@@ -1,0 +1,15 @@
+# Use node 10
+FROM node:10
+
+# set the working dir
+WORKDIR /app
+
+# Set the package files first, so they can be cached
+COPY client/package*.json ./
+
+# install npm dependencies, should be cached
+RUN npm install
+
+# start the angular client
+#ENTRYPOINT ["npm" "start"]
+CMD npm start

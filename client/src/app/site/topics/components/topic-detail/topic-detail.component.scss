@@ -1,0 +1,9 @@
+.topic-text {
+    margin: 0 20px 0 20px;
+    padding: 25px;
+
+    .missing {
+        color: slategray; // TODO: Colors in theme
+        font-style: italic;
+    }
+}
