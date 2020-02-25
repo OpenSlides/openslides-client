@@ -77,11 +77,11 @@ Change into the client:
 
 Build the docker image with your tool chain:
 
-`docker build . -f Dockerfile-dev -t client-dev`
+`docker build . -f Dockerfile.dev -t client-dev`
 
 Run the developing docker image:
 
-`docker run -it -v ${PWD}/client:/app -v /app/node_modules -p 4201:4200 --rm client-dev`
+`docker run -it -v ${PWD}/client/src:/app/src -p 4200:4200 --rm client-dev`
 
 You should now have an Angular developing server using docker up and running on http://localhost:4201/.
 The app will automatically reload if you change any of the source files.

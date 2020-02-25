@@ -10,6 +10,9 @@ COPY client/package*.json ./
 # install npm dependencies, should be cached
 RUN npm install
 
+# copy all files. The src folder is not necessary, becuase it is mounted, but all other files
+# like the angular.json must be copied to the image
+COPY client/ ./
+
 # start the angular client
-#ENTRYPOINT ["npm" "start"]
 CMD npm start
