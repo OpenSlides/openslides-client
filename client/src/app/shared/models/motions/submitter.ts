@@ -6,7 +6,7 @@ import { BaseModel } from '../base/base-model';
  * @ignore
  */
 export class Submitter extends BaseModel {
-    public static COLLECTIONSTRING = 'motions/submitter';
+    public static COLLECTION = 'motions/submitter';
 
     public id: number;
     public user_id: number;
@@ -14,6 +14,6 @@ export class Submitter extends BaseModel {
     public weight: number;
 
     public constructor(input?: any) {
-        super(Submitter.COLLECTIONSTRING, input);
+        super(Submitter.COLLECTION, input);
     }
 }

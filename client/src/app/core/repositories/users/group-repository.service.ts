@@ -1,20 +1,14 @@
 import { Injectable } from '@angular/core';
 
-import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { HttpService } from 'app/core/core-services/http.service';
 import { Permission } from 'app/core/core-services/operator.service';
-import { RelationManagerService } from 'app/core/core-services/relation-manager.service';
-import { ViewModelStoreService } from 'app/core/core-services/view-model-store.service';
 import { Group } from 'app/shared/models/users/group';
 import { GroupTitleInformation, ViewGroup } from 'app/site/users/models/view-group';
 import { BaseRepository } from '../base-repository';
-import { CollectionStringMapperService } from '../../core-services/collection-string-mapper.service';
-import { ConstantsService } from '../../core-services/constants.service';
-import { DataSendService } from '../../core-services/data-send.service';
-import { DataStoreService } from '../../core-services/data-store.service';
+import { RepositoryServiceCollector } from '../repository-service-collector';
 
 /**
  * Shape of a permission
@@ -23,6 +17,11 @@ interface PermDefinition {
     display_name: string;
     value: Permission;
 }
+
+const PERMISSIONS: PermDefinition[] = [
+    { display_name: 'Do it!', value: Permission.agendaCanBeSpeaker },
+    { display_name: "Don't do it!", value: Permission.agendaCanSee }
+];
 
 /**
  * Set rules to define the shape of an app permission
@@ -53,17 +52,8 @@ export class GroupRepositoryService extends BaseRepository<ViewGroup, Group, Gro
      * @param dataSend sending changed objects
      * @param constantsService reading out the OpenSlides constants
      */
-    public constructor(
-        DS: DataStoreService,
-        dataSend: DataSendService,
-        mapperService: CollectionStringMapperService,
-        viewModelStoreService: ViewModelStoreService,
-        translate: TranslateService,
-        relationManager: RelationManagerService,
-        private constantsService: ConstantsService,
-        private http: HttpService
-    ) {
-        super(DS, dataSend, mapperService, viewModelStoreService, translate, relationManager, Group);
+    public constructor(repositoryServiceCollector: RepositoryServiceCollector, private http: HttpService) {
+        super(repositoryServiceCollector, Group);
         this.sortPermsPerApp();
     }
 
@@ -90,7 +80,7 @@ export class GroupRepositoryService extends BaseRepository<ViewGroup, Group, Gro
      */
     public async togglePerm(group: ViewGroup, perm: Permission): Promise<void> {
         const set = !group.permissions.includes(perm);
-        return await this.http.post(`/rest/${group.collectionString}/${group.id}/set_permission/`, {
+        return await this.http.post(`/rest/${group.collection}/${group.id}/set_permission/`, {
             perm: perm,
             set: set
         });
@@ -117,57 +107,55 @@ export class GroupRepositoryService extends BaseRepository<ViewGroup, Group, Gro
      * read the constants, add them to an array of apps
      */
     private sortPermsPerApp(): void {
-        this.constantsService.get<any>('Permissions').subscribe(perms => {
-            this.appPermissions = [];
-            let pluginCounter = 0;
-            for (const perm of perms) {
-                // extract the apps name
-                const permApp = perm.value.split('.')[0];
-                switch (permApp) {
-                    case 'core':
-                        if (perm.value.indexOf('projector') > -1) {
-                            this.addAppPerm(0, perm, 'Projector');
-                        } else {
-                            this.addAppPerm(6, perm, 'General');
-                        }
-                        break;
-                    case 'agenda':
-                        this.addAppPerm(1, perm, 'Agenda');
-                        break;
-                    case 'motions':
-                        this.addAppPerm(2, perm, 'Motions');
-                        break;
-                    case 'assignments':
-                        this.addAppPerm(3, perm, 'Elections');
-                        break;
-                    case 'mediafiles':
-                        this.addAppPerm(4, perm, 'Files');
-                        break;
-                    case 'users':
-                        this.addAppPerm(5, perm, 'Participants');
-                        break;
-                    default:
-                        // plugins
-                        const displayName = `${permApp.charAt(0).toUpperCase()}${permApp.slice(1)}`;
-                        // check if the plugin exists as app. The appPermissions array might have empty
-                        // entries, so pay attention in the findIndex below.
-                        const result = this.appPermissions.findIndex(app => {
-                            return app ? app.name === displayName : false;
-                        });
-                        let pluginId: number;
-                        if (result >= 0) {
-                            pluginId = result;
-                        } else {
-                            // Ensure plugins to be behind the 7 core apps.
-                            pluginId = pluginCounter + 7;
-                            pluginCounter++;
-                        }
-                        this.addAppPerm(pluginId, perm, displayName);
-                        break;
-                }
+        this.appPermissions = [];
+        let pluginCounter = 0;
+        for (const perm of PERMISSIONS) {
+            // extract the apps name
+            const permApp = perm.value.split('.')[0];
+            switch (permApp) {
+                case 'core':
+                    if (perm.value.indexOf('projector') > -1) {
+                        this.addAppPerm(0, perm, 'Projector');
+                    } else {
+                        this.addAppPerm(6, perm, 'General');
+                    }
+                    break;
+                case 'agenda':
+                    this.addAppPerm(1, perm, 'Agenda');
+                    break;
+                case 'motions':
+                    this.addAppPerm(2, perm, 'Motions');
+                    break;
+                case 'assignments':
+                    this.addAppPerm(3, perm, 'Elections');
+                    break;
+                case 'mediafiles':
+                    this.addAppPerm(4, perm, 'Files');
+                    break;
+                case 'users':
+                    this.addAppPerm(5, perm, 'Participants');
+                    break;
+                default:
+                    // plugins
+                    const displayName = `${permApp.charAt(0).toUpperCase()}${permApp.slice(1)}`;
+                    // check if the plugin exists as app. The appPermissions array might have empty
+                    // entries, so pay attention in the findIndex below.
+                    const result = this.appPermissions.findIndex(app => {
+                        return app ? app.name === displayName : false;
+                    });
+                    let pluginId: number;
+                    if (result >= 0) {
+                        pluginId = result;
+                    } else {
+                        // Ensure plugins to be behind the 7 core apps.
+                        pluginId = pluginCounter + 7;
+                        pluginCounter++;
+                    }
+                    this.addAppPerm(pluginId, perm, displayName);
+                    break;
             }
-            this.sortPermsByPower();
-        });
+        }
+        this.sortPermsByPower();
     }
 
     /**

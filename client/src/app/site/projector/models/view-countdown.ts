@@ -10,8 +10,8 @@ export interface CountdownTitleInformation {
 }
 
 export class ViewCountdown extends BaseProjectableViewModel<Countdown> implements CountdownTitleInformation {
-    public static COLLECTIONSTRING = Countdown.COLLECTIONSTRING;
-    protected _collectionString = Countdown.COLLECTIONSTRING;
+    public static COLLECTION = Countdown.COLLECTION;
+    protected _collection = Countdown.COLLECTION;
 
     public get countdown(): Countdown {
         return this._model;
@@ -21,7 +21,7 @@ export class ViewCountdown extends BaseProjectableViewModel<Countdown> implement
         return {
             getBasicProjectorElement: options => ({
                 stable: true,
-                name: Countdown.COLLECTIONSTRING,
+                name: Countdown.COLLECTION,
                 id: this.id,
                 getIdentifiers: () => ['name', 'id']
             }),

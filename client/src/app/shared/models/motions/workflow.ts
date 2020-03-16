@@ -5,7 +5,7 @@ import { BaseModel } from '../base/base-model';
  * @ignore
  */
 export class Workflow extends BaseModel<Workflow> {
-    public static COLLECTIONSTRING = 'motions/workflow';
+    public static COLLECTION = 'motions/workflow';
 
     public id: number;
     public name: string;
@@ -13,6 +13,6 @@ export class Workflow extends BaseModel<Workflow> {
     public first_state_id: number;
 
     public constructor(input?: any) {
-        super(Workflow.COLLECTIONSTRING, input);
+        super(Workflow.COLLECTION, input);
     }
 }

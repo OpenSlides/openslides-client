@@ -6,7 +6,7 @@ import { BaseModel } from '../base/base-model';
  * @ignore
  */
 export class ProjectionDefault extends BaseModel<ProjectionDefault> {
-    public static COLLECTIONSTRING = 'core/projection-default';
+    public static COLLECTION = 'core/projection-default';
 
     public id: number;
     public name: string;
@@ -14,6 +14,6 @@ export class ProjectionDefault extends BaseModel<ProjectionDefault> {
     public projector_id: number;
 
     public constructor(input?: any) {
-        super(ProjectionDefault.COLLECTIONSTRING, input);
+        super(ProjectionDefault.COLLECTION, input);
     }
 }

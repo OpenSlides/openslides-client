@@ -1,8 +1,4 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
-
-import { TranslateService } from '@ngx-translate/core';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import {
@@ -10,6 +6,7 @@ import {
     GlobalVote,
     VotingData
 } from 'app/core/repositories/assignments/assignment-poll-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { VotingService } from 'app/core/ui-services/voting.service';
 import { AssignmentPollMethod } from 'app/shared/models/assignments/assignment-poll';
@@ -42,16 +39,14 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
     public alreadyVoted: boolean;
 
     public constructor(
-        title: Title,
-        protected translate: TranslateService,
-        matSnackbar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         operator: OperatorService,
         public vmanager: VotingService,
         private pollRepo: AssignmentPollRepositoryService,
         private promptService: PromptService,
         private cd: ChangeDetectorRef
     ) {
-        super(title, translate, matSnackbar, operator);
+        super(componentServiceCollector, operator);
     }
 
     public ngOnInit(): void {

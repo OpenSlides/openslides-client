@@ -1,19 +1,13 @@
 import { Injectable } from '@angular/core';
 
-import { TranslateService } from '@ngx-translate/core';
-
-import { RelationManagerService } from 'app/core/core-services/relation-manager.service';
-import { ViewModelStoreService } from 'app/core/core-services/view-model-store.service';
 import { RelationDefinition } from 'app/core/definitions/relations';
 import { TreeIdNode } from 'app/core/ui-services/tree.service';
 import { Category } from 'app/shared/models/motions/category';
 import { CategoryTitleInformation, ViewCategory } from 'app/site/motions/models/view-category';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { BaseRepository } from '../base-repository';
-import { CollectionStringMapperService } from '../../core-services/collection-string-mapper.service';
-import { DataSendService } from '../../core-services/data-send.service';
-import { DataStoreService } from '../../core-services/data-store.service';
 import { HttpService } from '../../core-services/http.service';
+import { RepositoryServiceCollector } from '../repository-service-collector';
 
 const CategoryRelations: RelationDefinition[] = [
     {
@@ -61,28 +55,11 @@ export class CategoryRepositoryService extends BaseRepository<ViewCategory, Cate
      * @param mapperService Maps collection strings to classes
      * @param dataSend sending changed objects
      * @param httpService OpenSlides own HTTP service
-     * @param configService to get the default sorting
+     * @param organisationSettingsService to get the default sorting
      * @param translate translationService to get the currently selected locale
      */
-    public constructor(
-        DS: DataStoreService,
-        dataSend: DataSendService,
-        mapperService: CollectionStringMapperService,
-        viewModelStoreService: ViewModelStoreService,
-        translate: TranslateService,
-        relationManager: RelationManagerService,
-        private httpService: HttpService
-    ) {
-        super(
-            DS,
-            dataSend,
-            mapperService,
-            viewModelStoreService,
-            translate,
-            relationManager,
-            Category,
-            CategoryRelations
-        );
+    public constructor(repositoryServiceCollector: RepositoryServiceCollector, private httpService: HttpService) {
+        super(repositoryServiceCollector, Category, CategoryRelations);
 
         this.setSortFunction((a, b) => a.weight - b.weight);
     }

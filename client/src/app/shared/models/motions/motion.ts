@@ -49,13 +49,13 @@ export interface MotionWithoutNestedModels extends BaseModelWithAgendaItemAndLis
  * @ignore
  */
 export class Motion extends BaseModelWithAgendaItemAndListOfSpeakers<Motion> {
-    public static COLLECTIONSTRING = 'motions/motion';
+    public static COLLECTION = 'motion';
 
     public id: number;
     public submitters: Submitter[];
 
     public constructor(input?: any) {
-        super(Motion.COLLECTIONSTRING, input);
+        super(Motion.COLLECTION, input);
     }
 
     /**

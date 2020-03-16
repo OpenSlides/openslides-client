@@ -3,7 +3,7 @@ import { Deserializer } from './deserializer';
 import { Identifiable } from './identifiable';
 
 export interface ModelConstructor<T extends BaseModel<T>> {
-    COLLECTIONSTRING: string;
+    COLLECTION: string;
     new (...args: any[]): T;
 }
 
@@ -13,19 +13,19 @@ export interface ModelConstructor<T extends BaseModel<T>> {
  */
 export abstract class BaseModel<T = any> extends Deserializer implements Identifiable, Collection {
     public get elementId(): string {
-        return `${this.collectionString}:${this.id}`;
+        return `${this.collection}:${this.id}`;
     }
     /**
      * force children of BaseModel to have an id
      */
     public abstract id: number;
 
-    protected constructor(public readonly collectionString: string, input?: Partial<T>) {
+    protected constructor(public readonly collection: string, input?: Partial<T>) {
         super(input);
     }
 
-    public getUpdatedVersion(update: Partial<T>): T {
-        const copy: T = (<any>Object.assign({}, this)) as T;
+    public getUpdatedData(update: Partial<T>): object {
+        const copy: object = Object.assign({}, this);
         return Object.assign(copy, update);
     }
 }

@@ -1,17 +1,11 @@
 import { Injectable } from '@angular/core';
 
-import { TranslateService } from '@ngx-translate/core';
-
-import { RelationManagerService } from 'app/core/core-services/relation-manager.service';
-import { ViewModelStoreService } from 'app/core/core-services/view-model-store.service';
 import { RelationDefinition } from 'app/core/definitions/relations';
 import { State } from 'app/shared/models/motions/state';
 import { StateTitleInformation, ViewState } from 'app/site/motions/models/view-state';
 import { ViewWorkflow, WorkflowTitleInformation } from 'app/site/motions/models/view-workflow';
 import { BaseRepository } from '../base-repository';
-import { CollectionStringMapperService } from '../../core-services/collection-string-mapper.service';
-import { DataSendService } from '../../core-services/data-send.service';
-import { DataStoreService } from '../../core-services/data-store.service';
+import { RepositoryServiceCollector } from '../repository-service-collector';
 
 const StateRelations: RelationDefinition[] = [
     {
@@ -57,15 +51,8 @@ export class StateRepositoryService extends BaseRepository<ViewState, State, Sta
      * @param dataSend sending data to the server
      * @param httpService HttpService
      */
-    public constructor(
-        DS: DataStoreService,
-        dataSend: DataSendService,
-        mapperService: CollectionStringMapperService,
-        viewModelStoreService: ViewModelStoreService,
-        translate: TranslateService,
-        relationManager: RelationManagerService
-    ) {
-        super(DS, dataSend, mapperService, viewModelStoreService, translate, relationManager, State, StateRelations);
+    public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
+        super(repositoryServiceCollector, State, StateRelations);
     }
 
     public getTitle = (titleInformation: WorkflowTitleInformation) => {

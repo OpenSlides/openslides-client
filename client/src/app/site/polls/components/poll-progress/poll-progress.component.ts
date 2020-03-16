@@ -6,7 +6,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs/operators';
 
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
-import { BaseViewComponent } from 'app/site/base/base-view';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewBasePoll } from 'app/site/polls/models/view-base-poll';
 
 @Component({
@@ -14,7 +15,7 @@ import { ViewBasePoll } from 'app/site/polls/models/view-base-poll';
     templateUrl: './poll-progress.component.html',
     styleUrls: ['./poll-progress.component.scss']
 })
-export class PollProgressComponent extends BaseViewComponent implements OnInit {
+export class PollProgressComponent extends BaseComponent implements OnInit {
     @Input()
     public poll: ViewBasePoll;
     public max: number;
@@ -24,12 +25,10 @@ export class PollProgressComponent extends BaseViewComponent implements OnInit {
     }
 
     public constructor(
-        title: Title,
-        protected translate: TranslateService,
-        snackbar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private userRepo: UserRepositoryService
     ) {
-        super(title, translate, snackbar);
+        super(componentServiceCollector);
     }
 
     public ngOnInit(): void {

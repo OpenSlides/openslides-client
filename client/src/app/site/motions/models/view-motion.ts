@@ -1,7 +1,7 @@
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
-import { ConfigService } from 'app/core/ui-services/config.service';
 import { DiffLinesInParagraph } from 'app/core/ui-services/diff.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { SearchProperty, SearchRepresentation } from 'app/core/ui-services/search.service';
 import { Motion, MotionComment, MotionWithoutNestedModels } from 'app/shared/models/motions/motion';
 import { PersonalNoteContent } from 'app/shared/models/users/personal-note';
@@ -187,8 +187,8 @@ export class ViewMotion extends BaseViewModelWithAgendaItemAndListOfSpeakers<Mot
             return null;
         }
     }
-    public static COLLECTIONSTRING = Motion.COLLECTIONSTRING;
-    protected _collectionString = Motion.COLLECTIONSTRING;
+    public static COLLECTION = Motion.COLLECTION;
+    protected _collection = Motion.COLLECTION;
 
     public personalNote?: PersonalNoteContent;
 
@@ -314,7 +314,7 @@ export class ViewMotion extends BaseViewModelWithAgendaItemAndListOfSpeakers<Mot
         return this.amendment_paragraphs && this.amendment_paragraphs.length > 0;
     }
 
-    public getSlide(configService: ConfigService): ProjectorElementBuildDeskriptor {
+    public getSlide(organisationSettingsService: OrganisationSettingsService): ProjectorElementBuildDeskriptor {
         const slideOptions = [];
         if (
             (this.changeRecommendations && this.changeRecommendations.length) ||
@@ -323,7 +323,7 @@ export class ViewMotion extends BaseViewModelWithAgendaItemAndListOfSpeakers<Mot
             slideOptions.push({
                 key: 'mode',
                 displayName: _('Which version?'),
-                default: configService.instant('motions_recommendation_text_mode'),
+                default: organisationSettingsService.instant('motions_recommendation_text_mode'),
                 choices: [
                     { value: 'original', displayName: 'Original version' },
                     { value: 'changed', displayName: 'Changed version' },
@@ -335,7 +335,7 @@ export class ViewMotion extends BaseViewModelWithAgendaItemAndListOfSpeakers<Mot
 
         return {
             getBasicProjectorElement: options => ({
-                name: Motion.COLLECTIONSTRING,
+                name: Motion.COLLECTION,
                 id: this.id,
                 getIdentifiers: () => ['name', 'id']
             }),

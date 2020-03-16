@@ -4,12 +4,11 @@ import { environment } from 'environments/environment';
 
 import { BaseModel } from 'app/shared/models/base/base-model';
 import { History } from 'app/shared/models/core/history';
-import { CollectionStringMapperService } from './collection-string-mapper.service';
+import { CollectionMapperService } from './collection-mapper.service';
 import { DataStoreService, DataStoreUpdateManagerService } from './data-store.service';
 import { HttpService } from './http.service';
 import { OpenSlidesStatusService } from './openslides-status.service';
 import { OpenSlidesService } from './openslides.service';
-import { WebsocketService } from './websocket.service';
 
 interface HistoryData {
     [collection: string]: BaseModel[];
@@ -31,7 +30,6 @@ export class TimeTravelService {
      * Constructs the time travel service
      *
      * @param httpService To fetch the history data
-     * @param webSocketService to disable websocket connection
      * @param modelMapperService to cast history objects into models
      * @param DS to overwrite the dataStore
      * @param OSStatus Sets the history status
@@ -39,8 +37,7 @@ export class TimeTravelService {
      */
     public constructor(
         private httpService: HttpService,
-        private webSocketService: WebsocketService,
-        private modelMapperService: CollectionStringMapperService,
+        private modelMapperService: CollectionMapperService,
         private DS: DataStoreService,
         private OSStatus: OpenSlidesStatusService,
         private OpenSlides: OpenSlidesService,
@@ -65,9 +62,9 @@ export class TimeTravelService {
                 allModels.push(new targetClass(model));
             });
         });
-        await this.DS.set(allModels, 0);
+        // await this.DS.set(allModels, 0);
 
-        this.DSUpdateManager.commit(updateSlot, 1, true);
+        this.DSUpdateManager.commit(updateSlot, true);
     }
 
     /**
@@ -100,7 +97,7 @@ export class TimeTravelService {
      * Clears the DataStore and stops the WebSocket connection
      */
     private async stopTime(history: History): Promise<void> {
-        await this.webSocketService.close();
+        // await this.webSocketService.close();
         await this.DS.set(); // Same as clear, but not persistent.
         this.OSStatus.enterHistoryMode(history);
     }

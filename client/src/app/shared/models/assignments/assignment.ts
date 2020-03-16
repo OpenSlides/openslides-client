@@ -18,13 +18,13 @@ export interface AssignmentWithoutNestedModels extends BaseModelWithAgendaItemAn
  * @ignore
  */
 export class Assignment extends BaseModelWithAgendaItemAndListOfSpeakers<Assignment> {
-    public static COLLECTIONSTRING = 'assignments/assignment';
+    public static COLLECTION = 'assignments/assignment';
 
     public id: number;
     public assignment_related_users: AssignmentRelatedUser[];
 
     public constructor(input?: any) {
-        super(Assignment.COLLECTIONSTRING, input);
+        super(Assignment.COLLECTION, input);
     }
 }
 export interface Assignment extends AssignmentWithoutNestedModels {}

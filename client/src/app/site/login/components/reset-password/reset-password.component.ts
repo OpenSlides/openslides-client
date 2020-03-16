@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 
-import { TranslateService } from '@ngx-translate/core';
 import { environment } from 'environments/environment';
 
 import { HttpService } from 'app/core/core-services/http.service';
-import { BaseViewComponent } from 'app/site/base/base-view';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { BaseComponent } from 'app/site/base/components/base.component';
 
 /**
  * Reset password component.
@@ -19,7 +17,7 @@ import { BaseViewComponent } from 'app/site/base/base-view';
     templateUrl: './reset-password.component.html',
     styleUrls: ['../../assets/reset-password-pages.scss']
 })
-export class ResetPasswordComponent extends BaseViewComponent implements OnInit {
+export class ResetPasswordComponent extends BaseComponent implements OnInit {
     /**
      * THis form holds one control for the email.
      */
@@ -29,14 +27,12 @@ export class ResetPasswordComponent extends BaseViewComponent implements OnInit 
      * Constructur for the reset password view. Initializes the form for the email.
      */
     public constructor(
-        titleService: Title,
-        protected translate: TranslateService,
-        matSnackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private http: HttpService,
         formBuilder: FormBuilder,
         private router: Router
     ) {
-        super(titleService, translate, matSnackBar);
+        super(componentServiceCollector);
         this.resetPasswordForm = formBuilder.group({
             email: ['', [Validators.required, Validators.email]]
         });

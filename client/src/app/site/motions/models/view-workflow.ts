@@ -11,8 +11,8 @@ export interface WorkflowTitleInformation {
  * @ignore
  */
 export class ViewWorkflow extends BaseViewModel<Workflow> implements WorkflowTitleInformation {
-    public static COLLECTIONSTRING = Workflow.COLLECTIONSTRING;
-    protected _collectionString = Workflow.COLLECTIONSTRING;
+    public static COLLECTION = Workflow.COLLECTION;
+    protected _collection = Workflow.COLLECTION;
 
     public get workflow(): Workflow {
         return this._model;

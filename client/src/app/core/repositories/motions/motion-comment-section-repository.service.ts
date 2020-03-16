@@ -1,10 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { TranslateService } from '@ngx-translate/core';
-
 import { HttpService } from 'app/core/core-services/http.service';
-import { RelationManagerService } from 'app/core/core-services/relation-manager.service';
-import { ViewModelStoreService } from 'app/core/core-services/view-model-store.service';
 import { RelationDefinition } from 'app/core/definitions/relations';
 import { MotionCommentSection } from 'app/shared/models/motions/motion-comment-section';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
@@ -14,9 +10,7 @@ import {
 } from 'app/site/motions/models/view-motion-comment-section';
 import { ViewGroup } from 'app/site/users/models/view-group';
 import { BaseRepository } from '../base-repository';
-import { CollectionStringMapperService } from '../../core-services/collection-string-mapper.service';
-import { DataSendService } from '../../core-services/data-send.service';
-import { DataStoreService } from '../../core-services/data-store.service';
+import { RepositoryServiceCollector } from '../repository-service-collector';
 
 const MotionCommentSectionRelations: RelationDefinition[] = [
     {
@@ -61,25 +55,8 @@ export class MotionCommentSectionRepositoryService extends BaseRepository<
      * @param dataSend Service to handle the dataSending
      * @param http Service to handle direct http-communication
      */
-    public constructor(
-        DS: DataStoreService,
-        dataSend: DataSendService,
-        mapperService: CollectionStringMapperService,
-        viewModelStoreService: ViewModelStoreService,
-        translate: TranslateService,
-        relationManager: RelationManagerService,
-        private http: HttpService
-    ) {
-        super(
-            DS,
-            dataSend,
-            mapperService,
-            viewModelStoreService,
-            translate,
-            relationManager,
-            MotionCommentSection,
-            MotionCommentSectionRelations
-        );
+    public constructor(repositoryServiceCollector: RepositoryServiceCollector, private http: HttpService) {
+        super(repositoryServiceCollector, MotionCommentSection, MotionCommentSectionRelations);
 
         this.viewModelSortFn = (a: ViewMotionCommentSection, b: ViewMotionCommentSection) => {
             if (a.weight === b.weight) {

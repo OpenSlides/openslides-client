@@ -1,13 +1,10 @@
 import { FormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
-
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { VOTE_UNDOCUMENTED } from 'app/shared/models/poll/base-poll';
 import { OneOfValidator } from 'app/shared/validators/one-of-validator';
-import { BaseViewComponent } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { PollFormComponent } from './poll-form/poll-form.component';
 import { PollService } from '../services/poll.service';
 import { ViewBasePoll } from '../models/view-base-poll';
@@ -15,7 +12,7 @@ import { ViewBasePoll } from '../models/view-base-poll';
 /**
  * A dialog for updating the values of a poll.
  */
-export abstract class BasePollDialogComponent<T extends ViewBasePoll, S extends PollService> extends BaseViewComponent {
+export abstract class BasePollDialogComponent<T extends ViewBasePoll, S extends PollService> extends BaseComponent {
     public publishImmediately: boolean;
 
     protected pollForm: PollFormComponent<T, S>;
@@ -23,12 +20,10 @@ export abstract class BasePollDialogComponent<T extends ViewBasePoll, S extends 
     public dialogVoteForm: FormGroup;
 
     public constructor(
-        title: Title,
-        protected translate: TranslateService,
-        matSnackbar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         public dialogRef: MatDialogRef<BasePollDialogComponent<T, S>>
     ) {
-        super(title, translate, matSnackbar);
+        super(componentServiceCollector);
         this.addKeyListener();
     }
 

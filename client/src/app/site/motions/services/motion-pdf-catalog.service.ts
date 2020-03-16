@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 import { BorderType, PdfDocumentService, PdfError, StyleType } from 'app/core/pdf-services/pdf-document.service';
 import { CategoryRepositoryService } from 'app/core/repositories/motions/category-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { MotionExportInfo } from './motion-export.service';
 import { MotionPdfService } from './motion-pdf.service';
 import { ViewCategory } from '../models/view-category';
@@ -30,12 +30,12 @@ export class MotionPdfCatalogService {
      * Constructor
      *
      * @param translate handle translations
-     * @param configService read out config variables
+     * @param organisationSettingsService read out config variables
      * @param motionPdfService handle motion to pdf conversion
      */
     public constructor(
         private translate: TranslateService,
-        private configService: ConfigService,
+        private organisationSettingsService: OrganisationSettingsService,
         private motionPdfService: MotionPdfService,
         private pdfService: PdfDocumentService,
         private motionRepo: MotionRepositoryService,
@@ -116,7 +116,7 @@ export class MotionPdfCatalogService {
             text: this.translate.instant('Table of contents'),
             style: 'heading2'
         };
-        const exportSubmitterRecommendation = this.configService.instant<boolean>(
+        const exportSubmitterRecommendation = this.organisationSettingsService.instant<boolean>(
             'motions_export_submitter_recommendation'
         );
 

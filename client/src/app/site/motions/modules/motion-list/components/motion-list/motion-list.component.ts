@@ -1,25 +1,24 @@
 import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { StorageService } from 'app/core/core-services/storage.service';
+import { modelDataToAutoupdateFormat } from 'app/core/core-services/autoupdate-helpers';
 import { CategoryRepositoryService } from 'app/core/repositories/motions/category-repository.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { WorkflowRepositoryService } from 'app/core/repositories/motions/workflow-repository.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { OsFilterOptionCondition } from 'app/core/ui-services/base-filter-list.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { infoDialogSettings, largeDialogSettings } from 'app/shared/utils/dialog-settings';
-import { BaseListViewComponent } from 'app/site/base/base-list-view';
+import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
 import { ViewCategory } from 'app/site/motions/models/view-category';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
@@ -189,7 +188,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
      * @param filterService filtering
      * @param router Router
      * @param route Current route
-     * @param configService The configuration provider
+     * @param organisationSettingsService The configuration provider
      * @param repo Motion Repository
      * @param tagRepo Tag Repository
      * @param motionBlockRepo
@@ -204,15 +203,12 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
      * @param perms LocalPermissionService
      */
     public constructor(
-        titleService: Title,
-        protected translate: TranslateService, // protected required for ng-translate-extract
-        matSnackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private route: ActivatedRoute,
-        storage: StorageService,
         public filterService: MotionFilterListService,
         public sortService: MotionSortListService,
         private router: Router,
-        private configService: ConfigService,
+        private organisationSettingsService: OrganisationSettingsService,
         private tagRepo: TagRepositoryService,
         private motionBlockRepo: MotionBlockRepositoryService,
         private categoryRepo: CategoryRepositoryService,
@@ -226,8 +222,36 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
         public vp: ViewportService,
         public operator: OperatorService
     ) {
-        super(titleService, translate, matSnackBar, storage);
+        super(componentServiceCollector);
         this.canMultiSelect = true;
+    }
+
+    public addInitial(): void {
+        const data = {
+            motion: {
+                2: {
+                    title: 'initial title',
+                    submitter_ids: [],
+                    identifier: 'A',
+                    attachments_id: []
+                }
+            }
+        };
+        console.log(modelDataToAutoupdateFormat);
+        console.log(modelDataToAutoupdateFormat(data));
+        this.autoupdateService.handleAutoupdate(modelDataToAutoupdateFormat(data));
+    }
+
+    public changeTitle(): void {
+        const title = Math.random().toString(36).substring(7);
+        const data = {
+            motion: {
+                2: {
+                    title
+                }
+            }
+        };
+        this.autoupdateService.handleAutoupdate(modelDataToAutoupdateFormat(data));
     }
 
     /**
@@ -239,16 +263,16 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
     public async ngOnInit(): Promise<void> {
         super.setTitle('Motions');
 
-        this.configService
+        this.organisationSettingsService
             .get<boolean>('motions_statutes_enabled')
             .subscribe(enabled => (this.statutesEnabled = enabled));
-        this.configService
+        this.organisationSettingsService
             .get<boolean>('motions_amendments_enabled')
             .subscribe(enabled => (this.amendmentsEnabled = enabled));
-        this.configService.get<string>('motions_recommendations_by').subscribe(recommender => {
+        this.organisationSettingsService.get<string>('motions_recommendations_by').subscribe(recommender => {
             this.recommendationEnabled = !!recommender;
         });
-        this.configService
+        this.organisationSettingsService
             .get<boolean>('motions_show_sequential_numbers')
             .subscribe(show => (this.showSequential = show));
         this.motionBlockRepo.getViewModelListObservable().subscribe(mBs => {
