@@ -1,16 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { CategoryRepositoryService } from 'app/core/repositories/motions/category-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { FlatNode } from 'app/core/ui-services/tree.service';
-import { SortTreeFilterOption, SortTreeViewComponent } from 'app/site/base/sort-tree.component';
+import { BaseSortTreeComponent, SortTreeFilterOption } from 'app/site/base/components/sort-tree.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { MotionCsvExportService } from 'app/site/motions/services/motion-csv-export.service';
 import { MotionPdfExportService } from 'app/site/motions/services/motion-pdf-export.service';
@@ -27,7 +25,7 @@ import { ViewTag } from 'app/site/tags/models/view-tag';
         '../../../../shared/components/sort-filter-bar/sort-filter-bar.component.scss'
     ]
 })
-export class CallListComponent extends SortTreeViewComponent<ViewMotion> implements OnInit {
+export class CallListComponent extends BaseSortTreeComponent<ViewMotion> implements OnInit {
     /**
      * All motions sorted first by weight, then by id.
      */
@@ -87,17 +85,15 @@ export class CallListComponent extends SortTreeViewComponent<ViewMotion> impleme
      * @param promptService
      */
     public constructor(
-        title: Title,
-        protected translate: TranslateService,
-        matSnackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
+        promptService: PromptService,
         private motionRepo: MotionRepositoryService,
         private motionCsvExport: MotionCsvExportService,
         private motionPdfExport: MotionPdfExportService,
         private tagRepo: TagRepositoryService,
-        private categoryRepo: CategoryRepositoryService,
-        promptService: PromptService
+        private categoryRepo: CategoryRepositoryService
     ) {
-        super(title, translate, matSnackBar, promptService);
+        super(componentServiceCollector, promptService);
 
         this.motionsObservable = this.motionRepo.getViewModelListObservable();
         this.motionsObservable.subscribe(motions => {

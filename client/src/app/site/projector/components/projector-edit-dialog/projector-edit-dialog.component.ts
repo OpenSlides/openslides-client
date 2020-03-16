@@ -8,17 +8,16 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar } from '@angular/material';
-import { Title } from '@angular/platform-browser';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
-import { TranslateService } from '@ngx-translate/core';
 import { auditTime } from 'rxjs/operators';
 
 import { ProjectionDefaultRepositoryService } from 'app/core/repositories/projector/projection-default-repository.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ProjectorComponent } from 'app/shared/components/projector/projector.component';
 import { Projector } from 'app/shared/models/core/projector';
-import { BaseViewComponent } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ClockSlideService } from '../../services/clock-slide.service';
 import { ViewProjectionDefault } from '../../models/view-projection-default';
 import { ViewProjector } from '../../models/view-projector';
@@ -34,7 +33,7 @@ import { ViewProjector } from '../../models/view-projector';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProjectorEditDialogComponent extends BaseViewComponent implements OnInit {
+export class ProjectorEditDialogComponent extends BaseComponent implements OnInit {
     /**
      * import the projector as view child, to determine when to update
      * the preview.
@@ -89,9 +88,7 @@ export class ProjectorEditDialogComponent extends BaseViewComponent implements O
     private aspectRatioRe = RegExp('[1-9]+[0-9]*:[1-9]+[0-9]*');
 
     public constructor(
-        title: Title,
-        translate: TranslateService,
-        matSnackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         formBuilder: FormBuilder,
         @Inject(MAT_DIALOG_DATA) public projector: ViewProjector,
         private dialogRef: MatDialogRef<ProjectorEditDialogComponent>,
@@ -100,7 +97,7 @@ export class ProjectorEditDialogComponent extends BaseViewComponent implements O
         private clockSlideService: ClockSlideService,
         private cd: ChangeDetectorRef
     ) {
-        super(title, translate, matSnackBar);
+        super(componentServiceCollector);
 
         if (projector) {
             this.previewProjector = new Projector(projector.getModel());

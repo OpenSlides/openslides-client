@@ -1,12 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
-
-import { BaseViewComponent } from 'app/site/base/base-view';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { BaseComponent } from 'app/site/base/components/base.component';
 
 /**
  * Determine what to send
@@ -23,7 +20,7 @@ export interface MessageData {
     templateUrl: './message-dialog.component.html',
     styleUrls: ['./message-dialog.component.scss']
 })
-export class MessageDialogComponent extends BaseViewComponent implements OnInit {
+export class MessageDialogComponent extends BaseComponent implements OnInit {
     /**
      * The form data
      */
@@ -39,13 +36,11 @@ export class MessageDialogComponent extends BaseViewComponent implements OnInit 
      * @param data the injected data, i.e the current text of a message to edit
      */
     public constructor(
-        title: Title,
-        matSnackBar: MatSnackBar,
-        translate: TranslateService,
+        componentServiceCollector: ComponentServiceCollector,
         private formBuilder: FormBuilder,
         @Inject(MAT_DIALOG_DATA) public data: MessageData
     ) {
-        super(title, translate, matSnackBar);
+        super(componentServiceCollector);
     }
 
     /**

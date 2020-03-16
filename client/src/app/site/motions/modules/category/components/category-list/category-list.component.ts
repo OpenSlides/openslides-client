@@ -1,17 +1,14 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { StorageService } from 'app/core/core-services/storage.service';
 import { CategoryRepositoryService } from 'app/core/repositories/motions/category-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
-import { BaseListViewComponent } from 'app/site/base/base-list-view';
+import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
 import { ViewCategory } from 'app/site/motions/models/view-category';
 
 /**
@@ -71,16 +68,13 @@ export class CategoryListComponent extends BaseListViewComponent<ViewCategory> i
      * @param operator
      */
     public constructor(
-        titleService: Title,
-        translate: TranslateService,
-        matSnackBar: MatSnackBar,
-        storage: StorageService,
+        componentServiceCollector: ComponentServiceCollector,
         public repo: CategoryRepositoryService,
         private formBuilder: FormBuilder,
         private dialog: MatDialog,
         private operator: OperatorService
     ) {
-        super(titleService, translate, matSnackBar, storage);
+        super(componentServiceCollector);
 
         this.createForm = this.formBuilder.group({
             prefix: [''],

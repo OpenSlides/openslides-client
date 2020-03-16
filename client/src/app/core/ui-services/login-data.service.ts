@@ -4,10 +4,10 @@ import { environment } from 'environments/environment.prod';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { auditTime } from 'rxjs/operators';
 
-import { ConfigService } from './config.service';
-import { ConstantsService } from '../core-services/constants.service';
+import { ConfigurationService } from '../core-services/configuration.service';
 import { HttpService } from '../core-services/http.service';
 import { OpenSlidesStatusService } from '../core-services/openslides-status.service';
+import { OrganisationSettingsService } from './organisation-settings.service';
 import { StorageService } from '../core-services/storage.service';
 
 interface SamlSettings {
@@ -137,14 +137,14 @@ export class LoginDataService {
     /**
      * Constructs this service. The config service is needed to update the privacy
      * policy and legal notice, when their config values change.
-     * @param configService
+     * @param organisationSettingsService
      */
     public constructor(
-        private configService: ConfigService,
+        private organisationSettingsService: OrganisationSettingsService,
         private storageService: StorageService,
         private OSStatus: OpenSlidesStatusService,
         private httpService: HttpService,
-        private constantsService: ConstantsService
+        private configurationService: ConfigurationService
     ) {
         this.storeLoginDataRequests.pipe(auditTime(100)).subscribe(() => this.storeLoginData());
         this.setup();
@@ -156,31 +156,33 @@ export class LoginDataService {
      */
     private async setup(): Promise<void> {
         await this.loadLoginData();
-        this.configService.get<string>('general_event_privacy_policy').subscribe(value => {
+        this.organisationSettingsService.get<string>('general_event_privacy_policy').subscribe(value => {
             if (value !== undefined) {
                 this._privacyPolicy.next(value);
                 this.storeLoginDataRequests.next();
             }
         });
-        this.configService.get<string>('general_event_legal_notice').subscribe(value => {
+        this.organisationSettingsService.get<string>('general_event_legal_notice').subscribe(value => {
             if (value !== undefined) {
                 this._legalNotice.next(value);
                 this.storeLoginDataRequests.next();
             }
         });
-        this.configService.get<string>('openslides_theme').subscribe(value => {
+        this.organisationSettingsService.get<string>('openslides_theme').subscribe(value => {
             if (value) {
                 this._theme.next(value);
                 this.storeLoginDataRequests.next();
             }
         });
-        this.configService.get<{ path: string; display_name: string }>('logo_web_header').subscribe(value => {
-            if (value) {
-                this._logoWebHeader.next(value);
-                this.storeLoginDataRequests.next();
-            }
-        });
-        this.constantsService.get<SamlSettings>('SamlSettings').subscribe(value => {
+        this.organisationSettingsService
+            .get<{ path: string; display_name: string }>('logo_web_header')
+            .subscribe(value => {
+                if (value) {
+                    this._logoWebHeader.next(value);
+                    this.storeLoginDataRequests.next();
+                }
+            });
+        this.configurationService.get<SamlSettings>('SamlSettings').subscribe(value => {
             if (value !== undefined) {
                 this._samlSettings.next(value);
                 this.storeLoginDataRequests.next();

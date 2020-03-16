@@ -11,7 +11,7 @@ describe('TreeSortService', () => {
         })
     );
 
-    // TODO testing (does not work without injecting a BaseViewComponent)
+    // TODO testing (does not work without injecting a BaseComponent)
     //   it('should be created', () => {
     //     const service: TreeSortService = TestBed.get(TreeSortService);
     //     expect(service).toBeTruthy();

@@ -1,15 +1,14 @@
 import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
 import { Subject, Subscription } from 'rxjs';
 
-import { BaseComponent } from 'app/base.component';
 import { OfflineService } from 'app/core/core-services/offline.service';
 import { ProjectorDataService, SlideData } from 'app/core/core-services/projector-data.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { Projector } from 'app/shared/models/core/projector';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { Size } from 'app/site/projector/size';
 
@@ -158,18 +157,17 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
      * @param translate
      * @param projectorDataService
      * @param projectorRepository
-     * @param configService
+     * @param organisationSettingsService
      */
     public constructor(
-        titleService: Title,
-        translate: TranslateService,
+        componentServiceCollector: ComponentServiceCollector,
         private projectorDataService: ProjectorDataService,
         private projectorRepository: ProjectorRepositoryService,
-        private configService: ConfigService,
+        private organisationSettingsService: OrganisationSettingsService,
         private offlineService: OfflineService,
         private elementRef: ElementRef
     ) {
-        super(titleService, translate);
+        super(componentServiceCollector);
 
         this.projectorClass =
             'projector-' +
@@ -182,14 +180,14 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
         document.head.appendChild(this.styleElement);
 
         // projector logo / background-image
-        this.configService.get<{ path?: string }>('logo_projector_main').subscribe(val => {
+        this.organisationSettingsService.get<{ path?: string }>('logo_projector_main').subscribe(val => {
             if (val && val.path) {
                 this.projectorLogo = val.path;
             } else {
                 this.projectorLogo = '';
             }
         });
-        this.configService.get<{ path?: string }>('logo_projector_header').subscribe(val => {
+        this.organisationSettingsService.get<{ path?: string }>('logo_projector_header').subscribe(val => {
             if (val && val.path) {
                 this.css.headerFooter.backgroundImage = "url('" + val.path + "')";
             } else {
@@ -199,10 +197,14 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
         });
 
         // event data
-        this.configService.get<string>('general_event_name').subscribe(val => (this.eventName = val));
-        this.configService.get<string>('general_event_description').subscribe(val => (this.eventDescription = val));
-        this.configService.get<string>('general_event_date').subscribe(val => (this.eventDate = val));
-        this.configService.get<string>('general_event_location').subscribe(val => (this.eventLocation = val));
+        this.organisationSettingsService.get<string>('general_event_name').subscribe(val => (this.eventName = val));
+        this.organisationSettingsService
+            .get<string>('general_event_description')
+            .subscribe(val => (this.eventDescription = val));
+        this.organisationSettingsService.get<string>('general_event_date').subscribe(val => (this.eventDate = val));
+        this.organisationSettingsService
+            .get<string>('general_event_location')
+            .subscribe(val => (this.eventLocation = val));
 
         // Watches for resizing of the container.
         this.resizeSubject.subscribe(() => {

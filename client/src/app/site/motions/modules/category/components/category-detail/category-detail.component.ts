@@ -1,19 +1,16 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-
-import { TranslateService } from '@ngx-translate/core';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { CategoryRepositoryService } from 'app/core/repositories/motions/category-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
-import { BaseViewComponent } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewCategory } from 'app/site/motions/models/view-category';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 
@@ -25,7 +22,7 @@ import { ViewMotion } from 'app/site/motions/models/view-motion';
     templateUrl: './category-detail.component.html',
     styleUrls: ['./category-detail.component.scss']
 })
-export class CategoryDetailComponent extends BaseViewComponent implements OnInit {
+export class CategoryDetailComponent extends BaseComponent implements OnInit {
     /**
      * The one selected category
      */
@@ -76,19 +73,17 @@ export class CategoryDetailComponent extends BaseViewComponent implements OnInit
      * @param promptService the displaying prompts before deleting
      */
     public constructor(
-        titleService: Title,
-        protected translate: TranslateService,
-        matSnackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private route: ActivatedRoute,
         private operator: OperatorService,
         private router: Router,
         private repo: CategoryRepositoryService,
         private motionRepo: MotionRepositoryService,
         private promptService: PromptService,
-        private fb: FormBuilder,
+        private formBuilder: FormBuilder,
         private dialog: MatDialog
     ) {
-        super(titleService, translate, matSnackBar);
+        super(componentServiceCollector);
     }
 
     /**
@@ -180,7 +175,7 @@ export class CategoryDetailComponent extends BaseViewComponent implements OnInit
      * Click handler for the edit button
      */
     public toggleEditMode(): void {
-        this.editForm = this.fb.group({
+        this.editForm = this.formBuilder.group({
             prefix: [this.selectedCategory.prefix],
             name: [this.selectedCategory.name, Validators.required]
         });

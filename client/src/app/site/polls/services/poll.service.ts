@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { _ } from 'app/core/translate/translation-marker';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { ChartData, ChartDate } from 'app/shared/components/charts/charts.component';
 import { AssignmentPollMethod } from 'app/shared/models/assignments/assignment-poll';
 import {
@@ -23,7 +24,6 @@ import {
     PollTypeVerbose,
     ViewBasePoll
 } from 'app/site/polls/models/view-base-poll';
-import { ConstantsService } from '../../../core/core-services/constants.service';
 
 const PERCENT_DECIMAL_PLACES = 3;
 /**
@@ -191,7 +191,7 @@ export abstract class PollService {
     public pollValues: CalculablePollKey[] = ['yes', 'no', 'abstain', 'votesvalid', 'votesinvalid', 'votescast'];
 
     public constructor(
-        constants: ConstantsService,
+        constants: OrganisationSettingsService,
         protected translate: TranslateService,
         protected pollKeyVerbose: PollKeyVerbosePipe,
         protected parsePollNumber: ParsePollNumberPipe

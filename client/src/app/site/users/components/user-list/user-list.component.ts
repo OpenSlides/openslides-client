@@ -1,24 +1,21 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { StorageService } from 'app/core/core-services/storage.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { _ } from 'app/core/translate/translation-marker';
 import { ChoiceService } from 'app/core/ui-services/choice.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { CsvExportService } from 'app/core/ui-services/csv-export.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { genders } from 'app/shared/models/users/user';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
-import { BaseListViewComponent } from 'app/site/base/base-list-view';
+import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
 import { UserFilterListService } from '../../services/user-filter-list.service';
 import { UserPdfExportService } from '../../services/user-pdf-export.service';
 import { UserSortListService } from '../../services/user-sort-list.service';
@@ -153,11 +150,8 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
      * @param userPdf Service for downloading pdf
      */
     public constructor(
-        titleService: Title,
-        protected translate: TranslateService, // protected required for ng-translate-extract
-        matSnackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private route: ActivatedRoute,
-        storage: StorageService,
         public repo: UserRepositoryService,
         private groupRepo: GroupRepositoryService,
         private choiceService: ChoiceService,
@@ -167,11 +161,11 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         private promptService: PromptService,
         public filterService: UserFilterListService,
         public sortService: UserSortListService,
-        config: ConfigService,
+        config: OrganisationSettingsService,
         private userPdf: UserPdfExportService,
         private dialog: MatDialog
     ) {
-        super(titleService, translate, matSnackBar, storage);
+        super(componentServiceCollector);
 
         // enable multiSelect for this listView
         this.canMultiSelect = true;
@@ -370,7 +364,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
             return;
         }
 
-        if (this.selectedRows.find(row => row.user.id === this.operator.user.id)) {
+        if (this.selectedRows.find(row => row.user.id === this.operator.operatorId)) {
             this.raiseError(
                 this.translate.instant(
                     'Note: Your own password was not changed. Please use the password change dialog instead.'
@@ -394,7 +388,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
             return;
         }
 
-        if (this.selectedRows.find(row => row.user.id === this.operator.user.id)) {
+        if (this.selectedRows.find(row => row.user.id === this.operator.operatorId)) {
             this.raiseError(
                 this.translate.instant(
                     'Note: Your own password was not changed. Please use the password change dialog instead.'

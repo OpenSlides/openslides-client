@@ -1,10 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 
 import { CollectionStringMapperService } from 'app/core/core-services/collection-string-mapper.service';
@@ -12,11 +9,12 @@ import { OperatorService } from 'app/core/core-services/operator.service';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DurationService } from 'app/core/ui-services/duration.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { SortingListComponent } from 'app/shared/components/sorting-list/sorting-list.component';
-import { BaseViewComponent } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { CurrentListOfSpeakersService } from 'app/site/projector/services/current-agenda-item.service';
@@ -33,7 +31,7 @@ import { SpeakerState, ViewSpeaker } from '../../models/view-speaker';
     templateUrl: './list-of-speakers.component.html',
     styleUrls: ['./list-of-speakers.component.scss']
 })
-export class ListOfSpeakersComponent extends BaseViewComponent implements OnInit {
+export class ListOfSpeakersComponent extends BaseComponent implements OnInit {
     @ViewChild(SortingListComponent, { static: false })
     public listElement: SortingListComponent;
 
@@ -112,7 +110,8 @@ export class ListOfSpeakersComponent extends BaseViewComponent implements OnInit
      * @returns true if the current user can be added to the list of speakers
      */
     public get canAddSelf(): boolean {
-        return !this.config.instant('agenda_present_speakers_only') || this.operator.user.is_present;
+        throw new Error('This is not as easy anymore...');
+        // return !this.config.instant('agenda_present_speakers_only') || this.operator.user.is_present;
     }
 
     /**
@@ -138,9 +137,7 @@ export class ListOfSpeakersComponent extends BaseViewComponent implements OnInit
      * @param durationService helper for speech duration display
      */
     public constructor(
-        title: Title,
-        protected translate: TranslateService, // protected required for ng-translate-extract
-        snackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private projectorRepo: ProjectorRepositoryService,
         private route: ActivatedRoute,
         private listOfSpeakersRepo: ListOfSpeakersRepositoryService,
@@ -151,9 +148,9 @@ export class ListOfSpeakersComponent extends BaseViewComponent implements OnInit
         private userRepository: UserRepositoryService,
         private collectionStringMapper: CollectionStringMapperService,
         private currentListOfSpeakersSlideService: CurrentListOfSpeakersSlideService,
-        private config: ConfigService
+        private config: OrganisationSettingsService
     ) {
-        super(title, translate, snackBar);
+        super(componentServiceCollector);
         this.addSpeakerForm = new FormGroup({ user_id: new FormControl() });
     }
 
@@ -399,7 +396,7 @@ export class ListOfSpeakersComponent extends BaseViewComponent implements OnInit
      * @returns whether or not the current operator is in the list
      */
     public isOpInList(): boolean {
-        return this.speakers.some(speaker => speaker.user_id === this.operator.user.id);
+        return this.speakers.some(speaker => speaker.user_id === this.operator.operatorId);
     }
 
     /**

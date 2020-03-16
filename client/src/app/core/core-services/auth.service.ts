@@ -53,8 +53,8 @@ export class AuthService {
             earlySuccessCallback();
             await this.OpenSlides.shutdown();
             await this.operator.setWhoAmI(response);
-            await this.OpenSlides.afterLoginBootup(response.user_id);
-            await this.redirectUser(response.user_id);
+            await this.OpenSlides.afterLoginBootup();
+            await this.redirectUser();
         } else if (authType === 'saml') {
             window.location.href = environment.urlPrefix + '/saml/?sso'; // Bye
         } else {
@@ -66,9 +66,9 @@ export class AuthService {
      * Redirects the user to the page where he came from. Boots OpenSlides,
      * if it wasn't done before.
      */
-    public async redirectUser(userId: number): Promise<void> {
+    public async redirectUser(): Promise<void> {
         if (!this.OpenSlides.booted) {
-            await this.OpenSlides.afterLoginBootup(userId);
+            await this.OpenSlides.afterLoginBootup();
         }
 
         let redirect = this.OpenSlides.redirectUrl ? this.OpenSlides.redirectUrl : '/';
@@ -84,7 +84,7 @@ export class AuthService {
      * Login for guests.
      */
     public async guestLogin(): Promise<void> {
-        this.redirectUser(null);
+        this.redirectUser();
     }
 
     /**

@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { AmendmentListPdfService } from './amendment-list-pdf.service';
 import { PdfDocumentService } from 'app/core/pdf-services/pdf-document.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { PersonalNoteContent } from 'app/shared/models/users/personal-note';
 import { MotionExportInfo } from './motion-export.service';
 import { MotionPdfCatalogService } from './motion-pdf-catalog.service';
@@ -23,13 +23,13 @@ export class MotionPdfExportService {
      * Constructor
      *
      * @param translate handle translations
-     * @param configService Read out Config variables
+     * @param organisationSettingsService Read out Config variables
      * @param motionPdfService Converting actual motions to PDF
      * @param pdfDocumentService Actual pdfmake functions and global doc definitions
      */
     public constructor(
         private translate: TranslateService,
-        private configService: ConfigService,
+        private organisationSettingsService: OrganisationSettingsService,
         private motionPdfService: MotionPdfService,
         private amendmentListPdfService: AmendmentListPdfService,
         private pdfCatalogService: MotionPdfCatalogService,
@@ -64,7 +64,7 @@ export class MotionPdfExportService {
      */
     public exportMotionCatalog(motions: ViewMotion[], exportInfo: MotionExportInfo): void {
         const doc = this.pdfCatalogService.motionListToDocDef(motions, exportInfo);
-        const motions_export_title = this.configService.instant<string>('motions_export_title');
+        const motions_export_title = this.organisationSettingsService.instant<string>('motions_export_title');
         const filename = this.translate.instant(motions_export_title);
         const metadata = {
             title: filename

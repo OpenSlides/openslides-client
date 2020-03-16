@@ -39,8 +39,8 @@ export abstract class BaseViewModel<M extends BaseModel = any> {
     public toJSON(): M {
         return this.getModel();
     }
-    public getUpdatedModel(update: Partial<M>): M {
-        return this.getModel().getUpdatedVersion(update);
+    public getUpdatedModelData(update: Partial<M>): object {
+        return this.getModel().getUpdatedData(update);
     }
 }
 export interface BaseViewModel<M extends BaseModel = any> extends Displayable, Identifiable, Collection {

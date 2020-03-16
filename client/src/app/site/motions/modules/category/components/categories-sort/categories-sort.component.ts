@@ -1,15 +1,13 @@
 import { Component, ViewChild } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 
 import { CategoryRepositoryService } from 'app/core/repositories/motions/category-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { SortingTreeComponent } from 'app/shared/components/sorting-tree/sorting-tree.component';
 import { CanComponentDeactivate } from 'app/shared/utils/watch-for-changes.guard';
-import { BaseViewComponent } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewCategory } from 'app/site/motions/models/view-category';
 
 /**
@@ -20,7 +18,7 @@ import { ViewCategory } from 'app/site/motions/models/view-category';
     templateUrl: './categories-sort.component.html',
     styleUrls: ['./categories-sort.component.scss']
 })
-export class CategoriesSortComponent extends BaseViewComponent implements CanComponentDeactivate {
+export class CategoriesSortComponent extends BaseComponent implements CanComponentDeactivate {
     /**
      * Reference to the sorting tree.
      */
@@ -46,13 +44,11 @@ export class CategoriesSortComponent extends BaseViewComponent implements CanCom
      * @param promptService
      */
     public constructor(
-        title: Title,
-        translate: TranslateService,
-        matSnackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private categoryRepo: CategoryRepositoryService,
         private promptService: PromptService
     ) {
-        super(title, translate, matSnackBar);
+        super(componentServiceCollector);
 
         this.categoriesObservable = this.categoryRepo.getViewModelListObservable();
     }

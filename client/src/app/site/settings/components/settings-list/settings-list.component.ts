@@ -1,14 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 
-import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
-import { BaseComponent } from 'app/base.component';
 import { ConfigGroup, ConfigRepositoryService } from 'app/core/repositories/config/config-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { CanComponentDeactivate } from 'app/shared/utils/watch-for-changes.guard';
+import { BaseComponent } from 'app/site/base/components/base.component';
 
 /**
  * Key-value-pair to set a setting with its associated value.
@@ -29,12 +28,12 @@ export interface ConfigItem {
  * List view for the global settings
  */
 @Component({
-    selector: 'os-config-list',
-    templateUrl: './config-list.component.html',
-    styleUrls: ['./config-list.component.scss'],
+    selector: 'os-settings-list',
+    templateUrl: './settings-list.component.html',
+    styleUrls: ['./settings-list.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ConfigListComponent extends BaseComponent implements CanComponentDeactivate, OnInit, OnDestroy {
+export class SettingsListComponent extends BaseComponent implements CanComponentDeactivate, OnInit, OnDestroy {
     public configGroup: ConfigGroup;
 
     public configGroupSubscription: Subscription | null = null;
@@ -50,14 +49,13 @@ export class ConfigListComponent extends BaseComponent implements CanComponentDe
     private configItems: ConfigItem[] = [];
 
     public constructor(
-        protected titleService: Title,
-        protected translate: TranslateService,
+        componentServiceCollector: ComponentServiceCollector,
         private cd: ChangeDetectorRef,
         private repo: ConfigRepositoryService,
         private route: ActivatedRoute,
         private promptDialog: PromptService
     ) {
-        super(titleService, translate);
+        super(componentServiceCollector);
     }
 
     /**

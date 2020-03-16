@@ -3,39 +3,54 @@ import { Injectable } from '@angular/core';
 import { BaseModel } from '../../shared/models/base/base-model';
 import { CollectionStringMapperService } from './collection-string-mapper.service';
 import { DataStoreService, DataStoreUpdateManagerService } from './data-store.service';
-import { WEBSOCKET_ERROR_CODES, WebsocketService } from './websocket.service';
+import { HTTPMethod } from './http.service';
+import { StreamingCommunicationService } from './streaming-communication.service';
 
-interface AutoupdateFormat {
-    /**
-     * All changed (and created) items as their full/restricted data grouped by their collection.
-     */
-    changed: {
-        [collectionString: string]: object[];
+const META_DELETED = 'meta_deleted';
+
+interface Fields {
+    fields: {
+        [field: string]: GenericRelationFieldDecriptor | RelationFieldDescriptor | StructuredFieldDecriptor | null;
     };
-
-    /**
-     * All deleted items (by id) grouped by their collection.
-     */
-    deleted: {
-        [collectionString: string]: number[];
-    };
-
-    /**
-     * The lower change id bond for this autoupdate
-     */
-    from_change_id: number;
-
-    /**
-     * The upper change id bound for this autoupdate
-     */
-    to_change_id: number;
-
-    /**
-     * Flag, if this autoupdate contains all data. If so, the DS needs to be resetted.
-     */
-    all_data: boolean;
 }
 
+export interface ModelRequest extends Fields {
+    ids: number[];
+    collection: string;
+}
+
+interface GenericRelationFieldDecriptor extends Fields {
+    type: 'generic-relation-list' | 'generic-relation';
+}
+
+interface RelationFieldDescriptor extends Fields {
+    type: 'relation-list' | 'relation';
+    collection: string;
+}
+
+interface StructuredFieldDecriptor {
+    type: 'template';
+    values?: {
+        [field: string]: GenericRelationFieldDecriptor | RelationFieldDescriptor | StructuredFieldDecriptor | null;
+    };
+}
+
+interface ModelData {
+    [collection: string]: {
+        [id: number]: object;
+    };
+}
+
+export interface ModelSubscription {
+    close: () => void;
+}
+
+interface DeletedModels {
+    [collection: string]: number[];
+}
+interface ChangedModels {
+    [collection: string]: BaseModel[];
+}
 /**
  * Handles the initial update and automatic updates using the {@link WebsocketService}
  * Incoming objects, usually BaseModels, will be saved in the dataStore (`this.DS`)
@@ -52,139 +67,85 @@ export class AutoupdateService {
      * @param modelMapper
      */
     public constructor(
-        private websocketService: WebsocketService,
+        private streamingCommunicationService: StreamingCommunicationService,
         private DS: DataStoreService,
         private modelMapper: CollectionStringMapperService,
         private DSUpdateManager: DataStoreUpdateManagerService
     ) {
-        this.websocketService.getOberservable<AutoupdateFormat>('autoupdate').subscribe(response => {
+        /*this.websocketService.getOberservable<AutoupdateFormat>('autoupdate').subscribe(response => {
             this.storeResponse(response);
-        });
+        });*/
+        console.warn('TODO: Enable Autoupdate service');
+    }
 
-        // Check for too high change id-errors. If this happens, reset the DS and get fresh data.
-        this.websocketService.errorResponseObservable.subscribe(error => {
-            if (error.code === WEBSOCKET_ERROR_CODES.CHANGE_ID_TOO_HIGH) {
-                this.doFullUpdate();
+    public request(request: ModelRequest): ModelSubscription {
+        const stream = this.streamingCommunicationService.getStream<ModelData>(HTTPMethod.POST, '/todo', request);
+        stream.messageObservable.subscribe(data => this.handleAutoupdate(data));
+        return { close: stream.close };
+    }
+
+    // Todo: change this to private
+    public handleAutoupdate(data: ModelData): void {
+        const deletedModels: DeletedModels = {};
+        const changedModels: ChangedModels = {};
+
+        for (const collection of Object.keys(data)) {
+            for (const id of Object.keys(data[collection])) {
+                const model = data[collection][id];
+                if (model[META_DELETED] === true) {
+                    if (deletedModels[collection] === undefined) {
+                        deletedModels[collection] = [];
+                    }
+                    deletedModels[collection].push(+id);
+                } else {
+                    if (changedModels[collection] === undefined) {
+                        changedModels[collection] = [];
+                    }
+                    model.id = id; // inject id, because it does not come from the server
+                    const basemodel = this.mapObjectToBaseModel(collection, model);
+                    if (basemodel) {
+                        changedModels[collection].push(basemodel);
+                    }
+                }
             }
-        });
-    }
-
-    /**
-     * Handle the answer of incoming data via {@link WebsocketService}.
-     *
-     * Detects the Class of an incomming model, creates a new empty object and assigns
-     * the data to it using the deserialize function. Also models that are flagged as deleted
-     * will be removed from the data store.
-     *
-     * Handles the change ids of all autoupdates.
-     */
-    private async storeResponse(autoupdate: AutoupdateFormat): Promise<void> {
-        if (autoupdate.all_data) {
-            await this.storeAllData(autoupdate);
-        } else {
-            await this.storePartialAutoupdate(autoupdate);
         }
+        this.handleChangedAndDeletedModels(changedModels, deletedModels);
     }
 
-    /**
-     * Stores all data from the autoupdate. This means, that the DS is resettet and filled with just the
-     * given data from the autoupdate.
-     * @param autoupdate The autoupdate
-     */
-    private async storeAllData(autoupdate: AutoupdateFormat): Promise<void> {
-        let elements: BaseModel[] = [];
-        Object.keys(autoupdate.changed).forEach(collection => {
-            elements = elements.concat(this.mapObjectsToBaseModels(collection, autoupdate.changed[collection]));
-        });
-
+    private async handleChangedAndDeletedModels(
+        changedModels: ChangedModels,
+        deletedModels: DeletedModels
+    ): Promise<void> {
         const updateSlot = await this.DSUpdateManager.getNewUpdateSlot(this.DS);
-        await this.DS.set(elements, autoupdate.to_change_id);
-        this.DSUpdateManager.commit(updateSlot, autoupdate.to_change_id, true);
+
+        // Delete the removed objects from the DataStore
+        for (const collection of Object.keys(deletedModels)) {
+            await this.DS.remove(collection, deletedModels[collection]);
+        }
+
+        // Add the objects to the DataStore.
+        for (const collection of Object.keys(changedModels)) {
+            await this.DS.addOrUpdate(changedModels[collection]);
+        }
+
+        this.DSUpdateManager.commit(updateSlot);
     }
 
     /**
-     * handles a normal autoupdate that is not a full update (all_data=false).
-     * @param autoupdate The autoupdate
-     */
-    private async storePartialAutoupdate(autoupdate: AutoupdateFormat): Promise<void> {
-        const maxChangeId = this.DS.maxChangeId;
-
-        if (autoupdate.from_change_id <= maxChangeId && autoupdate.to_change_id <= maxChangeId) {
-            console.log(`Ignore. Clients change id: ${maxChangeId}`);
-            return; // Ignore autoupdates, that lay full behind our changeid.
-        }
-
-        // Normal autoupdate
-        if (autoupdate.from_change_id <= maxChangeId + 1 && autoupdate.to_change_id > maxChangeId) {
-            const updateSlot = await this.DSUpdateManager.getNewUpdateSlot(this.DS);
-
-            // Delete the removed objects from the DataStore
-            for (const collection of Object.keys(autoupdate.deleted)) {
-                await this.DS.remove(collection, autoupdate.deleted[collection]);
-            }
-
-            // Add the objects to the DataStore.
-            for (const collection of Object.keys(autoupdate.changed)) {
-                await this.DS.add(this.mapObjectsToBaseModels(collection, autoupdate.changed[collection]));
-            }
-
-            await this.DS.flushToStorage(autoupdate.to_change_id);
-
-            this.DSUpdateManager.commit(updateSlot, autoupdate.to_change_id);
-        } else {
-            // autoupdate fully in the future. we are missing something!
-            this.requestChanges();
-        }
-    }
-
-    /**
-     * Creates baseModels for each plain object. If the collection is not registered,
-     * A console error will be issued and an empty list returned.
+     * Creates a BaseModel for the given plain object. If the collection is not registered,
+     * a console error will be issued and null returned.
      *
      * @param collection The collection all models have to be from.
-     * @param models All models that should be mapped to BaseModels
-     * @returns A list of basemodels constructed from the given models.
+     * @param model A model that should be mapped to a BaseModel
+     * @returns A basemodel constructed from the given model.
      */
-    private mapObjectsToBaseModels(collection: string, models: object[]): BaseModel[] {
+    private mapObjectToBaseModel(collection: string, model: object): BaseModel {
         if (this.modelMapper.isCollectionRegistered(collection)) {
             const targetClass = this.modelMapper.getModelConstructor(collection);
-            return models.map(model => new targetClass(model));
+            return new targetClass(model);
         } else {
             console.error(`Unregistered collection "${collection}". Ignore it.`);
-            return [];
+            return null;
         }
-    }
-
-    /**
-     * Sends a WebSocket request to the Server with the maxChangeId of the DataStore.
-     * The server should return an autoupdate with all new data.
-     */
-    public requestChanges(): void {
-        const changeId = this.DS.maxChangeId === 0 ? 0 : this.DS.maxChangeId + 1;
-        console.log(`requesting changed objects with DS max change id ${changeId}`);
-        this.websocketService.send('getElements', { change_id: changeId });
-    }
-
-    /**
-     * Does a full update: Requests all data from the server and sets the DS to the fresh data.
-     */
-    public async doFullUpdate(): Promise<void> {
-        const oldChangeId = this.DS.maxChangeId;
-        const response = await this.websocketService.sendAndGetResponse<{}, AutoupdateFormat>('getElements', {});
-
-        const updateSlot = await this.DSUpdateManager.getNewUpdateSlot(this.DS);
-        let allModels: BaseModel[] = [];
-        for (const collection of Object.keys(response.changed)) {
-            if (this.modelMapper.isCollectionRegistered(collection)) {
-                allModels = allModels.concat(this.mapObjectsToBaseModels(collection, response.changed[collection]));
-            } else {
-                console.error(`Unregistered collection "${collection}". Ignore it.`);
-            }
-        }
-
-        await this.DS.set(allModels, response.to_change_id);
-        this.DSUpdateManager.commit(updateSlot, response.to_change_id, true);
-
-        console.log(`Full update done from ${oldChangeId} to ${response.to_change_id}`);
     }
 }

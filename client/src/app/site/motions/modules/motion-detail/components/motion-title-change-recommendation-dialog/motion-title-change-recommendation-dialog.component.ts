@@ -1,13 +1,11 @@
 import { Component, Inject, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar } from '@angular/material';
-import { Title } from '@angular/platform-browser';
-
-import { TranslateService } from '@ngx-translate/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
 import { ChangeRecommendationRepositoryService } from 'app/core/repositories/motions/change-recommendation-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ModificationType } from 'app/core/ui-services/diff.service';
-import { BaseViewComponent } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
 
 /**
@@ -42,7 +40,7 @@ export interface MotionTitleChangeRecommendationDialogComponentData {
     styleUrls: ['./motion-title-change-recommendation-dialog.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class MotionTitleChangeRecommendationDialogComponent extends BaseViewComponent {
+export class MotionTitleChangeRecommendationDialogComponent extends BaseComponent {
     /**
      * Determine if the change recommendation is edited
      */
@@ -64,15 +62,13 @@ export class MotionTitleChangeRecommendationDialogComponent extends BaseViewComp
     public contentForm: FormGroup;
 
     public constructor(
+        componentServiceCollector: ComponentServiceCollector,
         @Inject(MAT_DIALOG_DATA) public data: MotionTitleChangeRecommendationDialogComponentData,
-        title: Title,
-        protected translate: TranslateService,
-        matSnackBar: MatSnackBar,
         private formBuilder: FormBuilder,
         private repo: ChangeRecommendationRepositoryService,
         private dialogRef: MatDialogRef<MotionTitleChangeRecommendationDialogComponent>
     ) {
-        super(title, translate, matSnackBar);
+        super(componentServiceCollector);
 
         this.editReco = data.editChangeRecommendation;
         this.newReco = data.newChangeRecommendation;

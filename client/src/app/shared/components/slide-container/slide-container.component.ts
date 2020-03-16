@@ -1,11 +1,9 @@
 import { Component, ComponentRef, Input, ViewChild, ViewContainerRef } from '@angular/core';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
-
-import { BaseComponent } from 'app/base.component';
 import { SlideData } from 'app/core/core-services/projector-data.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ProjectorElement } from 'app/shared/models/core/projector';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { isBaseScaleScrollSlideComponent } from 'app/slides/base-scale-scroll-slide-component';
 import { BaseSlideComponent } from 'app/slides/base-slide-component';
@@ -140,8 +138,8 @@ export class SlideContainerComponent extends BaseComponent {
         'margin-top': '50px'
     };
 
-    public constructor(titleService: Title, translate: TranslateService, private slideManager: SlideManager) {
-        super(titleService, translate);
+    public constructor(componentServiceCollector: ComponentServiceCollector, private slideManager: SlideManager) {
+        super(componentServiceCollector);
     }
 
     /**

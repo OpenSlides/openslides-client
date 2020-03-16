@@ -1,17 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { StorageService } from 'app/core/core-services/storage.service';
 import { AssignmentRepositoryService } from 'app/core/repositories/assignments/assignment-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
-import { BaseListViewComponent } from 'app/site/base/base-list-view';
+import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
 import { AssignmentFilterListService } from '../../services/assignment-filter-list.service';
 import { AssignmentPdfExportService } from '../../services/assignment-pdf-export.service';
 import { AssignmentSortListService } from '../../services/assignment-sort-list.service';
@@ -71,10 +68,7 @@ export class AssignmentListComponent extends BaseListViewComponent<ViewAssignmen
      * @param operator
      */
     public constructor(
-        titleService: Title,
-        storage: StorageService,
-        protected translate: TranslateService, // protected required for ng-translate-extract
-        matSnackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         public repo: AssignmentRepositoryService,
         private promptService: PromptService,
         public filterService: AssignmentFilterListService,
@@ -85,7 +79,7 @@ export class AssignmentListComponent extends BaseListViewComponent<ViewAssignmen
         public operator: OperatorService,
         public vp: ViewportService
     ) {
-        super(titleService, translate, matSnackBar, storage);
+        super(componentServiceCollector);
         this.canMultiSelect = true;
     }
 

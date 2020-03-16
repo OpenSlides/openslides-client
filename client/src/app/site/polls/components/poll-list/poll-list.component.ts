@@ -1,13 +1,10 @@
 import { Component } from '@angular/core';
-import { MatSnackBar } from '@angular/material';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
 
-import { StorageService } from 'app/core/core-services/storage.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { VotingService } from 'app/core/ui-services/voting.service';
-import { BaseListViewComponent } from 'app/site/base/base-list-view';
+import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
 import { PollFilterListService } from '../../services/poll-filter-list.service';
 import { PollListObservableService } from '../../services/poll-list-observable.service';
 import { ViewBasePoll } from '../../models/view-base-poll';
@@ -39,15 +36,12 @@ export class PollListComponent extends BaseListViewComponent<ViewBasePoll> {
     public filterProps = ['title', 'state'];
 
     public constructor(
+        componentServiceCollector: ComponentServiceCollector,
         public polls: PollListObservableService,
         public filterService: PollFilterListService,
-        public votingService: VotingService,
-        protected storage: StorageService,
-        title: Title,
-        translate: TranslateService,
-        snackbar: MatSnackBar
+        public votingService: VotingService
     ) {
-        super(title, translate, snackbar, storage);
+        super(componentServiceCollector);
         super.setTitle('List of electronic votes');
     }
 }

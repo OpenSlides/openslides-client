@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
 
-import { ConstantsService } from 'app/core/core-services/constants.service';
 import { MotionPollRepositoryService } from 'app/core/repositories/motions/motion-poll-repository.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { MotionPoll, MotionPollMethod } from 'app/shared/models/motions/motion-poll';
 import { MajorityMethod, PercentBase } from 'app/shared/models/poll/base-poll';
 import { ParsePollNumberPipe } from 'app/shared/pipes/parse-poll-number.pipe';
@@ -43,22 +42,19 @@ export class MotionPollService extends PollService {
      * @param config ConfigService
      */
     public constructor(
-        config: ConfigService,
-        constants: ConstantsService,
+        constants: OrganisationSettingsService,
         pollKeyVerbose: PollKeyVerbosePipe,
         parsePollNumber: ParsePollNumberPipe,
         protected translate: TranslateService,
         private pollRepo: MotionPollRepositoryService
     ) {
         super(constants, translate, pollKeyVerbose, parsePollNumber);
-        config
-            .get<PercentBase>('motion_poll_default_100_percent_base')
+        /*config.get<PercentBase>('motion_poll_default_100_percent_base')
             .subscribe(base => (this.defaultPercentBase = base));
-        config
-            .get<MajorityMethod>('motion_poll_default_majority_method')
+        config.get<MajorityMethod>('motion_poll_default_majority_method')
             .subscribe(method => (this.defaultMajorityMethod = method));
 
-        config.get<number[]>(MotionPoll.defaultGroupsConfig).subscribe(ids => (this.defaultGroupIds = ids));
+        config.get<number[]>(MotionPoll.defaultGroupsConfig).subscribe(ids => (this.defaultGroupIds = ids));*/
     }
 
     public getDefaultPollData(contextId?: number): MotionPoll {

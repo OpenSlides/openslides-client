@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { BaseViewModel } from '../../site/base/base-view-model';
-import { ConfigService } from './config.service';
 import { FileExportService } from './file-export.service';
+import { OrganisationSettingsService } from './organisation-settings.service';
 
 /**
  * Defines a csv column with a property of the model and an optional label. If this is not given, the
@@ -66,7 +66,7 @@ export class CsvExportService {
     public constructor(
         protected exporter: FileExportService,
         private translate: TranslateService,
-        private config: ConfigService
+        private config: OrganisationSettingsService
     ) {}
 
     /**

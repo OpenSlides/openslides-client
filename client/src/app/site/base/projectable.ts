@@ -1,4 +1,4 @@
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { IdentifiableProjectorElement, ProjectorElementOptions } from 'app/shared/models/core/projector';
 import { Displayable } from 'app/site/base/displayable';
 import { SlideOptions } from './slide-options';
@@ -34,5 +34,5 @@ export function isProjectable(obj: any): obj is Projectable {
 export interface Projectable extends Displayable {
     getProjectorTitle: () => string;
 
-    getSlide(configSerice?: ConfigService): ProjectorElementBuildDeskriptor;
+    getSlide(configSerice?: OrganisationSettingsService): ProjectorElementBuildDeskriptor;
 }

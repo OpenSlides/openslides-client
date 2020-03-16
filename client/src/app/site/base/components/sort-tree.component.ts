@@ -1,16 +1,13 @@
 import { EventEmitter, ViewChild } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
-
-import { TranslateService } from '@ngx-translate/core';
 
 import { SortDefinition } from 'app/core/ui-services/base-sort.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { SortingTreeComponent } from 'app/shared/components/sorting-tree/sorting-tree.component';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { CanComponentDeactivate } from 'app/shared/utils/watch-for-changes.guard';
-import { BaseViewComponent } from './base-view';
-import { BaseViewModel } from './base-view-model';
+import { BaseModelContextComponent } from './base-model-context.component';
+import { BaseViewModel } from '../base-view-model';
 
 export interface SortTreeFilterOption extends Identifiable {
     label: string;
@@ -21,7 +18,7 @@ export interface SortTreeFilterOption extends Identifiable {
 /**
  * Abstract Sort view for hierarchic item trees
  */
-export abstract class SortTreeViewComponent<V extends BaseViewModel> extends BaseViewComponent
+export abstract class BaseSortTreeComponent<V extends BaseViewModel> extends BaseModelContextComponent
     implements CanComponentDeactivate {
     /**
      * Reference to the view child
@@ -69,13 +66,8 @@ export abstract class SortTreeViewComponent<V extends BaseViewModel> extends Bas
      * @param matSnackBar
      * @param promptService
      */
-    public constructor(
-        title: Title,
-        protected translate: TranslateService,
-        matSnackBar: MatSnackBar,
-        protected promptService: PromptService
-    ) {
-        super(title, translate, matSnackBar);
+    public constructor(componentServiceCollector: ComponentServiceCollector, protected promptService: PromptService) {
+        super(componentServiceCollector);
     }
 
     /**

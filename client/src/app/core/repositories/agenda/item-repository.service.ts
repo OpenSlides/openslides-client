@@ -1,13 +1,8 @@
 import { Injectable } from '@angular/core';
 
-import { TranslateService } from '@ngx-translate/core';
-
-import { DataSendService } from 'app/core/core-services/data-send.service';
 import { HttpService } from 'app/core/core-services/http.service';
-import { RelationManagerService } from 'app/core/core-services/relation-manager.service';
-import { ViewModelStoreService } from 'app/core/core-services/view-model-store.service';
 import { RelationDefinition } from 'app/core/definitions/relations';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { TreeIdNode } from 'app/core/ui-services/tree.service';
 import { Item } from 'app/shared/models/agenda/item';
 import { Identifiable } from 'app/shared/models/base/identifiable';
@@ -22,8 +17,7 @@ import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
 import { ViewTopic } from 'app/site/topics/models/view-topic';
 import { BaseHasContentObjectRepository } from '../base-has-content-object-repository';
 import { BaseIsAgendaItemContentObjectRepository } from '../base-is-agenda-item-content-object-repository';
-import { CollectionStringMapperService } from '../../core-services/collection-string-mapper.service';
-import { DataStoreService } from '../../core-services/data-store.service';
+import { RepositoryServiceCollector } from '../repository-service-collector';
 
 const ItemRelations: RelationDefinition[] = [
     {
@@ -61,16 +55,11 @@ export class ItemRepositoryService extends BaseHasContentObjectRepository<
      * @param treeService sort the data according to weight and parents
      */
     public constructor(
-        DS: DataStoreService,
-        dataSend: DataSendService,
-        mapperService: CollectionStringMapperService,
-        viewModelStoreService: ViewModelStoreService,
-        translate: TranslateService,
-        relationManager: RelationManagerService,
+        repositoryServiceCollector: RepositoryServiceCollector,
         private httpService: HttpService,
-        private config: ConfigService
+        private config: OrganisationSettingsService
     ) {
-        super(DS, dataSend, mapperService, viewModelStoreService, translate, relationManager, Item, ItemRelations);
+        super(repositoryServiceCollector, Item, ItemRelations);
 
         this.setSortFunction((a, b) => a.weight - b.weight);
     }
@@ -153,7 +142,7 @@ export class ItemRepositoryService extends BaseHasContentObjectRepository<
      */
     public async update(update: Partial<Item>, viewModel: ViewItem): Promise<void> {
         (<any>update)._itemNumber = update.item_number;
-        const sendUpdate = viewModel.getUpdatedModel(update);
+        const sendUpdate = viewModel.getUpdatedModelData(update);
         const clone = JSON.parse(JSON.stringify(sendUpdate));
         clone.item_number = clone._itemNumber;
         return await this.dataSend.updateModel(clone);

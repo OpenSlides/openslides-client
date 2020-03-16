@@ -1,11 +1,8 @@
 import { Component, forwardRef, Input, OnInit } from '@angular/core';
 import { ControlValueAccessor, FormBuilder, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { MatSnackBar } from '@angular/material';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
-
-import { BaseViewComponent } from 'app/site/base/base-view';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { BaseComponent } from 'app/site/base/components/base.component';
 
 @Component({
     selector: 'os-check-input',
@@ -13,7 +10,7 @@ import { BaseViewComponent } from 'app/site/base/base-view';
     styleUrls: ['./check-input.component.scss'],
     providers: [{ provide: NG_VALUE_ACCESSOR, multi: true, useExisting: forwardRef(() => CheckInputComponent) }]
 })
-export class CheckInputComponent extends BaseViewComponent implements OnInit, ControlValueAccessor {
+export class CheckInputComponent extends BaseComponent implements OnInit, ControlValueAccessor {
     /**
      * Type of the used input.
      */
@@ -51,13 +48,8 @@ export class CheckInputComponent extends BaseViewComponent implements OnInit, Co
     /**
      * Default constructor.
      */
-    public constructor(
-        title: Title,
-        protected translate: TranslateService,
-        matSnackbar: MatSnackBar,
-        private fb: FormBuilder
-    ) {
-        super(title, translate, matSnackbar);
+    public constructor(componentServiceCollector: ComponentServiceCollector, private formBuilder: FormBuilder) {
+        super(componentServiceCollector);
         this.initForm();
     }
 
@@ -135,7 +127,7 @@ export class CheckInputComponent extends BaseViewComponent implements OnInit, Co
      * Initially build the form-control.
      */
     private initForm(): void {
-        this.contentForm = this.fb.control('');
+        this.contentForm = this.formBuilder.control('');
     }
 
     /**

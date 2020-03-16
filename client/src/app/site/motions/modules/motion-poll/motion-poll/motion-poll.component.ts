@@ -1,11 +1,10 @@
 import { Component, Input } from '@angular/core';
-import { MatDialog, MatSnackBar } from '@angular/material';
-import { Title } from '@angular/platform-browser';
+import { MatDialog } from '@angular/material';
 
-import { TranslateService } from '@ngx-translate/core';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { MotionPollRepositoryService } from 'app/core/repositories/motions/motion-poll-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { VotingPrivacyWarningComponent } from 'app/shared/components/voting-privacy-warning/voting-privacy-warning.component';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
@@ -77,18 +76,16 @@ export class MotionPollComponent extends BasePollComponent<ViewMotionPoll, Motio
      * @param motionRepo
      */
     public constructor(
-        titleService: Title,
-        matSnackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         promptService: PromptService,
         pollDialog: MotionPollDialogService,
         protected dialog: MatDialog,
         protected pollRepo: MotionPollRepositoryService,
-        protected translate: TranslateService,
         private pollService: MotionPollService,
         private pdfService: MotionPollPdfService,
         private operator: OperatorService
     ) {
-        super(titleService, matSnackBar, translate, dialog, promptService, pollRepo, pollDialog);
+        super(componentServiceCollector, dialog, promptService, pollRepo, pollDialog);
     }
 
     public openVotingWarning(): void {

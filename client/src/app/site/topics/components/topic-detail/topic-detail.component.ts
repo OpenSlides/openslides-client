@@ -1,20 +1,18 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ItemRepositoryService } from 'app/core/repositories/agenda/item-repository.service';
 import { TopicRepositoryService } from 'app/core/repositories/topics/topic-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ItemVisibilityChoices } from 'app/shared/models/agenda/item';
 import { Topic } from 'app/shared/models/topics/topic';
 import { ViewItem } from 'app/site/agenda/models/view-item';
-import { BaseViewComponent } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { CreateTopic } from '../../models/create-topic';
 import { ViewTopic } from '../../models/view-topic';
 
@@ -26,7 +24,7 @@ import { ViewTopic } from '../../models/view-topic';
     templateUrl: './topic-detail.component.html',
     styleUrls: ['./topic-detail.component.scss']
 })
-export class TopicDetailComponent extends BaseViewComponent {
+export class TopicDetailComponent extends BaseComponent {
     /**
      * Determine if the topic is in edit mode
      */
@@ -72,9 +70,7 @@ export class TopicDetailComponent extends BaseViewComponent {
      * @param DS Data Store
      */
     public constructor(
-        title: Title,
-        matSnackBar: MatSnackBar,
-        protected translate: TranslateService,
+        componentServiceCollector: ComponentServiceCollector,
         private route: ActivatedRoute,
         private router: Router,
         private formBuilder: FormBuilder,
@@ -83,7 +79,7 @@ export class TopicDetailComponent extends BaseViewComponent {
         private operator: OperatorService,
         private itemRepo: ItemRepositoryService
     ) {
-        super(title, translate, matSnackBar);
+        super(componentServiceCollector);
         this.getTopicByUrl();
         this.createForm();
 

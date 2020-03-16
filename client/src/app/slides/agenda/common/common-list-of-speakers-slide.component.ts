@@ -3,7 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { CollectionStringMapperService } from 'app/core/core-services/collection-string-mapper.service';
 import { SlideData } from 'app/core/core-services/projector-data.service';
 import { isBaseIsAgendaItemContentObjectRepository } from 'app/core/repositories/base-is-agenda-item-content-object-repository';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { ProjectorElement } from 'app/shared/models/core/projector';
 import { BaseSlideComponent } from 'app/slides/base-slide-component';
 import { CommonListOfSpeakersSlideData } from './common-list-of-speakers-slide-data';
@@ -37,7 +37,7 @@ export class CommonListOfSpeakersSlideComponent extends BaseSlideComponent<Commo
 
     public constructor(
         private collectionStringMapperService: CollectionStringMapperService,
-        private configService: ConfigService
+        private organisationSettingsService: OrganisationSettingsService
     ) {
         super();
     }
@@ -47,7 +47,7 @@ export class CommonListOfSpeakersSlideComponent extends BaseSlideComponent<Commo
      * Load the config for `agenda_hide_amount_of_speakers`.
      */
     public ngOnInit(): void {
-        this.configService
+        this.organisationSettingsService
             .get<boolean>('agenda_hide_amount_of_speakers')
             .subscribe(enabled => (this.hideAmountOfSpeakers = enabled));
     }

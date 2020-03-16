@@ -68,7 +68,7 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
      * @param {OperatorService} operator
      */
     public constructor(private renderer: Renderer2, private el: ElementRef, private operator: OperatorService) {
-        this.operator.getUserObservable().subscribe(this.onPermissionsChanged.bind(this));
+        this.operator.operatorUpdatedEvent.subscribe(this.onPermissionsChanged.bind(this));
     }
 
     /**

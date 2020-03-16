@@ -1,11 +1,8 @@
 import { Component } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
-
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { StatuteParagraph } from 'app/shared/models/motions/statute-paragraph';
-import { BaseImportListComponent } from 'app/site/base/base-import-list';
+import { BaseImportListComponent } from 'app/site/base/components/base-import-list.component';
 import { StatuteCsvExportService } from 'app/site/motions/services/statute-csv-export.service';
 import { StatuteImportService } from 'app/site/motions/services/statute-import.service';
 
@@ -27,13 +24,11 @@ export class StatuteImportListComponent extends BaseImportListComponent<StatuteP
      * @param statuteCSVExport: service for exporting example data
      */
     public constructor(
-        titleService: Title,
-        matSnackBar: MatSnackBar,
-        translate: TranslateService,
+        componentServiceCollector: ComponentServiceCollector,
         importer: StatuteImportService,
         private statuteCSVExport: StatuteCsvExportService
     ) {
-        super(importer, titleService, translate, matSnackBar);
+        super(componentServiceCollector, importer);
     }
 
     /**

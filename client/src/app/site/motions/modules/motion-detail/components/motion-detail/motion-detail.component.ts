@@ -12,11 +12,8 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 import { NotifyService } from 'app/core/core-services/notify.service';
@@ -30,9 +27,10 @@ import { StatuteParagraphRepositoryService } from 'app/core/repositories/motions
 import { WorkflowRepositoryService } from 'app/core/repositories/motions/workflow-repository.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DiffLinesInParagraph, LineRange } from 'app/core/ui-services/diff.service';
 import { LinenumberingService } from 'app/core/ui-services/linenumbering.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { PersonalNoteService } from 'app/core/ui-services/personal-note.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
@@ -40,7 +38,7 @@ import { Mediafile } from 'app/shared/models/mediafiles/mediafile';
 import { Motion } from 'app/shared/models/motions/motion';
 import { ViewUnifiedChange } from 'app/shared/models/motions/view-unified-change';
 import { infoDialogSettings, mediumDialogSettings } from 'app/shared/utils/dialog-settings';
-import { BaseViewComponent } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { CreateMotion } from 'app/site/motions/models/create-motion';
 import { ViewCategory } from 'app/site/motions/models/view-category';
 import { ViewCreateMotion } from 'app/site/motions/models/view-create-motion';
@@ -87,7 +85,7 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class MotionDetailComponent extends BaseViewComponent implements OnInit, OnDestroy {
+export class MotionDetailComponent extends BaseComponent implements OnInit, OnDestroy {
     /**
      * Motion content. Can be a new version
      */
@@ -399,47 +397,8 @@ export class MotionDetailComponent extends BaseViewComponent implements OnInit, 
 
     public recommendationReferencingMotions: ViewMotion[] = [];
 
-    /**
-     * Constructs the detail view.
-     *
-     * @param title
-     * @param translate
-     * @param matSnackBar
-     * @param vp the viewport service
-     * @param operator Operator Service
-     * @param perms local permissions
-     * @param router to navigate back to the motion list and to an existing motion
-     * @param route determine if this is a new or an existing motion
-     * @param formBuilder For reactive forms. Form Group and Form Control
-     * @param dialogService For opening dialogs
-     * @param el The native element
-     * @param repo Motion Repository
-     * @param changeRecoRepo Change Recommendation Repository
-     * @param statuteRepo: Statute Paragraph Repository
-     * @param mediafileRepo Mediafile Repository
-     * @param DS The DataStoreService
-     * @param configService The configuration provider
-     * @param promptService ensure safe deletion
-     * @param pdfExport export the motion to pdf
-     * @param personalNoteService: personal comments and favorite marker
-     * @param linenumberingService The line numbering service
-     * @param categoryRepo Repository for categories
-     * @param viewModelStore accessing view models
-     * @param categoryRepo access the category repository
-     * @param userRepo Repository for users
-     * @param notifyService: NotifyService work with notification
-     * @param tagRepo
-     * @param mediaFilerepo
-     * @param workflowRepo
-     * @param blockRepo
-     * @param itemRepo
-     * @param motionSortService
-     * @param motionFilterListService
-     */
     public constructor(
-        title: Title,
-        protected translate: TranslateService, // protected required for ng-translate-extract
-        matSnackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         public vp: ViewportService,
         public operator: OperatorService,
         public perms: LocalPermissionsService,
@@ -451,7 +410,7 @@ export class MotionDetailComponent extends BaseViewComponent implements OnInit, 
         public repo: MotionRepositoryService,
         private changeRecoRepo: ChangeRecommendationRepositoryService,
         private statuteRepo: StatuteParagraphRepositoryService,
-        private configService: ConfigService,
+        private organisationSettingsService: OrganisationSettingsService,
         private promptService: PromptService,
         private pdfExport: MotionPdfExportService,
         private personalNoteService: PersonalNoteService,
@@ -471,7 +430,7 @@ export class MotionDetailComponent extends BaseViewComponent implements OnInit, 
         private pollDialog: MotionPollDialogService,
         private motionPollService: MotionPollService
     ) {
-        super(title, translate, matSnackBar);
+        super(componentServiceCollector);
     }
 
     /**
@@ -493,36 +452,38 @@ export class MotionDetailComponent extends BaseViewComponent implements OnInit, 
         this.getMotionByUrl();
 
         // load config variables
-        this.configService
+        this.organisationSettingsService
             .get<boolean>('motions_statutes_enabled')
             .subscribe(enabled => (this.statutesEnabled = enabled));
-        this.configService
+        this.organisationSettingsService
             .get<boolean>('motions_reason_required')
             .subscribe(required => (this.reasonRequired = required));
-        this.configService
+        this.organisationSettingsService
             .get<boolean>('motions_hide_referring_motions')
             .subscribe(show => (this.showReferringMotions = !show));
-        this.configService
+        this.organisationSettingsService
             .get<number>('motions_min_supporters')
             .subscribe(supporters => (this.minSupporters = supporters));
-        this.configService.get<string>('motions_preamble').subscribe(preamble => (this.preamble = preamble));
-        this.configService
+        this.organisationSettingsService
+            .get<string>('motions_preamble')
+            .subscribe(preamble => (this.preamble = preamble));
+        this.organisationSettingsService
             .get<boolean>('motions_amendments_enabled')
             .subscribe(enabled => (this.amendmentsEnabled = enabled));
-        this.configService.get<number>('motions_line_length').subscribe(lineLength => {
+        this.organisationSettingsService.get<number>('motions_line_length').subscribe(lineLength => {
             this.lineLength = lineLength;
             this.recalcUnifiedChanges();
         });
-        this.configService
+        this.organisationSettingsService
             .get<LineNumberingMode>('motions_default_line_numbering')
             .subscribe(mode => (this.lnMode = mode));
-        this.configService
+        this.organisationSettingsService
             .get<ChangeRecoMode>('motions_recommendation_text_mode')
             .subscribe(mode => (this.crMode = this.determineCrMode(mode)));
-        this.configService
+        this.organisationSettingsService
             .get<boolean>('motions_show_sequential_numbers')
             .subscribe(shown => (this.showSequential = shown));
-        this.configService
+        this.organisationSettingsService
             .get<string>('motions_amendments_text_mode')
             .subscribe(amendmentTextMode => (this.amendmentTextMode = amendmentTextMode));
 
@@ -532,7 +493,7 @@ export class MotionDetailComponent extends BaseViewComponent implements OnInit, 
         });
 
         // use the filter and the search service to get the current sorting
-        if (this.configService.instant<boolean>('motions_amendments_main_table')) {
+        if (this.organisationSettingsService.instant<boolean>('motions_amendments_main_table')) {
             this.motionFilterService.initFilters(this.motionObserver);
             this.motionSortService.initSorting(this.motionFilterService.outputObservable);
             this.sortedMotionsObservable = this.motionSortService.outputObservable;
@@ -1190,7 +1151,7 @@ export class MotionDetailComponent extends BaseViewComponent implements OnInit, 
     public updateWorkflowIdForCreateForm(paragraph?: number): void {
         const isStatuteAmendment = !!this.contentForm.get('statute_amendment').value && !!paragraph;
         const configKey = isStatuteAmendment ? 'motions_statute_amendments_workflow' : 'motions_workflow';
-        const workflowId = this.configService.instant<string>(configKey);
+        const workflowId = this.organisationSettingsService.instant<string>(configKey);
         this.contentForm.patchValue({ workflow_id: +workflowId });
     }
 
@@ -1357,9 +1318,11 @@ export class MotionDetailComponent extends BaseViewComponent implements OnInit, 
             if (this.recommenderSubscription) {
                 this.recommenderSubscription.unsubscribe();
             }
-            this.recommenderSubscription = this.configService.get<string>(configKey).subscribe(recommender => {
-                this.recommender = recommender;
-            });
+            this.recommenderSubscription = this.organisationSettingsService
+                .get<string>(configKey)
+                .subscribe(recommender => {
+                    this.recommender = recommender;
+                });
         }
     }
 
@@ -1413,8 +1376,8 @@ export class MotionDetailComponent extends BaseViewComponent implements OnInit, 
     private sendEditNotification(type: MotionEditNotificationType, user?: number): void {
         const content: MotionEditNotification = {
             motionId: this.motion.id,
-            senderId: this.operator.viewUser.id,
-            senderName: this.operator.viewUser.short_name,
+            senderId: this.operator.operatorId,
+            senderName: this.operator.shortName,
             type: type
         };
         if (user) {
@@ -1448,7 +1411,7 @@ export class MotionDetailComponent extends BaseViewComponent implements OnInit, 
     private listenToEditNotification(): Subscription {
         return this.notifyService.getMessageObservable(this.NOTIFICATION_EDIT_MOTION).subscribe(message => {
             const content = <MotionEditNotification>message.content;
-            if (this.operator.viewUser.id !== content.senderId && content.motionId === this.motion.id) {
+            if (this.operator.operatorId !== content.senderId && content.motionId === this.motion.id) {
                 let warning = '';
 
                 switch (content.type) {

@@ -8,7 +8,7 @@ import { Deferred } from 'app/core/promises/deferred';
 import { _ } from 'app/core/translate/translation-marker';
 import { BaseSortListService } from 'app/core/ui-services/base-sort-list.service';
 import { OsSortingDefinition, OsSortingOption } from 'app/core/ui-services/base-sort.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { ViewMotion } from '../models/view-motion';
 
 /**
@@ -59,16 +59,19 @@ export class MotionSortListService extends BaseSortListService<ViewMotion> {
         translate: TranslateService,
         store: StorageService,
         OSStatus: OpenSlidesStatusService,
-        config: ConfigService
+        config: OrganisationSettingsService
     ) {
         super(translate, store, OSStatus);
 
-        config.get<string>('motions_motions_sorting').subscribe(defSortProp => {
+        this.defaultMotionSorting = 'identifier';
+        this.defaultSortingLoaded.resolve();
+
+        /*config.get<string>('motions_motions_sorting').subscribe(defSortProp => {
             if (defSortProp) {
                 this.defaultMotionSorting = defSortProp;
                 this.defaultSortingLoaded.resolve();
             }
-        });
+        });*/
     }
 
     protected getSortOptions(): OsSortingOption<ViewMotion>[] {

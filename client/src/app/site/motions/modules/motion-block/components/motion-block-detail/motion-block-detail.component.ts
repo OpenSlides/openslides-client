@@ -1,24 +1,21 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
 
-import { StorageService } from 'app/core/core-services/storage.service';
 import { ItemRepositoryService } from 'app/core/repositories/agenda/item-repository.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { ColumnRestriction } from 'app/shared/components/list-view-table/list-view-table.component';
 import { MotionBlock } from 'app/shared/models/motions/motion-block';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
-import { BaseListViewComponent } from 'app/site/base/base-list-view';
+import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
 import { BlockDetailFilterListService } from 'app/site/motions/services/block-detail-filter-list.service';
@@ -109,23 +106,20 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
      * @param promptService the displaying prompts before deleting
      */
     public constructor(
-        titleService: Title,
-        protected translate: TranslateService,
-        matSnackBar: MatSnackBar,
-        private configService: ConfigService,
+        componentServiceCollector: ComponentServiceCollector,
+        private organisationSettingsService: OrganisationSettingsService,
         private route: ActivatedRoute,
         private router: Router,
         protected repo: MotionBlockRepositoryService,
         public motionRepo: MotionRepositoryService,
         private promptService: PromptService,
-        private fb: FormBuilder,
+        private formBuilder: FormBuilder,
         private dialog: MatDialog,
         private itemRepo: ItemRepositoryService,
-        storage: StorageService,
         public filterService: BlockDetailFilterListService,
         public vp: ViewportService
     ) {
-        super(titleService, translate, matSnackBar, storage);
+        super(componentServiceCollector);
         this.blockId = parseInt(this.route.snapshot.params.id, 10);
         this.filterService.blockId = this.blockId;
     }
@@ -145,7 +139,7 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
             })
         );
         // load config variables
-        this.configService
+        this.organisationSettingsService
             .get<boolean>('motions_show_sequential_numbers')
             .subscribe(show => (this.showSequential = show));
         (<any>window).comp = this;
@@ -226,7 +220,7 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
      * Click handler for the edit button
      */
     public toggleEditMode(): void {
-        this.blockEditForm = this.fb.group({
+        this.blockEditForm = this.formBuilder.group({
             title: [this.block.title, Validators.required],
             internal: [this.block.internal]
         });

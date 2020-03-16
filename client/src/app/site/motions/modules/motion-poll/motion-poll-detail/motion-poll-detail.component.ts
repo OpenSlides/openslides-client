@@ -1,15 +1,13 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { MatSnackBar } from '@angular/material';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { MotionPollRepositoryService } from 'app/core/repositories/motions/motion-poll-repository.service';
 import { MotionVoteRepositoryService } from 'app/core/repositories/motions/motion-vote-repository.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
@@ -41,9 +39,7 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
     public filterProps = ['user.getFullName', 'valueVerbose'];
 
     public constructor(
-        title: Title,
-        translate: TranslateService,
-        matSnackbar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         repo: MotionPollRepositoryService,
         route: ActivatedRoute,
         groupRepo: GroupRepositoryService,
@@ -54,7 +50,7 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
         private operator: OperatorService,
         private router: Router
     ) {
-        super(title, translate, matSnackbar, repo, route, groupRepo, prompt, pollDialog, pollService, votesRepo);
+        super(componentServiceCollector, repo, route, groupRepo, prompt, pollDialog, pollService, votesRepo);
     }
 
     protected createVotesData(): void {

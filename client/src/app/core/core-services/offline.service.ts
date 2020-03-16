@@ -41,7 +41,7 @@ export class OfflineService {
     }
 
     /**
-     * Sets the offline flag. Restores the DataStoreService to the last known configuration.
+     * Sets the offline flag.
      */
     public goOfflineBecauseFailedWhoAmI(): void {
         if (!this.offline.getValue()) {

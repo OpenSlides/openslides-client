@@ -1,15 +1,13 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { MatSnackBar } from '@angular/material';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { AssignmentPollRepositoryService } from 'app/core/repositories/assignments/assignment-poll-repository.service';
 import { AssignmentVoteRepositoryService } from 'app/core/repositories/assignments/assignment-vote-repository.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { VoteValue } from 'app/shared/models/poll/base-vote';
 import { BasePollDetailComponent } from 'app/site/polls/components/base-poll-detail.component';
@@ -33,9 +31,7 @@ export class AssignmentPollDetailComponent extends BasePollDetailComponent<ViewA
     public candidatesLabels: string[] = [];
 
     public constructor(
-        title: Title,
-        translate: TranslateService,
-        matSnackbar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         repo: AssignmentPollRepositoryService,
         route: ActivatedRoute,
         groupRepo: GroupRepositoryService,
@@ -46,7 +42,7 @@ export class AssignmentPollDetailComponent extends BasePollDetailComponent<ViewA
         private operator: OperatorService,
         private router: Router
     ) {
-        super(title, translate, matSnackbar, repo, route, groupRepo, prompt, pollDialog, pollService, votesRepo);
+        super(componentServiceCollector, repo, route, groupRepo, prompt, pollDialog, pollService, votesRepo);
     }
 
     protected createVotesData(): void {

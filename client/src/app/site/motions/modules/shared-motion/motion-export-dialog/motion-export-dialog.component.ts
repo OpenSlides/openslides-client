@@ -8,7 +8,7 @@ import { auditTime } from 'rxjs/operators';
 
 import { StorageService } from 'app/core/core-services/storage.service';
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-comment-section';
 import {
     ChangeRecoMode,
@@ -107,20 +107,20 @@ export class MotionExportDialogComponent implements OnInit {
      *
      * @param formBuilder Creates the export form
      * @param dialogRef Make the dialog available
-     * @param configService
+     * @param organisationSettingsService
      * @param commentRepo
      */
     public constructor(
         public formBuilder: FormBuilder,
         public dialogRef: MatDialogRef<MotionExportDialogComponent>,
-        public configService: ConfigService,
+        public organisationSettingsService: OrganisationSettingsService,
         public commentRepo: MotionCommentSectionRepositoryService,
         private store: StorageService
     ) {
-        this.defaults.lnMode = this.configService.instant('motions_default_line_numbering');
-        this.defaults.crMode = this.configService.instant('motions_recommendation_text_mode');
+        this.defaults.lnMode = this.organisationSettingsService.instant('motions_default_line_numbering');
+        this.defaults.crMode = this.organisationSettingsService.instant('motions_recommendation_text_mode');
         this.commentsSubject = this.commentRepo.getViewModelListBehaviorSubject();
-        if (this.configService.instant('motions_show_sequential_numbers')) {
+        if (this.organisationSettingsService.instant('motions_show_sequential_numbers')) {
             this.defaults.metaInfo.push('id');
         }
         // Get the export order, exclude everything that does not count as meta-data

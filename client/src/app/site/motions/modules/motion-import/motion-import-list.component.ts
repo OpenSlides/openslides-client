@@ -1,11 +1,8 @@
 import { Component } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
-
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { Motion } from 'app/shared/models/motions/motion';
-import { BaseImportListComponent } from 'app/site/base/base-import-list';
+import { BaseImportListComponent } from 'app/site/base/components/base-import-list.component';
 import { MotionCsvExportService } from 'app/site/motions/services/motion-csv-export.service';
 import { MotionImportService } from 'app/site/motions/services/motion-import.service';
 
@@ -33,23 +30,12 @@ export class MotionImportListComponent extends BaseImportListComponent<Motion> {
         });
     }
 
-    /**
-     * Constructor for list view bases
-     *
-     * @param titleService the title serivce
-     * @param matSnackBar snackbar for displaying errors
-     * @param translate the translate service
-     * @param importer: The motion csv import service
-     * @param motionCSVExport: service for exporting example data
-     */
     public constructor(
-        titleService: Title,
-        matSnackBar: MatSnackBar,
-        translate: TranslateService,
+        componentServiceCollector: ComponentServiceCollector,
         importer: MotionImportService,
         private motionCSVExport: MotionCsvExportService
     ) {
-        super(importer, titleService, translate, matSnackBar);
+        super(componentServiceCollector, importer);
     }
 
     /**

@@ -1,20 +1,18 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatSnackBar } from '@angular/material';
-import { Title } from '@angular/platform-browser';
+import { MatDialog } from '@angular/material';
 
-import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { VotingPrivacyWarningComponent } from 'app/shared/components/voting-privacy-warning/voting-privacy-warning.component';
 import { AssignmentPollMethod, AssignmentPollPercentBase } from 'app/shared/models/assignments/assignment-poll';
 import { PercentBase } from 'app/shared/models/poll/base-poll';
 import { PollType } from 'app/shared/models/poll/base-poll';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
-import { BaseViewComponent } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import {
     MajorityMethodVerbose,
     PollClassType,
@@ -24,13 +22,14 @@ import {
 } from 'app/site/polls/models/view-base-poll';
 import { ViewGroup } from 'app/site/users/models/view-group';
 import { PollService } from '../../services/poll.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 
 @Component({
     selector: 'os-poll-form',
     templateUrl: './poll-form.component.html',
     styleUrls: ['./poll-form.component.scss']
 })
-export class PollFormComponent<T extends ViewBasePoll, S extends PollService> extends BaseViewComponent
+export class PollFormComponent<T extends ViewBasePoll, S extends PollService> extends BaseComponent
     implements OnInit {
     /**
      * The form-group for the meta-info.
@@ -104,15 +103,12 @@ export class PollFormComponent<T extends ViewBasePoll, S extends PollService> ex
      * injects the poll itself
      */
     public constructor(
-        title: Title,
-        protected translate: TranslateService,
-        snackbar: MatSnackBar,
-        private fb: FormBuilder,
+        componentServiceCollector: ComponentServiceCollector,
+        private formBuilder: FormBuilder,
         private groupRepo: GroupRepositoryService,
-        private configService: ConfigService,
         private dialog: MatDialog
     ) {
-        super(title, translate, snackbar);
+        super(componentServiceCollector);
         this.initContentForm();
     }
 
@@ -134,7 +130,8 @@ export class PollFormComponent<T extends ViewBasePoll, S extends PollService> ex
                     this.data.votes_amount = this.data.assignment.open_posts;
                 }
                 if (!this.data.pollmethod) {
-                    this.data.pollmethod = this.configService.instant('assignment_poll_method');
+                    // TODO: Enable the config service
+                    // this.data.pollmethod = this.configService.instant('assignment_poll_method');
                 }
             }
 
@@ -274,7 +271,7 @@ export class PollFormComponent<T extends ViewBasePoll, S extends PollService> ex
     }
 
     private initContentForm(): void {
-        this.contentForm = this.fb.group({
+        this.contentForm = this.formBuilder.group({
             title: ['', Validators.required],
             type: ['', Validators.required],
             pollmethod: ['', Validators.required],

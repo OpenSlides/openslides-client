@@ -1,18 +1,16 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { CategoryRepositoryService } from 'app/core/repositories/motions/category-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { ChoiceService } from 'app/core/ui-services/choice.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { SortingListComponent } from 'app/shared/components/sorting-list/sorting-list.component';
 import { CanComponentDeactivate } from 'app/shared/utils/watch-for-changes.guard';
-import { BaseViewComponent } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewCategory } from 'app/site/motions/models/view-category';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 
@@ -26,7 +24,7 @@ import { ViewMotion } from 'app/site/motions/models/view-motion';
     templateUrl: './category-motions-sort.component.html',
     styleUrls: ['./category-motions-sort.component.scss']
 })
-export class CategoryMotionsSortComponent extends BaseViewComponent implements OnInit, CanComponentDeactivate {
+export class CategoryMotionsSortComponent extends BaseComponent implements OnInit, CanComponentDeactivate {
     /**
      * The current category. Determined by the route
      */
@@ -88,16 +86,14 @@ export class CategoryMotionsSortComponent extends BaseViewComponent implements O
      * @param choiceService
      */
     public constructor(
-        title: Title,
-        protected translate: TranslateService, // protected required for ng-translate-extract
-        matSnackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private promptService: PromptService,
         private repo: CategoryRepositoryService,
         private route: ActivatedRoute,
         private motionRepo: MotionRepositoryService,
         private choiceService: ChoiceService
     ) {
-        super(title, translate, matSnackBar);
+        super(componentServiceCollector);
     }
 
     /**

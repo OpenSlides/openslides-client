@@ -1,18 +1,15 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
-
-import { TranslateService } from '@ngx-translate/core';
 
 import { ChangeRecommendationRepositoryService } from 'app/core/repositories/motions/change-recommendation-repository.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DiffService, LineRange } from 'app/core/ui-services/diff.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from 'app/shared/models/motions/view-unified-change';
 import { mediumDialogSettings } from 'app/shared/utils/dialog-settings';
 import { getRecommendationTypeName } from 'app/shared/utils/recommendation-type-names';
-import { BaseViewComponent } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
 import { LineNumberingMode } from 'app/site/motions/motions.constants';
@@ -51,7 +48,7 @@ import {
     templateUrl: './motion-detail-diff.component.html',
     styleUrls: ['./motion-detail-diff.component.scss']
 })
-export class MotionDetailDiffComponent extends BaseViewComponent implements AfterViewInit {
+export class MotionDetailDiffComponent extends BaseComponent implements AfterViewInit {
     /**
      * Get the {@link getRecommendationTypeName}-Function from Utils
      */
@@ -85,24 +82,26 @@ export class MotionDetailDiffComponent extends BaseViewComponent implements Afte
      * @param diff
      * @param recoRepo
      * @param dialogService
-     * @param configService
+     * @param organisationSettingsService
      * @param el
      * @param promptService
      */
     public constructor(
-        title: Title,
-        protected translate: TranslateService, // protected required for ng-translate-extract
-        matSnackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private diff: DiffService,
         private recoRepo: ChangeRecommendationRepositoryService,
         private dialogService: MatDialog,
-        private configService: ConfigService,
+        private organisationSettingsService: OrganisationSettingsService,
         private el: ElementRef,
         private promptService: PromptService
     ) {
-        super(title, translate, matSnackBar);
-        this.configService.get<number>('motions_line_length').subscribe(lineLength => (this.lineLength = lineLength));
-        this.configService.get<string>('motions_preamble').subscribe(preamble => (this.preamble = preamble));
+        super(componentServiceCollector);
+        this.organisationSettingsService
+            .get<number>('motions_line_length')
+            .subscribe(lineLength => (this.lineLength = lineLength));
+        this.organisationSettingsService
+            .get<string>('motions_preamble')
+            .subscribe(preamble => (this.preamble = preamble));
     }
 
     /**

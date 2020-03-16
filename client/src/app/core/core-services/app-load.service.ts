@@ -5,11 +5,11 @@ import { AppConfig, ModelEntry, SearchableModelEntry } from '../definitions/app-
 import { BaseRepository } from 'app/core/repositories/base-repository';
 import { HistoryAppConfig } from 'app/site/history/history.config';
 import { ProjectorAppConfig } from 'app/site/projector/projector.config';
+import { SettingsAppConfig } from 'app/site/settings/settings.config';
 import { TopicsAppConfig } from 'app/site/topics/topics.config';
 import { AssignmentsAppConfig } from '../../site/assignments/assignments.config';
 import { CollectionStringMapperService } from './collection-string-mapper.service';
 import { CommonAppConfig } from '../../site/common/common.config';
-import { ConfigAppConfig } from '../../site/config/config.config';
 import { ServicesToLoadOnAppsLoaded } from '../core.module';
 import { FallbackRoutesService } from './fallback-routes.service';
 import { MainMenuService } from './main-menu.service';
@@ -26,7 +26,7 @@ import { UsersAppConfig } from '../../site/users/users.config';
  */
 const appConfigs: AppConfig[] = [
     CommonAppConfig,
-    ConfigAppConfig,
+    SettingsAppConfig,
     AgendaAppConfig,
     AssignmentsAppConfig,
     MotionsAppConfig,

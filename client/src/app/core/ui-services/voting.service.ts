@@ -43,11 +43,10 @@ export class VotingService {
      * @returns null if no errors exist (= user can vote) or else a VotingError
      */
     public getVotePermissionError(poll: ViewBasePoll): VotingError | void {
-        const user = this.operator.viewUser;
         if (this.operator.isAnonymous) {
             return VotingError.USER_IS_ANONYMOUS;
         }
-        if (!poll.groups_id.intersect(user.groups_id).length) {
+        if (!this.operator.isInGroupIdsNonAdminCheck(...poll.groups_id)) {
             return VotingError.USER_HAS_NO_PERMISSION;
         }
         if (poll.type === PollType.Analog) {
@@ -56,9 +55,10 @@ export class VotingService {
         if (poll.state !== PollState.Started) {
             return VotingError.POLL_WRONG_STATE;
         }
-        if (!user.is_present) {
+        // TODO: This is not possible anymore
+        /* if (!user.is_present) {
             return VotingError.USER_NOT_PRESENT;
-        }
+        }*/
     }
 
     public getVotePermissionErrorVerbose(poll: ViewBasePoll): string | void {

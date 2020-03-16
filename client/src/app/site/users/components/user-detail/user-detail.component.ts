@@ -1,20 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 
-import { ConstantsService } from 'app/core/core-services/constants.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { genders } from 'app/shared/models/users/user';
 import { OneOfValidator } from 'app/shared/validators/one-of-validator';
-import { BaseViewComponent } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { UserPdfExportService } from '../../services/user-pdf-export.service';
 import { ViewGroup } from '../../models/view-group';
 import { ViewUser } from '../../models/view-user';
@@ -33,7 +30,7 @@ interface UserBackends {
     templateUrl: './user-detail.component.html',
     styleUrls: ['./user-detail.component.scss']
 })
-export class UserDetailComponent extends BaseViewComponent implements OnInit {
+export class UserDetailComponent extends BaseComponent implements OnInit {
     /**
      * Info form object
      */
@@ -92,9 +89,7 @@ export class UserDetailComponent extends BaseViewComponent implements OnInit {
      * @param groupRepo
      */
     public constructor(
-        title: Title,
-        protected translate: TranslateService, // protected required for ng-translate-extract
-        matSnackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
@@ -102,13 +97,14 @@ export class UserDetailComponent extends BaseViewComponent implements OnInit {
         private operator: OperatorService,
         private promptService: PromptService,
         private pdfService: UserPdfExportService,
-        private groupRepo: GroupRepositoryService,
-        private constantsService: ConstantsService
+        private groupRepo: GroupRepositoryService
     ) {
-        super(title, translate, matSnackBar);
+        super(componentServiceCollector);
         this.createForm();
 
-        this.constantsService.get<UserBackends>('UserBackends').subscribe(backends => (this.userBackends = backends));
+        // TODO
+        console.warn('TODO: get user backends from the se3rver. Does user backends even exists in OS4?');
+        // this.constantsService.get<UserBackends>('UserBackends').subscribe(backends => (this.userBackends = backends));
 
         this.groupRepo.getViewModelListObservableWithoutDefaultGroup().subscribe(this.groups);
     }
@@ -136,8 +132,8 @@ export class UserDetailComponent extends BaseViewComponent implements OnInit {
 
                 // observe operator to find out if we see our own page or not
                 this.subscriptions.push(
-                    this.operator.getUserObservable().subscribe(() => {
-                        this.ownPage = this.operator.user && this.operator.user.id === +params.id;
+                    this.operator.operatorUpdatedEvent.subscribe(() => {
+                        this.ownPage = this.operator.operatorId === +params.id;
                     })
                 );
             });

@@ -7,8 +7,8 @@ import { saveAs } from 'file-saver';
 
 import { ProgressSnackBarComponent } from 'app/shared/components/progress-snack-bar/progress-snack-bar.component';
 import { MotionExportInfo } from 'app/site/motions/services/motion-export.service';
-import { ConfigService } from '../ui-services/config.service';
 import { HttpService } from '../core-services/http.service';
+import { OrganisationSettingsService } from '../ui-services/organisation-settings.service';
 import { ProgressService } from '../ui-services/progress.service';
 
 /**
@@ -72,12 +72,12 @@ export class PdfDocumentService {
      * Constructor
      *
      * @param translate translations
-     * @param configService read config values
+     * @param organisationSettingsService read config values
      * @param mediaManageService to read out font files as media data
      */
     public constructor(
         private translate: TranslateService,
-        private configService: ConfigService,
+        private organisationSettingsService: OrganisationSettingsService,
         private httpService: HttpService,
         private matSnackBar: MatSnackBar,
         private progressService: ProgressService
@@ -92,9 +92,9 @@ export class PdfDocumentService {
         const fontPathList: string[] = Array.from(
             // create a list without redundancies
             new Set(
-                this.configService
+                this.organisationSettingsService
                     .instant<string[]>('fonts_available')
-                    .map(available => this.configService.instant<any>(available))
+                    .map(available => this.organisationSettingsService.instant<any>(available))
                     .map(font => font.path || `/${font.default}`)
             )
         );
@@ -148,7 +148,7 @@ export class PdfDocumentService {
      * @returns the name of the selected font
      */
     private getFontName(fontType: string): string {
-        const font = this.configService.instant<any>(fontType);
+        const font = this.organisationSettingsService.instant<any>(fontType);
         return (font.path || `/${font.default}`).split('/').pop();
     }
 
@@ -171,7 +171,7 @@ export class PdfDocumentService {
         landscape?: boolean
     ): Promise<object> {
         this.imageUrls = imageUrls ? imageUrls : [];
-        const pageSize = this.configService.instant('general_export_pdf_pagesize');
+        const pageSize = this.organisationSettingsService.instant('general_export_pdf_pagesize');
         const defaultMargins = pageSize === 'A5' ? [45, 30, 45, 45] : [75, 90, 75, 75];
         const result = {
             pageSize: pageSize || 'A4',
@@ -179,7 +179,7 @@ export class PdfDocumentService {
             pageMargins: customMargins || defaultMargins,
             defaultStyle: {
                 font: 'PdfFont',
-                fontSize: this.configService.instant('general_export_pdf_fontsize')
+                fontSize: this.organisationSettingsService.instant('general_export_pdf_fontsize')
             },
             header: this.getHeader(customMargins ? [customMargins[0], customMargins[2]] : null),
             // real footer gets created in the worker
@@ -234,8 +234,8 @@ export class PdfDocumentService {
      */
     private getHeader(lrMargin?: [number, number]): object {
         // check for the required logos
-        let logoHeaderLeftUrl = this.configService.instant<any>('logo_pdf_header_L').path;
-        let logoHeaderRightUrl = this.configService.instant<any>('logo_pdf_header_R').path;
+        let logoHeaderLeftUrl = this.organisationSettingsService.instant<any>('logo_pdf_header_L').path;
+        let logoHeaderRightUrl = this.organisationSettingsService.instant<any>('logo_pdf_header_R').path;
         let text;
         const columns = [];
 
@@ -256,8 +256,10 @@ export class PdfDocumentService {
         if (logoHeaderLeftUrl && logoHeaderRightUrl) {
             text = '';
         } else {
-            const general_event_name = this.configService.instant<string>('general_event_name');
-            const general_event_description = this.configService.instant<string>('general_event_description');
+            const general_event_name = this.organisationSettingsService.instant<string>('general_event_name');
+            const general_event_description = this.organisationSettingsService.instant<string>(
+                'general_event_description'
+            );
             const line1 = [
                 this.translate.instant(general_event_name),
                 this.translate.instant(general_event_description)
@@ -265,8 +267,8 @@ export class PdfDocumentService {
                 .filter(Boolean)
                 .join(' – ');
             const line2 = [
-                this.configService.instant('general_event_location'),
-                this.configService.instant('general_event_date')
+                this.organisationSettingsService.instant('general_event_location'),
+                this.organisationSettingsService.instant('general_event_date')
             ]
                 .filter(Boolean)
                 .join(', ');
@@ -319,8 +321,8 @@ export class PdfDocumentService {
         let logoContainerWidth: string;
         let pageNumberPosition: string;
         let logoContainerSize: number[];
-        const logoFooterLeftUrl = this.configService.instant<any>('logo_pdf_footer_L').path;
-        const logoFooterRightUrl = this.configService.instant<any>('logo_pdf_footer_R').path;
+        const logoFooterLeftUrl = this.organisationSettingsService.instant<any>('logo_pdf_footer_L').path;
+        const logoFooterRightUrl = this.organisationSettingsService.instant<any>('logo_pdf_footer_R').path;
 
         let footerPageNumber = '';
         if (showPageNr) {
@@ -356,7 +358,7 @@ export class PdfDocumentService {
         } else if (logoFooterRightUrl && !logoFooterLeftUrl) {
             pageNumberPosition = 'left';
         } else {
-            pageNumberPosition = this.configService.instant('general_export_pdf_pagenumber_alignment');
+            pageNumberPosition = this.organisationSettingsService.instant('general_export_pdf_pagenumber_alignment');
         }
 
         // add the left footer logo, if any
@@ -519,7 +521,7 @@ export class PdfDocumentService {
      * @returns an object that contains all pdf styles
      */
     private getStandardPaperStyles(): object {
-        const pageSize = this.configService.instant('general_export_pdf_pagesize');
+        const pageSize = this.organisationSettingsService.instant('general_export_pdf_pagesize');
         return {
             title: {
                 fontSize: pageSize === 'A5' ? 14 : 16,
@@ -679,7 +681,7 @@ export class PdfDocumentService {
      * @returns The motion list title for the PDF document
      */
     public createTitle(configVariable: string): object {
-        const titleText = this.translate.instant(this.configService.instant<string>(configVariable));
+        const titleText = this.translate.instant(this.organisationSettingsService.instant<string>(configVariable));
 
         return {
             text: titleText,
@@ -693,7 +695,7 @@ export class PdfDocumentService {
      * @returns The motion list preamble for the PDF document
      */
     public createPreamble(configVariable: string): object {
-        const preambleText = this.configService.instant<string>(configVariable);
+        const preambleText = this.organisationSettingsService.instant<string>(configVariable);
 
         if (preambleText) {
             return {

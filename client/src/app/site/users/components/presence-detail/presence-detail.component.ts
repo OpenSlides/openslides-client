@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { ViewUser } from '../../models/view-user';
 
 /**
@@ -68,7 +68,7 @@ export class PresenceDetailComponent implements OnInit {
         private formBuilder: FormBuilder,
         private operator: OperatorService,
         private translate: TranslateService,
-        config: ConfigService
+        config: OrganisationSettingsService
     ) {
         config.get<boolean>('users_enable_presence_view').subscribe(conf => (this._enabledInConfig = conf));
     }

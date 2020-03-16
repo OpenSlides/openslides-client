@@ -3,7 +3,7 @@ import { Config } from '../../shared/models/core/config';
 import { ConfigRepositoryService } from '../../core/repositories/config/config-repository.service';
 import { ViewConfig } from './models/view-config';
 
-export const ConfigAppConfig: AppConfig = {
+export const SettingsAppConfig: AppConfig = {
     name: 'settings',
     models: [{ model: Config, viewModel: ViewConfig, repository: ConfigRepositoryService }],
     mainMenuEntries: [

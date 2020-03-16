@@ -29,7 +29,7 @@ export class PersonalNoteService {
      * Watches for changes in the personal note model and the operator.
      */
     public constructor(private operator: OperatorService, private DS: DataStoreService, private http: HttpService) {
-        operator.getUserObservable().subscribe(() => this.updatePersonalNoteObject());
+        operator.operatorUpdatedEvent.subscribe(() => this.updatePersonalNoteObject());
         this.DS.getChangeObservable(PersonalNote).subscribe(_ => {
             this.updatePersonalNoteObject();
         });
@@ -45,7 +45,7 @@ export class PersonalNoteService {
         }
 
         // Get the note for the operator.
-        const operatorId = this.operator.user.id;
+        const operatorId = this.operator.operatorId;
         const objects = this.DS.filter(PersonalNote, pn => pn.user_id === operatorId);
         this.personalNoteObject = objects.length === 0 ? null : objects[0];
     }

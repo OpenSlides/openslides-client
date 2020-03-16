@@ -11,7 +11,7 @@ describe('BaseSortService', () => {
         });
     });
 
-    // TODO testing (does not work without injecting a BaseViewComponent)
+    // TODO testing (does not work without injecting a BaseComponent)
     //   it('should be created', () => {
     //     const service: BaseSortService = TestBed.get(BaseSortService);
     //     expect(service).toBeTruthy();

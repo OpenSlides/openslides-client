@@ -1,14 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatSnackBar } from '@angular/material';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
 import { environment } from 'environments/environment';
 
 import { HttpService } from 'app/core/core-services/http.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { LoginDataService } from 'app/core/ui-services/login-data.service';
-import { BaseViewComponent } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 
 /**
  * Characterize a plugin. This data is retrieved from the server
@@ -69,7 +67,7 @@ interface VersionResponse {
     templateUrl: './legal-notice-content.component.html',
     styleUrls: ['./legal-notice-content.component.scss']
 })
-export class LegalNoticeContentComponent extends BaseViewComponent implements OnInit {
+export class LegalNoticeContentComponent extends BaseComponent implements OnInit {
     /**
      * Decides, whether the component can be edited at all.
      * Defaults to `false`.
@@ -130,14 +128,12 @@ export class LegalNoticeContentComponent extends BaseViewComponent implements On
      * @param http
      */
     public constructor(
-        title: Title,
-        translate: TranslateService,
-        matSnackbar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private loginDataService: LoginDataService,
         private http: HttpService,
         fb: FormBuilder
     ) {
-        super(title, translate, matSnackbar);
+        super(componentServiceCollector);
         this.formGroup = fb.group({
             legalNotice: ''
         });

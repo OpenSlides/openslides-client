@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { TranslateService } from '@ngx-translate/core';
 import { environment } from 'environments/environment';
 import { BehaviorSubject, Subject } from 'rxjs';
 
@@ -15,13 +12,14 @@ import { OperatorService } from 'app/core/core-services/operator.service';
 import { TimeTravelService } from 'app/core/core-services/time-travel.service';
 import { ViewModelStoreService } from 'app/core/core-services/view-model-store.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { isDetailNavigable } from 'app/shared/models/base/detail-navigable';
 import { History } from 'app/shared/models/core/history';
 import { Motion } from 'app/shared/models/motions/motion';
 import { langToLocale } from 'app/shared/utils/lang-to-locale';
-import { BaseViewComponent } from 'app/site/base/base-view';
 import { BaseViewModel } from 'app/site/base/base-view-model';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewUser } from 'app/site/users/models/view-user';
 
 /**
@@ -34,7 +32,7 @@ import { ViewUser } from 'app/site/users/models/view-user';
     templateUrl: './history-list.component.html',
     styleUrls: ['./history-list.component.scss']
 })
-export class HistoryListComponent extends BaseViewComponent implements OnInit {
+export class HistoryListComponent extends BaseComponent implements OnInit {
     /**
      * Subject determine when the custom timestamp subject changes
      */
@@ -77,9 +75,7 @@ export class HistoryListComponent extends BaseViewComponent implements OnInit {
      * @param operator checks if the user is a super admin
      */
     public constructor(
-        titleService: Title,
-        translate: TranslateService,
-        matSnackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private viewModelStore: ViewModelStoreService,
         private router: Router,
         private operator: OperatorService,
@@ -91,7 +87,7 @@ export class HistoryListComponent extends BaseViewComponent implements OnInit {
         private activatedRoute: ActivatedRoute,
         private collectionMapper: CollectionStringMapperService
     ) {
-        super(titleService, translate, matSnackBar);
+        super(componentServiceCollector);
 
         this.modelSelectForm = this.formBuilder.group({
             model: []

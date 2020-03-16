@@ -6,7 +6,7 @@ import { AbstractPollData, BallotCountChoices, PollPdfService } from 'app/core/p
 import { PdfDocumentService } from 'app/core/pdf-services/pdf-document.service';
 import { AssignmentRepositoryService } from 'app/core/repositories/assignments/assignment-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { AssignmentPollMethod } from 'app/shared/models/assignments/assignment-poll';
 import { ViewAssignmentPoll } from '../models/view-assignment-poll';
 
@@ -28,22 +28,22 @@ export class AssignmentPollPdfService extends PollPdfService {
      *
      * @param translate handle translations
      * @param motionRepo get parent motions
-     * @param configService Read config variables
+     * @param organisationSettingsService Read config variables
      * @param userRepo User repository for counting amount of ballots needed
      * @param pdfService the pdf document creation service
      */
     public constructor(
         private translate: TranslateService,
         private assignmentRepo: AssignmentRepositoryService,
-        configService: ConfigService,
+        organisationSettingsService: OrganisationSettingsService,
         userRepo: UserRepositoryService,
         private pdfService: PdfDocumentService
     ) {
-        super(configService, userRepo);
-        this.configService
+        super(organisationSettingsService, userRepo);
+        this.organisationSettingsService
             .get<number>('assignments_pdf_ballot_papers_number')
             .subscribe(count => (this.ballotCustomCount = count));
-        this.configService
+        this.organisationSettingsService
             .get<BallotCountChoices>('assignments_pdf_ballot_papers_selection')
             .subscribe(selection => (this.ballotCountSelection = selection));
     }
