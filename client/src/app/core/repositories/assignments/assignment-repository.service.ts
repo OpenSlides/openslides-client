@@ -1,11 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { TranslateService } from '@ngx-translate/core';
-
-import { DataSendService } from 'app/core/core-services/data-send.service';
 import { HttpService } from 'app/core/core-services/http.service';
-import { RelationManagerService } from 'app/core/core-services/relation-manager.service';
-import { ViewModelStoreService } from 'app/core/core-services/view-model-store.service';
 import { RelationDefinition } from 'app/core/definitions/relations';
 import { Assignment } from 'app/shared/models/assignments/assignment';
 import { AssignmentRelatedUser } from 'app/shared/models/assignments/assignment-related-user';
@@ -17,8 +12,7 @@ import { ViewTag } from 'app/site/tags/models/view-tag';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { BaseIsAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-is-agenda-item-and-list-of-speakers-content-object-repository';
 import { NestedModelDescriptors } from '../base-repository';
-import { CollectionStringMapperService } from '../../core-services/collection-string-mapper.service';
-import { DataStoreService } from '../../core-services/data-store.service';
+import { RepositoryServiceCollector } from '../repository-service-collector';
 
 const AssignmentRelations: RelationDefinition[] = [
     {
@@ -91,26 +85,8 @@ export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeake
      * @param translate Translate string
      * @param httpService make HTTP Requests
      */
-    public constructor(
-        DS: DataStoreService,
-        dataSend: DataSendService,
-        mapperService: CollectionStringMapperService,
-        viewModelStoreService: ViewModelStoreService,
-        translate: TranslateService,
-        relationManager: RelationManagerService,
-        private httpService: HttpService
-    ) {
-        super(
-            DS,
-            dataSend,
-            mapperService,
-            viewModelStoreService,
-            translate,
-            relationManager,
-            Assignment,
-            AssignmentRelations,
-            AssignmentNestedModelDescriptors
-        );
+    public constructor(repositoryServiceCollector: RepositoryServiceCollector, private httpService: HttpService) {
+        super(repositoryServiceCollector, Assignment, AssignmentRelations, AssignmentNestedModelDescriptors);
     }
 
     public getTitle = (titleInformation: AssignmentTitleInformation) => {

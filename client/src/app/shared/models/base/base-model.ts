@@ -24,8 +24,8 @@ export abstract class BaseModel<T = any> extends Deserializer implements Identif
         super(input);
     }
 
-    public getUpdatedVersion(update: Partial<T>): T {
-        const copy: T = (<any>Object.assign({}, this)) as T;
+    public getUpdatedData(update: Partial<T>): object {
+        const copy: object = Object.assign({}, this);
         return Object.assign(copy, update);
     }
 }

@@ -1,17 +1,14 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
 
-import { StorageService } from 'app/core/core-services/storage.service';
 import { WorkflowRepositoryService } from 'app/core/repositories/motions/workflow-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { Workflow } from 'app/shared/models/motions/workflow';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
-import { BaseListViewComponent } from 'app/site/base/base-list-view';
+import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
 import { ViewWorkflow } from 'app/site/motions/models/view-workflow';
 
 /**
@@ -57,15 +54,12 @@ export class WorkflowListComponent extends BaseListViewComponent<ViewWorkflow> i
      * @param promptService Before delete, ask
      */
     public constructor(
-        titleService: Title,
-        protected translate: TranslateService,
-        matSnackBar: MatSnackBar,
-        storage: StorageService,
+        componentServiceCollector: ComponentServiceCollector,
         private dialog: MatDialog,
         public workflowRepo: WorkflowRepositoryService,
         private promptService: PromptService
     ) {
-        super(titleService, translate, matSnackBar, storage);
+        super(componentServiceCollector);
     }
 
     /**

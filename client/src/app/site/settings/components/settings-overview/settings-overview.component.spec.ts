@@ -1,21 +1,21 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ConfigOverviewComponent } from './config-overview.component';
 import { E2EImportsModule } from '../../../../../e2e-imports.module';
+import { SettingsOverviewComponent } from './settings-overview.component';
 
-describe('ConfigOverviewComponent', () => {
-    let component: ConfigOverviewComponent;
-    let fixture: ComponentFixture<ConfigOverviewComponent>;
+describe('SettingsOverviewComponent', () => {
+    let component: SettingsOverviewComponent;
+    let fixture: ComponentFixture<SettingsOverviewComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [E2EImportsModule],
-            declarations: [ConfigOverviewComponent]
+            declarations: [SettingsOverviewComponent]
         }).compileComponents();
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(ConfigOverviewComponent);
+        fixture = TestBed.createComponent(SettingsOverviewComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

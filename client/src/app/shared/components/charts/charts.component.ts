@@ -2,11 +2,11 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
 import { ChartOptions } from 'chart.js';
 import { Label } from 'ng2-charts';
 
-import { BaseViewComponent } from 'app/site/base/base-view';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { BaseComponent } from 'app/site/base/components/base.component';
 
 /**
  * The different supported chart-types.
@@ -41,7 +41,7 @@ export type ChartData = ChartDate[];
     styleUrls: ['./charts.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ChartsComponent extends BaseViewComponent {
+export class ChartsComponent extends BaseComponent {
     /**
      * The type of the chart.
      */
@@ -137,8 +137,8 @@ export class ChartsComponent extends BaseViewComponent {
      * @param matSnackbar
      * @param cd
      */
-    public constructor(title: Title, translate: TranslateService, matSnackbar: MatSnackBar) {
-        super(title, translate, matSnackbar);
+    public constructor(componentServiceCollector: ComponentServiceCollector) {
+        super(componentServiceCollector);
     }
 
     public calcBarChartHeight(): string | undefined {

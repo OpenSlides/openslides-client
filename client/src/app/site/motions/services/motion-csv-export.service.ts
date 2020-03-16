@@ -5,13 +5,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { ChangeRecommendationRepositoryService } from 'app/core/repositories/motions/change-recommendation-repository.service';
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
 import {
     CsvColumnDefinitionMap,
     CsvColumnDefinitionProperty,
     CsvExportService
 } from 'app/core/ui-services/csv-export.service';
 import { LinenumberingService } from 'app/core/ui-services/linenumbering.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { ViewUnifiedChange } from 'app/shared/models/motions/view-unified-change';
 import { reconvertChars } from 'app/shared/utils/reconvert-chars';
 import { stripHtmlTags } from 'app/shared/utils/strip-html-tags';
@@ -30,7 +30,7 @@ export class MotionCsvExportService {
      *
      * @param csvExport CsvExportService
      * @param translate TranslateService
-     * @param configService ConfigService
+     * @param organisationSettingsService ConfigService
      * @param linenumberingService LinenumberingService
      * @param changeRecoRepo ChangeRecommendationRepositoryService
      * @param motionRepo MotionRepositoryService
@@ -38,7 +38,7 @@ export class MotionCsvExportService {
     public constructor(
         private csvExport: CsvExportService,
         private translate: TranslateService,
-        private configService: ConfigService,
+        private organisationSettingsService: OrganisationSettingsService,
         private linenumberingService: LinenumberingService,
         private changeRecoRepo: ChangeRecommendationRepositoryService,
         private motionRepo: MotionRepositoryService,
@@ -54,7 +54,7 @@ export class MotionCsvExportService {
      */
     private createText(motion: ViewMotion, crMode: ChangeRecoMode): string {
         // get the line length from the config
-        const lineLength = this.configService.instant<number>('motions_line_length');
+        const lineLength = this.organisationSettingsService.instant<number>('motions_line_length');
 
         // lead motion or normal amendments
         // TODO: Consider title change recommendation
@@ -94,7 +94,7 @@ export class MotionCsvExportService {
         crMode?: ChangeRecoMode
     ): void {
         if (!crMode) {
-            crMode = this.configService.instant('motions_recommendation_text_mode');
+            crMode = this.organisationSettingsService.instant('motions_recommendation_text_mode');
         }
 
         const properties = sortMotionPropertyList(['identifier', 'title'].concat(contentToExport));

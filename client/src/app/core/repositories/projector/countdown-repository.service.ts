@@ -1,31 +1,20 @@
 import { Injectable } from '@angular/core';
 
-import { TranslateService } from '@ngx-translate/core';
-
-import { RelationManagerService } from 'app/core/core-services/relation-manager.service';
 import { ServertimeService } from 'app/core/core-services/servertime.service';
-import { ViewModelStoreService } from 'app/core/core-services/view-model-store.service';
 import { Countdown } from 'app/shared/models/core/countdown';
 import { CountdownTitleInformation, ViewCountdown } from 'app/site/projector/models/view-countdown';
 import { BaseRepository } from '../base-repository';
-import { CollectionStringMapperService } from '../../core-services/collection-string-mapper.service';
-import { DataSendService } from '../../core-services/data-send.service';
-import { DataStoreService } from '../../core-services/data-store.service';
+import { RepositoryServiceCollector } from '../repository-service-collector';
 
 @Injectable({
     providedIn: 'root'
 })
 export class CountdownRepositoryService extends BaseRepository<ViewCountdown, Countdown, CountdownTitleInformation> {
     public constructor(
-        DS: DataStoreService,
-        dataSend: DataSendService,
-        mapperService: CollectionStringMapperService,
-        viewModelStoreService: ViewModelStoreService,
-        translate: TranslateService,
-        relationManager: RelationManagerService,
+        repositoryServiceCollector: RepositoryServiceCollector,
         private servertimeService: ServertimeService
     ) {
-        super(DS, dataSend, mapperService, viewModelStoreService, translate, relationManager, Countdown);
+        super(repositoryServiceCollector, Countdown);
     }
 
     public getTitle = (titleInformation: CountdownTitleInformation) => {

@@ -1,15 +1,11 @@
-import { OnDestroy } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
-
-import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition, PblDataSource } from '@pebula/ngrid';
 
 import { StorageService } from 'app/core/core-services/storage.service';
-import { BaseViewComponent } from './base-view';
-import { BaseViewModel } from './base-view-model';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { BaseModelContextComponent } from './base-model-context.component';
+import { BaseViewModel } from '../base-view-model';
 
-export abstract class BaseListViewComponent<V extends BaseViewModel> extends BaseViewComponent implements OnDestroy {
+export abstract class BaseListViewComponent<V extends BaseViewModel> extends BaseModelContextComponent {
     /**
      * The source of the table data, will be filled by an event emitter
      */
@@ -47,19 +43,12 @@ export abstract class BaseListViewComponent<V extends BaseViewModel> extends Bas
      */
     public badgeButtonWidth = '45px';
 
-    /**
-     * @param titleService the title service
-     * @param translate the translate service
-     * @param matSnackBar showing errors
-     * @param storage Access the store
-     */
-    public constructor(
-        titleService: Title,
-        translate: TranslateService,
-        matSnackBar: MatSnackBar,
-        protected storage: StorageService
-    ) {
-        super(titleService, translate, matSnackBar);
+    protected get storage(): StorageService {
+        return this.componentServiceCollector.storage;
+    }
+
+    public constructor(componentServiceCollector: ComponentServiceCollector) {
+        super(componentServiceCollector);
         this.selectedRows = [];
     }
 

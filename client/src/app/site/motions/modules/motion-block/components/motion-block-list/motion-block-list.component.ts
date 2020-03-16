@@ -1,20 +1,17 @@
 import { Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
 import { BehaviorSubject } from 'rxjs';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { StorageService } from 'app/core/core-services/storage.service';
 import { ItemRepositoryService } from 'app/core/repositories/agenda/item-repository.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { ViewItem } from 'app/site/agenda/models/view-item';
-import { BaseListViewComponent } from 'app/site/base/base-list-view';
+import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
 import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
 import { MotionBlockSortService } from 'app/site/motions/services/motion-block-sort.service';
 
@@ -92,10 +89,7 @@ export class MotionBlockListComponent extends BaseListViewComponent<ViewMotionBl
      * @param sortService
      */
     public constructor(
-        titleService: Title,
-        translate: TranslateService,
-        matSnackBar: MatSnackBar,
-        storage: StorageService,
+        componentServiceCollector: ComponentServiceCollector,
         public repo: MotionBlockRepositoryService,
         private formBuilder: FormBuilder,
         private itemRepo: ItemRepositoryService,
@@ -103,7 +97,7 @@ export class MotionBlockListComponent extends BaseListViewComponent<ViewMotionBl
         private dialog: MatDialog,
         public sortService: MotionBlockSortService
     ) {
-        super(titleService, translate, matSnackBar, storage);
+        super(componentServiceCollector);
 
         this.createBlockForm = this.formBuilder.group({
             title: ['', Validators.required],

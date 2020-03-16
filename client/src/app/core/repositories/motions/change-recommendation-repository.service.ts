@@ -1,14 +1,8 @@
 import { Injectable } from '@angular/core';
 
-import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { CollectionStringMapperService } from 'app/core/core-services/collection-string-mapper.service';
-import { DataSendService } from 'app/core/core-services/data-send.service';
-import { DataStoreService } from 'app/core/core-services/data-store.service';
-import { RelationManagerService } from 'app/core/core-services/relation-manager.service';
-import { ViewModelStoreService } from 'app/core/core-services/view-model-store.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { MotionChangeRecommendation } from 'app/shared/models/motions/motion-change-reco';
 import {
@@ -18,6 +12,7 @@ import {
 import { ChangeRecoMode } from 'app/site/motions/motions.constants';
 import { BaseRepository } from '../base-repository';
 import { DiffService, LineRange, ModificationType } from '../../ui-services/diff.service';
+import { RepositoryServiceCollector } from '../repository-service-collector';
 import { ViewMotion } from '../../../site/motions/models/view-motion';
 import { ViewUnifiedChange } from '../../../shared/models/motions/view-unified-change';
 
@@ -52,24 +47,8 @@ export class ChangeRecommendationRepositoryService extends BaseRepository<
      * @param {TranslateService} translate
      * @param {DiffService} diffService
      */
-    public constructor(
-        DS: DataStoreService,
-        dataSend: DataSendService,
-        mapperService: CollectionStringMapperService,
-        viewModelStoreService: ViewModelStoreService,
-        translate: TranslateService,
-        relationManager: RelationManagerService,
-        private diffService: DiffService
-    ) {
-        super(
-            DS,
-            dataSend,
-            mapperService,
-            viewModelStoreService,
-            translate,
-            relationManager,
-            MotionChangeRecommendation
-        );
+    public constructor(repositoryServiceCollector: RepositoryServiceCollector, private diffService: DiffService) {
+        super(repositoryServiceCollector, MotionChangeRecommendation);
     }
 
     public getTitle = (titleInformation: MotionChangeRecommendationTitleInformation) => {

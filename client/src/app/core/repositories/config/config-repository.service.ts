@@ -1,20 +1,15 @@
 import { Injectable } from '@angular/core';
 
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { CollectionStringMapperService } from 'app/core/core-services/collection-string-mapper.service';
-import { DataSendService } from 'app/core/core-services/data-send.service';
-import { DataStoreService } from 'app/core/core-services/data-store.service';
 import { HttpService } from 'app/core/core-services/http.service';
-import { RelationManagerService } from 'app/core/core-services/relation-manager.service';
-import { ViewModelStoreService } from 'app/core/core-services/view-model-store.service';
 import { BaseRepository } from 'app/core/repositories/base-repository';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Config } from 'app/shared/models/core/config';
-import { ConfigItem } from 'app/site/config/components/config-list/config-list.component';
-import { ConfigTitleInformation, ViewConfig } from 'app/site/config/models/view-config';
+import { ConfigItem } from 'app/site/settings/components/settings-list/settings-list.component';
+import { ConfigTitleInformation, ViewConfig } from 'app/site/settings/models/view-config';
+import { RepositoryServiceCollector } from '../repository-service-collector';
 
 /**
  * Represents a config subgroup. It can only holds items and no further groups.
@@ -88,16 +83,8 @@ export class ConfigRepositoryService extends BaseRepository<ViewConfig, Config, 
      * @param dataSend sending changed objects
      * @param http OpenSlides own HTTP Service
      */
-    public constructor(
-        DS: DataStoreService,
-        dataSend: DataSendService,
-        mapperService: CollectionStringMapperService,
-        viewModelStoreService: ViewModelStoreService,
-        translate: TranslateService,
-        relationManager: RelationManagerService,
-        private http: HttpService
-    ) {
-        super(DS, dataSend, mapperService, viewModelStoreService, translate, relationManager, Config);
+    public constructor(repositoryServiceCollector: RepositoryServiceCollector, private http: HttpService) {
+        super(repositoryServiceCollector, Config);
 
         this.setSortFunction((a, b) => a.weight - b.weight);
 
@@ -178,7 +165,8 @@ export class ConfigRepositoryService extends BaseRepository<ViewConfig, Config, 
      * Saves a config value. The server needs the key instead of the id to fetch the config variable.
      */
     public async update(config: Partial<Config>, viewConfig: ViewConfig): Promise<void> {
-        const updatedConfig = viewConfig.getUpdatedModel(config);
+        const updatedData = viewConfig.getUpdatedModelData(config);
+        const updatedConfig = new Config(updatedData);
         await this.http.put(`/rest/${updatedConfig.collectionString}/${updatedConfig.key}/`, updatedConfig);
     }
 

@@ -4,16 +4,16 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
 import { AuthService } from 'app/core/core-services/auth.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { LoginDataService } from 'app/core/ui-services/login-data.service';
 import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { UserAuthType } from 'app/shared/models/users/user';
 import { ParentErrorStateMatcher } from 'app/shared/parent-error-state-matcher';
-import { BaseViewComponent } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 
 /**
  * Login mask component.
@@ -25,7 +25,7 @@ import { BaseViewComponent } from 'app/site/base/base-view';
     templateUrl: './login-mask.component.html',
     styleUrls: ['./login-mask.component.scss']
 })
-export class LoginMaskComponent extends BaseViewComponent implements OnInit, OnDestroy {
+export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestroy {
     /**
      * Show or hide password and change the indicator accordingly
      */
@@ -73,9 +73,7 @@ export class LoginMaskComponent extends BaseViewComponent implements OnInit, OnD
      * @param overlayService Service to show the spinner when the user is signing in
      */
     public constructor(
-        title: Title,
-        translate: TranslateService,
-        matSnackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private authService: AuthService,
         private operator: OperatorService,
         private router: Router,
@@ -84,7 +82,7 @@ export class LoginMaskComponent extends BaseViewComponent implements OnInit, OnD
         private loginDataService: LoginDataService,
         private overlayService: OverlayService
     ) {
-        super(title, translate, matSnackBar);
+        super(componentServiceCollector);
         // Hide the spinner if the user is at `login-mask`
         this.createForm();
     }
@@ -107,10 +105,10 @@ export class LoginMaskComponent extends BaseViewComponent implements OnInit, OnD
         );
 
         // Maybe the operator changes and the user is logged in. If so, redirect him and boot OpenSlides.
-        this.operatorSubscription = this.operator.getUserObservable().subscribe(user => {
+        this.operatorSubscription = this.operator.operatorUpdatedEvent.subscribe(user => {
             if (user) {
                 this.clearOperatorSubscription();
-                this.authService.redirectUser(user.id);
+                this.authService.redirectUser();
             }
         });
     }
@@ -175,7 +173,7 @@ export class LoginMaskComponent extends BaseViewComponent implements OnInit, OnD
      * returns if the anonymous is enabled.
      */
     public areGuestsEnabled(): boolean {
-        return this.operator.guestsEnabled;
+        return this.operator.guestEnabled;
     }
 
     /**

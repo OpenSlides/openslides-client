@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { auditTime } from 'rxjs/operators';
 
-import { WebsocketService } from 'app/core/core-services/websocket.service';
 import { Projector, ProjectorElement } from 'app/shared/models/core/projector';
 
 export interface SlideData<T = { error?: string }, P extends ProjectorElement = ProjectorElement> {
@@ -14,24 +12,24 @@ export interface SlideData<T = { error?: string }, P extends ProjectorElement = 
 
 export type ProjectorData = SlideData[];
 
-interface AllProjectorData {
+/*interface AllProjectorData {
     [id: number]: ProjectorData | { error: string };
-}
+}*/
 
 /**
  * Received data from server.
  */
-interface ProjectorWebsocketMessage {
-    /**
-     * The `change_id` of the current update.
-     */
-    change_id: number;
+// interface ProjectorWebsocketMessage {
+/**
+ * The `change_id` of the current update.
+ */
+//    change_id: number;
 
-    /**
-     * The necessary new projector-data.
-     */
-    data: AllProjectorData;
-}
+/**
+ * The necessary new projector-data.
+ */
+//    data: AllProjectorData;
+// }
 
 /**
  * This service handles the websocket connection for the projector data.
@@ -61,16 +59,16 @@ export class ProjectorDataService {
     /**
      * Holds the current change id to check, if the update contains new content or a deprecated one.
      */
-    private currentChangeId = 0;
+    // private currentChangeId = 0;
 
     /**
      * Constructor.
      *
      * @param websocketService
      */
-    public constructor(private websocketService: WebsocketService) {
+    public constructor() {
         // Dispatch projector data.
-        this.websocketService.getOberservable('projector').subscribe((update: ProjectorWebsocketMessage) => {
+        /*this.websocketService.getOberservable('projector').subscribe((update: ProjectorWebsocketMessage) => {
             if (this.currentChangeId > update.change_id) {
                 return;
             }
@@ -92,7 +90,8 @@ export class ProjectorDataService {
                 .map(id => parseInt(id, 10))
                 .filter(id => this.openProjectorInstances[id] > 0);
             this.websocketService.send('listenToProjectors', { projector_ids: allActiveProjectorIds });
-        });
+        });*/
+        console.warn('TODO: Enable Projector service');
     }
 
     /**

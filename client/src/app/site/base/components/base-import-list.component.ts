@@ -1,20 +1,16 @@
 import { Directive, OnInit, ViewChild } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
 import { auditTime } from 'rxjs/operators';
 
 import { BaseImportService, NewEntry, ValueLabelCombination } from 'app/core/ui-services/base-import.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseModel } from 'app/shared/models/base/base-model';
 import { getLongPreview, getShortPreview } from 'app/shared/utils/previewStrings';
-import { BaseViewComponent } from './base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 
-@Directive()
-export abstract class BaseImportListComponentDirective<M extends BaseModel> extends BaseViewComponent
-    implements OnInit {
+export abstract class BaseImportListComponent<M extends BaseModel> extends BaseComponent implements OnInit {
     /**
      * The data source for a table. Requires to be initialised with a BaseViewModel
      */
@@ -113,13 +109,8 @@ export abstract class BaseImportListComponentDirective<M extends BaseModel> exte
      * @param matSnackBar MatSnackBar for displaying errors
      */
 
-    public constructor(
-        protected importer: BaseImportService<M>,
-        titleService: Title,
-        translate: TranslateService,
-        matSnackBar: MatSnackBar
-    ) {
-        super(titleService, translate, matSnackBar);
+    public constructor(componentServiceCollector: ComponentServiceCollector, protected importer: BaseImportService<M>) {
+        super(componentServiceCollector);
         this.initTable();
         this.importer.errorEvent.subscribe(this.raiseError);
     }

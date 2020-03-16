@@ -35,16 +35,16 @@ export class CustomTranslationComponent implements ControlValueAccessor, OnInit 
     /**
      * Default constructor.
      *
-     * @param fb FormBuilder
+     * @param formBuilder FormBuilder
      */
-    public constructor(private fb: FormBuilder) {}
+    public constructor(private formBuilder: FormBuilder) {}
 
     /**
      * Initializes the form-controls.
      */
     public ngOnInit(): void {
-        this.translationForm = this.fb.group({
-            translationBoxes: this.fb.array([])
+        this.translationForm = this.formBuilder.group({
+            translationBoxes: this.formBuilder.array([])
         });
 
         this.translationBoxes = this.translationForm.get('translationBoxes') as FormArray;
@@ -114,7 +114,7 @@ export class CustomTranslationComponent implements ControlValueAccessor, OnInit 
      */
     public addNewTranslation(original: string = '', translation: string = ''): void {
         this.translationBoxes.push(
-            this.fb.group({
+            this.formBuilder.group({
                 original: [original, Validators.required],
                 translation: [translation, Validators.required]
             })

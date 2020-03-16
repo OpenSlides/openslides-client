@@ -5,7 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { OpenSlidesStatusService } from 'app/core/core-services/openslides-status.service';
 import { StorageService } from 'app/core/core-services/storage.service';
 import { OsSortingDefinition, OsSortingOption } from 'app/core/ui-services/base-sort.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { MotionSortListService } from './motion-sort-list.service';
 import { ViewMotion } from '../models/view-motion';
 
@@ -29,7 +29,7 @@ export class AmendmentSortListService extends MotionSortListService {
         protected translate: TranslateService,
         store: StorageService,
         OSStatus: OpenSlidesStatusService,
-        config: ConfigService
+        config: OrganisationSettingsService
     ) {
         super(translate, store, OSStatus, config);
     }

@@ -1,11 +1,8 @@
 import { Component } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
 
-import { OperatorService } from 'app/core/core-services/operator.service';
 import { MotionPollRepositoryService } from 'app/core/repositories/motions/motion-poll-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { VotingService } from 'app/core/ui-services/voting.service';
 import { VoteValue } from 'app/shared/models/poll/base-vote';
@@ -48,15 +45,12 @@ export class MotionPollVoteComponent extends BasePollVoteComponent<ViewMotionPol
     ];
 
     public constructor(
-        title: Title,
-        translate: TranslateService,
-        matSnackbar: MatSnackBar,
-        operator: OperatorService,
+        componentServiceCollector: ComponentServiceCollector,
         public vmanager: VotingService,
         private pollRepo: MotionPollRepositoryService,
         private promptService: PromptService
     ) {
-        super(title, translate, matSnackbar, operator);
+        super(componentServiceCollector);
     }
 
     public saveVote(vote: VoteValue): void {

@@ -128,9 +128,9 @@ export class ExtensionFieldComponent implements OnInit, OnDestroy {
     /**
      * Constructor
      *
-     * @param fb The FormBuilder
+     * @param formBuilder The FormBuilder
      */
-    public constructor(private fb: FormBuilder, private router: Router) {}
+    public constructor(private formBuilder: FormBuilder, private router: Router) {}
 
     /**
      * OnInit-method.
@@ -149,7 +149,7 @@ export class ExtensionFieldComponent implements OnInit, OnDestroy {
         this.initInput();
 
         if (this.searchList) {
-            this.extensionFieldForm = this.fb.group({
+            this.extensionFieldForm = this.formBuilder.group({
                 list: [[]]
             });
 

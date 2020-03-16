@@ -7,9 +7,10 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
-import { BaseViewComponent } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ProjectorEditDialogComponent } from '../projector-edit-dialog/projector-edit-dialog.component';
 import { ViewProjector } from '../../models/view-projector';
 
@@ -22,7 +23,7 @@ import { ViewProjector } from '../../models/view-projector';
     styleUrls: ['./projector-list-entry.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class ProjectorListEntryComponent extends BaseViewComponent implements OnInit {
+export class ProjectorListEntryComponent extends BaseComponent implements OnInit {
     /**
      * The projector shown by this entry.
      */
@@ -50,15 +51,13 @@ export class ProjectorListEntryComponent extends BaseViewComponent implements On
      * @param operator OperatorService
      */
     public constructor(
-        titleService: Title,
-        protected translate: TranslateService, // protected required for ng-translate-extract
-        matSnackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private repo: ProjectorRepositoryService,
         private promptService: PromptService,
         private dialogService: MatDialog,
         private operator: OperatorService
     ) {
-        super(titleService, translate, matSnackBar);
+        super(componentServiceCollector);
     }
 
     public ngOnInit(): void {}

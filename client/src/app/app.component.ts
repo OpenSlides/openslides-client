@@ -4,16 +4,14 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, take } from 'rxjs/operators';
 
-import { ConfigService } from './core/ui-services/config.service';
-import { ConstantsService } from './core/core-services/constants.service';
 import { CountUsersService } from './core/ui-services/count-users.service';
 import { DataStoreUpgradeService } from './core/core-services/data-store-upgrade.service';
 import { LoadFontService } from './core/ui-services/load-font.service';
 import { LoginDataService } from './core/ui-services/login-data.service';
 import { OperatorService } from './core/core-services/operator.service';
+import { OrganisationSettingsService } from './core/ui-services/organisation-settings.service';
 import { OverlayService } from './core/ui-services/overlay.service';
 import { PingService } from './core/core-services/ping.service';
-import { PrioritizeService } from './core/core-services/prioritize.service';
 import { RoutingStateService } from './core/ui-services/routing-state.service';
 import { ServertimeService } from './core/core-services/servertime.service';
 import { ThemeService } from './core/ui-services/theme.service';
@@ -66,7 +64,7 @@ export class AppComponent {
      * @param servertimeService executes the scheduler early on
      * @param themeService used to listen to theme-changes
      * @param countUsersService to call the constructor of the CountUserService
-     * @param configService to call the constructor of the ConfigService
+     * @param organisationSettingsService to call the constructor of the ConfigService
      * @param loadFontService to call the constructor of the LoadFontService
      * @param dataStoreUpgradeService
      */
@@ -77,14 +75,12 @@ export class AppComponent {
         router: Router,
         operator: OperatorService,
         loginDataService: LoginDataService,
-        constantsService: ConstantsService, // Needs to be started, so it can register itself to the WebsocketService
         themeService: ThemeService,
         overlayService: OverlayService,
         countUsersService: CountUsersService, // Needed to register itself.
-        configService: ConfigService,
+        organisationSettingsService: OrganisationSettingsService,
         loadFontService: LoadFontService,
         dataStoreUpgradeService: DataStoreUpgradeService, // to start it.
-        prioritizeService: PrioritizeService,
         pingService: PingService,
         routingState: RoutingStateService,
         votingBannerService: VotingBannerService // needed for initialisation

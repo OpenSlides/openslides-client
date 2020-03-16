@@ -1,11 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { TranslateService } from '@ngx-translate/core';
-
-import { DataSendService } from 'app/core/core-services/data-send.service';
 import { HttpService } from 'app/core/core-services/http.service';
-import { RelationManagerService } from 'app/core/core-services/relation-manager.service';
-import { ViewModelStoreService } from 'app/core/core-services/view-model-store.service';
 import { RelationDefinition } from 'app/core/definitions/relations';
 import { ListOfSpeakers } from 'app/shared/models/agenda/list-of-speakers';
 import { Speaker } from 'app/shared/models/agenda/speaker';
@@ -25,9 +20,8 @@ import { ViewUser } from 'app/site/users/models/view-user';
 import { BaseHasContentObjectRepository } from '../base-has-content-object-repository';
 import { BaseIsListOfSpeakersContentObjectRepository } from '../base-is-list-of-speakers-content-object-repository';
 import { NestedModelDescriptors } from '../base-repository';
-import { CollectionStringMapperService } from '../../core-services/collection-string-mapper.service';
-import { DataStoreService } from '../../core-services/data-store.service';
 import { ItemRepositoryService } from './item-repository.service';
+import { RepositoryServiceCollector } from '../repository-service-collector';
 
 const ListOfSpeakersRelations: RelationDefinition[] = [
     {
@@ -87,22 +81,12 @@ export class ListOfSpeakersRepositoryService extends BaseHasContentObjectReposit
      * @param treeService sort the data according to weight and parents
      */
     public constructor(
-        DS: DataStoreService,
-        dataSend: DataSendService,
-        mapperService: CollectionStringMapperService,
-        viewModelStoreService: ViewModelStoreService,
-        translate: TranslateService,
-        relationManager: RelationManagerService,
+        repositoryServiceCollector: RepositoryServiceCollector,
         private httpService: HttpService,
         private itemRepo: ItemRepositoryService
     ) {
         super(
-            DS,
-            dataSend,
-            mapperService,
-            viewModelStoreService,
-            translate,
-            relationManager,
+            repositoryServiceCollector,
             ListOfSpeakers,
             ListOfSpeakersRelations,
             ListOfSpeakersNestedModelDescriptors

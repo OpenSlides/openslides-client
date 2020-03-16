@@ -4,15 +4,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { MotionCommentSection } from 'app/shared/models/motions/motion-comment-section';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
-import { BaseViewComponent } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-comment-section';
 import { ViewGroup } from 'app/site/users/models/view-group';
 
@@ -24,7 +24,7 @@ import { ViewGroup } from 'app/site/users/models/view-group';
     templateUrl: './motion-comment-section-list.component.html',
     styleUrls: ['./motion-comment-section-list.component.scss']
 })
-export class MotionCommentSectionListComponent extends BaseViewComponent implements OnInit {
+export class MotionCommentSectionListComponent extends BaseComponent implements OnInit {
     @ViewChild('motionCommentDialog', { static: true })
     private motionCommentDialog: TemplateRef<string>;
 
@@ -53,16 +53,14 @@ export class MotionCommentSectionListComponent extends BaseViewComponent impleme
      * @param DS
      */
     public constructor(
-        titleService: Title,
-        protected translate: TranslateService, // protected required for ng-translate-extract
-        matSnackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private repo: MotionCommentSectionRepositoryService,
         private formBuilder: FormBuilder,
         private promptService: PromptService,
         private dialog: MatDialog,
         private groupRepo: GroupRepositoryService
     ) {
-        super(titleService, translate, matSnackBar);
+        super(componentServiceCollector);
 
         const form = {
             name: ['', Validators.required],

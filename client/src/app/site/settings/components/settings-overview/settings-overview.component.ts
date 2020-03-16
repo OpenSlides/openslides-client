@@ -1,30 +1,27 @@
 import { Component, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
-
-import { BaseComponent } from 'app/base.component';
 import { ConfigRepositoryService } from 'app/core/repositories/config/config-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
+import { BaseComponent } from 'app/site/base/components/base.component';
 
 /**
  * List view for the global settings
  */
 @Component({
-    selector: 'os-config-overview',
-    templateUrl: './config-overview.component.html',
-    styleUrls: ['./config-overview.component.scss']
+    selector: 'os-settings-overview',
+    templateUrl: './settings-overview.component.html',
+    styleUrls: ['./settings-overview.component.scss']
 })
-export class ConfigOverviewComponent extends BaseComponent implements OnInit {
+export class SettingsOverviewComponent extends BaseComponent implements OnInit {
     public groups: string[] = [];
 
     public constructor(
-        protected titleService: Title,
-        protected translate: TranslateService,
+        componentServiceCollector: ComponentServiceCollector,
         public repo: ConfigRepositoryService,
         private promptDialog: PromptService
     ) {
-        super(titleService, translate);
+        super(componentServiceCollector);
     }
 
     /**

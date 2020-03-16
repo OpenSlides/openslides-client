@@ -1,14 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
-
-import { TranslateService } from '@ngx-translate/core';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MotionComment } from 'app/shared/models/motions/motion';
-import { BaseViewComponent } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-comment-section';
 import { MotionPdfExportService } from 'app/site/motions/services/motion-pdf-export.service';
@@ -21,7 +18,7 @@ import { MotionPdfExportService } from 'app/site/motions/services/motion-pdf-exp
     templateUrl: './motion-comments.component.html',
     styleUrls: ['./motion-comments.component.scss']
 })
-export class MotionCommentsComponent extends BaseViewComponent implements OnInit {
+export class MotionCommentsComponent extends BaseComponent implements OnInit {
     /**
      * An array of all sections the operator can see.
      */
@@ -70,15 +67,13 @@ export class MotionCommentsComponent extends BaseViewComponent implements OnInit
      * @param matSnackBar showing errors and information
      */
     public constructor(
+        componentServiceCollector: ComponentServiceCollector,
         private commentRepo: MotionCommentSectionRepositoryService,
         private formBuilder: FormBuilder,
         private operator: OperatorService,
-        private pdfService: MotionPdfExportService,
-        titleService: Title,
-        translate: TranslateService,
-        matSnackBar: MatSnackBar
+        private pdfService: MotionPdfExportService
     ) {
-        super(titleService, translate, matSnackBar);
+        super(componentServiceCollector);
     }
 
     public ngOnInit(): void {

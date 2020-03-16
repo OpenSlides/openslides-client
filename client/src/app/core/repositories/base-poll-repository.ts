@@ -1,49 +1,29 @@
-import { TranslateService } from '@ngx-translate/core';
 
-import { CollectionStringMapperService } from 'app/core/core-services/collection-string-mapper.service';
-import { DataSendService } from 'app/core/core-services/data-send.service';
-import { DataStoreService } from 'app/core/core-services/data-store.service';
 import { HttpService } from 'app/core/core-services/http.service';
-import { RelationManagerService } from 'app/core/core-services/relation-manager.service';
-import { ViewModelStoreService } from 'app/core/core-services/view-model-store.service';
 import { RelationDefinition } from 'app/core/definitions/relations';
 import { BaseRepository, NestedModelDescriptors } from 'app/core/repositories/base-repository';
+import { RepositoryServiceCollector } from 'app/core/repositories/repository-service-collector';
 import { VotingService } from 'app/core/ui-services/voting.service';
 import { ModelConstructor } from 'app/shared/models/base/base-model';
 import { BasePoll, PollState } from 'app/shared/models/poll/base-poll';
 import { BaseViewModel, TitleInformation } from 'app/site/base/base-view-model';
-import { ViewBasePoll } from '../models/view-base-poll';
+import { ViewBasePoll } from '../../site/polls/models/view-base-poll';
 
-export abstract class BasePollRepositoryService<
+export abstract class BasePollRepository<
     V extends ViewBasePoll & T = any,
     M extends BasePoll = any,
     T extends TitleInformation = any
 > extends BaseRepository<V, M, T> {
     // just passing everything to superclass
     public constructor(
-        protected DS: DataStoreService,
-        protected dataSend: DataSendService,
-        protected collectionStringMapperService: CollectionStringMapperService,
-        protected viewModelStoreService: ViewModelStoreService,
-        protected translate: TranslateService,
-        protected relationManager: RelationManagerService,
+        repositoryServiceCollector: RepositoryServiceCollector,
         protected baseModelCtor: ModelConstructor<M>,
         protected relationDefinitions: RelationDefinition<BaseViewModel>[] = [],
         protected nestedModelDescriptors: NestedModelDescriptors = {},
         private votingService: VotingService,
         protected http: HttpService
     ) {
-        super(
-            DS,
-            dataSend,
-            collectionStringMapperService,
-            viewModelStoreService,
-            translate,
-            relationManager,
-            baseModelCtor,
-            relationDefinitions,
-            nestedModelDescriptors
-        );
+        super(repositoryServiceCollector, baseModelCtor, relationDefinitions, nestedModelDescriptors);
     }
 
     /**
@@ -52,9 +32,7 @@ export abstract class BasePollRepositoryService<
      */
     protected createViewModelWithTitles(model: M): V {
         const viewModel = super.createViewModelWithTitles(model);
-        Object.defineProperty(viewModel, 'canBeVotedFor', {
-            value: () => this.votingService.canVote(viewModel)
-        });
+        viewModel.canBeVotedFor = () => this.votingService.canVote(viewModel);
         return viewModel;
     }
 

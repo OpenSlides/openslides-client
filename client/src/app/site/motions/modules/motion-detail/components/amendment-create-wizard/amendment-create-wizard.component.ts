@@ -1,15 +1,12 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { TranslateService } from '@ngx-translate/core';
-
 import { MotionRepositoryService, ParagraphToChoose } from 'app/core/repositories/motions/motion-repository.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
-import { BaseViewComponent } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { CreateMotion } from 'app/site/motions/models/create-motion';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 
@@ -22,7 +19,7 @@ import { ViewMotion } from 'app/site/motions/models/view-motion';
     styleUrls: ['./amendment-create-wizard.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class AmendmentCreateWizardComponent extends BaseViewComponent implements OnInit {
+export class AmendmentCreateWizardComponent extends BaseComponent implements OnInit {
     /**
      * The motion to be amended
      */
@@ -69,7 +66,7 @@ export class AmendmentCreateWizardComponent extends BaseViewComponent implements
      *
      * @param titleService set the browser title
      * @param translate the translation service
-     * @param configService The configuration provider
+     * @param organisationSettingsService The configuration provider
      * @param formBuilder Form builder
      * @param repo Motion Repository
      * @param route The activated route
@@ -78,31 +75,29 @@ export class AmendmentCreateWizardComponent extends BaseViewComponent implements
      * @param matSnackBar Material Design SnackBar
      */
     public constructor(
-        titleService: Title,
-        protected translate: TranslateService, // protected required for ng-translate-extract
-        private configService: ConfigService,
+        componentServiceCollector: ComponentServiceCollector,
+        private organisationSettingsService: OrganisationSettingsService,
         private formBuilder: FormBuilder,
         private repo: MotionRepositoryService,
         private route: ActivatedRoute,
         private router: Router,
-        private promptService: PromptService,
-        matSnackBar: MatSnackBar
+        private promptService: PromptService
     ) {
-        super(titleService, translate, matSnackBar);
+        super(componentServiceCollector);
         this.createForm();
     }
 
     public ngOnInit(): void {
-        this.configService.get<number>('motions_line_length').subscribe(lineLength => {
+        this.organisationSettingsService.get<number>('motions_line_length').subscribe(lineLength => {
             this.lineLength = lineLength;
             this.getMotionByUrl();
         });
 
-        this.configService.get<boolean>('motions_reason_required').subscribe(required => {
+        this.organisationSettingsService.get<boolean>('motions_reason_required').subscribe(required => {
             this.reasonRequired = required;
         });
 
-        this.configService.get<boolean>('motions_amendments_multiple_paragraphs').subscribe(allowed => {
+        this.organisationSettingsService.get<boolean>('motions_amendments_multiple_paragraphs').subscribe(allowed => {
             this.multipleParagraphsAllowed = allowed;
         });
     }

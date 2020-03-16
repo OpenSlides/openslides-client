@@ -1,14 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-
-import { TranslateService } from '@ngx-translate/core';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
-import { BaseViewComponent } from 'app/site/base/base-view';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewUser } from '../../models/view-user';
 
 /**
@@ -19,7 +16,7 @@ import { ViewUser } from '../../models/view-user';
     templateUrl: './password.component.html',
     styleUrls: ['./password.component.scss']
 })
-export class PasswordComponent extends BaseViewComponent implements OnInit {
+export class PasswordComponent extends BaseComponent implements OnInit {
     /**
      * the user that is currently worked own
      */
@@ -70,16 +67,14 @@ export class PasswordComponent extends BaseViewComponent implements OnInit {
      * @param formBuilder formbuilder for the two forms
      */
     public constructor(
-        title: Title,
-        protected translate: TranslateService, // protected required for ng-translate-extract
-        matSnackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private route: ActivatedRoute,
         private router: Router,
         private repo: UserRepositoryService,
         private operator: OperatorService,
         private formBuilder: FormBuilder
     ) {
-        super(title, translate, matSnackBar);
+        super(componentServiceCollector);
     }
 
     /**
@@ -97,7 +92,7 @@ export class PasswordComponent extends BaseViewComponent implements OnInit {
             this.updateUser();
         });
 
-        this.operator.getUserObservable().subscribe(() => {
+        this.operator.operatorUpdatedEvent.subscribe(() => {
             this.updateUser();
         });
 
@@ -113,13 +108,8 @@ export class PasswordComponent extends BaseViewComponent implements OnInit {
     }
 
     private updateUser(): void {
-        const operator = this.operator.user;
-        this.ownPage = this.urlUserId ? operator.id === this.urlUserId : true;
-        if (this.ownPage) {
-            this.user = this.operator.viewUser;
-        } else {
-            this.user = this.repo.getViewModel(this.urlUserId);
-        }
+        this.ownPage = this.urlUserId ? this.operator.operatorId === this.urlUserId : true;
+        this.user = this.repo.getViewModel(this.urlUserId);
         this.canManage = this.operator.hasPerms('users.can_manage');
     }
 

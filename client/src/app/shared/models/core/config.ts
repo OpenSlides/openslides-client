@@ -31,6 +31,8 @@ export interface ConfigData {
     subgroup?: string;
 }
 
+// TODO: This is a setting now. Rename it.
+
 /**
  * Representation of a config variable
  * @ignore

@@ -10,20 +10,19 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
 import { Moment } from 'moment';
 import { Observable } from 'rxjs';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
 
-import { BaseComponent } from 'app/base.component';
 import { ConfigRepositoryService } from 'app/core/repositories/config/config-repository.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ParentErrorStateMatcher } from 'app/shared/parent-error-state-matcher';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewGroup } from 'app/site/users/models/view-group';
-import { ConfigItem } from '../config-list/config-list.component';
+import { ConfigItem } from '../settings-list/settings-list.component';
 import { ViewConfig } from '../../models/view-config';
 
 /**
@@ -36,13 +35,13 @@ import { ViewConfig } from '../../models/view-config';
  * ```
  */
 @Component({
-    selector: 'os-config-field',
-    templateUrl: './config-field.component.html',
-    styleUrls: ['./config-field.component.scss'],
+    selector: 'os-settings-field',
+    templateUrl: './settings-field.component.html',
+    styleUrls: ['./settings-field.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None // to style the date and time pickers
 })
-export class ConfigFieldComponent extends BaseComponent implements OnInit, OnDestroy {
+export class SettingsFieldComponent extends BaseComponent implements OnInit, OnDestroy {
     public configItem: ViewConfig;
 
     /**
@@ -132,14 +131,13 @@ export class ConfigFieldComponent extends BaseComponent implements OnInit, OnDes
      * @param repo ConfigRepositoryService
      */
     public constructor(
-        protected titleService: Title,
-        protected translate: TranslateService,
+        componentServiceCollector: ComponentServiceCollector,
         private formBuilder: FormBuilder,
         private cd: ChangeDetectorRef,
         public repo: ConfigRepositoryService,
         private groupRepo: GroupRepositoryService
     ) {
-        super(titleService, translate);
+        super(componentServiceCollector);
     }
 
     /**

@@ -13,6 +13,7 @@ import { Identifiable } from '../../shared/models/base/identifiable';
 import { OnAfterAppsLoaded } from '../definitions/on-after-apps-loaded';
 import { RelationManagerService } from '../core-services/relation-manager.service';
 import { RelationDefinition, ReverseRelationDefinition } from '../definitions/relations';
+import { RepositoryServiceCollector } from './repository-service-collector';
 import { ViewModelStoreService } from '../core-services/view-model-store.service';
 
 export interface ModelDescriptor<M extends BaseModel, V extends BaseViewModel> {
@@ -107,22 +108,41 @@ export abstract class BaseRepository<V extends BaseViewModel & T, M extends Base
      */
     protected baseViewModelCtor: ViewModelConstructor<V>;
 
+    protected get DS(): DataStoreService {
+        return this.repositoryServiceCollector.DS;
+    }
+
+    protected get dataSend(): DataSendService {
+        return this.repositoryServiceCollector.dataSend;
+    }
+
+    protected get collectionStringMapperService(): CollectionStringMapperService {
+        return this.repositoryServiceCollector.collectionStringMapperService;
+    }
+
+    protected get viewModelStoreService(): ViewModelStoreService {
+        return this.repositoryServiceCollector.viewModelStoreService;
+    }
+
+    protected get translate(): TranslateService {
+        return this.repositoryServiceCollector.translate;
+    }
+
+    protected get relationManager(): RelationManagerService {
+        return this.repositoryServiceCollector.relationManager;
+    }
+
     /**
      * Construction routine for the base repository
      *
-     * @param DS: The DataStore
-     * @param collectionStringMapperService Mapping strings to their corresponding classes
+     * @param repositoryServiceCollector A collector service with all needed services.
      * @param baseModelCtor The model constructor of which this repository is about.
      * @param depsModelCtors A list of constructors that are used in the view model.
      * If one of those changes, the view models will be updated.
+     * @param nestedModelDescriptors A descriptor (none per default) to specify nested models.
      */
     public constructor(
-        protected DS: DataStoreService,
-        protected dataSend: DataSendService,
-        protected collectionStringMapperService: CollectionStringMapperService,
-        protected viewModelStoreService: ViewModelStoreService,
-        protected translate: TranslateService,
-        protected relationManager: RelationManagerService,
+        private repositoryServiceCollector: RepositoryServiceCollector,
         protected baseModelCtor: ModelConstructor<M>,
         protected relationDefinitions: RelationDefinition<BaseViewModel>[] = [],
         protected nestedModelDescriptors: NestedModelDescriptors = {}
@@ -214,8 +234,9 @@ export abstract class BaseRepository<V extends BaseViewModel & T, M extends Base
      * @param viewModel the view model that the update is based on
      */
     public async update(update: Partial<M>, viewModel: V): Promise<void> {
-        const data = viewModel.getUpdatedModel(update);
-        return await this.dataSend.updateModel(data);
+        const data = viewModel.getUpdatedModelData(update);
+        const targetClass = this.collectionStringMapperService.getModelConstructor(viewModel.collectionString);
+        return await this.dataSend.updateModel(new targetClass(data));
     }
 
     /**

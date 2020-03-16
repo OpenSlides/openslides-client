@@ -1,23 +1,23 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ConfigFieldComponent } from '../config-field/config-field.component';
-import { ConfigListComponent } from './config-list.component';
 import { CustomTranslationComponent } from '../custom-translation/custom-translation.component';
 import { E2EImportsModule } from '../../../../../e2e-imports.module';
+import { SettingsFieldComponent } from '../settings-field/settings-field.component';
+import { SettingsListComponent } from './settings-list.component';
 
-describe('ConfigListComponent', () => {
-    let component: ConfigListComponent;
-    let fixture: ComponentFixture<ConfigListComponent>;
+describe('SettingsListComponent', () => {
+    let component: SettingsListComponent;
+    let fixture: ComponentFixture<SettingsListComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [E2EImportsModule],
-            declarations: [ConfigListComponent, ConfigFieldComponent, CustomTranslationComponent]
+            declarations: [SettingsListComponent, SettingsFieldComponent, CustomTranslationComponent]
         }).compileComponents();
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(ConfigListComponent);
+        fixture = TestBed.createComponent(SettingsListComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

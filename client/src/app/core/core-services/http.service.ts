@@ -97,9 +97,6 @@ export class HttpService {
             console.warn(`Please prefix the URL "${url}" with a slash.`);
             url = '/' + url;
         }
-        if (this.OSStatus.isPrioritizedClient) {
-            url = '/prioritize' + url;
-        }
 
         const options = {
             body: data,

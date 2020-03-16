@@ -45,7 +45,7 @@ const routes: Routes = [
             },
             {
                 path: 'settings',
-                loadChildren: () => import('./config/config.module').then(m => m.ConfigModule),
+                loadChildren: () => import('./settings/settings.module').then(m => m.SettingsModule),
                 data: { basePerm: 'core.can_manage_config' }
             },
             {

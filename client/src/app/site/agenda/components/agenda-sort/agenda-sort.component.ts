@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { ItemRepositoryService } from 'app/core/repositories/agenda/item-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ItemVisibilityChoices } from 'app/shared/models/agenda/item';
 import { SortTreeFilterOption, SortTreeViewComponentDirective } from 'app/site/base/sort-tree.component';
+import { BaseSortTreeComponent, SortTreeFilterOption } from 'app/site/base/components/sort-tree.component';
 import { ViewItem } from '../../models/view-item';
 
 /**
@@ -19,7 +18,7 @@ import { ViewItem } from '../../models/view-item';
     templateUrl: './agenda-sort.component.html',
     styleUrls: ['./agenda-sort.component.scss']
 })
-export class AgendaSortComponent extends SortTreeViewComponentDirective<ViewItem> implements OnInit {
+export class AgendaSortComponent extends BaseSortTreeComponent<ViewItem> implements OnInit {
     /**
      * All agendaItems sorted by their weight {@link ViewItem.weight}
      */
@@ -48,13 +47,11 @@ export class AgendaSortComponent extends SortTreeViewComponentDirective<ViewItem
      * @param promptService
      */
     public constructor(
-        title: Title,
-        translate: TranslateService,
-        matSnackBar: MatSnackBar,
-        private agendaRepo: ItemRepositoryService,
-        promptService: PromptService
+        componentServiceCollector: ComponentServiceCollector,
+        promptService: PromptService,
+        private agendaRepo: ItemRepositoryService
     ) {
-        super(title, translate, matSnackBar, promptService);
+        super(componentServiceCollector, promptService);
         this.itemsObservable = this.agendaRepo.getViewModelListObservable();
     }
 
