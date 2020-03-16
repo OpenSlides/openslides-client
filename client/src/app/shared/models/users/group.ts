@@ -6,13 +6,13 @@ import { BaseModel } from '../base/base-model';
  * @ignore
  */
 export class Group extends BaseModel<Group> {
-    public static COLLECTIONSTRING = 'users/group';
+    public static COLLECTION = 'users/group';
 
     public id: number;
     public name: string;
     public permissions: Permission[];
 
     public constructor(input?: Partial<Group>) {
-        super(Group.COLLECTIONSTRING, input);
+        super(Group.COLLECTION, input);
     }
 }

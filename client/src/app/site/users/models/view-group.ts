@@ -7,7 +7,7 @@ export interface GroupTitleInformation {
 }
 
 export class ViewGroup extends BaseViewModel<Group> implements GroupTitleInformation {
-    public static COLLECTIONSTRING = Group.COLLECTIONSTRING;
+    public static COLLECTION = Group.COLLECTION;
 
     public get group(): Group {
         return this._model;

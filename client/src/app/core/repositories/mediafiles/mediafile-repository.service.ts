@@ -1,22 +1,17 @@
 import { HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 
-import { DataSendService } from 'app/core/core-services/data-send.service';
 import { HttpService } from 'app/core/core-services/http.service';
-import { RelationManagerService } from 'app/core/core-services/relation-manager.service';
-import { ViewModelStoreService } from 'app/core/core-services/view-model-store.service';
 import { RelationDefinition } from 'app/core/definitions/relations';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Mediafile } from 'app/shared/models/mediafiles/mediafile';
 import { MediafileTitleInformation, ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { ViewGroup } from 'app/site/users/models/view-group';
 import { BaseIsListOfSpeakersContentObjectRepository } from '../base-is-list-of-speakers-content-object-repository';
-import { CollectionStringMapperService } from '../../core-services/collection-string-mapper.service';
-import { DataStoreService } from '../../core-services/data-store.service';
+import { RepositoryServiceCollector } from '../repository-service-collector';
 
 const MediafileRelations: RelationDefinition[] = [
     {
@@ -59,25 +54,8 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
      * @param dataSend sending data to the server
      * @param httpService OpenSlides own http service
      */
-    public constructor(
-        DS: DataStoreService,
-        mapperService: CollectionStringMapperService,
-        viewModelStoreService: ViewModelStoreService,
-        translate: TranslateService,
-        dataSend: DataSendService,
-        relationManager: RelationManagerService,
-        private httpService: HttpService
-    ) {
-        super(
-            DS,
-            dataSend,
-            mapperService,
-            viewModelStoreService,
-            translate,
-            relationManager,
-            Mediafile,
-            MediafileRelations
-        );
+    public constructor(repositoryServiceCollector: RepositoryServiceCollector, private httpService: HttpService) {
+        super(repositoryServiceCollector, Mediafile, MediafileRelations);
         this.directoryBehaviorSubject = new BehaviorSubject([]);
         this.getViewModelListObservable().subscribe(mediafiles => {
             if (mediafiles) {

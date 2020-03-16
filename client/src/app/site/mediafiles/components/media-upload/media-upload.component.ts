@@ -1,13 +1,10 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 
-import { TranslateService } from '@ngx-translate/core';
-
 import { MediafileRepositoryService } from 'app/core/repositories/mediafiles/mediafile-repository.service';
-import { BaseViewComponent } from 'app/site/base/base-view';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { BaseComponent } from 'app/site/base/components/base.component';
 
 /**
  * Handle file uploads from user
@@ -17,7 +14,7 @@ import { BaseViewComponent } from 'app/site/base/base-view';
     templateUrl: './media-upload.component.html',
     styleUrls: ['./media-upload.component.scss']
 })
-export class MediaUploadComponent extends BaseViewComponent implements OnInit {
+export class MediaUploadComponent extends BaseComponent implements OnInit {
     /**
      * Determine if uploading should happen parallel or synchronously.
      * Synchronous uploading might be necessary if we see that stuff breaks
@@ -36,14 +33,12 @@ export class MediaUploadComponent extends BaseViewComponent implements OnInit {
      * @param route Angulars activated route
      */
     public constructor(
-        titleService: Title,
-        translate: TranslateService,
-        matSnackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private location: Location,
         private route: ActivatedRoute,
         private repo: MediafileRepositoryService
     ) {
-        super(titleService, translate, matSnackBar);
+        super(componentServiceCollector);
     }
 
     public ngOnInit(): void {

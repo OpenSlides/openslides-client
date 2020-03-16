@@ -15,7 +15,7 @@ export interface TopicTitleInformation extends TitleInformationWithAgendaItem {
  * @ignore
  */
 export class ViewTopic extends BaseViewModelWithAgendaItemAndListOfSpeakers<Topic> implements TopicTitleInformation {
-    public static COLLECTIONSTRING = Topic.COLLECTIONSTRING;
+    public static COLLECTION = Topic.COLLECTION;
 
     public get topic(): Topic {
         return this._model;
@@ -51,7 +51,7 @@ export class ViewTopic extends BaseViewModelWithAgendaItemAndListOfSpeakers<Topi
     public getSlide(): ProjectorElementBuildDeskriptor {
         return {
             getBasicProjectorElement: options => ({
-                name: Topic.COLLECTIONSTRING,
+                name: Topic.COLLECTION,
                 id: this.id,
                 getIdentifiers: () => ['name', 'id']
             }),

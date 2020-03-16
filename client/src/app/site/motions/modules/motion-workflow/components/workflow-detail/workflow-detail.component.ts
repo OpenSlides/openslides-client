@@ -1,21 +1,19 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 
-import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { StateRepositoryService } from 'app/core/repositories/motions/state-repository.service';
 import { WorkflowRepositoryService } from 'app/core/repositories/motions/workflow-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { MergeAmendment, Restriction, State } from 'app/shared/models/motions/state';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
-import { BaseViewComponent } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewState } from 'app/site/motions/models/view-state';
 import { ViewWorkflow } from 'app/site/motions/models/view-workflow';
 
@@ -73,7 +71,7 @@ interface RestrictionShape {
     styleUrls: ['./workflow-detail.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WorkflowDetailComponent extends BaseViewComponent implements OnInit {
+export class WorkflowDetailComponent extends BaseComponent implements OnInit {
     /**
      * Reference to the workflow dialog
      */
@@ -153,9 +151,7 @@ export class WorkflowDetailComponent extends BaseViewComponent implements OnInit
      * @param route Read out URL paramters
      */
     public constructor(
-        title: Title,
-        protected translate: TranslateService, // protected required for ng-translate-extract
-        matSnackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private promptService: PromptService,
         private dialog: MatDialog,
         private workflowRepo: WorkflowRepositoryService,
@@ -163,7 +159,7 @@ export class WorkflowDetailComponent extends BaseViewComponent implements OnInit
         private route: ActivatedRoute,
         private cd: ChangeDetectorRef
     ) {
-        super(title, translate, matSnackBar);
+        super(componentServiceCollector);
     }
 
     /**

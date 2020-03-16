@@ -64,7 +64,7 @@ export class CountUsersService {
         });
 
         // Look for the current user.
-        operator.getUserObservable().subscribe(user => (this.currentUserId = user ? user.id : null));
+        operator.operatorIdObservable.subscribe(id => (this.currentUserId = id));
     }
 
     /**

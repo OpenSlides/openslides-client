@@ -9,19 +9,15 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Title } from '@angular/platform-browser';
 
 import { StorageMap } from '@ngx-pwa/local-storage';
-import { TranslateService } from '@ngx-translate/core';
 import { distinctUntilChanged } from 'rxjs/operators';
 
-import { BaseComponent } from 'app/base.component';
-import { ConstantsService } from 'app/core/core-services/constants.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Deferred } from 'app/core/promises/deferred';
-import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
+import { BaseComponent } from 'app/site/base/components/base.component';
 
 declare var JitsiMeetExternalAPI: any;
 
@@ -137,16 +133,12 @@ export class JitsiComponent extends BaseComponent implements OnInit, OnDestroy {
     };
 
     public constructor(
-        titleService: Title,
-        translate: TranslateService,
+        componentServiceCollector: ComponentServiceCollector,
         private operator: OperatorService,
         private storageMap: StorageMap,
-        private userRepo: UserRepositoryService,
-        private constantsService: ConstantsService,
-        private configService: ConfigService,
         private dialog: MatDialog
     ) {
-        super(titleService, translate);
+        super(componentServiceCollector);
     }
 
     public ngOnInit(): void {
@@ -182,7 +174,8 @@ export class JitsiComponent extends BaseComponent implements OnInit, OnDestroy {
             });
 
         await this.lockLoaded;
-        this.constantsService.get<JitsiSettings>('Settings').subscribe(settings => {
+        throw new Error('TODO');
+        /*this.constantsService.get<JitsiSettings>('Settings').subscribe(settings => {
             if (settings) {
                 this.jitsiDomain = settings.JITSI_DOMAIN;
                 this.roomName = settings.JITSI_ROOM_NAME;
@@ -203,7 +196,7 @@ export class JitsiComponent extends BaseComponent implements OnInit, OnDestroy {
             } else {
                 this.stopJitsi();
             }
-        });
+        });*/
     }
 
     public toggleMute(): void {
@@ -230,7 +223,7 @@ export class JitsiComponent extends BaseComponent implements OnInit, OnDestroy {
         this.setOptions();
         this.api = new JitsiMeetExternalAPI(this.jitsiDomain, this.options);
 
-        const jitsiname = this.userRepo.getShortName(this.operator.user);
+        const jitsiname = this.operator.shortName;
         this.api.executeCommand('displayName', jitsiname);
         this.loadApiCallbacks();
     }

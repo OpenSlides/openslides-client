@@ -1,17 +1,13 @@
 import { Injectable } from '@angular/core';
 
-import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { DataStoreService } from 'app/core/core-services/data-store.service';
 import { HttpService } from 'app/core/core-services/http.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { RelationManagerService } from 'app/core/core-services/relation-manager.service';
-import { ViewModelStoreService } from 'app/core/core-services/view-model-store.service';
 import { RelationDefinition } from 'app/core/definitions/relations';
-import { ConfigService } from 'app/core/ui-services/config.service';
 import { DiffLinesInParagraph, DiffService } from 'app/core/ui-services/diff.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { TreeIdNode } from 'app/core/ui-services/tree.service';
 import { Motion } from 'app/shared/models/motions/motion';
 import { Submitter } from 'app/shared/models/motions/submitter';
@@ -35,9 +31,8 @@ import { ViewPersonalNote } from 'app/site/users/models/view-personal-note';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { BaseIsAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-is-agenda-item-and-list-of-speakers-content-object-repository';
 import { NestedModelDescriptors } from '../base-repository';
-import { CollectionStringMapperService } from '../../core-services/collection-string-mapper.service';
-import { DataSendService } from '../../core-services/data-send.service';
 import { LineNumberedString, LinenumberingService, LineNumberRange } from '../../ui-services/linenumbering.service';
+import { RepositoryServiceCollector } from '../repository-service-collector';
 
 type SortProperty = 'weight' | 'identifier';
 
@@ -142,27 +137,26 @@ const MotionRelations: RelationDefinition[] = [
     // Personal notes are dynamically added in the repo.
 ];
 
-const MotionNestedModelDescriptors: NestedModelDescriptors = {
-    'motions/motion': [
-        {
-            ownKey: 'submitters',
-            foreignViewModel: ViewSubmitter,
-            foreignModel: Submitter,
-            order: 'weight',
-            relationDefinitionsByKey: {
-                user: {
-                    type: 'M2O',
-                    ownIdKey: 'user_id',
-                    ownKey: 'user',
-                    foreignViewModel: ViewUser
-                }
-            },
-            titles: {
-                getTitle: (viewSubmitter: ViewSubmitter) => (viewSubmitter.user ? viewSubmitter.user.getTitle() : '')
+const MotionNestedModelDescriptors: NestedModelDescriptors = {};
+MotionNestedModelDescriptors[Motion.COLLECTION] = [
+    {
+        ownKey: 'submitters',
+        foreignViewModel: ViewSubmitter,
+        foreignModel: Submitter,
+        order: 'weight',
+        relationDefinitionsByKey: {
+            user: {
+                type: 'M2O',
+                ownIdKey: 'user_id',
+                ownKey: 'user',
+                foreignViewModel: ViewUser
             }
+        },
+        titles: {
+            getTitle: (viewSubmitter: ViewSubmitter) => (viewSubmitter.user ? viewSubmitter.user.getTitle() : '')
         }
-    ]
-};
+    }
+];
 
 /**
  * Repository Services for motions (and potentially categories)
@@ -211,29 +205,14 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param operator
      */
     public constructor(
-        DS: DataStoreService,
-        dataSend: DataSendService,
-        mapperService: CollectionStringMapperService,
-        viewModelStoreService: ViewModelStoreService,
-        translate: TranslateService,
-        relationManager: RelationManagerService,
-        config: ConfigService,
+        repositoryServiceCollector: RepositoryServiceCollector,
+        config: OrganisationSettingsService,
         private httpService: HttpService,
         private readonly lineNumbering: LinenumberingService,
         private readonly diff: DiffService,
         private operator: OperatorService
     ) {
-        super(
-            DS,
-            dataSend,
-            mapperService,
-            viewModelStoreService,
-            translate,
-            relationManager,
-            Motion,
-            MotionRelations,
-            MotionNestedModelDescriptors
-        );
+        super(repositoryServiceCollector, Motion, MotionRelations, MotionNestedModelDescriptors);
         config.get<SortProperty>('motions_motions_sorting').subscribe(conf => {
             this.sortProperty = conf;
             this.setConfigSortFn();
@@ -347,7 +326,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      */
     private getPersonalNote(): ViewPersonalNote | null {
         return this.viewModelStoreService.find(ViewPersonalNote, pn => {
-            return pn.user_id === this.operator.user.id;
+            return pn.user_id === this.operator.operatorId;
         });
     }
 
@@ -368,7 +347,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         }
 
         const notes = personalNote.notes;
-        const collection = Motion.COLLECTIONSTRING;
+        const collection = Motion.COLLECTION;
         if (notes && notes[collection] && notes[collection][motion.id]) {
             return notes[collection][motion.id];
         }

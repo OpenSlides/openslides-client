@@ -1,14 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
-
-import { TranslateService } from '@ngx-translate/core';
 
 import { ProjectorMessageRepositoryService } from 'app/core/repositories/projector/projector-message-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ProjectionDialogService } from 'app/core/ui-services/projection-dialog.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { Projector } from 'app/shared/models/core/projector';
-import { BaseViewComponent } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewProjectorMessage } from '../../models/view-projector-message';
 
 /**
@@ -20,7 +17,7 @@ import { ViewProjectorMessage } from '../../models/view-projector-message';
     templateUrl: './message-controls.component.html',
     styleUrls: ['./message-controls.component.scss']
 })
-export class MessageControlsComponent extends BaseViewComponent implements OnInit {
+export class MessageControlsComponent extends BaseComponent implements OnInit {
     /**
      * Input slot for the projector message model
      */
@@ -49,14 +46,12 @@ export class MessageControlsComponent extends BaseViewComponent implements OnIni
      * @param promptService delete prompt
      */
     public constructor(
-        titleService: Title,
-        matSnackBar: MatSnackBar,
-        protected translate: TranslateService,
+        componentServiceCollector: ComponentServiceCollector,
         private repo: ProjectorMessageRepositoryService,
         private promptService: PromptService,
         private projectionDialogService: ProjectionDialogService
     ) {
-        super(titleService, translate, matSnackBar);
+        super(componentServiceCollector);
     }
 
     /**

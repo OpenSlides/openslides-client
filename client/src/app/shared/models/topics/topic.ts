@@ -5,7 +5,7 @@ import { BaseModelWithAgendaItemAndListOfSpeakers } from '../base/base-model-wit
  * @ignore
  */
 export class Topic extends BaseModelWithAgendaItemAndListOfSpeakers<Topic> {
-    public static COLLECTIONSTRING = 'topics/topic';
+    public static COLLECTION = 'topics/topic';
 
     public id: number;
     public title: string;
@@ -13,6 +13,6 @@ export class Topic extends BaseModelWithAgendaItemAndListOfSpeakers<Topic> {
     public attachments_id: number[];
 
     public constructor(input?: Partial<Topic>) {
-        super(Topic.COLLECTIONSTRING, input);
+        super(Topic.COLLECTION, input);
     }
 }

@@ -3,8 +3,8 @@ import { BaseViewModel } from 'app/site/base/base-view-model';
 import { ViewUser } from 'app/site/users/models/view-user';
 
 export class ViewAssignmentRelatedUser extends BaseViewModel<AssignmentRelatedUser> {
-    public static COLLECTIONSTRING = AssignmentRelatedUser.COLLECTIONSTRING;
-    protected _collectionString = AssignmentRelatedUser.COLLECTIONSTRING;
+    public static COLLECTION = AssignmentRelatedUser.COLLECTION;
+    protected _collection = AssignmentRelatedUser.COLLECTION;
 
     public get assignmentRelatedUser(): AssignmentRelatedUser {
         return this._model;

@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
 
-import { TranslateService } from '@ngx-translate/core';
-
-import { RelationManagerService } from 'app/core/core-services/relation-manager.service';
-import { ViewModelStoreService } from 'app/core/core-services/view-model-store.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { ProjectionDefault } from 'app/shared/models/core/projection-default';
 import {
@@ -11,9 +7,7 @@ import {
     ViewProjectionDefault
 } from 'app/site/projector/models/view-projection-default';
 import { BaseRepository } from '../base-repository';
-import { CollectionStringMapperService } from '../../core-services/collection-string-mapper.service';
-import { DataSendService } from '../../core-services/data-send.service';
-import { DataStoreService } from '../../core-services/data-store.service';
+import { RepositoryServiceCollector } from '../repository-service-collector';
 
 /**
  * Manages all projection default instances.
@@ -35,15 +29,8 @@ export class ProjectionDefaultRepositoryService extends BaseRepository<
      * @param viewModelStoreService
      * @param translate
      */
-    public constructor(
-        DS: DataStoreService,
-        dataSend: DataSendService,
-        mapperService: CollectionStringMapperService,
-        viewModelStoreService: ViewModelStoreService,
-        translate: TranslateService,
-        relationManager: RelationManagerService
-    ) {
-        super(DS, dataSend, mapperService, viewModelStoreService, translate, relationManager, ProjectionDefault);
+    public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
+        super(repositoryServiceCollector, ProjectionDefault);
     }
 
     public getVerboseName = (plural: boolean = false) => {

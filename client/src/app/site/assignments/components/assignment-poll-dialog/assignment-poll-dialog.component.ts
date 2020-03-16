@@ -1,12 +1,10 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { AssignmentPollMethod } from 'app/shared/models/assignments/assignment-poll';
 import { LOWEST_VOTE_VALUE, PollType } from 'app/shared/models/poll/base-poll';
 import { GeneralValueVerbose, VoteValue, VoteValueVerbose } from 'app/shared/models/poll/base-vote';
@@ -78,15 +76,13 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent<ViewA
      * injects the poll itself
      */
     public constructor(
-        private fb: FormBuilder,
-        title: Title,
-        protected translate: TranslateService,
-        matSnackbar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
+        private formBuilder: FormBuilder,
         public dialogRef: MatDialogRef<BasePollDialogComponent<ViewAssignmentPoll, AssignmentPollService>>,
         public assignmentPollService: AssignmentPollService,
         @Inject(MAT_DIALOG_DATA) public pollData: Partial<ViewAssignmentPoll>
     ) {
-        super(title, translate, matSnackbar, dialogRef);
+        super(componentServiceCollector, dialogRef);
     }
 
     public ngOnInit(): void {
@@ -165,11 +161,11 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent<ViewA
     private createDialog(): void {
         this.setAnalogPollValues();
 
-        this.dialogVoteForm = this.fb.group({
-            options: this.fb.group(
+        this.dialogVoteForm = this.formBuilder.group({
+            options: this.formBuilder.group(
                 // create a form group for each option with the user id as key
                 this.options.mapToObject(option => ({
-                    [option.user_id]: this.fb.group(
+                    [option.user_id]: this.formBuilder.group(
                         // for each user, create a form group with a control for each valid input (Y, N, A)
                         this.analogPollValues.mapToObject(value => ({
                             [value]: ['', [Validators.min(LOWEST_VOTE_VALUE)]]

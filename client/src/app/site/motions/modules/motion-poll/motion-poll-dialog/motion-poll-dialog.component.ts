@@ -1,11 +1,8 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
-
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { LOWEST_VOTE_VALUE } from 'app/shared/models/poll/base-poll';
 import { ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
 import { MotionPollService } from 'app/site/motions/services/motion-poll.service';
@@ -26,15 +23,13 @@ export class MotionPollDialogComponent extends BasePollDialogComponent<ViewMotio
     protected pollForm: PollFormComponent<ViewMotionPoll, MotionPollService>;
 
     public constructor(
-        title: Title,
-        translate: TranslateService,
-        matSnackbar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         public motionPollService: MotionPollService,
         public dialogRef: MatDialogRef<BasePollDialogComponent<ViewMotionPoll, MotionPollService>>,
         private formBuilder: FormBuilder,
         @Inject(MAT_DIALOG_DATA) public pollData: Partial<ViewMotionPoll>
     ) {
-        super(title, translate, matSnackbar, dialogRef);
+        super(componentServiceCollector, dialogRef);
     }
 
     public ngOnInit(): void {

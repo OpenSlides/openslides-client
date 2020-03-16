@@ -1,18 +1,16 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 
 import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
 
-import { StorageService } from 'app/core/core-services/storage.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { Tag } from 'app/shared/models/core/tag';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
-import { BaseListViewComponent } from 'app/site/base/base-list-view';
+import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
 import { ViewTag } from '../../models/view-tag';
 
 /**
@@ -60,25 +58,15 @@ export class TagListComponent extends BaseListViewComponent<ViewTag> implements 
         }
     ];
 
-    /**
-     * Constructor.
-     * @param titleService
-     * @param translate
-     * @param matSnackBar
-     * @param repo the tag repository
-     * @param promptService
-     */
     public constructor(
-        titleService: Title,
-        matSnackBar: MatSnackBar,
-        storage: StorageService,
+        componentServiceCollector: ComponentServiceCollector,
         public repo: TagRepositoryService,
         protected translate: TranslateService, // protected required for ng-translate-extract
-        private promptService: PromptService,
         private dialog: MatDialog,
-        private formBuilder: FormBuilder
+        private formBuilder: FormBuilder,
+        private promptService: PromptService
     ) {
-        super(titleService, translate, matSnackBar, storage);
+        super(componentServiceCollector);
     }
 
     /**

@@ -2,21 +2,18 @@ import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSidenav } from '@angular/material/sidenav';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 import { ActivationEnd, NavigationEnd, Router } from '@angular/router';
 
-import { TranslateService } from '@ngx-translate/core';
 import { filter } from 'rxjs/operators';
 
 import { navItemAnim } from '../shared/animations';
 import { OfflineService } from 'app/core/core-services/offline.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { UpdateService } from 'app/core/ui-services/update.service';
-import { BaseComponent } from '../base.component';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { MainMenuService } from '../core/core-services/main-menu.service';
 import { OpenSlidesStatusService } from '../core/core-services/openslides-status.service';
-import { OperatorService } from '../core/core-services/operator.service';
 import { TimeTravelService } from '../core/core-services/time-travel.service';
 import { ViewportService } from '../core/ui-services/viewport.service';
 
@@ -78,22 +75,19 @@ export class SiteComponent extends BaseComponent implements OnInit {
      * @param timeTravel
      */
     public constructor(
-        title: Title,
-        protected translate: TranslateService,
+        componentServiceCollector: ComponentServiceCollector,
         offlineService: OfflineService,
         private updateService: UpdateService,
         private router: Router,
-        public operator: OperatorService,
         public vp: ViewportService,
         public dialog: MatDialog,
         public mainMenuService: MainMenuService,
         public OSStatus: OpenSlidesStatusService,
         public timeTravel: TimeTravelService,
-        private matSnackBar: MatSnackBar,
         private overlayService: OverlayService
     ) {
-        super(title, translate);
-        overlayService.showSpinner(translate.instant('Loading data. Please wait ...'));
+        super(componentServiceCollector);
+        overlayService.showSpinner(this.translate.instant('Loading data. Please wait...'));
 
         offlineService.isOffline().subscribe(offline => {
             this.isOffline = offline;

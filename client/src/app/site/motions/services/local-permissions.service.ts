@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { OperatorService, Permission } from 'app/core/core-services/operator.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { ViewMotion } from '../models/view-motion';
 
 @Injectable({
@@ -12,15 +12,18 @@ export class LocalPermissionsService {
     private amendmentEnabled: boolean;
     private amendmentOfAmendment: boolean;
 
-    public constructor(private operator: OperatorService, private configService: ConfigService) {
+    public constructor(
+        private operator: OperatorService,
+        private organisationSettingsService: OrganisationSettingsService
+    ) {
         // load config variables
-        this.configService
+        this.organisationSettingsService
             .get<number>('motions_min_supporters')
             .subscribe(supporters => (this.configMinSupporters = supporters));
-        this.configService
+        this.organisationSettingsService
             .get<boolean>('motions_amendments_enabled')
             .subscribe(enabled => (this.amendmentEnabled = enabled));
-        this.configService
+        this.organisationSettingsService
             .get<boolean>('motions_amendments_of_amendments')
             .subscribe(enabled => (this.amendmentOfAmendment = enabled));
     }
@@ -69,9 +72,9 @@ export class LocalPermissionsService {
                     motion.state &&
                     motion.state.allow_support &&
                     motion.submitters &&
-                    !motion.submittersAsUsers.includes(this.operator.viewUser) &&
+                    !motion.submitters.map(submitter => submitter.user_id).includes(this.operator.operatorId) &&
                     motion.supporters &&
-                    !motion.supporters.includes(this.operator.viewUser)
+                    !motion.supporters_id.includes(this.operator.operatorId)
                 );
             }
             case 'unsupport': {
@@ -82,7 +85,7 @@ export class LocalPermissionsService {
                     motion.state &&
                     motion.state.allow_support &&
                     motion.supporters &&
-                    motion.supporters.indexOf(this.operator.viewUser) !== -1
+                    motion.supporters_id.indexOf(this.operator.operatorId) !== -1
                 );
             }
             case 'createpoll': {
@@ -109,7 +112,7 @@ export class LocalPermissionsService {
                         motion.submitters &&
                         motion.submitters.length &&
                         !this.operator.isAnonymous &&
-                        motion.submitters.some(submitter => submitter.user_id === this.operator.user.id))
+                        motion.submitters.some(submitter => submitter.user_id === this.operator.operatorId))
                 );
             }
             case 'update_submitters': {
@@ -125,7 +128,7 @@ export class LocalPermissionsService {
                     motion.state.allow_submitter_edit &&
                     motion.submitters &&
                     motion.submitters.length &&
-                    motion.submitters.some(submitter => submitter.user_id === this.operator.user.id)
+                    motion.submitters.some(submitter => submitter.user_id === this.operator.operatorId)
                 );
             }
             case 'change_state': {
@@ -141,7 +144,7 @@ export class LocalPermissionsService {
                         motion.state.allow_submitter_edit &&
                         !this.operator.isAnonymous &&
                         motion.submitters &&
-                        motion.submitters.some(submitter => submitter.user_id === this.operator.user.id))
+                        motion.submitters.some(submitter => submitter.user_id === this.operator.operatorId))
                 );
             }
             case 'change_metadata': {

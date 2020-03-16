@@ -5,7 +5,7 @@ import { BaseModel } from '../base/base-model';
  * @ignore
  */
 export class StatuteParagraph extends BaseModel<StatuteParagraph> {
-    public static COLLECTIONSTRING = 'motions/statute-paragraph';
+    public static COLLECTION = 'motions/statute-paragraph';
 
     public id: number;
     public title: string;
@@ -13,6 +13,6 @@ export class StatuteParagraph extends BaseModel<StatuteParagraph> {
     public weight: number;
 
     public constructor(input?: any) {
-        super(StatuteParagraph.COLLECTIONSTRING, input);
+        super(StatuteParagraph.COLLECTION, input);
     }
 }

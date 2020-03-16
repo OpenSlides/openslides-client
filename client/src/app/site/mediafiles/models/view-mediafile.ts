@@ -28,8 +28,8 @@ export interface MediafileTitleInformation {
 
 export class ViewMediafile extends BaseViewModelWithListOfSpeakers<Mediafile>
     implements MediafileTitleInformation, Searchable {
-    public static COLLECTIONSTRING = Mediafile.COLLECTIONSTRING;
-    protected _collectionString = Mediafile.COLLECTIONSTRING;
+    public static COLLECTION = Mediafile.COLLECTION;
+    protected _collection = Mediafile.COLLECTION;
 
     public get mediafile(): Mediafile {
         return this._model;
@@ -74,7 +74,7 @@ export class ViewMediafile extends BaseViewModelWithListOfSpeakers<Mediafile>
     public getSlide(): ProjectorElementBuildDeskriptor {
         return {
             getBasicProjectorElement: () => ({
-                name: Mediafile.COLLECTIONSTRING,
+                name: Mediafile.COLLECTION,
                 id: this.id,
                 getIdentifiers: () => ['name', 'id']
             }),

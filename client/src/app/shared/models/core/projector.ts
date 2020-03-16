@@ -55,7 +55,7 @@ export type ProjectorElements = ProjectorElement[];
  * @ignore
  */
 export class Projector extends BaseModel<Projector> {
-    public static COLLECTIONSTRING = 'core/projector';
+    public static COLLECTION = 'core/projector';
 
     public id: number;
     public elements: ProjectorElements;
@@ -109,7 +109,7 @@ export class Projector extends BaseModel<Projector> {
     }
 
     public constructor(input?: any) {
-        super(Projector.COLLECTIONSTRING, input);
+        super(Projector.COLLECTION, input);
     }
 
     /**

@@ -1,13 +1,11 @@
 import { Component, Input, OnDestroy } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
 import { MotionPollRepositoryService } from 'app/core/repositories/motions/motion-poll-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
-import { BaseViewComponent } from 'app/site/base/base-view';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewBasePoll } from 'app/site/polls/models/view-base-poll';
 import { ViewUser } from 'app/site/users/models/view-user';
 
@@ -16,7 +14,7 @@ import { ViewUser } from 'app/site/users/models/view-user';
     templateUrl: './poll-progress.component.html',
     styleUrls: ['./poll-progress.component.scss']
 })
-export class PollProgressComponent extends BaseViewComponent implements OnDestroy {
+export class PollProgressComponent extends BaseComponent implements OnDestroy {
     private pollId: number = null;
     private pollSubscription: Subscription = null;
 
@@ -45,13 +43,11 @@ export class PollProgressComponent extends BaseViewComponent implements OnDestro
     public valueInPercent: number;
 
     public constructor(
-        title: Title,
-        protected translate: TranslateService,
-        snackbar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private userRepo: UserRepositoryService,
         private pollRepo: MotionPollRepositoryService
     ) {
-        super(title, translate, snackbar);
+        super(componentServiceCollector);
         this.userRepo.getViewModelListObservable().subscribe(users => {
             if (users) {
                 this.calculateMaxUsers(users);

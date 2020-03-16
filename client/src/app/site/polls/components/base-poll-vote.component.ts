@@ -1,16 +1,13 @@
 import { Input } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
-
-import { TranslateService } from '@ngx-translate/core';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { VotingError } from 'app/core/ui-services/voting.service';
-import { BaseViewComponent } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { ViewBasePoll } from '../models/view-base-poll';
 
-export abstract class BasePollVoteComponent<V extends ViewBasePoll> extends BaseViewComponent {
+export abstract class BasePollVoteComponent<V extends ViewBasePoll> extends BaseComponent {
     @Input()
     public poll: V;
 
@@ -20,18 +17,14 @@ export abstract class BasePollVoteComponent<V extends ViewBasePoll> extends Base
 
     protected user: ViewUser;
 
-    public constructor(
-        title: Title,
-        translate: TranslateService,
-        matSnackbar: MatSnackBar,
-        protected operator: OperatorService
-    ) {
-        super(title, translate, matSnackbar);
+    public constructor(componentServiceCollector: ComponentServiceCollector, protected operator: OperatorService) {
+        super(componentServiceCollector);
 
-        this.subscriptions.push(
+        throw new Error('TODO');
+        /*this.subscriptions.push(
             this.operator.getViewUserObservable().subscribe(user => {
                 this.user = user;
             })
-        );
+        );*/
     }
 }

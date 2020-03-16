@@ -1,9 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { CollectionStringMapperService } from 'app/core/core-services/collection-string-mapper.service';
+import { CollectionMapperService } from 'app/core/core-services/collection-mapper.service';
 import { SlideData } from 'app/core/core-services/projector-data.service';
 import { isBaseIsAgendaItemContentObjectRepository } from 'app/core/repositories/base-is-agenda-item-content-object-repository';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { ProjectorElement } from 'app/shared/models/core/projector';
 import { BaseSlideComponentDirective } from 'app/slides/base-slide-component';
 import { CommonListOfSpeakersSlideData } from './common-list-of-speakers-slide-data';
@@ -36,8 +36,8 @@ export class CommonListOfSpeakersSlideComponent extends BaseSlideComponentDirect
     public hideAmountOfSpeakers: boolean;
 
     public constructor(
-        private collectionStringMapperService: CollectionStringMapperService,
-        private configService: ConfigService
+        private collectionMapperService: CollectionMapperService,
+        private organisationSettingsService: OrganisationSettingsService
     ) {
         super();
     }
@@ -47,7 +47,7 @@ export class CommonListOfSpeakersSlideComponent extends BaseSlideComponentDirect
      * Load the config for `agenda_hide_amount_of_speakers`.
      */
     public ngOnInit(): void {
-        this.configService
+        this.organisationSettingsService
             .get<boolean>('agenda_hide_amount_of_speakers')
             .subscribe(enabled => (this.hideAmountOfSpeakers = enabled));
     }
@@ -57,7 +57,7 @@ export class CommonListOfSpeakersSlideComponent extends BaseSlideComponentDirect
             return '';
         }
 
-        const repo = this.collectionStringMapperService.getRepository(this.data.data.content_object_collection);
+        const repo = this.collectionMapperService.getRepository(this.data.data.content_object_collection);
 
         if (isBaseIsAgendaItemContentObjectRepository(repo)) {
             return repo.getAgendaSlideTitle(this.data.data.title_information);

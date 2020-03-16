@@ -7,6 +7,7 @@ import { StorageService } from 'app/core/core-services/storage.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { BaseFilterListService, OsFilter, OsFilterOption } from 'app/core/ui-services/base-filter-list.service';
 import { ItemVisibilityChoices } from 'app/shared/models/agenda/item';
+import { Motion } from 'app/shared/models/motions/motion';
 import { ViewItem } from '../models/view-item';
 
 /**
@@ -67,7 +68,7 @@ export class AgendaFilterListService extends BaseFilterListService<ViewItem> {
                 label: 'Type',
                 property: 'collection',
                 options: [
-                    { label: this.translate.instant('Motions'), condition: 'motions/motion' },
+                    { label: this.translate.instant('Motions'), condition: Motion.COLLECTION },
                     { label: this.translate.instant('Topics'), condition: 'topics/topic' },
                     { label: this.translate.instant('Motion blocks'), condition: 'motions/motion-block' },
                     { label: this.translate.instant('Elections'), condition: 'assignments/assignment' }

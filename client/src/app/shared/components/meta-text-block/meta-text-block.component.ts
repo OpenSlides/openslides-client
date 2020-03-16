@@ -1,11 +1,10 @@
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
 import { Subject, Subscription } from 'rxjs';
 
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
-import { BaseComponent } from '../../../base.component';
+import { BaseComponent } from 'app/site/base/components/base.component';
 
 /**
  * Component for the motion comments view
@@ -79,12 +78,11 @@ export class MetaTextBlockComponent extends BaseComponent implements OnInit, OnD
      * @param cd
      */
     public constructor(
-        title: Title,
-        translate: TranslateService,
+        componentServiceCollector: ComponentServiceCollector,
         public vp: ViewportService,
         private cd: ChangeDetectorRef
     ) {
-        super(title, translate);
+        super(componentServiceCollector);
     }
 
     /**

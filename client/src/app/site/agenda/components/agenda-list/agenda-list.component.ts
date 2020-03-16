@@ -1,29 +1,26 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
 
 import { AgendaCsvExportService } from '../../services/agenda-csv-export.service';
 import { AgendaFilterListService } from '../../services/agenda-filter-list.service';
 import { AgendaPdfService } from '../../services/agenda-pdf.service';
 import { OperatorService, Permission } from 'app/core/core-services/operator.service';
-import { StorageService } from 'app/core/core-services/storage.service';
 import { PdfDocumentService } from 'app/core/pdf-services/pdf-document.service';
 import { ItemRepositoryService } from 'app/core/repositories/agenda/item-repository.service';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
 import { TopicRepositoryService } from 'app/core/repositories/topics/topic-repository.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DurationService } from 'app/core/ui-services/duration.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { ColumnRestriction } from 'app/shared/components/list-view-table/list-view-table.component';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
-import { BaseListViewComponent } from 'app/site/base/base-list-view';
+import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { ViewTopic } from 'app/site/topics/models/view-topic';
 import { ItemInfoDialogComponent } from '../item-info-dialog/item-info-dialog.component';
@@ -120,16 +117,13 @@ export class AgendaListComponent extends BaseListViewComponent<ViewItem> impleme
      * @param pdfService: Service for exporting a pdf
      */
     public constructor(
-        titleService: Title,
-        protected translate: TranslateService, // protected required for ng-translate-extract
-        matSnackBar: MatSnackBar,
-        storage: StorageService,
+        componentServiceCollector: ComponentServiceCollector,
         private operator: OperatorService,
         private router: Router,
         public repo: ItemRepositoryService,
         private promptService: PromptService,
         private dialog: MatDialog,
-        private config: ConfigService,
+        private config: OrganisationSettingsService,
         public vp: ViewportService,
         public durationService: DurationService,
         private csvExport: AgendaCsvExportService,
@@ -139,7 +133,7 @@ export class AgendaListComponent extends BaseListViewComponent<ViewItem> impleme
         private listOfSpeakersRepo: ListOfSpeakersRepositoryService,
         private topicRepo: TopicRepositoryService
     ) {
-        super(titleService, translate, matSnackBar, storage);
+        super(componentServiceCollector);
         this.canMultiSelect = true;
     }
 
@@ -378,15 +372,10 @@ export class AgendaListComponent extends BaseListViewComponent<ViewItem> impleme
      *
      * @param item The selected item.
      *
-     * @returns `true` if the given item's collection is equal to the `Topic.COLLECTIONSTRING`.
+     * @returns `true` if the given item's collection is equal to the `Topic.COLLECTION`.
      */
     public isTopic(obj: any): obj is ViewTopic {
         const topic = obj as ViewTopic;
-        return (
-            !!topic &&
-            topic.collectionString !== undefined &&
-            topic.collectionString === ViewTopic.COLLECTIONSTRING &&
-            !!topic.topic
-        );
+        return !!topic && topic.collection !== undefined && topic.collection === ViewTopic.COLLECTION && !!topic.topic;
     }
 }

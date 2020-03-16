@@ -8,8 +8,8 @@ import { ChangeRecommendationRepositoryService } from 'app/core/repositories/mot
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { StatuteParagraphRepositoryService } from 'app/core/repositories/motions/statute-paragraph-repository.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
 import { LinenumberingService } from 'app/core/ui-services/linenumbering.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from 'app/shared/models/motions/view-unified-change';
 import { ParsePollNumberPipe } from 'app/shared/pipes/parse-poll-number.pipe';
 import { PollKeyVerbosePipe } from 'app/shared/pipes/poll-key-verbose.pipe';
@@ -48,7 +48,7 @@ export class MotionPdfService {
      * @param motionRepo get parent motions
      * @param statuteRepo To get formated stature paragraphs
      * @param changeRecoRepo to get the change recommendations
-     * @param configService Read config variables
+     * @param organisationSettingsService Read config variables
      * @param pdfDocumentService Global PDF Functions
      * @param htmlToPdfService To convert HTML text into pdfmake doc def
      * @param pollService MotionPollService for rendering the polls
@@ -60,7 +60,7 @@ export class MotionPdfService {
         private motionRepo: MotionRepositoryService,
         private statuteRepo: StatuteParagraphRepositoryService,
         private changeRecoRepo: ChangeRecommendationRepositoryService,
-        private configService: ConfigService,
+        private organisationSettingsService: OrganisationSettingsService,
         private pdfDocumentService: PdfDocumentService,
         private htmlToPdfService: HtmlToPdfService,
         private linenumberingService: LinenumberingService,
@@ -90,9 +90,9 @@ export class MotionPdfService {
         let commentsToExport = exportInfo ? exportInfo.comments : null;
 
         // get the line length from the config
-        const lineLength = this.configService.instant<number>('motions_line_length');
+        const lineLength = this.organisationSettingsService.instant<number>('motions_line_length');
         // whether to append checkboxes to follow the recommendation or not
-        const optionToFollowRecommendation = this.configService.instant<boolean>(
+        const optionToFollowRecommendation = this.organisationSettingsService.instant<boolean>(
             'motions_export_follow_recommendation'
         );
 
@@ -106,12 +106,12 @@ export class MotionPdfService {
 
         // determine the default lnMode if not explicitly given
         if (!lnMode) {
-            lnMode = this.configService.instant('motions_default_line_numbering');
+            lnMode = this.organisationSettingsService.instant('motions_default_line_numbering');
         }
 
         // determine the default crMode if not explicitly given
         if (!crMode) {
-            crMode = this.configService.instant('motions_recommendation_text_mode');
+            crMode = this.organisationSettingsService.instant('motions_recommendation_text_mode');
         }
 
         const title = this.createTitle(motion, crMode, lineLength);
@@ -168,7 +168,7 @@ export class MotionPdfService {
         const changedTitle = this.changeRecoRepo.getTitleWithChanges(motion.title, titleChange, crMode);
 
         const identifier = motion.identifier ? ' ' + motion.identifier : '';
-        const pageSize = this.configService.instant('general_export_pdf_pagesize');
+        const pageSize = this.organisationSettingsService.instant('general_export_pdf_pagesize');
         let title = '';
         if (pageSize === 'A4') {
             title += `${this.translate.instant('Motion')} `;
@@ -245,7 +245,7 @@ export class MotionPdfService {
         }
 
         // supporters
-        const minSupporters = this.configService.instant<number>('motions_min_supporters');
+        const minSupporters = this.organisationSettingsService.instant<number>('motions_min_supporters');
         if (minSupporters && motion.supporters.length > 0) {
             const supporters = motion.supporters
                 .map(supporter => {
@@ -282,9 +282,9 @@ export class MotionPdfService {
             let recommendationByText: string;
 
             if (motion.isStatuteAmendment()) {
-                recommendationByText = this.configService.instant('motions_statute_recommendations_by');
+                recommendationByText = this.organisationSettingsService.instant('motions_statute_recommendations_by');
             } else {
-                recommendationByText = this.configService.instant('motions_recommendations_by');
+                recommendationByText = this.organisationSettingsService.instant('motions_recommendations_by');
             }
 
             metaTableBody.push([
@@ -549,7 +549,7 @@ export class MotionPdfService {
      * @returns doc def for the motion text
      */
     private createPreamble(motion: ViewMotion): object {
-        const motions_preamble = this.configService.instant<string>('motions_preamble');
+        const motions_preamble = this.organisationSettingsService.instant<string>('motions_preamble');
         return {
             text: `${this.translate.instant(motions_preamble)}`,
             margin: [0, 10, 0, 10]
@@ -780,8 +780,8 @@ export class MotionPdfService {
      * @returns pdfMake definitions
      */
     public textToDocDef(note: string, motion: ViewMotion, noteTitle: string): object {
-        const lineLength = this.configService.instant<number>('motions_line_length');
-        const crMode = this.configService.instant<ChangeRecoMode>('motions_recommendation_text_mode');
+        const lineLength = this.organisationSettingsService.instant<number>('motions_line_length');
+        const crMode = this.organisationSettingsService.instant<ChangeRecoMode>('motions_recommendation_text_mode');
         const title = this.createTitle(motion, crMode, lineLength);
         const subtitle = this.createSubtitle(motion);
         const metaInfo = this.createMetaInfoTable(motion, lineLength, crMode, ['submitters', 'state', 'category']);

@@ -29,7 +29,7 @@ export class PersonalNoteService {
      * Watches for changes in the personal note model and the operator.
      */
     public constructor(private operator: OperatorService, private DS: DataStoreService, private http: HttpService) {
-        operator.getUserObservable().subscribe(() => this.updatePersonalNoteObject());
+        operator.operatorUpdatedEvent.subscribe(() => this.updatePersonalNoteObject());
         this.DS.getChangeObservable(PersonalNote).subscribe(_ => {
             this.updatePersonalNoteObject();
         });
@@ -45,7 +45,7 @@ export class PersonalNoteService {
         }
 
         // Get the note for the operator.
-        const operatorId = this.operator.user.id;
+        const operatorId = this.operator.operatorId;
         const objects = this.DS.filter(PersonalNote, pn => pn.user_id === operatorId);
         this.personalNoteObject = objects.length === 0 ? null : objects[0];
     }
@@ -58,7 +58,7 @@ export class PersonalNoteService {
     public async savePersonalNote(model: BaseModel | BaseViewModel, content: PersonalNoteContent): Promise<void> {
         await this.savePersonalNoteObject([
             {
-                collection: model.collectionString,
+                collection: model.collection,
                 id: model.id,
                 content: content
             }
@@ -80,18 +80,18 @@ export class PersonalNoteService {
             pnObject.notes = {};
         }
         const requestData: PersonalNoteRequestData = models.map(model => {
-            if (!pnObject.notes[model.collectionString]) {
-                pnObject.notes[model.collectionString] = {};
+            if (!pnObject.notes[model.collection]) {
+                pnObject.notes[model.collection] = {};
             }
-            if (pnObject.notes[model.collectionString][model.id]) {
-                pnObject.notes[model.collectionString][model.id].star = star;
+            if (pnObject.notes[model.collection][model.id]) {
+                pnObject.notes[model.collection][model.id].star = star;
             } else {
-                pnObject.notes[model.collectionString][model.id] = { star: star, note: '' };
+                pnObject.notes[model.collection][model.id] = { star: star, note: '' };
             }
             return {
-                collection: model.collectionString,
+                collection: model.collection,
                 id: model.id,
-                content: pnObject.notes[model.collectionString][model.id]
+                content: pnObject.notes[model.collection][model.id]
             };
         });
         await this.savePersonalNoteObject(requestData);

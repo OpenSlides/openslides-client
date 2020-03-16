@@ -19,9 +19,9 @@ import {
     ProjectorElementBuildDeskriptor
 } from 'app/site/base/projectable';
 import { SlideManager } from 'app/slides/services/slide-manager.service';
-import { ConfigService } from '../ui-services/config.service';
 import { DataStoreService } from './data-store.service';
 import { HttpService } from './http.service';
+import { OrganisationSettingsService } from '../ui-services/organisation-settings.service';
 import { ProjectorDataService } from './projector-data.service';
 import { ViewModelStoreService } from './view-model-store.service';
 
@@ -52,7 +52,7 @@ export class ProjectorService {
         private slideManager: SlideManager,
         private viewModelStore: ViewModelStoreService,
         private translate: TranslateService,
-        private configService: ConfigService,
+        private organisationSettingsService: OrganisationSettingsService,
         private projectorDataService: ProjectorDataService
     ) {}
 
@@ -66,7 +66,7 @@ export class ProjectorService {
         obj: Projectable | ProjectorElementBuildDeskriptor | IdentifiableProjectorElement
     ): IdentifiableProjectorElement {
         if (isProjectable(obj)) {
-            return obj.getSlide(this.configService).getBasicProjectorElement({});
+            return obj.getSlide(this.organisationSettingsService).getBasicProjectorElement({});
         } else if (isProjectorElementBuildDeskriptor(obj)) {
             return obj.getBasicProjectorElement({});
         } else {

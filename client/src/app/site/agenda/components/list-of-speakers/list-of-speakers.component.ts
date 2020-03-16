@@ -1,24 +1,22 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 
-import { CollectionStringMapperService } from 'app/core/core-services/collection-string-mapper.service';
+import { CollectionMapperService } from 'app/core/core-services/collection-mapper.service';
 import { OperatorService, Permission } from 'app/core/core-services/operator.service';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DurationService } from 'app/core/ui-services/duration.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { Selectable } from 'app/shared/components/selectable';
 import { SortingListComponent } from 'app/shared/components/sorting-list/sorting-list.component';
-import { BaseViewComponent } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { CurrentListOfSpeakersSlideService } from 'app/site/projector/services/current-list-of-speakers-slide.service';
@@ -36,7 +34,7 @@ import { SpeakerState, ViewSpeaker } from '../../models/view-speaker';
     styleUrls: ['./list-of-speakers.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListOfSpeakersComponent extends BaseViewComponent implements OnInit {
+export class ListOfSpeakersComponent extends BaseComponent implements OnInit {
     @ViewChild(SortingListComponent)
     public listElement: SortingListComponent;
 
@@ -120,7 +118,8 @@ export class ListOfSpeakersComponent extends BaseViewComponent implements OnInit
      * @returns true if the current user can be added to the list of speakers
      */
     public get canAddSelf(): boolean {
-        return !this.config.instant('agenda_present_speakers_only') || this.operator.user.is_present;
+        throw new Error('This is not as easy anymore...');
+        // return !this.config.instant('agenda_present_speakers_only') || this.operator.user.is_present;
     }
 
     /**
@@ -153,9 +152,7 @@ export class ListOfSpeakersComponent extends BaseViewComponent implements OnInit
      * @param durationService helper for speech duration display
      */
     public constructor(
-        title: Title,
-        protected translate: TranslateService, // protected required for ng-translate-extract
-        snackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private projectorRepo: ProjectorRepositoryService,
         private route: ActivatedRoute,
         private listOfSpeakersRepo: ListOfSpeakersRepositoryService,
@@ -164,13 +161,13 @@ export class ListOfSpeakersComponent extends BaseViewComponent implements OnInit
         private currentListOfSpeakersService: CurrentListOfSpeakersService,
         private durationService: DurationService,
         private userRepository: UserRepositoryService,
-        private collectionStringMapper: CollectionStringMapperService,
+        private collectionMapper: CollectionMapperService,
         private currentListOfSpeakersSlideService: CurrentListOfSpeakersSlideService,
-        private config: ConfigService,
+        private config: OrganisationSettingsService,
         private viewport: ViewportService,
         private cd: ChangeDetectorRef
     ) {
-        super(title, translate, snackBar);
+        super(componentServiceCollector);
         this.addSpeakerForm = new FormGroup({ user_id: new FormControl() });
     }
 
@@ -312,7 +309,7 @@ export class ListOfSpeakersComponent extends BaseViewComponent implements OnInit
      * E.g. if a motion is the current content object, "Motion" will be the returned value.
      */
     public getContentObjectProjectorButtonText(): string {
-        const verboseName = this.collectionStringMapper
+        const verboseName = this.collectionMapper
             .getRepository(this.viewListOfSpeakers.listOfSpeakers.content_object.collection)
             .getVerboseName();
         return verboseName;
@@ -427,7 +424,7 @@ export class ListOfSpeakersComponent extends BaseViewComponent implements OnInit
      * @returns whether or not the current operator is in the list
      */
     public isOpInList(): boolean {
-        return this.speakers.some(speaker => speaker.user_id === this.operator.user.id);
+        return this.speakers.some(speaker => speaker.user_id === this.operator.operatorId);
     }
 
     /**

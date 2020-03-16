@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { BaseViewModel, ViewModelConstructor } from 'app/site/base/base-view-model';
 import { BaseRepository } from '../repositories/base-repository';
-import { CollectionStringMapperService } from './collection-string-mapper.service';
+import { CollectionMapperService } from './collection-mapper.service';
 
 /**
  * This service takes care of handling view models.
@@ -14,7 +14,7 @@ export class ViewModelStoreService {
     /**
      * @param mapperService
      */
-    public constructor(private mapperService: CollectionStringMapperService) {}
+    public constructor(private mapperService: CollectionMapperService) {}
 
     /**
      * gets the repository from a collection string or a view model constructor.
@@ -28,9 +28,9 @@ export class ViewModelStoreService {
     }
 
     /**
-     * Returns the view model identified by the collectionString and id
+     * Returns the view model identified by the collection and id
      *
-     * @param collectionString The collection of the view model
+     * @param collection The collection of the view model
      * @param id The id of the view model
      */
     public get<V extends BaseViewModel>(collectionType: ViewModelConstructor<V> | string, id: number): V {
@@ -59,7 +59,7 @@ export class ViewModelStoreService {
     /**
      * Gets all view models from a collection
      *
-     * @param collectionString  The collection
+     * @param collection  The collection
      * @returns all models from the collection
      */
     public getAll<T extends BaseViewModel>(collectionType: ViewModelConstructor<T> | string): T[] {
@@ -69,7 +69,7 @@ export class ViewModelStoreService {
     /**
      * Get all view models from a collection, that satisfy the callback
      *
-     * @param collectionString The collection
+     * @param collection The collection
      * @param callback The function to check
      * @returns all matched view models of the collection
      */
@@ -83,7 +83,7 @@ export class ViewModelStoreService {
     /**
      * Finds one view model from the collection, that satisfies the callback
      *
-     * @param collectionString The collection
+     * @param collection The collection
      * @param callback THe callback to satisfy
      * @returns a found view model or null, if nothing was found.
      */

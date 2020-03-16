@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
 
-import { AutoupdateFormat, AutoupdateService, isAutoupdateFormat } from './autoupdate.service';
 import { OpenSlidesStatusService } from './openslides-status.service';
 import { formatQueryParams, QueryParams } from '../definitions/query-params';
 
@@ -32,15 +31,6 @@ function isErrorDetailResponse(obj: any): obj is ErrorDetailResponse {
     );
 }
 
-interface AutoupdateResponse {
-    autoupdate: AutoupdateFormat;
-    data?: any;
-}
-
-function isAutoupdateReponse(obj: any): obj is AutoupdateResponse {
-    return obj && typeof obj === 'object' && isAutoupdateFormat((obj as AutoupdateResponse).autoupdate);
-}
-
 /**
  * Service for managing HTTP requests. Allows to send data for every method. Also (TODO) will do generic error handling.
  */
@@ -65,8 +55,7 @@ export class HttpService {
     public constructor(
         private http: HttpClient,
         private translate: TranslateService,
-        private OSStatus: OpenSlidesStatusService,
-        private autoupdateService: AutoupdateService
+        private OSStatus: OpenSlidesStatusService
     ) {
         this.defaultHeaders = new HttpHeaders().set('Content-Type', 'application/json');
     }
@@ -108,9 +97,6 @@ export class HttpService {
             console.warn(`Please prefix the URL "${url}" with a slash.`);
             url = '/' + url;
         }
-        if (this.OSStatus.isPrioritizedClient) {
-            url = '/prioritize' + url;
-        }
 
         const options = {
             body: data,
@@ -119,8 +105,7 @@ export class HttpService {
         };
 
         try {
-            const responseData: T = await this.http.request<T>(method, url, options).toPromise();
-            return this.processResponse(responseData);
+            return await this.http.request<T>(method, url, options).toPromise();
         } catch (error) {
             throw this.processError(error);
         }
@@ -197,14 +182,6 @@ export class HttpService {
             }
         }
         return message;
-    }
-
-    private processResponse<T>(responseData: T): T {
-        if (isAutoupdateReponse(responseData)) {
-            this.autoupdateService.injectAutoupdateIgnoreChangeId(responseData.autoupdate);
-            responseData = responseData.data;
-        }
-        return responseData;
     }
 
     /**
