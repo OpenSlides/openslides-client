@@ -17,8 +17,8 @@ export interface CategoryTitleInformation {
  * @ignore
  */
 export class ViewCategory extends BaseViewModel<Category> implements CategoryTitleInformation, Searchable {
-    public static COLLECTIONSTRING = Category.COLLECTIONSTRING;
-    protected _collectionString = Category.COLLECTIONSTRING;
+    public static COLLECTION = Category.COLLECTION;
+    protected _collection = Category.COLLECTION;
 
     public get category(): Category {
         return this._model;

@@ -2,9 +2,6 @@ import { Injectable } from '@angular/core';
 
 import { Observable, Subject } from 'rxjs';
 
-import { OperatorService } from './operator.service';
-import { WebsocketService } from './websocket.service';
-
 /**
  * Encapslates the name and content of every message regardless of being a request or response.
  */
@@ -82,14 +79,15 @@ export class NotifyService {
      * Constructor to create the NotifyService. Registers itself to the WebsocketService.
      * @param websocketService
      */
-    public constructor(private websocketService: WebsocketService, private operator: OperatorService) {
-        websocketService.getOberservable<NotifyResponse<any>>('notify').subscribe(notify => {
-            notify.sendByThisUser = notify.senderUserId === (this.operator.user ? this.operator.user.id : 0);
+    public constructor() {
+        /*websocketService.getOberservable<NotifyResponse<any>>('notify').subscribe(notify => {
+            notify.sendByThisUser = notify.senderUserId === (this.operator.user ? this.operator.operatorId : 0);
             this.notifySubject.next(notify);
             if (this.messageSubjects[notify.name]) {
                 this.messageSubjects[notify.name].next(notify);
             }
-        });
+        });*/
+        console.warn('TODO: Enable notify service');
     }
 
     /**
@@ -145,7 +143,8 @@ export class NotifyService {
         if (channels !== null) {
             notify.replyChannels = channels;
         }
-        this.websocketService.send('notify', notify);
+        // Nope...
+        // this.websocketService.send('notify', notify);
     }
 
     /**

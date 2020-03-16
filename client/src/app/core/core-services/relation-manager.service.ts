@@ -227,7 +227,7 @@ export class RelationManagerService {
         });
 
         // set nested models
-        (nestedModelDescriptors[model.collectionString] || []).forEach(
+        (nestedModelDescriptors[model.collection] || []).forEach(
             (modelDescriptor: ModelDescriptor<BaseModel, BaseViewModel>) => {
                 const nestedModels = (model[modelDescriptor.ownKey] || []).map((nestedModel: object) => {
                     return new modelDescriptor.foreignModel(nestedModel);

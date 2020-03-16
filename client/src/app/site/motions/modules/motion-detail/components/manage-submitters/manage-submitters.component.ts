@@ -1,19 +1,17 @@
 import { Component, Input } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { ViewModelStoreService } from 'app/core/core-services/view-model-store.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
-import { Selectable } from 'app/shared/components/selectable';
-import { BaseViewComponentDirective } from 'app/site/base/base-view';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { LocalPermissionsService } from 'app/site/motions/services/local-permissions.service';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { Selectable } from 'app/shared/components/selectable';
 
 /**
  * Component for the motion comments view
@@ -23,7 +21,7 @@ import { ViewUser } from 'app/site/users/models/view-user';
     templateUrl: './manage-submitters.component.html',
     styleUrls: ['./manage-submitters.component.scss']
 })
-export class ManageSubmittersComponent extends BaseViewComponentDirective {
+export class ManageSubmittersComponent extends BaseComponent {
     /**
      * The motion, which the personal note belong to.
      */
@@ -67,15 +65,13 @@ export class ManageSubmittersComponent extends BaseViewComponentDirective {
      * @param perms permission checks for the motion
      */
     public constructor(
-        title: Title,
-        translate: TranslateService,
-        matSnackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private viewModelStore: ViewModelStoreService,
         private motionRepository: MotionRepositoryService,
         private userRepository: UserRepositoryService,
         public perms: LocalPermissionsService
     ) {
-        super(title, translate, matSnackBar);
+        super(componentServiceCollector);
 
         this.addSubmitterForm = new FormGroup({ userId: new FormControl([]) });
         this.editSubmitterObservable = this.editSubmitterSubject.asObservable();

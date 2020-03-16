@@ -1,12 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
-
-import { TranslateService } from '@ngx-translate/core';
 
 import { AssignmentPollRepositoryService } from 'app/core/repositories/assignments/assignment-poll-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { VotingPrivacyWarningComponent } from 'app/shared/components/voting-privacy-warning/voting-privacy-warning.component';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
@@ -54,9 +51,7 @@ export class AssignmentPollComponent
     }
 
     public constructor(
-        titleService: Title,
-        matSnackBar: MatSnackBar,
-        translate: TranslateService,
+        componentServiceCollector: ComponentServiceCollector,
         dialog: MatDialog,
         promptService: PromptService,
         repo: AssignmentPollRepositoryService,
@@ -65,7 +60,7 @@ export class AssignmentPollComponent
         private formBuilder: FormBuilder,
         private pdfService: AssignmentPollPdfService
     ) {
-        super(titleService, matSnackBar, translate, dialog, promptService, repo, pollDialog);
+        super(componentServiceCollector, dialog, promptService, repo, pollDialog);
     }
 
     public ngOnInit(): void {

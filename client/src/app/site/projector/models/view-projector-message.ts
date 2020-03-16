@@ -8,8 +8,8 @@ export type ProjectorMessageTitleInformation = object;
 export class ViewProjectorMessage
     extends BaseProjectableViewModel<ProjectorMessage>
     implements ProjectorMessageTitleInformation {
-    public static COLLECTIONSTRING = ProjectorMessage.COLLECTIONSTRING;
-    protected _collectionString = ProjectorMessage.COLLECTIONSTRING;
+    public static COLLECTION = ProjectorMessage.COLLECTION;
+    protected _collection = ProjectorMessage.COLLECTION;
 
     public get projectormessage(): ProjectorMessage {
         return this._model;
@@ -19,7 +19,7 @@ export class ViewProjectorMessage
         return {
             getBasicProjectorElement: options => ({
                 stable: true,
-                name: ProjectorMessage.COLLECTIONSTRING,
+                name: ProjectorMessage.COLLECTION,
                 id: this.id,
                 getIdentifiers: () => ['name', 'id']
             }),

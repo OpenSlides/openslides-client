@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
 
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
-import { BaseViewComponentDirective } from 'app/site/base/base-view';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-comment-section';
 
 /**
@@ -16,7 +14,7 @@ import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-co
     templateUrl: './motion-comment-section-sort.component.html',
     styleUrls: ['./motion-comment-section-sort.component.scss']
 })
-export class MotionCommentSectionSortComponent extends BaseViewComponentDirective implements OnInit {
+export class MotionCommentSectionSortComponent extends BaseComponent implements OnInit {
     /**
      * Holds the models
      */
@@ -31,12 +29,10 @@ export class MotionCommentSectionSortComponent extends BaseViewComponentDirectiv
      * @param repo Motion comment repository service
      */
     public constructor(
-        title: Title,
-        translate: TranslateService, // protected required for ng-translate-extract
-        snackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private repo: MotionCommentSectionRepositoryService
     ) {
-        super(title, translate, snackBar);
+        super(componentServiceCollector);
         super.setTitle('Sort comments');
     }
 

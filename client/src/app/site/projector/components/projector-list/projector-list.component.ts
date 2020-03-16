@@ -10,17 +10,15 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, timer } from 'rxjs';
 
 import { OperatorService, Permission } from 'app/core/core-services/operator.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { Projector } from 'app/shared/models/core/projector';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
-import { BaseViewComponentDirective } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewProjector } from '../../models/view-projector';
 
 /**
@@ -33,7 +31,7 @@ import { ViewProjector } from '../../models/view-projector';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class ProjectorListComponent extends BaseViewComponentDirective implements OnInit, AfterViewInit, OnDestroy {
+export class ProjectorListComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * The create form.
      */
@@ -71,16 +69,14 @@ export class ProjectorListComponent extends BaseViewComponentDirective implement
      * @param operator OperatorService
      */
     public constructor(
-        titleService: Title,
-        protected translate: TranslateService, // protected required for ng-translate-extract
-        matSnackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private repo: ProjectorRepositoryService,
         private formBuilder: FormBuilder,
         private operator: OperatorService,
         private dialogService: MatDialog,
         private cd: ChangeDetectorRef
     ) {
-        super(titleService, translate, matSnackBar);
+        super(componentServiceCollector);
 
         this.createForm = this.formBuilder.group({
             name: ['', Validators.required]

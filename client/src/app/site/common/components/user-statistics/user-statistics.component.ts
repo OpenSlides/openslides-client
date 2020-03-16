@@ -1,8 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid/lib/grid';
 import { BehaviorSubject, Observable } from 'rxjs';
 
@@ -10,9 +7,10 @@ import {
     ListOfSpeakersRepositoryService,
     SpeakingTimeStructureLevelObject
 } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DurationService } from 'app/core/ui-services/duration.service';
 import { ViewSpeaker } from 'app/site/agenda/models/view-speaker';
-import { BaseViewComponentDirective } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 
 @Component({
     selector: 'os-user-statistics',
@@ -21,7 +19,7 @@ import { BaseViewComponentDirective } from 'app/site/base/base-view';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class UserStatisticsComponent extends BaseViewComponentDirective {
+export class UserStatisticsComponent extends BaseComponent {
     /**
      * Returns the total duration for a whole assembly.
      */
@@ -88,13 +86,11 @@ export class UserStatisticsComponent extends BaseViewComponentDirective {
     private relationSpeakingTimeStructureLevelSubject = new BehaviorSubject<SpeakingTimeStructureLevelObject[]>([]);
 
     public constructor(
-        title: Title,
-        protected translate: TranslateService,
-        matSnackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private losRepo: ListOfSpeakersRepositoryService,
         private durationService: DurationService
     ) {
-        super(title, translate, matSnackBar);
+        super(componentServiceCollector);
     }
 
     /**

@@ -15,8 +15,8 @@ export type MotionChangeRecommendationTitleInformation = object;
 export class ViewMotionChangeRecommendation
     extends BaseViewModel<MotionChangeRecommendation>
     implements MotionChangeRecommendationTitleInformation, ViewUnifiedChange {
-    public static COLLECTIONSTRING = MotionChangeRecommendation.COLLECTIONSTRING;
-    protected _collectionString = MotionChangeRecommendation.COLLECTIONSTRING;
+    public static COLLECTION = MotionChangeRecommendation.COLLECTION;
+    protected _collection = MotionChangeRecommendation.COLLECTION;
 
     public get changeRecommendation(): MotionChangeRecommendation {
         return this._model;

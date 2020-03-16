@@ -16,7 +16,7 @@ import {
     OsFilterOption,
     OsFilterOptions
 } from 'app/core/ui-services/base-filter-list.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { Restriction } from 'app/shared/models/motions/state';
 import { AmendmentType } from '../motions.constants';
 import { ViewMotion } from '../models/view-motion';
@@ -164,7 +164,7 @@ export class MotionFilterListService extends BaseFilterListService<ViewMotion> {
         private workflowRepo: WorkflowRepositoryService,
         private translate: TranslateService,
         private operator: OperatorService,
-        private config: ConfigService
+        private config: OrganisationSettingsService
     ) {
         super(store, OSStatus);
         this.getWorkflowConfig();
@@ -183,7 +183,7 @@ export class MotionFilterListService extends BaseFilterListService<ViewMotion> {
         this.updateFilterForRepo(tagRepo, this.tagFilterOptions, this.translate.instant('No tags'));
 
         this.subscribeWorkflows();
-        this.operator.getUserObservable().subscribe(() => {
+        this.operator.operatorUpdatedEvent.subscribe(() => {
             this.setFilterDefinitions();
         });
     }

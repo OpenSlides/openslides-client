@@ -78,19 +78,13 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
     private minLineNo: number = null;
     private maxLineNo: number = null;
 
-    /**
-     * @param {Renderer2} renderer
-     * @param {ElementRef} el
-     * @param {ChangeDetectorRef} cd
-     * @param {OperatorService} operator
-     */
     public constructor(
         private renderer: Renderer2,
         private el: ElementRef,
         private cd: ChangeDetectorRef,
         private operator: OperatorService
     ) {
-        this.operator.getUserObservable().subscribe(this.onPermissionsChanged.bind(this));
+        this.operator.operatorUpdatedEvent.subscribe(this.onPermissionsChanged.bind(this));
     }
 
     /**

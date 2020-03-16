@@ -1,14 +1,8 @@
 import { Injectable } from '@angular/core';
 
-import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { CollectionStringMapperService } from 'app/core/core-services/collection-string-mapper.service';
-import { DataSendService } from 'app/core/core-services/data-send.service';
-import { DataStoreService } from 'app/core/core-services/data-store.service';
-import { RelationManagerService } from 'app/core/core-services/relation-manager.service';
-import { ViewModelStoreService } from 'app/core/core-services/view-model-store.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { MotionChangeRecommendation } from 'app/shared/models/motions/motion-change-reco';
 import {
@@ -19,6 +13,7 @@ import { ChangeRecoMode } from 'app/site/motions/motions.constants';
 import { BaseRepository } from '../base-repository';
 import { DiffService, LineRange, ModificationType } from '../../ui-services/diff.service';
 import { LinenumberingService } from '../../ui-services/linenumbering.service';
+import { RepositoryServiceCollector } from '../repository-service-collector';
 import { ViewMotion } from '../../../site/motions/models/view-motion';
 import { ViewUnifiedChange } from '../../../shared/models/motions/view-unified-change';
 
@@ -40,40 +35,12 @@ export class ChangeRecommendationRepositoryService extends BaseRepository<
     MotionChangeRecommendation,
     MotionChangeRecommendationTitleInformation
 > {
-    /**
-     * Creates a MotionRepository
-     *
-     * Converts existing and incoming motions to ViewMotions
-     * Handles CRUD using an observer to the DataStore
-     *
-     * @param {DataStoreService} DS The DataStore
-     * @param {DataSendService} dataSend sending changed objects
-     * @param {CollectionStringMapperService} mapperService Maps collection strings to classes
-     * @param {ViewModelStoreService} viewModelStoreService
-     * @param {TranslateService} translate
-     * @param {RelationManagerService} relationManager
-     * @param {DiffService} diffService
-     * @param {LinenumberingService} lineNumbering Line numbering service
-     */
     public constructor(
-        DS: DataStoreService,
-        dataSend: DataSendService,
-        mapperService: CollectionStringMapperService,
-        viewModelStoreService: ViewModelStoreService,
-        translate: TranslateService,
-        relationManager: RelationManagerService,
+        repositoryServiceCollector: RepositoryServiceCollector,
         private diffService: DiffService,
         private lineNumbering: LinenumberingService
     ) {
-        super(
-            DS,
-            dataSend,
-            mapperService,
-            viewModelStoreService,
-            translate,
-            relationManager,
-            MotionChangeRecommendation
-        );
+        super(repositoryServiceCollector, MotionChangeRecommendation);
     }
 
     public getTitle = (titleInformation: MotionChangeRecommendationTitleInformation) => {

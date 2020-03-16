@@ -21,7 +21,7 @@ export enum DelegationType {
 }
 
 export class ViewUser extends BaseProjectableViewModel<User> implements UserTitleInformation, Searchable {
-    public static COLLECTIONSTRING = User.COLLECTIONSTRING;
+    public static COLLECTION = User.COLLECTION;
 
     public get user(): User {
         return this._model;
@@ -93,7 +93,7 @@ export class ViewUser extends BaseProjectableViewModel<User> implements UserTitl
     public getSlide(): ProjectorElementBuildDeskriptor {
         return {
             getBasicProjectorElement: options => ({
-                name: User.COLLECTIONSTRING,
+                name: User.COLLECTION,
                 id: this.id,
                 getIdentifiers: () => ['name', 'id']
             }),

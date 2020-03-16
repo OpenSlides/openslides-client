@@ -9,25 +9,22 @@ import {
     ViewChild
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
 import { DurationService } from 'app/core/ui-services/duration.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { SpeakerState, ViewSpeaker } from 'app/site/agenda/models/view-speaker';
-import { BaseViewComponentDirective } from 'app/site/base/base-view';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { Selectable } from '../selectable';
 import { SortingListComponent } from '../sorting-list/sorting-list.component';
+import { BaseComponent } from 'app/site/base/components/base.component';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 
 @Component({
     selector: 'os-list-of-speakers-content',
@@ -35,7 +32,7 @@ import { SortingListComponent } from '../sorting-list/sorting-list.component';
     styleUrls: ['./list-of-speakers-content.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListOfSpeakersContentComponent extends BaseViewComponentDirective implements OnInit {
+export class ListOfSpeakersContentComponent extends BaseComponent implements OnInit {
     @ViewChild(SortingListComponent)
     public listElement: SortingListComponent;
 
@@ -71,11 +68,12 @@ export class ListOfSpeakersContentComponent extends BaseViewComponentDirective i
     }
 
     public get isOpInList(): boolean {
-        return this.waitingSpeakers.some(speaker => speaker.user_id === this.operator.user.id);
+        return this.waitingSpeakers.some(speaker => speaker.user_id === this.operator.operatorId);
     }
 
     public get canAddSelf(): boolean {
-        return !this.config.instant('agenda_present_speakers_only') || this.operator.user.is_present;
+        throw new Error('TODO');
+        // return !this.config.instant('agenda_present_speakers_only') || this.operator.user.is_present;
     }
 
     @Input()
@@ -101,19 +99,17 @@ export class ListOfSpeakersContentComponent extends BaseViewComponentDirective i
     private hasFinishesSpeakersEvent = new EventEmitter<boolean>();
 
     public constructor(
-        title: Title,
-        protected translate: TranslateService,
-        snackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private listOfSpeakersRepo: ListOfSpeakersRepositoryService,
         private operator: OperatorService,
         private promptService: PromptService,
         private durationService: DurationService,
         private userRepository: UserRepositoryService,
-        private config: ConfigService,
+        // private config: ConfigService,
         private viewport: ViewportService,
         private cd: ChangeDetectorRef
     ) {
-        super(title, translate, snackBar);
+        super(componentServiceCollector);
         this.addSpeakerForm = new FormGroup({ user_id: new FormControl() });
     }
 
@@ -137,14 +133,15 @@ export class ListOfSpeakersContentComponent extends BaseViewComponentDirective i
                 this.isMobile = isMobile;
                 this.cd.markForCheck();
             }),
+            // TODO
             // observe changes the agenda_present_speakers_only config
-            this.config.get('agenda_present_speakers_only').subscribe(() => {
+            /*this.config.get('agenda_present_speakers_only').subscribe(() => {
                 this.filterUsers();
             }),
             // observe changes to the agenda_show_first_contribution config
             this.config.get<boolean>('agenda_show_first_contribution').subscribe(show => {
                 this.showFistContributionHint = show;
-            })
+            })*/
         );
     }
 
@@ -277,13 +274,14 @@ export class ListOfSpeakersContentComponent extends BaseViewComponentDirective i
      * (triggered on an update of users or config)
      */
     private filterUsers(): void {
-        const presentUsersOnly = this.config.instant('agenda_present_speakers_only');
-        const users = presentUsersOnly ? this.users.getValue().filter(u => u.is_present) : this.users.getValue();
+        // const presentUsersOnly = this.config.instant('agenda_present_speakers_only');
+        throw new Error('TODO');
+        /*const users = presentUsersOnly ? this.users.getValue().filter(u => u.is_present) : this.users.getValue();
         if (!this.waitingSpeakers || !this.waitingSpeakers.length) {
             this.filteredUsers.next(users);
         } else {
             this.filteredUsers.next(users.filter(u => !this.waitingSpeakers.some(speaker => speaker.user_id === u.id)));
-        }
+        }*/
     }
 
     /**

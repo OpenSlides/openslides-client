@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { ConfigService } from './config.service';
+import { OrganisationSettingsService } from './organisation-settings.service';
 
 /**
  * Enables the usage of the FontFace constructor
@@ -33,9 +33,9 @@ export class LoadFontService {
     /**
      * Constructor
      *
-     * @param configService To observe the config variables
+     * @param organisationSettingsService To observe the config variables
      */
-    public constructor(private configService: ConfigService) {
+    public constructor(private organisationSettingsService: OrganisationSettingsService) {
         this.loadCustomFont();
     }
 
@@ -46,13 +46,13 @@ export class LoadFontService {
      * Falls back to the normal OSFont when no custom  font was set.
      */
     private loadCustomFont(): void {
-        this.configService.get<any>('font_regular').subscribe(regular => {
+        this.organisationSettingsService.get<any>('font_regular').subscribe(regular => {
             if (regular) {
                 this.setCustomProjectorFont(regular, 400);
             }
         });
 
-        this.configService.get<any>('font_bold').subscribe(bold => {
+        this.organisationSettingsService.get<any>('font_bold').subscribe(bold => {
             if (bold) {
                 this.setCustomProjectorFont(bold, 500);
             }

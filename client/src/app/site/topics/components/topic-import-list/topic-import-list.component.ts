@@ -1,14 +1,11 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
-
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { CsvExportService } from 'app/core/ui-services/csv-export.service';
 import { DurationService } from 'app/core/ui-services/duration.service';
 import { ItemVisibilityChoices } from 'app/shared/models/agenda/item';
-import { BaseImportListComponentDirective } from 'app/site/base/base-import-list';
+import { BaseImportListComponent } from 'app/site/base/components/base-import-list.component';
 import { CreateTopic } from 'app/site/topics/models/create-topic';
 import { TopicImportService } from '../../../topics/services/topic-import.service';
 
@@ -19,7 +16,7 @@ import { TopicImportService } from '../../../topics/services/topic-import.servic
     selector: 'os-topic-import-list',
     templateUrl: './topic-import-list.component.html'
 })
-export class TopicImportListComponent extends BaseImportListComponentDirective<CreateTopic> {
+export class TopicImportListComponent extends BaseImportListComponent<CreateTopic> {
     /**
      * A form for text input
      */
@@ -37,15 +34,13 @@ export class TopicImportListComponent extends BaseImportListComponentDirective<C
      * @param durationService: Service converting numbers to time strings
      */
     public constructor(
-        titleService: Title,
-        matSnackBar: MatSnackBar,
-        translate: TranslateService,
+        componentServiceCollector: ComponentServiceCollector,
         importer: TopicImportService,
         formBuilder: FormBuilder,
         private exporter: CsvExportService,
         private durationService: DurationService
     ) {
-        super(importer, titleService, translate, matSnackBar);
+        super(componentServiceCollector, importer);
         this.textAreaForm = formBuilder.group({ inputtext: [''] });
     }
 

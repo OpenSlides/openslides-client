@@ -5,7 +5,7 @@ import { BaseModel } from '../base/base-model';
  * @ignore
  */
 export class Category extends BaseModel<Category> {
-    public static COLLECTIONSTRING = 'motions/category';
+    public static COLLECTION = 'motions/category';
 
     public id: number;
     public name: string;
@@ -15,6 +15,6 @@ export class Category extends BaseModel<Category> {
     public level: number;
 
     public constructor(input?: any) {
-        super(Category.COLLECTIONSTRING, input);
+        super(Category.COLLECTION, input);
     }
 }

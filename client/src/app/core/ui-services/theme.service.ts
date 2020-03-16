@@ -43,6 +43,8 @@ export class ThemeService {
             }
             this.changeTheme(newTheme);
         });
+        // The observable above will not fire. Do it by hand
+        this.changeTheme(ThemeService.DEFAULT_THEME);
     }
 
     /**

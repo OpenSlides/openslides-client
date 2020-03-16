@@ -1,16 +1,13 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
-
-import { TranslateService } from '@ngx-translate/core';
 
 import { StorageService } from 'app/core/core-services/storage.service';
 import { CountdownRepositoryService } from 'app/core/repositories/projector/countdown-repository.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { ProjectionDialogService } from 'app/core/ui-services/projection-dialog.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { Projector } from 'app/shared/models/core/projector';
-import { BaseViewComponentDirective } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewCountdown } from '../../models/view-countdown';
 
 /**
@@ -21,7 +18,7 @@ import { ViewCountdown } from '../../models/view-countdown';
     templateUrl: './countdown-controls.component.html',
     styleUrls: ['./countdown-controls.component.scss']
 })
-export class CountdownControlsComponent extends BaseViewComponentDirective {
+export class CountdownControlsComponent extends BaseComponent {
     /**
      * Countdown as input
      */
@@ -57,22 +54,22 @@ export class CountdownControlsComponent extends BaseViewComponentDirective {
      * @param translate
      * @param matSnackBar
      * @param repo
-     * @param configService
+     * @param organisationSettingsService
      * @param promptService
      */
     public constructor(
-        titleService: Title,
-        translate: TranslateService,
-        matSnackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private repo: CountdownRepositoryService,
-        private configService: ConfigService,
+        private organisationSettingsService: OrganisationSettingsService,
         private promptService: PromptService,
         private projectionDialogService: ProjectionDialogService,
         private storage: StorageService
     ) {
-        super(titleService, translate, matSnackBar);
+        super(componentServiceCollector);
 
-        this.configService.get<number>('agenda_countdown_warning_time').subscribe(time => (this.warningTime = time));
+        this.organisationSettingsService
+            .get<number>('agenda_countdown_warning_time')
+            .subscribe(time => (this.warningTime = time));
     }
 
     /**

@@ -15,8 +15,8 @@ export enum SpeakerState {
  * Provides "safe" access to a speaker with all it's components
  */
 export class ViewSpeaker extends BaseViewModel<Speaker> {
-    public static COLLECTIONSTRING = Speaker.COLLECTIONSTRING;
-    protected _collectionString = Speaker.COLLECTIONSTRING;
+    public static COLLECTION = Speaker.COLLECTION;
+    protected _collection = Speaker.COLLECTION;
 
     public get speaker(): Speaker {
         return this._model;

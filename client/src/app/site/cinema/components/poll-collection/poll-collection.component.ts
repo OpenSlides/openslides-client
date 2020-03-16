@@ -1,21 +1,19 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs/operators';
 
-import { BaseViewComponentDirective } from 'app/site/base/base-view';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { ViewBasePoll } from 'app/site/polls/models/view-base-poll';
 import { PollListObservableService } from 'app/site/polls/services/poll-list-observable.service';
+import { BaseComponent } from 'app/site/base/components/base.component';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 
 @Component({
     selector: 'os-poll-collection',
     templateUrl: './poll-collection.component.html',
     styleUrls: ['./poll-collection.component.scss']
 })
-export class PollCollectionComponent extends BaseViewComponentDirective implements OnInit {
+export class PollCollectionComponent extends BaseComponent implements OnInit {
     public polls: ViewBasePoll[];
 
     @Input()
@@ -34,12 +32,10 @@ export class PollCollectionComponent extends BaseViewComponentDirective implemen
     }
 
     public constructor(
-        title: Title,
-        translate: TranslateService,
-        snackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private pollService: PollListObservableService
     ) {
-        super(title, translate, snackBar);
+        super(componentServiceCollector);
     }
 
     public ngOnInit(): void {

@@ -1,8 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
-
-import { TranslateService } from '@ngx-translate/core';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ProjectorService } from 'app/core/core-services/projector.service';
@@ -11,16 +7,17 @@ import { DetailNavigable, isDetailNavigable } from 'app/shared/models/base/detai
 import { ProjectorElement } from 'app/shared/models/core/projector';
 import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
-import { BaseViewComponentDirective } from 'app/site/base/base-view';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { CurrentListOfSpeakersService } from 'app/site/projector/services/current-list-of-speakers.service';
+import { BaseComponent } from 'app/site/base/components/base.component';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 
 @Component({
     selector: 'os-cinema',
     templateUrl: './cinema.component.html',
     styleUrls: ['./cinema.component.scss']
 })
-export class CinemaComponent extends BaseViewComponentDirective implements OnInit {
+export class CinemaComponent extends BaseComponent implements OnInit {
     public listOfSpeakers: ViewListOfSpeakers;
     public projector: ViewProjector;
     private currentProjectorElement: ProjectorElement;
@@ -81,19 +78,18 @@ export class CinemaComponent extends BaseViewComponentDirective implements OnIni
     }
 
     public constructor(
-        title: Title,
-        translate: TranslateService,
-        snackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private operator: OperatorService,
         private projectorService: ProjectorService,
         private projectorRepo: ProjectorRepositoryService,
         private closService: CurrentListOfSpeakersService
     ) {
-        super(title, translate, snackBar);
+        super(componentServiceCollector);
     }
 
     public ngOnInit(): void {
-        this.subscriptions.push(
+        // TODO
+        /*this.subscriptions.push(
             this.projectorRepo.getReferenceProjectorObservable().subscribe(refProjector => {
                 this.projector = refProjector;
                 this.currentProjectorElement = refProjector?.elements[0] || null;
@@ -108,6 +104,6 @@ export class CinemaComponent extends BaseViewComponentDirective implements OnIni
             this.closService.currentListOfSpeakersObservable.subscribe(clos => {
                 this.listOfSpeakers = clos;
             })
-        );
+        );*/
     }
 }

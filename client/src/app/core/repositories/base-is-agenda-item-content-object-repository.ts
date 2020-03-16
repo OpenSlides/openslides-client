@@ -1,5 +1,3 @@
-import { TranslateService } from '@ngx-translate/core';
-
 import { ViewItem } from 'app/site/agenda/models/view-item';
 import {
     AgendaListTitle,
@@ -8,12 +6,8 @@ import {
 } from 'app/site/base/base-view-model-with-agenda-item';
 import { BaseModel, ModelConstructor } from '../../shared/models/base/base-model';
 import { BaseRepository } from './base-repository';
-import { CollectionStringMapperService } from '../core-services/collection-string-mapper.service';
-import { DataSendService } from '../core-services/data-send.service';
-import { DataStoreService } from '../core-services/data-store.service';
-import { RelationManagerService } from '../core-services/relation-manager.service';
 import { RelationDefinition } from '../definitions/relations';
-import { ViewModelStoreService } from '../core-services/view-model-store.service';
+import { RepositoryServiceCollector } from './repository-service-collector';
 
 export function isBaseIsAgendaItemContentObjectRepository(
     obj: any
@@ -45,25 +39,11 @@ export abstract class BaseIsAgendaItemContentObjectRepository<
     extends BaseRepository<V, M, T>
     implements IBaseIsAgendaItemContentObjectRepository<V, M, T> {
     public constructor(
-        DS: DataStoreService,
-        dataSend: DataSendService,
-        collectionStringMapperService: CollectionStringMapperService,
-        viewModelStoreService: ViewModelStoreService,
-        translate: TranslateService,
-        relationManager: RelationManagerService,
+        repositoryServiceCollector: RepositoryServiceCollector,
         baseModelCtor: ModelConstructor<M>,
         relationDefinitions?: RelationDefinition[]
     ) {
-        super(
-            DS,
-            dataSend,
-            collectionStringMapperService,
-            viewModelStoreService,
-            translate,
-            relationManager,
-            baseModelCtor,
-            relationDefinitions
-        );
+        super(repositoryServiceCollector, baseModelCtor, relationDefinitions);
     }
 
     protected extendRelations(): void {

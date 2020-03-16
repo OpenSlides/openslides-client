@@ -377,7 +377,7 @@ export class C4DialogComponent implements OnInit, OnDestroy {
      * Returns the operators name.
      */
     public getPlayerName(): string {
-        return this.op.viewUser.short_name;
+        return this.op.shortName;
     }
 
     /**
@@ -591,7 +591,7 @@ export class CopyrightSignComponent {
         event.preventDefault();
 
         // no anonymous invited..
-        if (!this.op.user) {
+        if (this.op.isAnonymous) {
             return;
         }
 

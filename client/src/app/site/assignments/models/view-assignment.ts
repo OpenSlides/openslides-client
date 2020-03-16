@@ -40,8 +40,8 @@ export const AssignmentPhases: { name: string; value: number; display_name: stri
 export class ViewAssignment
     extends BaseViewModelWithAgendaItemAndListOfSpeakers<Assignment>
     implements AssignmentTitleInformation {
-    public static COLLECTIONSTRING = Assignment.COLLECTIONSTRING;
-    protected _collectionString = Assignment.COLLECTIONSTRING;
+    public static COLLECTION = Assignment.COLLECTION;
+    protected _collection = Assignment.COLLECTION;
 
     public get assignment(): Assignment {
         return this._model;
@@ -94,7 +94,7 @@ export class ViewAssignment
     public getSlide(): ProjectorElementBuildDeskriptor {
         return {
             getBasicProjectorElement: options => ({
-                name: Assignment.COLLECTIONSTRING,
+                name: Assignment.COLLECTION,
                 id: this.id,
                 getIdentifiers: () => ['name', 'id']
             }),

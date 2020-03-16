@@ -19,7 +19,7 @@ export interface PersonalNoteContent {
  * All notes are assigned to their object (given by collection string and id)
  */
 export interface PersonalNotesFormat {
-    [collectionString: string]: {
+    [collection: string]: {
         [id: number]: PersonalNoteContent;
     };
 }
@@ -49,13 +49,13 @@ export interface PersonalNoteObject {
  * @ignore
  */
 export class PersonalNote extends BaseModel<PersonalNote> implements PersonalNoteObject {
-    public static COLLECTIONSTRING = 'users/personal-note';
+    public static COLLECTION = 'users/personal-note';
 
     public id: number;
     public user_id: number;
     public notes: PersonalNotesFormat;
 
     public constructor(input: Partial<PersonalNote>) {
-        super(PersonalNote.COLLECTIONSTRING, input);
+        super(PersonalNote.COLLECTION, input);
     }
 }

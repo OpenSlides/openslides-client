@@ -16,8 +16,8 @@ export interface MotionCommentSectionTitleInformation {
 export class ViewMotionCommentSection
     extends BaseViewModel<MotionCommentSection>
     implements MotionCommentSectionTitleInformation {
-    public static COLLECTIONSTRING = MotionCommentSection.COLLECTIONSTRING;
-    protected _collectionString = MotionCommentSection.COLLECTIONSTRING;
+    public static COLLECTION = MotionCommentSection.COLLECTION;
+    protected _collection = MotionCommentSection.COLLECTION;
 
     public get section(): MotionCommentSection {
         return this._model;

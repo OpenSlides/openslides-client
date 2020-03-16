@@ -8,8 +8,8 @@ export interface ProjectionDefaultTitleInformation {
 export class ViewProjectionDefault
     extends BaseViewModel<ProjectionDefault>
     implements ProjectionDefaultTitleInformation {
-    public static COLLECTIONSTRING = ProjectionDefault.COLLECTIONSTRING;
-    protected _collectionString = ProjectionDefault.COLLECTIONSTRING;
+    public static COLLECTION = ProjectionDefault.COLLECTION;
+    protected _collection = ProjectionDefault.COLLECTION;
 
     public get projectionDefault(): ProjectionDefault {
         return this._model;

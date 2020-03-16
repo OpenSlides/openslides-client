@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { TranslateService } from '@ngx-translate/core';
 import { environment } from 'environments/environment';
 
 import { HttpService } from 'app/core/core-services/http.service';
-import { BaseComponent } from '../../../../base.component';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { BaseComponent } from 'app/site/base/components/base.component';
 
 /**
  * Reset password component.
@@ -39,15 +37,13 @@ export class ResetPasswordConfirmComponent extends BaseComponent implements OnIn
      * Constructur for the reset password confirm view. Initializes the form for the new password.
      */
     public constructor(
-        protected titleService: Title,
-        protected translate: TranslateService,
+        componentServiceCollector: ComponentServiceCollector,
         private http: HttpService,
         formBuilder: FormBuilder,
         private activatedRoute: ActivatedRoute,
-        private router: Router,
-        private matSnackBar: MatSnackBar
+        private router: Router
     ) {
-        super(titleService, translate);
+        super(componentServiceCollector);
         this.newPasswordForm = formBuilder.group({
             password: ['', [Validators.required]]
         });

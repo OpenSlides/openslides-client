@@ -11,7 +11,7 @@ export enum MotionPollMethod {
  * Class representing a poll for a motion.
  */
 export class MotionPoll extends BasePoll<MotionPoll, MotionOption, MotionPollMethod, PercentBase> {
-    public static COLLECTIONSTRING = 'motions/motion-poll';
+    public static COLLECTION = 'motions/motion-poll';
     public static defaultGroupsConfig = 'motion_poll_default_groups';
 
     public id: number;
@@ -27,6 +27,6 @@ export class MotionPoll extends BasePoll<MotionPoll, MotionOption, MotionPollMet
     }
 
     public constructor(input?: any) {
-        super(MotionPoll.COLLECTIONSTRING, input);
+        super(MotionPoll.COLLECTION, input);
     }
 }

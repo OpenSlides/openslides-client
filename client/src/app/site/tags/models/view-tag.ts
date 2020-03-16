@@ -15,8 +15,8 @@ export interface TagTitleInformation {
  * @ignore
  */
 export class ViewTag extends BaseViewModel<Tag> implements TagTitleInformation, Searchable {
-    public static COLLECTIONSTRING = Tag.COLLECTIONSTRING;
-    protected _collectionString = Tag.COLLECTIONSTRING;
+    public static COLLECTION = Tag.COLLECTION;
+    protected _collection = Tag.COLLECTION;
 
     public get tag(): Tag {
         return this._model;

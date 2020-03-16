@@ -1,11 +1,8 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 
-import { TranslateService } from '@ngx-translate/core';
 import { timer } from 'rxjs';
 
 import { OperatorService, Permission } from 'app/core/core-services/operator.service';
@@ -16,6 +13,7 @@ import {
     ProjectorRepositoryService,
     ScrollScaleDirection
 } from 'app/core/repositories/projector/projector-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DurationService } from 'app/core/ui-services/duration.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { SizeObject } from 'app/shared/components/tile/tile.component';
@@ -23,7 +21,7 @@ import { Countdown } from 'app/shared/models/core/countdown';
 import { ProjectorElement } from 'app/shared/models/core/projector';
 import { ProjectorMessage } from 'app/shared/models/core/projector-message';
 import { infoDialogSettings, largeDialogSettings } from 'app/shared/utils/dialog-settings';
-import { BaseViewComponentDirective } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { Projectable } from 'app/site/base/projectable';
 import { ViewCountdown } from 'app/site/projector/models/view-countdown';
 import { ViewProjectorMessage } from 'app/site/projector/models/view-projector-message';
@@ -44,7 +42,7 @@ import { ViewProjector } from '../../models/view-projector';
     styleUrls: ['./projector-detail.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProjectorDetailComponent extends BaseViewComponentDirective implements OnInit {
+export class ProjectorDetailComponent extends BaseComponent implements OnInit {
     /**
      * The projector to show.
      */
@@ -81,9 +79,7 @@ export class ProjectorDetailComponent extends BaseViewComponentDirective impleme
      * @param route
      */
     public constructor(
-        titleService: Title,
-        translate: TranslateService,
-        matSnackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private dialog: MatDialog,
         private repo: ProjectorRepositoryService,
         private route: ActivatedRoute,
@@ -98,7 +94,7 @@ export class ProjectorDetailComponent extends BaseViewComponentDirective impleme
         private promptService: PromptService,
         private opertator: OperatorService
     ) {
-        super(titleService, translate, matSnackBar);
+        super(componentServiceCollector);
 
         this.countdownRepo.getViewModelListObservable().subscribe(countdowns => (this.countdowns = countdowns));
         this.messageRepo.getViewModelListObservable().subscribe(messages => (this.messages = messages));

@@ -1,18 +1,15 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { Title } from '@angular/platform-browser';
-
-import { TranslateService } from '@ngx-translate/core';
 
 import { Permission } from 'app/core/core-services/operator.service';
 import { AppPermissions, GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { Group } from 'app/shared/models/users/group';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
-import { BaseViewComponentDirective } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewGroup } from '../../models/view-group';
 
 /**
@@ -23,7 +20,7 @@ import { ViewGroup } from '../../models/view-group';
     templateUrl: './group-list.component.html',
     styleUrls: ['./group-list.component.scss']
 })
-export class GroupListComponent extends BaseViewComponentDirective implements OnInit {
+export class GroupListComponent extends BaseComponent implements OnInit {
     /**
      * Holds all Groups
      */
@@ -74,15 +71,13 @@ export class GroupListComponent extends BaseViewComponentDirective implements On
      * @param promptService
      */
     public constructor(
-        titleService: Title,
-        protected translate: TranslateService, // protected required for ng-translate-extract
-        matSnackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private dialog: MatDialog,
         private repo: GroupRepositoryService,
         private promptService: PromptService,
-        private fb: FormBuilder
+        private formBuilder: FormBuilder
     ) {
-        super(titleService, translate, matSnackBar);
+        super(componentServiceCollector);
     }
 
     /**
@@ -96,7 +91,7 @@ export class GroupListComponent extends BaseViewComponentDirective implements On
 
         const name = this.selectedGroup ? this.selectedGroup.name : '';
 
-        this.groupForm = this.fb.group({
+        this.groupForm = this.formBuilder.group({
             name: [name, Validators.required]
         });
 

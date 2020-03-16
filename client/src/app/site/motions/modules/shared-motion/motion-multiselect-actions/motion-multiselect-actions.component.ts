@@ -1,16 +1,14 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
 
 import { CategoryRepositoryService } from 'app/core/repositories/motions/category-repository.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
-import { BaseViewComponentDirective } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewCategory } from 'app/site/motions/models/view-category';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
@@ -24,7 +22,7 @@ import { MotionExportDialogComponent } from '../motion-export-dialog/motion-expo
     templateUrl: './motion-multiselect-actions.component.html',
     styleUrls: ['./motion-multiselect-actions.component.scss']
 })
-export class MotionMultiselectActionsComponent extends BaseViewComponentDirective implements OnInit {
+export class MotionMultiselectActionsComponent extends BaseComponent implements OnInit {
     /**
      * The list of the selected motions.
      */
@@ -64,21 +62,19 @@ export class MotionMultiselectActionsComponent extends BaseViewComponentDirectiv
      * @param categoryRepo
      * @param motionBlockRepo
      * @param tagRepo
-     * @param configService
+     * @param organisationSettingsService
      */
     public constructor(
-        title: Title,
-        protected translate: TranslateService,
-        matSnackbar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         public multiselectService: MotionMultiselectService,
         private categoryRepo: CategoryRepositoryService,
         private motionBlockRepo: MotionBlockRepositoryService,
         private tagRepo: TagRepositoryService,
-        private configService: ConfigService,
+        private organisationSettingsService: OrganisationSettingsService,
         private dialog: MatDialog,
         private motionExport: MotionExportService
     ) {
-        super(title, translate, matSnackbar);
+        super(componentServiceCollector);
     }
 
     /**
@@ -91,7 +87,7 @@ export class MotionMultiselectActionsComponent extends BaseViewComponentDirectiv
             this.categoryRepo.getViewModelListObservable().subscribe(categories => (this.categories = categories)),
             this.motionBlockRepo.getViewModelListObservable().subscribe(blocks => (this.motionBlocks = blocks)),
             this.tagRepo.getViewModelListObservable().subscribe(tags => (this.tags = tags)),
-            this.configService.get<string>('motions_recommendations_by').subscribe(recommender => {
+            this.organisationSettingsService.get<string>('motions_recommendations_by').subscribe(recommender => {
                 this.recommendationEnabled = !!recommender;
             })
         );
