@@ -4,7 +4,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 
 import { ItemRepositoryService } from 'app/core/repositories/agenda/item-repository.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { ItemVisibilityChoices } from 'app/shared/models/agenda/item';
 import { ViewItem } from 'app/site/agenda/models/view-item';
 
@@ -33,12 +33,15 @@ export class AgendaContentObjectFormComponent implements OnInit {
      */
     public itemObserver: BehaviorSubject<ViewItem[]>;
 
-    public constructor(private configService: ConfigService, private itemRepo: ItemRepositoryService) {}
+    public constructor(
+        private organisationSettingsService: OrganisationSettingsService,
+        private itemRepo: ItemRepositoryService
+    ) {}
 
     public ngOnInit(): void {
         this.checkbox = this.form.controls.agenda_create as FormControl;
 
-        this.configService.get<AgendaItemCreateChoices>('agenda_item_creation').subscribe(value => {
+        this.organisationSettingsService.get<AgendaItemCreateChoices>('agenda_item_creation').subscribe(value => {
             if (value === 'always') {
                 this.showForm = true;
                 this.checkbox.disable();
@@ -57,7 +60,7 @@ export class AgendaContentObjectFormComponent implements OnInit {
         });
 
         // Set the default visibility using observers
-        this.configService.get('agenda_new_items_default_visibility').subscribe(visibility => {
+        this.organisationSettingsService.get('agenda_new_items_default_visibility').subscribe(visibility => {
             this.form.get('agenda_type').setValue(+visibility);
         });
 

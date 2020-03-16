@@ -10,26 +10,22 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { TranslateService } from '@ngx-translate/core';
 import { columnFactory, createDS, PblColumnDefinition } from '@pebula/ngrid';
 import { PblNgridDataMatrixRow } from '@pebula/ngrid/target-events';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 import { OperatorService, Permission } from 'app/core/core-services/operator.service';
-import { StorageService } from 'app/core/core-services/storage.service';
 import { MediafileRepositoryService } from 'app/core/repositories/mediafiles/mediafile-repository.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MediaManageService } from 'app/core/ui-services/media-manage.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { Mediafile } from 'app/shared/models/mediafiles/mediafile';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
-import { BaseListViewComponent } from 'app/site/base/base-list-view';
+import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { ViewGroup } from 'app/site/users/models/view-group';
 import { MediafilesSortListService } from '../../services/mediafiles-sort-list.service';
@@ -187,10 +183,7 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
      * @param operator permission check
      */
     public constructor(
-        titleService: Title,
-        protected translate: TranslateService,
-        matSnackBar: MatSnackBar,
-        storage: StorageService,
+        componentServiceCollector: ComponentServiceCollector,
         private route: ActivatedRoute,
         private router: Router,
         public repo: MediafileRepositoryService,
@@ -200,13 +193,11 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
         public sortService: MediafilesSortListService,
         private operator: OperatorService,
         private dialog: MatDialog,
-        private fb: FormBuilder,
         private formBuilder: FormBuilder,
         private groupRepo: GroupRepositoryService,
-        private cd: ChangeDetectorRef,
-        private configService: ConfigService
+        private cd: ChangeDetectorRef
     ) {
-        super(titleService, translate, matSnackBar, storage);
+        super(componentServiceCollector);
         this.canMultiSelect = true;
 
         this.newDirectoryForm = this.formBuilder.group({
@@ -332,7 +323,7 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
         if (!this.isMultiSelect) {
             this.fileToEdit = file;
 
-            this.fileEditForm = this.fb.group({
+            this.fileEditForm = this.formBuilder.group({
                 title: [file.filename, Validators.required],
                 access_groups_id: [file.access_groups_id]
             });
@@ -465,10 +456,10 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
         /**
          * TODO: naming the files is discussable
          */
-        const eventName = this.configService.instant<string>('general_event_name');
+        /*const eventName = this.configService.instant<string>('general_event_name');
         const dirName = this.directory?.filename ?? this.translate.instant('Files');
         const archiveName = `${eventName} - ${dirName}`.trim();
-        this.repo.downloadArchive(archiveName, mediafiles);
+        this.repo.downloadArchive(archiveName, mediafiles);*/
     }
 
     public move(templateRef: TemplateRef<string>, mediafiles: ViewMediafile[]): void {

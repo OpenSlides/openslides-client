@@ -1,16 +1,10 @@
-import { TranslateService } from '@ngx-translate/core';
-
 import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { BaseViewModelWithListOfSpeakers } from 'app/site/base/base-view-model-with-list-of-speakers';
 import { BaseModel, ModelConstructor } from '../../shared/models/base/base-model';
 import { BaseRepository } from './base-repository';
 import { TitleInformation } from '../../site/base/base-view-model';
-import { CollectionStringMapperService } from '../core-services/collection-string-mapper.service';
-import { DataSendService } from '../core-services/data-send.service';
-import { DataStoreService } from '../core-services/data-store.service';
-import { RelationManagerService } from '../core-services/relation-manager.service';
 import { RelationDefinition } from '../definitions/relations';
-import { ViewModelStoreService } from '../core-services/view-model-store.service';
+import { RepositoryServiceCollector } from './repository-service-collector';
 
 export function isBaseIsListOfSpeakersContentObjectRepository(
     obj: any
@@ -42,25 +36,11 @@ export abstract class BaseIsListOfSpeakersContentObjectRepository<
     extends BaseRepository<V, M, T>
     implements IBaseIsListOfSpeakersContentObjectRepository<V, M, T> {
     public constructor(
-        DS: DataStoreService,
-        dataSend: DataSendService,
-        collectionStringMapperService: CollectionStringMapperService,
-        viewModelStoreService: ViewModelStoreService,
-        translate: TranslateService,
-        relationManager: RelationManagerService,
+        repositoryServiceCollector: RepositoryServiceCollector,
         baseModelCtor: ModelConstructor<M>,
         relationDefinitions?: RelationDefinition[]
     ) {
-        super(
-            DS,
-            dataSend,
-            collectionStringMapperService,
-            viewModelStoreService,
-            translate,
-            relationManager,
-            baseModelCtor,
-            relationDefinitions
-        );
+        super(repositoryServiceCollector, baseModelCtor, relationDefinitions);
     }
 
     protected extendRelations(): void {

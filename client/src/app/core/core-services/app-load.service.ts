@@ -6,11 +6,11 @@ import { BaseRepository } from 'app/core/repositories/base-repository';
 import { CinemaAppConfig } from 'app/site/cinema/cinema.config';
 import { HistoryAppConfig } from 'app/site/history/history.config';
 import { ProjectorAppConfig } from 'app/site/projector/projector.config';
+import { SettingsAppConfig } from 'app/site/settings/settings.config';
 import { TopicsAppConfig } from 'app/site/topics/topics.config';
 import { AssignmentsAppConfig } from '../../site/assignments/assignments.config';
-import { CollectionStringMapperService } from './collection-string-mapper.service';
+import { CollectionMapperService } from './collection-mapper.service';
 import { CommonAppConfig } from '../../site/common/common.config';
-import { ConfigAppConfig } from '../../site/config/config.config';
 import { ServicesToLoadOnAppsLoaded } from '../core.module';
 import { FallbackRoutesService } from './fallback-routes.service';
 import { MainMenuService } from './main-menu.service';
@@ -27,7 +27,7 @@ import { UsersAppConfig } from '../../site/users/users.config';
  */
 const appConfigs: AppConfig[] = [
     CommonAppConfig,
-    ConfigAppConfig,
+    SettingsAppConfig,
     AgendaAppConfig,
     AssignmentsAppConfig,
     MotionsAppConfig,
@@ -55,7 +55,7 @@ export class AppLoadService {
      * @param searchService
      */
     public constructor(
-        private modelMapper: CollectionStringMapperService,
+        private modelMapper: CollectionMapperService,
         private mainMenuService: MainMenuService,
         private searchService: SearchService,
         private injector: Injector,
@@ -73,7 +73,7 @@ export class AppLoadService {
                     this.modelMapper.registerCollectionElement(entry.model, entry.viewModel, repository);
                     if (this.isSearchableModelEntry(entry)) {
                         this.searchService.registerModel(
-                            entry.model.COLLECTIONSTRING,
+                            entry.model.COLLECTION,
                             repository,
                             entry.searchOrder,
                             entry.openInNewTab
@@ -105,7 +105,7 @@ export class AppLoadService {
             // we would not have to check if the result of the contructor (the model instance) is really a searchable.
             if (!isSearchable(new entry.viewModel())) {
                 throw Error(
-                    `Wrong configuration for ${entry.model.COLLECTIONSTRING}: you gave a searchOrder, but the model is not searchable.`
+                    `Wrong configuration for ${entry.model.COLLECTION}: you gave a searchOrder, but the model is not searchable.`
                 );
             }
             return true;

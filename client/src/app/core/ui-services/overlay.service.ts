@@ -62,12 +62,13 @@ export class OverlayService {
         offlineBroadcastService: OfflineBroadcastService
     ) {
         // Subscribe to the current user.
-        operator.getViewUserObservable().subscribe(user => {
+        this.user = 1; // temp to get the spinner working
+        /*operator.getViewUserObservable().subscribe(user => {
             if (user) {
                 this.user = user;
                 this.checkConnection();
             }
-        });
+        });*/
         // Subscribe to the booting-step.
         OpenSlides.booted.subscribe(isBooted => {
             this.hasBooted = isBooted;

@@ -8,7 +8,7 @@ import { BaseModel } from '../base/base-model';
  * @ignore
  */
 export class Speaker extends BaseModel<Speaker> {
-    public static COLLECTIONSTRING = 'agenda/speaker';
+    public static COLLECTION = 'agenda/speaker';
 
     public id: number;
     public user_id: number;
@@ -30,6 +30,6 @@ export class Speaker extends BaseModel<Speaker> {
     public end_time: string;
 
     public constructor(input?: any) {
-        super(Speaker.COLLECTIONSTRING, input);
+        super(Speaker.COLLECTION, input);
     }
 }

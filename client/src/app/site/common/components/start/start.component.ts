@@ -1,14 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
-
-import { TranslateService } from '@ngx-translate/core'; // showcase
 
 import { OperatorService, Permission } from 'app/core/core-services/operator.service';
 import { ConfigRepositoryService } from 'app/core/repositories/config/config-repository.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
-import { BaseViewComponentDirective } from 'app/site/base/base-view';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { BaseComponent } from 'app/site/base/components/base.component';
 
 /**
  * Interface describes the keys for the fields at start-component.
@@ -26,7 +23,7 @@ interface IStartContent {
     templateUrl: './start.component.html',
     styleUrls: ['./start.component.scss']
 })
-export class StartComponent extends BaseViewComponentDirective implements OnInit {
+export class StartComponent extends BaseComponent implements OnInit {
     /**
      * Whether the user is editing the content.
      */
@@ -50,19 +47,17 @@ export class StartComponent extends BaseViewComponentDirective implements OnInit
      *
      * @param titleService the title serve
      * @param translate to translation module
-     * @param configService read out config values
+     * @param organisationSettingsService read out config values
      */
     public constructor(
-        titleService: Title,
-        translate: TranslateService,
-        matSnackbar: MatSnackBar,
-        private configService: ConfigService,
+        componentServiceCollector: ComponentServiceCollector,
+        private organisationSettingsService: OrganisationSettingsService,
         private configRepo: ConfigRepositoryService,
-        private fb: FormBuilder,
+        private formBuilder: FormBuilder,
         private operator: OperatorService
     ) {
-        super(titleService, translate, matSnackbar);
-        this.startForm = this.fb.group({
+        super(componentServiceCollector);
+        this.startForm = this.formBuilder.group({
             general_event_welcome_title: ['', Validators.required],
             general_event_welcome_text: ''
         });
@@ -77,12 +72,12 @@ export class StartComponent extends BaseViewComponentDirective implements OnInit
         super.setTitle('Home');
 
         // set the welcome title
-        this.configService
+        this.organisationSettingsService
             .get<string>('general_event_welcome_title')
             .subscribe(welcomeTitle => (this.startContent.general_event_welcome_title = welcomeTitle));
 
         // set the welcome text
-        this.configService.get<string>('general_event_welcome_text').subscribe(welcomeText => {
+        this.organisationSettingsService.get<string>('general_event_welcome_text').subscribe(welcomeText => {
             this.startContent.general_event_welcome_text = this.translate.instant(welcomeText);
         });
     }

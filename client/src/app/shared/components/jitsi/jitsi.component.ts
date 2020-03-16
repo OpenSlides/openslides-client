@@ -1,20 +1,22 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
+import {
+    Component,
+    ElementRef,
+    HostListener,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+    ViewEncapsulation
+} from '@angular/core';
 
 import { StorageMap } from '@ngx-pwa/local-storage';
-import { TranslateService } from '@ngx-translate/core';
-import { delay, distinctUntilChanged, map } from 'rxjs/operators';
 
-import { ConstantsService } from 'app/core/core-services/constants.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Deferred } from 'app/core/promises/deferred';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { UserMediaPermService } from 'app/core/ui-services/user-media-perm.service';
-import { UserListIndexType } from 'app/site/agenda/models/view-list-of-speakers';
-import { BaseViewComponentDirective } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { CurrentListOfSpeakersService } from 'app/site/projector/services/current-list-of-speakers.service';
 
 declare var JitsiMeetExternalAPI: any;
@@ -77,7 +79,7 @@ enum ConferenceState {
     ],
     encapsulation: ViewEncapsulation.None
 })
-export class JitsiComponent extends BaseViewComponentDirective implements OnInit, OnDestroy {
+export class JitsiComponent extends BaseComponent implements OnInit, OnDestroy {
     public enableJitsi: boolean;
 
     private autoconnect: boolean;
@@ -228,18 +230,16 @@ export class JitsiComponent extends BaseViewComponentDirective implements OnInit
     };
 
     public constructor(
-        titleService: Title,
-        translate: TranslateService,
-        snackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private operator: OperatorService,
         private storageMap: StorageMap,
         private userRepo: UserRepositoryService,
-        private constantsService: ConstantsService,
-        private configService: ConfigService,
+        /*private constantsService: ConstantsService,
+        private configService: ConfigService,*/
         private closService: CurrentListOfSpeakersService,
         private userMediaPermService: UserMediaPermService
     ) {
-        super(titleService, translate, snackBar);
+        super(componentServiceCollector);
     }
 
     public async ngOnInit(): Promise<void> {
@@ -251,7 +251,7 @@ export class JitsiComponent extends BaseViewComponentDirective implements OnInit
         }
     }
 
-    public async ngOnDestroy(): Promise<void> {
+    /*public async ngOnDestroy(): Promise<void> {
         super.ngOnDestroy();
         this.stopConference();
     }
@@ -276,10 +276,10 @@ export class JitsiComponent extends BaseViewComponentDirective implements OnInit
         if (this.streamActiveInAnotherTab && this.streamRunning) {
             await this.deleteStreamingLock();
         }
-    }
+    }*/
 
     private async setUp(): Promise<void> {
-        this.subscriptions.push(
+        /*this.subscriptions.push(
             // if the operators users has changes, check if we have to start the animation
             this.operator
                 .getUserObservable()
@@ -308,9 +308,9 @@ export class JitsiComponent extends BaseViewComponentDirective implements OnInit
                 })
         );
 
-        await this.lockLoaded;
-
-        this.constantsService.get<JitsiSettings>('Settings').subscribe(settings => {
+        await this.lockLoaded;*/
+        throw new Error('TODO');
+        /*this.constantsService.get<JitsiSettings>('Settings').subscribe(settings => {
             if (settings) {
                 this.jitsiDomain = settings.JITSI_DOMAIN;
                 this.roomName = settings.JITSI_ROOM_NAME;

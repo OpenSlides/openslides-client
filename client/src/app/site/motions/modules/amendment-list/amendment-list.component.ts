@@ -1,24 +1,20 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 
-import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import { AmendmentFilterListService } from '../../services/amendment-filter-list.service';
 import { AmendmentSortListService } from '../../services/amendment-sort-list.service';
-import { StorageService } from 'app/core/core-services/storage.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { LinenumberingService } from 'app/core/ui-services/linenumbering.service';
 import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { ItemVisibilityChoices } from 'app/shared/models/agenda/item';
 import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
-import { BaseListViewComponent } from 'app/site/base/base-list-view';
+import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
 import { MotionExportDialogComponent } from '../shared-motion/motion-export-dialog/motion-export-dialog.component';
 import { MotionExportInfo, MotionExportService } from '../../services/motion-export.service';
 import { MotionMultiselectService } from '../../services/motion-multiselect.service';
@@ -79,22 +75,8 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
      */
     public filterProps = ['submitters', 'title', 'identifier', 'amendment_paragraphs'];
 
-    /**
-     *
-     * @param titleService set the title
-     * @param translate translate stuff
-     * @param matSnackBar show errors
-     * @param storage store and recall
-     * @param motionRepo get the motions
-     * @param motionSortService the default motion sorter
-     *
-     * @param Service get config vars
-     */
     public constructor(
-        titleService: Title,
-        translate: TranslateService,
-        matSnackBar: MatSnackBar,
-        storage: StorageService,
+        componentServiceCollector: ComponentServiceCollector,
         private route: ActivatedRoute,
         public motionRepo: MotionRepositoryService,
         public motionSortService: MotionSortListService,
@@ -105,10 +87,9 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
         private motionExport: MotionExportService,
         private linenumberingService: LinenumberingService,
         private pdfExport: MotionPdfExportService,
-        private overlayService: OverlayService,
-        private configService: ConfigService
+        private overlayService: OverlayService
     ) {
-        super(titleService, translate, matSnackBar, storage);
+        super(componentServiceCollector);
         super.setTitle('Amendments');
         this.canMultiSelect = true;
     }
@@ -129,9 +110,10 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
             this.amendmentFilterService.parentMotionId = undefined;
         }
 
-        this.configService
+        console.log('TODO: meetingsettingsservice');
+        /*this.configService
             .get<boolean>('motions_show_sequential_numbers')
-            .subscribe(show => (this.showSequentialNumber = show));
+            .subscribe(show => (this.showSequentialNumber = show));*/
     }
 
     /**

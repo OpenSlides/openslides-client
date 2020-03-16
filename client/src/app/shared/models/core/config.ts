@@ -31,18 +31,20 @@ export interface ConfigData {
     subgroup?: string;
 }
 
+// TODO: This is a setting now. Rename it.
+
 /**
  * Representation of a config variable
  * @ignore
  */
 export class Config extends BaseModel {
-    public static COLLECTIONSTRING = 'core/config';
+    public static COLLECTION = 'core/config';
     public id: number;
     public key: string;
     public value: any;
     public data?: ConfigData;
 
     public constructor(input?: any) {
-        super(Config.COLLECTIONSTRING, input);
+        super(Config.COLLECTION, input);
     }
 }

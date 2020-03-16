@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
 
+import { Motion } from 'app/shared/models/motions/motion';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { BaseRepository } from '../repositories/base-repository';
 import { Searchable } from '../../site/base/searchable';
@@ -60,7 +61,7 @@ export interface SearchModel {
     /**
      * The collection string.
      */
-    collectionString: string;
+    collection: string;
 
     /**
      * The singular verbose name of the model.
@@ -79,13 +80,13 @@ export interface SearchModel {
 }
 
 /**
- * A search result has the model's collectionstring, a verbose name and the actual models.
+ * A search result has the model's collection, a verbose name and the actual models.
  */
 export interface SearchResult {
     /**
      * The collection string.
      */
-    collectionString: string;
+    collection: string;
 
     /**
      * This verboseName must have the right cardianlity. If there is exactly one model in `models`,
@@ -114,7 +115,7 @@ export interface TranslatedCollection {
     value: string;
 
     /**
-     * The collectionString, the value relates to.
+     * The collection, the value relates to.
      */
     collection: string;
 }
@@ -130,7 +131,7 @@ export class SearchService {
      * All searchable models in our own representation.
      */
     private searchModels: {
-        collectionString: string;
+        collection: string;
         verboseNameSingular: string;
         verboseNamePlural: string;
         displayOrder: number;
@@ -155,18 +156,18 @@ export class SearchService {
     /**
      * Registers a model by the given attributes.
      *
-     * @param collectionString The colelction string of the model
+     * @param collection The colelction string of the model
      * @param ctor The model constructor
      * @param displayOrder The order in which the elements should be displayed.
      */
     public registerModel(
-        collectionString: string,
+        collection: string,
         repo: BaseRepository<any, any, any>,
         displayOrder: number,
         openInNewTab: boolean = false
     ): void {
         this.searchModels.push({
-            collectionString: collectionString,
+            collection: collection,
             verboseNameSingular: repo.getVerboseName(),
             verboseNamePlural: repo.getVerboseName(true),
             displayOrder: displayOrder,
@@ -180,7 +181,7 @@ export class SearchService {
      */
     public getRegisteredModels(): SearchModel[] {
         return this.searchModels.map(searchModel => ({
-            collectionString: searchModel.collectionString,
+            collection: searchModel.collection,
             verboseNameSingular: searchModel.verboseNameSingular,
             verboseNamePlural: searchModel.verboseNamePlural,
             openInNewTab: searchModel.openInNewTab
@@ -191,24 +192,24 @@ export class SearchService {
      * Does the actual searching.
      *
      * @param query The search query
-     * @param inCollectionStrings All connection strings which should be used for searching.
-     * @param dedicatedId Optional parameter. Useful to look for a specific id in the given collectionStrings.
+     * @param inCollections All connection strings which should be used for searching.
+     * @param dedicatedId Optional parameter. Useful to look for a specific id in the given collections.
      * @param searchOnlyById Optional parameter. Decides, whether all models should only be filtered by their id.
      *
      * @returns All search results sorted by the model's title (via `getTitle()`).
      */
     public search(
         query: string,
-        inCollectionStrings: string[],
+        inCollections: string[],
         dedicatedId?: number,
         searchOnlyById: boolean = false
     ): SearchResult[] {
         query = query.toLowerCase();
         return this.searchModels
-            .filter(s => inCollectionStrings.indexOf(s.collectionString) !== -1)
+            .filter(s => inCollections.indexOf(s.collection) !== -1)
             .map(searchModel => {
                 const results = this.viewModelStore
-                    .getAll(searchModel.collectionString)
+                    .getAll(searchModel.collection)
                     .map(x => x as BaseViewModel & Searchable)
                     .filter(model =>
                         !searchOnlyById
@@ -221,7 +222,7 @@ export class SearchService {
                     .sort((a, b) => this.languageCollator.compare(a.getTitle(), b.getTitle()));
 
                 return {
-                    collectionString: searchModel.collectionString,
+                    collection: searchModel.collection,
                     verboseName: results.length === 1 ? searchModel.verboseNameSingular : searchModel.verboseNamePlural,
                     openInNewTab: searchModel.openInNewTab,
                     models: results
@@ -235,12 +236,12 @@ export class SearchService {
      * @param collections All the collections, that should be translated.
      *
      * @returns {Array} An array containing the single values of the collections and the translated ones.
-     * These values point to the `collectionString` the user can search for.
+     * These values point to the `collection` the user can search for.
      */
-    public getTranslatedCollectionStrings(): TranslatedCollection[] {
+    public getTranslatedCollections(): TranslatedCollection[] {
         const nextCollections: TranslatedCollection[] = this.searchModels.flatMap((model: SearchModel) => [
-            { value: model.verboseNamePlural, collection: model.collectionString },
-            { value: model.verboseNameSingular, collection: model.collectionString }
+            { value: model.verboseNamePlural, collection: model.collection },
+            { value: model.verboseNameSingular, collection: model.collection }
         ]);
         const tmpCollections = [...nextCollections];
         for (const entry of tmpCollections) {
@@ -251,8 +252,8 @@ export class SearchService {
         }
         const sequentialNumber = 'Sequential number';
         nextCollections.push(
-            { value: sequentialNumber, collection: 'motions/motion' },
-            { value: this.translate.instant(sequentialNumber), collection: 'motions/motion' }
+            { value: sequentialNumber, collection: Motion.COLLECTION },
+            { value: this.translate.instant(sequentialNumber), collection: Motion.COLLECTION }
         );
         return nextCollections;
     }

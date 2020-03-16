@@ -1,14 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
-
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DurationService } from 'app/core/ui-services/duration.service';
-import { BaseViewComponentDirective } from 'app/site/base/base-view';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { BaseComponent } from 'app/site/base/components/base.component';
 
 /**
  * Countdown data for the form
@@ -28,7 +25,7 @@ export interface CountdownData {
     templateUrl: './countdown-dialog.component.html',
     styleUrls: ['./countdown-dialog.component.scss']
 })
-export class CountdownDialogComponent extends BaseViewComponentDirective implements OnInit {
+export class CountdownDialogComponent extends BaseComponent implements OnInit {
     /**
      * The form data
      */
@@ -44,23 +41,21 @@ export class CountdownDialogComponent extends BaseViewComponentDirective impleme
      *
      * @param title Title service. Required by parent
      * @param matSnackBar Required by parent
-     * @param configService Read out config variables
+     * @param organisationSettingsService Read out config variables
      * @param translate Required by parent
      * @param formBuilder To build the form
      * @param durationService Converts duration numbers to string
      * @param data The mat dialog data, contains the values to display (if any)
      */
     public constructor(
-        title: Title,
-        matSnackBar: MatSnackBar,
-        configService: ConfigService,
-        translate: TranslateService,
+        componentServiceCollector: ComponentServiceCollector,
+        organisationSettingsService: OrganisationSettingsService,
         private formBuilder: FormBuilder,
         private durationService: DurationService,
         @Inject(MAT_DIALOG_DATA) public data: CountdownData
     ) {
-        super(title, translate, matSnackBar);
-        this.defaultTime = configService.instant<number>('projector_default_countdown');
+        super(componentServiceCollector);
+        this.defaultTime = organisationSettingsService.instant<number>('projector_default_countdown');
     }
 
     /**

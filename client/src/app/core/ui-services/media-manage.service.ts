@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { HttpService } from 'app/core/core-services/http.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { ViewMediafile } from '../../site/mediafiles/models/view-mediafile';
 
 /**
@@ -48,7 +48,7 @@ export class MediaManageService {
      *
      * @param httpService OpenSlides own HttpService
      */
-    public constructor(private config: ConfigService, private httpService: HttpService) {}
+    public constructor(private config: OrganisationSettingsService, private httpService: HttpService) {}
 
     /**
      * Sets the given Mediafile to using the given management option

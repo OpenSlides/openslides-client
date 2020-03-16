@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs';
 
-import { AutoupdateService } from './autoupdate.service';
-import { ConstantsService } from './constants.service';
 import { StorageService } from './storage.service';
 
 interface SchemaVersion {
@@ -38,20 +36,19 @@ export class DataStoreUpgradeService {
      * @param constantsService
      * @param storageService
      */
-    public constructor(
-        private autoupdateService: AutoupdateService,
-        private constantsService: ConstantsService,
-        private storageService: StorageService
-    ) {
+    public constructor(private storageService: StorageService) {
         // Prevent the schema version to be cleard. This is important
         // after a reset from OpenSlides, because the complete data is
         // queried from the server and we do not want also to trigger a reload
         // by changing the schema from null -> <schema>.
         this.storageService.addNoClearKey(SCHEMA_VERSION);
 
-        this.constantsService
+        /*this.constantsService
             .get<SchemaVersion>(SCHEMA_VERSION)
             .subscribe(serverVersion => this.checkForUpgrade(serverVersion));
+        */
+        // temporary: get the spinner working:
+        this.upgradeChecked.next(true);
     }
 
     public async checkForUpgrade(serverVersion: SchemaVersion): Promise<boolean> {
@@ -81,7 +78,7 @@ export class DataStoreUpgradeService {
 
         if (doUpgrade) {
             console.log('\t-> In result of a schema version change: Do full update.');
-            await this.autoupdateService.doFullUpdate();
+            // await this.autoupdateService.doFullUpdate();
         } else {
             console.log('\t-> No upgrade needed.');
         }

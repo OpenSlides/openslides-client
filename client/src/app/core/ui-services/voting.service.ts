@@ -52,7 +52,7 @@ export class VotingService {
             return VotingError.USER_IS_ANONYMOUS;
         }
 
-        if (!poll.groups_id.intersect(user.groups_id).length) {
+        if (!this.operator.isInGroupIdsNonAdminCheck(...poll.groups_id)) {
             return VotingError.USER_HAS_NO_PERMISSION;
         }
         if (poll.type === PollType.Analog) {
@@ -61,12 +61,14 @@ export class VotingService {
         if (poll.state !== PollState.Started) {
             return VotingError.POLL_WRONG_STATE;
         }
+        // TODO: This is not possible anymore
+        /*
         if (!user.is_present && !this.operator.viewUser.canVoteFor(user)) {
             return VotingError.USER_NOT_PRESENT;
         }
         if (user.isVoteRightDelegated && this.operator.user.id === user.id) {
             return VotingError.USER_HAS_DELEGATED_RIGHT;
-        }
+        }*/
     }
 
     public getVotePermissionErrorVerbose(poll: ViewBasePoll, user: ViewUser = this.operator.viewUser): string | void {

@@ -3,7 +3,10 @@ import { Router } from '@angular/router';
 
 import { BehaviorSubject } from 'rxjs';
 
+<<<<<<< HEAD
 import { CommunicationManagerService } from './communication-manager.service';
+=======
+>>>>>>> 12450e1c5 (Refactoring. Making the client OS4 ready:)
 import { DataStoreService } from './data-store.service';
 import { OfflineBroadcastService, OfflineReason } from './offline-broadcast.service';
 import { OperatorService, WhoAmI } from './operator.service';
@@ -38,9 +41,7 @@ export class OpenSlidesService {
         private storageService: StorageService,
         private operator: OperatorService,
         private router: Router,
-        private DS: DataStoreService,
-        private communicationManager: CommunicationManagerService,
-        private offlineBroadcastService: OfflineBroadcastService
+        private DS: DataStoreService
     ) {
         // Handler that gets called, if the websocket connection reconnects after a disconnection.
         // There might have changed something on the server, so we check the operator, if he changed.
@@ -57,31 +58,28 @@ export class OpenSlidesService {
      */
     public async bootup(): Promise<void> {
         // start autoupdate if the user is logged in:
-        let whoami = await this.operator.whoAmIFromStorage();
-        const needToCheckOperator = !!whoami;
+        /*let response = await this.operator.whoAmIFromStorage();
+        const needToCheckOperator = !!response;
 
-        if (!whoami) {
-            const response = await this.operator.whoAmI();
-            if (!response.online) {
-                this.offlineBroadcastService.goOffline(OfflineReason.WhoAmIFailed);
-            }
-            whoami = response.whoami;
-        }
+        if (!response) {
+            response = await this.operator.whoAmI();
+        }*/
+        await this.operator.doWhoAmIRequest();
 
-        if (!whoami.user && !whoami.guest_enabled) {
+        if (this.operator.isAnonymous && !this.operator.guestEnabled) {
             if (!location.pathname.includes('error')) {
                 this.redirectUrl = location.pathname;
             }
             this.redirectToLoginIfNotSubpage();
         } else {
-            await this.afterLoginBootup(whoami.user_id);
+            await this.afterLoginBootup();
         }
 
-        if (needToCheckOperator) {
+        /*if (needToCheckOperator) {
             // Check for the operator via a async whoami (so no await here)
             // to validate, that the cache was correct.
             this.checkOperator(false);
-        }
+        }*/
     }
 
     /**
@@ -106,7 +104,8 @@ export class OpenSlidesService {
      * OpenSlides as a guest.
      * @param userId the id or null for guest
      */
-    public async afterLoginBootup(userId: number | null): Promise<void> {
+    public async afterLoginBootup(/*userId: number | null*/): Promise<void> {
+        /*
         // Check, which user was logged in last time
         const lastUserId = await this.storageService.get<number>('lastUserLoggedIn');
         // if the user changed, reset the cache and save the new user.
@@ -114,7 +113,11 @@ export class OpenSlidesService {
             await this.DS.clear();
             await this.storageService.set('lastUserLoggedIn', userId);
         }
-        await this.setupDataStoreAndStartCommunication();
+        await this.setupDataStoreAndWebSocket();
+        */
+
+        this.DS.clear();
+
         // Now finally booted.
         this.booted.next(true);
     }
@@ -122,16 +125,23 @@ export class OpenSlidesService {
     /**
      * Init DS from cache and after this start the websocket service.
      */
-    private async setupDataStoreAndStartCommunication(): Promise<void> {
-        await this.DS.initFromStorage();
-        this.communicationManager.startCommunication();
-    }
+    /*private async setupDataStoreAndWebSocket(): Promise<void> {
+        let changeId = await this.DS.initFromStorage();
+        // disconnect the WS connection, if there was one. This is needed
+        // to update the connection parameters, namely the cookies. If the user
+        // is changed, the WS needs to reconnect, so the new connection holds the new
+        // user information.
+        if (this.websocketService.isConnected) {
+            await this.websocketService.close(); // Wait for the disconnect.
+        }
+        await this.websocketService.connect(changeId); // Request changes after changeId.
+    }*/
 
     /**
      * Shuts down OpenSlides.
      */
     public async shutdown(): Promise<void> {
-        this.communicationManager.closeConnections();
+        // await this.websocketService.close();
         this.booted.next(false);
     }
 
@@ -166,24 +176,26 @@ export class OpenSlidesService {
      *
      * @returns true, if the user is still logged in
      */
-    public async checkWhoAmI(whoami: WhoAmI, requestChanges: boolean = true): Promise<boolean> {
-        let isLoggedIn = false;
+    /*private async checkOperator(requestChanges: boolean = true): Promise<void> {
+        const response = await this.operator.doWhoAmIRequest();
         // User logged off.
-        if (!whoami.user && !whoami.guest_enabled) {
+        if (!response.user && !response.guest_enabled) {
+            // this.websocketService.cancelReconnectenRetry();
             await this.shutdown();
             this.redirectToLoginIfNotSubpage();
         } else {
             isLoggedIn = true;
             if (
-                (this.operator.user && this.operator.user.id !== whoami.user_id) ||
-                (!this.operator.user && whoami.user_id)
+                (this.operator.user && this.operator.operatorId !== response.user_id) ||
+                (!this.operator.user && response.user_id)
             ) {
                 // user changed
                 await this.DS.clear();
                 await this.reboot();
+            } else if (requestChanges) {
+                // User is still the same, but check for missed autoupdates.
+                // this.autoupdateService.requestChanges();
             }
         }
-
-        return isLoggedIn;
-    }
+    }*/
 }

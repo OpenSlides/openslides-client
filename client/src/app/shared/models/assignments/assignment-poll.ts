@@ -27,7 +27,7 @@ export class AssignmentPoll extends BasePoll<
     AssignmentPollMethod,
     AssignmentPollPercentBase
 > {
-    public static COLLECTIONSTRING = 'assignments/assignment-poll';
+    public static COLLECTION = 'assignments/assignment-poll';
     public static defaultGroupsConfig = 'assignment_poll_default_groups';
     public static defaultPollMethodConfig = 'assignment_poll_method';
     public static DECIMAL_FIELDS = [
@@ -83,7 +83,7 @@ export class AssignmentPoll extends BasePoll<
     }
 
     public constructor(input?: any) {
-        super(AssignmentPoll.COLLECTIONSTRING, input);
+        super(AssignmentPoll.COLLECTION, input);
     }
 
     protected getDecimalFields(): string[] {

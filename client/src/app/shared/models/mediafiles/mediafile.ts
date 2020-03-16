@@ -27,7 +27,7 @@ export interface MediafileWithoutNestedModels extends BaseModelWithListOfSpeaker
  * @ignore
  */
 export class Mediafile extends BaseModelWithListOfSpeakers<Mediafile> {
-    public static COLLECTIONSTRING = 'mediafiles/mediafile';
+    public static COLLECTION = 'mediafiles/mediafile';
     public id: number;
 
     public get has_inherited_access_groups(): boolean {
@@ -35,7 +35,7 @@ export class Mediafile extends BaseModelWithListOfSpeakers<Mediafile> {
     }
 
     public constructor(input?: any) {
-        super(Mediafile.COLLECTIONSTRING, input);
+        super(Mediafile.COLLECTION, input);
     }
 
     /**

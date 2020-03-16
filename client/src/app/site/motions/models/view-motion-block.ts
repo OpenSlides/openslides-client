@@ -17,8 +17,8 @@ export interface MotionBlockTitleInformation extends TitleInformationWithAgendaI
 export class ViewMotionBlock
     extends BaseViewModelWithAgendaItemAndListOfSpeakers
     implements MotionBlockTitleInformation, Searchable {
-    public static COLLECTIONSTRING = MotionBlock.COLLECTIONSTRING;
-    protected _collectionString = MotionBlock.COLLECTIONSTRING;
+    public static COLLECTION = MotionBlock.COLLECTION;
+    protected _collection = MotionBlock.COLLECTION;
 
     public get motionBlock(): MotionBlock {
         return this._model;
@@ -52,7 +52,7 @@ export class ViewMotionBlock
     public getSlide(): ProjectorElementBuildDeskriptor {
         return {
             getBasicProjectorElement: options => ({
-                name: MotionBlock.COLLECTIONSTRING,
+                name: MotionBlock.COLLECTION,
                 id: this.id,
                 getIdentifiers: () => ['name', 'id']
             }),

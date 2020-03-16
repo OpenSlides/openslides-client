@@ -5,7 +5,7 @@ import { BaseModel } from '../base/base-model';
  * @ignore
  */
 export class MotionCommentSection extends BaseModel<MotionCommentSection> {
-    public static COLLECTIONSTRING = 'motions/motion-comment-section';
+    public static COLLECTION = 'motions/motion-comment-section';
 
     public id: number;
     public name: string;
@@ -14,6 +14,6 @@ export class MotionCommentSection extends BaseModel<MotionCommentSection> {
     public weight: number;
 
     public constructor(input?: any) {
-        super(MotionCommentSection.COLLECTIONSTRING, input);
+        super(MotionCommentSection.COLLECTION, input);
     }
 }

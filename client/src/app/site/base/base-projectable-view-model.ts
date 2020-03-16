@@ -1,5 +1,5 @@
 import { ProjectorTitle } from 'app/core/core-services/projector.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { BaseModel } from 'app/shared/models/base/base-model';
 import { BaseViewModel } from './base-view-model';
 import { Projectable, ProjectorElementBuildDeskriptor } from './projectable';
@@ -10,7 +10,9 @@ import { Projectable, ProjectorElementBuildDeskriptor } from './projectable';
 export abstract class BaseProjectableViewModel<M extends BaseModel = any>
     extends BaseViewModel<M>
     implements Projectable {
-    public abstract getSlide(configService?: ConfigService): ProjectorElementBuildDeskriptor;
+    public abstract getSlide(
+        organisationSettingsService?: OrganisationSettingsService
+    ): ProjectorElementBuildDeskriptor;
 
     /**
      * @returns the projector title used for managing projector elements.

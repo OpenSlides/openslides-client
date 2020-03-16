@@ -1,3 +1,4 @@
+import { Motion } from 'app/shared/models/motions/motion';
 import { SlideManifest } from './slide-manifest';
 
 /**
@@ -25,8 +26,8 @@ export const allSlides: SlideManifest[] = [
         canBeMappedToModel: true
     },
     {
-        slide: 'motions/motion',
-        path: 'motions/motion',
+        slide: Motion.COLLECTION,
+        path: Motion.COLLECTION,
         loadChildren: () => import('./motions/motion/motion-slide.module').then(m => m.MotionSlideModule),
         verboseName: 'Motion',
         elementIdentifiers: ['name', 'id'],

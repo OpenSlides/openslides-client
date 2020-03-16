@@ -6,8 +6,8 @@ export interface ProjectorTitleInformation {
 }
 
 export class ViewProjector extends BaseViewModel<Projector> {
-    public static COLLECTIONSTRING = Projector.COLLECTIONSTRING;
-    protected _collectionString = Projector.COLLECTIONSTRING;
+    public static COLLECTION = Projector.COLLECTION;
+    protected _collection = Projector.COLLECTION;
 
     public get projector(): Projector {
         return this._model;

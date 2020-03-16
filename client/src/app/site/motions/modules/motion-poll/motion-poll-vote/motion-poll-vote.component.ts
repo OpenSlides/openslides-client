@@ -1,16 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
-
-import { TranslateService } from '@ngx-translate/core';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { MotionPollRepositoryService } from 'app/core/repositories/motions/motion-poll-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { VotingService } from 'app/core/ui-services/voting.service';
 import { VoteValue } from 'app/shared/models/poll/base-vote';
 import { ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
-import { BasePollVoteComponentDirective, VoteOption } from 'app/site/polls/components/base-poll-vote.component';
+import { BasePollVoteComponent, VoteOption } from 'app/site/polls/components/base-poll-vote.component';
 import { ViewUser } from 'app/site/users/models/view-user';
 
 @Component({
@@ -19,7 +16,7 @@ import { ViewUser } from 'app/site/users/models/view-user';
     styleUrls: ['./motion-poll-vote.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MotionPollVoteComponent extends BasePollVoteComponentDirective<ViewMotionPoll> implements OnInit {
+export class MotionPollVoteComponent extends BasePollVoteComponent<ViewMotionPoll> implements OnInit {
     public voteOptions: VoteOption[] = [
         {
             vote: 'Y',
@@ -42,16 +39,14 @@ export class MotionPollVoteComponent extends BasePollVoteComponentDirective<View
     ];
 
     public constructor(
-        title: Title,
-        translate: TranslateService,
-        matSnackbar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         operator: OperatorService,
         public votingService: VotingService,
         private pollRepo: MotionPollRepositoryService,
         private promptService: PromptService,
         private cd: ChangeDetectorRef
     ) {
-        super(title, translate, matSnackbar, operator, votingService);
+        super(componentServiceCollector, operator, votingService);
 
         // observe user updates to refresh the view on dynamic changes
         this.subscriptions.push(

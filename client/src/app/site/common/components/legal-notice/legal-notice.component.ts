@@ -1,21 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
-
-import { TranslateService } from '@ngx-translate/core';
 
 import { DataStoreService } from 'app/core/core-services/data-store.service';
 import { OpenSlidesService } from 'app/core/core-services/openslides.service';
 import { OperatorService, Permission } from 'app/core/core-services/operator.service';
 import { ConfigRepositoryService } from 'app/core/repositories/config/config-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { UpdateService } from 'app/core/ui-services/update.service';
-import { BaseViewComponentDirective } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 
 @Component({
     selector: 'os-legal-notice',
     templateUrl: './legal-notice.component.html'
 })
-export class LegalNoticeComponent extends BaseViewComponentDirective implements OnInit {
+export class LegalNoticeComponent extends BaseComponent implements OnInit {
     /**
      * Whether this component is in editing-mode.
      */
@@ -32,16 +29,14 @@ export class LegalNoticeComponent extends BaseViewComponentDirective implements 
      * Constructor.
      */
     public constructor(
-        title: Title,
-        protected translate: TranslateService,
-        matSnackbar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private openSlidesService: OpenSlidesService,
         private update: UpdateService,
         private configRepo: ConfigRepositoryService,
         private operator: OperatorService,
         private DS: DataStoreService
     ) {
-        super(title, translate, matSnackbar);
+        super(componentServiceCollector);
     }
 
     public ngOnInit(): void {

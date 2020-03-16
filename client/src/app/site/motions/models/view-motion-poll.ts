@@ -26,8 +26,8 @@ export const MotionPollPercentBaseVerbose = {
 export class ViewMotionPoll
     extends ViewBasePoll<MotionPoll, MotionPollMethod, PercentBase>
     implements MotionPollTitleInformation {
-    public static COLLECTIONSTRING = MotionPoll.COLLECTIONSTRING;
-    protected _collectionString = MotionPoll.COLLECTIONSTRING;
+    public static COLLECTION = MotionPoll.COLLECTION;
+    protected _collection = MotionPoll.COLLECTION;
 
     public readonly pollClassType = PollClassType.Motion;
 
@@ -46,7 +46,7 @@ export class ViewMotionPoll
     public getSlide(): ProjectorElementBuildDeskriptor {
         return {
             getBasicProjectorElement: options => ({
-                name: MotionPoll.COLLECTIONSTRING,
+                name: MotionPoll.COLLECTION,
                 id: this.id,
                 getIdentifiers: () => ['name', 'id']
             }),

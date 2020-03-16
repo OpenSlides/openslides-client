@@ -27,7 +27,7 @@ export class OfflineService {
     }
 
     /**
-     * Helper function to set offline status
+     * Sets the offline flag.
      */
     public goOffline(reason: OfflineReason): void {
         if (this.offlineBroadcastService.isOffline()) {

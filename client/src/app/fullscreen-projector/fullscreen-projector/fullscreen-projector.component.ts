@@ -88,7 +88,7 @@ export class FullscreenProjectorComponent implements OnInit {
             this.isLoading = false;
         });
 
-        this.operator.getUserObservable().subscribe(() => {
+        this.operator.operatorUpdatedEvent.subscribe(() => {
             this.canSeeProjector = this.operator.hasPerms(Permission.coreCanSeeProjector);
         });
     }

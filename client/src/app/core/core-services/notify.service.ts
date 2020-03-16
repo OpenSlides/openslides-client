@@ -2,10 +2,6 @@ import { Injectable } from '@angular/core';
 
 import { Observable, Subject } from 'rxjs';
 
-import { CommunicationManagerService, OfflineError } from './communication-manager.service';
-import { HttpService } from './http.service';
-import { OperatorService } from './operator.service';
-
 /**
  * Encapslates the name and content of every message regardless of being a request or response.
  */
@@ -101,41 +97,19 @@ export class NotifyService {
         [name: string]: Subject<NotifyResponse<any>>;
     } = {};
 
-    private channelId: string;
-
-    public constructor(
-        private communicationManager: CommunicationManagerService,
-        private http: HttpService,
-        private operator: OperatorService
-    ) {
-        this.communicationManager.startCommunicationEvent.subscribe(() => this.startListening());
-        this.communicationManager.stopCommunicationEvent.subscribe(() => (this.channelId = null));
-    }
-
-    private async startListening(): Promise<void> {
-        try {
-            await this.communicationManager.subscribe<NotifyResponse<any> | ChannelIdResponse>(
-                '/system/notify',
-                notify => {
-                    if (isChannelIdResponse(notify)) {
-                        this.channelId = notify.channel_id;
-                    } else if (isNotifyResponse(notify)) {
-                        notify.sendByThisUser =
-                            notify.sender_user_id === (this.operator.user ? this.operator.user.id : 0);
-                        this.notifySubject.next(notify);
-                        if (this.messageSubjects[notify.name]) {
-                            this.messageSubjects[notify.name].next(notify);
-                        }
-                    } else {
-                        console.error('Unknwon notify message', notify);
-                    }
-                }
-            );
-        } catch (e) {
-            if (!(e instanceof OfflineError)) {
-                console.error(e);
+    /**
+     * Constructor to create the NotifyService. Registers itself to the WebsocketService.
+     * @param websocketService
+     */
+    public constructor() {
+        /*websocketService.getOberservable<NotifyResponse<any>>('notify').subscribe(notify => {
+            notify.sendByThisUser = notify.senderUserId === (this.operator.user ? this.operator.operatorId : 0);
+            this.notifySubject.next(notify);
+            if (this.messageSubjects[notify.name]) {
+                this.messageSubjects[notify.name].next(notify);
             }
-        }
+        });*/
+        console.warn('TODO: Enable notify service');
     }
 
     /**
@@ -205,9 +179,8 @@ export class NotifyService {
         if (channels) {
             notify.to_channels = channels;
         }
-
-        console.debug('send notify', notify);
-        await this.http.post<unknown>('/system/notify/send', notify);
+        // Nope...
+        // this.websocketService.send('notify', notify);
     }
 
     /**

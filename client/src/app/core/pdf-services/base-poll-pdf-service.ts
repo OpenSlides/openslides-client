@@ -1,5 +1,5 @@
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
 
 /**
@@ -50,12 +50,15 @@ export abstract class PollPdfService {
 
     /**
      * Contructor. Subscribes to the logo path and event name
-     * @param configService Configzuration
+     * @param organisationSettingsService Configzuration
      * @param userRepo user Repository for determining the number of ballots
      */
-    public constructor(protected configService: ConfigService, protected userRepo: UserRepositoryService) {
-        this.configService.get<string>('general_event_name').subscribe(name => (this.eventName = name));
-        this.configService.get<{ path?: string }>('logo_pdf_ballot_paper').subscribe(url => {
+    public constructor(
+        protected organisationSettingsService: OrganisationSettingsService,
+        protected userRepo: UserRepositoryService
+    ) {
+        this.organisationSettingsService.get<string>('general_event_name').subscribe(name => (this.eventName = name));
+        this.organisationSettingsService.get<{ path?: string }>('logo_pdf_ballot_paper').subscribe(url => {
             if (url && url.path) {
                 if (url.path.indexOf('/') === 0) {
                     url.path = url.path.substr(1); // remove prepending slash

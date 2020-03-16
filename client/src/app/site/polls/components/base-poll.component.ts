@@ -1,23 +1,18 @@
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 
+import { BasePollRepository } from 'app/core/repositories/base-poll-repository';
 import { BasePollDialogService } from 'app/core/ui-services/base-poll-dialog.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ChartData } from 'app/shared/components/charts/charts.component';
 import { PollState, PollType } from 'app/shared/models/poll/base-poll';
-import { BaseViewComponentDirective } from 'app/site/base/base-view';
-import { BasePollRepositoryService } from '../services/base-poll-repository.service';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { PollService } from '../services/poll.service';
 import { ViewBasePoll } from '../models/view-base-poll';
 
-export abstract class BasePollComponent<
-    V extends ViewBasePoll,
-    S extends PollService
-> extends BaseViewComponentDirective {
+export abstract class BasePollComponent<V extends ViewBasePoll, S extends PollService> extends BaseComponent {
     public stateChangePending = false;
 
     public chartDataSubject: BehaviorSubject<ChartData> = new BehaviorSubject([]);
@@ -44,15 +39,13 @@ export abstract class BasePollComponent<
     }
 
     public constructor(
-        titleService: Title,
-        matSnackBar: MatSnackBar,
-        protected translate: TranslateService,
+        componentServiceCollector: ComponentServiceCollector,
         protected dialog: MatDialog,
         protected promptService: PromptService,
-        protected repo: BasePollRepositoryService,
+        protected repo: BasePollRepository,
         protected pollDialog: BasePollDialogService<V, S>
     ) {
-        super(titleService, translate, matSnackBar);
+        super(componentServiceCollector);
     }
 
     public async changeState(key: PollState): Promise<void> {

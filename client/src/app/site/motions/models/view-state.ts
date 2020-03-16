@@ -11,8 +11,8 @@ export interface StateTitleInformation {
  * @ignore
  */
 export class ViewState extends BaseViewModel<State> implements StateTitleInformation {
-    public static COLLECTIONSTRING = State.COLLECTIONSTRING;
-    protected _collectionString = State.COLLECTIONSTRING;
+    public static COLLECTION = State.COLLECTION;
+    protected _collection = State.COLLECTION;
 
     public get state(): State {
         return this._model;

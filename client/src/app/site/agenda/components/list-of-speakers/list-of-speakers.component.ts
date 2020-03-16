@@ -1,16 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 
-import { TranslateService } from '@ngx-translate/core';
-
-import { CollectionStringMapperService } from 'app/core/core-services/collection-string-mapper.service';
+import { CollectionMapperService } from 'app/core/core-services/collection-mapper.service';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { ListOfSpeakersContentComponent } from 'app/shared/components/list-of-speakers-content/list-of-speakers-content.component';
-import { BaseViewComponentDirective } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { CurrentListOfSpeakersSlideService } from 'app/site/projector/services/current-list-of-speakers-slide.service';
@@ -25,7 +22,7 @@ import { ViewListOfSpeakers } from '../../models/view-list-of-speakers';
     templateUrl: './list-of-speakers.component.html',
     styleUrls: ['./list-of-speakers.component.scss']
 })
-export class ListOfSpeakersComponent extends BaseViewComponentDirective implements OnInit {
+export class ListOfSpeakersComponent extends BaseComponent implements OnInit {
     @ViewChild('content')
     private listOfSpeakersContentComponent: ListOfSpeakersContentComponent;
 
@@ -80,18 +77,16 @@ export class ListOfSpeakersComponent extends BaseViewComponentDirective implemen
      * @param durationService helper for speech duration display
      */
     public constructor(
-        title: Title,
-        protected translate: TranslateService, // protected required for ng-translate-extract
-        snackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private route: ActivatedRoute,
         private listOfSpeakersRepo: ListOfSpeakersRepositoryService,
         private promptService: PromptService,
         private currentListOfSpeakersService: CurrentListOfSpeakersService,
-        private collectionStringMapper: CollectionStringMapperService,
         private currentListOfSpeakersSlideService: CurrentListOfSpeakersSlideService,
-        private viewport: ViewportService
+        private viewport: ViewportService,
+        private collectionMapper: CollectionMapperService
     ) {
-        super(title, translate, snackBar);
+        super(componentServiceCollector);
     }
 
     public ngOnInit(): void {
@@ -150,7 +145,7 @@ export class ListOfSpeakersComponent extends BaseViewComponentDirective implemen
      * E.g. if a motion is the current content object, "Motion" will be the returned value.
      */
     public getContentObjectProjectorButtonText(): string {
-        const verboseName = this.collectionStringMapper
+        const verboseName = this.collectionMapper
             .getRepository(this.viewListOfSpeakers.listOfSpeakers.content_object.collection)
             .getVerboseName();
         return verboseName;

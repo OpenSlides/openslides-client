@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
-
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { LoginDataService } from 'app/core/ui-services/login-data.service';
-import { BaseComponent } from '../../../../base.component';
+import { BaseComponent } from 'app/site/base/components/base.component';
 
 /**
  * Login component.
@@ -24,11 +22,10 @@ export class LoginWrapperComponent extends BaseComponent implements OnInit {
      * @param translate just needed because super.setTitle depends in the `translator.instant` function
      */
     public constructor(
-        protected titleService: Title,
-        protected translate: TranslateService,
+        componentServiceCollector: ComponentServiceCollector,
         private loginDataService: LoginDataService
     ) {
-        super(titleService, translate);
+        super(componentServiceCollector);
     }
 
     /**

@@ -1,10 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 
 import { OperatorService, Permission } from 'app/core/core-services/operator.service';
@@ -13,10 +10,11 @@ import { AssignmentRepositoryService } from 'app/core/repositories/assignments/a
 import { MediafileRepositoryService } from 'app/core/repositories/mediafiles/mediafile-repository.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { Assignment } from 'app/shared/models/assignments/assignment';
 import { ViewItem } from 'app/site/agenda/models/view-item';
-import { BaseViewComponentDirective } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { LocalPermissionsService } from 'app/site/motions/services/local-permissions.service';
 import { ViewTag } from 'app/site/tags/models/view-tag';
@@ -36,7 +34,7 @@ import { ViewAssignmentRelatedUser } from '../../models/view-assignment-related-
     templateUrl: './assignment-detail.component.html',
     styleUrls: ['./assignment-detail.component.scss']
 })
-export class AssignmentDetailComponent extends BaseViewComponentDirective implements OnInit, OnDestroy {
+export class AssignmentDetailComponent extends BaseComponent implements OnInit, OnDestroy {
     /**
      * Determines if the assignment is new
      */
@@ -119,7 +117,7 @@ export class AssignmentDetailComponent extends BaseViewComponentDirective implem
      * @returns true if they are in the list of candidates
      */
     public get isSelfCandidate(): boolean {
-        return this.assignment.candidates.find(user => user.id === this.operator.user.id) ? true : false;
+        return this.assignment.candidates.find(user => user.id === this.operator.operatorId) ? true : false;
     }
 
     /**
@@ -169,9 +167,7 @@ export class AssignmentDetailComponent extends BaseViewComponentDirective implem
      * @param promptService
      */
     public constructor(
-        title: Title,
-        protected translate: TranslateService, // protected required for ng-translate-extract
-        matSnackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private operator: OperatorService,
         public perms: LocalPermissionsService,
         private router: Router,
@@ -187,7 +183,7 @@ export class AssignmentDetailComponent extends BaseViewComponentDirective implem
         private pollDialog: AssignmentPollDialogService,
         private assignmentPollService: AssignmentPollService
     ) {
-        super(title, translate, matSnackBar);
+        super(componentServiceCollector);
         this.subscriptions.push(
             /* List of eligible users */
             this.userRepo.getViewModelListObservable().subscribe(users => {
@@ -340,7 +336,7 @@ export class AssignmentDetailComponent extends BaseViewComponentDirective implem
      */
     public openDialog(): void {
         const dialogData = {
-            collectionString: ViewAssignmentPoll.COLLECTIONSTRING,
+            collection: ViewAssignmentPoll.COLLECTION,
             assignment_id: this.assignment.id,
             assignment: this.assignment,
             ...this.assignmentPollService.getDefaultPollData(this.assignment.id)

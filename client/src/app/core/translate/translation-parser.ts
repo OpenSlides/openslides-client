@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { TranslateDefaultParser, TranslateStore } from '@ngx-translate/core';
 
-import { ConfigService } from '../ui-services/config.service';
+import { OrganisationSettingsService } from '../ui-services/organisation-settings.service';
 
 export interface CustomTranslation {
     original: string;
@@ -27,7 +27,7 @@ export class OpenSlidesTranslateParser extends TranslateDefaultParser {
      * @param config
      * @param translateStore
      */
-    public constructor(config: ConfigService, private translateStore: TranslateStore) {
+    public constructor(config: OrganisationSettingsService, private translateStore: TranslateStore) {
         super();
 
         config.get<CustomTranslations>('translations').subscribe(ct => {

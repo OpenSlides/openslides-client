@@ -1,16 +1,13 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
-
-import { TranslateService } from '@ngx-translate/core';
 
 import { StatuteParagraphRepositoryService } from 'app/core/repositories/motions/statute-paragraph-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { StatuteParagraph } from 'app/shared/models/motions/statute-paragraph';
 import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
-import { BaseViewComponentDirective } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewStatuteParagraph } from 'app/site/motions/models/view-statute-paragraph';
 import { StatuteCsvExportService } from 'app/site/motions/services/statute-csv-export.service';
 
@@ -22,7 +19,7 @@ import { StatuteCsvExportService } from 'app/site/motions/services/statute-csv-e
     templateUrl: './statute-paragraph-list.component.html',
     styleUrls: ['./statute-paragraph-list.component.scss']
 })
-export class StatuteParagraphListComponent extends BaseViewComponentDirective implements OnInit {
+export class StatuteParagraphListComponent extends BaseComponent implements OnInit {
     @ViewChild('statuteParagraphDialog', { static: true })
     private statuteParagraphDialog: TemplateRef<string>;
 
@@ -52,16 +49,14 @@ export class StatuteParagraphListComponent extends BaseViewComponentDirective im
      * @param csvExportService
      */
     public constructor(
-        titleService: Title,
-        protected translate: TranslateService, // protected required for ng-translate-extract
-        matSnackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private repo: StatuteParagraphRepositoryService,
         private formBuilder: FormBuilder,
         private promptService: PromptService,
         private dialog: MatDialog,
         private csvExportService: StatuteCsvExportService
     ) {
-        super(titleService, translate, matSnackBar);
+        super(componentServiceCollector);
 
         const form = {
             title: ['', Validators.required],

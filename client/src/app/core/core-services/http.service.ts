@@ -4,11 +4,9 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 
-import { AutoupdateFormat } from '../definitions/autoupdate-format';
-import { AutoupdateThrottleService } from './autoupdate-throttle.service';
-import { HTTPMethod } from '../definitions/http-methods';
 import { OpenSlidesStatusService } from './openslides-status.service';
 import { formatQueryParams, QueryParams } from '../definitions/query-params';
+import { HTTPMethod } from '../definitions/http-methods';
 
 export interface ErrorDetailResponse {
     detail: string | string[];
@@ -22,15 +20,6 @@ function isErrorDetailResponse(obj: any): obj is ErrorDetailResponse {
         (typeof obj.detail === 'string' || obj.detail instanceof Array) &&
         (!obj.args || obj.args instanceof Array)
     );
-}
-
-interface AutoupdateResponse {
-    change_id: number;
-    data?: any;
-}
-
-function isAutoupdateReponse(obj: any): obj is AutoupdateResponse {
-    return obj && typeof obj === 'object' && typeof (obj as AutoupdateResponse).change_id === 'number';
 }
 
 /**
@@ -101,9 +90,6 @@ export class HttpService {
             console.warn(`Please prefix the URL "${url}" with a slash.`);
             url = '/' + url;
         }
-        if (this.OSStatus.isPrioritizedClient) {
-            url = '/prioritize' + url;
-        }
 
         const options = {
             body: data,
@@ -112,8 +98,7 @@ export class HttpService {
         };
 
         try {
-            const responseData: T = await this.http.request<T>(method, url, options).toPromise();
-            return this.processResponse(responseData);
+            return await this.http.request<T>(method, url, options).toPromise();
         } catch (error) {
             throw this.processError(error);
         }
@@ -194,14 +179,6 @@ export class HttpService {
             }
         }
         return message;
-    }
-
-    private processResponse<T>(responseData: T): T {
-        if (isAutoupdateReponse(responseData)) {
-            this.responseChangeIds.next(responseData.change_id);
-            return responseData.data;
-        }
-        return responseData;
     }
 
     /**

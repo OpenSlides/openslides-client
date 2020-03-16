@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { CollectionStringMapperService } from 'app/core/core-services/collection-string-mapper.service';
+import { CollectionMapperService } from 'app/core/core-services/collection-mapper.service';
 import { SlideData } from 'app/core/core-services/projector-data.service';
 import { isBaseIsAgendaItemContentObjectRepository } from 'app/core/repositories/base-is-agenda-item-content-object-repository';
 import { ProjectorElement } from 'app/shared/models/core/projector';
@@ -27,12 +27,12 @@ export class ItemListSlideComponent extends BaseSlideComponentDirective<ItemList
 
     private _data: SlideData<ItemListSlideData, ProjectorElement>;
 
-    public constructor(private collectionStringMapperService: CollectionStringMapperService) {
+    public constructor(private collectionMapperService: CollectionMapperService) {
         super();
     }
 
     public getTitle(item: SlideItem): string {
-        const repo = this.collectionStringMapperService.getRepository(item.collection);
+        const repo = this.collectionMapperService.getRepository(item.collection);
         if (isBaseIsAgendaItemContentObjectRepository(repo)) {
             return repo.getListTitle(item.title_information);
         } else {

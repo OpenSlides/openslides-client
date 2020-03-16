@@ -1,15 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs/operators';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
-import { BaseViewComponentDirective } from 'app/site/base/base-view';
 import { BaseViewModel } from 'app/site/base/base-view-model';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
 import { PollClassType, ViewBasePoll } from 'app/site/polls/models/view-base-poll';
@@ -21,7 +19,7 @@ import { PollListObservableService } from 'app/site/polls/services/poll-list-obs
     styleUrls: ['./poll-collection.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PollCollectionComponent extends BaseViewComponentDirective implements OnInit {
+export class PollCollectionComponent extends BaseComponent implements OnInit {
     public polls: ViewBasePoll[];
 
     public lastPublishedPoll: ViewBasePoll;
@@ -62,14 +60,12 @@ export class PollCollectionComponent extends BaseViewComponentDirective implemen
     }
 
     public constructor(
-        title: Title,
-        translate: TranslateService,
-        snackBar: MatSnackBar,
-        private operator: OperatorService,
+        componentServiceCollector: ComponentServiceCollector,
         private pollService: PollListObservableService,
-        private cd: ChangeDetectorRef
+        private cd: ChangeDetectorRef,
+        private operator: OperatorService,
     ) {
-        super(title, translate, snackBar);
+        super(componentServiceCollector);
     }
 
     public ngOnInit(): void {

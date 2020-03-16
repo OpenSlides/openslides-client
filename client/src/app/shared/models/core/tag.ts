@@ -5,12 +5,12 @@ import { BaseModel } from '../base/base-model';
  * @ignore
  */
 export class Tag extends BaseModel<Tag> {
-    public static COLLECTIONSTRING = 'core/tag';
+    public static COLLECTION = 'core/tag';
 
     public id: number;
     public name: string;
 
     public constructor(input?: any) {
-        super(Tag.COLLECTIONSTRING, input);
+        super(Tag.COLLECTION, input);
     }
 }

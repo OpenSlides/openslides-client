@@ -3,9 +3,8 @@ import { Injectable } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 
-import { ConstantsService } from 'app/core/core-services/constants.service';
 import { AssignmentPollRepositoryService } from 'app/core/repositories/assignments/assignment-poll-repository.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import {
     AssignmentPoll,
     AssignmentPollMethod,
@@ -52,15 +51,14 @@ export class AssignmentPollService extends PollService {
      * @param config ConfigService
      */
     public constructor(
-        config: ConfigService,
-        constants: ConstantsService,
+        constants: OrganisationSettingsService,
         pollKeyVerbose: PollKeyVerbosePipe,
         parsePollNumber: ParsePollNumberPipe,
         protected translate: TranslateService,
         private pollRepo: AssignmentPollRepositoryService
     ) {
         super(constants, translate, pollKeyVerbose, parsePollNumber);
-        config
+        /*config
             .get<AssignmentPollPercentBase>('assignment_poll_default_100_percent_base')
             .subscribe(base => (this.defaultPercentBase = base));
         config
@@ -71,7 +69,7 @@ export class AssignmentPollService extends PollService {
             .get<AssignmentPollMethod>(AssignmentPoll.defaultPollMethodConfig)
             .subscribe(method => (this.defaultPollMethod = method));
         config.get<PollType>('assignment_poll_default_type').subscribe(type => (this.defaultPollType = type));
-        config.get<boolean>('assignment_poll_sort_poll_result_by_votes').subscribe(sort => (this.sortByVote = sort));
+        config.get<boolean>('assignment_poll_sort_poll_result_by_votes').subscribe(sort => (this.sortByVote = sort));*/
     }
 
     public getDefaultPollData(contextId?: number): AssignmentPoll {

@@ -1,23 +1,16 @@
 import { Injectable } from '@angular/core';
 
-import { TranslateService } from '@ngx-translate/core';
-
-import { ConstantsService } from 'app/core/core-services/constants.service';
 import { HttpService } from 'app/core/core-services/http.service';
-import { RelationManagerService } from 'app/core/core-services/relation-manager.service';
-import { ViewModelStoreService } from 'app/core/core-services/view-model-store.service';
 import { PreventedInDemo } from 'app/core/definitions/custom-errors';
 import { RelationDefinition } from 'app/core/definitions/relations';
 import { NewEntry } from 'app/core/ui-services/base-import.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { User } from 'app/shared/models/users/user';
 import { ViewGroup } from 'app/site/users/models/view-group';
 import { UserTitleInformation, ViewUser } from 'app/site/users/models/view-user';
 import { BaseRepository } from '../base-repository';
-import { CollectionStringMapperService } from '../../core-services/collection-string-mapper.service';
-import { DataSendService } from '../../core-services/data-send.service';
-import { DataStoreService } from '../../core-services/data-store.service';
 import { environment } from '../../../../environments/environment';
+import { RepositoryServiceCollector } from '../repository-service-collector';
 
 export interface MassImportResult {
     importedTrackIds: number[];
@@ -82,30 +75,25 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User, UserTi
      * @param dataSend sending changed objects
      * @param translate
      * @param httpService
-     * @param configService
+     * @param organisationSettingsService
      */
     public constructor(
-        DS: DataStoreService,
-        dataSend: DataSendService,
-        mapperService: CollectionStringMapperService,
-        viewModelStoreService: ViewModelStoreService,
-        relationManager: RelationManagerService,
-        protected translate: TranslateService,
+        repositoryServiceCollector: RepositoryServiceCollector,
         private httpService: HttpService,
-        private configService: ConfigService,
-        private constantsService: ConstantsService
+        private organisationSettingsService: OrganisationSettingsService
     ) {
-        super(DS, dataSend, mapperService, viewModelStoreService, translate, relationManager, User, UserRelations);
-        this.sortProperty = this.configService.instant('users_sort_by');
-        this.configService.get<SortProperty>('users_sort_by').subscribe(conf => {
+        super(repositoryServiceCollector, User, UserRelations);
+        this.sortProperty = this.organisationSettingsService.instant('users_sort_by');
+        this.organisationSettingsService.get<SortProperty>('users_sort_by').subscribe(conf => {
             this.sortProperty = conf;
             this.setConfigSortFn();
         });
-        this.constantsService.get<{ DEMO_USERS?: number[] }>('Settings').subscribe(settings => {
+        // TODO
+        /*this.constantsService.get<any>('Settings').subscribe(settings => {
             if (settings) {
                 this.demoModeUserIds = settings.DEMO_USERS || null;
             }
-        });
+        });*/
     }
 
     public getTitle = (titleInformation: UserTitleInformation) => {
@@ -343,8 +331,8 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User, UserTi
     public async bulkSendInvitationEmail(users: ViewUser[]): Promise<string> {
         this.preventInDemo();
         const user_ids = users.map(user => user.id);
-        const users_email_subject = this.configService.instant<string>('users_email_subject');
-        const users_email_body = this.configService.instant<string>('users_email_body');
+        const users_email_subject = this.organisationSettingsService.instant<string>('users_email_subject');
+        const users_email_body = this.organisationSettingsService.instant<string>('users_email_body');
         const subject = this.translate.instant(users_email_subject);
         const message = this.translate.instant(users_email_body);
 

@@ -5,13 +5,13 @@ import { BaseModelWithAgendaItemAndListOfSpeakers } from '../base/base-model-wit
  * @ignore
  */
 export class MotionBlock extends BaseModelWithAgendaItemAndListOfSpeakers<MotionBlock> {
-    public static COLLECTIONSTRING = 'motions/motion-block';
+    public static COLLECTION = 'motions/motion-block';
 
     public id: number;
     public title: string;
     public internal: boolean;
 
     public constructor(input?: any) {
-        super(MotionBlock.COLLECTIONSTRING, input);
+        super(MotionBlock.COLLECTION, input);
     }
 }

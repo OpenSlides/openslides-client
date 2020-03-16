@@ -1,21 +1,18 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewEncapsulation } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
 
 import { OperatorService, Permission } from 'app/core/core-services/operator.service';
 import { AssignmentPollRepositoryService } from 'app/core/repositories/assignments/assignment-poll-repository.service';
 import { AssignmentVoteRepositoryService } from 'app/core/repositories/assignments/assignment-vote-repository.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ChartData } from 'app/shared/components/charts/charts.component';
 import { VoteValue } from 'app/shared/models/poll/base-vote';
 import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
-import { BasePollDetailComponentDirective } from 'app/site/polls/components/base-poll-detail.component';
+import { BasePollDetailComponent } from 'app/site/polls/components/base-poll-detail.component';
 import { AssignmentPollDialogService } from '../../services/assignment-poll-dialog.service';
 import { AssignmentPollService } from '../../services/assignment-poll.service';
 
@@ -26,7 +23,7 @@ import { AssignmentPollService } from '../../services/assignment-poll.service';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class AssignmentPollDetailComponent extends BasePollDetailComponentDirective<
+export class AssignmentPollDetailComponent extends BasePollDetailComponent<
     ViewAssignmentPoll,
     AssignmentPollService
 > {
@@ -49,38 +46,25 @@ export class AssignmentPollDetailComponent extends BasePollDetailComponentDirect
     }
 
     public constructor(
-        title: Title,
-        translate: TranslateService,
-        matSnackbar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         repo: AssignmentPollRepositoryService,
         route: ActivatedRoute,
         groupRepo: GroupRepositoryService,
         prompt: PromptService,
         pollDialog: AssignmentPollDialogService,
-        configService: ConfigService,
-        protected pollService: AssignmentPollService,
+        pollService: AssignmentPollService,
         votesRepo: AssignmentVoteRepositoryService,
-        protected operator: OperatorService,
-        private router: Router,
-        protected cd: ChangeDetectorRef
+        operator: OperatorService,
+        cd: ChangeDetectorRef,
+        private router: Router
     ) {
-        super(
-            title,
-            translate,
-            matSnackbar,
-            repo,
-            route,
-            groupRepo,
-            prompt,
-            pollDialog,
-            pollService,
-            votesRepo,
-            operator,
-            cd
-        );
-        configService
+        super(componentServiceCollector, repo, route, groupRepo, prompt, pollDialog, pollService, votesRepo, operator, cd);
+        // TODO: Get this from the active meeting.
+        /*configService
             .get<boolean>('users_activate_vote_weight')
             .subscribe(active => (this.isVoteWeightActive = active));
+        */
+        console.warn('TODO: assignment-poll-detail.component');
     }
 
     protected createVotesData(): void {

@@ -10,7 +10,7 @@ import { MotionBlockRepositoryService } from 'app/core/repositories/motions/moti
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
 import { WorkflowRepositoryService } from 'app/core/repositories/motions/workflow-repository.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { MotionFilterListService } from './motion-filter-list.service';
 import { ViewMotion } from '../models/view-motion';
 
@@ -56,7 +56,7 @@ export class BlockDetailFilterListService extends MotionFilterListService {
         workflowRepo: WorkflowRepositoryService,
         translate: TranslateService,
         operator: OperatorService,
-        config: ConfigService
+        config: OrganisationSettingsService
     ) {
         super(
             store,
