@@ -1,19 +1,31 @@
-## General
-*.pyc
-*.swp
-*.swo
+.DS_STORE
+
+/dist/
+/bazel-out
+/integration/bazel/bazel-*
+e2e_test.*
 *.log
-*~
-# IDEs and editors
-/.idea
-.project
-.classpath
-.c9/
-*.launch
+node_modules
+
+# Include when developing application packages.
+pubspec.lock
+.c9
+.idea/
+.devcontainer/*
+!.devcontainer/README.md
+!.devcontainer/recommended-devcontainer.json
+!.devcontainer/recommended-Dockerfile
 .settings/
-*.sublime-workspace
-.vscode/*
+.vscode/launch.json
+.vscode/settings.json
+.vscode/tasks.json
+*.swo
+modules/.settings
+modules/.vscode
+.vimrc
+.nvimrc
 *.code-workspace
+<<<<<<< HEAD
 # System Files
 .DS_Store
 Thumbs.db
@@ -32,49 +44,27 @@ Thumbs.db
 openslides_*
 # Old OS3 stuff
 /tests/
+=======
 
-## Server
-# Local user data (settings, database, media, search index, static files)
-personal_data/*
-server/personal_data/*
-server/openslides/static/*
-# Unit test and coverage reports
-.coverage
-server/tests/file/*
-server/tests/db.sqlite3.test
-.pytest_cache
-# Package building
-*.egg-info
-# Mypy cache for typechecking
-.mypy_cache
+# Don't check in secret files
+*secret.js
 
-## OpenSlides 3 Client
-# Javascript tools and libraries
-**/node_modules/*
-**/bower_components/*
-# compiled output
-client/dist
-client/static
-client/tmp
-client/out-tsc
-# docs
-client/documentation
-Compodoc
-Compodocmodules
-# build artifacts
-client/.sass-cache
-client/connect.lock
-client/coverage
-client/libpeerconnection.log
-client/npm-debug.log
-client/yarn-error.log
-client/testem.log
-client/typings
-client/yarn.lock
-package-lock.json
-client/package-lock.json
-cypress.json
+# Ignore npm/yarn debug log
+npm-debug.log
+yarn-error.log
+yarn.lock
 
+# build-analytics
+.build-analytics
+>>>>>>> a7d4575c0 (Initial commit for OpenSlides4)
+
+# rollup-test output
+/modules/rollup-test/dist/
+
+# User specific bazel settings
+.bazelrc.user
+
+<<<<<<< HEAD
 ## Deployment
 # Docker build artifacts
 docker/docker-compose.yml
@@ -82,3 +72,7 @@ docker/docker-compose.yml
 *.pem
 # secrets
 docker/secrets/*.env
+=======
+.notes.md
+baseline.json
+>>>>>>> a7d4575c0 (Initial commit for OpenSlides4)
