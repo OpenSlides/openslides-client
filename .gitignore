@@ -1,92 +1,47 @@
-# General
-*.pyc
-*.swp
-*.swo
+.DS_STORE
+
+/dist/
+/bazel-out
+/integration/bazel/bazel-*
+e2e_test.*
 *.log
-*~
+node_modules
 
-# Virtual Environment
-.virtualenv*/*
-.venv/*
-
-# Javascript tools and libraries
-node_modules/*
-bower_components/*
-
-# OS4-Submodules
-/openslides-*
-
-# OS3+
-/server/
-/haproxy/
-
-# Local user data (settings, database, media, search index, static files)
-personal_data/*
-openslides/static/*
-collected-static/*
-
-# Package building/IDE
-docs/_build/*
-*.egg-info
-build/*
-dist/*
-debug/*
-.DS_Store
-.idea
+# Include when developing application packages.
+pubspec.lock
+.c9
+.idea/
+.devcontainer/*
+!.devcontainer/README.md
+!.devcontainer/recommended-devcontainer.json
+!.devcontainer/recommended-Dockerfile
+.settings/
+.vscode/launch.json
+.vscode/settings.json
+.vscode/tasks.json
+*.swo
+modules/.settings
+modules/.vscode
+.vimrc
+.nvimrc
 *.code-workspace
 
-# Unit test and coverage reports
-.coverage
-tests/file/*
-tests/db.sqlite3.test
-.pytest_cache
+# Don't check in secret files
+*secret.js
 
-# Plugin development
-openslides_*
+# Ignore npm/yarn debug log
+npm-debug.log
+yarn-error.log
+yarn.lock
 
-# Mypy cache for typechecking
-.mypy_cache
+# build-analytics
+.build-analytics
 
-# OpenSlides 3 Client
+# rollup-test output
+/modules/rollup-test/dist/
 
-# compiled output
-client/dist
-client/tmp
-client/out-tsc
-client/documentation
+# User specific bazel settings
+.bazelrc.user
 
-# dependencies
-client/node_modules
-
-# IDEs and editors
-/.idea
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-
-# IDE - VSCode
-.vscode/*
-
-# misc
-Compodoc
-Compodocmodules
-client/.sass-cache
-client/connect.lock
-client/coverage
-client/libpeerconnection.log
-client/npm-debug.log
-client/yarn-error.log
-client/testem.log
-client/typings
-client/yarn.lock
-package-lock.json
-client/package-lock.json
-cypress.json
-*-version.txt
-
-# System Files
-client/.DS_Store
-client/Thumbs.db
+.notes.md
+baseline.json
