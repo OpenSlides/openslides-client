@@ -1,11 +1,12 @@
-import { HttpClient, HttpEvent, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpDownloadProgressEvent, HttpEvent, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { Observable, Subject, Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 import { HTTPMethod } from './http.service';
 
-// const PROGRESS_TYPE = 3;
+const PROGRESS_TYPE = 3;
 
 export class Stream<T> {
     private content = new Subject<T>();
@@ -15,54 +16,49 @@ export class Stream<T> {
     }
 
     private subscription: Subscription;
-    /*private lastPosition = 0;
 
-    private nextMessageSize = 0;*/
+    /**
+     * This is the index where we checked, if there is a \n in the read buffer (event.partialText)
+     * This position is always >= contentStartIndex and is > contentStartIndex, if the message
+     * was too big to fit into one buffer. So we have just a partial message.
+     *
+     * The difference between this index and contentStartIndex is that this index remembers the position
+     * we checked for a \n which lay in the middle of the next JOSN-packet.
+     */
+    private checkedUntilIndex = 0;
+
+    /**
+     * This index holds always the position of the current JOSN-packet, that we are receiving.
+     */
+    private contentStartIndex = 0;
 
     public constructor(observable: Observable<HttpEvent<string>>) {
-        /*this.subscription = observable.pipe(filter(x => x.type === PROGRESS_TYPE)).subscribe((event: HttpDownloadProgressEvent) => {
+        return;
+        this.subscription = observable
+            .pipe(filter(x => x.type === PROGRESS_TYPE))
+            .subscribe((event: HttpDownloadProgressEvent) => {
+                // Maybe we get multiple messages, so continue, until the complete buffer is checked.
+                while (this.checkedUntilIndex < event.loaded) {
+                    // check if there is a \n somewhere in [checkedUntilIndex, ...]
+                    const LF_index = event.partialText.indexOf('\n', this.checkedUntilIndex);
 
-            while (this.lastPosition < event.loaded) {
-                const newContentLength = event.loaded - this.lastPosition;
+                    if (LF_index >= 0) {
+                        // take string in [contentStartIndex, LF_index-1]. This must be valid JSON.
+                        // In substring, the last character is exlusive.
+                        const content = event.partialText.substring(this.contentStartIndex, LF_index);
 
-                if (this.nextMessageSize === 0) {
-                    // We need an anouncement
-                    if (newContentLength < 8) {
-                        break; // message to short to contain an announcement.
+                        // move pointer: next JSON starts at LF_index + 1
+                        this.checkedUntilIndex = LF_index + 1;
+                        this.contentStartIndex = LF_index + 1;
+
+                        console.log('received', content.length, content);
+                        const parsedContent = JSON.parse(content) as T;
+                        console.log(parsedContent);
+                        this.content.next(parsedContent);
                     }
-
-                    this.nextMessageSize = this.getAnnouncementLength(
-                        event.partialText.substring(this.lastPosition, this.lastPosition + 8)
-                    );
-                    this.lastPosition += 8;
-                    console.log("got announcement.", this.lastPosition, this.nextMessageSize)
-                } else {
-                    if (newContentLength < this.nextMessageSize) {
-                        break; // we do not have enough data.
-                    }
-
-                    const content = event.partialText.substring(this.lastPosition, this.lastPosition + this.nextMessageSize);
-                    this.lastPosition += this.nextMessageSize;
-                    this.nextMessageSize = 0;
-                    console.log("received", this.lastPosition, this.nextMessageSize)
-                    console.log("received", content.length); // , "bytes:", content);
-
-                    const parsedContent = JSON.parse(content) as T;
-                    this.content.next(parsedContent);
                 }
-            }
-        });*/
+            });
     }
-
-    /*private getAnnouncementLength(str: string): number {
-        const buf = new ArrayBuffer(4);
-        const bufView = new Uint8Array(buf);
-        for (let i = 0; i < 4; i++) {
-            const i2 = i * 2;
-            bufView[i] = parseInt(str.substring(i2, i2 + 2), 16);
-        }
-        return new Uint32Array(buf)[0];
-    }*/
 
     public close(): void {
         this.content.complete();

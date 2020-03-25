@@ -216,11 +216,11 @@ export class OperatorService {
 
         const userReqeust: ModelRequest = {
             ids: [this.whoAmIData.user_id],
-            collection: User.COLLECTIONSTRING,
+            collection: User.COLLECTION,
             fields: {
                 groups_id: {
                     type: 'relation-list',
-                    collection: Group.COLLECTIONSTRING,
+                    collection: Group.COLLECTION,
                     fields: {
                         permissions: null
                     }

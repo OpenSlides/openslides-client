@@ -8,16 +8,16 @@ import { BaseModel, ModelConstructor } from '../../shared/models/base/base-model
  * Unifies the ModelConstructor and ViewModelConstructor.
  */
 interface UnifiedConstructors {
-    COLLECTIONSTRING: string;
+    COLLECTION: string;
     new (...args: any[]): any;
 }
 
 /**
- * Every types supported: (View)ModelConstructors, repos and collectionstrings.
+ * Every types supported: (View)ModelConstructors, repos and collections.
  */
 type TypeIdentifier = UnifiedConstructors | BaseRepository<any, any, any> | string;
 
-type CollectionStringMappedTypes = [
+type CollectionMappedTypes = [
     ModelConstructor<BaseModel>,
     ViewModelConstructor<BaseViewModel>,
     BaseRepository<BaseViewModel<any>, BaseModel<any>, TitleInformation>
@@ -31,19 +31,19 @@ type CollectionStringMappedTypes = [
 @Injectable({
     providedIn: 'root'
 })
-export class CollectionStringMapperService {
+export class CollectionMapperService {
     /**
      * Maps collection strings to mapping entries
      */
-    private collectionStringMapping: {
-        [collectionString: string]: CollectionStringMappedTypes;
+    private collectionMapping: {
+        [collection: string]: CollectionMappedTypes;
     } = {};
 
     public constructor() {}
 
     /**
      * Registers the combination of a collection string, model, view model and repository
-     * @param collectionString
+     * @param collection
      * @param model
      */
     public registerCollectionElement<V extends BaseViewModel<M>, M extends BaseModel>(
@@ -51,26 +51,26 @@ export class CollectionStringMapperService {
         viewModel: ViewModelConstructor<V>,
         repository: BaseRepository<V, M, TitleInformation>
     ): void {
-        this.collectionStringMapping[model.COLLECTIONSTRING] = [model, viewModel, repository];
+        this.collectionMapping[model.COLLECTION] = [model, viewModel, repository];
     }
 
     /**
      * @param obj The object to get the collection string from.
-     * @returns the collectionstring
+     * @returns the collection
      */
-    public getCollectionString(obj: TypeIdentifier): string {
+    public getCollection(obj: TypeIdentifier): string {
         if (typeof obj === 'string') {
             return obj;
         } else {
-            return obj.COLLECTIONSTRING;
+            return obj.COLLECTION;
         }
     }
 
     /**
      * @returns true, if the given collection is known by this service.
      */
-    public isCollectionRegistered(collectionString: string): boolean {
-        return !!this.collectionStringMapping[collectionString];
+    public isCollectionRegistered(collection: string): boolean {
+        return !!this.collectionMapping[collection];
     }
 
     /**
@@ -78,8 +78,8 @@ export class CollectionStringMapperService {
      * @returns the model constructor
      */
     public getModelConstructor<M extends BaseModel>(obj: TypeIdentifier): ModelConstructor<M> | null {
-        if (this.isCollectionRegistered(this.getCollectionString(obj))) {
-            return this.collectionStringMapping[this.getCollectionString(obj)][0] as ModelConstructor<M>;
+        if (this.isCollectionRegistered(this.getCollection(obj))) {
+            return this.collectionMapping[this.getCollection(obj)][0] as ModelConstructor<M>;
         }
     }
 
@@ -88,8 +88,8 @@ export class CollectionStringMapperService {
      * @returns the view model constructor
      */
     public getViewModelConstructor<M extends BaseViewModel>(obj: TypeIdentifier): ViewModelConstructor<M> | null {
-        if (this.isCollectionRegistered(this.getCollectionString(obj))) {
-            return this.collectionStringMapping[this.getCollectionString(obj)][1] as ViewModelConstructor<M>;
+        if (this.isCollectionRegistered(this.getCollection(obj))) {
+            return this.collectionMapping[this.getCollection(obj)][1] as ViewModelConstructor<M>;
         }
     }
 
@@ -100,8 +100,8 @@ export class CollectionStringMapperService {
     public getRepository<V extends BaseViewModel, M extends BaseModel, T extends TitleInformation>(
         obj: TypeIdentifier
     ): BaseRepository<V & T, M, T> | null {
-        if (this.isCollectionRegistered(this.getCollectionString(obj))) {
-            return this.collectionStringMapping[this.getCollectionString(obj)][2] as BaseRepository<V & T, M, T>;
+        if (this.isCollectionRegistered(this.getCollection(obj))) {
+            return this.collectionMapping[this.getCollection(obj)][2] as BaseRepository<V & T, M, T>;
         }
     }
 
@@ -109,7 +109,7 @@ export class CollectionStringMapperService {
      * @returns all registered repositories.
      */
     public getAllRepositories(): BaseRepository<any, any, any>[] {
-        return Object.values(this.collectionStringMapping).map((types: CollectionStringMappedTypes) => types[2]);
+        return Object.values(this.collectionMapping).map((types: CollectionMappedTypes) => types[2]);
     }
 
     /**
@@ -134,6 +134,6 @@ export class CollectionStringMapperService {
             return false;
         }
 
-        return Object.keys(this.collectionStringMapping).some(collection => collection === splitted[0]);
+        return Object.keys(this.collectionMapping).some(collection => collection === splitted[0]);
     }
 }

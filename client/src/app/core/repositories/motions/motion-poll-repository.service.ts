@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 
-
 import { HttpService } from 'app/core/core-services/http.service';
 import { RelationDefinition } from 'app/core/definitions/relations';
 import { BasePollRepository } from 'app/core/repositories/base-poll-repository';

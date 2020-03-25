@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { CollectionStringMapperService } from 'app/core/core-services/collection-string-mapper.service';
+import { CollectionMapperService } from 'app/core/core-services/collection-mapper.service';
 import { SlideData } from 'app/core/core-services/projector-data.service';
 import { isBaseIsAgendaItemContentObjectRepository } from 'app/core/repositories/base-is-agenda-item-content-object-repository';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
@@ -36,7 +36,7 @@ export class CommonListOfSpeakersSlideComponent extends BaseSlideComponent<Commo
     public hideAmountOfSpeakers: boolean;
 
     public constructor(
-        private collectionStringMapperService: CollectionStringMapperService,
+        private collectionMapperService: CollectionMapperService,
         private organisationSettingsService: OrganisationSettingsService
     ) {
         super();
@@ -57,7 +57,7 @@ export class CommonListOfSpeakersSlideComponent extends BaseSlideComponent<Commo
             return '';
         }
 
-        const repo = this.collectionStringMapperService.getRepository(this.data.data.content_object_collection);
+        const repo = this.collectionMapperService.getRepository(this.data.data.content_object_collection);
 
         if (isBaseIsAgendaItemContentObjectRepository(repo)) {
             return repo.getAgendaSlideTitle(this.data.data.title_information);

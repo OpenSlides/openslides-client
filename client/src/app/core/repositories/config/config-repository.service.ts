@@ -166,7 +166,7 @@ export class ConfigRepositoryService extends BaseRepository<ViewConfig, Config, 
     public async update(config: Partial<Config>, viewConfig: ViewConfig): Promise<void> {
         const updatedData = viewConfig.getUpdatedModelData(config);
         const updatedConfig = new Config(updatedData);
-        await this.http.put(`/rest/${updatedConfig.collectionString}/${updatedConfig.key}/`, updatedConfig);
+        await this.http.put(`/rest/${updatedConfig.collection}/${updatedConfig.key}/`, updatedConfig);
     }
 
     /**

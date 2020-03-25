@@ -14,7 +14,7 @@ export type UserAuthType = 'default' | 'saml';
  * @ignore
  */
 export class User extends BaseModel<User> {
-    public static COLLECTIONSTRING = 'users/user';
+    public static COLLECTION = 'users/user';
 
     public id: number;
     public username: string;
@@ -36,6 +36,6 @@ export class User extends BaseModel<User> {
     public auth_type?: UserAuthType;
 
     public constructor(input?: Partial<User>) {
-        super(User.COLLECTIONSTRING, input);
+        super(User.COLLECTION, input);
     }
 }

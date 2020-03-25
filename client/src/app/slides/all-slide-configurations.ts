@@ -2,6 +2,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { ViewModelStoreService } from 'app/core/core-services/view-model-store.service';
 import { ProjectorElement } from 'app/shared/models/core/projector';
+import { Motion } from 'app/shared/models/motions/motion';
 import { Slide, SlideDynamicConfiguration } from './slide-manifest';
 
 export const allSlidesDynamicConfiguration: (SlideDynamicConfiguration & Slide)[] = [
@@ -16,7 +17,7 @@ export const allSlidesDynamicConfiguration: (SlideDynamicConfiguration & Slide)[
         scrollable: true
     },
     {
-        slide: 'motions/motion',
+        slide: Motion.COLLECTION,
         scaleable: true,
         scrollable: true
     },

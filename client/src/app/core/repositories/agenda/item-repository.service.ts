@@ -72,7 +72,7 @@ export class ItemRepositoryService extends BaseHasContentObjectRepository<
         if (titleInformation.contentObject) {
             return titleInformation.contentObject.getAgendaListTitle();
         } else {
-            const repo = this.collectionStringMapperService.getRepository(
+            const repo = this.collectionMapperService.getRepository(
                 titleInformation.contentObjectData.collection
             ) as BaseIsAgendaItemContentObjectRepository<any, any, any>;
             return repo.getAgendaListTitle(titleInformation.title_information);
@@ -102,7 +102,7 @@ export class ItemRepositoryService extends BaseHasContentObjectRepository<
         if (titleInformation.contentObject) {
             return titleInformation.contentObject.getAgendaListTitleWithoutItemNumber();
         } else {
-            const repo = this.collectionStringMapperService.getRepository(
+            const repo = this.collectionMapperService.getRepository(
                 titleInformation.contentObjectData.collection
             ) as BaseIsAgendaItemContentObjectRepository<any, any, any>;
             return repo.getAgendaListTitleWithoutItemNumber(titleInformation.title_information);
@@ -150,7 +150,7 @@ export class ItemRepositoryService extends BaseHasContentObjectRepository<
 
     public async addItemToAgenda(contentObject: BaseViewModelWithAgendaItem<any>): Promise<Identifiable> {
         return await this.httpService.post('/rest/agenda/item/', {
-            collection: contentObject.collectionString,
+            collection: contentObject.collection,
             id: contentObject.id
         });
     }

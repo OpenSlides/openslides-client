@@ -42,7 +42,7 @@ export class ChangeRecommendationRepositoryService extends BaseRepository<
      *
      * @param {DataStoreService} DS The DataStore
      * @param {DataSendService} dataSend sending changed objects
-     * @param {CollectionStringMapperService} mapperService Maps collection strings to classes
+     * @param {CollectionMapperService} mapperService Maps collection strings to classes
      * @param {ViewModelStoreService} viewModelStoreService
      * @param {TranslateService} translate
      * @param {DiffService} diffService

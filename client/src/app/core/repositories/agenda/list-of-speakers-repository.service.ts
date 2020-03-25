@@ -101,7 +101,7 @@ export class ListOfSpeakersRepositoryService extends BaseHasContentObjectReposit
         if (titleInformation.contentObject) {
             return titleInformation.contentObject.getListOfSpeakersTitle();
         } else {
-            const repo = this.collectionStringMapperService.getRepository(
+            const repo = this.collectionMapperService.getRepository(
                 titleInformation.contentObjectData.collection
             ) as BaseIsListOfSpeakersContentObjectRepository<any, any, any>;
 

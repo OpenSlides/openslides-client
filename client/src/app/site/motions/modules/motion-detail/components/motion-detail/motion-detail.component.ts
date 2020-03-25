@@ -1592,7 +1592,7 @@ export class MotionDetailComponent extends BaseComponent implements OnInit, OnDe
 
     public openDialog(): void {
         const dialogData = {
-            collectionString: ViewMotionPoll.COLLECTIONSTRING,
+            collection: ViewMotionPoll.COLLECTION,
             motion_id: this.motion.id,
             motion: this.motion,
             ...this.motionPollService.getDefaultPollData(this.motion.id)

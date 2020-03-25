@@ -61,7 +61,7 @@ export class PresentationControlComponent extends BaseComponent {
      */
     private updateElements(): void {
         this.elements = this.projector.elements.filter(element => {
-            if (element.name !== Mediafile.COLLECTIONSTRING || !element.id) {
+            if (element.name !== Mediafile.COLLECTION || !element.id) {
                 return false;
             }
             const mediafile = this.mediafileRepo.getViewModel(element.id);

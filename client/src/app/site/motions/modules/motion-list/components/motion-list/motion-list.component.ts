@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { PblColumnDefinition } from '@pebula/ngrid';
 
+import { modelDataToAutoupdateFormat } from 'app/core/core-services/autoupdate-helpers';
 import { CategoryRepositoryService } from 'app/core/repositories/motions/category-repository.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
@@ -218,7 +219,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
 
     public addInitial(): void {
         const data = {
-            'motions/motion': {
+            motion: {
                 2: {
                     title: 'initial title',
                     submitter_ids: [],
@@ -227,7 +228,9 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
                 }
             }
         };
-        this.autoupdateService.handleAutoupdate(data);
+        console.log(modelDataToAutoupdateFormat);
+        console.log(modelDataToAutoupdateFormat(data));
+        this.autoupdateService.handleAutoupdate(modelDataToAutoupdateFormat(data));
     }
 
     public changeTitle(): void {
@@ -235,13 +238,13 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
             .toString(36)
             .substring(7);
         const data = {
-            'motions/motion': {
+            motion: {
                 2: {
                     title
                 }
             }
         };
-        this.autoupdateService.handleAutoupdate(data);
+        this.autoupdateService.handleAutoupdate(modelDataToAutoupdateFormat(data));
     }
 
     /**

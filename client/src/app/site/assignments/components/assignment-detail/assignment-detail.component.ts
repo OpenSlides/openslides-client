@@ -305,7 +305,7 @@ export class AssignmentDetailComponent extends BaseComponent implements OnInit {
      */
     public openDialog(): void {
         const dialogData = {
-            collectionString: ViewAssignmentPoll.COLLECTIONSTRING,
+            collection: ViewAssignmentPoll.COLLECTION,
             assignment_id: this.assignment.id,
             assignment: this.assignment,
             ...this.assignmentPollService.getDefaultPollData(this.assignment.id)

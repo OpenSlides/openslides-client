@@ -58,7 +58,7 @@ export class PersonalNoteService {
     public async savePersonalNote(model: BaseModel | BaseViewModel, content: PersonalNoteContent): Promise<void> {
         await this.savePersonalNoteObject([
             {
-                collection: model.collectionString,
+                collection: model.collection,
                 id: model.id,
                 content: content
             }
@@ -80,18 +80,18 @@ export class PersonalNoteService {
             pnObject.notes = {};
         }
         const requestData: PersonalNoteRequestData = models.map(model => {
-            if (!pnObject.notes[model.collectionString]) {
-                pnObject.notes[model.collectionString] = {};
+            if (!pnObject.notes[model.collection]) {
+                pnObject.notes[model.collection] = {};
             }
-            if (pnObject.notes[model.collectionString][model.id]) {
-                pnObject.notes[model.collectionString][model.id].star = star;
+            if (pnObject.notes[model.collection][model.id]) {
+                pnObject.notes[model.collection][model.id].star = star;
             } else {
-                pnObject.notes[model.collectionString][model.id] = { star: star, note: '' };
+                pnObject.notes[model.collection][model.id] = { star: star, note: '' };
             }
             return {
-                collection: model.collectionString,
+                collection: model.collection,
                 id: model.id,
-                content: pnObject.notes[model.collectionString][model.id]
+                content: pnObject.notes[model.collection][model.id]
             };
         });
         await this.savePersonalNoteObject(requestData);

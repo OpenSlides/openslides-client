@@ -4,7 +4,7 @@ import { BaseViewModel } from 'app/site/base/base-view-model';
 export type PersonalNoteTitleInformation = object;
 
 export class ViewPersonalNote extends BaseViewModel<PersonalNote> implements PersonalNoteTitleInformation {
-    public static COLLECTIONSTRING = PersonalNote.COLLECTIONSTRING;
+    public static COLLECTION = PersonalNote.COLLECTION;
 
     public get personalNote(): PersonalNote {
         return this._model;

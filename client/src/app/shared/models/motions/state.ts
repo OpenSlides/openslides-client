@@ -16,7 +16,7 @@ export enum MergeAmendment {
  * @ignore
  */
 export class State extends BaseModel<State> {
-    public static COLLECTIONSTRING = 'motions/state';
+    public static COLLECTION = 'motions/state';
 
     public id: number;
     public name: string;
@@ -38,6 +38,6 @@ export class State extends BaseModel<State> {
      * @param input If given, it will be deserialized
      */
     public constructor(input?: any) {
-        super(State.COLLECTIONSTRING, input);
+        super(State.COLLECTION, input);
     }
 }

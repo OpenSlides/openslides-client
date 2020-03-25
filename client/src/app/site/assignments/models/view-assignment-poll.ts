@@ -34,8 +34,8 @@ export const AssignmentPollPercentBaseVerbose = {
 
 export class ViewAssignmentPoll extends ViewBasePoll<AssignmentPoll, AssignmentPollMethod, AssignmentPollPercentBase>
     implements AssignmentPollTitleInformation {
-    public static COLLECTIONSTRING = AssignmentPoll.COLLECTIONSTRING;
-    protected _collectionString = AssignmentPoll.COLLECTIONSTRING;
+    public static COLLECTION = AssignmentPoll.COLLECTION;
+    protected _collection = AssignmentPoll.COLLECTION;
 
     public readonly tableChartData: Map<string, BehaviorSubject<ChartData>> = new Map();
     public readonly pollClassType = PollClassType.Assignment;
@@ -55,7 +55,7 @@ export class ViewAssignmentPoll extends ViewBasePoll<AssignmentPoll, AssignmentP
     public getSlide(): ProjectorElementBuildDeskriptor {
         return {
             getBasicProjectorElement: options => ({
-                name: AssignmentPoll.COLLECTIONSTRING,
+                name: AssignmentPoll.COLLECTION,
                 id: this.id,
                 getIdentifiers: () => ['name', 'id']
             }),

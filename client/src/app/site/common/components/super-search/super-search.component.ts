@@ -35,11 +35,11 @@ export class SuperSearchComponent implements OnInit {
     public searchCollection = '';
 
     /**
-     * Holds the collection-string of the specific collection.
+     * Holds the collection of the specific collection.
      *
      * Is set, if the user has entered a collection.
      */
-    public specificCollectionString: string = null;
+    public specificCollection: string = null;
 
     /**
      * Holds the input text the user entered to search for a specific id.
@@ -84,14 +84,14 @@ export class SuperSearchComponent implements OnInit {
     public registeredModels: SearchModel[];
 
     /**
-     * Stores all the collectionStrings registered by the `search.service`.
+     * Stores all the collections registered by the `search.service`.
      */
-    private collectionStrings: string[];
+    private collections: string[];
 
     /**
      * Stores all the collections with translated names.
      */
-    private translatedCollectionStrings: TranslatedCollection[];
+    private translatedCollections: TranslatedCollection[];
 
     /**
      * Key to store the query in the local-storage.
@@ -128,8 +128,8 @@ export class SuperSearchComponent implements OnInit {
         this.DS.modifiedObservable.pipe(auditTime(100)).subscribe(() => this.search());
 
         this.registeredModels = this.searchService.getRegisteredModels();
-        this.collectionStrings = this.registeredModels.map(rm => rm.collectionString);
-        this.translatedCollectionStrings = this.searchService.getTranslatedCollectionStrings();
+        this.collections = this.registeredModels.map(rm => rm.collection);
+        this.translatedCollections = this.searchService.getTranslatedCollections();
 
         this.searchForm.valueChanges.pipe(debounceTime(250)).subscribe((value: string) => {
             if (value.trim() === '') {
@@ -147,10 +147,10 @@ export class SuperSearchComponent implements OnInit {
      * The main function to search through all collections.
      */
     private search(): void {
-        if (this.searchString !== '' || this.specificCollectionString) {
+        if (this.searchString !== '' || this.specificCollection) {
             this.searchResults = this.searchService.search(
                 this.searchString,
-                this.specificCollectionString ? [this.specificCollectionString] : this.collectionStrings,
+                this.specificCollection ? [this.specificCollection] : this.collections,
                 this.specificId,
                 !!this.searchStringForId
             );
@@ -179,8 +179,8 @@ export class SuperSearchComponent implements OnInit {
         // The query is splitted by the first ':' - max. two hits.
         const splittedQuery = this.splitQuery(query);
 
-        this.specificCollectionString = this.searchSpecificCollection(splittedQuery[0]);
-        if (this.specificCollectionString) {
+        this.specificCollection = this.searchSpecificCollection(splittedQuery[0]);
+        if (this.specificCollection) {
             this.searchCollection = splittedQuery.shift();
         }
 
@@ -221,7 +221,7 @@ export class SuperSearchComponent implements OnInit {
     }
 
     /**
-     * This function test, if the query matches some of the `collectionStrings`.
+     * This function test, if the query matches some of the `collections`.
      *
      * That indicates, that the user looks for items in a specific collection.
      *
@@ -229,7 +229,7 @@ export class SuperSearchComponent implements OnInit {
      * or null, if there exists none.
      */
     private searchSpecificCollection(query: string): string | null {
-        const nextCollection = this.translatedCollectionStrings.find(item =>
+        const nextCollection = this.translatedCollections.find(item =>
             // The value of the item should match the query plus any further
             // characters (useful for splitted words in the query).
             // This will look, if the user searches in a specific collection.
@@ -330,7 +330,7 @@ export class SuperSearchComponent implements OnInit {
      */
     public changeModel(model: BaseViewModel & Searchable): void {
         this.selectedModel = model;
-        this.selectedCollection = model.collectionString;
+        this.selectedCollection = model.collection;
     }
 
     /**
@@ -339,7 +339,7 @@ export class SuperSearchComponent implements OnInit {
      * @param model The model, the user selected.
      */
     public viewResult(model: BaseViewModel & Searchable): void {
-        if (model.collectionString === 'mediafiles/mediafile' && !(<ViewMediafile>model).is_directory) {
+        if (model.collection === 'mediafiles/mediafile' && !(<ViewMediafile>model).is_directory) {
             window.open(model.getDetailStateURL(), '_blank');
         } else {
             this.router.navigateByUrl(model.getDetailStateURL());
@@ -363,7 +363,7 @@ export class SuperSearchComponent implements OnInit {
         this.searchResults = [];
         this.selectedModel = null;
         this.searchCollection = '';
-        this.specificCollectionString = null;
+        this.specificCollection = null;
         this.searchString = '';
         this.searchStringForId = null;
         this.specificId = null;

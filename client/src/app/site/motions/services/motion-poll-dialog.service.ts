@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material';
 
-import { CollectionStringMapperService } from 'app/core/core-services/collection-string-mapper.service';
+import { CollectionMapperService } from 'app/core/core-services/collection-mapper.service';
 import { BasePollDialogService } from 'app/core/ui-services/base-poll-dialog.service';
 import { MotionPollDialogComponent } from 'app/site/motions/modules/motion-poll/motion-poll-dialog/motion-poll-dialog.component';
 import { MotionPollService } from './motion-poll.service';
@@ -16,7 +16,7 @@ import { ViewMotionPoll } from '../models/view-motion-poll';
 export class MotionPollDialogService extends BasePollDialogService<ViewMotionPoll, MotionPollService> {
     protected dialogComponent = MotionPollDialogComponent;
 
-    public constructor(dialog: MatDialog, mapper: CollectionStringMapperService) {
+    public constructor(dialog: MatDialog, mapper: CollectionMapperService) {
         super(dialog, mapper);
     }
 }
