@@ -1,4 +1,3 @@
-
 import { HttpService } from 'app/core/core-services/http.service';
 import { RelationDefinition } from 'app/core/definitions/relations';
 import { BaseRepository, NestedModelDescriptors } from 'app/core/repositories/base-repository';
@@ -55,7 +54,7 @@ export abstract class BasePollRepository<
     }
 
     private restPath(poll: BasePoll): string {
-        return `/rest/${poll.collectionString}/${poll.id}`;
+        return `/rest/${poll.collection}/${poll.id}`;
     }
 
     public pseudoanonymize(poll: BasePoll): Promise<void> {

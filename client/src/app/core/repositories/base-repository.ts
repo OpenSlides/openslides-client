@@ -5,7 +5,7 @@ import { auditTime } from 'rxjs/operators';
 import { Collection } from 'app/shared/models/base/collection';
 import { BaseModel, ModelConstructor } from '../../shared/models/base/base-model';
 import { BaseViewModel, TitleInformation, ViewModelConstructor } from '../../site/base/base-view-model';
-import { CollectionStringMapperService } from '../core-services/collection-string-mapper.service';
+import { CollectionMapperService } from '../core-services/collection-mapper.service';
 import { DataSendService } from '../core-services/data-send.service';
 import { DataStoreService } from '../core-services/data-store.service';
 import { HasViewModelListObservable } from '../definitions/has-view-model-list-observable';
@@ -73,18 +73,18 @@ export abstract class BaseRepository<V extends BaseViewModel & T, M extends Base
     /**
      * The collection string of the managed model.
      */
-    private _collectionString: string;
+    private _collection: string;
 
-    public get collectionString(): string {
-        return this._collectionString;
+    public get collection(): string {
+        return this._collection;
     }
 
     /**
-     * Needed for the collectionStringMapper service to treat repositories the same as
+     * Needed for the collectionMapper service to treat repositories the same as
      * ModelConstructors and ViewModelConstructors.
      */
-    public get COLLECTIONSTRING(): string {
-        return this._collectionString;
+    public get COLLECTION(): string {
+        return this._collection;
     }
 
     public abstract getVerboseName: (plural?: boolean) => string;
@@ -116,8 +116,8 @@ export abstract class BaseRepository<V extends BaseViewModel & T, M extends Base
         return this.repositoryServiceCollector.dataSend;
     }
 
-    protected get collectionStringMapperService(): CollectionStringMapperService {
-        return this.repositoryServiceCollector.collectionStringMapperService;
+    protected get collectionMapperService(): CollectionMapperService {
+        return this.repositoryServiceCollector.collectionMapperService;
     }
 
     protected get viewModelStoreService(): ViewModelStoreService {
@@ -147,7 +147,7 @@ export abstract class BaseRepository<V extends BaseViewModel & T, M extends Base
         protected relationDefinitions: RelationDefinition<BaseViewModel>[] = [],
         protected nestedModelDescriptors: NestedModelDescriptors = {}
     ) {
-        this._collectionString = baseModelCtor.COLLECTIONSTRING;
+        this._collection = baseModelCtor.COLLECTION;
 
         this.extendRelations();
 
@@ -170,7 +170,7 @@ export abstract class BaseRepository<V extends BaseViewModel & T, M extends Base
     protected extendRelations(): void {}
 
     public onAfterAppsLoaded(): void {
-        this.baseViewModelCtor = this.collectionStringMapperService.getViewModelConstructor(this.collectionString);
+        this.baseViewModelCtor = this.collectionMapperService.getViewModelConstructor(this.collection);
         this.DS.clearObservable.subscribe(() => this.clear());
         this.translate.onLangChange.subscribe(change => {
             this.languageCollator = new Intl.Collator(change.lang);
@@ -204,7 +204,7 @@ export abstract class BaseRepository<V extends BaseViewModel & T, M extends Base
      */
     public changedModels(ids: number[]): void {
         ids.forEach(id => {
-            this.viewModelStore[id] = this.createViewModelWithTitles(this.DS.get(this.collectionString, id));
+            this.viewModelStore[id] = this.createViewModelWithTitles(this.DS.get(this.collection, id));
         });
     }
 
@@ -235,7 +235,7 @@ export abstract class BaseRepository<V extends BaseViewModel & T, M extends Base
      */
     public async update(update: Partial<M>, viewModel: V): Promise<void> {
         const data = viewModel.getUpdatedModelData(update);
-        const targetClass = this.collectionStringMapperService.getModelConstructor(viewModel.collectionString);
+        const targetClass = this.collectionMapperService.getModelConstructor(viewModel.collection);
         return await this.dataSend.updateModel(new targetClass(data));
     }
 

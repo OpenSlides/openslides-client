@@ -6,7 +6,7 @@ import { Identifiable } from '../../shared/models/base/identifiable';
 export type TitleInformation = object;
 
 export interface ViewModelConstructor<T extends BaseViewModel> {
-    COLLECTIONSTRING: string;
+    COLLECTION: string;
     new (...args: any[]): T;
 }
 
@@ -22,7 +22,7 @@ export abstract class BaseViewModel<M extends BaseModel = any> {
     }
 
     /**
-     * @param collectionString
+     * @param collection
      * @param model
      */
     public constructor(protected _model: M) {}

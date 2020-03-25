@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 
-
 import { RelationDefinition } from 'app/core/definitions/relations';
 import { AssignmentVote } from 'app/shared/models/assignments/assignment-vote';
 import { ViewAssignmentOption } from 'app/site/assignments/models/view-assignment-option';

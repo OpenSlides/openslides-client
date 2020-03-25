@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 
-
 import { RelationDefinition } from 'app/core/definitions/relations';
 import { MotionVote } from 'app/shared/models/motions/motion-vote';
 import { ViewMotionOption } from 'app/site/motions/models/view-motion-option';

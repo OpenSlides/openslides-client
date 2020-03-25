@@ -191,14 +191,15 @@ export abstract class PollService {
     public pollValues: CalculablePollKey[] = ['yes', 'no', 'abstain', 'votesvalid', 'votesinvalid', 'votescast'];
 
     public constructor(
-        constants: OrganisationSettingsService,
+        public constants: OrganisationSettingsService, // TODO: remove public. it is only here, so the linter doesn't complain about this unused variable
         protected translate: TranslateService,
         protected pollKeyVerbose: PollKeyVerbosePipe,
         protected parsePollNumber: ParsePollNumberPipe
     ) {
-        constants
+        /*constants
             .get<OpenSlidesSettings>('Settings')
-            .subscribe(settings => (this.isElectronicVotingEnabled = settings.ENABLE_ELECTRONIC_VOTING));
+            .subscribe(settings => (this.isElectronicVotingEnabled = settings.ENABLE_ELECTRONIC_VOTING));*/
+        this.isElectronicVotingEnabled = false;
     }
 
     /**

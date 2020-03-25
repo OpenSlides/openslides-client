@@ -3,7 +3,7 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
 import { BaseModel, ModelConstructor } from '../../shared/models/base/base-model';
-import { CollectionStringMapperService } from './collection-string-mapper.service';
+import { CollectionMapperService } from './collection-mapper.service';
 import { Deferred } from '../promises/deferred';
 import { RelationCacheService } from './relation-cache.service';
 
@@ -141,7 +141,7 @@ interface ModelCollection {
  * {@link DataStoreService}
  */
 interface ModelStorage {
-    [collectionString: string]: ModelCollection;
+    [collection: string]: ModelCollection;
 }
 
 /**
@@ -166,7 +166,7 @@ export class DataStoreUpdateManagerService {
      * @param mapperService
      */
     public constructor(
-        private mapperService: CollectionStringMapperService,
+        private mapperService: CollectionMapperService,
         private relationCacheService: RelationCacheService
     ) {}
 
@@ -218,19 +218,19 @@ export class DataStoreUpdateManagerService {
 
         // Phase 1: deleting and creating of view models (in this order)
         repositories.forEach(repo => {
-            const deletedModelIds = slot.getDeletedModelIdsForCollection(repo.collectionString);
+            const deletedModelIds = slot.getDeletedModelIdsForCollection(repo.collection);
             repo.deleteModels(deletedModelIds);
-            this.relationCacheService.registerDeletedModels(repo.collectionString, deletedModelIds);
-            const changedModelIds = slot.getChangedModelIdsForCollection(repo.collectionString);
+            this.relationCacheService.registerDeletedModels(repo.collection, deletedModelIds);
+            const changedModelIds = slot.getChangedModelIdsForCollection(repo.collection);
             repo.changedModels(changedModelIds);
             // TODO!!
             const changeId = 0;
-            this.relationCacheService.registerChangedModels(repo.collectionString, changedModelIds, changeId);
+            this.relationCacheService.registerChangedModels(repo.collection, changedModelIds, changeId);
         });
 
         // Phase 2: updating all repositories
         repositories.forEach(repo => {
-            repo.commitUpdate(slot.getAllModelsIdsForCollection(repo.collectionString));
+            repo.commitUpdate(slot.getAllModelsIdsForCollection(repo.collection));
         });
 
         slot.DS.triggerModifiedObservable();
@@ -322,7 +322,7 @@ export class DataStoreService {
      * @param DSUpdateManager
      */
     public constructor(
-        private modelMapper: CollectionStringMapperService,
+        private modelMapper: CollectionMapperService,
         private DSUpdateManager: DataStoreUpdateManagerService
     ) {}
 
@@ -333,7 +333,7 @@ export class DataStoreService {
      * @param collectionType The collection
      */
     public getChangeObservable<T extends BaseModel>(collectionType: ModelConstructor<T> | string): Observable<T> {
-        const collection = this.getCollectionString(collectionType);
+        const collection = this.getCollection(collectionType);
         if (!this.changedSubjects[collection]) {
             this.changedSubjects[collection] = new Subject();
         }
@@ -358,53 +358,53 @@ export class DataStoreService {
      * @param collectionType Either a Model constructor or a string.
      * @returns the collection string
      */
-    private getCollectionString<T extends BaseModel<T>>(collectionType: ModelConstructor<T> | string): string {
+    private getCollection<T extends BaseModel<T>>(collectionType: ModelConstructor<T> | string): string {
         if (typeof collectionType === 'string') {
             return collectionType;
         } else {
-            return this.modelMapper.getCollectionString(collectionType);
+            return this.modelMapper.getCollection(collectionType);
         }
     }
 
     /**
      * Read one model based on the collection and id from the DataStore.
      *
-     * @param collectionType The desired BaseModel or collectionString to be read from the dataStore
+     * @param collectionType The desired BaseModel or collection to be read from the dataStore
      * @param ids One ID of the BaseModel
      * @return The given BaseModel-subclass instance
      * @example: this.DS.get(User, 1)
      * @example: this.DS.get<Countdown>('core/countdown', 2)
      */
     public get<T extends BaseModel<T>>(collectionType: ModelConstructor<T> | string, id: number): T {
-        const collectionString = this.getCollectionString<T>(collectionType);
+        const collection = this.getCollection<T>(collectionType);
 
-        const collection: ModelCollection = this.modelStore[collectionString];
-        if (!collection) {
+        const modelCollection: ModelCollection = this.modelStore[collection];
+        if (!modelCollection) {
             return;
         } else {
-            return collection[id] as T;
+            return modelCollection[id] as T;
         }
     }
 
     /**
      * Read multiple ID's from dataStore.
      *
-     * @param collectionType The desired BaseModel or collectionString to be read from the dataStore
+     * @param collectionType The desired BaseModel or collection to be read from the dataStore
      * @param ids Multiple IDs as a list of IDs of BaseModel
      * @return The BaseModel-list corresponding to the given ID(s)
      * @example: this.DS.getMany(User, [1,2,3,4,5])
      * @example: this.DS.getMany<User>('users/user', [1,2,3,4,5])
      */
     public getMany<T extends BaseModel<T>>(collectionType: ModelConstructor<T> | string, ids: number[]): T[] {
-        const collectionString = this.getCollectionString<T>(collectionType);
+        const collection = this.getCollection<T>(collectionType);
 
-        const collection: ModelCollection = this.modelStore[collectionString];
-        if (!collection) {
+        const modelCollection: ModelCollection = this.modelStore[collection];
+        if (!modelCollection) {
             return [];
         }
         const models = ids
             .map(id => {
-                return collection[id];
+                return modelCollection[id];
             })
             .filter(model => !!model); // remove non valid models.
         return models as T[];
@@ -413,19 +413,19 @@ export class DataStoreService {
     /**
      * Get all models of the given collection from the DataStore.
      *
-     * @param collectionType The desired BaseModel or collectionString to be read from the dataStore
+     * @param collectionType The desired BaseModel or collection to be read from the dataStore
      * @return The BaseModel-list of all instances of T
      * @example: this.DS.getAll(User)
      * @example: this.DS.getAll<User>('users/user')
      */
     public getAll<T extends BaseModel<T>>(collectionType: ModelConstructor<T> | string): T[] {
-        const collectionString = this.getCollectionString<T>(collectionType);
+        const collection = this.getCollection<T>(collectionType);
 
-        const collection: ModelCollection = this.modelStore[collectionString];
-        if (!collection) {
+        const modelCollection: ModelCollection = this.modelStore[collection];
+        if (!modelCollection) {
             return [];
         } else {
-            return Object.values(collection);
+            return Object.values(modelCollection);
         }
     }
 
@@ -471,7 +471,7 @@ export class DataStoreService {
      */
     public async add(models: BaseModel[] /*, changeId?: number*/): Promise<void> {
         models.forEach(model => {
-            const collection = model.collectionString;
+            const collection = model.collection;
             if (this.modelStore[collection] === undefined) {
                 this.modelStore[collection] = {};
             }
@@ -492,7 +492,7 @@ export class DataStoreService {
      */
     public async addOrUpdate(models: BaseModel[]): Promise<void> {
         models.forEach(model => {
-            const collection = model.collectionString;
+            const collection = model.collection;
             if (this.modelStore[collection] === undefined) {
                 this.modelStore[collection] = {};
             }
@@ -513,22 +513,22 @@ export class DataStoreService {
     /**
      * removes one or multiple models from dataStore.
      *
-     * @param collectionString The desired BaseModel type to be removed from the datastore
+     * @param collection The desired BaseModel type to be removed from the datastore
      * @param ids A list of IDs of BaseModels to remove from the datastore
      * @param changeId The changeId of this update. If given, the storage will be flushed to the
      * cache. Else one can call {@method flushToStorage} to do this manually.
      * @example this.DS.remove('users/user', [myUser.id, 3, 4])
      */
-    public async remove(collectionString: string, ids: number[] /*, changeId?: number*/): Promise<void> {
+    public async remove(collection: string, ids: number[] /*, changeId?: number*/): Promise<void> {
         ids.forEach(id => {
-            if (this.modelStore[collectionString]) {
-                delete this.modelStore[collectionString][id];
+            if (this.modelStore[collection]) {
+                delete this.modelStore[collection][id];
             }
-            /*if (this.jsonStore[collectionString]) {
-                delete this.jsonStore[collectionString][id];
+            /*if (this.jsonStore[collection]) {
+                delete this.jsonStore[collection][id];
             }*/
             this.publishDeletedInformation({
-                collection: collectionString,
+                collection,
                 id: id
             });
         });
@@ -548,10 +548,10 @@ export class DataStoreService {
         this.modelStore = {};
         // this.jsonStore = {};
         // Inform about the deletion
-        Object.keys(modelStoreReference).forEach(collectionString => {
-            Object.keys(modelStoreReference[collectionString]).forEach(id => {
+        Object.keys(modelStoreReference).forEach(collection => {
+            Object.keys(modelStoreReference[collection]).forEach(id => {
                 this.publishDeletedInformation({
-                    collection: collectionString,
+                    collection,
                     id: +id // needs casting, because Objects.keys gives all keys as strings...
                 });
             });
@@ -569,14 +569,14 @@ export class DataStoreService {
     private publishChangedInformation(model: BaseModel): void {
         const slot = this.DSUpdateManager.getCurrentUpdateSlot();
         if (slot) {
-            slot.addChangedModel(model.collectionString, model.id);
+            slot.addChangedModel(model.collection, model.id);
             // triggerModifiedObservable will be called by committing the update slot.
         } else {
             this.triggerModifiedObservable();
         }
 
-        if (this.changedSubjects[model.collectionString]) {
-            this.changedSubjects[model.collectionString].next(model);
+        if (this.changedSubjects[model.collection]) {
+            this.changedSubjects[model.collection].next(model);
         }
     }
 

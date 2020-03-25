@@ -2,15 +2,15 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { BehaviorSubject } from 'rxjs';
 
+import { BasePollRepository } from 'app/core/repositories/base-poll-repository';
 import { BasePollDialogService } from 'app/core/ui-services/base-poll-dialog.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ChartData } from 'app/shared/components/charts/charts.component';
 import { PollState, PollType } from 'app/shared/models/poll/base-poll';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { PollService } from '../services/poll.service';
 import { ViewBasePoll } from '../models/view-base-poll';
-import { BaseComponent } from 'app/site/base/components/base.component';
-import { BasePollRepository } from 'app/core/repositories/base-poll-repository'
 
 export abstract class BasePollComponent<V extends ViewBasePoll, S extends PollService> extends BaseComponent {
     public chartDataSubject: BehaviorSubject<ChartData> = new BehaviorSubject([]);

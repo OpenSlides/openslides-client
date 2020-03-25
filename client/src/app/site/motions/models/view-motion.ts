@@ -187,8 +187,8 @@ export class ViewMotion extends BaseViewModelWithAgendaItemAndListOfSpeakers<Mot
             return null;
         }
     }
-    public static COLLECTIONSTRING = Motion.COLLECTIONSTRING;
-    protected _collectionString = Motion.COLLECTIONSTRING;
+    public static COLLECTION = Motion.COLLECTION;
+    protected _collection = Motion.COLLECTION;
 
     public personalNote?: PersonalNoteContent;
 
@@ -336,7 +336,7 @@ export class ViewMotion extends BaseViewModelWithAgendaItemAndListOfSpeakers<Mot
 
         return {
             getBasicProjectorElement: options => ({
-                name: Motion.COLLECTIONSTRING,
+                name: Motion.COLLECTION,
                 id: this.id,
                 getIdentifiers: () => ['name', 'id']
             }),

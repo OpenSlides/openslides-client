@@ -38,13 +38,13 @@ export interface ConfigData {
  * @ignore
  */
 export class Config extends BaseModel {
-    public static COLLECTIONSTRING = 'core/config';
+    public static COLLECTION = 'core/config';
     public id: number;
     public key: string;
     public value: any;
     public data?: ConfigData;
 
     public constructor(input?: any) {
-        super(Config.COLLECTIONSTRING, input);
+        super(Config.COLLECTION, input);
     }
 }

@@ -137,27 +137,26 @@ const MotionRelations: RelationDefinition[] = [
     // Personal notes are dynamically added in the repo.
 ];
 
-const MotionNestedModelDescriptors: NestedModelDescriptors = {
-    'motions/motion': [
-        {
-            ownKey: 'submitters',
-            foreignViewModel: ViewSubmitter,
-            foreignModel: Submitter,
-            order: 'weight',
-            relationDefinitionsByKey: {
-                user: {
-                    type: 'M2O',
-                    ownIdKey: 'user_id',
-                    ownKey: 'user',
-                    foreignViewModel: ViewUser
-                }
-            },
-            titles: {
-                getTitle: (viewSubmitter: ViewSubmitter) => (viewSubmitter.user ? viewSubmitter.user.getTitle() : '')
+const MotionNestedModelDescriptors: NestedModelDescriptors = {};
+MotionNestedModelDescriptors[Motion.COLLECTION] = [
+    {
+        ownKey: 'submitters',
+        foreignViewModel: ViewSubmitter,
+        foreignModel: Submitter,
+        order: 'weight',
+        relationDefinitionsByKey: {
+            user: {
+                type: 'M2O',
+                ownIdKey: 'user_id',
+                ownKey: 'user',
+                foreignViewModel: ViewUser
             }
+        },
+        titles: {
+            getTitle: (viewSubmitter: ViewSubmitter) => (viewSubmitter.user ? viewSubmitter.user.getTitle() : '')
         }
-    ]
-};
+    }
+];
 
 /**
  * Repository Services for motions (and potentially categories)
@@ -336,7 +335,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         }
 
         const notes = personalNote.notes;
-        const collection = Motion.COLLECTIONSTRING;
+        const collection = Motion.COLLECTION;
         if (notes && notes[collection] && notes[collection][motion.id]) {
             return notes[collection][motion.id];
         }

@@ -17,8 +17,8 @@ export interface ListOfSpeakersTitleInformation {
  */
 export class ViewListOfSpeakers extends BaseViewModelWithContentObject<ListOfSpeakers, BaseViewModelWithListOfSpeakers>
     implements ListOfSpeakersTitleInformation, Projectable {
-    public static COLLECTIONSTRING = ListOfSpeakers.COLLECTIONSTRING;
-    protected _collectionString = ListOfSpeakers.COLLECTIONSTRING;
+    public static COLLECTION = ListOfSpeakers.COLLECTION;
+    protected _collection = ListOfSpeakers.COLLECTION;
 
     public get listOfSpeakers(): ListOfSpeakers {
         return this._model;

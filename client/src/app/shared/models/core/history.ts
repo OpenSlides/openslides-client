@@ -20,7 +20,7 @@ export class History implements Deserializable {
         return new Date(this.timestamp * 1000);
     }
 
-    public get collectionString(): string {
+    public get collection(): string {
         return this.element_id.split(':')[0];
     }
 

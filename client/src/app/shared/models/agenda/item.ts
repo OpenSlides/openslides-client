@@ -16,7 +16,7 @@ export const ItemVisibilityChoices = [
  * @ignore
  */
 export class Item extends BaseModelWithContentObject<Item> {
-    public static COLLECTIONSTRING = 'agenda/item';
+    public static COLLECTION = 'agenda/item';
 
     // TODO: remove this, if the server can properly include the agenda item number
     // in the title information. See issue #4738
@@ -51,6 +51,6 @@ export class Item extends BaseModelWithContentObject<Item> {
     public level: number;
 
     public constructor(input?: any) {
-        super(Item.COLLECTIONSTRING, input);
+        super(Item.COLLECTION, input);
     }
 }

@@ -4,7 +4,7 @@ import { BaseModel } from '../base/base-model';
  * Content of the 'assignment_related_users' property.
  */
 export class AssignmentRelatedUser extends BaseModel<AssignmentRelatedUser> {
-    public static COLLECTIONSTRING = 'assignments/assignment-related-user';
+    public static COLLECTION = 'assignments/assignment-related-user';
 
     public id: number;
     public user_id: number;
@@ -12,6 +12,6 @@ export class AssignmentRelatedUser extends BaseModel<AssignmentRelatedUser> {
     public weight: number;
 
     public constructor(input?: any) {
-        super(AssignmentRelatedUser.COLLECTIONSTRING, input);
+        super(AssignmentRelatedUser.COLLECTION, input);
     }
 }

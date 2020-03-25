@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 
-import { TranslateService } from '@ngx-translate/core';
 
 import { HttpService } from 'app/core/core-services/http.service';
 import { RelationDefinition } from 'app/core/definitions/relations';
@@ -56,7 +55,6 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User, UserTi
      */
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
-        protected translate: TranslateService,
         private httpService: HttpService,
         private organisationSettingsService: OrganisationSettingsService
     ) {

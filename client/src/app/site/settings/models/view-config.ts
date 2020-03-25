@@ -9,8 +9,8 @@ export interface ConfigTitleInformation {
  * The view model for configs.
  */
 export class ViewConfig extends BaseViewModel<Config> implements ConfigTitleInformation {
-    public static COLLECTIONSTRING = Config.COLLECTIONSTRING;
-    protected _collectionString = Config.COLLECTIONSTRING;
+    public static COLLECTION = Config.COLLECTION;
+    protected _collection = Config.COLLECTION;
 
     public get config(): Config {
         return this._model;

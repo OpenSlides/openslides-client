@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'environments/environment';
 import { BehaviorSubject, Subject } from 'rxjs';
 
-import { CollectionStringMapperService } from 'app/core/core-services/collection-string-mapper.service';
+import { CollectionMapperService } from 'app/core/core-services/collection-mapper.service';
 import { HttpService } from 'app/core/core-services/http.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { TimeTravelService } from 'app/core/core-services/time-travel.service';
@@ -57,7 +57,7 @@ export class HistoryListComponent extends BaseComponent implements OnInit {
     /**
      * The current selected collection. THis may move to `modelSelectForm`, if this can be choosen.
      */
-    private currentCollection = Motion.COLLECTIONSTRING;
+    private currentCollection = Motion.COLLECTION;
 
     public get currentModelId(): number | null {
         return this.modelSelectForm.controls.model.value;
@@ -85,7 +85,7 @@ export class HistoryListComponent extends BaseComponent implements OnInit {
         private motionRepo: MotionRepositoryService,
         private promptService: PromptService,
         private activatedRoute: ActivatedRoute,
-        private collectionMapper: CollectionStringMapperService
+        private collectionMapper: CollectionMapperService
     ) {
         super(componentServiceCollector);
 
@@ -162,7 +162,7 @@ export class HistoryListComponent extends BaseComponent implements OnInit {
      * @returns the title of the history element or null if it could not be found
      */
     public getElementInfo(history: History): string {
-        const model = this.viewModelStore.get(history.collectionString, history.modelId);
+        const model = this.viewModelStore.get(history.collection, history.modelId);
         return model ? model.getListTitle() : null;
     }
 
@@ -178,7 +178,7 @@ export class HistoryListComponent extends BaseComponent implements OnInit {
         }
 
         await this.timeTravelService.loadHistoryPoint(history);
-        const element = this.viewModelStore.get(history.collectionString, history.modelId);
+        const element = this.viewModelStore.get(history.collection, history.modelId);
         if (element && isDetailNavigable(element)) {
             this.router.navigate([element.getDetailStateURL()]);
         } else {

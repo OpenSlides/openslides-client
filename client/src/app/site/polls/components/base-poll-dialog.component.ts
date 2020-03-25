@@ -1,7 +1,6 @@
 import { FormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 
-
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { VOTE_UNDOCUMENTED } from 'app/shared/models/poll/base-poll';
 import { OneOfValidator } from 'app/shared/validators/one-of-validator';

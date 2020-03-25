@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { BehaviorSubject, Subscription } from 'rxjs';
 
-import { CollectionStringMapperService } from 'app/core/core-services/collection-string-mapper.service';
+import { CollectionMapperService } from 'app/core/core-services/collection-mapper.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
@@ -146,7 +146,7 @@ export class ListOfSpeakersComponent extends BaseComponent implements OnInit {
         private currentListOfSpeakersService: CurrentListOfSpeakersService,
         private durationService: DurationService,
         private userRepository: UserRepositoryService,
-        private collectionStringMapper: CollectionStringMapperService,
+        private collectionMapper: CollectionMapperService,
         private currentListOfSpeakersSlideService: CurrentListOfSpeakersSlideService,
         private config: OrganisationSettingsService
     ) {
@@ -286,7 +286,7 @@ export class ListOfSpeakersComponent extends BaseComponent implements OnInit {
      * E.g. if a motion is the current content object, "Motion" will be the returned value.
      */
     public getContentObjectProjectorButtonText(): string {
-        const verboseName = this.collectionStringMapper
+        const verboseName = this.collectionMapper
             .getRepository(this.viewListOfSpeakers.listOfSpeakers.content_object.collection)
             .getVerboseName();
         return verboseName;

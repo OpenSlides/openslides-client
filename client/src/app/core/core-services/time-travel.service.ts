@@ -4,7 +4,7 @@ import { environment } from 'environments/environment';
 
 import { BaseModel } from 'app/shared/models/base/base-model';
 import { History } from 'app/shared/models/core/history';
-import { CollectionStringMapperService } from './collection-string-mapper.service';
+import { CollectionMapperService } from './collection-mapper.service';
 import { DataStoreService, DataStoreUpdateManagerService } from './data-store.service';
 import { HttpService } from './http.service';
 import { OpenSlidesStatusService } from './openslides-status.service';
@@ -37,7 +37,7 @@ export class TimeTravelService {
      */
     public constructor(
         private httpService: HttpService,
-        private modelMapperService: CollectionStringMapperService,
+        private modelMapperService: CollectionMapperService,
         private DS: DataStoreService,
         private OSStatus: OpenSlidesStatusService,
         private OpenSlides: OpenSlidesService,

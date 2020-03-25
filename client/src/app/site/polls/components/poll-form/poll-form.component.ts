@@ -24,15 +24,13 @@ import {
 } from 'app/site/polls/models/view-base-poll';
 import { ViewGroup } from 'app/site/users/models/view-group';
 import { PollService } from '../../services/poll.service';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 
 @Component({
     selector: 'os-poll-form',
     templateUrl: './poll-form.component.html',
     styleUrls: ['./poll-form.component.scss']
 })
-export class PollFormComponent<T extends ViewBasePoll, S extends PollService> extends BaseComponent
-    implements OnInit {
+export class PollFormComponent<T extends ViewBasePoll, S extends PollService> extends BaseComponent implements OnInit {
     /**
      * The form-group for the meta-info.
      */

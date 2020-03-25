@@ -13,7 +13,7 @@ export interface ListOfSpeakersWithoutNestedModels extends BaseModelWithContentO
  * @ignore
  */
 export class ListOfSpeakers extends BaseModelWithContentObject<ListOfSpeakers> {
-    public static COLLECTIONSTRING = 'agenda/list-of-speakers';
+    public static COLLECTION = 'agenda/list-of-speakers';
 
     public id: number;
     public title_information: object;
@@ -22,7 +22,7 @@ export class ListOfSpeakers extends BaseModelWithContentObject<ListOfSpeakers> {
     public content_object: ContentObject;
 
     public constructor(input?: any) {
-        super(ListOfSpeakers.COLLECTIONSTRING, input);
+        super(ListOfSpeakers.COLLECTION, input);
     }
 }
 

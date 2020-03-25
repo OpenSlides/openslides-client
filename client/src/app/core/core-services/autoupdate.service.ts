@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 
+import { autoupdateFormatToModelData, AutoupdateModelData } from './autoupdate-helpers';
 import { BaseModel } from '../../shared/models/base/base-model';
-import { CollectionStringMapperService } from './collection-string-mapper.service';
+import { CollectionMapperService } from './collection-mapper.service';
 import { DataStoreService, DataStoreUpdateManagerService } from './data-store.service';
 import { HTTPMethod } from './http.service';
 import { StreamingCommunicationService } from './streaming-communication.service';
@@ -35,12 +36,6 @@ interface StructuredFieldDecriptor {
     };
 }
 
-interface ModelData {
-    [collection: string]: {
-        [id: number]: object;
-    };
-}
-
 export interface ModelSubscription {
     close: () => void;
 }
@@ -69,7 +64,7 @@ export class AutoupdateService {
     public constructor(
         private streamingCommunicationService: StreamingCommunicationService,
         private DS: DataStoreService,
-        private modelMapper: CollectionStringMapperService,
+        private modelMapper: CollectionMapperService,
         private DSUpdateManager: DataStoreUpdateManagerService
     ) {
         /*this.websocketService.getOberservable<AutoupdateFormat>('autoupdate').subscribe(response => {
@@ -79,19 +74,24 @@ export class AutoupdateService {
     }
 
     public request(request: ModelRequest): ModelSubscription {
-        const stream = this.streamingCommunicationService.getStream<ModelData>(HTTPMethod.POST, '/todo', request);
+        const stream = this.streamingCommunicationService.getStream<AutoupdateModelData>(
+            HTTPMethod.POST,
+            '/todo',
+            request
+        );
         stream.messageObservable.subscribe(data => this.handleAutoupdate(data));
         return { close: stream.close };
     }
 
     // Todo: change this to private
-    public handleAutoupdate(data: ModelData): void {
+    public handleAutoupdate(autoupdateData: AutoupdateModelData): void {
+        const modelData = autoupdateFormatToModelData(autoupdateData);
         const deletedModels: DeletedModels = {};
         const changedModels: ChangedModels = {};
 
-        for (const collection of Object.keys(data)) {
-            for (const id of Object.keys(data[collection])) {
-                const model = data[collection][id];
+        for (const collection of Object.keys(modelData)) {
+            for (const id of Object.keys(modelData[collection])) {
+                const model = modelData[collection][id];
                 if (model[META_DELETED] === true) {
                     if (deletedModels[collection] === undefined) {
                         deletedModels[collection] = [];
@@ -101,7 +101,6 @@ export class AutoupdateService {
                     if (changedModels[collection] === undefined) {
                         changedModels[collection] = [];
                     }
-                    model.id = id; // inject id, because it does not come from the server
                     const basemodel = this.mapObjectToBaseModel(collection, model);
                     if (basemodel) {
                         changedModels[collection].push(basemodel);

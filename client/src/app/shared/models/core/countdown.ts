@@ -5,7 +5,7 @@ import { BaseModel } from '../base/base-model';
  * @ignore
  */
 export class Countdown extends BaseModel<Countdown> {
-    public static COLLECTIONSTRING = 'core/countdown';
+    public static COLLECTION = 'core/countdown';
 
     public id: number;
     public description?: string;
@@ -15,6 +15,6 @@ export class Countdown extends BaseModel<Countdown> {
     public running: boolean;
 
     public constructor(input?: any) {
-        super(Countdown.COLLECTIONSTRING, input);
+        super(Countdown.COLLECTION, input);
     }
 }

@@ -5,7 +5,7 @@ import { BaseModel } from '../base/base-model';
  * @ignore
  */
 export class MotionChangeRecommendation extends BaseModel<MotionChangeRecommendation> {
-    public static COLLECTIONSTRING = 'motions/motion-change-recommendation';
+    public static COLLECTION = 'motions/motion-change-recommendation';
 
     public id: number;
     public motion_id: number;
@@ -19,6 +19,6 @@ export class MotionChangeRecommendation extends BaseModel<MotionChangeRecommenda
     public creation_time: string;
 
     public constructor(input?: any) {
-        super(MotionChangeRecommendation.COLLECTIONSTRING, input);
+        super(MotionChangeRecommendation.COLLECTION, input);
     }
 }
