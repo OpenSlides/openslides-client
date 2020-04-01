@@ -5,7 +5,7 @@ import { BaseModelWithAgendaItemAndListOfSpeakers } from '../base/base-model-wit
  * @ignore
  */
 export class Topic extends BaseModelWithAgendaItemAndListOfSpeakers<Topic> {
-    public static COLLECTION = 'topics/topic';
+    public static COLLECTION = 'topic';
 
     public id: number;
     public title: string;

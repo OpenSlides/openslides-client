@@ -4,13 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { PblColumnDefinition } from '@pebula/ngrid';
 
-import { modelDataToAutoupdateFormat } from 'app/core/core-services/autoupdate-helpers';
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { StorageService } from 'app/core/core-services/storage.service';
-import { CategoryRepositoryService } from 'app/core/repositories/motions/category-repository.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
+import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
-import { WorkflowRepositoryService } from 'app/core/repositories/motions/workflow-repository.service';
+import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/motion-workflow-repository.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { OsFilterOptionCondition } from 'app/core/ui-services/base-filter-list.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -19,10 +17,10 @@ import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { infoDialogSettings, largeDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
-import { ViewCategory } from 'app/site/motions/models/view-category';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
-import { ViewWorkflow } from 'app/site/motions/models/view-workflow';
+import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
+import { ViewMotionWorkflow } from 'app/site/motions/models/view-motion-workflow';
 import { LocalPermissionsService } from 'app/site/motions/services/local-permissions.service';
 import { MotionExportInfo, MotionExportService } from 'app/site/motions/services/motion-export.service';
 import { MotionFilterListService } from 'app/site/motions/services/motion-filter-list.service';
@@ -152,8 +150,8 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
     public recommendationEnabled: boolean;
 
     public tags: ViewTag[] = [];
-    public workflows: ViewWorkflow[] = [];
-    public categories: ViewCategory[] = [];
+    public workflows: ViewMotionWorkflow[] = [];
+    public categories: ViewMotionCategory[] = [];
     public motionBlocks: ViewMotionBlock[] = [];
 
     /**
@@ -211,8 +209,8 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
         private organisationSettingsService: OrganisationSettingsService,
         private tagRepo: TagRepositoryService,
         private motionBlockRepo: MotionBlockRepositoryService,
-        private categoryRepo: CategoryRepositoryService,
-        private workflowRepo: WorkflowRepositoryService,
+        private categoryRepo: MotionCategoryRepositoryService,
+        private workflowRepo: MotionWorkflowRepositoryService,
         public motionRepo: MotionRepositoryService,
         private dialog: MatDialog,
         public multiselectService: MotionMultiselectService,
@@ -224,34 +222,6 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
     ) {
         super(componentServiceCollector);
         this.canMultiSelect = true;
-    }
-
-    public addInitial(): void {
-        const data = {
-            motion: {
-                2: {
-                    title: 'initial title',
-                    submitter_ids: [],
-                    identifier: 'A',
-                    attachments_id: []
-                }
-            }
-        };
-        console.log(modelDataToAutoupdateFormat);
-        console.log(modelDataToAutoupdateFormat(data));
-        this.autoupdateService.handleAutoupdate(modelDataToAutoupdateFormat(data));
-    }
-
-    public changeTitle(): void {
-        const title = Math.random().toString(36).substring(7);
-        const data = {
-            motion: {
-                2: {
-                    title
-                }
-            }
-        };
-        this.autoupdateService.handleAutoupdate(modelDataToAutoupdateFormat(data));
     }
 
     /**
@@ -326,7 +296,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
      * Filters thous without parent, sorts them by theit weight, maps them to TileInfo and publishes
      * the result
      */
-    private createCategoryTiles(categories: ViewCategory[]): void {
+    private createCategoryTiles(categories: ViewMotionCategory[]): void {
         this.categoryTiles = categories
             .filter(category => !category.parent_id && !!category.totalAmountOfMotions)
             .sort((a, b) => a.weight - b.weight)
@@ -350,7 +320,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
         let favoriteMotions = 0;
         let motionsWithNotes = 0;
         let motionsWithoutCategory = 0;
-        const localCategories = new Set<ViewCategory>();
+        const localCategories = new Set<ViewMotionCategory>();
 
         for (const motion of motions) {
             if (!motion.category) {

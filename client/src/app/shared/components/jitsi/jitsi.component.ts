@@ -363,10 +363,10 @@ export class JitsiComponent extends BaseComponent implements OnInit, OnDestroy {
                     distinctUntilChanged()
                 )
                 .subscribe(userLosIndex => this.autoJoinJitsiByLosIndex(userLosIndex))
-        );
+        );*/
     }
 
-    public toggleMute(): void {
+    /*public toggleMute(): void {
         if (this.isJitsiActive) {
             this.api.executeCommand('toggleAudio');
         }
@@ -594,5 +594,5 @@ export class JitsiComponent extends BaseComponent implements OnInit, OnDestroy {
 
     private setConferenceState(newState: ConferenceState): void {
         this.currentState = newState;
-    }
+    }*/
 }

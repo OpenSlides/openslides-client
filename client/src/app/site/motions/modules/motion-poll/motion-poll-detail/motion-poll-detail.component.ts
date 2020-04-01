@@ -60,7 +60,18 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
         cd: ChangeDetectorRef,
         private router: Router
     ) {
-        super(componentServiceCollector, repo, route, groupRepo, prompt, pollDialog, pollService, votesRepo, operator, cd);
+        super(
+            componentServiceCollector,
+            repo,
+            route,
+            groupRepo,
+            prompt,
+            pollDialog,
+            pollService,
+            votesRepo,
+            operator,
+            cd
+        );
         // TODO: Get this from the active meeting.
         // TODO: refactor this into the BasePollDetailComponent and also remove from assignment-poll-detail
         /*configService

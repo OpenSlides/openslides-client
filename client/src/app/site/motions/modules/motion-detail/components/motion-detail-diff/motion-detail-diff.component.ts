@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
-import { ChangeRecommendationRepositoryService } from 'app/core/repositories/motions/change-recommendation-repository.service';
+import { MotionChangeRecommendationRepositoryService } from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DiffService, LineRange } from 'app/core/ui-services/diff.service';
@@ -104,7 +104,7 @@ export class MotionDetailDiffComponent extends BaseComponent implements AfterVie
         componentServiceCollector: ComponentServiceCollector,
         private diff: DiffService,
         private lineNumbering: LinenumberingService,
-        private recoRepo: ChangeRecommendationRepositoryService,
+        private recoRepo: MotionChangeRecommendationRepositoryService,
         private motionRepo: MotionRepositoryService,
         private dialogService: MatDialog,
         private organisationSettingsService: OrganisationSettingsService,

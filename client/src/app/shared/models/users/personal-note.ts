@@ -49,7 +49,7 @@ export interface PersonalNoteObject {
  * @ignore
  */
 export class PersonalNote extends BaseModel<PersonalNote> implements PersonalNoteObject {
-    public static COLLECTION = 'users/personal-note';
+    public static COLLECTION = 'personal_note';
 
     public id: number;
     public user_id: number;

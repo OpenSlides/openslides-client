@@ -5,7 +5,7 @@ import { BaseModel } from '../base/base-model';
  * @ignore
  */
 export class MotionCommentSection extends BaseModel<MotionCommentSection> {
-    public static COLLECTION = 'motions/motion-comment-section';
+    public static COLLECTION = 'motion_comment_section';
 
     public id: number;
     public name: string;

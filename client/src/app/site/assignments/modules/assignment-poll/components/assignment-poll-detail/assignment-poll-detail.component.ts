@@ -23,10 +23,7 @@ import { AssignmentPollService } from '../../services/assignment-poll.service';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class AssignmentPollDetailComponent extends BasePollDetailComponent<
-    ViewAssignmentPoll,
-    AssignmentPollService
-> {
+export class AssignmentPollDetailComponent extends BasePollDetailComponent<ViewAssignmentPoll, AssignmentPollService> {
     public columnDefinitionSingleVotes: PblColumnDefinition[];
 
     public filterProps = ['user.getFullName'];
@@ -58,7 +55,18 @@ export class AssignmentPollDetailComponent extends BasePollDetailComponent<
         cd: ChangeDetectorRef,
         private router: Router
     ) {
-        super(componentServiceCollector, repo, route, groupRepo, prompt, pollDialog, pollService, votesRepo, operator, cd);
+        super(
+            componentServiceCollector,
+            repo,
+            route,
+            groupRepo,
+            prompt,
+            pollDialog,
+            pollService,
+            votesRepo,
+            operator,
+            cd
+        );
         // TODO: Get this from the active meeting.
         /*configService
             .get<boolean>('users_activate_vote_weight')

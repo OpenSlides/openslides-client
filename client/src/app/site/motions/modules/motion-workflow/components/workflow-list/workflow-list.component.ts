@@ -3,13 +3,13 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { PblColumnDefinition } from '@pebula/ngrid';
 
-import { WorkflowRepositoryService } from 'app/core/repositories/motions/workflow-repository.service';
+import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/motion-workflow-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
-import { Workflow } from 'app/shared/models/motions/workflow';
+import { MotionWorkflow } from 'app/shared/models/motions/motion-workflow';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
-import { ViewWorkflow } from 'app/site/motions/models/view-workflow';
+import { ViewMotionWorkflow } from 'app/site/motions/models/view-motion-workflow';
 
 /**
  * List view for workflows
@@ -19,7 +19,7 @@ import { ViewWorkflow } from 'app/site/motions/models/view-workflow';
     templateUrl: './workflow-list.component.html',
     styleUrls: ['./workflow-list.component.scss']
 })
-export class WorkflowListComponent extends BaseListViewComponent<ViewWorkflow> implements OnInit {
+export class WorkflowListComponent extends BaseListViewComponent<ViewMotionWorkflow> implements OnInit {
     /**
      * Holds the new workflow title
      */
@@ -56,7 +56,7 @@ export class WorkflowListComponent extends BaseListViewComponent<ViewWorkflow> i
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private dialog: MatDialog,
-        public workflowRepo: WorkflowRepositoryService,
+        public workflowRepo: MotionWorkflowRepositoryService,
         private promptService: PromptService
     ) {
         super(componentServiceCollector);
@@ -80,7 +80,7 @@ export class WorkflowListComponent extends BaseListViewComponent<ViewWorkflow> i
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.workflowRepo.create(new Workflow({ name: result })).then(() => {}, this.raiseError);
+                this.workflowRepo.create(new MotionWorkflow({ name: result })).then(() => {}, this.raiseError);
             }
         });
     }
@@ -90,7 +90,7 @@ export class WorkflowListComponent extends BaseListViewComponent<ViewWorkflow> i
      *
      * @param selected the selected workflow
      */
-    public async onDeleteWorkflow(selected: ViewWorkflow): Promise<void> {
+    public async onDeleteWorkflow(selected: ViewMotionWorkflow): Promise<void> {
         const title = this.translate.instant('Are you sure you want to delete this workflow?');
         const content = selected.getTitle();
         if (await this.promptService.open(title, content)) {

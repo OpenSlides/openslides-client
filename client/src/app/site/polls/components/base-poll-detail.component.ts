@@ -203,7 +203,7 @@ export abstract class BasePollDetailComponent<V extends ViewBasePoll, S extends 
      * This will be false if the operator does not have "can_see_extra_data"
      */
     protected userHasVoteDelegation(user: ViewUser): boolean {
-        throw new Error("TODO");
+        throw new Error('TODO');
         /*if (user.isVoteRightDelegated) {
             return true;
         } else if (this.operator.viewUser.canVoteFor(user)) {
@@ -217,7 +217,7 @@ export abstract class BasePollDetailComponent<V extends ViewBasePoll, S extends 
      * This will be false if the operator does not have "can_see_extra_data"
      */
     protected getUsersVoteDelegation(user: ViewUser): ViewUser | null {
-        throw new Error("TODO");
+        throw new Error('TODO');
         /*if (!!user.voteDelegatedTo) {
             return user.voteDelegatedTo;
         }

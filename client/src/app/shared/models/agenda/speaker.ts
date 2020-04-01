@@ -8,7 +8,7 @@ import { BaseModel } from '../base/base-model';
  * @ignore
  */
 export class Speaker extends BaseModel<Speaker> {
-    public static COLLECTION = 'agenda/speaker';
+    public static COLLECTION = 'speaker';
 
     public id: number;
     public user_id: number;

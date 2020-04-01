@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
 
+import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { AbstractPollData, BallotCountChoices, PollPdfService } from 'app/core/pdf-services/base-poll-pdf-service';
 import { PdfDocumentService } from 'app/core/pdf-services/pdf-document.service';
 import { AssignmentRepositoryService } from 'app/core/repositories/assignments/assignment-repository.service';
@@ -33,13 +34,14 @@ export class AssignmentPollPdfService extends PollPdfService {
      * @param pdfService the pdf document creation service
      */
     public constructor(
-        private translate: TranslateService,
-        private assignmentRepo: AssignmentRepositoryService,
         organisationSettingsService: OrganisationSettingsService,
         userRepo: UserRepositoryService,
+        activeMeetingService: ActiveMeetingService,
+        private translate: TranslateService,
+        private assignmentRepo: AssignmentRepositoryService,
         private pdfService: PdfDocumentService
     ) {
-        super(organisationSettingsService, userRepo);
+        super(organisationSettingsService, userRepo, activeMeetingService);
         this.organisationSettingsService
             .get<number>('assignments_pdf_ballot_papers_number')
             .subscribe(count => (this.ballotCustomCount = count));

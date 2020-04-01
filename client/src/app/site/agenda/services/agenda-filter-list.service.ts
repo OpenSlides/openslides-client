@@ -6,9 +6,9 @@ import { OpenSlidesStatusService } from 'app/core/core-services/openslides-statu
 import { StorageService } from 'app/core/core-services/storage.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { BaseFilterListService, OsFilter, OsFilterOption } from 'app/core/ui-services/base-filter-list.service';
-import { ItemVisibilityChoices } from 'app/shared/models/agenda/item';
+import { ItemVisibilityChoices } from 'app/shared/models/agenda/agenda-item';
 import { Motion } from 'app/shared/models/motions/motion';
-import { ViewItem } from '../models/view-item';
+import { ViewAgendaItem } from '../models/view-agenda-item';
 
 /**
  * Filter the agenda list
@@ -16,7 +16,7 @@ import { ViewItem } from '../models/view-item';
 @Injectable({
     providedIn: 'root'
 })
-export class AgendaFilterListService extends BaseFilterListService<ViewItem> {
+export class AgendaFilterListService extends BaseFilterListService<ViewAgendaItem> {
     /**
      * set the storage key name
      */
@@ -82,7 +82,7 @@ export class AgendaFilterListService extends BaseFilterListService<ViewItem> {
      *
      * @returns the list of ViewItems without the types
      */
-    protected preFilter(viewItems: ViewItem[]): ViewItem[] {
+    protected preFilter(viewItems: ViewAgendaItem[]): ViewAgendaItem[] {
         return viewItems.filter(item => item.type !== undefined);
     }
 

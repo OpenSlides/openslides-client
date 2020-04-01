@@ -63,7 +63,7 @@ export class PollCollectionComponent extends BaseComponent implements OnInit {
         componentServiceCollector: ComponentServiceCollector,
         private pollService: PollListObservableService,
         private cd: ChangeDetectorRef,
-        private operator: OperatorService,
+        private operator: OperatorService
     ) {
         super(componentServiceCollector);
     }

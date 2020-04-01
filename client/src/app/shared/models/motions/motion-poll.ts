@@ -11,7 +11,7 @@ export enum MotionPollMethod {
  * Class representing a poll for a motion.
  */
 export class MotionPoll extends BasePoll<MotionPoll, MotionOption, MotionPollMethod, PercentBase> {
-    public static COLLECTION = 'motions/motion-poll';
+    public static COLLECTION = 'motion_poll';
     public static defaultGroupsConfig = 'motion_poll_default_groups';
     public static DECIMAL_FIELDS = ['votesvalid', 'votesinvalid', 'votescast'];
 

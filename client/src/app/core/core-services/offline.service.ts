@@ -59,10 +59,10 @@ export class OfflineService {
                 online = await this.communicationManager.isCommunicationServiceOnline();
                 console.log('is communication online? ', online);
             } else if (this.reason === OfflineReason.WhoAmIFailed) {
-                const result = await this.operatorService.whoAmI();
+                /*const result = await this.operatorService.whoAmI();
                 online = result.online;
                 whoami = result.whoami;
-                console.log('is whoami reachable?', online);
+                console.log('is whoami reachable?', online);*/
             }
 
             if (online) {
@@ -90,7 +90,7 @@ export class OfflineService {
      * 2) enable communications.
      */
     private async goOnline(whoami?: WhoAmI): Promise<void> {
-        console.log('go online!', this.reason, whoami);
+        /*console.log('go online!', this.reason, whoami);
         if (this.reason === OfflineReason.ConnectionLost) {
             // now we have to check whoami
             const result = await this.operatorService.whoAmI();
@@ -120,6 +120,6 @@ export class OfflineService {
         }
         console.log('done');
 
-        this.offlineBroadcastService.isOfflineSubject.next(false);
+        this.offlineBroadcastService.isOfflineSubject.next(false);*/
     }
 }

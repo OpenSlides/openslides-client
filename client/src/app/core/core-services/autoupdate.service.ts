@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 
-import { autoupdateFormatToModelData, AutoupdateModelData } from './autoupdate-helpers';
+import { autoupdateFormatToModelData, AutoupdateModelData, ModelData } from './autoupdate-helpers';
 import { BaseModel } from '../../shared/models/base/base-model';
 import { CollectionMapperService } from './collection-mapper.service';
 import { DataStoreService, DataStoreUpdateManagerService } from './data-store.service';
+import { HTTPMethod } from '../definitions/http-methods';
 import { Mutex } from '../promises/mutex';
 import { StreamingCommunicationService } from './streaming-communication.service';
-import { HTTPMethod } from '../definitions/http-methods';
 
 const META_DELETED = 'meta_deleted';
 
@@ -80,15 +80,19 @@ export class AutoupdateService {
             '/todo',
             request
         );
-        stream.messageObservable.subscribe(data => this.handleAutoupdate(data));
+        stream.messageObservable.subscribe(data => this.handleAutoupdateWithStupidFormat(data));
         return { close: stream.close };
     }
 
-    // Todo: change this to private
-    public async handleAutoupdate(autoupdateData: AutoupdateModelData): Promise<void> {
+    private async handleAutoupdateWithStupidFormat(autoupdateData: AutoupdateModelData): Promise<void> {
+        const modelData = autoupdateFormatToModelData(autoupdateData);
+        await this.handleAutoupdate(modelData);
+    }
+
+    // Todo: change this to private. needed for testing to insert example data
+    public async handleAutoupdate(modelData: ModelData): Promise<void> {
         const unlock = await this.mutex.lock();
 
-        const modelData = autoupdateFormatToModelData(autoupdateData);
         const deletedModels: DeletedModels = {};
         const changedModels: ChangedModels = {};
 

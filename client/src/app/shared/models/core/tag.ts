@@ -5,7 +5,7 @@ import { BaseModel } from '../base/base-model';
  * @ignore
  */
 export class Tag extends BaseModel<Tag> {
-    public static COLLECTION = 'core/tag';
+    public static COLLECTION = 'tag';
 
     public id: number;
     public name: string;

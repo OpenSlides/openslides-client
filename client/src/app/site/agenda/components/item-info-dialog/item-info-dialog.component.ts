@@ -4,10 +4,10 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { DurationService } from 'app/core/ui-services/duration.service';
-import { ItemVisibilityChoices } from 'app/shared/models/agenda/item';
+import { ItemVisibilityChoices } from 'app/shared/models/agenda/agenda-item';
 import { durationValidator } from 'app/shared/validators/custom-validators';
 import { ViewTag } from 'app/site/tags/models/view-tag';
-import { ViewItem } from '../../models/view-item';
+import { ViewAgendaItem } from '../../models/view-agenda-item';
 
 /**
  * Dialog component to change agenda item details
@@ -43,7 +43,7 @@ export class ItemInfoDialogComponent implements OnInit {
         public durationService: DurationService,
         public dialogRef: MatDialogRef<ItemInfoDialogComponent>,
         public tagRepo: TagRepositoryService,
-        @Inject(MAT_DIALOG_DATA) public item: ViewItem
+        @Inject(MAT_DIALOG_DATA) public item: ViewAgendaItem
     ) {
         this.agendaInfoForm = this.formBuilder.group({
             tags_id: [],

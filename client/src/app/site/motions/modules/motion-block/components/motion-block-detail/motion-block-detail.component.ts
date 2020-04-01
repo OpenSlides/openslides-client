@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PblColumnDefinition } from '@pebula/ngrid';
 
 import { Permission } from 'app/core/core-services/operator.service';
-import { ItemRepositoryService } from 'app/core/repositories/agenda/item-repository.service';
+import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -118,7 +118,7 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
         private promptService: PromptService,
         private formBuilder: FormBuilder,
         private dialog: MatDialog,
-        private itemRepo: ItemRepositoryService,
+        private itemRepo: AgendaItemRepositoryService,
         public filterService: BlockDetailFilterListService,
         public vp: ViewportService
     ) {

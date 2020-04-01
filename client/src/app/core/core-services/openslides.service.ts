@@ -3,10 +3,7 @@ import { Router } from '@angular/router';
 
 import { BehaviorSubject } from 'rxjs';
 
-<<<<<<< HEAD
 import { CommunicationManagerService } from './communication-manager.service';
-=======
->>>>>>> 12450e1c5 (Refactoring. Making the client OS4 ready:)
 import { DataStoreService } from './data-store.service';
 import { OfflineBroadcastService, OfflineReason } from './offline-broadcast.service';
 import { OperatorService, WhoAmI } from './operator.service';
@@ -41,7 +38,8 @@ export class OpenSlidesService {
         private storageService: StorageService,
         private operator: OperatorService,
         private router: Router,
-        private DS: DataStoreService
+        private DS: DataStoreService,
+        private offlineBroadcastService: OfflineBroadcastService
     ) {
         // Handler that gets called, if the websocket connection reconnects after a disconnection.
         // There might have changed something on the server, so we check the operator, if he changed.
@@ -163,13 +161,13 @@ export class OpenSlidesService {
         await this.bootup();
     }
 
-    public async checkOperator(requestChanges: boolean = true): Promise<void> {
+    /*public async checkOperator(requestChanges: boolean = true): Promise<void> {
         const response = await this.operator.whoAmI();
         if (!response.online) {
             this.offlineBroadcastService.goOffline(OfflineReason.WhoAmIFailed);
         }
         await this.checkWhoAmI(response.whoami, requestChanges);
-    }
+    }*/
 
     /**
      * Verify that the operator is the same as it was before. Should be alled on a reconnect.

@@ -2,7 +2,7 @@ import { Component, Inject, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { ChangeRecommendationRepositoryService } from 'app/core/repositories/motions/change-recommendation-repository.service';
+import { MotionChangeRecommendationRepositoryService } from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ModificationType } from 'app/core/ui-services/diff.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
@@ -65,7 +65,7 @@ export class MotionTitleChangeRecommendationDialogComponent extends BaseComponen
         componentServiceCollector: ComponentServiceCollector,
         @Inject(MAT_DIALOG_DATA) public data: MotionTitleChangeRecommendationDialogComponentData,
         private formBuilder: FormBuilder,
-        private repo: ChangeRecommendationRepositoryService,
+        private repo: MotionChangeRecommendationRepositoryService,
         private dialogRef: MatDialogRef<MotionTitleChangeRecommendationDialogComponent>
     ) {
         super(componentServiceCollector);

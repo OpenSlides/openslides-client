@@ -4,9 +4,9 @@ import { map } from 'rxjs/operators';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
-import { PollClassType, ViewBasePoll } from 'app/site/polls/models/view-base-poll';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { PollClassType, ViewBasePoll } from 'app/site/polls/models/view-base-poll';
 
 @Component({
     selector: 'os-poll-progress',
@@ -32,7 +32,11 @@ export class PollProgressComponent extends BaseComponent implements OnInit {
         return canManage && this.operator.hasPerms(this.permission.usersCanSeeName);
     }
 
-    public constructor(componentServiceCollector: ComponentServiceCollector, private userRepo: UserRepositoryService, private operator: OperatorService) {
+    public constructor(
+        componentServiceCollector: ComponentServiceCollector,
+        private userRepo: UserRepositoryService,
+        private operator: OperatorService
+    ) {
         super(componentServiceCollector);
     }
 
@@ -53,7 +57,7 @@ export class PollProgressComponent extends BaseComponent implements OnInit {
                                 user =>
                                     ((user.is_present && !user.isVoteRightDelegated) ||
                                         user.voteDelegatedTo?.is_present) &&
-                                    this.poll.groups_id.intersect(user.groups_id).length
+                                    this.poll.groups_id.intersect(user.group_ids(1)).length // TODO
                             )
                         )
                     )
