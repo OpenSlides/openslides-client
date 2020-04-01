@@ -18,13 +18,13 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 import { NotifyService } from 'app/core/core-services/notify.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { ItemRepositoryService } from 'app/core/repositories/agenda/item-repository.service';
-import { CategoryRepositoryService } from 'app/core/repositories/motions/category-repository.service';
-import { ChangeRecommendationRepositoryService } from 'app/core/repositories/motions/change-recommendation-repository.service';
+import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
+import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
+import { MotionChangeRecommendationRepositoryService } from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
 import { MotionRepositoryService, ParagraphToChoose } from 'app/core/repositories/motions/motion-repository.service';
-import { StatuteParagraphRepositoryService } from 'app/core/repositories/motions/statute-paragraph-repository.service';
-import { WorkflowRepositoryService } from 'app/core/repositories/motions/workflow-repository.service';
+import { MotionStatuteParagraphRepositoryService } from 'app/core/repositories/motions/motion-statute-paragraph-repository.service';
+import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/motion-workflow-repository.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -40,14 +40,14 @@ import { ViewUnifiedChange } from 'app/shared/models/motions/view-unified-change
 import { infoDialogSettings, mediumDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { CreateMotion } from 'app/site/motions/models/create-motion';
-import { ViewCategory } from 'app/site/motions/models/view-category';
 import { ViewCreateMotion } from 'app/site/motions/models/view-create-motion';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
+import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
 import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
 import { ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
-import { ViewStatuteParagraph } from 'app/site/motions/models/view-statute-paragraph';
-import { ViewWorkflow } from 'app/site/motions/models/view-workflow';
+import { ViewMotionStatuteParagraph } from 'app/site/motions/models/view-motion-statute-paragraph';
+import { ViewMotionWorkflow } from 'app/site/motions/models/view-motion-workflow';
 import { MotionEditNotification } from 'app/site/motions/motion-edit-notification';
 import {
     ChangeRecoMode,
@@ -246,17 +246,17 @@ export class MotionDetailComponent extends BaseComponent implements OnInit, OnDe
     /**
      * statute paragraphs, necessary for amendments
      */
-    public statuteParagraphs: ViewStatuteParagraph[] = [];
+    public statuteParagraphs: ViewMotionStatuteParagraph[] = [];
 
     /**
      * Subject for the Categories
      */
-    public categoryObserver: BehaviorSubject<ViewCategory[]>;
+    public categoryObserver: BehaviorSubject<ViewMotionCategory[]>;
 
     /**
      * Subject for the Categories
      */
-    public workflowObserver: BehaviorSubject<ViewWorkflow[]>;
+    public workflowObserver: BehaviorSubject<ViewMotionWorkflow[]>;
 
     /**
      * Subject for the Submitters
@@ -424,20 +424,20 @@ export class MotionDetailComponent extends BaseComponent implements OnInit, OnDe
         private dialogService: MatDialog,
         private el: ElementRef,
         public repo: MotionRepositoryService,
-        private changeRecoRepo: ChangeRecommendationRepositoryService,
-        private statuteRepo: StatuteParagraphRepositoryService,
+        private changeRecoRepo: MotionChangeRecommendationRepositoryService,
+        private statuteRepo: MotionStatuteParagraphRepositoryService,
         private organisationSettingsService: OrganisationSettingsService,
         private promptService: PromptService,
         private pdfExport: MotionPdfExportService,
         private personalNoteService: PersonalNoteService,
         private linenumberingService: LinenumberingService,
-        private categoryRepo: CategoryRepositoryService,
+        private categoryRepo: MotionCategoryRepositoryService,
         private userRepo: UserRepositoryService,
         private notifyService: NotifyService,
         private tagRepo: TagRepositoryService,
-        private workflowRepo: WorkflowRepositoryService,
+        private workflowRepo: MotionWorkflowRepositoryService,
         private blockRepo: MotionBlockRepositoryService,
-        private itemRepo: ItemRepositoryService,
+        private itemRepo: AgendaItemRepositoryService,
         private motionSortService: MotionSortListService,
         private amendmentSortService: AmendmentSortListService,
         private motionFilterService: MotionFilterListService,

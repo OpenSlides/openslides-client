@@ -7,7 +7,7 @@ import { Papa } from 'ngx-papaparse';
 import { TopicRepositoryService } from 'app/core/repositories/topics/topic-repository.service';
 import { BaseImportService, NewEntry } from 'app/core/ui-services/base-import.service';
 import { DurationService } from 'app/core/ui-services/duration.service';
-import { ItemVisibilityChoices } from 'app/shared/models/agenda/item';
+import { ItemVisibilityChoices } from 'app/shared/models/agenda/agenda-item';
 import { CreateTopic } from '../models/create-topic';
 
 @Injectable({

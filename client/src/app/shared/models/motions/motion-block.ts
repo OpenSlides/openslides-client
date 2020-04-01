@@ -5,7 +5,7 @@ import { BaseModelWithAgendaItemAndListOfSpeakers } from '../base/base-model-wit
  * @ignore
  */
 export class MotionBlock extends BaseModelWithAgendaItemAndListOfSpeakers<MotionBlock> {
-    public static COLLECTION = 'motions/motion-block';
+    public static COLLECTION = 'motion_block';
 
     public id: number;
     public title: string;

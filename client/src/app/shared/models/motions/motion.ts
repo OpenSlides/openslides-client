@@ -1,5 +1,5 @@
 import { BaseModelWithAgendaItemAndListOfSpeakers } from '../base/base-model-with-agenda-item-and-list-of-speakers';
-import { Submitter } from './submitter';
+import { MotionSubmitter } from './motion-submitter';
 
 export interface MotionComment {
     id: number;
@@ -52,7 +52,7 @@ export class Motion extends BaseModelWithAgendaItemAndListOfSpeakers<Motion> {
     public static COLLECTION = 'motion';
 
     public id: number;
-    public submitters: Submitter[];
+    public submitters: MotionSubmitter[];
 
     public constructor(input?: any) {
         super(Motion.COLLECTION, input);
@@ -63,10 +63,10 @@ export class Motion extends BaseModelWithAgendaItemAndListOfSpeakers<Motion> {
      */
     public get sorted_submitter_ids(): number[] {
         return this.submitters
-            .sort((a: Submitter, b: Submitter) => {
+            .sort((a: MotionSubmitter, b: MotionSubmitter) => {
                 return a.weight - b.weight;
             })
-            .map((submitter: Submitter) => submitter.user_id);
+            .map((submitter: MotionSubmitter) => submitter.user_id);
     }
 }
 

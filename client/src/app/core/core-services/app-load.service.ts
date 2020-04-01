@@ -1,32 +1,32 @@
 import { Injectable, Injector } from '@angular/core';
 
-import { AgendaAppConfig } from '../../site/agenda/agenda.config';
 import { AppConfig, ModelEntry, SearchableModelEntry } from '../definitions/app-config';
 import { BaseRepository } from 'app/core/repositories/base-repository';
+import { AgendaAppConfig } from 'app/site/agenda/agenda.config';
+import { AssignmentsAppConfig } from 'app/site/assignments/assignments.config';
+import { isSearchable } from 'app/site/base/searchable';
+import { CommonAppConfig } from 'app/site/common/common.config';
+import { EventManagementAppConfig } from 'app/site/event-management/event-management.config';
 import { HistoryAppConfig } from 'app/site/history/history.config';
+import { MediafileAppConfig } from 'app/site/mediafiles/mediafile.config';
+import { MotionsAppConfig } from 'app/site/motions/motions.config';
 import { ProjectorAppConfig } from 'app/site/projector/projector.config';
-import { SettingsAppConfig } from 'app/site/settings/settings.config';
+import { TagAppConfig } from 'app/site/tags/tag.config';
 import { TopicsAppConfig } from 'app/site/topics/topics.config';
-import { AssignmentsAppConfig } from '../../site/assignments/assignments.config';
+import { UsersAppConfig } from 'app/site/users/users.config';
 import { CollectionMapperService } from './collection-mapper.service';
-import { CommonAppConfig } from '../../site/common/common.config';
 import { ServicesToLoadOnAppsLoaded } from '../core.module';
 import { FallbackRoutesService } from './fallback-routes.service';
 import { MainMenuService } from './main-menu.service';
-import { MediafileAppConfig } from '../../site/mediafiles/mediafile.config';
-import { MotionsAppConfig } from '../../site/motions/motions.config';
 import { OnAfterAppsLoaded } from '../definitions/on-after-apps-loaded';
 import { SearchService } from '../ui-services/search.service';
-import { isSearchable } from '../../site/base/searchable';
-import { TagAppConfig } from '../../site/tags/tag.config';
-import { UsersAppConfig } from '../../site/users/users.config';
 
 /**
  * A list of all app configurations of all delivered apps.
  */
 const appConfigs: AppConfig[] = [
     CommonAppConfig,
-    SettingsAppConfig,
+    EventManagementAppConfig,
     AgendaAppConfig,
     AssignmentsAppConfig,
     MotionsAppConfig,

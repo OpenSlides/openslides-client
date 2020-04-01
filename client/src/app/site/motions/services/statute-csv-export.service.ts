@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { CsvColumnDefinitionProperty, CsvExportService } from 'app/core/ui-services/csv-export.service';
-import { ViewStatuteParagraph } from '../models/view-statute-paragraph';
+import { ViewMotionStatuteParagraph } from '../models/view-motion-statute-paragraph';
 
 /**
  * Exports CSVs for statute paragraphs.
@@ -25,8 +25,8 @@ export class StatuteCsvExportService {
      *
      * @param statute statute PParagraphs to export
      */
-    public exportStatutes(statutes: ViewStatuteParagraph[]): void {
-        const exportProperties: CsvColumnDefinitionProperty<ViewStatuteParagraph>[] = [
+    public exportStatutes(statutes: ViewMotionStatuteParagraph[]): void {
+        const exportProperties: CsvColumnDefinitionProperty<ViewMotionStatuteParagraph>[] = [
             { property: 'title' },
             { property: 'text' }
         ];

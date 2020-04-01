@@ -2,6 +2,7 @@ import { Component, Input, OnDestroy } from '@angular/core';
 
 import { Subscription } from 'rxjs';
 
+import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { MotionPollRepositoryService } from 'app/core/repositories/motions/motion-poll-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -45,7 +46,8 @@ export class PollProgressComponent extends BaseComponent implements OnDestroy {
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private userRepo: UserRepositoryService,
-        private pollRepo: MotionPollRepositoryService
+        private pollRepo: MotionPollRepositoryService,
+        private activeMeetingService: ActiveMeetingService
     ) {
         super(componentServiceCollector);
         this.userRepo.getViewModelListObservable().subscribe(users => {
@@ -91,7 +93,11 @@ export class PollProgressComponent extends BaseComponent implements OnDestroy {
             allUsers = this.userRepo.getViewModelList();
         }
 
-        allUsers = allUsers.filter(user => user.is_present && this.poll.groups_id.intersect(user.groups_id).length);
+        allUsers = allUsers.filter(
+            user =>
+                user.is_present &&
+                this.poll.groups_id.intersect(user.group_ids(this.activeMeetingService.getMeetingId())).length
+        );
 
         this.max = allUsers.length;
         this.valueInPercent = this.poll ? (this.votescast / this.max) * 100 : 0;

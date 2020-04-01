@@ -15,7 +15,7 @@ export type UserAuthType = 'default' | 'saml';
  * @ignore
  */
 export class User extends BaseDecimalModel<User> {
-    public static COLLECTION = 'users/user';
+    public static COLLECTION = 'user';
 
     public id: number;
     public username: string;
@@ -26,7 +26,7 @@ export class User extends BaseDecimalModel<User> {
     public structure_level: string;
     public number: string;
     public about_me: string;
-    public groups_id: number[];
+    // public group_ids: number[];
     public is_present: boolean;
     public is_committee: boolean;
     public email?: string;
@@ -47,5 +47,9 @@ export class User extends BaseDecimalModel<User> {
 
     protected getDecimalFields(): string[] {
         return ['vote_weight'];
+    }
+
+    public group_ids(meeting_id: number): number[] {
+        return this[`group_${meeting_id}_ids`];
     }
 }

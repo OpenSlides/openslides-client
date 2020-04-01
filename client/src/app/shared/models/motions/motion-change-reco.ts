@@ -5,7 +5,7 @@ import { BaseModel } from '../base/base-model';
  * @ignore
  */
 export class MotionChangeRecommendation extends BaseModel<MotionChangeRecommendation> {
-    public static COLLECTION = 'motions/motion-change-recommendation';
+    public static COLLECTION = 'motion_change_recommendation';
 
     public id: number;
     public motion_id: number;

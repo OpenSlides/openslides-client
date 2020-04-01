@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { HttpService } from 'app/core/core-services/http.service';
-import { RelationDefinition } from 'app/core/definitions/relations';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Projector } from 'app/shared/models/core/projector';
 import { ProjectorTitleInformation, ViewProjector } from 'app/site/projector/models/view-projector';
@@ -16,15 +15,6 @@ export enum ScrollScaleDirection {
     Down = 'down',
     Reset = 'reset'
 }
-
-const ProjectorRelations: RelationDefinition[] = [
-    {
-        type: 'M2O',
-        ownIdKey: 'reference_projector_id',
-        ownKey: 'referenceProjector',
-        foreignViewModel: ViewProjector
-    }
-];
 
 /**
  * Manages all projector instances.
@@ -42,7 +32,7 @@ export class ProjectorRepositoryService extends BaseRepository<ViewProjector, Pr
      * @param http
      */
     public constructor(repositoryServiceCollector: RepositoryServiceCollector, private http: HttpService) {
-        super(repositoryServiceCollector, Projector, ProjectorRelations);
+        super(repositoryServiceCollector, Projector);
     }
 
     public getTitle = (titleInformation: ProjectorTitleInformation) => {

@@ -1,17 +1,16 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
-
-import { CategoryRepositoryService } from 'app/core/repositories/motions/category-repository.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
+import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { ViewCategory } from 'app/site/motions/models/view-category';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
+import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
 import { MotionExportInfo, MotionExportService } from 'app/site/motions/services/motion-export.service';
 import { MotionMultiselectService } from 'app/site/motions/services/motion-multiselect.service';
 import { ViewTag } from 'app/site/tags/models/view-tag';
@@ -43,7 +42,7 @@ export class MotionMultiselectActionsComponent extends BaseComponent implements 
     /**
      * The list of all categories.
      */
-    public categories: ViewCategory[] = [];
+    public categories: ViewMotionCategory[] = [];
 
     /**
      * The list of all tags.
@@ -67,7 +66,7 @@ export class MotionMultiselectActionsComponent extends BaseComponent implements 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         public multiselectService: MotionMultiselectService,
-        private categoryRepo: CategoryRepositoryService,
+        private categoryRepo: MotionCategoryRepositoryService,
         private motionBlockRepo: MotionBlockRepositoryService,
         private tagRepo: TagRepositoryService,
         private organisationSettingsService: OrganisationSettingsService,

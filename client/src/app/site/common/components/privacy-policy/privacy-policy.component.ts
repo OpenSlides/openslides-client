@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-
 import { OperatorService, Permission } from 'app/core/core-services/operator.service';
-import { ConfigRepositoryService } from 'app/core/repositories/config/config-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';
 
@@ -29,11 +27,7 @@ export class PrivacyPolicyComponent extends BaseComponent implements OnInit {
      * @param translate
      * @param configRepo
      */
-    public constructor(
-        componentServiceCollector: ComponentServiceCollector,
-        private configRepo: ConfigRepositoryService,
-        private operator: OperatorService
-    ) {
+    public constructor(componentServiceCollector: ComponentServiceCollector, private operator: OperatorService) {
         super(componentServiceCollector);
     }
 
@@ -45,9 +39,10 @@ export class PrivacyPolicyComponent extends BaseComponent implements OnInit {
      * Saves changes.
      */
     public saveChanges(): void {
-        this.configRepo
+        /*this.configRepo
             .bulkUpdate([{ key: 'general_event_privacy_policy', value: this.privacyProlicy }])
-            .then(() => (this.isEditing = !this.isEditing), this.raiseError);
+            .then(() => (this.isEditing = !this.isEditing), this.raiseError);*/
+        throw new Error('TODO');
     }
 
     /**
