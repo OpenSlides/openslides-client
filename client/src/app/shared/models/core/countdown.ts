@@ -5,7 +5,7 @@ import { BaseModel } from '../base/base-model';
  * @ignore
  */
 export class Countdown extends BaseModel<Countdown> {
-    public static COLLECTION = 'core/countdown';
+    public static COLLECTION = 'projector_countdown';
 
     public id: number;
     public description?: string;

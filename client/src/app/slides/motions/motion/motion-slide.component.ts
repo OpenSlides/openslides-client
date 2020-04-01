@@ -3,7 +3,7 @@ import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { SlideData } from 'app/core/core-services/projector-data.service';
-import { ChangeRecommendationRepositoryService } from 'app/core/repositories/motions/change-recommendation-repository.service';
+import { MotionChangeRecommendationRepositoryService } from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { DiffLinesInParagraph, DiffService, LineRange } from 'app/core/ui-services/diff.service';
 import { LineNumberedString, LinenumberingService } from 'app/core/ui-services/linenumbering.service';
@@ -137,7 +137,7 @@ export class MotionSlideComponent
     public constructor(
         translate: TranslateService,
         motionRepo: MotionRepositoryService,
-        private changeRepo: ChangeRecommendationRepositoryService,
+        private changeRepo: MotionChangeRecommendationRepositoryService,
         private lineNumbering: LinenumberingService,
         private diff: DiffService
     ) {

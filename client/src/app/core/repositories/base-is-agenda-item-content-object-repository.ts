@@ -1,4 +1,3 @@
-import { ViewItem } from 'app/site/agenda/models/view-item';
 import {
     AgendaListTitle,
     BaseViewModelWithAgendaItem,
@@ -6,7 +5,6 @@ import {
 } from 'app/site/base/base-view-model-with-agenda-item';
 import { BaseModel, ModelConstructor } from '../../shared/models/base/base-model';
 import { BaseRepository } from './base-repository';
-import { RelationDefinition } from '../definitions/relations';
 import { RepositoryServiceCollector } from './repository-service-collector';
 
 export function isBaseIsAgendaItemContentObjectRepository(
@@ -32,27 +30,12 @@ export interface IBaseIsAgendaItemContentObjectRepository<
  * The base repository for objects with an agenda item.
  */
 export abstract class BaseIsAgendaItemContentObjectRepository<
-        V extends BaseViewModelWithAgendaItem & T,
-        M extends BaseModel,
-        T extends TitleInformationWithAgendaItem
-    >
-    extends BaseRepository<V, M, T>
-    implements IBaseIsAgendaItemContentObjectRepository<V, M, T> {
-    public constructor(
-        repositoryServiceCollector: RepositoryServiceCollector,
-        baseModelCtor: ModelConstructor<M>,
-        relationDefinitions?: RelationDefinition[]
-    ) {
-        super(repositoryServiceCollector, baseModelCtor, relationDefinitions);
-    }
-
-    protected extendRelations(): void {
-        this.relationDefinitions.push({
-            type: 'M2O',
-            ownIdKey: 'agenda_item_id',
-            ownKey: 'item',
-            foreignViewModel: ViewItem
-        });
+    V extends BaseViewModelWithAgendaItem & T,
+    M extends BaseModel,
+    T extends TitleInformationWithAgendaItem
+> extends BaseRepository<V, M, T> implements IBaseIsAgendaItemContentObjectRepository<V, M, T> {
+    public constructor(repositoryServiceCollector: RepositoryServiceCollector, baseModelCtor: ModelConstructor<M>) {
+        super(repositoryServiceCollector, baseModelCtor);
     }
 
     /**
@@ -76,8 +59,8 @@ export abstract class BaseIsAgendaItemContentObjectRepository<
     /**
      * Adds the agenda titles to the viewmodel.
      */
-    protected createViewModelWithTitles(model: M): V {
-        const viewModel = super.createViewModelWithTitles(model);
+    protected createViewModel(model: M): V {
+        const viewModel = super.createViewModel(model);
         viewModel.getAgendaListTitle = () => this.getAgendaListTitle(viewModel);
         viewModel.getAgendaSlideTitle = () => this.getAgendaSlideTitle(viewModel);
         return viewModel;

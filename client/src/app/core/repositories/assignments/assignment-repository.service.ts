@@ -1,62 +1,11 @@
 import { Injectable } from '@angular/core';
 
 import { HttpService } from 'app/core/core-services/http.service';
-import { RelationDefinition } from 'app/core/definitions/relations';
 import { Assignment } from 'app/shared/models/assignments/assignment';
-import { AssignmentRelatedUser } from 'app/shared/models/assignments/assignment-related-user';
 import { AssignmentTitleInformation, ViewAssignment } from 'app/site/assignments/models/view-assignment';
-import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
-import { ViewAssignmentRelatedUser } from 'app/site/assignments/models/view-assignment-related-user';
-import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
-import { ViewTag } from 'app/site/tags/models/view-tag';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { BaseIsAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-is-agenda-item-and-list-of-speakers-content-object-repository';
-import { NestedModelDescriptors } from '../base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
-
-const AssignmentRelations: RelationDefinition[] = [
-    {
-        type: 'M2M',
-        ownIdKey: 'tags_id',
-        ownKey: 'tags',
-        foreignViewModel: ViewTag
-    },
-    {
-        type: 'M2M',
-        ownIdKey: 'attachments_id',
-        ownKey: 'attachments',
-        foreignViewModel: ViewMediafile
-    },
-    {
-        type: 'O2M',
-        ownKey: 'polls',
-        foreignIdKey: 'assignment_id',
-        foreignViewModel: ViewAssignmentPoll
-    }
-];
-
-const AssignmentNestedModelDescriptors: NestedModelDescriptors = {
-    'assignments/assignment': [
-        {
-            ownKey: 'assignment_related_users',
-            foreignViewModel: ViewAssignmentRelatedUser,
-            foreignModel: AssignmentRelatedUser,
-            order: 'weight',
-            relationDefinitionsByKey: {
-                user: {
-                    type: 'M2O',
-                    ownIdKey: 'user_id',
-                    ownKey: 'user',
-                    foreignViewModel: ViewUser
-                }
-            },
-            titles: {
-                getTitle: (viewAssignmentRelatedUser: ViewAssignmentRelatedUser) =>
-                    viewAssignmentRelatedUser.user ? viewAssignmentRelatedUser.user.getFullName() : ''
-            }
-        }
-    ]
-};
 
 /**
  * Repository Service for Assignments.
@@ -86,7 +35,7 @@ export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeake
      * @param httpService make HTTP Requests
      */
     public constructor(repositoryServiceCollector: RepositoryServiceCollector, private httpService: HttpService) {
-        super(repositoryServiceCollector, Assignment, AssignmentRelations, AssignmentNestedModelDescriptors);
+        super(repositoryServiceCollector, Assignment);
     }
 
     public getTitle = (titleInformation: AssignmentTitleInformation) => {

@@ -7,15 +7,15 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { StateRepositoryService } from 'app/core/repositories/motions/state-repository.service';
-import { WorkflowRepositoryService } from 'app/core/repositories/motions/workflow-repository.service';
+import { MotionStateRepositoryService } from 'app/core/repositories/motions/motion-state-repository.service';
+import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/motion-workflow-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
-import { MergeAmendment, Restriction, State } from 'app/shared/models/motions/state';
+import { MergeAmendment, MotionState, Restriction } from 'app/shared/models/motions/motion-state';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { ViewState } from 'app/site/motions/models/view-state';
-import { ViewWorkflow } from 'app/site/motions/models/view-workflow';
+import { ViewMotionState } from 'app/site/motions/models/view-motion-state';
+import { ViewMotionWorkflow } from 'app/site/motions/models/view-motion-workflow';
 
 /**
  * Declares data for the workflow dialog
@@ -86,7 +86,7 @@ export class WorkflowDetailComponent extends BaseComponent implements OnInit {
     /**
      * Holds the current workflow
      */
-    public workflow: ViewWorkflow;
+    public workflow: ViewMotionWorkflow;
 
     /**
      * The header rows that the table should show
@@ -154,8 +154,8 @@ export class WorkflowDetailComponent extends BaseComponent implements OnInit {
         componentServiceCollector: ComponentServiceCollector,
         private promptService: PromptService,
         private dialog: MatDialog,
-        private workflowRepo: WorkflowRepositoryService,
-        private stateRepo: StateRepositoryService,
+        private workflowRepo: MotionWorkflowRepositoryService,
+        private stateRepo: MotionStateRepositoryService,
         private route: ActivatedRoute,
         private cd: ChangeDetectorRef
     ) {
@@ -196,7 +196,7 @@ export class WorkflowDetailComponent extends BaseComponent implements OnInit {
      *
      * @param state the selected workflow state
      */
-    public onClickStateName(state: ViewState): void {
+    public onClickStateName(state: ViewMotionState): void {
         this.openEditDialog(state.name, 'Rename state', '', true).subscribe(result => {
             if (result) {
                 this.cd.detectChanges();
@@ -223,7 +223,7 @@ export class WorkflowDetailComponent extends BaseComponent implements OnInit {
         this.openEditDialog('', this.translate.instant('New state'), this.translate.instant('Name')).subscribe(
             result => {
                 if (result && result.action === 'update') {
-                    const state = new State({
+                    const state = new MotionState({
                         name: result.value,
                         workflow_id: this.workflow.id
                     });
@@ -252,7 +252,7 @@ export class WorkflowDetailComponent extends BaseComponent implements OnInit {
      * @param perm The permission
      * @param state The selected workflow state
      */
-    public onClickInputPerm(perm: StatePerm, state: ViewState): void {
+    public onClickInputPerm(perm: StatePerm, state: ViewMotionState): void {
         this.openEditDialog(state[perm.selector], 'Edit', perm.name, false, true).subscribe(result => {
             if (result.value === '') {
                 result.value = null;
@@ -270,7 +270,7 @@ export class WorkflowDetailComponent extends BaseComponent implements OnInit {
      * @param perm The states permission that was changed
      * @param event The change event.
      */
-    public onToggleStatePerm(state: ViewState, perm: string, event: MatCheckboxChange): void {
+    public onToggleStatePerm(state: ViewMotionState, perm: string, event: MatCheckboxChange): void {
         this.stateRepo.update({ [perm]: event.checked }, state).then(() => {}, this.raiseError);
     }
 
@@ -281,7 +281,7 @@ export class WorkflowDetailComponent extends BaseComponent implements OnInit {
      * @param state The selected workflow state
      * @param color The selected color
      */
-    public onSelectColor(state: ViewState, color: string): void {
+    public onSelectColor(state: ViewMotionState, color: string): void {
         this.stateRepo.update({ css_class: color }, state).then(() => {}, this.raiseError);
     }
 
@@ -291,7 +291,7 @@ export class WorkflowDetailComponent extends BaseComponent implements OnInit {
      * @param nextState the potential next workflow state
      * @param state the state to add or remove another state to
      */
-    public onSetNextState(nextState: ViewState, state: ViewState): void {
+    public onSetNextState(nextState: ViewMotionState, state: ViewMotionState): void {
         const ids = state.next_states_id.map(id => id);
         const stateIdIndex = ids.findIndex(id => id === nextState.id);
 
@@ -309,7 +309,7 @@ export class WorkflowDetailComponent extends BaseComponent implements OnInit {
      * @param restrictions The new restrictions
      * @param state the state to change
      */
-    public onSetRestriction(restriction: Restriction, state: ViewState): void {
+    public onSetRestriction(restriction: Restriction, state: ViewMotionState): void {
         const restrictions = state.restriction.map(r => r);
         const restrictionIndex = restrictions.findIndex(r => r === restriction);
 
@@ -335,7 +335,7 @@ export class WorkflowDetailComponent extends BaseComponent implements OnInit {
      * @param amendment determines the amendment
      * @param state the state to change
      */
-    public setMergeAmendment(amendment: number, state: ViewState): void {
+    public setMergeAmendment(amendment: number, state: ViewMotionState): void {
         this.stateRepo.update({ merge_amendment_into_final: amendment }, state).then(() => {}, this.raiseError);
     }
 
@@ -406,7 +406,7 @@ export class WorkflowDetailComponent extends BaseComponent implements OnInit {
      * @param state the workflow state
      * @returns a unique definition
      */
-    public getColumnDef(state: ViewState): string {
+    public getColumnDef(state: ViewMotionState): string {
         return `${state.name}${state.id}`;
     }
 

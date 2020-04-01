@@ -1,3 +1,4 @@
+import { ActiveMeetingService } from '../core-services/active-meeting.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
@@ -55,7 +56,8 @@ export abstract class PollPdfService {
      */
     public constructor(
         protected organisationSettingsService: OrganisationSettingsService,
-        protected userRepo: UserRepositoryService
+        protected userRepo: UserRepositoryService,
+        protected activeMeetingService: ActiveMeetingService
     ) {
         this.organisationSettingsService.get<string>('general_event_name').subscribe(name => (this.eventName = name));
         this.organisationSettingsService.get<{ path?: string }>('logo_pdf_ballot_paper').subscribe(url => {
@@ -78,8 +80,13 @@ export abstract class PollPdfService {
             case 'NUMBER_OF_ALL_PARTICIPANTS':
                 return this.userRepo.getViewModelList().length;
             case 'NUMBER_OF_DELEGATES':
-                return this.userRepo.getViewModelList().filter(user => user.groups_id && user.groups_id.includes(2))
-                    .length;
+                return this.userRepo
+                    .getViewModelList()
+                    .filter(
+                        user =>
+                            user.group_ids(this.activeMeetingService.getMeetingId()) &&
+                            user.group_ids(this.activeMeetingService.getMeetingId()).includes(2)
+                    ).length;
             case 'CUSTOM_NUMBER':
                 return this.ballotCustomCount;
             default:

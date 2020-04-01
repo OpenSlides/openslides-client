@@ -40,9 +40,9 @@ export abstract class BaseHasContentObjectRepository<
     /**
      * @override
      */
-    public changedModels(ids: number[]): void {
+    /*public changedModels(ids: number[]): void {
         ids.forEach(id => {
-            const v = this.createViewModelWithTitles(this.DS.get(this.collection, id));
+            const v = this.createViewModel(this.DS.get(this.collection, id));
             this.viewModelStore[id] = v;
 
             const contentObject = v.contentObjectData;
@@ -52,12 +52,12 @@ export abstract class BaseHasContentObjectRepository<
             this.contentObjectMapping[contentObject.collection][contentObject.id] = v;
             this.updateViewModelObservable(id);
         });
-    }
+    }*/
 
     /**
      * @override
      */
-    public deleteModels(ids: number[]): void {
+    /*public deleteModels(ids: number[]): void {
         ids.forEach(id => {
             const v = this.viewModelStore[id];
             if (v) {
@@ -69,5 +69,5 @@ export abstract class BaseHasContentObjectRepository<
             delete this.viewModelStore[id];
             this.updateViewModelObservable(id);
         });
-    }
+    }*/
 }

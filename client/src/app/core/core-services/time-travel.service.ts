@@ -64,7 +64,7 @@ export class TimeTravelService {
         });
         // await this.DS.set(allModels, 0);
 
-        this.DSUpdateManager.commit(updateSlot, true);
+        this.DSUpdateManager.commit(updateSlot);
     }
 
     /**

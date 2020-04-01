@@ -12,8 +12,8 @@ export interface ModelConstructor<T extends BaseModel<T>> {
  * When inherit from this class, give the subclass as the type. E.g. `class Motion extends BaseModel<Motion>`
  */
 export abstract class BaseModel<T = any> extends Deserializer implements Identifiable, Collection {
-    public get elementId(): string {
-        return `${this.collection}:${this.id}`;
+    public get fqid(): string {
+        return `${this.collection}/${this.id}`;
     }
     /**
      * force children of BaseModel to have an id
