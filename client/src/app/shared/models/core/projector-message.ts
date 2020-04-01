@@ -5,7 +5,7 @@ import { BaseModel } from '../base/base-model';
  * @ignore
  */
 export class ProjectorMessage extends BaseModel<ProjectorMessage> {
-    public static COLLECTION = 'core/projector-message';
+    public static COLLECTION = 'projector_message';
 
     public id: number;
     public message: string;

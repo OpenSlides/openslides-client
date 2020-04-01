@@ -1,17 +1,13 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { MatSnackBar } from '@angular/material';
-import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-
-import { TranslateService } from '@ngx-translate/core';
 
 import { AuthService } from 'app/core/core-services/auth.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { LoginDataService } from 'app/core/ui-services/login-data.service';
 import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { DEFAULT_AUTH_TYPE } from 'app/shared/models/users/user';
-import { BaseViewComponent } from 'app/site/base/base-view';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewUser } from 'app/site/users/models/view-user';
 
 @Component({
@@ -19,7 +15,7 @@ import { ViewUser } from 'app/site/users/models/view-user';
     templateUrl: './user-menu.component.html',
     styleUrls: ['./user-menu.component.scss']
 })
-export class UserMenuComponent extends BaseViewComponent implements OnInit {
+export class UserMenuComponent extends BaseComponent implements OnInit {
     public isLoggedIn: boolean;
 
     public user: ViewUser;
@@ -32,27 +28,24 @@ export class UserMenuComponent extends BaseViewComponent implements OnInit {
 
     public allowSelfSetPresent: boolean;
 
-    private selfPresentConfStr = 'users_allow_self_set_present';
+    // private selfPresentConfStr = 'users_allow_self_set_present';
 
     @Output()
     private navEvent: EventEmitter<void> = new EventEmitter();
 
     public constructor(
-        titleService: Title,
-        protected translate: TranslateService,
-        protected matSnackBar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         private operator: OperatorService,
         private authService: AuthService,
-        private overlayService: OverlayService, // private vp: ViewportService,
+        private overlayService: OverlayService,
         private loginDataService: LoginDataService,
-        private configService: ConfigService,
         private router: Router
     ) {
-        super(titleService, translate, matSnackBar);
+        super(componentServiceCollector);
     }
 
     public ngOnInit(): void {
-        this.operator.getViewUserObservable().subscribe(user => {
+        /*this.operator.getViewUserObservable().subscribe(user => {
             if (user) {
                 this.user = user;
             }
@@ -65,15 +58,15 @@ export class UserMenuComponent extends BaseViewComponent implements OnInit {
             }
         });
 
-        this.operator.authType.subscribe(authType => (this.authType = authType));
+        this.operator.authType.subscribe(authType => (this.authType = authType));*/
 
         this.loginDataService.samlSettings.subscribe(
             samlSettings => (this.samlChangePasswordUrl = samlSettings ? samlSettings.changePasswordUrl : null)
         );
 
-        this.configService
+        /*this.configService
             .get<boolean>(this.selfPresentConfStr)
-            .subscribe(allowed => (this.allowSelfSetPresent = allowed));
+            .subscribe(allowed => (this.allowSelfSetPresent = allowed));*/
     }
 
     public isOnProfilePage(): boolean {
@@ -128,7 +121,7 @@ export class UserMenuComponent extends BaseViewComponent implements OnInit {
      * Function to log out the current user
      */
     public logout(): void {
-        if (this.operator.guestsEnabled) {
+        if (this.operator.guestEnabled) {
             this.overlayService.showSpinner(null, true);
         }
         this.authService.logout();

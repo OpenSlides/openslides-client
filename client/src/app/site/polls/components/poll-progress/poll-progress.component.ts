@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { map } from 'rxjs/operators';
 
+import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';
@@ -18,7 +19,11 @@ export class PollProgressComponent extends BaseComponent implements OnInit {
 
     public max: number;
 
-    public constructor(componentServiceCollector: ComponentServiceCollector, private userRepo: UserRepositoryService) {
+    public constructor(
+        componentServiceCollector: ComponentServiceCollector,
+        private userRepo: UserRepositoryService,
+        private activeMeetingService: ActiveMeetingService
+    ) {
         super(componentServiceCollector);
     }
 
@@ -40,7 +45,12 @@ export class PollProgressComponent extends BaseComponent implements OnInit {
                 .getViewModelListObservable()
                 .pipe(
                     map(users =>
-                        users.filter(user => user.is_present && this.poll.groups_id.intersect(user.groups_id).length)
+                        users.filter(
+                            user =>
+                                user.is_present &&
+                                this.poll.groups_id.intersect(user.group_ids(this.activeMeetingService.getMeetingId()))
+                                    .length
+                        )
                     )
                 )
                 .subscribe(users => {

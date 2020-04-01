@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
 
-import { ChangeRecommendationRepositoryService } from 'app/core/repositories/motions/change-recommendation-repository.service';
+import { MotionChangeRecommendationRepositoryService } from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import {
@@ -40,7 +40,7 @@ export class MotionCsvExportService {
         private translate: TranslateService,
         private organisationSettingsService: OrganisationSettingsService,
         private linenumberingService: LinenumberingService,
-        private changeRecoRepo: ChangeRecommendationRepositoryService,
+        private changeRecoRepo: MotionChangeRecommendationRepositoryService,
         private motionRepo: MotionRepositoryService,
         private commentRepo: MotionCommentSectionRepositoryService
     ) {}

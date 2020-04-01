@@ -13,7 +13,7 @@ export interface ListOfSpeakersWithoutNestedModels extends BaseModelWithContentO
  * @ignore
  */
 export class ListOfSpeakers extends BaseModelWithContentObject<ListOfSpeakers> {
-    public static COLLECTION = 'agenda/list-of-speakers';
+    public static COLLECTION = 'list_of_speakers';
 
     public id: number;
     public title_information: object;

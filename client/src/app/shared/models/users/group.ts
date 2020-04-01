@@ -5,7 +5,7 @@ import { BaseModel } from '../base/base-model';
  * @ignore
  */
 export class Group extends BaseModel<Group> {
-    public static COLLECTION = 'users/group';
+    public static COLLECTION = 'group';
 
     public id: number;
     public name: string;

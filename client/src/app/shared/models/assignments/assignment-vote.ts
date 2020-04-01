@@ -1,7 +1,7 @@
 import { BaseVote } from '../poll/base-vote';
 
 export class AssignmentVote extends BaseVote<AssignmentVote> {
-    public static COLLECTION = 'assignments/assignment-vote';
+    public static COLLECTION = 'assignment_vote';
 
     public id: number;
 

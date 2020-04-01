@@ -1,9 +1,7 @@
-import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { BaseViewModelWithListOfSpeakers } from 'app/site/base/base-view-model-with-list-of-speakers';
 import { BaseModel, ModelConstructor } from '../../shared/models/base/base-model';
 import { BaseRepository } from './base-repository';
 import { TitleInformation } from '../../site/base/base-view-model';
-import { RelationDefinition } from '../definitions/relations';
 import { RepositoryServiceCollector } from './repository-service-collector';
 
 export function isBaseIsListOfSpeakersContentObjectRepository(
@@ -33,21 +31,8 @@ export abstract class BaseIsListOfSpeakersContentObjectRepository<
     M extends BaseModel,
     T extends TitleInformation
 > extends BaseRepository<V, M, T> implements IBaseIsListOfSpeakersContentObjectRepository<V, M, T> {
-    public constructor(
-        repositoryServiceCollector: RepositoryServiceCollector,
-        baseModelCtor: ModelConstructor<M>,
-        relationDefinitions?: RelationDefinition[]
-    ) {
-        super(repositoryServiceCollector, baseModelCtor, relationDefinitions);
-    }
-
-    protected extendRelations(): void {
-        this.relationDefinitions.push({
-            type: 'M2O',
-            ownIdKey: 'list_of_speakers_id',
-            ownKey: 'list_of_speakers',
-            foreignViewModel: ViewListOfSpeakers
-        });
+    public constructor(repositoryServiceCollector: RepositoryServiceCollector, baseModelCtor: ModelConstructor<M>) {
+        super(repositoryServiceCollector, baseModelCtor);
     }
 
     public getListOfSpeakersTitle(titleInformation: T): string {
@@ -61,8 +46,8 @@ export abstract class BaseIsListOfSpeakersContentObjectRepository<
     /**
      * Adds the list of speakers titles to the view model
      */
-    protected createViewModelWithTitles(model: M): V {
-        const viewModel = super.createViewModelWithTitles(model);
+    protected createViewModel(model: M): V {
+        const viewModel = super.createViewModel(model);
         viewModel.getListOfSpeakersTitle = () => this.getListOfSpeakersTitle(viewModel);
         viewModel.getListOfSpeakersSlideTitle = () => this.getListOfSpeakersSlideTitle(viewModel);
         return viewModel;

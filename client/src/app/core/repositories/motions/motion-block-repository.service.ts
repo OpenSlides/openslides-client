@@ -1,22 +1,12 @@
 import { Injectable } from '@angular/core';
 
 import { HttpService } from 'app/core/core-services/http.service';
-import { RelationDefinition } from 'app/core/definitions/relations';
 import { MotionBlock } from 'app/shared/models/motions/motion-block';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { MotionBlockTitleInformation, ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
 import { BaseIsAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-is-agenda-item-and-list-of-speakers-content-object-repository';
 import { MotionRepositoryService } from './motion-repository.service';
 import { RepositoryServiceCollector } from '../repository-service-collector';
-
-const MotionBlockRelations: RelationDefinition[] = [
-    {
-        type: 'O2M',
-        foreignIdKey: 'motion_block_id',
-        ownKey: 'motions',
-        foreignViewModel: ViewMotion
-    }
-];
 
 /**
  * Repository service for motion blocks
@@ -43,7 +33,7 @@ export class MotionBlockRepositoryService extends BaseIsAgendaItemAndListOfSpeak
         private motionRepo: MotionRepositoryService,
         private httpService: HttpService
     ) {
-        super(repositoryServiceCollector, MotionBlock, MotionBlockRelations);
+        super(repositoryServiceCollector, MotionBlock);
         this.initSorting();
     }
 

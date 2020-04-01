@@ -1,31 +1,14 @@
 import { Injectable } from '@angular/core';
 
 import { HttpService } from 'app/core/core-services/http.service';
-import { RelationDefinition } from 'app/core/definitions/relations';
 import { MotionCommentSection } from 'app/shared/models/motions/motion-comment-section';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import {
     MotionCommentSectionTitleInformation,
     ViewMotionCommentSection
 } from 'app/site/motions/models/view-motion-comment-section';
-import { ViewGroup } from 'app/site/users/models/view-group';
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
-
-const MotionCommentSectionRelations: RelationDefinition[] = [
-    {
-        type: 'M2M',
-        ownIdKey: 'read_groups_id',
-        ownKey: 'read_groups',
-        foreignViewModel: ViewGroup
-    },
-    {
-        type: 'M2M',
-        ownIdKey: 'write_groups_id',
-        ownKey: 'write_groups',
-        foreignViewModel: ViewGroup
-    }
-];
 
 /**
  * Repository Services for Categories
@@ -56,7 +39,7 @@ export class MotionCommentSectionRepositoryService extends BaseRepository<
      * @param http Service to handle direct http-communication
      */
     public constructor(repositoryServiceCollector: RepositoryServiceCollector, private http: HttpService) {
-        super(repositoryServiceCollector, MotionCommentSection, MotionCommentSectionRelations);
+        super(repositoryServiceCollector, MotionCommentSection);
 
         this.viewModelSortFn = (a: ViewMotionCommentSection, b: ViewMotionCommentSection) => {
             if (a.weight === b.weight) {

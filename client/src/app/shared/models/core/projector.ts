@@ -55,7 +55,7 @@ export type ProjectorElements = ProjectorElement[];
  * @ignore
  */
 export class Projector extends BaseModel<Projector> {
-    public static COLLECTION = 'core/projector';
+    public static COLLECTION = 'projector';
 
     public id: number;
     public elements: ProjectorElements;

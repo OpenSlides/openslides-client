@@ -9,7 +9,7 @@ import { AgendaFilterListService } from '../../services/agenda-filter-list.servi
 import { AgendaPdfService } from '../../services/agenda-pdf.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { PdfDocumentService } from 'app/core/pdf-services/pdf-document.service';
-import { ItemRepositoryService } from 'app/core/repositories/agenda/item-repository.service';
+import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
 import { TopicRepositoryService } from 'app/core/repositories/topics/topic-repository.service';
 import { _ } from 'app/core/translate/translation-marker';
@@ -24,7 +24,7 @@ import { BaseListViewComponent } from 'app/site/base/components/base-list-view.c
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { ViewTopic } from 'app/site/topics/models/view-topic';
 import { ItemInfoDialogComponent } from '../item-info-dialog/item-info-dialog.component';
-import { ViewItem } from '../../models/view-item';
+import { ViewAgendaItem } from '../../models/view-agenda-item';
 import { ViewListOfSpeakers } from '../../models/view-list-of-speakers';
 
 /**
@@ -35,7 +35,7 @@ import { ViewListOfSpeakers } from '../../models/view-list-of-speakers';
     templateUrl: './agenda-list.component.html',
     styleUrls: ['./agenda-list.component.scss']
 })
-export class AgendaListComponent extends BaseListViewComponent<ViewItem> implements OnInit {
+export class AgendaListComponent extends BaseListViewComponent<ViewAgendaItem> implements OnInit {
     /**
      * Show or hide the numbering button
      */
@@ -119,7 +119,7 @@ export class AgendaListComponent extends BaseListViewComponent<ViewItem> impleme
         componentServiceCollector: ComponentServiceCollector,
         private operator: OperatorService,
         private router: Router,
-        public repo: ItemRepositoryService,
+        public repo: AgendaItemRepositoryService,
         private promptService: PromptService,
         private dialog: MatDialog,
         private config: OrganisationSettingsService,
@@ -154,7 +154,7 @@ export class AgendaListComponent extends BaseListViewComponent<ViewItem> impleme
      *
      * @param item The item to get the list of speakers from
      */
-    public getListOfSpeakers(item: ViewItem): ViewListOfSpeakers | null {
+    public getListOfSpeakers(item: ViewAgendaItem): ViewListOfSpeakers | null {
         return this.listOfSpeakersRepo.findByContentObject(item.item.content_object);
     }
 
@@ -163,7 +163,7 @@ export class AgendaListComponent extends BaseListViewComponent<ViewItem> impleme
      *
      * @param item the item that was selected from the list view
      */
-    public getDetailUrl(item: ViewItem): string {
+    public getDetailUrl(item: ViewAgendaItem): string {
         if (item.contentObject && !this.isMultiSelect) {
             return item.contentObject.getDetailStateURL();
         }
@@ -175,7 +175,7 @@ export class AgendaListComponent extends BaseListViewComponent<ViewItem> impleme
      *
      * @param item The view item that was clicked
      */
-    public openEditInfo(item: ViewItem): void {
+    public openEditInfo(item: ViewAgendaItem): void {
         if (this.isMultiSelect || !this.canManage) {
             return;
         }
@@ -206,7 +206,7 @@ export class AgendaListComponent extends BaseListViewComponent<ViewItem> impleme
     /**
      * Click handler for the done button in the dot-menu
      */
-    public async onDoneSingleButton(item: ViewItem): Promise<void> {
+    public async onDoneSingleButton(item: ViewAgendaItem): Promise<void> {
         await this.repo.update({ closed: !item.closed }, item).catch(this.raiseError);
     }
 
@@ -223,7 +223,7 @@ export class AgendaListComponent extends BaseListViewComponent<ViewItem> impleme
      *
      * @param item The item to remove from the agenda
      */
-    public async removeFromAgenda(item: ViewItem): Promise<void> {
+    public async removeFromAgenda(item: ViewAgendaItem): Promise<void> {
         const title = this.translate.instant('Are you sure you want to remove this entry from the agenda?');
         const content = item.contentObject.getTitle();
         if (await this.promptService.open(title, content)) {
@@ -231,7 +231,7 @@ export class AgendaListComponent extends BaseListViewComponent<ViewItem> impleme
         }
     }
 
-    public async deleteTopic(item: ViewItem): Promise<void> {
+    public async deleteTopic(item: ViewAgendaItem): Promise<void> {
         if (!(item.contentObject instanceof ViewTopic)) {
             return;
         }

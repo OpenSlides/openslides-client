@@ -8,9 +8,9 @@ import { filter } from 'rxjs/operators';
 
 import { navItemAnim } from '../shared/animations';
 import { OfflineService } from 'app/core/core-services/offline.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { UpdateService } from 'app/core/ui-services/update.service';
-import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { MainMenuService } from '../core/core-services/main-menu.service';
 import { OpenSlidesStatusService } from '../core/core-services/openslides-status.service';
@@ -84,7 +84,7 @@ export class SiteComponent extends BaseComponent implements OnInit {
         public mainMenuService: MainMenuService,
         public OSStatus: OpenSlidesStatusService,
         public timeTravel: TimeTravelService,
-        private overlayService: OverlayService,
+        private overlayService: OverlayService
     ) {
         super(componentServiceCollector);
         overlayService.showSpinner(this.translate.instant('Loading data. Please wait...'));

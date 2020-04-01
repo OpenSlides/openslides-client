@@ -1,44 +1,12 @@
 import { Injectable } from '@angular/core';
 
 import { HttpService } from 'app/core/core-services/http.service';
-import { RelationDefinition } from 'app/core/definitions/relations';
 import { BasePollRepository } from 'app/core/repositories/base-poll-repository';
 import { VotingService } from 'app/core/ui-services/voting.service';
 import { MotionPoll } from 'app/shared/models/motions/motion-poll';
 import { VoteValue } from 'app/shared/models/poll/base-vote';
-import { ViewMotion } from 'app/site/motions/models/view-motion';
-import { ViewMotionOption } from 'app/site/motions/models/view-motion-option';
 import { MotionPollTitleInformation, ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
-import { ViewGroup } from 'app/site/users/models/view-group';
-import { ViewUser } from 'app/site/users/models/view-user';
 import { RepositoryServiceCollector } from '../repository-service-collector';
-
-const MotionPollRelations: RelationDefinition[] = [
-    {
-        type: 'M2M',
-        ownIdKey: 'groups_id',
-        ownKey: 'groups',
-        foreignViewModel: ViewGroup
-    },
-    {
-        type: 'O2M',
-        ownIdKey: 'options_id',
-        ownKey: 'options',
-        foreignViewModel: ViewMotionOption
-    },
-    {
-        type: 'M2O',
-        ownIdKey: 'motion_id',
-        ownKey: 'motion',
-        foreignViewModel: ViewMotion
-    },
-    {
-        type: 'M2M',
-        ownIdKey: 'voted_id',
-        ownKey: 'voted',
-        foreignViewModel: ViewUser
-    }
-];
 
 /**
  * Repository Service for Assignments.
@@ -58,7 +26,7 @@ export class MotionPollRepositoryService extends BasePollRepository<
         votingService: VotingService,
         http: HttpService
     ) {
-        super(repositoryServiceCollector, MotionPoll, MotionPollRelations, {}, votingService, http);
+        super(repositoryServiceCollector, MotionPoll, votingService, http);
     }
 
     public getTitle = (titleInformation: MotionPollTitleInformation) => {

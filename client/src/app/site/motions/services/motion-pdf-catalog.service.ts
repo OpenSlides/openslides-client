@@ -4,13 +4,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 
 import { BorderType, PdfDocumentService, PdfError, StyleType } from 'app/core/pdf-services/pdf-document.service';
-import { CategoryRepositoryService } from 'app/core/repositories/motions/category-repository.service';
+import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { MotionExportInfo } from './motion-export.service';
 import { MotionPdfService } from './motion-pdf.service';
-import { ViewCategory } from '../models/view-category';
 import { ViewMotion } from '../models/view-motion';
+import { ViewMotionCategory } from '../models/view-motion-category';
 
 /**
  * Service to export a list of motions.
@@ -24,7 +24,7 @@ import { ViewMotion } from '../models/view-motion';
     providedIn: 'root'
 })
 export class MotionPdfCatalogService {
-    private categoryObserver: BehaviorSubject<ViewCategory[]>;
+    private categoryObserver: BehaviorSubject<ViewMotionCategory[]>;
 
     /**
      * Constructor
@@ -39,7 +39,7 @@ export class MotionPdfCatalogService {
         private motionPdfService: MotionPdfService,
         private pdfService: PdfDocumentService,
         private motionRepo: MotionRepositoryService,
-        private categoryRepo: CategoryRepositoryService
+        private categoryRepo: MotionCategoryRepositoryService
     ) {
         this.categoryObserver = this.categoryRepo.getViewModelListBehaviorSubject();
     }

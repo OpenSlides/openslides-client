@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { autoupdateFormatToModelData, AutoupdateModelData } from './autoupdate-helpers';
+import { autoupdateFormatToModelData, AutoupdateModelData, ModelData } from './autoupdate-helpers';
 import { BaseModel } from '../../shared/models/base/base-model';
 import { CollectionMapperService } from './collection-mapper.service';
 import { DataStoreService, DataStoreUpdateManagerService } from './data-store.service';
@@ -79,13 +79,17 @@ export class AutoupdateService {
             '/todo',
             request
         );
-        stream.messageObservable.subscribe(data => this.handleAutoupdate(data));
+        stream.messageObservable.subscribe(data => this.handleAutoupdateWithStupidFormat(data));
         return { close: stream.close };
     }
 
-    // Todo: change this to private
-    public handleAutoupdate(autoupdateData: AutoupdateModelData): void {
+    private handleAutoupdateWithStupidFormat(autoupdateData: AutoupdateModelData): void {
         const modelData = autoupdateFormatToModelData(autoupdateData);
+        this.handleAutoupdate(modelData);
+    }
+
+    // Todo: change this to private. needed for testing to insert example data
+    public handleAutoupdate(modelData: ModelData): void {
         const deletedModels: DeletedModels = {};
         const changedModels: ChangedModels = {};
 

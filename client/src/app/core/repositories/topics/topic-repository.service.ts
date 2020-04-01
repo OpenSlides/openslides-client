@@ -1,20 +1,9 @@
 import { Injectable } from '@angular/core';
 
-import { RelationDefinition } from 'app/core/definitions/relations';
 import { Topic } from 'app/shared/models/topics/topic';
-import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { TopicTitleInformation, ViewTopic } from 'app/site/topics/models/view-topic';
 import { BaseIsAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-is-agenda-item-and-list-of-speakers-content-object-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
-
-const TopicRelations: RelationDefinition[] = [
-    {
-        type: 'M2M',
-        ownIdKey: 'attachments_id',
-        ownKey: 'attachments',
-        foreignViewModel: ViewMediafile
-    }
-];
 
 /**
  * Repository for topics
@@ -35,7 +24,7 @@ export class TopicRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCon
      * @param dataSend Access the DataSendService
      */
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
-        super(repositoryServiceCollector, Topic, TopicRelations);
+        super(repositoryServiceCollector, Topic);
     }
 
     public getTitle = (titleInformation: TopicTitleInformation) => {

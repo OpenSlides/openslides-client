@@ -4,9 +4,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Papa } from 'ngx-papaparse';
 
-import { StatuteParagraphRepositoryService } from 'app/core/repositories/motions/statute-paragraph-repository.service';
+import { MotionStatuteParagraphRepositoryService } from 'app/core/repositories/motions/motion-statute-paragraph-repository.service';
 import { BaseImportService, NewEntry } from 'app/core/ui-services/base-import.service';
-import { StatuteParagraph } from 'app/shared/models/motions/statute-paragraph';
+import { MotionStatuteParagraph } from 'app/shared/models/motions/motion-statute-paragraph';
 
 /**
  * Service for motion imports
@@ -14,7 +14,7 @@ import { StatuteParagraph } from 'app/shared/models/motions/statute-paragraph';
 @Injectable({
     providedIn: 'root'
 })
-export class StatuteImportService extends BaseImportService<StatuteParagraph> {
+export class StatuteImportService extends BaseImportService<MotionStatuteParagraph> {
     /**
      * List of possible errors and their verbose explanation
      */
@@ -35,7 +35,7 @@ export class StatuteImportService extends BaseImportService<StatuteParagraph> {
      * @param matSnackBar snackBar to display import errors
      */
     public constructor(
-        private repo: StatuteParagraphRepositoryService,
+        private repo: MotionStatuteParagraphRepositoryService,
         translate: TranslateService,
         papa: Papa,
         matSnackbar: MatSnackBar
@@ -59,8 +59,8 @@ export class StatuteImportService extends BaseImportService<StatuteParagraph> {
      * @param line
      * @returns a new Entry representing a Motion
      */
-    public mapData(line: string): NewEntry<StatuteParagraph> {
-        const newEntry = new StatuteParagraph(new StatuteParagraph());
+    public mapData(line: string): NewEntry<MotionStatuteParagraph> {
+        const newEntry = new MotionStatuteParagraph(new MotionStatuteParagraph());
         const headerLength = Math.min(this.expectedHeader.length, line.length);
         for (let idx = 0; idx < headerLength; idx++) {
             switch (this.expectedHeader[idx]) {

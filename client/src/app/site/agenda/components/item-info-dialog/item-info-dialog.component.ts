@@ -3,9 +3,9 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 import { DurationService } from 'app/core/ui-services/duration.service';
-import { ItemVisibilityChoices } from 'app/shared/models/agenda/item';
+import { ItemVisibilityChoices } from 'app/shared/models/agenda/agenda-item';
 import { durationValidator } from 'app/shared/validators/custom-validators';
-import { ViewItem } from '../../models/view-item';
+import { ViewAgendaItem } from '../../models/view-agenda-item';
 
 /**
  * Dialog component to change agenda item details
@@ -38,7 +38,7 @@ export class ItemInfoDialogComponent {
         public formBuilder: FormBuilder,
         public durationService: DurationService,
         public dialogRef: MatDialogRef<ItemInfoDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public item: ViewItem
+        @Inject(MAT_DIALOG_DATA) public item: ViewAgendaItem
     ) {
         this.agendaInfoForm = this.formBuilder.group({
             type: [''],

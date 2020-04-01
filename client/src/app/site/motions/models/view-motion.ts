@@ -12,14 +12,14 @@ import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { ViewTag } from 'app/site/tags/models/view-tag';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { AmendmentType } from '../motions.constants';
-import { ViewCategory } from './view-category';
 import { ViewMotionBlock } from './view-motion-block';
+import { ViewMotionCategory } from './view-motion-category';
 import { ViewMotionChangeRecommendation } from './view-motion-change-recommendation';
 import { ViewMotionCommentSection } from './view-motion-comment-section';
 import { ViewMotionPoll } from './view-motion-poll';
-import { ViewState } from './view-state';
-import { ViewSubmitter } from './view-submitter';
-import { ViewWorkflow } from './view-workflow';
+import { ViewMotionState } from './view-motion-state';
+import { ViewMotionSubmitter } from './view-motion-submitter';
+import { ViewMotionWorkflow } from './view-motion-workflow';
 
 export interface MotionTitleInformation extends TitleInformationWithAgendaItem {
     title: string;
@@ -47,7 +47,7 @@ export class ViewMotion extends BaseViewModelWithAgendaItemAndListOfSpeakers<Mot
         return this.identifier ? this.identifier : this.title;
     }
 
-    public get possibleRecommendations(): ViewState[] {
+    public get possibleRecommendations(): ViewMotionState[] {
         return this.workflow ? this.workflow.states.filter(state => state.recommendation_label) : [];
     }
 
@@ -347,12 +347,12 @@ export class ViewMotion extends BaseViewModelWithAgendaItemAndListOfSpeakers<Mot
 }
 
 interface TIMotionRelations {
-    category?: ViewCategory;
-    submitters: ViewSubmitter[];
+    category?: ViewMotionCategory;
+    submitters: ViewMotionSubmitter[];
     supporters?: ViewUser[];
-    workflow?: ViewWorkflow;
-    state?: ViewState;
-    recommendation?: ViewState;
+    workflow?: ViewMotionWorkflow;
+    state?: ViewMotionState;
+    recommendation?: ViewMotionState;
     motion_block?: ViewMotionBlock;
     attachments?: ViewMediafile[];
     tags?: ViewTag[];

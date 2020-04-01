@@ -38,9 +38,6 @@
     </div>
 </os-head-bar>
 
-<button (click)="addInitial()">Add initial data</button>
-<button (click)="changeTitle()">ChangeTitle</button>
-
 <ng-container *ngIf="selectedView === 'tiles'; then tiles; else list"></ng-container>
 
 <ng-template #list>

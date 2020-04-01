@@ -1,37 +1,37 @@
 import { AppConfig } from '../../core/definitions/app-config';
-import { CategoryRepositoryService } from 'app/core/repositories/motions/category-repository.service';
-import { ChangeRecommendationRepositoryService } from 'app/core/repositories/motions/change-recommendation-repository.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
+import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
+import { MotionChangeRecommendationRepositoryService } from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
 import { MotionOptionRepositoryService } from 'app/core/repositories/motions/motion-option-repository.service';
 import { MotionPollRepositoryService } from 'app/core/repositories/motions/motion-poll-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
+import { MotionStateRepositoryService } from 'app/core/repositories/motions/motion-state-repository.service';
+import { MotionStatuteParagraphRepositoryService } from 'app/core/repositories/motions/motion-statute-paragraph-repository.service';
 import { MotionVoteRepositoryService } from 'app/core/repositories/motions/motion-vote-repository.service';
-import { StateRepositoryService } from 'app/core/repositories/motions/state-repository.service';
-import { StatuteParagraphRepositoryService } from 'app/core/repositories/motions/statute-paragraph-repository.service';
-import { WorkflowRepositoryService } from 'app/core/repositories/motions/workflow-repository.service';
+import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/motion-workflow-repository.service';
 import { MotionOption } from 'app/shared/models/motions/motion-option';
 import { MotionPoll } from 'app/shared/models/motions/motion-poll';
+import { MotionState } from 'app/shared/models/motions/motion-state';
 import { MotionVote } from 'app/shared/models/motions/motion-vote';
-import { State } from 'app/shared/models/motions/state';
-import { Category } from '../../shared/models/motions/category';
 import { Motion } from '../../shared/models/motions/motion';
 import { MotionBlock } from '../../shared/models/motions/motion-block';
+import { MotionCategory } from '../../shared/models/motions/motion-category';
 import { MotionChangeRecommendation } from '../../shared/models/motions/motion-change-reco';
 import { MotionCommentSection } from '../../shared/models/motions/motion-comment-section';
-import { StatuteParagraph } from '../../shared/models/motions/statute-paragraph';
-import { ViewCategory } from './models/view-category';
+import { MotionStatuteParagraph } from '../../shared/models/motions/motion-statute-paragraph';
+import { MotionWorkflow } from '../../shared/models/motions/motion-workflow';
 import { ViewMotion } from './models/view-motion';
 import { ViewMotionBlock } from './models/view-motion-block';
+import { ViewMotionCategory } from './models/view-motion-category';
 import { ViewMotionChangeRecommendation } from './models/view-motion-change-recommendation';
 import { ViewMotionCommentSection } from './models/view-motion-comment-section';
 import { ViewMotionOption } from './models/view-motion-option';
 import { ViewMotionPoll } from './models/view-motion-poll';
+import { ViewMotionState } from './models/view-motion-state';
+import { ViewMotionStatuteParagraph } from './models/view-motion-statute-paragraph';
 import { ViewMotionVote } from './models/view-motion-vote';
-import { ViewState } from './models/view-state';
-import { ViewStatuteParagraph } from './models/view-statute-paragraph';
-import { ViewWorkflow } from './models/view-workflow';
-import { Workflow } from '../../shared/models/motions/workflow';
+import { ViewMotionWorkflow } from './models/view-motion-workflow';
 
 export const MotionsAppConfig: AppConfig = {
     name: 'motions',
@@ -43,20 +43,20 @@ export const MotionsAppConfig: AppConfig = {
             repository: MotionRepositoryService
         },
         {
-            model: Category,
-            viewModel: ViewCategory,
+            model: MotionCategory,
+            viewModel: ViewMotionCategory,
             searchOrder: 6,
-            repository: CategoryRepositoryService
+            repository: MotionCategoryRepositoryService
         },
         {
-            model: Workflow,
-            viewModel: ViewWorkflow,
-            repository: WorkflowRepositoryService
+            model: MotionWorkflow,
+            viewModel: ViewMotionWorkflow,
+            repository: MotionWorkflowRepositoryService
         },
         {
-            model: State,
-            viewModel: ViewState,
-            repository: StateRepositoryService
+            model: MotionState,
+            viewModel: ViewMotionState,
+            repository: MotionStateRepositoryService
         },
         {
             model: MotionCommentSection,
@@ -66,7 +66,7 @@ export const MotionsAppConfig: AppConfig = {
         {
             model: MotionChangeRecommendation,
             viewModel: ViewMotionChangeRecommendation,
-            repository: ChangeRecommendationRepositoryService
+            repository: MotionChangeRecommendationRepositoryService
         },
         {
             model: MotionBlock,
@@ -75,10 +75,10 @@ export const MotionsAppConfig: AppConfig = {
             repository: MotionBlockRepositoryService
         },
         {
-            model: StatuteParagraph,
-            viewModel: ViewStatuteParagraph,
+            model: MotionStatuteParagraph,
+            viewModel: ViewMotionStatuteParagraph,
             searchOrder: 9,
-            repository: StatuteParagraphRepositoryService
+            repository: MotionStatuteParagraphRepositoryService
         },
         { model: MotionPoll, viewModel: ViewMotionPoll, repository: MotionPollRepositoryService },
         { model: MotionOption, viewModel: ViewMotionOption, repository: MotionOptionRepositoryService },

@@ -6,11 +6,11 @@ import { PblColumnDefinition } from '@pebula/ngrid';
 import { BehaviorSubject } from 'rxjs';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { ItemRepositoryService } from 'app/core/repositories/agenda/item-repository.service';
+import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
-import { ViewItem } from 'app/site/agenda/models/view-item';
+import { ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
 import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
 import { MotionBlockSortService } from 'app/site/motions/services/motion-block-sort.service';
@@ -36,7 +36,7 @@ export class MotionBlockListComponent extends BaseListViewComponent<ViewMotionBl
     /**
      * Holds the agenda items to select the parent item
      */
-    public items: BehaviorSubject<ViewItem[]>;
+    public items: BehaviorSubject<ViewAgendaItem[]>;
 
     /**
      * Determine the default agenda visibility
@@ -92,7 +92,7 @@ export class MotionBlockListComponent extends BaseListViewComponent<ViewMotionBl
         componentServiceCollector: ComponentServiceCollector,
         public repo: MotionBlockRepositoryService,
         private formBuilder: FormBuilder,
-        private itemRepo: ItemRepositoryService,
+        private itemRepo: AgendaItemRepositoryService,
         private operator: OperatorService,
         private dialog: MatDialog,
         public sortService: MotionBlockSortService

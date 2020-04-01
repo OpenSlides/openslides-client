@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { StatuteParagraph } from 'app/shared/models/motions/statute-paragraph';
+import { MotionStatuteParagraph } from 'app/shared/models/motions/motion-statute-paragraph';
 import { BaseImportListComponent } from 'app/site/base/components/base-import-list.component';
 import { StatuteCsvExportService } from 'app/site/motions/services/statute-csv-export.service';
 import { StatuteImportService } from 'app/site/motions/services/statute-import.service';
@@ -13,7 +13,7 @@ import { StatuteImportService } from 'app/site/motions/services/statute-import.s
     selector: 'os-statute-import-list',
     templateUrl: './statute-import-list.component.html'
 })
-export class StatuteImportListComponent extends BaseImportListComponent<StatuteParagraph> {
+export class StatuteImportListComponent extends BaseImportListComponent<MotionStatuteParagraph> {
     /**
      * Constructor for list view bases
      *
