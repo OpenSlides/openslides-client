@@ -7,7 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { ItemRepositoryService } from 'app/core/repositories/agenda/item-repository.service';
+import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { AssignmentRepositoryService } from 'app/core/repositories/assignments/assignment-repository.service';
 import { MediafileRepositoryService } from 'app/core/repositories/mediafiles/mediafile-repository.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
@@ -15,7 +15,7 @@ import { UserRepositoryService } from 'app/core/repositories/users/user-reposito
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { Assignment } from 'app/shared/models/assignments/assignment';
-import { ViewItem } from 'app/site/agenda/models/view-item';
+import { ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { LocalPermissionsService } from 'app/site/motions/services/local-permissions.service';
@@ -87,7 +87,7 @@ export class AssignmentDetailComponent extends BaseComponent implements OnInit {
     /**
      * Used in the search Value selector to assign an agenda item
      */
-    public agendaObserver: BehaviorSubject<ViewItem[]>;
+    public agendaObserver: BehaviorSubject<ViewAgendaItem[]>;
 
     /**
      * Sets the assignment, e.g. via an auto update. Reload important things here:
@@ -170,7 +170,7 @@ export class AssignmentDetailComponent extends BaseComponent implements OnInit {
         formBuilder: FormBuilder,
         public repo: AssignmentRepositoryService,
         private userRepo: UserRepositoryService,
-        private itemRepo: ItemRepositoryService,
+        private itemRepo: AgendaItemRepositoryService,
         private tagRepo: TagRepositoryService,
         private promptService: PromptService,
         private pdfService: AssignmentPdfExportService,

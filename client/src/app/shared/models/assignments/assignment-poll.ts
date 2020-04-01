@@ -26,7 +26,7 @@ export class AssignmentPoll extends BasePoll<
     AssignmentPollMethod,
     AssignmentPollPercentBase
 > {
-    public static COLLECTION = 'assignments/assignment-poll';
+    public static COLLECTION = 'assignment_poll';
     public static defaultGroupsConfig = 'assignment_poll_default_groups';
     public static defaultPollMethodConfig = 'assignment_poll_method';
     public static DECIMAL_FIELDS = [

@@ -2,13 +2,12 @@ import { Component, OnInit } from '@angular/core';
 
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { ItemRepositoryService } from 'app/core/repositories/agenda/item-repository.service';
+import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
-import { ItemVisibilityChoices } from 'app/shared/models/agenda/item';
-import { SortTreeFilterOption, SortTreeViewComponentDirective } from 'app/site/base/sort-tree.component';
+import { ItemVisibilityChoices } from 'app/shared/models/agenda/agenda-item';
 import { BaseSortTreeComponent, SortTreeFilterOption } from 'app/site/base/components/sort-tree.component';
-import { ViewItem } from '../../models/view-item';
+import { ViewAgendaItem } from '../../models/view-agenda-item';
 
 /**
  * Sort view for the agenda.
@@ -18,11 +17,11 @@ import { ViewItem } from '../../models/view-item';
     templateUrl: './agenda-sort.component.html',
     styleUrls: ['./agenda-sort.component.scss']
 })
-export class AgendaSortComponent extends BaseSortTreeComponent<ViewItem> implements OnInit {
+export class AgendaSortComponent extends BaseSortTreeComponent<ViewAgendaItem> implements OnInit {
     /**
      * All agendaItems sorted by their weight {@link ViewItem.weight}
      */
-    public itemsObservable: Observable<ViewItem[]>;
+    public itemsObservable: Observable<ViewAgendaItem[]>;
 
     /**
      * These are the available options for filtering the nodes.
@@ -49,7 +48,7 @@ export class AgendaSortComponent extends BaseSortTreeComponent<ViewItem> impleme
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         promptService: PromptService,
-        private agendaRepo: ItemRepositoryService
+        private agendaRepo: AgendaItemRepositoryService
     ) {
         super(componentServiceCollector, promptService);
         this.itemsObservable = this.agendaRepo.getViewModelListObservable();
@@ -82,7 +81,7 @@ export class AgendaSortComponent extends BaseSortTreeComponent<ViewItem> impleme
          */
         const filter = this.activeFilters.subscribe((value: number[]) => {
             this.hasActiveFilter = value.length === 0 ? false : true;
-            this.changeFilter.emit((item: ViewItem): boolean => {
+            this.changeFilter.emit((item: ViewAgendaItem): boolean => {
                 return !(value.includes(item.type) || value.length === 0);
             });
         });

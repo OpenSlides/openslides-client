@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { OSTreeNode, TreeService } from 'app/core/ui-services/tree.service';
-import { ViewItem } from '../models/view-item';
+import { ViewAgendaItem } from '../models/view-agenda-item';
 
 /**
  * pdfMake structure for a content line in the pdf document.
@@ -41,8 +41,8 @@ export class AgendaPdfService {
      * will be ignored, all other items will be sorted by their parents and weight
      * @returns definitions ready to be opened or exported via {@link PdfDocumentService}
      */
-    public agendaListToDocDef(items: ViewItem[]): object {
-        const tree: OSTreeNode<ViewItem>[] = this.treeService.makeTree(items, 'weight', 'parent_id');
+    public agendaListToDocDef(items: ViewAgendaItem[]): object {
+        const tree: OSTreeNode<ViewAgendaItem>[] = this.treeService.makeTree(items, 'weight', 'parent_id');
         const title = {
             text: this.translate.instant('Agenda'),
             style: 'title'
@@ -57,7 +57,7 @@ export class AgendaPdfService {
      * @param tree
      * @returns hierarchical pdfMake definitions for topic entries
      */
-    private createEntries(tree: OSTreeNode<ViewItem>[]): AgendaTreePdfEntry[] {
+    private createEntries(tree: OSTreeNode<ViewAgendaItem>[]): AgendaTreePdfEntry[] {
         const content: AgendaTreePdfEntry[] = [];
         tree.forEach(treeitem => content.push(...this.parseItem(treeitem, 0)));
         return content;
@@ -71,7 +71,7 @@ export class AgendaPdfService {
      * @param level: The hierarchy index (beginning at 0 for top level agenda topics)
      * @returns pdfMake definitions for the number/title strings, indented according to hierarchy
      */
-    private parseItem(nodeItem: OSTreeNode<ViewItem>, level: number): AgendaTreePdfEntry[] {
+    private parseItem(nodeItem: OSTreeNode<ViewAgendaItem>, level: number): AgendaTreePdfEntry[] {
         const itemList: AgendaTreePdfEntry[] = [];
         if (!nodeItem.item.item.is_hidden) {
             // don't include hidden items and their subitems

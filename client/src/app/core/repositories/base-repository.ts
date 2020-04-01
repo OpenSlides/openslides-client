@@ -12,24 +12,9 @@ import { HasViewModelListObservable } from '../definitions/has-view-model-list-o
 import { Identifiable } from '../../shared/models/base/identifiable';
 import { OnAfterAppsLoaded } from '../definitions/on-after-apps-loaded';
 import { RelationManagerService } from '../core-services/relation-manager.service';
-import { RelationDefinition, ReverseRelationDefinition } from '../definitions/relations';
+import { Relation } from '../definitions/relations';
 import { RepositoryServiceCollector } from './repository-service-collector';
 import { ViewModelStoreService } from '../core-services/view-model-store.service';
-
-export interface ModelDescriptor<M extends BaseModel, V extends BaseViewModel> {
-    relationDefinitionsByKey: { [key: string]: RelationDefinition };
-    ownKey: string;
-    foreignViewModel: ViewModelConstructor<V>;
-    foreignModel: ModelConstructor<M>;
-    order?: string;
-    titles?: {
-        [key: string]: (viewModel: V) => string;
-    };
-}
-
-export interface NestedModelDescriptors {
-    [collection: string]: ModelDescriptor<BaseModel, BaseViewModel>[];
-}
 
 export abstract class BaseRepository<V extends BaseViewModel & T, M extends BaseModel, T extends TitleInformation>
     implements OnAfterAppsLoaded, Collection, HasViewModelListObservable<V> {
@@ -97,11 +82,11 @@ export abstract class BaseRepository<V extends BaseViewModel & T, M extends Base
      * Attention: Some inherited repos might put other relations than RelationDefinition in here, so
      * *always* check the type of the relation.
      */
-    protected relationsByCollection: { [collection: string]: RelationDefinition<BaseViewModel>[] } = {};
+    /*protected relationsByCollection: { [collection: string]: RelationDefinition<BaseViewModel>[] } = {};
 
-    protected reverseRelationsByCollection: { [collection: string]: ReverseRelationDefinition<BaseViewModel>[] } = {};
+    protected reverseRelationsByCollection: { [collection: string]: ReverseRelationDefinition<BaseViewModel>[] } = {};*/
 
-    protected relationsByKey: { [key: string]: RelationDefinition<BaseViewModel> } = {};
+    protected relationsByKey: { [key: string]: Relation } = {};
 
     /**
      * The view model ctor of the encapsulated view model.
@@ -143,16 +128,12 @@ export abstract class BaseRepository<V extends BaseViewModel & T, M extends Base
      */
     public constructor(
         private repositoryServiceCollector: RepositoryServiceCollector,
-        protected baseModelCtor: ModelConstructor<M>,
-        protected relationDefinitions: RelationDefinition<BaseViewModel>[] = [],
-        protected nestedModelDescriptors: NestedModelDescriptors = {}
+        protected baseModelCtor: ModelConstructor<M>
     ) {
         this._collection = baseModelCtor.COLLECTION;
 
-        this.extendRelations();
-
-        this.relationDefinitions.forEach(relation => {
-            this.relationsByKey[relation.ownKey] = relation;
+        this.relationManager.getRelationsForCollection(this.collection).forEach(relation => {
+            this.relationsByKey[relation.ownField] = relation;
         });
 
         // All data is piped through an auditTime of 1ms. This is to prevent massive
@@ -166,8 +147,6 @@ export abstract class BaseRepository<V extends BaseViewModel & T, M extends Base
 
         this.languageCollator = new Intl.Collator(this.translate.currentLang);
     }
-
-    protected extendRelations(): void {}
 
     public onAfterAppsLoaded(): void {
         this.baseViewModelCtor = this.collectionMapperService.getViewModelConstructor(this.collection);
@@ -204,7 +183,7 @@ export abstract class BaseRepository<V extends BaseViewModel & T, M extends Base
      */
     public changedModels(ids: number[]): void {
         ids.forEach(id => {
-            this.viewModelStore[id] = this.createViewModelWithTitles(this.DS.get(this.collection, id));
+            this.viewModelStore[id] = this.createViewModel(this.DS.get(this.collection, id));
         });
     }
 
@@ -212,17 +191,50 @@ export abstract class BaseRepository<V extends BaseViewModel & T, M extends Base
      * After creating a view model, all functions for models from the repo
      * are assigned to the new view model.
      */
-    protected createViewModelWithTitles(model: M): V {
-        const viewModel = this.relationManager.createViewModel(
-            model,
-            this.baseViewModelCtor,
-            this.relationsByKey,
-            this.nestedModelDescriptors
-        );
+    protected createViewModel(model: M): V {
+        const viewModel = this.createViewModelproxy(model);
 
         viewModel.getTitle = () => this.getTitle(viewModel);
         viewModel.getListTitle = () => this.getListTitle(viewModel);
         viewModel.getVerboseName = this.getVerboseName;
+        return viewModel;
+    }
+
+    private createViewModelproxy(model: M): V {
+        let viewModel = new this.baseViewModelCtor(model);
+        viewModel = new Proxy(viewModel, {
+            get: (target: V, property) => {
+                // target is our viewModel and property the requsted value: viewModel[property]
+                let result: any; // This is what we have to resolve: viewModel[property] -> result
+                const _model: M = target.getModel();
+                const relation = typeof property === 'string' ? this.relationsByKey[property] : null;
+
+                // try to find a getter for property
+                if (property in target) {
+                    // iterate over prototype chain
+                    let prototypeFunc = this.baseViewModelCtor,
+                        descriptor = null;
+                    do {
+                        descriptor = Object.getOwnPropertyDescriptor(prototypeFunc.prototype, property);
+                        if (!descriptor || !descriptor.get) {
+                            prototypeFunc = Object.getPrototypeOf(prototypeFunc);
+                        }
+                    } while (!(descriptor && descriptor.get) && prototypeFunc && prototypeFunc.prototype);
+
+                    if (descriptor && descriptor.get) {
+                        // if getter was found in prototype chain, bind it with this proxy for right `this` access
+                        result = descriptor.get.bind(viewModel)();
+                    } else {
+                        result = target[property];
+                    }
+                } else if (property in _model) {
+                    result = _model[property];
+                } else if (relation) {
+                    result = this.relationManager.handleRelation(_model, relation);
+                }
+                return result;
+            }
+        });
         return viewModel;
     }
 
@@ -272,15 +284,6 @@ export abstract class BaseRepository<V extends BaseViewModel & T, M extends Base
         // this ensures we get a valid base model, even if the view was just
         // sending an object with "as MyModelClass"
         const sendModel = new this.baseModelCtor(model);
-
-        // Strips empty fields from the sending mode data (except false)
-        // required for i.e. users, since group list is mandatory
-        Object.keys(sendModel).forEach(key => {
-            if (!sendModel[key] && sendModel[key] !== false) {
-                delete sendModel[key];
-            }
-        });
-
         return await this.dataSend.createModel(sendModel);
     }
 

@@ -4,10 +4,10 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { HtmlToPdfService } from 'app/core/pdf-services/html-to-pdf.service';
 import { PdfDocumentService } from 'app/core/pdf-services/pdf-document.service';
-import { ChangeRecommendationRepositoryService } from 'app/core/repositories/motions/change-recommendation-repository.service';
+import { MotionChangeRecommendationRepositoryService } from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
-import { StatuteParagraphRepositoryService } from 'app/core/repositories/motions/statute-paragraph-repository.service';
+import { MotionStatuteParagraphRepositoryService } from 'app/core/repositories/motions/motion-statute-paragraph-repository.service';
 import { LinenumberingService } from 'app/core/ui-services/linenumbering.service';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from 'app/shared/models/motions/view-unified-change';
@@ -58,8 +58,8 @@ export class MotionPdfService {
     public constructor(
         private translate: TranslateService,
         private motionRepo: MotionRepositoryService,
-        private statuteRepo: StatuteParagraphRepositoryService,
-        private changeRecoRepo: ChangeRecommendationRepositoryService,
+        private statuteRepo: MotionStatuteParagraphRepositoryService,
+        private changeRecoRepo: MotionChangeRecommendationRepositoryService,
         private organisationSettingsService: OrganisationSettingsService,
         private pdfDocumentService: PdfDocumentService,
         private htmlToPdfService: HtmlToPdfService,

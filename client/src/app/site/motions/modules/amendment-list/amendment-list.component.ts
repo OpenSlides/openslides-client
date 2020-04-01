@@ -15,7 +15,7 @@ import { MotionRepositoryService } from 'app/core/repositories/motions/motion-re
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { LinenumberingService } from 'app/core/ui-services/linenumbering.service';
 import { OverlayService } from 'app/core/ui-services/overlay.service';
-import { ItemVisibilityChoices } from 'app/shared/models/agenda/item';
+import { ItemVisibilityChoices } from 'app/shared/models/agenda/agenda-item';
 import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
 import { MotionExportDialogComponent } from '../shared-motion/motion-export-dialog/motion-export-dialog.component';

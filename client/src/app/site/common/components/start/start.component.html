@@ -19,6 +19,8 @@
 
             <div [innerHTML]="startContent.general_event_welcome_text | trust: 'html'"></div>
         </div>
+
+        <button type="button" mat-button (click)="test()">TEST</button>
     </ng-container>
 
     <ng-container *ngIf="isEditing">

@@ -5,7 +5,6 @@ import { Observable, Subject } from 'rxjs';
 import { BaseModel, ModelConstructor } from '../../shared/models/base/base-model';
 import { CollectionMapperService } from './collection-mapper.service';
 import { Deferred } from '../promises/deferred';
-import { RelationCacheService } from './relation-cache.service';
 
 /**
  * Represents information about a deleted model.
@@ -165,10 +164,7 @@ export class DataStoreUpdateManagerService {
     /**
      * @param mapperService
      */
-    public constructor(
-        private mapperService: CollectionMapperService,
-        private relationCacheService: RelationCacheService
-    ) {}
+    public constructor(private mapperService: CollectionMapperService) {}
 
     /**
      * Retrieve the current update slot.
@@ -203,7 +199,7 @@ export class DataStoreUpdateManagerService {
      *
      * @param slot The slot to commit
      */
-    public commit(slot: UpdateSlot, resetCache: boolean = false): void {
+    public commit(slot: UpdateSlot): void {
         if (!this.currentUpdateSlot || !this.currentUpdateSlot.equal(slot)) {
             throw new Error('No or wrong update slot to be finished!');
         }
@@ -212,20 +208,13 @@ export class DataStoreUpdateManagerService {
         // notify repositories in two phases
         const repositories = this.mapperService.getAllRepositories();
 
-        if (resetCache) {
-            this.relationCacheService.reset();
-        }
-
         // Phase 1: deleting and creating of view models (in this order)
         repositories.forEach(repo => {
             const deletedModelIds = slot.getDeletedModelIdsForCollection(repo.collection);
             repo.deleteModels(deletedModelIds);
-            this.relationCacheService.registerDeletedModels(repo.collection, deletedModelIds);
+
             const changedModelIds = slot.getChangedModelIdsForCollection(repo.collection);
             repo.changedModels(changedModelIds);
-            // TODO!!
-            const changeId = 0;
-            this.relationCacheService.registerChangedModels(repo.collection, changedModelIds, changeId);
         });
 
         // Phase 2: updating all repositories

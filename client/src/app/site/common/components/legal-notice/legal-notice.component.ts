@@ -6,7 +6,6 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { OpenSlidesService } from 'app/core/core-services/openslides.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { ConfigRepositoryService } from 'app/core/repositories/config/config-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { UpdateService } from 'app/core/ui-services/update.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
@@ -33,7 +32,6 @@ export class LegalNoticeComponent extends BaseComponent implements OnInit {
         componentServiceCollector: ComponentServiceCollector,
         private openSlidesService: OpenSlidesService,
         private update: UpdateService,
-        private configRepo: ConfigRepositoryService,
         private operator: OperatorService
     ) {
         super(componentServiceCollector);
@@ -55,9 +53,11 @@ export class LegalNoticeComponent extends BaseComponent implements OnInit {
      * Saves changes.
      */
     public saveChanges(): void {
-        this.configRepo
+        /*this.configRepo
             .bulkUpdate([{ key: 'general_event_legal_notice', value: this.legalNotice }])
             .then(() => (this.isEditing = !this.isEditing), this.raiseError);
+        */
+        throw new Error('TODO');
     }
 
     /**

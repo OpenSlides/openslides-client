@@ -5,10 +5,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { OpenSlidesStatusService } from 'app/core/core-services/openslides-status.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { StorageService } from 'app/core/core-services/storage.service';
-import { CategoryRepositoryService } from 'app/core/repositories/motions/category-repository.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
+import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
-import { WorkflowRepositoryService } from 'app/core/repositories/motions/workflow-repository.service';
+import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/motion-workflow-repository.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import {
     BaseFilterListService,
@@ -156,11 +156,11 @@ export class MotionFilterListService extends BaseFilterListService<ViewMotion> {
     public constructor(
         store: StorageService,
         OSStatus: OpenSlidesStatusService,
-        categoryRepo: CategoryRepositoryService,
+        categoryRepo: MotionCategoryRepositoryService,
         motionBlockRepo: MotionBlockRepositoryService,
         commentRepo: MotionCommentSectionRepositoryService,
         tagRepo: TagRepositoryService,
-        private workflowRepo: WorkflowRepositoryService,
+        private workflowRepo: MotionWorkflowRepositoryService,
         private translate: TranslateService,
         private operator: OperatorService,
         private config: OrganisationSettingsService

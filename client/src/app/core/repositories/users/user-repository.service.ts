@@ -1,12 +1,9 @@
 import { Injectable } from '@angular/core';
 
-
 import { HttpService } from 'app/core/core-services/http.service';
-import { RelationDefinition } from 'app/core/definitions/relations';
 import { NewEntry } from 'app/core/ui-services/base-import.service';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { User } from 'app/shared/models/users/user';
-import { ViewGroup } from 'app/site/users/models/view-group';
 import { UserTitleInformation, ViewUser } from 'app/site/users/models/view-user';
 import { BaseRepository } from '../base-repository';
 import { environment } from '../../../../environments/environment';
@@ -19,15 +16,6 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 type StringNamingSchema = 'lastCommaFirst' | 'firstSpaceLast';
 
 type SortProperty = 'first_name' | 'last_name' | 'number';
-
-const UserRelations: RelationDefinition[] = [
-    {
-        type: 'M2M',
-        ownIdKey: 'groups_id',
-        ownKey: 'groups',
-        foreignViewModel: ViewGroup
-    }
-];
 
 /**
  * Repository service for users
@@ -58,7 +46,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User, UserTi
         private httpService: HttpService,
         private organisationSettingsService: OrganisationSettingsService
     ) {
-        super(repositoryServiceCollector, User, UserRelations);
+        super(repositoryServiceCollector, User);
         this.sortProperty = this.organisationSettingsService.instant('users_sort_by');
         this.organisationSettingsService.get<SortProperty>('users_sort_by').subscribe(conf => {
             this.sortProperty = conf;
@@ -149,8 +137,8 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User, UserTi
     /**
      * Adds the short and full name to the view user.
      */
-    protected createViewModelWithTitles(model: User): ViewUser {
-        const viewModel = super.createViewModelWithTitles(model);
+    protected createViewModel(model: User): ViewUser {
+        const viewModel = super.createViewModel(model);
         viewModel.getFullName = () => this.getFullName(viewModel);
         viewModel.getShortName = () => this.getShortName(viewModel);
         viewModel.getLevelAndNumber = () => this.getLevelAndNumber(viewModel);

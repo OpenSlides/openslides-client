@@ -1,7 +1,7 @@
 import { BaseVote } from '../poll/base-vote';
 
 export class MotionVote extends BaseVote<MotionVote> {
-    public static COLLECTION = 'motions/motion-vote';
+    public static COLLECTION = 'motion_vote';
 
     public id: number;
 

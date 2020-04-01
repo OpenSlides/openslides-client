@@ -1,43 +1,11 @@
 import { Injectable } from '@angular/core';
 
 import { HttpService } from 'app/core/core-services/http.service';
-import { RelationDefinition } from 'app/core/definitions/relations';
 import { BasePollRepository } from 'app/core/repositories/base-poll-repository';
 import { VotingService } from 'app/core/ui-services/voting.service';
 import { AssignmentPoll } from 'app/shared/models/assignments/assignment-poll';
-import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
-import { ViewAssignmentOption } from 'app/site/assignments/models/view-assignment-option';
 import { AssignmentPollTitleInformation, ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
-import { ViewGroup } from 'app/site/users/models/view-group';
-import { ViewUser } from 'app/site/users/models/view-user';
 import { RepositoryServiceCollector } from '../repository-service-collector';
-
-const AssignmentPollRelations: RelationDefinition[] = [
-    {
-        type: 'M2M',
-        ownIdKey: 'groups_id',
-        ownKey: 'groups',
-        foreignViewModel: ViewGroup
-    },
-    {
-        type: 'O2M',
-        ownIdKey: 'options_id',
-        ownKey: 'options',
-        foreignViewModel: ViewAssignmentOption
-    },
-    {
-        type: 'M2O',
-        ownIdKey: 'assignment_id',
-        ownKey: 'assignment',
-        foreignViewModel: ViewAssignment
-    },
-    {
-        type: 'M2M',
-        ownIdKey: 'voted_id',
-        ownKey: 'voted',
-        foreignViewModel: ViewUser
-    }
-];
 
 export interface AssignmentAnalogVoteData {
     options: {
@@ -89,7 +57,7 @@ export class AssignmentPollRepositoryService extends BasePollRepository<
         votingService: VotingService,
         http: HttpService
     ) {
-        super(repositoryServiceCollector, AssignmentPoll, AssignmentPollRelations, {}, votingService, http);
+        super(repositoryServiceCollector, AssignmentPoll, votingService, http);
     }
 
     public getTitle = (titleInformation: AssignmentPollTitleInformation) => {

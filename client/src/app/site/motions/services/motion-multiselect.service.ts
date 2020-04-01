@@ -3,11 +3,11 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { HttpService } from 'app/core/core-services/http.service';
-import { ItemRepositoryService } from 'app/core/repositories/agenda/item-repository.service';
-import { CategoryRepositoryService } from 'app/core/repositories/motions/category-repository.service';
+import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
+import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
-import { WorkflowRepositoryService } from 'app/core/repositories/motions/workflow-repository.service';
+import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/motion-workflow-repository.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ChoiceService } from 'app/core/ui-services/choice.service';
@@ -51,10 +51,10 @@ export class MotionMultiselectService {
         private promptService: PromptService,
         private choiceService: ChoiceService,
         private userRepo: UserRepositoryService,
-        private workflowRepo: WorkflowRepositoryService,
-        private categoryRepo: CategoryRepositoryService,
+        private workflowRepo: MotionWorkflowRepositoryService,
+        private categoryRepo: MotionCategoryRepositoryService,
         private tagRepo: TagRepositoryService,
-        private agendaRepo: ItemRepositoryService,
+        private agendaRepo: AgendaItemRepositoryService,
         private motionBlockRepo: MotionBlockRepositoryService,
         private httpService: HttpService,
         private treeService: TreeService,

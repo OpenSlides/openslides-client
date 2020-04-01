@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { CategoryRepositoryService } from 'app/core/repositories/motions/category-repository.service';
+import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -92,7 +92,7 @@ export class CallListComponent extends BaseSortTreeComponent<ViewMotion> impleme
         private motionCsvExport: MotionCsvExportService,
         private motionPdfExport: MotionPdfExportService,
         private tagRepo: TagRepositoryService,
-        private categoryRepo: CategoryRepositoryService
+        private categoryRepo: MotionCategoryRepositoryService
     ) {
         super(componentServiceCollector, promptService);
 

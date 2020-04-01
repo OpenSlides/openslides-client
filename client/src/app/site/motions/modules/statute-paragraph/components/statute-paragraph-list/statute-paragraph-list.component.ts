@@ -6,13 +6,13 @@ import { Title } from '@angular/platform-browser';
 
 import { TranslateService } from '@ngx-translate/core';
 
-import { StatuteParagraphRepositoryService } from 'app/core/repositories/motions/statute-paragraph-repository.service';
+import { MotionStatuteParagraphRepositoryService } from 'app/core/repositories/motions/motion-statute-paragraph-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
-import { StatuteParagraph } from 'app/shared/models/motions/statute-paragraph';
+import { MotionStatuteParagraph } from 'app/shared/models/motions/motion-statute-paragraph';
 import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { ViewStatuteParagraph } from 'app/site/motions/models/view-statute-paragraph';
+import { ViewMotionStatuteParagraph } from 'app/site/motions/models/view-motion-statute-paragraph';
 import { StatuteCsvExportService } from 'app/site/motions/services/statute-csv-export.service';
 
 /**
@@ -27,12 +27,12 @@ export class StatuteParagraphListComponent extends BaseComponent implements OnIn
     @ViewChild('statuteParagraphDialog', { static: true })
     private statuteParagraphDialog: TemplateRef<string>;
 
-    private currentStatuteParagraph: ViewStatuteParagraph | null;
+    private currentStatuteParagraph: ViewMotionStatuteParagraph | null;
 
     /**
      * Source of the Data
      */
-    public statuteParagraphs: ViewStatuteParagraph[] = [];
+    public statuteParagraphs: ViewMotionStatuteParagraph[] = [];
 
     /**
      * Formgroup for creating and updating of statute paragraphs
@@ -52,7 +52,7 @@ export class StatuteParagraphListComponent extends BaseComponent implements OnIn
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        private repo: StatuteParagraphRepositoryService,
+        private repo: MotionStatuteParagraphRepositoryService,
         private formBuilder: FormBuilder,
         private promptService: PromptService,
         private dialog: MatDialog,
@@ -82,7 +82,7 @@ export class StatuteParagraphListComponent extends BaseComponent implements OnIn
     /**
      * Open the modal dialog
      */
-    public openDialog(paragraph?: ViewStatuteParagraph): void {
+    public openDialog(paragraph?: ViewMotionStatuteParagraph): void {
         this.currentStatuteParagraph = paragraph;
         this.statuteParagraphForm.reset();
         if (paragraph) {
@@ -107,10 +107,13 @@ export class StatuteParagraphListComponent extends BaseComponent implements OnIn
             // eiher update or create
             if (this.currentStatuteParagraph) {
                 this.repo
-                    .update(this.statuteParagraphForm.value as Partial<StatuteParagraph>, this.currentStatuteParagraph)
+                    .update(
+                        this.statuteParagraphForm.value as Partial<MotionStatuteParagraph>,
+                        this.currentStatuteParagraph
+                    )
                     .catch(this.raiseError);
             } else {
-                const paragraph = new StatuteParagraph(this.statuteParagraphForm.value);
+                const paragraph = new MotionStatuteParagraph(this.statuteParagraphForm.value);
                 this.repo.create(paragraph).catch(this.raiseError);
             }
             this.statuteParagraphForm.reset();
@@ -121,7 +124,7 @@ export class StatuteParagraphListComponent extends BaseComponent implements OnIn
      * Is executed, when the delete button is pressed
      * @param viewStatuteParagraph The statute paragraph to delete
      */
-    public async onDeleteButton(viewStatuteParagraph: ViewStatuteParagraph): Promise<void> {
+    public async onDeleteButton(viewStatuteParagraph: ViewMotionStatuteParagraph): Promise<void> {
         const title = this.translate.instant('Are you sure you want to delete this statute paragraph?');
         const content = viewStatuteParagraph.title;
         if (await this.promptService.open(title, content)) {

@@ -59,7 +59,8 @@ export class ImportCreateUser extends User {
                 open += 1;
             }
         });
-        this.groups_id = ids;
+        // TODO
+        // this.group_ids = ids;
         return open;
     }
 }

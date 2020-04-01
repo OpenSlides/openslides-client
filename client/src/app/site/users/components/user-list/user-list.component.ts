@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { PblColumnDefinition } from '@pebula/ngrid';
 
+import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
@@ -175,7 +176,8 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         config: OrganisationSettingsService,
         private userPdf: UserPdfExportService,
         private dialog: MatDialog,
-        private pollService: PollService
+        private pollService: PollService,
+        private activeMeetingService: ActiveMeetingService
     ) {
         super(componentServiceCollector);
 
@@ -233,7 +235,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         ev.stopPropagation();
         this.infoDialog = {
             name: user.username,
-            groups_id: user.groups_id,
+            groups_id: user.group_ids(this.activeMeetingService.getMeetingId()),
             gender: user.gender,
             structure_level: user.structure_level,
             number: user.number

@@ -6,7 +6,7 @@ import { Title } from '@angular/platform-browser';
 
 import { TranslateService } from '@ngx-translate/core';
 
-import { ChangeRecommendationRepositoryService } from 'app/core/repositories/motions/change-recommendation-repository.service';
+import { MotionChangeRecommendationRepositoryService } from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { LineRange, ModificationType } from 'app/core/ui-services/diff.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
@@ -95,7 +95,7 @@ export class MotionChangeRecommendationDialogComponent extends BaseComponent {
         componentServiceCollector: ComponentServiceCollector,
         @Inject(MAT_DIALOG_DATA) public data: MotionChangeRecommendationDialogComponentData,
         private formBuilder: FormBuilder,
-        private repo: ChangeRecommendationRepositoryService,
+        private repo: MotionChangeRecommendationRepositoryService,
         private dialogRef: MatDialogRef<MotionChangeRecommendationDialogComponent>
     ) {
         super(componentServiceCollector);

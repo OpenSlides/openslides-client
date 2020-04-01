@@ -5,13 +5,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { ItemRepositoryService } from 'app/core/repositories/agenda/item-repository.service';
+import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { TopicRepositoryService } from 'app/core/repositories/topics/topic-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
-import { ItemVisibilityChoices } from 'app/shared/models/agenda/item';
+import { ItemVisibilityChoices } from 'app/shared/models/agenda/agenda-item';
 import { Topic } from 'app/shared/models/topics/topic';
-import { ViewItem } from 'app/site/agenda/models/view-item';
+import { ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { CreateTopic } from '../../models/create-topic';
 import { ViewTopic } from '../../models/view-topic';
@@ -48,7 +48,7 @@ export class TopicDetailComponent extends BaseComponent {
     /**
      * Subject for agenda items
      */
-    public itemObserver: BehaviorSubject<ViewItem[]>;
+    public itemObserver: BehaviorSubject<ViewAgendaItem[]>;
 
     /**
      * Determine visibility states for the agenda that will be created implicitly
@@ -77,7 +77,7 @@ export class TopicDetailComponent extends BaseComponent {
         private repo: TopicRepositoryService,
         private promptService: PromptService,
         private operator: OperatorService,
-        private itemRepo: ItemRepositoryService
+        private itemRepo: AgendaItemRepositoryService
     ) {
         super(componentServiceCollector);
         this.getTopicByUrl();

@@ -1,6 +1,4 @@
 import { BaseModel } from 'app/shared/models/base/base-model';
-import { ViewItem } from 'app/site/agenda/models/view-item';
-import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import {
     AgendaListTitle,
@@ -38,20 +36,6 @@ export abstract class BaseIsAgendaItemAndListOfSpeakersContentObjectRepository<
     implements
         IBaseIsAgendaItemContentObjectRepository<V, M, T>,
         IBaseIsListOfSpeakersContentObjectRepository<V, M, T> {
-    protected extendRelations(): void {
-        this.relationDefinitions.push({
-            type: 'M2O',
-            ownIdKey: 'agenda_item_id',
-            ownKey: 'item',
-            foreignViewModel: ViewItem
-        });
-        this.relationDefinitions.push({
-            type: 'M2O',
-            ownIdKey: 'list_of_speakers_id',
-            ownKey: 'listOfSpeakers',
-            foreignViewModel: ViewListOfSpeakers
-        });
-    }
 
     public getAgendaListTitle(titleInformation: T): AgendaListTitle {
         // Return the agenda title with the model's verbose name appended
@@ -74,8 +58,8 @@ export abstract class BaseIsAgendaItemAndListOfSpeakersContentObjectRepository<
         return this.getAgendaSlideTitle(titleInformation);
     };
 
-    protected createViewModelWithTitles(model: M): V {
-        const viewModel = super.createViewModelWithTitles(model);
+    protected createViewModel(model: M): V {
+        const viewModel = super.createViewModel(model);
         viewModel.getAgendaListTitle = () => this.getAgendaListTitle(viewModel);
         viewModel.getAgendaSlideTitle = () => this.getAgendaSlideTitle(viewModel);
         viewModel.getListOfSpeakersTitle = () => this.getListOfSpeakersTitle(viewModel);

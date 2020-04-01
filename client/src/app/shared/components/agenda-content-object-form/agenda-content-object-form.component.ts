@@ -3,10 +3,10 @@ import { FormControl, FormGroup } from '@angular/forms';
 
 import { BehaviorSubject } from 'rxjs';
 
-import { ItemRepositoryService } from 'app/core/repositories/agenda/item-repository.service';
+import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
-import { ItemVisibilityChoices } from 'app/shared/models/agenda/item';
-import { ViewItem } from 'app/site/agenda/models/view-item';
+import { ItemVisibilityChoices } from 'app/shared/models/agenda/agenda-item';
+import { ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 
 type AgendaItemCreateChoices = 'always' | 'never' | 'default_yes' | 'default_no';
 
@@ -31,11 +31,11 @@ export class AgendaContentObjectFormComponent implements OnInit {
     /**
      * Subject for agenda items
      */
-    public itemObserver: BehaviorSubject<ViewItem[]>;
+    public itemObserver: BehaviorSubject<ViewAgendaItem[]>;
 
     public constructor(
         private organisationSettingsService: OrganisationSettingsService,
-        private itemRepo: ItemRepositoryService
+        private itemRepo: AgendaItemRepositoryService
     ) {}
 
     public ngOnInit(): void {

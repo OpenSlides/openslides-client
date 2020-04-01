@@ -2,13 +2,13 @@ import { Component, ViewChild } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
-import { CategoryRepositoryService } from 'app/core/repositories/motions/category-repository.service';
+import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { SortingTreeComponent } from 'app/shared/components/sorting-tree/sorting-tree.component';
 import { CanComponentDeactivate } from 'app/shared/utils/watch-for-changes.guard';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { ViewCategory } from 'app/site/motions/models/view-category';
+import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
 
 /**
  * Sort view for the call list.
@@ -23,12 +23,12 @@ export class CategoriesSortComponent extends BaseComponent implements CanCompone
      * Reference to the sorting tree.
      */
     @ViewChild('osSortedTree', { static: true })
-    private osSortTree: SortingTreeComponent<ViewCategory>;
+    private osSortTree: SortingTreeComponent<ViewMotionCategory>;
 
     /**
      * All motions sorted first by weight, then by id.
      */
-    public categoriesObservable: Observable<ViewCategory[]>;
+    public categoriesObservable: Observable<ViewMotionCategory[]>;
 
     /**
      * Boolean to check if the tree has changed.
@@ -45,7 +45,7 @@ export class CategoriesSortComponent extends BaseComponent implements CanCompone
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        private categoryRepo: CategoryRepositoryService,
+        private categoryRepo: MotionCategoryRepositoryService,
         private promptService: PromptService
     ) {
         super(componentServiceCollector);

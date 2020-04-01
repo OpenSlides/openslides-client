@@ -4,16 +4,16 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Papa } from 'ngx-papaparse';
 
-import { CategoryRepositoryService } from 'app/core/repositories/motions/category-repository.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
+import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { BaseImportService, NewEntry } from 'app/core/ui-services/base-import.service';
 import { Tag } from 'app/shared/models/core/tag';
-import { Category } from 'app/shared/models/motions/category';
 import { Motion } from 'app/shared/models/motions/motion';
 import { MotionBlock } from 'app/shared/models/motions/motion-block';
+import { MotionCategory } from 'app/shared/models/motions/motion-category';
 import { CreateMotion } from '../models/create-motion';
 import { CsvMapping, ImportCreateMotion } from '../models/import-create-motion';
 import { motionExportOnly, motionImportExportHeaderOrder } from '../motions.constants';
@@ -75,7 +75,7 @@ export class MotionImportService extends BaseImportService<Motion> {
      */
     public constructor(
         private repo: MotionRepositoryService,
-        private categoryRepo: CategoryRepositoryService,
+        private categoryRepo: MotionCategoryRepositoryService,
         private motionBlockRepo: MotionBlockRepositoryService,
         private userRepo: UserRepositoryService,
         private tagRepo: TagRepositoryService,
@@ -368,7 +368,7 @@ export class MotionImportService extends BaseImportService<Motion> {
             promises.push(
                 this.categoryRepo
                     .create(
-                        new Category({
+                        new MotionCategory({
                             name: cat.name,
                             prefix: cat.prefix ? cat.prefix : null
                         })

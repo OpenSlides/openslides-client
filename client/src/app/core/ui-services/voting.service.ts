@@ -46,9 +46,10 @@ export class VotingService {
         if (this.operator.isAnonymous) {
             return VotingError.USER_IS_ANONYMOUS;
         }
-        if (!this.operator.isInGroupIdsNonAdminCheck(...poll.groups_id)) {
+        // TODO: enable. Currently this fals, becuase poll.groups_id is null (The accessor must be entitled_group_ids)
+        /*if (!this.operator.isInGroupIdsNonAdminCheck(...poll.groups_id)) {
             return VotingError.USER_HAS_NO_PERMISSION;
-        }
+        }*/
         if (poll.type === PollType.Analog) {
             return VotingError.POLL_WRONG_TYPE;
         }
