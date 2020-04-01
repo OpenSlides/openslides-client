@@ -14,12 +14,9 @@ export interface ViewModelConstructor<T extends BaseViewModel> {
  * Base class for view models.
  */
 export abstract class BaseViewModel<M extends BaseModel = any> {
-    /**
-     * @returns the element id of the model
-     */
-    public get elementId(): string {
-        return this._model.elementId;
-    }
+    /*public get fqid(): string {
+        return this._model.fqid;
+    }*/
 
     /**
      * @param collection

@@ -5,14 +5,14 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { OperatorService, Permission } from 'app/core/core-services/operator.service';
-import { CategoryRepositoryService } from 'app/core/repositories/motions/category-repository.service';
+import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { ViewCategory } from 'app/site/motions/models/view-category';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
+import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
 
 /**
  * Detail component to display one motion block
@@ -26,12 +26,12 @@ export class CategoryDetailComponent extends BaseComponent implements OnInit {
     /**
      * The one selected category
      */
-    public selectedCategory: ViewCategory;
+    public selectedCategory: ViewMotionCategory;
 
     /**
      * All categories with the selected one and all children.
      */
-    public categories: ViewCategory[];
+    public categories: ViewMotionCategory[];
 
     /**
      * Datasources for `categories`. Holds all motions for one category.
@@ -79,7 +79,7 @@ export class CategoryDetailComponent extends BaseComponent implements OnInit {
         private route: ActivatedRoute,
         private operator: OperatorService,
         private router: Router,
-        private repo: CategoryRepositoryService,
+        private repo: MotionCategoryRepositoryService,
         private motionRepo: MotionRepositoryService,
         private promptService: PromptService,
         private formBuilder: FormBuilder,
@@ -205,7 +205,7 @@ export class CategoryDetailComponent extends BaseComponent implements OnInit {
         return this.motionRepo.getExtendedStateLabel(motion);
     }
 
-    public getLevelDashes(category: ViewCategory): string {
+    public getLevelDashes(category: ViewMotionCategory): string {
         const relativeLevel = category.level - this.selectedCategory.level;
         return '–'.repeat(relativeLevel);
     }

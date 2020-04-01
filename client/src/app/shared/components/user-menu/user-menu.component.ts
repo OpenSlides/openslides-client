@@ -1,7 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 
-
 import { AuthService } from 'app/core/core-services/auth.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -29,7 +28,7 @@ export class UserMenuComponent extends BaseComponent implements OnInit {
 
     public allowSelfSetPresent: boolean;
 
-    private selfPresentConfStr = 'users_allow_self_set_present';
+    // private selfPresentConfStr = 'users_allow_self_set_present';
 
     @Output()
     private navEvent: EventEmitter<void> = new EventEmitter();
@@ -38,7 +37,7 @@ export class UserMenuComponent extends BaseComponent implements OnInit {
         componentServiceCollector: ComponentServiceCollector,
         private operator: OperatorService,
         private authService: AuthService,
-        private overlayService: OverlayService, // private vp: ViewportService,
+        private overlayService: OverlayService,
         private loginDataService: LoginDataService,
         private router: Router
     ) {
@@ -57,9 +56,9 @@ export class UserMenuComponent extends BaseComponent implements OnInit {
                 this.username = this.translate.instant('Guest');
                 this.isLoggedIn = false;
             }
-        });*/
+        });
 
-        this.operator.authType.subscribe(authType => (this.authType = authType));
+        this.operator.authType.subscribe(authType => (this.authType = authType));*/
 
         this.loginDataService.samlSettings.subscribe(
             samlSettings => (this.samlChangePasswordUrl = samlSettings ? samlSettings.changePasswordUrl : null)

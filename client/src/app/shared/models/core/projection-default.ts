@@ -6,7 +6,7 @@ import { BaseModel } from '../base/base-model';
  * @ignore
  */
 export class ProjectionDefault extends BaseModel<ProjectionDefault> {
-    public static COLLECTION = 'core/projection-default';
+    public static COLLECTION = 'projectiondefault';
 
     public id: number;
     public name: string;

@@ -5,32 +5,21 @@ import { map } from 'rxjs/operators';
 
 import { HttpService } from 'app/core/core-services/http.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { RelationDefinition } from 'app/core/definitions/relations';
 import { DiffLinesInParagraph, DiffService } from 'app/core/ui-services/diff.service';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { TreeIdNode } from 'app/core/ui-services/tree.service';
 import { Motion } from 'app/shared/models/motions/motion';
-import { Submitter } from 'app/shared/models/motions/submitter';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from 'app/shared/models/motions/view-unified-change';
 import { PersonalNoteContent } from 'app/shared/models/users/personal-note';
 import { AgendaListTitle } from 'app/site/base/base-view-model-with-agenda-item';
-import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
-import { ViewCategory } from 'app/site/motions/models/view-category';
 import { MotionTitleInformation, ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionAmendedParagraph } from 'app/site/motions/models/view-motion-amended-paragraph';
-import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
 import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
-import { ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
-import { ViewState } from 'app/site/motions/models/view-state';
-import { ViewStatuteParagraph } from 'app/site/motions/models/view-statute-paragraph';
-import { ViewSubmitter } from 'app/site/motions/models/view-submitter';
-import { ViewWorkflow } from 'app/site/motions/models/view-workflow';
+import { ViewMotionStatuteParagraph } from 'app/site/motions/models/view-motion-statute-paragraph';
 import { ChangeRecoMode } from 'app/site/motions/motions.constants';
-import { ViewTag } from 'app/site/tags/models/view-tag';
 import { ViewPersonalNote } from 'app/site/users/models/view-personal-note';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { BaseIsAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-is-agenda-item-and-list-of-speakers-content-object-repository';
-import { NestedModelDescriptors } from '../base-repository';
 import { LineNumberedString, LinenumberingService, LineNumberRange } from '../../ui-services/linenumbering.service';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
@@ -60,103 +49,6 @@ export interface ParagraphToChoose {
      */
     lineTo: number;
 }
-
-const MotionRelations: RelationDefinition[] = [
-    {
-        type: 'M2O',
-        ownIdKey: 'state_id',
-        ownKey: 'state',
-        foreignViewModel: ViewState
-    },
-    {
-        type: 'M2O',
-        ownIdKey: 'recommendation_id',
-        ownKey: 'recommendation',
-        foreignViewModel: ViewState
-    },
-    {
-        type: 'M2O',
-        ownIdKey: 'workflow_id',
-        ownKey: 'workflow',
-        foreignViewModel: ViewWorkflow
-    },
-    {
-        type: 'M2O',
-        ownIdKey: 'category_id',
-        ownKey: 'category',
-        foreignViewModel: ViewCategory
-    },
-    {
-        type: 'M2O',
-        ownIdKey: 'motion_block_id',
-        ownKey: 'motion_block',
-        foreignViewModel: ViewMotionBlock
-    },
-    {
-        type: 'M2M',
-        ownIdKey: 'supporters_id',
-        ownKey: 'supporters',
-        foreignViewModel: ViewUser
-    },
-    {
-        type: 'M2M',
-        ownIdKey: 'attachments_id',
-        ownKey: 'attachments',
-        foreignViewModel: ViewMediafile
-    },
-    {
-        type: 'M2M',
-        ownIdKey: 'tags_id',
-        ownKey: 'tags',
-        foreignViewModel: ViewTag
-    },
-    {
-        type: 'M2M',
-        ownIdKey: 'change_recommendations_id',
-        ownKey: 'changeRecommendations',
-        foreignViewModel: ViewMotionChangeRecommendation
-    },
-    {
-        type: 'O2M',
-        foreignIdKey: 'parent_id',
-        ownKey: 'amendments',
-        foreignViewModel: ViewMotion
-    },
-    {
-        type: 'M2O',
-        ownIdKey: 'parent_id',
-        ownKey: 'parent',
-        foreignViewModel: ViewMotion
-    },
-    {
-        type: 'O2M',
-        foreignIdKey: 'motion_id',
-        ownKey: 'polls',
-        foreignViewModel: ViewMotionPoll
-    }
-    // Personal notes are dynamically added in the repo.
-];
-
-const MotionNestedModelDescriptors: NestedModelDescriptors = {};
-MotionNestedModelDescriptors[Motion.COLLECTION] = [
-    {
-        ownKey: 'submitters',
-        foreignViewModel: ViewSubmitter,
-        foreignModel: Submitter,
-        order: 'weight',
-        relationDefinitionsByKey: {
-            user: {
-                type: 'M2O',
-                ownIdKey: 'user_id',
-                ownKey: 'user',
-                foreignViewModel: ViewUser
-            }
-        },
-        titles: {
-            getTitle: (viewSubmitter: ViewSubmitter) => (viewSubmitter.user ? viewSubmitter.user.getTitle() : '')
-        }
-    }
-];
 
 /**
  * Repository Services for motions (and potentially categories)
@@ -212,7 +104,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         private readonly diff: DiffService,
         private operator: OperatorService
     ) {
-        super(repositoryServiceCollector, Motion, MotionRelations, MotionNestedModelDescriptors);
+        super(repositoryServiceCollector, Motion);
         config.get<SortProperty>('motions_motions_sorting').subscribe(conf => {
             this.sortProperty = conf;
             this.setConfigSortFn();
@@ -282,45 +174,12 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
     };
 
     protected createViewModelWithTitles(model: Motion): ViewMotion {
-        const viewModel = super.createViewModelWithTitles(model);
+        const viewModel = super.createViewModel(model);
 
         viewModel.getIdentifierOrTitle = () => this.getIdentifierOrTitle(viewModel);
         viewModel.getProjectorTitle = () => this.getProjectorTitle(viewModel);
 
         return viewModel;
-    }
-
-    protected extendRelations(): void {
-        this.relationDefinitions.push({
-            type: 'custom',
-            ownKey: 'personalNote',
-            get: (motion: Motion, viewMotion: ViewMotion) => {
-                return this.getPersonalNoteForMotion(motion);
-            },
-            getCacheObjectToCheck: (viewMotion: ViewMotion) => this.getPersonalNote()
-        });
-        this.relationDefinitions.push({
-            type: 'custom',
-            ownKey: 'diffLines',
-            get: (motion: Motion, viewMotion: ViewMotion) => {
-                if (viewMotion.parent && viewMotion.isParagraphBasedAmendment()) {
-                    const changeRecos = viewMotion.changeRecommendations.filter(changeReco =>
-                        changeReco.showInFinalView()
-                    );
-                    return this.getAmendmentParagraphLines(
-                        viewMotion,
-                        this.motionLineLength,
-                        ChangeRecoMode.Changed,
-                        changeRecos,
-                        false
-                    );
-                } else {
-                    return [];
-                }
-            },
-            getCacheObjectToCheck: (viewMotion: ViewMotion) => viewMotion.parent
-        });
-        super.extendRelations();
     }
 
     /**
@@ -651,7 +510,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
     }
 
     public formatStatuteAmendment(
-        paragraphs: ViewStatuteParagraph[],
+        paragraphs: ViewMotionStatuteParagraph[],
         amendment: ViewMotion,
         lineLength: number
     ): string {

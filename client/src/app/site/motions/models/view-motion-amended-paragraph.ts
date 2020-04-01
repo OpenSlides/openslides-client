@@ -1,5 +1,5 @@
 import { LineRange } from 'app/core/ui-services/diff.service';
-import { MergeAmendment } from 'app/shared/models/motions/state';
+import { MergeAmendment } from 'app/shared/models/motions/motion-state';
 import { ViewMotion } from './view-motion';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from '../../../shared/models/motions/view-unified-change';
 

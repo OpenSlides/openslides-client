@@ -1,60 +1,15 @@
 import { Injectable } from '@angular/core';
 
+import { AgendaItemRepositoryService } from './agenda-item-repository.service';
 import { HttpService } from 'app/core/core-services/http.service';
-import { RelationDefinition } from 'app/core/definitions/relations';
 import { ListOfSpeakers } from 'app/shared/models/agenda/list-of-speakers';
-import { Speaker } from 'app/shared/models/agenda/speaker';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { ListOfSpeakersTitleInformation, ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { ViewSpeaker } from 'app/site/agenda/models/view-speaker';
-import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
-import {
-    BaseViewModelWithListOfSpeakers,
-    isBaseViewModelWithListOfSpeakers
-} from 'app/site/base/base-view-model-with-list-of-speakers';
-import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
-import { ViewMotion } from 'app/site/motions/models/view-motion';
-import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
-import { ViewTopic } from 'app/site/topics/models/view-topic';
-import { ViewUser } from 'app/site/users/models/view-user';
+import { BaseViewModelWithListOfSpeakers } from 'app/site/base/base-view-model-with-list-of-speakers';
 import { BaseHasContentObjectRepository } from '../base-has-content-object-repository';
 import { BaseIsListOfSpeakersContentObjectRepository } from '../base-is-list-of-speakers-content-object-repository';
-import { NestedModelDescriptors } from '../base-repository';
-import { ItemRepositoryService } from './item-repository.service';
 import { RepositoryServiceCollector } from '../repository-service-collector';
-
-const ListOfSpeakersRelations: RelationDefinition[] = [
-    {
-        type: 'generic',
-        possibleModels: [ViewMotion, ViewMotionBlock, ViewTopic, ViewAssignment, ViewMediafile],
-        isVForeign: isBaseViewModelWithListOfSpeakers,
-        VForeignVerbose: 'BaseViewModelWithListOfSpeakers',
-        ownContentObjectDataKey: 'contentObjectData',
-        ownKey: 'contentObject'
-    }
-];
-
-const ListOfSpeakersNestedModelDescriptors: NestedModelDescriptors = {
-    'agenda/list-of-speakers': [
-        {
-            ownKey: 'speakers',
-            foreignViewModel: ViewSpeaker,
-            foreignModel: Speaker,
-            order: 'weight',
-            relationDefinitionsByKey: {
-                user: {
-                    type: 'M2O',
-                    ownIdKey: 'user_id',
-                    ownKey: 'user',
-                    foreignViewModel: ViewUser
-                }
-            },
-            titles: {
-                getTitle: (viewSpeaker: ViewSpeaker) => viewSpeaker.name
-            }
-        }
-    ]
-};
 
 /**
  * An object, that contains information about structure-level,
@@ -94,14 +49,9 @@ export class ListOfSpeakersRepositoryService extends BaseHasContentObjectReposit
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
         private httpService: HttpService,
-        private itemRepo: ItemRepositoryService
+        private itemRepo: AgendaItemRepositoryService
     ) {
-        super(
-            repositoryServiceCollector,
-            ListOfSpeakers,
-            ListOfSpeakersRelations,
-            ListOfSpeakersNestedModelDescriptors
-        );
+        super(repositoryServiceCollector, ListOfSpeakers);
     }
 
     public getVerboseName = (plural: boolean = false) => {

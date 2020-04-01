@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { CategoryRepositoryService } from 'app/core/repositories/motions/category-repository.service';
+import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { ChoiceService } from 'app/core/ui-services/choice.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -11,8 +11,8 @@ import { PromptService } from 'app/core/ui-services/prompt.service';
 import { SortingListComponent } from 'app/shared/components/sorting-list/sorting-list.component';
 import { CanComponentDeactivate } from 'app/shared/utils/watch-for-changes.guard';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { ViewCategory } from 'app/site/motions/models/view-category';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
+import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
 
 /**
  * View for rearranging and renumbering the motions of a category. The {@link onNumberMotions}
@@ -28,7 +28,7 @@ export class CategoryMotionsSortComponent extends BaseComponent implements OnIni
     /**
      * The current category. Determined by the route
      */
-    public category: ViewCategory;
+    public category: ViewMotionCategory;
 
     /**
      * A behaviorSubject emitting the currently asigned motions on change
@@ -88,7 +88,7 @@ export class CategoryMotionsSortComponent extends BaseComponent implements OnIni
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private promptService: PromptService,
-        private repo: CategoryRepositoryService,
+        private repo: MotionCategoryRepositoryService,
         private route: ActivatedRoute,
         private motionRepo: MotionRepositoryService,
         private choiceService: ChoiceService

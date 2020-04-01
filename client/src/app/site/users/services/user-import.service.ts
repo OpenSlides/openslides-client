@@ -25,7 +25,8 @@ export class UserImportService extends BaseImportService<User> {
         'last_name',
         'structure_level',
         'number',
-        'groups_id',
+        // TODO
+        // 'groups_id',
         'comment',
         'is_active',
         'is_present',

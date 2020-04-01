@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
-
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PersonalNoteService } from 'app/core/ui-services/personal-note.service';
 import { PersonalNoteContent } from 'app/shared/models/users/personal-note';

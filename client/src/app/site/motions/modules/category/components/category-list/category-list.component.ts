@@ -5,11 +5,11 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { PblColumnDefinition } from '@pebula/ngrid';
 
 import { OperatorService, Permission } from 'app/core/core-services/operator.service';
-import { CategoryRepositoryService } from 'app/core/repositories/motions/category-repository.service';
+import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
-import { ViewCategory } from 'app/site/motions/models/view-category';
+import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
 
 /**
  * Table for categories
@@ -19,7 +19,7 @@ import { ViewCategory } from 'app/site/motions/models/view-category';
     templateUrl: './category-list.component.html',
     styleUrls: ['./category-list.component.scss']
 })
-export class CategoryListComponent extends BaseListViewComponent<ViewCategory> implements OnInit {
+export class CategoryListComponent extends BaseListViewComponent<ViewMotionCategory> implements OnInit {
     @ViewChild('newCategoryDialog', { static: true })
     private newCategoryDialog: TemplateRef<string>;
 
@@ -71,7 +71,7 @@ export class CategoryListComponent extends BaseListViewComponent<ViewCategory> i
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        public repo: CategoryRepositoryService,
+        public repo: MotionCategoryRepositoryService,
         private formBuilder: FormBuilder,
         private dialog: MatDialog,
         private operator: OperatorService
@@ -130,7 +130,7 @@ export class CategoryListComponent extends BaseListViewComponent<ViewCategory> i
         }
     }
 
-    public getMargin(category: ViewCategory): string {
+    public getMargin(category: ViewMotionCategory): string {
         return `${category.level * 20}px`;
     }
 }
