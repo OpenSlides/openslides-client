@@ -48,7 +48,7 @@ export class AmendmentListPdfService {
 
         return [
             {
-                text: amendment.identifierOrTitle
+                text: amendment.numberOrTitle
             },
             {
                 text: amendment.getChangeLines()

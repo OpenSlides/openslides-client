@@ -112,9 +112,9 @@ export class AmendmentCreateWizardComponent extends BaseComponent implements OnI
                 if (newViewMotion) {
                     this.paragraphs = this.repo.getParagraphsToChoose(newViewMotion, this.lineLength);
 
-                    if (newViewMotion.hasParent) {
+                    if (newViewMotion.hasLeadMotion) {
                         this.isAmendmentOfAmendment = true;
-                        this.motion = newViewMotion.parent;
+                        this.motion = newViewMotion.lead_motion;
                         this.diffedParagraphs = this.repo.getDiffedParagraphToChoose(newViewMotion, this.lineLength);
                     } else {
                         this.isAmendmentOfAmendment = false;
@@ -248,6 +248,7 @@ export class AmendmentCreateWizardComponent extends BaseComponent implements OnI
      * @returns {Promise<void>}
      */
     public async saveAmendment(): Promise<void> {
+        console.error('TODO: workflow_id from meetingssettingsservice');
         let text = '';
         const amendedParagraphs = this.paragraphs.map((paragraph: ParagraphToChoose, index: number): string => {
             if (this.contentForm.value.selectedParagraphs.find(para => para.paragraphNo === index)) {
@@ -259,14 +260,14 @@ export class AmendmentCreateWizardComponent extends BaseComponent implements OnI
         });
         const newMotionValues = {
             ...this.contentForm.value,
-            title: this.translate.instant('Amendment to') + ' ' + this.motion.getIdentifierOrTitle(),
+            title: this.translate.instant('Amendment to') + ' ' + this.motion.getNumberOrTitle(),
             text: text, // Workaround as 'text' is required from the backend
             parent_id: this.motion.id,
             category_id: this.motion.category_id,
-            tags_id: this.motion.tags_id,
+            tag_ids: this.motion.tag_ids,
             motion_block_id: this.motion.motion_block_id,
-            amendment_paragraphs: amendedParagraphs,
-            workflow_id: this.configService.instant<number>('motions_amendments_workflow')
+            amendment_paragraphs: amendedParagraphs
+            // workflow_id: this.configService.instant<number>('motions_amendments_workflow')
         };
 
         const motion = new CreateMotion();

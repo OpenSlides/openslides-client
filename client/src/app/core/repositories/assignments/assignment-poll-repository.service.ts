@@ -52,10 +52,7 @@ export class AssignmentPollRepositoryService extends BasePollRepository<
      * @param translate Translate string
      * @param httpService make HTTP Requests
      */
-    public constructor(
-        repositoryServiceCollector: RepositoryServiceCollector,
-        http: HttpService
-    ) {
+    public constructor(repositoryServiceCollector: RepositoryServiceCollector, http: HttpService) {
         super(repositoryServiceCollector, AssignmentPoll, http);
     }
 

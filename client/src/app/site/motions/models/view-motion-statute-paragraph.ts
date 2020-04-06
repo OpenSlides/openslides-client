@@ -1,7 +1,9 @@
 import { SearchRepresentation } from 'app/core/ui-services/search.service';
 import { MotionStatuteParagraph } from 'app/shared/models/motions/motion-statute-paragraph';
 import { Searchable } from 'app/site/base/searchable';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { BaseViewModel } from '../../base/base-view-model';
+import { ViewMotion } from './view-motion';
 
 export interface StatuteParagraphTitleInformation {
     title: string;
@@ -14,7 +16,8 @@ export interface StatuteParagraphTitleInformation {
  * Provides "safe" access to variables and functions in {@link StatuteParagraph}
  * @ignore
  */
-export class ViewMotionStatuteParagraph extends BaseViewModel<MotionStatuteParagraph>
+export class ViewMotionStatuteParagraph
+    extends BaseViewModel<MotionStatuteParagraph>
     implements StatuteParagraphTitleInformation, Searchable {
     public static COLLECTION = MotionStatuteParagraph.COLLECTION;
     protected _collection = MotionStatuteParagraph.COLLECTION;
@@ -31,4 +34,8 @@ export class ViewMotionStatuteParagraph extends BaseViewModel<MotionStatuteParag
         return '/motions/statute-paragraphs';
     }
 }
-export interface ViewMotionStatuteParagraph extends MotionStatuteParagraph {}
+interface IMotionStatuteParagraphRelations {
+    motions: ViewMotion[];
+    meeting: ViewMeeting;
+}
+export interface ViewMotionStatuteParagraph extends MotionStatuteParagraph, IMotionStatuteParagraphRelations {}

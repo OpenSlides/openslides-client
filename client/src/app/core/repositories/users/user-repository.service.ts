@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 
-import { PreventedInDemo } from 'app/core/definitions/custom-errors';
+import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { HttpService } from 'app/core/core-services/http.service';
+import { PreventedInDemo } from 'app/core/definitions/custom-errors';
+import { Id } from 'app/core/definitions/key-types';
 import { NewEntry } from 'app/core/ui-services/base-import.service';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { User } from 'app/shared/models/users/user';
@@ -57,7 +59,8 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User, UserTi
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
         private httpService: HttpService,
-        private organisationSettingsService: OrganisationSettingsService
+        private organisationSettingsService: OrganisationSettingsService,
+        private activeMeetingService: ActiveMeetingService
     ) {
         super(repositoryServiceCollector, User);
         this.sortProperty = this.organisationSettingsService.instant('users_sort_by');
@@ -161,6 +164,13 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User, UserTi
         viewModel.getFullName = () => this.getFullName(viewModel);
         viewModel.getShortName = () => this.getShortName(viewModel);
         viewModel.getLevelAndNumber = () => this.getLevelAndNumber(viewModel);
+        viewModel.getEnsuredActiveMeetingId = () => {
+            const meetingId = this.activeMeetingService.getMeetingId();
+            if (!meetingId) {
+                throw new Error('No active meeting selected!');
+            }
+            return meetingId;
+        };
         return viewModel;
     }
 
@@ -279,7 +289,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User, UserTi
      * @param action add or remove the groups
      * @param groupIds All group ids to add or remove
      */
-    public async bulkAlterGroups(users: ViewUser[], action: 'add' | 'remove', groupIds: number[]): Promise<void> {
+    public async bulkAlterGroups(users: ViewUser[], action: 'add' | 'remove', groupIds: Id[]): Promise<void> {
         this.preventAlterationOnDemoUsers(users);
         await this.httpService.post('/rest/users/user/bulk_alter_groups/', {
             user_ids: users.map(user => user.id),
@@ -303,7 +313,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User, UserTi
         const subject = this.translate.instant(users_email_subject);
         const message = this.translate.instant(users_email_body);
 
-        const response = await this.httpService.post<{ count: Number; no_email_ids: number[] }>(
+        const response = await this.httpService.post<{ count: number; no_email_ids: number[] }>(
             '/rest/users/user/mass_invite_email/',
             {
                 user_ids: user_ids,

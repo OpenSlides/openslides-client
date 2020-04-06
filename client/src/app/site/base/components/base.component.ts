@@ -1,4 +1,4 @@
-import { OnDestroy } from '@angular/core';
+import { OnDestroy, Directive } from '@angular/core';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material/snack-bar';
 import { Title } from '@angular/platform-browser';
 
@@ -15,6 +15,7 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
  * A BaseComponent is an OpenSlides Component.
  * Components in the 'Side'- or 'projector' Folder are BaseComponents
  */
+@Directive()
 export abstract class BaseComponent implements OnDestroy {
     /**
      * To check permissions in templates using permission.[...]

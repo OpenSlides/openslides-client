@@ -1,4 +1,4 @@
-import { OnDestroy, OnInit } from '@angular/core';
+import { OnDestroy, OnInit, Directive } from '@angular/core';
 
 import { AutoupdateService, ModelRequest, ModelSubscription } from 'app/core/core-services/autoupdate.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -11,6 +11,7 @@ import { BaseComponent } from './base.component';
  * A BaseComponent is an OpenSlides Component.
  * Components in the 'Side'- or 'projector' Folder are BaseComponents
  */
+@Directive()
 export abstract class BaseModelContextComponent extends BaseComponent implements OnInit, OnDestroy {
     private modelSubscription: ModelSubscription | null = null;
 

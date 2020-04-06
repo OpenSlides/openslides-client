@@ -170,5 +170,11 @@ export class StartComponent extends BaseComponent implements OnInit {
         console.log(meeting1.logo_$);
         const key = meeting1.logo_$[0];
         console.log(meeting1.logo(key).title, meeting1.logo(key).used_as_logo_in_meeting(key).name);
+
+        console.log('\ntest user overwrites');
+        const viewUser = this.userRepo.getViewModel(1);
+        const user = viewUser.user;
+        console.log(user.group_ids(1), (<any>user).group_ids());
+        console.log(viewUser.group_ids(1), (<any>viewUser).group_ids());
     }
 }

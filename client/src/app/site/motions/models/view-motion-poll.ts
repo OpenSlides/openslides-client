@@ -3,7 +3,7 @@ import { PercentBase } from 'app/shared/models/poll/base-poll';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { ViewMotionOption } from 'app/site/motions/models/view-motion-option';
-import { PollClassType, ViewBasePoll } from 'app/site/polls/models/view-base-poll';
+import { BaseViewPoll, PollClassType } from 'app/site/polls/models/base-view-poll';
 import { ViewMotion } from './view-motion';
 
 export interface MotionPollTitleInformation {
@@ -24,12 +24,16 @@ export const MotionPollPercentBaseVerbose = {
 };
 
 export class ViewMotionPoll
-    extends ViewBasePoll<MotionPoll, MotionPollMethod, PercentBase>
+    extends BaseViewPoll<MotionPoll, ViewMotionOption, MotionPollMethod, PercentBase>
     implements MotionPollTitleInformation {
     public static COLLECTION = MotionPoll.COLLECTION;
     protected _collection = MotionPoll.COLLECTION;
 
     public readonly pollClassType = PollClassType.Motion;
+
+    public get motionPoll(): MotionPoll {
+        return this._model;
+    }
 
     public get result(): ViewMotionOption {
         return this.options[0];
@@ -48,7 +52,7 @@ export class ViewMotionPoll
             getBasicProjectorElement: options => ({
                 name: MotionPoll.COLLECTION,
                 id: this.id,
-                getIdentifiers: () => ['name', 'id']
+                getNumbers: () => ['name', 'id']
             }),
             slideOptions: [],
             projectionDefaultName: 'motion_poll',
@@ -68,8 +72,7 @@ export class ViewMotionPoll
         return this.result.yes < 0 || this.result.no < 0 || this.result.abstain < 0;
     }
 }
-
-export interface ViewMotionPoll extends MotionPoll {
+interface IMotionPollRelations {
     motion: ViewMotion;
-    options: ViewMotionOption[];
 }
+export interface ViewMotionPoll extends MotionPoll, IMotionPollRelations {}

@@ -12,8 +12,6 @@ import {
 
 import videojs from 'video.js';
 
-import { ConfigService } from 'app/core/ui-services/config.service';
-
 interface VideoSource {
     src: string;
     type: MimeType;
@@ -60,10 +58,11 @@ export class VjsPlayerComponent implements OnInit, OnDestroy {
 
     private posterUrl: string;
 
-    public constructor(config: ConfigService) {
-        config.get<string>('general_system_stream_poster').subscribe(posterUrl => {
+    public constructor() {
+        throw new Error('TODO');
+        /*config.get<string>('general_system_stream_poster').subscribe(posterUrl => {
             this.posterUrl = posterUrl;
-        });
+        });*/
     }
 
     public async ngOnInit(): Promise<void> {

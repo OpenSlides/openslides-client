@@ -1,9 +1,13 @@
 import { SearchRepresentation } from 'app/core/ui-services/search.service';
 import { Topic } from 'app/shared/models/topics/topic';
+import { ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
+import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { TitleInformationWithAgendaItem } from 'app/site/base/base-view-model-with-agenda-item';
 import { BaseViewModelWithAgendaItemAndListOfSpeakers } from 'app/site/base/base-view-model-with-agenda-item-and-list-of-speakers';
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
-import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
+import { HasAttachment, ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
+import { ViewTag } from 'app/site/tags/models/view-tag';
 
 export interface TopicTitleInformation extends TitleInformationWithAgendaItem {
     title: string;
@@ -14,7 +18,9 @@ export interface TopicTitleInformation extends TitleInformationWithAgendaItem {
  * Provides "safe" access to topic with all it's components
  * @ignore
  */
-export class ViewTopic extends BaseViewModelWithAgendaItemAndListOfSpeakers<Topic> implements TopicTitleInformation {
+export class ViewTopic
+    extends BaseViewModelWithAgendaItemAndListOfSpeakers<Topic>
+    implements TopicTitleInformation, HasAttachment {
     public static COLLECTION = Topic.COLLECTION;
 
     public get topic(): Topic {
@@ -53,7 +59,7 @@ export class ViewTopic extends BaseViewModelWithAgendaItemAndListOfSpeakers<Topi
             getBasicProjectorElement: options => ({
                 name: Topic.COLLECTION,
                 id: this.id,
-                getIdentifiers: () => ['name', 'id']
+                getNumbers: () => ['name', 'id']
             }),
             slideOptions: [],
             projectionDefaultName: 'topics',
@@ -67,6 +73,9 @@ export class ViewTopic extends BaseViewModelWithAgendaItemAndListOfSpeakers<Topi
 }
 interface ITopicRelations {
     attachments: ViewMediafile[];
+    agenda_item: ViewAgendaItem[];
+    list_of_speakers: ViewListOfSpeakers[];
+    tags: ViewTag[];
+    meeting: ViewMeeting;
 }
-
 export interface ViewTopic extends Topic, ITopicRelations {}

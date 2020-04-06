@@ -11,7 +11,7 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { VoteValue } from 'app/shared/models/poll/base-vote';
 import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
-import { BasePollDetailComponentDirective } from 'app/site/polls/components/base-poll-detail.component';
+import { BasePollDetailComponent } from 'app/site/polls/components/base-poll-detail.component';
 import { AssignmentPollDialogService } from '../../services/assignment-poll-dialog.service';
 import { AssignmentPollService } from '../../services/assignment-poll.service';
 
@@ -21,7 +21,7 @@ import { AssignmentPollService } from '../../services/assignment-poll.service';
     styleUrls: ['./assignment-poll-detail.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class AssignmentPollDetailComponent extends BasePollDetailComponentDirective<
+export class AssignmentPollDetailComponent extends BasePollDetailComponent<
     ViewAssignmentPoll,
     AssignmentPollService
 > {

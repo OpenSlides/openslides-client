@@ -15,16 +15,17 @@ import { BehaviorSubject } from 'rxjs';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DurationService } from 'app/core/ui-services/duration.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
-import { SpeakerState, ViewSpeaker } from 'app/site/agenda/models/view-speaker';
+import { ViewSpeaker } from 'app/site/agenda/models/view-speaker';
+import { SpeakerState } from 'app/shared/models/agenda/speaker';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { Selectable } from '../selectable';
 import { SortingListComponent } from '../sorting-list/sorting-list.component';
-import { BaseComponent } from 'app/site/base/components/base.component';
-import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 
 @Component({
     selector: 'os-list-of-speakers-content',
@@ -132,7 +133,7 @@ export class ListOfSpeakersContentComponent extends BaseComponent implements OnI
             this.viewport.isMobileSubject.subscribe(isMobile => {
                 this.isMobile = isMobile;
                 this.cd.markForCheck();
-            }),
+            })
             // TODO
             // observe changes the agenda_present_speakers_only config
             /*this.config.get('agenda_present_speakers_only').subscribe(() => {

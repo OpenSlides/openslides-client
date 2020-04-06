@@ -16,10 +16,10 @@ import { ProjectionDefaultRepositoryService } from 'app/core/repositories/projec
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ProjectorComponent } from 'app/shared/components/projector/projector.component';
-import { Projector } from 'app/shared/models/core/projector';
+import { Projector } from 'app/shared/models/projector/projector';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ClockSlideService } from '../../services/clock-slide.service';
-import { ViewProjectionDefault } from '../../models/view-projection-default';
+import { ViewProjectiondefault } from '../../models/view-projection-default';
 import { ViewProjector } from '../../models/view-projector';
 
 /**
@@ -55,7 +55,7 @@ export class ProjectorEditDialogComponent extends BaseComponent implements OnIni
     /**
      * All ProjectionDefaults to select from.
      */
-    public projectionDefaults: ViewProjectionDefault[];
+    public projectionDefaults: ViewProjectiondefault[];
 
     /**
      * show a preview of the changes

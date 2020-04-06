@@ -1,13 +1,13 @@
-import { Input } from '@angular/core';
+import { Input, Directive } from '@angular/core';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { VotingData } from 'app/core/repositories/assignments/assignment-poll-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { VotingError, VotingService } from 'app/core/ui-services/voting.service';
 import { VoteValue } from 'app/shared/models/poll/base-vote';
-import { ViewUser } from 'app/site/users/models/view-user';
-import { ViewBasePoll } from '../models/view-base-poll';
-import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { ViewUser } from 'app/site/users/models/view-user';
+import { BaseViewPoll } from '../models/base-view-poll';
 
 export interface VoteOption {
     vote?: VoteValue;
@@ -16,7 +16,8 @@ export interface VoteOption {
     label?: string;
 }
 
-export abstract class BasePollVoteComponent<V extends ViewBasePoll> extends BaseComponent {
+@Directive()
+export abstract class BasePollVoteComponent<V extends BaseViewPoll> extends BaseComponent {
     @Input()
     public poll: V;
 

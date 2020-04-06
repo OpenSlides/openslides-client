@@ -57,7 +57,7 @@ export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeake
      */
     public async changeCandidate(userId: number, assignment: ViewAssignment, adding?: boolean): Promise<void> {
         const data = { user: userId };
-        if (assignment.candidates.some(candidate => candidate.id === userId) && adding !== true) {
+        if (assignment.assignment_candidates.some(candidate => candidate.id === userId) && adding !== true) {
             await this.httpService.delete(this.restPath + assignment.id + this.candidatureOtherPath, data);
         } else if (adding !== false) {
             await this.httpService.post(this.restPath + assignment.id + this.candidatureOtherPath, data);

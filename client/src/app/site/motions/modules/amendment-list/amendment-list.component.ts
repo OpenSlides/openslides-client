@@ -73,7 +73,7 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
     /**
      * To filter stuff
      */
-    public filterProps = ['submitters', 'title', 'identifier', 'amendment_paragraphs'];
+    public filterProps = ['submitters', 'title', 'number', 'amendment_paragraphs'];
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -87,7 +87,7 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
         private motionExport: MotionExportService,
         private linenumberingService: LinenumberingService,
         private pdfExport: MotionPdfExportService,
-        private overlayService: OverlayService,
+        private overlayService: OverlayService
     ) {
         super(componentServiceCollector);
         super.setTitle('Amendments');
@@ -110,7 +110,7 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
             this.amendmentFilterService.parentMotionId = undefined;
         }
 
-        console.log("TODO: meetingsettingsservice")
+        console.log('TODO: meetingsettingsservice');
         /*this.configService
             .get<boolean>('motions_show_sequential_numbers')
             .subscribe(show => (this.showSequentialNumber = show));*/

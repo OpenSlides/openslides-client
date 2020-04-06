@@ -1,12 +1,18 @@
 import { AssignmentOption } from 'app/shared/models/assignments/assignment-option';
-import { ViewBaseOption } from 'app/site/polls/models/view-base-option';
+import { BaseViewOption } from 'app/site/polls/models/base-view-option';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { ViewAssignmentPoll } from './view-assignment-poll';
+import { ViewAssignmentVote } from './view-assignment-vote';
 
-export class ViewAssignmentOption extends ViewBaseOption<AssignmentOption> {
+export class ViewAssignmentOption extends BaseViewOption<AssignmentOption, ViewAssignmentPoll, ViewAssignmentVote> {
     public static COLLECTION = AssignmentOption.COLLECTION;
     protected _collection = AssignmentOption.COLLECTION;
-}
 
-export interface ViewAssignmentOption extends AssignmentOption {
+    public get assignmentOption(): AssignmentOption {
+        return this._model;
+    }
+}
+interface IAssignmentOptionRelations {
     user: ViewUser;
 }
+export interface ViewAssignmentOption extends AssignmentOption, IAssignmentOptionRelations {}

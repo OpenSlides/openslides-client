@@ -82,8 +82,8 @@ export class MotionXlsxExportService {
     public exportMotionList(motions: ViewMotion[], infoToExport: InfoToExport[], comments: number[]): void {
         const workbook = new Workbook();
         const properties = infoToExport.includes('speakers')
-            ? sortMotionPropertyList(['identifier', 'title'].concat(infoToExport)).concat('speakers')
-            : sortMotionPropertyList(['identifier', 'title'].concat(infoToExport));
+            ? sortMotionPropertyList(['number', 'title'].concat(infoToExport)).concat('speakers')
+            : sortMotionPropertyList(['number', 'title'].concat(infoToExport));
 
         const worksheet = workbook.addWorksheet(this.translate.instant('Motions'), {
             pageSetup: {

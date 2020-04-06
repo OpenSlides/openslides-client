@@ -3,14 +3,13 @@ import { Component, OnInit } from '@angular/core';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ProjectorService } from 'app/core/core-services/projector.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DetailNavigable, isDetailNavigable } from 'app/shared/models/base/detail-navigable';
-import { ProjectorElement } from 'app/shared/models/core/projector';
 import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { CurrentListOfSpeakersService } from 'app/site/projector/services/current-list-of-speakers.service';
-import { BaseComponent } from 'app/site/base/components/base.component';
-import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 
 @Component({
     selector: 'os-cinema',
@@ -20,7 +19,7 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 export class CinemaComponent extends BaseComponent implements OnInit {
     public listOfSpeakers: ViewListOfSpeakers;
     public projector: ViewProjector;
-    private currentProjectorElement: ProjectorElement;
+    private currentProjectorElement: any /*ProjectorElement*/;
     public projectedViewModel: BaseProjectableViewModel;
 
     public get title(): string {

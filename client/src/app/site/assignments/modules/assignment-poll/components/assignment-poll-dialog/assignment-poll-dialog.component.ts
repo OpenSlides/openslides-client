@@ -95,10 +95,10 @@ export class AssignmentPollDialogComponent
                 this.options = this.pollData.options;
             } else if (
                 this.pollData.assignment &&
-                this.pollData.assignment.candidates &&
-                this.pollData.assignment.candidates.length
+                this.pollData.assignment.candidatesAsUsers &&
+                this.pollData.assignment.candidatesAsUsers.length
             ) {
-                this.options = this.pollData.assignment.candidates.map(
+                this.options = this.pollData.assignment.candidatesAsUsers.map(
                     user => ({
                         user_id: user.id,
                         user: user

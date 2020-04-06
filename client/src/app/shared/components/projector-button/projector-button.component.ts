@@ -7,7 +7,7 @@ import { ProjectorService } from 'app/core/core-services/projector.service';
 import { StorageService } from 'app/core/core-services/storage.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { ProjectionDialogService } from 'app/core/ui-services/projection-dialog.service';
-import { IdentifiableProjectorElement, Projector } from 'app/shared/models/core/projector';
+import { Projector } from 'app/shared/models/projector/projector';
 import {
     isProjectable,
     isProjectorElementBuildDeskriptor,
@@ -128,25 +128,28 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
      * @returns true, if the object is projected on one projector.
      */
     public checkIsProjected(): boolean {
+        return false;
+        /*
         if (!this.object) {
             return false;
         }
 
         return this.projector
             ? this.projectorService.isProjectedOn(this.object, this.projector)
-            : this.projectorService.isProjected(this.object);
+            : this.projectorService.isProjected(this.object);*/
     }
 
     /**
      * @param options The previous configured options of a projector.
      */
-    private getProjectorElement(options: object): IdentifiableProjectorElement | null {
-        let element = null;
+    private getProjectorElement(options: object): /*IdentifiableProjectorElement |*/ null {
+        throw new Error('TODO');
+        /*let element = null;
         if (isProjectable(this.object)) {
             element = this.object.getSlide().getBasicProjectorElement(options);
         } else if (isProjectorElementBuildDeskriptor(this.object)) {
             element = this.object.getBasicProjectorElement(options);
         }
-        return Object.assign(element, options);
+        return Object.assign(element, options);*/
     }
 }

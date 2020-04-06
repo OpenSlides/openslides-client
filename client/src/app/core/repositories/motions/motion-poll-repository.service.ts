@@ -20,10 +20,7 @@ export class MotionPollRepositoryService extends BasePollRepository<
     MotionPoll,
     MotionPollTitleInformation
 > {
-    public constructor(
-        repositoryServiceCollector: RepositoryServiceCollector,
-        http: HttpService
-    ) {
+    public constructor(repositoryServiceCollector: RepositoryServiceCollector, http: HttpService) {
         super(repositoryServiceCollector, MotionPoll, http);
     }
     public getTitle = (titleInformation: MotionPollTitleInformation) => {

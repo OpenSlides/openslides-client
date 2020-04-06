@@ -1,4 +1,4 @@
-import { OnInit } from '@angular/core';
+import { OnInit, Directive } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { Label } from 'ng2-charts';
@@ -17,15 +17,17 @@ import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewGroup } from 'app/site/users/models/view-group';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { BasePollRepository } from '../../../core/repositories/base-poll-repository';
+import { BaseViewPoll } from '../models/base-view-poll';
+import { BaseViewVote } from '../models/base-view-vote';
 import { PollService } from '../services/poll.service';
-import { ViewBasePoll } from '../models/view-base-poll';
-import { ViewBaseVote } from '../models/view-base-vote';
 
 export interface BaseVoteData {
     user?: ViewUser;
 }
 
-export abstract class BasePollDetailComponent<V extends ViewBasePoll, S extends PollService> extends BaseComponent
+@Directive()
+export abstract class BasePollDetailComponent<V extends BaseViewPoll, S extends PollService>
+    extends BaseComponent
     implements OnInit {
     /**
      * All the groups of users.
@@ -98,7 +100,7 @@ export abstract class BasePollDetailComponent<V extends ViewBasePoll, S extends 
         protected promptService: PromptService,
         protected pollDialog: BasePollDialogService<V, S>,
         protected pollService: S,
-        protected votesRepo: BaseRepository<ViewBaseVote, BaseVote, object>
+        protected votesRepo: BaseRepository<BaseViewVote, BaseVote, object>
     ) {
         super(componentServiceCollector);
         this.setup();

@@ -1,5 +1,5 @@
-import { ViewBasePoll } from './view-base-poll';
+import { BaseViewPoll } from './base-view-poll';
 
-export interface HasViewPolls<T extends ViewBasePoll> {
+export interface HasViewPolls<T extends BaseViewPoll> {
     polls: T[];
 }

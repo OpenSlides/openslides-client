@@ -62,9 +62,9 @@ export class AssignmentPollService extends PollService {
         config
             .get<MajorityMethod>('assignment_poll_default_majority_method')
             .subscribe(method => (this.defaultMajorityMethod = method));
-        config.get<number[]>(AssignmentPoll.defaultGroupsConfig).subscribe(ids => (this.defaultGroupIds = ids));
+        config.get<number[]>('assignment_poll_default_groups').subscribe(ids => (this.defaultGroupIds = ids));
         config
-            .get<AssignmentPollMethod>(AssignmentPoll.defaultPollMethodConfig)
+            .get<AssignmentPollMethod>('assignment_poll_method')
             .subscribe(method => (this.defaultPollMethod = method));
         config.get<PollType>('assignment_poll_default_type').subscribe(type => (this.defaultPollType = type));
         config.get<boolean>('assignment_poll_sort_poll_result_by_votes').subscribe(sort => (this.sortByVote = sort));*/
@@ -104,44 +104,44 @@ export class AssignmentPollService extends PollService {
     }
 
     public generateTableData(poll: ViewAssignmentPoll | PollData): PollTableData[] {
-        const tableData: PollTableData[] = poll.options
-            .sort((a, b) => {
-                if (this.sortByVote) {
-                    return b.yes - a.yes;
-                } else {
-                    // PollData does not have weight, we need to rely on the order of things.
-                    if (a.weight && b.weight) {
-                        return b.weight - a.weight;
-                    }
+        const x = poll.options.sort((a, b) => {
+            if (this.sortByVote) {
+                return b.yes - a.yes;
+            } else {
+                // PollData does not have weight, we need to rely on the order of things.
+                if (a.weight && b.weight) {
+                    return b.weight - a.weight;
                 }
-            })
-            .map((candidate: ViewAssignmentOption) => {
-                const pollTableEntry: PollTableData = {
-                    class: 'user',
-                    value: super.getVoteTableKeys(poll).map(
-                        key =>
-                            ({
-                                vote: key.vote,
-                                amount: candidate[key.vote],
-                                icon: key.icon,
-                                hide: key.hide,
-                                showPercent: key.showPercent
-                            } as VotingResult)
-                    )
-                };
+            }
+        });
 
-                // Since pollData does not have any subtitle option
-                if (candidate instanceof ViewAssignmentOption) {
-                    pollTableEntry.votingOption = candidate.user.short_name;
-                    pollTableEntry.votingOptionSubtitle = candidate.user.getLevelAndNumber();
-                } else {
-                    pollTableEntry.votingOption = (candidate as PollDataOption).user.short_name;
-                }
+        const tableData: PollTableData[] = (x as ViewAssignmentOption[]).map((candidate: ViewAssignmentOption) => {
+            const pollTableEntry: PollTableData = {
+                class: 'user',
+                value: super.getVoteTableKeys(poll).map(
+                    key =>
+                        ({
+                            vote: key.vote,
+                            amount: candidate[key.vote],
+                            icon: key.icon,
+                            hide: key.hide,
+                            showPercent: key.showPercent
+                        } as VotingResult)
+                )
+            };
 
-                return pollTableEntry;
-            });
-        tableData.push(...this.formatVotingResultToTableData(this.getGlobalVoteKeys(poll), poll));
-        tableData.push(...this.formatVotingResultToTableData(super.getSumTableKeys(poll), poll));
+            // Since pollData does not have any subtitle option
+            if (candidate instanceof ViewAssignmentOption) {
+                pollTableEntry.votingOption = candidate.user.short_name;
+                pollTableEntry.votingOptionSubtitle = candidate.user.getLevelAndNumber();
+            } else {
+                pollTableEntry.votingOption = (candidate as PollDataOption).user.short_name;
+            }
+
+            return pollTableEntry;
+        });
+        tableData.push(...this.formatVotingResultToTableData(this.getGlobalVoteKeys(poll), poll as PollData));
+        tableData.push(...this.formatVotingResultToTableData(super.getSumTableKeys(poll), poll as PollData));
         return tableData;
     }
 

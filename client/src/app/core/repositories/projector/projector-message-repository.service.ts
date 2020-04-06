@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { ProjectorMessage } from 'app/shared/models/core/projector-message';
+import { ProjectorMessage } from 'app/shared/models/projector/projector-message';
 import {
     ProjectorMessageTitleInformation,
     ViewProjectorMessage

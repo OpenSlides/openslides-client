@@ -10,10 +10,9 @@ import { OperatorService } from 'app/core/core-services/operator.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { LoginDataService } from 'app/core/ui-services/login-data.service';
 import { OverlayService } from 'app/core/ui-services/overlay.service';
-import { UserAuthType } from 'app/shared/models/users/user';
 import { ParentErrorStateMatcher } from 'app/shared/parent-error-state-matcher';
-import { BrowserSupportService } from '../../services/browser-support.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { BrowserSupportService } from '../../services/browser-support.service';
 
 /**
  * Login mask component.
@@ -162,8 +161,8 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
      *
      * Send username and password to the {@link AuthService}
      */
-    public async formLogin(authType: UserAuthType): Promise<void> {
-        this.loginErrorMsg = '';
+    public async formLogin(/*authType: UserAuthType*/): Promise<void> {
+        /*this.loginErrorMsg = '';
         try {
             this.overlayService.logout(); // Ensures displaying spinner, if logging in
             this.overlayService.showSpinner(this.translate.instant(this.loginMessage), true);
@@ -176,7 +175,8 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
                 notFound: true
             });
             this.loginErrorMsg = e;
-        }
+        }*/
+        throw new Error('TODO'); // Ingore SAML for now...
     }
 
     /**

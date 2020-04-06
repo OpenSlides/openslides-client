@@ -13,7 +13,7 @@ import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
 import { MotionPollDialogService } from 'app/site/motions/services/motion-poll-dialog.service';
 import { MotionPollService } from 'app/site/motions/services/motion-poll.service';
-import { BasePollDetailComponentDirective } from 'app/site/polls/components/base-poll-detail.component';
+import { BasePollDetailComponent } from 'app/site/polls/components/base-poll-detail.component';
 
 @Component({
     selector: 'os-motion-poll-detail',
@@ -22,7 +22,7 @@ import { BasePollDetailComponentDirective } from 'app/site/polls/components/base
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class MotionPollDetailComponent extends BasePollDetailComponentDirective<ViewMotionPoll, MotionPollService> {
+export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotionPoll, MotionPollService> {
     public motion: ViewMotion;
     public columnDefinition: PblColumnDefinition[] = [
         {

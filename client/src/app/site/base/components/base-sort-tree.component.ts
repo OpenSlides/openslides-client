@@ -1,4 +1,4 @@
-import { EventEmitter, ViewChild } from '@angular/core';
+import { EventEmitter, ViewChild, Directive } from '@angular/core';
 
 import { SortDefinition } from 'app/core/ui-services/base-sort.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -18,7 +18,9 @@ export interface SortTreeFilterOption extends Identifiable {
 /**
  * Abstract Sort view for hierarchic item trees
  */
-export abstract class BaseSortTreeComponent<V extends BaseViewModel> extends BaseModelContextComponent
+@Directive()
+export abstract class BaseSortTreeComponent<V extends BaseViewModel>
+    extends BaseModelContextComponent
     implements CanComponentDeactivate {
     /**
      * Reference to the view child

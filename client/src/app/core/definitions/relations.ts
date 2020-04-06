@@ -2,6 +2,8 @@ import { BaseViewModel, ViewModelConstructor } from 'app/site/base/base-view-mod
 
 type _ViewModelConstructor = ViewModelConstructor<BaseViewModel>;
 
+export type StructuredRelation<Argument, Result> = (args: Argument) => Result;
+
 export interface Relation {
     ownViewModels: _ViewModelConstructor[]; // the default-case is exactly one entry for non-generic relations
     foreignViewModel?: _ViewModelConstructor; // given on generic=false

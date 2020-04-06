@@ -1,16 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs/operators';
 
-import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
-import { MotionPollRepositoryService } from 'app/core/repositories/motions/motion-poll-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { ViewBasePoll } from 'app/site/polls/models/view-base-poll';
+import { BaseViewPoll } from '../../models/base-view-poll';
 
 @Component({
     selector: 'os-poll-progress',
@@ -19,17 +14,14 @@ import { ViewBasePoll } from 'app/site/polls/models/view-base-poll';
 })
 export class PollProgressComponent extends BaseComponent implements OnInit {
     @Input()
-    public poll: ViewBasePoll;
+    public poll: BaseViewPoll;
     public max: number;
 
     public get votescast(): number {
         return this.poll?.votescast || 0;
     }
 
-    public constructor(
-        componentServiceCollector: ComponentServiceCollector,
-        private userRepo: UserRepositoryService
-    ) {
+    public constructor(componentServiceCollector: ComponentServiceCollector, private userRepo: UserRepositoryService) {
         super(componentServiceCollector);
     }
 
@@ -39,18 +31,20 @@ export class PollProgressComponent extends BaseComponent implements OnInit {
                 this.userRepo
                     .getViewModelListObservable()
                     .pipe(
-                        map(users =>
+                        map(users => {
                             /**
                              * Filter the users who would be able to vote:
                              * They are present or have their right to vote delegated
                              * They are in one of the voting groups
                              */
-                            users.filter(
+                            console.error('TODO');
+                            /*return users.filter(
                                 user =>
                                     (user.is_present || user.isVoteRightDelegated) &&
                                     this.poll.groups_id.intersect(user.groups_id).length
-                            )
-                        )
+                            )*/
+                            return [];
+                        })
                     )
                     .subscribe(users => {
                         this.max = users.length;

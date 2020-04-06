@@ -78,7 +78,7 @@ export class MotionPdfCatalogService {
                 }
             } catch (err) {
                 const errorText = `${this.translate.instant('Error during PDF creation of motion:')} ${
-                    motions[motionIndex].identifierOrTitle
+                    motions[motionIndex].numberOrTitle
                 }`;
                 console.error(`${errorText}\nDebugInfo:\n`, err);
                 throw new PdfError(errorText);
@@ -157,7 +157,7 @@ export class MotionPdfCatalogService {
                         } else {
                             tocBody.push(
                                 this.pdfService.createTocLine(
-                                    `${motion.identifier ? motion.identifier : ''}`,
+                                    `${motion.number ? motion.number : ''}`,
                                     motion.title,
                                     `${motion.id}`,
                                     StyleType.CATEGORY_SECTION
@@ -181,11 +181,7 @@ export class MotionPdfCatalogService {
             const uncatTocBody = motions
                 .filter(motion => !motion.category)
                 .map(motion =>
-                    this.pdfService.createTocLine(
-                        `${motion.identifier ? motion.identifier : ''}`,
-                        motion.title,
-                        `${motion.id}`
-                    )
+                    this.pdfService.createTocLine(`${motion.number ? motion.number : ''}`, motion.title, `${motion.id}`)
                 );
 
             // only push this array if there is at least one entry
@@ -204,7 +200,7 @@ export class MotionPdfCatalogService {
                 } else {
                     tocBody.push(
                         this.pdfService.createTocLine(
-                            `${motion.identifier ? motion.identifier : ''}`,
+                            `${motion.number ? motion.number : ''}`,
                             motion.title,
                             `${motion.id}`
                         )
@@ -226,7 +222,7 @@ export class MotionPdfCatalogService {
      */
     private getTocHeaderDefinition(): object {
         return [
-            { text: this.translate.instant('Identifier'), style: 'tocHeaderRow' },
+            { text: this.translate.instant('Number'), style: 'tocHeaderRow' },
             {
                 style: 'tocHeaderRow',
                 text: [
@@ -261,7 +257,7 @@ export class MotionPdfCatalogService {
                     : motion.submitters[i].getTitle();
         }
         return this.pdfService.createTocLine(
-            `${motion.identifier ? motion.identifier : ''}`,
+            `${motion.number ? motion.number : ''}`,
             motion.title,
             `${motion.id}`,
             style,

@@ -1,3 +1,4 @@
+import { Id } from 'app/core/definitions/key-types';
 import { CalculablePollKey } from 'app/site/polls/services/poll.service';
 import { AssignmentOption } from './assignment-option';
 import { BasePoll } from '../poll/base-poll';
@@ -27,8 +28,6 @@ export class AssignmentPoll extends BasePoll<
     AssignmentPollPercentBase
 > {
     public static COLLECTION = 'assignment_poll';
-    public static defaultGroupsConfig = 'assignment_poll_default_groups';
-    public static defaultPollMethodConfig = 'assignment_poll_method';
     public static DECIMAL_FIELDS = [
         'votesvalid',
         'votesinvalid',
@@ -37,15 +36,15 @@ export class AssignmentPoll extends BasePoll<
         'amount_global_no'
     ];
 
-    public id: number;
-    public assignment_id: number;
+    public description: string;
     public votes_amount: number;
     public allow_multiple_votes_per_candidate: boolean;
     public global_no: boolean;
     public global_abstain: boolean;
     public amount_global_no: number;
     public amount_global_abstain: number;
-    public description: string;
+
+    public assignment_id: Id; // assignment/poll_ids;
 
     public get isMethodY(): boolean {
         return this.pollmethod === AssignmentPollMethod.Votes;

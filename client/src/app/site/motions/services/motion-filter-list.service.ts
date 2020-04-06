@@ -86,7 +86,7 @@ export class MotionFilterListService extends BaseFilterListService<ViewMotion> {
     };
 
     public tagFilterOptions: OsFilter = {
-        property: 'tags_id',
+        property: 'tag_ids',
         label: 'Tags',
         options: []
     };
@@ -194,7 +194,7 @@ export class MotionFilterListService extends BaseFilterListService<ViewMotion> {
      */
     protected preFilter(motions: ViewMotion[]): ViewMotion[] {
         if (!this.showAmendmentsInMainTable) {
-            return motions.filter(motion => !motion.parent_id);
+            return motions.filter(motion => !motion.lead_motion_id);
         }
     }
 

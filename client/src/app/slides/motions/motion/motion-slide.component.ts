@@ -11,7 +11,7 @@ import { ViewUnifiedChange, ViewUnifiedChangeType } from 'app/shared/models/moti
 import { MotionTitleInformation } from 'app/site/motions/models/view-motion';
 import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.constants';
 import { IBaseScaleScrollSlideComponent } from 'app/slides/base-scale-scroll-slide-component';
-import { BaseMotionSlideComponentDirective } from '../base/base-motion-slide';
+import { BaseMotionSlideComponent } from '../base/base-motion-slide';
 import { MotionSlideData, MotionSlideDataAmendment } from './motion-slide-data';
 import { MotionSlideObjAmendmentParagraph } from './motion-slide-obj-amendment-paragraph';
 import { MotionSlideObjChangeReco } from './motion-slide-obj-change-reco';
@@ -23,7 +23,7 @@ import { MotionSlideObjChangeReco } from './motion-slide-obj-change-reco';
     encapsulation: ViewEncapsulation.None
 })
 export class MotionSlideComponent
-    extends BaseMotionSlideComponentDirective<MotionSlideData>
+    extends BaseMotionSlideComponent<MotionSlideData>
     implements IBaseScaleScrollSlideComponent<MotionSlideData> {
     /**
      * Indicates the LineNumberingMode Mode.
@@ -57,7 +57,7 @@ export class MotionSlideComponent
     public allChangingObjects: ViewUnifiedChange[];
 
     /**
-     * Reference to all referencing motions to store sorted by `identifier`.
+     * Reference to all referencing motions to store sorted by `number`.
      */
     public referencingMotions = [];
 
@@ -69,20 +69,18 @@ export class MotionSlideComponent
         this.lnMode = value.data.line_numbering_mode;
         this.lineLength = value.data.line_length;
         this.preamble = value.data.preamble;
-        this.crMode = value.element.mode || 'original';
+        // this.crMode = value.element.mode || 'original';
+        throw new Error('TODO');
 
-        this.textDivStyles.width = value.data.show_meta_box ? 'calc(100% - 250px)' : '100%';
+        /*this.textDivStyles.width = value.data.show_meta_box ? 'calc(100% - 250px)' : '100%';
 
         if (value.data.recommendation_referencing_motions) {
             this.referencingMotions = value.data.recommendation_referencing_motions.sort((a, b) =>
-                a.identifier.localeCompare(b.identifier)
+                a.number.localeCompare(b.number)
             );
         }
 
-        console.log('cr mode? ', this.crMode);
-        console.log('the data: ', this._data);
-
-        this.recalcUnifiedChanges();
+        this.recalcUnifiedChanges();*/
     }
 
     public get data(): SlideData<MotionSlideData> {
@@ -144,8 +142,8 @@ export class MotionSlideComponent
         super(translate, motionRepo);
     }
 
-    public getIdentifierOrTitle(titleInformation: MotionTitleInformation): string {
-        return this.motionRepo.getIdentifierOrTitle(titleInformation);
+    public getNumberOrTitle(titleInformation: MotionTitleInformation): string {
+        return this.motionRepo.getNumberOrTitle(titleInformation);
     }
 
     public getRecommendationLabel(): string {

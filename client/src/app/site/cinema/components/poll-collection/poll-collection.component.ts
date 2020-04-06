@@ -2,11 +2,11 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { map } from 'rxjs/operators';
 
-import { BaseViewModel } from 'app/site/base/base-view-model';
-import { ViewBasePoll } from 'app/site/polls/models/view-base-poll';
-import { PollListObservableService } from 'app/site/polls/services/poll-list-observable.service';
-import { BaseComponent } from 'app/site/base/components/base.component';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { BaseViewModel } from 'app/site/base/base-view-model';
+import { BaseComponent } from 'app/site/base/components/base.component';
+import { BaseViewPoll } from 'app/site/polls/models/base-view-poll';
+import { PollListObservableService } from 'app/site/polls/services/poll-list-observable.service';
 
 @Component({
     selector: 'os-poll-collection',
@@ -14,7 +14,7 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
     styleUrls: ['./poll-collection.component.scss']
 })
 export class PollCollectionComponent extends BaseComponent implements OnInit {
-    public polls: ViewBasePoll[];
+    public polls: BaseViewPoll[];
 
     @Input()
     private currentProjection: BaseViewModel<any>;
@@ -49,7 +49,7 @@ export class PollCollectionComponent extends BaseComponent implements OnInit {
         );
     }
 
-    public getPollVoteTitle(poll: ViewBasePoll): string {
+    public getPollVoteTitle(poll: BaseViewPoll): string {
         const contentObject = poll.getContentObject();
         const listTitle = contentObject.getListTitle();
         const model = contentObject.getVerboseName();
@@ -62,7 +62,7 @@ export class PollCollectionComponent extends BaseComponent implements OnInit {
         }
     }
 
-    public getPollDetailLink(poll: ViewBasePoll): string {
+    public getPollDetailLink(poll: BaseViewPoll): string {
         return poll.parentLink;
     }
 }

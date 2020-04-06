@@ -7,11 +7,11 @@ import { ViewModelStoreService } from 'app/core/core-services/view-model-store.s
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { Selectable } from 'app/shared/components/selectable';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
-import { LocalPermissionsService } from 'app/site/motions/services/local-permissions.service';
+import { PermissionsService } from 'app/site/motions/services/permissions.service';
 import { ViewUser } from 'app/site/users/models/view-user';
-import { Selectable } from 'app/shared/components/selectable';
 
 /**
  * Component for the motion comments view
@@ -69,7 +69,7 @@ export class ManageSubmittersComponent extends BaseComponent {
         private viewModelStore: ViewModelStoreService,
         private motionRepository: MotionRepositoryService,
         private userRepository: UserRepositoryService,
-        public perms: LocalPermissionsService
+        public perms: PermissionsService
     ) {
         super(componentServiceCollector);
 

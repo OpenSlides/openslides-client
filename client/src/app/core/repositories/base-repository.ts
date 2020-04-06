@@ -10,6 +10,7 @@ import { DataSendService } from '../core-services/data-send.service';
 import { DataStoreService } from '../core-services/data-store.service';
 import { HasViewModelListObservable } from '../definitions/has-view-model-list-observable';
 import { Identifiable } from '../../shared/models/base/identifiable';
+import { Id } from '../definitions/key-types';
 import { OnAfterAppsLoaded } from '../definitions/on-after-apps-loaded';
 import { RelationManagerService } from '../core-services/relation-manager.service';
 import { Relation } from '../definitions/relations';
@@ -169,7 +170,7 @@ export abstract class BaseRepository<V extends BaseViewModel & T, M extends Base
      *
      * @param ids All model ids
      */
-    public deleteModels(ids: number[]): void {
+    public deleteModels(ids: Id[]): void {
         ids.forEach(id => {
             delete this.viewModelStore[id];
         });
@@ -181,7 +182,7 @@ export abstract class BaseRepository<V extends BaseViewModel & T, M extends Base
      *
      * @param ids All model ids.
      */
-    public changedModels(ids: number[]): void {
+    public changedModels(ids: Id[]): void {
         ids.forEach(id => {
             this.viewModelStore[id] = this.createViewModel(this.DS.get(this.collection, id));
         });
@@ -311,7 +312,7 @@ export abstract class BaseRepository<V extends BaseViewModel & T, M extends Base
     /**
      * helper function to return one viewModel
      */
-    public getViewModel(id: number): V {
+    public getViewModel(id: Id): V {
         return this.viewModelStore[id];
     }
 
@@ -335,7 +336,7 @@ export abstract class BaseRepository<V extends BaseViewModel & T, M extends Base
     /**
      * @returns the current observable for one viewModel
      */
-    public getViewModelObservable(id: number): Observable<V> {
+    public getViewModelObservable(id: Id): Observable<V> {
         if (!this.viewModelSubjects[id]) {
             this.viewModelSubjects[id] = new BehaviorSubject<V>(this.viewModelStore[id]);
         }
@@ -369,7 +370,7 @@ export abstract class BaseRepository<V extends BaseViewModel & T, M extends Base
     /**
      * Updates the ViewModel observable using a ViewModel corresponding to the id
      */
-    protected updateViewModelObservable(id: number): void {
+    protected updateViewModelObservable(id: Id): void {
         if (this.viewModelSubjects[id]) {
             this.viewModelSubjects[id].next(this.viewModelStore[id]);
         }
@@ -379,7 +380,7 @@ export abstract class BaseRepository<V extends BaseViewModel & T, M extends Base
     /**
      * update the observable of the list. Also updates the sorting of the view model list.
      */
-    public commitUpdate(modelIds: number[]): void {
+    public commitUpdate(modelIds: Id[]): void {
         this.unsafeViewModelListSubject.next(this.getViewModelList());
         modelIds.forEach(id => {
             this.updateViewModelObservable(id);

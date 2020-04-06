@@ -16,8 +16,9 @@ import { PollType } from 'app/shared/models/poll/base-poll';
 import { VoteValue } from 'app/shared/models/poll/base-vote';
 import { ViewAssignmentOption } from 'app/site/assignments/models/view-assignment-option';
 import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
-import { BasePollVoteComponentDirective, VoteOption } from 'app/site/polls/components/base-poll-vote.component';
+import { BasePollVoteComponent, VoteOption } from 'app/site/polls/components/base-poll-vote.component';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 
 @Component({
     selector: 'os-assignment-poll-vote',
@@ -25,7 +26,7 @@ import { ViewUser } from 'app/site/users/models/view-user';
     styleUrls: ['./assignment-poll-vote.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AssignmentPollVoteComponent extends BasePollVoteComponentDirective<ViewAssignmentPoll> implements OnInit {
+export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssignmentPoll> implements OnInit {
     public AssignmentPollMethod = AssignmentPollMethod;
     public PollType = PollType;
     public voteActions: VoteOption[] = [];
@@ -35,20 +36,18 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponentDirective<
     }
 
     public constructor(
-        title: Title,
-        protected translate: TranslateService,
-        matSnackbar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         operator: OperatorService,
         votingService: VotingService,
         private pollRepo: AssignmentPollRepositoryService,
         private promptService: PromptService,
         private cd: ChangeDetectorRef
     ) {
-        super(title, translate, matSnackbar, operator, votingService);
+        super(componentServiceCollector, operator, votingService);
 
         // observe user updates to refresh the view on dynamic changes
         this.subscriptions.push(
-            operator.getViewUserObservable().subscribe(() => {
+            operator.operatorIdObservable.subscribe(() => {
                 this.cd.markForCheck();
             })
         );

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 
 import { Identifiable } from 'app/shared/models/base/identifiable';
-import { ProjectionDefault } from 'app/shared/models/core/projection-default';
+import { Projectiondefault } from 'app/shared/models/projector/projection-default';
 import {
     ProjectionDefaultTitleInformation,
-    ViewProjectionDefault
+    ViewProjectiondefault
 } from 'app/site/projector/models/view-projection-default';
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
@@ -16,8 +16,8 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
     providedIn: 'root'
 })
 export class ProjectionDefaultRepositoryService extends BaseRepository<
-    ViewProjectionDefault,
-    ProjectionDefault,
+    ViewProjectiondefault,
+    Projectiondefault,
     ProjectionDefaultTitleInformation
 > {
     /**
@@ -30,7 +30,7 @@ export class ProjectionDefaultRepositoryService extends BaseRepository<
      * @param translate
      */
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
-        super(repositoryServiceCollector, ProjectionDefault);
+        super(repositoryServiceCollector, Projectiondefault);
     }
 
     public getVerboseName = (plural: boolean = false) => {
@@ -44,14 +44,14 @@ export class ProjectionDefaultRepositoryService extends BaseRepository<
     /**
      * Creation of projection defaults is not supported.
      */
-    public async create(projectorData: Partial<ProjectionDefault>): Promise<Identifiable> {
+    public async create(projectorData: Partial<Projectiondefault>): Promise<Identifiable> {
         throw new Error('Not supported');
     }
 
     /**
      * Deletion of projection defaults is not supported.
      */
-    public async delete(viewProjectionDefault: ViewProjectionDefault): Promise<void> {
+    public async delete(viewProjectionDefault: ViewProjectiondefault): Promise<void> {
         throw new Error('Not supported');
     }
 }

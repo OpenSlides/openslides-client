@@ -25,6 +25,7 @@ import { ViewMotion } from '../models/view-motion';
     providedIn: 'root'
 })
 export class MotionCsvExportService {
+    public numberOrTitle;
     /**
      * Does nothing.
      *
@@ -104,7 +105,7 @@ export class MotionCsvExportService {
             crMode = this.organisationSettingsService.instant('motions_recommendation_text_mode');
         }
 
-        const properties = sortMotionPropertyList(['identifier', 'title'].concat(contentToExport));
+        const properties = sortMotionPropertyList(['number', 'title'].concat(contentToExport));
         const exportProperties: (
             | CsvColumnDefinitionProperty<ViewMotion>
             | CsvColumnDefinitionMap<ViewMotion>
@@ -148,8 +149,7 @@ export class MotionCsvExportService {
 
         this.csvExport.export(motions, exportProperties, this.translate.instant('Motions') + '.csv');
     }
-
-    /**
+    /**numberOrTitle
      * Exports the call list.
      *
      * @param motions All motions in the CSV. They should be ordered by weight correctly.
@@ -158,8 +158,8 @@ export class MotionCsvExportService {
         this.csvExport.export(
             motions,
             [
-                { label: 'Called', map: motion => (motion.sort_parent_id ? '' : motion.identifierOrTitle) },
-                { label: 'Called with', map: motion => (!motion.sort_parent_id ? '' : motion.identifierOrTitle) },
+                { label: 'Called', map: motion => (motion.sort_parent_id ? '' : motion.numberOrTitle) },
+                { label: 'Called with', map: motion => (!motion.sort_parent_id ? '' : motion.numberOrTitle) },
                 { label: 'submitters', map: motion => motion.submittersAsUsers.map(s => s.short_name).join(',') },
                 { property: 'title' },
                 {
@@ -175,7 +175,7 @@ export class MotionCsvExportService {
     // TODO does not reflect updated export order. any more. Hard coded for now
     public exportDummyMotion(): void {
         const headerRow = [
-            'Identifier',
+            'number',
             'Submitters',
             'Title',
             'Text',
