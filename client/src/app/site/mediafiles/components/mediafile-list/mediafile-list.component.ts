@@ -326,7 +326,7 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
 
             this.fileEditForm = this.formBuilder.group({
                 title: [file.filename, Validators.required],
-                access_groups_id: [file.access_groups_id]
+                access_group_ids: [file.access_group_ids]
             });
 
             this.dialogRef = this.dialog.open(this.fileEditDialog, infoDialogSettings);

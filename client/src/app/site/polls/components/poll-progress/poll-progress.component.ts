@@ -7,8 +7,8 @@ import { MotionPollRepositoryService } from 'app/core/repositories/motions/motio
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { ViewBasePoll } from 'app/site/polls/models/view-base-poll';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { BaseViewPoll } from '../../models/base-view-poll';
 
 @Component({
     selector: 'os-poll-progress',
@@ -20,7 +20,7 @@ export class PollProgressComponent extends BaseComponent implements OnDestroy {
     private pollSubscription: Subscription = null;
 
     @Input()
-    public set poll(value: ViewBasePoll) {
+    public set poll(value: BaseViewPoll) {
         if (value.id !== this.pollId) {
             this.pollId = value.id;
 
@@ -34,10 +34,10 @@ export class PollProgressComponent extends BaseComponent implements OnDestroy {
             });
         }
     }
-    public get poll(): ViewBasePoll {
+    public get poll(): BaseViewPoll {
         return this._poll;
     }
-    private _poll: ViewBasePoll;
+    private _poll: BaseViewPoll;
 
     public votescast = 0;
     public max: number;
@@ -95,8 +95,8 @@ export class PollProgressComponent extends BaseComponent implements OnDestroy {
 
         allUsers = allUsers.filter(
             user =>
-                user.is_present &&
-                this.poll.groups_id.intersect(user.group_ids(this.activeMeetingService.getMeetingId())).length
+                user.isPresentInMeeting() &&
+                this.poll.entitled_group_ids.intersect(user.group_ids(this.activeMeetingService.getMeetingId())).length
         );
 
         this.max = allUsers.length;

@@ -1,7 +1,7 @@
 # Translators:
 # Emanuel Schütze <emanuel.schuetze@intevation.de>, 2019
 # Andreas Engler <engel.a@web.de>, 2019
-# 
+#
 msgid ""
 msgstr ""
 "Last-Translator: Andreas Engler <engel.a@web.de>, 2019\n"
@@ -152,7 +152,7 @@ msgstr "Разрешить доступ для анонимных пользов
 msgid "Allow amendments of amendments"
 msgstr "Разрешить внесение изменений"
 
-msgid "Allow blank in identifier"
+msgid "Allow blank in number"
 msgstr "Разрешить пустой идентификатор"
 
 msgid "Allow create poll"
@@ -812,7 +812,7 @@ msgstr "Не вздумайте"
 msgid "Do not forget to save your changes!"
 msgstr "Не забудьте сохранить свои изменения!"
 
-msgid "Do not set identifier"
+msgid "Do not set number"
 msgstr ""
 
 msgid "Do you really want to exit this page?"
@@ -1153,11 +1153,11 @@ msgstr "Главная"
 msgid "How to create new amendments"
 msgstr "Как создать новые поправки"
 
-msgid "Identifier"
+msgid "Number"
 msgstr "Идентификатор"
 
 msgid ""
-"Identifier, reason, submitter, category, origin and motion block are "
+"Number, reason, submitter, category, origin and motion block are "
 "optional and may be empty."
 msgstr ""
 "Идентификатор, причина, отправитель, категория, источник и блок заявления "
@@ -1617,7 +1617,7 @@ msgstr "Количество кандидатов"
 msgid "Number of last speakers to be shown on the projector"
 msgstr "Количество оставшихся спикеров будет показано на проекторе"
 
-msgid "Number of minimal digits for identifier"
+msgid "Number of minimal digits for number"
 msgstr "Количество минимальных цифр для идентификатора"
 
 msgid "Number of persons to be elected"
@@ -1849,7 +1849,7 @@ msgstr "Предустановленные секунды для нового о
 msgid "Prefix"
 msgstr "Префикс"
 
-msgid "Prefix for the identifier for amendments"
+msgid "Prefix for the number for amendments"
 msgstr "Префикс для идентификатора элемента для внесения поправок"
 
 msgid "Presence"
@@ -2256,7 +2256,7 @@ msgstr "Сортировать"
 msgid "Sort agenda"
 msgstr "Сортировать повестку дня"
 
-msgid "Sort by identifier"
+msgid "Sort by number"
 msgstr "Сортировать по идентификатору"
 
 msgid "Sort categories"
@@ -2644,7 +2644,7 @@ msgstr "Имя пользователя"
 msgid "Username or password is not correct."
 msgstr "Имя пользователя или пароль не является правильным."
 
-msgid "Uses leading zeros to sort motions correctly by identifier."
+msgid "Uses leading zeros to sort motions correctly by number."
 msgstr ""
 "Использует ведущие нули для правильной сортировки заявлений по "
 "идентификатору."

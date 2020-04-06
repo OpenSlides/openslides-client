@@ -10,20 +10,18 @@ import { OrganisationSettingsService } from 'app/core/ui-services/organisation-s
 import { TreeIdNode } from 'app/core/ui-services/tree.service';
 import { Motion } from 'app/shared/models/motions/motion';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from 'app/shared/models/motions/view-unified-change';
-import { PersonalNoteContent } from 'app/shared/models/users/personal-note';
 import { AgendaListTitle } from 'app/site/base/base-view-model-with-agenda-item';
 import { MotionTitleInformation, ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionAmendedParagraph } from 'app/site/motions/models/view-motion-amended-paragraph';
 import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
 import { ViewMotionStatuteParagraph } from 'app/site/motions/models/view-motion-statute-paragraph';
 import { ChangeRecoMode } from 'app/site/motions/motions.constants';
-import { ViewPersonalNote } from 'app/site/users/models/view-personal-note';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { BaseIsAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-is-agenda-item-and-list-of-speakers-content-object-repository';
 import { LineNumberedString, LinenumberingService, LineNumberRange } from '../../ui-services/linenumbering.service';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
-type SortProperty = 'weight' | 'identifier';
+type SortProperty = 'sort_weight' | 'number';
 
 /**
  * Describes the single paragraphs from the base motion.
@@ -116,16 +114,16 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
     }
 
     public getTitle = (titleInformation: MotionTitleInformation) => {
-        if (titleInformation.identifier) {
-            return `${titleInformation.identifier}: ${titleInformation.title}`;
+        if (titleInformation.number) {
+            return `${titleInformation.number}: ${titleInformation.title}`;
         } else {
             return titleInformation.title;
         }
     };
 
-    public getIdentifierOrTitle = (titleInformation: MotionTitleInformation) => {
-        if (titleInformation.identifier) {
-            return titleInformation.identifier;
+    public getNumberOrTitle = (titleInformation: MotionTitleInformation) => {
+        if (titleInformation.number) {
+            return titleInformation.number;
         } else {
             return titleInformation.title;
         }
@@ -133,9 +131,9 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
 
     public getAgendaSlideTitle = (titleInformation: MotionTitleInformation) => {
         const numberPrefix = titleInformation.agenda_item_number() ? `${titleInformation.agenda_item_number()} · ` : '';
-        // if the identifier is set, the title will be 'Motion <identifier>'.
-        if (titleInformation.identifier) {
-            return `${numberPrefix} ${this.translate.instant('Motion')} ${titleInformation.identifier}`;
+        // if the number is set, the title will be 'Motion <number>'.
+        if (titleInformation.number) {
+            return `${numberPrefix} ${this.translate.instant('Motion')} ${titleInformation.number}`;
         } else {
             return `${numberPrefix} ${titleInformation.title}`;
         }
@@ -143,10 +141,10 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
 
     public getAgendaListTitle = (titleInformation: MotionTitleInformation) => {
         const numberPrefix = titleInformation.agenda_item_number() ? `${titleInformation.agenda_item_number()} · ` : '';
-        // Append the verbose name only, if not the special format 'Motion <identifier>' is used.
+        // Append the verbose name only, if not the special format 'Motion <number>' is used.
         let title;
-        if (titleInformation.identifier) {
-            title = `${numberPrefix}${this.translate.instant('Motion')} ${titleInformation.identifier} · ${
+        if (titleInformation.number) {
+            title = `${numberPrefix}${this.translate.instant('Motion')} ${titleInformation.number} · ${
                 titleInformation.title
             }`;
         } else {
@@ -176,42 +174,10 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
     protected createViewModelWithTitles(model: Motion): ViewMotion {
         const viewModel = super.createViewModel(model);
 
-        viewModel.getIdentifierOrTitle = () => this.getIdentifierOrTitle(viewModel);
+        viewModel.getNumberOrTitle = () => this.getNumberOrTitle(viewModel);
         viewModel.getProjectorTitle = () => this.getProjectorTitle(viewModel);
 
         return viewModel;
-    }
-
-    /**
-     * @returns the personal note for the operator.
-     */
-    private getPersonalNote(): ViewPersonalNote | null {
-        return this.viewModelStoreService.find(ViewPersonalNote, pn => {
-            return pn.user_id === this.operator.operatorId;
-        });
-    }
-
-    /**
-     * Get the personal note content for one motion by their id
-     *
-     * @param motion the motion
-     * @returns the personal note content for this motion or null
-     */
-    private getPersonalNoteForMotion(motion: Motion): PersonalNoteContent | null {
-        if (this.operator.isAnonymous) {
-            return;
-        }
-
-        const personalNote = this.getPersonalNote();
-        if (!personalNote) {
-            return;
-        }
-
-        const notes = personalNote.notes;
-        const collection = Motion.COLLECTION;
-        if (notes && notes[collection] && notes[collection][motion.id]) {
-            return notes[collection][motion.id];
-        }
     }
 
     /**
@@ -304,18 +270,18 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param viewMotion the motion to tag
      * @param tagId the tags id to add or remove
      */
-    public async setTag(viewMotion: ViewMotion, tagId: number): Promise<void> {
-        const tags = viewMotion.motion.tags_id.map(tag => tag);
-        const tagIndex = tags.findIndex(tag => tag === tagId);
+    public async toggleTag(viewMotion: ViewMotion, tagId: number): Promise<void> {
+        const tag_ids = viewMotion.motion.tag_ids.map(tag => tag);
+        const tagIndex = tag_ids.findIndex(tag => tag === tagId);
 
         if (tagIndex === -1) {
             // add tag to motion
-            tags.push(tagId);
+            tag_ids.push(tagId);
         } else {
             // remove tag from motion
-            tags.splice(tagIndex, 1);
+            tag_ids.splice(tagIndex, 1);
         }
-        await this.patch({ tags_id: tags }, viewMotion);
+        await this.patch({ tag_ids: tag_ids }, viewMotion);
     }
 
     /**
@@ -375,7 +341,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         return this.getViewModelListObservable().pipe(
             map((motions: ViewMotion[]): ViewMotion[] => {
                 return motions.filter((motion: ViewMotion): boolean => {
-                    return motion.parent_id === motionId;
+                    return motion.lead_motion_id === motionId;
                 });
             })
         );
@@ -412,7 +378,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @returns all amendments
      */
     public getAllAmendmentsInstantly(): ViewMotion[] {
-        return this.getViewModelList().filter(motion => !!motion.parent_id);
+        return this.getViewModelList().filter(motion => !!motion.lead_motion_id);
     }
 
     /**
@@ -421,7 +387,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param motionId the motion ID to get the amendments to
      */
     public getAmendmentsInstantly(motionId: number): ViewMotion[] {
-        return this.getViewModelList().filter(motion => motion.parent_id === motionId);
+        return this.getViewModelList().filter(motion => motion.lead_motion_id === motionId);
     }
 
     /**
@@ -561,10 +527,10 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param {number} lineLength
      */
     public getParagraphsToChoose(motion: ViewMotion, lineLength: number): ParagraphToChoose[] {
-        const parent = motion.hasParent ? motion.parent : motion;
+        const parent = motion.hasLeadMotion ? motion.lead_motion : motion;
         return this.getTextParagraphs(parent, true, lineLength).map((paragraph: string, index: number) => {
             let localParagraph;
-            if (motion.hasParent) {
+            if (motion.hasLeadMotion) {
                 localParagraph = motion.amendment_paragraphs[index] ? motion.amendment_paragraphs[index] : paragraph;
             } else {
                 localParagraph = paragraph;
@@ -578,8 +544,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * for selection
      */
     public getDiffedParagraphToChoose(amendment: ViewMotion, lineLength: number): ParagraphToChoose[] {
-        if (amendment.hasParent) {
-            const parent = amendment.parent;
+        if (amendment.hasLeadMotion) {
+            const parent = amendment.lead_motion;
 
             return this.getTextParagraphs(parent, true, lineLength).map((paragraph: string, index: number) => {
                 const diffedParagraph = amendment.amendment_paragraphs[index]
@@ -622,7 +588,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         changes: ViewMotionChangeRecommendation[],
         includeUnchanged: boolean
     ): string[] {
-        const motion = amendment.parent;
+        const motion = amendment.lead_motion;
         const baseParagraphs = this.getTextParagraphs(motion, true, lineLength);
 
         // Changes need to be applied from the bottom up, to prevent conflicts with changing line numbers.
@@ -691,7 +657,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         changeRecommendations: ViewMotionChangeRecommendation[],
         includeUnchanged: boolean
     ): DiffLinesInParagraph[] {
-        const motion = amendment.parent;
+        const motion = amendment.lead_motion;
         const baseParagraphs = this.getTextParagraphs(motion, true, lineLength);
 
         let amendmentParagraphs;
@@ -768,7 +734,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         lineLength: number,
         changeRecos: ViewMotionChangeRecommendation[]
     ): ViewMotionAmendedParagraph[] {
-        const motion = amendment.parent;
+        const motion = amendment.lead_motion;
         const baseParagraphs = this.getTextParagraphs(motion, true, lineLength);
         const changedAmendmentParagraphs = this.applyChangesToAmendment(amendment, lineLength, changeRecos, false);
 
@@ -813,7 +779,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         lineLength: number,
         withDiff: boolean
     ): LineNumberedString[] {
-        const motion = amendment.parent;
+        const motion = amendment.lead_motion;
         const baseParagraphs = this.getTextParagraphs(motion, true, lineLength);
 
         return (amendment.amendment_paragraphs || []).map((newText: string, paraNo: number): string => {
@@ -851,7 +817,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @returns True if there is at eleast one amendment
      */
     public hasAmendments(motion: ViewMotion): boolean {
-        return this.getViewModelList().filter(allMotions => allMotions.parent_id === motion.id).length > 0;
+        return this.getViewModelList().filter(allMotions => allMotions.lead_motion_id === motion.id).length > 0;
     }
 
     /**
@@ -881,7 +847,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
     /**
      * Get the label for the motion's current state with the extension
      * attached (if available). For cross-referencing other motions, `[motion:id]`
-     * will replaced by the referenced motion's identifier (see {@link solveExtensionPlaceHolder})
+     * will replaced by the referenced motion's number (see {@link solveExtensionPlaceHolder})
      *
      * @param motion
      * @returns the translated state with the extension attached
@@ -925,7 +891,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         return value.replace(/\[motion:(\d+)\]/g, (match, id) => {
             const motion = this.getViewModel(id);
             if (motion) {
-                return motion.getIdentifierOrTitle();
+                return motion.getNumberOrTitle();
             } else {
                 return this.translate.instant('<unknown motion>');
             }
@@ -941,9 +907,9 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
                 if (a[this.sortProperty] === b[this.sortProperty]) {
                     return this.languageCollator.compare(a.title, b.title);
                 } else {
-                    if (this.sortProperty === 'weight') {
+                    if (this.sortProperty === 'sort_weight') {
                         // handling numerical values
-                        return a.weight - b.weight;
+                        return a.sort_weight - b.sort_weight;
                     } else {
                         return this.languageCollator.compare(a[this.sortProperty], b[this.sortProperty]);
                     }

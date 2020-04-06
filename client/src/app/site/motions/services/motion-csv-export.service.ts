@@ -104,7 +104,7 @@ export class MotionCsvExportService {
             crMode = this.organisationSettingsService.instant('motions_recommendation_text_mode');
         }
 
-        const properties = sortMotionPropertyList(['identifier', 'title'].concat(contentToExport));
+        const properties = sortMotionPropertyList(['number', 'title'].concat(contentToExport));
         const exportProperties: (
             | CsvColumnDefinitionProperty<ViewMotion>
             | CsvColumnDefinitionMap<ViewMotion>
@@ -175,7 +175,7 @@ export class MotionCsvExportService {
     // TODO does not reflect updated export order. any more. Hard coded for now
     public exportDummyMotion(): void {
         const headerRow = [
-            'Identifier',
+            'number',
             'Submitters',
             'Title',
             'Text',

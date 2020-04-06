@@ -8,7 +8,7 @@ import { ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
 import { MotionPollService } from 'app/site/motions/services/motion-poll.service';
 import { BasePollDialogComponent } from 'app/site/polls/components/base-poll-dialog.component';
 import { PollFormComponent } from 'app/site/polls/components/poll-form/poll-form.component';
-import { PercentBaseVerbose } from 'app/site/polls/models/view-base-poll';
+import { PercentBaseVerbose } from 'app/site/polls/models/base-view-poll';
 
 @Component({
     selector: 'os-motion-poll-dialog',

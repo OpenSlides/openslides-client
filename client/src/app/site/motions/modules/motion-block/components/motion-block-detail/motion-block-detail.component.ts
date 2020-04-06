@@ -43,7 +43,7 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
     /**
      * To quick-filter the list
      */
-    public filterProps = ['submitters', 'title', 'identifier'];
+    public filterProps = ['submitters', 'title', 'number'];
 
     /**
      * Columns to display in table when desktop view is available

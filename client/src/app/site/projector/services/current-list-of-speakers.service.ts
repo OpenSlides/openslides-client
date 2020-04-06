@@ -107,7 +107,8 @@ export class CurrentListOfSpeakersService {
      * @returns The view list of speakers or null, if there is no such projector element.
      */
     private getCurrentListOfSpeakersForProjector(projector: ViewProjector): ViewListOfSpeakers | null {
-        const nonStableElements = projector.elements.filter(element => !element.stable);
+        throw new Error('TODO');
+        /*const nonStableElements = projector.elements.filter(element => !element.stable);
         for (const nonStableElement of nonStableElements) {
             const identifiableNonStableElement = this.slideManager.getIdentifiableProjectorElement(nonStableElement);
             try {
@@ -118,7 +119,7 @@ export class CurrentListOfSpeakersService {
             } catch (e) {
                 // make TypeScript silent.
             }
-        }
+        }*/
         return null;
     }
 }

@@ -1,5 +1,5 @@
-import { BaseModelWithContentObject } from '../base/base-model-with-content-object';
-import { ContentObject } from '../base/content-object';
+import { Fqid, Id } from 'app/core/definitions/key-types';
+import { BaseModel } from '../base/base-model';
 
 /**
  * Determine visibility states for agenda items
@@ -15,41 +15,27 @@ export const ItemVisibilityChoices = [
  * Representations of agenda Item
  * @ignore
  */
-export class AgendaItem extends BaseModelWithContentObject<AgendaItem> {
+export class AgendaItem extends BaseModel<AgendaItem> {
     public static COLLECTION = 'agenda_item';
 
-    // TODO: remove this, if the server can properly include the agenda item number
-    // in the title information. See issue #4738
-    private _itemNumber: string;
-    private _titleInformation: any;
-
-    public id: number;
-    public get item_number(): string {
-        return this._itemNumber;
-    }
-    public set item_number(val: string) {
-        this._itemNumber = val;
-        if (this._titleInformation) {
-            this._titleInformation.agenda_item_number = () => this.item_number;
-        }
-    }
-    public get title_information(): object {
-        return this._titleInformation;
-    }
-    public set title_information(val: object) {
-        this._titleInformation = val;
-        this._titleInformation.agenda_item_number = () => this.item_number;
-    }
+    public id: Id;
+    public item_number: string;
     public comment: string;
     public closed: boolean;
     public type: number;
     public is_hidden: boolean;
-    public duration: number; // minutes
-    public content_object: ContentObject;
+    public is_internal: boolean;
+    public duration: number; // in seconds
     public weight: number;
-    public parent_id: number;
     public level: number;
     public tags_id: number[];
+
+    public content_object_id: Fqid; // */agenda_item_id;
+    public parent_id?: Id; // agenda_item/child_ids;
+    public child_ids: Id[]; // (agenda_item/parent_id)[];
+    public projection_ids: Id[]; // (projection/element_id)[];
+    public current_projector_ids: Id[]; // (projector/current_element_ids)[]
+    public meeting_id: Id; // meeting/agenda_item_ids;
 
     public constructor(input?: any) {
         super(AgendaItem.COLLECTION, input);

@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { environment } from 'environments/environment';
 
 import { OperatorService, WhoAmI } from 'app/core/core-services/operator.service';
-import { DEFAULT_AUTH_TYPE, UserAuthType } from 'app/shared/models/users/user';
 import { DataStoreService } from './data-store.service';
 import { HttpService } from './http.service';
 import { OpenSlidesService } from './openslides.service';
@@ -38,7 +37,8 @@ export class AuthService {
      * - Type "default": username and password needed; the earlySuccessCallback will be called.
      * - Type "saml": The windows location will be changed to the single-sign-on service initiator.
      */
-    public async login(
+    // TODO: remove auth type
+    /*public async login(
         authType: UserAuthType,
         username: string,
         password: string,
@@ -60,7 +60,7 @@ export class AuthService {
         } else {
             throw new Error(`Unsupported auth type "${authType}"`);
         }
-    }
+    }*/
 
     /**
      * Redirects the user to the page where he came from. Boots OpenSlides,
@@ -94,7 +94,7 @@ export class AuthService {
      * send a `post`-request to `/apps/users/logout/'`. Restarts OpenSlides.
      */
     public async logout(): Promise<void> {
-        const authType = this.operator.authType.getValue();
+        /*const authType = this.operator.authType.getValue();
         if (authType === DEFAULT_AUTH_TYPE) {
             let response = null;
             try {
@@ -112,6 +112,7 @@ export class AuthService {
             window.location.href = environment.urlPrefix + '/saml/?slo'; // Bye
         } else {
             throw new Error(`Unsupported auth type "${authType}"`);
-        }
+        }*/
+        throw new Error('TODO'); // just ignore the SAML case for now..
     }
 }

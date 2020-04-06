@@ -1,17 +1,5 @@
-import { AssignmentRelatedUser } from './assignment-related-user';
+import { Id } from 'app/core/definitions/key-types';
 import { BaseModelWithAgendaItemAndListOfSpeakers } from '../base/base-model-with-agenda-item-and-list-of-speakers';
-
-export interface AssignmentWithoutNestedModels extends BaseModelWithAgendaItemAndListOfSpeakers<Assignment> {
-    id: number;
-    title: string;
-    description: string;
-    open_posts: number;
-    phase: number; // see Openslides constants
-    default_poll_description: string;
-    tags_id: number[];
-    attachments_id: number[];
-    number_poll_candidates: boolean;
-}
 
 /**
  * Representation of an assignment.
@@ -20,11 +8,25 @@ export interface AssignmentWithoutNestedModels extends BaseModelWithAgendaItemAn
 export class Assignment extends BaseModelWithAgendaItemAndListOfSpeakers<Assignment> {
     public static COLLECTION = 'assignment';
 
-    public id: number;
-    public assignment_related_users: AssignmentRelatedUser[];
+    public id: Id;
+    public title: string;
+    public description: string;
+    public open_posts: number;
+    public phase: number;
+    public default_poll_description: string;
+    public number_poll_candidates: boolean;
+
+    public assignment_candidate_ids: Id[]; // (assignment_candidate/assignment_id)[];
+    public poll_ids: Id[]; // (assignment_poll/assignment_id)[];
+    public agenda_item_id?: Id; // agenda_item/content_object_id;
+    public list_of_speakers_id?: Id; // list_of_speakers/content_object_id;
+    public tag_ids: Id[]; // (tag/tagged_ids)[];
+    public attachment_ids: Id[]; // (mediafile/attachment_ids)[];
+    public projection_ids: Id[]; // (projection/element_id)[];
+    public current_projector_ids: Id[]; // (projector/current_element_ids)[]
+    public meeting_id: Id; // meeting/assignment_ids;
 
     public constructor(input?: any) {
         super(Assignment.COLLECTION, input);
     }
 }
-export interface Assignment extends AssignmentWithoutNestedModels {}

@@ -55,11 +55,11 @@
         [(selectedRows)]="selectedRows"
         (dataSourceChange)="onDataSourceChange($event)"
     >
-        <!-- Identifier -->
-        <div *pblNgridCellDef="'identifier'; row as motion" class="cell-slot fill">
+        <!-- number -->
+        <div *pblNgridCellDef="'number'; row as motion" class="cell-slot fill">
             <a class="detail-link" [routerLink]="motion.id" *ngIf="!isMultiSelect"></a>
-            <div class="column-identifier innerTable">
-                {{ motion.identifier }}
+            <div class="column-number innerTable">
+                {{ motion.number }}
             </div>
         </div>
 
@@ -80,8 +80,8 @@
 
                     <!-- The title -->
                     <span>
-                        <span *ngIf="vp.isMobile && motion.identifier">
-                            {{ motion.identifier }}
+                        <span *ngIf="vp.isMobile && motion.number">
+                            {{ motion.number }}
                             <span>&middot;</span>
                         </span>
                         {{ motion.title }}
@@ -90,7 +90,8 @@
 
                 <!-- Submitters -->
                 <div class="submitters-line ellipsis-overflow">
-                    <span *ngIf="motion.submitters.length">
+                    TODO: Enable submitter relations...
+                    <!--<span *ngIf="motion.submitters.length">
                         <span>{{ 'by' | translate }}</span>
                         {{ motion.submitters }}
                     </span>
@@ -100,8 +101,8 @@
                             &middot;
                         </span>
                         <span>{{ 'Sequential number' | translate }}</span>
-                        {{ motion.id }}
-                    </span>
+                        {{ motion.sequential_number }}
+                    </span>-->
                 </div>
 
                 <!-- TODO: These two now appear twice. Might be an own component -->
@@ -380,7 +381,7 @@
         </mat-form-field>
         <!-- Tag -->
         <mat-form-field *ngIf="isTagAvailable()">
-            <mat-select multiple placeholder="{{ 'Tags' | translate }}" [(ngModel)]="infoDialog.tags_id">
+            <mat-select multiple placeholder="{{ 'Tags' | translate }}" [(ngModel)]="infoDialog.tag_ids">
                 <mat-option *ngFor="let tag of tags" [value]="tag.id">
                     {{ tag.getTitle() | translate }}
                 </mat-option>

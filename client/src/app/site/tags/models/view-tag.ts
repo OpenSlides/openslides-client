@@ -1,6 +1,7 @@
 import { SearchRepresentation } from 'app/core/ui-services/search.service';
 import { Tag } from 'app/shared/models/core/tag';
 import { Searchable } from 'app/site/base/searchable';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { BaseViewModel } from '../../base/base-view-model';
 
 export interface TagTitleInformation {
@@ -30,4 +31,8 @@ export class ViewTag extends BaseViewModel<Tag> implements TagTitleInformation, 
         return `/tags`;
     }
 }
-export interface ViewTag extends Tag {}
+interface ITagRelations {
+    tagged: BaseViewModel[];
+    meeting: ViewMeeting;
+}
+export interface ViewTag extends Tag, ITagRelations {}

@@ -11,7 +11,7 @@
         </button>
         <button
             mat-icon-button
-            *ngIf="!isEditMode && motion && motion.personalNote && motion.personalNote.note"
+            *ngIf="!isEditMode && personalNoteText"
             (click)="printPersonalNote()"
             matTooltip="{{ 'Export personal note only' | translate }}"
         >
@@ -39,8 +39,8 @@
     <!-- Content -->
     <ng-container class="meta-text-block-content">
         <ng-container *ngIf="!isEditMode">
-            <div *ngIf="motion && motion.personalNote" [innerHTML]="personalNoteText | trust: 'html'"></div>
-            <div class="no-content" *ngIf="!motion || !motion.hasNotes">
+            <div *ngIf="personalNoteText" [innerHTML]="personalNoteText | trust: 'html'"></div>
+            <div class="no-content" *ngIf="!motion || motion.personal_notes.length === 0">
                 {{ 'No personal note' | translate }}
             </div>
         </ng-container>

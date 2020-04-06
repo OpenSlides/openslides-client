@@ -1,9 +1,14 @@
 import { SearchRepresentation } from 'app/core/ui-services/search.service';
 import { MotionBlock } from 'app/shared/models/motions/motion-block';
+import { ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
+import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { TitleInformationWithAgendaItem } from 'app/site/base/base-view-model-with-agenda-item';
 import { BaseViewModelWithAgendaItemAndListOfSpeakers } from 'app/site/base/base-view-model-with-agenda-item-and-list-of-speakers';
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { Searchable } from 'app/site/base/searchable';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
+import { ViewProjection } from 'app/site/projector/models/view-projection';
+import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { ViewMotion } from './view-motion';
 
 export interface MotionBlockTitleInformation extends TitleInformationWithAgendaItem {
@@ -53,7 +58,7 @@ export class ViewMotionBlock extends BaseViewModelWithAgendaItemAndListOfSpeaker
             getBasicProjectorElement: options => ({
                 name: MotionBlock.COLLECTION,
                 id: this.id,
-                getIdentifiers: () => ['name', 'id']
+                getNumbers: () => ['name', 'id']
             }),
             slideOptions: [],
             projectionDefaultName: 'motionBlocks',
@@ -61,8 +66,12 @@ export class ViewMotionBlock extends BaseViewModelWithAgendaItemAndListOfSpeaker
         };
     }
 }
-
-interface IMotionBLockRelations {
-    motions?: ViewMotion[];
+interface IMotionBlockRelations {
+    motions: ViewMotion[];
+    agenda_item: ViewAgendaItem;
+    list_of_speakers: ViewListOfSpeakers;
+    projections: ViewProjection[];
+    current_projectors: ViewProjector[];
+    meeting: ViewMeeting;
 }
-export interface ViewMotionBlock extends MotionBlock, IMotionBLockRelations {}
+export interface ViewMotionBlock extends MotionBlock, IMotionBlockRelations {}

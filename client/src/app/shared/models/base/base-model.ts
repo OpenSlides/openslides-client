@@ -1,3 +1,4 @@
+import { Fqid, Id } from 'app/core/definitions/key-types';
 import { Collection } from './collection';
 import { Deserializer } from './deserializer';
 import { Identifiable } from './identifiable';
@@ -12,13 +13,13 @@ export interface ModelConstructor<T extends BaseModel<T>> {
  * When inherit from this class, give the subclass as the type. E.g. `class Motion extends BaseModel<Motion>`
  */
 export abstract class BaseModel<T = any> extends Deserializer implements Identifiable, Collection {
-    public get fqid(): string {
+    public get fqid(): Fqid {
         return `${this.collection}/${this.id}`;
     }
     /**
      * force children of BaseModel to have an id
      */
-    public abstract id: number;
+    public abstract id: Id;
 
     protected constructor(public readonly collection: string, input?: Partial<T>) {
         super(input);

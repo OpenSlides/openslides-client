@@ -1,14 +1,14 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { StorageService } from 'app/core/core-services/storage.service';
-import { CountdownRepositoryService } from 'app/core/repositories/projector/countdown-repository.service';
+import { CountdownRepositoryService } from 'app/core/repositories/projector/projector-countdown-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { ProjectionDialogService } from 'app/core/ui-services/projection-dialog.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
-import { Projector } from 'app/shared/models/core/projector';
+import { Projector } from 'app/shared/models/projector/projector';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { ViewCountdown } from '../../models/view-countdown';
+import { ViewProjectorCountdown } from '../../models/view-projector-countdown';
 
 /**
  *
@@ -23,13 +23,13 @@ export class CountdownControlsComponent extends BaseComponent {
      * Countdown as input
      */
     @Input()
-    public countdown: ViewCountdown;
+    public countdown: ViewProjectorCountdown;
 
     /**
      * Edit event
      */
     @Output()
-    public editEvent = new EventEmitter<ViewCountdown>();
+    public editEvent = new EventEmitter<ViewProjectorCountdown>();
 
     /**
      * Pre defined projection target (if any)
