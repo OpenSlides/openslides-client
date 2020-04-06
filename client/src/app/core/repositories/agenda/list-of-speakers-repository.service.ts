@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { AgendaItemRepositoryService } from './agenda-item-repository.service';
 import { HttpService } from 'app/core/core-services/http.service';
+import { collectionFromFqid } from 'app/core/core-services/key-transforms';
 import { ListOfSpeakers } from 'app/shared/models/agenda/list-of-speakers';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { ListOfSpeakersTitleInformation, ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
@@ -48,21 +49,23 @@ export class ListOfSpeakersRepositoryService extends BaseHasContentObjectReposit
     };
 
     public getTitle = (titleInformation: ListOfSpeakersTitleInformation) => {
-        if (titleInformation.contentObject) {
-            return titleInformation.contentObject.getListOfSpeakersTitle();
+        if (titleInformation.content_object) {
+            return titleInformation.content_object.getListOfSpeakersTitle();
         } else {
+            const collection = collectionFromFqid(titleInformation.content_object_id);
             const repo = this.collectionMapperService.getRepository(
-                titleInformation.contentObjectData.collection
+                collection
             ) as BaseIsListOfSpeakersContentObjectRepository<any, any, any>;
 
             // Try to get the agenda item for this to get the item number
             // TODO: This can be resolved with #4738
-            const item = this.itemRepo.findByContentObject(titleInformation.contentObjectData);
+            /*const item = this.itemRepo.findByContentObjectId(titleInformation.content_object_id);
             if (item) {
                 (<any>titleInformation.title_information).agenda_item_number = () => item.item_number;
             }
 
-            return repo.getListOfSpeakersTitle(titleInformation.title_information);
+            return repo.getListOfSpeakersTitle(titleInformation.title_information);*/
+            // This has to be decided: do we stick to titleInformation or not?
         }
     };
 

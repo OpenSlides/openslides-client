@@ -75,7 +75,7 @@ export class ViewUser extends BaseProjectableViewModel<User> implements UserTitl
             getBasicProjectorElement: options => ({
                 name: User.COLLECTION,
                 id: this.id,
-                getIdentifiers: () => ['name', 'id']
+                getNumbers: () => ['name', 'id']
             }),
             slideOptions: [],
             projectionDefaultName: 'users',

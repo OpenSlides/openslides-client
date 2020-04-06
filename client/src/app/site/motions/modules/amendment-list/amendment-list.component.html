@@ -40,11 +40,11 @@
     <div *pblNgridCellDef="'meta'; row as motion" class="cell-slot fill">
         <a class="detail-link" [routerLink]="motion.getDetailStateURL()" [state]="{ back: 'true' }"></a>
         <div class="innerTable">
-            <!-- Identifier and line -->
+            <!-- number and line -->
             <div class="title-line one-line">
-                <span>{{ motion.identifier }}</span>
+                <span>{{ motion.number }}</span>
                 <span *ngIf="motion.diffLines && motion.diffLines.length">
-                    <span *ngIf="motion.identifier">&nbsp;&middot;&nbsp;</span>
+                    <span *ngIf="motion.number">&nbsp;&middot;&nbsp;</span>
                     <span translate>Line</span>
                     <span>&nbsp;{{ motion.getChangeLines() }}</span>
                 </span>

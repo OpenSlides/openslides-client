@@ -3,7 +3,6 @@ import { Component, Input } from '@angular/core';
 import { CollectionMapperService } from 'app/core/core-services/collection-mapper.service';
 import { SlideData } from 'app/core/core-services/projector-data.service';
 import { isBaseIsAgendaItemContentObjectRepository } from 'app/core/repositories/base-is-agenda-item-content-object-repository';
-import { ProjectorElement } from 'app/shared/models/core/projector';
 import { BaseSlideComponent } from 'app/slides/base-slide-component';
 import { ItemListSlideData, SlideItem } from './item-list-slide-data';
 
@@ -14,18 +13,18 @@ import { ItemListSlideData, SlideItem } from './item-list-slide-data';
 })
 export class ItemListSlideComponent extends BaseSlideComponent<ItemListSlideData> {
     @Input()
-    public set data(value: SlideData<ItemListSlideData, ProjectorElement>) {
+    public set data(value: SlideData<ItemListSlideData>) {
         value.data.items.forEach(
             item => (item.title_information.agenda_item_number = () => item.title_information._agenda_item_number)
         );
         this._data = value;
     }
 
-    public get data(): SlideData<ItemListSlideData, ProjectorElement> {
+    public get data(): SlideData<ItemListSlideData> {
         return this._data;
     }
 
-    private _data: SlideData<ItemListSlideData, ProjectorElement>;
+    private _data: SlideData<ItemListSlideData>;
 
     public constructor(private collectionMapperService: CollectionMapperService) {
         super();

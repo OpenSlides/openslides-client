@@ -4,9 +4,8 @@ import { LoadChildrenCallback } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
 import { ViewModelStoreService } from 'app/core/core-services/view-model-store.service';
-import { IdentifiableProjectorElement, ProjectorElement } from 'app/shared/models/core/projector';
 
-type BooleanOrFunction = boolean | ((element: ProjectorElement) => boolean);
+type BooleanOrFunction = boolean | ((element: any) => boolean);
 
 export interface Slide {
     slide: string;
@@ -27,7 +26,7 @@ export interface SlideDynamicConfiguration {
     scaleable: BooleanOrFunction;
 
     getSlideTitle?: (
-        element: ProjectorElement,
+        element: any /*ProjectorElement*/,
         translate: TranslateService,
         viewModelStore: ViewModelStoreService
     ) => string;
@@ -41,7 +40,7 @@ export interface SlideManifest extends Slide {
     path: string;
     loadChildren: LoadChildrenCallback;
     verboseName: string;
-    elementIdentifiers: (keyof IdentifiableProjectorElement)[];
+    elementNumbers: string /*keyof IdentifiableProjectorElement*/[];
     canBeMappedToModel: boolean;
 }
 

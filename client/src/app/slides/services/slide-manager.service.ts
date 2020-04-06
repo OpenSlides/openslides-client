@@ -1,7 +1,6 @@
 import { Compiler, ComponentFactory, Inject, Injectable, Injector, NgModuleFactory, Type } from '@angular/core';
 
 import { allSlidesDynamicConfiguration } from '../all-slide-configurations';
-import { IdentifiableProjectorElement, ProjectorElement } from 'app/shared/models/core/projector';
 import { BaseSlideComponent } from '../base-slide-component';
 import { Slide, SlideDynamicConfiguration, SlideManifest } from '../slide-manifest';
 import { SLIDE_MANIFESTS } from '../slide-manifest';
@@ -54,12 +53,12 @@ export class SlideManager {
         return this.loadedSlideConfigurations[slideName];
     }
 
-    public getIdentifialbeProjectorElement<P extends ProjectorElement>(element: P): IdentifiableProjectorElement & P {
+    /*public getIdentifialbeProjectorElement<P extends ProjectorElement>(element: P): IdentifiableProjectorElement & P {
         const identifiableElement: IdentifiableProjectorElement & P = element as IdentifiableProjectorElement & P;
-        const identifiers = this.getManifest(element.name).elementIdentifiers.map(x => x); // map to copy.
-        identifiableElement.getIdentifiers = () => identifiers;
+        const identifiers = this.getManifest(element.name).elementNumbers.map(x => x); // map to copy.
+        identifiableElement.getNumbers = () => identifiers;
         return identifiableElement;
-    }
+    }*/
 
     /**
      * Get slide verbose name for a given slide.

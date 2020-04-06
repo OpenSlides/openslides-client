@@ -16,7 +16,7 @@ import { BehaviorSubject, timer } from 'rxjs';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { Projector } from 'app/shared/models/core/projector';
+import { Projector } from 'app/shared/models/projector/projector';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewProjector } from '../../models/view-projector';
@@ -109,11 +109,10 @@ export class ProjectorListComponent extends BaseComponent implements OnInit, Aft
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 const projectorToCreate: Partial<Projector> = {
-                    name: this.createForm.value.name,
-                    reference_projector_id: this.repo.getReferenceProjectorId()
+                    name: this.createForm.value.name
                 };
 
-                this.repo.create(projectorToCreate).then(() => {
+                this.repo.create(projectorToCreate as Projector).then(() => {
                     this.cd.detectChanges();
                 }, this.raiseError);
             }

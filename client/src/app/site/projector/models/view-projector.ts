@@ -1,5 +1,9 @@
-import { Projector, ProjectorElements } from 'app/shared/models/core/projector';
+import { BaseModel } from 'app/shared/models/base/base-model';
+import { Projector } from 'app/shared/models/projector/projector';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { BaseViewModel } from '../../base/base-view-model';
+import { ViewProjection } from './view-projection';
+import { ViewProjectionDefault } from './view-projection-default';
 
 export interface ProjectorTitleInformation {
     name: string;
@@ -13,15 +17,21 @@ export class ViewProjector extends BaseViewModel<Projector> {
         return this._model;
     }
 
-    public get non_stable_elements(): ProjectorElements {
+    /*public get non_stable_elements(): ProjectorElements {
         return this.projector.elements.filter(element => !element.stable);
-    }
+    }*/
 
     public get isReferenceProjector(): boolean {
-        return this.id === this.reference_projector_id;
+        return !!this.used_as_reference_projector_meeting_id;
     }
 }
 interface IProjectorRelations {
-    referenceProjector: ViewProjector;
+    current_projections: ViewProjection[];
+    current_elements: BaseModel[];
+    elements_preview: ViewProjection[];
+    elements_history: ViewProjection[];
+    used_as_reference_projector_in_meeting?: ViewMeeting;
+    projectiondefaults: ViewProjectionDefault[];
+    meeting?: ViewMeeting;
 }
 export interface ViewProjector extends Projector, IProjectorRelations {}

@@ -80,8 +80,8 @@ export class ViewMotionAmendedParagraph implements ViewUnifiedChange {
         return !this.isAccepted();
     }
 
-    public getIdentifier(): string {
-        return this.amendment.identifier;
+    public getNumber(): string {
+        return this.amendment.number;
     }
 
     public showInDiffView(): boolean {

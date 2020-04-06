@@ -48,6 +48,10 @@ export class ViewAssignmentPoll extends ViewBasePoll<AssignmentPoll, AssignmentP
         return AssignmentPollPercentBaseVerbose[this.onehundred_percent_base];
     }
 
+    public get assignmentPoll(): AssignmentPoll {
+        return this._model;
+    }
+
     public getContentObject(): BaseViewModel {
         return this.assignment;
     }
@@ -57,7 +61,7 @@ export class ViewAssignmentPoll extends ViewBasePoll<AssignmentPoll, AssignmentP
             getBasicProjectorElement: options => ({
                 name: AssignmentPoll.COLLECTION,
                 id: this.id,
-                getIdentifiers: () => ['name', 'id']
+                getNumbers: () => ['name', 'id']
             }),
             slideOptions: [],
             projectionDefaultName: 'assignment_poll',

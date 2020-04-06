@@ -76,8 +76,8 @@ export interface ColumnRestriction {
  *     [(selectedRows)]="selectedRows"
  *     (dataSourceChange)="onDataSourceChange($event)"
  * >
- *     <div *pblNgridCellDef="'identifier'; row as motion" class="cell-slot">
- *         {{ motion.identifier }}
+ *     <div *pblNgridCellDef="'number'; row as motion" class="cell-slot">
+ *         {{ motion.number }}
  *     </div>
  * </os-list-view-table>
  * ```
@@ -609,7 +609,7 @@ export class ListViewTableComponent<V extends BaseViewModel, M extends BaseModel
         viewModel: BaseViewModelWithContentObject | BaseProjectableViewModel
     ): BaseProjectableViewModel {
         const withContent = viewModel as BaseViewModelWithContentObject;
-        return !!withContent.contentObject ? withContent.contentObject : viewModel;
+        return !!withContent.content_object ? withContent.content_object : viewModel;
     }
 
     /**

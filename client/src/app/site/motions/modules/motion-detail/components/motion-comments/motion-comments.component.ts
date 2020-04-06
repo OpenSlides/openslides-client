@@ -4,9 +4,9 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { MotionComment } from 'app/shared/models/motions/motion';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
+import { ViewMotionComment } from 'app/site/motions/models/view-motion-comment';
 import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-comment-section';
 import { MotionPdfExportService } from 'app/site/motions/services/motion-pdf-export.service';
 
@@ -30,29 +30,15 @@ export class MotionCommentsComponent extends BaseComponent implements OnInit {
     public commentForms: { [id: number]: FormGroup } = {};
 
     /**
-     * This object holds all comments for each section for the given motion.
-     */
-    public comments: { [id: number]: MotionComment } = {};
-
-    /**
      * The motion, which these comments belong to.
      */
-    private _motion: ViewMotion;
+    @Input()
+    public motion: ViewMotion;
 
     /**
      * Set to true if an error was detected to prevent automatic navigation
      */
     public error = false;
-
-    @Input()
-    public set motion(motion: ViewMotion) {
-        this._motion = motion;
-        this.updateComments();
-    }
-
-    public get motion(): ViewMotion {
-        return this._motion;
-    }
 
     /**
      * Watches for changes in sections and the operator. If one of them changes, the sections are reloaded
@@ -87,13 +73,16 @@ export class MotionCommentsComponent extends BaseComponent implements OnInit {
         );
     }
 
+    public getCommentForSection(section: ViewMotionCommentSection): ViewMotionComment {
+        return this.motion.getCommentForSection(section);
+    }
+
     /**
      * sets the `sections` member with sections, if the operator has reading permissions.
      */
     private filterSections(): void {
         if (this.sections && this.sections.length) {
             this.sections = this.sections.filter(section => this.operator.isInGroupIds(...section.read_groups_id));
-            this.updateComments();
         }
     }
 
@@ -107,25 +96,12 @@ export class MotionCommentsComponent extends BaseComponent implements OnInit {
     }
 
     /**
-     * Update the comments. Comments are saved in the `comments` object associated with their section id.
-     */
-    private updateComments(): void {
-        this.comments = {};
-        if (!this.motion || !this.sections) {
-            return;
-        }
-        this.sections.forEach(section => {
-            this.comments[section.id] = this.motion.getCommentForSection(section);
-        });
-    }
-
-    /**
      * Puts the comment into edit mode.
      *
      * @param section The section for the comment.
      */
     public editComment(section: ViewMotionCommentSection): void {
-        const comment = this.comments[section.id];
+        const comment = this.motion.getCommentForSection(section);
         const form = this.formBuilder.group({
             comment: [comment ? comment.comment : '']
         });
@@ -166,10 +142,8 @@ export class MotionCommentsComponent extends BaseComponent implements OnInit {
      * @returns true if there is any content or the user is allowed to edit
      */
     public sectionVisible(section: ViewMotionCommentSection): boolean {
-        if (!this.canEditSection(section) && (!this.comments[section.id] || !this.comments[section.id].comment)) {
-            return false;
-        }
-        return true;
+        const comment = this.motion.getCommentForSection(section);
+        return this.canEditSection(section) || (!!comment && !!comment.comment);
     }
 
     /**

@@ -4,7 +4,6 @@ import { CollectionMapperService } from 'app/core/core-services/collection-mappe
 import { SlideData } from 'app/core/core-services/projector-data.service';
 import { isBaseIsAgendaItemContentObjectRepository } from 'app/core/repositories/base-is-agenda-item-content-object-repository';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
-import { ProjectorElement } from 'app/shared/models/core/projector';
 import { BaseSlideComponent } from 'app/slides/base-slide-component';
 import { CommonListOfSpeakersSlideData } from './common-list-of-speakers-slide-data';
 
@@ -16,7 +15,7 @@ import { CommonListOfSpeakersSlideData } from './common-list-of-speakers-slide-d
 export class CommonListOfSpeakersSlideComponent extends BaseSlideComponent<CommonListOfSpeakersSlideData>
     implements OnInit {
     @Input()
-    public set data(value: SlideData<CommonListOfSpeakersSlideData, ProjectorElement>) {
+    public set data(value: SlideData<CommonListOfSpeakersSlideData>) {
         // In the case of projected references without ListOfSpeakers Slide
         if (Object.entries(value.data).length) {
             value.data.title_information.agenda_item_number = () => value.data.title_information._agenda_item_number;
@@ -24,11 +23,11 @@ export class CommonListOfSpeakersSlideComponent extends BaseSlideComponent<Commo
         }
     }
 
-    public get data(): SlideData<CommonListOfSpeakersSlideData, ProjectorElement> {
+    public get data(): SlideData<CommonListOfSpeakersSlideData> {
         return this._data;
     }
 
-    private _data: SlideData<CommonListOfSpeakersSlideData, ProjectorElement>;
+    private _data: SlideData<CommonListOfSpeakersSlideData>;
 
     /**
      * Boolean, whether the amount of speakers should be shown.

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Identifiable } from 'app/shared/models/base/identifiable';
-import { ProjectionDefault } from 'app/shared/models/core/projection-default';
+import { ProjectionDefault } from 'app/shared/models/projector/projection-default';
 import {
     ProjectionDefaultTitleInformation,
     ViewProjectionDefault

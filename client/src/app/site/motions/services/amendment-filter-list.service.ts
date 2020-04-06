@@ -105,9 +105,9 @@ export class AmendmentFilterListService extends MotionFilterListService {
     protected preFilter(motions: ViewMotion[]): ViewMotion[] {
         return motions.filter(motion => {
             if (this._parentMotionId) {
-                return motion.parent_id === this._parentMotionId;
+                return motion.lead_motion_id === this._parentMotionId;
             } else {
-                return !!motion.parent_id;
+                return !!motion.lead_motion_id;
             }
         });
     }

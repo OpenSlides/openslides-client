@@ -100,7 +100,7 @@ export class AssignmentListComponent extends BaseListViewComponent<ViewAssignmen
     }
 
     /**
-     * @returns all the identifier of the columns that should be hidden in mobile
+     * @returns all the number of the columns that should be hidden in mobile
      */
     public getColumnsHiddenInMobile(): string[] {
         const hiddenInMobile = ['phase', 'candidates'];

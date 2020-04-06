@@ -32,7 +32,7 @@ export class BaseMotionSlideComponent<T extends object> extends BaseSlideCompone
         return text.replace(/\[motion:(\d+)\]/g, (match, id) => {
             const titleInformation = referencedMotions[id];
             if (titleInformation) {
-                return this.motionRepo.getIdentifierOrTitle(titleInformation);
+                return this.motionRepo.getNumberOrTitle(titleInformation);
             } else {
                 return this.translate.instant('<unknown motion>');
             }

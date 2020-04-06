@@ -4,6 +4,10 @@ import { ViewBaseVote } from 'app/site/polls/models/view-base-vote';
 export class ViewAssignmentVote extends ViewBaseVote<AssignmentVote> {
     public static COLLECTION = AssignmentVote.COLLECTION;
     protected _collection = AssignmentVote.COLLECTION;
+
+    public get assignmentVote(): AssignmentVote {
+        return this._model;
+    }
 }
 
 export interface ViewAssignmentVote extends AssignmentVote {}

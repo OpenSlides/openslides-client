@@ -76,7 +76,7 @@ export class ViewMediafile extends BaseViewModelWithListOfSpeakers<Mediafile>
             getBasicProjectorElement: () => ({
                 name: Mediafile.COLLECTION,
                 id: this.id,
-                getIdentifiers: () => ['name', 'id']
+                getNumbers: () => ['name', 'id']
             }),
             slideOptions: [],
             projectionDefaultName: 'mediafiles',

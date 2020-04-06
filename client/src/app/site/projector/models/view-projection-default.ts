@@ -1,5 +1,7 @@
-import { ProjectionDefault } from 'app/shared/models/core/projection-default';
+import { ProjectionDefault } from 'app/shared/models/projector/projection-default';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { BaseViewModel } from '../../base/base-view-model';
+import { ViewProjector } from './view-projector';
 
 export interface ProjectionDefaultTitleInformation {
     display_name: string;
@@ -14,4 +16,8 @@ export class ViewProjectionDefault extends BaseViewModel<ProjectionDefault>
         return this._model;
     }
 }
-export interface ViewProjectionDefault extends ProjectionDefault {}
+interface IProjectionDefaultRelations {
+    projector: ViewProjector;
+    meeting: ViewMeeting;
+}
+export interface ViewProjectionDefault extends ProjectionDefault, IProjectionDefaultRelations {}

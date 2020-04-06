@@ -20,7 +20,7 @@
     </div>
     <ul>
         <li translate>
-            Identifier, reason, submitter, category, origin and motion block are optional and may be empty.
+            number, reason, submitter, category, origin and motion block are optional and may be empty.
         </li>
         <li translate>Additional columns after the required ones may be present and won't affect the import.</li>
     </ul>
@@ -133,9 +133,9 @@
                 </mat-cell>
             </ng-container>
 
-            <!-- identifier column -->
-            <ng-container matColumnDef="identifier">
-                <mat-header-cell *matHeaderCellDef translate>Identifier</mat-header-cell>
+            <!-- number column -->
+            <ng-container matColumnDef="number">
+                <mat-header-cell *matHeaderCellDef translate>Number</mat-header-cell>
                 <mat-cell *matCellDef="let entry">
                     <mat-icon
                         color="warn"
@@ -145,7 +145,7 @@
                     >
                         warning
                     </mat-icon>
-                    {{ entry.newEntry.identifier }}
+                    {{ entry.newEntry.number }}
                 </mat-cell>
             </ng-container>
 

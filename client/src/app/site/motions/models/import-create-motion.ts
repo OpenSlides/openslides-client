@@ -142,7 +142,7 @@ export class ImportCreateMotion extends CreateMotion {
                 ++open;
             }
         }
-        this.tags_id = ids;
+        this.tag_ids = ids;
         return open;
     }
 }

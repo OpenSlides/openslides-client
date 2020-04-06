@@ -58,7 +58,7 @@ export class AgendaListComponent extends BaseListViewComponent<ViewAgendaItem> i
     public itemListSlide: ProjectorElementBuildDeskriptor = {
         getBasicProjectorElement: options => ({
             name: 'agenda/item-list',
-            getIdentifiers: () => ['name']
+            getNumbers: () => ['name']
         }),
         slideOptions: [
             {
@@ -155,7 +155,7 @@ export class AgendaListComponent extends BaseListViewComponent<ViewAgendaItem> i
      * @param item The item to get the list of speakers from
      */
     public getListOfSpeakers(item: ViewAgendaItem): ViewListOfSpeakers | null {
-        return this.listOfSpeakersRepo.findByContentObject(item.item.content_object);
+        return this.listOfSpeakersRepo.findByContentObjectId(item.item.content_object_id);
     }
 
     /**
@@ -164,8 +164,8 @@ export class AgendaListComponent extends BaseListViewComponent<ViewAgendaItem> i
      * @param item the item that was selected from the list view
      */
     public getDetailUrl(item: ViewAgendaItem): string {
-        if (item.contentObject && !this.isMultiSelect) {
-            return item.contentObject.getDetailStateURL();
+        if (item.content_object && !this.isMultiSelect) {
+            return item.content_object.getDetailStateURL();
         }
     }
 
@@ -225,20 +225,20 @@ export class AgendaListComponent extends BaseListViewComponent<ViewAgendaItem> i
      */
     public async removeFromAgenda(item: ViewAgendaItem): Promise<void> {
         const title = this.translate.instant('Are you sure you want to remove this entry from the agenda?');
-        const content = item.contentObject.getTitle();
+        const content = item.content_object.getTitle();
         if (await this.promptService.open(title, content)) {
             await this.repo.removeFromAgenda(item).catch(this.raiseError);
         }
     }
 
     public async deleteTopic(item: ViewAgendaItem): Promise<void> {
-        if (!(item.contentObject instanceof ViewTopic)) {
+        if (!(item.content_object instanceof ViewTopic)) {
             return;
         }
         const title = this.translate.instant('Are you sure you want to delete this topic?');
-        const content = item.contentObject.getTitle();
+        const content = item.content_object.getTitle();
         if (await this.promptService.open(title, content)) {
-            await this.topicRepo.delete(item.contentObject).catch(this.raiseError);
+            await this.topicRepo.delete(item.content_object).catch(this.raiseError);
         }
     }
 
@@ -252,8 +252,8 @@ export class AgendaListComponent extends BaseListViewComponent<ViewAgendaItem> i
         if (await this.promptService.open(title, content)) {
             try {
                 for (const item of this.selectedRows) {
-                    if (item.contentObject instanceof ViewTopic) {
-                        await this.topicRepo.delete(item.contentObject);
+                    if (item.content_object instanceof ViewTopic) {
+                        await this.topicRepo.delete(item.content_object);
                     } else {
                         await this.repo.removeFromAgenda(item);
                     }

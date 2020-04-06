@@ -1,56 +1,7 @@
 import { BaseModel } from '../base/base-model';
 
-export interface ProjectorElementOptions {
-    /**
-     * Additional data.
-     */
-    [key: string]: any;
-}
-
-/**
- * A projectorelement must have a name and optional attributes.
- * error is listed here, because this might be set by the server, if
- * something is wrong and I want you to be sensible about this.
- */
-export interface ProjectorElement extends ProjectorElementOptions {
-    /**
-     * The name of the element.
-     */
-    name: string;
-
-    /**
-     * An optional error. If this is set, this element is invalid, so
-     * DO NOT read additional data (name is save).
-     */
-    error?: string;
-}
-
-export interface IdentifiableProjectorElement extends ProjectorElement {
-    getIdentifiers(): (keyof IdentifiableProjectorElement)[];
-}
-
-/**
- * Compares an identifiable element to an element. Every identifier of `a` must match, if
- * the attribute is given in the element `b`.
- *
- * @param a The identifiable element
- * @param b The non-identifiable element
- */
-export function elementIdentifies(a: IdentifiableProjectorElement, b: ProjectorElement): boolean {
-    return a.getIdentifiers().every(identifier => {
-        return !b[identifier] || b[identifier] === a[identifier];
-    });
-}
-
-/**
- * Multiple elements.
- */
-export type ProjectorElements = ProjectorElement[];
-
 /**
  * Representation of a projector.
- *
- * TODO: Move all function to the viewprojector.
  *
  * @ignore
  */
@@ -58,17 +9,12 @@ export class Projector extends BaseModel<Projector> {
     public static COLLECTION = 'projector';
 
     public id: number;
-    public elements: ProjectorElements;
-    public elements_preview: ProjectorElements;
-    public elements_history: ProjectorElements[];
+    public name: string;
     public scale: number;
     public scroll: number;
-    public name: string;
     public width: number;
     public aspect_ratio_numerator: number;
     public aspect_ratio_denominator: number;
-    public reference_projector_id: number;
-    public projectiondefaults_id: number[];
     public color: string;
     public background_color: string;
     public header_background_color: string;
@@ -79,6 +25,14 @@ export class Projector extends BaseModel<Projector> {
     public show_header_footer: boolean;
     public show_title: boolean;
     public show_logo: boolean;
+
+    public current_projection_ids: number[]; // (projection/current_projector_ids)[];
+    public current_element_ids: string[]; // (*/current_projector_ids)[];
+    public elements_preview_ids: number[]; // (projection/projector_preview_ids)[];
+    public elements_history_ids: number[]; // (projection/projector_history_ids)[];
+    public used_as_reference_projector_meeting_id: number; // meeting/reference_projector_id;
+    public projectiondefault_ids: number; // projectiondefault[];
+    public meeting_id: number; // meeting/projector_ids;
 
     /**
      * @returns Calculate the height of the projector
@@ -118,13 +72,13 @@ export class Projector extends BaseModel<Projector> {
      *
      * @returns true, TODO
      */
-    public isElementShown(element: IdentifiableProjectorElement): boolean {
+    /*public isElementShown(element: IdentifiableProjectorElement): boolean {
         return this.elements.some(elementOnProjector => {
-            return element.getIdentifiers().every(identifier => {
+            return element.getNumbers().every(identifier => {
                 return !elementOnProjector[identifier] || elementOnProjector[identifier] === element[identifier];
             });
         });
-    }
+    }*/
 
     /**
      * Removes all elements, that do not have `stable=true`.
@@ -133,7 +87,7 @@ export class Projector extends BaseModel<Projector> {
      *
      * @returns all removed unstable elements
      */
-    public removeAllNonStableElements(): ProjectorElements {
+    /*public removeAllNonStableElements(): ProjectorElements {
         let unstableElements: ProjectorElements;
         let stableElements: ProjectorElements;
 
@@ -141,16 +95,16 @@ export class Projector extends BaseModel<Projector> {
 
         this.elements = stableElements;
         return unstableElements;
-    }
+    }*/
 
     /**
      * Adds the given element to the projectorelements
      *
      * @param element The element to add.
      */
-    public addElement<T extends ProjectorElement>(element: T): void {
+    /*public addElement<T extends ProjectorElement>(element: T): void {
         this.elements.push(element);
-    }
+    }*/
 
     /**
      * Removes and returns all projector elements, witch can be identified with the
@@ -159,7 +113,7 @@ export class Projector extends BaseModel<Projector> {
      * @param element The element to remove
      * @returns all removed projector elements
      */
-    public removeElements(element: IdentifiableProjectorElement): ProjectorElements {
+    /*public removeElements(element: IdentifiableProjectorElement): ProjectorElements {
         let removedElements: ProjectorElements;
         let nonRemovedElements: ProjectorElements;
         [removedElements, nonRemovedElements] = this.partitionArray(this.elements, elementOnProjector => {
@@ -167,7 +121,7 @@ export class Projector extends BaseModel<Projector> {
         });
         this.elements = nonRemovedElements;
         return removedElements;
-    }
+    }*/
 
     /**
      * Replaces all elements with the given elements, if these elements can identify to the
@@ -175,11 +129,11 @@ export class Projector extends BaseModel<Projector> {
      *
      * @param element The element to replace
      */
-    public replaceElements(element: IdentifiableProjectorElement): void {
+    /*public replaceElements(element: IdentifiableProjectorElement): void {
         this.elements = this.elements.map(elementOnProjector =>
             elementIdentifies(element, elementOnProjector) ? element : elementOnProjector
         );
-    }
+    }*/
 
     /**
      * Splits up the array into two arrays. All elements with a true return value from the callback
@@ -189,7 +143,7 @@ export class Projector extends BaseModel<Projector> {
      * @param callback To evaluate every entry
      * @returns the splitted array
      */
-    private partitionArray<T>(array: T[], callback: (element: T) => boolean): [T[], T[]] {
+    /*private partitionArray<T>(array: T[], callback: (element: T) => boolean): [T[], T[]] {
         return array.reduce(
             (result, element) => {
                 result[callback(element) ? 0 : 1].push(element);
@@ -197,5 +151,5 @@ export class Projector extends BaseModel<Projector> {
             },
             [[], []] as [T[], T[]]
         );
-    }
+    }*/
 }

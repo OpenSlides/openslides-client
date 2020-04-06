@@ -1,5 +1,4 @@
 import { BaseModelWithContentObject } from '../base/base-model-with-content-object';
-import { ContentObject } from '../base/content-object';
 
 /**
  * Determine visibility states for agenda items
@@ -18,37 +17,23 @@ export const ItemVisibilityChoices = [
 export class AgendaItem extends BaseModelWithContentObject<AgendaItem> {
     public static COLLECTION = 'agenda_item';
 
-    // TODO: remove this, if the server can properly include the agenda item number
-    // in the title information. See issue #4738
-    private _itemNumber: string;
-    private _titleInformation: any;
-
     public id: number;
-    public get item_number(): string {
-        return this._itemNumber;
-    }
-    public set item_number(val: string) {
-        this._itemNumber = val;
-        if (this._titleInformation) {
-            this._titleInformation.agenda_item_number = () => this.item_number;
-        }
-    }
-    public get title_information(): object {
-        return this._titleInformation;
-    }
-    public set title_information(val: object) {
-        this._titleInformation = val;
-        this._titleInformation.agenda_item_number = () => this.item_number;
-    }
+    public item_number: string;
     public comment: string;
     public closed: boolean;
     public type: number;
     public is_hidden: boolean;
-    public duration: number; // minutes
-    public content_object: ContentObject;
+    public is_internal: boolean;
+    public duration: number; // in seconds
     public weight: number;
-    public parent_id: number;
     public level: number;
+
+    public content_object_id: string; // */agenda_item_id;
+    public parent_id: number; // agenda_item/child_ids;
+    public child_ids: number[]; // (agenda_item/parent_id)[];
+    public projection_ids: number[]; // (projection/element_id)[];
+    public current_projector_ids: number[]; // (projector/current_element_ids)[]
+    public meeting_id: number; // meeting/agenda_item_ids;
 
     public constructor(input?: any) {
         super(AgendaItem.COLLECTION, input);

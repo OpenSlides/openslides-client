@@ -47,7 +47,7 @@ export class ViewMotionPoll extends ViewBasePoll<MotionPoll, MotionPollMethod, P
             getBasicProjectorElement: options => ({
                 name: MotionPoll.COLLECTION,
                 id: this.id,
-                getIdentifiers: () => ['name', 'id']
+                getNumbers: () => ['name', 'id']
             }),
             slideOptions: [],
             projectionDefaultName: 'motion_poll',

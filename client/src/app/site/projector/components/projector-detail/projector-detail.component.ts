@@ -7,7 +7,7 @@ import { timer } from 'rxjs';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ProjectorService } from 'app/core/core-services/projector.service';
-import { CountdownRepositoryService } from 'app/core/repositories/projector/countdown-repository.service';
+import { CountdownRepositoryService } from 'app/core/repositories/projector/projector-countdown-repository.service';
 import { ProjectorMessageRepositoryService } from 'app/core/repositories/projector/projector-message-repository.service';
 import {
     ProjectorRepositoryService,
@@ -17,13 +17,12 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { DurationService } from 'app/core/ui-services/duration.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { SizeObject } from 'app/shared/components/tile/tile.component';
-import { Countdown } from 'app/shared/models/core/countdown';
-import { ProjectorElement } from 'app/shared/models/core/projector';
-import { ProjectorMessage } from 'app/shared/models/core/projector-message';
+import { ProjectorCountdown } from 'app/shared/models/projector/projector-countdown';
+import { ProjectorMessage } from 'app/shared/models/projector/projector-message';
 import { infoDialogSettings, largeDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { Projectable } from 'app/site/base/projectable';
-import { ViewCountdown } from 'app/site/projector/models/view-countdown';
+import { ViewProjectorCountdown } from 'app/site/projector/models/view-projector-countdown';
 import { ViewProjectorMessage } from 'app/site/projector/models/view-projector-message';
 import { SlideManager } from 'app/slides/services/slide-manager.service';
 import { CountdownData, CountdownDialogComponent } from '../countdown-dialog/countdown-dialog.component';
@@ -50,7 +49,7 @@ export class ProjectorDetailComponent extends BaseComponent implements OnInit {
 
     public scrollScaleDirection = ScrollScaleDirection;
 
-    public countdowns: ViewCountdown[] = [];
+    public countdowns: ViewProjectorCountdown[] = [];
 
     public messages: ViewProjectorMessage[] = [];
 
@@ -189,7 +188,7 @@ export class ProjectorDetailComponent extends BaseComponent implements OnInit {
         this.projectorService.projectPreviousSlide(this.projector.projector).catch(this.raiseError);
     }
 
-    public onSortingChange(event: CdkDragDrop<ProjectorElement>): void {
+    public onSortingChange(event: any /*CdkDragDrop<ProjectorElement>*/): void {
         moveItemInArray(this.projector.elements_preview, event.previousIndex, event.currentIndex);
         this.projectorService.savePreview(this.projector.projector).catch(this.raiseError);
     }
@@ -203,7 +202,8 @@ export class ProjectorDetailComponent extends BaseComponent implements OnInit {
         this.projectorService.projectPreviewSlide(this.projector.projector, elementIndex).catch(this.raiseError);
     }
 
-    public getSlideTitle(element: ProjectorElement): string {
+    public getSlideTitle(element: any /*ProjectorElement*/): string {
+        throw new Error('TODO');
         return this.projectorService.getSlideTitle(element);
     }
 
@@ -223,9 +223,10 @@ export class ProjectorDetailComponent extends BaseComponent implements OnInit {
         }
     }
 
-    public unprojectCurrent(element: ProjectorElement): void {
-        const idElement = this.slideManager.getIdentifialbeProjectorElement(element);
-        this.projectorService.removeFrom(this.projector.projector, idElement).catch(this.raiseError);
+    public unprojectCurrent(element: any /*ProjectorElement*/): void {
+        /*const idElement = this.slideManager.getIdentifialbeProjectorElement(element);
+        this.projectorService.removeFrom(this.projector.projector, idElement).catch(this.raiseError);*/
+        throw new Error('TODO');
     }
 
     public isClosProjected(stable: boolean): boolean {
@@ -249,7 +250,7 @@ export class ProjectorDetailComponent extends BaseComponent implements OnInit {
      *
      * @param viewCountdown optional existing countdown to edit
      */
-    public openCountdownDialog(viewCountdown?: ViewCountdown): void {
+    public openCountdownDialog(viewCountdown?: ViewProjectorCountdown): void {
         let countdownData: CountdownData = {
             title: '',
             description: '',
@@ -311,10 +312,10 @@ export class ProjectorDetailComponent extends BaseComponent implements OnInit {
      * @param data the countdown data to send
      * @param viewCountdown optional existing countdown to update
      */
-    public submitCountdown(data: CountdownData, viewCountdown?: ViewCountdown): void {
+    public submitCountdown(data: CountdownData, viewCountdown?: ViewProjectorCountdown): void {
         const defaultTime = this.durationService.stringToDuration(data.duration, 'm');
 
-        const sendData = new Countdown({
+        const sendData = new ProjectorCountdown({
             title: data.title,
             description: data.description,
             default_time: defaultTime,

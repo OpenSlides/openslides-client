@@ -1,4 +1,3 @@
-import { _ } from 'app/core/translate/translation-marker';
 import { Meeting } from 'app/shared/models/event-management/meeting';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { ViewMotionWorkflow } from 'app/site/motions/models/view-motion-workflow';

@@ -205,7 +205,10 @@ export class MotionMultiselectService {
             let requestData = null;
             if (selectedChoice.action === choices[0]) {
                 requestData = motions.map(motion => {
-                    let submitterIds = [...motion.sorted_submitter_ids, ...(selectedChoice.items as number[])];
+                    let submitterIds = [
+                        ...motion.submitters.map(submitter => submitter.id),
+                        ...(selectedChoice.items as number[])
+                    ];
                     submitterIds = submitterIds.filter((id, index, self) => self.indexOf(id) === index); // remove duplicates
                     return {
                         id: motion.id,
@@ -215,7 +218,9 @@ export class MotionMultiselectService {
             } else if (selectedChoice.action === choices[1]) {
                 requestData = motions.map(motion => {
                     const submitterIdsToRemove = selectedChoice.items as number[];
-                    const submitterIds = motion.sorted_submitter_ids.filter(id => !submitterIdsToRemove.includes(id));
+                    const submitterIds = motion.submitters
+                        .map(submitter => submitter.id)
+                        .filter(id => !submitterIdsToRemove.includes(id));
                     return {
                         id: motion.id,
                         submitters: submitterIds
@@ -248,7 +253,7 @@ export class MotionMultiselectService {
             let requestData = null;
             if (selectedChoice.action === choices[0]) {
                 requestData = motions.map(motion => {
-                    let tagIds = [...motion.tags_id, ...(selectedChoice.items as number[])];
+                    let tagIds = [...motion.tag_ids, ...(selectedChoice.items as number[])];
                     tagIds = tagIds.filter((id, index, self) => self.indexOf(id) === index); // remove duplicates
                     return {
                         id: motion.id,
@@ -258,7 +263,7 @@ export class MotionMultiselectService {
             } else if (selectedChoice.action === choices[1]) {
                 requestData = motions.map(motion => {
                     const tagIdsToRemove = selectedChoice.items as number[];
-                    const tagIds = motion.tags_id.filter(id => !tagIdsToRemove.includes(id));
+                    const tagIds = motion.tag_ids.filter(id => !tagIdsToRemove.includes(id));
                     return {
                         id: motion.id,
                         tags: tagIds
@@ -314,7 +319,7 @@ export class MotionMultiselectService {
         );
         const options = [this.translate.instant('Set as parent'), this.translate.instant('Insert after')];
         const allMotions = this.repo.getViewModelList();
-        const tree = this.treeService.makeTree(allMotions, 'weight', 'sort_parent_id');
+        const tree = this.treeService.makeTree(allMotions, 'sort_weight', 'sort_parent_id');
         const itemsToMove = this.treeService.getBranchesFromTree(tree, motions);
         const partialTree = this.treeService.getTreeWithoutSelection(tree, motions);
         const availableMotions = this.treeService.getFlatItemsFromTree(partialTree);
@@ -337,7 +342,7 @@ export class MotionMultiselectService {
                     const sortedSiblingTree = this.treeService.insertBranchesIntoTree(
                         partialTree,
                         itemsToMove,
-                        this.repo.getViewModel(selectedChoice.items as number).parent_id,
+                        this.repo.getViewModel(selectedChoice.items as number).lead_motion_id,
                         selectedChoice.items as number
                     );
                     await this.repo.sortMotions(this.treeService.stripTree(sortedSiblingTree));

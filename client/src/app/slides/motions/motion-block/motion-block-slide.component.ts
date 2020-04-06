@@ -13,7 +13,7 @@ import { MotionBlockSlideData, MotionBlockSlideMotionRepresentation } from './mo
 //    mode is used until #motions<=SHORT_LAYOUT_THRESHOLD. There
 //    are ROWS_PER_COLUMN_SHORT rows per column, is MAX_COLUMNS
 //    is reached. If so, thhe rows per columns will be ignored.
-// 2) Short Layout: Just motion identifier and the recommendation
+// 2) Short Layout: Just motion number and the recommendation
 //    in one line. This mode is used if #motions>SHORT_LAYOUT_THRESHOLD.
 //    The same as in the log layout holds, just with ROWS_PER_COLUMN_SHORT.
 
@@ -42,10 +42,7 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
     public set data(data: SlideData<MotionBlockSlideData>) {
         if (data && data.data.motions) {
             data.data.motions = data.data.motions.sort((a, b) =>
-                this.languageCollator.compare(
-                    this.motionRepo.getIdentifierOrTitle(a),
-                    this.motionRepo.getIdentifierOrTitle(b)
-                )
+                this.languageCollator.compare(this.motionRepo.getNumberOrTitle(a), this.motionRepo.getNumberOrTitle(b))
             );
 
             // Populate the motion with the recommendation_label
@@ -165,21 +162,21 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
 
     /**
      * @returns the title of the given motion. If no title should be shown, just the
-     * identifier is returned.
+     * number is returned.
      */
     public getMotionTitle(i: number, j: number): string {
         if (this.shortDisplayStyle) {
-            return this.motionRepo.getIdentifierOrTitle(this.getMotion(i, j));
+            return this.motionRepo.getNumberOrTitle(this.getMotion(i, j));
         } else {
             return this.motionRepo.getTitle(this.getMotion(i, j));
         }
     }
 
     /**
-     * @returns the identifier (of title if identifier not availabe) of the given motion.
+     * @returns the umber (of title if number not availabe) of the given motion.
      */
-    public getMotionIdentifier(i: number, j: number): string {
-        return this.motionRepo.getIdentifierOrTitle(this.getMotion(i, j));
+    public getMotionNumber(i: number, j: number): string {
+        return this.motionRepo.getNumberOrTitle(this.getMotion(i, j));
     }
 
     /**

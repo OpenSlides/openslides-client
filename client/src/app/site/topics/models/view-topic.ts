@@ -49,7 +49,7 @@ export class ViewTopic extends BaseViewModelWithAgendaItemAndListOfSpeakers<Topi
             getBasicProjectorElement: options => ({
                 name: Topic.COLLECTION,
                 id: this.id,
-                getIdentifiers: () => ['name', 'id']
+                getNumbers: () => ['name', 'id']
             }),
             slideOptions: [],
             projectionDefaultName: 'topics',

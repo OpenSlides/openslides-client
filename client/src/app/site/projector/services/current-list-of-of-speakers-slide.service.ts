@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { ProjectorService } from 'app/core/core-services/projector.service';
-import { IdentifiableProjectorElement } from 'app/shared/models/core/projector';
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { ViewProjector } from '../models/view-projector';
 
@@ -22,24 +21,25 @@ export class CurrentListOfSpeakersSlideService {
      * @param overlay Wether to have a slide or overlay
      * @returns the identifiable CLOS projector element.
      */
-    private getCurrentListOfSpeakersProjectorElement(overlay: boolean): IdentifiableProjectorElement {
+    /*private getCurrentListOfSpeakersProjectorElement(overlay: boolean): IdentifiableProjectorElement {
         return {
             name: overlay ? 'agenda/current-list-of-speakers-overlay' : 'agenda/current-list-of-speakers',
             stable: overlay,
-            getIdentifiers: () => ['name']
+            getNumbers: () => ['name']
         };
-    }
+    }*/
 
     /**
      * @returns the slide build descriptor for the overlay or slide
      */
     public getSlide(overlay: boolean): ProjectorElementBuildDeskriptor {
-        return {
+        /*return {
             getBasicProjectorElement: options => this.getCurrentListOfSpeakersProjectorElement(overlay),
             slideOptions: [],
             projectionDefaultName: 'agenda_current_list_of_speakers',
             getDialogTitle: () => 'Current list of speakers'
-        };
+        };*/
+        throw new Error('TODO');
     }
 
     /**
@@ -50,10 +50,11 @@ export class CurrentListOfSpeakersSlideService {
      * @returns if the slide/overlay is projected on the projector
      */
     public isProjectedOn(projector: ViewProjector, overlay: boolean): boolean {
-        return this.projectorService.isProjectedOn(
+        /*return this.projectorService.isProjectedOn(
             this.getCurrentListOfSpeakersProjectorElement(overlay),
             projector.projector
-        );
+        );*/
+        throw new Error('TODO');
     }
 
     /**
@@ -63,7 +64,7 @@ export class CurrentListOfSpeakersSlideService {
      * @param overlay Slide or overlay
      */
     public async toggleOn(projector: ViewProjector, overlay: boolean): Promise<void> {
-        const isClosProjected = this.isProjectedOn(projector, overlay);
+        /*const isClosProjected = this.isProjectedOn(projector, overlay);
         if (isClosProjected) {
             await this.projectorService.removeFrom(
                 projector.projector,
@@ -74,6 +75,7 @@ export class CurrentListOfSpeakersSlideService {
                 projector.projector,
                 this.getCurrentListOfSpeakersProjectorElement(overlay)
             );
-        }
+        }*/
+        throw new Error('TODO');
     }
 }

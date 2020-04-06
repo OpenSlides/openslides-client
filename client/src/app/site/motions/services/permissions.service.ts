@@ -7,7 +7,7 @@ import { ViewMotion } from '../models/view-motion';
 @Injectable({
     providedIn: 'root'
 })
-export class LocalPermissionsService {
+export class PermissionsService {
     public configMinSupporters: number;
     private amendmentEnabled: boolean;
     private amendmentOfAmendment: boolean;
@@ -74,7 +74,7 @@ export class LocalPermissionsService {
                     motion.submitters &&
                     !motion.submitters.map(submitter => submitter.user_id).includes(this.operator.operatorId) &&
                     motion.supporters &&
-                    !motion.supporters_id.includes(this.operator.operatorId)
+                    !motion.supporter_ids.includes(this.operator.operatorId)
                 );
             }
             case 'unsupport': {
@@ -85,7 +85,7 @@ export class LocalPermissionsService {
                     motion.state &&
                     motion.state.allow_support &&
                     motion.supporters &&
-                    motion.supporters_id.indexOf(this.operator.operatorId) !== -1
+                    motion.supporter_ids.indexOf(this.operator.operatorId) !== -1
                 );
             }
             case 'createpoll': {
@@ -160,7 +160,7 @@ export class LocalPermissionsService {
                 return (
                     this.operator.hasPerms('motions.can_create_amendments') &&
                     this.amendmentEnabled &&
-                    (!motion.parent_id || (motion.parent_id && this.amendmentOfAmendment))
+                    (!motion.lead_motion_id || (motion.lead_motion_id && this.amendmentOfAmendment))
                 );
             }
             case 'can_manage_metadata': {

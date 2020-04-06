@@ -1,5 +1,5 @@
+import { Fqid } from 'app/core/definitions/key-types';
 import { BaseModelWithContentObject } from 'app/shared/models/base/base-model-with-content-object';
-import { ContentObject } from 'app/shared/models/base/content-object';
 import { BaseViewModel } from './base-view-model';
 
 /**
@@ -13,8 +13,8 @@ export abstract class BaseViewModelWithContentObject<
     M extends BaseModelWithContentObject = any,
     C extends BaseViewModel = any
 > extends BaseViewModel<M> {
-    public get contentObjectData(): ContentObject {
-        return this.getModel().content_object;
+    public get contentObjectId(): Fqid {
+        return this.getModel().content_object_id;
     }
 }
 
@@ -22,5 +22,5 @@ export interface BaseViewModelWithContentObject<
     M extends BaseModelWithContentObject = any,
     C extends BaseViewModel = any
 > {
-    contentObject: C | null;
+    content_object: C | null;
 }

@@ -53,7 +53,7 @@ export class ViewMotionBlock extends BaseViewModelWithAgendaItemAndListOfSpeaker
             getBasicProjectorElement: options => ({
                 name: MotionBlock.COLLECTION,
                 id: this.id,
-                getIdentifiers: () => ['name', 'id']
+                getNumbers: () => ['name', 'id']
             }),
             slideOptions: [],
             projectionDefaultName: 'motionBlocks',

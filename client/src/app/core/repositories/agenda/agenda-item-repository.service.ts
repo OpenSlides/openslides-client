@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { HttpService } from 'app/core/core-services/http.service';
+import { collectionFromFqid } from 'app/core/core-services/key-transforms';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { TreeIdNode } from 'app/core/ui-services/tree.service';
 import { AgendaItem } from 'app/shared/models/agenda/agenda-item';
@@ -50,13 +51,15 @@ export class AgendaItemRepositoryService extends BaseHasContentObjectRepository<
     };
 
     public getTitle = (titleInformation: AgendaItemTitleInformation) => {
-        if (titleInformation.contentObject) {
-            return titleInformation.contentObject.getAgendaListTitle();
+        if (titleInformation.content_object) {
+            return titleInformation.content_object.getAgendaListTitle();
         } else {
+            /*const collection = collectionFromFqid(titleInformation.content_object_id);
             const repo = this.collectionMapperService.getRepository(
-                titleInformation.contentObjectData.collection
+                collection
             ) as BaseIsAgendaItemContentObjectRepository<any, any, any>;
-            return repo.getAgendaListTitle(titleInformation.title_information);
+            return repo.getAgendaListTitle(titleInformation.title_information);*/
+            // This has to be decided: do we stick to titleInformation or not?
         }
     };
 
@@ -66,8 +69,8 @@ export class AgendaItemRepositoryService extends BaseHasContentObjectRepository<
      * @returns An optional subtitle as `string`. Defaults to `null`.
      */
     public getSubtitle = (viewItem: ViewAgendaItem) => {
-        if (viewItem.contentObject) {
-            return viewItem.contentObject.getAgendaSubtitle();
+        if (viewItem.content_object) {
+            return viewItem.content_object.getAgendaSubtitle();
         } else {
             // The subtitle is not present in the title_information yet.
             return null;
@@ -80,13 +83,15 @@ export class AgendaItemRepositoryService extends BaseHasContentObjectRepository<
      * @returns The title without any prefix like item number.
      */
     public getTitleWithoutItemNumber = (titleInformation: AgendaItemTitleInformation) => {
-        if (titleInformation.contentObject) {
-            return titleInformation.contentObject.getAgendaListTitleWithoutItemNumber();
+        if (titleInformation.content_object) {
+            return titleInformation.content_object.getAgendaListTitleWithoutItemNumber();
         } else {
+            /*const collection = collectionFromFqid(titleInformation.content_object_id);
             const repo = this.collectionMapperService.getRepository(
-                titleInformation.contentObjectData.collection
+                collection
             ) as BaseIsAgendaItemContentObjectRepository<any, any, any>;
-            return repo.getAgendaListTitleWithoutItemNumber(titleInformation.title_information);
+            return repo.getAgendaListTitleWithoutItemNumber(titleInformation.title_information);*/
+            // This has to be decided: do we stick to titleInformation or not?
         }
     };
 
