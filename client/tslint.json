@@ -9,6 +9,7 @@
         "arrow-parens": false,
         "callable-types": true,
         "class-name": true,
+        "directive-class-suffix": false,
         "deprecation": {
             "severity": "warn"
         },
@@ -100,7 +101,6 @@
         "no-output-rename": true,
         "use-lifecycle-interface": true,
         "use-pipe-transform-interface": true,
-        "component-class-suffix": true,
-        "directive-class-suffix": true
+        "component-class-suffix": true
     }
 }

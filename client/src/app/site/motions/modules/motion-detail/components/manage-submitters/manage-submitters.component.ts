@@ -10,7 +10,7 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { Selectable } from 'app/shared/components/selectable';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
-import { LocalPermissionsService } from 'app/site/motions/services/local-permissions.service';
+import { PermissionsService } from 'app/site/motions/services/permissions.service';
 import { ViewUser } from 'app/site/users/models/view-user';
 
 /**
@@ -69,7 +69,7 @@ export class ManageSubmittersComponent extends BaseComponent {
         private viewModelStore: ViewModelStoreService,
         private motionRepository: MotionRepositoryService,
         private userRepository: UserRepositoryService,
-        public perms: LocalPermissionsService
+        public perms: PermissionsService
     ) {
         super(componentServiceCollector);
 

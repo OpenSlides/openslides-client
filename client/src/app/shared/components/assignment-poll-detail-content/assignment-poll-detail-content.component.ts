@@ -3,12 +3,13 @@ import { Title } from '@angular/platform-browser';
 
 import { TranslateService } from '@ngx-translate/core';
 
-import { BaseComponent } from 'app/base.component';
 import { OperatorService } from 'app/core/core-services/operator.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { AssignmentPollMethod } from 'app/shared/models/assignments/assignment-poll';
 import { PollState } from 'app/shared/models/poll/base-poll';
 import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
 import { AssignmentPollService } from 'app/site/assignments/modules/assignment-poll/services/assignment-poll.service';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { PollData, PollTableData, VotingResult } from 'app/site/polls/services/poll.service';
 
 @Component({
@@ -73,12 +74,11 @@ export class AssignmentPollDetailContentComponent extends BaseComponent {
     }
 
     public constructor(
-        titleService: Title,
-        translateService: TranslateService,
+        componentServiceCollector: ComponentServiceCollector,
         private pollService: AssignmentPollService,
         private operator: OperatorService
     ) {
-        super(titleService, translateService);
+        super(componentServiceCollector);
     }
 
     public getVoteClass(votingResult: VotingResult): string {

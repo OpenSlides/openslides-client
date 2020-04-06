@@ -3,7 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { DataStoreService } from 'app/core/core-services/data-store.service';
 import { ProjectorService } from 'app/core/core-services/projector.service';
-import { IdentifiableProjectorElement, Projector } from 'app/shared/models/core/projector';
+import { Projector } from 'app/shared/models/projector/projector';
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import {
     isSlideChoiceOption,
@@ -14,7 +14,11 @@ import {
     SlideOptions
 } from 'app/site/base/slide-options';
 
-export type ProjectionDialogReturnType = ['project' | 'addToPreview', Projector[], IdentifiableProjectorElement];
+export type ProjectionDialogReturnType = [
+    'project' | 'addToPreview',
+    Projector[],
+    any /*IdentifiableProjectorElement*/
+];
 
 /**
  */
@@ -35,7 +39,7 @@ export class ProjectionDialogComponent {
         private DS: DataStoreService,
         private projectorService: ProjectorService
     ) {
-        this.projectors = this.DS.getAll<Projector>('core/projector');
+        this.projectors = this.DS.getAll(Projector);
         // TODO: Maybe watch. But this may not be necessary for the short living time of this dialog.
 
         if (projectorElementBuildDescriptor) {
@@ -45,9 +49,12 @@ export class ProjectionDialogComponent {
 
             // Add default projector, if the projectable is not projected on it.
             if (this.projectorElementBuildDescriptor.projectionDefaultName) {
-                const defaultProjector: Projector = this.projectorService.getProjectorForDefault(
+                // TODO:
+                // - get the ViewProjectionDefault with the given name from the ProjectionDefaultRepositoryService
+                // - use projectionDefault.projector
+                const defaultProjector: Projector = null; /*this.projectorService.getProjectorForDefault(
                     this.projectorElementBuildDescriptor.projectionDefaultName
-                );
+                );*/
                 if (defaultProjector && !this.selectedProjectors.includes(defaultProjector)) {
                     this.selectedProjectors.push(defaultProjector);
                 }

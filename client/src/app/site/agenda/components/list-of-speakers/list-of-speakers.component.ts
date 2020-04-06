@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { CollectionMapperService } from 'app/core/core-services/collection-mapper.service';
+import { collectionFromFqid } from 'app/core/core-services/key-transforms';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
@@ -145,9 +146,8 @@ export class ListOfSpeakersComponent extends BaseComponent implements OnInit {
      * E.g. if a motion is the current content object, "Motion" will be the returned value.
      */
     public getContentObjectProjectorButtonText(): string {
-        const verboseName = this.collectionMapper
-            .getRepository(this.viewListOfSpeakers.listOfSpeakers.content_object.collection)
-            .getVerboseName();
+        const collection = collectionFromFqid(this.viewListOfSpeakers.content_object_id);
+        const verboseName = this.collectionMapper.getRepository(collection).getVerboseName();
         return verboseName;
     }
 

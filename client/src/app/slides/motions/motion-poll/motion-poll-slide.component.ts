@@ -4,7 +4,7 @@ import { MotionPoll } from 'app/shared/models/motions/motion-poll';
 import { PollState } from 'app/shared/models/poll/base-poll';
 import { MotionPollService } from 'app/site/motions/services/motion-poll.service';
 import { PollData, PollTableData } from 'app/site/polls/services/poll.service';
-import { BasePollSlideComponentDirective } from 'app/slides/polls/base-poll-slide.component';
+import { BasePollSlideComponent } from 'app/slides/polls/base-poll-slide.component';
 import { MotionPollSlideData } from './motion-poll-slide-data';
 
 @Component({
@@ -12,7 +12,7 @@ import { MotionPollSlideData } from './motion-poll-slide-data';
     templateUrl: './motion-poll-slide.component.html',
     styleUrls: ['./motion-poll-slide.component.scss']
 })
-export class MotionPollSlideComponent extends BasePollSlideComponentDirective<MotionPollSlideData, MotionPollService> {
+export class MotionPollSlideComponent extends BasePollSlideComponent<MotionPollSlideData, MotionPollService> {
     public PollState = PollState;
 
     public pollData: PollData;

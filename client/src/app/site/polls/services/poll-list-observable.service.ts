@@ -9,17 +9,17 @@ import { MotionPollRepositoryService } from 'app/core/repositories/motions/motio
 import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
-import { PollClassType, ViewBasePoll } from '../models/view-base-poll';
+import { BaseViewPoll, PollClassType } from '../models/base-view-poll';
 
 @Injectable({
     providedIn: 'root'
 })
-export class PollListObservableService implements HasViewModelListObservable<ViewBasePoll> {
+export class PollListObservableService implements HasViewModelListObservable<BaseViewPoll> {
     // protected so tslint doesn't complain
     protected motionPolls: ViewMotionPoll[] = [];
     protected assignmentPolls: ViewAssignmentPoll[] = [];
 
-    private readonly viewPollListSubject: BehaviorSubject<ViewBasePoll[]> = new BehaviorSubject<ViewBasePoll[]>([]);
+    private readonly viewPollListSubject: BehaviorSubject<BaseViewPoll[]> = new BehaviorSubject<BaseViewPoll[]>([]);
 
     public constructor(
         motionPollRepo: MotionPollRepositoryService,
@@ -34,18 +34,18 @@ export class PollListObservableService implements HasViewModelListObservable<Vie
             .subscribe(polls => this.adjustViewModelListObservable(polls, PollClassType.Assignment));
     }
 
-    private adjustViewModelListObservable(polls: ViewBasePoll[], mode: PollClassType): void {
+    private adjustViewModelListObservable(polls: BaseViewPoll[], mode: PollClassType): void {
         this[mode + 'Polls'] = polls;
 
-        const allPolls = (this.motionPolls as ViewBasePoll[]).concat(this.assignmentPolls);
+        const allPolls = (this.motionPolls as BaseViewPoll[]).concat(this.assignmentPolls);
         this.viewPollListSubject.next(allPolls);
     }
 
-    public getViewModelListObservable(): Observable<ViewBasePoll[]> {
+    public getViewModelListObservable(): Observable<BaseViewPoll[]> {
         return this.viewPollListSubject.asObservable();
     }
 
-    public getObservableFromViewModel(poll: ViewBasePoll): Observable<BaseViewModel> {
+    public getObservableFromViewModel(poll: BaseViewPoll): Observable<BaseViewModel> {
         return this.mapper.getRepository(poll.collection).getViewModelObservable(poll.id);
     }
 }

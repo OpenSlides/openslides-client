@@ -53,7 +53,7 @@ export class OfflineService {
 
         setTimeout(async () => {
             let online: boolean;
-            let whoami: WhoAmI | null = null;
+            const whoami: WhoAmI | null = null;
 
             if (this.reason === OfflineReason.ConnectionLost) {
                 online = await this.communicationManager.isCommunicationServiceOnline();

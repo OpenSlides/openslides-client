@@ -10,7 +10,7 @@ import { BaseViewModel } from 'app/site/base/base-view-model';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
-import { PollClassType, ViewBasePoll } from 'app/site/polls/models/view-base-poll';
+import { BaseViewPoll, PollClassType } from 'app/site/polls/models/base-view-poll';
 import { PollListObservableService } from 'app/site/polls/services/poll-list-observable.service';
 
 @Component({
@@ -20,9 +20,9 @@ import { PollListObservableService } from 'app/site/polls/services/poll-list-obs
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PollCollectionComponent extends BaseComponent implements OnInit {
-    public polls: ViewBasePoll[];
+    public polls: BaseViewPoll[];
 
-    public lastPublishedPoll: ViewBasePoll;
+    public lastPublishedPoll: BaseViewPoll;
 
     private _currentProjection: BaseViewModel<any>;
 
@@ -87,15 +87,15 @@ export class PollCollectionComponent extends BaseComponent implements OnInit {
         );
     }
 
-    public identifyPoll(index: number, poll: ViewBasePoll): number {
+    public identifyPoll(index: number, poll: BaseViewPoll): number {
         return poll.id;
     }
 
-    public getPollDetailLink(poll: ViewBasePoll): string {
+    public getPollDetailLink(poll: BaseViewPoll): string {
         return poll.parentLink;
     }
 
-    public getPollVoteTitle(poll: ViewBasePoll): string {
+    public getPollVoteTitle(poll: BaseViewPoll): string {
         const contentObject = poll.getContentObject();
         const listTitle = contentObject.getListTitle();
         const model = contentObject.getVerboseName();
@@ -125,7 +125,7 @@ export class PollCollectionComponent extends BaseComponent implements OnInit {
      *
      * @param viewModel
      */
-    private getLastfinshedPoll(viewModel: BaseViewModel): ViewBasePoll {
+    private getLastfinshedPoll(viewModel: BaseViewModel): BaseViewPoll {
         if (viewModel instanceof ViewMotion || viewModel instanceof ViewAssignment) {
             let currPolls: ViewMotionPoll[] | ViewAssignmentPoll[] = viewModel.polls;
             /**
@@ -140,7 +140,7 @@ export class PollCollectionComponent extends BaseComponent implements OnInit {
         return null;
     }
 
-    public canManage(poll: ViewBasePoll): boolean {
+    public canManage(poll: BaseViewPoll): boolean {
         if (poll.pollClassType === PollClassType.Motion) {
             return this.operator.hasPerms(this.permission.motionsCanManagePolls);
         } else if (poll.pollClassType === PollClassType.Assignment) {

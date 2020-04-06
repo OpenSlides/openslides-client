@@ -9,7 +9,7 @@ import {
 } from 'app/shared/models/assignments/assignment-poll';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
-import { PollClassType, ViewBasePoll } from 'app/site/polls/models/view-base-poll';
+import { BaseViewPoll, PollClassType } from 'app/site/polls/models/base-view-poll';
 import { ViewAssignment } from './view-assignment';
 import { ViewAssignmentOption } from './view-assignment-option';
 
@@ -34,13 +34,17 @@ export const AssignmentPollPercentBaseVerbose = {
 };
 
 export class ViewAssignmentPoll
-    extends ViewBasePoll<AssignmentPoll, AssignmentPollMethod, AssignmentPollPercentBase>
+    extends BaseViewPoll<AssignmentPoll, ViewAssignmentOption, AssignmentPollMethod, AssignmentPollPercentBase>
     implements AssignmentPollTitleInformation {
     public static COLLECTION = AssignmentPoll.COLLECTION;
     protected _collection = AssignmentPoll.COLLECTION;
 
     public readonly tableChartData: Map<string, BehaviorSubject<ChartData>> = new Map();
     public readonly pollClassType = PollClassType.Assignment;
+
+    public get assignmentPoll(): AssignmentPoll {
+        return this._model;
+    }
 
     public get pollmethodVerbose(): string {
         return AssignmentPollMethodVerbose[this.pollmethod];
@@ -59,7 +63,7 @@ export class ViewAssignmentPoll
             getBasicProjectorElement: options => ({
                 name: AssignmentPoll.COLLECTION,
                 id: this.id,
-                getIdentifiers: () => ['name', 'id']
+                getNumbers: () => ['name', 'id']
             }),
             slideOptions: [],
             projectionDefaultName: 'assignment_poll',
@@ -71,8 +75,7 @@ export class ViewAssignmentPoll
         return AssignmentPoll.DECIMAL_FIELDS;
     }
 }
-
-export interface ViewAssignmentPoll extends AssignmentPoll {
-    options: ViewAssignmentOption[];
+interface IAssignmentPollRelations {
     assignment: ViewAssignment;
 }
+export interface ViewAssignmentPoll extends AssignmentPoll, IAssignmentPollRelations {}

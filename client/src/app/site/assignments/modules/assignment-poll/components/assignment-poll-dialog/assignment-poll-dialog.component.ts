@@ -15,7 +15,7 @@ import {
 } from 'app/site/assignments/models/view-assignment-poll';
 import { BasePollDialogComponent } from 'app/site/polls/components/base-poll-dialog.component';
 import { PollFormComponent } from 'app/site/polls/components/poll-form/poll-form.component';
-import { PollPropertyVerbose } from 'app/site/polls/models/view-base-poll';
+import { PollPropertyVerbose } from 'app/site/polls/models/base-view-poll';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { AssignmentPollService, UnknownUserLabel } from '../../services/assignment-poll.service';
 
@@ -99,10 +99,10 @@ export class AssignmentPollDialogComponent
                 this.options = this.pollData.options;
             } else if (
                 this.pollData.assignment &&
-                this.pollData.assignment.candidates &&
-                this.pollData.assignment.candidates.length
+                this.pollData.assignment.candidatesAsUsers &&
+                this.pollData.assignment.candidatesAsUsers.length
             ) {
-                this.options = this.pollData.assignment.candidates.map(
+                this.options = this.pollData.assignment.candidatesAsUsers.map(
                     user => ({
                         user_id: user.id,
                         user: user

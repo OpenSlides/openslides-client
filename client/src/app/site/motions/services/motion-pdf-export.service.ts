@@ -5,7 +5,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { AmendmentListPdfService } from './amendment-list-pdf.service';
 import { PdfDocumentService } from 'app/core/pdf-services/pdf-document.service';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
-import { PersonalNoteContent } from 'app/shared/models/users/personal-note';
 import { MotionExportInfo } from './motion-export.service';
 import { MotionPdfCatalogService } from './motion-pdf-catalog.service';
 import { MotionPdfService } from './motion-pdf.service';
@@ -37,7 +36,7 @@ export class MotionPdfExportService {
     ) {}
 
     /**
-     * Exports a single motions to PDF
+     * Exports a single motions to PDFnumberOrTitle
      *
      * @param motion The motion to export
      * @param lnMode the desired line numbering mode
@@ -45,7 +44,7 @@ export class MotionPdfExportService {
      */
     public exportSingleMotion(motion: ViewMotion, exportInfo?: MotionExportInfo): void {
         const doc = this.motionPdfService.motionToDocDef(motion, exportInfo);
-        const filename = `${this.translate.instant('Motion')} ${motion.identifierOrTitle}`;
+        const filename = `${this.translate.instant('Motion')} ${motion.numberOrTitle}`;
         const metadata = {
             title: filename
         };
@@ -93,19 +92,23 @@ export class MotionPdfExportService {
      * @param note
      * @param motion
      */
-    public exportPersonalNote(note: PersonalNoteContent, motion: ViewMotion): void {
-        const doc = this.motionPdfService.textToDocDef(note.note, motion, 'Personal note');
+    public exportPersonalNote(motion: ViewMotion): void {
+        throw new Error('TODO');
+        // Get the note in a clever way. E.g. (this should work...):
+        // const personalNote = motion.personal_notes[0];
+        // const note = personalNote ? personalNote.note : '';
+
+        /*const doc = this.motionPdfService.textToDocDef(note, motion, 'Personal note');
         const filename = `${motion.identifierOrTitle} - ${this.translate.instant('Personal note')}`;
         const metadata = {
             title: filename
         };
-        this.pdfDocumentService.download(doc, filename, metadata);
+        this.pdfDocumentService.download(doc, filename, metadata);*/
     }
 
     /**
      * Exports the given comment with some short information about the
-     * motion the note refers to
-     *
+     * motion the note refers to numberOrTitle
      * @param comment
      * @param motion
      */
@@ -113,7 +116,7 @@ export class MotionPdfExportService {
         const motionComment = motion.getCommentForSection(comment);
         if (motionComment && motionComment.comment) {
             const doc = this.motionPdfService.textToDocDef(motionComment.comment, motion, comment.name);
-            const filename = `${motion.identifierOrTitle} - ${comment.name}`;
+            const filename = `${motion.numberOrTitle} - ${comment.name}`;
             const metadata = { title: filename };
             this.pdfDocumentService.download(doc, filename, metadata);
         }

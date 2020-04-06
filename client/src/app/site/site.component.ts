@@ -93,9 +93,10 @@ export class SiteComponent extends BaseComponent implements OnInit {
         super(componentServiceCollector);
         overlayService.showSpinner(this.translate.instant('Loading data. Please wait...'));
 
-        offlineBroadcastService.isOfflineObservable.subscribe(offline => {
+        console.error('TODO');
+        /*offlineBroadcastService.isOfflineObservable.subscribe(offline => {
             this.isOffline = offline;
-        });
+        });*/
 
         this.searchform = new FormGroup({ query: new FormControl([]) });
 

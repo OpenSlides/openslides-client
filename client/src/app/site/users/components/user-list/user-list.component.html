@@ -65,7 +65,7 @@
         <div class="groupsCell">
             <div *ngIf="user.groups && user.groups.length">
                 <os-icon-container icon="people" noWrap="true">
-                    <span *ngFor="let group of user.groups; let last = last">
+                    <span *ngFor="let group of user.groups(); let last = last">
                         {{ group.getTitle() | translate }}<span *ngIf="!last">,</span>
                     </span>
                 </os-icon-container>
@@ -102,9 +102,9 @@
             <!-- Has comment indicator -->
             <mat-icon inline *ngIf="!!user.comment" matTooltip="{{ user.comment }}"> comment </mat-icon>
 
-            <os-icon-container *ngIf="user.isSamlUser" icon="device_hub"
+            <!--<os-icon-container *ngIf="user.isSamlUser" icon="device_hub"
                 ><span>{{ 'Is SAML user' | translate }}</span></os-icon-container
-            >
+            >-->
         </div>
     </div>
 

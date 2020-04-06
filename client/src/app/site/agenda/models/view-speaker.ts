@@ -1,15 +1,7 @@
-import { Speaker } from 'app/shared/models/agenda/speaker';
+import { Speaker, SpeakerState } from 'app/shared/models/agenda/speaker';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { ViewUser } from 'app/site/users/models/view-user';
-
-/**
- * Determine the state of the speaker
- */
-export enum SpeakerState {
-    WAITING,
-    CURRENT,
-    FINISHED
-}
+import { ViewListOfSpeakers } from './view-list-of-speakers';
 
 /**
  * Provides "safe" access to a speaker with all it's components
@@ -45,11 +37,9 @@ export class ViewSpeaker extends BaseViewModel<Speaker> {
     public get gender(): string {
         return this.user ? this.user.gender : '';
     }
-
-    public getListTitle = () => {
-        return this.getTitle();
-    };
 }
-export interface ViewSpeaker extends Speaker {
-    user?: ViewUser;
+interface ISpeakerRelations {
+    user: ViewUser;
+    list_of_speakers: ViewListOfSpeakers;
 }
+export interface ViewSpeaker extends Speaker, ISpeakerRelations {}

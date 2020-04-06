@@ -6,7 +6,7 @@
     </div>
 
     <!-- login form -->
-    <form [formGroup]="loginForm" class="login-container" (ngSubmit)="formLogin('default')">
+    <form [formGroup]="loginForm" class="login-container" (ngSubmit)="formLogin()">
         <mat-form-field>
             <input
                 matInput
@@ -51,7 +51,7 @@
         >
             {{ 'Login as guest' | translate }}
         </button>
-        <a
+        <!--<a
             mat-stroked-button
             *ngIf="samlLoginButtonText"
             class="login-button"
@@ -59,6 +59,6 @@
             (click)="formLogin('saml')"
         >
             {{ samlLoginButtonText | translate }}
-        </a>
+        </a>-->
     </form>
 </div>

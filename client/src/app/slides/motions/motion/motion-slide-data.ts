@@ -20,7 +20,7 @@ export interface MotionSlideDataAmendment {
  * It only contains the data necessary for rendering the amendment's diff.
  */
 export interface MotionSlideDataBaseMotion {
-    identifier: string;
+    number: string;
     title: string;
     text: string;
 }
@@ -57,7 +57,7 @@ export interface MotionSlideDataChangeReco {
  * or an amendment (with the bas motion embedded).
  */
 export interface MotionSlideData {
-    identifier: string;
+    number: string;
     title: string;
     preamble: string;
     text: string;

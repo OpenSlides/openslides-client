@@ -1,14 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
-
-import { TranslateService } from '@ngx-translate/core';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import {
     AssignmentPollRepositoryService,
     GlobalVote
 } from 'app/core/repositories/assignments/assignment-poll-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { VotingService } from 'app/core/ui-services/voting.service';
 import { AssignmentPollMethod } from 'app/shared/models/assignments/assignment-poll';
@@ -16,7 +13,7 @@ import { PollType } from 'app/shared/models/poll/base-poll';
 import { VoteValue } from 'app/shared/models/poll/base-vote';
 import { ViewAssignmentOption } from 'app/site/assignments/models/view-assignment-option';
 import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
-import { BasePollVoteComponentDirective, VoteOption } from 'app/site/polls/components/base-poll-vote.component';
+import { BasePollVoteComponent, VoteOption } from 'app/site/polls/components/base-poll-vote.component';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { UnknownUserLabel } from '../../services/assignment-poll.service';
 
@@ -47,7 +44,7 @@ const voteOptions = {
     styleUrls: ['./assignment-poll-vote.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AssignmentPollVoteComponent extends BasePollVoteComponentDirective<ViewAssignmentPoll> implements OnInit {
+export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssignmentPoll> implements OnInit {
     public unknownUserLabel = UnknownUserLabel;
     public AssignmentPollMethod = AssignmentPollMethod;
     public PollType = PollType;
@@ -62,20 +59,18 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponentDirective<
     }
 
     public constructor(
-        title: Title,
-        protected translate: TranslateService,
-        matSnackbar: MatSnackBar,
+        componentServiceCollector: ComponentServiceCollector,
         operator: OperatorService,
         votingService: VotingService,
         private pollRepo: AssignmentPollRepositoryService,
         private promptService: PromptService,
         private cd: ChangeDetectorRef
     ) {
-        super(title, translate, matSnackbar, operator, votingService);
+        super(componentServiceCollector, operator, votingService);
 
         // observe user updates to refresh the view on dynamic changes
         this.subscriptions.push(
-            operator.getViewUserObservable().subscribe(() => {
+            operator.operatorIdObservable.subscribe(() => {
                 this.cd.markForCheck();
             })
         );

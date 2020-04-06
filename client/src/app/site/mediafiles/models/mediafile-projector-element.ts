@@ -1,4 +1,4 @@
-import { ProjectorElement } from 'app/shared/models/core/projector';
+/*import { ProjectorElement } from 'app/shared/models/projector/projector';
 
 export interface MediafileProjectorElement extends ProjectorElement {
     // Images and Pdf
@@ -11,3 +11,5 @@ export interface MediafileProjectorElement extends ProjectorElement {
     page?: number;
     zoom?: number; // 0 is normal, then +-1, +-2, ...
 }
+*/
+// TODO

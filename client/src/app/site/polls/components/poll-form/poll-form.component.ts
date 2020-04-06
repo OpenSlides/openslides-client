@@ -16,12 +16,12 @@ import { isNumberRange } from 'app/shared/validators/custom-validators';
 import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import {
+    BaseViewPoll,
     MajorityMethodVerbose,
     PollClassType,
     PollPropertyVerbose,
-    PollTypeVerbose,
-    ViewBasePoll
-} from 'app/site/polls/models/view-base-poll';
+    PollTypeVerbose
+} from 'app/site/polls/models/base-view-poll';
 import { ViewGroup } from 'app/site/users/models/view-group';
 import { PollService } from '../../services/poll.service';
 
@@ -31,7 +31,7 @@ import { PollService } from '../../services/poll.service';
     styleUrls: ['./poll-form.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class PollFormComponent<T extends ViewBasePoll, S extends PollService> extends BaseComponent implements OnInit {
+export class PollFormComponent<T extends BaseViewPoll, S extends PollService> extends BaseComponent implements OnInit {
     /**
      * The form-group for the meta-info.
      */
@@ -110,7 +110,7 @@ export class PollFormComponent<T extends ViewBasePoll, S extends PollService> ex
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        private formBuilder: FormBuilder,
+        private fb: FormBuilder,
         private groupRepo: GroupRepositoryService,
         private dialog: MatDialog
     ) {
@@ -315,7 +315,7 @@ export class PollFormComponent<T extends ViewBasePoll, S extends PollService> ex
     }
 
     private initContentForm(): void {
-        this.contentForm = this.formBuilder.group({
+        this.contentForm = this.fb.group({
             title: ['', Validators.required],
             type: ['', Validators.required],
             pollmethod: ['', Validators.required],

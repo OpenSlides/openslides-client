@@ -1,3 +1,4 @@
+import { Id } from 'app/core/definitions/key-types';
 import { BaseDecimalModel } from '../base/base-decimal-model';
 import { BaseOption } from './base-option';
 
@@ -48,19 +49,26 @@ export abstract class BasePoll<
     PM extends string = string,
     PB extends string = string
 > extends BaseDecimalModel<T> {
+    public id: Id;
     public state: PollState;
     public type: PollType;
     public title: string;
     public votesvalid: number;
     public votesinvalid: number;
     public votescast: number;
-    public groups_id: number[];
+    public onehundred_percent_base: PB;
     public majority_method: MajorityMethod;
     public voted_id: number[];
     public user_has_voted: boolean;
-    public user_has_voted_for_delegations: number[];
+    public user_has_voted_for_delegations: Id[];
     public pollmethod: PM;
-    public onehundred_percent_base: PB;
+
+    public voted_ids: Id[]; // (user/(assignment|motion)_poll_voted_$<meeting_id>_ids)[];
+    public entitled_group_ids: Id[]; // (group/(assignment|motion)_poll_ids)[];
+    public option_ids: Id[]; // ((assignment|motion)_option/poll_id)[];
+    public projection_ids: Id[]; // (projection/element_id)[];
+    public current_projector_ids: Id[]; // (projector/current_element_ids)[]
+    public meeting_id: Id; // meeting/(assignment|motion)_poll_ids;
 
     public get isCreated(): boolean {
         return this.state === PollState.Created;
@@ -90,12 +98,12 @@ export abstract class BasePoll<
         return this.type === PollType.Named;
     }
 
-    public get isAnon(): boolean {
+    public get isAnonymous(): boolean {
         return this.type === PollType.Pseudoanonymous;
     }
 
     public get isEVoting(): boolean {
-        return this.isNamed || this.isAnon;
+        return this.isNamed || this.isAnonymous;
     }
 
     /**

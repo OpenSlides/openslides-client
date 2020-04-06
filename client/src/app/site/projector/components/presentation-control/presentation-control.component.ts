@@ -3,9 +3,7 @@ import { Component, Input } from '@angular/core';
 import { ProjectorService } from 'app/core/core-services/projector.service';
 import { MediafileRepositoryService } from 'app/core/repositories/mediafiles/mediafile-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { Mediafile } from 'app/shared/models/mediafiles/mediafile';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { MediafileProjectorElement } from 'app/site/mediafiles/models/mediafile-projector-element';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { SlideManager } from 'app/slides/services/slide-manager.service';
 import { ViewProjector } from '../../models/view-projector';
@@ -35,7 +33,7 @@ export class PresentationControlComponent extends BaseComponent {
     }
 
     // All mediafile elements.
-    public elements: MediafileProjectorElement[] = [];
+    public elements: any /*MediafileProjectorElement*/[] = [];
 
     /**
      * Constructor
@@ -60,23 +58,23 @@ export class PresentationControlComponent extends BaseComponent {
      * Updates incoming elements
      */
     private updateElements(): void {
-        this.elements = this.projector.elements.filter(element => {
+        /*this.elements = this.projector.elements.filter(element => {
             if (element.name !== Mediafile.COLLECTION || !element.id) {
                 return false;
             }
             const mediafile = this.mediafileRepo.getViewModel(element.id);
             return !!mediafile && mediafile.isProjectable();
-        });
+        });*/
     }
 
-    public getMediafile(element: MediafileProjectorElement): ViewMediafile {
+    public getMediafile(element: any /*MediafileProjectorElement*/): ViewMediafile {
         return this.mediafileRepo.getViewModel(element.id);
     }
 
     /**
      * @returns the currently used page number (1 in case of unnumbered elements)
      */
-    public getPage(element: MediafileProjectorElement): number {
+    public getPage(element: any /*MediafileProjectorElement*/): number {
         return element.page || 1;
     }
 
@@ -85,7 +83,7 @@ export class PresentationControlComponent extends BaseComponent {
      *
      * @param element
      */
-    public pdfForward(element: MediafileProjectorElement): void {
+    public pdfForward(element: any /*MediafileProjectorElement*/): void {
         if (this.getPage(element) < this.getMediafile(element).pages) {
             this.pdfSetPage(element, this.getPage(element) + 1);
         }
@@ -96,7 +94,7 @@ export class PresentationControlComponent extends BaseComponent {
      *
      * @param element
      */
-    public pdfBackward(element: MediafileProjectorElement): void {
+    public pdfBackward(element: any /*MediafileProjectorElement*/): void {
         if (this.getPage(element) > 1) {
             this.pdfSetPage(element, this.getPage(element) - 1);
         }
@@ -109,14 +107,14 @@ export class PresentationControlComponent extends BaseComponent {
      * @param element
      * @param page
      */
-    public pdfSetPage(element: MediafileProjectorElement, page: number): void {
+    public pdfSetPage(element: any /*MediafileProjectorElement*/, page: number): void {
         if (this.getMediafile(element).pages >= page) {
             element.page = page;
             this.updateElement(element);
         }
     }
 
-    public zoom(element: MediafileProjectorElement, direction: 'in' | 'out' | 'reset'): void {
+    public zoom(element: any /*MediafileProjectorElement*/, direction: 'in' | 'out' | 'reset'): void {
         if (direction === 'reset') {
             element.zoom = 0;
         } else if (direction === 'in') {
@@ -127,13 +125,14 @@ export class PresentationControlComponent extends BaseComponent {
         this.updateElement(element);
     }
 
-    public fullscreen(element: MediafileProjectorElement): void {
+    public fullscreen(element: any /*MediafileProjectorElement*/): void {
         element.fullscreen = !element.fullscreen;
         this.updateElement(element);
     }
 
-    private updateElement(element: MediafileProjectorElement): void {
-        const idElement = this.slideManager.getIdentifiableProjectorElement(element);
-        this.projectorService.updateElement(this.projector.projector, idElement).catch(this.raiseError);
+    private updateElement(element: any /*MediafileProjectorElement*/): void {
+        /*const idElement = this.slideManager.getIdentifiableProjectorElement(element);
+        this.projectorService.updateElement(this.projector.projector, idElement).catch(this.raiseError);*/
+        throw new Error('TODO');
     }
 }

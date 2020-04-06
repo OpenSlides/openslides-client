@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 import { ViewAssignmentOption } from 'app/site/assignments/models/view-assignment-option';
 import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
 import { UnknownUserLabel } from 'app/site/assignments/modules/assignment-poll/services/assignment-poll.service';
-import { PollPropertyVerbose } from 'app/site/polls/models/view-base-poll';
+import { PollPropertyVerbose } from 'app/site/polls/models/base-view-poll';
 
 @Component({
     selector: 'os-assignment-poll-meta-info',

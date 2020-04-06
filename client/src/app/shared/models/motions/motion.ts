@@ -1,45 +1,5 @@
+import { Id } from 'app/core/definitions/key-types';
 import { BaseModelWithAgendaItemAndListOfSpeakers } from '../base/base-model-with-agenda-item-and-list-of-speakers';
-import { MotionSubmitter } from './motion-submitter';
-
-export interface MotionComment {
-    id: number;
-    comment: string;
-    section_id: number;
-    read_groups_id: number[];
-}
-
-export interface MotionWithoutNestedModels extends BaseModelWithAgendaItemAndListOfSpeakers<Motion> {
-    id: number;
-    identifier: string;
-    title: string;
-    text: string;
-    reason: string;
-    amendment_paragraphs: string[] | null;
-    modified_final_version: string;
-    parent_id: number;
-    category_id: number;
-    category_weight: number;
-    motion_block_id: number;
-    origin: string;
-    supporters_id: number[];
-    comments: MotionComment[];
-    workflow_id: number;
-    state_id: number;
-    state_extension: string;
-    state_required_permission_to_see: string;
-    statute_paragraph_id: number;
-    recommendation_id: number;
-    recommendation_extension: string;
-    tags_id: number[];
-    attachments_id: number[];
-    weight: number;
-    sort_parent_id: number;
-    created: string;
-    last_modified: string;
-    change_recommendations_id: number[];
-
-    sorted_submitter_ids: number[];
-}
 
 /**
  * Representation of Motion.
@@ -51,23 +11,49 @@ export interface MotionWithoutNestedModels extends BaseModelWithAgendaItemAndLis
 export class Motion extends BaseModelWithAgendaItemAndListOfSpeakers<Motion> {
     public static COLLECTION = 'motion';
 
-    public id: number;
-    public submitters: MotionSubmitter[];
+    public id: Id;
+    public number: string;
+    public sequential_number: number;
+    public title: string;
+    public text: string;
+    public amendment_paragraphs: string[] | null; // TODO: structured field
+    public modified_final_version: string;
+    public reason: string;
+    public category_weight: number;
+    public state_extension: string;
+    public recommendation_extension: string;
+    public sort_weight: number;
+    public created: number;
+    public last_modified: number;
+
+    public lead_motion_id: Id; // motion/amendment_ids;
+    public amendment_ids: Id[]; // (motion/lead_motion_id)[];
+    public sort_parent_id: Id; // motion/sort_child_ids;
+    public sort_child_ids: Id[]; // (motion/parent_id)[];
+    // Note: The related motions in origin_id/derived_motion_ids may not be in the same meeting
+    public origin_id: Id; // motion/derived_motion_ids;
+    public derived_motion_ids: Id[]; // (motion/origin_id)[];
+    public state_id: Id; // motion_state/motion_ids;
+    public workflow_id: Id; // motion_workflow/motion_ids;
+    public recommendation_id: Id; // motion_state/motion_recommendation_ids;
+    public category_id: Id; // category/motion_ids;
+    public motion_block_id: Id; // motion_block/motion_ids;
+    public submitter_ids: Id[]; // (motion_submitter/motion_id)[];
+    public supporter_ids: Id[]; // (user/supported_motion_$<meeting_id>_ids)[];
+    public poll_ids: Id[]; // (motion_poll/motion_id)[];
+    public change_recommendation_ids: Id[]; // (motion_change_recommendation/motion_id)[];
+    public statute_paragraph_id: Id; // motion_statute_paragraph/motion_ids;
+    public comment_ids: Id[]; // (motion_comment/motion_id)[];
+    public agenda_item_id: Id; // agenda_item/content_object_id;
+    public list_of_speakers_id: Id; // list_of_speakers/content_object_id;
+    public tag_ids: Id[]; // (tag/tagged_ids)[];
+    public attachment_ids: Id[]; // (mediafile/attachment_ids)[];
+    public projection_ids: Id[]; // (projection/element_id)[];
+    public current_projector_ids: Id[]; // (projector/current_element_ids)[]
+    public personal_note_ids: Id[]; // (personal_note/content_object_id)[];
+    public meeting_id: Id; // meeting/motion_ids;
 
     public constructor(input?: any) {
         super(Motion.COLLECTION, input);
     }
-
-    /**
-     * returns the motion submitters user ids
-     */
-    public get sorted_submitter_ids(): number[] {
-        return this.submitters
-            .sort((a: MotionSubmitter, b: MotionSubmitter) => {
-                return a.weight - b.weight;
-            })
-            .map((submitter: MotionSubmitter) => submitter.user_id);
-    }
 }
-
-export interface Motion extends MotionWithoutNestedModels {}

@@ -64,8 +64,8 @@ export class MotionCommentSectionListComponent extends BaseComponent implements 
 
         const form = {
             name: ['', Validators.required],
-            read_groups_id: [[]],
-            write_groups_id: [[]]
+            read_group_ids: [[]],
+            write_group_ids: [[]]
         };
         this.commentFieldForm = this.formBuilder.group(form);
     }
@@ -102,8 +102,8 @@ export class MotionCommentSectionListComponent extends BaseComponent implements 
         this.currentComment = commentSection;
         this.commentFieldForm.reset({
             name: commentSection ? commentSection.name : '',
-            read_groups_id: commentSection ? commentSection.read_groups_id : [],
-            write_groups_id: commentSection ? commentSection.write_groups_id : []
+            read_group_ids: commentSection ? commentSection.read_group_ids : [],
+            write_group_ids: commentSection ? commentSection.write_group_ids : []
         });
         this.dialogRef = this.dialog.open(this.motionCommentDialog, infoDialogSettings);
         this.dialogRef.afterClosed().subscribe(res => {

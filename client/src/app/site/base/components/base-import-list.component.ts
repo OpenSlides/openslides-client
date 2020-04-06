@@ -1,4 +1,4 @@
-import { OnInit, ViewChild } from '@angular/core';
+import { Directive, OnInit, ViewChild } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 
@@ -11,6 +11,7 @@ import { BaseModel } from 'app/shared/models/base/base-model';
 import { getLongPreview, getShortPreview } from 'app/shared/utils/previewStrings';
 import { BaseComponent } from 'app/site/base/components/base.component';
 
+@Directive()
 export abstract class BaseImportListComponent<M extends BaseModel> extends BaseComponent implements OnInit {
     /**
      * The data source for a table. Requires to be initialised with a BaseViewModel

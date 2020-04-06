@@ -1,8 +1,14 @@
+import { StructuredRelation } from 'app/core/definitions/relations';
 import { SearchRepresentation } from 'app/core/ui-services/search.service';
-import { Mediafile, MediafileWithoutNestedModels } from 'app/shared/models/mediafiles/mediafile';
+import { Mediafile } from 'app/shared/models/mediafiles/mediafile';
+import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
+import { BaseViewModel } from 'app/site/base/base-view-model';
 import { BaseViewModelWithListOfSpeakers } from 'app/site/base/base-view-model-with-list-of-speakers';
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { Searchable } from 'app/site/base/searchable';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
+import { ViewProjection } from 'app/site/projector/models/view-projection';
+import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { ViewGroup } from 'app/site/users/models/view-group';
 
 export const IMAGE_MIMETYPES = ['image/png', 'image/jpeg', 'image/gif'];
@@ -26,6 +32,11 @@ export interface MediafileTitleInformation {
     title: string;
 }
 
+export interface HasAttachment {
+    attachments: ViewMediafile[];
+    attachment_ids: number[];
+}
+
 export class ViewMediafile
     extends BaseViewModelWithListOfSpeakers<Mediafile>
     implements MediafileTitleInformation, Searchable {
@@ -34,10 +45,6 @@ export class ViewMediafile
 
     public get mediafile(): Mediafile {
         return this._model;
-    }
-
-    public get filename(): string {
-        return this.title;
     }
 
     public get pages(): number | null {
@@ -77,7 +84,7 @@ export class ViewMediafile
             getBasicProjectorElement: () => ({
                 name: Mediafile.COLLECTION,
                 id: this.id,
-                getIdentifiers: () => ['name', 'id']
+                getNumbers: () => ['name', 'id']
             }),
             slideOptions: [],
             projectionDefaultName: 'mediafiles',
@@ -148,8 +155,19 @@ export class ViewMediafile
     }
 }
 interface IMediafileRelations {
+    access_groups: ViewGroup[];
     parent?: ViewMediafile;
-    access_groups?: ViewGroup[];
+    children: ViewMediafile[];
+    list_of_speakers: ViewListOfSpeakers;
+    projections: ViewProjection[];
+    current_projectors: ViewProjector[];
+    attachments: (BaseViewModel & HasAttachment)[];
+    meeting: ViewMeeting;
+    used_as_logo_in_meeting: StructuredRelation<string, ViewMeeting | null>;
+    used_as_font_in_meeting: StructuredRelation<string, ViewMeeting | null>;
+
+    // this one is speacial: It is a one-sided relation, which must only be accessed, if
+    // has_inherited_access_groups is true.
     inherited_access_groups?: ViewGroup[];
 }
-export interface ViewMediafile extends MediafileWithoutNestedModels, IMediafileRelations {}
+export interface ViewMediafile extends Mediafile, IMediafileRelations {}

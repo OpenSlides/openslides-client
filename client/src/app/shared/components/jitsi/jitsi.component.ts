@@ -1,13 +1,5 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import {
-    Component,
-    ElementRef,
-    HostListener,
-    OnDestroy,
-    OnInit,
-    ViewChild,
-    ViewEncapsulation
-} from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 
 import { StorageMap } from '@ngx-pwa/local-storage';
 

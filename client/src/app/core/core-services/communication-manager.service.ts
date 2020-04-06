@@ -7,14 +7,7 @@ import { HttpService } from './http.service';
 import { OfflineBroadcastService, OfflineReason } from './offline-broadcast.service';
 import { OperatorService } from './operator.service';
 import { SleepPromise } from '../promises/sleep';
-import {
-    CommunicationError,
-    ErrorType,
-    Stream,
-    StreamContainer,
-    StreamingCommunicationService,
-    verboseErrorType
-} from './streaming-communication.service';
+import { Stream, StreamingCommunicationService } from './streaming-communication.service';
 
 type HttpParamsGetter = () => HttpParams | { [param: string]: string | string[] };
 
@@ -54,7 +47,7 @@ export class CommunicationManagerService {
         return this._stopCommunicationEvent.asObservable();
     }
 
-    private streamContainers: { [id: number]: StreamContainer } = {};
+    // private streamContainers: { [id: number]: StreamContainer } = {};
 
     public constructor(
         private streamingCommunicationService: StreamingCommunicationService,
@@ -62,10 +55,10 @@ export class CommunicationManagerService {
         private http: HttpService,
         private operatorService: OperatorService
     ) {
-        this.offlineBroadcastService.goOfflineObservable.subscribe(() => this.closeConnections());
+        // this.offlineBroadcastService.goOfflineObservable.subscribe(() => this.closeConnections());
     }
 
-    public async subscribe<T>(
+    /*public async subscribe<T>(
         url: string,
         messageHandler: (message: T) => void,
         params?: HttpParamsGetter
@@ -173,7 +166,7 @@ export class CommunicationManagerService {
     // do not even try to connect again..
     private shouldRetryConnecting(): boolean {
         return this.operatorService.guestsEnabled || !!this.operatorService.user;
-    }
+    }*/
 
     public async isCommunicationServiceOnline(): Promise<boolean> {
         try {

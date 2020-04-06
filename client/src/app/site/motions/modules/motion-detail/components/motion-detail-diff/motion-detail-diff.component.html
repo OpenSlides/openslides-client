@@ -17,7 +17,7 @@
                     <span *ngIf="change.isTitleChange()">{{ 'Title' | translate }}</span>
                     <span *ngIf="isChangeRecommendation(change)"> ({{ 'Change recommendation' | translate }})</span>
                     <span *ngIf="isAmendment(change)">
-                        ({{ 'Amendment' | translate }} {{ change.getIdentifier() }})</span
+                        ({{ 'Amendment' | translate }} {{ change.getChangeId() }})</span
                     >
                     <span class="operation" *ngIf="isChangeRecommendation(change)">
                         – {{ getRecommendationTypeName(change) | translate }}
@@ -32,8 +32,8 @@
                         <ng-container *ngIf="change.isRejected() && !isAmendment(change)">
                             – <span>{{ 'Rejected' | translate }}</span></ng-container
                         >
-                        <ng-container *ngIf="(change.isAccepted() || isAmendment(change)) && change.stateName">
-                            – {{ change.stateName | translate }}</ng-container
+                        <ng-container *ngIf="(change.isAccepted() || isAmendment(change)) && change">
+                            – {{ change | translate }}</ng-container
                         >
                     </span>
                 </a>
@@ -122,7 +122,7 @@
                        uib-tooltip="Open amendment"
                        class="btn btn-default btn-sm pull-right btn-amend-info">
                         <i class="fa fa-info"></i>
-                        {{ change.original.identifier }}
+                        {{ change.original.number }}
                     </a>
                 --></div>
                 <div class="status-row" *ngIf="isChangeRecommendation(change) && change.isRejected()">
@@ -135,7 +135,7 @@
                  even if it's accepted -->
                 <div class="status-row" *ngIf="isAmendment(change) && showAllAmendments">
                     <i class="grey"
-                        >{{ change.amendment.identifier }} - {{ change.amendment.state.name | translate }}</i
+                        >{{ change.amendment.number }} - {{ change.amendment.state.name | translate }}</i
                     >
                 </div>
 

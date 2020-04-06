@@ -50,7 +50,7 @@ export class MotionPollVoteComponent extends BasePollVoteComponent<ViewMotionPol
 
         // observe user updates to refresh the view on dynamic changes
         this.subscriptions.push(
-            operator.getViewUserObservable().subscribe(() => {
+            operator.operatorIdObservable.subscribe(() => {
                 this.cd.markForCheck();
             })
         );

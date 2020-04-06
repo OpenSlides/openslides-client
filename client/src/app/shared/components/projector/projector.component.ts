@@ -2,12 +2,13 @@ import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/cor
 
 import { Subject, Subscription } from 'rxjs';
 
+import { OfflineBroadcastService } from 'app/core/core-services/offline-broadcast.service';
 import { OfflineService } from 'app/core/core-services/offline.service';
 import { ProjectorDataService, SlideData } from 'app/core/core-services/projector-data.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
-import { Projector } from 'app/shared/models/core/projector';
+import { Projector } from 'app/shared/models/projector/projector';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { Size } from 'app/site/projector/size';
@@ -164,7 +165,7 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
         private projectorDataService: ProjectorDataService,
         private projectorRepository: ProjectorRepositoryService,
         private organisationSettingsService: OrganisationSettingsService,
-        private offlineService: OfflineService,
+        private offlineBroadcastService: OfflineBroadcastService,
         private elementRef: ElementRef
     ) {
         super(componentServiceCollector);

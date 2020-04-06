@@ -95,7 +95,7 @@ const AgendaItemRelations: RelationDefinition[] = [
         isVForeign: isBaseViewModelWithAgendaItem,
         VForeignVerbose: 'BaseViewModelWithAgendaItem',
         ownContentObjectDataKey: 'contentObjectData',
-        ownKey: 'contentObject'
+        ownKey: 'content_object'
     }
 ];
 
@@ -106,7 +106,7 @@ const ListOfSpeakersRelations: RelationDefinition[] = [
         isVForeign: isBaseViewModelWithListOfSpeakers,
         VForeignVerbose: 'BaseViewModelWithListOfSpeakers',
         ownContentObjectDataKey: 'contentObjectData',
-        ownKey: 'contentObject'
+        ownKey: 'content_object'
     }
 ];
 
@@ -189,7 +189,7 @@ const AssignmentRelations: RelationDefinition[] = [
     },
     {
         type: 'M2M',
-        ownIdKey: 'attachments_id',
+        ownIdKey: 'attachment_ids',
         ownKey: 'attachments',
         foreignViewModel: ViewMediafile
     },
@@ -401,7 +401,7 @@ const MotionRelations: RelationDefinition[] = [
     },
     {
         type: 'M2M',
-        ownIdKey: 'attachments_id',
+        ownIdKey: 'attachment_ids',
         ownKey: 'attachments',
         foreignViewModel: ViewMediafile
     },
@@ -501,7 +501,7 @@ const ProjectorRelations: RelationDefinition[] = [
 const TopicRelations: RelationDefinition[] = [
     {
         type: 'M2M',
-        ownIdKey: 'attachments_id',
+        ownIdKey: 'attachment_ids',
         ownKey: 'attachments',
         foreignViewModel: ViewMediafile
     }

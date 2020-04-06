@@ -10,8 +10,6 @@ import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/li
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DetailNavigable, isDetailNavigable } from 'app/shared/models/base/detail-navigable';
-import { ProjectorElement } from 'app/shared/models/core/projector';
-import { ListOfSpeakersComponent } from 'app/site/agenda/components/list-of-speakers/list-of-speakers.component';
 import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { BaseComponent } from 'app/site/base/components/base.component';
@@ -26,7 +24,7 @@ import { CurrentListOfSpeakersService } from 'app/site/projector/services/curren
 export class CinemaComponent extends BaseComponent implements OnInit {
     public listOfSpeakers: ViewListOfSpeakers;
     public projector: ViewProjector;
-    private currentProjectorElement: ProjectorElement;
+    private currentProjectorElement: any /*ProjectorElement*/;
     public projectedViewModel: BaseProjectableViewModel;
 
     public get title(): string {

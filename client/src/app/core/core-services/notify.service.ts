@@ -161,7 +161,8 @@ export class NotifyService {
         users?: number[],
         channels?: string[]
     ): Promise<void> {
-        if (!this.channelId) {
+        throw new Error('TODO');
+        /*if (!this.channelId) {
             throw new Error('No channel id!');
         }
 
@@ -179,8 +180,7 @@ export class NotifyService {
         if (channels) {
             notify.to_channels = channels;
         }
-        // Nope...
-        // this.websocketService.send('notify', notify);
+        this.websocketService.send('notify', notify);*/
     }
 
     /**

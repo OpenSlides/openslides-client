@@ -87,7 +87,7 @@ export class MotionPdfService {
         let crMode = exportInfo && exportInfo.crMode ? exportInfo.crMode : null;
         const infoToExport = exportInfo ? exportInfo.metaInfo : null;
         const contentToExport = exportInfo ? exportInfo.content : null;
-        let commentsToExport = exportInfo ? exportInfo.comments : null;
+        const commentsToExport = exportInfo ? exportInfo.comments : null;
 
         // get the line length from the config
         const lineLength = this.organisationSettingsService.instant<number>('motions_line_length');
@@ -96,7 +96,7 @@ export class MotionPdfService {
             'motions_export_follow_recommendation'
         );
 
-        let motionPdfContent = [];
+        const motionPdfContent = [];
 
         // Enforces that statutes should always have Diff Mode and no line numbers
         if (motion.isStatuteAmendment()) {
@@ -115,7 +115,8 @@ export class MotionPdfService {
         }
 
         const title = this.createTitle(motion, crMode, lineLength);
-        const sequential =
+        throw new Error('TODO');
+        /*const sequential =
             infoToExport?.includes('id') ?? this.configService.instant<boolean>('motions_show_sequential_numbers');
         const subtitle = this.createSubtitle(motion, sequential);
 
@@ -153,7 +154,7 @@ export class MotionPdfService {
             motionPdfContent.push(this.createComments(motion, commentsToExport));
         }
 
-        return motionPdfContent;
+        return motionPdfContent;*/
     }
 
     /**
@@ -170,14 +171,14 @@ export class MotionPdfService {
         const titleChange = changes.find(change => change?.isTitleChange());
         const changedTitle = this.changeRecoRepo.getTitleWithChanges(motion.title, titleChange, crMode);
 
-        const identifier = motion.identifier ? ' ' + motion.identifier : '';
+        const number = motion.number ? ' ' + motion.number : '';
         const pageSize = this.organisationSettingsService.instant('general_export_pdf_pagesize');
         let title = '';
         if (pageSize === 'A4') {
             title += `${this.translate.instant('Motion')} `;
         }
 
-        title += `${identifier}: ${changedTitle}`;
+        title += `${number}: ${changedTitle}`;
 
         return {
             text: title,
@@ -198,12 +199,12 @@ export class MotionPdfService {
             subtitleLines.push(`${this.translate.instant('Sequential number')}: ${motion.id}`);
         }
 
-        if (motion.parent_id) {
+        if (motion.lead_motion_id) {
             if (sequential) {
                 subtitleLines.push(' • ');
             }
             subtitleLines.push(
-                `${this.translate.instant('Amendment to')} ${motion.parent.identifier || motion.parent.title}`
+                `${this.translate.instant('Amendment to')} ${motion.lead_motion.number || motion.lead_motion.title}`
             );
         }
 
@@ -463,7 +464,7 @@ export class MotionPdfService {
                         );
                     } else if (change.getChangeType() === ViewUnifiedChangeType.TYPE_AMENDMENT) {
                         const amendment = change as ViewMotionAmendedParagraph;
-                        let summaryText = `(${this.translate.instant('Amendment')} ${amendment.getIdentifier()}) -`;
+                        let summaryText = `(${this.translate.instant('Amendment')} ${amendment.getNumber()}) -`;
                         if (amendment.isRejected()) {
                             summaryText += ` ${this.translate.instant('Rejected')}`;
                         } else if (amendment.isAccepted()) {
@@ -683,7 +684,7 @@ export class MotionPdfService {
      * @returns definitions ready to be opened or exported via {@link PdfDocumentService}
      */
     public callListToDoc(motions: ViewMotion[]): object {
-        motions.sort((a, b) => a.weight - b.weight);
+        motions.sort((a, b) => a.sort_weight - b.sort_weight);
         const title = {
             text: this.translate.instant('Call list'),
             style: 'title'
@@ -764,9 +765,9 @@ export class MotionPdfService {
     private createCallListRow(motion: ViewMotion): object {
         return [
             {
-                text: motion.sort_parent_id ? '' : motion.identifierOrTitle
+                text: motion.sort_parent_id ? '' : motion.numberOrTitle
             },
-            { text: motion.sort_parent_id ? motion.identifierOrTitle : '' },
+            { text: motion.sort_parent_id ? motion.numberOrTitle : '' },
             { text: motion.submitters.length ? motion.submittersAsUsers.map(s => s.short_name).join(', ') : '' },
             { text: motion.title },
             {
@@ -806,8 +807,9 @@ export class MotionPdfService {
             let name = '',
                 content = '';
             if (comment === PERSONAL_NOTE_ID) {
-                name = this.translate.instant('Personal note');
-                content = motion && motion.personalNote && motion.personalNote.note;
+                throw new Error('TODO');
+                /*name = this.translate.instant('Personal note');
+                content = motion && motion.personalNote && motion.personalNote.note;*/
             } else {
                 const viewComment = this.commentRepo.getViewModel(comment);
                 const section = motion.getCommentForSection(viewComment);

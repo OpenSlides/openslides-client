@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import { HTTPMethod } from './http.service';
+import { HTTPMethod } from '../definitions/http-methods';
 
 const PROGRESS_TYPE = 3;
 

@@ -15,7 +15,7 @@ interface UnifiedConstructors {
 /**
  * Every types supported: (View)ModelConstructors, repos and collections.
  */
-type TypeIdentifier = UnifiedConstructors | BaseRepository<any, any, any> | string;
+type TypeNumber = UnifiedConstructors | BaseRepository<any, any, any> | string;
 
 type CollectionMappedTypes = [
     ModelConstructor<BaseModel>,
@@ -58,7 +58,7 @@ export class CollectionMapperService {
      * @param obj The object to get the collection string from.
      * @returns the collection
      */
-    public getCollection(obj: TypeIdentifier): string {
+    public getCollection(obj: TypeNumber): string {
         if (typeof obj === 'string') {
             return obj;
         } else {
@@ -77,7 +77,7 @@ export class CollectionMapperService {
      * @param obj The object to get the model constructor from.
      * @returns the model constructor
      */
-    public getModelConstructor<M extends BaseModel>(obj: TypeIdentifier): ModelConstructor<M> | null {
+    public getModelConstructor<M extends BaseModel>(obj: TypeNumber): ModelConstructor<M> | null {
         if (this.isCollectionRegistered(this.getCollection(obj))) {
             return this.collectionMapping[this.getCollection(obj)][0] as ModelConstructor<M>;
         }
@@ -87,7 +87,7 @@ export class CollectionMapperService {
      * @param obj The object to get the view model constructor from.
      * @returns the view model constructor
      */
-    public getViewModelConstructor<M extends BaseViewModel>(obj: TypeIdentifier): ViewModelConstructor<M> | null {
+    public getViewModelConstructor<M extends BaseViewModel>(obj: TypeNumber): ViewModelConstructor<M> | null {
         if (this.isCollectionRegistered(this.getCollection(obj))) {
             return this.collectionMapping[this.getCollection(obj)][1] as ViewModelConstructor<M>;
         }
@@ -98,7 +98,7 @@ export class CollectionMapperService {
      * @returns the repository
      */
     public getRepository<V extends BaseViewModel, M extends BaseModel, T extends TitleInformation>(
-        obj: TypeIdentifier
+        obj: TypeNumber
     ): BaseRepository<V & T, M, T> | null {
         if (this.isCollectionRegistered(this.getCollection(obj))) {
             return this.collectionMapping[this.getCollection(obj)][2] as BaseRepository<V & T, M, T>;

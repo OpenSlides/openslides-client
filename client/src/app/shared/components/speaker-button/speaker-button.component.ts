@@ -3,8 +3,8 @@ import { Component, Input, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
+import { Fqid } from 'app/core/definitions/key-types';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
-import { ContentObject, isContentObject } from 'app/shared/models/base/content-object';
 import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import {
     BaseViewModelWithListOfSpeakers,
@@ -25,12 +25,13 @@ import {
 })
 export class SpeakerButtonComponent implements OnDestroy {
     @Input()
-    public set object(obj: BaseViewModelWithListOfSpeakers | ContentObject | null) {
+    public set object(obj: BaseViewModelWithListOfSpeakers | Fqid | null) {
         let listOfSpeakers: ViewListOfSpeakers;
         if (isBaseViewModelWithListOfSpeakers(obj)) {
             listOfSpeakers = obj.listOfSpeakers;
-        } else if (isContentObject(obj)) {
-            listOfSpeakers = this.listOfSpeakersRepo.findByContentObject(obj);
+            /*} else if (typeof obj === 'string') {
+            listOfSpeakers = this.listOfSpeakersRepo.findByContentObjectId(obj);*/
+            // No lookup by fqid...
         } else {
             listOfSpeakers = null;
         }

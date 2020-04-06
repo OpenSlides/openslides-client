@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
-import { BaseSlideComponentDirective } from 'app/slides/base-slide-component';
+import { BaseSlideComponent } from 'app/slides/base-slide-component';
 import { ProjectorMessageSlideData } from './projector-message-slide-data';
 
 @Component({
@@ -9,7 +9,7 @@ import { ProjectorMessageSlideData } from './projector-message-slide-data';
     styleUrls: ['./projector-message-slide.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class ProjectorMessageSlideComponent extends BaseSlideComponentDirective<ProjectorMessageSlideData> {
+export class ProjectorMessageSlideComponent extends BaseSlideComponent<ProjectorMessageSlideData> {
     public constructor() {
         super();
     }

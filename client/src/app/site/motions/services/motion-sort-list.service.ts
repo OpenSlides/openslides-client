@@ -37,8 +37,8 @@ export class MotionSortListService extends BaseSortListService<ViewMotion> {
      * Define the sort options
      */
     protected motionSortOptions: OsSortingOption<ViewMotion>[] = [
-        { property: 'weight', label: 'Call list' },
-        { property: 'identifier' },
+        { property: 'sort_weight', label: 'Call list' },
+        { property: 'number' },
         { property: 'title' },
         { property: 'submitters' },
         { property: 'category', sortFn: this.categorySortFn },
@@ -63,7 +63,7 @@ export class MotionSortListService extends BaseSortListService<ViewMotion> {
     ) {
         super(translate, store, OSStatus);
 
-        this.defaultMotionSorting = 'identifier';
+        this.defaultMotionSorting = 'number';
         this.defaultSortingLoaded.resolve();
 
         /*config.get<string>('motions_motions_sorting').subscribe(defSortProp => {

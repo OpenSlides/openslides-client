@@ -3,9 +3,10 @@ import { Title } from '@angular/platform-browser';
 
 import { TranslateService } from '@ngx-translate/core';
 
-import { BaseComponent } from 'app/base.component';
 import { OperatorService } from 'app/core/core-services/operator.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PollState } from 'app/shared/models/poll/base-poll';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
 import { MotionPollService } from 'app/site/motions/services/motion-poll.service';
 import { PollData, PollTableData } from 'app/site/polls/services/poll.service';
@@ -59,13 +60,12 @@ export class MotionPollDetailContentComponent extends BaseComponent {
     }
 
     public constructor(
-        titleService: Title,
-        translate: TranslateService,
+        componentServiceCollector: ComponentServiceCollector,
         private pollService: MotionPollService,
         private cd: ChangeDetectorRef,
         private operator: OperatorService
     ) {
-        super(titleService, translate);
+        super(componentServiceCollector);
     }
 
     private setTableData(): void {

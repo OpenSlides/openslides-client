@@ -1,8 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import { ServertimeService } from 'app/core/core-services/servertime.service';
-import { ConfigService } from 'app/core/ui-services/config.service';
-import { FontConfigObject } from 'app/core/ui-services/media-manage.service';
 
 declare let FontFace: any;
 
@@ -96,9 +94,11 @@ export class CountdownTimeComponent implements OnInit, OnDestroy {
         return this._countdown;
     }
 
-    public constructor(private servertimeService: ServertimeService, private configService: ConfigService) {}
+    public constructor(private servertimeService: ServertimeService) {}
 
     public ngOnInit(): void {
+        console.error('TODO');
+        /*
         this.configService.get<FontConfigObject>('font_monospace').subscribe(font => {
             if (font) {
                 const customFont = new FontFace('OSFont Monospace', `url(${font.path || font.default})`);
@@ -112,6 +112,7 @@ export class CountdownTimeComponent implements OnInit, OnDestroy {
                     });
             }
         });
+        */
     }
 
     /**

@@ -1,7 +1,14 @@
-import { PersonalNote, PersonalNoteContent } from 'app/shared/models/users/personal-note';
+import { PersonalNote } from 'app/shared/models/users/personal-note';
 import { BaseViewModel } from 'app/site/base/base-view-model';
+import { ViewUser } from './view-user';
 
 export type PersonalNoteTitleInformation = object;
+
+export interface HasPersonalNote {
+    personal_notes?: ViewPersonalNote[];
+    personal_note_ids: number[];
+    getPersonalNote: () => ViewPersonalNote | null;
+}
 
 export class ViewPersonalNote extends BaseViewModel<PersonalNote> implements PersonalNoteTitleInformation {
     public static COLLECTION = PersonalNote.COLLECTION;
@@ -9,13 +16,9 @@ export class ViewPersonalNote extends BaseViewModel<PersonalNote> implements Per
     public get personalNote(): PersonalNote {
         return this._model;
     }
-
-    public getNoteContent(collection: string, id: number): PersonalNoteContent | null {
-        if (this.notes[collection]) {
-            return this.notes[collection][id];
-        } else {
-            return null;
-        }
-    }
 }
-export interface ViewPersonalNote extends PersonalNote {}
+interface IPersonalNoteRelations {
+    user: ViewUser;
+    content_object?: BaseViewModel & HasPersonalNote;
+}
+export interface ViewPersonalNote extends PersonalNote, IPersonalNoteRelations {}

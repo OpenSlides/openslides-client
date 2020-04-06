@@ -6,7 +6,7 @@ import { OperatorService } from 'app/core/core-services/operator.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { PollClassType, ViewBasePoll } from 'app/site/polls/models/view-base-poll';
+import { BaseViewPoll, PollClassType } from '../../models/base-view-poll';
 
 @Component({
     selector: 'os-poll-progress',
@@ -15,7 +15,7 @@ import { PollClassType, ViewBasePoll } from 'app/site/polls/models/view-base-pol
 })
 export class PollProgressComponent extends BaseComponent implements OnInit {
     @Input()
-    public poll: ViewBasePoll;
+    public poll: BaseViewPoll;
     public max: number;
 
     public get votescast(): number {
@@ -46,20 +46,21 @@ export class PollProgressComponent extends BaseComponent implements OnInit {
                 this.userRepo
                     .getViewModelListObservable()
                     .pipe(
-                        map(users =>
+                        map(users => {
                             /**
                              * Filter the users who would be able to vote:
                              * They are present and don't have their vote right delegated
                              * or the have their vote delegated to a user who is present.
                              * They are in one of the voting groups
                              */
-                            users.filter(
+                            console.error('TODO');
+                            /*return users.filter(
                                 user =>
-                                    ((user.is_present && !user.isVoteRightDelegated) ||
-                                        user.voteDelegatedTo?.is_present) &&
-                                    this.poll.groups_id.intersect(user.group_ids(1)).length // TODO
-                            )
-                        )
+                                    (user.is_present || user.isVoteRightDelegated) &&
+                                    this.poll.groups_id.intersect(user.groups_id).length
+                            )*/
+                            return [];
+                        })
                     )
                     .subscribe(users => {
                         this.max = users.length;

@@ -15,8 +15,6 @@ import { ajax, AjaxResponse } from 'rxjs/ajax';
 import { catchError, map } from 'rxjs/operators';
 import videojs from 'video.js';
 
-import { ConfigService } from 'app/core/ui-services/config.service';
-
 interface VideoSource {
     src: string;
     type: MimeType;
@@ -62,10 +60,11 @@ export class VjsPlayerComponent implements OnInit, OnDestroy {
         };
     }
 
-    public constructor(config: ConfigService) {
-        config.get<string>('general_system_stream_poster').subscribe(posterUrl => {
+    public constructor(/*config: ConfigService*/) {
+        throw new Error('TODO');
+        /*config.get<string>('general_system_stream_poster').subscribe(posterUrl => {
             this.posterUrl = posterUrl?.trim();
-        });
+        });*/
     }
 
     public async ngOnInit(): Promise<void> {

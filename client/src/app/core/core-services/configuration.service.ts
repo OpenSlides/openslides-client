@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import { HTTPMethod } from './http.service';
+import { HTTPMethod } from '../definitions/http-methods';
 import { StreamingCommunicationService } from './streaming-communication.service';
 
 interface Configuration {
