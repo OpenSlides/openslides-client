@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { Config } from '../../shared/models/core/config';
 import { DataStoreService } from '../core-services/data-store.service';
 
 /**
@@ -33,12 +32,12 @@ export class OrganisationSettingsService {
      * Listen for changes of setting variables.
      */
     public constructor(private DS: DataStoreService) {
-        this.DS.getChangeObservable(Config).subscribe(data => {
+        /*this.DS.getChangeObservable(Config).subscribe(data => {
             // on changes notify the observers for specific keys.
             if (this.settingSubjects[data.key]) {
                 this.settingSubjects[data.key].next(data.value);
             }
-        });
+        });*/
     }
 
     /**
@@ -50,14 +49,15 @@ export class OrganisationSettingsService {
      * @param key The setting value to get from.
      */
     public instant<T>(key: string): T {
-        const values = this.DS.filter(Config, value => value.key === key);
+        /*const values = this.DS.filter(Config, value => value.key === key);
         if (values.length > 1) {
             throw new Error('More keys found then expected');
         } else if (values.length === 1) {
             return values[0].value as T;
         } else {
             return;
-        }
+        }*/
+        return;
     }
 
     /**

@@ -1,7 +1,7 @@
 # 
 # Translators:
 # Emanuel Schütze <emanuel.schuetze@intevation.de>, 2020
-# 
+#
 msgid ""
 msgstr ""
 "Last-Translator: Emanuel Schütze <emanuel.schuetze@intevation.de>, 2020\n"
@@ -170,7 +170,7 @@ msgstr "Erlaube Zugriff für anonyme Gast-Nutzer"
 msgid "Allow amendments of amendments"
 msgstr "Änderungsanträge zu Änderungsanträgen erlauben"
 
-msgid "Allow blank in identifier"
+msgid "Allow blank in number"
 msgstr "Leerzeichen im Bezeichner erlauben"
 
 msgid "Allow create poll"
@@ -918,7 +918,7 @@ msgstr "Nicht entscheiden"
 msgid "Do not forget to save your changes!"
 msgstr "Vergessen Sie nicht Ihre Änderungen zu speichern!"
 
-msgid "Do not set identifier"
+msgid "Do not set number"
 msgstr "Bezeichner nicht setzen"
 
 msgid "Do you really want to exit this page?"
@@ -1317,11 +1317,11 @@ msgstr "Erstellung von Änderungsanträgen"
 msgid "I know the risk"
 msgstr "Ich kenne das Risiko"
 
-msgid "Identifier"
+msgid "Number"
 msgstr "Bezeichner"
 
 msgid ""
-"Identifier, reason, submitter, category, origin and motion block are "
+"Number, reason, submitter, category, origin and motion block are "
 "optional and may be empty."
 msgstr ""
 "Bezeichner, Begründung, Antragsteller/in, Sachgebiet, Herkunft und "
@@ -1835,7 +1835,7 @@ msgstr "Kandidatenanzahl"
 msgid "Number of last speakers to be shown on the projector"
 msgstr "Anzahl der dargestellten letzten Redner/innen auf dem Projektor"
 
-msgid "Number of minimal digits for identifier"
+msgid "Number of minimal digits for number"
 msgstr "Minimale Anzahl an Ziffern im Bezeichner"
 
 msgid "Number of persons to be elected"
@@ -2082,7 +2082,7 @@ msgstr "Vorgegebene Sekunden für neue Countdowns"
 msgid "Prefix"
 msgstr "Präfix"
 
-msgid "Prefix for the identifier for amendments"
+msgid "Prefix for the number for amendments"
 msgstr "Präfix für den Bezeichner von Änderungsanträgen"
 
 msgid "Presence"
@@ -2533,7 +2533,7 @@ msgstr "Sortieren"
 msgid "Sort agenda"
 msgstr "Tagesordnung sortieren"
 
-msgid "Sort by identifier"
+msgid "Sort by number"
 msgstr "Nach Bezeichner sortieren"
 
 msgid "Sort categories"
@@ -2953,7 +2953,7 @@ msgstr "Benutzername"
 msgid "Username or password is not correct."
 msgstr "Benutzername oder Passwort war nicht korrekt."
 
-msgid "Uses leading zeros to sort motions correctly by identifier."
+msgid "Uses leading zeros to sort motions correctly by number."
 msgstr ""
 "Es werden führende Nullen verwendet, um die Bezeichner korrekt zu sortieren."
 

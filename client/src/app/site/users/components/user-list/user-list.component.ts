@@ -269,10 +269,18 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
                 { property: 'last_name', label: 'Surname' },
                 { property: 'structure_level', label: 'Structure level' },
                 { property: 'number', label: 'Participant number' },
-                { label: 'groups', map: user => user.groups.map(group => group.name).join(',') },
+                {
+                    label: 'groups',
+                    map: user =>
+                        user
+                            .groups()
+                            .map(group => group.name)
+                            .join(',')
+                },
                 { property: 'comment' },
                 { property: 'is_active', label: 'Is active' },
-                { property: 'is_present', label: 'Is present' },
+                // TODO
+                // { property: 'is_present', label: 'Is present' },
                 { property: 'is_committee', label: 'Is a committee' },
                 { property: 'default_password', label: 'Initial password' },
                 { property: 'email' },
@@ -431,12 +439,12 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
      * @param event the mouse event (to prevent propagaton to row triggers)
      */
     public setPresent(viewUser: ViewUser): void {
-        viewUser.user.is_present = !viewUser.user.is_present;
-
+        throw new Error('TODO');
+        /*viewUser.user.is_present = !viewUser.user.is_present;
         if (this.operator.hasPerms(Permission.usersCanManage)) {
             this.repo.update(viewUser.user, viewUser).catch(this.raiseError);
         } else if (this.allowSelfSetPresent && this.operator.operatorId === viewUser.id) {
             this.operator.setPresence(viewUser.user.is_present).catch(this.raiseError);
-        }
+        }*/
     }
 }

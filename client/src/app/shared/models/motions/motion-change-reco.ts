@@ -1,3 +1,4 @@
+import { Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
 
 /**
@@ -7,8 +8,7 @@ import { BaseModel } from '../base/base-model';
 export class MotionChangeRecommendation extends BaseModel<MotionChangeRecommendation> {
     public static COLLECTION = 'motion_change_recommendation';
 
-    public id: number;
-    public motion_id: number;
+    public id: Id;
     public rejected: boolean;
     public internal: boolean;
     public type: number;
@@ -17,6 +17,8 @@ export class MotionChangeRecommendation extends BaseModel<MotionChangeRecommenda
     public line_to: number;
     public text: string;
     public creation_time: string;
+
+    public motion_id: Id; // motion/change_recommendation_ids;
 
     public constructor(input?: any) {
         super(MotionChangeRecommendation.COLLECTION, input);

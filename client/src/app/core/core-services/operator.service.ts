@@ -10,7 +10,7 @@ import { AutoupdateService, ModelRequest, ModelSubscription } from './autoupdate
 import { DataStoreService } from './data-store.service';
 import { HttpService } from './http.service';
 import { OfflineService } from './offline.service';
-import { DEFAULT_AUTH_TYPE, User, UserAuthType } from '../../shared/models/users/user';
+import { User } from '../../shared/models/users/user';
 
 /**
  * Permissions on the client are just strings. This makes clear, that
@@ -59,7 +59,7 @@ export interface WhoAmI {
     guest_enabled: boolean;
     group_ids: number[] | null; // Null meaning, that no active meeting is selected, so groups are not relevant.
     short_name: string;
-    auth_type: UserAuthType;
+    // auth_type: UserAuthType;
     permissions: Permission[];
 }
 
@@ -73,8 +73,8 @@ function isWhoAmI(obj: any): obj is WhoAmI {
         whoAmI.group_ids !== undefined &&
         whoAmI.user_id !== undefined &&
         whoAmI.short_name !== undefined &&
-        whoAmI.permissions !== undefined &&
-        whoAmI.auth_type !== undefined
+        whoAmI.permissions !== undefined
+        // whoAmI.auth_type !== undefined
     );
 }
 
@@ -127,7 +127,7 @@ export class OperatorService {
         return this.operatorShortNameSubject.asObservable();
     }
 
-    public readonly authType: BehaviorSubject<UserAuthType> = new BehaviorSubject(DEFAULT_AUTH_TYPE);
+    // public readonly authType: BehaviorSubject<UserAuthType> = new BehaviorSubject(DEFAULT_AUTH_TYPE);
 
     private _loaded: Promise<void>;
     public get loaded(): Promise<void> {
@@ -261,7 +261,7 @@ export class OperatorService {
             guest_enabled: false,
             group_ids: null,
             short_name: '',
-            auth_type: DEFAULT_AUTH_TYPE,
+            // auth_type: DEFAULT_AUTH_TYPE,
             permissions: []
         };
     }

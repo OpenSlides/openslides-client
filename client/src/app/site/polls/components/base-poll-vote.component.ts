@@ -5,9 +5,9 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { VotingError } from 'app/core/ui-services/voting.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewUser } from 'app/site/users/models/view-user';
-import { ViewBasePoll } from '../models/view-base-poll';
+import { BaseViewPoll } from '../models/base-view-poll';
 
-export abstract class BasePollVoteComponent<V extends ViewBasePoll> extends BaseComponent {
+export abstract class BasePollVoteComponent<V extends BaseViewPoll> extends BaseComponent {
     @Input()
     public poll: V;
 

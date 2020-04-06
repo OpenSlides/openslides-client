@@ -261,11 +261,12 @@ export class UserDetailComponent extends BaseComponent implements OnInit {
             });
         }
 
-        if (!this.newUser && this.user.auth_type && this.userBackends && this.userBackends[this.user.auth_type]) {
+        // TODO: remove auth type?
+        /*if (!this.newUser && this.user.auth_type && this.userBackends && this.userBackends[this.user.auth_type]) {
             this.userBackends[this.user.auth_type].disallowedUpdateKeys.forEach(key => {
                 this.personalInfoForm.get(key).disable();
             });
-        }
+        }*/
     }
 
     /**

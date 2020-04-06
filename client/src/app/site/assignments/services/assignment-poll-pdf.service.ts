@@ -112,7 +112,7 @@ export class AssignmentPollPdfService extends PollPdfService {
      * Creates one ballot in it's position on the page. Note that creating once
      * and then pasting the result several times does not work
      *
-     * @param title The identifier of the motion
+     * @param title The number of the motion
      * @param subtitle The actual motion title
      */
     protected createBallot(data: AbstractPollData): object {

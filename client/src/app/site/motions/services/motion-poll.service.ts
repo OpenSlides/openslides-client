@@ -57,7 +57,7 @@ export class MotionPollService extends PollService {
             .subscribe(method => (this.defaultMajorityMethod = method));
         config.get<PollType>('motion_poll_default_type').subscribe(type => (this.defaultPollType = type));
 
-        config.get<number[]>(MotionPoll.defaultGroupsConfig).subscribe(ids => (this.defaultGroupIds = ids));*/
+        config.get<number[]>('motion_poll_default_groups').subscribe(ids => (this.defaultGroupIds = ids));*/
     }
 
     public getDefaultPollData(contextId?: number): MotionPoll {

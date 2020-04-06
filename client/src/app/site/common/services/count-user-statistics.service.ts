@@ -70,7 +70,7 @@ export class CountUsersStatisticsService {
             stats.activeUsers[userId]++;
 
             // Add to group stats
-            const groups = user ? user.groups : [];
+            const groups = user ? user.groups() : [];
             groups.forEach(group => {
                 if (!stats.groups[group.id]) {
                     stats.groups[group.id] = {

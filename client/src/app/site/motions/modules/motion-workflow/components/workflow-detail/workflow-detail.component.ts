@@ -107,7 +107,7 @@ export class WorkflowDetailComponent extends BaseComponent implements OnInit {
         { name: 'Allow support', selector: 'allow_support', type: 'check' },
         { name: 'Allow create poll', selector: 'allow_create_poll', type: 'check' },
         { name: 'Allow submitter edit', selector: 'allow_submitter_edit', type: 'check' },
-        { name: 'Do not set identifier', selector: 'dont_set_identifier', type: 'check' },
+        { name: 'Do not set number', selector: 'dont_set_number', type: 'check' },
         { name: 'Show state extension field', selector: 'show_state_extension_field', type: 'check' },
         {
             name: 'Show recommendation extension field',
@@ -181,7 +181,7 @@ export class WorkflowDetailComponent extends BaseComponent implements OnInit {
 
             this.stateRepo
                 .getViewModelListObservable()
-                .pipe(map(states => states.filter(state => this.workflow.states_id.includes(state.id))))
+                .pipe(map(states => states.filter(state => this.workflow.state_ids.includes(state.id))))
                 .subscribe(states => {
                     if (states) {
                         this.cd.markForCheck();
@@ -292,7 +292,7 @@ export class WorkflowDetailComponent extends BaseComponent implements OnInit {
      * @param state the state to add or remove another state to
      */
     public onSetNextState(nextState: ViewMotionState, state: ViewMotionState): void {
-        const ids = state.next_states_id.map(id => id);
+        const ids = state.next_state_ids.map(id => id);
         const stateIdIndex = ids.findIndex(id => id === nextState.id);
 
         if (stateIdIndex < 0) {
@@ -300,7 +300,7 @@ export class WorkflowDetailComponent extends BaseComponent implements OnInit {
         } else {
             ids.splice(stateIdIndex, 1);
         }
-        this.stateRepo.update({ next_states_id: ids }, state).then(() => {}, this.raiseError);
+        this.stateRepo.update({ next_state_ids: ids }, state).then(() => {}, this.raiseError);
     }
 
     /**

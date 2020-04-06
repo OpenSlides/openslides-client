@@ -5,7 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
 import { ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
-import { ViewBasePoll } from 'app/site/polls/models/view-base-poll';
+import { BaseViewPoll } from 'app/site/polls/models/base-view-poll';
 import { PollListObservableService } from 'app/site/polls/services/poll-list-observable.service';
 import { BannerDefinition, BannerService } from './banner.service';
 import { OpenSlidesStatusService } from '../core-services/openslides-status.service';
@@ -33,7 +33,7 @@ export class VotingBannerService {
      * checks all polls for votable ones and displays a banner for them
      * @param polls the updated poll list
      */
-    private checkForVotablePolls(polls: ViewBasePoll[]): void {
+    private checkForVotablePolls(polls: BaseViewPoll[]): void {
         // display no banner if in history mode or there are no polls to vote
         const pollsToVote = polls.filter(poll => this.votingService.canVote(poll) && !poll.user_has_voted);
         if ((this.OSStatus.isInHistoryMode && this.currentBanner) || !pollsToVote.length) {
@@ -73,9 +73,9 @@ export class VotingBannerService {
      *
      * @returns The title.
      */
-    private getTextForPoll(poll: ViewBasePoll): string {
+    private getTextForPoll(poll: BaseViewPoll): string {
         if (poll instanceof ViewMotionPoll) {
-            return `${this.translate.instant('Motion')} ${poll.motion.getIdentifierOrTitle()}: ${this.translate.instant(
+            return `${this.translate.instant('Motion')} ${poll.motion.getNumberOrTitle()}: ${this.translate.instant(
                 'Voting opened'
             )}`;
         } else if (poll instanceof ViewAssignmentPoll) {

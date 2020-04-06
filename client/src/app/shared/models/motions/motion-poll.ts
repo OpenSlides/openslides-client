@@ -1,3 +1,4 @@
+import { Id } from 'app/core/definitions/key-types';
 import { CalculablePollKey } from 'app/site/polls/services/poll.service';
 import { BasePoll, PercentBase } from '../poll/base-poll';
 import { MotionOption } from './motion-option';
@@ -12,10 +13,8 @@ export enum MotionPollMethod {
  */
 export class MotionPoll extends BasePoll<MotionPoll, MotionOption, MotionPollMethod, PercentBase> {
     public static COLLECTION = 'motion_poll';
-    public static defaultGroupsConfig = 'motion_poll_default_groups';
 
-    public id: number;
-    public motion_id: number;
+    public motion_id: Id;
 
     public get pollmethodFields(): CalculablePollKey[] {
         const ynField: CalculablePollKey[] = ['yes', 'no'];

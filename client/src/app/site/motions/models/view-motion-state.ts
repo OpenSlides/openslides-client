@@ -1,5 +1,6 @@
 import { MotionState } from 'app/shared/models/motions/motion-state';
 import { BaseViewModel } from '../../base/base-view-model';
+import { ViewMotion } from './view-motion';
 import { ViewMotionWorkflow } from './view-motion-workflow';
 
 export interface StateTitleInformation {
@@ -19,17 +20,15 @@ export class ViewMotionState extends BaseViewModel<MotionState> implements State
     }
 
     public get isFinalState(): boolean {
-        return (
-            !this.next_states_id ||
-            !this.next_states_id.length ||
-            (this.next_states_id.length === 1 && this.next_states_id[0] === 0)
-        );
+        return !this.next_state_ids || !this.next_state_ids.length;
     }
 }
-
 interface IStateRelations {
-    next_states?: ViewMotionState[];
-    previous_states?: ViewMotionState[];
-    workflow?: ViewMotionWorkflow;
+    next_states: ViewMotionState[];
+    previous_states: ViewMotionState[];
+    motions: ViewMotion[];
+    motion_recommendations: ViewMotion[];
+    workflow: ViewMotionWorkflow;
+    first_state_of_workflow?: ViewMotionWorkflow;
 }
 export interface ViewMotionState extends MotionState, IStateRelations {}

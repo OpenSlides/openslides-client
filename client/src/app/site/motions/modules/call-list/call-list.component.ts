@@ -98,7 +98,7 @@ export class CallListComponent extends BaseSortTreeComponent<ViewMotion> impleme
         this.motionsObservable = this.motionRepo.getViewModelListObservable();
         this.motionsObservable.subscribe(motions => {
             // Sort motions and make a copy, so it will stay sorted.
-            this.motions = motions.map(x => x).sort((a, b) => a.weight - b.weight);
+            this.motions = motions.map(x => x).sort((a, b) => a.sort_weight - b.sort_weight);
         });
     }
 
@@ -254,14 +254,14 @@ export class CallListComponent extends BaseSortTreeComponent<ViewMotion> impleme
 
     /**
      * This method requires a confirmation from the user
-     * and starts the sorting by the property `identifier` of the motions
+     * and starts the sorting by the property `number` of the motions
      * in case of `true`.
      */
-    public async sortMotionsByIdentifier(): Promise<void> {
+    public async sortMotionsByNumber(): Promise<void> {
         const title = this.translate.instant('Do you really want to go ahead?');
         const text = this.translate.instant('This will reset all made changes and sort the call list.');
         if (await this.promptService.open(title, text)) {
-            this.forceSort.emit('identifier');
+            this.forceSort.emit('number');
         }
     }
 

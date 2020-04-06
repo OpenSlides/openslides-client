@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { ProjectorService } from 'app/core/core-services/projector.service';
-import { IdentifiableProjectorElement } from 'app/shared/models/core/projector';
 import { ViewProjector } from '../models/view-projector';
 
 /**
@@ -12,24 +11,26 @@ import { ViewProjector } from '../models/view-projector';
 export class ClockSlideService {
     public constructor(private projectorService: ProjectorService) {}
 
-    private getClockProjectorElement(): IdentifiableProjectorElement {
+    /*private getClockProjectorElement(): IdentifiableProjectorElement {
         return {
             name: 'core/clock',
             stable: true,
-            getIdentifiers: () => ['name']
+            getNumbers: () => ['name']
         };
-    }
+    }*/
 
     public isProjectedOn(projector: ViewProjector): boolean {
-        return this.projectorService.isProjectedOn(this.getClockProjectorElement(), projector.projector);
+        // return this.projectorService.isProjectedOn(this.getClockProjectorElement(), projector.projector);
+        throw new Error('TODO');
     }
 
     public async setProjectedOn(projector: ViewProjector, show: boolean): Promise<void> {
-        const isClockProjected = this.isProjectedOn(projector);
+        /*const isClockProjected = this.isProjectedOn(projector);
         if (show && !isClockProjected) {
             await this.projectorService.projectOn(projector.projector, this.getClockProjectorElement());
         } else if (!show && isClockProjected) {
             await this.projectorService.removeFrom(projector.projector, this.getClockProjectorElement());
-        }
+        }*/
+        throw new Error('TODO');
     }
 }

@@ -35,7 +35,7 @@ export class MotionImportService extends BaseImportService<Motion> {
         Tags: 'Could not resolve the tags',
         Title: 'A title is required',
         Text: "A content in the 'text' column is required",
-        Duplicates: 'A motion with this identifier already exists.'
+        Duplicates: 'A motion with this number already exists.'
     };
 
     /**
@@ -125,7 +125,7 @@ export class MotionImportService extends BaseImportService<Motion> {
                     newEntry[this.expectedHeader[idx]] = line[idx];
             }
         }
-        const hasDuplicates = this.repo.getViewModelList().some(motion => motion.identifier === newEntry.identifier);
+        const hasDuplicates = this.repo.getViewModelList().some(motion => motion.number === newEntry.number);
         const entry: NewEntry<Motion> = {
             newEntry: newEntry,
             hasDuplicates: hasDuplicates,

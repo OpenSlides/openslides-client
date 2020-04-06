@@ -157,9 +157,7 @@ export class MotionDetailDiffComponent extends BaseComponent implements AfterVie
                     ((otherChange.getLineFrom() >= change.getLineFrom() &&
                         otherChange.getLineFrom() < change.getLineTo()) ||
                         (otherChange.getLineTo() > change.getLineFrom() &&
-                            otherChange.getLineTo() <= change.getLineTo()) ||
-                        (otherChange.getLineFrom() < change.getLineFrom() &&
-                            otherChange.getLineTo() > change.getLineTo()))
+                            otherChange.getLineTo() <= change.getLineTo()))
                 );
             }).length > 0
         );
@@ -172,7 +170,7 @@ export class MotionDetailDiffComponent extends BaseComponent implements AfterVie
     public getDiff(change: ViewUnifiedChange): string {
         let motionHtml: string;
         if (this.motion.isParagraphBasedAmendment()) {
-            const parentMotion = this.motionRepo.getViewModel(this.motion.parent_id);
+            const parentMotion = this.motionRepo.getViewModel(this.motion.lead_motion_id);
             motionHtml = parentMotion.text;
         } else {
             motionHtml = this.motion.text;

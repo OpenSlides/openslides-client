@@ -1,7 +1,7 @@
-# 
+#
 # Translators:
 # fri, 2020
-# 
+#
 msgid ""
 msgstr ""
 "Last-Translator: fri, 2020\n"
@@ -164,7 +164,7 @@ msgstr "Povolit přístup anonymním hostům-uživatelům"
 msgid "Allow amendments of amendments"
 msgstr "Povolit pozměňovací návrhy k pozměňovacím návrhům"
 
-msgid "Allow blank in identifier"
+msgid "Allow blank in number"
 msgstr "Povolit prázdný identifikátor"
 
 msgid "Allow create poll"
@@ -885,7 +885,7 @@ msgstr "Nerozhodovat"
 msgid "Do not forget to save your changes!"
 msgstr "Nezapoměňte uložit své změny!"
 
-msgid "Do not set identifier"
+msgid "Do not set number"
 msgstr "Nenastavovat identifikátor"
 
 msgid "Do you really want to exit this page?"
@@ -1279,7 +1279,7 @@ msgid "Identifier"
 msgstr "Identifikátor"
 
 msgid ""
-"Identifier, reason, submitter, category, origin and motion block are "
+"Number, reason, submitter, category, origin and motion block are "
 "optional and may be empty."
 msgstr ""
 "Identifikátor (označení dat), zdůvodnění, navrhovatel/navrhovatel/ka, obor "
@@ -1791,7 +1791,7 @@ msgstr "Počet uchazečů"
 msgid "Number of last speakers to be shown on the projector"
 msgstr "Počet posledních na promítacím přístroji zobrazených  řečníků"
 
-msgid "Number of minimal digits for identifier"
+msgid "Number of minimal digits for number"
 msgstr "Nejmenší počet číslic pro identifikátor"
 
 msgid "Number of persons to be elected"
@@ -2035,7 +2035,7 @@ msgstr "Předem stanovené sekundy pro nová odpočítávání"
 msgid "Prefix"
 msgstr "Předpona"
 
-msgid "Prefix for the identifier for amendments"
+msgid "Prefix for the number for amendments"
 msgstr "Předpona identifikátoru pro pozměňovací návrhy"
 
 msgid "Presence"
@@ -2483,7 +2483,7 @@ msgstr "Řadit"
 msgid "Sort agenda"
 msgstr "Řadit pořad jednání"
 
-msgid "Sort by identifier"
+msgid "Sort by number"
 msgstr "Řadit dle identifikátoru"
 
 msgid "Sort categories"
@@ -2889,7 +2889,7 @@ msgstr "Uživatelské jméno"
 msgid "Username or password is not correct."
 msgstr "Uživatelské jméno nebo heslo není správné."
 
-msgid "Uses leading zeros to sort motions correctly by identifier."
+msgid "Uses leading zeros to sort motions correctly by number."
 msgstr ""
 "Použije nuly na začátku pro správné řazení návrhů podle identifikátoru."
 

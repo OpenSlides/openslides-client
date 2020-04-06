@@ -91,8 +91,9 @@ export class PresenceDetailComponent implements OnInit {
         const users = this.userRepo.getUsersByNumber(number);
         this.userForm.reset();
         if (users.length === 1) {
-            await this.userRepo.update({ is_present: !users[0].is_present }, users[0]);
-            this.subscribeUser(users[0].id);
+            throw new Error('TODO');
+            /*await this.userRepo.update({ is_present: !users[0].is_present }, users[0]);
+            this.subscribeUser(users[0].id);*/
         } else if (!users.length) {
             this.clearSubscription();
             this.errorMsg = this.translate.instant('Participant cannot be found');

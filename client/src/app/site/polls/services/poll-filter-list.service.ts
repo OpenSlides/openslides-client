@@ -6,12 +6,12 @@ import { OpenSlidesStatusService } from 'app/core/core-services/openslides-statu
 import { StorageService } from 'app/core/core-services/storage.service';
 import { BaseFilterListService, OsFilter } from 'app/core/ui-services/base-filter-list.service';
 import { PollState } from 'app/shared/models/poll/base-poll';
-import { ViewBasePoll } from '../models/view-base-poll';
+import { BaseViewPoll } from '../models/base-view-poll';
 
 @Injectable({
     providedIn: 'root'
 })
-export class PollFilterListService extends BaseFilterListService<ViewBasePoll> {
+export class PollFilterListService extends BaseFilterListService<BaseViewPoll> {
     /**
      * set the storage key name
      */
@@ -25,7 +25,7 @@ export class PollFilterListService extends BaseFilterListService<ViewBasePoll> {
      * Filter out analog polls
      * @param viewPoll All polls
      */
-    protected preFilter(viewPoll: ViewBasePoll[]): ViewBasePoll[] | void {
+    protected preFilter(viewPoll: BaseViewPoll[]): BaseViewPoll[] | void {
         return viewPoll.filter(poll => !poll.isAnalog);
     }
 

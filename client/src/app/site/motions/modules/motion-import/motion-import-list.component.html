@@ -25,7 +25,7 @@
     <ul>
         <li>
             {{
-                'Identifier, reason, submitter, category, origin and motion block are optional and may be empty.'
+                'Number, reason, submitter, category, origin and motion block are optional and may be empty.'
                     | translate
             }}
         </li>
@@ -145,9 +145,9 @@
                 </mat-cell>
             </ng-container>
 
-            <!-- identifier column -->
-            <ng-container matColumnDef="identifier">
-                <mat-header-cell *matHeaderCellDef>{{ 'Identifier' | translate }}</mat-header-cell>
+            <!-- number column -->
+            <ng-container matColumnDef="number">
+                <mat-header-cell *matHeaderCellDef>{{ 'Number' | translate }}</mat-header-cell>
                 <mat-cell *matCellDef="let entry">
                     <mat-icon
                         color="warn"
@@ -157,7 +157,7 @@
                     >
                         warning
                     </mat-icon>
-                    {{ entry.newEntry.identifier }}
+                    {{ entry.newEntry.number }}
                 </mat-cell>
             </ng-container>
 

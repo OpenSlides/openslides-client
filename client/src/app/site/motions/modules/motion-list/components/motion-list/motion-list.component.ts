@@ -21,11 +21,11 @@ import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
 import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
 import { ViewMotionWorkflow } from 'app/site/motions/models/view-motion-workflow';
-import { LocalPermissionsService } from 'app/site/motions/services/local-permissions.service';
 import { MotionExportInfo, MotionExportService } from 'app/site/motions/services/motion-export.service';
 import { MotionFilterListService } from 'app/site/motions/services/motion-filter-list.service';
 import { MotionMultiselectService } from 'app/site/motions/services/motion-multiselect.service';
 import { MotionSortListService } from 'app/site/motions/services/motion-sort-list.service';
+import { PermissionsService } from 'app/site/motions/services/permissions.service';
 import { ViewTag } from 'app/site/tags/models/view-tag';
 import { MotionExportDialogComponent } from '../../../shared-motion/motion-export-dialog/motion-export-dialog.component';
 
@@ -68,7 +68,7 @@ interface InfoDialog {
     /**
      * The motions tag ids
      */
-    tags_id: number[];
+    tag_ids: number[];
 
     /**
      * The id of the state
@@ -118,7 +118,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
      */
     public tableColumnDefinition: PblColumnDefinition[] = [
         {
-            prop: 'identifier'
+            prop: 'number'
         },
         {
             prop: 'title',
@@ -159,7 +159,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
      *
      * TODO: repo.getExtendedStateLabel(), repo.getExtendedRecommendationLabel()
      */
-    public filterProps = ['submitters', 'motion_block', 'title', 'identifier'];
+    public filterProps = ['submitters', 'motion_block', 'title', 'number'];
 
     /**
      * List of `TileCategoryInformation`.
@@ -214,7 +214,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
         public motionRepo: MotionRepositoryService,
         private dialog: MatDialog,
         public multiselectService: MotionMultiselectService,
-        public perms: LocalPermissionsService,
+        public perms: PermissionsService,
         private motionExport: MotionExportService,
         private overlayService: OverlayService,
         public vp: ViewportService,
@@ -282,7 +282,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
      * current permissions
      */
     public getColumnsHiddenInMobile(): string[] {
-        const hiddenColumns = ['identifier', 'state'];
+        const hiddenColumns = ['number', 'state'];
 
         if (!this.perms.canAccessMobileDotMenu()) {
             hiddenColumns.push('menu');
@@ -440,7 +440,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
             title: motion.title,
             motion_block_id: motion.motion_block_id,
             category_id: motion.category_id,
-            tags_id: motion.tags_id,
+            tag_ids: motion.tag_ids,
             state_id: motion.state_id,
             recommendation_id: motion.recommendation_id
         };

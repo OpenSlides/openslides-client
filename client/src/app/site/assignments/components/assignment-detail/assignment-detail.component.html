@@ -142,12 +142,12 @@
                     class="candidates-list"
                     *ngIf="
                         assignment &&
-                        assignment.assignment_related_users &&
-                        assignment.assignment_related_users.length > 0
+                        assignment.assignment_candidates &&
+                        assignment.assignment_candidates.length > 0
                     "
                 >
                     <os-sorting-list
-                        [input]="assignment.assignment_related_users"
+                        [input]="assignment.assignment_candidates"
                         [live]="true"
                         [count]="assignment.number_poll_candidates"
                         [enable]="hasPerms('manage')"
@@ -159,7 +159,7 @@
                                 <button
                                     mat-icon-button
                                     matTooltip="{{ 'Remove candidate' | translate }}"
-                                    (click)="removeUser(item)"
+                                    (click)="removeCandidate(item)"
                                 >
                                     <mat-icon>clear</mat-icon>
                                 </button>
@@ -199,7 +199,7 @@
                     </div>
 
                     <!-- Add me and remove me if OP has correct permission -->
-                    <div *ngIf="assignment && hasPerms('addSelf') && assignment.candidates">
+                    <div *ngIf="assignment && hasPerms('addSelf') && assignment.assignment_candidates">
                         <div>
                             <button mat-button color="accent" (click)="addSelf()" *ngIf="!isSelfCandidate">
                                 <mat-icon>add</mat-icon>
@@ -246,7 +246,7 @@
             <div class="content-field" *ngIf="tagsAvailable" [formGroup]="assignmentForm">
                 <mat-form-field>
                     <os-search-value-selector
-                        formControlName="tags_id"
+                        formControlName="tag_ids"
                         [multiple]="true"
                         [includeNone]="true"
                         placeholder="{{ 'Tags' | translate }}"
@@ -255,7 +255,7 @@
                 </mat-form-field>
 
                 <os-attachment-control
-                    formControlName="attachments_id"
+                    formControlName="attachment_ids"
                     (errorHandler)="raiseError($event)"
                 ></os-attachment-control>
             </div>

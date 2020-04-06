@@ -1,12 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs/operators';
 
-import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
-import { MotionPollRepositoryService } from 'app/core/repositories/motions/motion-poll-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';

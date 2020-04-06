@@ -45,7 +45,7 @@ export class ExampleDataService {
         }
     }
 
-    private inject(...fqids): void {
+    private inject(...fqids: string[]): void {
         const selectionOfData: ModelData = {};
         for (const fqid of fqids) {
             let collection, id;

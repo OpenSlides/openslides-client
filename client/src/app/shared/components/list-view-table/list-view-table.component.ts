@@ -25,9 +25,10 @@ import { HasViewModelListObservable } from 'app/core/definitions/has-view-model-
 import { BaseFilterListService } from 'app/core/ui-services/base-filter-list.service';
 import { BaseSortListService } from 'app/core/ui-services/base-sort-list.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
+import { AgendaItemTitleInformation } from 'app/site/agenda/models/view-agenda-item';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { BaseViewModel } from 'app/site/base/base-view-model';
-import { BaseViewModelWithContentObject } from 'app/site/base/base-view-model-with-content-object';
+import { isProjectable, Projectable } from 'app/site/base/projectable';
 
 export interface CssClassDefinition {
     [key: string]: boolean;
@@ -76,8 +77,8 @@ export interface ColumnRestriction {
  *     [(selectedRows)]="selectedRows"
  *     (dataSourceChange)="onDataSourceChange($event)"
  * >
- *     <div *pblNgridCellDef="'identifier'; row as motion" class="cell-slot">
- *         {{ motion.identifier }}
+ *     <div *pblNgridCellDef="'number'; row as motion" class="cell-slot">
+ *         {{ motion.number }}
  *     </div>
  * </os-list-view-table>
  * ```
@@ -89,7 +90,7 @@ export interface ColumnRestriction {
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class ListViewTableComponent<V extends BaseViewModel | BaseViewModelWithContentObject>
+export class ListViewTableComponent<V extends BaseViewModel | (BaseViewModel & AgendaItemTitleInformation)>
     implements OnInit, OnDestroy {
     /**
      * Declare the table
@@ -569,16 +570,16 @@ export class ListViewTableComponent<V extends BaseViewModel | BaseViewModelWithC
     }
 
     /**
-     * Depending on the view, the view model in the row can either be a
-     * `BaseViewModelWithContentObject` or a `BaseViewModelWithContentObject`.
-     * In the first case, we want to get the content object rather than
-     * the object itself for the projection button.
-     *
      * @param viewModel The model of the table
      * @returns a view model that can be projected
      */
     public getProjectable(viewModel: V): BaseProjectableViewModel {
-        return (viewModel as BaseViewModelWithContentObject)?.contentObject ?? viewModel;
+        console.warn('TODO: this is heavily casted. Where is it used? Can this be done better?');
+        let obj: any = viewModel;
+        if ((viewModel as any).content_object) {
+            obj = (viewModel as any).content_object;
+        }
+        return obj as BaseProjectableViewModel;
     }
 
     /**

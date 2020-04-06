@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 
 import { HttpService } from 'app/core/core-services/http.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
-import { Projector } from 'app/shared/models/core/projector';
+import { Projector } from 'app/shared/models/projector/projector';
 import { ProjectorTitleInformation, ViewProjector } from 'app/site/projector/models/view-projector';
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
@@ -45,15 +45,6 @@ export class ProjectorRepositoryService extends BaseRepository<ViewProjector, Pr
     public getVerboseName = (plural: boolean = false) => {
         return this.translate.instant(plural ? 'Projectors' : 'Projector');
     };
-
-    /**
-     * Creates a new projector. Adds the clock as default, stable element
-     */
-    public async create(projectorData: Partial<Projector>): Promise<Identifiable> {
-        const projector = new Projector(projectorData);
-        projector.elements = [{ name: 'core/clock', stable: true }];
-        return await this.dataSend.createModel(projector);
-    }
 
     /**
      * Scroll the given projector.
