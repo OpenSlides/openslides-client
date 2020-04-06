@@ -1,6 +1,6 @@
-import { ModificationType } from 'app/core/ui-services/diff.service';
 import { MotionChangeRecommendation } from 'app/shared/models/motions/motion-change-reco';
 import { BaseViewModel } from '../../base/base-view-model';
+import { ViewMotion } from './view-motion';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from '../../../shared/models/motions/view-unified-change';
 
 export type MotionChangeRecommendationTitleInformation = object;
@@ -26,38 +26,6 @@ export class ViewMotionChangeRecommendation extends BaseViewModel<MotionChangeRe
         this.changeRecommendation.type = type;
         this.changeRecommendation.text = text;
         this.changeRecommendation.internal = internal;
-    }
-
-    public get rejected(): boolean {
-        return this.changeRecommendation.rejected;
-    }
-
-    public get internal(): boolean {
-        return this.changeRecommendation.internal;
-    }
-
-    public get type(): number {
-        return this.changeRecommendation.type || ModificationType.TYPE_REPLACEMENT;
-    }
-
-    public get other_description(): string {
-        return this.changeRecommendation.other_description;
-    }
-
-    public get line_from(): number {
-        return this.changeRecommendation.line_from;
-    }
-
-    public get line_to(): number {
-        return this.changeRecommendation.line_to;
-    }
-
-    public get text(): string {
-        return this.changeRecommendation.text;
-    }
-
-    public get motion_id(): number {
-        return this.changeRecommendation.motion_id;
     }
 
     public getChangeId(): string {
@@ -100,3 +68,9 @@ export class ViewMotionChangeRecommendation extends BaseViewModel<MotionChangeRe
         return this.line_from === 0 && this.line_to === 0;
     }
 }
+interface IMotionChangeRecommendationRelations {
+    motion: ViewMotion;
+}
+export interface ViewMotionChangeRecommendation
+    extends MotionChangeRecommendation,
+        IMotionChangeRecommendationRelations {}

@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { Motion } from 'app/shared/models/motions/motion';
-import { BaseImportListComponentDirective } from 'app/site/base/base-import-list';
 import { BaseImportListComponent } from 'app/site/base/components/base-import-list.component';
 import { MotionCsvExportService } from 'app/site/motions/services/motion-csv-export.service';
 import { MotionImportService } from 'app/site/motions/services/motion-import.service';
@@ -14,7 +13,7 @@ import { MotionImportService } from 'app/site/motions/services/motion-import.ser
     selector: 'os-motion-import-list',
     templateUrl: './motion-import-list.component.html'
 })
-export class MotionImportListComponent extends BaseImportListComponentDirective<Motion> {
+export class MotionImportListComponent extends BaseImportListComponent<Motion> {
     /**
      * Fetach a list of the headers expected by the importer, and prepare them
      * to be translateable (upper case)

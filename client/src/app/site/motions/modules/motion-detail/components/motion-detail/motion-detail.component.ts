@@ -31,7 +31,6 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { DiffLinesInParagraph, LineRange } from 'app/core/ui-services/diff.service';
 import { LinenumberingService } from 'app/core/ui-services/linenumbering.service';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
-import { PersonalNoteService } from 'app/core/ui-services/personal-note.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { Mediafile } from 'app/shared/models/mediafiles/mediafile';
@@ -58,12 +57,12 @@ import {
 } from 'app/site/motions/motions.constants';
 import { AmendmentFilterListService } from 'app/site/motions/services/amendment-filter-list.service';
 import { AmendmentSortListService } from 'app/site/motions/services/amendment-sort-list.service';
-import { LocalPermissionsService } from 'app/site/motions/services/local-permissions.service';
 import { MotionFilterListService } from 'app/site/motions/services/motion-filter-list.service';
 import { MotionPdfExportService } from 'app/site/motions/services/motion-pdf-export.service';
 import { MotionPollDialogService } from 'app/site/motions/services/motion-poll-dialog.service';
 import { MotionPollService } from 'app/site/motions/services/motion-poll.service';
 import { MotionSortListService } from 'app/site/motions/services/motion-sort-list.service';
+import { PermissionsService } from 'app/site/motions/services/permissions.service';
 import { ViewTag } from 'app/site/tags/models/view-tag';
 import { ViewUser } from 'app/site/users/models/view-user';
 import {
@@ -401,7 +400,7 @@ export class MotionDetailComponent extends BaseComponent implements OnInit, OnDe
         componentServiceCollector: ComponentServiceCollector,
         public vp: ViewportService,
         public operator: OperatorService,
-        public perms: LocalPermissionsService,
+        public perms: PermissionsService,
         private router: Router,
         private route: ActivatedRoute,
         private formBuilder: FormBuilder,
@@ -413,7 +412,6 @@ export class MotionDetailComponent extends BaseComponent implements OnInit, OnDe
         private organisationSettingsService: OrganisationSettingsService,
         private promptService: PromptService,
         private pdfExport: MotionPdfExportService,
-        private personalNoteService: PersonalNoteService,
         private linenumberingService: LinenumberingService,
         private categoryRepo: MotionCategoryRepositoryService,
         private userRepo: UserRepositoryService,
@@ -497,9 +495,9 @@ export class MotionDetailComponent extends BaseComponent implements OnInit, OnDe
             this.motionFilterService.initFilters(this.motionObserver);
             this.motionSortService.initSorting(this.motionFilterService.outputObservable);
             this.sortedMotionsObservable = this.motionSortService.outputObservable;
-        } else if (this.motion.parent_id) {
+        } else if (this.motion.lead_motion_id) {
             // only use the amendments for this motion
-            this.amendmentFilterService.initFilters(this.repo.amendmentsTo(this.motion.parent_id));
+            this.amendmentFilterService.initFilters(this.repo.amendmentsTo(this.motion.lead_motion_id));
             this.amendmentSortService.initSorting(this.amendmentFilterService.outputObservable);
             this.sortedMotionsObservable = this.amendmentSortService.outputObservable;
         } else {
@@ -648,16 +646,16 @@ export class MotionDetailComponent extends BaseComponent implements OnInit, OnDe
                 const parentMotion = this.repo.getViewModel(this.route.snapshot.queryParams.parent);
                 const defaultTitle = `${this.translate.instant('Amendment to')} ${parentMotion.identifierOrTitle}`;
                 defaultMotion.title = defaultTitle;
-                defaultMotion.parent_id = parentMotion.id;
+                defaultMotion.lead_motion_id = parentMotion.id;
                 defaultMotion.category_id = parentMotion.category_id;
-                defaultMotion.tags_id = parentMotion.tags_id;
+                defaultMotion.tag_ids = parentMotion.tag_ids;
                 defaultMotion.motion_block_id = parentMotion.motion_block_id;
                 this.contentForm.patchValue({
                     title: defaultTitle,
                     category_id: parentMotion.category_id,
                     motion_block_id: parentMotion.motion_block_id,
                     parent_id: parentMotion.id,
-                    tags_id: parentMotion.tags_id
+                    tag_ids: parentMotion.tag_ids
                 });
 
                 if (this.amendmentTextMode === 'fulltext') {
@@ -680,7 +678,7 @@ export class MotionDetailComponent extends BaseComponent implements OnInit, OnDe
 
         if (formMotion.isParagraphBasedAmendment()) {
             contentPatch.selected_paragraphs = [];
-            const parentMotion = this.repo.getViewModel(formMotion.parent_id);
+            const parentMotion = this.repo.getViewModel(formMotion.lead_motion_id);
             // Hint: lineLength is sometimes not loaded yet when this form is initialized;
             // This doesn't hurt as long as patchForm is called when editing mode is started, i.e., later.
             if (parentMotion && this.lineLength) {
@@ -716,19 +714,19 @@ export class MotionDetailComponent extends BaseComponent implements OnInit, OnDe
             reason.push(Validators.required);
         }
         this.contentForm = this.formBuilder.group({
-            identifier: [''],
+            number: [''],
             title: ['', Validators.required],
             text: ['', Validators.required],
             reason: reason,
             category_id: [''],
-            attachments_id: [[]],
+            attachment_ids: [[]],
             agenda_create: [''],
             agenda_parent_id: [],
             agenda_type: [''],
             submitters_id: [],
             supporters_id: [[]],
             workflow_id: [],
-            tags_id: [],
+            tag_ids: [],
             origin: [''],
             selected_paragraphs: [],
             statute_amendment: [''], // Internal value for the checkbox, not saved to the model
@@ -1294,7 +1292,7 @@ export class MotionDetailComponent extends BaseComponent implements OnInit, OnDe
      */
     public setTag(event: MouseEvent, id: number): void {
         event.stopPropagation();
-        this.repo.setTag(this.motion, id).catch(this.raiseError);
+        this.repo.toggleTag(this.motion, id).catch(this.raiseError);
     }
 
     /**
@@ -1336,7 +1334,7 @@ export class MotionDetailComponent extends BaseComponent implements OnInit, OnDe
             lnMode: this.lnMode === this.LineNumberingMode.Inside ? this.LineNumberingMode.Outside : this.lnMode,
             crMode: this.crMode,
             // export all comment fields as well as personal note
-            comments: this.motion.commentSectionIds.concat([PERSONAL_NOTE_ID])
+            comments: this.motion.usedCommentSectionIds.concat([PERSONAL_NOTE_ID])
         });
     }
 
@@ -1508,7 +1506,8 @@ export class MotionDetailComponent extends BaseComponent implements OnInit, OnDe
      * Toggles the favorite status
      */
     public toggleFavorite(): void {
-        if (!this.motion.personalNote) {
+        throw new Error('TODO');
+        /*if (!this.motion.personalNote) {
             this.motion.personalNote = {
                 note: '',
                 star: true
@@ -1517,6 +1516,7 @@ export class MotionDetailComponent extends BaseComponent implements OnInit, OnDe
             this.motion.personalNote.star = !this.motion.personalNote.star;
         }
         this.personalNoteService.savePersonalNote(this.motion, this.motion.personalNote).catch(this.raiseError);
+        */
     }
 
     /**

@@ -22,7 +22,7 @@
         <div class="spacer" [ngStyle]="{ height: projector.show_header_footer ? '50px' : '0' }"></div>
         <div [ngClass]="{ slidetitle: data.data.show_meta_box }">
             <h1>
-                <span *ngIf="data.data.identifier">{{ data.data.identifier }}:</span>
+                <span *ngIf="data.data.number">{{ data.data.number }}:</span>
                 {{ getTitleWithChanges() }}
             </h1>
             <!-- recommendation referencing motions -->
@@ -30,7 +30,7 @@
                 <span>{{ 'Referring motions' | translate }}</span
                 >:
                 <span *ngFor="let titleInformation of referencingMotions; let last = last">
-                    {{ getIdentifierOrTitle(titleInformation) }}<span *ngIf="!last">,</span>
+                    {{ getNumberOrTitle(titleInformation) }}<span *ngIf="!last">,</span>
                 </span>
             </h2>
 
@@ -63,7 +63,7 @@
                         </td>
                         <td>
                             <span *ngFor="let titleInformation of referencingMotions; let last = last">
-                                {{ getIdentifierOrTitle(titleInformation) }}<span *ngIf="!last">,</span>
+                                {{ getNumberOrTitle(titleInformation) }}<span *ngIf="!last">,</span>
                             </span>
                         </td>
                     </tr>

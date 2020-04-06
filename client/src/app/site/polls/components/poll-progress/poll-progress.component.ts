@@ -6,7 +6,7 @@ import { ActiveMeetingService } from 'app/core/core-services/active-meeting.serv
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { ViewBasePoll } from 'app/site/polls/models/view-base-poll';
+import { BaseViewPoll } from 'app/site/polls/models/base-view-poll';
 
 @Component({
     selector: 'os-poll-progress',
@@ -15,7 +15,7 @@ import { ViewBasePoll } from 'app/site/polls/models/view-base-poll';
 })
 export class PollProgressComponent extends BaseComponent implements OnInit {
     @Input()
-    public poll: ViewBasePoll;
+    public poll: BaseViewPoll;
 
     public max: number;
 
@@ -47,9 +47,10 @@ export class PollProgressComponent extends BaseComponent implements OnInit {
                     map(users =>
                         users.filter(
                             user =>
-                                user.is_present &&
-                                this.poll.groups_id.intersect(user.group_ids(this.activeMeetingService.getMeetingId()))
-                                    .length
+                                user.isPresentInMeeting() &&
+                                this.poll.entitled_group_ids.intersect(
+                                    user.group_ids(this.activeMeetingService.getMeetingId())
+                                ).length
                         )
                     )
                 )

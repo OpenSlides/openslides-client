@@ -1,13 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
-
-import { TranslateService } from '@ngx-translate/core';
 
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { PersonalNoteService } from 'app/core/ui-services/personal-note.service';
-import { PersonalNoteContent } from 'app/shared/models/users/personal-note';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { MotionPdfExportService } from 'app/site/motions/services/motion-pdf-export.service';
@@ -38,7 +32,8 @@ export class PersonalNoteComponent extends BaseComponent {
     public isEditMode = false;
 
     public get personalNoteText(): string {
-        return this.motion.personalNoteText;
+        const pn = this.motion.personal_notes[0];
+        return pn ? pn.note : '';
     }
 
     /**
@@ -50,7 +45,6 @@ export class PersonalNoteComponent extends BaseComponent {
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        private personalNoteService: PersonalNoteService,
         formBuilder: FormBuilder,
         private pdfService: MotionPdfExportService
     ) {
@@ -66,7 +60,7 @@ export class PersonalNoteComponent extends BaseComponent {
     public editPersonalNote(): void {
         this.personalNoteForm.reset();
         this.personalNoteForm.patchValue({
-            note: this.motion.personalNote ? this.motion.personalNote.note : ''
+            note: this.personalNoteText
         });
         this.isEditMode = true;
     }
@@ -75,7 +69,8 @@ export class PersonalNoteComponent extends BaseComponent {
      * Saves the personal note. If it does not exists, it will be created.
      */
     public async savePersonalNote(): Promise<void> {
-        let content: PersonalNoteContent;
+        throw new Error('TODO');
+        /*let content: PersonalNoteContent;
         if (this.motion.personalNote) {
             content = Object.assign({}, this.motion.personalNote);
             content.note = this.personalNoteForm.get('note').value;
@@ -90,13 +85,13 @@ export class PersonalNoteComponent extends BaseComponent {
             this.isEditMode = false;
         } catch (e) {
             this.raiseError(e);
-        }
+        }*/
     }
 
     /**
      * Triggers a pdf export of the personal note
      */
     public printPersonalNote(): void {
-        this.pdfService.exportPersonalNote(this.motion.personalNote, this.motion);
+        this.pdfService.exportPersonalNote(this.motion);
     }
 }

@@ -1,8 +1,3 @@
-import { Directive, EventEmitter, ViewChild } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
-
-import { TranslateService } from '@ngx-translate/core';
 import { EventEmitter, ViewChild } from '@angular/core';
 
 import { SortDefinition } from 'app/core/ui-services/base-sort.service';
@@ -23,7 +18,6 @@ export interface SortTreeFilterOption extends Identifiable {
 /**
  * Abstract Sort view for hierarchic item trees
  */
-@Directive()
 export abstract class BaseSortTreeComponent<V extends BaseViewModel> extends BaseModelContextComponent
     implements CanComponentDeactivate {
     /**

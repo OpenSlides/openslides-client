@@ -26,7 +26,8 @@ export class UserSortListService extends BaseSortListService<ViewUser> {
     private userSortOptions: OsSortingOption<ViewUser>[] = [
         { property: 'first_name', label: 'Given name' },
         { property: 'last_name', label: 'Surname' },
-        { property: 'is_present', label: 'Presence' },
+        // TODO
+        // { property: 'is_present', label: 'Presence' },
         { property: 'is_active', label: 'Is active' },
         { property: 'is_committee', label: 'Is committee' },
         { property: 'number', label: 'Participant number' },

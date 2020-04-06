@@ -2,7 +2,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { MotionTitleInformation } from 'app/site/motions/models/view-motion';
-import { BaseSlideComponentDirective } from 'app/slides/base-slide-component';
+import { BaseSlideComponent } from 'app/slides/base-slide-component';
 
 /**
  * Format for referenced motions: A mapping of motion ids to their title information.
@@ -15,7 +15,7 @@ export interface ReferencedMotions {
  * Base slide for motions and motion blocks. This Provides the functionality of
  * replacing referenced motions (format: `[motion:<id>]`) in strings.
  */
-export class BaseMotionSlideComponent<T extends object> extends BaseSlideComponentDirective<T> {
+export class BaseMotionSlideComponent<T extends object> extends BaseSlideComponent<T> {
     public constructor(protected translate: TranslateService, protected motionRepo: MotionRepositoryService) {
         super();
     }
@@ -32,7 +32,7 @@ export class BaseMotionSlideComponent<T extends object> extends BaseSlideCompone
         return text.replace(/\[motion:(\d+)\]/g, (match, id) => {
             const titleInformation = referencedMotions[id];
             if (titleInformation) {
-                return this.motionRepo.getIdentifierOrTitle(titleInformation);
+                return this.motionRepo.getNumberOrTitle(titleInformation);
             } else {
                 return this.translate.instant('<unknown motion>');
             }

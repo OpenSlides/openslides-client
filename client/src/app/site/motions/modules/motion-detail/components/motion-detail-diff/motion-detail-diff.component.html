@@ -15,7 +15,7 @@
                 </span>
                 <span *ngIf="change.isTitleChange()">{{ 'Title' | translate }}</span>
                 <span *ngIf="isChangeRecommendation(change)"> ({{ 'Change recommendation' | translate }})</span>
-                <span *ngIf="isAmendment(change)"> ({{ 'Amendment' | translate }} {{ change.getIdentifier() }})</span>
+                <span *ngIf="isAmendment(change)"> ({{ 'Amendment' | translate }} {{ change.getNumber() }})</span>
                 <span class="operation" *ngIf="isChangeRecommendation(change)">
                     – {{ getRecommendationTypeName(change) | translate }}
                     <!--
@@ -105,12 +105,13 @@
                     <mat-icon>more_horiz</mat-icon>
                 </button>
 
+                <!-- TODO -->
                 <!--
                     <a ng-if="change.type == 'amendment'" ui-sref="motions.motion.detail({id: change.original.id})"
                        uib-tooltip="Open amendment"
                        class="btn btn-default btn-sm pull-right btn-amend-info">
                         <i class="fa fa-info"></i>
-                        {{ change.original.identifier }}
+                        {{ change.original.number }}
                     </a>
                 -->
             </div>

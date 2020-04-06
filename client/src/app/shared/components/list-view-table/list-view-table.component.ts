@@ -27,7 +27,7 @@ import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { BaseModel } from 'app/shared/models/base/base-model';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { BaseViewModel } from 'app/site/base/base-view-model';
-import { BaseViewModelWithContentObject } from 'app/site/base/base-view-model-with-content-object';
+import { isProjectable, Projectable } from 'app/site/base/projectable';
 
 export interface CssClassDefinition {
     [key: string]: boolean;
@@ -76,8 +76,8 @@ export interface ColumnRestriction {
  *     [(selectedRows)]="selectedRows"
  *     (dataSourceChange)="onDataSourceChange($event)"
  * >
- *     <div *pblNgridCellDef="'identifier'; row as motion" class="cell-slot">
- *         {{ motion.identifier }}
+ *     <div *pblNgridCellDef="'number'; row as motion" class="cell-slot">
+ *         {{ motion.number }}
  *     </div>
  * </os-list-view-table>
  * ```
@@ -589,19 +589,13 @@ export class ListViewTableComponent<V extends BaseViewModel, M extends BaseModel
     }
 
     /**
-     * Depending on the view, the view model in the row can either be a
-     * `BaseViewModelWithContentObject` or a `BaseViewModelWithContentObject`.
-     * In the first case, we want to get the content object rather than
-     * the object itself for the projection button.
-     *
      * @param viewModel The model of the table
      * @returns a view model that can be projected
      */
-    public getProjectable(
-        viewModel: BaseViewModelWithContentObject | BaseProjectableViewModel
-    ): BaseProjectableViewModel {
-        const withContent = viewModel as BaseViewModelWithContentObject;
-        return !!withContent.contentObject ? withContent.contentObject : viewModel;
+    public getProjectable(viewModel: V): Projectable {
+        if (isProjectable(viewModel)) {
+            return viewModel;
+        }
     }
 
     /**

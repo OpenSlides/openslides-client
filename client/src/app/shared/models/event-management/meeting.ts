@@ -1,9 +1,10 @@
+import { Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
 
 export class Meeting extends BaseModel<Meeting> {
     public static COLLECTION = 'meeting';
 
-    public id: number;
+    public id: Id;
     public url_name: string; // For unique urls.
     public is_template: boolean; // Unique within a committee
     public enable_anonymous: boolean;
@@ -48,8 +49,8 @@ export class Meeting extends BaseModel<Meeting> {
     public list_of_speakers_present_users_only: boolean;
 
     // Motions
-    public motions_default_workflow_id: number; // workflow/default_workflow_meeting_id;
-    public motions_default_statute_amendments_workflow_id: number; // workflow/default_statute_amendments_meeting_id;
+    public motions_default_workflow_id: Id; // workflow/default_workflow_meeting_id;
+    public motions_default_statute_amendments_workflow_id: Id; // workflow/default_statute_amendments_meeting_id;
     public motions_preamble: string;
     public motions_default_line_numbering: string;
     public motions_line_length: number;
@@ -85,7 +86,7 @@ export class Meeting extends BaseModel<Meeting> {
     public motion_poll_ballot_paper_number: number;
     public motion_poll_default_100_percent_base: string;
     public motion_poll_default_majority_method: string;
-    public motion_poll_default_groups: number[]; // (group/used_as_motion_poll_default)[];
+    public motion_poll_default_group_ids: Id[]; // (group/used_as_motion_poll_default_id)[];
 
     // Users
     public users_sort_by: string;
@@ -110,39 +111,39 @@ export class Meeting extends BaseModel<Meeting> {
     public assignment_poll_default_method: string;
     public assignment_poll_default_100_percent_base: string;
     public assignment_poll_default_majority_method: string;
-    public assignment_poll_default_groups: number[]; // (group/used_as_assignment_poll_default)[];
+    public assignment_poll_default_group_ids: Id[]; // (group/used_as_assignment_poll_default_id)[];
 
-    public projector_ids: number[]; // (projector/meeting_id)[];
-    public projectiondefault_ids: number[]; // number[] // (projectiondefault/meeting_id)[];
-    public projector_message_ids: number[]; // (projector_message/meeting_id)[];
-    public projector_countdown_ids: number[]; // (projector_countdown/meeting_id)[];
-    public tag_ids: number[]; // (tag/meeting_id)[];
-    public agenda_item_ids: number[]; // (agenda_item/meeting_id)[];
-    public list_of_speakers_ids: number[]; // (list_of_speakers/meeting_id)[];
-    public topic_ids: number[]; // (topic/meeting_id)[];
-    public group_ids: number[]; // (group/meeting_id)[];
-    public mediafile_ids: number[]; // (mediafile/meeting_id)[];
-    public motion_ids: number[]; // (motion/meeting_id)[];
-    public motion_comment_section_ids: number[]; // (motion_comment_section/meeting_id)[];
-    public motion_category_ids: number[]; // (motion_category/meeting_id)[];
-    public motion_block_ids: number[]; // (motion_block/meeting_id)[];
-    public motion_workflow_ids: number[]; // (motion_workflow/meeting_id)[];
-    public motion_statute_paragraph_ids: number[]; // (motion_statute_paragraph/meetin_id)[];
-    public motion_poll_ids: number[]; // (motion_poll/meeting_id)[];
-    public assignment_ids: number[]; // (assignment/meeting_id)[];
-    public assignment_poll_ids: number[]; // (assignment_poll/meeting_id)[];
+    public projector_ids: Id[]; // (projector/meeting_id)[];
+    public projectiondefault_ids: Id[]; // (projectiondefault/meeting_id)[];
+    public projector_message_ids: Id[]; // (projector_message/meeting_id)[];
+    public projector_countdown_ids: Id[]; // (projector_countdown/meeting_id)[];
+    public tag_ids: Id[]; // (tag/meeting_id)[];
+    public agenda_item_ids: Id[]; // (agenda_item/meeting_id)[];
+    public list_of_speakers_ids: Id[]; // (list_of_speakers/meeting_id)[];
+    public topic_ids: Id[]; // (topic/meeting_id)[];
+    public group_ids: Id[]; // (group/meeting_id)[];
+    public mediafile_ids: Id[]; // (mediafile/meeting_id)[];
+    public motion_ids: Id[]; // (motion/meeting_id)[];
+    public motion_comment_section_ids: Id[]; // (motion_comment_section/meeting_id)[];
+    public motion_category_ids: Id[]; // (motion_category/meeting_id)[];
+    public motion_block_ids: Id[]; // (motion_block/meeting_id)[];
+    public motion_workflow_ids: Id[]; // (motion_workflow/meeting_id)[];
+    public motion_statute_paragraph_ids: Id[]; // (motion_statute_paragraph/meeting_id)[];
+    public motion_poll_ids: Id[]; // (motion_poll/meeting_id)[];
+    public assignment_ids: Id[]; // (assignment/meeting_id)[];
+    public assignment_poll_ids: Id[]; // (assignment_poll/meeting_id)[];
 
     // Logos and Fonts
     public logo_$: string[]; // mediafile/logo_$<token>;
     public font_$: string[]; // mediafile/font_$<token>;
 
     // Other relations
-    public committee_id: number; // committee/meeting_ids;
-    public default_meeting_for_committee_id: number; // committee/default_meeting_id;
-    public present_user_ids: number[]; // (user/is_present_in_meeting_ids)[];
-    public temorary_user_ids: number[]; // (user/meeting_id)[];
-    public guest_ids: number[]; // (user/guest_meeting_ids)[];
-    public reference_projector_id: number; // projector/used_as_reference_projector_meeting_id;
+    public committee_id: Id; // committee/meeting_ids;
+    public default_meeting_for_committee_id: Id; // committee/default_meeting_id;
+    public present_user_ids: Id[]; // (user/is_present_in_meeting_ids)[];
+    public temorary_user_ids: Id[]; // (user/meeting_id)[];
+    public guest_ids: Id[]; // (user/guest_meeting_ids)[];
+    public reference_projector_id: Id; // projector/used_as_reference_projector_meeting_id;
 
     public constructor(input?: any) {
         super(Meeting.COLLECTION, input);

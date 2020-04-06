@@ -5,21 +5,10 @@ import { MeetingTitleInformation, ViewMeeting } from 'app/site/event-management/
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
-/**
- * Manages all projector instances.
- */
 @Injectable({
     providedIn: 'root'
 })
 export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meeting, MeetingTitleInformation> {
-    /**
-     * Constructor calls the parent constructor
-     *
-     * @param DS The DataStore
-     * @param mapperService Maps collection strings to classes
-     * @param dataSend sending changed objects
-     * @param http
-     */
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, Meeting);
     }
@@ -29,6 +18,6 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
     };
 
     public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Projectors' : 'Projector');
+        return this.translate.instant(plural ? 'Meetings' : 'Meeting');
     };
 }

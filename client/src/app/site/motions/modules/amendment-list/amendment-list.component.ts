@@ -1,8 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
-import { MatDialog } from '@angular/material';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 
 import { PblColumnDefinition } from '@pebula/ngrid';
@@ -74,7 +71,7 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
     /**
      * To filter stuff
      */
-    public filterProps = ['submitters', 'title', 'identifier', 'amendment_paragraphs'];
+    public filterProps = ['submitters', 'title', 'number', 'amendment_paragraphs'];
 
     /**
      *

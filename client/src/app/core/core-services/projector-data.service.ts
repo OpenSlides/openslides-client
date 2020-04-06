@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
-import { Projector, ProjectorElement } from 'app/shared/models/core/projector';
+import { Projector } from 'app/shared/models/projector/projector';
 
-export interface SlideData<T = { error?: string }, P extends ProjectorElement = ProjectorElement> {
+export interface SlideData<T = { error?: string }> {
     data: T;
-    element: P;
+    options: object;
     error?: string;
 }
 

@@ -4,7 +4,7 @@ import { ProjectorMessageRepositoryService } from 'app/core/repositories/project
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ProjectionDialogService } from 'app/core/ui-services/projection-dialog.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
-import { Projector } from 'app/shared/models/core/projector';
+import { Projector } from 'app/shared/models/projector/projector';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewProjectorMessage } from '../../models/view-projector-message';
 

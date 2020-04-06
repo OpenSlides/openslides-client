@@ -4,7 +4,9 @@ import { ActivatedRoute } from '@angular/router';
 
 import { BehaviorSubject, Subscription } from 'rxjs';
 
+import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { CollectionMapperService } from 'app/core/core-services/collection-mapper.service';
+import { collectionFromFqid } from 'app/core/core-services/key-transforms';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
@@ -14,6 +16,7 @@ import { DurationService } from 'app/core/ui-services/duration.service';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { SortingListComponent } from 'app/shared/components/sorting-list/sorting-list.component';
+import { SpeakerState } from 'app/shared/models/agenda/speaker';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
@@ -21,7 +24,7 @@ import { CurrentListOfSpeakersService } from 'app/site/projector/services/curren
 import { CurrentListOfSpeakersSlideService } from 'app/site/projector/services/current-list-of-of-speakers-slide.service';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { ViewListOfSpeakers } from '../../models/view-list-of-speakers';
-import { SpeakerState, ViewSpeaker } from '../../models/view-speaker';
+import { ViewSpeaker } from '../../models/view-speaker';
 
 /**
  * The list of speakers for agenda items.
@@ -148,7 +151,8 @@ export class ListOfSpeakersComponent extends BaseComponent implements OnInit {
         private userRepository: UserRepositoryService,
         private collectionMapper: CollectionMapperService,
         private currentListOfSpeakersSlideService: CurrentListOfSpeakersSlideService,
-        private config: OrganisationSettingsService
+        private config: OrganisationSettingsService,
+        private activeMeetingService: ActiveMeetingService
     ) {
         super(componentServiceCollector);
         this.addSpeakerForm = new FormGroup({ user_id: new FormControl() });
@@ -217,7 +221,8 @@ export class ListOfSpeakersComponent extends BaseComponent implements OnInit {
         if (!this.projectors.length) {
             return;
         }
-        const referenceProjector = this.projectors[0].referenceProjector;
+        throw new Error('TODO'); // Get the reference projector from the active meeting
+        /*const referenceProjector = this.projectors[0].referenceProjector;
         if (!referenceProjector || referenceProjector.id === this.closReferenceProjectorId) {
             return;
         }
@@ -235,7 +240,7 @@ export class ListOfSpeakersComponent extends BaseComponent implements OnInit {
                     this.setListOfSpeakersId(listOfSpeakers.id);
                 }
             });
-        this.subscriptions.push(this.projectorSubscription);
+        this.subscriptions.push(this.projectorSubscription);*/
     }
 
     /**
@@ -286,9 +291,8 @@ export class ListOfSpeakersComponent extends BaseComponent implements OnInit {
      * E.g. if a motion is the current content object, "Motion" will be the returned value.
      */
     public getContentObjectProjectorButtonText(): string {
-        const verboseName = this.collectionMapper
-            .getRepository(this.viewListOfSpeakers.listOfSpeakers.content_object.collection)
-            .getVerboseName();
+        const collection = collectionFromFqid(this.viewListOfSpeakers.content_object_id);
+        const verboseName = this.collectionMapper.getRepository(collection).getVerboseName();
         return verboseName;
     }
 
@@ -483,7 +487,9 @@ export class ListOfSpeakersComponent extends BaseComponent implements OnInit {
      */
     private filterUsers(): void {
         const presentUsersOnly = this.config.instant('agenda_present_speakers_only');
-        const users = presentUsersOnly ? this.users.getValue().filter(u => u.is_present) : this.users.getValue();
+        const users = presentUsersOnly
+            ? this.users.getValue().filter(u => u.isPresentInMeeting())
+            : this.users.getValue();
         if (!this.speakers || !this.speakers.length) {
             this.filteredUsers.next(users);
         } else {

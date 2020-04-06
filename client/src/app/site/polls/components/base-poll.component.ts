@@ -9,10 +9,10 @@ import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ChartData } from 'app/shared/components/charts/charts.component';
 import { PollState, PollType } from 'app/shared/models/poll/base-poll';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { BaseViewPoll } from '../models/base-view-poll';
 import { PollService } from '../services/poll.service';
-import { ViewBasePoll } from '../models/view-base-poll';
 
-export abstract class BasePollComponent<V extends ViewBasePoll, S extends PollService> extends BaseComponent {
+export abstract class BasePollComponent<V extends BaseViewPoll, S extends PollService> extends BaseComponent {
     public chartDataSubject: BehaviorSubject<ChartData> = new BehaviorSubject([]);
 
     protected _poll: V;

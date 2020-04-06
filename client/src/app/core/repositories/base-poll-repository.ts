@@ -5,10 +5,10 @@ import { VotingService } from 'app/core/ui-services/voting.service';
 import { ModelConstructor } from 'app/shared/models/base/base-model';
 import { BasePoll, PollState } from 'app/shared/models/poll/base-poll';
 import { TitleInformation } from 'app/site/base/base-view-model';
-import { ViewBasePoll } from '../../site/polls/models/view-base-poll';
+import { BaseViewPoll } from '../../site/polls/models/base-view-poll';
 
 export abstract class BasePollRepository<
-    V extends ViewBasePoll & T = any,
+    V extends BaseViewPoll & T = any,
     M extends BasePoll = any,
     T extends TitleInformation = any
 > extends BaseRepository<V, M, T> {

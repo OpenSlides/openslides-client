@@ -147,7 +147,7 @@ msgstr ""
 msgid "Allow amendments of amendments"
 msgstr ""
 
-msgid "Allow blank in identifier"
+msgid "Allow blank in number"
 msgstr ""
 
 msgid "Allow create poll"
@@ -825,7 +825,7 @@ msgstr ""
 msgid "Do not forget to save your changes!"
 msgstr ""
 
-msgid "Do not set identifier"
+msgid "Do not set number"
 msgstr ""
 
 msgid "Do you really want to exit this page?"
@@ -1189,11 +1189,11 @@ msgstr ""
 msgid "I know the risk"
 msgstr ""
 
-msgid "Identifier"
+msgid "Number"
 msgstr ""
 
 msgid ""
-"Identifier, reason, submitter, category, origin and motion block are "
+"Number, reason, submitter, category, origin and motion block are "
 "optional and may be empty."
 msgstr ""
 
@@ -1667,7 +1667,7 @@ msgstr ""
 msgid "Number of last speakers to be shown on the projector"
 msgstr ""
 
-msgid "Number of minimal digits for identifier"
+msgid "Number of minimal digits for number"
 msgstr ""
 
 msgid "Number of persons to be elected"
@@ -1888,7 +1888,7 @@ msgstr ""
 msgid "Prefix"
 msgstr ""
 
-msgid "Prefix for the identifier for amendments"
+msgid "Prefix for the number for amendments"
 msgstr ""
 
 msgid "Presence"
@@ -2294,7 +2294,7 @@ msgstr ""
 msgid "Sort agenda"
 msgstr ""
 
-msgid "Sort by identifier"
+msgid "Sort by number"
 msgstr ""
 
 msgid "Sort categories"
@@ -2657,7 +2657,7 @@ msgstr ""
 msgid "Username or password is not correct."
 msgstr ""
 
-msgid "Uses leading zeros to sort motions correctly by identifier."
+msgid "Uses leading zeros to sort motions correctly by number."
 msgstr ""
 
 msgid "Valid votes"

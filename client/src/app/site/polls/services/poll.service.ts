@@ -18,12 +18,12 @@ import { ParsePollNumberPipe } from 'app/shared/pipes/parse-poll-number.pipe';
 import { PollKeyVerbosePipe } from 'app/shared/pipes/poll-key-verbose.pipe';
 import { AssignmentPollMethodVerbose } from 'app/site/assignments/models/view-assignment-poll';
 import {
+    BaseViewPoll,
     MajorityMethodVerbose,
     PercentBaseVerbose,
     PollPropertyVerbose,
-    PollTypeVerbose,
-    ViewBasePoll
-} from 'app/site/polls/models/view-base-poll';
+    PollTypeVerbose
+} from 'app/site/polls/models/base-view-poll';
 
 const PERCENT_DECIMAL_PLACES = 3;
 /**
@@ -227,7 +227,7 @@ export abstract class PollService {
         return {
             onehundred_percent_base: this.defaultPercentBase,
             majority_method: this.defaultMajorityMethod,
-            groups_id: this.defaultGroupIds,
+            entitled_group_ids: this.defaultGroupIds,
             type: PollType.Analog
         };
     }
@@ -249,7 +249,7 @@ export abstract class PollService {
         return PollPropertyVerbose[key];
     }
 
-    public getVoteTableKeys(poll: PollData | ViewBasePoll): VotingResult[] {
+    public getVoteTableKeys(poll: PollData | BaseViewPoll): VotingResult[] {
         return [
             {
                 vote: 'yes',
@@ -269,7 +269,7 @@ export abstract class PollService {
         ];
     }
 
-    private showAbstainPercent(poll: PollData | ViewBasePoll): boolean {
+    private showAbstainPercent(poll: PollData | BaseViewPoll): boolean {
         return (
             poll.onehundred_percent_base === PercentBase.YNA ||
             poll.onehundred_percent_base === PercentBase.Valid ||
@@ -277,11 +277,11 @@ export abstract class PollService {
         );
     }
 
-    public showPercentOfValidOrCast(poll: PollData | ViewBasePoll): boolean {
+    public showPercentOfValidOrCast(poll: PollData | BaseViewPoll): boolean {
         return poll.onehundred_percent_base === PercentBase.Valid || poll.onehundred_percent_base === PercentBase.Cast;
     }
 
-    public getSumTableKeys(poll: PollData | ViewBasePoll): VotingResult[] {
+    public getSumTableKeys(poll: PollData | BaseViewPoll): VotingResult[] {
         return [
             {
                 vote: 'votesvalid',
@@ -302,28 +302,30 @@ export abstract class PollService {
         ];
     }
 
-    public generateChartData(poll: PollData | ViewBasePoll): ChartData {
+    public generateChartData(poll: PollData | BaseViewPoll): ChartData {
         const fields = this.getPollDataFields(poll);
 
         const data: ChartData = fields.map(key => {
-            return {
-                data: this.getResultFromPoll(poll, key),
-                label: key.toUpperCase(),
-                backgroundColor: PollColor[key],
-                hoverBackgroundColor: PollColor[key],
-                barThickness: PollChartBarThickness,
-                maxBarThickness: PollChartBarThickness
-            } as ChartDate;
+            return (
+                {
+                    data: this.getResultFromPoll(poll, key),
+                    label: key.toUpperCase(),
+                    backgroundColor: PollColor[key],
+                    hoverBackgroundColor: PollColor[key],
+                    barThickness: PollChartBarThickness,
+                    maxBarThickness: PollChartBarThickness
+                } as ChartDate
+            );
         });
 
         return data;
     }
 
-    protected getPollDataFields(poll: PollData | ViewBasePoll): CalculablePollKey[] {
+    protected getPollDataFields(poll: PollData | BaseViewPoll): CalculablePollKey[] {
         let fields: CalculablePollKey[];
         let isAssignment: boolean;
 
-        if (poll instanceof ViewBasePoll) {
+        if (poll instanceof BaseViewPoll) {
             isAssignment = poll.pollClassType === 'assignment';
         } else {
             isAssignment = Object.keys(poll.options[0]).includes('user');

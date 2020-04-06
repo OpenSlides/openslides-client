@@ -29,7 +29,7 @@ export class UserImportService extends BaseImportService<User> {
         // 'groups_id',
         'comment',
         'is_active',
-        'is_present',
+        // 'is_present',
         'is_committee',
         'default_password',
         'email',

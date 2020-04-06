@@ -1,3 +1,4 @@
+import { Id } from 'app/core/definitions/key-types';
 import { BaseModel } from './base-model';
 import { BaseModelWithAgendaItem, isBaseModelWithAgendaItem } from './base-model-with-agenda-item';
 import { BaseModelWithListOfSpeakers, isBaseModelWithListOfSpeakers } from './base-model-with-list-of-speakers';
@@ -11,6 +12,6 @@ export function isBaseModelWithAgendaItemAndListOfSpeakers(obj: any): obj is Bas
  */
 export abstract class BaseModelWithAgendaItemAndListOfSpeakers<T = object> extends BaseModel<T>
     implements BaseModelWithAgendaItem<T>, BaseModelWithListOfSpeakers<T> {
-    public agenda_item_id: number;
-    public list_of_speakers_id: number;
+    public agenda_item_id?: Id;
+    public list_of_speakers_id?: Id;
 }

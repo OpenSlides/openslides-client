@@ -268,7 +268,7 @@ export class UserPdfService {
         const result = [];
         let counter = 1;
         users.forEach(user => {
-            const groupList = user.groups.map(grp => this.translate.instant(grp.name));
+            const groupList = user.groups().map(grp => this.translate.instant(grp.name));
             result.push([{ text: '' + counter }, { text: user.full_name }, { text: groupList.join(', ') }]);
             counter += 1;
         });

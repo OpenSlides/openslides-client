@@ -132,7 +132,7 @@ export class TopicDetailComponent extends BaseComponent {
         this.topicForm = this.formBuilder.group({
             agenda_type: [],
             agenda_parent_id: [],
-            attachments_id: [[]],
+            attachment_ids: [[]],
             text: [''],
             title: ['', Validators.required]
         });

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { PollState, PollType } from 'app/shared/models/poll/base-poll';
-import { ViewBasePoll } from 'app/site/polls/models/view-base-poll';
+import { BaseViewPoll } from 'app/site/polls/models/base-view-poll';
 import { OperatorService } from '../core-services/operator.service';
 
 export enum VotingError {
@@ -33,7 +33,7 @@ export class VotingService {
     /**
      * checks whether the operator can vote on the given poll
      */
-    public canVote(poll: ViewBasePoll): boolean {
+    public canVote(poll: BaseViewPoll): boolean {
         const error = this.getVotePermissionError(poll);
         return !error;
     }
@@ -42,7 +42,7 @@ export class VotingService {
      * checks whether the operator can vote on the given poll
      * @returns null if no errors exist (= user can vote) or else a VotingError
      */
-    public getVotePermissionError(poll: ViewBasePoll): VotingError | void {
+    public getVotePermissionError(poll: BaseViewPoll): VotingError | void {
         if (this.operator.isAnonymous) {
             return VotingError.USER_IS_ANONYMOUS;
         }
@@ -62,7 +62,7 @@ export class VotingService {
         }*/
     }
 
-    public getVotePermissionErrorVerbose(poll: ViewBasePoll): string | void {
+    public getVotePermissionErrorVerbose(poll: BaseViewPoll): string | void {
         const error = this.getVotePermissionError(poll);
         if (error) {
             return VotingErrorVerbose[error];

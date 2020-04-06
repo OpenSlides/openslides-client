@@ -16,7 +16,7 @@ import { TopicImportService } from '../../../topics/services/topic-import.servic
     selector: 'os-topic-import-list',
     templateUrl: './topic-import-list.component.html'
 })
-export class TopicImportListComponent extends BaseImportListComponentDirective<CreateTopic> {
+export class TopicImportListComponent extends BaseImportListComponent<CreateTopic> {
     /**
      * A form for text input
      */

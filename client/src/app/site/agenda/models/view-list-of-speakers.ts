@@ -1,21 +1,27 @@
+<<<<<<< HEAD
 import { ProjectorTitle } from 'app/core/core-services/projector.service';
 import { ListOfSpeakers, ListOfSpeakersWithoutNestedModels } from 'app/shared/models/agenda/list-of-speakers';
 import { ContentObject } from 'app/shared/models/base/content-object';
 import { BaseViewModelWithContentObject } from 'app/site/base/base-view-model-with-content-object';
+=======
+import { Fqid } from 'app/core/definitions/key-types';
+import { ListOfSpeakers } from 'app/shared/models/agenda/list-of-speakers';
+import { SpeakerState } from 'app/shared/models/agenda/speaker';
+import { BaseViewModel } from 'app/site/base/base-view-model';
+>>>>>>> New Models:
 import { BaseViewModelWithListOfSpeakers } from 'app/site/base/base-view-model-with-list-of-speakers';
 import { Projectable, ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
-import { SpeakerState, ViewSpeaker } from './view-speaker';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
+import { ViewProjection } from 'app/site/projector/models/view-projection';
+import { ViewProjector } from 'app/site/projector/models/view-projector';
+import { ViewSpeaker } from './view-speaker';
 
 export interface ListOfSpeakersTitleInformation {
-    contentObject: BaseViewModelWithListOfSpeakers;
-    contentObjectData: ContentObject;
-    title_information: object;
+    content_object?: BaseViewModelWithListOfSpeakers;
+    content_object_id: Fqid;
 }
 
-/**
- * TODO: Resolve potential circular dependencies with {@link BaseViewModelWithListOfSpeakers}.
- */
-export class ViewListOfSpeakers extends BaseViewModelWithContentObject<ListOfSpeakers, BaseViewModelWithListOfSpeakers>
+export class ViewListOfSpeakers extends BaseViewModel<ListOfSpeakers>
     implements ListOfSpeakersTitleInformation, Projectable {
     public static COLLECTION = ListOfSpeakers.COLLECTION;
     protected _collection = ListOfSpeakers.COLLECTION;
@@ -44,7 +50,7 @@ export class ViewListOfSpeakers extends BaseViewModelWithContentObject<ListOfSpe
             getBasicProjectorElement: options => ({
                 name: 'agenda/list-of-speakers',
                 id: this.id,
-                getIdentifiers: () => ['name', 'id']
+                getNumbers: () => ['name', 'id']
             }),
             slideOptions: [],
             projectionDefaultName: 'agenda_list_of_speakers',
@@ -53,6 +59,10 @@ export class ViewListOfSpeakers extends BaseViewModelWithContentObject<ListOfSpe
     }
 }
 interface IListOfSpeakersRelations {
+    content_object?: BaseViewModelWithListOfSpeakers;
     speakers: ViewSpeaker[];
+    projections: ViewProjection[];
+    current_projectors: ViewProjector[];
+    meeting: ViewMeeting;
 }
-export interface ViewListOfSpeakers extends ListOfSpeakersWithoutNestedModels, IListOfSpeakersRelations {}
+export interface ViewListOfSpeakers extends ListOfSpeakers, IListOfSpeakersRelations {}

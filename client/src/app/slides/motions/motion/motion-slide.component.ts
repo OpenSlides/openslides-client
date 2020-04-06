@@ -56,7 +56,7 @@ export class MotionSlideComponent extends BaseMotionSlideComponent<MotionSlideDa
     public allChangingObjects: ViewUnifiedChange[];
 
     /**
-     * Reference to all referencing motions to store sorted by `identifier`.
+     * Reference to all referencing motions to store sorted by `number`.
      */
     public referencingMotions = [];
 
@@ -68,17 +68,18 @@ export class MotionSlideComponent extends BaseMotionSlideComponent<MotionSlideDa
         this.lnMode = value.data.line_numbering_mode;
         this.lineLength = value.data.line_length;
         this.preamble = value.data.preamble;
-        this.crMode = value.element.mode || 'original';
+        // this.crMode = value.element.mode || 'original';
+        throw new Error('TODO');
 
-        this.textDivStyles.width = value.data.show_meta_box ? 'calc(100% - 250px)' : '100%';
+        /*this.textDivStyles.width = value.data.show_meta_box ? 'calc(100% - 250px)' : '100%';
 
         if (value.data.recommendation_referencing_motions) {
             this.referencingMotions = value.data.recommendation_referencing_motions.sort((a, b) =>
-                a.identifier.localeCompare(b.identifier)
+                a.number.localeCompare(b.number)
             );
         }
 
-        this.recalcUnifiedChanges();
+        this.recalcUnifiedChanges();*/
     }
 
     public get data(): SlideData<MotionSlideData> {
@@ -131,8 +132,8 @@ export class MotionSlideComponent extends BaseMotionSlideComponent<MotionSlideDa
         super(translate, motionRepo);
     }
 
-    public getIdentifierOrTitle(titleInformation: MotionTitleInformation): string {
-        return this.motionRepo.getIdentifierOrTitle(titleInformation);
+    public getNumberOrTitle(titleInformation: MotionTitleInformation): string {
+        return this.motionRepo.getNumberOrTitle(titleInformation);
     }
 
     public getRecommendationLabel(): string {

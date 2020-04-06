@@ -112,9 +112,9 @@ export class AmendmentCreateWizardComponent extends BaseComponent implements OnI
                 if (newViewMotion) {
                     this.paragraphs = this.repo.getParagraphsToChoose(newViewMotion, this.lineLength);
 
-                    if (newViewMotion.hasParent) {
+                    if (newViewMotion.hasLeadMotion) {
                         this.isAmendmentOfAmendment = true;
-                        this.motion = newViewMotion.parent;
+                        this.motion = newViewMotion.lead_motion;
                         this.diffedParagraphs = this.repo.getDiffedParagraphToChoose(newViewMotion, this.lineLength);
                     } else {
                         this.isAmendmentOfAmendment = false;
@@ -259,11 +259,11 @@ export class AmendmentCreateWizardComponent extends BaseComponent implements OnI
         });
         const newMotionValues = {
             ...this.contentForm.value,
-            title: this.translate.instant('Amendment to') + ' ' + this.motion.identifier,
+            title: this.translate.instant('Amendment to') + ' ' + this.motion.number,
             text: text, // Workaround as 'text' is required from the backend
             parent_id: this.motion.id,
             category_id: this.motion.category_id,
-            tags_id: this.motion.tags_id,
+            tag_ids: this.motion.tag_ids,
             motion_block_id: this.motion.motion_block_id,
             amendment_paragraphs: amendedParagraphs
         };

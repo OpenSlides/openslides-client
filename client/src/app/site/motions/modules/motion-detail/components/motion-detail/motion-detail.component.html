@@ -13,9 +13,9 @@
     <div class="title-slot">
         <h2 *ngIf="motion && !newMotion">
             <span>{{ 'Motion' | translate }}</span>
-            <!-- Whitespace between "Motion" and identifier -->
-            <span>&nbsp;</span> <span *ngIf="!editMotion">{{ motion.identifier }}</span>
-            <span *ngIf="editMotion">{{ contentForm.get('identifier').value }}</span>
+            <!-- Whitespace between "Motion" and number -->
+            <span>&nbsp;</span> <span *ngIf="!editMotion">{{ motion.number }}</span>
+            <span *ngIf="editMotion">{{ contentForm.get('number').value }}</span>
         </h2>
         <h2 *ngIf="newMotion && !amendmentEdit">{{ 'New motion' | translate }}</h2>
         <h2 *ngIf="amendmentEdit">{{ 'New amendment' | translate }}</h2>
@@ -26,12 +26,12 @@
         <div *ngIf="previousMotion">
             <button mat-button (click)="navigateToMotion(previousMotion)">
                 <mat-icon>chevron_left</mat-icon>
-                <span>{{ previousMotion.identifier }}</span>
+                <span>{{ previousMotion.number }}</span>
             </button>
         </div>
         <div *ngIf="nextMotion">
             <button mat-button (click)="navigateToMotion(nextMotion)">
-                <span>{{ nextMotion.identifier }}</span>
+                <span>{{ nextMotion.number }}</span>
                 <mat-icon>chevron_right</mat-icon>
             </button>
         </div>
@@ -49,11 +49,11 @@
             <div *ngIf="vp.isMobile">
                 <button mat-menu-item (click)="navigateToMotion(previousMotion)" *ngIf="previousMotion">
                     <mat-icon>chevron_left</mat-icon>
-                    <span>{{ 'Motion' | translate }} {{ previousMotion.identifier }}</span>
+                    <span>{{ 'Motion' | translate }} {{ previousMotion.number }}</span>
                 </button>
                 <button mat-menu-item (click)="navigateToMotion(nextMotion)" *ngIf="nextMotion">
                     <mat-icon>chevron_right</mat-icon>
-                    <span>{{ 'Motion' | translate }} {{ nextMotion.identifier }}</span>
+                    <span>{{ 'Motion' | translate }} {{ nextMotion.number }}</span>
                 </button>
                 <mat-divider *ngIf="previousMotion || nextMotion"></mat-divider>
             </div>
@@ -86,7 +86,7 @@
                 mat-menu-item
                 *osPerms="'core.can_see_history'"
                 [routerLink]="['/history']"
-                [queryParams]="{ element: motion.elementId }"
+                [queryParams]="{ element: motion.fqid }"
             >
                 <mat-icon>history</mat-icon>
                 <span>
@@ -147,14 +147,14 @@
         <span class="main-nav-color title-font">
             <span *ngIf="showSequential">
                 <span>{{ 'Sequential number' | translate }}</span
-                >&nbsp;{{ motion.id }}
+                >&nbsp;{{ motion.sequential_number }}
             </span>
-            <span *ngIf="showSequential && motion.parent_id">&#xb7;&nbsp;</span>
-            <span *ngIf="motion.parent_id">
+            <span *ngIf="showSequential && motion.lead_motion">&#xb7;&nbsp;</span>
+            <span *ngIf="motion.lead_motion">
                 <span>
                     <span>{{ 'Amendment to' | translate }}</span
-                    >&nbsp;<a [routerLink]="motion.parent.getDetailStateURL()" [state]="{ back: 'true' }">
-                        {{ motion.parent.identifier || motion.parent.title }}
+                    >&nbsp;<a [routerLink]="motion.lead_motion.getDetailStateURL()" [state]="{ back: 'true' }">
+                        {{ motion.lead_motion.number || motion.lead_motion.title }}
                     </a>
                 </span>
             </span>
@@ -628,17 +628,17 @@
         </div>
 
         <div class="form-id-title">
-            <!-- Identifier -->
+            <!-- number -->
             <div
                 *ngIf="editMotion && !newMotion && perms.isAllowed('change_metadata', motion)"
-                class="content-field form-identifier"
+                class="content-field form-number"
             >
                 <mat-form-field *ngIf="editMotion">
                     <input
                         matInput
                         autofocus
-                        placeholder="{{ 'Identifier' | translate }}"
-                        formControlName="identifier"
+                        placeholder="{{ 'Number' | translate }}"
+                        formControlName="number"
                     />
                 </mat-form-field>
             </div>
@@ -818,7 +818,7 @@
                 </div>
                 <div *osPerms="'motions.can_manage'; and: editMotion">
                     <os-attachment-control
-                        formControlName="attachments_id"
+                        formControlName="attachment_ids"
                         (errorHandler)="showUploadError($event)"
                     ></os-attachment-control>
                 </div>

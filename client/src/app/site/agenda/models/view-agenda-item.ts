@@ -1,16 +1,18 @@
+import { Fqid } from 'app/core/definitions/key-types';
 import { AgendaItem, ItemVisibilityChoices } from 'app/shared/models/agenda/agenda-item';
-import { ContentObject } from 'app/shared/models/base/content-object';
+import { BaseViewModel } from 'app/site/base/base-view-model';
 import { BaseViewModelWithAgendaItem } from 'app/site/base/base-view-model-with-agenda-item';
-import { BaseViewModelWithContentObject } from 'app/site/base/base-view-model-with-content-object';
+import { Projectable, ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
+import { ViewProjection } from 'app/site/projector/models/view-projection';
+import { ViewProjector } from 'app/site/projector/models/view-projector';
 
 export interface AgendaItemTitleInformation {
-    contentObject: BaseViewModelWithAgendaItem;
-    contentObjectData: ContentObject;
-    title_information: object;
+    content_object?: BaseViewModelWithAgendaItem;
+    content_object_id: Fqid;
 }
 
-export class ViewAgendaItem extends BaseViewModelWithContentObject<AgendaItem, BaseViewModelWithAgendaItem>
-    implements AgendaItemTitleInformation {
+export class ViewAgendaItem extends BaseViewModel<AgendaItem> implements AgendaItemTitleInformation, Projectable {
     public static COLLECTION = AgendaItem.COLLECTION;
     protected _collection = AgendaItem.COLLECTION;
 
@@ -32,6 +34,14 @@ export class ViewAgendaItem extends BaseViewModelWithContentObject<AgendaItem, B
         return type ? type.name : '';
     }
 
+    public getProjectorTitle(): string {
+        return this.getTitle();
+    }
+
+    public getSlide(): ProjectorElementBuildDeskriptor {
+        throw new Error('TODO');
+    }
+
     /**
      * Gets a shortened string for CSV export
      * @returns empty string if it is a public item, 'internal' or 'hidden' otherwise
@@ -43,14 +53,13 @@ export class ViewAgendaItem extends BaseViewModelWithContentObject<AgendaItem, B
         const type = ItemVisibilityChoices.find(choice => choice.key === this.type);
         return type ? type.csvName : '';
     }
-
-    /**
-     * Returns the collection of the underlying content-object.
-     *
-     * @returns The collection as string.
-     */
-    public get collection(): string {
-        return this.contentObjectData.collection;
-    }
 }
-export interface ViewAgendaItem extends AgendaItem {}
+interface IAgendaItemRelations {
+    content_object?: BaseViewModelWithAgendaItem;
+    parent?: ViewAgendaItem;
+    children: ViewAgendaItem[];
+    projections: ViewProjection[];
+    current_projectors: ViewProjector[];
+    meeting?: ViewMeeting;
+}
+export interface ViewAgendaItem extends AgendaItem, IAgendaItemRelations {}

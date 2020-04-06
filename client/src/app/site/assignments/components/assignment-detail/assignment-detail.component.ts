@@ -18,15 +18,15 @@ import { Assignment } from 'app/shared/models/assignments/assignment';
 import { ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
-import { LocalPermissionsService } from 'app/site/motions/services/local-permissions.service';
+import { PermissionsService } from 'app/site/motions/services/permissions.service';
 import { ViewTag } from 'app/site/tags/models/view-tag';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { AssignmentPdfExportService } from '../../services/assignment-pdf-export.service';
 import { AssignmentPollDialogService } from '../../services/assignment-poll-dialog.service';
 import { AssignmentPollService } from '../../services/assignment-poll.service';
 import { AssignmentPhases, ViewAssignment } from '../../models/view-assignment';
+import { ViewAssignmentCandidate } from '../../models/view-assignment-candidate';
 import { ViewAssignmentPoll } from '../../models/view-assignment-poll';
-import { ViewAssignmentRelatedUser } from '../../models/view-assignment-related-user';
 
 /**
  * Component for the assignment detail view
@@ -119,7 +119,7 @@ export class AssignmentDetailComponent extends BaseComponent implements OnInit {
      * @returns true if they are in the list of candidates
      */
     public get isSelfCandidate(): boolean {
-        return this.assignment.candidates.find(user => user.id === this.operator.operatorId) ? true : false;
+        return this.assignment.candidatesAsUsers.find(user => user.id === this.operator.operatorId) ? true : false;
     }
 
     /**
@@ -164,7 +164,7 @@ export class AssignmentDetailComponent extends BaseComponent implements OnInit {
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private operator: OperatorService,
-        public perms: LocalPermissionsService,
+        public perms: PermissionsService,
         private router: Router,
         private route: ActivatedRoute,
         formBuilder: FormBuilder,
@@ -188,8 +188,8 @@ export class AssignmentDetailComponent extends BaseComponent implements OnInit {
         );
         this.assignmentForm = formBuilder.group({
             phase: null,
-            tags_id: [],
-            attachments_id: [],
+            tag_ids: [],
+            attachment_ids: [],
             title: ['', Validators.required],
             description: [''],
             default_poll_description: [''],
@@ -335,7 +335,7 @@ export class AssignmentDetailComponent extends BaseComponent implements OnInit {
      *
      * @param userId the id of a ViewUser
      */
-    public async addUser(userId: number): Promise<void> {
+    public async addUserAsCandidate(userId: number): Promise<void> {
         const user = this.userRepo.getViewModel(userId);
         if (user) {
             await this.repo.changeCandidate(user, this.assignment, true).catch(this.raiseError);
@@ -347,7 +347,7 @@ export class AssignmentDetailComponent extends BaseComponent implements OnInit {
      *
      * @param candidate A ViewAssignmentUser currently in the list of related users
      */
-    public async removeUser(candidate: ViewAssignmentRelatedUser): Promise<void> {
+    public async removeCandidate(candidate: ViewAssignmentCandidate): Promise<void> {
         await this.repo.changeCandidate(candidate.user, this.assignment, false).catch(this.raiseError);
     }
 
@@ -376,7 +376,7 @@ export class AssignmentDetailComponent extends BaseComponent implements OnInit {
                 this.candidatesForm.valueChanges.subscribe(formResult => {
                     // resetting a form triggers a form.next(null) - check if data is present
                     if (formResult && formResult.userId) {
-                        this.addUser(formResult.userId);
+                        this.addUserAsCandidate(formResult.userId);
                         this.candidatesForm.setValue({ userId: null });
                     }
                 })
@@ -468,13 +468,13 @@ export class AssignmentDetailComponent extends BaseComponent implements OnInit {
      * (triggered on an autoupdate of either users or the assignment)
      */
     private filterCandidates(): void {
-        if (!this.assignment || !this.assignment.candidates.length) {
+        if (!this.assignment || !this.assignment.candidatesAsUsers.length) {
             this.filteredCandidates.next(this.availableCandidates.getValue());
         } else {
             this.filteredCandidates.next(
                 this.availableCandidates
                     .getValue()
-                    .filter(u => !this.assignment.candidates.some(cand => cand.id === u.id))
+                    .filter(u => !this.assignment.candidatesAsUsers.some(user => user.id === u.id))
             );
         }
     }
@@ -482,7 +482,7 @@ export class AssignmentDetailComponent extends BaseComponent implements OnInit {
     /**
      * Triggers an update of the sorting.
      */
-    public onSortingChange(listInNewOrder: ViewAssignmentRelatedUser[]): void {
+    public onSortingChange(listInNewOrder: ViewAssignmentCandidate[]): void {
         this.repo
             .sortCandidates(
                 listInNewOrder.map(relatedUser => relatedUser.id),

@@ -256,7 +256,9 @@ export class PdfDocumentService {
         if (logoHeaderLeftUrl && logoHeaderRightUrl) {
             text = '';
         } else {
-            const general_event_name = this.translate.instant(this.organisationSettingsService.instant<string>('general_event_name'));
+            const general_event_name = this.translate.instant(
+                this.organisationSettingsService.instant<string>('general_event_name')
+            );
             const general_event_description = this.translate.instant(
                 this.organisationSettingsService.instant<string>('general_event_description')
             );

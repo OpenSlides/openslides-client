@@ -2,11 +2,10 @@ import { Component, ComponentRef, Input, ViewChild, ViewContainerRef } from '@an
 
 import { SlideData } from 'app/core/core-services/projector-data.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { ProjectorElement } from 'app/shared/models/core/projector';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { isBaseScaleScrollSlideComponent } from 'app/slides/base-scale-scroll-slide-component';
-import { BaseSlideComponentDirective } from 'app/slides/base-slide-component';
+import { BaseSlideComponent } from 'app/slides/base-slide-component';
 import { SlideManager } from 'app/slides/services/slide-manager.service';
 
 function hasError(obj: object): obj is { error: string } {
@@ -26,7 +25,7 @@ export class SlideContainerComponent extends BaseComponent {
 
     @ViewChild('slide', { read: ViewContainerRef, static: true })
     private slide: ViewContainerRef;
-    private slideRef: ComponentRef<BaseSlideComponentDirective<object>>;
+    private slideRef: ComponentRef<BaseSlideComponent<object>>;
 
     /**
      * A slide is autonomic, if it takes care of scaling and scrolling by itself.
@@ -63,12 +62,13 @@ export class SlideContainerComponent extends BaseComponent {
         }
 
         this._slideData = slideData;
-        if (this.previousSlideName !== slideData.element.name) {
+        throw new Error('TODO');
+        /*if (this.previousSlideName !== slideData.element.name) {
             this.slideChanged(slideData.element);
             this.previousSlideName = slideData.element.name;
         } else {
             this.setDataForComponent();
-        }
+        }*/
     }
 
     public get slideData(): SlideData<object> {
@@ -186,7 +186,7 @@ export class SlideContainerComponent extends BaseComponent {
      *
      * @param slideName The slide to load.
      */
-    private slideChanged(element: ProjectorElement): void {
+    /*private slideChanged(element: ProjectorElement): void {
         const options = this.slideManager.getSlideConfiguration(element.name);
         if (typeof options.scaleable === 'boolean') {
             this.slideOptions.scaleable = options.scaleable;
@@ -206,16 +206,16 @@ export class SlideContainerComponent extends BaseComponent {
             this.updateScale();
             this.updateScroll();
         });
-    }
+    }*/
 
     /**
      * "injects" the slide data into the slide component.
      */
-    private setDataForComponent(): void {
+    /*private setDataForComponent(): void {
         if (this.slideRef && this.slideRef.instance) {
             this.slideRef.instance.data = this.slideData;
         }
-    }
+    }*/
 
     /**
      * "injects" the projector into the slide component.

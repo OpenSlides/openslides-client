@@ -1,3 +1,4 @@
+import { Id } from 'app/core/definitions/key-types';
 import { BaseModel } from './base-model';
 
 export function isBaseModelWithListOfSpeakers(obj: any): obj is BaseModelWithListOfSpeakers {
@@ -8,5 +9,5 @@ export function isBaseModelWithListOfSpeakers(obj: any): obj is BaseModelWithLis
  * A base model with a list of speakers. The id is always given by the server.
  */
 export abstract class BaseModelWithListOfSpeakers<T = object> extends BaseModel<T> {
-    public list_of_speakers_id: number;
+    public list_of_speakers_id?: Id;
 }

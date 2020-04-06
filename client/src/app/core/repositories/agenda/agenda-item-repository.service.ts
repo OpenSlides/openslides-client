@@ -6,9 +6,8 @@ import { TreeIdNode } from 'app/core/ui-services/tree.service';
 import { AgendaItem } from 'app/shared/models/agenda/agenda-item';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { AgendaItemTitleInformation, ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
-import { BaseViewModelWithAgendaItem, AgendaListTitle } from 'app/site/base/base-view-model-with-agenda-item';
-import { BaseHasContentObjectRepository } from '../base-has-content-object-repository';
-import { BaseIsAgendaItemContentObjectRepository } from '../base-is-agenda-item-content-object-repository';
+import { AgendaListTitle, BaseViewModelWithAgendaItem } from 'app/site/base/base-view-model-with-agenda-item';
+import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 /**
@@ -19,10 +18,9 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class AgendaItemRepositoryService extends BaseHasContentObjectRepository<
+export class AgendaItemRepositoryService extends BaseRepository<
     ViewAgendaItem,
     AgendaItem,
-    BaseViewModelWithAgendaItem,
     AgendaItemTitleInformation
 > {
     /**
@@ -50,13 +48,15 @@ export class AgendaItemRepositoryService extends BaseHasContentObjectRepository<
     };
 
     private getAgendaTitle(titleInformation: AgendaItemTitleInformation): AgendaListTitle {
-        if (titleInformation.contentObject) {
-            return titleInformation.contentObject.getAgendaListTitle();
+        if (titleInformation.content_object) {
+            return titleInformation.content_object.getAgendaListTitle();
         } else {
+            /*const collection = collectionFromFqid(titleInformation.content_object_id);
             const repo = this.collectionMapperService.getRepository(
-                titleInformation.contentObjectData.collection
+                collection
             ) as BaseIsAgendaItemContentObjectRepository<any, any, any>;
-            return repo.getAgendaListTitle(titleInformation.title_information);
+            return repo.getAgendaListTitle(titleInformation.title_information);*/
+            // This has to be decided: do we stick to titleInformation or not?
         }
     }
 

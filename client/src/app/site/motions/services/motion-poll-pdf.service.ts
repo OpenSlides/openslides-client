@@ -56,7 +56,7 @@ export class MotionPollPdfService extends PollPdfService {
      * There will be 8 ballots per page.
      * Each ballot will contain:
      * - the event name and logo
-     * - a first, bold line with a title. Defaults to the label Motion, the identifier,
+     * - a first, bold line with a title. Defaults to the label Motion, the number,
      *   and the current number of polls for this motion (if more than one)
      * - a subtitle. A second, short (two lines, 90 characters) clarification for
      *   the ballot. Defaults to the beginning of the motion's title
@@ -68,11 +68,11 @@ export class MotionPollPdfService extends PollPdfService {
      */
     public printBallots(motionPoll: MotionPoll, title?: string, subtitle?: string): void {
         const motion = this.motionRepo.getViewModel(motionPoll.motion_id);
-        const fileName = `${this.translate.instant('Motion')} - ${motion.identifier} - ${this.translate.instant(
+        const fileName = `${this.translate.instant('Motion')} - ${motion.number} - ${this.translate.instant(
             'ballot-paper'
         )}`;
         if (!title) {
-            title = `${this.translate.instant('Motion')} - ${motion.identifier}`;
+            title = `${this.translate.instant('Motion')} - ${motion.number}`;
             if (motion.polls.length > 1) {
                 title += ` (${this.translate.instant('Vote')} ${motion.polls.length})`;
             }
@@ -95,7 +95,7 @@ export class MotionPollPdfService extends PollPdfService {
      * Creates one ballot in it's position on the page. Note that creating once
      * and then pasting the result several times does not work
      *
-     * @param title The identifier of the motion
+     * @param title The number of the motion
      * @param subtitle The actual motion title
      */
     protected createBallot(data: AbstractPollData): any {

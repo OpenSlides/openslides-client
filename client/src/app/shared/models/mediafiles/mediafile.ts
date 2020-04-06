@@ -1,25 +1,9 @@
+import { Id } from 'app/core/definitions/key-types';
 import { BaseModelWithListOfSpeakers } from '../base/base-model-with-list-of-speakers';
 
 interface PdfInformation {
     pages?: number;
     encrypted?: boolean;
-}
-
-export interface MediafileWithoutNestedModels extends BaseModelWithListOfSpeakers<Mediafile> {
-    id: number;
-    title: string;
-    media_url_prefix: string;
-    pdf_information: PdfInformation;
-    filesize?: string;
-    mimetype?: string;
-    access_groups_id: number[];
-    create_timestamp: string;
-    parent_id: number | null;
-    is_directory: boolean;
-    path: string;
-    inherited_access_groups_id: boolean | number[];
-
-    has_inherited_access_groups: boolean;
 }
 
 /**
@@ -28,14 +12,44 @@ export interface MediafileWithoutNestedModels extends BaseModelWithListOfSpeaker
  */
 export class Mediafile extends BaseModelWithListOfSpeakers<Mediafile> {
     public static COLLECTION = 'mediafile';
-    public id: number;
+    public static MEDIA_URL_PREFIX = '/media/';
+
+    public id: Id;
+    public title: string;
+    public is_directory: boolean;
+    public filesize?: string;
+    public filename: string;
+    public mimetype?: string;
+    public pdf_information: PdfInformation;
+    public create_timestamp: string;
+    public path: string;
+    public inherited_access_group_ids: boolean | number[];
+
+    public access_group_ids: Id[]; // (group/mediafile_access_group_ids)[];
+    public parent_id: Id; // mediafile/child_ids;
+    public child_ids: Id[]; // (mediafile/parent_id)[];
+    public list_of_speakers_id: Id; // list_of_speakers/content_object_id;
+    public projection_ids: Id[]; // (projection/element_id)[];
+    public current_projector_ids: Id[]; // (projector/current_element_ids)[]
+    public attachment_ids: Id[]; // (*/attachment_ids)[];
+    public meeting_id: Id; // meeting/mediafile_ids;
+    public used_as_logo_$_in_meeting: string[]; // meeting/logo_$<token>;
+    public used_as_font_$_in_meeting: string[]; // meeting/font_$<token>;
 
     public get has_inherited_access_groups(): boolean {
-        return typeof this.inherited_access_groups_id !== 'boolean';
+        return typeof this.inherited_access_group_ids !== 'boolean';
     }
 
     public constructor(input?: any) {
         super(Mediafile.COLLECTION, input);
+    }
+
+    public used_ad_logo_in_meeting(token: string): Id | null {
+        return this[`used_as_logo_${token}_in_meeting`] || null;
+    }
+
+    public used_ad_font_in_meeting(token: string): Id | null {
+        return this[`used_as_font_${token}_in_meeting`] || null;
     }
 
     /**
@@ -44,7 +58,6 @@ export class Mediafile extends BaseModelWithListOfSpeakers<Mediafile> {
      * @returns the download URL for the specific file as string
      */
     public get url(): string {
-        return `${this.media_url_prefix}${this.path}`;
+        return `${Mediafile.MEDIA_URL_PREFIX}${this.path}`;
     }
 }
-export interface Mediafile extends MediafileWithoutNestedModels {}

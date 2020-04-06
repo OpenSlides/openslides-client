@@ -1,6 +1,4 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 
 import { AuthService } from 'app/core/core-services/auth.service';
@@ -8,7 +6,6 @@ import { OperatorService } from 'app/core/core-services/operator.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { LoginDataService } from 'app/core/ui-services/login-data.service';
 import { OverlayService } from 'app/core/ui-services/overlay.service';
-import { DEFAULT_AUTH_TYPE } from 'app/shared/models/users/user';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewUser } from 'app/site/users/models/view-user';
 
@@ -23,8 +20,6 @@ export class UserMenuComponent extends BaseComponent implements OnInit {
     public user: ViewUser;
 
     public username = '';
-
-    public authType = DEFAULT_AUTH_TYPE;
 
     public samlChangePasswordUrl: string | null = null;
 
@@ -112,7 +107,8 @@ export class UserMenuComponent extends BaseComponent implements OnInit {
     }
 
     public toggleUserIsPresent(): void {
-        this.operator.setPresence(!this.user.is_present).catch(this.raiseError);
+        const present = this.user.isPresentInMeeting();
+        this.operator.setPresence(!present).catch(this.raiseError);
     }
 
     public onClickNavEntry(): void {
