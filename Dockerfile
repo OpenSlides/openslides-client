@@ -1,5 +1,5 @@
 # Stage 0, "build-stage", based on Node.js, to build and compile the frontend
-FROM node:10 as build-stage
+FROM node:13 as build-stage
 
 WORKDIR /app
 ARG REPOSITORY_URL=https://github.com/OpenSlides/openslides-client.git

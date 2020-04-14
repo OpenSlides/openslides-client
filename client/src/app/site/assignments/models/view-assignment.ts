@@ -1,23 +1,18 @@
 import { SearchRepresentation } from 'app/core/ui-services/search.service';
 import { Assignment } from 'app/shared/models/assignments/assignment';
-import { ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
-import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
-import { TitleInformationWithAgendaItem } from 'app/site/base/base-view-model-with-agenda-item';
-import { BaseViewModelWithAgendaItemAndListOfSpeakers } from 'app/site/base/base-view-model-with-agenda-item-and-list-of-speakers';
+import { HasAgendaItem, ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
+import { HasListOfSpeakers, ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
+import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { HasAttachment, ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { HasViewPolls } from 'app/site/polls/models/has-view-polls';
 import { ViewProjection } from 'app/site/projector/models/view-projection';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
-import { ViewTag } from 'app/site/tags/models/view-tag';
+import { HasTags, ViewTag } from 'app/site/tags/models/view-tag';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { ViewAssignmentCandidate } from './view-assignment-candidate';
 import { ViewAssignmentPoll } from './view-assignment-poll';
-
-export interface AssignmentTitleInformation extends TitleInformationWithAgendaItem {
-    title: string;
-}
 
 /**
  * A constant containing all possible assignment phases and their different
@@ -42,8 +37,7 @@ export const AssignmentPhases: { name: string; value: number; display_name: stri
     }
 ];
 
-export class ViewAssignment extends BaseViewModelWithAgendaItemAndListOfSpeakers<Assignment>
-    implements AssignmentTitleInformation, HasAttachment {
+export class ViewAssignment extends BaseProjectableViewModel<Assignment> {
     public static COLLECTION = Assignment.COLLECTION;
     protected _collection = Assignment.COLLECTION;
 
@@ -52,7 +46,7 @@ export class ViewAssignment extends BaseViewModelWithAgendaItemAndListOfSpeakers
     }
 
     public get candidatesAsUsers(): ViewUser[] {
-        return this.assignment_candidates.map(candidate => candidate.user).filter(x => !!x);
+        return this.candidates.map(candidate => candidate.user).filter(x => !!x);
     }
 
     public get phaseString(): string {
@@ -81,7 +75,7 @@ export class ViewAssignment extends BaseViewModelWithAgendaItemAndListOfSpeakers
      * @returns the amount of candidates in the assignment's candidate list
      */
     public get candidateAmount(): number {
-        return this.assignment_candidates.length;
+        return this.candidates.length;
     }
 
     public formatForSearch(): SearchRepresentation {
@@ -106,14 +100,14 @@ export class ViewAssignment extends BaseViewModelWithAgendaItemAndListOfSpeakers
     }
 }
 interface IAssignmentRelations extends HasViewPolls<ViewAssignmentPoll> {
-    assignment_candidates: ViewAssignmentCandidate[];
+    candidates: ViewAssignmentCandidate[];
     polls: ViewAssignmentPoll[];
-    agenda_item: ViewAgendaItem;
-    list_of_speakers: ViewListOfSpeakers;
-    tags: ViewTag[];
-    attachments: ViewMediafile[];
-    projections: ViewProjection[];
-    current_projectors: ViewProjector[];
     meeting: ViewMeeting;
 }
-export interface ViewAssignment extends Assignment, IAssignmentRelations {}
+export interface ViewAssignment
+    extends Assignment,
+        IAssignmentRelations,
+        HasAttachment,
+        HasTags,
+        HasAgendaItem,
+        HasListOfSpeakers {}

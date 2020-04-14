@@ -21,16 +21,7 @@ import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { ViewGroup } from './view-group';
 import { ViewPersonalNote } from './view-personal-note';
 
-export interface UserTitleInformation {
-    username: string;
-    title?: string;
-    first_name?: string;
-    last_name?: string;
-    structure_level?: string;
-    number?: string;
-}
-
-export class ViewUser extends BaseProjectableViewModel<User> implements UserTitleInformation, Searchable {
+export class ViewUser extends BaseProjectableViewModel<User> implements Searchable {
     public static COLLECTION = User.COLLECTION;
 
     public get user(): User {
@@ -169,8 +160,6 @@ interface IUserRelations {
     guest_meetings: ViewMeeting[];
     committees_as_member: ViewCommittee[];
     committees_as_manager: ViewCommittee[];
-    projections: ViewProjection[];
-    current_projectors: ViewProjector[];
     groups: UserStructuredRelation<ViewGroup>;
     speakers: UserStructuredRelation<ViewSpeaker>;
     personal_notes: UserStructuredRelation<ViewPersonalNote>;

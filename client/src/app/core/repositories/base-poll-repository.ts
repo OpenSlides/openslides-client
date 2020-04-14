@@ -4,14 +4,12 @@ import { RepositoryServiceCollector } from 'app/core/repositories/repository-ser
 import { VotingService } from 'app/core/ui-services/voting.service';
 import { ModelConstructor } from 'app/shared/models/base/base-model';
 import { BasePoll, PollState } from 'app/shared/models/poll/base-poll';
-import { TitleInformation } from 'app/site/base/base-view-model';
 import { BaseViewPoll } from '../../site/polls/models/base-view-poll';
 
-export abstract class BasePollRepository<
-    V extends BaseViewPoll & T = any,
-    M extends BasePoll = any,
-    T extends TitleInformation = any
-> extends BaseRepository<V, M, T> {
+export abstract class BasePollRepository<V extends BaseViewPoll = any, M extends BasePoll = any> extends BaseRepository<
+    V,
+    M
+> {
     // just passing everything to superclass
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,

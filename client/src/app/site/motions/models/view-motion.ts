@@ -5,17 +5,16 @@ import { DiffLinesInParagraph } from 'app/core/ui-services/diff.service';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { SearchProperty, SearchRepresentation } from 'app/core/ui-services/search.service';
 import { Motion } from 'app/shared/models/motions/motion';
-import { ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
-import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
-import { TitleInformationWithAgendaItem } from 'app/site/base/base-view-model-with-agenda-item';
-import { BaseViewModelWithAgendaItemAndListOfSpeakers } from 'app/site/base/base-view-model-with-agenda-item-and-list-of-speakers';
+import { HasAgendaItem, ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
+import { HasListOfSpeakers, ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
+import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { Searchable } from 'app/site/base/searchable';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { HasAttachment, ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { ViewProjection } from 'app/site/projector/models/view-projection';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
-import { ViewTag } from 'app/site/tags/models/view-tag';
+import { HasTags, ViewTag } from 'app/site/tags/models/view-tag';
 import { HasPersonalNote, ViewPersonalNote } from 'app/site/users/models/view-personal-note';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { AmendmentType } from '../motions.constants';
@@ -30,11 +29,6 @@ import { ViewMotionStatuteParagraph } from './view-motion-statute-paragraph';
 import { ViewMotionSubmitter } from './view-motion-submitter';
 import { ViewMotionWorkflow } from './view-motion-workflow';
 
-export interface MotionTitleInformation extends TitleInformationWithAgendaItem {
-    title: string;
-    number?: string;
-}
-
 /**
  * Motion class for the View
  *
@@ -42,8 +36,7 @@ export interface MotionTitleInformation extends TitleInformationWithAgendaItem {
  * Provides "safe" access to variables and functions in {@link Motion}
  * @ignore
  */
-export class ViewMotion extends BaseViewModelWithAgendaItemAndListOfSpeakers<Motion>
-    implements MotionTitleInformation, Searchable, HasAttachment, HasPersonalNote {
+export class ViewMotion extends BaseProjectableViewModel<Motion> {
     public static COLLECTION = Motion.COLLECTION;
     protected _collection = Motion.COLLECTION;
 
@@ -64,11 +57,11 @@ export class ViewMotion extends BaseViewModelWithAgendaItemAndListOfSpeakers<Mot
     }
 
     public get agenda_type(): number | null {
-        return this.item ? this.item.type : null;
+        return this.agenda_item ? this.agenda_item.type : null;
     }
 
     public get speakerAmount(): number | null {
-        return this.listOfSpeakers ? this.listOfSpeakers.waitingSpeakerAmount : null;
+        return this.list_of_speakers ? this.list_of_speakers.waitingSpeakerAmount : null;
     }
 
     /**
@@ -245,8 +238,8 @@ export class ViewMotion extends BaseViewModelWithAgendaItemAndListOfSpeakers<Mot
             value: null,
             blockProperties: []
         };
-        if (this.motion_block) {
-            metaData.blockProperties.push({ key: 'Motion block', value: this.motion_block.getTitle() });
+        if (this.block) {
+            metaData.blockProperties.push({ key: 'Motion block', value: this.block.getTitle() });
         }
         if (this.category) {
             metaData.blockProperties.push({ key: 'Category', value: this.category.getTitle() });
@@ -343,7 +336,7 @@ export class ViewMotion extends BaseViewModelWithAgendaItemAndListOfSpeakers<Mot
 
 interface IMotionRelations {
     lead_motion?: ViewMotion;
-    amendments: ViewMotion[]; // children
+    amendments: ViewMotion[]; // children to lead_motion
     sort_parent?: ViewMotion;
     sort_children: ViewMotion[];
     origin?: ViewMotion;
@@ -352,21 +345,22 @@ interface IMotionRelations {
     workflow?: ViewMotionWorkflow;
     recommendation?: ViewMotionState;
     category?: ViewMotionCategory;
-    motion_block?: ViewMotionBlock;
+    block?: ViewMotionBlock;
     submitters: ViewMotionSubmitter[];
     supporters: ViewUser[];
     polls: ViewMotionPoll[];
     change_recommendations: ViewMotionChangeRecommendation[];
     statute_paragraph?: ViewMotionStatuteParagraph;
     comments: ViewMotionComment[];
-    agenda_item: ViewAgendaItem;
-    list_of_speakers: ViewListOfSpeakers;
-    tags: ViewTag[];
-    attachments: ViewMediafile[];
-    projections: ViewProjection[];
-    current_projectors: ViewProjector[];
-    personal_notes: ViewPersonalNote[];
     meeting: ViewMeeting;
 }
 
-export interface ViewMotion extends Motion, IMotionRelations {}
+export interface ViewMotion
+    extends Motion,
+        IMotionRelations,
+        Searchable,
+        HasAttachment,
+        HasPersonalNote,
+        HasTags,
+        HasAgendaItem,
+        HasListOfSpeakers {}

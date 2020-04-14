@@ -1,5 +1,6 @@
 import { Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
+import { HasProjectableIds } from '../base/has-projectable-ids';
 
 /**
  * Representation of a countdown
@@ -15,11 +16,10 @@ export class ProjectorCountdown extends BaseModel<ProjectorCountdown> {
     public countdown_time: number;
     public running: boolean;
 
-    public projection_ids: Id[]; // (projection/element_id)[];
-    public current_projector_ids: Id; // (projector/current_element_ids)[]
     public meeting_id: Id; // meeting/projector_countdown_ids;
 
     public constructor(input?: any) {
         super(ProjectorCountdown.COLLECTION, input);
     }
 }
+export interface ProjectorCountdown extends HasProjectableIds {}

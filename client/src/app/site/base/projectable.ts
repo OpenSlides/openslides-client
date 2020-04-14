@@ -1,7 +1,10 @@
 import { ProjectorTitle } from 'app/core/core-services/projector.service';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { HasProjectableIds } from 'app/shared/models/base/has-projectable-ids';
 import { Displayable } from 'app/site/base/displayable';
 import { SlideOptions } from './slide-options';
+import { ViewProjection } from '../projector/models/view-projection';
+import { ViewProjector } from '../projector/models/view-projector';
 
 export function isProjectorElementBuildDeskriptor(obj: any): obj is ProjectorElementBuildDeskriptor {
     const deskriptor = <ProjectorElementBuildDeskriptor>obj;
@@ -32,7 +35,10 @@ export function isProjectable(obj: any): obj is Projectable {
 /**
  * Interface for every model, that should be projectable.
  */
-export interface Projectable extends Displayable {
+export interface Projectable extends Displayable, HasProjectableIds {
+    projections: ViewProjection[];
+    current_projectors: ViewProjector[];
+
     getProjectorTitle: () => ProjectorTitle;
 
     getSlide(configSerice?: OrganisationSettingsService): ProjectorElementBuildDeskriptor;

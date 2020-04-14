@@ -1,14 +1,17 @@
 import { TranslateService } from '@ngx-translate/core';
 
-import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
-import { MotionTitleInformation } from 'app/site/motions/models/view-motion';
 import { BaseSlideComponent } from 'app/slides/base-slide-component';
+
+export interface ReferencedMotionTitleInformation {
+    title: string;
+    number?: string;
+}
 
 /**
  * Format for referenced motions: A mapping of motion ids to their title information.
  */
 export interface ReferencedMotions {
-    [id: number]: MotionTitleInformation;
+    [id: number]: ReferencedMotionTitleInformation;
 }
 
 /**
@@ -16,7 +19,7 @@ export interface ReferencedMotions {
  * replacing referenced motions (format: `[motion:<id>]`) in strings.
  */
 export class BaseMotionSlideComponent<T extends object> extends BaseSlideComponent<T> {
-    public constructor(protected translate: TranslateService, protected motionRepo: MotionRepositoryService) {
+    public constructor(protected translate: TranslateService) {
         super();
     }
 
@@ -30,12 +33,20 @@ export class BaseMotionSlideComponent<T extends object> extends BaseSlideCompone
      */
     public replaceReferencedMotions(text: string, referencedMotions: ReferencedMotions): string {
         return text.replace(/\[motion:(\d+)\]/g, (match, id) => {
-            const titleInformation = referencedMotions[id];
-            if (titleInformation) {
-                return this.motionRepo.getNumberOrTitle(titleInformation);
+            const referencedMotion = referencedMotions[id];
+            if (referencedMotion) {
+                return this.getNumberOrTitle(referencedMotion);
             } else {
                 return this.translate.instant('<unknown motion>');
             }
         });
+    }
+
+    protected getNumberOrTitle(titleInformation: ReferencedMotionTitleInformation): string {
+        if (titleInformation.number) {
+            return titleInformation.number;
+        } else {
+            return titleInformation.title;
+        }
     }
 }

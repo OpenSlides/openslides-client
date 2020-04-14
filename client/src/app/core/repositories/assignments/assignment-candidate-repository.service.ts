@@ -13,16 +13,12 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class AssignmentCandidateRepositoryService extends BaseRepository<
-    ViewAssignmentCandidate,
-    AssignmentCandidate,
-    {}
-> {
+export class AssignmentCandidateRepositoryService extends BaseRepository<ViewAssignmentCandidate, AssignmentCandidate> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, AssignmentCandidate);
     }
 
-    public getTitle = (titleInformation: {}) => {
+    public getTitle = (viewAssignmentCandidate: ViewAssignmentCandidate) => {
         return 'Candidate';
     };
 

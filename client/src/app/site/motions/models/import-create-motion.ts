@@ -47,13 +47,13 @@ export class ImportCreateMotion extends CreateMotion {
         if (!this.csvMotionblock) {
             return 0;
         } else if (this.csvMotionblock.id) {
-            this.motion_block_id = this.csvMotionblock.id;
+            this.block_id = this.csvMotionblock.id;
             return 0;
         } else {
             const newBlock = motionBlocks.find(newMotionBlock => newMotionBlock.name === this.csvMotionblock.name);
             if (newBlock) {
                 this.csvMotionblock = newBlock;
-                this.motion_block_id = newBlock.id;
+                this.block_id = newBlock.id;
                 return 0;
             } else {
                 return 1;

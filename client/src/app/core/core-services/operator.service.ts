@@ -6,11 +6,16 @@ import { auditTime, take } from 'rxjs/operators';
 
 import { ActiveMeetingService } from './active-meeting.service';
 import { Group } from 'app/shared/models/users/group';
+import { ViewUser } from 'app/site/users/models/view-user';
 import { AutoupdateService, ModelRequest, ModelSubscription } from './autoupdate.service';
+import { CollectionMapperService } from './collection-mapper.service';
 import { DataStoreService } from './data-store.service';
 import { HttpService } from './http.service';
+import { SimplifiedModelRequest, SpecificStructuredField } from './model-request-builder.service';
 import { OfflineService } from './offline.service';
+import { OnAfterAppsLoaded } from '../definitions/on-after-apps-loaded';
 import { User } from '../../shared/models/users/user';
+import { ShortNameInformation, UserRepositoryService } from '../repositories/users/user-repository.service';
 
 /**
  * Permissions on the client are just strings. This makes clear, that
@@ -58,7 +63,8 @@ export interface WhoAmI {
     user_id: number | null;
     guest_enabled: boolean;
     group_ids: number[] | null; // Null meaning, that no active meeting is selected, so groups are not relevant.
-    short_name: string;
+    short_name_information: ShortNameInformation;
+    short_name?: string;
     // auth_type: UserAuthType;
     permissions: Permission[];
 }
@@ -72,7 +78,7 @@ function isWhoAmI(obj: any): obj is WhoAmI {
         whoAmI.guest_enabled !== undefined &&
         whoAmI.group_ids !== undefined &&
         whoAmI.user_id !== undefined &&
-        whoAmI.short_name !== undefined &&
+        whoAmI.short_name_information !== undefined &&
         whoAmI.permissions !== undefined
         // whoAmI.auth_type !== undefined
     );
@@ -87,7 +93,7 @@ function isWhoAmI(obj: any): obj is WhoAmI {
 @Injectable({
     providedIn: 'root'
 })
-export class OperatorService {
+export class OperatorService implements OnAfterAppsLoaded {
     private whoAmIData: WhoAmI = this.getDefaultWhoAmIData();
 
     public get operatorId(): number | null {
@@ -129,6 +135,8 @@ export class OperatorService {
 
     // public readonly authType: BehaviorSubject<UserAuthType> = new BehaviorSubject(DEFAULT_AUTH_TYPE);
 
+    private userRepository: UserRepositoryService | null;
+
     private _loaded: Promise<void>;
     public get loaded(): Promise<void> {
         return this._loaded;
@@ -144,7 +152,8 @@ export class OperatorService {
         private DS: DataStoreService,
         private offlineService: OfflineService,
         private autoupdateService: AutoupdateService,
-        private activeMeetingService: ActiveMeetingService
+        private activeMeetingService: ActiveMeetingService,
+        private collectionMapper: CollectionMapperService
     ) {
         this._loaded = this.operatorUpdatedEvent.pipe(take(1)).toPromise();
 
@@ -158,7 +167,9 @@ export class OperatorService {
 
         this.DS.getChangeObservable(User).subscribe(user => {
             if (user !== undefined && this.whoAmIData && this.whoAmIData.user_id === user.id) {
-                this.whoAmIData.short_name = ''; // TODO: calc short name.
+                if (this.userRepository) {
+                    this.whoAmIData.short_name = this.userRepository.getShortName(user);
+                }
                 this.whoAmIData.permissions = this.calcPermissions();
 
                 if (this.activeMeetingId) {
@@ -184,6 +195,10 @@ export class OperatorService {
                     }
                 }
             });
+    }
+
+    public onAfterAppsLoaded(): void {
+        this.userRepository = this.collectionMapper.getRepository(User.COLLECTION) as UserRepositoryService;
     }
 
     private updateGroupIds(): void {
@@ -215,7 +230,7 @@ export class OperatorService {
                 user_id: 1,
                 guest_enabled: true,
                 group_ids: [2],
-                short_name: 'username',
+                short_name_information: { username: 'TODO' },
                 auth_type: 'default',
                 permissions: []
             };
@@ -226,6 +241,7 @@ export class OperatorService {
                 this.offlineService.goOfflineBecauseFailedWhoAmI();
             }
         } catch (e) {
+            throw e;
             this.offlineService.goOfflineBecauseFailedWhoAmI();
         }
     }
@@ -239,6 +255,10 @@ export class OperatorService {
             whoami = this.getDefaultWhoAmIData();
         }
         this.whoAmIData = whoami;
+
+        if (this.userRepository) {
+            this.whoAmIData.short_name = this.userRepository.getShortName(this.whoAmIData.short_name_information);
+        }
 
         if (this.currentDefaultGroupSubscription) {
             this.currentDefaultGroupSubscription.close();
@@ -260,7 +280,9 @@ export class OperatorService {
             user_id: null,
             guest_enabled: false,
             group_ids: null,
-            short_name: '',
+            short_name_information: {
+                username: 'TODO'
+            },
             // auth_type: DEFAULT_AUTH_TYPE,
             permissions: []
         };
@@ -272,21 +294,19 @@ export class OperatorService {
             this.currentUserSubscription = null;
         }
 
-        const userReqeust: ModelRequest = {
+        const simpleUserRequest: SimplifiedModelRequest = {
             ids: [this.whoAmIData.user_id],
-            collection: User.COLLECTION,
-            fields: {
-                group_ids: {
-                    type: 'relation-list',
-                    collection: Group.COLLECTION,
-                    fields: {
-                        permissions: null
-                    }
+            viewModelCtor: ViewUser,
+            fieldset: 'shortName',
+            follow: [
+                {
+                    idField: SpecificStructuredField('group_$_ids', '1'), // TODO: active meeting id
+                    follow: [],
+                    fieldset: ['permissions']
                 }
-                // TODO: Fields for short name.
-            }
+            ]
         };
-        this.currentUserSubscription = this.autoupdateService.request(userReqeust);
+        this.currentUserSubscription = await this.autoupdateService.simpleRequest(simpleUserRequest);
 
         this.operatorShortNameSubject.next(this.whoAmIData.short_name);
         this.operatorUpdatedEvent.next();

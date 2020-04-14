@@ -19,13 +19,13 @@ export interface Relation {
     ownIdFieldSuffix?: string; // given, if structured=true
 }
 
-export function makeO2O(args: {
-    AViewModel: _ViewModelConstructor;
-    BViewModel: _ViewModelConstructor;
-    AField: string;
-    BField: string;
-    AIdField?: string;
-    BIdField?: string;
+export function makeO2O<A extends BaseViewModel, B extends BaseViewModel>(args: {
+    AViewModel: ViewModelConstructor<A>;
+    BViewModel: ViewModelConstructor<B>;
+    AField: keyof A & string;
+    BField: keyof B & string;
+    AIdField?: keyof A & string;
+    BIdField?: keyof B & string;
 }): Relation[] {
     return [
         // A -> B
@@ -51,14 +51,14 @@ export function makeO2O(args: {
     ];
 }
 
-export function makeM2O(args: {
-    OViewModel: _ViewModelConstructor;
-    MViewModel: _ViewModelConstructor;
-    OField: string;
-    MField: string;
-    OIdField?: string;
-    MIdField?: string;
-    order?: string;
+export function makeM2O<O extends BaseViewModel, M extends BaseViewModel>(args: {
+    OViewModel: ViewModelConstructor<O>;
+    MViewModel: ViewModelConstructor<M>;
+    OField: keyof O & string;
+    MField: keyof M & string;
+    OIdField?: keyof O & string;
+    MIdField?: keyof M & string;
+    order?: keyof M & string;
 }): Relation[] {
     return [
         // M -> O
@@ -85,15 +85,15 @@ export function makeM2O(args: {
     ];
 }
 
-export function makeM2M(args: {
-    AViewModel: _ViewModelConstructor;
-    BViewModel: _ViewModelConstructor;
-    AField: string;
-    BField: string;
-    AIdField?: string;
-    BIdField?: string;
-    AOrder?: string;
-    BOrder?: string;
+export function makeM2M<A extends BaseViewModel, B extends BaseViewModel>(args: {
+    AViewModel: ViewModelConstructor<A>;
+    BViewModel: ViewModelConstructor<B>;
+    AField: keyof A & string;
+    BField: keyof B & string;
+    AIdField?: keyof A & string;
+    BIdField?: keyof B & string;
+    AOrder?: keyof A & string;
+    BOrder?: keyof B & string;
 }): Relation[] {
     return [
         // A -> B
@@ -121,13 +121,13 @@ export function makeM2M(args: {
     ];
 }
 
-export function makeGenericO2O(args: {
-    viewModel: _ViewModelConstructor;
-    possibleViewModels: _ViewModelConstructor[];
-    viewModelField: string;
-    possibleViewModelsField: string;
-    viewModelIdField?: string;
-    possibleViewModelsIdField?: string;
+export function makeGenericO2O<V extends BaseViewModel, I>(args: {
+    viewModel: ViewModelConstructor<V>;
+    possibleViewModels: ViewModelConstructor<BaseViewModel & I>[];
+    viewModelField: keyof V & string;
+    possibleViewModelsField: keyof I & string;
+    viewModelIdField?: keyof V & string;
+    possibleViewModelsIdField?: keyof I & string;
 }): Relation[] {
     return [
         // viewModel -> possible view models
@@ -153,15 +153,15 @@ export function makeGenericO2O(args: {
     ];
 }
 
-export function makeGenericM2M(args: {
-    viewModel: _ViewModelConstructor;
-    possibleViewModels: _ViewModelConstructor[];
-    viewModelField: string;
-    possibleViewModelsField: string;
-    viewModelIdField?: string;
-    possibleViewModelsIdField?: string;
-    viewModelorder?: string;
-    possibleViewModelsOrder?: string;
+export function makeGenericM2M<V extends BaseViewModel, I>(args: {
+    viewModel: ViewModelConstructor<V>;
+    possibleViewModels: ViewModelConstructor<BaseViewModel & I>[];
+    viewModelField: keyof V & string;
+    possibleViewModelsField: keyof I & string;
+    viewModelIdField?: keyof V & string;
+    possibleViewModelsIdField?: keyof I & string;
+    viewModelOrder?: keyof V & string;
+    possibleViewModelsOrder?: keyof I & string;
 }): Relation[] {
     return [
         // viewModel -> possible view models
@@ -184,79 +184,7 @@ export function makeGenericM2M(args: {
             many: true,
             generic: false,
             structured: false,
-            order: args.viewModelorder
-        }
-    ];
-}
-
-export function makeStructuredO2O(args: {
-    structuredViewModel: _ViewModelConstructor;
-    otherViewModel: _ViewModelConstructor;
-    structuredField: string;
-    structuredIdField: string;
-    structuredIdFieldDefaultAttribute?: 'active-meeting';
-    otherViewModelField: string;
-    otherViewModelIdField: string;
-}): Relation[] {
-    return [
-        // structured -> other
-        {
-            ownViewModels: [args.structuredViewModel],
-            foreignViewModel: args.otherViewModel,
-            ownField: args.structuredField,
-            ownIdField: args.structuredIdField,
-            many: false,
-            generic: false,
-            structured: true,
-            ownIdFieldDefaultAttribute: args.structuredIdFieldDefaultAttribute
-        },
-        // possible view models -> viewModel
-        {
-            ownViewModels: [args.otherViewModel],
-            foreignViewModel: args.structuredViewModel,
-            ownField: args.otherViewModelField,
-            ownIdField: args.otherViewModelIdField,
-            many: false,
-            generic: false,
-            structured: false
-        }
-    ];
-}
-
-export function makeStructuredM2M(args: {
-    structuredViewModel: _ViewModelConstructor;
-    otherViewModel: _ViewModelConstructor;
-    structuredField: string;
-    structuredIdField: string;
-    otherViewModelField: string;
-    otherViewModelIdField?: string;
-    structuredIdFieldDefaultAttribute?: 'active-meeting';
-    structuredOrder?: string;
-    otherViewModelOrder?: string;
-}): Relation[] {
-    return [
-        // structured -> other
-        {
-            ownViewModels: [args.structuredViewModel],
-            foreignViewModel: args.otherViewModel,
-            ownField: args.structuredField,
-            ownIdField: args.structuredIdField,
-            many: true,
-            generic: false,
-            structured: true,
-            ownIdFieldDefaultAttribute: args.structuredIdFieldDefaultAttribute,
-            order: args.otherViewModelOrder
-        },
-        // possible view models -> viewModel
-        {
-            ownViewModels: [args.otherViewModel],
-            foreignViewModel: args.structuredViewModel,
-            ownField: args.otherViewModelField,
-            ownIdField: args.otherViewModelIdField,
-            many: true,
-            generic: false,
-            structured: false,
-            order: args.structuredOrder
+            order: args.viewModelOrder
         }
     ];
 }

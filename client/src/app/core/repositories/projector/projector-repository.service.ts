@@ -4,9 +4,8 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { HttpService } from 'app/core/core-services/http.service';
-import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Projector } from 'app/shared/models/projector/projector';
-import { ProjectorTitleInformation, ViewProjector } from 'app/site/projector/models/view-projector';
+import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
@@ -25,7 +24,7 @@ export enum ScrollScaleDirection {
 @Injectable({
     providedIn: 'root'
 })
-export class ProjectorRepositoryService extends BaseRepository<ViewProjector, Projector, ProjectorTitleInformation> {
+export class ProjectorRepositoryService extends BaseRepository<ViewProjector, Projector> {
     /**
      * Constructor calls the parent constructor
      *
@@ -38,8 +37,8 @@ export class ProjectorRepositoryService extends BaseRepository<ViewProjector, Pr
         super(repositoryServiceCollector, Projector);
     }
 
-    public getTitle = (titleInformation: ProjectorTitleInformation) => {
-        return titleInformation.name;
+    public getTitle = (viewProjector: ViewProjector) => {
+        return viewProjector.name;
     };
 
     public getVerboseName = (plural: boolean = false) => {

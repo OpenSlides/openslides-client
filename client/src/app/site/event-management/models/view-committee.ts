@@ -4,11 +4,7 @@ import { ViewUser } from 'app/site/users/models/view-user';
 import { ViewMeeting } from './view-meeting';
 import { ViewOrganisation } from './view-organisation';
 
-export interface CommitteeTitleInformation {
-    name: string;
-}
-
-export class ViewCommittee extends BaseViewModel<Committee> implements CommitteeTitleInformation {
+export class ViewCommittee extends BaseViewModel<Committee> {
     public static COLLECTION = Committee.COLLECTION;
     protected _collection = Committee.COLLECTION;
 
@@ -18,7 +14,7 @@ export class ViewCommittee extends BaseViewModel<Committee> implements Committee
 }
 interface ICommitteeRelations {
     meetings: ViewMeeting[];
-    default_meting: ViewMeeting;
+    default_meeting: ViewMeeting;
     members: ViewUser[];
     managers: ViewUser[];
     forward_to_committees: ViewCommittee[];

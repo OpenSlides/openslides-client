@@ -5,7 +5,7 @@ import { BasePollRepository } from 'app/core/repositories/base-poll-repository';
 import { VotingService } from 'app/core/ui-services/voting.service';
 import { MotionPoll } from 'app/shared/models/motions/motion-poll';
 import { VoteValue } from 'app/shared/models/poll/base-vote';
-import { MotionPollTitleInformation, ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
+import { ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 /**
@@ -16,11 +16,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class MotionPollRepositoryService extends BasePollRepository<
-    ViewMotionPoll,
-    MotionPoll,
-    MotionPollTitleInformation
-> {
+export class MotionPollRepositoryService extends BasePollRepository<ViewMotionPoll, MotionPoll> {
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
         votingService: VotingService,
@@ -29,8 +25,8 @@ export class MotionPollRepositoryService extends BasePollRepository<
         super(repositoryServiceCollector, MotionPoll, votingService, http);
     }
 
-    public getTitle = (titleInformation: MotionPollTitleInformation) => {
-        return titleInformation.title;
+    public getTitle = (viewMotionPoll: ViewMotionPoll) => {
+        return viewMotionPoll.title;
     };
 
     public getVerboseName = (plural: boolean = false) => {

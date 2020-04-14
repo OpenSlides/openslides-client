@@ -19,7 +19,7 @@ import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { Selectable } from 'app/shared/components/selectable';
 import { SortingListComponent } from 'app/shared/components/sorting-list/sorting-list.component';
 import { SpeakerState } from 'app/shared/models/agenda/speaker';
-import { BaseComponent } from 'app/site/base/components/base.component';
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { CurrentListOfSpeakersSlideService } from 'app/site/projector/services/current-list-of-speakers-slide.service';
@@ -37,7 +37,7 @@ import { ViewSpeaker } from '../../models/view-speaker';
     styleUrls: ['./list-of-speakers.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListOfSpeakersComponent extends BaseComponent implements OnInit {
+export class ListOfSpeakersComponent extends BaseModelContextComponent implements OnInit {
     @ViewChild(SortingListComponent)
     public listElement: SortingListComponent;
 
@@ -121,7 +121,9 @@ export class ListOfSpeakersComponent extends BaseComponent implements OnInit {
      * @returns true if the current user can be added to the list of speakers
      */
     public get canAddSelf(): boolean {
-        throw new Error('This is not as easy anymore...');
+        // throw new Error('This is not as easy anymore...');
+        console.warn('TODO: canAddSelf');
+        return true;
         // return !this.config.instant('agenda_present_speakers_only') || this.operator.user.is_present;
     }
 
@@ -279,6 +281,26 @@ export class ListOfSpeakersComponent extends BaseComponent implements OnInit {
             this.closSubscription.unsubscribe();
         }
 
+        this.requestModels({
+            viewModelCtor: ViewListOfSpeakers,
+            ids: [id],
+            follow: [
+                {
+                    idField: 'speaker_ids',
+                    follow: [
+                        {
+                            idField: 'user_id',
+                            fieldset: 'shortName'
+                        }
+                    ]
+                },
+                {
+                    idField: 'content_object_id',
+                    fieldset: ['title'] // TODO: What are required fields for generic relations?
+                }
+            ]
+        });
+
         this.closSubscription = this.listOfSpeakersRepo.getViewModelObservable(id).subscribe(listOfSpeakers => {
             if (listOfSpeakers) {
                 this.setListOfSpeakers(listOfSpeakers);
@@ -314,9 +336,11 @@ export class ListOfSpeakersComponent extends BaseComponent implements OnInit {
      * E.g. if a motion is the current content object, "Motion" will be the returned value.
      */
     public getContentObjectProjectorButtonText(): string {
-        const collection = collectionFromFqid(this.viewListOfSpeakers.content_object_id);
-        const verboseName = this.collectionMapper.getRepository(collection).getVerboseName();
-        return verboseName;
+        if (this.viewListOfSpeakers.content_object_id) {
+            const collection = collectionFromFqid(this.viewListOfSpeakers.content_object_id);
+            const verboseName = this.collectionMapper.getRepository(collection).getVerboseName();
+            return verboseName;
+        }
     }
 
     /**

@@ -7,8 +7,7 @@ import { Projectable, ProjectorElementBuildDeskriptor } from './projectable';
 /**
  * Base view class for projectable models.
  */
-export abstract class BaseProjectableViewModel<M extends BaseModel = any> extends BaseViewModel<M>
-    implements Projectable {
+export abstract class BaseProjectableViewModel<M extends BaseModel = any> extends BaseViewModel<M> {
     public abstract getSlide(
         organisationSettingsService?: OrganisationSettingsService
     ): ProjectorElementBuildDeskriptor;
@@ -20,3 +19,4 @@ export abstract class BaseProjectableViewModel<M extends BaseModel = any> extend
         return { title: this.getTitle() };
     }
 }
+export interface BaseProjectableViewModel<M extends BaseModel = any> extends Projectable {}

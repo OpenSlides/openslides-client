@@ -8,10 +8,9 @@ import { MotionRepositoryService } from 'app/core/repositories/motions/motion-re
 import { DiffLinesInParagraph, DiffService, LineRange } from 'app/core/ui-services/diff.service';
 import { LineNumberedString, LinenumberingService } from 'app/core/ui-services/linenumbering.service';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from 'app/shared/models/motions/view-unified-change';
-import { MotionTitleInformation } from 'app/site/motions/models/view-motion';
 import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.constants';
 import { IBaseScaleScrollSlideComponent } from 'app/slides/base-scale-scroll-slide-component';
-import { BaseMotionSlideComponent } from '../base/base-motion-slide';
+import { BaseMotionSlideComponent, ReferencedMotionTitleInformation } from '../base/base-motion-slide';
 import { MotionSlideData, MotionSlideDataAmendment } from './motion-slide-data';
 import { MotionSlideObjAmendmentParagraph } from './motion-slide-obj-amendment-paragraph';
 import { MotionSlideObjChangeReco } from './motion-slide-obj-change-reco';
@@ -133,16 +132,11 @@ export class MotionSlideComponent extends BaseMotionSlideComponent<MotionSlideDa
 
     public constructor(
         translate: TranslateService,
-        motionRepo: MotionRepositoryService,
         private changeRepo: MotionChangeRecommendationRepositoryService,
         private lineNumbering: LinenumberingService,
         private diff: DiffService
     ) {
-        super(translate, motionRepo);
-    }
-
-    public getNumberOrTitle(titleInformation: MotionTitleInformation): string {
-        return this.motionRepo.getNumberOrTitle(titleInformation);
+        super(translate);
     }
 
     public getRecommendationLabel(): string {

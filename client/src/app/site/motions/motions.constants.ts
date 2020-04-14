@@ -24,7 +24,7 @@ export type InfoToExport =
     | 'state'
     | 'recommendation'
     | 'category'
-    | 'motion_block'
+    | 'block'
     | 'origin'
     | 'tags'
     | 'polls'
@@ -108,7 +108,8 @@ export const motionImportExportHeaderOrder: string[] = [
     'origin',
     'recommendation',
     'state',
-    'id'
+    'block',
+    'origin'
 ];
 
 /**

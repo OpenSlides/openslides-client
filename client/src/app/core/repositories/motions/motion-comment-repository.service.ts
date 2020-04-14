@@ -8,12 +8,12 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class MotionCommentRepositoryService extends BaseRepository<ViewMotionComment, MotionComment, {}> {
+export class MotionCommentRepositoryService extends BaseRepository<ViewMotionComment, MotionComment> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, MotionComment);
     }
 
-    public getTitle = (titleInformation: {}) => {
+    public getTitle = (viewMotionComment: ViewMotionComment) => {
         return 'Comment';
     };
 

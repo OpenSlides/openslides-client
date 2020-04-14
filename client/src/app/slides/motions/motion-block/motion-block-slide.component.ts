@@ -42,7 +42,7 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
     public set data(data: SlideData<MotionBlockSlideData>) {
         if (data && data.data.motions) {
             data.data.motions = data.data.motions.sort((a, b) =>
-                this.languageCollator.compare(this.motionRepo.getNumberOrTitle(a), this.motionRepo.getNumberOrTitle(b))
+                this.languageCollator.compare(this.getNumberOrTitle(a), this.getNumberOrTitle(b))
             );
 
             // Populate the motion with the recommendation_label
@@ -133,8 +133,8 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
         return this.makeIndicesArray(this.columns);
     }
 
-    public constructor(translate: TranslateService, motionRepo: MotionRepositoryService) {
-        super(translate, motionRepo);
+    public constructor(translate: TranslateService) {
+        super(translate);
         this.languageCollator = new Intl.Collator(this.translate.currentLang);
     }
 
@@ -166,9 +166,14 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
      */
     public getMotionTitle(i: number, j: number): string {
         if (this.shortDisplayStyle) {
-            return this.motionRepo.getNumberOrTitle(this.getMotion(i, j));
+            return this.getNumberOrTitle(this.getMotion(i, j));
         } else {
-            return this.motionRepo.getTitle(this.getMotion(i, j));
+            const motion = this.getMotion(i, j);
+            if (motion.number) {
+                return `${motion.number}: ${motion.title}`;
+            } else {
+                return motion.title;
+            }
         }
     }
 
@@ -176,7 +181,7 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
      * @returns the umber (of title if number not availabe) of the given motion.
      */
     public getMotionNumber(i: number, j: number): string {
-        return this.motionRepo.getNumberOrTitle(this.getMotion(i, j));
+        return this.getNumberOrTitle(this.getMotion(i, j));
     }
 
     /**

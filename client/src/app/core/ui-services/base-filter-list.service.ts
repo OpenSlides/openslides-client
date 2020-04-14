@@ -2,7 +2,7 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 import { BaseModel } from 'app/shared/models/base/base-model';
 import { BaseRepository } from '../repositories/base-repository';
-import { BaseViewModel, TitleInformation } from '../../site/base/base-view-model';
+import { BaseViewModel } from '../../site/base/base-view-model';
 import { OpenSlidesStatusService } from '../core-services/openslides-status.service';
 import { StorageService } from '../core-services/storage.service';
 
@@ -284,7 +284,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
      * @param filterFn custom filter function if required
      */
     protected updateFilterForRepo(
-        repo: BaseRepository<BaseViewModel, BaseModel, TitleInformation>,
+        repo: BaseRepository<BaseViewModel, BaseModel>,
         filter: OsFilter,
         noneOptionLabel?: string,
         filterFn?: (filter: BaseViewModel<any>) => boolean

@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { MotionStatuteParagraph } from 'app/shared/models/motions/motion-statute-paragraph';
-import {
-    StatuteParagraphTitleInformation,
-    ViewMotionStatuteParagraph
-} from 'app/site/motions/models/view-motion-statute-paragraph';
+import { ViewMotionStatuteParagraph } from 'app/site/motions/models/view-motion-statute-paragraph';
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
@@ -20,8 +17,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 })
 export class MotionStatuteParagraphRepositoryService extends BaseRepository<
     ViewMotionStatuteParagraph,
-    MotionStatuteParagraph,
-    StatuteParagraphTitleInformation
+    MotionStatuteParagraph
 > {
     /**
      * Creates a StatuteParagraphRepository
@@ -36,8 +32,8 @@ export class MotionStatuteParagraphRepositoryService extends BaseRepository<
         super(repositoryServiceCollector, MotionStatuteParagraph);
     }
 
-    public getTitle = (titleInformation: StatuteParagraphTitleInformation) => {
-        return titleInformation.title;
+    public getTitle = (viewMotionStatuteParagraph: ViewMotionStatuteParagraph) => {
+        return viewMotionStatuteParagraph.title;
     };
 
     public getVerboseName = (plural: boolean = false) => {
