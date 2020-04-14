@@ -5,10 +5,7 @@ import { map } from 'rxjs/operators';
 
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { MotionChangeRecommendation } from 'app/shared/models/motions/motion-change-reco';
-import {
-    MotionChangeRecommendationTitleInformation,
-    ViewMotionChangeRecommendation
-} from 'app/site/motions/models/view-motion-change-recommendation';
+import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
 import { ChangeRecoMode } from 'app/site/motions/motions.constants';
 import { BaseRepository } from '../base-repository';
 import { DiffService, LineRange, ModificationType } from '../../ui-services/diff.service';
@@ -31,8 +28,7 @@ import { ViewUnifiedChange } from '../../../shared/models/motions/view-unified-c
 })
 export class MotionChangeRecommendationRepositoryService extends BaseRepository<
     ViewMotionChangeRecommendation,
-    MotionChangeRecommendation,
-    MotionChangeRecommendationTitleInformation
+    MotionChangeRecommendation
 > {
     /**
      * Creates a MotionRepository
@@ -51,7 +47,7 @@ export class MotionChangeRecommendationRepositoryService extends BaseRepository<
         super(repositoryServiceCollector, MotionChangeRecommendation);
     }
 
-    public getTitle = (titleInformation: MotionChangeRecommendationTitleInformation) => {
+    public getTitle = (viewMotionChangeRecommendation: ViewMotionChangeRecommendation) => {
         return this.getVerboseName();
     };
 

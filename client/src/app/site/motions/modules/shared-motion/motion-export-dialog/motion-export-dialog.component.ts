@@ -66,7 +66,7 @@ export class MotionExportDialogComponent implements OnInit {
         format: ExportFileFormat.PDF,
         content: ['text', 'reason'],
         pdfOptions: ['toc', 'page', 'addBreaks'],
-        metaInfo: ['submitters', 'state', 'recommendation', 'category', 'origin', 'tags', 'motion_block', 'polls']
+        metaInfo: ['submitters', 'state', 'recommendation', 'category', 'origin', 'tags', 'block', 'polls']
     };
 
     /**
@@ -281,7 +281,7 @@ export class MotionExportDialogComponent implements OnInit {
             case 'id': {
                 return 'Sequential number';
             }
-            case 'motion_block': {
+            case 'block': {
                 return 'Motion block';
             }
             default: {

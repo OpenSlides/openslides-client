@@ -57,7 +57,7 @@ interface InfoDialog {
     /**
      * The motion block id
      */
-    motion_block_id: number;
+    block_id: number;
 
     /**
      * The category id
@@ -153,7 +153,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
      *
      * TODO: repo.getExtendedStateLabel(), repo.getExtendedRecommendationLabel()
      */
-    public filterProps = ['submitters', 'motion_block', 'title', 'number'];
+    public filterProps = ['submitters', 'block', 'title', 'number'];
 
     /**
      * List of `TileCategoryInformation`.
@@ -428,7 +428,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
         // The interface holding the current information from motion.
         this.infoDialog = {
             title: motion.title,
-            motion_block_id: motion.motion_block_id,
+            block_id: motion.block_id,
             category_id: motion.category_id,
             tag_ids: motion.tag_ids,
             state_id: motion.state_id,

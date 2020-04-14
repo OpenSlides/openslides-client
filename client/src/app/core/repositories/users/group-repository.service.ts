@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 
 import { HttpService } from 'app/core/core-services/http.service';
 import { Group } from 'app/shared/models/users/group';
-import { GroupTitleInformation, ViewGroup } from 'app/site/users/models/view-group';
+import { ViewGroup } from 'app/site/users/models/view-group';
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
@@ -38,7 +38,7 @@ export interface AppPermissions {
 @Injectable({
     providedIn: 'root'
 })
-export class GroupRepositoryService extends BaseRepository<ViewGroup, Group, GroupTitleInformation> {
+export class GroupRepositoryService extends BaseRepository<ViewGroup, Group> {
     /**
      * holds sorted permissions per app.
      */
@@ -56,8 +56,8 @@ export class GroupRepositoryService extends BaseRepository<ViewGroup, Group, Gro
         this.sortPermsPerApp();
     }
 
-    public getTitle = (titleInformation: GroupTitleInformation) => {
-        return titleInformation.name;
+    public getTitle = (viewGroup: ViewGroup) => {
+        return viewGroup.name;
     };
 
     public getVerboseName = (plural: boolean = false) => {

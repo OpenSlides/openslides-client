@@ -1,20 +1,20 @@
 import { Injectable } from '@angular/core';
 
 import { Resource } from 'app/shared/models/event-management/resource';
-import { ResourceTitleInformation, ViewResource } from 'app/site/event-management/models/view-resource';
+import { ViewResource } from 'app/site/event-management/models/view-resource';
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 @Injectable({
     providedIn: 'root'
 })
-export class ResourceRepositoryService extends BaseRepository<ViewResource, Resource, ResourceTitleInformation> {
+export class ResourceRepositoryService extends BaseRepository<ViewResource, Resource> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, Resource);
     }
 
-    public getTitle = (titleInformation: Resource) => {
-        return titleInformation.token;
+    public getTitle = (viewResource: ViewResource) => {
+        return viewResource.token;
     };
 
     public getVerboseName = (plural: boolean = false) => {

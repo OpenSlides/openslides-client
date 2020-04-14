@@ -7,7 +7,7 @@ import { MainMenuEntry } from '../core-services/main-menu.service';
 import { Searchable } from '../../site/base/searchable';
 
 interface BaseModelEntry {
-    repository: Type<BaseRepository<any, any, any>>;
+    repository: Type<BaseRepository<any, any>>;
     model: ModelConstructor<BaseModel>;
 }
 

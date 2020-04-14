@@ -8,7 +8,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class SpeakerRepositoryService extends BaseRepository<ViewSpeaker, Speaker, {}> {
+export class SpeakerRepositoryService extends BaseRepository<ViewSpeaker, Speaker> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, Speaker);
 
@@ -19,7 +19,7 @@ export class SpeakerRepositoryService extends BaseRepository<ViewSpeaker, Speake
         return this.translate.instant(plural ? 'Speakers' : 'Speaker');
     };
 
-    public getTitle = (titleInformation: Speaker) => {
+    public getTitle = (viewSpeaker: ViewSpeaker) => {
         return 'Speaker';
     };
 }

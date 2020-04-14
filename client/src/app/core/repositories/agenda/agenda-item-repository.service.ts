@@ -5,10 +5,15 @@ import { OrganisationSettingsService } from 'app/core/ui-services/organisation-s
 import { TreeIdNode } from 'app/core/ui-services/tree.service';
 import { AgendaItem } from 'app/shared/models/agenda/agenda-item';
 import { Identifiable } from 'app/shared/models/base/identifiable';
-import { AgendaItemTitleInformation, ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
-import { AgendaListTitle, BaseViewModelWithAgendaItem } from 'app/site/base/base-view-model-with-agenda-item';
+import { HasAgendaItem, ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
+import { BaseViewModel } from 'app/site/base/base-view-model';
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
+
+export interface AgendaListTitle {
+    title: string;
+    subtitle?: string;
+}
 
 /**
  * Repository service for items
@@ -18,11 +23,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class AgendaItemRepositoryService extends BaseRepository<
-    ViewAgendaItem,
-    AgendaItem,
-    AgendaItemTitleInformation
-> {
+export class AgendaItemRepositoryService extends BaseRepository<ViewAgendaItem, AgendaItem> {
     /**
      * Contructor for agenda repository.
      *
@@ -47,10 +48,11 @@ export class AgendaItemRepositoryService extends BaseRepository<
         return this.translate.instant(plural ? 'Items' : 'Item');
     };
 
-    private getAgendaTitle(titleInformation: AgendaItemTitleInformation): AgendaListTitle {
-        if (titleInformation.content_object) {
-            return titleInformation.content_object.getAgendaListTitle();
+    private getAgendaTitle(viewAgendaItem: ViewAgendaItem): AgendaListTitle {
+        if (viewAgendaItem.content_object) {
+            return viewAgendaItem.content_object.getAgendaListTitle();
         } else {
+            throw new Error('TODO');
             /*const collection = collectionFromFqid(titleInformation.content_object_id);
             const repo = this.collectionMapperService.getRepository(
                 collection
@@ -60,13 +62,19 @@ export class AgendaItemRepositoryService extends BaseRepository<
         }
     }
 
-    public getTitle = (titleInformation: AgendaItemTitleInformation) => {
-        return this.getAgendaTitle(titleInformation).title;
+    public getTitle = (viewAgendaItem: ViewAgendaItem) => {
+        return this.getAgendaTitle(viewAgendaItem).title;
     };
 
-    public getSubtitle = (titleInformation: AgendaItemTitleInformation) => {
-        return this.getAgendaTitle(titleInformation).subtitle;
+    public getSubtitle = (viewAgendaItem: ViewAgendaItem) => {
+        return this.getAgendaTitle(viewAgendaItem).subtitle;
     };
+
+    public getItemNumberPrefix(viewModel: HasAgendaItem): string {
+        return viewModel.agenda_item && viewModel.agenda_item.item_number
+            ? `${viewModel.agenda_item.item_number} · `
+            : '';
+    }
 
     /**
      * @override The base-function to extends the items with an optional subtitle.
@@ -107,7 +115,7 @@ export class AgendaItemRepositoryService extends BaseRepository<
         return await this.dataSend.updateModel(clone);
     }
 
-    public async addItemToAgenda(contentObject: BaseViewModelWithAgendaItem<any>): Promise<Identifiable> {
+    public async addItemToAgenda(contentObject: BaseViewModel & HasAgendaItem): Promise<Identifiable> {
         return await this.httpService.post('/rest/agenda/item/', {
             collection: contentObject.collection,
             id: contentObject.id

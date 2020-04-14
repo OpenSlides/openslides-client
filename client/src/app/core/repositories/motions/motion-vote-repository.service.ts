@@ -13,7 +13,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class MotionVoteRepositoryService extends BaseRepository<ViewMotionVote, MotionVote, object> {
+export class MotionVoteRepositoryService extends BaseRepository<ViewMotionVote, MotionVote> {
     /**
      * @param DS DataStore access
      * @param dataSend Sending data
@@ -26,7 +26,7 @@ export class MotionVoteRepositoryService extends BaseRepository<ViewMotionVote, 
         super(repositoryServiceCollector, MotionVote);
     }
 
-    public getTitle = (titleInformation: object) => {
+    public getTitle = (viewMotionVote: object) => {
         return 'Vote';
     };
 

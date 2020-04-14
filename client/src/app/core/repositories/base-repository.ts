@@ -4,7 +4,7 @@ import { auditTime } from 'rxjs/operators';
 
 import { Collection } from 'app/shared/models/base/collection';
 import { BaseModel, ModelConstructor } from '../../shared/models/base/base-model';
-import { BaseViewModel, TitleInformation, ViewModelConstructor } from '../../site/base/base-view-model';
+import { BaseViewModel, ViewModelConstructor } from '../../site/base/base-view-model';
 import { CollectionMapperService } from '../core-services/collection-mapper.service';
 import { DataSendService } from '../core-services/data-send.service';
 import { DataStoreService } from '../core-services/data-store.service';
@@ -17,7 +17,7 @@ import { Relation } from '../definitions/relations';
 import { RepositoryServiceCollector } from './repository-service-collector';
 import { ViewModelStoreService } from '../core-services/view-model-store.service';
 
-export abstract class BaseRepository<V extends BaseViewModel & T, M extends BaseModel, T extends TitleInformation>
+export abstract class BaseRepository<V extends BaseViewModel, M extends BaseModel>
     implements OnAfterAppsLoaded, Collection, HasViewModelListObservable<V> {
     /**
      * Stores all the viewModel in an object
@@ -74,7 +74,7 @@ export abstract class BaseRepository<V extends BaseViewModel & T, M extends Base
     }
 
     public abstract getVerboseName: (plural?: boolean) => string;
-    public abstract getTitle: (titleInformation: T) => string;
+    public abstract getTitle: (viewModel: V) => string;
 
     /**
      * Maps the given relations (`relationDefinitions`) to their affected collections. This means,
@@ -160,8 +160,8 @@ export abstract class BaseRepository<V extends BaseViewModel & T, M extends Base
         });
     }
 
-    public getListTitle: (titleInformation: T) => string = (titleInformation: T) => {
-        return this.getTitle(titleInformation);
+    public getListTitle: (viewModel: V) => string = (viewModel: V) => {
+        return this.getTitle(viewModel);
     };
 
     /**

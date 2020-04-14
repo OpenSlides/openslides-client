@@ -60,7 +60,7 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
             .get<boolean>('users_activate_vote_weight')
             .subscribe(active => (this.isVoteWeightActive = active));
         */
-       console.warn("TODO: assignment-poll-detail.component")
+        console.warn('TODO: assignment-poll-detail.component');
     }
 
     protected createVotesData(): void {

@@ -1,12 +1,7 @@
 import { Resource } from 'app/shared/models/event-management/resource';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { ViewOrganisation } from './view-organisation';
-
-export interface ResourceTitleInformation {
-    token: string;
-}
-
-export class ViewResource extends BaseViewModel<Resource> implements ResourceTitleInformation {
+export class ViewResource extends BaseViewModel<Resource> {
     public static COLLECTION = Resource.COLLECTION;
     protected _collection = Resource.COLLECTION;
 

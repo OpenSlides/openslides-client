@@ -1,6 +1,7 @@
 import { Id } from 'app/core/definitions/key-types';
 import { BaseDecimalModel } from '../base/base-decimal-model';
 import { BaseOption } from './base-option';
+import { HasProjectableIds } from '../base/has-projectable-ids';
 
 export enum PollColor {
     yes = '#4caf50',
@@ -64,8 +65,6 @@ export abstract class BasePoll<
     public voted_ids: Id[]; // (user/(assignment|motion)_poll_voted_$<meeting_id>_ids)[];
     public entitled_group_ids: Id[]; // (group/(assignment|motion)_poll_ids)[];
     public option_ids: Id[]; // ((assignment|motion)_option/poll_id)[];
-    public projection_ids: Id[]; // (projection/element_id)[];
-    public current_projector_ids: Id[]; // (projector/current_element_ids)[]
     public meeting_id: Id; // meeting/(assignment|motion)_poll_ids;
 
     public get isCreated(): boolean {
@@ -119,3 +118,9 @@ export abstract class BasePoll<
         return ['votesvalid', 'votesinvalid', 'votescast'];
     }
 }
+export interface BasePoll<
+    T = any,
+    O extends BaseOption<any> = any,
+    PM extends string = string,
+    PB extends string = string
+> extends HasProjectableIds {}

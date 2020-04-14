@@ -339,14 +339,14 @@ export class MotionPdfService {
         }
 
         // motion block
-        if (motion.motion_block && (!infoToExport || infoToExport.includes('motion_block'))) {
+        if (motion.block && (!infoToExport || infoToExport.includes('block'))) {
             metaTableBody.push([
                 {
                     text: `${this.translate.instant('Motion block')}:`,
                     style: 'boldText'
                 },
                 {
-                    text: motion.motion_block.title
+                    text: motion.block.title
                 }
             ]);
         }
@@ -631,18 +631,16 @@ export class MotionPdfService {
      * @returns
      */
     private getUnifiedChanges(motion: ViewMotion, lineLength: number): ViewUnifiedChange[] {
-        return (
-            this.changeRecoRepo
-                .getChangeRecoOfMotion(motion.id)
-                .concat(
-                    this.motionRepo
-                        .getAmendmentsInstantly(motion.id)
-                        .flatMap((amendment: ViewMotion) =>
-                            this.motionRepo.getAmendmentAmendedParagraphs(amendment, lineLength)
-                        )
-                )
-                .sort((a, b) => a.getLineFrom() - b.getLineFrom()) as ViewUnifiedChange[]
-        );
+        return this.changeRecoRepo
+            .getChangeRecoOfMotion(motion.id)
+            .concat(
+                this.motionRepo
+                    .getAmendmentsInstantly(motion.id)
+                    .flatMap((amendment: ViewMotion) =>
+                        this.motionRepo.getAmendmentAmendedParagraphs(amendment, lineLength)
+                    )
+            )
+            .sort((a, b) => a.getLineFrom() - b.getLineFrom()) as ViewUnifiedChange[];
     }
 
     /**

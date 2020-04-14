@@ -649,11 +649,11 @@ export class MotionDetailComponent extends BaseComponent implements OnInit, OnDe
                 defaultMotion.lead_motion_id = parentMotion.id;
                 defaultMotion.category_id = parentMotion.category_id;
                 defaultMotion.tag_ids = parentMotion.tag_ids;
-                defaultMotion.motion_block_id = parentMotion.motion_block_id;
+                defaultMotion.block_id = parentMotion.block_id;
                 this.contentForm.patchValue({
                     title: defaultTitle,
                     category_id: parentMotion.category_id,
-                    motion_block_id: parentMotion.motion_block_id,
+                    block_id: parentMotion.block_id,
                     parent_id: parentMotion.id,
                     tag_ids: parentMotion.tag_ids
                 });
@@ -731,7 +731,7 @@ export class MotionDetailComponent extends BaseComponent implements OnInit, OnDe
             selected_paragraphs: [],
             statute_amendment: [''], // Internal value for the checkbox, not saved to the model
             statute_paragraph_id: [''],
-            motion_block_id: [],
+            block_id: [],
             parent_id: [],
             modified_final_version: ['']
         });
@@ -1301,7 +1301,7 @@ export class MotionDetailComponent extends BaseComponent implements OnInit, OnDe
      * @param id Motion block id
      */
     public setBlock(id: number): void {
-        if (id === this.motion.motion_block_id) {
+        if (id === this.motion.block_id) {
             id = null;
         }
         this.repo.setBlock(this.motion, id).catch(this.raiseError);
@@ -1583,7 +1583,7 @@ export class MotionDetailComponent extends BaseComponent implements OnInit, OnDe
     }
 
     public removeFromAgenda(): void {
-        this.itemRepo.removeFromAgenda(this.motion.item).catch(this.raiseError);
+        this.itemRepo.removeFromAgenda(this.motion.agenda_item).catch(this.raiseError);
     }
 
     /**

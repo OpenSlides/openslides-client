@@ -7,7 +7,7 @@ import { timer } from 'rxjs';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ProjectorService } from 'app/core/core-services/projector.service';
-import { CountdownRepositoryService } from 'app/core/repositories/projector/projector-countdown-repository.service';
+import { ProjectorCountdownRepositoryService } from 'app/core/repositories/projector/projector-countdown-repository.service';
 import { ProjectorMessageRepositoryService } from 'app/core/repositories/projector/projector-message-repository.service';
 import {
     ProjectorRepositoryService,
@@ -84,7 +84,7 @@ export class ProjectorDetailComponent extends BaseComponent implements OnInit {
         private route: ActivatedRoute,
         private projectorService: ProjectorService,
         private slideManager: SlideManager,
-        private countdownRepo: CountdownRepositoryService,
+        private countdownRepo: ProjectorCountdownRepositoryService,
         private messageRepo: ProjectorMessageRepositoryService,
         private currentListOfSpeakersSlideService: CurrentListOfSpeakersSlideService,
         private currentSpeakerChyronService: CurrentSpeakerChyronSlideService,
@@ -189,12 +189,12 @@ export class ProjectorDetailComponent extends BaseComponent implements OnInit {
     }
 
     public onSortingChange(event: any /*CdkDragDrop<ProjectorElement>*/): void {
-        moveItemInArray(this.projector.elements_preview, event.previousIndex, event.currentIndex);
+        moveItemInArray(this.projector.preview_projections, event.previousIndex, event.currentIndex);
         this.projectorService.savePreview(this.projector.projector).catch(this.raiseError);
     }
 
     public removePreviewElement(elementIndex: number): void {
-        this.projector.elements_preview.splice(elementIndex, 1);
+        this.projector.preview_projections.splice(elementIndex, 1);
         this.projectorService.savePreview(this.projector.projector).catch(this.raiseError);
     }
 
@@ -202,18 +202,14 @@ export class ProjectorDetailComponent extends BaseComponent implements OnInit {
         this.projectorService.projectPreviewSlide(this.projector.projector, elementIndex).catch(this.raiseError);
     }
 
-<<<<<<< HEAD
-    public getSlideTitle(element: ProjectorElement): string {
-        return this.projectorService.getSlideTitle(element).title;
-    }
-
-    public getSlideSubtitle(element: ProjectorElement): string | null {
-        return this.projectorService.getSlideTitle(element).subtitle;
-=======
     public getSlideTitle(element: any /*ProjectorElement*/): string {
         throw new Error('TODO');
-        return this.projectorService.getSlideTitle(element);
->>>>>>> New Models:
+        // return this.projectorService.getSlideTitle(element).title;
+    }
+
+    public getSlideSubtitle(element: any /*ProjectorElement*/): string | null {
+        // return this.projectorService.getSlideTitle(element).subtitle;
+        throw new Error('TODO');
     }
 
     public isProjected(obj: Projectable): boolean {

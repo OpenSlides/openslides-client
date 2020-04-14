@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { AgendaItemRepositoryService, AgendaListTitle } from '../agenda/agenda-item-repository.service';
 import { HttpService } from 'app/core/core-services/http.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { DiffLinesInParagraph, DiffService } from 'app/core/ui-services/diff.service';
@@ -10,8 +11,7 @@ import { OrganisationSettingsService } from 'app/core/ui-services/organisation-s
 import { TreeIdNode } from 'app/core/ui-services/tree.service';
 import { Motion } from 'app/shared/models/motions/motion';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from 'app/shared/models/motions/view-unified-change';
-import { AgendaListTitle } from 'app/site/base/base-view-model-with-agenda-item';
-import { MotionTitleInformation, ViewMotion } from 'app/site/motions/models/view-motion';
+import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionAmendedParagraph } from 'app/site/motions/models/view-motion-amended-paragraph';
 import { ViewMotionStatuteParagraph } from 'app/site/motions/models/view-motion-statute-paragraph';
 import { ChangeRecoMode } from 'app/site/motions/motions.constants';
@@ -62,8 +62,7 @@ export interface ParagraphToChoose {
 })
 export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersContentObjectRepository<
     ViewMotion,
-    Motion,
-    MotionTitleInformation
+    Motion
 > {
     /**
      * The property the incoming data is sorted by
@@ -91,13 +90,14 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      */
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
+        agendaItemRepo: AgendaItemRepositoryService,
         config: OrganisationSettingsService,
         private httpService: HttpService,
         private readonly lineNumbering: LinenumberingService,
         private readonly diff: DiffService,
         private operator: OperatorService
     ) {
-        super(repositoryServiceCollector, Motion);
+        super(repositoryServiceCollector, Motion, agendaItemRepo);
         config.get<SortProperty>('motions_motions_sorting').subscribe(conf => {
             this.sortProperty = conf;
             this.setConfigSortFn();
@@ -108,49 +108,43 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         });
     }
 
-    public getTitle = (titleInformation: MotionTitleInformation) => {
-        if (titleInformation.number) {
-            return `${titleInformation.number}: ${titleInformation.title}`;
+    public getTitle = (viewMotion: ViewMotion) => {
+        if (viewMotion.number) {
+            return `${viewMotion.number}: ${viewMotion.title}`;
         } else {
-            return titleInformation.title;
+            return viewMotion.title;
         }
     };
 
-    public getNumberOrTitle = (titleInformation: MotionTitleInformation) => {
-        if (titleInformation.number) {
-            return titleInformation.number;
+    public getNumberOrTitle = (viewMotion: ViewMotion) => {
+        if (viewMotion.number) {
+            return viewMotion.number;
         } else {
-            return titleInformation.title;
+            return viewMotion.title;
         }
     };
 
-    public getAgendaSlideTitle = (titleInformation: MotionTitleInformation) => {
-        const numberPrefix = titleInformation.agenda_item_number() ? `${titleInformation.agenda_item_number()} · ` : '';
+    public getAgendaSlideTitle = (viewMotion: ViewMotion) => {
+        const numberPrefix = this.agendaItemRepo.getItemNumberPrefix(viewMotion);
         // if the number is set, the title will be 'Motion <number>'.
-        if (titleInformation.number) {
-            return `${numberPrefix} ${this.translate.instant('Motion')} ${titleInformation.number}`;
+        if (viewMotion.number) {
+            return `${numberPrefix} ${this.translate.instant('Motion')} ${viewMotion.number}`;
         } else {
-            return `${numberPrefix} ${titleInformation.title}`;
+            return `${numberPrefix} ${viewMotion.title}`;
         }
     };
 
-    public getAgendaListTitle = (titleInformation: MotionTitleInformation) => {
-        const numberPrefix = titleInformation.agenda_item_number() ? `${titleInformation.agenda_item_number()} · ` : '';
+    public getAgendaListTitle = (viewMotion: ViewMotion) => {
+        const numberPrefix = this.agendaItemRepo.getItemNumberPrefix(viewMotion);
         // Append the verbose name only, if not the special format 'Motion <number>' is used.
         let title;
-        if (titleInformation.number) {
-            title = `${numberPrefix}${this.translate.instant('Motion')} ${titleInformation.number} · ${
-                titleInformation.title
-            }`;
+        if (viewMotion.number) {
+            title = `${numberPrefix}${this.translate.instant('Motion')} ${viewMotion.number} · ${viewMotion.title}`;
         } else {
-            title = `${numberPrefix}${titleInformation.title} (${this.getVerboseName()})`;
+            title = `${numberPrefix}${viewMotion.title} (${this.getVerboseName()})`;
         }
         const agendaTitle: AgendaListTitle = { title };
 
-        // Subtitle.
-        // This is a bit hacky: If one has not motions.can_see, the titleinformation is nut sufficient for
-        // submitters. So try-cast titleInformation to a ViewMotion and check, if submittersAsUsers is available
-        const viewMotion: ViewMotion = titleInformation as ViewMotion;
         if (viewMotion.submittersAsUsers && viewMotion.submittersAsUsers.length) {
             agendaTitle.subtitle = `${this.translate.instant('by')} ${viewMotion.submittersAsUsers.join(', ')}`;
         }
@@ -162,7 +156,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
     };
 
     public getProjectorTitle = (viewMotion: ViewMotion) => {
-        const subtitle = viewMotion.item && viewMotion.item.comment ? viewMotion.item.comment : null;
+        const subtitle =
+            viewMotion.agenda_item && viewMotion.agenda_item.comment ? viewMotion.agenda_item.comment : null;
         return { title: this.getAgendaSlideTitle(viewMotion), subtitle };
     };
 
@@ -208,8 +203,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      */
     public async setMultiMotionBlock(viewMotions: ViewMotion[], motionblockId: number): Promise<void> {
         const restPath = `/rest/motions/motion/manage_multiple_motion_block/`;
-        const motionsIdMap: { id: number; motion_block: number }[] = viewMotions.map(motion => {
-            return { id: motion.id, motion_block: motionblockId };
+        const motionsIdMap: { id: number; block: number }[] = viewMotions.map(motion => {
+            return { id: motion.id, block: motionblockId };
         });
         await this.httpService.post(restPath, { motions: motionsIdMap });
     }
@@ -256,7 +251,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param blockId the ID of the motion block
      */
     public async setBlock(viewMotion: ViewMotion, blockId: number): Promise<void> {
-        await this.patch({ motion_block_id: blockId }, viewMotion);
+        await this.patch({ block_id: blockId }, viewMotion);
     }
 
     /**
@@ -564,14 +559,12 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      */
     private extractAffectedParagraphs(paragraph: string, index: number): ParagraphToChoose {
         const affected: LineNumberRange = this.lineNumbering.getLineNumberRange(paragraph);
-        return (
-            {
-                paragraphNo: index,
-                html: this.lineNumbering.stripLineNumbers(paragraph),
-                lineFrom: affected.from,
-                lineTo: affected.to
-            } as ParagraphToChoose
-        );
+        return {
+            paragraphNo: index,
+            html: this.lineNumbering.stripLineNumbers(paragraph),
+            lineFrom: affected.from,
+            lineTo: affected.to
+        } as ParagraphToChoose;
     }
 
     /**
@@ -604,18 +597,16 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
                         // Nothing has changed in this paragraph
                         if (includeUnchanged) {
                             const paragraph_line_range = this.lineNumbering.getLineNumberRange(baseParagraphs[paraNo]);
-                            return (
-                                {
-                                    paragraphNo: paraNo,
-                                    paragraphLineFrom: paragraph_line_range.from,
-                                    paragraphLineTo: paragraph_line_range.to,
-                                    diffLineFrom: paragraph_line_range.to,
-                                    diffLineTo: paragraph_line_range.to,
-                                    textPre: baseParagraphs[paraNo],
-                                    text: '',
-                                    textPost: ''
-                                } as DiffLinesInParagraph
-                            );
+                            return {
+                                paragraphNo: paraNo,
+                                paragraphLineFrom: paragraph_line_range.from,
+                                paragraphLineTo: paragraph_line_range.to,
+                                diffLineFrom: paragraph_line_range.to,
+                                diffLineTo: paragraph_line_range.to,
+                                textPre: baseParagraphs[paraNo],
+                                text: '',
+                                textPost: ''
+                            } as DiffLinesInParagraph;
                         } else {
                             return null; // null will make this paragraph filtered out
                         }

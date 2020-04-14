@@ -128,14 +128,13 @@
 
     <!-- Info column -->
     <div *pblNgridCellDef="'info'; row as mediafile" class="fill clickable" (click)="onEditFile(mediafile)">
-        TODO: Enable mediafile relations
-        <!--<os-icon-container *ngIf="mediafile.access_groups.length" icon="group">
+        <os-icon-container *ngIf="mediafile.access_groups.length" icon="group">
             <span *ngFor="let group of mediafile.access_groups | slice: 0:3; let last = last">
                 <span>{{ group.getTitle() | translate }}</span>
                 <span *ngIf="!last">, </span>
                 <span *ngIf="last && mediafile.access_groups.length > 3">...</span>
             </span>
-        </os-icon-container>-->
+        </os-icon-container>
     </div>
 
     <!-- Indicator column -->

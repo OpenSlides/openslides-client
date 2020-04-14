@@ -3,8 +3,6 @@ import { Collection } from 'app/shared/models/base/collection';
 import { Displayable } from './displayable';
 import { Identifiable } from '../../shared/models/base/identifiable';
 
-export type TitleInformation = object;
-
 export interface ViewModelConstructor<T extends BaseViewModel> {
     COLLECTION: string;
     new (...args: any[]): T;

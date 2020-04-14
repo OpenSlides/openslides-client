@@ -3,12 +3,7 @@ import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { BaseViewModel } from '../../base/base-view-model';
 import { ViewProjector } from './view-projector';
 
-export interface ProjectionDefaultTitleInformation {
-    display_name: string;
-}
-
-export class ViewProjectiondefault extends BaseViewModel<Projectiondefault>
-    implements ProjectionDefaultTitleInformation {
+export class ViewProjectiondefault extends BaseViewModel<Projectiondefault> {
     public static COLLECTION = Projectiondefault.COLLECTION;
     protected _collection = Projectiondefault.COLLECTION;
 

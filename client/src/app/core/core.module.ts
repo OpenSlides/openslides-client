@@ -3,10 +3,9 @@ import { NgModule, Optional, SkipSelf, Type } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 
 import { OnAfterAppsLoaded } from './definitions/on-after-apps-loaded';
+import { OperatorService } from './core-services/operator.service';
 
-export const ServicesToLoadOnAppsLoaded: Type<OnAfterAppsLoaded>[] = [
-    /*OperatorService*/
-];
+export const ServicesToLoadOnAppsLoaded: Type<OnAfterAppsLoaded>[] = [OperatorService];
 
 /**
  * Global Core Module.

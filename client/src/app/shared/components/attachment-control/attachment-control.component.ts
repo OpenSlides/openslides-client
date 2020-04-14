@@ -18,7 +18,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { MediafileRepositoryService } from 'app/core/repositories/mediafiles/mediafile-repository.service';
-import { BaseFormControlComponent } from 'app/shared/models/base/base-form-control';
+import { BaseFormControlComponent } from 'app/shared/components/base-form-control';
 import { mediumDialogSettings } from 'app/shared/utils/dialog-settings';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 

@@ -6,7 +6,7 @@ import { Id } from 'app/core/definitions/key-types';
 import { NewEntry } from 'app/core/ui-services/base-import.service';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { User } from 'app/shared/models/users/user';
-import { UserTitleInformation, ViewUser } from 'app/site/users/models/view-user';
+import { ViewUser } from 'app/site/users/models/view-user';
 import { BaseRepository } from '../base-repository';
 import { environment } from '../../../../environments/environment';
 import { RepositoryServiceCollector } from '../repository-service-collector';
@@ -19,6 +19,18 @@ type StringNamingSchema = 'lastCommaFirst' | 'firstSpaceLast';
 
 type SortProperty = 'first_name' | 'last_name' | 'number';
 
+export interface ShortNameInformation {
+    title?: string;
+    username: string;
+    first_name?: string;
+    last_name?: string;
+}
+interface LevelAndNumberInformation {
+    structure_level?: string;
+    number?: string;
+}
+type FullNameInformation = ShortNameInformation & LevelAndNumberInformation;
+
 /**
  * Repository service for users
  *
@@ -27,7 +39,7 @@ type SortProperty = 'first_name' | 'last_name' | 'number';
 @Injectable({
     providedIn: 'root'
 })
-export class UserRepositoryService extends BaseRepository<ViewUser, User, UserTitleInformation> {
+export class UserRepositoryService extends BaseRepository<ViewUser, User> {
     /**
      * The property the incoming data is sorted by
      */
@@ -57,8 +69,8 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User, UserTi
         });
     }
 
-    public getTitle = (titleInformation: UserTitleInformation) => {
-        return this.getFullName(titleInformation);
+    public getTitle = (viewUser: ViewUser) => {
+        return this.getFullName(viewUser);
     };
 
     /**
@@ -66,16 +78,16 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User, UserTi
      *
      * @returns a non-empty string
      */
-    public getShortName(titleInformation: UserTitleInformation): string {
-        const title = titleInformation.title ? titleInformation.title.trim() : '';
-        const firstName = titleInformation.first_name ? titleInformation.first_name.trim() : '';
-        const lastName = titleInformation.last_name ? titleInformation.last_name.trim() : '';
-        let shortName = `${firstName} ${lastName}`;
+    public getShortName(user: ShortNameInformation): string {
+        const title = user.title ? user.title.trim() : '';
+        const firstName = user.first_name ? user.first_name.trim() : '';
+        const lastName = user.last_name ? user.last_name.trim() : '';
 
-        if (shortName.length <= 1) {
-            // We have at least one space from the concatination of
-            // first- and lastname.
-            shortName = titleInformation.username;
+        let shortName;
+        if (firstName || lastName) {
+            shortName = `${firstName} ${lastName}`;
+        } else {
+            shortName = user.username;
         }
 
         if (title) {
@@ -85,34 +97,34 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User, UserTi
         return shortName;
     }
 
-    public getFullName(titleInformation: UserTitleInformation): string {
-        let name = this.getShortName(titleInformation);
+    public getFullName(user: FullNameInformation): string {
+        let fullName = this.getShortName(user);
         const additions: string[] = [];
 
         // addition: add number and structure level
-        const structure_level = titleInformation.structure_level ? titleInformation.structure_level.trim() : '';
+        const structure_level = user.structure_level ? user.structure_level.trim() : '';
         if (structure_level) {
             additions.push(structure_level);
         }
 
-        const number = titleInformation.number ? titleInformation.number.trim() : '';
+        const number = user.number ? user.number.trim() : '';
         if (number) {
             additions.push(`${this.translate.instant('No.')} ${number}`);
         }
 
         if (additions.length > 0) {
-            name += ' (' + additions.join(' · ') + ')';
+            fullName += ' (' + additions.join(' · ') + ')';
         }
-        return name.trim();
+        return fullName;
     }
 
-    public getLevelAndNumber(titleInformation: UserTitleInformation): string {
-        if (titleInformation.structure_level && titleInformation.number) {
-            return `${titleInformation.structure_level} · ${this.translate.instant('No.')} ${titleInformation.number}`;
-        } else if (titleInformation.structure_level) {
-            return titleInformation.structure_level;
-        } else if (titleInformation.number) {
-            return `${this.translate.instant('No.')} ${titleInformation.number}`;
+    public getLevelAndNumber(user: LevelAndNumberInformation): string {
+        if (user.structure_level && user.number) {
+            return `${user.structure_level} · ${this.translate.instant('No.')} ${user.number}`;
+        } else if (user.structure_level) {
+            return user.structure_level;
+        } else if (user.number) {
+            return `${this.translate.instant('No.')} ${user.number}`;
         } else {
             return '';
         }
@@ -214,12 +226,10 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User, UserTi
         const data = newEntries.map(entry => {
             return { ...entry.newEntry, importTrackId: entry.importTrackId };
         });
-        const response =
-            (await this.httpService.post(`/rest/users/user/mass_import/`, { users: data })) as
-            {
-                detail: string;
-                importedTrackIds: number[];
-            };
+        const response = (await this.httpService.post(`/rest/users/user/mass_import/`, { users: data })) as {
+            detail: string;
+            importedTrackIds: number[];
+        };
         return response.importedTrackIds;
     }
 

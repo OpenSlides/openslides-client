@@ -105,7 +105,7 @@ export class UserDetailComponent extends BaseComponent implements OnInit {
         private promptService: PromptService,
         private pdfService: UserPdfExportService,
         private groupRepo: GroupRepositoryService,
-        private pollService: PollService,
+        private pollService: PollService
     ) {
         super(componentServiceCollector);
         this.createForm();

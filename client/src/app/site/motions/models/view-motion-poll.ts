@@ -6,10 +6,6 @@ import { ViewMotionOption } from 'app/site/motions/models/view-motion-option';
 import { BaseViewPoll, PollClassType } from 'app/site/polls/models/base-view-poll';
 import { ViewMotion } from './view-motion';
 
-export interface MotionPollTitleInformation {
-    title: string;
-}
-
 export const MotionPollMethodVerbose = {
     YN: 'Yes/No',
     YNA: 'Yes/No/Abstain'
@@ -23,8 +19,7 @@ export const MotionPollPercentBaseVerbose = {
     disabled: 'Disabled (no percents)'
 };
 
-export class ViewMotionPoll extends BaseViewPoll<MotionPoll, ViewMotionOption, MotionPollMethod, PercentBase>
-    implements MotionPollTitleInformation {
+export class ViewMotionPoll extends BaseViewPoll<MotionPoll, ViewMotionOption, MotionPollMethod, PercentBase> {
     public static COLLECTION = MotionPoll.COLLECTION;
     protected _collection = MotionPoll.COLLECTION;
 

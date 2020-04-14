@@ -1,5 +1,11 @@
 import { Id } from 'app/core/definitions/key-types';
-import { BaseModelWithAgendaItemAndListOfSpeakers } from '../base/base-model-with-agenda-item-and-list-of-speakers';
+import { BaseModel } from '../base/base-model';
+import { HasAgendaItemId } from '../base/has-agenda-item-id';
+import { HasAttachmentIds } from '../base/has-attachment-ids';
+import { HasListOfSpeakersId } from '../base/has-list-of-speakers-id';
+import { HasPersonalNoteIds } from '../base/has-personal-note-ids';
+import { HasProjectableIds } from '../base/has-projectable-ids';
+import { HasTagIds } from '../base/has-tag-ids';
 
 /**
  * Representation of Motion.
@@ -8,7 +14,7 @@ import { BaseModelWithAgendaItemAndListOfSpeakers } from '../base/base-model-wit
  *
  * @ignore
  */
-export class Motion extends BaseModelWithAgendaItemAndListOfSpeakers<Motion> {
+export class Motion extends BaseModel<Motion> {
     public static COLLECTION = 'motion';
 
     public id: Id;
@@ -36,23 +42,23 @@ export class Motion extends BaseModelWithAgendaItemAndListOfSpeakers<Motion> {
     public workflow_id: Id; // motion_workflow/motion_ids;
     public recommendation_id: Id; // motion_state/motion_recommendation_ids;
     public category_id: Id; // category/motion_ids;
-    public motion_block_id: Id; // motion_block/motion_ids;
+    public block_id: Id; // block/motion_ids;
     public submitter_ids: Id[]; // (motion_submitter/motion_id)[];
     public supporter_ids: Id[]; // (user/supported_motion_$<meeting_id>_ids)[];
     public poll_ids: Id[]; // (motion_poll/motion_id)[];
     public change_recommendation_ids: Id[]; // (motion_change_recommendation/motion_id)[];
     public statute_paragraph_id: Id; // motion_statute_paragraph/motion_ids;
     public comment_ids: Id[]; // (motion_comment/motion_id)[];
-    public agenda_item_id: Id; // agenda_item/content_object_id;
-    public list_of_speakers_id: Id; // list_of_speakers/content_object_id;
-    public tag_ids: Id[]; // (tag/tagged_ids)[];
-    public attachment_ids: Id[]; // (mediafile/attachment_ids)[];
-    public projection_ids: Id[]; // (projection/element_id)[];
-    public current_projector_ids: Id[]; // (projector/current_element_ids)[]
-    public personal_note_ids: Id[]; // (personal_note/content_object_id)[];
     public meeting_id: Id; // meeting/motion_ids;
 
     public constructor(input?: any) {
         super(Motion.COLLECTION, input);
     }
 }
+export interface Motion
+    extends HasAgendaItemId,
+        HasListOfSpeakersId,
+        HasTagIds,
+        HasAttachmentIds,
+        HasPersonalNoteIds,
+        HasProjectableIds {}

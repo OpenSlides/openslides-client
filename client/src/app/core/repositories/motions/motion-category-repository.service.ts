@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { TreeIdNode } from 'app/core/ui-services/tree.service';
 import { MotionCategory } from 'app/shared/models/motions/motion-category';
-import { CategoryTitleInformation, ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
+import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
 import { BaseRepository } from '../base-repository';
 import { HttpService } from '../../core-services/http.service';
 import { RepositoryServiceCollector } from '../repository-service-collector';
@@ -20,11 +20,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class MotionCategoryRepositoryService extends BaseRepository<
-    ViewMotionCategory,
-    MotionCategory,
-    CategoryTitleInformation
-> {
+export class MotionCategoryRepositoryService extends BaseRepository<ViewMotionCategory, MotionCategory> {
     /**
      * Creates a CategoryRepository
      * Converts existing and incoming category to ViewCategories
@@ -43,10 +39,10 @@ export class MotionCategoryRepositoryService extends BaseRepository<
         this.setSortFunction((a, b) => a.weight - b.weight);
     }
 
-    public getTitle = (titleInformation: CategoryTitleInformation) => {
-        return titleInformation.prefix
-            ? titleInformation.prefix + ' - ' + titleInformation.name
-            : titleInformation.name;
+    public getTitle = (viewMotionCategory: ViewMotionCategory) => {
+        return viewMotionCategory.prefix
+            ? viewMotionCategory.prefix + ' - ' + viewMotionCategory.name
+            : viewMotionCategory.name;
     };
 
     public getVerboseName = (plural: boolean = false) => {
@@ -56,20 +52,22 @@ export class MotionCategoryRepositoryService extends BaseRepository<
     /**
      * Updates a categories numbering.
      *
-     * @param category the category it should be updated in
+     * @param viewMotionCategory the category it should be updated in
      */
-    public async numberMotionsInCategory(category: ViewMotionCategory): Promise<void> {
-        await this.httpService.post(`/rest/motions/category/${category.id}/numbering/`);
+    public async numberMotionsInCategory(viewMotionCategory: ViewMotionCategory): Promise<void> {
+        await this.httpService.post(`/rest/motions/category/${viewMotionCategory.id}/numbering/`);
     }
 
     /**
      * Updates the sorting of motions in a category.
      *
-     * @param category the category it should be updated in
+     * @param viewMotionCategory the category it should be updated in
      * @param motionIds the list of motion ids on this category
      */
-    public async sortMotionsInCategory(category: MotionCategory, motionIds: number[]): Promise<void> {
-        await this.httpService.post(`/rest/motions/category/${category.id}/sort_motions/`, { motions: motionIds });
+    public async sortMotionsInCategory(viewMotionCategory: MotionCategory, motionIds: number[]): Promise<void> {
+        await this.httpService.post(`/rest/motions/category/${viewMotionCategory.id}/sort_motions/`, {
+            motions: motionIds
+        });
     }
 
     /**

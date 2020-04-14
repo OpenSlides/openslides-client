@@ -65,7 +65,7 @@ export class AppLoadService {
         appConfigs.forEach((config: AppConfig) => {
             if (config.models) {
                 config.models.forEach(entry => {
-                    let repository: BaseRepository<any, any, any> = null;
+                    let repository: BaseRepository<any, any> = null;
                     repository = this.injector.get(entry.repository);
                     repositories.push(repository);
                     this.modelMapper.registerCollectionElement(entry.model, entry.viewModel, repository);

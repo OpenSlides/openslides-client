@@ -4,7 +4,7 @@ import { HttpService } from 'app/core/core-services/http.service';
 import { BasePollRepository } from 'app/core/repositories/base-poll-repository';
 import { VotingService } from 'app/core/ui-services/voting.service';
 import { AssignmentPoll } from 'app/shared/models/assignments/assignment-poll';
-import { AssignmentPollTitleInformation, ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
+import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 export interface AssignmentAnalogVoteData {
@@ -37,11 +37,7 @@ export type GlobalVote = 'A' | 'N';
 @Injectable({
     providedIn: 'root'
 })
-export class AssignmentPollRepositoryService extends BasePollRepository<
-    ViewAssignmentPoll,
-    AssignmentPoll,
-    AssignmentPollTitleInformation
-> {
+export class AssignmentPollRepositoryService extends BasePollRepository<ViewAssignmentPoll, AssignmentPoll> {
     /**
      * Constructor for the Assignment Repository.
      *
@@ -60,8 +56,8 @@ export class AssignmentPollRepositoryService extends BasePollRepository<
         super(repositoryServiceCollector, AssignmentPoll, votingService, http);
     }
 
-    public getTitle = (titleInformation: AssignmentPollTitleInformation) => {
-        return titleInformation.title;
+    public getTitle = (viewAssignmentPoll: ViewAssignmentPoll) => {
+        return viewAssignmentPoll.title;
     };
 
     public getVerboseName = (plural: boolean = false) => {

@@ -3,11 +3,7 @@ import { Projector } from 'app/shared/models/projector/projector';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { BaseViewModel } from '../../base/base-view-model';
 import { ViewProjection } from './view-projection';
-import { ViewProjectiondefault } from './view-projection-default';
-
-export interface ProjectorTitleInformation {
-    name: string;
-}
+import { ViewProjectiondefault } from './view-projectiondefault';
 
 export class ViewProjector extends BaseViewModel<Projector> {
     public static COLLECTION = Projector.COLLECTION;
@@ -28,8 +24,8 @@ export class ViewProjector extends BaseViewModel<Projector> {
 interface IProjectorRelations {
     current_projections: ViewProjection[];
     current_elements: BaseModel[];
-    elements_preview: ViewProjection[];
-    elements_history: ViewProjection[];
+    preview_projections: ViewProjection[];
+    history_projections: ViewProjection[];
     used_as_reference_projector_in_meeting?: ViewMeeting;
     projectiondefaults: ViewProjectiondefault[];
     meeting?: ViewMeeting;

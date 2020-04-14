@@ -2,6 +2,7 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 import { Id } from 'app/core/definitions/key-types';
 import { BaseDecimalModel } from '../base/base-decimal-model';
+import { HasProjectableIds } from '../base/has-projectable-ids';
 
 /**
  * Iterable pre selection of genders (sexes)
@@ -41,10 +42,6 @@ export class User extends BaseDecimalModel<User> {
     public committee_as_member_ids: Id[]; // (committee/member_ids)[];
     public committee_as_manager_ids: Id[]; // (committee/manager_ids)[];
 
-    // Projection
-    public projection_ids: Id[]; // (projection/element_id)[];
-    public current_projector_ids: Id[]; // (projector/current_element_ids)[]
-
     public group_$_ids: string[]; // (group/user_ids)[];
     public speaker_$_ids: string[]; // (speaker/user_id)[];
     public personal_note_$_ids: string[]; // (personal_note/user_id)[];
@@ -54,7 +51,7 @@ export class User extends BaseDecimalModel<User> {
     public motion_vote_$_ids: string[]; // (motion_vote/user_id)[];
     public assignment_candidate_$_ids: string[]; // (assignment_candidate/user_id)[];
     public assignment_poll_voted_$_ids: string[]; // (assignment_poll/voted_ids)[];
-    public assignment_option_$_ids: string[]; // (assignment_option/user_ids)[];
+    public assignment_option_$_ids: string[]; // (assignment_option/user_id)[];
     public assignment_vote_$_ids: string[]; // (assignment_vote/user_id)[];
 
     public get isVoteWeightOne(): boolean {
@@ -113,3 +110,4 @@ export class User extends BaseDecimalModel<User> {
         return ['vote_weight'];
     }
 }
+export interface User extends HasProjectableIds {}

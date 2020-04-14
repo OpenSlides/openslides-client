@@ -1,18 +1,33 @@
-import { Fqid } from 'app/core/definitions/key-types';
+import { AgendaListTitle } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { AgendaItem, ItemVisibilityChoices } from 'app/shared/models/agenda/agenda-item';
+import { HasAgendaItemId } from 'app/shared/models/base/has-agenda-item-id';
+import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { BaseViewModel } from 'app/site/base/base-view-model';
-import { BaseViewModelWithAgendaItem } from 'app/site/base/base-view-model-with-agenda-item';
-import { Projectable, ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
+import { DetailNavigable } from 'app/site/base/detail-navigable';
+import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
-import { ViewProjection } from 'app/site/projector/models/view-projection';
-import { ViewProjector } from 'app/site/projector/models/view-projector';
 
-export interface AgendaItemTitleInformation {
-    content_object?: BaseViewModelWithAgendaItem;
-    content_object_id: Fqid;
+export interface HasAgendaItem extends DetailNavigable, HasAgendaItemId {
+    agenda_item?: ViewAgendaItem;
+
+    /**
+     * @returns the agenda title
+     */
+    getAgendaSlideTitle: () => string;
+
+    /**
+     * @return the agenda title with the verbose name of the content object
+     */
+    getAgendaListTitle: () => AgendaListTitle;
+
+    /**
+     * @returns the (optional) descriptive text to be exported in the CSV.
+     * May be overridden by inheriting classes
+     */
+    getCSVExportText: () => string;
 }
 
-export class ViewAgendaItem extends BaseViewModel<AgendaItem> implements AgendaItemTitleInformation, Projectable {
+export class ViewAgendaItem extends BaseProjectableViewModel<AgendaItem> {
     public static COLLECTION = AgendaItem.COLLECTION;
     protected _collection = AgendaItem.COLLECTION;
 
@@ -34,9 +49,10 @@ export class ViewAgendaItem extends BaseViewModel<AgendaItem> implements AgendaI
         return type ? type.name : '';
     }
 
-    public getProjectorTitle(): string {
-        return this.getTitle();
-    }
+    public getProjectorTitle = () => {
+        const subtitle = this.item.comment || null;
+        return { title: this.getTitle(), subtitle };
+    };
 
     public getSlide(): ProjectorElementBuildDeskriptor {
         throw new Error('TODO');
@@ -55,11 +71,9 @@ export class ViewAgendaItem extends BaseViewModel<AgendaItem> implements AgendaI
     }
 }
 interface IAgendaItemRelations {
-    content_object?: BaseViewModelWithAgendaItem;
+    content_object?: BaseViewModel & HasAgendaItem;
     parent?: ViewAgendaItem;
     children: ViewAgendaItem[];
-    projections: ViewProjection[];
-    current_projectors: ViewProjector[];
     meeting?: ViewMeeting;
 }
 export interface ViewAgendaItem extends AgendaItem, IAgendaItemRelations {}

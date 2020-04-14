@@ -368,10 +368,10 @@ export class AgendaListComponent extends BaseListViewComponent<ViewAgendaItem> i
      *
      * @param selectedItems All selected items.
      */
-    public duplicateMultipleTopics(selectedItems: ViewItem[]): void {
+    public duplicateMultipleTopics(selectedItems: ViewAgendaItem[]): void {
         for (const item of selectedItems) {
-            if (this.isTopic(item.contentObject)) {
-                this.duplicateTopic(item.contentObject);
+            if (this.isTopic(item.content_object)) {
+                this.duplicateTopic(item.content_object);
             }
         }
     }
@@ -381,15 +381,10 @@ export class AgendaListComponent extends BaseListViewComponent<ViewAgendaItem> i
      *
      * @param item The selected item.
      *
-     * @returns `true` if the given item's collection is equal to the `Topic.COLLECTIONSTRING`.
+     * @returns `true` if the given item's collection is equal to the `Topic.COLLECTION`.
      */
     public isTopic(obj: any): obj is ViewTopic {
         const topic = obj as ViewTopic;
-        return (
-            !!topic &&
-            topic.collectionString !== undefined &&
-            topic.collectionString === ViewTopic.COLLECTIONSTRING &&
-            !!topic.topic
-        );
+        return !!topic && topic.collection !== undefined && topic.collection === ViewTopic.COLLECTION && !!topic.topic;
     }
 }

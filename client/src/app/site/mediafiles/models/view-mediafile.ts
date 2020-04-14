@@ -1,9 +1,11 @@
 import { StructuredRelation } from 'app/core/definitions/relations';
 import { SearchRepresentation } from 'app/core/ui-services/search.service';
+import { HasAttachmentIds } from 'app/shared/models/base/has-attachment-ids';
 import { Mediafile } from 'app/shared/models/mediafiles/mediafile';
-import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
+import { HasAgendaItem } from 'app/site/agenda/models/view-agenda-item';
+import { HasListOfSpeakers, ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
+import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { BaseViewModel } from 'app/site/base/base-view-model';
-import { BaseViewModelWithListOfSpeakers } from 'app/site/base/base-view-model-with-list-of-speakers';
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { Searchable } from 'app/site/base/searchable';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
@@ -28,17 +30,11 @@ export const VIDEO_MIMETYPES = [
     'video/x-matroska'
 ];
 
-export interface MediafileTitleInformation {
-    title: string;
-}
-
-export interface HasAttachment {
+export interface HasAttachment extends HasAttachmentIds {
     attachments: ViewMediafile[];
-    attachment_ids: number[];
 }
 
-export class ViewMediafile extends BaseViewModelWithListOfSpeakers<Mediafile>
-    implements MediafileTitleInformation, Searchable {
+export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
     public static COLLECTION = Mediafile.COLLECTION;
     protected _collection = Mediafile.COLLECTION;
 
@@ -157,9 +153,6 @@ interface IMediafileRelations {
     access_groups: ViewGroup[];
     parent?: ViewMediafile;
     children: ViewMediafile[];
-    list_of_speakers: ViewListOfSpeakers;
-    projections: ViewProjection[];
-    current_projectors: ViewProjector[];
     attachments: (BaseViewModel & HasAttachment)[];
     meeting: ViewMeeting;
     used_as_logo_in_meeting: StructuredRelation<string, ViewMeeting | null>;
@@ -169,4 +162,4 @@ interface IMediafileRelations {
     // has_inherited_access_groups is true.
     inherited_access_groups?: ViewGroup[];
 }
-export interface ViewMediafile extends Mediafile, IMediafileRelations {}
+export interface ViewMediafile extends Mediafile, IMediafileRelations, Searchable, HasListOfSpeakers {}

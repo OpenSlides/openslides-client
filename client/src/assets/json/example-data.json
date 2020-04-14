@@ -1166,7 +1166,7 @@
         "workflow_id": 1,
         "recommendation_id": null,
         "category_id": 2,
-        "motion_block_id": null,
+        "block_id": null,
         "submitter_ids": [1],
         "supporter_ids": [],
         "poll_ids": [1, 2],
@@ -1208,7 +1208,7 @@
         "workflow_id": 1,
         "recommendation_id": null,
         "category_id": 1,
-        "motion_block_id": null,
+        "block_id": null,
         "submitter_ids": [2],
         "supporter_ids": [],
         "poll_ids": [],
@@ -1250,7 +1250,7 @@
         "workflow_id": 1,
         "recommendation_id": null,
         "category_id": 2,
-        "motion_block_id": 1,
+        "block_id": 1,
         "submitter_ids": [3],
         "supporter_ids": [3],
         "poll_ids": [],
@@ -1292,7 +1292,7 @@
         "workflow_id": 2,
         "recommendation_id": null,
         "category_id": null,
-        "motion_block_id": 1,
+        "block_id": 1,
         "submitter_ids": [4],
         "supporter_ids": [],
         "poll_ids": [],
@@ -1837,7 +1837,7 @@
         "default_poll_description": "",
         "number_poll_candidates": false,
 
-        "assignment_candidate_ids": [1, 2, 3],
+        "candidate_ids": [1, 2, 3],
         "polls_id": [1, 2],
         "agenda_item_id": 11,
         "list_of_speakers_id": 11,
@@ -1856,7 +1856,7 @@
         "default_poll_description": "",
         "number_poll_candidates": true,
 
-        "assignment_candidate_ids": [4, 5],
+        "candidate_ids": [4, 5],
         "polls_id": [3],
         "agenda_item_id": 14,
         "list_of_speakers_id": 14,
@@ -2183,8 +2183,8 @@
 
         "current_projection_ids": [4],
         "current_element_ids": ["assignment/1"],
-        "elements_preview_ids": [1, 2],
-        "elements_history_ids": [],
+        "preview_projection_ids": [1, 2],
+        "history_projection_ids": [],
         "used_as_reference_projector_meeting_id": null,
         "projectiondefaults_id": [1, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
         "meeting_id": 1
@@ -2210,8 +2210,8 @@
 
         "current_projection_ids": [6],
         "current_element_ids": ["clock/1"],
-        "elements_preview_ids": [],
-        "elements_history_ids": [],
+        "preview_projection_ids": [],
+        "history_projection_ids": [],
         "used_as_reference_projector_meeting_id": 1,
         "projectiondefaults_id": [2, 3],
         "meeting_id": 1
@@ -2219,17 +2219,17 @@
 "projection": [
     {
         "id": 1,
-        "projector_id": null,
-        "projector_history_id": null,
-        "projector_preview_id": 1,
+        "current_projector_id": null,
+        "preview_projector_id": 1,
+        "history_projector_id": null,
         "element_id": "motion_block/1",
         "options": {}
     },
     {
         "id": 2,
-        "projector_id": null,
-        "projector_history_id": null,
-        "projector_preview_id": 1,
+        "current_projector_id": null,
+        "preview_projector_id": 1,
+        "history_projector_history_id": null,
         "element_id": "motion/4",
         "options": {
             "mode": "diff"
@@ -2237,17 +2237,17 @@
     },
     {
         "id": 4,
-        "projector_id": 1,
-        "projector_history_id": null,
-        "projector_preview_id": null,
+        "current_projector_id": 1,
+        "preview_projector_id": null,
+        "history_projector_id": null,
         "element_id": "assignment/1",
         "options": {}
     },
     {
         "id": 6,
-        "projector_id": 1,
-        "projector_history_id": null,
-        "projector_preview_id": null,
+        "current_projector_id": 1,
+        "preview_projector_id": null,
+        "history_projector_id": null,
         "element_id": "clock/1",
         "_comment": "there is no clock model, but it should just not be resolved.",
         "options": {

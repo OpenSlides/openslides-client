@@ -78,6 +78,6 @@ export class BlockDetailFilterListService extends MotionFilterListService {
      * @return
      */
     protected preFilter(viewMotions: ViewMotion[]): ViewMotion[] {
-        return viewMotions.filter(motion => motion.motion_block_id === this._blockId);
+        return viewMotions.filter(motion => motion.block_id === this._blockId);
     }
 }

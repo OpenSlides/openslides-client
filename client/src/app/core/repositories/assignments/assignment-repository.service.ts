@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 
+import { AgendaItemRepositoryService } from '../agenda/agenda-item-repository.service';
 import { HttpService } from 'app/core/core-services/http.service';
 import { Assignment } from 'app/shared/models/assignments/assignment';
-import { AssignmentTitleInformation, ViewAssignment } from 'app/site/assignments/models/view-assignment';
+import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { BaseIsAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-is-agenda-item-and-list-of-speakers-content-object-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
@@ -17,8 +18,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 })
 export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeakersContentObjectRepository<
     ViewAssignment,
-    Assignment,
-    AssignmentTitleInformation
+    Assignment
 > {
     private readonly restPath = '/rest/assignments/assignment/';
     private readonly candidatureOtherPath = '/candidature_other/';
@@ -34,12 +34,16 @@ export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeake
      * @param translate Translate string
      * @param httpService make HTTP Requests
      */
-    public constructor(repositoryServiceCollector: RepositoryServiceCollector, private httpService: HttpService) {
-        super(repositoryServiceCollector, Assignment);
+    public constructor(
+        repositoryServiceCollector: RepositoryServiceCollector,
+        agendaItemRepo: AgendaItemRepositoryService,
+        private httpService: HttpService
+    ) {
+        super(repositoryServiceCollector, Assignment, agendaItemRepo);
     }
 
-    public getTitle = (titleInformation: AssignmentTitleInformation) => {
-        return titleInformation.title;
+    public getTitle = (viewAssignment: ViewAssignment) => {
+        return viewAssignment.title;
     };
 
     public getVerboseName = (plural: boolean = false) => {

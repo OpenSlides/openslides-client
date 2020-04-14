@@ -5,11 +5,8 @@ import { distinctUntilChanged } from 'rxjs/operators';
 
 import { Fqid } from 'app/core/definitions/key-types';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
-import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
-import {
-    BaseViewModelWithListOfSpeakers,
-    isBaseViewModelWithListOfSpeakers
-} from 'app/site/base/base-view-model-with-list-of-speakers';
+import { HasListOfSpeakers, hasListOfSpeakers, ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
+import { BaseViewModel } from 'app/site/base/base-view-model';
 
 /**
  * A generic button to go to the list of speakers. Give the content object with
@@ -23,10 +20,10 @@ import {
 })
 export class SpeakerButtonComponent implements OnDestroy {
     @Input()
-    public set object(obj: BaseViewModelWithListOfSpeakers | Fqid | null) {
+    public set object(obj: (BaseViewModel & HasListOfSpeakers) | Fqid | null) {
         let listOfSpeakers: ViewListOfSpeakers;
-        if (isBaseViewModelWithListOfSpeakers(obj)) {
-            listOfSpeakers = obj.listOfSpeakers;
+        if (hasListOfSpeakers(obj)) {
+            listOfSpeakers = obj.list_of_speakers;
             /*} else if (typeof obj === 'string') {
             listOfSpeakers = this.listOfSpeakersRepo.findByContentObjectId(obj);*/
             // No lookup by fqid...

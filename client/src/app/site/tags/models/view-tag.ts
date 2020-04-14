@@ -1,11 +1,13 @@
+import { Id } from 'app/core/definitions/key-types';
 import { SearchRepresentation } from 'app/core/ui-services/search.service';
+import { HasTagIds } from 'app/shared/models/base/has-tag-ids';
 import { Tag } from 'app/shared/models/core/tag';
 import { Searchable } from 'app/site/base/searchable';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { BaseViewModel } from '../../base/base-view-model';
 
-export interface TagTitleInformation {
-    name: string;
+export interface HasTags extends HasTagIds {
+    tags: ViewTag[];
 }
 
 /**
@@ -15,7 +17,7 @@ export interface TagTitleInformation {
  * Provides "safe" access to variables and functions in {@link Tag}
  * @ignore
  */
-export class ViewTag extends BaseViewModel<Tag> implements TagTitleInformation, Searchable {
+export class ViewTag extends BaseViewModel<Tag> implements Searchable {
     public static COLLECTION = Tag.COLLECTION;
     protected _collection = Tag.COLLECTION;
 
@@ -32,7 +34,7 @@ export class ViewTag extends BaseViewModel<Tag> implements TagTitleInformation, 
     }
 }
 interface ITagRelations {
-    tagged: BaseViewModel[];
+    tagged: (BaseViewModel & HasTags)[];
     meeting: ViewMeeting;
 }
 export interface ViewTag extends Tag, ITagRelations {}
