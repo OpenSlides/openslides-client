@@ -1,10 +1,10 @@
 import { MotionPollMethod } from 'app/shared/models/motions/motion-poll';
 import { MajorityMethod, PercentBase, PollState, PollType } from 'app/shared/models/poll/base-poll';
-import { MotionTitleInformation } from 'app/site/motions/models/view-motion';
 import { BasePollSlideData } from 'app/slides/polls/base-poll-slide-data';
+import { ReferencedMotionTitleInformation } from '../base/base-motion-slide';
 
 export interface MotionPollSlideData extends BasePollSlideData {
-    motion: MotionTitleInformation;
+    motion: ReferencedMotionTitleInformation;
     poll: {
         title: string;
         type: PollType;

@@ -1,5 +1,7 @@
 import { Id } from 'app/core/definitions/key-types';
-import { BaseModelWithListOfSpeakers } from '../base/base-model-with-list-of-speakers';
+import { BaseModel } from '../base/base-model';
+import { HasListOfSpeakersId } from '../base/has-list-of-speakers-id';
+import { HasProjectableIds } from '../base/has-projectable-ids';
 
 interface PdfInformation {
     pages?: number;
@@ -10,7 +12,7 @@ interface PdfInformation {
  * Representation of MediaFile. Has the nested property "File"
  * @ignore
  */
-export class Mediafile extends BaseModelWithListOfSpeakers<Mediafile> {
+export class Mediafile extends BaseModel<Mediafile> {
     public static COLLECTION = 'mediafile';
     public static MEDIA_URL_PREFIX = '/media/';
 
@@ -28,9 +30,6 @@ export class Mediafile extends BaseModelWithListOfSpeakers<Mediafile> {
     public access_group_ids: Id[]; // (group/mediafile_access_group_ids)[];
     public parent_id: Id; // mediafile/child_ids;
     public child_ids: Id[]; // (mediafile/parent_id)[];
-    public list_of_speakers_id: Id; // list_of_speakers/content_object_id;
-    public projection_ids: Id[]; // (projection/element_id)[];
-    public current_projector_ids: Id[]; // (projector/current_element_ids)[]
     public attachment_ids: Id[]; // (*/attachment_ids)[];
     public meeting_id: Id; // meeting/mediafile_ids;
     public used_as_logo_$_in_meeting: string[]; // meeting/logo_$<token>;
@@ -61,3 +60,4 @@ export class Mediafile extends BaseModelWithListOfSpeakers<Mediafile> {
         return `${Mediafile.MEDIA_URL_PREFIX}${this.path}`;
     }
 }
+export interface Mediafile extends HasProjectableIds, HasListOfSpeakersId {}

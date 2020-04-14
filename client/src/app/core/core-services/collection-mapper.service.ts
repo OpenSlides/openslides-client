@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { BaseRepository } from 'app/core/repositories/base-repository';
-import { BaseViewModel, TitleInformation, ViewModelConstructor } from 'app/site/base/base-view-model';
+import { BaseViewModel, ViewModelConstructor } from 'app/site/base/base-view-model';
 import { BaseModel, ModelConstructor } from '../../shared/models/base/base-model';
 
 /**
@@ -15,12 +15,12 @@ interface UnifiedConstructors {
 /**
  * Every types supported: (View)ModelConstructors, repos and collections.
  */
-type TypeNumber = UnifiedConstructors | BaseRepository<any, any, any> | string;
+type TypeNumber = UnifiedConstructors | BaseRepository<any, any> | string;
 
 type CollectionMappedTypes = [
     ModelConstructor<BaseModel>,
     ViewModelConstructor<BaseViewModel>,
-    BaseRepository<BaseViewModel<any>, BaseModel<any>, TitleInformation>
+    BaseRepository<BaseViewModel<any>, BaseModel<any>>
 ];
 
 /**
@@ -49,7 +49,7 @@ export class CollectionMapperService {
     public registerCollectionElement<V extends BaseViewModel<M>, M extends BaseModel>(
         model: ModelConstructor<M>,
         viewModel: ViewModelConstructor<V>,
-        repository: BaseRepository<V, M, TitleInformation>
+        repository: BaseRepository<V, M>
     ): void {
         this.collectionMapping[model.COLLECTION] = [model, viewModel, repository];
     }
@@ -97,18 +97,16 @@ export class CollectionMapperService {
      * @param obj The object to get the repository from.
      * @returns the repository
      */
-    public getRepository<V extends BaseViewModel, M extends BaseModel, T extends TitleInformation>(
-        obj: TypeNumber
-    ): BaseRepository<V & T, M, T> | null {
+    public getRepository<V extends BaseViewModel, M extends BaseModel>(obj: TypeNumber): BaseRepository<V, M> | null {
         if (this.isCollectionRegistered(this.getCollection(obj))) {
-            return this.collectionMapping[this.getCollection(obj)][2] as BaseRepository<V & T, M, T>;
+            return this.collectionMapping[this.getCollection(obj)][2] as BaseRepository<V, M>;
         }
     }
 
     /**
      * @returns all registered repositories.
      */
-    public getAllRepositories(): BaseRepository<any, any, any>[] {
+    public getAllRepositories(): BaseRepository<any, any>[] {
         return Object.values(this.collectionMapping).map((types: CollectionMappedTypes) => types[2]);
     }
 

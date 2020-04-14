@@ -251,7 +251,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
             gender: user.gender,
             structure_level: user.structure_level,
             number: user.number,
-            vote_delegated_from_users_id: user.vote_delegated_from_users_id
+            vote_delegated_from_users_id: user.vote_delegations_from_ids()
         };
 
         const dialogRef = this.dialog.open(this.userInfoDialog, infoDialogSettings);

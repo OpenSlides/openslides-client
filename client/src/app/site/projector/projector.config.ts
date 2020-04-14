@@ -1,8 +1,8 @@
 import { AppConfig } from '../../core/definitions/app-config';
 import { Permission } from 'app/core/core-services/operator.service';
-import { ProjectionDefaultRepositoryService } from 'app/core/repositories/projector/projection-default-repository.service';
+import { ProjectiondefaultRepositoryService } from 'app/core/repositories/projector/projection-default-repository.service';
 import { ProjectionRepositoryService } from 'app/core/repositories/projector/projection-repository.service';
-import { CountdownRepositoryService } from 'app/core/repositories/projector/projector-countdown-repository.service';
+import { ProjectorCountdownRepositoryService } from 'app/core/repositories/projector/projector-countdown-repository.service';
 import { ProjectorMessageRepositoryService } from 'app/core/repositories/projector/projector-message-repository.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { Projection } from 'app/shared/models/projector/projection';
@@ -11,7 +11,7 @@ import { Projector } from 'app/shared/models/projector/projector';
 import { ProjectorCountdown } from 'app/shared/models/projector/projector-countdown';
 import { ProjectorMessage } from 'app/shared/models/projector/projector-message';
 import { ViewProjection } from './models/view-projection';
-import { ViewProjectiondefault } from './models/view-projection-default';
+import { ViewProjectiondefault } from './models/view-projectiondefault';
 import { ViewProjector } from './models/view-projector';
 import { ViewProjectorCountdown } from './models/view-projector-countdown';
 import { ViewProjectorMessage } from './models/view-projector-message';
@@ -27,7 +27,7 @@ export const ProjectorAppConfig: AppConfig = {
         {
             model: Projectiondefault,
             viewModel: ViewProjectiondefault,
-            repository: ProjectionDefaultRepositoryService
+            repository: ProjectiondefaultRepositoryService
         },
         {
             model: Projection,
@@ -37,7 +37,7 @@ export const ProjectorAppConfig: AppConfig = {
         {
             model: ProjectorCountdown,
             viewModel: ViewProjectorCountdown,
-            repository: CountdownRepositoryService
+            repository: ProjectorCountdownRepositoryService
         },
         {
             model: ProjectorMessage,

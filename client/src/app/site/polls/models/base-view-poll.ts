@@ -130,8 +130,6 @@ interface IBasePollRelations<O extends BaseViewOption> {
     voted: ViewUser[];
     entitled_groups: ViewGroup[];
     options: O[];
-    projections: ViewProjection[];
-    current_projectors: ViewProjector[];
     meeting: ViewMeeting;
 }
 export interface BaseViewPoll<

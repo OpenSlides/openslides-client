@@ -2,6 +2,7 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 import { Id } from 'app/core/definitions/key-types';
 import { BaseDecimalModel } from '../base/base-decimal-model';
+import { HasProjectableIds } from '../base/has-projectable-ids';
 
 /**
  * Iterable pre selection of genders (sexes)
@@ -29,10 +30,9 @@ export class User extends BaseDecimalModel<User> {
     public number: string;
     public structure_level: string;
     public email?: string;
-    public vote_delegated_to_id: number;
-    public vote_delegated_from_users_id: number[];
     public last_email_send?: string; // ISO datetime string
     public vote_weight: number;
+    public is_demo_user: boolean;
 
     public role_id?: Id; // role/user_ids;
 
@@ -43,10 +43,6 @@ export class User extends BaseDecimalModel<User> {
     public committee_as_member_ids: Id[]; // (committee/member_ids)[];
     public committee_as_manager_ids: Id[]; // (committee/manager_ids)[];
 
-    // Projection
-    public projection_ids: Id[]; // (projection/element_id)[];
-    public current_projector_ids: Id[]; // (projector/current_element_ids)[]
-
     public group_$_ids: string[]; // (group/user_ids)[];
     public speaker_$_ids: string[]; // (speaker/user_id)[];
     public personal_note_$_ids: string[]; // (personal_note/user_id)[];
@@ -54,10 +50,14 @@ export class User extends BaseDecimalModel<User> {
     public submitted_motion_$_ids: string[]; // (motion_submitter/user_id)[];
     public motion_poll_voted_$_ids: string[]; // (motion_poll/voted_ids)[];
     public motion_vote_$_ids: string[]; // (motion_vote/user_id)[];
+    public motion_delegated_vote_$_ids: string[]; // (motion_vote/delegated_user_id)[];
     public assignment_candidate_$_ids: string[]; // (assignment_candidate/user_id)[];
     public assignment_poll_voted_$_ids: string[]; // (assignment_poll/voted_ids)[];
-    public assignment_option_$_ids: string[]; // (assignment_option/user_ids)[];
+    public assignment_option_$_ids: string[]; // (assignment_option/user_id)[];
     public assignment_vote_$_ids: string[]; // (assignment_vote/user_id)[];
+    public assignment_delegated_vote_$_ids: string[]; // (assignment_vote/delegated_user_id)[];
+    public vote_delegated_$_to_id: string[]; // user/vote_delegated_$<meeting_id>_from_ids;
+    public vote_delegations_$_from_ids: string[]; // user/vote_delegated_$<meeting_id>_to_id;
 
     public get isVoteWeightOne(): boolean {
         return this.vote_weight === 1;
@@ -67,12 +67,12 @@ export class User extends BaseDecimalModel<User> {
         return !!this.vote_delegated_to_id;
     }
 
-    public get hasVoteRightFromOthers(): boolean {
-        return this.vote_delegated_from_users_id?.length > 0;
-    }
-
     public constructor(input?: Partial<User>) {
         super(User.COLLECTION, input);
+    }
+
+    public hasVoteRightFromOthers(meetingId: Id): boolean {
+        return this.vote_delegations_from_ids(meetingId)?.length > 0;
     }
 
     public group_ids(meetingId: Id): Id[] {
@@ -103,6 +103,10 @@ export class User extends BaseDecimalModel<User> {
         return this[`motion_vote_${meetingId}_ids`] || [];
     }
 
+    public motion_delegated_vote_ids(meetingId: Id): Id[] {
+        return this[`motion_delegated_vote_${meetingId}_ids`] || [];
+    }
+
     public assignment_candidate_ids(meetingId: Id): Id[] {
         return this[`assignment_candidate_${meetingId}_ids`] || [];
     }
@@ -119,7 +123,20 @@ export class User extends BaseDecimalModel<User> {
         return this[`assignment_vote_${meetingId}_ids`] || [];
     }
 
+    public assignment_delegated_vote_ids(meetingId: Id): Id[] {
+        return this[`assignment_delegated_vote_${meetingId}_ids`] || [];
+    }
+
+    public vote_delegated_to_id(meetingId: Id): Id[] {
+        return this[`vote_delegated_${meetingId}_to_id`] || [];
+    }
+
+    public vote_delegations_from_ids(meetingId: Id): Id[] {
+        return this[`vote_delegations_${meetingId}_from_ids`] || [];
+    }
+
     protected getDecimalFields(): string[] {
         return ['vote_weight'];
     }
 }
+export interface User extends HasProjectableIds {}

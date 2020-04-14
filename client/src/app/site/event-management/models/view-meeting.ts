@@ -13,7 +13,7 @@ import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-co
 import { ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
 import { ViewMotionStatuteParagraph } from 'app/site/motions/models/view-motion-statute-paragraph';
 import { ViewMotionWorkflow } from 'app/site/motions/models/view-motion-workflow';
-import { ViewProjectiondefault } from 'app/site/projector/models/view-projection-default';
+import { ViewProjectiondefault } from 'app/site/projector/models/view-projectiondefault';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { ViewProjectorCountdown } from 'app/site/projector/models/view-projector-countdown';
 import { ViewProjectorMessage } from 'app/site/projector/models/view-projector-message';
@@ -23,11 +23,7 @@ import { ViewGroup } from 'app/site/users/models/view-group';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { ViewCommittee } from './view-committee';
 
-export interface MeetingTitleInformation {
-    name: string;
-}
-
-export class ViewMeeting extends BaseViewModel<Meeting> implements MeetingTitleInformation {
+export class ViewMeeting extends BaseViewModel<Meeting> {
     public static COLLECTION = Meeting.COLLECTION;
     protected _collection = Meeting.COLLECTION;
 
@@ -43,7 +39,7 @@ interface IMeetingRelations {
     projectors: ViewProjector[];
     projectiondefaults: ViewProjectiondefault[];
     projector_messages: ViewProjectorMessage[];
-    projector_countdown: ViewProjectorCountdown[];
+    projector_countdowns: ViewProjectorCountdown[];
     tags: ViewTag[];
     agenda_items: ViewAgendaItem[];
     lists_of_speakers: ViewListOfSpeakers[];
@@ -64,7 +60,7 @@ interface IMeetingRelations {
     committee: ViewCommittee;
     default_meeting_for_committee?: ViewCommittee;
     present_users: ViewUser[];
-    temorary_users: ViewUser[];
+    temporary_users: ViewUser[];
     guests: ViewUser[];
     reference_projector: ViewProjector;
 }

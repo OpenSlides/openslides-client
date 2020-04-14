@@ -3,15 +3,11 @@ import { BaseViewModel } from '../../base/base-view-model';
 import { ViewMotion } from './view-motion';
 import { ViewMotionWorkflow } from './view-motion-workflow';
 
-export interface StateTitleInformation {
-    name: string;
-}
-
 /**
  * class for the ViewState.
  * @ignore
  */
-export class ViewMotionState extends BaseViewModel<MotionState> implements StateTitleInformation {
+export class ViewMotionState extends BaseViewModel<MotionState> {
     public static COLLECTION = MotionState.COLLECTION;
     protected _collection = MotionState.COLLECTION;
 

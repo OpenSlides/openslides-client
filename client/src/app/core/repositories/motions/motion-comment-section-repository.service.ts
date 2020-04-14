@@ -3,10 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpService } from 'app/core/core-services/http.service';
 import { MotionCommentSection } from 'app/shared/models/motions/motion-comment-section';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
-import {
-    MotionCommentSectionTitleInformation,
-    ViewMotionCommentSection
-} from 'app/site/motions/models/view-motion-comment-section';
+import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-comment-section';
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
@@ -25,8 +22,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 })
 export class MotionCommentSectionRepositoryService extends BaseRepository<
     ViewMotionCommentSection,
-    MotionCommentSection,
-    MotionCommentSectionTitleInformation
+    MotionCommentSection
 > {
     /**
      * Creates a CategoryRepository
@@ -50,8 +46,8 @@ export class MotionCommentSectionRepositoryService extends BaseRepository<
         };
     }
 
-    public getTitle = (titleInformation: MotionCommentSectionTitleInformation) => {
-        return titleInformation.name;
+    public getTitle = (viewMotionCommentSection: ViewMotionCommentSection) => {
+        return viewMotionCommentSection.name;
     };
 
     public getVerboseName = (plural: boolean = false) => {

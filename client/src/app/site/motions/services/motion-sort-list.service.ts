@@ -42,7 +42,7 @@ export class MotionSortListService extends BaseSortListService<ViewMotion> {
         { property: 'title' },
         { property: 'submitters' },
         { property: 'category', sortFn: this.categorySortFn },
-        { property: 'motion_block_id', label: 'Motion block' },
+        { property: 'block_id', label: 'Motion block' },
         { property: 'state' },
         { property: 'creationDate', label: _('Creation date') },
         { property: 'lastChangeDate', label: _('Last modified') }

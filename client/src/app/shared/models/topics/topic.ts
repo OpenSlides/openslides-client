@@ -1,24 +1,25 @@
 import { Id } from 'app/core/definitions/key-types';
-import { BaseModelWithAgendaItemAndListOfSpeakers } from '../base/base-model-with-agenda-item-and-list-of-speakers';
+import { BaseModel } from '../base/base-model';
+import { HasAgendaItemId } from '../base/has-agenda-item-id';
+import { HasAttachmentIds } from '../base/has-attachment-ids';
+import { HasListOfSpeakersId } from '../base/has-list-of-speakers-id';
+import { HasTagIds } from '../base/has-tag-ids';
 
 /**
  * Representation of a topic.
  * @ignore
  */
-export class Topic extends BaseModelWithAgendaItemAndListOfSpeakers<Topic> {
+export class Topic extends BaseModel<Topic> {
     public static COLLECTION = 'topic';
 
     public id: Id;
     public title: string;
     public text: string;
 
-    public attachment_ids: Id[]; // (mediafile/attachement_ids)[];
-    public agenda_item_id: Id; // agenda_item/content_object_id;
-    public list_of_speakers_id: Id; // list_of_speakers/content_object_id;
-    public tag_ids: Id[]; // (tag/tagged_ids)[];
     public meeting_id: Id; // meeting/topic_ids;
 
     public constructor(input?: Partial<Topic>) {
         super(Topic.COLLECTION, input);
     }
 }
+export interface Topic extends HasAgendaItemId, HasListOfSpeakersId, HasAttachmentIds, HasTagIds {}

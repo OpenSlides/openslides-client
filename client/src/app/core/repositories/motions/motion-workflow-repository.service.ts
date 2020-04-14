@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { MotionWorkflow } from 'app/shared/models/motions/motion-workflow';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionState } from 'app/site/motions/models/view-motion-state';
-import { ViewMotionWorkflow, WorkflowTitleInformation } from 'app/site/motions/models/view-motion-workflow';
+import { ViewMotionWorkflow } from 'app/site/motions/models/view-motion-workflow';
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
@@ -20,11 +20,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class MotionWorkflowRepositoryService extends BaseRepository<
-    ViewMotionWorkflow,
-    MotionWorkflow,
-    WorkflowTitleInformation
-> {
+export class MotionWorkflowRepositoryService extends BaseRepository<ViewMotionWorkflow, MotionWorkflow> {
     /**
      * Creates a WorkflowRepository
      * Converts existing and incoming workflow to ViewWorkflows
@@ -38,8 +34,8 @@ export class MotionWorkflowRepositoryService extends BaseRepository<
         super(repositoryServiceCollector, MotionWorkflow);
     }
 
-    public getTitle = (titleInformation: WorkflowTitleInformation) => {
-        return titleInformation.name;
+    public getTitle = (viewMotionWorkflow: ViewMotionWorkflow) => {
+        return viewMotionWorkflow.name;
     };
 
     public getVerboseName = (plural: boolean = false) => {

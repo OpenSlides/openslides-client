@@ -109,7 +109,7 @@ export class MotionXlsxExportService {
             ...properties.map(property => {
                 let propertyHeader = '';
                 switch (property) {
-                    case 'motion_block':
+                    case 'block':
                         propertyHeader = 'Motion block';
                         break;
                     case 'speakers':

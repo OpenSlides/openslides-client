@@ -125,10 +125,10 @@ export class MotionCsvExportService {
                     label: 'Text',
                     map: motion => this.createText(motion, crMode)
                 };
-            } else if (option === 'motion_block') {
+            } else if (option === 'block') {
                 return {
                     label: 'Motion block',
-                    map: motion => (motion.motion_block ? motion.motion_block.getTitle() : '')
+                    map: motion => (motion.block ? motion.block.getTitle() : '')
                 };
             } else {
                 return { property: option } as CsvColumnDefinitionProperty<ViewMotion>;
@@ -166,7 +166,7 @@ export class MotionCsvExportService {
                     label: 'recommendation',
                     map: motion => (motion.recommendation ? this.motionRepo.getExtendedRecommendationLabel(motion) : '')
                 },
-                { property: 'motion_block', label: 'Motion block' }
+                { property: 'block', label: 'Motion block' }
             ],
             this.translate.instant('Call list') + '.csv'
         );

@@ -256,6 +256,7 @@
 
         "users_sort_by": "first_name",
         "users_enable_presence_view": true,
+        "users_enable_vote_weight": true,
         "users_allow_self_set_present": true,
         "users_pdf_welcometitle": "Welcome to OpenSlides",
         "users_pdf_welcometext": "[Place for your welcome and help text.]",
@@ -784,7 +785,7 @@
         "closed": false,
 
         "content_object_id": "motion/2",
-        "speakers": [],
+        "speaker_ids": [],
         "projection_ids": [],
         "current_projector_ids": [],
         "meeting_id": 1
@@ -793,7 +794,7 @@
         "id": 3,
         "closed": false,
 
-        "content_object": "topic/1",
+        "content_object_id": "topic/1",
         "speaker_ids": [1, 2],
         "projection_ids": [],
         "current_projector_ids": [],
@@ -803,7 +804,7 @@
         "id": 4,
         "closed": false,
 
-        "content_object": "topic/2",
+        "content_object_id": "topic/2",
         "speaker_ids": [],
         "projection_ids": [],
         "current_projector_ids": [],
@@ -813,7 +814,7 @@
         "id": 5,
         "closed": false,
 
-        "content_object": "topic/3",
+        "content_object_id": "topic/3",
         "speaker_ids": [],
         "projection_ids": [],
         "current_projector_ids": [],
@@ -823,7 +824,7 @@
         "id": 6,
         "closed": false,
 
-        "content_object": "topic/4",
+        "content_object_id": "topic/4",
         "speaker_ids": [],
         "projection_ids": [],
         "current_projector_ids": [],
@@ -833,7 +834,7 @@
         "id": 7,
         "closed": false,
 
-        "content_object": "topic/5",
+        "content_object_id": "topic/5",
         "speaker_ids": [3, 4],
         "projection_ids": [],
         "current_projector_ids": [],
@@ -843,7 +844,7 @@
         "id": 8,
         "closed": false,
 
-        "content_object": "topic/6",
+        "content_object_id": "topic/6",
         "speaker_ids": [5],
         "projection_ids": [],
         "current_projector_ids": [],
@@ -853,7 +854,7 @@
         "id": 9,
         "closed": false,
 
-        "content_object": "topic/7",
+        "content_object_id": "topic/7",
         "speaker_ids": [],
         "projection_ids": [],
         "current_projector_ids": [],
@@ -863,7 +864,7 @@
         "id": 10,
         "closed": false,
 
-        "content_object": "topic/8",
+        "content_object_id": "topic/8",
         "speaker_ids": [],
         "projection_ids": [],
         "current_projector_ids": [],
@@ -873,8 +874,8 @@
         "id": 11,
         "closed": false,
 
-        "content_object": "assignment/1",
-        "speakers": [6, 7, 8],
+        "content_object_id": "assignment/1",
+        "speaker_ids": [6, 7, 8],
         "projection_ids": [],
         "current_projector_ids": [],
         "meeting_id": 1
@@ -883,8 +884,8 @@
         "id": 12,
         "closed": false,
 
-        "content_object": "motion/3",
-        "speakers": [],
+        "content_object_id": "motion/3",
+        "speaker_ids": [],
         "projection_ids": [],
         "current_projector_ids": [],
         "meeting_id": 1
@@ -893,8 +894,8 @@
         "id": 13,
         "closed": false,
 
-        "content_object": "motion/4",
-        "speakers": [],
+        "content_object_id": "motion/4",
+        "speaker_ids": [],
         "projection_ids": [],
         "current_projector_ids": [],
         "meeting_id": 1
@@ -903,8 +904,8 @@
         "id": 14,
         "closed": false,
 
-        "content_object": "assignment/2",
-        "speakers": [9, 10],
+        "content_object_id": "assignment/2",
+        "speaker_ids": [9, 10],
         "projection_ids": [],
         "current_projector_ids": [],
         "meeting_id": 1
@@ -913,8 +914,8 @@
         "id": 15,
         "closed": false,
 
-        "content_object": "motion_block/1",
-        "speakers": [],
+        "content_object_id": "motion_block/1",
+        "speaker_ids": [],
         "projection_ids": [],
         "current_projector_ids": [],
         "meeting_id": 1
@@ -1054,7 +1055,7 @@
     {
         "id": 1,
         "title": "A",
-        "text": "",
+        "text": "This is a <b>very</b> great text",
 
         "attachment_ids": [],
         "agenda_item_id": 3,
@@ -1163,10 +1164,9 @@
         "origin_id": null,
         "derived_motion_ids": [],
         "state_id": 1,
-        "workflow_id": 1,
         "recommendation_id": null,
         "category_id": 2,
-        "motion_block_id": null,
+        "block_id": null,
         "submitter_ids": [1],
         "supporter_ids": [],
         "poll_ids": [1, 2],
@@ -1205,10 +1205,9 @@
         "origin_id": null,
         "derived_motion_ids": [],
         "state_id": 1,
-        "workflow_id": 1,
         "recommendation_id": null,
         "category_id": 1,
-        "motion_block_id": null,
+        "block_id": null,
         "submitter_ids": [2],
         "supporter_ids": [],
         "poll_ids": [],
@@ -1247,10 +1246,9 @@
         "origin_id": null,
         "derived_motion_ids": [],
         "state_id": 1,
-        "workflow_id": 1,
         "recommendation_id": null,
         "category_id": 2,
-        "motion_block_id": 1,
+        "block_id": 1,
         "submitter_ids": [3],
         "supporter_ids": [3],
         "poll_ids": [],
@@ -1289,10 +1287,9 @@
         "origin_id": null,
         "derived_motion_ids": [],
         "state_id": 6,
-        "workflow_id": 2,
         "recommendation_id": null,
         "category_id": null,
-        "motion_block_id": 1,
+        "block_id": 1,
         "submitter_ids": [4],
         "supporter_ids": [],
         "poll_ids": [],
@@ -1723,7 +1720,6 @@
 
         "states_id": [1, 2, 3, 4],
         "first_state_id": 1,
-        "motion_ids": [1, 2, 3],
         "default_workflow_meeting_id": 1,
         "default_statute_amendments_meeting_id": null,
         "meeting_id": 1
@@ -1734,7 +1730,6 @@
 
         "states_id": [5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
         "first_state_id": 5,
-        "motion_ids": [4],
         "default_workflow_meeting_id": null,
         "default_statute_amendments_meeting_id": 1,
         "meeting_id": 1
@@ -1837,7 +1832,7 @@
         "default_poll_description": "",
         "number_poll_candidates": false,
 
-        "assignment_candidate_ids": [1, 2, 3],
+        "candidate_ids": [1, 2, 3],
         "polls_id": [1, 2],
         "agenda_item_id": 11,
         "list_of_speakers_id": 11,
@@ -1856,7 +1851,7 @@
         "default_poll_description": "",
         "number_poll_candidates": true,
 
-        "assignment_candidate_ids": [4, 5],
+        "candidate_ids": [4, 5],
         "polls_id": [3],
         "agenda_item_id": 14,
         "list_of_speakers_id": 14,
@@ -2183,8 +2178,8 @@
 
         "current_projection_ids": [4],
         "current_element_ids": ["assignment/1"],
-        "elements_preview_ids": [1, 2],
-        "elements_history_ids": [],
+        "preview_projection_ids": [1, 2],
+        "history_projection_ids": [],
         "used_as_reference_projector_meeting_id": null,
         "projectiondefaults_id": [1, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
         "meeting_id": 1
@@ -2210,8 +2205,8 @@
 
         "current_projection_ids": [6],
         "current_element_ids": ["clock/1"],
-        "elements_preview_ids": [],
-        "elements_history_ids": [],
+        "preview_projection_ids": [],
+        "history_projection_ids": [],
         "used_as_reference_projector_meeting_id": 1,
         "projectiondefaults_id": [2, 3],
         "meeting_id": 1
@@ -2219,17 +2214,17 @@
 "projection": [
     {
         "id": 1,
-        "projector_id": null,
-        "projector_history_id": null,
-        "projector_preview_id": 1,
+        "current_projector_id": null,
+        "preview_projector_id": 1,
+        "history_projector_id": null,
         "element_id": "motion_block/1",
         "options": {}
     },
     {
         "id": 2,
-        "projector_id": null,
-        "projector_history_id": null,
-        "projector_preview_id": 1,
+        "current_projector_id": null,
+        "preview_projector_id": 1,
+        "history_projector_history_id": null,
         "element_id": "motion/4",
         "options": {
             "mode": "diff"
@@ -2237,19 +2232,18 @@
     },
     {
         "id": 4,
-        "projector_id": 1,
-        "projector_history_id": null,
-        "projector_preview_id": null,
+        "current_projector_id": 1,
+        "preview_projector_id": null,
+        "history_projector_id": null,
         "element_id": "assignment/1",
         "options": {}
     },
     {
         "id": 6,
-        "projector_id": 1,
-        "projector_history_id": null,
-        "projector_preview_id": null,
+        "current_projector_id": 1,
+        "preview_projector_id": null,
+        "history_projector_id": null,
         "element_id": "clock/1",
-        "_comment": "there is no clock model, but it should just not be resolved.",
         "options": {
             "stable": true
         }

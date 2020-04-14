@@ -5,11 +5,6 @@ import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { BaseViewModel } from '../../base/base-view-model';
 import { ViewMotion } from './view-motion';
 
-export interface CategoryTitleInformation {
-    prefix: string;
-    name: string;
-}
-
 /**
  * Category class for the View
  *
@@ -17,7 +12,7 @@ export interface CategoryTitleInformation {
  * Provides "safe" access to variables and functions in {@link Category}
  * @ignore
  */
-export class ViewMotionCategory extends BaseViewModel<MotionCategory> implements CategoryTitleInformation, Searchable {
+export class ViewMotionCategory extends BaseViewModel<MotionCategory> implements Searchable {
     public static COLLECTION = MotionCategory.COLLECTION;
     protected _collection = MotionCategory.COLLECTION;
 

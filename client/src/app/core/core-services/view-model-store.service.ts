@@ -23,8 +23,8 @@ export class ViewModelStoreService {
      */
     private getRepository<V extends BaseViewModel>(
         collectionType: ViewModelConstructor<V> | string
-    ): BaseRepository<V, any, any> {
-        return this.mapperService.getRepository(collectionType) as BaseRepository<V, any, any>;
+    ): BaseRepository<V, any> {
+        return this.mapperService.getRepository(collectionType) as BaseRepository<V, any>;
     }
 
     /**

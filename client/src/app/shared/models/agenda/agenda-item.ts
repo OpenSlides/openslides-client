@@ -1,5 +1,6 @@
 import { Fqid, Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
+import { HasProjectableIds } from '../base/has-projectable-ids';
 
 /**
  * Determine visibility states for agenda items
@@ -33,11 +34,10 @@ export class AgendaItem extends BaseModel<AgendaItem> {
     public content_object_id: Fqid; // */agenda_item_id;
     public parent_id?: Id; // agenda_item/child_ids;
     public child_ids: Id[]; // (agenda_item/parent_id)[];
-    public projection_ids: Id[]; // (projection/element_id)[];
-    public current_projector_ids: Id[]; // (projector/current_element_ids)[]
     public meeting_id: Id; // meeting/agenda_item_ids;
 
     public constructor(input?: any) {
         super(AgendaItem.COLLECTION, input);
     }
 }
+export interface AgendaItem extends HasProjectableIds {}

@@ -16,19 +16,9 @@ import { ViewRole } from 'app/site/event-management/models/view-role';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
 import { ViewMotionSubmitter } from 'app/site/motions/models/view-motion-submitter';
-import { ViewProjection } from 'app/site/projector/models/view-projection';
-import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { ViewGroup } from './view-group';
 import { ViewPersonalNote } from './view-personal-note';
 
-export interface UserTitleInformation {
-    username: string;
-    title?: string;
-    first_name?: string;
-    last_name?: string;
-    structure_level?: string;
-    number?: string;
-}
 
 export enum DelegationType {
     Transferred = 1,
@@ -36,7 +26,7 @@ export enum DelegationType {
     Neither
 }
 
-export class ViewUser extends BaseProjectableViewModel<User> implements UserTitleInformation, Searchable {
+export class ViewUser extends BaseProjectableViewModel<User> implements Searchable {
     public static COLLECTION = User.COLLECTION;
 
     public get user(): User {
@@ -68,15 +58,10 @@ export class ViewUser extends BaseProjectableViewModel<User> implements UserTitl
         }
     }
 
-    public get delegationName(): string | undefined {
-        return 'TODO';
-        //return this.voteDelegatedTo?.getFullName();
-    }
-
     public get delegationType(): DelegationType {
         if (this.user.isVoteRightDelegated) {
             return DelegationType.Transferred;
-        } else if (this.user.hasVoteRightFromOthers) {
+        } else if (this.hasVoteRightFromOthers()) {
             return DelegationType.Received;
         }
         return DelegationType.Neither;
@@ -100,6 +85,14 @@ export class ViewUser extends BaseProjectableViewModel<User> implements UserTitl
             meetingId = this.getEnsuredActiveMeetingId();
         }
         return this.is_present_in_meeting_ids.includes(meetingId);
+    }
+
+    public hasVoteRightFromOthers(meetingId?: Id): boolean {
+        return this.vote_delegations_from_ids(meetingId || this.getEnsuredActiveMeetingId())?.length > 0;
+    }
+
+    public delegationName(meetingId?: Id): string | undefined {
+        return this.vote_delegated_to(meetingId || this.getEnsuredActiveMeetingId())?.getFullName();
     }
 
     // ### In this block there is access to structured fields with the active meeting id as a default.
@@ -131,6 +124,10 @@ export class ViewUser extends BaseProjectableViewModel<User> implements UserTitl
         return this.user.motion_vote_ids(meetingId || this.getEnsuredActiveMeetingId());
     }
 
+    public motion_delegated_vote_ids(meetingId?: Id): Id[] {
+        return this.user.motion_vote_ids(meetingId || this.getEnsuredActiveMeetingId());
+    }
+
     public assignment_candidate_ids(meetingId?: Id): Id[] {
         return this.user.assignment_candidate_ids(meetingId || this.getEnsuredActiveMeetingId());
     }
@@ -146,6 +143,18 @@ export class ViewUser extends BaseProjectableViewModel<User> implements UserTitl
     public assignment_vote_ids(meetingId?: Id): Id[] {
         return this.user.assignment_vote_ids(meetingId || this.getEnsuredActiveMeetingId());
     }
+
+    public assignment_delegated_vote_ids(meetingId?: Id): Id[] {
+        return this.user.assignment_delegated_vote_ids(meetingId || this.getEnsuredActiveMeetingId());
+    }
+
+    public vote_delegated_to_id(meetingId?: Id): Id[] {
+        return this.user.vote_delegated_to_id(meetingId || this.getEnsuredActiveMeetingId());
+    }
+
+    public vote_delegations_from_ids(meetingId?: Id): Id[] {
+        return this.user.vote_delegations_from_ids(meetingId || this.getEnsuredActiveMeetingId());
+    }
     // ### block end.
 
     /**
@@ -160,7 +169,7 @@ export class ViewUser extends BaseProjectableViewModel<User> implements UserTitl
             { key: 'Last name', value: this.last_name },
             { key: 'Structure level', value: this.structure_level },
             { key: 'Number', value: this.number },
-            { key: 'Vote Delegation', value: this.delegationName }
+            { key: 'Vote Delegation', value: this.delegationName() }
         ];
         return { properties, searchValue: properties.map(property => property.value) };
     }
@@ -183,10 +192,11 @@ export class ViewUser extends BaseProjectableViewModel<User> implements UserTitl
     }
 
     public canVoteFor(user: ViewUser): boolean {
-        return this.vote_delegated_from_users_id.includes(user.id);
+        throw new Error('TODO');
+        //return this.vote_delegations_from_users_id.includes(user.id);
     }
 }
-type UserStructuredRelation<Result> = (arg?: Id) => Result[];
+type UserManyStructuredRelation<Result> = (arg?: Id) => Result[];
 interface IUserRelations {
     role?: ViewRole;
     is_present_in_meetings: ViewMeeting[];
@@ -194,18 +204,18 @@ interface IUserRelations {
     guest_meetings: ViewMeeting[];
     committees_as_member: ViewCommittee[];
     committees_as_manager: ViewCommittee[];
-    projections: ViewProjection[];
-    current_projectors: ViewProjector[];
-    groups: UserStructuredRelation<ViewGroup>;
-    speakers: UserStructuredRelation<ViewSpeaker>;
-    personal_notes: UserStructuredRelation<ViewPersonalNote>;
-    supported_motions: UserStructuredRelation<ViewMotion>;
-    submitted_motions: UserStructuredRelation<ViewMotionSubmitter>;
-    motion_poll_voted: UserStructuredRelation<ViewMotionPoll>;
-    motion_votes: UserStructuredRelation<MotionVote>;
-    assignment_candidates: UserStructuredRelation<ViewAssignmentCandidate>;
-    assignment_poll_voted: UserStructuredRelation<ViewAssignmentPoll>;
-    assignment_options: UserStructuredRelation<ViewAssignmentOption>;
-    assignment_votes: UserStructuredRelation<ViewAssignmentVote>;
+    groups: UserManyStructuredRelation<ViewGroup>;
+    speakers: UserManyStructuredRelation<ViewSpeaker>;
+    personal_notes: UserManyStructuredRelation<ViewPersonalNote>;
+    supported_motions: UserManyStructuredRelation<ViewMotion>;
+    submitted_motions: UserManyStructuredRelation<ViewMotionSubmitter>;
+    motion_poll_voted: UserManyStructuredRelation<ViewMotionPoll>;
+    motion_votes: UserManyStructuredRelation<MotionVote>;
+    assignment_candidates: UserManyStructuredRelation<ViewAssignmentCandidate>;
+    assignment_poll_voted: UserManyStructuredRelation<ViewAssignmentPoll>;
+    assignment_options: UserManyStructuredRelation<ViewAssignmentOption>;
+    assignment_votes: UserManyStructuredRelation<ViewAssignmentVote>;
+    vote_delegated_to: (arg?: Id) => ViewUser;
+    vote_delegations_from: UserManyStructuredRelation<ViewUser>;
 }
 export interface ViewUser extends User, IUserRelations {}

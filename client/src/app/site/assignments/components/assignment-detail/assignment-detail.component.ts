@@ -501,6 +501,6 @@ export class AssignmentDetailComponent extends BaseComponent implements OnInit {
     }
 
     public removeFromAgenda(): void {
-        this.itemRepo.removeFromAgenda(this.assignment.item).catch(this.raiseError);
+        this.itemRepo.removeFromAgenda(this.assignment.agenda_item).catch(this.raiseError);
     }
 }

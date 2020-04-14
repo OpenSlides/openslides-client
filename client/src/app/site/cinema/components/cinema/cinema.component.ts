@@ -4,12 +4,12 @@ import { OperatorService } from 'app/core/core-services/operator.service';
 import { ProjectorService } from 'app/core/core-services/projector.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { DetailNavigable, isDetailNavigable } from 'app/shared/models/base/detail-navigable';
 import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { CurrentListOfSpeakersService } from 'app/site/projector/services/current-list-of-speakers.service';
+import { isDetailNavigable, DetailNavigable } from 'app/site/base/detail-navigable';
 
 @Component({
     selector: 'os-cinema',

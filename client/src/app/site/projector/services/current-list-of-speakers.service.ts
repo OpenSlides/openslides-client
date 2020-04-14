@@ -6,7 +6,6 @@ import { ProjectorService } from 'app/core/core-services/projector.service';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
-import { isBaseViewModelWithListOfSpeakers } from 'app/site/base/base-view-model-with-list-of-speakers';
 import { SlideManager } from 'app/slides/services/slide-manager.service';
 import { ViewProjector } from '../models/view-projector';
 

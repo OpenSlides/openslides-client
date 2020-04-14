@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 
+import { AgendaItemRepositoryService } from '../agenda/agenda-item-repository.service';
+import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Topic } from 'app/shared/models/topics/topic';
 import { CreateTopic } from 'app/site/topics/models/create-topic';
-import { TopicTitleInformation, ViewTopic } from 'app/site/topics/models/view-topic';
+import { ViewTopic } from 'app/site/topics/models/view-topic';
 import { BaseIsAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-is-agenda-item-and-list-of-speakers-content-object-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
@@ -12,11 +14,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class TopicRepositoryService extends BaseIsAgendaItemAndListOfSpeakersContentObjectRepository<
-    ViewTopic,
-    Topic,
-    TopicTitleInformation
-> {
+export class TopicRepositoryService extends BaseIsAgendaItemAndListOfSpeakersContentObjectRepository<ViewTopic, Topic> {
     /**
      * Constructor calls the parent constructor
      *
@@ -24,28 +22,40 @@ export class TopicRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCon
      * @param mapperService OpenSlides mapping service for collections
      * @param dataSend Access the DataSendService
      */
-    public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
-        super(repositoryServiceCollector, Topic);
+    public constructor(
+        repositoryServiceCollector: RepositoryServiceCollector,
+        agendaItemRepo: AgendaItemRepositoryService
+    ) {
+        super(repositoryServiceCollector, Topic, agendaItemRepo);
     }
 
-    public getTitle = (titleInformation: TopicTitleInformation) => {
-        return titleInformation.title;
+    public getFieldsets(): Fieldsets<Topic> {
+        const titleFields: (keyof Topic)[] = ['title'];
+        return {
+            [DEFAULT_FIELDSET]: titleFields.concat(['text']),
+            list: titleFields,
+            title: titleFields
+        };
+    }
+
+    public getTitle = (topic: ViewTopic) => {
+        return topic.title;
     };
 
-    public getListTitle = (titleInformation: TopicTitleInformation) => {
-        if (titleInformation.agenda_item_number && titleInformation.agenda_item_number()) {
-            return `${titleInformation.agenda_item_number()} · ${titleInformation.title}`;
+    public getListTitle = (topic: ViewTopic) => {
+        if (topic.agenda_item.item_number) {
+            return `${topic.agenda_item.item_number} · ${topic.title}`;
         } else {
-            return this.getTitle(titleInformation);
+            return this.getTitle(topic);
         }
     };
 
-    public getAgendaListTitle = (titleInformation: TopicTitleInformation) => {
-        return { title: this.getListTitle(titleInformation) };
+    public getAgendaListTitle = (topic: ViewTopic) => {
+        return { title: this.getListTitle(topic) };
     };
 
-    public getAgendaSlideTitle = (titleInformation: TopicTitleInformation) => {
-        return this.getAgendaListTitle(titleInformation).title;
+    public getAgendaSlideTitle = (topic: ViewTopic) => {
+        return this.getAgendaListTitle(topic).title;
     };
 
     public getVerboseName = (plural: boolean = false) => {
@@ -56,9 +66,9 @@ export class TopicRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCon
         this.create(
             new CreateTopic({
                 ...topic.topic,
-                agenda_type: topic.item.type,
-                agenda_parent_id: topic.item.parent_id,
-                agenda_weight: topic.item.weight
+                agenda_type: topic.agenda_item.type,
+                agenda_parent_id: topic.agenda_item.parent_id,
+                agenda_weight: topic.agenda_item.weight
             })
         );
     }

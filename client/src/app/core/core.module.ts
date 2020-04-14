@@ -2,11 +2,11 @@ import { CommonModule } from '@angular/common';
 import { NgModule, Optional, SkipSelf, Type } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 
+import { ModelRequestBuilderService } from './core-services/model-request-builder.service';
 import { OnAfterAppsLoaded } from './definitions/on-after-apps-loaded';
+import { OperatorService } from './core-services/operator.service';
 
-export const ServicesToLoadOnAppsLoaded: Type<OnAfterAppsLoaded>[] = [
-    /*OperatorService*/
-];
+export const ServicesToLoadOnAppsLoaded: Type<OnAfterAppsLoaded>[] = [OperatorService, ModelRequestBuilderService];
 
 /**
  * Global Core Module.

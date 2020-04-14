@@ -68,7 +68,7 @@ export class MotionFilterListService extends BaseFilterListService<ViewMotion> {
     };
 
     public motionBlockFilterOptions: OsFilter = {
-        property: 'motion_block_id',
+        property: 'block_id',
         label: 'Motion block',
         options: []
     };

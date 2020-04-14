@@ -90,8 +90,7 @@
 
                 <!-- Submitters -->
                 <div class="submitters-line ellipsis-overflow">
-                    TODO: Enable submitter relations...
-                    <!--<span *ngIf="motion.submitters.length">
+                    <span *ngIf="motion.submitters.length">
                         <span>{{ 'by' | translate }}</span>
                         {{ motion.submitters }}
                     </span>
@@ -102,7 +101,7 @@
                         </span>
                         <span>{{ 'Sequential number' | translate }}</span>
                         {{ motion.sequential_number }}
-                    </span>-->
+                    </span>
                 </div>
 
                 <!-- TODO: These two now appear twice. Might be an own component -->
@@ -141,8 +140,8 @@
                 </div>
 
                 <!-- Motion Block -->
-                <div class="ellipsis-overflow spacer-top-5" *ngIf="motion.motion_block">
-                    <os-icon-container icon="widgets">{{ motion.motion_block.title }}</os-icon-container>
+                <div class="ellipsis-overflow spacer-top-5" *ngIf="motion.block">
+                    <os-icon-container icon="widgets">{{ motion.block.title }}</os-icon-container>
                 </div>
 
                 <!-- Tags -->
@@ -375,7 +374,7 @@
         </mat-form-field>
         <!-- Motion block -->
         <mat-form-field *ngIf="isMotionBlockAvailable()">
-            <mat-select placeholder="{{ 'Motion block' | translate }}" [(ngModel)]="infoDialog.motion_block_id">
+            <mat-select placeholder="{{ 'Motion block' | translate }}" [(ngModel)]="infoDialog.block_id">
                 <mat-option [value]="null">-</mat-option>
                 <mat-option *ngFor="let block of motionBlocks" [value]="block.id">
                     {{ block.getTitle() | translate }}

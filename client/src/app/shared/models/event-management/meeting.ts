@@ -91,6 +91,7 @@ export class Meeting extends BaseModel<Meeting> {
     // Users
     public users_sort_by: string;
     public users_enable_presence_view: boolean;
+    public users_enable_vote_weight: boolean;
     public users_allow_self_set_present: boolean;
     public users_pdf_welcometitle: string;
     public users_pdf_welcometext: string;
@@ -126,7 +127,7 @@ export class Meeting extends BaseModel<Meeting> {
     public motion_ids: Id[]; // (motion/meeting_id)[];
     public motion_comment_section_ids: Id[]; // (motion_comment_section/meeting_id)[];
     public motion_category_ids: Id[]; // (motion_category/meeting_id)[];
-    public motion_block_ids: Id[]; // (motion_block/meeting_id)[];
+    public motion_block_ids: Id[]; // (block/meeting_id)[];
     public motion_workflow_ids: Id[]; // (motion_workflow/meeting_id)[];
     public motion_statute_paragraph_ids: Id[]; // (motion_statute_paragraph/meeting_id)[];
     public motion_poll_ids: Id[]; // (motion_poll/meeting_id)[];
@@ -141,7 +142,7 @@ export class Meeting extends BaseModel<Meeting> {
     public committee_id: Id; // committee/meeting_ids;
     public default_meeting_for_committee_id: Id; // committee/default_meeting_id;
     public present_user_ids: Id[]; // (user/is_present_in_meeting_ids)[];
-    public temorary_user_ids: Id[]; // (user/meeting_id)[];
+    public temporary_user_ids: Id[]; // (user/meeting_id)[];
     public guest_ids: Id[]; // (user/guest_meeting_ids)[];
     public reference_projector_id: Id; // projector/used_as_reference_projector_meeting_id;
 

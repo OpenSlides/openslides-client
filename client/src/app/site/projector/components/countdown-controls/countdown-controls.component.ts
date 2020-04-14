@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { StorageService } from 'app/core/core-services/storage.service';
-import { CountdownRepositoryService } from 'app/core/repositories/projector/projector-countdown-repository.service';
+import { ProjectorCountdownRepositoryService } from 'app/core/repositories/projector/projector-countdown-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { ProjectionDialogService } from 'app/core/ui-services/projection-dialog.service';
@@ -59,7 +59,7 @@ export class CountdownControlsComponent extends BaseComponent {
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        private repo: CountdownRepositoryService,
+        private repo: ProjectorCountdownRepositoryService,
         private organisationSettingsService: OrganisationSettingsService,
         private promptService: PromptService,
         private projectionDialogService: ProjectionDialogService,

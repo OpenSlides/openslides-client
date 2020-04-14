@@ -8,11 +8,7 @@ import { ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
 import { BaseViewModel } from '../../base/base-view-model';
 import { ViewUser } from './view-user';
 
-export interface GroupTitleInformation {
-    name: string;
-}
-
-export class ViewGroup extends BaseViewModel<Group> implements GroupTitleInformation {
+export class ViewGroup extends BaseViewModel<Group> {
     public static COLLECTION = Group.COLLECTION;
 
     public get group(): Group {
