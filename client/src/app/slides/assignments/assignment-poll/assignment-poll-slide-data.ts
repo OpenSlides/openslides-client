@@ -1,10 +1,11 @@
 import { AssignmentPollMethod } from 'app/shared/models/assignments/assignment-poll';
 import { MajorityMethod, PercentBase, PollState, PollType } from 'app/shared/models/poll/base-poll';
-import { AssignmentTitleInformation } from 'app/site/assignments/models/view-assignment';
 import { BasePollSlideData } from 'app/slides/polls/base-poll-slide-data';
 
 export interface AssignmentPollSlideData extends BasePollSlideData {
-    assignment: AssignmentTitleInformation;
+    assignment: {
+        title: string;
+    };
     poll: {
         title: string;
         type: PollType;

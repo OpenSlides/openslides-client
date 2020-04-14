@@ -13,7 +13,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class AssignmentVoteRepositoryService extends BaseRepository<ViewAssignmentVote, AssignmentVote, object> {
+export class AssignmentVoteRepositoryService extends BaseRepository<ViewAssignmentVote, AssignmentVote> {
     /**
      * @param DS DataStore access
      * @param dataSend Sending data
@@ -26,7 +26,7 @@ export class AssignmentVoteRepositoryService extends BaseRepository<ViewAssignme
         super(repositoryServiceCollector, AssignmentVote);
     }
 
-    public getTitle = (titleInformation: object) => {
+    public getTitle = (viewAssignmentVote: ViewAssignmentVote) => {
         return 'Vote';
     };
 

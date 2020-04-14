@@ -8,7 +8,7 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { ListOfSpeakersContentComponent } from 'app/shared/components/list-of-speakers-content/list-of-speakers-content.component';
-import { BaseComponent } from 'app/site/base/components/base.component';
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { CurrentListOfSpeakersSlideService } from 'app/site/projector/services/current-list-of-speakers-slide.service';
@@ -23,7 +23,7 @@ import { ViewListOfSpeakers } from '../../models/view-list-of-speakers';
     templateUrl: './list-of-speakers.component.html',
     styleUrls: ['./list-of-speakers.component.scss']
 })
-export class ListOfSpeakersComponent extends BaseComponent implements OnInit {
+export class ListOfSpeakersComponent extends BaseModelContextComponent implements OnInit {
     @ViewChild('content')
     private listOfSpeakersContentComponent: ListOfSpeakersContentComponent;
 
@@ -146,9 +146,11 @@ export class ListOfSpeakersComponent extends BaseComponent implements OnInit {
      * E.g. if a motion is the current content object, "Motion" will be the returned value.
      */
     public getContentObjectProjectorButtonText(): string {
-        const collection = collectionFromFqid(this.viewListOfSpeakers.content_object_id);
-        const verboseName = this.collectionMapper.getRepository(collection).getVerboseName();
-        return verboseName;
+        if (this.viewListOfSpeakers.content_object_id) {
+            const collection = collectionFromFqid(this.viewListOfSpeakers.content_object_id);
+            const verboseName = this.collectionMapper.getRepository(collection).getVerboseName();
+            return verboseName;
+        }
     }
 
     public setManualSortMode(active: boolean): void {

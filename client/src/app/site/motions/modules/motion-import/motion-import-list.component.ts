@@ -22,7 +22,7 @@ export class MotionImportListComponent extends BaseImportListComponent<Motion> {
      */
     public get expectedHeader(): string[] {
         return this.importer.expectedHeader.map(header => {
-            if (header === 'motion_block') {
+            if (header === 'block') {
                 return 'Motion block';
             } else {
                 return header.charAt(0).toUpperCase() + header.slice(1);

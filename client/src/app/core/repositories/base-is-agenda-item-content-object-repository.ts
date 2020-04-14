@@ -1,16 +1,15 @@
-import {
-    AgendaListTitle,
-    BaseViewModelWithAgendaItem,
-    TitleInformationWithAgendaItem
-} from 'app/site/base/base-view-model-with-agenda-item';
+import { AgendaItemRepositoryService, AgendaListTitle } from './agenda/agenda-item-repository.service';
+import { HasAgendaItemId } from 'app/shared/models/base/has-agenda-item-id';
+import { HasAgendaItem } from 'app/site/agenda/models/view-agenda-item';
+import { BaseViewModel } from 'app/site/base/base-view-model';
 import { BaseModel, ModelConstructor } from '../../shared/models/base/base-model';
 import { BaseRepository } from './base-repository';
 import { RepositoryServiceCollector } from './repository-service-collector';
 
 export function isBaseIsAgendaItemContentObjectRepository(
     obj: any
-): obj is BaseIsAgendaItemContentObjectRepository<any, any, any> {
-    const repo = obj as BaseIsAgendaItemContentObjectRepository<any, any, any>;
+): obj is BaseIsAgendaItemContentObjectRepository<any, any> {
+    const repo = obj as BaseIsAgendaItemContentObjectRepository<any, any>;
     return !!obj && repo.getAgendaSlideTitle !== undefined && repo.getAgendaListTitle !== undefined;
 }
 
@@ -18,25 +17,27 @@ export function isBaseIsAgendaItemContentObjectRepository(
  * Describes a base repository which objects do have an assigned agenda item.
  */
 export interface IBaseIsAgendaItemContentObjectRepository<
-    V extends BaseViewModelWithAgendaItem & T,
-    M extends BaseModel,
-    T extends TitleInformationWithAgendaItem
-> extends BaseRepository<V, M, T> {
-    getAgendaListTitle: (titleInformation: T) => AgendaListTitle;
-    getAgendaSlideTitle: (titleInformation: T) => string;
+    V extends BaseViewModel & HasAgendaItem,
+    M extends BaseModel & HasAgendaItemId
+> extends BaseRepository<V, M> {
+    getAgendaListTitle: (viewModel: V) => AgendaListTitle;
+    getAgendaSlideTitle: (viewModel: V) => string;
 }
 
 /**
  * The base repository for objects with an agenda item.
  */
 export abstract class BaseIsAgendaItemContentObjectRepository<
-        V extends BaseViewModelWithAgendaItem & T,
-        M extends BaseModel,
-        T extends TitleInformationWithAgendaItem
+        V extends BaseViewModel & HasAgendaItem,
+        M extends BaseModel & HasAgendaItemId
     >
-    extends BaseRepository<V, M, T>
-    implements IBaseIsAgendaItemContentObjectRepository<V, M, T> {
-    public constructor(repositoryServiceCollector: RepositoryServiceCollector, baseModelCtor: ModelConstructor<M>) {
+    extends BaseRepository<V, M>
+    implements IBaseIsAgendaItemContentObjectRepository<V, M> {
+    public constructor(
+        repositoryServiceCollector: RepositoryServiceCollector,
+        baseModelCtor: ModelConstructor<M>,
+        protected agendaItemRepo: AgendaItemRepositoryService
+    ) {
         super(repositoryServiceCollector, baseModelCtor);
     }
 
@@ -44,22 +45,18 @@ export abstract class BaseIsAgendaItemContentObjectRepository<
      * @returns the agenda title for the agenda item list. Should
      * be `<item number> · <title> (<type>)`. E.g. `7 · the is an election (Election)`.
      */
-    public getAgendaListTitle(titleInformation: T): AgendaListTitle {
+    public getAgendaListTitle(viewModel: V): AgendaListTitle {
         // Return the agenda title with the model's verbose name appended
-        let numberPrefix = '';
-        if (titleInformation.agenda_item_number && titleInformation.agenda_item_number()) {
-            numberPrefix = `${titleInformation.agenda_item_number()} · `;
-        }
-
-        const title = `${numberPrefix}${this.getTitle(titleInformation)} (${this.getVerboseName()})`;
+        const numberPrefix = this.agendaItemRepo.getItemNumberPrefix(viewModel);
+        const title = numberPrefix + this.getTitle(viewModel) + ' (' + this.getVerboseName() + ')';
         return { title };
     }
 
     /**
      * @returns the agenda title for the item slides
      */
-    public getAgendaSlideTitle(titleInformation: T): string {
-        return this.getTitle(titleInformation);
+    public getAgendaSlideTitle(viewModel: V): string {
+        return this.getTitle(viewModel);
     }
 
     /**

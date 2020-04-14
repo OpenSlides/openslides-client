@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 
+import { AgendaItemRepositoryService } from '../agenda/agenda-item-repository.service';
 import { HttpService } from 'app/core/core-services/http.service';
+import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Assignment } from 'app/shared/models/assignments/assignment';
-import { AssignmentTitleInformation, ViewAssignment } from 'app/site/assignments/models/view-assignment';
+import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { BaseIsAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-is-agenda-item-and-list-of-speakers-content-object-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
@@ -17,8 +19,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 })
 export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeakersContentObjectRepository<
     ViewAssignment,
-    Assignment,
-    AssignmentTitleInformation
+    Assignment
 > {
     private readonly restPath = '/rest/assignments/assignment/';
     private readonly candidatureOtherPath = '/candidature_other/';
@@ -34,12 +35,30 @@ export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeake
      * @param translate Translate string
      * @param httpService make HTTP Requests
      */
-    public constructor(repositoryServiceCollector: RepositoryServiceCollector, private httpService: HttpService) {
-        super(repositoryServiceCollector, Assignment);
+    public constructor(
+        repositoryServiceCollector: RepositoryServiceCollector,
+        agendaItemRepo: AgendaItemRepositoryService,
+        private httpService: HttpService
+    ) {
+        super(repositoryServiceCollector, Assignment, agendaItemRepo);
     }
 
-    public getTitle = (titleInformation: AssignmentTitleInformation) => {
-        return titleInformation.title;
+    public getFieldsets(): Fieldsets<Assignment> {
+        const titleFields: (keyof Assignment)[] = ['title'];
+        const listFields: (keyof Assignment)[] = titleFields.concat(['open_posts', 'phase']);
+        return {
+            [DEFAULT_FIELDSET]: listFields.concat([
+                'description',
+                'default_poll_description',
+                'number_poll_candidates'
+            ]),
+            list: listFields,
+            title: titleFields
+        };
+    }
+
+    public getTitle = (viewAssignment: ViewAssignment) => {
+        return viewAssignment.title;
     };
 
     public getVerboseName = (plural: boolean = false) => {
@@ -57,7 +76,7 @@ export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeake
      */
     public async changeCandidate(userId: number, assignment: ViewAssignment, adding?: boolean): Promise<void> {
         const data = { user: userId };
-        if (assignment.assignment_candidates.some(candidate => candidate.id === userId) && adding !== true) {
+        if (assignment.candidates.some(candidate => candidate.id === userId) && adding !== true) {
             await this.httpService.delete(this.restPath + assignment.id + this.candidatureOtherPath, data);
         } else if (adding !== false) {
             await this.httpService.post(this.restPath + assignment.id + this.candidatureOtherPath, data);

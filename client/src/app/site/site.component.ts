@@ -44,11 +44,6 @@ export class SiteComponent extends BaseComponent implements OnInit {
     public isLoggedIn: boolean;
 
     /**
-     * Indicates, whether the user is offline or not.
-     */
-    public isOffline: boolean;
-
-    /**
      * Holds the typed search query.
      */
     public searchform: FormGroup;
@@ -92,11 +87,6 @@ export class SiteComponent extends BaseComponent implements OnInit {
     ) {
         super(componentServiceCollector);
         overlayService.showSpinner(this.translate.instant('Loading data. Please wait...'));
-
-        console.error('TODO');
-        /*offlineBroadcastService.isOfflineObservable.subscribe(offline => {
-            this.isOffline = offline;
-        });*/
 
         this.searchform = new FormGroup({ query: new FormControl([]) });
 

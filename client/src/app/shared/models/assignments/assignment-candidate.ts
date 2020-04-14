@@ -10,7 +10,7 @@ export class AssignmentCandidate extends BaseModel<AssignmentCandidate> {
     public id: Id;
     public weight: number;
 
-    public assignment_id: Id; // assignment/assignment_candidate_ids;
+    public assignment_id: Id; // assignment/candidate_ids;
     public user_id: Id; // user/assignment_candidate_$<meeting_id>_ids;
 
     public constructor(input?: any) {

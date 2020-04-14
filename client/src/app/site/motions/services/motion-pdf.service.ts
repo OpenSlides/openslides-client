@@ -345,14 +345,14 @@ export class MotionPdfService {
         }
 
         // motion block
-        if (motion.motion_block && (!infoToExport || infoToExport.includes('motion_block'))) {
+        if (motion.block && (!infoToExport || infoToExport.includes('block'))) {
             metaTableBody.push([
                 {
                     text: `${this.translate.instant('Motion block')}:`,
                     style: 'boldText'
                 },
                 {
-                    text: motion.motion_block.title
+                    text: motion.block.title
                 }
             ]);
         }

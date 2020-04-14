@@ -13,8 +13,8 @@ export class ViewProjection extends BaseViewModel<Projection> {
 }
 interface IProjectionRelations {
     current_projector?: ViewProjector;
-    projector_history?: ViewProjector;
-    projector_preview?: ViewProjector;
+    preview_projector?: ViewProjector;
+    history_projector?: ViewProjector;
     element: BaseModel;
 }
 export interface ViewProjection extends Projection, IProjectionRelations {}

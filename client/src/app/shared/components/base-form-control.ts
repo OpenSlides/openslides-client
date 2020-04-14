@@ -22,12 +22,12 @@ import { Subject, Subscription } from 'rxjs';
  * ```
  */
 @Directive()
-export abstract class BaseFormControlComponentDirective<T>
+export abstract class BaseFormControlComponent<T>
     extends MatFormFieldControl<T>
     implements OnDestroy, ControlValueAccessor {
     public static nextId = 0;
 
-    @HostBinding() public id = `base-form-control-${BaseFormControlComponentDirective.nextId++}`;
+    @HostBinding() public id = `base-form-control-${BaseFormControlComponent.nextId++}`;
 
     @HostBinding('class.floating') public get shouldLabelFloat(): boolean {
         return this.focused || !this.empty;

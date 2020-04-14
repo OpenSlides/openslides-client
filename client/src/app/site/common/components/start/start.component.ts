@@ -9,6 +9,7 @@ import { UserRepositoryService } from 'app/core/repositories/users/user-reposito
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { ViewMotion } from 'app/site/motions/models/view-motion';
 
 /**
  * Interface describes the keys for the fields at start-component.

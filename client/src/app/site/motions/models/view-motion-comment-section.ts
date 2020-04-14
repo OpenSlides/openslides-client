@@ -4,10 +4,6 @@ import { ViewGroup } from 'app/site/users/models/view-group';
 import { BaseViewModel } from '../../base/base-view-model';
 import { ViewMotionComment } from './view-motion-comment';
 
-export interface MotionCommentSectionTitleInformation {
-    name: string;
-}
-
 /**
  * Motion comment section class for the View
  *
@@ -15,9 +11,7 @@ export interface MotionCommentSectionTitleInformation {
  * Provides "safe" access to variables and functions in {@link MotionCommentSection}
  * @ignore
  */
-export class ViewMotionCommentSection
-    extends BaseViewModel<MotionCommentSection>
-    implements MotionCommentSectionTitleInformation {
+export class ViewMotionCommentSection extends BaseViewModel<MotionCommentSection> {
     public static COLLECTION = MotionCommentSection.COLLECTION;
     protected _collection = MotionCommentSection.COLLECTION;
 

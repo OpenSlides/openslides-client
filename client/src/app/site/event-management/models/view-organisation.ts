@@ -4,11 +4,7 @@ import { ViewCommittee } from './view-committee';
 import { ViewResource } from './view-resource';
 import { ViewRole } from './view-role';
 
-export interface OrganisationTitleInformation {
-    name: string;
-}
-
-export class ViewOrganisation extends BaseViewModel<Organisation> implements OrganisationTitleInformation {
+export class ViewOrganisation extends BaseViewModel<Organisation> {
     public static COLLECTION = Organisation.COLLECTION;
     protected _collection = Organisation.COLLECTION;
 

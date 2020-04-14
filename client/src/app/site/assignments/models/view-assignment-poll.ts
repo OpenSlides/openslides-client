@@ -13,10 +13,6 @@ import { BaseViewPoll, PollClassType } from 'app/site/polls/models/base-view-pol
 import { ViewAssignment } from './view-assignment';
 import { ViewAssignmentOption } from './view-assignment-option';
 
-export interface AssignmentPollTitleInformation {
-    title: string;
-}
-
 export const AssignmentPollMethodVerbose = {
     Y: _('Yes per candidate'),
     N: _('No per candidate'),
@@ -33,9 +29,12 @@ export const AssignmentPollPercentBaseVerbose = {
     disabled: _('Disabled (no percents)')
 };
 
-export class ViewAssignmentPoll
-    extends BaseViewPoll<AssignmentPoll, ViewAssignmentOption, AssignmentPollMethod, AssignmentPollPercentBase>
-    implements AssignmentPollTitleInformation {
+export class ViewAssignmentPoll extends BaseViewPoll<
+    AssignmentPoll,
+    ViewAssignmentOption,
+    AssignmentPollMethod,
+    AssignmentPollPercentBase
+> {
     public static COLLECTION = AssignmentPoll.COLLECTION;
     protected _collection = AssignmentPoll.COLLECTION;
 

@@ -5,10 +5,6 @@ import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { BaseViewModel } from '../../base/base-view-model';
 import { ViewMotion } from './view-motion';
 
-export interface StatuteParagraphTitleInformation {
-    title: string;
-}
-
 /**
  * State paragrpah class for the View
  *
@@ -16,9 +12,7 @@ export interface StatuteParagraphTitleInformation {
  * Provides "safe" access to variables and functions in {@link StatuteParagraph}
  * @ignore
  */
-export class ViewMotionStatuteParagraph
-    extends BaseViewModel<MotionStatuteParagraph>
-    implements StatuteParagraphTitleInformation, Searchable {
+export class ViewMotionStatuteParagraph extends BaseViewModel<MotionStatuteParagraph> implements Searchable {
     public static COLLECTION = MotionStatuteParagraph.COLLECTION;
     protected _collection = MotionStatuteParagraph.COLLECTION;
 

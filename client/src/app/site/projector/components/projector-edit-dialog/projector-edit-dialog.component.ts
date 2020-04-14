@@ -12,14 +12,14 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { auditTime } from 'rxjs/operators';
 
-import { ProjectionDefaultRepositoryService } from 'app/core/repositories/projector/projection-default-repository.service';
+import { ProjectiondefaultRepositoryService } from 'app/core/repositories/projector/projection-default-repository.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ProjectorComponent } from 'app/shared/components/projector/projector.component';
 import { Projector } from 'app/shared/models/projector/projector';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ClockSlideService } from '../../services/clock-slide.service';
-import { ViewProjectiondefault } from '../../models/view-projection-default';
+import { ViewProjectiondefault } from '../../models/view-projectiondefault';
 import { ViewProjector } from '../../models/view-projector';
 
 /**
@@ -93,7 +93,7 @@ export class ProjectorEditDialogComponent extends BaseComponent implements OnIni
         @Inject(MAT_DIALOG_DATA) public projector: ViewProjector,
         private dialogRef: MatDialogRef<ProjectorEditDialogComponent>,
         private repo: ProjectorRepositoryService,
-        private projectionDefaultRepo: ProjectionDefaultRepositoryService,
+        private projectionDefaultRepo: ProjectiondefaultRepositoryService,
         private clockSlideService: ClockSlideService,
         private cd: ChangeDetectorRef
     ) {

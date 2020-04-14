@@ -27,10 +27,10 @@ export class Projector extends BaseModel<Projector> {
     public show_title: boolean;
     public show_logo: boolean;
 
-    public current_projection_ids: Id[]; // (projection/current_projector_ids)[];
+    public current_projection_ids: Id[]; // (projection/current_projector_id)[];
     public current_element_ids: Fqid[]; // (*/current_projector_ids)[];
-    public elements_preview_ids: Id[]; // (projection/projector_preview_ids)[];
-    public elements_history_ids: Id[]; // (projection/projector_history_ids)[];
+    public preview_projection_ids: Id[]; // (projection/preview_projector_id)[];
+    public history_projection_ids: Id[]; // (projection/history_projector_id)[];
     public used_as_reference_projector_meeting_id: Id; // meeting/reference_projector_id;
     public projectiondefault_ids: Id; // projectiondefault[];
     public meeting_id: Id; // meeting/projector_ids;

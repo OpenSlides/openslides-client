@@ -4,37 +4,41 @@ import { autoupdateFormatToModelData, AutoupdateModelData, ModelData } from './a
 import { BaseModel } from '../../shared/models/base/base-model';
 import { CollectionMapperService } from './collection-mapper.service';
 import { DataStoreService, DataStoreUpdateManagerService } from './data-store.service';
+import { ExampleDataService } from './example-data.service';
 import { HTTPMethod } from '../definitions/http-methods';
+import { ModelRequestBuilderService, SimplifiedModelRequest } from './model-request-builder.service';
 import { Mutex } from '../promises/mutex';
 import { StreamingCommunicationService } from './streaming-communication.service';
 
 const META_DELETED = 'meta_deleted';
 
-interface Fields {
-    fields: {
-        [field: string]: GenericRelationFieldDecriptor | RelationFieldDescriptor | StructuredFieldDecriptor | null;
-    };
+export type FieldDescriptor = GenericRelationFieldDecriptor | RelationFieldDescriptor | StructuredFieldDecriptor;
+
+export interface Fields {
+    [field: string]: FieldDescriptor | null;
 }
 
-export interface ModelRequest extends Fields {
+export interface HasFields {
+    fields: Fields;
+}
+
+export interface ModelRequest extends HasFields {
     ids: number[];
     collection: string;
 }
 
-interface GenericRelationFieldDecriptor extends Fields {
+interface GenericRelationFieldDecriptor extends HasFields {
     type: 'generic-relation-list' | 'generic-relation';
 }
 
-interface RelationFieldDescriptor extends Fields {
+interface RelationFieldDescriptor extends HasFields {
     type: 'relation-list' | 'relation';
     collection: string;
 }
 
 interface StructuredFieldDecriptor {
     type: 'template';
-    values?: {
-        [field: string]: GenericRelationFieldDecriptor | RelationFieldDescriptor | StructuredFieldDecriptor | null;
-    };
+    values?: Fields;
 }
 
 export interface ModelSubscription {
@@ -66,14 +70,18 @@ export class AutoupdateService {
         private streamingCommunicationService: StreamingCommunicationService,
         private DS: DataStoreService,
         private modelMapper: CollectionMapperService,
-        private DSUpdateManager: DataStoreUpdateManagerService
+        private DSUpdateManager: DataStoreUpdateManagerService,
+        private exampleDataService: ExampleDataService,
+        private modelRequestBuilder: ModelRequestBuilderService
     ) {
         /*this.websocketService.getOberservable<AutoupdateFormat>('autoupdate').subscribe(response => {
             this.storeResponse(response);
         });*/
         console.warn('TODO: Enable Autoupdate service');
+        this.setup();
     }
 
+    /* TODO: THis is the real implementation
     public request(request: ModelRequest): ModelSubscription {
         const stream = this.streamingCommunicationService.getStream<AutoupdateModelData>(
             HTTPMethod.POST,
@@ -82,7 +90,37 @@ export class AutoupdateService {
         );
         stream.messageObservable.subscribe(data => this.handleAutoupdateWithStupidFormat(data));
         return { close: stream.close };
+    }*/
+
+    // START MOCKED SERVICE
+
+    private async setup(): Promise<void> {
+        await this.exampleDataService.loaded;
+        // this.handleAutoupdate(this.exampleDataService.getAllModelData())
+        // this.handleAutoupdate(this.exampleDataService.getModelData('user/1'));
     }
+
+    public async simpleRequest(simpleRequest: SimplifiedModelRequest): Promise<ModelSubscription> {
+        const request = await this.modelRequestBuilder.build(simpleRequest);
+        return this.request(request);
+    }
+
+    public request(request: ModelRequest): ModelSubscription {
+        this._request(request);
+        return {
+            close: () => {
+                console.log('closed request', request);
+            }
+        };
+    }
+
+    private async _request(request: ModelRequest): Promise<void> {
+        await this.exampleDataService.loaded;
+        console.log('Autoupdate request', request);
+        await this.handleAutoupdate(this.exampleDataService.getForRequest(request));
+    }
+
+    // END MOCKED SERVICE
 
     private async handleAutoupdateWithStupidFormat(autoupdateData: AutoupdateModelData): Promise<void> {
         const modelData = autoupdateFormatToModelData(autoupdateData);
@@ -91,6 +129,7 @@ export class AutoupdateService {
 
     // Todo: change this to private. needed for testing to insert example data
     public async handleAutoupdate(modelData: ModelData): Promise<void> {
+        console.log('handle autoupdate', modelData);
         const unlock = await this.mutex.lock();
 
         const deletedModels: DeletedModels = {};
@@ -108,6 +147,7 @@ export class AutoupdateService {
                     if (changedModels[collection] === undefined) {
                         changedModels[collection] = [];
                     }
+                    model.id = +id;
                     const basemodel = this.mapObjectToBaseModel(collection, model);
                     if (basemodel) {
                         changedModels[collection].push(basemodel);
@@ -115,8 +155,8 @@ export class AutoupdateService {
                 }
             }
         }
+        console.log(changedModels, deletedModels);
         await this.handleChangedAndDeletedModels(changedModels, deletedModels);
-
         unlock();
     }
 

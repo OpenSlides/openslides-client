@@ -9,10 +9,10 @@ import { ProjectorService } from 'app/core/core-services/projector.service';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { DetailNavigable, isDetailNavigable } from 'app/shared/models/base/detail-navigable';
 import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { DetailNavigable, isDetailNavigable } from 'app/site/base/detail-navigable';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { CurrentListOfSpeakersService } from 'app/site/projector/services/current-list-of-speakers.service';
 

@@ -3,8 +3,6 @@ import { BaseViewModel } from '../../base/base-view-model';
 import { ViewMotion } from './view-motion';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from '../../../shared/models/motions/view-unified-change';
 
-export type MotionChangeRecommendationTitleInformation = object;
-
 /**
  * Change recommendation class for the View
  *
@@ -14,7 +12,7 @@ export type MotionChangeRecommendationTitleInformation = object;
  */
 export class ViewMotionChangeRecommendation
     extends BaseViewModel<MotionChangeRecommendation>
-    implements MotionChangeRecommendationTitleInformation, ViewUnifiedChange {
+    implements ViewUnifiedChange {
     public static COLLECTION = MotionChangeRecommendation.COLLECTION;
     protected _collection = MotionChangeRecommendation.COLLECTION;
 

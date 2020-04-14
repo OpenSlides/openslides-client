@@ -4,9 +4,7 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { HttpService } from './http.service';
-import { OfflineBroadcastService, OfflineReason } from './offline-broadcast.service';
-import { OperatorService } from './operator.service';
-import { SleepPromise } from '../promises/sleep';
+import { OfflineBroadcastService } from './offline-broadcast.service';
 import { Stream, StreamingCommunicationService } from './streaming-communication.service';
 
 type HttpParamsGetter = () => HttpParams | { [param: string]: string | string[] };
@@ -52,8 +50,7 @@ export class CommunicationManagerService {
     public constructor(
         private streamingCommunicationService: StreamingCommunicationService,
         private offlineBroadcastService: OfflineBroadcastService,
-        private http: HttpService,
-        private operatorService: OperatorService
+        private http: HttpService
     ) {
         // this.offlineBroadcastService.goOfflineObservable.subscribe(() => this.closeConnections());
     }

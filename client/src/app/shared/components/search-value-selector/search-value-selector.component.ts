@@ -20,8 +20,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { auditTime } from 'rxjs/operators';
 
-import { BaseFormControlComponentDirective } from 'app/shared/models/base/base-form-control';
-import { Identifiable } from 'app/shared/models/base/identifiable';
+import { BaseFormControlComponent } from 'app/shared/components/base-form-control';
 import { ParentErrorStateMatcher } from 'app/shared/parent-error-state-matcher';
 import { Selectable } from '../selectable';
 
@@ -54,7 +53,7 @@ import { Selectable } from '../selectable';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SearchValueSelectorComponent extends BaseFormControlComponentDirective<Selectable[]> {
+export class SearchValueSelectorComponent extends BaseFormControlComponent<Selectable[]> {
     @ViewChild(CdkVirtualScrollViewport, { static: true })
     public cdkVirtualScrollViewPort: CdkVirtualScrollViewport;
 

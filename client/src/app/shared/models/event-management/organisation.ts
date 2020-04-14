@@ -14,6 +14,8 @@ export class Organisation extends BaseModel<Organisation> {
     public login_text: string;
     public theme: string;
     public custom_translations: JSON;
+    public reset_password_verbose_errors: boolean;
+    public enable_electronic_voting: boolean;
 
     public committee_ids: Id[]; // (committee/organisation_id)[];
     public role_ids: Id[]; // (role/organisation_id)[];

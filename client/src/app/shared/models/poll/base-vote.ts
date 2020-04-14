@@ -31,6 +31,7 @@ export abstract class BaseVote<T = any> extends BaseDecimalModel<T> {
 
     public option_id: Id; // (assignment|motion)_option/vote_ids;
     public user_id?: Id; // user/(assignment|motion)_vote_$<meeting_id>_ids;
+    public delegated_user_id?: Id; // user/(assignment|motion)_delegated_vote_$_ids;
 
     public get valueVerbose(): string {
         return VoteValueVerbose[this.value];

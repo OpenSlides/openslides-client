@@ -301,7 +301,7 @@ export class JitsiComponent extends BaseComponent implements OnInit, OnDestroy {
         );
 
         await this.lockLoaded;*/
-        throw new Error('TODO');
+        console.error('TODO');
         /*this.constantsService.get<JitsiSettings>('Settings').subscribe(settings => {
             if (settings) {
                 this.jitsiDomain = settings.JITSI_DOMAIN;
@@ -358,7 +358,7 @@ export class JitsiComponent extends BaseComponent implements OnInit, OnDestroy {
         );*/
     }
 
-    /*public toggleMute(): void {
+    public toggleMute(): void {
         if (this.isJitsiActive) {
             this.api.executeCommand('toggleAudio');
         }
@@ -377,7 +377,7 @@ export class JitsiComponent extends BaseComponent implements OnInit, OnDestroy {
     }
 
     public async enterConversation(): Promise<void> {
-        await this.operator.loaded;
+        /*await this.operator.loaded;
         try {
             await this.userMediaPermService.requestMediaAccess();
             this.storageMap.set(this.RTC_LOGGED_STORAGE_KEY, true).subscribe(() => {});
@@ -390,7 +390,7 @@ export class JitsiComponent extends BaseComponent implements OnInit, OnDestroy {
             this.loadApiCallbacks();
         } catch (e) {
             this.raiseError(e);
-        }
+        }*/
     }
 
     private loadApiCallbacks(): void {
@@ -436,7 +436,7 @@ export class JitsiComponent extends BaseComponent implements OnInit, OnDestroy {
         }
     }
 
-    private autoJoinJitsiByLosIndex(operatorClosIndex: number): void {
+    /*private autoJoinJitsiByLosIndex(operatorClosIndex: number): void {
         if (operatorClosIndex !== UserListIndexType.NotOnList) {
             if (!this.isOnCurrentLos) {
                 this.isOnCurrentLos = true;
@@ -459,7 +459,7 @@ export class JitsiComponent extends BaseComponent implements OnInit, OnDestroy {
         if (!this.isAccessPermitted) {
             this.viewStream();
         }
-    }
+    }*/
 
     private setRoomPassword(): void {
         if (this.roomPassword && !this.isPasswortSet) {
@@ -586,5 +586,5 @@ export class JitsiComponent extends BaseComponent implements OnInit, OnDestroy {
 
     private setConferenceState(newState: ConferenceState): void {
         this.currentState = newState;
-    }*/
+    }
 }

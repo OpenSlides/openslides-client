@@ -10,6 +10,7 @@ export class BaseViewVote<M extends BaseVote<M> = any, O extends BaseViewOption 
 }
 interface IBaseVoteRelations<O extends BaseViewOption> {
     user?: ViewUser;
+    delegated_user?: ViewUser;
     option: O;
 }
 export interface BaseViewVote<M extends BaseVote<M> = any, O extends BaseViewOption = any>

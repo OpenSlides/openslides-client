@@ -162,7 +162,7 @@ export class SearchService {
      */
     public registerModel(
         collection: string,
-        repo: BaseRepository<any, any, any>,
+        repo: BaseRepository<any, any>,
         displayOrder: number,
         openInNewTab: boolean = false
     ): void {
