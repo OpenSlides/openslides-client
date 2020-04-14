@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Tag } from 'app/shared/models/core/tag';
-import { TagTitleInformation, ViewTag } from 'app/site/tags/models/view-tag';
+import { ViewTag } from 'app/site/tags/models/view-tag';
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
@@ -18,7 +18,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class TagRepositoryService extends BaseRepository<ViewTag, Tag, TagTitleInformation> {
+export class TagRepositoryService extends BaseRepository<ViewTag, Tag> {
     /**
      * Creates a TagRepository
      * Converts existing and incoming Tags to ViewTags
@@ -33,8 +33,8 @@ export class TagRepositoryService extends BaseRepository<ViewTag, Tag, TagTitleI
         this.initSorting();
     }
 
-    public getTitle = (titleInformation: TagTitleInformation) => {
-        return titleInformation.name;
+    public getTitle = (viewTag: ViewTag) => {
+        return viewTag.name;
     };
 
     public getVerboseName = (plural: boolean = false) => {

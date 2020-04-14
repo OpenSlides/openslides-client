@@ -98,7 +98,7 @@ export abstract class BasePollDetailComponent<V extends BaseViewPoll, S extends 
         protected promptService: PromptService,
         protected pollDialog: BasePollDialogService<V, S>,
         protected pollService: S,
-        protected votesRepo: BaseRepository<BaseViewVote, BaseVote, object>
+        protected votesRepo: BaseRepository<BaseViewVote, BaseVote>
     ) {
         super(componentServiceCollector);
         this.setup();

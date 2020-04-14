@@ -67,6 +67,10 @@ export class RelationManagerService {
         return this.relationsByCollection[collection] || [];
     }
 
+    public findRelation(collection: string, ownIdField: string): Relation | null {
+        return this.getRelationsForCollection(collection).find(relation => relation.ownIdField === ownIdField);
+    }
+
     public handleRelation<M extends BaseModel>(model: M, relation: Relation): any {
         if (!relation.generic && !relation.structured) {
             return this.handleNormalRelation(model, relation, relation.ownIdField);
@@ -100,6 +104,9 @@ export class RelationManagerService {
             return foreignViewModels;
         } else {
             const fqid = model[relation.ownIdField];
+            if (!fqid) {
+                return null;
+            }
             let collection, id;
             [collection, id] = collectionIdFromFqid(fqid);
             const foreignViewModel = this.viewModelStoreService.get(collection, id);

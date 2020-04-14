@@ -18,7 +18,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { auditTime } from 'rxjs/operators';
 
-import { BaseFormControlComponent } from 'app/shared/models/base/base-form-control';
+import { BaseFormControlComponent } from 'app/shared/components/base-form-control';
 import { ParentErrorStateMatcher } from 'app/shared/parent-error-state-matcher';
 import { Selectable } from '../selectable';
 

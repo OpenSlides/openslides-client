@@ -1,25 +1,18 @@
 import { SearchRepresentation } from 'app/core/ui-services/search.service';
 import { Topic } from 'app/shared/models/topics/topic';
-import { ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
-import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
-import { TitleInformationWithAgendaItem } from 'app/site/base/base-view-model-with-agenda-item';
-import { BaseViewModelWithAgendaItemAndListOfSpeakers } from 'app/site/base/base-view-model-with-agenda-item-and-list-of-speakers';
+import { HasAgendaItem, ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
+import { HasListOfSpeakers, ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
+import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { HasAttachment, ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
-import { ViewTag } from 'app/site/tags/models/view-tag';
-
-export interface TopicTitleInformation extends TitleInformationWithAgendaItem {
-    title: string;
-    agenda_item_number?: () => string;
-}
+import { HasTags, ViewTag } from 'app/site/tags/models/view-tag';
 
 /**
  * Provides "safe" access to topic with all it's components
  * @ignore
  */
-export class ViewTopic extends BaseViewModelWithAgendaItemAndListOfSpeakers<Topic>
-    implements TopicTitleInformation, HasAttachment {
+export class ViewTopic extends BaseProjectableViewModel<Topic> {
     public static COLLECTION = Topic.COLLECTION;
 
     public get topic(): Topic {
@@ -71,10 +64,6 @@ export class ViewTopic extends BaseViewModelWithAgendaItemAndListOfSpeakers<Topi
     }
 }
 interface ITopicRelations {
-    attachments: ViewMediafile[];
-    agenda_item: ViewAgendaItem[];
-    list_of_speakers: ViewListOfSpeakers[];
-    tags: ViewTag[];
     meeting: ViewMeeting;
 }
-export interface ViewTopic extends Topic, ITopicRelations {}
+export interface ViewTopic extends Topic, ITopicRelations, HasAttachment, HasTags, HasAgendaItem, HasListOfSpeakers {}

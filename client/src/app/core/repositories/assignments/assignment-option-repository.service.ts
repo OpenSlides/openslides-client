@@ -13,12 +13,12 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class AssignmentOptionRepositoryService extends BaseRepository<ViewAssignmentOption, AssignmentOption, object> {
+export class AssignmentOptionRepositoryService extends BaseRepository<ViewAssignmentOption, AssignmentOption> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, AssignmentOption);
     }
 
-    public getTitle = (titleInformation: object) => {
+    public getTitle = (viewAssignmentOption: ViewAssignmentOption) => {
         return 'Option';
     };
 

@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 
-import { AgendaItemRepositoryService } from './agenda-item-repository.service';
 import { HttpService } from 'app/core/core-services/http.service';
-import { collectionFromFqid } from 'app/core/core-services/key-transforms';
+import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { ListOfSpeakers } from 'app/shared/models/agenda/list-of-speakers';
 import { Identifiable } from 'app/shared/models/base/identifiable';
-import { ListOfSpeakersTitleInformation, ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
+import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { ViewSpeaker } from 'app/site/agenda/models/view-speaker';
-import { BaseIsListOfSpeakersContentObjectRepository } from '../base-is-list-of-speakers-content-object-repository';
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
@@ -30,11 +28,7 @@ export interface SpeakingTimeStructureLevelObject {
 @Injectable({
     providedIn: 'root'
 })
-export class ListOfSpeakersRepositoryService extends BaseRepository<
-    ViewListOfSpeakers,
-    ListOfSpeakers,
-    ListOfSpeakersTitleInformation
-> {
+export class ListOfSpeakersRepositoryService extends BaseRepository<ViewListOfSpeakers, ListOfSpeakers> {
     /**
      * Contructor for agenda repository.
      *
@@ -45,36 +39,21 @@ export class ListOfSpeakersRepositoryService extends BaseRepository<
      * @param dataSend send models to the server
      * @param treeService sort the data according to weight and parents
      */
-    public constructor(
-        repositoryServiceCollector: RepositoryServiceCollector,
-        private httpService: HttpService,
-        private itemRepo: AgendaItemRepositoryService
-    ) {
+    public constructor(repositoryServiceCollector: RepositoryServiceCollector, private httpService: HttpService) {
         super(repositoryServiceCollector, ListOfSpeakers);
+    }
+
+    public getFieldsets(): Fieldsets<ListOfSpeakers> {
+        return { [DEFAULT_FIELDSET]: ['closed', 'content_object_id', 'speaker_ids'] };
     }
 
     public getVerboseName = (plural: boolean = false) => {
         return this.translate.instant(plural ? 'Lists of speakers' : 'List of speakers');
     };
 
-    public getTitle = (titleInformation: ListOfSpeakersTitleInformation) => {
-        if (titleInformation.content_object) {
-            return titleInformation.content_object.getListOfSpeakersTitle();
-        } else {
-            const collection = collectionFromFqid(titleInformation.content_object_id);
-            const repo = this.collectionMapperService.getRepository(
-                collection
-            ) as BaseIsListOfSpeakersContentObjectRepository<any, any, any>;
-
-            // Try to get the agenda item for this to get the item number
-            // TODO: This can be resolved with #4738
-            /*const item = this.itemRepo.findByContentObjectId(titleInformation.content_object_id);
-            if (item) {
-                (<any>titleInformation.title_information).agenda_item_number = () => item.item_number;
-            }
-
-            return repo.getListOfSpeakersTitle(titleInformation.title_information);*/
-            // This has to be decided: do we stick to titleInformation or not?
+    public getTitle = (viewListOfSpeakers: ViewListOfSpeakers) => {
+        if (viewListOfSpeakers.content_object) {
+            return viewListOfSpeakers.content_object.getListOfSpeakersTitle();
         }
     };
 

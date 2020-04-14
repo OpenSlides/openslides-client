@@ -496,7 +496,7 @@ export class DataStoreService {
                 this.modelStore[collection][model.id] = model;
             }
 
-            this.publishChangedInformation(model);
+            this.publishChangedInformation(this.modelStore[collection][model.id]);
         });
     }
 

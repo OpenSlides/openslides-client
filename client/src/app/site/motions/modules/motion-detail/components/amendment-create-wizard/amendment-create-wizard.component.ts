@@ -264,7 +264,7 @@ export class AmendmentCreateWizardComponent extends BaseComponent implements OnI
             parent_id: this.motion.id,
             category_id: this.motion.category_id,
             tag_ids: this.motion.tag_ids,
-            motion_block_id: this.motion.motion_block_id,
+            block_id: this.motion.block_id,
             amendment_paragraphs: amendedParagraphs
         };
 

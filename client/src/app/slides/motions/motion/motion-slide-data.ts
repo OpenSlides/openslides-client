@@ -1,6 +1,5 @@
-import { MotionTitleInformation } from 'app/site/motions/models/view-motion';
 import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.constants';
-import { ReferencedMotions } from '../base/base-motion-slide';
+import { ReferencedMotions, ReferencedMotionTitleInformation } from '../base/base-motion-slide';
 
 /**
  * This interface describes the data returned by the server about an amendment.
@@ -67,7 +66,7 @@ export interface MotionSlideData {
     recommender?: string;
     recommendation?: string;
     recommendation_extension?: string;
-    recommendation_referencing_motions?: MotionTitleInformation[];
+    recommendation_referencing_motions?: ReferencedMotionTitleInformation[];
     referenced_motions?: ReferencedMotions;
     base_motion?: MotionSlideDataBaseMotion;
     base_statute?: MotionSlideDataBaseStatute;

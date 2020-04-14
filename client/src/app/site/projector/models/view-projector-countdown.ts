@@ -4,16 +4,8 @@ import { ProjectorCountdown } from 'app/shared/models/projector/projector-countd
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
-import { ViewProjection } from './view-projection';
-import { ViewProjector } from './view-projector';
 
-export interface CountdownTitleInformation {
-    title: string;
-    description?: string;
-}
-
-export class ViewProjectorCountdown extends BaseProjectableViewModel<ProjectorCountdown>
-    implements CountdownTitleInformation {
+export class ViewProjectorCountdown extends BaseProjectableViewModel<ProjectorCountdown> {
     public static COLLECTION = ProjectorCountdown.COLLECTION;
     protected _collection = ProjectorCountdown.COLLECTION;
 
@@ -52,8 +44,6 @@ export class ViewProjectorCountdown extends BaseProjectableViewModel<ProjectorCo
     }
 }
 interface IProjectorCountdownRelations {
-    projections: ViewProjection[];
-    current_projectors: ViewProjector[];
     meeting: ViewMeeting[];
 }
 export interface ViewProjectorCountdown extends ProjectorCountdown, IProjectorCountdownRelations {}

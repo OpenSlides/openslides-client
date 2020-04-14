@@ -115,7 +115,7 @@ export class MotionImportService extends BaseImportService<Motion> {
                 case 'category':
                     newEntry.csvCategory = this.getCategory(line[idx]);
                     break;
-                case 'motion_block':
+                case 'block':
                     newEntry.csvMotionblock = this.getMotionBlock(line[idx]);
                     break;
                 case 'tags':

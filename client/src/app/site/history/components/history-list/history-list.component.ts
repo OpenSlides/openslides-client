@@ -14,12 +14,12 @@ import { ViewModelStoreService } from 'app/core/core-services/view-model-store.s
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
-import { isDetailNavigable } from 'app/shared/models/base/detail-navigable';
 import { History } from 'app/shared/models/core/history';
 import { Motion } from 'app/shared/models/motions/motion';
 import { langToLocale } from 'app/shared/utils/lang-to-locale';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { isDetailNavigable } from 'app/site/base/detail-navigable';
 import { ViewUser } from 'app/site/users/models/view-user';
 
 /**

@@ -9,6 +9,7 @@ import { UserRepositoryService } from 'app/core/repositories/users/user-reposito
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { ViewMotion } from 'app/site/motions/models/view-motion';
 
 /**
  * Interface describes the keys for the fields at start-component.
@@ -126,9 +127,7 @@ export class StartComponent extends BaseComponent implements OnInit {
         console.clear();
 
         console.log('test M20 (I)');
-        // the any is just to silence the typing system: There relations should work, but
-        // they are not typed yet (typescript doesn't know about them yet)
-        const motion1: any = this.motionRepo.getViewModel(1);
+        const motion1 = this.motionRepo.getViewModel(1);
         console.log(motion1, motion1.category, motion1.category.motions);
         // Note the order of the motions: they should be ordered by category_weight.
         motion1.category.motions.forEach(m => console.log(m.title, m.id, m.category_weight));
@@ -143,7 +142,7 @@ export class StartComponent extends BaseComponent implements OnInit {
         console.log(state1.next_states.map(s => s.previous_states[0].name));
 
         console.log('\ntest generic M2M');
-        const motion2: any = this.motionRepo.getViewModel(2);
+        const motion2 = this.motionRepo.getViewModel(2);
         console.log(
             motion2.tags.map(t => t.name),
             motion2.tags.map(t => t.tagged)
@@ -151,14 +150,14 @@ export class StartComponent extends BaseComponent implements OnInit {
 
         console.log('\ntest generic O2O');
         console.log(motion1.agenda_item, motion1.agenda_item.id);
-        console.log(motion1.title, motion1.agenda_item.content_object.title);
+        console.log(motion1.title, (<ViewMotion>motion1.agenda_item.content_object).title);
 
         console.log('\ntest structured M2M (I)');
-        const user3: any = this.userRepo.getViewModel(3);
+        const user3 = this.userRepo.getViewModel(3);
         console.log(user3.groups(), user3.groups(2));
 
         console.log('\ntest structured M2M (II)');
-        const user1: any = this.userRepo.getViewModel(1);
+        const user1 = this.userRepo.getViewModel(1);
         console.log(
             user1.groups().map(g => g.name),
             user1.groups(1).map(g => g.name)
@@ -166,7 +165,7 @@ export class StartComponent extends BaseComponent implements OnInit {
         console.log(user1.groups()[0].users.map(u => u.username));
 
         console.log('\ntest structured O2O');
-        const meeting1: any = this.meetingRepo.getViewModel(1);
+        const meeting1 = this.meetingRepo.getViewModel(1);
         console.log(meeting1.logo_$);
         const key = meeting1.logo_$[0];
         console.log(meeting1.logo(key).title, meeting1.logo(key).used_as_logo_in_meeting(key).name);
@@ -174,7 +173,10 @@ export class StartComponent extends BaseComponent implements OnInit {
         console.log('\ntest user overwrites');
         const viewUser = this.userRepo.getViewModel(1);
         const user = viewUser.user;
-        console.log(user.group_ids(1), (<any>user).group_ids());
-        console.log(viewUser.group_ids(1), (<any>viewUser).group_ids());
+        console.log(user.group_ids(1), user.group_ids(1));
+        console.log(viewUser.group_ids(1), viewUser.group_ids());
+
+        console.log('\ntmp');
+        console.log(motion2.tag_ids);
     }
 }

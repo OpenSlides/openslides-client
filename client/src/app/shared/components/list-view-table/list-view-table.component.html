@@ -34,7 +34,7 @@
             <os-projector-button
                 *osPerms="'core.can_manage_projector'"
                 class="projector-button"
-                [object]="getProjectable(viewModel)"
+                [object]="_getProjectorButtonObject(viewModel)"
                 (changeEvent)="viewUpdateEvent()"
             ></os-projector-button>
             <!-- Projector indicator -->
@@ -62,7 +62,7 @@
         <!-- Speaker -->
         <div *pblNgridCellDef="'speaker'; row as viewModel; rowContext as rowContext" class="fill">
             <os-speaker-button
-                [object]="viewModel.contentObjectData ? viewModel.contentObjectData : viewModel"
+                [object]="_getSpeakerButtonObject(viewModel)"
                 [disabled]="multiSelect"
             ></os-speaker-button>
         </div>

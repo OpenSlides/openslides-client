@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 
+import { AgendaItemRepositoryService } from '../agenda/agenda-item-repository.service';
 import { HttpService } from 'app/core/core-services/http.service';
+import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { MotionBlock } from 'app/shared/models/motions/motion-block';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
-import { MotionBlockTitleInformation, ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
+import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
 import { BaseIsAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-is-agenda-item-and-list-of-speakers-content-object-repository';
 import { MotionRepositoryService } from './motion-repository.service';
 import { RepositoryServiceCollector } from '../repository-service-collector';
@@ -16,8 +18,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 })
 export class MotionBlockRepositoryService extends BaseIsAgendaItemAndListOfSpeakersContentObjectRepository<
     ViewMotionBlock,
-    MotionBlock,
-    MotionBlockTitleInformation
+    MotionBlock
 > {
     /**
      * Constructor for the motion block repository
@@ -30,15 +31,26 @@ export class MotionBlockRepositoryService extends BaseIsAgendaItemAndListOfSpeak
      */
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
+        agendaItemRepo: AgendaItemRepositoryService,
         private motionRepo: MotionRepositoryService,
         private httpService: HttpService
     ) {
-        super(repositoryServiceCollector, MotionBlock);
+        super(repositoryServiceCollector, MotionBlock, agendaItemRepo);
         this.initSorting();
     }
 
-    public getTitle = (titleInformation: MotionBlockTitleInformation) => {
-        return titleInformation.title;
+    public getFieldsets(): Fieldsets<MotionBlock> {
+        const titleFields: (keyof MotionBlock)[] = ['title'];
+        const listFields: (keyof MotionBlock)[] = titleFields.concat(['internal']);
+        return {
+            [DEFAULT_FIELDSET]: listFields,
+            list: listFields,
+            title: titleFields
+        };
+    }
+
+    public getTitle = (viewMotionBlock: ViewMotionBlock) => {
+        return viewMotionBlock.title;
     };
 
     public getVerboseName = (plural: boolean = false) => {
@@ -52,7 +64,7 @@ export class MotionBlockRepositoryService extends BaseIsAgendaItemAndListOfSpeak
      */
     public removeMotionFromBlock(viewMotion: ViewMotion): void {
         const updateMotion = viewMotion.motion;
-        updateMotion.motion_block_id = null;
+        updateMotion.block_id = null;
         this.motionRepo.update(updateMotion, viewMotion);
     }
 

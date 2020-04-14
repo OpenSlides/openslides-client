@@ -1,66 +1,404 @@
-import { ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
+import { HasAgendaItem, ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
+import { HasListOfSpeakers, ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
+import { ViewSpeaker } from 'app/site/agenda/models/view-speaker';
 import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
+import { ViewAssignmentCandidate } from 'app/site/assignments/models/view-assignment-candidate';
+import { ViewAssignmentOption } from 'app/site/assignments/models/view-assignment-option';
+import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
+import { ViewAssignmentVote } from 'app/site/assignments/models/view-assignment-vote';
+import { BaseViewModel, ViewModelConstructor } from 'app/site/base/base-view-model';
+import { Projectable } from 'app/site/base/projectable';
+import { ViewCommittee } from 'app/site/event-management/models/view-committee';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
+import { ViewOrganisation } from 'app/site/event-management/models/view-organisation';
+import { ViewResource } from 'app/site/event-management/models/view-resource';
+import { ViewRole } from 'app/site/event-management/models/view-role';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
 import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
+import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
+import { ViewMotionComment } from 'app/site/motions/models/view-motion-comment';
+import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-comment-section';
+import { ViewMotionOption } from 'app/site/motions/models/view-motion-option';
+import { ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
 import { ViewMotionState } from 'app/site/motions/models/view-motion-state';
-import { ViewTag } from 'app/site/tags/models/view-tag';
+import { ViewMotionStatuteParagraph } from 'app/site/motions/models/view-motion-statute-paragraph';
+import { ViewMotionSubmitter } from 'app/site/motions/models/view-motion-submitter';
+import { ViewMotionVote } from 'app/site/motions/models/view-motion-vote';
+import { ViewMotionWorkflow } from 'app/site/motions/models/view-motion-workflow';
+import { ViewProjection } from 'app/site/projector/models/view-projection';
+import { ViewProjectiondefault } from 'app/site/projector/models/view-projectiondefault';
+import { ViewProjector } from 'app/site/projector/models/view-projector';
+import { ViewProjectorCountdown } from 'app/site/projector/models/view-projector-countdown';
+import { ViewProjectorMessage } from 'app/site/projector/models/view-projector-message';
+import { HasTags, ViewTag } from 'app/site/tags/models/view-tag';
 import { ViewTopic } from 'app/site/topics/models/view-topic';
 import { ViewGroup } from 'app/site/users/models/view-group';
+import { HasPersonalNote, ViewPersonalNote } from 'app/site/users/models/view-personal-note';
 import { ViewUser } from 'app/site/users/models/view-user';
-import {
-    makeGenericM2M,
-    makeGenericO2O,
-    makeM2M,
-    makeM2O,
-    makeStructuredM2M,
-    Relation
-} from '../definitions/relations';
+import { makeGenericM2M, makeGenericO2O, makeM2M, makeM2O, makeO2O, Relation } from '../definitions/relations';
+
+const PROJECTABLE_VIEW_MODELS: ViewModelConstructor<BaseViewModel & Projectable>[] = [
+    ViewMotion,
+    ViewMediafile,
+    ViewListOfSpeakers,
+    ViewMotionBlock,
+    ViewAssignment,
+    ViewAgendaItem,
+    ViewUser,
+    ViewAssignmentPoll,
+    ViewMotionPoll,
+    ViewProjectorMessage,
+    ViewProjectorCountdown
+];
+
+interface MakeStructuredUserRelationArguments<V extends BaseViewModel> {
+    otherViewModel: ViewModelConstructor<V>;
+    structuredField: keyof ViewUser & string;
+    structuredIdField: keyof ViewUser & string;
+    otherViewModelField: keyof V & string;
+    otherViewModelIdField?: keyof V & string;
+}
+function _makeStructuredUserRelation<V extends BaseViewModel>(
+    args: MakeStructuredUserRelationArguments<V>,
+    many: boolean
+): Relation[] {
+    return [
+        // structured -> other
+        {
+            ownViewModels: [ViewUser],
+            foreignViewModel: args.otherViewModel,
+            ownField: args.structuredField,
+            ownIdField: args.structuredIdField,
+            many: true,
+            generic: false,
+            structured: true,
+            ownIdFieldDefaultAttribute: 'active-meeting'
+        },
+        // other -> structured
+        {
+            ownViewModels: [args.otherViewModel],
+            foreignViewModel: ViewUser,
+            ownField: args.otherViewModelField,
+            ownIdField: args.otherViewModelIdField,
+            many: many,
+            generic: false,
+            structured: false
+        }
+    ];
+}
+
+function makeOneStructuredUser2MRelation<V extends BaseViewModel>(
+    args: MakeStructuredUserRelationArguments<V>
+): Relation[] {
+    return _makeStructuredUserRelation(args, false);
+}
+
+function makeManyStructuredUsers2MRelation<V extends BaseViewModel>(
+    args: MakeStructuredUserRelationArguments<V>
+): Relation[] {
+    return _makeStructuredUserRelation(args, true);
+}
+
+// Where to place relations (in this order):
+// 1) For structured relations, the relation is defined on the structured side
+// 2) For generic relations, the relation is defined on the generic side
+// 3) Relations should assigned to the "higher" part of the relation. E.g.:
+//     - The meeting<->committee relation is in the committee block.
+//     - The motion<->category relation in in the motion block
 
 export const RELATIONS: Relation[] = [
+    // ########## Organisation
     ...makeM2O({
-        MViewModel: ViewMotion,
-        OViewModel: ViewMotionCategory,
-        MField: 'category',
-        OField: 'motions',
-        order: 'category_weight'
+        OViewModel: ViewOrganisation,
+        MViewModel: ViewCommittee,
+        OField: 'committees',
+        MField: 'organisation'
     }),
     ...makeM2O({
-        MViewModel: ViewMotionCategory,
-        OViewModel: ViewMotionCategory,
-        MField: 'parent',
-        OField: 'children',
-        OIdField: 'child_ids',
-        order: 'weight'
+        OViewModel: ViewOrganisation,
+        MViewModel: ViewRole,
+        OField: 'roles',
+        MField: 'organisation'
     }),
-    ...makeM2M({
-        AViewModel: ViewMotionState,
-        BViewModel: ViewMotionState,
-        AField: 'next_states',
-        BField: 'previous_states'
+    ...makeM2O({
+        OViewModel: ViewOrganisation,
+        MViewModel: ViewResource,
+        OField: 'resources',
+        MField: 'organisation'
     }),
-    ...makeGenericM2M({
-        viewModel: ViewTag,
-        possibleViewModels: [ViewAssignment, ViewMotion, ViewTopic],
-        viewModelField: 'tagged',
-        viewModelIdField: 'tagged_ids',
-        possibleViewModelsField: 'tags'
-    }),
-    ...makeGenericO2O({
-        viewModel: ViewAgendaItem,
-        possibleViewModels: [ViewMotion, ViewTopic, ViewAssignment, ViewMotionBlock],
-        viewModelField: 'content_object',
-        possibleViewModelsField: 'agenda_item'
-    }),
-    ...makeStructuredM2M({
-        structuredViewModel: ViewUser,
+    // ########## User
+    ...makeManyStructuredUsers2MRelation({
         otherViewModel: ViewGroup,
         structuredField: 'groups',
         structuredIdField: 'group_$_ids',
-        structuredIdFieldDefaultAttribute: 'active-meeting',
         otherViewModelField: 'users'
+    }),
+    ...makeOneStructuredUser2MRelation({
+        otherViewModel: ViewSpeaker,
+        structuredField: 'speakers',
+        structuredIdField: 'speaker_$_ids',
+        otherViewModelField: 'user'
+    }),
+    ...makeOneStructuredUser2MRelation({
+        otherViewModel: ViewPersonalNote,
+        structuredField: 'personal_notes',
+        structuredIdField: 'personal_note_$_ids',
+        otherViewModelField: 'user'
+    }),
+    ...makeManyStructuredUsers2MRelation({
+        otherViewModel: ViewMotion,
+        structuredField: 'supported_motions',
+        structuredIdField: 'supported_motion_$_ids',
+        otherViewModelField: 'supporters'
+    }),
+    ...makeOneStructuredUser2MRelation({
+        otherViewModel: ViewMotionSubmitter,
+        structuredField: 'submitted_motions',
+        structuredIdField: 'submitted_motion_$_ids',
+        otherViewModelField: 'user'
+    }),
+    ...makeManyStructuredUsers2MRelation({
+        otherViewModel: ViewMotionPoll,
+        structuredField: 'motion_poll_voted',
+        structuredIdField: 'motion_poll_voted_$_ids',
+        otherViewModelField: 'voted'
+    }),
+    ...makeOneStructuredUser2MRelation({
+        otherViewModel: ViewMotionVote,
+        structuredField: 'motion_votes',
+        structuredIdField: 'motion_vote_$_ids',
+        otherViewModelField: 'user'
+    }),
+    ...makeOneStructuredUser2MRelation({
+        otherViewModel: ViewAssignmentCandidate,
+        structuredField: 'assignment_candidates',
+        structuredIdField: 'assignment_candidate_$_ids',
+        otherViewModelField: 'user'
+    }),
+    ...makeManyStructuredUsers2MRelation({
+        otherViewModel: ViewAssignmentPoll,
+        structuredField: 'assignment_poll_voted',
+        structuredIdField: 'assignment_poll_voted_$_ids',
+        otherViewModelField: 'voted'
+    }),
+    ...makeOneStructuredUser2MRelation({
+        otherViewModel: ViewAssignmentOption,
+        structuredField: 'assignment_options',
+        structuredIdField: 'assignment_option_$_ids',
+        otherViewModelField: 'user'
+    }),
+    ...makeOneStructuredUser2MRelation({
+        otherViewModel: ViewAssignmentVote,
+        structuredField: 'assignment_votes',
+        structuredIdField: 'assignment_vote_$_ids',
+        otherViewModelField: 'user'
+    }),
+    // ########## Role
+    ...makeM2O({
+        OViewModel: ViewRole,
+        MViewModel: ViewUser,
+        OField: 'users',
+        MField: 'role'
+    }),
+    // ########## Committees
+    ...makeM2O({
+        OViewModel: ViewCommittee,
+        MViewModel: ViewMeeting,
+        OField: 'meetings',
+        MField: 'committee'
+    }),
+    ...makeO2O({
+        AViewModel: ViewCommittee,
+        BViewModel: ViewMeeting,
+        AField: 'default_meeting',
+        BField: 'default_meeting_for_committee'
+    }),
+    ...makeM2M({
+        AViewModel: ViewCommittee,
+        BViewModel: ViewUser,
+        AField: 'members',
+        BField: 'committees_as_member',
+        BIdField: 'committee_as_member_ids'
+    }),
+    ...makeM2M({
+        AViewModel: ViewCommittee,
+        BViewModel: ViewUser,
+        AField: 'managers',
+        BField: 'committees_as_manager',
+        BIdField: 'committee_as_manager_ids'
+    }),
+    ...makeM2M({
+        AViewModel: ViewCommittee,
+        BViewModel: ViewCommittee,
+        AField: 'forward_to_committees',
+        BField: 'receive_forwardings_from_committees'
+    }),
+    // ########## Meetings
+    ...makeO2O({
+        AViewModel: ViewMeeting,
+        BViewModel: ViewMotionWorkflow,
+        AField: 'motions_default_workflow',
+        BField: 'default_workflow_meeting'
+    }),
+    ...makeO2O({
+        AViewModel: ViewMeeting,
+        BViewModel: ViewMotionWorkflow,
+        AField: 'motions_default_statute_amendments_workflow',
+        BField: 'default_statute_amendments_meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewGroup,
+        OField: 'motion_poll_default_groups',
+        MField: 'used_as_motion_poll_default'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewGroup,
+        OField: 'assignment_poll_default_groups',
+        MField: 'used_as_assignment_poll_default'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewProjector,
+        OField: 'projectors',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewProjectiondefault,
+        OField: 'projectiondefaults',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewProjectorMessage,
+        OField: 'projector_messages',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewProjectorCountdown,
+        OField: 'projector_countdowns',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewTag,
+        OField: 'tags',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewAgendaItem,
+        OField: 'agenda_items',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewListOfSpeakers,
+        OField: 'lists_of_speakers',
+        OIdField: 'list_of_speakers_ids',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewTopic,
+        OField: 'topics',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewGroup,
+        OField: 'groups',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewMediafile,
+        OField: 'mediafiles',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewMotion,
+        OField: 'motions',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewMotionCommentSection,
+        OField: 'motion_comment_sections',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewMotionCategory,
+        OField: 'motion_categories',
+        OIdField: 'motion_category_ids',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewMotionBlock,
+        OField: 'motion_blocks',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewMotionWorkflow,
+        OField: 'motion_workflows',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewMotionStatuteParagraph,
+        OField: 'motion_statute_paragraphs',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewMotionPoll,
+        OField: 'motion_polls',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewAssignment,
+        OField: 'assignments',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewAssignmentPoll,
+        OField: 'assignment_polls',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewUser,
+        OField: 'present_users',
+        MField: 'is_present_in_meetings'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewUser,
+        OField: 'temporary_users',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewUser,
+        OField: 'guests',
+        MField: 'guest_meetings'
+    }),
+    ...makeO2O({
+        AViewModel: ViewMeeting,
+        BViewModel: ViewProjector,
+        AField: 'reference_projector',
+        BField: 'used_as_reference_projector_in_meeting'
     }),
     // Logo -> meeting
     {
@@ -81,438 +419,312 @@ export const RELATIONS: Relation[] = [
         many: false,
         generic: false,
         structured: true
-    }
-];
-
-// These are all collected relations from all repos. These relations must be redone in the new format.
-// The variablename indicates from which repo the relations are.
-// Attention: These are not all relations: There are new ones in OS4.
-/*
-const AgendaItemRelations: RelationDefinition[] = [
-    {
-        type: 'generic',
-        possibleModels: [ViewMotion, ViewMotionBlock, ViewTopic, ViewAssignment],
-        isVForeign: isBaseViewModelWithAgendaItem,
-        VForeignVerbose: 'BaseViewModelWithAgendaItem',
-        ownContentObjectDataKey: 'contentObjectData',
-        ownKey: 'content_object'
-    }
-];
-
-const ListOfSpeakersRelations: RelationDefinition[] = [
-    {
-        type: 'generic',
-        possibleModels: [ViewMotion, ViewMotionBlock, ViewTopic, ViewAssignment, ViewMediafile],
-        isVForeign: isBaseViewModelWithListOfSpeakers,
-        VForeignVerbose: 'BaseViewModelWithListOfSpeakers',
-        ownContentObjectDataKey: 'contentObjectData',
-        ownKey: 'content_object'
-    }
-];
-
-const ListOfSpeakersNestedModelDescriptors: NestedModelDescriptors = {
-    'agenda/list-of-speakers': [
-        {
-            ownKey: 'speakers',
-            foreignViewModel: ViewSpeaker,
-            foreignModel: Speaker,
-            order: 'weight',
-            relationDefinitionsByKey: {
-                user: {
-                    type: 'M2O',
-                    ownIdKey: 'user_id',
-                    ownKey: 'user',
-                    foreignViewModel: ViewUser
-                }
-            },
-            titles: {
-                getTitle: (viewSpeaker: ViewSpeaker) => viewSpeaker.name
-            }
-        }
-    ]
-};
-
-const AssignmentOptionRelations: RelationDefinition[] = [
-    {
-        type: 'O2M',
-        foreignIdKey: 'option_id',
-        ownKey: 'votes',
-        foreignViewModel: ViewAssignmentVote
     },
+    // Font -> meeting
     {
-        type: 'M2O',
-        ownIdKey: 'poll_id',
-        ownKey: 'poll',
-        foreignViewModel: ViewAssignmentPoll
+        ownViewModels: [ViewMediafile],
+        foreignViewModel: ViewMeeting,
+        ownField: 'used_as_font_in_meeting',
+        ownIdField: 'used_as_font_$_in_meeting',
+        many: false,
+        generic: false,
+        structured: true
     },
+    // Meeting -> Font
     {
-        type: 'M2O',
-        ownIdKey: 'user_id',
-        ownKey: 'user',
-        foreignViewModel: ViewUser
-    }
-];
-
-const AssignmentPollRelations: RelationDefinition[] = [
-    {
-        type: 'M2M',
-        ownIdKey: 'groups_id',
-        ownKey: 'groups',
-        foreignViewModel: ViewGroup
+        ownViewModels: [ViewMeeting],
+        foreignViewModel: ViewMediafile,
+        ownField: 'font',
+        ownIdField: 'font_$',
+        many: false,
+        generic: false,
+        structured: true
     },
-    {
-        type: 'O2M',
-        ownIdKey: 'options_id',
-        ownKey: 'options',
-        foreignViewModel: ViewAssignmentOption
-    },
-    {
-        type: 'M2O',
-        ownIdKey: 'assignment_id',
-        ownKey: 'assignment',
-        foreignViewModel: ViewAssignment
-    },
-    {
-        type: 'M2M',
-        ownIdKey: 'voted_id',
-        ownKey: 'voted',
-        foreignViewModel: ViewUser
-    }
-];
-
-const AssignmentRelations: RelationDefinition[] = [
-    {
-        type: 'M2M',
-        ownIdKey: 'tags_id',
-        ownKey: 'tags',
-        foreignViewModel: ViewTag
-    },
-    {
-        type: 'M2M',
-        ownIdKey: 'attachment_ids',
-        ownKey: 'attachments',
-        foreignViewModel: ViewMediafile
-    },
-    {
-        type: 'O2M',
-        ownKey: 'polls',
-        foreignIdKey: 'assignment_id',
-        foreignViewModel: ViewAssignmentPoll
-    }
-];
-
-const AssignmentNestedModelDescriptors: NestedModelDescriptors = {
-    'assignments/assignment': [
-        {
-            ownKey: 'assignment_related_users',
-            foreignViewModel: ViewAssignmentRelatedUser,
-            foreignModel: AssignmentRelatedUser,
-            order: 'weight',
-            relationDefinitionsByKey: {
-                user: {
-                    type: 'M2O',
-                    ownIdKey: 'user_id',
-                    ownKey: 'user',
-                    foreignViewModel: ViewUser
-                }
-            },
-            titles: {
-                getTitle: (viewAssignmentRelatedUser: ViewAssignmentRelatedUser) =>
-                    viewAssignmentRelatedUser.user ? viewAssignmentRelatedUser.user.getFullName() : ''
-            }
-        }
-    ]
-};
-
-const AssignmentVoteRelations: RelationDefinition[] = [
-    {
-        type: 'M2O',
-        ownIdKey: 'user_id',
-        ownKey: 'user',
-        foreignViewModel: ViewUser
-    },
-    {
-        type: 'M2O',
-        ownIdKey: 'option_id',
-        ownKey: 'option',
-        foreignViewModel: ViewAssignmentOption
-    }
-];
-
-const MediafileRelations: RelationDefinition[] = [
-    {
-        type: 'M2O',
-        ownIdKey: 'parent_id',
-        ownKey: 'parent',
-        foreignViewModel: ViewMediafile
-    },
-    {
-        type: 'M2M',
-        ownIdKey: 'access_groups_id',
-        ownKey: 'access_groups',
-        foreignViewModel: ViewGroup
-    },
-    {
-        type: 'M2M',
-        ownIdKey: 'inherited_access_groups_id',
-        ownKey: 'inherited_access_groups',
-        foreignViewModel: ViewGroup
-    }
-];
-
-const CategoryRelations: RelationDefinition[] = [
-    {
-        type: 'M2O',
-        ownIdKey: 'parent_id',
-        ownKey: 'parent',
-        foreignViewModel: ViewCategory
-    },
-    {
-        type: 'O2M',
-        foreignIdKey: 'category_id',
-        ownKey: 'motions',
-        foreignViewModel: ViewMotion,
+    // ########## Personal notes
+    ...makeGenericO2O<ViewPersonalNote, HasPersonalNote>({
+        viewModel: ViewPersonalNote,
+        possibleViewModels: [ViewMotion],
+        viewModelField: 'content_object',
+        possibleViewModelsField: 'personal_notes'
+    }),
+    // ########## Tags
+    ...makeGenericM2M<ViewTag, HasTags>({
+        viewModel: ViewTag,
+        possibleViewModels: [ViewAssignment, ViewMotion, ViewTopic],
+        viewModelField: 'tagged',
+        viewModelIdField: 'tagged_ids',
+        possibleViewModelsField: 'tags'
+    }),
+    // ########## Agenda items
+    ...makeGenericO2O<ViewAgendaItem, HasAgendaItem>({
+        viewModel: ViewAgendaItem,
+        possibleViewModels: [ViewMotion, ViewMotionBlock, ViewAssignment, ViewTopic],
+        viewModelField: 'content_object',
+        possibleViewModelsField: 'agenda_item'
+    }),
+    ...makeM2O({
+        MViewModel: ViewAgendaItem,
+        OViewModel: ViewAgendaItem,
+        MField: 'parent',
+        OField: 'children',
+        OIdField: 'child_ids'
+    }),
+    // ########## Lists of speakers
+    ...makeGenericO2O<ViewListOfSpeakers, HasListOfSpeakers>({
+        viewModel: ViewListOfSpeakers,
+        possibleViewModels: [ViewMotion, ViewMotionBlock, ViewAssignment, ViewTopic, ViewMediafile],
+        viewModelField: 'content_object',
+        possibleViewModelsField: 'list_of_speakers'
+    }),
+    ...makeM2O({
+        MViewModel: ViewSpeaker,
+        OViewModel: ViewListOfSpeakers,
+        MField: 'list_of_speakers',
+        OField: 'speakers'
+    }),
+    // ########## Motions
+    ...makeM2O({
+        MViewModel: ViewMotion,
+        OViewModel: ViewMotion,
+        MField: 'lead_motion',
+        OField: 'amendments'
+    }),
+    ...makeM2O({
+        MViewModel: ViewMotion,
+        OViewModel: ViewMotion,
+        MField: 'sort_parent',
+        OField: 'sort_children',
+        OIdField: 'sort_child_ids'
+    }),
+    ...makeM2O({
+        MViewModel: ViewMotion,
+        OViewModel: ViewMotion,
+        MField: 'origin',
+        OField: 'derived_motions'
+    }),
+    ...makeM2O({
+        MViewModel: ViewMotion,
+        OViewModel: ViewMotionState,
+        MField: 'state',
+        OField: 'motions'
+    }),
+    ...makeM2O({
+        MViewModel: ViewMotion,
+        OViewModel: ViewMotionState,
+        MField: 'recommendation',
+        OField: 'motions'
+    }),
+    ...makeM2O({
+        MViewModel: ViewMotion,
+        OViewModel: ViewMotionCategory,
+        MField: 'category',
+        OField: 'motions',
         order: 'category_weight'
-    },
-    {
-        type: 'O2M',
-        foreignIdKey: 'parent_id',
-        ownKey: 'children',
-        foreignViewModel: ViewCategory,
+    }),
+    ...makeM2O({
+        MViewModel: ViewMotion,
+        OViewModel: ViewMotionBlock,
+        MField: 'block',
+        OField: 'motions'
+    }),
+    ...makeM2O({
+        MViewModel: ViewMotionSubmitter,
+        OViewModel: ViewMotion,
+        MField: 'motion',
+        OField: 'submitters'
+    }),
+    ...makeM2O({
+        MViewModel: ViewMotionPoll,
+        OViewModel: ViewMotion,
+        MField: 'motion',
+        OField: 'polls'
+    }),
+    ...makeM2O({
+        MViewModel: ViewMotionChangeRecommendation,
+        OViewModel: ViewMotion,
+        MField: 'motion',
+        OField: 'change_recommendations'
+    }),
+    ...makeM2O({
+        MViewModel: ViewMotion,
+        OViewModel: ViewMotionStatuteParagraph,
+        MField: 'statute_paragraph',
+        OField: 'motions'
+    }),
+    ...makeM2O({
+        MViewModel: ViewMotionComment,
+        OViewModel: ViewMotion,
+        MField: 'motion',
+        OField: 'comments'
+    }),
+    // ########## Motion comment sections
+    ...makeM2O({
+        MViewModel: ViewMotionComment,
+        OViewModel: ViewMotionCommentSection,
+        MField: 'section',
+        OField: 'comments'
+    }),
+    ...makeM2M({
+        AViewModel: ViewMotionCommentSection,
+        BViewModel: ViewGroup,
+        AField: 'read_groups',
+        BField: 'read_comment_sections'
+    }),
+    ...makeM2M({
+        AViewModel: ViewMotionCommentSection,
+        BViewModel: ViewGroup,
+        AField: 'write_groups',
+        BField: 'write_comment_sections'
+    }),
+    // ########## Motion category
+    ...makeM2O({
+        MViewModel: ViewMotionCategory,
+        OViewModel: ViewMotionCategory,
+        MField: 'parent',
+        OField: 'children',
+        OIdField: 'child_ids',
         order: 'weight'
-    }
+    }),
+    // ########## Motion states
+    ...makeM2M({
+        AViewModel: ViewMotionState,
+        BViewModel: ViewMotionState,
+        AField: 'next_states',
+        BField: 'previous_states'
+    }),
+    // ########## Motion workflow
+    ...makeM2O({
+        MViewModel: ViewMotionState,
+        OViewModel: ViewMotionWorkflow,
+        MField: 'workflow',
+        OField: 'states'
+    }),
+    ...makeO2O({
+        AViewModel: ViewMotionWorkflow,
+        BViewModel: ViewMotionState,
+        AField: 'first_state',
+        BField: 'first_state_of_workflow'
+    }),
+    // ########## Motion polls
+    ...makeM2M({
+        AViewModel: ViewMotionPoll,
+        BViewModel: ViewGroup,
+        AField: 'entitled_groups',
+        BField: 'motion_polls'
+    }),
+    // ########## Motion options
+    ...makeM2O({
+        MViewModel: ViewMotionOption,
+        OViewModel: ViewMotionPoll,
+        MField: 'poll',
+        OField: 'options'
+    }),
+    // ########## Motion votes
+    ...makeM2O({
+        MViewModel: ViewMotionVote,
+        OViewModel: ViewMotionOption,
+        MField: 'option',
+        OField: 'votes'
+    }),
+    // ########## Assignments
+    ...makeM2O({
+        MViewModel: ViewAssignmentCandidate,
+        OViewModel: ViewAssignment,
+        MField: 'assignment',
+        OField: 'candidates'
+    }),
+    ...makeM2O({
+        MViewModel: ViewAssignmentPoll,
+        OViewModel: ViewAssignment,
+        MField: 'assignment',
+        OField: 'polls'
+    }),
+    // ########## Assignment polls
+    ...makeM2M({
+        AViewModel: ViewAssignmentPoll,
+        BViewModel: ViewGroup,
+        AField: 'entitled_groups',
+        BField: 'assignment_polls'
+    }),
+    // ########## Assignment options
+    ...makeM2O({
+        MViewModel: ViewAssignmentOption,
+        OViewModel: ViewAssignmentPoll,
+        MField: 'poll',
+        OField: 'options'
+    }),
+    // ########## Assignment votes
+    ...makeM2O({
+        MViewModel: ViewAssignmentVote,
+        OViewModel: ViewAssignmentOption,
+        MField: 'option',
+        OField: 'votes'
+    }),
+    // ########## Mediafile
+    ...makeM2M({
+        AViewModel: ViewMediafile,
+        BViewModel: ViewGroup,
+        AField: 'access_groups',
+        BField: 'mediafile_access_groups'
+    }),
+    ...makeM2O({
+        MViewModel: ViewMediafile,
+        OViewModel: ViewMediafile,
+        MField: 'parent',
+        OField: 'children',
+        OIdField: 'child_ids'
+    }),
+    // ########## Projector
+    ...makeM2O({
+        MViewModel: ViewProjection,
+        OViewModel: ViewProjector,
+        MField: 'current_projector',
+        OField: 'current_projections'
+    }),
+    ...makeM2O({
+        MViewModel: ViewProjection,
+        OViewModel: ViewProjector,
+        MField: 'preview_projector',
+        OField: 'preview_projections'
+    }),
+    ...makeM2O({
+        MViewModel: ViewProjection,
+        OViewModel: ViewProjector,
+        MField: 'history_projector',
+        OField: 'history_projections'
+    }),
+    ...makeGenericM2M<ViewProjector, Projectable>({
+        viewModel: ViewProjector,
+        possibleViewModels: PROJECTABLE_VIEW_MODELS,
+        viewModelField: 'current_elements',
+        possibleViewModelsField: 'current_projectors'
+    }),
+    ...makeM2O({
+        MViewModel: ViewProjectiondefault,
+        OViewModel: ViewProjector,
+        MField: 'projector',
+        OField: 'projectiondefaults'
+    }),
+    // ########## Projections
+    // This is a generic O2M: projection <M---1> element
+    // projection -> elements
     {
-        type: 'O2M',
-        ownIdKey: 'children_ids',
-        ownKey: 'children',
-        foreignViewModel: ViewCategory
+        ownViewModels: [ViewProjection],
+        foreignViewModelPossibilities: PROJECTABLE_VIEW_MODELS,
+        ownField: 'element',
+        ownIdField: 'element_id',
+        many: false,
+        generic: true,
+        structured: false
     },
+    // elements -> projection
     {
-        type: 'O2M',
-        ownIdKey: 'motion_ids',
-        ownKey: 'motions',
-        foreignViewModel: ViewMotion,
-        order: 'category_weight'
-    }
-];
-
-const MotionBlockRelations: RelationDefinition[] = [
-    {
-        type: 'O2M',
-        foreignIdKey: 'motion_block_id',
-        ownKey: 'motions',
-        foreignViewModel: ViewMotion
-    }
-];
-
-const MotionCommentSectionRelations: RelationDefinition[] = [
-    {
-        type: 'M2M',
-        ownIdKey: 'read_groups_id',
-        ownKey: 'read_groups',
-        foreignViewModel: ViewGroup
-    },
-    {
-        type: 'M2M',
-        ownIdKey: 'write_groups_id',
-        ownKey: 'write_groups',
-        foreignViewModel: ViewGroup
-    }
-];
-
-const MotionOptionRelations: RelationDefinition[] = [
-    {
-        type: 'O2M',
-        foreignIdKey: 'option_id',
-        ownKey: 'votes',
-        foreignViewModel: ViewMotionVote
-    },
-    {
-        type: 'M2O',
-        ownIdKey: 'poll_id',
-        ownKey: 'poll',
-        foreignViewModel: ViewMotionPoll
-    }
-];
-
-const MotionPollRelations: RelationDefinition[] = [
-    {
-        type: 'M2M',
-        ownIdKey: 'groups_id',
-        ownKey: 'groups',
-        foreignViewModel: ViewGroup
-    },
-    {
-        type: 'O2M',
-        ownIdKey: 'options_id',
-        ownKey: 'options',
-        foreignViewModel: ViewMotionOption
-    },
-    {
-        type: 'M2O',
-        ownIdKey: 'motion_id',
-        ownKey: 'motion',
-        foreignViewModel: ViewMotion
-    },
-    {
-        type: 'M2M',
-        ownIdKey: 'voted_id',
-        ownKey: 'voted',
-        foreignViewModel: ViewUser
-    }
-];
-
-const MotionRelations: RelationDefinition[] = [
-    {
-        type: 'M2O',
-        ownIdKey: 'state_id',
-        ownKey: 'state',
-        foreignViewModel: ViewState
-    },
-    {
-        type: 'M2O',
-        ownIdKey: 'recommendation_id',
-        ownKey: 'recommendation',
-        foreignViewModel: ViewState
-    },
-    {
-        type: 'M2O',
-        ownIdKey: 'workflow_id',
-        ownKey: 'workflow',
-        foreignViewModel: ViewWorkflow
-    },
-    {
-        type: 'M2O',
-        ownIdKey: 'category_id',
-        ownKey: 'category',
-        foreignViewModel: ViewCategory
-    },
-    {
-        type: 'M2O',
-        ownIdKey: 'motion_block_id',
-        ownKey: 'motion_block',
-        foreignViewModel: ViewMotionBlock
-    },
-    {
-        type: 'M2M',
-        ownIdKey: 'supporters_id',
-        ownKey: 'supporters',
-        foreignViewModel: ViewUser
-    },
-    {
-        type: 'M2M',
-        ownIdKey: 'attachment_ids',
-        ownKey: 'attachments',
-        foreignViewModel: ViewMediafile
-    },
-    {
-        type: 'M2M',
-        ownIdKey: 'tags_id',
-        ownKey: 'tags',
-        foreignViewModel: ViewTag
-    },
-    {
-        type: 'M2M',
-        ownIdKey: 'change_recommendations_id',
-        ownKey: 'changeRecommendations',
-        foreignViewModel: ViewMotionChangeRecommendation
-    },
-    {
-        type: 'O2M',
-        foreignIdKey: 'parent_id',
-        ownKey: 'amendments',
-        foreignViewModel: ViewMotion
-    },
-    {
-        type: 'M2O',
-        ownIdKey: 'parent_id',
-        ownKey: 'parent',
-        foreignViewModel: ViewMotion
-    },
-    {
-        type: 'O2M',
-        foreignIdKey: 'motion_id',
-        ownKey: 'polls',
-        foreignViewModel: ViewMotionPoll
-    }
-    // Personal notes are dynamically added in the repo.
-];
-
-const MotionVoteRelations: RelationDefinition[] = [
-    {
-        type: 'M2O',
-        ownIdKey: 'user_id',
-        ownKey: 'user',
-        foreignViewModel: ViewUser
-    },
-    {
-        type: 'M2O',
-        ownIdKey: 'option_id',
-        ownKey: 'option',
-        foreignViewModel: ViewMotionOption
+        ownViewModels: PROJECTABLE_VIEW_MODELS,
+        foreignViewModel: ViewProjection,
+        ownField: 'projections',
+        ownIdField: 'projection_ids',
+        many: true,
+        generic: false,
+        structured: false
     }
 ];
-
-const MotionStateRelations: RelationDefinition[] = [
-    {
-        type: 'M2O',
-        ownIdKey: 'workflow_id',
-        ownKey: 'workflow',
-        foreignViewModel: ViewMotionWorkflow
-    },
-    {
-        type: 'M2M',
-        ownIdKey: 'next_states_id',
-        ownKey: 'next_states',
-        foreignViewModel: ViewMotionState
-    },
-    {
-        type: 'M2M',
-        foreignIdKey: 'next_states_id',
-        ownKey: 'previous_states',
-        foreignViewModel: ViewMotionState
-    }
-];
-
-const MotionWorkflowRelations: RelationDefinition[] = [
-    {
-        type: 'O2M',
-        ownIdKey: 'states_id',
-        ownKey: 'states',
-        foreignViewModel: ViewMotionState
-    },
-    {
-        type: 'M2O',
-        ownIdKey: 'first_state_id',
-        ownKey: 'first_state',
-        foreignViewModel: ViewMotionState
-    }
-];
-
-const ProjectorRelations: RelationDefinition[] = [
-    {
-        type: 'M2O',
-        ownIdKey: 'reference_projector_id',
-        ownKey: 'referenceProjector',
-        foreignViewModel: ViewProjector
-    }
-];
-
-const TopicRelations: RelationDefinition[] = [
-    {
-        type: 'M2M',
-        ownIdKey: 'attachment_ids',
-        ownKey: 'attachments',
-        foreignViewModel: ViewMediafile
-    }
-];
-
-const UserRelations: RelationDefinition[] = [
-    {
-        type: 'M2M',
-        ownIdKey: 'groups_id',
-        ownKey: 'groups',
-        foreignViewModel: ViewGroup
-    }
-];
-*/

@@ -2,18 +2,14 @@ import { Injectable } from '@angular/core';
 
 import { ServertimeService } from 'app/core/core-services/servertime.service';
 import { ProjectorCountdown } from 'app/shared/models/projector/projector-countdown';
-import { CountdownTitleInformation, ViewProjectorCountdown } from 'app/site/projector/models/view-projector-countdown';
+import { ViewProjectorCountdown } from 'app/site/projector/models/view-projector-countdown';
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 @Injectable({
     providedIn: 'root'
 })
-export class CountdownRepositoryService extends BaseRepository<
-    ViewProjectorCountdown,
-    ProjectorCountdown,
-    CountdownTitleInformation
-> {
+export class ProjectorCountdownRepositoryService extends BaseRepository<ViewProjectorCountdown, ProjectorCountdown> {
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
         private servertimeService: ServertimeService
@@ -21,10 +17,10 @@ export class CountdownRepositoryService extends BaseRepository<
         super(repositoryServiceCollector, ProjectorCountdown);
     }
 
-    public getTitle = (titleInformation: CountdownTitleInformation) => {
-        return titleInformation.description
-            ? `${titleInformation.title} (${titleInformation.description})`
-            : titleInformation.title;
+    public getTitle = (viewProjectorCountdown: ViewProjectorCountdown) => {
+        return viewProjectorCountdown.description
+            ? `${viewProjectorCountdown.title} (${viewProjectorCountdown.description})`
+            : viewProjectorCountdown.title;
     };
 
     public getVerboseName = (plural: boolean = false) => {

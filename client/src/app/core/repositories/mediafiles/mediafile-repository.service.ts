@@ -7,7 +7,7 @@ import { first, map } from 'rxjs/operators';
 import { HttpService } from 'app/core/core-services/http.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Mediafile } from 'app/shared/models/mediafiles/mediafile';
-import { MediafileTitleInformation, ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
+import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { BaseIsListOfSpeakersContentObjectRepository } from '../base-is-list-of-speakers-content-object-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
@@ -17,11 +17,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjectRepository<
-    ViewMediafile,
-    Mediafile,
-    MediafileTitleInformation
-> {
+export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjectRepository<ViewMediafile, Mediafile> {
     private directoryBehaviorSubject: BehaviorSubject<ViewMediafile[]>;
 
     /**
@@ -45,8 +41,8 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
         };
     }
 
-    public getTitle = (titleInformation: MediafileTitleInformation) => {
-        return titleInformation.title;
+    public getTitle = (viewMediafile: ViewMediafile) => {
+        return viewMediafile.title;
     };
 
     public getVerboseName = (plural: boolean = false) => {

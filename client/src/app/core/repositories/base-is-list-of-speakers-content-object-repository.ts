@@ -1,13 +1,14 @@
-import { BaseViewModelWithListOfSpeakers } from 'app/site/base/base-view-model-with-list-of-speakers';
+import { HasListOfSpeakersId } from 'app/shared/models/base/has-list-of-speakers-id';
+import { HasListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { BaseModel, ModelConstructor } from '../../shared/models/base/base-model';
 import { BaseRepository } from './base-repository';
-import { TitleInformation } from '../../site/base/base-view-model';
+import { BaseViewModel } from '../../site/base/base-view-model';
 import { RepositoryServiceCollector } from './repository-service-collector';
 
 export function isBaseIsListOfSpeakersContentObjectRepository(
     obj: any
-): obj is BaseIsListOfSpeakersContentObjectRepository<any, any, any> {
-    const repo = obj as BaseIsListOfSpeakersContentObjectRepository<any, any, any>;
+): obj is BaseIsListOfSpeakersContentObjectRepository<any, any> {
+    const repo = obj as BaseIsListOfSpeakersContentObjectRepository<any, any>;
     return !!obj && repo.getListOfSpeakersTitle !== undefined && repo.getListOfSpeakersSlideTitle !== undefined;
 }
 
@@ -15,32 +16,30 @@ export function isBaseIsListOfSpeakersContentObjectRepository(
  * Describes a base repository which objects have a list of speakers assigned.
  */
 export interface IBaseIsListOfSpeakersContentObjectRepository<
-    V extends BaseViewModelWithListOfSpeakers & T,
-    M extends BaseModel,
-    T extends TitleInformation
-> extends BaseRepository<V, M, T> {
-    getListOfSpeakersTitle: (titleInformation: T) => string;
-    getListOfSpeakersSlideTitle: (titleInformation: T) => string;
+    V extends BaseViewModel & HasListOfSpeakers,
+    M extends BaseModel & HasListOfSpeakersId
+> extends BaseRepository<V, M> {
+    getListOfSpeakersTitle: (viewModel: V) => string;
+    getListOfSpeakersSlideTitle: (viewModel: V) => string;
 }
 
 /**
  * The base repository for objects with a list of speakers.
  */
 export abstract class BaseIsListOfSpeakersContentObjectRepository<
-    V extends BaseViewModelWithListOfSpeakers & T,
-    M extends BaseModel,
-    T extends TitleInformation
-> extends BaseRepository<V, M, T> implements IBaseIsListOfSpeakersContentObjectRepository<V, M, T> {
+    V extends BaseViewModel & HasListOfSpeakers,
+    M extends BaseModel & HasListOfSpeakersId
+> extends BaseRepository<V, M> implements IBaseIsListOfSpeakersContentObjectRepository<V, M> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector, baseModelCtor: ModelConstructor<M>) {
         super(repositoryServiceCollector, baseModelCtor);
     }
 
-    public getListOfSpeakersTitle(titleInformation: T): string {
-        return this.getTitle(titleInformation) + ' (' + this.getVerboseName() + ')';
+    public getListOfSpeakersTitle(viewModel: V): string {
+        return this.getTitle(viewModel) + ' (' + this.getVerboseName() + ')';
     }
 
-    public getListOfSpeakersSlideTitle(titleInformation: T): string {
-        return this.getTitle(titleInformation);
+    public getListOfSpeakersSlideTitle(viewModel: V): string {
+        return this.getTitle(viewModel);
     }
 
     /**
