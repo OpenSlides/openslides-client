@@ -15,6 +15,8 @@ import { ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { CreateTopic } from '../../models/create-topic';
 import { ViewTopic } from '../../models/view-topic';
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
+import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
 
 /**
  * Detail page for topics.
@@ -24,7 +26,7 @@ import { ViewTopic } from '../../models/view-topic';
     templateUrl: './topic-detail.component.html',
     styleUrls: ['./topic-detail.component.scss']
 })
-export class TopicDetailComponent extends BaseComponent {
+export class TopicDetailComponent extends BaseModelContextComponent {
     /**
      * Determine if the topic is in edit mode
      */
@@ -177,6 +179,13 @@ export class TopicDetailComponent extends BaseComponent {
      * @param id the id of the required topic
      */
     public loadTopic(id: number): void {
+        this.requestModels({
+            viewModelCtor: ViewTopic,
+            ids: [id],
+            follow: [
+                SPEAKER_BUTTON_FOLLOW,
+            ]
+        });
         this.repo.getViewModelObservable(id).subscribe(newViewTopic => {
             // repo sometimes delivers undefined values
             // also ensures edition cannot be interrupted by autoupdate

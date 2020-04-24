@@ -5,6 +5,7 @@ import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 
 import { AutoupdateService } from '../core-services/autoupdate.service';
+import { ModelRequestBuilderService } from '../core-services/model-request-builder.service';
 import { StorageService } from '../core-services/storage.service';
 
 @Injectable({

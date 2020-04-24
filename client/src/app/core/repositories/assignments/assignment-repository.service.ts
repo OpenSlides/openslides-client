@@ -7,6 +7,7 @@ import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { BaseIsAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-is-agenda-item-and-list-of-speakers-content-object-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
+import { Fieldsets, DEFAULT_FIELDSET } from 'app/core/core-services/model-request-builder.service';
 
 /**
  * Repository Service for Assignments.
@@ -40,6 +41,25 @@ export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeake
         private httpService: HttpService
     ) {
         super(repositoryServiceCollector, Assignment, agendaItemRepo);
+    }
+
+    public getFieldsets(): Fieldsets<Assignment> {
+        const titleFields: (keyof Assignment)[] = [
+            'title'
+        ];
+        const listFields: (keyof Assignment)[] = titleFields.concat([
+            'open_posts',
+            'phase'
+        ]);
+        return {
+            [DEFAULT_FIELDSET]: listFields.concat([
+                'description',
+                'default_poll_description',
+                'number_poll_candidates',
+            ]),
+            list: listFields,
+            title: titleFields,
+        };
     }
 
     public getTitle = (viewAssignment: ViewAssignment) => {

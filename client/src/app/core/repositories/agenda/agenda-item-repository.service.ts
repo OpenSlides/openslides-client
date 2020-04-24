@@ -9,6 +9,7 @@ import { HasAgendaItem, ViewAgendaItem } from 'app/site/agenda/models/view-agend
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
+import { Fieldsets, DEFAULT_FIELDSET } from 'app/core/core-services/model-request-builder.service';
 
 export interface AgendaListTitle {
     title: string;
@@ -42,6 +43,10 @@ export class AgendaItemRepositoryService extends BaseRepository<ViewAgendaItem, 
         super(repositoryServiceCollector, AgendaItem);
 
         this.setSortFunction((a, b) => a.weight - b.weight);
+    }
+
+    public getFieldsets(): Fieldsets<AgendaItem> {
+        return { [DEFAULT_FIELDSET]: ['item_number', 'comment', 'closed', 'type', 'is_hidden', 'is_internal', 'duration', 'weight', 'level', 'parent_id', 'child_ids', 'meeting_id'] };
     }
 
     public getVerboseName = (plural: boolean = false) => {

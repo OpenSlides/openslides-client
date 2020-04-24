@@ -8,13 +8,16 @@ import { LoginDataService } from 'app/core/ui-services/login-data.service';
 import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
+import { Subscription } from 'rxjs';
+import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 
 @Component({
     selector: 'os-user-menu',
     templateUrl: './user-menu.component.html',
     styleUrls: ['./user-menu.component.scss']
 })
-export class UserMenuComponent extends BaseComponent implements OnInit {
+export class UserMenuComponent extends BaseModelContextComponent implements OnInit {
     public isLoggedIn: boolean;
 
     public user: ViewUser;
@@ -30,32 +33,34 @@ export class UserMenuComponent extends BaseComponent implements OnInit {
     @Output()
     private navEvent: EventEmitter<void> = new EventEmitter();
 
+    private _userId: number | null = null;
+
+    private userSubscription: Subscription | null = null;
+
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private operator: OperatorService,
         private authService: AuthService,
         private overlayService: OverlayService,
         private loginDataService: LoginDataService,
-        private router: Router
+        private router: Router,
+        private userRepo: UserRepositoryService
     ) {
         super(componentServiceCollector);
     }
 
     public ngOnInit(): void {
-        /*this.operator.getViewUserObservable().subscribe(user => {
-            if (user) {
-                this.user = user;
-            }
-            if (!this.operator.isAnonymous) {
-                this.username = user ? user.short_name : '';
-                this.isLoggedIn = true;
-            } else {
-                this.username = this.translate.instant('Guest');
-                this.isLoggedIn = false;
-            }
-        });
+        /*this.operator.authType.subscribe(authType => (this.authType = authType));*/
 
-        this.operator.authType.subscribe(authType => (this.authType = authType));*/
+        this.operator.operatorUpdatedEvent.subscribe(() => {
+            this.isLoggedIn = !this.operator.isAnonymous;
+            this.username = this.isLoggedIn ? this.operator.shortName : this.translate.instant('Guest');
+            const userId = this.operator.operatorId;
+            if (this._userId !== userId) {
+                this._userId = userId
+                this.userUpdate();
+            }
+        })
 
         this.loginDataService.samlSettings.subscribe(
             samlSettings => (this.samlChangePasswordUrl = samlSettings ? samlSettings.changePasswordUrl : null)
@@ -66,7 +71,32 @@ export class UserMenuComponent extends BaseComponent implements OnInit {
             .subscribe(allowed => (this.allowSelfSetPresent = allowed));*/
     }
 
+    private userUpdate(): void {
+        if (this._userId === null) {
+            this.user = null;
+            return;
+        }
+
+        this.requestModels({
+            viewModelCtor: ViewUser,
+            ids: [this._userId],
+            fieldset: ['is_present_in_meeting_ids']
+        });
+
+        if (this.userSubscription) {
+            this.userSubscription.unsubscribe();
+        }
+        this.userSubscription = this.userRepo.getViewModelObservable(this._userId).subscribe(user => {
+            if (user !== undefined) {
+                this.user = user;
+            }
+        });
+    }
+
     public isOnProfilePage(): boolean {
+        if (!this.user) {
+            return false;
+        }
         const ownProfilePageUrl = `/users/${this.user.id}`;
         return ownProfilePageUrl === this.router.url;
     }

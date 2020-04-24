@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 
+import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { TreeIdNode } from 'app/core/ui-services/tree.service';
 import { MotionCategory } from 'app/shared/models/motions/motion-category';
 import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
@@ -37,6 +38,12 @@ export class MotionCategoryRepositoryService extends BaseRepository<ViewMotionCa
         super(repositoryServiceCollector, MotionCategory);
 
         this.setSortFunction((a, b) => a.weight - b.weight);
+    }
+
+    public getFieldsets(): Fieldsets<MotionCategory> {
+        return {
+            [DEFAULT_FIELDSET]: ['child_ids', 'parent_id', 'name', 'prefix', 'weight']
+        };
     }
 
     public getTitle = (viewMotionCategory: ViewMotionCategory) => {

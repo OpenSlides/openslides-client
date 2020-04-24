@@ -4,8 +4,9 @@ import { Title } from '@angular/platform-browser';
 
 import { OnAfterAppsLoaded } from './definitions/on-after-apps-loaded';
 import { OperatorService } from './core-services/operator.service';
+import { ModelRequestBuilderService } from './core-services/model-request-builder.service';
 
-export const ServicesToLoadOnAppsLoaded: Type<OnAfterAppsLoaded>[] = [OperatorService];
+export const ServicesToLoadOnAppsLoaded: Type<OnAfterAppsLoaded>[] = [OperatorService, ModelRequestBuilderService];
 
 /**
  * Global Core Module.

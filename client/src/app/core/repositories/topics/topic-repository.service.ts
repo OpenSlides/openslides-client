@@ -6,6 +6,7 @@ import { CreateTopic } from 'app/site/topics/models/create-topic';
 import { ViewTopic } from 'app/site/topics/models/view-topic';
 import { BaseIsAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-is-agenda-item-and-list-of-speakers-content-object-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
+import { Fieldsets, DEFAULT_FIELDSET } from 'app/core/core-services/model-request-builder.service';
 
 /**
  * Repository for topics
@@ -26,6 +27,19 @@ export class TopicRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCon
         agendaItemRepo: AgendaItemRepositoryService
     ) {
         super(repositoryServiceCollector, Topic, agendaItemRepo);
+    }
+
+    public getFieldsets(): Fieldsets<Topic> {
+        const titleFields: (keyof Topic)[] = [
+            'title'
+        ];
+        return {
+            [DEFAULT_FIELDSET]: titleFields.concat([
+                'text'
+            ]),
+            list: titleFields,
+            title: titleFields,
+        };
     }
 
     public getTitle = (viewTopic: ViewTopic) => {

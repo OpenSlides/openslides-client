@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { HttpService } from 'app/core/core-services/http.service';
+import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Id } from 'app/core/definitions/key-types';
 import { NewEntry } from 'app/core/ui-services/base-import.service';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
@@ -30,6 +31,8 @@ interface LevelAndNumberInformation {
     number?: string;
 }
 type FullNameInformation = ShortNameInformation & LevelAndNumberInformation;
+
+const SHORT_NAME_FIELDS: (keyof User)[] = ['title', 'username', 'first_name', 'last_name'];
 
 /**
  * Repository service for users
@@ -67,6 +70,25 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             this.sortProperty = conf;
             this.setConfigSortFn();
         });
+    }
+
+    public getFieldsets(): Fieldsets<User> {
+        return {
+            shortName: SHORT_NAME_FIELDS,
+            [DEFAULT_FIELDSET]: SHORT_NAME_FIELDS.concat([
+                'about_me',
+                'comment',
+                'email',
+                'gender',
+                'is_active',
+                'is_committee',
+                'is_present_in_meeting_ids',
+                'last_email_send',
+                'number',
+                'structure_level',
+                'vote_weight'
+            ])
+        };
     }
 
     public getTitle = (viewUser: ViewUser) => {

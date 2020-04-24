@@ -14,13 +14,11 @@ import { Tag } from 'app/shared/models/core/tag';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
 import { ViewTag } from '../../models/view-tag';
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 
 /**
  * Listview for the complete list of available Tags
- * ### Usage:
- * ```html
- * <os-tag-list></os-tag-list>
- * ```
  */
 @Component({
     selector: 'os-tag-list',
@@ -61,7 +59,6 @@ export class TagListComponent extends BaseListViewComponent<ViewTag> implements 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         public repo: TagRepositoryService,
-        protected translate: TranslateService, // protected required for ng-translate-extract
         private dialog: MatDialog,
         private formBuilder: FormBuilder,
         private promptService: PromptService
@@ -74,7 +71,25 @@ export class TagListComponent extends BaseListViewComponent<ViewTag> implements 
      * Sets the title, inits the table and calls the repo.
      */
     public ngOnInit(): void {
+        super.ngOnInit();
         super.setTitle('Tags');
+    }
+
+    protected getModelRequest(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [1], // TODO
+            follow: [
+                {
+                    idField: 'tag_ids',
+                    follow: [{
+                        idField: 'tagged_ids',
+                        fieldset: ['title'] // TODO
+                    }]
+                }
+            ],
+            fieldset: []
+        };
     }
 
     /**

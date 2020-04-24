@@ -8,6 +8,7 @@ import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
 import { BaseIsAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-is-agenda-item-and-list-of-speakers-content-object-repository';
 import { MotionRepositoryService } from './motion-repository.service';
 import { RepositoryServiceCollector } from '../repository-service-collector';
+import { Fieldsets, DEFAULT_FIELDSET } from 'app/core/core-services/model-request-builder.service';
 
 /**
  * Repository service for motion blocks
@@ -37,6 +38,21 @@ export class MotionBlockRepositoryService extends BaseIsAgendaItemAndListOfSpeak
         super(repositoryServiceCollector, MotionBlock, agendaItemRepo);
         this.initSorting();
     }
+
+    public getFieldsets(): Fieldsets<MotionBlock> {
+        const titleFields: (keyof MotionBlock)[] = [
+            'title'
+        ];
+        const listFields: (keyof MotionBlock)[] = titleFields.concat([
+            'internal'
+        ]);
+        return {
+            [DEFAULT_FIELDSET]: listFields,
+            list: listFields,
+            title: titleFields,
+        };
+    }
+
 
     public getTitle = (viewMotionBlock: ViewMotionBlock) => {
         return viewMotionBlock.title;

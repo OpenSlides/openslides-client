@@ -11,6 +11,7 @@ import { DataStoreService } from '../core-services/data-store.service';
 import { HasViewModelListObservable } from '../definitions/has-view-model-list-observable';
 import { Identifiable } from '../../shared/models/base/identifiable';
 import { Id } from '../definitions/key-types';
+import { DEFAULT_FIELDSET, Fieldsets } from '../core-services/model-request-builder.service';
 import { OnAfterAppsLoaded } from '../definitions/on-after-apps-loaded';
 import { RelationManagerService } from '../core-services/relation-manager.service';
 import { Relation } from '../definitions/relations';
@@ -193,7 +194,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      * are assigned to the new view model.
      */
     protected createViewModel(model: M): V {
-        const viewModel = this.createViewModelproxy(model);
+        const viewModel = this.createViewModelProxy(model);
 
         viewModel.getTitle = () => this.getTitle(viewModel);
         viewModel.getListTitle = () => this.getListTitle(viewModel);
@@ -201,7 +202,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         return viewModel;
     }
 
-    private createViewModelproxy(model: M): V {
+    private createViewModelProxy(model: M): V {
         let viewModel = new this.baseViewModelCtor(model);
         viewModel = new Proxy(viewModel, {
             get: (target: V, property) => {
@@ -237,6 +238,10 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
             }
         });
         return viewModel;
+    }
+
+    public getFieldsets(): Fieldsets<any> {
+        return { [DEFAULT_FIELDSET]: [] };
     }
 
     /**

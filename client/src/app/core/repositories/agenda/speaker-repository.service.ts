@@ -4,6 +4,7 @@ import { Speaker } from 'app/shared/models/agenda/speaker';
 import { ViewSpeaker } from 'app/site/agenda/models/view-speaker';
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
+import { Fieldsets, DEFAULT_FIELDSET } from 'app/core/core-services/model-request-builder.service';
 
 @Injectable({
     providedIn: 'root'
@@ -15,11 +16,15 @@ export class SpeakerRepositoryService extends BaseRepository<ViewSpeaker, Speake
         this.setSortFunction((a, b) => a.weight - b.weight);
     }
 
+    public getFieldsets(): Fieldsets<Speaker> {
+        return { [DEFAULT_FIELDSET]: ['begin_time', 'end_time', 'weight', 'marked'] };
+    }
+
     public getVerboseName = (plural: boolean = false) => {
         return this.translate.instant(plural ? 'Speakers' : 'Speaker');
     };
 
     public getTitle = (viewSpeaker: ViewSpeaker) => {
-        return 'Speaker';
+        return viewSpeaker.user ? viewSpeaker.user.getShortName() : "";
     };
 }

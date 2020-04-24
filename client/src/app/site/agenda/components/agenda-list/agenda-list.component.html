@@ -28,6 +28,8 @@
     listStorageKey="agenda"
     [(selectedRows)]="selectedRows"
     (dataSourceChange)="onDataSourceChange($event)"
+    [getProjectorButtonObject]="getProjectorButtonObject"
+    [getSpeakerButtonObject]="getSpeakerButtonObject"
 >
     <!-- Title column -->
     <div *pblNgridCellDef="'title'; row as item; rowContext as rowContext" class="cell-slot fill">
@@ -200,7 +202,7 @@
         <!-- Mobile entries -->
         <div *ngIf="vp.isMobile">
             <os-projector-button [object]="item.content_object" [menuItem]="true"></os-projector-button>
-            <os-speaker-button [object]="item.contentObjectData" [menuItem]="true"></os-speaker-button>
+            <os-speaker-button [object]="item.content_object" [menuItem]="true"></os-speaker-button>
         </div>
 
         <!-- Agenda entries -->

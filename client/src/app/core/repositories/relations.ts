@@ -510,12 +510,6 @@ export const RELATIONS: Relation[] = [
     }),
     ...makeM2O({
         MViewModel: ViewMotion,
-        OViewModel: ViewMotionWorkflow,
-        MField: 'workflow',
-        OField: 'motions'
-    }),
-    ...makeM2O({
-        MViewModel: ViewMotion,
         OViewModel: ViewMotionState,
         MField: 'recommendation',
         OField: 'motions'

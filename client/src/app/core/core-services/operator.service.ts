@@ -6,10 +6,12 @@ import { auditTime, take } from 'rxjs/operators';
 
 import { ActiveMeetingService } from './active-meeting.service';
 import { Group } from 'app/shared/models/users/group';
+import { ViewUser } from 'app/site/users/models/view-user';
 import { AutoupdateService, ModelRequest, ModelSubscription } from './autoupdate.service';
 import { CollectionMapperService } from './collection-mapper.service';
 import { DataStoreService } from './data-store.service';
 import { HttpService } from './http.service';
+import { SimplifiedModelRequest, SpecificStructuredField } from './model-request-builder.service';
 import { OfflineService } from './offline.service';
 import { OnAfterAppsLoaded } from '../definitions/on-after-apps-loaded';
 import { User } from '../../shared/models/users/user';
@@ -200,12 +202,14 @@ export class OperatorService implements OnAfterAppsLoaded {
                 permissions: []
             };
 
+
             if (isWhoAmI(response)) {
                 await this.setWhoAmI(response);
             } else {
                 this.offlineService.goOfflineBecauseFailedWhoAmI();
             }
         } catch (e) {
+            throw e;
             this.offlineService.goOfflineBecauseFailedWhoAmI();
         }
     }
@@ -258,21 +262,19 @@ export class OperatorService implements OnAfterAppsLoaded {
             this.currentUserSubscription = null;
         }
 
-        const userReqeust: ModelRequest = {
+        const simpleUserRequest: SimplifiedModelRequest = {
             ids: [this.whoAmIData.user_id],
-            collection: User.COLLECTION,
-            fields: {
-                group_ids: {
-                    type: 'relation-list',
-                    collection: Group.COLLECTION,
-                    fields: {
-                        permissions: null
-                    }
+            viewModelCtor: ViewUser,
+            fieldset: 'shortName',
+            follow: [
+                {
+                    idField: SpecificStructuredField('group_$_ids', '1'), // TODO: active meeting id
+                    follow: [],
+                    fieldset: ['permissions']
                 }
-                // TODO: Fields for short name.
-            }
+            ]
         };
-        this.currentUserSubscription = this.autoupdateService.request(userReqeust);
+        this.currentUserSubscription = await this.autoupdateService.simpleRequest(simpleUserRequest);
 
         this.operatorShortNameSubject.next(this.whoAmIData.short_name);
         this.operatorUpdatedEvent.next();

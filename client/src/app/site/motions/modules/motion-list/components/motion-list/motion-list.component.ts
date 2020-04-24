@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { PblColumnDefinition } from '@pebula/ngrid';
 
+import { ModelRequest } from 'app/core/core-services/autoupdate.service';
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
@@ -14,8 +16,10 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
+import { Motion } from 'app/shared/models/motions/motion';
 import { infoDialogSettings, largeDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
 import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
@@ -224,6 +228,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
      * subscribes to filter and sorting services
      */
     public async ngOnInit(): Promise<void> {
+        super.ngOnInit();
         super.setTitle('Motions');
 
         this.organisationSettingsService
@@ -258,6 +263,53 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
                 this.createMotionTiles(motions);
             }
         });
+    }
+
+    protected getModelRequest(): SimplifiedModelRequest {
+        /*return {
+            collection: ViewMeeting.COLLECTION,
+            ids: [1], // TODO
+            fields: {
+                motion_ids: {
+                    type: 'relation-list',
+                    collection: ViewMotion.COLLECTION,
+                    fields: {
+                        title: null,
+                        number: null,
+                        category_id: {
+                            type: "relation",
+                            collection: ViewMotionCategory.COLLECTION,
+                            fields: {
+                                prefix: null,
+                                name: null,
+                                weight: null,
+                                motion_ids: null,
+                            }
+                        }
+                    }
+                },
+            }
+        }*/
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [1], // TODO
+            follow: [
+                {
+                    idField: 'motion_ids',
+                    follow: [
+                        'category_id',
+                        {
+                            idField: 'list_of_speakers_id',
+                            follow: [
+                                /*"speaker_ids"*/
+                            ]
+                        }
+                    ],
+                    fieldset: 'list'
+                }
+            ],
+            fieldset: []
+        };
     }
 
     /**

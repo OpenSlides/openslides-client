@@ -91,6 +91,7 @@ export class Meeting extends BaseModel<Meeting> {
     // Users
     public users_sort_by: string;
     public users_enable_presence_view: boolean;
+    public users_enable_vote_weight: boolean;
     public users_allow_self_set_present: boolean;
     public users_pdf_welcometitle: string;
     public users_pdf_welcometext: string;

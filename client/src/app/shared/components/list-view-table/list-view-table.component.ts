@@ -25,9 +25,9 @@ import { BaseFilterListService } from 'app/core/ui-services/base-filter-list.ser
 import { BaseSortListService } from 'app/core/ui-services/base-sort-list.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { BaseModel } from 'app/shared/models/base/base-model';
-import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { isProjectable, Projectable } from 'app/site/base/projectable';
+import { HasListOfSpeakers, hasListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 
 export interface CssClassDefinition {
     [key: string]: boolean;
@@ -212,6 +212,12 @@ export class ListViewTableComponent<V extends BaseViewModel, M extends BaseModel
      */
     @Input()
     public fullScreen = true;
+
+    @Input()
+    public getProjectorButtonObject: (viewModel: V) => Projectable | null = null;
+
+    @Input()
+    public getSpeakerButtonObject: (viewModel: V) => (BaseViewModel & HasListOfSpeakers) | null = null;
 
     /**
      * Option to apply additional classes to the virtual-scrolling-list.
@@ -592,9 +598,23 @@ export class ListViewTableComponent<V extends BaseViewModel, M extends BaseModel
      * @param viewModel The model of the table
      * @returns a view model that can be projected
      */
-    public getProjectable(viewModel: V): Projectable {
-        if (isProjectable(viewModel)) {
-            return viewModel;
+    public _getProjectorButtonObject(viewModel: V): Projectable | null {
+        if (this.getProjectorButtonObject === null) {
+            if (isProjectable(viewModel)) {
+                return viewModel;
+            }
+        } else {
+            return this.getProjectorButtonObject(viewModel);
+        }
+    }
+
+    public _getSpeakerButtonObject(viewModel: V): (BaseViewModel & HasListOfSpeakers) | null {
+        if (this.getSpeakerButtonObject === null) {
+            if (hasListOfSpeakers(viewModel)) {
+                return viewModel;
+            }
+        } else {
+            return this.getSpeakerButtonObject(viewModel);
         }
     }
 

@@ -7,6 +7,16 @@ import { Fqid } from 'app/core/definitions/key-types';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
 import { HasListOfSpeakers, hasListOfSpeakers, ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { BaseViewModel } from 'app/site/base/base-view-model';
+import { Follow } from 'app/core/core-services/model-request-builder.service';
+
+export const SPEAKER_BUTTON_FOLLOW: Follow = {
+    idField: 'list_of_speakers_id',
+    follow: [{
+        idField: 'speaker_ids',
+        fieldset: ['begin_time', 'end_time']  // required for ViewSpeaker.state -> waitingSpeakersAmount
+    }],
+    fieldset: ['closed'],
+}
 
 /**
  * A generic button to go to the list of speakers. Give the content object with
@@ -21,18 +31,9 @@ import { BaseViewModel } from 'app/site/base/base-view-model';
 export class SpeakerButtonComponent implements OnDestroy {
     @Input()
     public set object(obj: (BaseViewModel & HasListOfSpeakers) | Fqid | null) {
-        let listOfSpeakers: ViewListOfSpeakers;
-        if (hasListOfSpeakers(obj)) {
-            listOfSpeakers = obj.list_of_speakers;
-            /*} else if (typeof obj === 'string') {
-            listOfSpeakers = this.listOfSpeakersRepo.findByContentObjectId(obj);*/
-            // No lookup by fqid...
-        } else {
-            listOfSpeakers = null;
-        }
+        const listOfSpeakers = hasListOfSpeakers(obj) ? obj.list_of_speakers : null;
 
         this.cleanLosSub();
-
         if (listOfSpeakers) {
             this.losSub = this.listOfSpeakersRepo
                 .getViewModelObservable(listOfSpeakers.id)

@@ -26,7 +26,11 @@ import { isProjectable, Projectable, ProjectorElementBuildDeskriptor } from 'app
 import { ViewTopic } from 'app/site/topics/models/view-topic';
 import { ItemInfoDialogComponent } from '../item-info-dialog/item-info-dialog.component';
 import { ViewAgendaItem } from '../../models/view-agenda-item';
-import { ViewListOfSpeakers } from '../../models/view-list-of-speakers';
+import { ViewListOfSpeakers, hasListOfSpeakers, HasListOfSpeakers } from '../../models/view-list-of-speakers';
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
+import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
+import { BaseViewModel } from 'app/site/base/base-view-model';
 
 /**
  * List view for the agenda.
@@ -143,6 +147,7 @@ export class AgendaListComponent extends BaseListViewComponent<ViewAgendaItem> i
      * Sets the title, initializes the table and filter options, subscribes to filter service.
      */
     public ngOnInit(): void {
+        super.ngOnInit();
         super.setTitle('Agenda');
         this.config
             .get<boolean>('agenda_enable_numbering')
@@ -150,16 +155,20 @@ export class AgendaListComponent extends BaseListViewComponent<ViewAgendaItem> i
         this.config.get<boolean>('agenda_show_subtitle').subscribe(showSubtitle => (this.showSubtitle = showSubtitle));
     }
 
-    /**
-     * Gets the list of speakers for an agenda item. Might be null, if the items content
-     * object does not have a list of speakers.
-     *
-     * @param item The item to get the list of speakers from
-     */
-    public getListOfSpeakers(item: ViewAgendaItem): ViewListOfSpeakers | null {
-        // this has to be done by model relations: item.content_object.list_of_speakers
-        // return this.listOfSpeakersRepo.findByContentObjectId(item.item.content_object_id);
-        throw new Error('TODO');
+    protected getModelRequest(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [1], // TODO
+            follow: [{
+                idField: 'agenda_item_ids',
+                follow: [{
+                    idField: 'content_object_id',
+                    follow: [SPEAKER_BUTTON_FOLLOW],
+                    fieldset: 'title'
+                }]
+            }],
+            fieldset: []
+        };
     }
 
     /**
@@ -170,6 +179,18 @@ export class AgendaListComponent extends BaseListViewComponent<ViewAgendaItem> i
     public getDetailUrl(item: ViewAgendaItem): string {
         if (item.content_object && !this.isMultiSelect) {
             return item.content_object.getDetailStateURL();
+        }
+    }
+
+    public getProjectorButtonObject = (agendaItem: ViewAgendaItem) => {
+        if (isProjectable(agendaItem.content_object)) {
+            return agendaItem.content_object;
+        }
+    }
+
+    public getSpeakerButtonObject = (agendaItem: ViewAgendaItem) => {
+        if (hasListOfSpeakers(agendaItem.content_object)) {
+            return agendaItem.content_object;
         }
     }
 
@@ -220,12 +241,6 @@ export class AgendaListComponent extends BaseListViewComponent<ViewAgendaItem> i
      */
     public onPlusButton(): void {
         this.router.navigate(['/topics/new']);
-    }
-
-    public getProjectable(viewModel: ViewAgendaItem): Projectable {
-        if (isProjectable(viewModel.content_object)) {
-            return viewModel.content_object;
-        }
     }
 
     /**
