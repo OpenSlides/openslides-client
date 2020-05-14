@@ -31,7 +31,7 @@
         <div *pblNgridCellDef="'projector'; row as viewModel" class="fill ngrid-lg">
             <os-projector-button
                 class="projector-button"
-                [object]="getProjectorButtonObject(viewModel)"
+                [object]="_getProjectorButtonObject(viewModel)"
                 (changeEvent)="viewUpdateEvent()"
             ></os-projector-button>
         </div>
@@ -49,7 +49,7 @@
         <!-- Speaker -->
         <div *pblNgridCellDef="'speaker'; row as viewModel; rowContext as rowContext" class="fill">
             <os-speaker-button
-                [object]="getSpeakerButtonObject(viewModel)"
+                [object]="_getSpeakerButtonObject(viewModel)"
                 [disabled]="multiSelect"
             ></os-speaker-button>
         </div>
