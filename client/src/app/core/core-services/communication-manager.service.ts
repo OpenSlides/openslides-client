@@ -3,13 +3,17 @@ import { EventEmitter, Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
+import { HTTPMethod } from '../definitions/http-methods';
 import { HttpService } from './http.service';
-import { OfflineBroadcastService } from './offline-broadcast.service';
-import { Stream, StreamingCommunicationService } from './streaming-communication.service';
+import { OfflineBroadcastService, OfflineReason } from './offline-broadcast.service';
+import { SleepPromise } from '../promises/sleep';
+import { StreamContainer, StreamingCommunicationService } from './streaming-communication.service';
 
 type HttpParamsGetter = () => HttpParams | { [param: string]: string | string[] };
+type HttpBodyGetter = () => any;
 
-const MAX_STREAM_FAILURE_RETRIES = 3;
+const MAX_CONNECTION_RETRIES = 3;
+const MAX_STREAM_FAILURE_RETRIES = 1;
 
 export class OfflineError extends Error {
     public constructor() {
@@ -18,59 +22,48 @@ export class OfflineError extends Error {
     }
 }
 
-interface StreamConnectionWrapper {
-    id: number;
-    url: string;
-    messageHandler: (message: any) => void;
-    params: HttpParamsGetter;
-    stream?: Stream<any>;
-    hasErroredAmount: number;
-}
-
 @Injectable({
     providedIn: 'root'
 })
 export class CommunicationManagerService {
-    private communicationAllowed = false;
-
     private readonly _startCommunicationEvent = new EventEmitter<void>();
+
+    private communicationAllowed = false;
 
     public get startCommunicationEvent(): Observable<void> {
         return this._startCommunicationEvent.asObservable();
     }
 
-    private readonly _stopCommunicationEvent = new EventEmitter<void>();
+    private streamContainers: { [id: number]: StreamContainer } = {};
 
-    public get stopCommunicationEvent(): Observable<void> {
-        return this._stopCommunicationEvent.asObservable();
-    }
-
-    // private streamContainers: { [id: number]: StreamContainer } = {};
+    private isOperatorAuthenticated = false;
 
     public constructor(
         private streamingCommunicationService: StreamingCommunicationService,
         private offlineBroadcastService: OfflineBroadcastService,
         private http: HttpService
     ) {
-        // this.offlineBroadcastService.goOfflineObservable.subscribe(() => this.closeConnections());
+        this.offlineBroadcastService.goOfflineObservable.subscribe(() => this.closeConnections());
     }
 
-    /*public async subscribe<T>(
+    public async subscribe<T>(
+        method: HTTPMethod,
         url: string,
         messageHandler: (message: T) => void,
+        body?: HttpBodyGetter,
         params?: HttpParamsGetter
     ): Promise<() => void> {
         if (!params) {
             params = () => null;
         }
 
-        const streamContainer = new StreamContainer(url, messageHandler, params);
+        const streamContainer = new StreamContainer(method, url, messageHandler, params, body);
         return await this.connectWithWrapper(streamContainer);
     }
 
     public startCommunication(): void {
         if (this.communicationAllowed) {
-            console.error('Illegal state! Do not emit this event multiple times');
+            console.error('Illegal state! DO not emit this event multiple times');
         } else {
             this.communicationAllowed = true;
             this._startCommunicationEvent.emit();
@@ -79,39 +72,55 @@ export class CommunicationManagerService {
 
     private async connectWithWrapper(streamContainer: StreamContainer): Promise<() => void> {
         console.log('connect', streamContainer, streamContainer.stream);
-        const errorHandler = (type: ErrorType, error: CommunicationError, message: string) =>
-            this.handleError(streamContainer, type, error, message);
-        this.streamingCommunicationService.subscribe(streamContainer, errorHandler);
+        let retries = 0;
+        const errorHandler = (error: any) => this.handleError(streamContainer, error);
+        let gotError = true;
+        while (gotError) {
+            try {
+                await this.streamingCommunicationService.subscribe(streamContainer, errorHandler);
+                gotError = false;
+            } catch (e) {
+                retries++;
+                console.log('retry nr.', retries);
+                if (streamContainer.stream) {
+                    streamContainer.stream.close();
+                    streamContainer.stream = null;
+                }
+                if (retries < MAX_CONNECTION_RETRIES) {
+                    console.log('retry reason: A');
+                    await this.delayAndCheckReconnection();
+                } else {
+                    this.goOffline();
+                    throw new OfflineError();
+                }
+            }
+            console.log('while end', gotError, streamContainer.stream);
+        }
+        console.log('connectWithWrapper Done', streamContainer.stream);
+
         this.streamContainers[streamContainer.id] = streamContainer;
         return () => this.close(streamContainer);
     }
 
-    private async handleError(
-        streamContainer: StreamContainer,
-        type: ErrorType,
-        error: CommunicationError,
-        message: string
-    ): Promise<void> {
-        console.log('handle Error', streamContainer, streamContainer.stream, verboseErrorType(type), error, message);
+    private async handleError(streamContainer: StreamContainer, error: any): Promise<void> {
+        console.log('handle Error', streamContainer, streamContainer.stream, error);
         streamContainer.stream.close();
         streamContainer.stream = null;
 
         streamContainer.hasErroredAmount++;
         if (streamContainer.hasErroredAmount > MAX_STREAM_FAILURE_RETRIES) {
-            this.goOffline(streamContainer, OfflineReason.ConnectionLost);
-        } else if (type === ErrorType.Client && error.type === 'ErrorAuth') {
-            this.goOffline(streamContainer, OfflineReason.WhoAmIFailed);
+            delete this.streamContainers[streamContainer.id];
+            this.goOffline();
         } else {
             // retry it after some time:
-            console.log(
-                `Retry no. ${streamContainer.hasErroredAmount} of ${MAX_STREAM_FAILURE_RETRIES} for ${streamContainer.url}`
-            );
             try {
+                console.log('retry reason: B');
                 await this.delayAndCheckReconnection();
                 await this.connectWithWrapper(streamContainer);
             } catch (e) {
-                // delayAndCheckReconnection can throw an OfflineError,
-                // which are just an 'abord mission' signal. Here, those errors can be ignored.
+                // delayAndCheckReconnection may throw an OfflineError...
+                // TODO: do we need these error above?
+                // Also connectWithWrapper can throw an OfflineError. This one can be ignored.
             }
         }
     }
@@ -143,32 +152,38 @@ export class CommunicationManagerService {
         }
         this.streamContainers = {};
         this.communicationAllowed = false;
-        this._stopCommunicationEvent.emit();
     }
 
-    private goOffline(streamContainer: StreamContainer, reason: OfflineReason): void {
-        delete this.streamContainers[streamContainer.id];
+    public goOffline(): void {
         this.closeConnections(); // here we close the connections early.
-        this.offlineBroadcastService.goOffline(reason);
+        this.offlineBroadcastService.goOffline(OfflineReason.ConnectionLost);
     }
 
-    private close(streamConnectionWrapper: StreamConnectionWrapper): void {
-        if (this.streamContainers[streamConnectionWrapper.id]) {
-            this.streamContainers[streamConnectionWrapper.id].stream.close();
-            delete this.streamContainers[streamConnectionWrapper.id];
+    private close(streamContainer: StreamContainer): void {
+        if (this.streamContainers[streamContainer.id]) {
+            this.streamContainers[streamContainer.id].stream.close();
+            delete this.streamContainers[streamContainer.id];
         }
     }
 
     // Checks the operator: If we do not have a valid user,
     // do not even try to connect again..
     private shouldRetryConnecting(): boolean {
-        return this.operatorService.guestsEnabled || !!this.operatorService.user;
-    }*/
+        return this.isOperatorAuthenticated;
+    }
+
+    public setIsOperatorAuthenticated(isAuthenticated: boolean): void {
+        this.isOperatorAuthenticated = isAuthenticated;
+    }
 
     public async isCommunicationServiceOnline(): Promise<boolean> {
         try {
             const response = await this.http.get<{ healthy: boolean }>('/system/health');
-            return !!response.healthy;
+            if (response.healthy) {
+                return true;
+            } else {
+                return false;
+            }
         } catch (e) {
             return false;
         }

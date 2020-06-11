@@ -3,7 +3,6 @@ import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/cor
 import { Subject, Subscription } from 'rxjs';
 
 import { OfflineBroadcastService } from 'app/core/core-services/offline-broadcast.service';
-import { OfflineService } from 'app/core/core-services/offline.service';
 import { ProjectorDataService, SlideData } from 'app/core/core-services/projector-data.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';

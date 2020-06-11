@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 
+import { environment } from 'environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import { HTTPMethod } from '../definitions/http-methods';
-import { StreamingCommunicationService } from './streaming-communication.service';
+import { CommunicationManagerService } from './communication-manager.service';
+import { HttpService } from './http.service';
 
 interface Configuration {
-    [key: string]: BehaviorSubject<any>;
+    [key: string]: any;
 }
 
 @Injectable({
@@ -17,27 +18,23 @@ export class ConfigurationService {
     /**
      * The constants
      */
-    private configuration: { [key: string]: any } = {};
+    private configuration: Configuration = {};
 
     /**
      * Pending requests will be notified by these subjects, one per key.
      */
-    private subjects: Configuration = {};
+    private subjects: { [key: string]: BehaviorSubject<any> } = {};
 
-    /**
-     * @param websocketService
-     */
-    public constructor(streamingCommunicationService: StreamingCommunicationService) {
+    public constructor(communicationManagerService: CommunicationManagerService, http: HttpService) {
         console.warn('TODO: Settingsservice server-side service');
 
-        streamingCommunicationService
-            .getStream<Configuration>(HTTPMethod.GET, '/settings')
-            .messageObservable.subscribe(configuration => {
-                this.configuration = configuration;
-                Object.keys(this.subjects).forEach(key => {
-                    this.subjects[key].next(this.configuration[key]);
-                });
+        // TODO: this is some presenter....
+        communicationManagerService.startCommunicationEvent.subscribe(async () => {
+            this.configuration = await http.get<Configuration>(environment.urlPrefix + '/core/constants/');
+            Object.keys(this.subjects).forEach(key => {
+                this.subjects[key].next(this.configuration[key]);
             });
+        });
     }
 
     /**

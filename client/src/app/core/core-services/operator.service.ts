@@ -7,8 +7,9 @@ import { auditTime, take } from 'rxjs/operators';
 import { ActiveMeetingService } from './active-meeting.service';
 import { Group } from 'app/shared/models/users/group';
 import { ViewUser } from 'app/site/users/models/view-user';
-import { AutoupdateService, ModelRequest, ModelSubscription } from './autoupdate.service';
+import { AutoupdateService, ModelSubscription } from './autoupdate.service';
 import { CollectionMapperService } from './collection-mapper.service';
+import { CommunicationManagerService } from './communication-manager.service';
 import { DataStoreService } from './data-store.service';
 import { HttpService } from './http.service';
 import { SimplifiedModelRequest, SpecificStructuredField } from './model-request-builder.service';
@@ -117,6 +118,10 @@ export class OperatorService implements OnAfterAppsLoaded {
         return this.whoAmIData.guest_enabled;
     }
 
+    public get isAuthenticated(): boolean {
+        return this.isAnonymous || this.guestEnabled;
+    }
+
     /**
      * Subject for the operator as a view user.
      */
@@ -151,10 +156,10 @@ export class OperatorService implements OnAfterAppsLoaded {
     public constructor(
         private http: HttpService,
         private DS: DataStoreService,
-        private offlineBroadcastService: OfflineBroadcastService,
         private autoupdateService: AutoupdateService,
         private activeMeetingService: ActiveMeetingService,
-        private collectionMapper: CollectionMapperService
+        private collectionMapper: CollectionMapperService,
+        private communicationManagerService: CommunicationManagerService
     ) {
         this._loaded = this.operatorUpdatedEvent.pipe(take(1)).toPromise();
 
@@ -222,7 +227,8 @@ export class OperatorService implements OnAfterAppsLoaded {
      *
      * @returns The response of the WhoAmI request.
      */
-    public async doWhoAmIRequest(): Promise<void> {
+    public async doWhoAmIRequest(): Promise<{ whoami: WhoAmI; online: boolean }> {
+        let online = true;
         try {
             // const response = await this.http.get(environment.urlPrefix + '/users/whoami/');
 
@@ -239,11 +245,12 @@ export class OperatorService implements OnAfterAppsLoaded {
             if (isWhoAmI(response)) {
                 await this.setWhoAmI(response);
             } else {
-                this.offlineBroadcastService.goOffline(OfflineReason.WhoAmIFailed);
+                online = false;
             }
         } catch (e) {
-            this.offlineBroadcastService.goOffline(OfflineReason.WhoAmIFailed);
+            online = false;
         }
+        return { whoami: this.whoAmIData, online };
     }
 
     /**
@@ -266,6 +273,7 @@ export class OperatorService implements OnAfterAppsLoaded {
         }
 
         this.operatorIdSubject.next(this.whoAmIData.user_id);
+        this.communicationManagerService.setIsOperatorAuthenticated(this.isAuthenticated);
 
         if (this.whoAmIData.user_id) {
             await this.refreshUserSubscription();

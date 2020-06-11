@@ -10,9 +10,8 @@
     "README": "https://github.com/OpenSlides/OpenSlides/blob/master/client/README.md",
     "scripts": {
         "ng": "ng",
-        "start": "ng serve --proxy-config proxy.conf.json --host=0.0.0.0",
-        "start-https": "ng serve --ssl --ssl-cert localhost.pem --ssl-key localhost-key.pem --proxy-config proxy.conf.json --host=0.0.0.0",
-        "start-es5": "ng serve --proxy-config proxy.conf.json --host=0.0.0.0 --configuration es5",
+        "start": "ng serve --proxy-config proxy.conf.json --host=0.0.0.0 --port=9001",
+        "start-es5": "ng serve --proxy-config proxy.conf.json --host=0.0.0.0 --port=9001 --configuration es5",
         "build": "ng build --prod",
         "build-to-dir": "npm run build -- --output-path",
         "postinstall": "ngcc",

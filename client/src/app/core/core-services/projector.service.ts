@@ -69,14 +69,13 @@ export class ProjectorService {
      * @returns true, if the object is projected on one projector.
      */
     public isProjected(obj: Projectable | ProjectorElementBuildDeskriptor /*| IdentifiableProjectorElement*/): boolean {
-        throw new Error('TODO');
         /*const element = this.getProjectorElement(obj);
         if (element.getIdentifiers) {
             return this.DS.getAll<Projector>('core/projector').some(projector => {
                 return projector.isElementShown(element);
             });
-        }
-        return false;*/
+        }*/
+        return false;
     }
 
     /**
