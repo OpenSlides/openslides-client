@@ -4,8 +4,9 @@ import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 
 import { DataStoreService } from './data-store.service';
-import { OperatorService } from './operator.service';
+import { OperatorService, WhoAmI } from './operator.service';
 import { StorageService } from './storage.service';
+import { OfflineBroadcastService, OfflineReason } from './offline-broadcast.service';
 
 /**
  * Handles the bootup/showdown of this application.
@@ -45,7 +46,8 @@ export class OpenSlidesService {
         private storageService: StorageService,
         private operator: OperatorService,
         private router: Router,
-        private DS: DataStoreService
+        private DS: DataStoreService,
+        private offlineBroadcastService: OfflineBroadcastService
     ) {
         // Handler that gets called, if the websocket connection reconnects after a disconnection.
         // There might have changed something on the server, so we check the operator, if he changed.
@@ -68,9 +70,12 @@ export class OpenSlidesService {
         if (!response) {
             response = await this.operator.whoAmI();
         }*/
-        await this.operator.doWhoAmIRequest();
+        const response = await this.operator.doWhoAmIRequest();
+        if (!response.online) {
+            this.offlineBroadcastService.goOffline(OfflineReason.WhoAmIFailed);
+        }
 
-        if (this.operator.isAnonymous && !this.operator.guestEnabled) {
+        if (!this.operator.isAuthenticated) {
             if (!location.pathname.includes('error')) {
                 this.redirectUrl = location.pathname;
             }
@@ -169,26 +174,28 @@ export class OpenSlidesService {
 
     /**
      * Verify that the operator is the same as it was before. Should be alled on a reconnect.
+     *
+     * @returns true, if the user is still logged in
      */
-    /*private async checkOperator(requestChanges: boolean = true): Promise<void> {
-        const response = await this.operator.doWhoAmIRequest();
+    public async checkWhoAmI(whoami: WhoAmI): Promise<boolean> {
+        let isLoggedIn = false;
         // User logged off.
-        if (!response.user && !response.guest_enabled) {
-            // this.websocketService.cancelReconnectenRetry();
+        if (!whoami.user_id && !whoami.guest_enabled) {
             await this.shutdown();
             this.redirectToLoginIfNotSubpage();
         } else {
-            if (
-                (this.operator.user && this.operator.operatorId !== response.user_id) ||
-                (!this.operator.user && response.user_id)
+            isLoggedIn = true;
+            console.warn("TODO: did the user change?")
+            /*if (
+                (this.operator.user && this.operator.user.id !== whoami.user_id) ||
+                (!this.operator.user && whoami.user_id)
             ) {
                 // user changed
                 await this.DS.clear();
                 await this.reboot();
-            } else if (requestChanges) {
-                // User is still the same, but check for missed autoupdates.
-                // this.autoupdateService.requestChanges();
-            }
+            }*/
         }
-    }*/
+
+        return isLoggedIn;
+    }
 }

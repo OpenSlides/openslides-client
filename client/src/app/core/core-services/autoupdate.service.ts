@@ -8,6 +8,8 @@ import { ExampleDataService } from './example-data.service';
 import { ModelRequestBuilderService, SimplifiedModelRequest } from './model-request-builder.service';
 import { Mutex } from '../promises/mutex';
 import { StreamingCommunicationService } from './streaming-communication.service';
+import { CommunicationManagerService, OfflineError } from './communication-manager.service';
+import { HTTPMethod } from '../definitions/http-methods';
 
 const META_DELETED = 'meta_deleted';
 
@@ -61,6 +63,8 @@ interface ChangedModels {
 export class AutoupdateService {
     private mutex = new Mutex();
 
+    private activeRequests: {[id: number]: {request: ModelRequest, closeFn: () => void}} = {};
+
     /**
      * Constructor to create the AutoupdateService. Calls the constructor of the parent class.
      * @param websocketService
@@ -68,51 +72,82 @@ export class AutoupdateService {
      * @param modelMapper
      */
     public constructor(
-        private streamingCommunicationService: StreamingCommunicationService,
         private DS: DataStoreService,
         private modelMapper: CollectionMapperService,
         private DSUpdateManager: DataStoreUpdateManagerService,
         private exampleDataService: ExampleDataService,
-        private modelRequestBuilder: ModelRequestBuilderService
+        private modelRequestBuilder: ModelRequestBuilderService,
+        private communicationManager: CommunicationManagerService
     ) {
-        /*this.websocketService.getOberservable<AutoupdateFormat>('autoupdate').subscribe(response => {
-            this.storeResponse(response);
-        });*/
-        console.warn('TODO: Enable Autoupdate service');
-        this.setup();
+        this.communicationManager.startCommunicationEvent.subscribe(() => this.startAllAutoupdates());
+
+        // console.warn('TODO: Enable Autoupdate service');
+        // this.setupMock();
     }
 
-    /* TODO: THis is the real implementation
-    public request(request: ModelRequest): ModelSubscription {
-        const stream = this.streamingCommunicationService.getStream<AutoupdateModelData>(
-            HTTPMethod.POST,
-            '/todo',
-            request
-        );
-        stream.messageObservable.subscribe(data => this.handleAutoupdateWithStupidFormat(data));
-        return { close: stream.close };
-    }*/
-
-    // START MOCKED SERVICE
-
-    private async setup(): Promise<void> {
-        await this.exampleDataService.loaded;
-        // this.handleAutoupdate(this.exampleDataService.getAllModelData())
-        // this.handleAutoupdate(this.exampleDataService.getModelData('user/1'));
+    public async startAllAutoupdates(): Promise<void> {
+        try {
+            for (const id of Object.keys(this.activeRequests)) {
+                this.startAutoupdate(+id);
+            }
+        } catch (e) {
+            if (e instanceof OfflineError) {
+                console.log(e);
+            } else {
+                console.log('???', e);
+            }
+        }
     }
 
     public async simpleRequest(simpleRequest: SimplifiedModelRequest): Promise<ModelSubscription> {
         const request = await this.modelRequestBuilder.build(simpleRequest);
-        return this.request(request);
+        return await this.request(request);
     }
 
-    public request(request: ModelRequest): ModelSubscription {
-        this._request(request);
-        return {
-            close: () => {
-                console.log('closed request', request);
+    public async request(request: ModelRequest): Promise<ModelSubscription> {
+        // this._request(request);
+
+        const id = Math.floor(Math.random() * (900000 - 1) + 100000); // [100000, 999999]
+        this.activeRequests[id] = {
+            request,
+            closeFn: () => {
+                delete this.activeRequests[id];
             }
-        };
+        }
+        try {
+            await this.startAutoupdate(id);
+        } catch (e) {
+            if (e instanceof OfflineError) {
+                console.log(e);
+            } else {
+                console.log('???', e);
+            }
+        }
+        return {close: this.activeRequests[id].closeFn};
+    }
+
+    private async startAutoupdate(id: number): Promise<void> {
+        const closeFn = await this.communicationManager.subscribe<AutoupdateModelData>(
+            HTTPMethod.POST,
+            '/system/autoupdate',
+            message => {
+                console.log('Got message', message);
+                this.handleAutoupdateWithStupidFormat(message);
+            },
+            () => [this.activeRequests[id].request]
+        );
+
+        this.activeRequests[id].closeFn = () => {
+            delete this.activeRequests[id];
+            closeFn();
+        }
+    }
+
+    // START MOCKED SERVICE
+    private async setupMock(): Promise<void> {
+        await this.exampleDataService.loaded;
+        // this.handleAutoupdate(this.exampleDataService.getAllModelData())
+        // this.handleAutoupdate(this.exampleDataService.getModelData('user/1'));
     }
 
     private async _request(request: ModelRequest): Promise<void> {
