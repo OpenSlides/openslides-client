@@ -12,6 +12,8 @@
     </div>
 </os-head-bar>
 
+<button type="button" mat-button (click)="t()">TEST</button>
+
 <mat-card class="spacer-bottom-60" [ngClass]="isEditing ? 'os-form-card' : 'os-card'">
     <ng-container *ngIf="!isEditing">
         <div class="app-content">
