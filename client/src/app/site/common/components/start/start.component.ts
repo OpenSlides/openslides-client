@@ -10,6 +10,7 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
+import { HttpService } from 'app/core/core-services/http.service';
 
 /**
  * Interface describes the keys for the fields at start-component.
@@ -63,13 +64,28 @@ export class StartComponent extends BaseComponent implements OnInit {
         private meetingRepo: MeetingRepositoryService,
         private motionRepo: MotionRepositoryService,
         private stateRepo: MotionStateRepositoryService,
-        private userRepo: UserRepositoryService
+        private userRepo: UserRepositoryService,
+        private http: HttpService,
     ) {
         super(componentServiceCollector);
         this.startForm = this.formBuilder.group({
             general_event_welcome_title: ['', Validators.required],
             general_event_welcome_text: ''
         });
+    }
+
+    public async t(): Promise<void> {
+        const data = [
+            {
+                action: "topic.create",
+                data: [{
+                    meeting_id: 1,
+                    title: "TEST"
+                }]
+            }
+        ];
+        const r = await this.http.post("/system/action/handle_request", data);
+        console.log(r);
     }
 
     /**

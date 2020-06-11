@@ -10,8 +10,8 @@
     "README": "https://github.com/OpenSlides/OpenSlides/blob/master/client/README.md",
     "scripts": {
         "ng": "ng",
-        "start": "ng serve --proxy-config proxy.conf.json --host=0.0.0.0",
-        "start-es5": "ng serve --proxy-config proxy.conf.json --host=0.0.0.0 --configuration es5",
+        "start": "ng serve --proxy-config proxy.conf.json --host=0.0.0.0 --port=9001",
+        "start-es5": "ng serve --proxy-config proxy.conf.json --host=0.0.0.0 --port=9001 --configuration es5",
         "build": "ng build --prod",
         "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points",
         "build-debug": "ng build",
