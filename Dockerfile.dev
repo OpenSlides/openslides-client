@@ -4,6 +4,7 @@ WORKDIR /app
 
 COPY client/package.json .
 RUN npm install
+RUN npm run postinstall
 
 COPY client ./
 

@@ -5,17 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { OpenSlidesStatusService } from './openslides-status.service';
 import { formatQueryParams, QueryParams } from '../definitions/query-params';
-
-/**
- * Enum for different HTTPMethods
- */
-export enum HTTPMethod {
-    GET = 'get',
-    POST = 'post',
-    PUT = 'put',
-    PATCH = 'patch',
-    DELETE = 'delete'
-}
+import { HTTPMethod } from '../definitions/http-methods';
 
 export interface ErrorDetailResponse {
     detail: string | string[];

@@ -174,7 +174,7 @@ export class JitsiComponent extends BaseComponent implements OnInit, OnDestroy {
             });
 
         await this.lockLoaded;
-        throw new Error('TODO');
+        console.warn('Jitsi: TODO');
         /*this.constantsService.get<JitsiSettings>('Settings').subscribe(settings => {
             if (settings) {
                 this.jitsiDomain = settings.JITSI_DOMAIN;

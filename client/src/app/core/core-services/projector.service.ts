@@ -79,7 +79,7 @@ export class ProjectorService {
         return this.DS.getAll(Projector).some(projector => {
             return projector.isElementShown(element);
         });*/
-        throw new Error('TODO');
+        return false;
     }
 
     /**

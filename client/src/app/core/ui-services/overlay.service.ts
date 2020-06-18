@@ -7,9 +7,9 @@ import { distinctUntilChanged } from 'rxjs/operators';
 import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
 import { SuperSearchComponent } from 'app/site/common/components/super-search/super-search.component';
 import { DataStoreUpgradeService } from '../core-services/data-store-upgrade.service';
-import { OfflineService } from '../core-services/offline.service';
 import { OpenSlidesService } from '../core-services/openslides.service';
 import { OperatorService } from '../core-services/operator.service';
+import { OfflineBroadcastService } from '../core-services/offline-broadcast.service';
 
 /**
  * Component to control the visibility of components, that overlay the whole window.
@@ -59,7 +59,7 @@ export class OverlayService {
         private operator: OperatorService,
         OpenSlides: OpenSlidesService,
         upgradeService: DataStoreUpgradeService,
-        offlineService: OfflineService
+        offlineBroadcastService: OfflineBroadcastService
     ) {
         // Subscribe to the current user.
         this.user = 1; // temp to get the spinner working
@@ -80,8 +80,8 @@ export class OverlayService {
             this.checkConnection();
         });
         // Subscribe to check if we are offline
-        offlineService
-            .isOffline()
+        offlineBroadcastService
+            .isOfflineObservable
             .pipe(distinctUntilChanged())
             .subscribe(offline => {
                 this.isOffline = offline;
