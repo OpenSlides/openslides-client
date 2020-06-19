@@ -81,29 +81,26 @@ export class Stream<T> {
         private messageHandler: (message: T) => void,
         private errorHandler: (error: any) => void
     ) {
-        console.log('create new Stream');
         this.subscription = observable.subscribe((event: HttpEvent<string>) => {
             if (this.closed) {
                 console.log('got message, but closed');
                 return;
             }
-            console.log('event', event);
             if (event.type === HEADER_EVENT_TYPE) {
                 const headerResponse = event as HttpHeaderResponse;
                 this._statuscode = headerResponse.status;
                 if (headerResponse.status >= 400) {
                     this.hasError = true;
                 }
-            } else if ((<HttpEvent<string>>event).type === PROGRESS_EVENT_TYPE) {
+            } else if ((event as HttpEvent<string>).type === PROGRESS_EVENT_TYPE) {
                 this.handleMessage(event as HttpDownloadProgressEvent);
-            } else if ((<HttpEvent<string>>event).type === FINISH_EVENT_TYPE) {
+            } else if ((event as HttpEvent<string>).type === FINISH_EVENT_TYPE) {
                 this.errorHandler('The stream was closed');
             }
         });
     }
 
     private handleMessage(event: HttpDownloadProgressEvent): void {
-        console.log('handleMessage', event, event.partialText);
         if (this.hasError) {
             if (!this.gotFirstResponse.wasResolved) {
                 this._errorContent = event.partialText;
@@ -125,8 +122,6 @@ export class Stream<T> {
                 this.checkedUntilIndex = LF_index + 1;
                 this.contentStartIndex = LF_index + 1;
 
-                console.log('received', content.length, content);
-
                 let parsedContent;
                 try {
                     parsedContent = JSON.parse(content) as T;
@@ -147,7 +142,7 @@ export class Stream<T> {
                     return;
                 } else {
                     this.gotFirstResponse.resolve(this.hasError);
-                    console.log('publish', parsedContent);
+                    console.log('received', parsedContent);
                     this.messageHandler(parsedContent);
                 }
             } else {
@@ -160,7 +155,6 @@ export class Stream<T> {
         this.subscription.unsubscribe();
         this.subscription = null;
         this.closed = true;
-        console.log('stream closed');
     }
 }
 

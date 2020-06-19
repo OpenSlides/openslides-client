@@ -41,12 +41,6 @@ export class OpenSlidesService {
         private DS: DataStoreService,
         private offlineBroadcastService: OfflineBroadcastService
     ) {
-        // Handler that gets called, if the websocket connection reconnects after a disconnection.
-        // There might have changed something on the server, so we check the operator, if he changed.
-        /*websocketService.retryReconnectEvent.subscribe(() => {
-            this.checkOperator();
-        });*/
-
         this.bootup();
     }
 
@@ -55,13 +49,6 @@ export class OpenSlidesService {
      * {@method afterLoginBootup}. If not, redirect the user to the login page.
      */
     public async bootup(): Promise<void> {
-        // start autoupdate if the user is logged in:
-        /*let response = await this.operator.whoAmIFromStorage();
-        const needToCheckOperator = !!response;
-
-        if (!response) {
-            response = await this.operator.whoAmI();
-        }*/
         const response = await this.operator.doWhoAmIRequest();
         if (!response.online) {
             this.offlineBroadcastService.goOffline(OfflineReason.WhoAmIFailed);
@@ -75,12 +62,6 @@ export class OpenSlidesService {
         } else {
             await this.afterLoginBootup();
         }
-
-        /*if (needToCheckOperator) {
-            // Check for the operator via a async whoami (so no await here)
-            // to validate, that the cache was correct.
-            this.checkOperator(false);
-        }*/
     }
 
     /**

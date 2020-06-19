@@ -131,6 +131,10 @@ export class OperatorService implements OnAfterAppsLoaded {
         return this.operatorIdSubject.asObservable();
     }
 
+    /**
+     * This eventemitter gets fired on every change:
+     * Either the operator itself changed or the model or permission changed.
+     */
     public readonly operatorUpdatedEvent: EventEmitter<void> = new EventEmitter();
 
     private operatorShortNameSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
@@ -183,6 +187,7 @@ export class OperatorService implements OnAfterAppsLoaded {
                 }
 
                 this.operatorShortNameSubject.next(this.whoAmIData.short_name);
+                this.operatorUpdatedEvent.emit();
             }
         });
         this.DS.getChangeObservable(Group)
@@ -190,6 +195,7 @@ export class OperatorService implements OnAfterAppsLoaded {
             .subscribe(group => {
                 if (this.isAnonymous && group.id === 1) {
                     this.whoAmIData.permissions = this.calcPermissions();
+                    this.operatorUpdatedEvent.emit();
                 } else {
                     this.updateGroupIds();
                     if (
@@ -198,6 +204,7 @@ export class OperatorService implements OnAfterAppsLoaded {
                         (this.whoAmIData.group_ids.length === 0 && group.id === 1)
                     ) {
                         this.whoAmIData.permissions = this.calcPermissions();
+                        this.operatorUpdatedEvent.emit();
                     }
                 }
             });
@@ -314,10 +321,10 @@ export class OperatorService implements OnAfterAppsLoaded {
                 }
             ]
         };
-        this.currentUserSubscription = await this.autoupdateService.simpleRequest(simpleUserRequest);
-
-        this.operatorShortNameSubject.next(this.whoAmIData.short_name);
-        this.operatorUpdatedEvent.next();
+        // Do not wait for the subscription to be done...
+        (async () => {
+            this.currentUserSubscription = await this.autoupdateService.simpleRequest(simpleUserRequest);
+        })();
     }
 
     /**
