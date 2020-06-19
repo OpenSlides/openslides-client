@@ -58,7 +58,7 @@ export class OfflineService {
 
             if (this.reason === OfflineReason.ConnectionLost) {
                 online = await this.communicationManager.isCommunicationServiceOnline();
-                console.log("is communication online? ", online);
+                console.log("is communication online?", online);
             } else if (this.reason === OfflineReason.WhoAmIFailed) {
                 const result = await this.operatorService.doWhoAmIRequest();
                 online = result.online;

@@ -93,9 +93,7 @@ export class CommunicationManagerService {
                     throw new OfflineError();
                 }
             }
-            console.log("while end", gotError, streamContainer.stream);
         }
-        console.log("connectWithWrapper Done", streamContainer.stream);
 
         this.streamContainers[streamContainer.id] = streamContainer;
         return () => this.close(streamContainer);
