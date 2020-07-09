@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+import { HttpService } from 'app/core/core-services/http.service';
 import { OperatorService, Permission } from 'app/core/core-services/operator.service';
 import { MeetingRepositoryService } from 'app/core/repositories/event-management/meeting-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
@@ -10,7 +11,6 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
-import { HttpService } from 'app/core/core-services/http.service';
 
 /**
  * Interface describes the keys for the fields at start-component.
@@ -65,7 +65,7 @@ export class StartComponent extends BaseComponent implements OnInit {
         private motionRepo: MotionRepositoryService,
         private stateRepo: MotionStateRepositoryService,
         private userRepo: UserRepositoryService,
-        private http: HttpService,
+        private http: HttpService
     ) {
         super(componentServiceCollector);
         this.startForm = this.formBuilder.group({
@@ -77,14 +77,16 @@ export class StartComponent extends BaseComponent implements OnInit {
     public async t(): Promise<void> {
         const data = [
             {
-                action: "topic.create",
-                data: [{
-                    meeting_id: 1,
-                    title: "TEST"
-                }]
+                action: 'topic.create',
+                data: [
+                    {
+                        meeting_id: 1,
+                        title: 'TEST'
+                    }
+                ]
             }
         ];
-        const r = await this.http.post("/system/action/handle_request", data);
+        const r = await this.http.post('/system/action/handle_request', data);
         console.log(r);
     }
 

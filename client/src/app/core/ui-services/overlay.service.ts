@@ -7,9 +7,9 @@ import { distinctUntilChanged } from 'rxjs/operators';
 import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
 import { SuperSearchComponent } from 'app/site/common/components/super-search/super-search.component';
 import { DataStoreUpgradeService } from '../core-services/data-store-upgrade.service';
+import { OfflineBroadcastService } from '../core-services/offline-broadcast.service';
 import { OpenSlidesService } from '../core-services/openslides.service';
 import { OperatorService } from '../core-services/operator.service';
-import { OfflineBroadcastService } from '../core-services/offline-broadcast.service';
 
 /**
  * Component to control the visibility of components, that overlay the whole window.
@@ -80,13 +80,10 @@ export class OverlayService {
             this.checkConnection();
         });
         // Subscribe to check if we are offline
-        offlineBroadcastService
-            .isOfflineObservable
-            .pipe(distinctUntilChanged())
-            .subscribe(offline => {
-                this.isOffline = offline;
-                this.checkConnection();
-            });
+        offlineBroadcastService.isOfflineObservable.pipe(distinctUntilChanged()).subscribe(offline => {
+            this.isOffline = offline;
+            this.checkConnection();
+        });
     }
 
     /**
