@@ -17,6 +17,7 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
+import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
 import { Motion } from 'app/shared/models/motions/motion';
 import { infoDialogSettings, largeDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
@@ -296,6 +297,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
                                 motion_ids: null,
                             }
                         }
+                        // TODO: Speaker
                     }
                 },
             }
@@ -306,15 +308,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
             follow: [
                 {
                     idField: 'motion_ids',
-                    follow: [
-                        'category_id',
-                        {
-                            idField: 'list_of_speakers_id',
-                            follow: [
-                                /*"speaker_ids"*/
-                            ]
-                        }
-                    ],
+                    follow: ['category_id', SPEAKER_BUTTON_FOLLOW],
                     fieldset: 'list'
                 }
             ],

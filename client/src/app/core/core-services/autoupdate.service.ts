@@ -100,6 +100,7 @@ export class AutoupdateService {
 
     public async simpleRequest(simpleRequest: SimplifiedModelRequest): Promise<ModelSubscription> {
         const request = await this.modelRequestBuilder.build(simpleRequest);
+        console.log(simpleRequest, request);
         return await this.request(request);
     }
 
