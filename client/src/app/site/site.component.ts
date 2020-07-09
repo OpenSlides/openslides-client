@@ -7,6 +7,7 @@ import { ActivationEnd, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
 import { navItemAnim } from '../shared/animations';
+import { OfflineBroadcastService } from 'app/core/core-services/offline-broadcast.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { UpdateService } from 'app/core/ui-services/update.service';
@@ -15,7 +16,6 @@ import { MainMenuEntry, MainMenuService } from '../core/core-services/main-menu.
 import { OpenSlidesStatusService } from '../core/core-services/openslides-status.service';
 import { TimeTravelService } from '../core/core-services/time-travel.service';
 import { ViewportService } from '../core/ui-services/viewport.service';
-import { OfflineBroadcastService } from 'app/core/core-services/offline-broadcast.service';
 
 /**
  * Interface to describe possible routing data

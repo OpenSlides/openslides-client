@@ -30,7 +30,7 @@ export class BannerService {
 
     public activeBanners: BehaviorSubject<BannerDefinition[]> = new BehaviorSubject<BannerDefinition[]>([]);
 
-    public constructor(/*translate: TranslateService, */offlineBroadcastService: OfflineBroadcastService) {
+    public constructor(/*translate: TranslateService, */ offlineBroadcastService: OfflineBroadcastService) {
         /*translate.onLangChange.subscribe(() => {
             this.offlineBannerDefinition.text = translate.instant(this.offlineBannerDefinition.text);
         });*/

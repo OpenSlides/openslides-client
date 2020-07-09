@@ -1,4 +1,5 @@
 import { Id } from 'app/core/definitions/key-types';
+import { StructuredRelation } from 'app/core/definitions/relations';
 import { SearchRepresentation } from 'app/core/ui-services/search.service';
 import { MotionVote } from 'app/shared/models/motions/motion-vote';
 import { User } from 'app/shared/models/users/user';

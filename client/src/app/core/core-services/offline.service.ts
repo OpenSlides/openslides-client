@@ -23,7 +23,7 @@ export class OfflineService {
         private operatorService: OperatorService,
         private communicationManager: CommunicationManagerService
     ) {
-        console.log("Hi there!");
+        console.log('Hi there!');
         this.offlineBroadcastService.goOfflineObservable.subscribe((reason: OfflineReason) => this.goOffline(reason));
     }
 
@@ -58,12 +58,12 @@ export class OfflineService {
 
             if (this.reason === OfflineReason.ConnectionLost) {
                 online = await this.communicationManager.isCommunicationServiceOnline();
-                console.log("is communication online?", online);
+                console.log('is communication online?', online);
             } else if (this.reason === OfflineReason.WhoAmIFailed) {
                 const result = await this.operatorService.doWhoAmIRequest();
                 online = result.online;
                 whoami = result.whoami;
-                console.log("is whoami reachable?", online);
+                console.log('is whoami reachable?', online);
             }
 
             if (online) {
@@ -91,12 +91,12 @@ export class OfflineService {
      * 2) enable communications.
      */
     private async goOnline(whoami?: WhoAmI): Promise<void> {
-        console.log("go online!", this.reason, whoami);
+        console.log('go online!', this.reason, whoami);
         if (this.reason === OfflineReason.ConnectionLost) {
             // now we have to check whoami
             const result = await this.operatorService.doWhoAmIRequest();
             if (!result.online) {
-                console.log("whoami down.");
+                console.log('whoami down.');
                 this.reason = OfflineReason.WhoAmIFailed;
                 this.checkStillOffline();
                 return;
@@ -105,21 +105,21 @@ export class OfflineService {
         } else if (this.reason === OfflineReason.WhoAmIFailed) {
             const online = await this.communicationManager.isCommunicationServiceOnline();
             if (!online) {
-                console.log("communication down.");
+                console.log('communication down.');
                 this.reason = OfflineReason.ConnectionLost;
                 this.checkStillOffline();
                 return;
             }
         }
-        console.log("we are online!");
+        console.log('we are online!');
 
         // Ok, we are online now!
         const isLoggedIn = await this.OpenSlides.checkWhoAmI(whoami);
-        console.log("logged in:", isLoggedIn);
+        console.log('logged in:', isLoggedIn);
         if (isLoggedIn) {
             this.communicationManager.startCommunication();
         }
-        console.log("done");
+        console.log('done');
 
         this.offlineBroadcastService.isOfflineSubject.next(false);
     }

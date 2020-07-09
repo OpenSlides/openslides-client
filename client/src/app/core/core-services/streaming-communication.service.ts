@@ -83,7 +83,7 @@ export class Stream<T> {
     ) {
         this.subscription = observable.subscribe((event: HttpEvent<string>) => {
             if (this.closed) {
-                console.log("got message, but closed");
+                console.log('got message, but closed');
                 return;
             }
             if (event.type === HEADER_EVENT_TYPE) {
@@ -189,7 +189,7 @@ export class StreamingCommunicationService {
         }
         const body = streamContainer.body();
         if (body) {
-            options.body = body
+            options.body = body;
         }
         const observable = this.http.request(streamContainer.method, streamContainer.url, options);
 
@@ -197,7 +197,7 @@ export class StreamingCommunicationService {
             console.error('Illegal state!');
         }
 
-        console.log("StreamingCommunicationService.subscribe")
+        console.log('StreamingCommunicationService.subscribe');
         const stream = new Stream<T>(observable, streamContainer.messageHandler, errorHandler);
         streamContainer.stream = stream;
 
