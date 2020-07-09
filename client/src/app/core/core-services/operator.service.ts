@@ -9,13 +9,13 @@ import { Group } from 'app/shared/models/users/group';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { AutoupdateService, ModelSubscription } from './autoupdate.service';
 import { CollectionMapperService } from './collection-mapper.service';
+import { CommunicationManagerService } from './communication-manager.service';
 import { DataStoreService } from './data-store.service';
 import { HttpService } from './http.service';
 import { SimplifiedModelRequest, SpecificStructuredField } from './model-request-builder.service';
 import { OnAfterAppsLoaded } from '../definitions/on-after-apps-loaded';
 import { User } from '../../shared/models/users/user';
 import { ShortNameInformation, UserRepositoryService } from '../repositories/users/user-repository.service';
-import { CommunicationManagerService } from './communication-manager.service';
 
 /**
  * Permissions on the client are just strings. This makes clear, that
@@ -185,7 +185,7 @@ export class OperatorService implements OnAfterAppsLoaded {
                 }
 
                 this.operatorShortNameSubject.next(this.whoAmIData.short_name);
-                this.operatorUpdatedEvent.emit()
+                this.operatorUpdatedEvent.emit();
             }
         });
         this.DS.getChangeObservable(Group)
@@ -193,7 +193,7 @@ export class OperatorService implements OnAfterAppsLoaded {
             .subscribe(group => {
                 if (this.isAnonymous && group.id === 1) {
                     this.whoAmIData.permissions = this.calcPermissions();
-                    this.operatorUpdatedEvent.emit()
+                    this.operatorUpdatedEvent.emit();
                 } else {
                     this.updateGroupIds();
                     if (
@@ -202,7 +202,7 @@ export class OperatorService implements OnAfterAppsLoaded {
                         (this.whoAmIData.group_ids.length === 0 && group.id === 1)
                     ) {
                         this.whoAmIData.permissions = this.calcPermissions();
-                        this.operatorUpdatedEvent.emit()
+                        this.operatorUpdatedEvent.emit();
                     }
                 }
             });
@@ -322,7 +322,7 @@ export class OperatorService implements OnAfterAppsLoaded {
         // Do not wait for the subscription to be done...
         (async () => {
             this.currentUserSubscription = await this.autoupdateService.simpleRequest(simpleUserRequest);
-        })()
+        })();
     }
 
     /**

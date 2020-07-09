@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 
+import { environment } from 'environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { CommunicationManagerService } from './communication-manager.service';
 import { HttpService } from './http.service';
-import { environment } from 'environments/environment';
 
 interface Configuration {
     [key: string]: any;
@@ -23,7 +23,7 @@ export class ConfigurationService {
     /**
      * Pending requests will be notified by these subjects, one per key.
      */
-    private subjects: {[key: string]: BehaviorSubject<any>} = {};
+    private subjects: { [key: string]: BehaviorSubject<any> } = {};
 
     public constructor(communicationManagerService: CommunicationManagerService, http: HttpService) {
         console.warn('TODO: Settingsservice server-side service');

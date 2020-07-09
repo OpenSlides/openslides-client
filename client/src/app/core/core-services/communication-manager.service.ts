@@ -1,12 +1,13 @@
 import { HttpParams } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
 
+import { Observable } from 'rxjs';
+
+import { HTTPMethod } from '../definitions/http-methods';
 import { HttpService } from './http.service';
 import { OfflineBroadcastService, OfflineReason } from './offline-broadcast.service';
 import { SleepPromise } from '../promises/sleep';
 import { StreamContainer, StreamingCommunicationService } from './streaming-communication.service';
-import { Observable } from 'rxjs';
-import { HTTPMethod } from '../definitions/http-methods';
 
 type HttpParamsGetter = () => HttpParams | { [param: string]: string | string[] };
 type HttpBodyGetter = () => any;
@@ -62,7 +63,7 @@ export class CommunicationManagerService {
 
     public startCommunication(): void {
         if (this.communicationAllowed) {
-            console.error("Illegal state! DO not emit this event multiple times");
+            console.error('Illegal state! DO not emit this event multiple times');
         } else {
             this.communicationAllowed = true;
             this._startCommunicationEvent.emit();
@@ -70,7 +71,7 @@ export class CommunicationManagerService {
     }
 
     private async connectWithWrapper(streamContainer: StreamContainer): Promise<() => void> {
-        console.log("connect", streamContainer, streamContainer.stream);
+        console.log('connect', streamContainer, streamContainer.stream);
         let retries = 0;
         const errorHandler = (error: any) => this.handleError(streamContainer, error);
         let gotError = true;
@@ -80,13 +81,13 @@ export class CommunicationManagerService {
                 gotError = false;
             } catch (e) {
                 retries++;
-                console.log("retry nr.", retries);
+                console.log('retry nr.', retries);
                 if (streamContainer.stream) {
                     streamContainer.stream.close();
                     streamContainer.stream = null;
                 }
                 if (retries < MAX_CONNECTION_RETRIES) {
-                    console.log("retry reason: A");
+                    console.log('retry reason: A');
                     await this.delayAndCheckReconnection();
                 } else {
                     this.goOffline();
@@ -100,7 +101,7 @@ export class CommunicationManagerService {
     }
 
     private async handleError(streamContainer: StreamContainer, error: any): Promise<void> {
-        console.log("handle Error", streamContainer, streamContainer.stream, error);
+        console.log('handle Error', streamContainer, streamContainer.stream, error);
         streamContainer.stream.close();
         streamContainer.stream = null;
 
@@ -111,7 +112,7 @@ export class CommunicationManagerService {
         } else {
             // retry it after some time:
             try {
-                console.log("retry reason: B");
+                console.log('retry reason: B');
                 await this.delayAndCheckReconnection();
                 await this.connectWithWrapper(streamContainer);
             } catch (e) {
@@ -166,7 +167,7 @@ export class CommunicationManagerService {
     // Checks the operator: If we do not have a valid user,
     // do not even try to connect again..
     private shouldRetryConnecting(): boolean {
-        return this.isOperatorAuthenticated
+        return this.isOperatorAuthenticated;
     }
 
     public setIsOperatorAuthenticated(isAuthenticated: boolean): void {

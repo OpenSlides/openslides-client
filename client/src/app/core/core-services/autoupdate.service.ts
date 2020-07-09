@@ -3,13 +3,13 @@ import { Injectable } from '@angular/core';
 import { autoupdateFormatToModelData, AutoupdateModelData, ModelData } from './autoupdate-helpers';
 import { BaseModel } from '../../shared/models/base/base-model';
 import { CollectionMapperService } from './collection-mapper.service';
+import { CommunicationManagerService, OfflineError } from './communication-manager.service';
 import { DataStoreService, DataStoreUpdateManagerService } from './data-store.service';
 import { ExampleDataService } from './example-data.service';
+import { HTTPMethod } from '../definitions/http-methods';
 import { ModelRequestBuilderService, SimplifiedModelRequest } from './model-request-builder.service';
 import { Mutex } from '../promises/mutex';
 import { StreamingCommunicationService } from './streaming-communication.service';
-import { CommunicationManagerService, OfflineError } from './communication-manager.service';
-import { HTTPMethod } from '../definitions/http-methods';
 
 const META_DELETED = 'meta_deleted';
 
@@ -63,7 +63,7 @@ interface ChangedModels {
 export class AutoupdateService {
     private mutex = new Mutex();
 
-    private activeRequests: {[id: number]: {request: ModelRequest, closeFn: () => void}} = {};
+    private activeRequests: { [id: number]: { request: ModelRequest; closeFn: () => void } } = {};
 
     /**
      * Constructor to create the AutoupdateService. Calls the constructor of the parent class.
@@ -101,6 +101,7 @@ export class AutoupdateService {
 
     public async simpleRequest(simpleRequest: SimplifiedModelRequest): Promise<ModelSubscription> {
         const request = await this.modelRequestBuilder.build(simpleRequest);
+        console.log(simpleRequest, request);
         return await this.request(request);
     }
 
@@ -113,7 +114,7 @@ export class AutoupdateService {
             closeFn: () => {
                 delete this.activeRequests[id];
             }
-        }
+        };
         try {
             await this.startAutoupdate(id);
         } catch (e) {
@@ -123,7 +124,7 @@ export class AutoupdateService {
                 console.log('???', e);
             }
         }
-        return {close: this.activeRequests[id].closeFn};
+        return { close: this.activeRequests[id].closeFn };
     }
 
     private async startAutoupdate(id: number): Promise<void> {
@@ -140,7 +141,7 @@ export class AutoupdateService {
         this.activeRequests[id].closeFn = () => {
             delete this.activeRequests[id];
             closeFn();
-        }
+        };
     }
 
     // START MOCKED SERVICE

@@ -4,9 +4,9 @@ import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 
 import { DataStoreService } from './data-store.service';
+import { OfflineBroadcastService, OfflineReason } from './offline-broadcast.service';
 import { OperatorService, WhoAmI } from './operator.service';
 import { StorageService } from './storage.service';
-import { OfflineBroadcastService, OfflineReason } from './offline-broadcast.service';
 
 /**
  * Handles the bootup/showdown of this application.
@@ -166,7 +166,7 @@ export class OpenSlidesService {
             this.redirectToLoginIfNotSubpage();
         } else {
             isLoggedIn = true;
-            console.warn("TODO: did the user change?")
+            console.warn('TODO: did the user change?');
             /*if (
                 (this.operator.user && this.operator.user.id !== whoami.user_id) ||
                 (!this.operator.user && whoami.user_id)

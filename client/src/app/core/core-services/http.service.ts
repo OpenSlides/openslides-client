@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
 
+import { HTTPMethod } from '../definitions/http-methods';
 import { OpenSlidesStatusService } from './openslides-status.service';
 import { formatQueryParams, QueryParams } from '../definitions/query-params';
-import { HTTPMethod } from '../definitions/http-methods';
 
 export interface ErrorDetailResponse {
     detail: string | string[];
