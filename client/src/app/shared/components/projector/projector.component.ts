@@ -2,6 +2,7 @@ import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/cor
 
 import { Subject, Subscription } from 'rxjs';
 
+import { OfflineBroadcastService } from 'app/core/core-services/offline-broadcast.service';
 import { ProjectorDataService, SlideData } from 'app/core/core-services/projector-data.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -10,7 +11,6 @@ import { Projector } from 'app/shared/models/projector/projector';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { Size } from 'app/site/projector/size';
-import { OfflineBroadcastService } from 'app/core/core-services/offline-broadcast.service';
 
 /**
  * THE projector. Cares about scaling and the right size and resolution.
@@ -209,7 +209,9 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
             }
         });
 
-        this.offlineSubscription = this.offlineBroadcastService.isOfflineObservable.subscribe(isOffline => (this.isOffline = isOffline));
+        this.offlineSubscription = this.offlineBroadcastService.isOfflineObservable.subscribe(
+            isOffline => (this.isOffline = isOffline)
+        );
     }
 
     /**
