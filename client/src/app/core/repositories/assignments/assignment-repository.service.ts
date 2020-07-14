@@ -37,8 +37,7 @@ export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeake
      */
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
-        agendaItemRepo: AgendaItemRepositoryService,
-        private httpService: HttpService
+        agendaItemRepo: AgendaItemRepositoryService
     ) {
         super(repositoryServiceCollector, Assignment, agendaItemRepo);
     }
@@ -77,9 +76,11 @@ export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeake
     public async changeCandidate(user: ViewUser, assignment: ViewAssignment, adding?: boolean): Promise<void> {
         const data = { user: user.id };
         if (assignment.candidatesAsUsers.some(candidate => candidate.id === user.id) && adding !== true) {
-            await this.httpService.delete(this.restPath + assignment.id + this.candidatureOtherPath, data);
+            // await this.httpService.delete(this.restPath + assignment.id + this.candidatureOtherPath, data);
+            throw new Error('TODO');
         } else if (adding !== false) {
-            await this.httpService.post(this.restPath + assignment.id + this.candidatureOtherPath, data);
+            throw new Error('TODO');
+            // await this.httpService.post(this.restPath + assignment.id + this.candidatureOtherPath, data);
         }
     }
 
@@ -89,7 +90,8 @@ export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeake
      * @param assignment The assignment to add the candidate to
      */
     public async addSelf(assignment: ViewAssignment): Promise<void> {
-        await this.httpService.post(this.restPath + assignment.id + this.candidatureSelfPath);
+        throw new Error('TODO');
+        // await this.httpService.post(this.restPath + assignment.id + this.candidatureSelfPath);
     }
 
     /**
@@ -98,7 +100,8 @@ export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeake
      * @param assignment The assignment to remove ourself from
      */
     public async deleteSelf(assignment: ViewAssignment): Promise<void> {
-        await this.httpService.delete(this.restPath + assignment.id + this.candidatureSelfPath);
+        // await this.httpService.delete(this.restPath + assignment.id + this.candidatureSelfPath);
+        throw new Error('TODO');
     }
 
     /**
@@ -110,6 +113,7 @@ export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeake
     public async sortCandidates(sortedCandidates: number[], assignment: ViewAssignment): Promise<void> {
         const restPath = `/rest/assignments/assignment/${assignment.id}/sort_related_users/`;
         const data = { related_users: sortedCandidates };
-        await this.httpService.post(restPath, data);
+        // await this.httpService.post(restPath, data);
+        throw new Error('TODO');
     }
 }

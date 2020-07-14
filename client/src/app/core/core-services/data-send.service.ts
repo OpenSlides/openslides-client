@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
+import { ActionService } from './action.service';
 import { BaseModel } from '../../shared/models/base/base-model';
-import { HttpService } from './http.service';
 import { Identifiable } from '../../shared/models/base/identifiable';
 
 /**
@@ -18,7 +18,7 @@ export class DataSendService {
      *
      * @param httpService The HTTP Service
      */
-    public constructor(private httpService: HttpService) {}
+    public constructor(private actions: ActionService) {}
 
     /**
      * Sends a post request with the model to the server to create it.
@@ -26,8 +26,7 @@ export class DataSendService {
      * @param model The model to create.
      */
     public async createModel(model: BaseModel): Promise<Identifiable> {
-        const restPath = `/rest/${model.collection}/`;
-        return await this.httpService.post<Identifiable>(restPath, model);
+        return await this.actions.create(model.collection, [model]);
     }
 
     /**
@@ -36,8 +35,7 @@ export class DataSendService {
      * @param model The model that is meant to be changed.
      */
     public async updateModel(model: BaseModel): Promise<void> {
-        const restPath = `/rest/${model.collection}/${model.id}/`;
-        await this.httpService.put(restPath, model);
+        await this.actions.update(model.collection, [model]);
     }
 
     /**
@@ -46,8 +44,8 @@ export class DataSendService {
      * @param model The model to partially update.
      */
     public async partialUpdateModel(model: BaseModel): Promise<void> {
-        const restPath = `/rest/${model.collection}/${model.id}/`;
-        await this.httpService.patch(restPath, model);
+        // const restPath = `/rest/${model.collection}/${model.id}/`;
+        // await this.httpService.patch(restPath, model);
     }
 
     /**
@@ -56,7 +54,6 @@ export class DataSendService {
      * @param model the model that shall be deleted.
      */
     public async deleteModel(model: BaseModel): Promise<void> {
-        const restPath = `/rest/${model.collection}/${model.id}/`;
-        await this.httpService.delete(restPath);
+        await this.actions.delete(model.collection, model.id);
     }
 }

@@ -78,7 +78,6 @@ export class PdfDocumentService {
     public constructor(
         private translate: TranslateService,
         private organisationSettingsService: OrganisationSettingsService,
-        private httpService: HttpService,
         private matSnackBar: MatSnackBar,
         private progressService: ProgressService
     ) {}
@@ -126,17 +125,18 @@ export class PdfDocumentService {
     private async convertUrlToBase64(url: string): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             const headers = new HttpHeaders();
-            this.httpService.get<Blob>(url, {}, {}, headers, 'blob').then(file => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => {
-                    const resultStr: string = reader.result as string;
-                    resolve(resultStr.split(',')[1]);
-                };
-                reader.onerror = error => {
-                    reject(error);
-                };
-            });
+            // this.httpService.get<Blob>(url, {}, {}, headers, 'blob').then(file => {
+            //     const reader = new FileReader();
+            //     reader.readAsDataURL(file);
+            //     reader.onload = () => {
+            //         const resultStr: string = reader.result as string;
+            //         resolve(resultStr.split(',')[1]);
+            //     };
+            //     reader.onerror = error => {
+            //         reject(error);
+            //     };
+            // });
+            throw new Error('TODO');
         });
     }
 

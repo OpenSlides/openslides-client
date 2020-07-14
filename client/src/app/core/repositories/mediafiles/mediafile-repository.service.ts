@@ -27,7 +27,7 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
      * @param dataSend sending data to the server
      * @param httpService OpenSlides own http service
      */
-    public constructor(repositoryServiceCollector: RepositoryServiceCollector, private httpService: HttpService) {
+    public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, Mediafile);
         this.directoryBehaviorSubject = new BehaviorSubject([]);
         this.getViewModelListObservable().subscribe(mediafiles => {
@@ -84,7 +84,8 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
      */
     public async uploadFile(file: any): Promise<Identifiable> {
         const emptyHeader = new HttpHeaders();
-        return this.httpService.post<Identifiable>('/rest/mediafiles/mediafile/', file, {}, emptyHeader);
+        throw new Error('TODO');
+        // return this.httpService.post<Identifiable>('/rest/mediafiles/mediafile/', file, {}, emptyHeader);
     }
 
     public getDirectoryBehaviorSubject(): BehaviorSubject<ViewMediafile[]> {
@@ -92,10 +93,11 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
     }
 
     public async move(mediafiles: ViewMediafile[], directoryId: number | null): Promise<void> {
-        return await this.httpService.post('/rest/mediafiles/mediafile/move/', {
-            ids: mediafiles.map(mediafile => mediafile.id),
-            directory_id: directoryId
-        });
+        // return await this.httpService.post('/rest/mediafiles/mediafile/move/', {
+        //     ids: mediafiles.map(mediafile => mediafile.id),
+        //     directory_id: directoryId
+        // });
+        throw new Error('TODO');
     }
 
     /**
@@ -104,8 +106,9 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
      * @param mediafiles The users to delete
      */
     public async bulkDelete(mediafiles: ViewMediafile[]): Promise<void> {
-        await this.httpService.post('/rest/mediafiles/mediafile/bulk_delete/', {
-            ids: mediafiles.map(mediafile => mediafile.id)
-        });
+        // await this.httpService.post('/rest/mediafiles/mediafile/bulk_delete/', {
+        //     ids: mediafiles.map(mediafile => mediafile.id)
+        // });
+        throw new Error('TODO');
     }
 }

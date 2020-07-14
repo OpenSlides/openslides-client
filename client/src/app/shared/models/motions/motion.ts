@@ -37,7 +37,7 @@ export class Motion extends BaseModel<Motion> {
     public sort_parent_id: Id; // motion/sort_child_ids;
     public sort_child_ids: Id[]; // (motion/parent_id)[];
     public origin_id: Id; // motion/derived_motion_ids; // Note: The related motions may not be in the same meeting
-    public derived_motion_ids: Id[]; // (motion/origin_id)[]; // Note: The related motions may not be in the same meeting
+    public derived_motion_ids: Id[]; // (motion/origin_id)[]; Note: The related motions may not be in the same meeting
     public state_id: Id; // motion_state/motion_ids;
     public workflow_id: Id; // motion_workflow/motion_ids;
     public recommendation_id: Id; // motion_state/motion_recommendation_ids;
