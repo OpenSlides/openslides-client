@@ -22,14 +22,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjectRepository<ViewMediafile, Mediafile> {
     private directoryBehaviorSubject: BehaviorSubject<ViewMediafile[]>;
 
-    /**
-     * Constructor for the mediafile repository
-     * @param DS Data store
-     * @param mapperService OpenSlides class mapping service
-     * @param dataSend sending data to the server
-     * @param httpService OpenSlides own http service
-     */
-    public constructor(repositoryServiceCollector: RepositoryServiceCollector, private httpService: HttpService) {
+    public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, Mediafile);
         this.directoryBehaviorSubject = new BehaviorSubject([]);
         this.getViewModelListObservable().subscribe(mediafiles => {
@@ -86,11 +79,13 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
      */
     public async uploadFile(file: any): Promise<Identifiable> {
         const emptyHeader = new HttpHeaders();
-        return this.httpService.post<Identifiable>('/rest/mediafiles/mediafile/', file, {}, emptyHeader);
+        throw new Error('TODO');
+        // return this.httpService.post<Identifiable>('/rest/mediafiles/mediafile/', file, {}, emptyHeader);
     }
 
     public async downloadArchive(archiveName: string, files: ViewMediafile[]): Promise<void> {
-        const zip = new JSZip();
+        throw new Error('TODO');
+        /*const zip = new JSZip();
         for (const file of files) {
             if (!file.is_directory) {
                 const base64Data = await this.httpService.downloadAsBase64(file.url);
@@ -98,7 +93,7 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
             }
         }
         const archive = await zip.generateAsync({ type: 'blob' });
-        saveAs(archive, archiveName);
+        saveAs(archive, archiveName);*/
     }
 
     public getDirectoryBehaviorSubject(): BehaviorSubject<ViewMediafile[]> {
@@ -106,10 +101,11 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
     }
 
     public async move(mediafiles: ViewMediafile[], directoryId: number | null): Promise<void> {
-        return await this.httpService.post('/rest/mediafiles/mediafile/move/', {
-            ids: mediafiles.map(mediafile => mediafile.id),
-            directory_id: directoryId
-        });
+        // return await this.httpService.post('/rest/mediafiles/mediafile/move/', {
+        //     ids: mediafiles.map(mediafile => mediafile.id),
+        //     directory_id: directoryId
+        // });
+        throw new Error('TODO');
     }
 
     /**
@@ -118,8 +114,9 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
      * @param mediafiles The users to delete
      */
     public async bulkDelete(mediafiles: ViewMediafile[]): Promise<void> {
-        await this.httpService.post('/rest/mediafiles/mediafile/bulk_delete/', {
-            ids: mediafiles.map(mediafile => mediafile.id)
-        });
+        // await this.httpService.post('/rest/mediafiles/mediafile/bulk_delete/', {
+        //     ids: mediafiles.map(mediafile => mediafile.id)
+        // });
+        throw new Error('TODO');
     }
 }

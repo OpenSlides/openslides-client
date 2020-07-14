@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { HttpService } from 'app/core/core-services/http.service';
+import { ActionService } from 'app/core/core-services/action.service';
 import { OperatorService, Permission } from 'app/core/core-services/operator.service';
 import { MeetingRepositoryService } from 'app/core/repositories/event-management/meeting-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
