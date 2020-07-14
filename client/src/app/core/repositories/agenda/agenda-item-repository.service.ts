@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { HttpService } from 'app/core/core-services/http.service';
+import { ActionService, ActionType } from 'app/core/core-services/action.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { TreeIdNode } from 'app/core/ui-services/tree.service';
@@ -37,7 +37,7 @@ export class AgendaItemRepositoryService extends BaseRepository<ViewAgendaItem, 
      */
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
-        private httpService: HttpService,
+        private actions: ActionService,
         private config: OrganisationSettingsService
     ) {
         super(repositoryServiceCollector, AgendaItem);
@@ -114,7 +114,8 @@ export class AgendaItemRepositoryService extends BaseRepository<ViewAgendaItem, 
      * Trigger the automatic numbering sequence on the server
      */
     public async autoNumbering(): Promise<void> {
-        await this.httpService.post('/rest/agenda/item/numbering/');
+        // await this.httpService.post('/rest/agenda/item/numbering/');
+        throw new Error('TODO');
     }
 
     /**
@@ -136,14 +137,14 @@ export class AgendaItemRepositoryService extends BaseRepository<ViewAgendaItem, 
     }
 
     public async addItemToAgenda(contentObject: BaseViewModel & HasAgendaItem): Promise<Identifiable> {
-        return await this.httpService.post('/rest/agenda/item/', {
+        return await this.actions.create(ActionType.AGENDA_ITEM_CREATE, {
             collection: contentObject.collection,
             id: contentObject.id
         });
     }
 
     public async removeFromAgenda(item: ViewAgendaItem): Promise<void> {
-        return await this.httpService.delete(`/rest/agenda/item/${item.id}/`);
+        return await this.actions.delete(ActionType.AGENDA_ITEM_DELETE, item.id);
     }
 
     public async create(item: AgendaItem): Promise<Identifiable> {
@@ -160,7 +161,8 @@ export class AgendaItemRepositoryService extends BaseRepository<ViewAgendaItem, 
      * @param data The reordered data from the sorting
      */
     public async sortItems(data: TreeIdNode[]): Promise<void> {
-        await this.httpService.post('/rest/agenda/item/sort/', data);
+        // await this.httpService.post('/rest/agenda/item/sort/', data);
+        throw new Error('TODO');
     }
 
     /**

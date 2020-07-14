@@ -36,7 +36,6 @@ export class TimeTravelService {
      * @param OpenSlides For restarting OpenSlide when exiting the history mode
      */
     public constructor(
-        private httpService: HttpService,
         private modelMapperService: CollectionMapperService,
         private DS: DataStoreService,
         private OSStatus: OpenSlidesStatusService,
@@ -86,11 +85,12 @@ export class TimeTravelService {
      */
     private async getHistoryData(history: History): Promise<HistoryData> {
         const queryParams = { timestamp: Math.ceil(history.timestamp) };
-        return await this.httpService.get<HistoryData>(
-            `${environment.urlPrefix}/core/history/data/`,
-            null,
-            queryParams
-        );
+        // return await this.httpService.get<HistoryData>(
+        //     `${environment.urlPrefix}/core/history/data/`,
+        //     null,
+        //     queryParams
+        // );
+        throw new Error('TODO');
     }
 
     /**

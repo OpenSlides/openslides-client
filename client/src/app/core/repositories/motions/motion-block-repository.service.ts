@@ -32,8 +32,7 @@ export class MotionBlockRepositoryService extends BaseIsAgendaItemAndListOfSpeak
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
         agendaItemRepo: AgendaItemRepositoryService,
-        private motionRepo: MotionRepositoryService,
-        private httpService: HttpService
+        private motionRepo: MotionRepositoryService
     ) {
         super(repositoryServiceCollector, MotionBlock, agendaItemRepo);
         this.initSorting();
@@ -85,7 +84,8 @@ export class MotionBlockRepositoryService extends BaseIsAgendaItemAndListOfSpeak
      */
     public async followRecommendation(motionBlock: ViewMotionBlock): Promise<void> {
         const restPath = `/rest/motions/motion-block/${motionBlock.id}/follow_recommendations/`;
-        await this.httpService.post(restPath);
+        // await this.httpService.post(restPath);
+        throw new Error('TODO');
     }
 
     /**

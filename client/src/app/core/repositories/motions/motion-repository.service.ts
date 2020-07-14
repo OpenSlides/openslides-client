@@ -21,6 +21,8 @@ import { ViewUser } from 'app/site/users/models/view-user';
 import { BaseIsAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-is-agenda-item-and-list-of-speakers-content-object-repository';
 import { LineNumberedString, LinenumberingService, LineNumberRange } from '../../ui-services/linenumbering.service';
 import { RepositoryServiceCollector } from '../repository-service-collector';
+import { ActionService, ActionType } from 'app/core/core-services/action.service';
+import { Action } from 'rxjs/internal/scheduler/Action';
 
 type SortProperty = 'sort_weight' | 'number';
 
@@ -98,10 +100,10 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         repositoryServiceCollector: RepositoryServiceCollector,
         agendaItemRepo: AgendaItemRepositoryService,
         config: OrganisationSettingsService,
-        private httpService: HttpService,
         private readonly lineNumbering: LinenumberingService,
         private readonly diff: DiffService,
-        private operator: OperatorService
+        private operator: OperatorService,
+        private actions: ActionService
     ) {
         super(repositoryServiceCollector, Motion, agendaItemRepo);
         config.get<SortProperty>('motions_motions_sorting').subscribe(conf => {
@@ -203,8 +205,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param stateId the number that indicates the state
      */
     public async setState(viewMotion: ViewMotion, stateId: number): Promise<void> {
-        const restPath = `/rest/motions/motion/${viewMotion.id}/set_state/`;
-        await this.httpService.put(restPath, { state: stateId });
+        await this.actions.sendRequest(ActionType.MOTION_UPDATE_METADATA, [{ id: viewMotion.id, state: stateId }]);
     }
 
     /**
@@ -214,11 +215,10 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param stateId the number that indicates the state
      */
     public async setMultiState(viewMotions: ViewMotion[], stateId: number): Promise<void> {
-        const restPath = `/rest/motions/motion/manage_multiple_state/`;
         const motionsIdMap: { id: number; state: number }[] = viewMotions.map(motion => {
             return { id: motion.id, state: stateId };
         });
-        await this.httpService.post(restPath, { motions: motionsIdMap });
+        await this.actions.sendRequest(ActionType.MOTION_UPDATE_METADATA, motionsIdMap);
     }
 
     /**
@@ -228,11 +228,10 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param motionblockId the number that indicates the motion block
      */
     public async setMultiMotionBlock(viewMotions: ViewMotion[], motionblockId: number): Promise<void> {
-        const restPath = `/rest/motions/motion/manage_multiple_motion_block/`;
         const motionsIdMap: { id: number; block: number }[] = viewMotions.map(motion => {
             return { id: motion.id, block: motionblockId };
         });
-        await this.httpService.post(restPath, { motions: motionsIdMap });
+        await this.actions.sendRequest(ActionType.MOTION_UPDATE_METADATA, motionsIdMap);
     }
 
     /**
@@ -242,11 +241,10 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param categoryId the number that indicates the category
      */
     public async setMultiCategory(viewMotions: ViewMotion[], categoryId: number): Promise<void> {
-        const restPath = `/rest/motions/motion/manage_multiple_category/`;
         const motionsIdMap: { id: number; category: number }[] = viewMotions.map(motion => {
             return { id: motion.id, category: categoryId };
         });
-        await this.httpService.post(restPath, { motions: motionsIdMap });
+        await this.actions.sendRequest(ActionType.MOTION_UPDATE_METADATA, motionsIdMap);
     }
 
     /**
@@ -256,8 +254,9 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param recommendationId the number that indicates the recommendation
      */
     public async setRecommendation(viewMotion: ViewMotion, recommendationId: number): Promise<void> {
-        const restPath = `/rest/motions/motion/${viewMotion.id}/set_recommendation/`;
-        await this.httpService.put(restPath, { recommendation: recommendationId });
+        await this.actions.sendRequest(ActionType.MOTION_UPDATE_METADATA, [
+            { id: viewMotion.id, recommendation: recommendationId }
+        ]);
     }
 
     /**
@@ -315,7 +314,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
                 }
             ]
         };
-        await this.httpService.post('/rest/motions/motion/manage_multiple_submitters/', requestData);
+        await this.actions.sendRequest(ActionType.MOTION_UPDATE_METADATA, requestData.motions);
     }
 
     /**
@@ -324,7 +323,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param data The reordered data from the sorting
      */
     public async sortMotions(data: TreeIdNode[]): Promise<void> {
-        await this.httpService.post('/rest/motions/motion/sort/', data);
+        throw new Error('TODO');
+        // await this.httpService.post('/rest/motions/motion/sort/', data);
     }
 
     /**
@@ -334,7 +334,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      */
     public async support(viewMotion: ViewMotion): Promise<void> {
         const url = `/rest/motions/motion/${viewMotion.id}/support/`;
-        await this.httpService.post(url);
+        // await this.httpService.post(url);
+        throw new Error('TODO');
     }
 
     /**
@@ -344,7 +345,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      */
     public async unsupport(viewMotion: ViewMotion): Promise<void> {
         const url = `/rest/motions/motion/${viewMotion.id}/support/`;
-        await this.httpService.delete(url);
+        // await this.httpService.delete(url);
+        throw new Error('TODO');
     }
 
     /**
@@ -825,7 +827,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
     public async followRecommendation(motion: ViewMotion): Promise<void> {
         if (motion.recommendation_id) {
             const restPath = `/rest/motions/motion/${motion.id}/follow_recommendation/`;
-            await this.httpService.post(restPath);
+            // await this.httpService.post(restPath);
+            throw new Error('TODO');
         }
     }
     /**

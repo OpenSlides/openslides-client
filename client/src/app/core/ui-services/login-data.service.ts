@@ -143,7 +143,6 @@ export class LoginDataService {
         private organisationSettingsService: OrganisationSettingsService,
         private storageService: StorageService,
         private OSStatus: OpenSlidesStatusService,
-        private httpService: HttpService,
         private configurationService: ConfigurationService
     ) {
         this.storeLoginDataRequests.pipe(auditTime(100)).subscribe(() => this.storeLoginData());
@@ -210,8 +209,9 @@ export class LoginDataService {
      */
     private async _refresh(): Promise<void> {
         try {
-            const loginData = await this.httpService.get<LoginData>(environment.urlPrefix + '/users/login/');
-            this.setLoginData(loginData);
+            throw new Error('TODO');
+            // const loginData = await this.httpService.get<LoginData>(environment.urlPrefix + '/users/login/');
+            // this.setLoginData(loginData);
             this.storeLoginDataRequests.next();
         } catch (e) {
             console.log('Could not refresh login data', e);

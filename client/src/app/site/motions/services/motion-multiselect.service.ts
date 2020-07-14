@@ -54,7 +54,6 @@ export class MotionMultiselectService {
         private tagRepo: TagRepositoryService,
         private agendaRepo: AgendaItemRepositoryService,
         private motionBlockRepo: MotionBlockRepositoryService,
-        private httpService: HttpService,
         private treeService: TreeService,
         private overlayService: OverlayService
     ) {}
@@ -95,7 +94,8 @@ export class MotionMultiselectService {
                 items: motions.map(motion => motion.agenda_item_id),
                 parent_id: selectedChoice.items as number
             };
-            await this.httpService.post('/rest/agenda/item/assign/', requestData);
+            throw new Error('TODO');
+            // await this.httpService.post('/rest/agenda/item/assign/', requestData);
         }
     }
 
@@ -149,9 +149,10 @@ export class MotionMultiselectService {
                 }));
                 const message = `${motions.length} ` + this.translate.instant(this.messageForSpinner);
                 this.overlayService.showSpinner(message, true);
-                await this.httpService.post('/rest/motions/motion/manage_multiple_recommendation/', {
-                    motions: requestData
-                });
+                // await this.httpService.post('/rest/motions/motion/manage_multiple_recommendation/', {
+                //     motions: requestData
+                // });
+                throw new Error('TODO');
             }
         } else {
             throw new Error(
@@ -228,7 +229,9 @@ export class MotionMultiselectService {
 
             const message = `${motions.length} ` + this.translate.instant(this.messageForSpinner);
             this.overlayService.showSpinner(message, true);
-            await this.httpService.post('/rest/motions/motion/manage_multiple_submitters/', { motions: requestData });
+            throw new Error('TODO');
+            // await this.httpService.post('/rest/motions/motion/manage_multiple_submitters/',
+            // { motions: requestData });
         }
     }
 
@@ -278,7 +281,8 @@ export class MotionMultiselectService {
 
             const message = `${motions.length} ` + this.translate.instant(this.messageForSpinner);
             this.overlayService.showSpinner(message, true);
-            await this.httpService.post('/rest/motions/motion/manage_multiple_tags/', { motions: requestData });
+            throw new Error('TODO');
+            // await this.httpService.post('/rest/motions/motion/manage_multiple_tags/', { motions: requestData });
         }
     }
 

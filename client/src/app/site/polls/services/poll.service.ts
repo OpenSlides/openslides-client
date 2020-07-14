@@ -196,7 +196,8 @@ export abstract class PollService {
     public pollValues: CalculablePollKey[] = ['yes', 'no', 'abstain', 'votesvalid', 'votesinvalid', 'votescast'];
 
     public constructor(
-        public constants: OrganisationSettingsService, // TODO: remove public. it is only here, so the linter doesn't complain about this unused variable
+        // TODO: remove public. it is only here, so the linter doesn't complain about this unused variable
+        public constants: OrganisationSettingsService,
         protected translate: TranslateService,
         protected pollKeyVerbose: PollKeyVerbosePipe,
         protected parsePollNumber: ParsePollNumberPipe
