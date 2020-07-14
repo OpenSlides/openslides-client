@@ -5,7 +5,10 @@
 /integration/bazel/bazel-*
 e2e_test.*
 *.log
+
+# node modules
 node_modules
+package-lock.json
 
 # Include when developing application packages.
 pubspec.lock
