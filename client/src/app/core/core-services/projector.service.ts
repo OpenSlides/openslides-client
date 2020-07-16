@@ -34,12 +34,6 @@ export interface ProjectorTitle {
     providedIn: 'root'
 })
 export class ProjectorService {
-    /**
-     * Constructor.
-     *
-     * @param DS
-     * @param dataSend
-     */
     public constructor(
         private DS: DataStoreService,
         private http: HttpService,
@@ -51,7 +45,7 @@ export class ProjectorService {
     ) {}
 
     /**
-     * Retusn the identifiable projector element from the given types of slides/elements/descriptors
+     * Return the identifiable projector element from the given types of slides/elements/descriptors
      *
      * @param obj Something related to IdentifiableProjectorElement
      * @returns the identifiable projector element from obj.
@@ -69,7 +63,7 @@ export class ProjectorService {
     }*/
 
     /**
-     * Checks, if a given object is projected.
+     * Checks if a given object is projected.
      *
      * @param obj The object in question
      * @returns true, if the object is projected on one projector.

@@ -446,7 +446,7 @@ export class AssignmentDetailComponent extends BaseComponent implements OnInit {
 
     public async updateAssignmentFromForm(): Promise<void> {
         try {
-            await this.repo.patch({ ...this.assignmentForm.value }, this.assignment);
+            await this.repo.update({ ...this.assignmentForm.value }, this.assignment);
             this.editAssignment = false;
         } catch (e) {
             this.raiseError(e);

@@ -77,6 +77,7 @@ export class PdfDocumentService {
     public constructor(
         private translate: TranslateService,
         private organisationSettingsService: OrganisationSettingsService,
+        private httpService: HttpService,
         private matSnackBar: MatSnackBar,
         private progressService: ProgressService
     ) {}

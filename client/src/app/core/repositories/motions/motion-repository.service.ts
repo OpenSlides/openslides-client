@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { AgendaItemRepositoryService, AgendaListTitle } from '../agenda/agenda-item-repository.service';
-import { HttpService } from 'app/core/core-services/http.service';
+import { ActionType } from 'app/core/core-services/action.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { DiffLinesInParagraph, DiffService } from 'app/core/ui-services/diff.service';
@@ -21,8 +21,6 @@ import { ViewUser } from 'app/site/users/models/view-user';
 import { BaseIsAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-is-agenda-item-and-list-of-speakers-content-object-repository';
 import { LineNumberedString, LinenumberingService, LineNumberRange } from '../../ui-services/linenumbering.service';
 import { RepositoryServiceCollector } from '../repository-service-collector';
-import { ActionService, ActionType } from 'app/core/core-services/action.service';
-import { Action } from 'rxjs/internal/scheduler/Action';
 
 type SortProperty = 'sort_weight' | 'number';
 
@@ -58,7 +56,7 @@ export interface ParagraphToChoose {
  * shared/models), so components can display them and interact with them.
  *
  * Rather than manipulating models directly, the repository is meant to
- * inform the {@link DataSendService} about changes which will send
+ * inform the {@link ActionService} about changes which will send
  * them to the Server.
  */
 @Injectable({
@@ -78,32 +76,13 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      */
     private motionLineLength: number;
 
-    /**
-     * Creates a MotionRepository
-     *
-     * Converts existing and incoming motions to ViewMotions
-     * Handles CRUD using an observer to the DataStore
-     *
-     * @param DS The DataStore
-     * @param mapperService Maps collection strings to classes
-     * @param dataSend sending changed objects
-     * @param viewModelStoreService ViewModelStoreService
-     * @param translate
-     * @param relationManager
-     * @param httpService OpenSlides own Http service
-     * @param lineNumbering Line numbering for motion text
-     * @param diff Display changes in motion text as diff.
-     * @param config ConfigService (subscribe to sorting config)
-     * @param operator
-     */
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
         agendaItemRepo: AgendaItemRepositoryService,
         config: OrganisationSettingsService,
         private readonly lineNumbering: LinenumberingService,
         private readonly diff: DiffService,
-        private operator: OperatorService,
-        private actions: ActionService
+        private operator: OperatorService
     ) {
         super(repositoryServiceCollector, Motion, agendaItemRepo);
         config.get<SortProperty>('motions_motions_sorting').subscribe(conf => {
@@ -266,7 +245,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param categoryId the number that indicates the category
      */
     public async setCatetory(viewMotion: ViewMotion, categoryId: number): Promise<void> {
-        await this.patch({ category_id: categoryId }, viewMotion);
+        await this.update({ category_id: categoryId }, viewMotion);
     }
 
     /**
@@ -276,7 +255,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param blockId the ID of the motion block
      */
     public async setBlock(viewMotion: ViewMotion, blockId: number): Promise<void> {
-        await this.patch({ block_id: blockId }, viewMotion);
+        await this.update({ block_id: blockId }, viewMotion);
     }
 
     /**
@@ -296,7 +275,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
             // remove tag from motion
             tag_ids.splice(tagIndex, 1);
         }
-        await this.patch({ tag_ids: tag_ids }, viewMotion);
+        await this.update({ tag_ids: tag_ids }, viewMotion);
     }
 
     /**
@@ -849,7 +828,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      */
     public async setStateExtension(viewMotion: ViewMotion, value: string): Promise<void> {
         if (viewMotion.state.show_state_extension_field) {
-            return this.patch({ state_extension: value }, viewMotion);
+            return this.update({ state_extension: value }, viewMotion);
         }
     }
 
@@ -861,7 +840,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      */
     public async setRecommendationExtension(viewMotion: ViewMotion, value: string): Promise<void> {
         if (viewMotion.recommendation.show_recommendation_extension_field) {
-            return this.patch({ recommendation_extension: value }, viewMotion);
+            return this.update({ recommendation_extension: value }, viewMotion);
         }
     }
 

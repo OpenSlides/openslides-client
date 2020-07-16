@@ -58,20 +58,9 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
      */
     protected sortProperty: SortProperty;
 
-    /**
-     * Constructor for the user repo
-     *
-     * @param DS The DataStore
-     * @param mapperService Maps collection strings to classes
-     * @param dataSend sending changed objects
-     * @param translate
-     * @param httpService
-     * @param organisationSettingsService
-     */
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
-        private organisationSettingsService: OrganisationSettingsService,
-        private activeMeetingService: ActiveMeetingService
+        private organisationSettingsService: OrganisationSettingsService
     ) {
         super(repositoryServiceCollector, User);
         this.sortProperty = this.organisationSettingsService.instant('users_sort_by');
@@ -219,10 +208,10 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
      * @param newPassword the new password
      */
     public async setNewPassword(oldPassword: string, newPassword: string): Promise<void> {
-        // await this.httpService.post(`${environment.urlPrefix}/users/setpassword/`, {
-        //     old_password: oldPassword,
-        //     new_password: newPassword
-        // });
+        /* await this.httpService.post(`${environment.urlPrefix}/users/setpassword/`, {
+            old_password: oldPassword,
+            new_password: newPassword
+        }); */
         throw new Error('TODO');
     }
 
@@ -233,9 +222,9 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
      * @param users The users to reset the passwords from
      */
     public async bulkResetPasswordsToDefault(users: ViewUser[]): Promise<void> {
-        // await this.httpService.post('/rest/users/user/bulk_reset_passwords_to_default/', {
-        //     user_ids: users.map(user => user.id)
-        // });
+        /* await this.httpService.post('/rest/users/user/bulk_reset_passwords_to_default/', {
+            user_ids: users.map(user => user.id)
+        }); */
         throw new Error('TODO');
     }
 
@@ -287,11 +276,11 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         field: 'is_active' | 'is_present' | 'is_committee',
         value: boolean
     ): Promise<void> {
-        // await this.httpService.post('/rest/users/user/bulk_set_state/', {
-        //     user_ids: users.map(user => user.id),
-        //     field: field,
-        //     value: value
-        // });
+        /* await this.httpService.post('/rest/users/user/bulk_set_state/', {
+            user_ids: users.map(user => user.id),
+            field: field,
+            value: value
+        }); */
         throw new Error('TODO');
     }
 
@@ -303,11 +292,11 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
      * @param groupIds All group ids to add or remove
      */
     public async bulkAlterGroups(users: ViewUser[], action: 'add' | 'remove', groupIds: Id[]): Promise<void> {
-        // await this.httpService.post('/rest/users/user/bulk_alter_groups/', {
-        //     user_ids: users.map(user => user.id),
-        //     action: action,
-        //     group_ids: groupIds
-        // });
+        /* await this.httpService.post('/rest/users/user/bulk_alter_groups/', {
+            user_ids: users.map(user => user.id),
+            action: action,
+            group_ids: groupIds
+        }); */
         throw new Error('TODO');
     }
 
@@ -325,57 +314,57 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         const subject = this.translate.instant(users_email_subject);
         const message = this.translate.instant(users_email_body);
 
-        // const response = await this.httpService.post<{ count: number; no_email_ids: number[] }>(
-        //     '/rest/users/user/mass_invite_email/',
-        //     {
-        //         user_ids: user_ids,
-        //         subject: subject,
-        //         message: message
-        //     }
-        // );
         throw new Error('TODO');
+        /* const response = await this.httpService.post<{ count: number; no_email_ids: number[] }>(
+            '/rest/users/user/mass_invite_email/',
+            {
+                user_ids: user_ids,
+                subject: subject,
+                message: message
+            }
+        );
 
-        // const numEmails = response.count;
-        // const noEmailIds = response.no_email_ids;
-        // let msg;
-        // if (numEmails === 0) {
-        //     msg = this.translate.instant('No emails were send.');
-        // } else if (numEmails === 1) {
-        //     msg = this.translate.instant('One email was send sucessfully.');
-        // } else {
-        //     msg = this.translate.instant('%num% emails were send sucessfully.');
-        //     msg = msg.replace('%num%', numEmails);
-        // }
+        const numEmails = response.count;
+        const noEmailIds = response.no_email_ids;
+        let msg;
+        if (numEmails === 0) {
+            msg = this.translate.instant('No emails were send.');
+        } else if (numEmails === 1) {
+            msg = this.translate.instant('One email was send sucessfully.');
+        } else {
+            msg = this.translate.instant('%num% emails were send sucessfully.');
+            msg = msg.replace('%num%', numEmails);
+        }
 
-        // if (noEmailIds.length) {
-        //     msg += ' ';
+        if (noEmailIds.length) {
+            msg += ' ';
 
-        //     if (noEmailIds.length === 1) {
-        //         msg += this.translate.instant(
-        //             'The user %user% has no email, so the invitation email could not be send.'
-        //         );
-        //     } else {
-        //         msg += this.translate.instant(
-        //             'The users %user% have no email, so the invitation emails could not be send.'
-        //         );
-        //     }
+            if (noEmailIds.length === 1) {
+                msg += this.translate.instant(
+                    'The user %user% has no email, so the invitation email could not be send.'
+                );
+            } else {
+                msg += this.translate.instant(
+                    'The users %user% have no email, so the invitation emails could not be send.'
+                );
+            }
 
-        //     // This one builds a username string like "user1, user2 and user3" with the full names.
-        //     const usernames = noEmailIds
-        //         .map(id => this.getViewModel(id))
-        //         .filter(user => !!user)
-        //         .map(user => user.short_name);
-        //     let userString;
-        //     if (usernames.length > 1) {
-        //         const lastUsername = usernames.pop();
-        //         userString = usernames.join(', ') + ' ' + this.translate.instant('and') + ' ' + lastUsername;
-        //     } else {
-        //         userString = usernames.join(', ');
-        //     }
-        //     msg = msg.replace('%user%', userString);
-        // }
+            // This one builds a username string like "user1, user2 and user3" with the full names.
+            const usernames = noEmailIds
+                .map(id => this.getViewModel(id))
+                .filter(user => !!user)
+                .map(user => user.short_name);
+            let userString;
+            if (usernames.length > 1) {
+                const lastUsername = usernames.pop();
+                userString = usernames.join(', ') + ' ' + this.translate.instant('and') + ' ' + lastUsername;
+            } else {
+                userString = usernames.join(', ');
+            }
+            msg = msg.replace('%user%', userString);
+        }
 
-        // return msg;
+        return msg; */
     }
 
     /**
