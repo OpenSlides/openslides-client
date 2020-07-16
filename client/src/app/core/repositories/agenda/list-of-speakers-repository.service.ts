@@ -29,16 +29,6 @@ export interface SpeakingTimeStructureLevelObject {
     providedIn: 'root'
 })
 export class ListOfSpeakersRepositoryService extends BaseRepository<ViewListOfSpeakers, ListOfSpeakers> {
-    /**
-     * Contructor for agenda repository.
-     *
-     * @param DS The DataStore
-     * @param httpService OpenSlides own HttpService
-     * @param mapperService OpenSlides mapping service for collection strings
-     * @param config Read config variables
-     * @param dataSend send models to the server
-     * @param treeService sort the data according to weight and parents
-     */
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, ListOfSpeakers);
     }

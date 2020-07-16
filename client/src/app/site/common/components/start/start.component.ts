@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { ActionService } from 'app/core/core-services/action.service';
+import { ActionService, ActionType } from 'app/core/core-services/action.service';
 import { OperatorService, Permission } from 'app/core/core-services/operator.service';
 import { MeetingRepositoryService } from 'app/core/repositories/event-management/meeting-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
@@ -10,7 +10,6 @@ import { UserRepositoryService } from 'app/core/repositories/users/user-reposito
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { ViewMotion } from 'app/site/motions/models/view-motion';
 
 /**
  * Interface describes the keys for the fields at start-component.

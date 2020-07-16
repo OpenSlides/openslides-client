@@ -503,7 +503,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
             delete result.title; // Do not update the title!
 
             try {
-                await this.motionRepo.patch(result, motion);
+                await this.motionRepo.update(result, motion);
                 if (result.state_id !== motion.state_id) {
                     await this.motionRepo.setState(motion, result.state_id);
                 }

@@ -25,16 +25,6 @@ export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeake
     private readonly candidatureOtherPath = '/candidature_other/';
     private readonly candidatureSelfPath = '/candidature_self/';
 
-    /**
-     * Constructor for the Assignment Repository.
-     *
-     * @param DS DataStore access
-     * @param dataSend Sending data
-     * @param mapperService Map models to object
-     * @param viewModelStoreService Access view models
-     * @param translate Translate string
-     * @param httpService make HTTP Requests
-     */
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
         agendaItemRepo: AgendaItemRepositoryService

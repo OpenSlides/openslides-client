@@ -25,14 +25,6 @@ export enum ScrollScaleDirection {
     providedIn: 'root'
 })
 export class ProjectorRepositoryService extends BaseRepository<ViewProjector, Projector> {
-    /**
-     * Constructor calls the parent constructor
-     *
-     * @param DS The DataStore
-     * @param mapperService Maps collection strings to classes
-     * @param dataSend sending changed objects
-     * @param http
-     */
     public constructor(repositoryServiceCollector: RepositoryServiceCollector, private http: HttpService) {
         super(repositoryServiceCollector, Projector);
     }
