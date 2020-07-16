@@ -45,13 +45,6 @@ export class GroupRepositoryService extends BaseRepository<ViewGroup, Group> {
      */
     public appPermissions: AppPermissions[] = [];
 
-    /**
-     * Constructor calls the parent constructor
-     * @param DS The DataStore
-     * @param mapperService Maps collection strings to classes
-     * @param dataSend sending changed objects
-     * @param constantsService reading out the OpenSlides constants
-     */
     public constructor(repositoryServiceCollector: RepositoryServiceCollector, private http: HttpService) {
         super(repositoryServiceCollector, Group);
         this.sortPermsPerApp();

@@ -53,7 +53,7 @@ export abstract class BasePollDialogService<V extends BaseViewPoll, S extends Po
                         };
                     }
                 }
-                await repo.patch(update, <V>viewPoll);
+                await repo.update(update, <V>viewPoll);
             }
         }
     }

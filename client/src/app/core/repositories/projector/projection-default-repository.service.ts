@@ -13,15 +13,6 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
     providedIn: 'root'
 })
 export class ProjectiondefaultRepositoryService extends BaseRepository<ViewProjectiondefault, Projectiondefault> {
-    /**
-     * Constructor calls the parent constructor
-     *
-     * @param DS The DataStore
-     * @param dataSend sending changed objects
-     * @param mapperService Maps collection strings to classes
-     * @param viewModelStoreService
-     * @param translate
-     */
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, Projectiondefault);
     }

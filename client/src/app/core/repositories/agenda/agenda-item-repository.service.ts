@@ -25,19 +25,8 @@ export interface AgendaListTitle {
     providedIn: 'root'
 })
 export class AgendaItemRepositoryService extends BaseRepository<ViewAgendaItem, AgendaItem> {
-    /**
-     * Contructor for agenda repository.
-     *
-     * @param DS The DataStore
-     * @param httpService OpenSlides own HttpService
-     * @param mapperService OpenSlides mapping service for collection strings
-     * @param config Read config variables
-     * @param dataSend send models to the server
-     * @param treeService sort the data according to weight and parents
-     */
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
-        private actions: ActionService,
         private config: OrganisationSettingsService
     ) {
         super(repositoryServiceCollector, AgendaItem);
@@ -119,6 +108,7 @@ export class AgendaItemRepositoryService extends BaseRepository<ViewAgendaItem, 
     }
 
     /**
+     * META-TODO: can this be removed?
      * TODO: Copied from BaseRepository and added the cloned model to write back the
      * item_number correctly. This must be reverted with #4738 (indroduced with #4639)
      *
@@ -133,18 +123,15 @@ export class AgendaItemRepositoryService extends BaseRepository<ViewAgendaItem, 
         const sendUpdate = viewModel.getUpdatedModelData(update);
         const clone = JSON.parse(JSON.stringify(sendUpdate));
         clone.item_number = clone._itemNumber;
-        return await this.dataSend.updateModel(clone);
+        return await super.update(clone, viewModel);
     }
 
     public async addItemToAgenda(contentObject: BaseViewModel & HasAgendaItem): Promise<Identifiable> {
-        return await this.actions.create(ActionType.AGENDA_ITEM_CREATE, {
-            collection: contentObject.collection,
-            id: contentObject.id
-        });
+        return await this.create({ id: contentObject.id } as AgendaItem);
     }
 
     public async removeFromAgenda(item: ViewAgendaItem): Promise<void> {
-        return await this.actions.delete(ActionType.AGENDA_ITEM_DELETE, item.id);
+        return await this.delete(item);
     }
 
     public async create(item: AgendaItem): Promise<Identifiable> {

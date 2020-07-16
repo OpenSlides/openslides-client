@@ -20,15 +20,6 @@ export class MotionBlockRepositoryService extends BaseIsAgendaItemAndListOfSpeak
     ViewMotionBlock,
     MotionBlock
 > {
-    /**
-     * Constructor for the motion block repository
-     *
-     * @param DS Data Store
-     * @param mapperService Mapping collection strings to classes
-     * @param dataSend Send models to the server
-     * @param motionRepo Accessing the motion repository
-     * @param httpService Sending a request directly
-     */
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
         agendaItemRepo: AgendaItemRepositoryService,

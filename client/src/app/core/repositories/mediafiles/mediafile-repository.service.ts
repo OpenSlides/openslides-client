@@ -20,13 +20,6 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjectRepository<ViewMediafile, Mediafile> {
     private directoryBehaviorSubject: BehaviorSubject<ViewMediafile[]>;
 
-    /**
-     * Constructor for the mediafile repository
-     * @param DS Data store
-     * @param mapperService OpenSlides class mapping service
-     * @param dataSend sending data to the server
-     * @param httpService OpenSlides own http service
-     */
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, Mediafile);
         this.directoryBehaviorSubject = new BehaviorSubject([]);

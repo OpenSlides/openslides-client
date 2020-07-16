@@ -2,11 +2,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { auditTime } from 'rxjs/operators';
 
+import { ActionService, ActionType } from '../core-services/action.service';
 import { Collection } from 'app/shared/models/base/collection';
 import { BaseModel, ModelConstructor } from '../../shared/models/base/base-model';
 import { BaseViewModel, ViewModelConstructor } from '../../site/base/base-view-model';
 import { CollectionMapperService } from '../core-services/collection-mapper.service';
-import { DataSendService } from '../core-services/data-send.service';
 import { DataStoreService } from '../core-services/data-store.service';
 import { HasViewModelListObservable } from '../definitions/has-view-model-list-observable';
 import { Identifiable } from '../../shared/models/base/identifiable';
@@ -17,6 +17,7 @@ import { RelationManagerService } from '../core-services/relation-manager.servic
 import { Relation } from '../definitions/relations';
 import { RepositoryServiceCollector } from './repository-service-collector';
 import { ViewModelStoreService } from '../core-services/view-model-store.service';
+import { ActiveMeetingService } from '../core-services/active-meeting.service';
 
 export abstract class BaseRepository<V extends BaseViewModel, M extends BaseModel>
     implements OnAfterAppsLoaded, Collection, HasViewModelListObservable<V> {
@@ -99,8 +100,8 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         return this.repositoryServiceCollector.DS;
     }
 
-    protected get dataSend(): DataSendService {
-        return this.repositoryServiceCollector.dataSend;
+    protected get actions(): ActionService {
+        return this.repositoryServiceCollector.actionService;
     }
 
     protected get collectionMapperService(): CollectionMapperService {
@@ -117,6 +118,10 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
 
     protected get relationManager(): RelationManagerService {
         return this.repositoryServiceCollector.relationManager;
+    }
+
+    protected get activeMeetingService(): ActiveMeetingService {
+        return this.repositoryServiceCollector.activeMeetingService;
     }
 
     /**
@@ -245,29 +250,18 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     }
 
     /**
-     * Saves the (full) update to an existing model. So called "update"-function
+     * Saves the (partial) update to an existing model. So called "update"-function
      * Provides a default procedure, but can be overwritten if required
      *
      * @param update the update that should be created
      * @param viewModel the view model that the update is based on
      */
     public async update(update: Partial<M>, viewModel: V): Promise<void> {
-        const data = viewModel.getUpdatedModelData(update);
-        const targetClass = this.collectionMapperService.getModelConstructor(viewModel.collection);
-        return await this.dataSend.updateModel(new targetClass(data));
-    }
-
-    /**
-     * patches an existing model with new data,
-     * rather than sending a full update
-     *
-     * @param update the update to send
-     * @param viewModel the motion to update
-     */
-    public async patch(update: Partial<M>, viewModel: V): Promise<void> {
-        const patch = new this.baseModelCtor(update);
-        patch.id = viewModel.id;
-        return await this.dataSend.partialUpdateModel(patch);
+        if (!update.id) {
+            update.id = viewModel.id;
+        }
+        const actionType = `${this.collection}.update` as ActionType;
+        return await this.actions.sendRequest(actionType, update);
     }
 
     /**
@@ -277,7 +271,8 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      * @param viewModel the view model to delete
      */
     public async delete(viewModel: V): Promise<void> {
-        return await this.dataSend.deleteModel(viewModel.getModel());
+        const actionType = `${this.collection}.delete` as ActionType;
+        return await this.actions.sendRequest(actionType, { id: viewModel.id });
     }
 
     /**
@@ -287,10 +282,12 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      * @param model the model to create on the server
      */
     public async create(model: M): Promise<Identifiable> {
-        // this ensures we get a valid base model, even if the view was just
-        // sending an object with "as MyModelClass"
-        const sendModel = new this.baseModelCtor(model);
-        return await this.dataSend.createModel(sendModel);
+        const data = {
+            meeting_id: this.activeMeetingService.getMeetingId(),
+            ...model
+        }
+        const actionType = `${this.collection}.create` as ActionType;
+        return await this.actions.sendRequest(actionType, data);
     }
 
     /**

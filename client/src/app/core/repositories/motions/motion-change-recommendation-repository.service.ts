@@ -21,7 +21,7 @@ import { ViewUnifiedChange } from '../../../shared/models/motions/view-unified-c
  * shared/models), so components can display them and interact with them.
  *
  * Rather than manipulating models directly, the repository is meant to
- * inform the {@link DataSendService} about changes which will send
+ * inform the {@link ActionService} about changes which will send
  * them to the Server.
  */
 @Injectable({
@@ -53,7 +53,7 @@ export class MotionChangeRecommendationRepositoryService extends BaseRepository<
      * @returns The id of the created change recommendation
      */
     public async createByViewModel(view: ViewMotionChangeRecommendation): Promise<Identifiable> {
-        return await this.dataSend.createModel(view.changeRecommendation);
+        return await this.create(view.changeRecommendation);
     }
 
     /**
@@ -83,7 +83,7 @@ export class MotionChangeRecommendationRepositoryService extends BaseRepository<
      * @param {ViewMotionChangeRecommendation} changeRecommendation
      */
     public async setAccepted(changeRecommendation: ViewMotionChangeRecommendation): Promise<void> {
-        await this.patch({ rejected: false }, changeRecommendation);
+        await this.update({ rejected: false }, changeRecommendation);
     }
 
     /**
@@ -92,7 +92,7 @@ export class MotionChangeRecommendationRepositoryService extends BaseRepository<
      * @param {ViewMotionChangeRecommendation} changeRecommendation
      */
     public async setRejected(changeRecommendation: ViewMotionChangeRecommendation): Promise<void> {
-        await this.patch({ rejected: true }, changeRecommendation);
+        await this.update({ rejected: true }, changeRecommendation);
     }
 
     /**
@@ -102,7 +102,7 @@ export class MotionChangeRecommendationRepositoryService extends BaseRepository<
      * @param {boolean} internal
      */
     public async setInternal(changeRecommendation: ViewMotionChangeRecommendation, internal: boolean): Promise<void> {
-        await this.patch({ internal: internal }, changeRecommendation);
+        await this.update({ internal: internal }, changeRecommendation);
     }
 
     public getTitleWithChanges = (originalTitle: string, change: ViewUnifiedChange, crMode: ChangeRecoMode): string => {
