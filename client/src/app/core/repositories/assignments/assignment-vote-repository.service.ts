@@ -14,14 +14,6 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
     providedIn: 'root'
 })
 export class AssignmentVoteRepositoryService extends BaseRepository<ViewAssignmentVote, AssignmentVote> {
-    /**
-     * @param DS DataStore access
-     * @param dataSend Sending data
-     * @param mapperService Map models to object
-     * @param viewModelStoreService Access view models
-     * @param translate Translate string
-     * @param httpService make HTTP Requests
-     */
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, AssignmentVote);
     }

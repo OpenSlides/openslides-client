@@ -15,25 +15,13 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
  * shared/models), so components can display them and interact with them.
  *
  * Rather than manipulating models directly, the repository is meant to
- * inform the {@link DataSendService} about changes which will send
+ * inform the {@link ActionService} about changes which will send
  * them to the Server.
  */
 @Injectable({
     providedIn: 'root'
 })
 export class MotionCategoryRepositoryService extends BaseRepository<ViewMotionCategory, MotionCategory> {
-    /**
-     * Creates a CategoryRepository
-     * Converts existing and incoming category to ViewCategories
-     * Handles CRUD using an observer to the DataStore
-     *
-     * @param DS The DataStore
-     * @param mapperService Maps collection strings to classes
-     * @param dataSend sending changed objects
-     * @param httpService OpenSlides own HTTP service
-     * @param organisationSettingsService to get the default sorting
-     * @param translate translationService to get the currently selected locale
-     */
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, MotionCategory);
 

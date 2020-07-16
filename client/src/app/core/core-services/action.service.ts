@@ -22,46 +22,28 @@ export enum ActionType {
     MEETING_DELETE = 'meeting.delete'
 }
 
-export type RequestData = any;
-
-export interface RequestInfo<T> {
+export interface RequestInfo {
     action: ActionType;
-    // data: (keyof T)[];
-    data: RequestData;
+    data: any;
 }
 
 @Injectable({
     providedIn: 'root'
 })
 export class ActionService {
-    private readonly BACKEND_URL = '/system/action/handle_request';
+    private readonly ACTION_URL = '/system/action/handle_request';
 
     private constructor(private http: HttpService) {}
 
-    public async sendRequest<T>(action: ActionType, data: RequestData[]): Promise<T> {
-        const request: RequestInfo<T>[] = [
-            {
-                action,
-                data
-            }
-        ];
-        return await this.http.post<T>(this.BACKEND_URL, request);
+    public async sendRequest<T>(action: ActionType, data: any): Promise<T> {
+        return this._sendRequest({ action, data: [data] });
     }
 
-    public async create(collection: string, data: RequestData): Promise<any> {
-        return await this.sendRequest(`${collection}.create` as ActionType, [data]);
+    public async sendBulkRequest<T>(action: ActionType, data: any[]): Promise<T> {
+        return this._sendRequest({ action, data });
     }
 
-    public async update(collection: string, data: RequestData): Promise<any> {
-        return await this.sendRequest(`${collection}.update` as ActionType, [data]);
-    }
-
-    public async delete(collection: string, id: string | number): Promise<any> {
-        return await this.sendRequest(`${collection}.delete` as ActionType, [{ id }]);
-    }
-
-    public async testRequest(): Promise<void> {
-        const r = await this.create('topic', { meeting_id: 1, title: 'Test' });
-        console.log(r);
+    private async _sendRequest<T>(request: RequestInfo): Promise<T> {
+        return await this.http.post<T>(this.ACTION_URL, [request]);
     }
 }

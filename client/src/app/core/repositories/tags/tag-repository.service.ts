@@ -12,22 +12,13 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
  * shared/models), so components can display them and interact with them.
  *
  * Rather than manipulating models directly, the repository is meant to
- * inform the {@link DataSendService} about changes which will send
+ * inform the {@link ActionService} about changes which will send
  * them to the Server.
  */
 @Injectable({
     providedIn: 'root'
 })
 export class TagRepositoryService extends BaseRepository<ViewTag, Tag> {
-    /**
-     * Creates a TagRepository
-     * Converts existing and incoming Tags to ViewTags
-     * Handles CRUD using an observer to the DataStore
-     *
-     * @param DS DataStore
-     * @param mapperService Maps collection strings to classes
-     * @param dataSend sending changed objects
-     */
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, Tag);
         this.initSorting();

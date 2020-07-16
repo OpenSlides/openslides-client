@@ -20,7 +20,6 @@ export class TopicRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCon
      *
      * @param DS Access the DataStore
      * @param mapperService OpenSlides mapping service for collections
-     * @param dataSend Access the DataSendService
      */
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
