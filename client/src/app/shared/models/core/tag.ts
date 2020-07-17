@@ -1,4 +1,4 @@
-import { Id } from 'app/core/definitions/key-types';
+import { Fqid, Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
 
 /**
@@ -11,7 +11,7 @@ export class Tag extends BaseModel<Tag> {
     public id: Id;
     public name: string;
 
-    public tagged_ids: Id[]; // (*/tag_ids)[];
+    public tagged_ids: Fqid[]; // (*/tag_ids)[];
     public meeting_id: Id; // meeting/tag_ids;
 
     public constructor(input?: any) {

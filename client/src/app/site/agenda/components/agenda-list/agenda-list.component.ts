@@ -7,6 +7,7 @@ import { PblColumnDefinition } from '@pebula/ngrid';
 
 import { AgendaCsvExportService } from '../../services/agenda-csv-export.service';
 import { AgendaFilterListService } from '../../services/agenda-filter-list.service';
+import { AgendaItemInfoDialogComponent } from '../agenda-item-info-dialog/agenda-item-info-dialog.component';
 import { AgendaPdfService } from '../../services/agenda-pdf.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService, Permission } from 'app/core/core-services/operator.service';
@@ -22,15 +23,12 @@ import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { ColumnRestriction } from 'app/shared/components/list-view-table/list-view-table.component';
 import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
-import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
-import { BaseViewModel } from 'app/site/base/base-view-model';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
-import { isProjectable, Projectable, ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
+import { isProjectable, ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewTopic } from 'app/site/topics/models/view-topic';
-import { ItemInfoDialogComponent } from '../item-info-dialog/item-info-dialog.component';
 import { ViewAgendaItem } from '../../models/view-agenda-item';
-import { hasListOfSpeakers, HasListOfSpeakers, ViewListOfSpeakers } from '../../models/view-list-of-speakers';
+import { hasListOfSpeakers } from '../../models/view-list-of-speakers';
 
 /**
  * List view for the agenda.
@@ -208,7 +206,7 @@ export class AgendaListComponent extends BaseListViewComponent<ViewAgendaItem> i
         if (this.isMultiSelect || !this.canManage) {
             return;
         }
-        const dialogRef = this.dialog.open(ItemInfoDialogComponent, { ...infoDialogSettings, data: item });
+        const dialogRef = this.dialog.open(AgendaItemInfoDialogComponent, { ...infoDialogSettings, data: item });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {

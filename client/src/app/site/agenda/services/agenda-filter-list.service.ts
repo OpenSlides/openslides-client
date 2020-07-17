@@ -23,7 +23,7 @@ export class AgendaFilterListService extends BaseFilterListService<ViewAgendaIte
     protected storageKey = 'AgendaList';
 
     public tagFilterOptions: OsFilter = {
-        property: 'tags_id',
+        property: 'tag_ids',
         label: 'Tags',
         options: []
     };
