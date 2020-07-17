@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { auditTime } from 'rxjs/operators';
 
 import { ActionService, ActionType } from '../core-services/action.service';
+import { ActiveMeetingService } from '../core-services/active-meeting.service';
 import { Collection } from 'app/shared/models/base/collection';
 import { BaseModel, ModelConstructor } from '../../shared/models/base/base-model';
 import { BaseViewModel, ViewModelConstructor } from '../../site/base/base-view-model';
@@ -17,7 +18,6 @@ import { RelationManagerService } from '../core-services/relation-manager.servic
 import { Relation } from '../definitions/relations';
 import { RepositoryServiceCollector } from './repository-service-collector';
 import { ViewModelStoreService } from '../core-services/view-model-store.service';
-import { ActiveMeetingService } from '../core-services/active-meeting.service';
 
 export abstract class BaseRepository<V extends BaseViewModel, M extends BaseModel>
     implements OnAfterAppsLoaded, Collection, HasViewModelListObservable<V> {
@@ -285,7 +285,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         const data = {
             meeting_id: this.activeMeetingService.getMeetingId(),
             ...model
-        }
+        };
         const actionType = `${this.collection}.create` as ActionType;
         return await this.actions.sendRequest(actionType, data);
     }

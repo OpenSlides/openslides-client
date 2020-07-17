@@ -1,4 +1,4 @@
-import { Id } from 'app/core/definitions/key-types';
+import { Fqid, Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
 import { HasListOfSpeakersId } from '../base/has-list-of-speakers-id';
 import { HasProjectableIds } from '../base/has-projectable-ids';
@@ -30,7 +30,7 @@ export class Mediafile extends BaseModel<Mediafile> {
     public access_group_ids: Id[]; // (group/mediafile_access_group_ids)[];
     public parent_id: Id; // mediafile/child_ids;
     public child_ids: Id[]; // (mediafile/parent_id)[];
-    public attachment_ids: Id[]; // (*/attachment_ids)[];
+    public attachment_ids: Fqid[]; // (*/attachment_ids)[];
     public meeting_id: Id; // meeting/mediafile_ids;
     public used_as_logo_$_in_meeting: string[]; // meeting/logo_$<token>;
     public used_as_font_$_in_meeting: string[]; // meeting/font_$<token>;
