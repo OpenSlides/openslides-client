@@ -116,7 +116,7 @@ export class TopicDetailComponent extends BaseModelContextComponent {
                 if (!this.topicForm.value.agenda_parent_id) {
                     delete this.topicForm.value.agenda_parent_id;
                 }
-                delete this.topicForm.value.agenda_type  // TODO: remove
+                delete this.topicForm.value.agenda_type; // TODO: remove
                 await this.repo.create(this.topicForm.value);
                 this.router.navigate([`/agenda/`]);
             } else {
