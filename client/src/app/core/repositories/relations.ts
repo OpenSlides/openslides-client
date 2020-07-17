@@ -450,7 +450,7 @@ export const RELATIONS: Relation[] = [
     // ########## Tags
     ...makeGenericM2M<ViewTag, HasTags>({
         viewModel: ViewTag,
-        possibleViewModels: [ViewAssignment, ViewMotion, ViewTopic],
+        possibleViewModels: [ViewAgendaItem, ViewAssignment, ViewMotion, ViewTopic],
         viewModelField: 'tagged',
         viewModelIdField: 'tagged_ids',
         possibleViewModelsField: 'tags'

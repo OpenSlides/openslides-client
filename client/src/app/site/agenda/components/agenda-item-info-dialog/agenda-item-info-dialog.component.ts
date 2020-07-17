@@ -13,11 +13,11 @@ import { ViewAgendaItem } from '../../models/view-agenda-item';
  * Dialog component to change agenda item details
  */
 @Component({
-    selector: 'os-item-info-dialog',
-    templateUrl: './item-info-dialog.component.html',
-    styleUrls: ['./item-info-dialog.component.scss']
+    selector: 'os-agenda-item-info-dialog',
+    templateUrl: './agenda-item-info-dialog.component.html',
+    styleUrls: ['./agenda-item-info-dialog.component.scss']
 })
-export class ItemInfoDialogComponent implements OnInit {
+export class AgendaItemInfoDialogComponent implements OnInit {
     /**
      * Holds the agenda item form
      */
@@ -41,12 +41,12 @@ export class ItemInfoDialogComponent implements OnInit {
     public constructor(
         public formBuilder: FormBuilder,
         public durationService: DurationService,
-        public dialogRef: MatDialogRef<ItemInfoDialogComponent>,
+        public dialogRef: MatDialogRef<AgendaItemInfoDialogComponent>,
         public tagRepo: TagRepositoryService,
         @Inject(MAT_DIALOG_DATA) public item: ViewAgendaItem
     ) {
         this.agendaInfoForm = this.formBuilder.group({
-            tags_id: [],
+            tag_ids: [],
             type: [''],
             durationText: ['', durationValidator],
             item_number: [''],
@@ -57,7 +57,7 @@ export class ItemInfoDialogComponent implements OnInit {
     public ngOnInit(): void {
         // load current values
         if (this.item) {
-            this.agendaInfoForm.get('tags_id').setValue(this.item.tags_id);
+            this.agendaInfoForm.get('tag_ids').setValue(this.item.tag_ids);
             this.agendaInfoForm.get('type').setValue(this.item.type);
             this.agendaInfoForm
                 .get('durationText')
