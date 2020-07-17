@@ -14,7 +14,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
  * shared/models), so components can display them and interact with them.
  *
  * Rather than manipulating models directly, the repository is meant to
- * inform the {@link DataSendService} about changes which will send
+ * inform the {@link ActionService} about changes which will send
  * them to the Server.
  */
 @Injectable({
@@ -24,16 +24,6 @@ export class MotionCommentSectionRepositoryService extends BaseRepository<
     ViewMotionCommentSection,
     MotionCommentSection
 > {
-    /**
-     * Creates a CategoryRepository
-     * Converts existing and incoming category to ViewCategories
-     * Handles CRUD using an observer to the DataStore
-     *
-     * @param mapperService Mapper Service for the Collection Strings
-     * @param DS Service that handles the dataStore
-     * @param dataSend Service to handle the dataSending
-     * @param http Service to handle direct http-communication
-     */
     public constructor(repositoryServiceCollector: RepositoryServiceCollector, private http: HttpService) {
         super(repositoryServiceCollector, MotionCommentSection);
 

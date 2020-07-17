@@ -15,26 +15,14 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
  * shared/models), so components can display them and interact with them.
  *
  * Rather than manipulating models directly, the repository is meant to
- * inform the {@link DataSendService} about changes which will send
+ * inform the {@link ActionService} about changes which will send
  * them to the Server.
  */
 @Injectable({
     providedIn: 'root'
 })
 export class MotionCategoryRepositoryService extends BaseRepository<ViewMotionCategory, MotionCategory> {
-    /**
-     * Creates a CategoryRepository
-     * Converts existing and incoming category to ViewCategories
-     * Handles CRUD using an observer to the DataStore
-     *
-     * @param DS The DataStore
-     * @param mapperService Maps collection strings to classes
-     * @param dataSend sending changed objects
-     * @param httpService OpenSlides own HTTP service
-     * @param organisationSettingsService to get the default sorting
-     * @param translate translationService to get the currently selected locale
-     */
-    public constructor(repositoryServiceCollector: RepositoryServiceCollector, private httpService: HttpService) {
+    public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, MotionCategory);
 
         this.setSortFunction((a, b) => a.weight - b.weight);
@@ -62,7 +50,8 @@ export class MotionCategoryRepositoryService extends BaseRepository<ViewMotionCa
      * @param viewMotionCategory the category it should be updated in
      */
     public async numberMotionsInCategory(viewMotionCategory: ViewMotionCategory): Promise<void> {
-        await this.httpService.post(`/rest/motions/category/${viewMotionCategory.id}/numbering/`);
+        // await this.httpService.post(`/rest/motions/category/${viewMotionCategory.id}/numbering/`);
+        throw new Error('TODO');
     }
 
     /**
@@ -72,9 +61,10 @@ export class MotionCategoryRepositoryService extends BaseRepository<ViewMotionCa
      * @param motionIds the list of motion ids on this category
      */
     public async sortMotionsInCategory(viewMotionCategory: MotionCategory, motionIds: number[]): Promise<void> {
-        await this.httpService.post(`/rest/motions/category/${viewMotionCategory.id}/sort_motions/`, {
-            motions: motionIds
-        });
+        // await this.httpService.post(`/rest/motions/category/${viewMotionCategory.id}/sort_motions/`, {
+        //     motions: motionIds
+        // });
+        throw new Error('TODO');
     }
 
     /**
@@ -83,6 +73,7 @@ export class MotionCategoryRepositoryService extends BaseRepository<ViewMotionCa
      * @param data The reordered data from the sorting
      */
     public async sortCategories(data: TreeIdNode[]): Promise<void> {
-        await this.httpService.post('/rest/motions/category/sort_categories/', data);
+        // await this.httpService.post('/rest/motions/category/sort_categories/', data);
+        throw new Error('TODO');
     }
 }

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { AgendaItemRepositoryService, AgendaListTitle } from '../agenda/agenda-item-repository.service';
-import { HttpService } from 'app/core/core-services/http.service';
+import { ActionType } from 'app/core/core-services/action.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { DiffLinesInParagraph, DiffService } from 'app/core/ui-services/diff.service';
@@ -56,7 +56,7 @@ export interface ParagraphToChoose {
  * shared/models), so components can display them and interact with them.
  *
  * Rather than manipulating models directly, the repository is meant to
- * inform the {@link DataSendService} about changes which will send
+ * inform the {@link ActionService} about changes which will send
  * them to the Server.
  */
 @Injectable({
@@ -76,29 +76,10 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      */
     private motionLineLength: number;
 
-    /**
-     * Creates a MotionRepository
-     *
-     * Converts existing and incoming motions to ViewMotions
-     * Handles CRUD using an observer to the DataStore
-     *
-     * @param DS The DataStore
-     * @param mapperService Maps collection strings to classes
-     * @param dataSend sending changed objects
-     * @param viewModelStoreService ViewModelStoreService
-     * @param translate
-     * @param relationManager
-     * @param httpService OpenSlides own Http service
-     * @param lineNumbering Line numbering for motion text
-     * @param diff Display changes in motion text as diff.
-     * @param config ConfigService (subscribe to sorting config)
-     * @param operator
-     */
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
         agendaItemRepo: AgendaItemRepositoryService,
         config: OrganisationSettingsService,
-        private httpService: HttpService,
         private readonly lineNumbering: LinenumberingService,
         private readonly diff: DiffService,
         private operator: OperatorService
@@ -203,8 +184,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param stateId the number that indicates the state
      */
     public async setState(viewMotion: ViewMotion, stateId: number): Promise<void> {
-        const restPath = `/rest/motions/motion/${viewMotion.id}/set_state/`;
-        await this.httpService.put(restPath, { state: stateId });
+        await this.actions.sendRequest(ActionType.MOTION_UPDATE_METADATA, [{ id: viewMotion.id, state: stateId }]);
     }
 
     /**
@@ -214,11 +194,10 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param stateId the number that indicates the state
      */
     public async setMultiState(viewMotions: ViewMotion[], stateId: number): Promise<void> {
-        const restPath = `/rest/motions/motion/manage_multiple_state/`;
         const motionsIdMap: { id: number; state: number }[] = viewMotions.map(motion => {
             return { id: motion.id, state: stateId };
         });
-        await this.httpService.post(restPath, { motions: motionsIdMap });
+        await this.actions.sendRequest(ActionType.MOTION_UPDATE_METADATA, motionsIdMap);
     }
 
     /**
@@ -228,11 +207,10 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param motionblockId the number that indicates the motion block
      */
     public async setMultiMotionBlock(viewMotions: ViewMotion[], motionblockId: number): Promise<void> {
-        const restPath = `/rest/motions/motion/manage_multiple_motion_block/`;
         const motionsIdMap: { id: number; block: number }[] = viewMotions.map(motion => {
             return { id: motion.id, block: motionblockId };
         });
-        await this.httpService.post(restPath, { motions: motionsIdMap });
+        await this.actions.sendRequest(ActionType.MOTION_UPDATE_METADATA, motionsIdMap);
     }
 
     /**
@@ -242,11 +220,10 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param categoryId the number that indicates the category
      */
     public async setMultiCategory(viewMotions: ViewMotion[], categoryId: number): Promise<void> {
-        const restPath = `/rest/motions/motion/manage_multiple_category/`;
         const motionsIdMap: { id: number; category: number }[] = viewMotions.map(motion => {
             return { id: motion.id, category: categoryId };
         });
-        await this.httpService.post(restPath, { motions: motionsIdMap });
+        await this.actions.sendRequest(ActionType.MOTION_UPDATE_METADATA, motionsIdMap);
     }
 
     /**
@@ -256,8 +233,9 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param recommendationId the number that indicates the recommendation
      */
     public async setRecommendation(viewMotion: ViewMotion, recommendationId: number): Promise<void> {
-        const restPath = `/rest/motions/motion/${viewMotion.id}/set_recommendation/`;
-        await this.httpService.put(restPath, { recommendation: recommendationId });
+        await this.actions.sendRequest(ActionType.MOTION_UPDATE_METADATA, [
+            { id: viewMotion.id, recommendation: recommendationId }
+        ]);
     }
 
     /**
@@ -267,7 +245,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param categoryId the number that indicates the category
      */
     public async setCatetory(viewMotion: ViewMotion, categoryId: number): Promise<void> {
-        await this.patch({ category_id: categoryId }, viewMotion);
+        await this.update({ category_id: categoryId }, viewMotion);
     }
 
     /**
@@ -277,7 +255,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param blockId the ID of the motion block
      */
     public async setBlock(viewMotion: ViewMotion, blockId: number): Promise<void> {
-        await this.patch({ block_id: blockId }, viewMotion);
+        await this.update({ block_id: blockId }, viewMotion);
     }
 
     /**
@@ -297,7 +275,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
             // remove tag from motion
             tag_ids.splice(tagIndex, 1);
         }
-        await this.patch({ tag_ids: tag_ids }, viewMotion);
+        await this.update({ tag_ids: tag_ids }, viewMotion);
     }
 
     /**
@@ -315,7 +293,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
                 }
             ]
         };
-        await this.httpService.post('/rest/motions/motion/manage_multiple_submitters/', requestData);
+        await this.actions.sendRequest(ActionType.MOTION_UPDATE_METADATA, requestData.motions);
     }
 
     /**
@@ -324,7 +302,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param data The reordered data from the sorting
      */
     public async sortMotions(data: TreeIdNode[]): Promise<void> {
-        await this.httpService.post('/rest/motions/motion/sort/', data);
+        throw new Error('TODO');
+        // await this.httpService.post('/rest/motions/motion/sort/', data);
     }
 
     /**
@@ -334,7 +313,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      */
     public async support(viewMotion: ViewMotion): Promise<void> {
         const url = `/rest/motions/motion/${viewMotion.id}/support/`;
-        await this.httpService.post(url);
+        // await this.httpService.post(url);
+        throw new Error('TODO');
     }
 
     /**
@@ -344,7 +324,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      */
     public async unsupport(viewMotion: ViewMotion): Promise<void> {
         const url = `/rest/motions/motion/${viewMotion.id}/support/`;
-        await this.httpService.delete(url);
+        // await this.httpService.delete(url);
+        throw new Error('TODO');
     }
 
     /**
@@ -823,7 +804,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
     public async followRecommendation(motion: ViewMotion): Promise<void> {
         if (motion.recommendation_id) {
             const restPath = `/rest/motions/motion/${motion.id}/follow_recommendation/`;
-            await this.httpService.post(restPath);
+            // await this.httpService.post(restPath);
+            throw new Error('TODO');
         }
     }
     /**
@@ -844,7 +826,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      */
     public async setStateExtension(viewMotion: ViewMotion, value: string): Promise<void> {
         if (viewMotion.state.show_state_extension_field) {
-            return this.patch({ state_extension: value }, viewMotion);
+            return this.update({ state_extension: value }, viewMotion);
         }
     }
 
@@ -856,7 +838,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      */
     public async setRecommendationExtension(viewMotion: ViewMotion, value: string): Promise<void> {
         if (viewMotion.recommendation.show_recommendation_extension_field) {
-            return this.patch({ recommendation_extension: value }, viewMotion);
+            return this.update({ recommendation_extension: value }, viewMotion);
         }
     }
 

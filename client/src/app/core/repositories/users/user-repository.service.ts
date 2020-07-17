@@ -53,21 +53,9 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
      */
     protected sortProperty: SortProperty;
 
-    /**
-     * Constructor for the user repo
-     *
-     * @param DS The DataStore
-     * @param mapperService Maps collection strings to classes
-     * @param dataSend sending changed objects
-     * @param translate
-     * @param httpService
-     * @param organisationSettingsService
-     */
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
-        private httpService: HttpService,
-        private organisationSettingsService: OrganisationSettingsService,
-        private activeMeetingService: ActiveMeetingService
+        private organisationSettingsService: OrganisationSettingsService
     ) {
         super(repositoryServiceCollector, User);
         this.sortProperty = this.organisationSettingsService.instant('users_sort_by');
@@ -204,7 +192,8 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
      */
     public async resetPassword(user: ViewUser, password: string): Promise<void> {
         const path = `/rest/users/user/${user.id}/reset_password/`;
-        await this.httpService.post(path, { password: password });
+        // await this.httpService.post(path, { password: password });
+        throw new Error('TODO');
     }
 
     /**
@@ -214,10 +203,11 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
      * @param newPassword the new password
      */
     public async setNewPassword(oldPassword: string, newPassword: string): Promise<void> {
-        await this.httpService.post(`${environment.urlPrefix}/users/setpassword/`, {
+        /* await this.httpService.post(`${environment.urlPrefix}/users/setpassword/`, {
             old_password: oldPassword,
             new_password: newPassword
-        });
+        }); */
+        throw new Error('TODO');
     }
 
     /**
@@ -227,9 +217,10 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
      * @param users The users to reset the passwords from
      */
     public async bulkResetPasswordsToDefault(users: ViewUser[]): Promise<void> {
-        await this.httpService.post('/rest/users/user/bulk_reset_passwords_to_default/', {
+        /* await this.httpService.post('/rest/users/user/bulk_reset_passwords_to_default/', {
             user_ids: users.map(user => user.id)
-        });
+        }); */
+        throw new Error('TODO');
     }
 
     /**
@@ -239,9 +230,10 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
      * @param users The users to generate new passwords for
      */
     public async bulkGenerateNewPasswords(users: ViewUser[]): Promise<void> {
-        await this.httpService.post('/rest/users/user/bulk_generate_passwords/', {
-            user_ids: users.map(user => user.id)
-        });
+        // await this.httpService.post('/rest/users/user/bulk_generate_passwords/', {
+        //     user_ids: users.map(user => user.id)
+        // });
+        throw new Error('TODO');
     }
 
     /**
@@ -253,7 +245,8 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         const data = newEntries.map(entry => {
             return { ...entry.newEntry, importTrackId: entry.importTrackId };
         });
-        return await this.httpService.post<MassImportResult>(`/rest/users/user/mass_import/`, { users: data });
+        // return await this.httpService.post<MassImportResult>(`/rest/users/user/mass_import/`, { users: data });
+        throw new Error('TODO');
     }
 
     /**
@@ -262,7 +255,8 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
      * @param users The users to delete
      */
     public async bulkDelete(users: ViewUser[]): Promise<void> {
-        await this.httpService.post('/rest/users/user/bulk_delete/', { user_ids: users.map(user => user.id) });
+        // await this.httpService.post('/rest/users/user/bulk_delete/', { user_ids: users.map(user => user.id) });
+        throw new Error('TODO');
     }
 
     /**
@@ -277,11 +271,12 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         field: 'is_active' | 'is_present' | 'is_committee',
         value: boolean
     ): Promise<void> {
-        await this.httpService.post('/rest/users/user/bulk_set_state/', {
+        /* await this.httpService.post('/rest/users/user/bulk_set_state/', {
             user_ids: users.map(user => user.id),
             field: field,
             value: value
-        });
+        }); */
+        throw new Error('TODO');
     }
 
     /**
@@ -292,11 +287,12 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
      * @param groupIds All group ids to add or remove
      */
     public async bulkAlterGroups(users: ViewUser[], action: 'add' | 'remove', groupIds: Id[]): Promise<void> {
-        await this.httpService.post('/rest/users/user/bulk_alter_groups/', {
+        /* await this.httpService.post('/rest/users/user/bulk_alter_groups/', {
             user_ids: users.map(user => user.id),
             action: action,
             group_ids: groupIds
-        });
+        }); */
+        throw new Error('TODO');
     }
 
     /**
@@ -313,7 +309,8 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         const subject = this.translate.instant(users_email_subject);
         const message = this.translate.instant(users_email_body);
 
-        const response = await this.httpService.post<{ count: number; no_email_ids: number[] }>(
+        throw new Error('TODO');
+        /* const response = await this.httpService.post<{ count: number; no_email_ids: number[] }>(
             '/rest/users/user/mass_invite_email/',
             {
                 user_ids: user_ids,
@@ -321,6 +318,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
                 message: message
             }
         );
+
         const numEmails = response.count;
         const noEmailIds = response.no_email_ids;
         let msg;
@@ -361,7 +359,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             msg = msg.replace('%user%', userString);
         }
 
-        return msg;
+        return msg; */
     }
 
     /**

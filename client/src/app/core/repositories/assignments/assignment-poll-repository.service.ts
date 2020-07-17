@@ -38,16 +38,6 @@ export type GlobalVote = 'A' | 'N';
     providedIn: 'root'
 })
 export class AssignmentPollRepositoryService extends BasePollRepository<ViewAssignmentPoll, AssignmentPoll> {
-    /**
-     * Constructor for the Assignment Repository.
-     *
-     * @param DS DataStore access
-     * @param dataSend Sending data
-     * @param mapperService Map models to object
-     * @param viewModelStoreService Access view models
-     * @param translate Translate string
-     * @param httpService make HTTP Requests
-     */
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
         votingService: VotingService,

@@ -48,7 +48,7 @@ export class MediaManageService {
      *
      * @param httpService OpenSlides own HttpService
      */
-    public constructor(private config: OrganisationSettingsService, private httpService: HttpService) {}
+    public constructor(private config: OrganisationSettingsService) {}
 
     /**
      * Sets the given Mediafile to using the given management option
@@ -78,7 +78,8 @@ export class MediaManageService {
             }
         };
 
-        return this.httpService.put<void>(restPath, payload);
+        throw new Error('TODO');
+        // return this.httpService.put<void>(restPath, payload);
     }
 
     /**

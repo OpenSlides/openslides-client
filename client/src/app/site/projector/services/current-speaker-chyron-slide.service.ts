@@ -31,7 +31,8 @@ export class CurrentSpeakerChyronSlideService {
      * @returns if the slide is projected on the projector
      */
     public isProjectedOn(projector: ViewProjector): boolean {
-        // return this.projectorService.isProjectedOn(this.getCurrentSpeakerChyronProjectorElement(), projector.projector);
+        // return this.projectorService.isProjectedOn(
+        // this.getCurrentSpeakerChyronProjectorElement(), projector.projector);
         throw new Error('TODO');
     }
 

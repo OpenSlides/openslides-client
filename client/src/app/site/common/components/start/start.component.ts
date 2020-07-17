@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { HttpService } from 'app/core/core-services/http.service';
+import { ActionService, ActionType } from 'app/core/core-services/action.service';
 import { OperatorService, Permission } from 'app/core/core-services/operator.service';
 import { MeetingRepositoryService } from 'app/core/repositories/event-management/meeting-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
@@ -10,7 +10,6 @@ import { UserRepositoryService } from 'app/core/repositories/users/user-reposito
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { ViewMotion } from 'app/site/motions/models/view-motion';
 
 /**
  * Interface describes the keys for the fields at start-component.
@@ -65,7 +64,7 @@ export class StartComponent extends BaseComponent implements OnInit {
         private motionRepo: MotionRepositoryService,
         private stateRepo: MotionStateRepositoryService,
         private userRepo: UserRepositoryService,
-        private http: HttpService
+        private actions: ActionService
     ) {
         super(componentServiceCollector);
         this.startForm = this.formBuilder.group({
@@ -75,18 +74,7 @@ export class StartComponent extends BaseComponent implements OnInit {
     }
 
     public async t(): Promise<void> {
-        const data = [
-            {
-                action: 'topic.create',
-                data: [
-                    {
-                        meeting_id: 1,
-                        title: 'TEST'
-                    }
-                ]
-            }
-        ];
-        const r = await this.http.post('/system/action/handle_request', data);
+        const r = await this.actions.sendRequest(ActionType.TOPIC_CREATE, [{ meeting_id: 1, title: 'Test' }]);
         console.log(r);
     }
 
@@ -139,62 +127,5 @@ export class StartComponent extends BaseComponent implements OnInit {
      */
     public canManage(): boolean {
         return this.operator.hasPerms(Permission.coreCanManageConfig);
-    }
-
-    public test(): void {
-        console.clear();
-
-        console.log('test M20 (I)');
-        const motion1 = this.motionRepo.getViewModel(1);
-        console.log(motion1, motion1.category, motion1.category.motions);
-        // Note the order of the motions: they should be ordered by category_weight.
-        motion1.category.motions.forEach(m => console.log(m.title, m.id, m.category_weight));
-
-        console.log('\ntest M2O (II)');
-        console.log(motion1.category.name, motion1.category.parent.name, motion1.category.parent.children[0].name);
-
-        console.log('\ntest M2M');
-        const state1 = this.stateRepo.getViewModel(1);
-        console.log(state1.name);
-        console.log(state1.next_states.map(s => s.name));
-        console.log(state1.next_states.map(s => s.previous_states[0].name));
-
-        console.log('\ntest generic M2M');
-        const motion2 = this.motionRepo.getViewModel(2);
-        console.log(
-            motion2.tags.map(t => t.name),
-            motion2.tags.map(t => t.tagged)
-        );
-
-        console.log('\ntest generic O2O');
-        console.log(motion1.agenda_item, motion1.agenda_item.id);
-        console.log(motion1.title, (<ViewMotion>motion1.agenda_item.content_object).title);
-
-        console.log('\ntest structured M2M (I)');
-        const user3 = this.userRepo.getViewModel(3);
-        console.log(user3.groups(), user3.groups(2));
-
-        console.log('\ntest structured M2M (II)');
-        const user1 = this.userRepo.getViewModel(1);
-        console.log(
-            user1.groups().map(g => g.name),
-            user1.groups(1).map(g => g.name)
-        );
-        console.log(user1.groups()[0].users.map(u => u.username));
-
-        console.log('\ntest structured O2O');
-        const meeting1 = this.meetingRepo.getViewModel(1);
-        console.log(meeting1.logo_$);
-        const key = meeting1.logo_$[0];
-        console.log(meeting1.logo(key).title, meeting1.logo(key).used_as_logo_in_meeting(key).name);
-
-        console.log('\ntest user overwrites');
-        const viewUser = this.userRepo.getViewModel(1);
-        const user = viewUser.user;
-        console.log(user.group_ids(1), user.group_ids(1));
-        console.log(viewUser.group_ids(1), viewUser.group_ids());
-
-        console.log('\ntmp');
-        console.log(motion2.tag_ids);
     }
 }

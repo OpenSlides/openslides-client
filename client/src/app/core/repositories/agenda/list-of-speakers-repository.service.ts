@@ -29,17 +29,7 @@ export interface SpeakingTimeStructureLevelObject {
     providedIn: 'root'
 })
 export class ListOfSpeakersRepositoryService extends BaseRepository<ViewListOfSpeakers, ListOfSpeakers> {
-    /**
-     * Contructor for agenda repository.
-     *
-     * @param DS The DataStore
-     * @param httpService OpenSlides own HttpService
-     * @param mapperService OpenSlides mapping service for collection strings
-     * @param config Read config variables
-     * @param dataSend send models to the server
-     * @param treeService sort the data according to weight and parents
-     */
-    public constructor(repositoryServiceCollector: RepositoryServiceCollector, private httpService: HttpService) {
+    public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, ListOfSpeakers);
     }
 
@@ -66,7 +56,8 @@ export class ListOfSpeakersRepositoryService extends BaseRepository<ViewListOfSp
      */
     public async createSpeaker(listOfSpeakers: ViewListOfSpeakers, userId: number): Promise<Identifiable> {
         const restUrl = this.getRestUrl(listOfSpeakers.id, 'manage_speaker');
-        return await this.httpService.post<Identifiable>(restUrl, { user: userId });
+        // return await this.httpService.post<Identifiable>(restUrl, { user: userId });
+        throw new Error('TODO');
     }
 
     /**
@@ -78,7 +69,8 @@ export class ListOfSpeakersRepositoryService extends BaseRepository<ViewListOfSp
      */
     public async delete(listOfSpeakers: ViewListOfSpeakers, speakerId?: number): Promise<void> {
         const restUrl = this.getRestUrl(listOfSpeakers.id, 'manage_speaker');
-        await this.httpService.delete(restUrl, speakerId ? { speaker: speakerId } : null);
+        // await this.httpService.delete(restUrl, speakerId ? { speaker: speakerId } : null);
+        throw new Error('TODO');
     }
 
     /**
@@ -88,7 +80,8 @@ export class ListOfSpeakersRepositoryService extends BaseRepository<ViewListOfSp
      */
     public async deleteAllSpeakers(listOfSpeakers: ViewListOfSpeakers): Promise<void> {
         const restUrl = this.getRestUrl(listOfSpeakers.id, 'manage_speaker');
-        await this.httpService.delete(restUrl, { speaker: listOfSpeakers.speakers.map(speaker => speaker.id) });
+        // await this.httpService.delete(restUrl, { speaker: listOfSpeakers.speakers.map(speaker => speaker.id) });
+        throw new Error('TODO');
     }
 
     /**
@@ -99,7 +92,8 @@ export class ListOfSpeakersRepositoryService extends BaseRepository<ViewListOfSp
      */
     public async sortSpeakers(listOfSpeakers: ViewListOfSpeakers, speakerIds: number[]): Promise<void> {
         const restUrl = this.getRestUrl(listOfSpeakers.id, 'sort_speakers');
-        await this.httpService.post(restUrl, { speakers: speakerIds });
+        // await this.httpService.post(restUrl, { speakers: speakerIds });
+        throw new Error('TODO');
     }
 
     /**
@@ -109,7 +103,8 @@ export class ListOfSpeakersRepositoryService extends BaseRepository<ViewListOfSp
      */
     public async readdLastSpeaker(listOfSpeakers: ViewListOfSpeakers): Promise<void> {
         const restUrl = this.getRestUrl(listOfSpeakers.id, 'readd_last_speaker');
-        await this.httpService.post(restUrl);
+        // await this.httpService.post(restUrl);
+        throw new Error('TODO');
     }
 
     /**
@@ -121,7 +116,8 @@ export class ListOfSpeakersRepositoryService extends BaseRepository<ViewListOfSp
      */
     public async markSpeaker(listOfSpeakers: ViewListOfSpeakers, speaker: ViewSpeaker, marked: boolean): Promise<void> {
         const restUrl = this.getRestUrl(listOfSpeakers.id, 'manage_speaker');
-        await this.httpService.patch(restUrl, { user: speaker.user.id, marked: marked });
+        // await this.httpService.patch(restUrl, { user: speaker.user.id, marked: marked });
+        throw new Error('TODO');
     }
 
     /**
@@ -131,7 +127,8 @@ export class ListOfSpeakersRepositoryService extends BaseRepository<ViewListOfSp
      */
     public async stopCurrentSpeaker(listOfSpeakers: ViewListOfSpeakers): Promise<void> {
         const restUrl = this.getRestUrl(listOfSpeakers.id, 'speak');
-        await this.httpService.delete(restUrl);
+        // await this.httpService.delete(restUrl);
+        throw new Error('TODO');
     }
 
     /**
@@ -142,11 +139,13 @@ export class ListOfSpeakersRepositoryService extends BaseRepository<ViewListOfSp
      */
     public async startSpeaker(listOfSpeakers: ViewListOfSpeakers, speaker: ViewSpeaker): Promise<void> {
         const restUrl = this.getRestUrl(listOfSpeakers.id, 'speak');
-        await this.httpService.put(restUrl, { speaker: speaker.id });
+        // await this.httpService.put(restUrl, { speaker: speaker.id });
+        throw new Error('TODO');
     }
 
     public async deleteAllSpeakersOfAllListsOfSpeakers(): Promise<void> {
-        await this.httpService.post('/rest/agenda/list-of-speakers/delete_all_speakers/');
+        // await this.httpService.post('/rest/agenda/list-of-speakers/delete_all_speakers/');
+        throw new Error('TODO');
     }
 
     public isFirstContribution(speaker: ViewSpeaker): boolean {
