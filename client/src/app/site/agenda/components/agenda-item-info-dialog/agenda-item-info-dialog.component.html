@@ -3,7 +3,7 @@
     <form class="item-dialog-form" [formGroup]="agendaInfoForm" (keydown)="onKeyDown($event)">
         <!-- Tag -->
         <mat-form-field *ngIf="isTagAvailable()">
-            <mat-select formControlName="tags_id" multiple placeholder="{{ 'Tags' | translate }}">
+            <mat-select formControlName="tag_ids" multiple placeholder="{{ 'Tags' | translate }}">
                 <mat-option *ngFor="let tag of tags" [value]="tag.id">
                     {{ tag.getTitle() | translate }}
                 </mat-option>

@@ -6,7 +6,7 @@ import { BaseViewModel } from 'app/site/base/base-view-model';
 import { DetailNavigable } from 'app/site/base/detail-navigable';
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
-import { ViewTag } from 'app/site/tags/models/view-tag';
+import { HasTags } from 'app/site/tags/models/view-tag';
 
 export interface HasAgendaItem extends DetailNavigable, HasAgendaItemId {
     agenda_item?: ViewAgendaItem;
@@ -75,7 +75,6 @@ interface IAgendaItemRelations {
     content_object?: BaseViewModel & HasAgendaItem;
     parent?: ViewAgendaItem;
     children: ViewAgendaItem[];
-    tags: ViewTag[];
     meeting?: ViewMeeting;
 }
-export interface ViewAgendaItem extends AgendaItem, IAgendaItemRelations {}
+export interface ViewAgendaItem extends AgendaItem, IAgendaItemRelations, HasTags {}

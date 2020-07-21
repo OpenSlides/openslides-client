@@ -3,16 +3,16 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { E2EImportsModule } from 'e2e-imports.module';
 
-import { ItemInfoDialogComponent } from './item-info-dialog.component';
+import { AgendaItemInfoDialogComponent } from './agenda-item-info-dialog.component';
 
-describe('ItemInfoDialogComponent', () => {
-    let component: ItemInfoDialogComponent;
-    let fixture: ComponentFixture<ItemInfoDialogComponent>;
+describe('AgendaItemInfoDialogComponent', () => {
+    let component: AgendaItemInfoDialogComponent;
+    let fixture: ComponentFixture<AgendaItemInfoDialogComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [E2EImportsModule],
-            declarations: [ItemInfoDialogComponent],
+            declarations: [AgendaItemInfoDialogComponent],
             providers: [
                 { provide: MatDialogRef, useValue: {} },
                 {
@@ -24,7 +24,7 @@ describe('ItemInfoDialogComponent', () => {
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(ItemInfoDialogComponent);
+        fixture = TestBed.createComponent(AgendaItemInfoDialogComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
