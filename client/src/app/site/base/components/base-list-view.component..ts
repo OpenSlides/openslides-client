@@ -1,3 +1,5 @@
+import { OnDestroy } from '@angular/core';
+
 import { PblColumnDefinition, PblDataSource } from '@pebula/ngrid';
 
 import { StorageService } from 'app/core/core-services/storage.service';
@@ -5,7 +7,8 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { BaseModelContextComponent } from './base-model-context.component';
 import { BaseViewModel } from '../base-view-model';
 
-export abstract class BaseListViewComponent<V extends BaseViewModel> extends BaseModelContextComponent {
+export abstract class BaseListViewComponent<V extends BaseViewModel> extends BaseModelContextComponent
+    implements OnDestroy {
     /**
      * The source of the table data, will be filled by an event emitter
      */
@@ -50,6 +53,10 @@ export abstract class BaseListViewComponent<V extends BaseViewModel> extends Bas
     public constructor(componentServiceCollector: ComponentServiceCollector) {
         super(componentServiceCollector);
         this.selectedRows = [];
+    }
+
+    public ngOnDestroy(): void {
+        super.ngOnDestroy();
     }
 
     /**

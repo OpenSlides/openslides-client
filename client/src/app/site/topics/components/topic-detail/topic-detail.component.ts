@@ -14,8 +14,6 @@ import { ItemVisibilityChoices } from 'app/shared/models/agenda/agenda-item';
 import { Topic } from 'app/shared/models/topics/topic';
 import { ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
-import { BaseComponent } from 'app/site/base/components/base.component';
-import { CreateTopic } from '../../models/create-topic';
 import { ViewTopic } from '../../models/view-topic';
 
 /**
@@ -169,7 +167,7 @@ export class TopicDetailComponent extends BaseModelContextComponent {
         } else {
             // load existing topic
             this.route.params.subscribe(params => {
-                this.loadTopic(params.id);
+                this.loadTopic(Number(params.id));
             });
         }
     }
@@ -185,6 +183,7 @@ export class TopicDetailComponent extends BaseModelContextComponent {
             ids: [id],
             follow: [SPEAKER_BUTTON_FOLLOW]
         });
+
         this.repo.getViewModelObservable(id).subscribe(newViewTopic => {
             // repo sometimes delivers undefined values
             // also ensures edition cannot be interrupted by autoupdate

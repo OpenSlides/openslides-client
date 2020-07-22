@@ -85,7 +85,7 @@ export class TagListComponent extends BaseListViewComponent<ViewTag> implements 
                     follow: [
                         {
                             idField: 'tagged_ids',
-                            fieldset: ['title'] // TODO
+                            fieldset: ['title', 'name'] // TODO
                         }
                     ]
                 }
