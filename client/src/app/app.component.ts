@@ -59,15 +59,8 @@ export class AppComponent {
      * Handles the altering of Array.toString()
      *
      * @param translate To set the default language
-     * @param operator To call the constructor of the OperatorService
-     * @param loginDataService to call the constructor of the LoginDataService
-     * @param constantService to call the constructor of the ConstantService
      * @param servertimeService executes the scheduler early on
      * @param themeService used to listen to theme-changes
-     * @param countUsersService to call the constructor of the CountUserService
-     * @param organisationSettingsService to call the constructor of the ConfigService
-     * @param loadFontService to call the constructor of the LoadFontService
-     * @param dataStoreUpgradeService
      */
     public constructor(
         translate: TranslateService,

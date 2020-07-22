@@ -1,27 +1,19 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { Subscription } from 'rxjs';
 
+import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { CanComponentDeactivate } from 'app/shared/utils/watch-for-changes.guard';
-import { BaseComponent } from 'app/site/base/components/base.component';
-
-/**
- * Key-value-pair to set a setting with its associated value.
- */
-export interface ConfigItem {
-    /**
-     * The key has to be a string.
-     */
-    key: string;
-
-    /**
-     * The value can be any.
-     */
-    value: any;
-}
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
+import { SettingsGroup } from '../../../../core/repositories/event-management/meeting-settings';
+import { SettingsFieldUpdate, MeetingSettingsFieldComponent } from '../meeting-settings-field/meeting-settings-field.component';
+import { MeetingRepositoryService } from 'app/core/repositories/event-management/meeting-repository.service';
 
 /**
  * List view for the global settings
@@ -32,10 +24,11 @@ export interface ConfigItem {
     styleUrls: ['./meeting-settings-list.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MeetingSettingsListComponent extends BaseComponent implements CanComponentDeactivate, OnInit, OnDestroy {
-    // public configGroup: ConfigGroup;
+export class MeetingSettingsListComponent extends BaseModelContextComponent
+    implements CanComponentDeactivate, OnInit, OnDestroy {
+    public settingsGroup: SettingsGroup;
 
-    public configGroupSubscription: Subscription | null = null;
+    public meeting: ViewMeeting;
 
     /**
      * Object containing all errors.
@@ -43,15 +36,21 @@ export class MeetingSettingsListComponent extends BaseComponent implements CanCo
     public errors = {};
 
     /**
-     * Array of all changed settings.
+     * Map of all changed settings.
      */
-    private configItems: ConfigItem[] = [];
+    private changedSettings: { [key: string]: any } = {};
+
+    /** Provides access to all created settings fields. */
+    @ViewChildren("settingsFields") settingsFields: QueryList<MeetingSettingsFieldComponent>;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private cd: ChangeDetectorRef,
         private route: ActivatedRoute,
-        private promptDialog: PromptService
+        private promptDialog: PromptService,
+        private meetingSettingsService: MeetingSettingsService,
+        private activeMeetingService: ActiveMeetingService,
+        private repo: MeetingRepositoryService
     ) {
         super(componentServiceCollector);
     }
@@ -61,33 +60,24 @@ export class MeetingSettingsListComponent extends BaseComponent implements CanCo
      */
     public ngOnInit(): void {
         const settings = this.translate.instant('Settings');
-        /*this.route.params.subscribe(params => {
-            this.clearSubscription();
-            this.configGroupSubscription = this.repo.getConfigGroupOberservable(params.group).subscribe(configGroup => {
-                if (configGroup) {
-                    const groupName = this.translate.instant(configGroup.name);
-                    super.setTitle(`${settings} - ${groupName}`);
-                    this.configGroup = configGroup;
-                    this.cd.markForCheck();
-                }
-            });
-        });*/
+        this.route.params.subscribe(params => {
+            if (params.group) {
+                this.settingsGroup = this.meetingSettingsService.getSettingsGroup(params.group);
+                const groupName = this.translate.instant(this.settingsGroup.label);
+                super.setTitle(`${settings} - ${groupName}`);
+                this.cd.markForCheck();
+            }
+        });
+        this.activeMeetingService.getMeetingObservable().subscribe(meeting => {
+            this.meeting = meeting;
+        });
     }
 
     /**
-     * Updates the specified config-item indicated by the given key.
-     *
-     * @param key The key of the config-item.
-     * @param value The next value the config-item has.
+     * Updates the specified settings item indicated by the given key.
      */
-    public updateConfigGroup(update: ConfigItem): void {
-        const { key, value }: ConfigItem = update;
-        const index = this.configItems.findIndex(item => item.key === key);
-        if (index === -1) {
-            this.configItems.push({ key, value });
-        } else {
-            this.configItems[index] = { key, value };
-        }
+    public updateSetting(update: SettingsFieldUpdate): void {
+        this.changedSettings[update.key] = update.value;
         this.cd.markForCheck();
     }
 
@@ -96,47 +86,35 @@ export class MeetingSettingsListComponent extends BaseComponent implements CanCo
      */
     public saveAll(): void {
         this.cd.detach();
-        /*this.repo.bulkUpdate(this.configItems).then(result => {
-            this.errors = result.errors;
-            if (Object.keys(result.errors).length === 0) {
-                this.configItems = [];
-                this.cd.reattach();
-                this.cd.markForCheck();
-            }
-        });*/
+        this.repo.update(this.changedSettings, this.meeting).then(result => {
+            this.changedSettings = {};
+            this.cd.reattach();
+            this.cd.markForCheck();
+        }, errors => {
+            this.errors = errors;
+        });
     }
 
     /**
      * This resets all values to their defaults.
      */
     public async resetAll(): Promise<void> {
-        /*const title = this.translate.instant(
-            'Are you sure you want to reset all options to factory defaults?
-            All changes of this settings group will be lost!'
+        const title = this.translate.instant(
+            'Are you sure you want to reset all options to factory defaults? All changes of this settings group will be lost!'
         );
         if (await this.promptDialog.open(title)) {
-            await this.repo.resetGroups([this.configGroup.name]);
-        }*/
-    }
-
-    /**
-     * Returns, if there are changes depending on the `configMap`.
-     *
-     * @returns True, if the array `configMap` has at least one member.
-     */
-    public hasChanges(): boolean {
-        return !!this.configItems.length;
-    }
-
-    private clearSubscription(): void {
-        if (this.configGroupSubscription) {
-            this.configGroupSubscription.unsubscribe();
-            this.configGroupSubscription = null;
+            for (let settingsField of this.settingsFields) {
+                settingsField.onResetButton();
+            }
         }
     }
 
-    public ngOnDestroy(): void {
-        this.clearSubscription();
+    /**
+     * Returns whether the user made any changes so far by checking the
+     * `changedSettings` object.
+     */
+    public hasChanges(): boolean {
+        return Object.keys(this.changedSettings).length > 0;
     }
 
     /**

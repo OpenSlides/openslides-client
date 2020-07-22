@@ -4,6 +4,7 @@ import { HttpService } from 'app/core/core-services/http.service';
 import { Projector } from 'app/shared/models/projector/projector';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { BaseRepository } from '../base-repository';
+import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 /**
@@ -21,7 +22,7 @@ export enum ScrollScaleDirection {
 @Injectable({
     providedIn: 'root'
 })
-export class ProjectorRepositoryService extends BaseRepository<ViewProjector, Projector> {
+export class ProjectorRepositoryService extends MeetingModelBaseRepository<ViewProjector, Projector> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector, private http: HttpService) {
         super(repositoryServiceCollector, Projector);
     }

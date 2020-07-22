@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { AssignmentVote } from 'app/shared/models/assignments/assignment-vote';
 import { ViewAssignmentVote } from 'app/site/assignments/models/view-assignment-vote';
 import { BaseRepository } from '../base-repository';
+import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 /**
@@ -13,7 +14,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class AssignmentVoteRepositoryService extends BaseRepository<ViewAssignmentVote, AssignmentVote> {
+export class AssignmentVoteRepositoryService extends MeetingModelBaseRepository<ViewAssignmentVote, AssignmentVote> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, AssignmentVote);
     }

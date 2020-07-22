@@ -4,12 +4,16 @@ import { ServertimeService } from 'app/core/core-services/servertime.service';
 import { ProjectorCountdown } from 'app/shared/models/projector/projector-countdown';
 import { ViewProjectorCountdown } from 'app/site/projector/models/view-projector-countdown';
 import { BaseRepository } from '../base-repository';
+import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 @Injectable({
     providedIn: 'root'
 })
-export class ProjectorCountdownRepositoryService extends BaseRepository<ViewProjectorCountdown, ProjectorCountdown> {
+export class ProjectorCountdownRepositoryService extends MeetingModelBaseRepository<
+    ViewProjectorCountdown,
+    ProjectorCountdown
+> {
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
         private servertimeService: ServertimeService
