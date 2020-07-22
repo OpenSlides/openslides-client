@@ -8,6 +8,7 @@ import { Permission } from 'app/core/core-services/operator.service';
 import { Group } from 'app/shared/models/users/group';
 import { ViewGroup } from 'app/site/users/models/view-group';
 import { BaseRepository } from '../base-repository';
+import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 /**
@@ -39,7 +40,7 @@ export interface AppPermissions {
 @Injectable({
     providedIn: 'root'
 })
-export class GroupRepositoryService extends BaseRepository<ViewGroup, Group> {
+export class GroupRepositoryService extends MeetingModelBaseRepository<ViewGroup, Group> {
     /**
      * holds sorted permissions per app.
      */

@@ -4,6 +4,7 @@ import { HasAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { BaseModel, ModelConstructor } from '../../shared/models/base/base-model';
 import { BaseRepository } from './base-repository';
+import { MeetingModelBaseRepository } from './meeting-model-base-repository';
 import { RepositoryServiceCollector } from './repository-service-collector';
 
 export function isBaseIsAgendaItemContentObjectRepository(
@@ -19,7 +20,7 @@ export function isBaseIsAgendaItemContentObjectRepository(
 export interface IBaseIsAgendaItemContentObjectRepository<
     V extends BaseViewModel & HasAgendaItem,
     M extends BaseModel & HasAgendaItemId
-> extends BaseRepository<V, M> {
+> extends MeetingModelBaseRepository<V, M> {
     getAgendaListTitle: (viewModel: V) => AgendaListTitle;
     getAgendaSlideTitle: (viewModel: V) => string;
 }
@@ -28,11 +29,9 @@ export interface IBaseIsAgendaItemContentObjectRepository<
  * The base repository for objects with an agenda item.
  */
 export abstract class BaseIsAgendaItemContentObjectRepository<
-        V extends BaseViewModel & HasAgendaItem,
-        M extends BaseModel & HasAgendaItemId
-    >
-    extends BaseRepository<V, M>
-    implements IBaseIsAgendaItemContentObjectRepository<V, M> {
+    V extends BaseViewModel & HasAgendaItem,
+    M extends BaseModel & HasAgendaItemId
+> extends MeetingModelBaseRepository<V, M> implements IBaseIsAgendaItemContentObjectRepository<V, M> {
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
         baseModelCtor: ModelConstructor<M>,

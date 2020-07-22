@@ -7,6 +7,7 @@ import { Identifiable } from 'app/shared/models/base/identifiable';
 import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { ViewSpeaker } from 'app/site/agenda/models/view-speaker';
 import { BaseRepository } from '../base-repository';
+import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 /**
@@ -28,7 +29,7 @@ export interface SpeakingTimeStructureLevelObject {
 @Injectable({
     providedIn: 'root'
 })
-export class ListOfSpeakersRepositoryService extends BaseRepository<ViewListOfSpeakers, ListOfSpeakers> {
+export class ListOfSpeakersRepositoryService extends MeetingModelBaseRepository<ViewListOfSpeakers, ListOfSpeakers> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, ListOfSpeakers);
     }

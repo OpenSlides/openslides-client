@@ -4,12 +4,13 @@ import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-reques
 import { Speaker } from 'app/shared/models/agenda/speaker';
 import { ViewSpeaker } from 'app/site/agenda/models/view-speaker';
 import { BaseRepository } from '../base-repository';
+import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 @Injectable({
     providedIn: 'root'
 })
-export class SpeakerRepositoryService extends BaseRepository<ViewSpeaker, Speaker> {
+export class SpeakerRepositoryService extends MeetingModelBaseRepository<ViewSpeaker, Speaker> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, Speaker);
 

@@ -33,7 +33,7 @@ export enum Permission {
     assignmentsCanNominateOther = 'assignments.can_nominate_other',
     assignmentsCanNominateSelf = 'assignments.can_nominate_self',
     assignmentsCanSee = 'assignments.can_see',
-    coreCanManageConfig = 'core.can_manage_config',
+    coreCanManageSettings = 'core.can_manage_settings',
     coreCanManageLogosAndFonts = 'core.can_manage_logos_and_fonts',
     coreCanSeeHistory = 'core.can_see_history',
     coreCanManageProjector = 'core.can_manage_projector',

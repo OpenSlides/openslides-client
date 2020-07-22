@@ -6,6 +6,7 @@ import { MotionCategory } from 'app/shared/models/motions/motion-category';
 import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
 import { BaseRepository } from '../base-repository';
 import { HttpService } from '../../core-services/http.service';
+import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 /**
@@ -21,7 +22,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class MotionCategoryRepositoryService extends BaseRepository<ViewMotionCategory, MotionCategory> {
+export class MotionCategoryRepositoryService extends MeetingModelBaseRepository<ViewMotionCategory, MotionCategory> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, MotionCategory);
 

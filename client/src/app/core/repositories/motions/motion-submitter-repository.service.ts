@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { MotionSubmitter } from 'app/shared/models/motions/motion-submitter';
 import { ViewMotionSubmitter } from 'app/site/motions/models/view-motion-submitter';
 import { BaseRepository } from '../base-repository';
+import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 @Injectable({
     providedIn: 'root'
 })
-export class MotionSubmitterRepositoryService extends BaseRepository<ViewMotionSubmitter, MotionSubmitter> {
+export class MotionSubmitterRepositoryService extends MeetingModelBaseRepository<ViewMotionSubmitter, MotionSubmitter> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, MotionSubmitter);
     }

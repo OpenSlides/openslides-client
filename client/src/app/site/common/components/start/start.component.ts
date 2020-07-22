@@ -114,6 +114,6 @@ export class StartComponent extends BaseComponent implements OnInit {
      * Returns, if the current user has the necessary permissions.
      */
     public canManage(): boolean {
-        return this.operator.hasPerms(Permission.coreCanManageConfig);
+        return this.operator.hasPerms(Permission.coreCanManageSettings);
     }
 }

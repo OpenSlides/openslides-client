@@ -67,13 +67,6 @@ export class PdfDocumentService {
 
     private pdfWorker: Worker;
 
-    /**
-     * Constructor
-     *
-     * @param translate translations
-     * @param organisationSettingsService read config values
-     * @param mediaManageService to read out font files as media data
-     */
     public constructor(
         private translate: TranslateService,
         private organisationSettingsService: OrganisationSettingsService,
