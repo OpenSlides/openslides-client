@@ -4,6 +4,7 @@ import { Identifiable } from 'app/shared/models/base/identifiable';
 import { PersonalNote } from 'app/shared/models/users/personal-note';
 import { ViewPersonalNote } from 'app/site/users/models/view-personal-note';
 import { BaseRepository } from '../base-repository';
+import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 /**
@@ -11,7 +12,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class PersonalNoteRepositoryService extends BaseRepository<ViewPersonalNote, PersonalNote> {
+export class PersonalNoteRepositoryService extends MeetingModelBaseRepository<ViewPersonalNote, PersonalNote> {
     /**
      * @param DS The DataStore
      * @param mapperService Maps collection strings to classes

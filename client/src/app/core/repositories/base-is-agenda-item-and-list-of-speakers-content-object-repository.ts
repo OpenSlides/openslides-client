@@ -14,6 +14,7 @@ import {
     isBaseIsListOfSpeakersContentObjectRepository
 } from './base-is-list-of-speakers-content-object-repository';
 import { BaseRepository } from './base-repository';
+import { MeetingModelBaseRepository } from './meeting-model-base-repository';
 import { RepositoryServiceCollector } from './repository-service-collector';
 
 export function isBaseIsAgendaItemAndListOfSpeakersContentObjectRepository(
@@ -31,7 +32,7 @@ export function isBaseIsAgendaItemAndListOfSpeakersContentObjectRepository(
 export abstract class BaseIsAgendaItemAndListOfSpeakersContentObjectRepository<
     V extends BaseViewModel & HasAgendaItem & HasListOfSpeakers,
     M extends BaseModel & HasAgendaItemId & HasListOfSpeakersId
-> extends BaseRepository<V, M>
+> extends MeetingModelBaseRepository<V, M>
     implements IBaseIsAgendaItemContentObjectRepository<V, M>, IBaseIsListOfSpeakersContentObjectRepository<V, M> {
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,

@@ -9,7 +9,9 @@ import { OrganisationSettingsService } from 'app/core/ui-services/organisation-s
 import { User } from 'app/shared/models/users/user';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { BaseRepository } from '../base-repository';
+import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { environment } from '../../../../environments/environment';
+import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 export interface MassImportResult {
@@ -52,7 +54,7 @@ const SHORT_NAME_FIELDS: (keyof User)[] = ['title', 'username', 'first_name', 'l
 @Injectable({
     providedIn: 'root'
 })
-export class UserRepositoryService extends BaseRepository<ViewUser, User> {
+export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewUser, User> {
     /**
      * The property the incoming data is sorted by
      */

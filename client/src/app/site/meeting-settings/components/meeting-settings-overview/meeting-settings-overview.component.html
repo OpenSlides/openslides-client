@@ -19,24 +19,13 @@
     >
         <ng-container class="block-node">
             <table>
-                <tbody>
-                    <tr>
-                        <td [ngSwitch]="group">
-                            <mat-icon *ngSwitchCase="'General'">home</mat-icon>
-                            <mat-icon *ngSwitchCase="'Agenda'">today</mat-icon>
-                            <mat-icon *ngSwitchCase="'Motions'">assignment</mat-icon>
-                            <mat-icon *ngSwitchCase="'Elections'">how_to_vote</mat-icon>
-                            <mat-icon *ngSwitchCase="'Participants'">groups</mat-icon>
-                            <mat-icon *ngSwitchCase="'Custom translations'">language</mat-icon>
-                        </td>
-                    </tr>
-                </tbody>
+                <tr><td><mat-icon>{{ group.icon }}</mat-icon></td></tr>
             </table>
         </ng-container>
         <ng-container class="block-content-node">
-            <a class="stretch-to-fill-parent" [routerLink]="group.toLowerCase()"></a>
+            <a class="stretch-to-fill-parent" [routerLink]="group.label.toLowerCase()"></a>
             <div class="link-wrapper">
-                {{ group | translate }}
+                {{ group.label | translate }}
             </div>
         </ng-container>
     </os-block-tile>

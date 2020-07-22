@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { AssignmentCandidate } from 'app/shared/models/assignments/assignment-candidate';
 import { ViewAssignmentCandidate } from 'app/site/assignments/models/view-assignment-candidate';
 import { BaseRepository } from '../base-repository';
+import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 /**
@@ -13,7 +14,10 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class AssignmentCandidateRepositoryService extends BaseRepository<ViewAssignmentCandidate, AssignmentCandidate> {
+export class AssignmentCandidateRepositoryService extends MeetingModelBaseRepository<
+    ViewAssignmentCandidate,
+    AssignmentCandidate
+> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, AssignmentCandidate);
     }

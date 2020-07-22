@@ -9,6 +9,7 @@ import { CommonAppConfig } from 'app/site/common/common.config';
 import { EventManagementAppConfig } from 'app/site/event-management/event-management.config';
 import { HistoryAppConfig } from 'app/site/history/history.config';
 import { MediafileAppConfig } from 'app/site/mediafiles/mediafile.config';
+import { SettingsAppConfig } from 'app/site/meeting-settings/meeting-settings.config';
 import { MotionsAppConfig } from 'app/site/motions/motions.config';
 import { ProjectorAppConfig } from 'app/site/projector/projector.config';
 import { TagAppConfig } from 'app/site/tags/tag.config';
@@ -35,7 +36,8 @@ const appConfigs: AppConfig[] = [
     UsersAppConfig,
     HistoryAppConfig,
     ProjectorAppConfig,
-    TopicsAppConfig
+    TopicsAppConfig,
+    SettingsAppConfig
 ];
 
 /**

@@ -9,6 +9,7 @@ import { Identifiable } from 'app/shared/models/base/identifiable';
 import { HasAgendaItem, ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { BaseRepository } from '../base-repository';
+import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 export interface AgendaListTitle {
@@ -24,7 +25,7 @@ export interface AgendaListTitle {
 @Injectable({
     providedIn: 'root'
 })
-export class AgendaItemRepositoryService extends BaseRepository<ViewAgendaItem, AgendaItem> {
+export class AgendaItemRepositoryService extends MeetingModelBaseRepository<ViewAgendaItem, AgendaItem> {
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
         private config: OrganisationSettingsService

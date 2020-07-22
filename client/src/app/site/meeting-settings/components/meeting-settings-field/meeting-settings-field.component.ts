@@ -18,9 +18,16 @@ import { distinctUntilChanged, filter } from 'rxjs/operators';
 
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { ParentErrorStateMatcher } from 'app/shared/parent-error-state-matcher';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewGroup } from 'app/site/users/models/view-group';
+import { SettingsItem } from '../../../../core/repositories/event-management/meeting-settings';
+
+export interface SettingsFieldUpdate {
+    key: string;
+    value: any;
+}
 
 /**
  * Component for a config field, used by the {@link ConfigListComponent}. Handles
@@ -39,8 +46,6 @@ import { ViewGroup } from 'app/site/users/models/view-group';
     encapsulation: ViewEncapsulation.None // to style the date and time pickers
 })
 export class MeetingSettingsFieldComponent extends BaseComponent implements OnInit, OnDestroy {
-    public configItem: any; // TODO
-
     /**
      * Option to show a green check-icon.
      */
@@ -57,31 +62,16 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
     public translatedValue: object;
 
     /**
-     * The config item for this component. Just accepts components with already
-     * populated constants-info.
+     * The settings item for this component.
      */
     @Input()
-    public set config(value: any) {
-        // TODO: any
-        if (value) {
-            this.configItem = value;
+    public setting: SettingsItem;
 
-            if (this.form) {
-                if (this.configItem.inputType === 'datetimepicker') {
-                    // datetime has to be converted
-                    const datetimeObj = this.unixToDateAndTime(this.configItem.value as number);
-                    this.form.patchValue(datetimeObj, { emitEvent: false });
-                } else {
-                    this.form.patchValue(
-                        {
-                            value: this.configItem.value
-                        },
-                        { emitEvent: false }
-                    );
-                }
-            }
-        }
-    }
+    /**
+     * The current value of this component's setting.
+     */
+    @Input()
+    public value: any;
 
     /**
      * Passes the list of errors as object.
@@ -92,7 +82,7 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
      */
     @Input()
     public set errorList(errorList: { [key: string]: any }) {
-        const hasError = Object.keys(errorList).find(errorKey => errorKey === this.configItem.key);
+        const hasError = Object.keys(errorList).find(errorKey => errorKey === this.setting.key);
         if (hasError) {
             this.error = errorList[hasError];
             this.updateError(true);
@@ -113,7 +103,7 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
     public matcher = new ParentErrorStateMatcher();
 
     @Output()
-    public update = new EventEmitter<any>(); // TODO
+    public update = new EventEmitter<SettingsFieldUpdate>();
 
     /** used by the groups config type */
     public groupObservable: Observable<ViewGroup[]> = null;
@@ -131,13 +121,14 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
         componentServiceCollector: ComponentServiceCollector,
         private formBuilder: FormBuilder,
         private cd: ChangeDetectorRef,
-        private groupRepo: GroupRepositoryService
+        private groupRepo: GroupRepositoryService,
+        private meetingSettingsService: MeetingSettingsService
     ) {
         super(componentServiceCollector);
     }
 
     /**
-     * Sets up the form for this config field.
+     * Sets up the form for this settings field.
      */
     public ngOnInit(): void {
         // filter out empty results in group observable. We never have no groups and it messes up
@@ -147,22 +138,18 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
             .pipe(filter(groups => !!groups.length));
 
         this.form = this.formBuilder.group({
-            value: [''],
+            value: ['', this.setting.validators ?? []],
             date: [''],
             time: ['']
         });
-        this.translatedValue = this.configItem.value;
-        if (
-            this.configItem.inputType === 'string' ||
-            this.configItem.inputType === 'markupText' ||
-            this.configItem.inputType === 'text'
-        ) {
-            if (typeof this.configItem.value === 'string' && this.configItem.value !== '') {
-                this.translatedValue = this.translate.instant(this.configItem.value);
+        this.translatedValue = this.value ?? this.meetingSettingsService.getDefaultValue(this.setting.key);
+        if (this.setting.type === 'string' || this.setting.type === 'markupText' || this.setting.type === 'text') {
+            if (typeof this.value === 'string' && this.value !== '') {
+                this.translatedValue = this.translate.instant(this.value);
             }
         }
-        if (this.configItem.inputType === 'datetimepicker' && this.configItem.value) {
-            const datetimeObj = this.unixToDateAndTime(this.configItem.value as number);
+        if (this.setting.type === 'datetime' && this.value) {
+            const datetimeObj = this.unixToDateAndTime(this.value as number);
             this.form.patchValue(datetimeObj);
         }
         this.form.patchValue({
@@ -223,20 +210,20 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
      * Trigger an update of the data
      */
     private onChange(value: any): void {
-        if (this.configItem.inputType === 'markupText') {
+        if (this.setting.type === 'markupText') {
             // tinyMCE markuptext does not autoupdate on change, only when entering or leaving
             return;
         }
-        if (this.configItem.inputType === 'datetimepicker') {
+        if (this.setting.type === 'datetime') {
             // datetime has to be converted
             const date = this.form.get('date').value;
             const time = this.form.get('time').value;
             value = this.dateAndTimeToUnix(date, time);
         }
-        if (this.configItem.inputType === 'groups') {
+        if (this.setting.type === 'groups') {
             // we have to check here explicitly if nothing changed because of the search value selector
             const newS = new Set(value);
-            const oldS = new Set(this.configItem.value);
+            const oldS = new Set(this.value);
             if (newS.equals(oldS)) {
                 return;
             }
@@ -246,12 +233,10 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
     }
 
     /**
-     * Triggers a reset to the default value (if a default value is present)
+     * Triggers a reset to the default value
      */
     public onResetButton(): void {
-        if (this.configItem.defaultValue !== undefined) {
-            this.onChange(this.configItem.defaultValue);
-        }
+        this.form.controls.value.setValue(this.meetingSettingsService.getDefaultValue(this.setting));
     }
 
     /**
@@ -259,7 +244,7 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
      * @param value The new value to set.
      */
     private sendUpdate(value: any): void {
-        this.update.emit({ key: this.configItem.key, value });
+        this.update.emit({ key: this.setting.key, value: value });
     }
 
     /**
@@ -322,5 +307,12 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
                 });
             }
         };
+    }
+
+    /**
+     * compare function used with the KeyValuePipe to display the percent bases in original order
+     */
+    public keepEntryOrder(): number {
+        return 0;
     }
 }
