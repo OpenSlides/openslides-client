@@ -48,7 +48,7 @@ const routes: Route[] = [
                 path: 'settings',
                 loadChildren: () =>
                     import('./meeting-settings/meeting-settings.module').then(m => m.MeetingSettingsModule),
-                data: { basePerm: Permission.coreCanManageConfig }
+                data: { basePerm: Permission.coreCanManageSettings }
             },
             {
                 path: 'users',

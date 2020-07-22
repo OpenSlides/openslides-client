@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { MotionState } from 'app/shared/models/motions/motion-state';
 import { ViewMotionState } from 'app/site/motions/models/view-motion-state';
 import { BaseRepository } from '../base-repository';
+import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 /**
@@ -18,7 +19,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class MotionStateRepositoryService extends BaseRepository<ViewMotionState, MotionState> {
+export class MotionStateRepositoryService extends MeetingModelBaseRepository<ViewMotionState, MotionState> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, MotionState);
     }

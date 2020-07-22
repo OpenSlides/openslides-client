@@ -17,6 +17,7 @@ import { OnAfterAppsLoaded } from '../definitions/on-after-apps-loaded';
 import { RelationManagerService } from '../core-services/relation-manager.service';
 import { Relation } from '../definitions/relations';
 import { RepositoryServiceCollector } from './repository-service-collector';
+import { RepositoryServiceCollectorWithoutActiveMeetingService } from './repository-service-collector-without-active-meeting-service';
 import { ViewModelStoreService } from '../core-services/view-model-store.service';
 
 export abstract class BaseRepository<V extends BaseViewModel, M extends BaseModel>
@@ -120,21 +121,8 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         return this.repositoryServiceCollector.relationManager;
     }
 
-    protected get activeMeetingService(): ActiveMeetingService {
-        return this.repositoryServiceCollector.activeMeetingService;
-    }
-
-    /**
-     * Construction routine for the base repository
-     *
-     * @param repositoryServiceCollector A collector service with all needed services.
-     * @param baseModelCtor The model constructor of which this repository is about.
-     * @param depsModelCtors A list of constructors that are used in the view model.
-     * If one of those changes, the view models will be updated.
-     * @param nestedModelDescriptors A descriptor (none per default) to specify nested models.
-     */
     public constructor(
-        private repositoryServiceCollector: RepositoryServiceCollector,
+        private repositoryServiceCollector: RepositoryServiceCollectorWithoutActiveMeetingService,
         protected baseModelCtor: ModelConstructor<M>
     ) {
         this._collection = baseModelCtor.COLLECTION;
@@ -282,12 +270,8 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      * @param model the model to create on the server
      */
     public async create(model: M): Promise<Identifiable> {
-        const data = {
-            meeting_id: this.activeMeetingService.getMeetingId(),
-            ...model
-        };
         const actionType = `${this.collection}.create` as ActionType;
-        return await this.actions.sendRequest(actionType, data);
+        return await this.actions.sendRequest(actionType, model);
     }
 
     /**
