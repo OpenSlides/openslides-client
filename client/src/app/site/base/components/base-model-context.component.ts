@@ -1,29 +1,19 @@
 import { Directive, OnDestroy, OnInit } from '@angular/core';
 
-import { AutoupdateService, ModelSubscription } from 'app/core/core-services/autoupdate.service';
-import {
-    ModelRequestBuilderService,
-    SimplifiedModelRequest
-} from 'app/core/core-services/model-request-builder.service';
+import { ModelSubscription } from 'app/core/core-services/autoupdate.service';
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
+import { ModelRequestService } from 'app/core/core-services/model-request.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from './base.component';
 
 /**
- * Provides functionalities that will be used by most components
- * currently able to set the title with the suffix ' - OpenSlides'
- *
- * A BaseComponent is an OpenSlides Component.
- * Components in the 'Side'- or 'projector' Folder are BaseComponents
+ * Components which call specific model updates
  */
 @Directive()
 export abstract class BaseModelContextComponent extends BaseComponent implements OnInit, OnDestroy {
-    protected modelSubscription: ModelSubscription | null = null;
+    protected localModelSub: ModelSubscription | null = null;
 
-    protected get autoupdateService(): AutoupdateService {
-        return this.componentServiceCollector.autoupdateService;
-    }
-
-    public constructor(componentServiceCollector: ComponentServiceCollector) {
+    public constructor(protected componentServiceCollector: ComponentServiceCollector) {
         super(componentServiceCollector);
     }
 
@@ -35,19 +25,21 @@ export abstract class BaseModelContextComponent extends BaseComponent implements
     }
 
     protected async requestModels(simplifiedModelRequest: SimplifiedModelRequest): Promise<void> {
-        this.closeModelSubscription();
-        this.modelSubscription = await this.autoupdateService.simpleRequest(simplifiedModelRequest);
+        this.cleanCurrentModelSub();
+        this.localModelSub = await this.componentServiceCollector.modelRequestService.requestModels(
+            simplifiedModelRequest
+        );
     }
 
     public ngOnDestroy(): void {
         super.ngOnDestroy();
-        this.closeModelSubscription();
+        this.cleanCurrentModelSub();
     }
 
-    private closeModelSubscription(): void {
-        if (this.modelSubscription) {
-            this.modelSubscription.close();
-            this.modelSubscription = null;
+    private cleanCurrentModelSub(): void {
+        if (this.localModelSub) {
+            this.localModelSub.close();
+            this.localModelSub = null;
         }
     }
 
