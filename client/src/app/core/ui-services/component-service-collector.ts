@@ -4,8 +4,7 @@ import { Title } from '@angular/platform-browser';
 
 import { TranslateService } from '@ngx-translate/core';
 
-import { AutoupdateService } from '../core-services/autoupdate.service';
-import { ModelRequestBuilderService } from '../core-services/model-request-builder.service';
+import { ModelRequestService } from '../core-services/model-request.service';
 import { StorageService } from '../core-services/storage.service';
 
 @Injectable({
@@ -16,7 +15,7 @@ export class ComponentServiceCollector {
         public titleService: Title,
         public translate: TranslateService,
         public matSnackBar: MatSnackBar,
-        public autoupdateService: AutoupdateService,
-        public storage: StorageService
+        public storage: StorageService,
+        public modelRequestService: ModelRequestService
     ) {}
 }
