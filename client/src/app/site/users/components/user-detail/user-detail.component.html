@@ -301,9 +301,9 @@
         </div>
 
         <!-- Groups -->
-        <div *ngIf="user.groups && user.groups.length > 0">
+        <div *ngIf="usersGroups && usersGroups.length > 0">
             <h4>{{ 'Groups' | translate }}</h4>
-            <span *ngFor="let group of user.groups; let last = last">
+            <span *ngFor="let group of usersGroups; let last = last">
                 {{ group.getTitle() | translate }}<span *ngIf="!last">,&nbsp;</span>
             </span>
         </div>
