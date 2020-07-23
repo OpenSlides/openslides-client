@@ -16,8 +16,6 @@ type FollowList = (string | Follow)[];
 export interface SimplifiedModelRequest extends BaseSimplifiedModelRequest {
     viewModelCtor: ViewModelConstructor<BaseViewModel>;
     ids: Id[];
-    fieldset?: Fieldset;
-    follow?: FollowList;
 }
 
 interface ISpecificStructuredField {
@@ -36,6 +34,7 @@ export interface Follow extends BaseSimplifiedModelRequest {
 interface BaseSimplifiedModelRequest {
     follow?: FollowList;
     fieldset?: Fieldset;
+    additionalFields?: (Field | ISpecificStructuredField)[];
 }
 
 export interface Fieldsets<M extends BaseModel> {
@@ -82,7 +81,7 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
 
     private addFields(collection: Collection, fields: Fields, request: BaseSimplifiedModelRequest): void {
         // Add datafields
-        for (const field of this.calculateDataFields(collection, request.fieldset)) {
+        for (const field of this.calculateDataFields(collection, request.fieldset, request.additionalFields)) {
             fields[field] = null;
         }
 
@@ -92,8 +91,8 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
         }
     }
 
-    private calculateDataFields(collection: Collection, fieldset?: Fieldset): Field[] {
-        let fields;
+    private calculateDataFields(collection: Collection, fieldset?: Fieldset, additionalFields?: (Field | ISpecificStructuredField)[]): Field[] {
+        let fields: Field[];
         if (!fieldset) {
             fieldset = DEFAULT_FIELDSET;
         }
@@ -102,11 +101,28 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
             if (!registeredFieldsets || !registeredFieldsets[fieldset]) {
                 throw new Error(`Unregistered fieldset ${fieldset} for collection ${collection}`);
             }
-            fields = registeredFieldsets[fieldset];
+            fields = registeredFieldsets[fieldset] as Field[];
         } else {
             fields = fieldset;
         }
+
+        if (additionalFields) {
+            fields = fields.concat(additionalFields.map(f => this.ensureField(f)));
+        }
+
         return fields;
+    }
+
+    /**
+     * Takes a field specification (a plain field of a specific structured field) and converts
+     * the latter to a plain field.
+     */
+    private ensureField(field: Field | ISpecificStructuredField): Field {
+        if (typeof field === 'string') {
+            return field;
+        } else {
+            return field.templateIdField.replace('$', field.templateValue);
+        }
     }
 
     private addFollowedRelations(collection: Collection, followList: FollowList, fields: Fields): void {
@@ -126,7 +142,7 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
 
     private getFollowedRelation(collection: Collection, follow: Follow, fields: Fields): void {
         let effectiveIdField: Field; // the id field of the model. For specific structured fields
-        // it is the strucutred field, not template field, e.g. group_1_ids instead of group_$_ids.
+        // it is the structured field, not template field, e.g. group_1_ids instead of group_$_ids.
         let queryIdField: Field; // The field to query the relation for. For specific structured relations
         // it is the template field.
         if (typeof follow.idField === 'string') {

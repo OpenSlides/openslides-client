@@ -5,6 +5,7 @@ import { ViewTag } from 'app/site/tags/models/view-tag';
 import { BaseRepository } from '../base-repository';
 import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
+import { Fieldsets, DEFAULT_FIELDSET } from 'app/core/core-services/model-request-builder.service';
 
 /**
  * Repository Services for Tags
@@ -23,6 +24,12 @@ export class TagRepositoryService extends MeetingModelBaseRepository<ViewTag, Ta
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, Tag);
         this.initSorting();
+    }
+
+    public getFieldsets(): Fieldsets<Tag> {
+        return {
+            [DEFAULT_FIELDSET]: ['name']
+        };
     }
 
     public getTitle = (viewTag: ViewTag) => {
