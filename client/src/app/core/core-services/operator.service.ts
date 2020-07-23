@@ -315,7 +315,6 @@ export class OperatorService implements OnAfterAppsLoaded {
             follow: [
                 {
                     idField: SpecificStructuredField('group_$_ids', '1'), // TODO: active meeting id
-                    follow: [],
                     fieldset: ['permissions']
                 }
             ]

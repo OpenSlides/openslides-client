@@ -5,7 +5,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
 
-import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
+import { SimplifiedModelRequest, DEFAULT_FIELDSET } from 'app/core/core-services/model-request-builder.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
@@ -81,13 +81,7 @@ export class TagListComponent extends BaseListViewComponent<ViewTag> implements 
             ids: [1], // TODO
             follow: [
                 {
-                    idField: 'tag_ids',
-                    follow: [
-                        {
-                            idField: 'tagged_ids',
-                            fieldset: ['title', 'name'] // TODO
-                        }
-                    ]
+                    idField: 'tag_ids'
                 }
             ],
             fieldset: []
