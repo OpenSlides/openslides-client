@@ -6,7 +6,6 @@ import { filter, take } from 'rxjs/operators';
 
 import { CountUsersService } from './core/ui-services/count-users.service';
 import { DataStoreUpgradeService } from './core/core-services/data-store-upgrade.service';
-import { ExampleDataService } from './core/core-services/example-data.service';
 import { LoadFontService } from './core/ui-services/load-font.service';
 import { LoginDataService } from './core/ui-services/login-data.service';
 import { OperatorService } from './core/core-services/operator.service';
@@ -77,7 +76,6 @@ export class AppComponent {
         dataStoreUpgradeService: DataStoreUpgradeService, // to start it.
         pingService: PingService,
         routingState: RoutingStateService,
-        exampleDataService: ExampleDataService,
         votingBannerService: VotingBannerService // needed for initialisation
     ) {
         // manually add the supported languages

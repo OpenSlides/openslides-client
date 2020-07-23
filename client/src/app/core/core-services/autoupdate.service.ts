@@ -5,15 +5,13 @@ import { BaseModel } from '../../shared/models/base/base-model';
 import { CollectionMapperService } from './collection-mapper.service';
 import { CommunicationManagerService, OfflineError } from './communication-manager.service';
 import { DataStoreService, DataStoreUpdateManagerService } from './data-store.service';
-import { ExampleDataService } from './example-data.service';
 import { HTTPMethod } from '../definitions/http-methods';
 import { ModelRequestBuilderService, SimplifiedModelRequest } from './model-request-builder.service';
 import { Mutex } from '../promises/mutex';
-import { StreamingCommunicationService } from './streaming-communication.service';
 
 const META_DELETED = 'meta_deleted';
 
-export type FieldDescriptor = GenericRelationFieldDecriptor | RelationFieldDescriptor | StructuredFieldDecriptor;
+export type FieldDescriptor = RelationFieldDescriptor | GenericRelationFieldDecriptor | StructuredFieldDecriptor;
 
 export interface Fields {
     [field: string]: FieldDescriptor | null;
@@ -28,18 +26,18 @@ export interface ModelRequest extends HasFields {
     collection: string;
 }
 
-interface GenericRelationFieldDecriptor extends HasFields {
+export interface GenericRelationFieldDecriptor extends HasFields {
     type: 'generic-relation-list' | 'generic-relation';
 }
 
-interface RelationFieldDescriptor extends HasFields {
+export interface RelationFieldDescriptor extends HasFields {
     type: 'relation-list' | 'relation';
     collection: string;
 }
 
-interface StructuredFieldDecriptor {
+export interface StructuredFieldDecriptor {
     type: 'template';
-    values?: Fields;
+    values?: FieldDescriptor;
 }
 
 export interface ModelSubscription {
@@ -75,14 +73,10 @@ export class AutoupdateService {
         private DS: DataStoreService,
         private modelMapper: CollectionMapperService,
         private DSUpdateManager: DataStoreUpdateManagerService,
-        private exampleDataService: ExampleDataService,
         private modelRequestBuilder: ModelRequestBuilderService,
         private communicationManager: CommunicationManagerService
     ) {
         this.communicationManager.startCommunicationEvent.subscribe(() => this.startAllAutoupdates());
-
-        // console.warn('TODO: Enable Autoupdate service');
-        // this.setupMock();
     }
 
     public async startAllAutoupdates(): Promise<void> {
@@ -106,8 +100,6 @@ export class AutoupdateService {
     }
 
     public async request(request: ModelRequest): Promise<ModelSubscription> {
-        // this._request(request);
-
         const id = Math.floor(Math.random() * (900000 - 1) + 100000); // [100000, 999999]
         this.activeRequests[id] = {
             request,
@@ -144,28 +136,12 @@ export class AutoupdateService {
         };
     }
 
-    // START MOCKED SERVICE
-    private async setupMock(): Promise<void> {
-        await this.exampleDataService.loaded;
-        // this.handleAutoupdate(this.exampleDataService.getAllModelData())
-        // this.handleAutoupdate(this.exampleDataService.getModelData('user/1'));
-    }
-
-    private async _request(request: ModelRequest): Promise<void> {
-        await this.exampleDataService.loaded;
-        console.log('Autoupdate request', request);
-        await this.handleAutoupdate(this.exampleDataService.getForRequest(request));
-    }
-
-    // END MOCKED SERVICE
-
     private async handleAutoupdateWithStupidFormat(autoupdateData: AutoupdateModelData): Promise<void> {
         const modelData = autoupdateFormatToModelData(autoupdateData);
         await this.handleAutoupdate(modelData);
     }
 
-    // Todo: change this to private. needed for testing to insert example data
-    public async handleAutoupdate(modelData: ModelData): Promise<void> {
+    private async handleAutoupdate(modelData: ModelData): Promise<void> {
         console.log('handle autoupdate', modelData);
         const unlock = await this.mutex.lock();
 
