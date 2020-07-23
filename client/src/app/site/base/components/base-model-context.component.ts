@@ -8,6 +8,9 @@ import { BaseComponent } from './base.component';
 
 /**
  * Components which call specific model updates
+ *
+ * Uses ngOnInit to send the model request so make sure it is called if
+ * the method is overwritten!
  */
 export abstract class BaseModelContextComponent extends BaseComponent implements OnInit, OnDestroy {
     protected localModelSub: ModelSubscription | null = null;
@@ -18,6 +21,7 @@ export abstract class BaseModelContextComponent extends BaseComponent implements
 
     public ngOnInit(): void {
         const simplifiedModelRequest = this.getModelRequest();
+        console.log(simplifiedModelRequest);
         if (simplifiedModelRequest) {
             this.requestModels(simplifiedModelRequest);
         }

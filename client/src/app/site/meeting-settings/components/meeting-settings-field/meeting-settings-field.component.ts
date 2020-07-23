@@ -9,13 +9,15 @@ import {
     Output,
     ViewEncapsulation
 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import * as moment from 'moment';
 import { Moment } from 'moment';
 import { Observable } from 'rxjs';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
 
+import { CollectionMapperService } from 'app/core/core-services/collection-mapper.service';
+import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/motion-workflow-repository.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
@@ -74,28 +76,14 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
     public value: any;
 
     /**
-     * Passes the list of errors as object.
-     *
-     * The function looks, if the key of this config-item is contained in the list.
-     *
-     * @param errorList The object containing all errors.
-     */
-    @Input()
-    public set errorList(errorList: { [key: string]: any }) {
-        const hasError = Object.keys(errorList).find(errorKey => errorKey === this.setting.key);
-        if (hasError) {
-            this.error = errorList[hasError];
-            this.updateError(true);
-        } else {
-            this.error = null;
-            this.updateError(null);
-        }
-    }
-
-    /**
      * The form for this configItem.
      */
     public form: FormGroup;
+
+    /** Accessor to get the validity of this field. */
+    public get valid(): boolean {
+        return this.form?.valid;
+    }
 
     /**
      * The matcher for custom (request) errors.
@@ -122,7 +110,8 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
         private formBuilder: FormBuilder,
         private cd: ChangeDetectorRef,
         private groupRepo: GroupRepositoryService,
-        private meetingSettingsService: MeetingSettingsService
+        public meetingSettingsService: MeetingSettingsService,
+        private mapper: CollectionMapperService
     ) {
         super(componentServiceCollector);
     }
@@ -137,12 +126,28 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
             .getViewModelListObservableWithoutDefaultGroup()
             .pipe(filter(groups => !!groups.length));
 
+        if (this.setting.choicesFunc) {
+            const def = this.setting.choicesFunc;
+            const repo = this.mapper.getRepository(def.collection);
+            if (!repo) {
+                throw new Error(`Repository for collection "${def.collection}" not found.`);
+            }
+            this.subscriptions.push(
+                repo.getViewModelListObservable().subscribe(models => {
+                    this.setting.choices = models.mapToObject(model => ({
+                        [model[def.labelKey]]: model[def.idKey]
+                    }));
+                    this.cd.markForCheck();
+                })
+            );
+        }
+
         this.form = this.formBuilder.group({
             value: ['', this.setting.validators ?? []],
             date: [''],
             time: ['']
         });
-        this.translatedValue = this.value ?? this.meetingSettingsService.getDefaultValue(this.setting.key);
+        this.translatedValue = this.value ?? this.meetingSettingsService.getDefaultValue(this.setting);
         if (this.setting.type === 'string' || this.setting.type === 'markupText' || this.setting.type === 'text') {
             if (typeof this.value === 'string' && this.value !== '') {
                 this.translatedValue = this.translate.instant(this.value);
@@ -210,23 +215,28 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
      * Trigger an update of the data
      */
     private onChange(value: any): void {
-        if (this.setting.type === 'markupText') {
-            // tinyMCE markuptext does not autoupdate on change, only when entering or leaving
-            return;
-        }
-        if (this.setting.type === 'datetime') {
-            // datetime has to be converted
-            const date = this.form.get('date').value;
-            const time = this.form.get('time').value;
-            value = this.dateAndTimeToUnix(date, time);
-        }
-        if (this.setting.type === 'groups') {
-            // we have to check here explicitly if nothing changed because of the search value selector
-            const newS = new Set(value);
-            const oldS = new Set(this.value);
-            if (newS.equals(oldS)) {
+        switch (this.setting.type) {
+            case 'markupText':
+                // tinyMCE markuptext does not autoupdate on change, only when entering or leaving
                 return;
-            }
+            case 'datetime':
+                // datetime has to be converted
+                const date = this.form.get('date').value;
+                const time = this.form.get('time').value;
+                value = this.dateAndTimeToUnix(date, time);
+                break;
+            case 'groups':
+                // we have to check here explicitly if nothing changed because of the search value selector
+                const newS = new Set(value);
+                const oldS = new Set(this.value);
+                if (newS.equals(oldS)) {
+                    return;
+                }
+                break;
+            case 'integer':
+                // convert to an actual integer
+                value = +value;
+                break;
         }
         this.sendUpdate(value);
         this.cd.detectChanges();
@@ -245,18 +255,6 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
      */
     private sendUpdate(value: any): void {
         this.update.emit({ key: this.setting.key, value: value });
-    }
-
-    /**
-     * Function to update the form-control to display or hide an error.
-     *
-     * @param error `true | false`, if an error should be shown. `null`, if there is no error.
-     */
-    private updateError(error: boolean | null): void {
-        if (this.form) {
-            this.form.setErrors(error ? { error } : null);
-            this.cd.detectChanges();
-        }
     }
 
     /**
@@ -286,7 +284,7 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
      * @returns wheather it should be excluded or not
      */
     public isExcludedType(type: string): boolean {
-        const excluded = ['boolean', 'markupText', 'text', 'translations', 'datetimepicker'];
+        const excluded = ['boolean', 'markupText', 'text', 'translations', 'datetime'];
         return excluded.includes(type);
     }
 

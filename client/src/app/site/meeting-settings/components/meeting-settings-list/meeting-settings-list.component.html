@@ -10,7 +10,7 @@
     <div class="menu-slot">
         <button
             mat-button
-            [disabled]="!hasChanges()"
+            [disabled]="!hasChanges() || hasErrors()"
             (click)="saveAll()"
             matTooltip="{{ 'Save all changes' | translate }}"
         >
@@ -32,7 +32,6 @@
                     (update)="updateSetting($event)"
                     [setting]="setting"
                     [value]="meeting && meeting[setting.key]"
-                    [errorList]="errors"
                 ></os-meeting-settings-field>
             </ng-container>
         </ng-container>
