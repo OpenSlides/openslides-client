@@ -16,6 +16,7 @@ import { PollService } from 'app/site/polls/services/poll.service';
 import { UserPdfExportService } from '../../services/user-pdf-export.service';
 import { ViewGroup } from '../../models/view-group';
 import { ViewUser } from '../../models/view-user';
+import { SpecificStructuredField } from 'app/core/core-services/model-request-builder.service';
 
 interface UserBackends {
     [name: string]: {
@@ -146,16 +147,9 @@ export class UserDetailComponent extends BaseModelContextComponent {
             viewModelCtor: ViewUser,
             ids: [userId],
             follow: [
-                // FIXME: not sure how to get the users groups
-                // {
-                //     idField: 'group_$_ids',
-                //     follow: [
-                //         {
-                //             idField: 'groups',
-                //             fieldset: 'name'
-                //         }
-                //     ]
-                // }
+                {
+                    idField: SpecificStructuredField('group_$_ids', '1'), // TODO: active meeting id
+                }
             ]
         });
 
