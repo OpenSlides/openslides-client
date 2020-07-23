@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { BaseModel } from 'app/shared/models/base/base-model';
 import { BaseViewModel, ViewModelConstructor } from 'app/site/base/base-view-model';
-import { FieldDescriptor, Fields, ModelRequest } from './autoupdate.service';
+import { FieldDescriptor, Fields, ModelRequest, StructuredFieldDecriptor, GenericRelationFieldDecriptor, RelationFieldDescriptor } from './autoupdate.service';
 import { CollectionMapperService } from './collection-mapper.service';
 import { Deferred } from '../promises/deferred';
 import { Collection, Field, Id } from '../definitions/key-types';
@@ -29,6 +29,16 @@ export function SpecificStructuredField(templateIdField: string, templateValue: 
 
 export interface Follow extends BaseSimplifiedModelRequest {
     idField: string | ISpecificStructuredField;
+
+    /**
+     * Note for structured fields:
+     * this value can be set to true, to just retrieve all values of all structured fields
+     * and do not follow (potential) relations.
+     * The default is false, so relations are followed. There will be an error, if the
+     * structured field has no associated relation and `onlyValues` is not explicitly
+     * set to true.
+     */
+    onlyValues?: boolean;
 }
 
 interface BaseSimplifiedModelRequest {
@@ -130,8 +140,7 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
             let follow: Follow;
             if (typeof entry === 'string') {
                 follow = {
-                    idField: entry,
-                    follow: []
+                    idField: entry
                 };
             } else {
                 follow = entry;
@@ -162,25 +171,52 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
 
         let descriptor: FieldDescriptor;
         if (!relation.generic && (!relation.structured || isSpecificStructuredField)) {
-            const foreignCollection = relation.foreignViewModel.COLLECTION;
-            descriptor = {
-                type: relation.many ? 'relation-list' : 'relation',
-                collection: foreignCollection,
-                fields: {}
-            };
-            this.addFields(foreignCollection, descriptor.fields, follow);
+            descriptor = this.getRelationFieldDescriptor(relation, follow);
         } else if (relation.generic) {
-            descriptor = {
-                type: relation.many ? 'generic-relation-list' : 'generic-relation',
-                fields: {}
-            };
-            this.addGenericRelation(relation.foreignViewModelPossibilities, descriptor.fields, follow);
+            descriptor = this.getGenericRelationFieldDescriptor(relation, follow);
         } else {
-            throw new Error('TODO');
+            descriptor = this.getStructuredFieldDescriptor(relation, follow);
         }
 
         fields[effectiveIdField] = descriptor;
     }
+
+    private getRelationFieldDescriptor(relation: Relation, follow: Follow): RelationFieldDescriptor {
+        const foreignCollection = relation.foreignViewModel.COLLECTION;
+        const descriptor: RelationFieldDescriptor = {
+            type: relation.many ? 'relation-list' : 'relation',
+            collection: foreignCollection,
+            fields: {}
+        };
+        this.addFields(foreignCollection, descriptor.fields, follow);
+        return descriptor;
+    }
+
+    private getGenericRelationFieldDescriptor(relation: Relation, follow: Follow): GenericRelationFieldDecriptor {
+        const descriptor: GenericRelationFieldDecriptor = {
+            type: relation.many ? 'generic-relation-list' : 'generic-relation',
+            fields: {}
+        };
+        this.addGenericRelation(relation.foreignViewModelPossibilities, descriptor.fields, follow);
+        return descriptor;
+    }
+
+    private getStructuredFieldDescriptor(relation: Relation, follow: Follow): StructuredFieldDecriptor {
+        const descriptor: StructuredFieldDecriptor = {
+            type: "template"
+        }
+
+        if (!follow.onlyValues) {
+            if (relation.generic) {
+                descriptor.values = this.getGenericRelationFieldDescriptor(relation, follow);
+            } else {
+                descriptor.values = this.getRelationFieldDescriptor(relation, follow);
+            }
+        }
+
+        return descriptor;
+    }
+
 
     private addGenericRelation(
         possibleViewModels: ViewModelConstructor<BaseViewModel>[],

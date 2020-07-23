@@ -10,6 +10,9 @@ import { UserRepositoryService } from 'app/core/repositories/users/user-reposito
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { ModelRequestBuilderService } from 'app/core/core-services/model-request-builder.service';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
+import { AutoupdateService } from 'app/core/core-services/autoupdate.service';
 
 /**
  * Interface describes the keys for the fields at start-component.
