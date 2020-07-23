@@ -10,6 +10,9 @@ import { UserRepositoryService } from 'app/core/repositories/users/user-reposito
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { ModelRequestBuilderService } from 'app/core/core-services/model-request-builder.service';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
+import { AutoupdateService } from 'app/core/core-services/autoupdate.service';
 
 /**
  * Interface describes the keys for the fields at start-component.
@@ -64,7 +67,9 @@ export class StartComponent extends BaseComponent implements OnInit {
         private motionRepo: MotionRepositoryService,
         private stateRepo: MotionStateRepositoryService,
         private userRepo: UserRepositoryService,
-        private actions: ActionService
+        private actions: ActionService,
+        private modelRequestBuilder: ModelRequestBuilderService,
+        private autoupdateService: AutoupdateService
     ) {
         super(componentServiceCollector);
         this.startForm = this.formBuilder.group({
@@ -74,8 +79,20 @@ export class StartComponent extends BaseComponent implements OnInit {
     }
 
     public async t(): Promise<void> {
-        const r = await this.actions.sendRequest(ActionType.TOPIC_CREATE, [{ meeting_id: 1, title: 'Test' }]);
-        console.log(r);
+        const a = await this.modelRequestBuilder.build({
+            viewModelCtor: ViewMeeting,
+            ids: [1],
+            follow: [
+                {
+                    idField: 'logo_$',
+                    fieldset: ['path', 'mimetype'],
+                    onlyValues: true
+                }
+            ],
+            fieldset: []
+        })
+        console.log(a);
+        this.autoupdateService.request(a);
     }
 
     /**
