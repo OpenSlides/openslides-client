@@ -10,6 +10,7 @@ import { ViewGroup } from 'app/site/users/models/view-group';
 import { BaseRepository } from '../base-repository';
 import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
+import { Fieldsets, DEFAULT_FIELDSET } from 'app/core/core-services/model-request-builder.service';
 
 /**
  * Shape of a permission
@@ -49,6 +50,12 @@ export class GroupRepositoryService extends MeetingModelBaseRepository<ViewGroup
     public constructor(repositoryServiceCollector: RepositoryServiceCollector, private http: HttpService) {
         super(repositoryServiceCollector, Group);
         this.sortPermsPerApp();
+    }
+
+    public getFieldsets(): Fieldsets<Group> {
+        return {
+            [DEFAULT_FIELDSET]: ['name']
+        };
     }
 
     public getTitle = (viewGroup: ViewGroup) => {

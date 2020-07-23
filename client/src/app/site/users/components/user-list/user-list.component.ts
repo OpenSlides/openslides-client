@@ -24,6 +24,8 @@ import { UserPdfExportService } from '../../services/user-pdf-export.service';
 import { UserSortListService } from '../../services/user-sort-list.service';
 import { ViewGroup } from '../../models/view-group';
 import { ViewUser } from '../../models/view-user';
+import { SimplifiedModelRequest, SpecificStructuredField } from 'app/core/core-services/model-request-builder.service';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 
 /**
  * Interface for the short editing dialog.
@@ -218,6 +220,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
      * to filter/sort services
      */
     public ngOnInit(): void {
+        super.ngOnInit();
         super.setTitle('Participants');
 
         // Initialize the groups
@@ -228,6 +231,32 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
                 .getViewModelListObservable()
                 .subscribe(groups => (this.groups = groups.filter(group => group.id !== 1)))
         );
+    }
+
+    protected getModelRequest(): SimplifiedModelRequest {
+        // Note: There is no direct relation between metting<->user.
+        // A user is a member of a meeting, if he is in at least one group.
+        // So we have to take the way from meeting->group->user to get all
+        // users belonging to this meeting.
+        // there is no `fieldset: []` for groups since we do need groups to be
+        // displayed, but an extra additionalField to retrieve group ids for each
+        // user to link them.
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [1], // TODO
+            follow: [
+                {
+                    idField: 'group_ids',
+                    follow: [
+                        {
+                            idField: 'user_ids',
+                            additionalFields: [SpecificStructuredField('group_$_ids', '1')] // TODO: Active meeting id.
+                        }
+                    ]
+                }
+            ],
+            fieldset: []
+        };
     }
 
     /**
