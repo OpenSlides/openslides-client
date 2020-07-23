@@ -11,7 +11,7 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { genders } from 'app/shared/models/users/user';
 import { OneOfValidator } from 'app/shared/validators/one-of-validator';
-import { BaseComponent } from 'app/site/base/components/base.component';
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { PollService } from 'app/site/polls/services/poll.service';
 import { UserPdfExportService } from '../../services/user-pdf-export.service';
 import { ViewGroup } from '../../models/view-group';
@@ -31,7 +31,7 @@ interface UserBackends {
     templateUrl: './user-detail.component.html',
     styleUrls: ['./user-detail.component.scss']
 })
-export class UserDetailComponent extends BaseComponent implements OnInit {
+export class UserDetailComponent extends BaseModelContextComponent {
     /**
      * Info form object
      */
@@ -61,6 +61,10 @@ export class UserDetailComponent extends BaseComponent implements OnInit {
      * ViewUser model
      */
     public user: ViewUser;
+
+    public get usersGroups(): ViewGroup[] {
+        return this.user.groups();
+    }
 
     /**
      * Contains all groups, except for the default group.
@@ -108,10 +112,11 @@ export class UserDetailComponent extends BaseComponent implements OnInit {
         private pollService: PollService
     ) {
         super(componentServiceCollector);
+        this.getUserByUrl();
         this.createForm();
 
         // TODO
-        console.warn('TODO: get user backends from the server. Does user backends even exists in OS4?');
+        // console.warn('TODO: get user backends from the server. Does user backends even exists in OS4?');
         // this.constantsService.get<UserBackends>('UserBackends')
         //      .subscribe(backends => (this.userBackends = backends));
 
@@ -124,35 +129,48 @@ export class UserDetailComponent extends BaseComponent implements OnInit {
         this.groupRepo.getViewModelListObservableWithoutDefaultGroup().subscribe(this.groups);
     }
 
-    /**
-     * Init function.
-     */
-    public ngOnInit(): void {
+    private getUserByUrl(): void {
         if (this.route.snapshot.url[0] && this.route.snapshot.url[0].path === 'new') {
             super.setTitle('New participant');
             this.newUser = true;
             this.setEditMode(true);
         } else {
             this.route.params.subscribe(params => {
-                this.subscriptions.push(
-                    this.repo.getViewModelObservable(+params.id).subscribe(user => {
-                        // ensures edition cannot be interrupted by autoupdate
-                        if (user && !this.editUser) {
-                            const title = user.getTitle();
-                            super.setTitle(title);
-                            this.user = user;
-                        }
-                    })
-                );
-
-                // observe operator to find out if we see our own page or not
-                this.subscriptions.push(
-                    this.operator.operatorUpdatedEvent.subscribe(() => {
-                        this.ownPage = this.operator.operatorId === +params.id;
-                    })
-                );
+                this.loadUserById(Number(params.id));
             });
         }
+    }
+
+    private loadUserById(userId: number): void {
+        this.requestModels({
+            viewModelCtor: ViewUser,
+            ids: [userId],
+            follow: [
+                // FIXME: not sure how to get the users groups
+                // {
+                //     idField: 'group_$_ids',
+                //     follow: [
+                //         {
+                //             idField: 'groups',
+                //             fieldset: 'name'
+                //         }
+                //     ]
+                // }
+            ]
+        });
+
+        this.subscriptions.push(
+            this.repo.getViewModelObservable(userId).subscribe(user => {
+                if (user && !this.editUser) {
+                    const title = user.getTitle();
+                    super.setTitle(title);
+                    this.user = user;
+                }
+            }),
+            this.operator.operatorUpdatedEvent.subscribe(() => {
+                this.ownPage = this.operator.operatorId === userId;
+            })
+        );
     }
 
     /**
