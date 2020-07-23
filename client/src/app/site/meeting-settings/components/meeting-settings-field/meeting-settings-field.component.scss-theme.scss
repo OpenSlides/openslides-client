@@ -1,11 +1,11 @@
 @import '~@angular/material/theming';
 
-@mixin os-config-field-style($theme) {
+@mixin os-settings-field-style($theme) {
     $foreground: map-get($theme, foreground);
 
     $is-dark-theme: map-get($theme, is-dark);
 
-    .config-field-wrapper {
+    .settings-field-wrapper {
         .mat-form-field {
             .mat-form-field-flex {
                 border-bottom: 1px solid mat-color($foreground, divider, if($is-dark-theme, 0.7, 0.42));

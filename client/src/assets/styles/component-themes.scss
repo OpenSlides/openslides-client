@@ -60,7 +60,7 @@ $narrow-spacing: (
     @include os-super-search-style($theme);
     @include os-rounded-input-style($theme);
     @include os-meta-text-block-style($theme);
-    @include os-config-field-style($theme);
+    @include os-settings-field-style($theme);
     @include os-amendment-create-wizard-style($theme);
     @include os-motion-detail-diff-style($theme);
     @include os-banner-style($theme);

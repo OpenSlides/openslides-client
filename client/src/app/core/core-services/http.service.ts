@@ -152,6 +152,8 @@ export class HttpService {
                 });
                 error = errorList.join(', ');
             }
+        } else if (typeof e.error === 'string') {
+            error += e.error;
         } else if (e.status === 500) {
             error += this.translate.instant('A server error occured. Please contact your system administrator.');
         } else if (e.status > 500) {

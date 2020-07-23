@@ -26,9 +26,11 @@
 
                 <ng-template #select ngProjectAs="mat-select">
                     <mat-select formControlName="value" [errorStateMatcher]="matcher">
-                        <mat-option *ngFor="let choice of setting.choices | keyvalue: keepEntryOrder" [value]="choice.key">
-                            {{ choice.value | translate }}
-                        </mat-option>
+                        <ng-container *ngIf="setting.choices">
+                            <mat-option *ngFor="let choice of setting.choices | keyvalue: keepEntryOrder" [value]="choice.value">
+                                {{ choice.key | translate }}
+                            </mat-option>
+                        </ng-container>
                     </mat-select>
                 </ng-template>
 

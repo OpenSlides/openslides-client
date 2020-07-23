@@ -43,11 +43,6 @@ export class MeetingSettingsListComponent
     public meeting: ViewMeeting;
 
     /**
-     * Object containing all errors.
-     */
-    public errors = {};
-
-    /**
      * Map of all changed settings.
      */
     private changedSettings: { [key: string]: any } = {};
@@ -71,6 +66,7 @@ export class MeetingSettingsListComponent
      * Sets the title, inits the table and calls the repo
      */
     public ngOnInit(): void {
+        super.ngOnInit();
         const settings = this.translate.instant('Settings');
         this.route.params.subscribe(params => {
             if (params.group) {
@@ -104,8 +100,10 @@ export class MeetingSettingsListComponent
                 this.cd.reattach();
                 this.cd.markForCheck();
             },
-            errors => {
-                this.errors = errors;
+            error => {
+                this.matSnackBar.open(error, this.translate.instant('Ok'), {
+                    duration: 0
+                });
             }
         );
     }
@@ -132,6 +130,10 @@ export class MeetingSettingsListComponent
         return Object.keys(this.changedSettings).length > 0;
     }
 
+    public hasErrors(): boolean {
+        return this.settingsFields?.some(field => !field.valid);
+    }
+
     /**
      * Lifecycle-hook to hook into, before the route changes.
      *
@@ -144,5 +146,22 @@ export class MeetingSettingsListComponent
             return await this.promptDialog.open(title, content);
         }
         return true;
+    }
+
+    protected getModelRequest(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [1], // TODO
+            follow: [
+                {
+                    idField: 'group_ids',
+                    fieldset: 'name'
+                },
+                {
+                    idField: 'motion_workflow_ids',
+                    fieldset: 'name'
+                }
+            ]
+        };
     }
 }

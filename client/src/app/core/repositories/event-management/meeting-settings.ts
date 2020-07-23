@@ -1,9 +1,13 @@
 import { ValidatorFn, Validators } from '@angular/forms';
 
+import { Observable } from 'rxjs';
 import dedent from 'ts-dedent';
 
 import { AssignmentPollMethod } from 'app/shared/models/assignments/assignment-poll';
+import { MotionWorkflow } from 'app/shared/models/motions/motion-workflow';
 import { MajorityMethod, PercentBase, PollType } from 'app/shared/models/poll/base-poll';
+import { AssignmentPollMethodVerbose } from 'app/site/assignments/models/view-assignment-poll';
+import { MajorityMethodVerbose, PercentBaseVerbose, PollTypeVerbose } from 'app/site/polls/models/base-view-poll';
 
 export type SettingsType =
     | 'string'
@@ -16,14 +20,29 @@ export type SettingsType =
     | 'translations'
     | 'groups';
 
+export interface ChoicesMap {
+    [name: string]: string | number;
+}
+
+/**
+ * Need for settings that depend on models. The collection is resolved via the
+ * CollectionMapperService and the keys are read from each model to build a
+ * ChoicesMap (see MeetingSettingsField).
+ */
+export interface ChoicesFunctionDefinition {
+    collection: string;
+    idKey: string;
+    labelKey: string;
+}
+
 export interface SettingsItem {
     key: string;
     label: string;
     type?: SettingsType; // default: text
-    choices?: {
-        // mandatory for type=choice; maps value <-> label
-        [value: string]: string;
-    };
+    choices?: ChoicesMap;
+    // mandatory for type=choice; maps label <-> value
+    choicesFunc?: ChoicesFunctionDefinition;
+    // alternative to `choices`; overwrites `choices` if both are given
     default?: any;
     // If no default is given, it is set according to the type:
     // string/[markup]text: ""
@@ -43,6 +62,13 @@ export interface SettingsGroup {
         label: string;
         settings: SettingsItem[];
     }[];
+}
+
+function switchKeyValue(object: { [key: string]: string }): { [key: string]: string } {
+    return Object.entries(object).reduce((res, [key, value]) => {
+        res[value] = key;
+        return res;
+    }, {});
 }
 
 export const meetingSettings: SettingsGroup[] = [
@@ -136,8 +162,8 @@ export const meetingSettings: SettingsGroup[] = [
                         default: 'utf-8',
                         type: 'choice',
                         choices: {
-                            'utf-8': 'UTF-8',
-                            'iso-8859-15': 'ISO-8859-15'
+                            'UTF-8': 'utf-8',
+                            'ISO-8859-15': 'iso-8859-15'
                         }
                     },
                     {
@@ -146,20 +172,20 @@ export const meetingSettings: SettingsGroup[] = [
                         default: 'center',
                         type: 'choice',
                         choices: {
-                            left: 'Left',
-                            center: 'Center',
-                            right: 'Right'
+                            Left: 'left',
+                            Center: 'center',
+                            Right: 'right'
                         }
                     },
                     {
                         key: 'export_pdf_fontsize',
                         label: 'Standard font size in PDF',
-                        default: '10',
+                        default: 10,
                         type: 'choice',
                         choices: {
-                            10: '10',
-                            11: '11',
-                            12: '12'
+                            10: 10,
+                            11: 11,
+                            12: 12
                         }
                     },
                     {
@@ -168,8 +194,8 @@ export const meetingSettings: SettingsGroup[] = [
                         default: 'A4',
                         type: 'choice',
                         choices: {
-                            A4: 'DIN A4',
-                            A5: 'DIN A5'
+                            'DIN A4': 'A4',
+                            'DIN A5': 'A5'
                         }
                     }
                 ]
@@ -223,8 +249,8 @@ export const meetingSettings: SettingsGroup[] = [
                         default: 'arabic',
                         type: 'choice',
                         choices: {
-                            arabic: 'Arabic',
-                            roman: 'Roman'
+                            Arabic: 'arabic',
+                            Roman: 'roman'
                         }
                     }
                 ]
@@ -238,21 +264,21 @@ export const meetingSettings: SettingsGroup[] = [
                         default: 'default_yes',
                         type: 'choice',
                         choices: {
-                            always: 'Always',
-                            never: 'Never',
-                            default_yes: 'Ask, default yes',
-                            default_no: 'Ask, default no'
+                            Always: 'always',
+                            Never: 'never',
+                            'Ask, default yes': 'default_yes',
+                            'Ask, default no': 'default_no'
                         }
                     },
                     {
                         key: 'agenda_new_items_default_visibility',
                         label: 'Default visibility for new agenda items (except topics)',
-                        default: '2',
+                        default: 2,
                         type: 'choice',
                         choices: {
-                            1: 'Public item',
-                            2: 'Internal item',
-                            3: 'Hidden item'
+                            'Public item': 1,
+                            'Internal item': 2,
+                            'Hidden item': 3
                         }
                     },
                     {
@@ -331,14 +357,22 @@ export const meetingSettings: SettingsGroup[] = [
                         label: 'Workflow of new motions',
                         default: 1,
                         type: 'choice',
-                        choices: { 1: 'default' } // TODO: fetch workflows from server
+                        choicesFunc: {
+                            collection: MotionWorkflow.COLLECTION,
+                            idKey: 'id',
+                            labelKey: 'name'
+                        }
                     },
                     {
                         key: 'motions_default_statute_amendments_workflow_id',
                         label: 'Workflow of new statute amendments',
                         default: 1,
                         type: 'choice',
-                        choices: { 1: 'default' } // TODO: fetch workflows from server
+                        choicesFunc: {
+                            collection: MotionWorkflow.COLLECTION,
+                            idKey: 'id',
+                            labelKey: 'name'
+                        }
                     },
                     {
                         key: 'motions_preamble',
@@ -353,7 +387,7 @@ export const meetingSettings: SettingsGroup[] = [
                         choices: {
                             outside: 'outside',
                             inline: 'inline',
-                            none: 'Disabled'
+                            Disabled: 'none'
                         }
                     },
                     {
@@ -422,10 +456,10 @@ export const meetingSettings: SettingsGroup[] = [
                         default: 'diff',
                         type: 'choice',
                         choices: {
-                            original: 'Original version',
-                            changed: 'Changed version',
-                            diff: 'Diff version',
-                            agreed: 'Final version'
+                            'Original version': 'original',
+                            'Changed version': 'changed',
+                            'Diff version': 'diff',
+                            'Final version': 'agreed'
                         }
                     },
                     {
@@ -434,8 +468,8 @@ export const meetingSettings: SettingsGroup[] = [
                         default: 'identifier',
                         type: 'choice',
                         choices: {
-                            weight: 'Call list',
-                            identifier: 'Identifier'
+                            'Call list': 'weight',
+                            Identifier: 'identifier'
                         }
                     }
                 ]
@@ -449,9 +483,9 @@ export const meetingSettings: SettingsGroup[] = [
                         default: 'per_category',
                         type: 'choice',
                         choices: {
-                            per_category: 'Numbered per category',
-                            serially_numbered: 'Serially numbered',
-                            manually: 'Set it manually'
+                            'Numbered per category': 'per_category',
+                            'Serially numbered': 'serially_numbered',
+                            'Set it manually': 'manually'
                         }
                     },
                     {
@@ -505,9 +539,9 @@ export const meetingSettings: SettingsGroup[] = [
                         default: 'paragraph',
                         type: 'choice',
                         choices: {
-                            freestyle: 'Empty text field',
-                            fulltext: 'Edit the whole motion text',
-                            paragraph: 'Paragraph-based, Diff-enabled'
+                            'Empty text field': 'freestyle',
+                            'Edit the whole motion text': 'fulltext',
+                            'Paragraph-based, Diff-enabled': 'paragraph'
                         }
                     },
                     {
@@ -542,20 +576,20 @@ export const meetingSettings: SettingsGroup[] = [
                         key: 'motion_poll_default_type',
                         label: 'Default voting type',
                         type: 'choice',
-                        choices: PollType
+                        choices: switchKeyValue(PollTypeVerbose)
                     },
                     {
                         key: 'motion_poll_default_100_percent_base',
                         label: 'Default 100 % base of a voting result',
                         default: PercentBase.YNA,
                         type: 'choice',
-                        choices: PercentBase
+                        choices: switchKeyValue(PercentBaseVerbose)
                     },
                     {
                         key: 'motion_poll_default_majority_method',
                         label: 'Required majority',
                         type: 'choice',
-                        choices: MajorityMethod,
+                        choices: switchKeyValue(MajorityMethodVerbose),
                         helpText: 'Default method to check whether a motion has reached the required majority.'
                     },
                     {
@@ -570,9 +604,9 @@ export const meetingSettings: SettingsGroup[] = [
                         default: 'CUSTOM_NUMBER',
                         type: 'choice',
                         choices: {
-                            NUMBER_OF_DELEGATES: 'Number of all delegates',
-                            NUMBER_OF_ALL_PARTICIPANTS: 'Number of all participants',
-                            CUSTOM_NUMBER: 'Use the following custom number'
+                            'Number of all delegates': 'NUMBER_OF_DELEGATES',
+                            'Number of all participants': 'NUMBER_OF_ALL_PARTICIPANTS',
+                            'Use the following custom number': 'CUSTOM_NUMBER'
                         }
                     },
                     {
@@ -622,26 +656,26 @@ export const meetingSettings: SettingsGroup[] = [
                         label: 'Default election method',
                         default: AssignmentPollMethod.Y,
                         type: 'choice',
-                        choices: AssignmentPollMethod
+                        choices: switchKeyValue(AssignmentPollMethodVerbose)
                     },
                     {
                         key: 'assignment_poll_default_type',
                         label: 'Default voting type',
                         type: 'choice',
-                        choices: PollType
+                        choices: switchKeyValue(PollTypeVerbose)
                     },
                     {
                         key: 'assignment_poll_default_100_percent_base',
                         label: 'Default 100 % base of an election result',
                         default: PercentBase.Valid,
                         type: 'choice',
-                        choices: PercentBase
+                        choices: switchKeyValue(PercentBaseVerbose)
                     },
                     {
                         key: 'assignment_poll_default_majority_method',
                         label: 'Required majority',
                         type: 'choice',
-                        choices: MajorityMethod,
+                        choices: switchKeyValue(MajorityMethodVerbose),
                         helpText: 'Default method to check whether a candidate has reached the required majority.'
                     },
                     {
@@ -672,9 +706,9 @@ export const meetingSettings: SettingsGroup[] = [
                         default: 'CUSTOM_NUMBER',
                         type: 'choice',
                         choices: {
-                            NUMBER_OF_DELEGATES: 'Number of all delegates',
-                            NUMBER_OF_ALL_PARTICIPANTS: 'Number of all participants',
-                            CUSTOM_NUMBER: 'Use the following custom number'
+                            'Number of all delegates': 'NUMBER_OF_DELEGATES',
+                            'Number of all participants': 'NUMBER_OF_ALL_PARTICIPANTS',
+                            'Use the following custom number': 'CUSTOM_NUMBER'
                         }
                     },
                     {
@@ -690,7 +724,7 @@ export const meetingSettings: SettingsGroup[] = [
                 label: 'PDF export',
                 settings: [
                     {
-                        key: 'assignemnts_export_title',
+                        key: 'assignments_export_title',
                         label: 'Title for PDF document (all elections)',
                         default: 'Elections'
                     },
@@ -715,9 +749,9 @@ export const meetingSettings: SettingsGroup[] = [
                         default: 'first_name',
                         type: 'choice',
                         choices: {
-                            first_name: 'Given name',
-                            last_name: 'Surname',
-                            number: 'Participant number'
+                            'Given name': 'first_name',
+                            Surname: 'last_name',
+                            'Participant number': 'number'
                         }
                     },
                     {
@@ -773,10 +807,10 @@ export const meetingSettings: SettingsGroup[] = [
                         type: 'choice',
                         helpText: 'Used for WLAN QRCode in PDF of access data.',
                         choices: {
-                            '': '---------',
+                            '---------': '',
                             WEP: 'WEP',
-                            WPA: 'WPA/WPA2',
-                            nopass: 'No encryption'
+                            'WPA/WPA2': 'WPA',
+                            'No encryption': 'nopass'
                         }
                     }
                 ]

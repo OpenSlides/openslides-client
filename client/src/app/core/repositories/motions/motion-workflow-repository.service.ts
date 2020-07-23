@@ -26,13 +26,6 @@ export class MotionWorkflowRepositoryService extends MeetingModelBaseRepository<
         super(repositoryServiceCollector, MotionWorkflow);
     }
 
-    public getFieldsets(): Fieldsets<MotionWorkflow> {
-        const detailFields: (keyof MotionWorkflow)[] = ['name'];
-        return {
-            [DEFAULT_FIELDSET]: detailFields
-        };
-    }
-
     public getTitle = (viewMotionWorkflow: ViewMotionWorkflow) => {
         return viewMotionWorkflow.name;
     };
@@ -57,5 +50,15 @@ export class MotionWorkflowRepositoryService extends MeetingModelBaseRepository<
             states = states.concat(workflow.states);
         });
         return states;
+    }
+
+    public getFieldsets(): Fieldsets<MotionWorkflow> {
+        const nameFields: (keyof MotionWorkflow)[] = ['name'];
+        const listFields: (keyof MotionWorkflow)[] = nameFields;
+        return {
+            [DEFAULT_FIELDSET]: listFields,
+            name: nameFields,
+            list: listFields
+        };
     }
 }
