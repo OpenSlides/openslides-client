@@ -14,7 +14,7 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { Assignment } from 'app/shared/models/assignments/assignment';
 import { ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
-import { BaseComponent } from 'app/site/base/components/base.component';
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { PermissionsService } from 'app/site/motions/services/permissions.service';
 import { ViewTag } from 'app/site/tags/models/view-tag';
@@ -25,6 +25,7 @@ import { AssignmentPollService } from '../../modules/assignment-poll/services/as
 import { AssignmentPhases, ViewAssignment } from '../../models/view-assignment';
 import { ViewAssignmentCandidate } from '../../models/view-assignment-candidate';
 import { ViewAssignmentPoll } from '../../models/view-assignment-poll';
+import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
 
 /**
  * Component for the assignment detail view
@@ -34,7 +35,7 @@ import { ViewAssignmentPoll } from '../../models/view-assignment-poll';
     templateUrl: './assignment-detail.component.html',
     styleUrls: ['./assignment-detail.component.scss']
 })
-export class AssignmentDetailComponent extends BaseComponent implements OnInit {
+export class AssignmentDetailComponent extends BaseModelContextComponent implements OnInit {
     /**
      * Determines if the assignment is new
      */
@@ -110,6 +111,10 @@ export class AssignmentDetailComponent extends BaseComponent implements OnInit {
      * Current instance of ViewAssignment. Accessed via getter and setter.
      */
     private _assignment: ViewAssignment;
+
+    public get candidates(): ViewUser[] {
+        return this.assignment.candidatesAsUsers;
+    }
 
     /**
      * Check if the operator is a candidate
@@ -200,13 +205,13 @@ export class AssignmentDetailComponent extends BaseComponent implements OnInit {
         this.candidatesForm = formBuilder.group({
             userId: null
         });
+        this.getAssignmentByUrl();
     }
 
     /**
      * Init data
      */
     public ngOnInit(): void {
-        this.getAssignmentByUrl();
         this.agendaObserver = this.itemRepo.getViewModelListBehaviorSubject();
         this.tagsObserver = this.tagRepo.getViewModelListBehaviorSubject();
         this.mediafilesObserver = this.mediafileRepo.getViewModelListBehaviorSubject();
@@ -360,39 +365,67 @@ export class AssignmentDetailComponent extends BaseComponent implements OnInit {
      * Determine the assignment to display using the URL
      */
     public getAssignmentByUrl(): void {
-        const params = this.route.snapshot.params;
-        if (params && params.id) {
-            // existing assignment
-            const assignmentId: number = +params.id;
-            // the following subscriptions need to be cleared when the route changes
-            this.subscriptions.push(
-                this.repo.getViewModelObservable(assignmentId).subscribe(assignment => {
-                    if (assignment) {
-                        const title = assignment.getTitle();
-                        super.setTitle(title);
-                        this.assignment = assignment;
-                        if (!this.editAssignment) {
-                            this.patchForm(this.assignment);
-                        }
-                    }
-                })
-            );
-            this.subscriptions.push(
-                this.candidatesForm.valueChanges.subscribe(formResult => {
-                    // resetting a form triggers a form.next(null) - check if data is present
-                    if (formResult && formResult.userId) {
-                        this.addUser(formResult.userId);
-                        this.candidatesForm.setValue({ userId: null });
-                    }
-                })
-            );
-        } else {
+        if (this.route.snapshot.url[0] && this.route.snapshot.url[0].path === 'new') {
             super.setTitle('New election');
             this.newAssignment = true;
             this.editAssignment = true;
-            // TODO set defaults?
             this.assignment = new ViewAssignment(new Assignment());
+        } else {
+            this.subscriptions.push(
+                this.route.params.subscribe(params => {
+                    this.loadAssignmentById(Number(params.id));
+                })
+            );
         }
+    }
+
+    private loadAssignmentById(assignmentId: number): void {
+        this.requestModels({
+            viewModelCtor: ViewAssignment,
+            ids: [assignmentId],
+            follow: [
+                {
+                    idField: 'candidate_ids',
+                    follow: [
+                        {
+                            idField: 'user_id',
+                            fieldset: 'shortName'
+                        }
+                    ]
+                },
+                // // requires more adjustment and integration of the poll repo
+                // {
+                //     idField: 'poll_ids',
+                //     follow: [
+                //         {
+                //             idField: 'id',
+                //             fieldset: 'title'
+                //         }
+                //     ]
+                // },
+                SPEAKER_BUTTON_FOLLOW
+            ]
+        });
+
+        this.subscriptions.push(
+            this.repo.getViewModelObservable(assignmentId).subscribe(assignment => {
+                if (assignment) {
+                    const title = assignment.getTitle();
+                    super.setTitle(title);
+                    this.assignment = assignment;
+                    if (!this.editAssignment) {
+                        this.patchForm(this.assignment);
+                    }
+                }
+            }),
+            this.candidatesForm.valueChanges.subscribe(formResult => {
+                // resetting a form triggers a form.next(null) - check if data is present
+                if (formResult && formResult.userId) {
+                    this.addUser(formResult.userId);
+                    this.candidatesForm.setValue({ userId: null });
+                }
+            })
+        );
     }
 
     /**
@@ -473,14 +506,14 @@ export class AssignmentDetailComponent extends BaseComponent implements OnInit {
      * (triggered on an autoupdate of either users or the assignment)
      */
     private filterCandidates(): void {
-        if (!this.assignment || !this.assignment.candidatesAsUsers.length) {
-            this.filteredCandidates.next(this.availableCandidates.getValue());
-        } else {
+        if (this.assignment?.candidatesAsUsers?.length) {
             this.filteredCandidates.next(
                 this.availableCandidates
                     .getValue()
                     .filter(u => !this.assignment.candidatesAsUsers.some(user => user.id === u.id))
             );
+        } else {
+            this.filteredCandidates.next(this.availableCandidates.getValue());
         }
     }
 
