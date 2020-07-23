@@ -61,7 +61,7 @@
     <div *pblNgridCellDef="'candidates'; row as assignment" class="cell-slot fill">
         <mat-chip-list>
             <mat-chip color="accent" selected matTooltip="{{ 'Number of candidates' | translate }}">
-                {{ assignment.candidateAmount }}
+                {{ getCandidateAmount(assignment) }}
             </mat-chip>
         </mat-chip-list>
     </div>
