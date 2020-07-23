@@ -531,7 +531,8 @@ export const RELATIONS: Relation[] = [
         MViewModel: ViewMotionSubmitter,
         OViewModel: ViewMotion,
         MField: 'motion',
-        OField: 'submitters'
+        OField: 'submitters',
+        order: 'weight'
     }),
     ...makeM2O({
         MViewModel: ViewMotionPoll,
@@ -631,7 +632,8 @@ export const RELATIONS: Relation[] = [
         MViewModel: ViewAssignmentCandidate,
         OViewModel: ViewAssignment,
         MField: 'assignment',
-        OField: 'candidates'
+        OField: 'candidates',
+        order: 'weight'
     }),
     ...makeM2O({
         MViewModel: ViewAssignmentPoll,
