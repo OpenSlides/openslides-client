@@ -10,6 +10,7 @@ import { ChangeRecoMode } from 'app/site/motions/motions.constants';
 import { BaseRepository } from '../base-repository';
 import { DiffService, LineRange, ModificationType } from '../../ui-services/diff.service';
 import { LinenumberingService } from '../../ui-services/linenumbering.service';
+import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 import { ViewMotion } from '../../../site/motions/models/view-motion';
 import { ViewUnifiedChange } from '../../../shared/models/motions/view-unified-change';
@@ -27,7 +28,7 @@ import { ViewUnifiedChange } from '../../../shared/models/motions/view-unified-c
 @Injectable({
     providedIn: 'root'
 })
-export class MotionChangeRecommendationRepositoryService extends BaseRepository<
+export class MotionChangeRecommendationRepositoryService extends MeetingModelBaseRepository<
     ViewMotionChangeRecommendation,
     MotionChangeRecommendation
 > {

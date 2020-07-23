@@ -5,6 +5,7 @@ import { MotionCommentSection } from 'app/shared/models/motions/motion-comment-s
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-comment-section';
 import { BaseRepository } from '../base-repository';
+import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 /**
@@ -20,7 +21,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class MotionCommentSectionRepositoryService extends BaseRepository<
+export class MotionCommentSectionRepositoryService extends MeetingModelBaseRepository<
     ViewMotionCommentSection,
     MotionCommentSection
 > {

@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { SettingsGroup } from '../../../../core/repositories/event-management/meeting-settings';
 
 /**
  * List view for the global settings
@@ -12,22 +14,17 @@ import { BaseComponent } from 'app/site/base/components/base.component';
     templateUrl: './meeting-settings-overview.component.html',
     styleUrls: ['./meeting-settings-overview.component.scss']
 })
-export class MeetingSettingsOverviewComponent extends BaseComponent implements OnInit {
-    public groups: string[] = [];
+export class MeetingSettingsOverviewComponent extends BaseComponent {
+    public groups: SettingsGroup[] = [];
 
-    public constructor(componentServiceCollector: ComponentServiceCollector, private promptDialog: PromptService) {
+    public constructor(
+        componentServiceCollector: ComponentServiceCollector,
+        private promptDialog: PromptService,
+        private meetingSettingsService: MeetingSettingsService
+    ) {
         super(componentServiceCollector);
-    }
 
-    /**
-     * Sets the title, inits the table and calls the repo
-     */
-    public ngOnInit(): void {
-        super.setTitle('Settings');
-
-        /*this.repo.availableGroupsOberservable.subscribe(groups => {
-            this.groups = groups;
-        });*/
+        this.groups = this.meetingSettingsService.getSettings();
     }
 
     /**

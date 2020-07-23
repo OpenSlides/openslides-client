@@ -105,7 +105,7 @@ export class Meeting extends BaseModel<Meeting> {
     public users_email_body: string;
 
     // Assignments
-    public assignemnts_export_title: string;
+    public assignments_export_title: string;
     public assignments_export_preamble: string;
     public assignment_poll_add_candidates_to_list_of_speakers: boolean;
     public assignment_poll_sort_poll_result_by_votes: boolean;
