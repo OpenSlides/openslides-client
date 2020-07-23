@@ -122,7 +122,7 @@
             </div>
         </div>
 
-        <div *ngIf="assignment.attachments.length">
+        <div *ngIf="assignment.attachments?.length">
             <h4>{{ 'Election documents' | translate }}</h4>
             <mat-list dense class="election-document-list">
                 <mat-list-item *ngFor="let file of assignment.attachments">
@@ -138,16 +138,9 @@
         <ng-container>
             <h3>{{ 'Candidates' | translate }}</h3>
             <div>
-                <div
-                    class="candidates-list"
-                    *ngIf="
-                        assignment &&
-                        assignment.assignment_candidates &&
-                        assignment.assignment_candidates.length > 0
-                    "
-                >
+                <div class="candidates-list" *ngIf="candidates && candidates.length">
                     <os-sorting-list
-                        [input]="assignment.assignment_candidates"
+                        [input]="candidates"
                         [live]="true"
                         [count]="assignment.number_poll_candidates"
                         [enable]="hasPerms('manage')"

@@ -34,7 +34,7 @@ export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeake
 
     public getFieldsets(): Fieldsets<Assignment> {
         const titleFields: (keyof Assignment)[] = ['title'];
-        const listFields: (keyof Assignment)[] = titleFields.concat(['open_posts', 'phase']);
+        const listFields: (keyof Assignment)[] = titleFields.concat(['open_posts', 'phase', 'candidate_ids']);
         return {
             [DEFAULT_FIELDSET]: listFields.concat([
                 'description',
