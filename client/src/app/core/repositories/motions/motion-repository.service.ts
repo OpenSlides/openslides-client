@@ -99,20 +99,27 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
     public getFieldsets(): Fieldsets<Motion> {
         const titleFields: (keyof Motion)[] = ['title', 'number'];
         const listFields: (keyof Motion)[] = titleFields.concat([
-            'sort_child_ids',
-            'sort_parent_id',
+            'sequential_number',
             'sort_weight',
-            'category_weight',
-            'created',
-            'last_modified',
-            'sequential_number'
+            'category_weight'
         ]);
+        const blockListFields: (keyof Motion)[] = titleFields.concat(['block_id']);
+        const detailFields: (keyof Motion)[] = titleFields.concat([
+            'sequential_number',
+            'text',
+            'reason',
+            'amendment_paragraphs',
+            'modified_final_version'
+        ]);
+        const amendmentFields: (keyof Motion)[] = ['amendment_paragraphs'];
+        const callListFields: (keyof Motion)[] = titleFields.concat(['sort_weight']);
         return {
-            [DEFAULT_FIELDSET]: listFields.concat([
-                /*todo*/
-            ]),
+            [DEFAULT_FIELDSET]: detailFields,
             list: listFields,
-            title: titleFields
+            blockList: blockListFields,
+            callList: callListFields,
+            title: titleFields,
+            amendment: amendmentFields
         };
     }
 
@@ -407,8 +414,17 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         highlightLine?: number
     ): string {
         const targetMotion = this.getViewModel(id);
-
         if (targetMotion && targetMotion.text) {
+            if (!crMode) {
+                console.warn("formatMotion has no crMode mode. Fall back to 'original'");
+                crMode = ChangeRecoMode.Original;
+            }
+
+            if (!lineLength) {
+                console.warn("formatMotion has no lineLength. Fall back to '80'");
+                lineLength = 80;
+            }
+
             switch (crMode) {
                 case ChangeRecoMode.Original:
                     return this.lineNumbering.insertLineNumbers(targetMotion.text, lineLength, highlightLine);

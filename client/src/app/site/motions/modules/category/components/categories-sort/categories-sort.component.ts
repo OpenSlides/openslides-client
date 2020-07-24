@@ -7,8 +7,9 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { SortingTreeComponent } from 'app/shared/components/sorting-tree/sorting-tree.component';
 import { CanComponentDeactivate } from 'app/shared/utils/watch-for-changes.guard';
-import { BaseComponent } from 'app/site/base/components/base.component';
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 
 /**
  * Sort view for the call list.
@@ -18,7 +19,7 @@ import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category
     templateUrl: './categories-sort.component.html',
     styleUrls: ['./categories-sort.component.scss']
 })
-export class CategoriesSortComponent extends BaseComponent implements CanComponentDeactivate {
+export class CategoriesSortComponent extends BaseModelContextComponent implements CanComponentDeactivate {
     /**
      * Reference to the sorting tree.
      */
@@ -49,7 +50,16 @@ export class CategoriesSortComponent extends BaseComponent implements CanCompone
         private promptService: PromptService
     ) {
         super(componentServiceCollector);
-
+        this.requestModels({
+            viewModelCtor: ViewMeeting,
+            ids: [1], // TODO
+            follow: [
+                {
+                    idField: 'motion_category_ids',
+                    fieldset: 'sortList'
+                }
+            ]
+        });
         this.categoriesObservable = this.categoryRepo.getViewModelListObservable();
     }
 
