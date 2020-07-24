@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 
+import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Tag } from 'app/shared/models/core/tag';
 import { ViewTag } from 'app/site/tags/models/view-tag';
 import { BaseRepository } from '../base-repository';
 import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
-import { Fieldsets, DEFAULT_FIELDSET } from 'app/core/core-services/model-request-builder.service';
 
 /**
  * Repository Services for Tags

@@ -4,8 +4,8 @@ import { environment } from 'environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import { CommunicationManagerService } from './communication-manager.service';
 import { HttpService } from './http.service';
+import { LifecycleService } from './lifecycle.service';
 
 interface Configuration {
     [key: string]: any;
@@ -25,16 +25,16 @@ export class ConfigurationService {
      */
     private subjects: { [key: string]: BehaviorSubject<any> } = {};
 
-    public constructor(communicationManagerService: CommunicationManagerService, http: HttpService) {
+    public constructor(lifecycleService: LifecycleService, http: HttpService) {
         console.warn('TODO: Settingsservice server-side service');
 
         // TODO: this is some presenter....
-        communicationManagerService.startCommunicationEvent.subscribe(async () => {
+        /*lifecycleService.openslidesBooted.subscribe(async () => {
             this.configuration = await http.get<Configuration>(environment.urlPrefix + '/core/constants/');
             Object.keys(this.subjects).forEach(key => {
                 this.subjects[key].next(this.configuration[key]);
             });
-        });
+        });*/
     }
 
     /**

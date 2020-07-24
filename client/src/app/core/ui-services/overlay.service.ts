@@ -7,6 +7,7 @@ import { distinctUntilChanged } from 'rxjs/operators';
 import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
 import { SuperSearchComponent } from 'app/site/common/components/super-search/super-search.component';
 import { DataStoreUpgradeService } from '../core-services/data-store-upgrade.service';
+import { LifecycleService } from '../core-services/lifecycle.service';
 import { OfflineBroadcastService } from '../core-services/offline-broadcast.service';
 import { OpenSlidesService } from '../core-services/openslides.service';
 import { OperatorService } from '../core-services/operator.service';
@@ -59,7 +60,8 @@ export class OverlayService {
         private operator: OperatorService,
         OpenSlides: OpenSlidesService,
         upgradeService: DataStoreUpgradeService,
-        offlineBroadcastService: OfflineBroadcastService
+        offlineBroadcastService: OfflineBroadcastService,
+        lifecycleService: LifecycleService
     ) {
         // Subscribe to the current user.
         this.user = 1; // temp to get the spinner working
@@ -70,8 +72,12 @@ export class OverlayService {
             }
         });*/
         // Subscribe to the booting-step.
-        OpenSlides.booted.subscribe(isBooted => {
-            this.hasBooted = isBooted;
+        lifecycleService.openslidesBooted.subscribe(() => {
+            this.hasBooted = true;
+            this.checkConnection();
+        });
+        lifecycleService.openslidesShutdowned.subscribe(() => {
+            this.hasBooted = false;
             this.checkConnection();
         });
         // Subscribe to the upgrade-mechanism.

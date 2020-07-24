@@ -32,7 +32,7 @@ export class MeetingSettingsService {
     }
 
     public getDefaultValue(setting: string | SettingsItem): any {
-        if (typeof setting === "string") {
+        if (typeof setting === 'string') {
             setting = this.settingsMap[setting];
         }
         return setting.default ?? this.getDefaultValueForType(setting);

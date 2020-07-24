@@ -1,54 +1,60 @@
 import { HttpParams } from '@angular/common/http';
-import { EventEmitter, Injectable } from '@angular/core';
-
-import { Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
 
 import { HTTPMethod } from '../definitions/http-methods';
-import { HttpService } from './http.service';
-import { OfflineBroadcastService, OfflineReason } from './offline-broadcast.service';
-import { SleepPromise } from '../promises/sleep';
-import { StreamContainer, StreamingCommunicationService } from './streaming-communication.service';
+import { HttpStreamEndpointService } from './http-stream-endpoint.service';
+import { StreamContainer } from './http-stream.service';
+import { LifecycleService } from './lifecycle.service';
+import { OfflineBroadcastService } from './offline-broadcast.service';
+import { OfflineError, StreamingCommunicationService } from './streaming-communication.service';
 
 type HttpParamsGetter = () => HttpParams | { [param: string]: string | string[] };
 type HttpBodyGetter = () => any;
 
-const MAX_CONNECTION_RETRIES = 3;
-const MAX_STREAM_FAILURE_RETRIES = 1;
-
-export class OfflineError extends Error {
-    public constructor() {
-        super('');
-        this.name = 'OfflineError';
-    }
+class StreamContainerWithCloseFn extends StreamContainer {
+    public closeFn: () => void;
 }
 
+/**
+ * Main class for communication in streams with the server. You have to register an
+ * endpoint to communicate with `registerEndpoint` and connect to it with `connect`.
+ *
+ * Note about some behaviours:
+ * - The returned function must be called to close the stream.
+ * - The connection attempt can block - internally we are waiting for the first message.
+ *   If there is no first message, we'll wait...
+ * TODO: not good. we want to cancel connection attempts
+ * - The fact that `connect` returns does not mean, that we are connected. Maybe we are offline
+ *   since offile-handling is managed by this service
+ * - When going offline every connection is closed and attempted to reconnect when going
+ *   online. This implies that for one connect, multiple requests can be done.
+ *   -> Make sure that the streams are build in a way, that it handles reconnects.
+ */
 @Injectable({
     providedIn: 'root'
 })
 export class CommunicationManagerService {
-    private readonly _startCommunicationEvent = new EventEmitter<void>();
+    private isRunning = false;
 
-    private communicationAllowed = false;
-
-    public get startCommunicationEvent(): Observable<void> {
-        return this._startCommunicationEvent.asObservable();
-    }
-
-    private streamContainers: { [id: number]: StreamContainer } = {};
-
-    private isOperatorAuthenticated = false;
+    private requestedStreams: { [id: number]: StreamContainerWithCloseFn } = {};
 
     public constructor(
         private streamingCommunicationService: StreamingCommunicationService,
         private offlineBroadcastService: OfflineBroadcastService,
-        private http: HttpService
+        private lifecycleService: LifecycleService,
+        private httpEndpointService: HttpStreamEndpointService
     ) {
-        this.offlineBroadcastService.goOfflineObservable.subscribe(() => this.closeConnections());
+        this.offlineBroadcastService.goOfflineObservable.subscribe(() => this.stopCommunication());
+        this.offlineBroadcastService.goOnlineObservable.subscribe(() => this.startCommunication());
+        this.lifecycleService.openslidesBooted.subscribe(() => this.startCommunication());
     }
 
-    public async subscribe<T>(
-        method: HTTPMethod,
-        url: string,
+    public registerEndpoint(name: string, url: string, healthUrl: string, method?: HTTPMethod): void {
+        this.httpEndpointService.registerEndpoint(name, url, healthUrl, method);
+    }
+
+    public async connect<T>(
+        endpointName: string,
         messageHandler: (message: T) => void,
         body?: HttpBodyGetter,
         params?: HttpParamsGetter
@@ -57,133 +63,55 @@ export class CommunicationManagerService {
             params = () => null;
         }
 
-        const streamContainer = new StreamContainer(method, url, messageHandler, params, body);
-        return await this.connectWithWrapper(streamContainer);
-    }
+        const endpoint = this.httpEndpointService.getEndpoint(endpointName);
+        const streamContainer = new StreamContainerWithCloseFn(endpoint, messageHandler, params, body);
+        this.requestedStreams[streamContainer.id] = streamContainer;
 
-    public startCommunication(): void {
-        if (this.communicationAllowed) {
-            console.error('Illegal state! DO not emit this event multiple times');
-        } else {
-            this.communicationAllowed = true;
-            this._startCommunicationEvent.emit();
-        }
-    }
-
-    private async connectWithWrapper(streamContainer: StreamContainer): Promise<() => void> {
-        console.log('connect', streamContainer, streamContainer.stream);
-        let retries = 0;
-        const errorHandler = (error: any) => this.handleError(streamContainer, error);
-        let gotError = true;
-        while (gotError) {
-            try {
-                await this.streamingCommunicationService.subscribe(streamContainer, errorHandler);
-                gotError = false;
-            } catch (e) {
-                retries++;
-                console.log('retry nr.', retries);
-                if (streamContainer.stream) {
-                    streamContainer.stream.close();
-                    streamContainer.stream = null;
-                }
-                if (retries < MAX_CONNECTION_RETRIES) {
-                    console.log('retry reason: A');
-                    await this.delayAndCheckReconnection();
-                } else {
-                    this.goOffline();
-                    throw new OfflineError();
-                }
-            }
+        if (this.isRunning) {
+            await this._connect(streamContainer);
         }
 
-        this.streamContainers[streamContainer.id] = streamContainer;
         return () => this.close(streamContainer);
     }
 
-    private async handleError(streamContainer: StreamContainer, error: any): Promise<void> {
-        console.log('handle Error', streamContainer, streamContainer.stream, error);
-        streamContainer.stream.close();
-        streamContainer.stream = null;
-
-        streamContainer.hasErroredAmount++;
-        if (streamContainer.hasErroredAmount > MAX_STREAM_FAILURE_RETRIES) {
-            delete this.streamContainers[streamContainer.id];
-            this.goOffline();
-        } else {
-            // retry it after some time:
-            try {
-                console.log('retry reason: B');
-                await this.delayAndCheckReconnection();
-                await this.connectWithWrapper(streamContainer);
-            } catch (e) {
-                // delayAndCheckReconnection may throw an OfflineError...
-                // TODO: do we need these error above?
-                // Also connectWithWrapper can throw an OfflineError. This one can be ignored.
-            }
-        }
-    }
-
-    private async delayAndCheckReconnection(): Promise<void> {
-        const delay = Math.floor(Math.random() * 3000 + 2000);
-        console.log(`retry again in ${delay} ms`);
-
-        await SleepPromise(delay);
-
-        // do not continue, if we are offline!
-        if (this.offlineBroadcastService.isOffline()) {
-            console.log('we are offline?');
-            throw new OfflineError();
-        }
-
-        // do not continue, if we are offline!
-        if (!this.shouldRetryConnecting()) {
-            console.log('operator changed, do not rety');
-            throw new OfflineError(); // TODO: This error is not really good....
-        }
-    }
-
-    public closeConnections(): void {
-        for (const streamWrapper of Object.values(this.streamContainers)) {
-            if (streamWrapper.stream) {
-                streamWrapper.stream.close();
-            }
-        }
-        this.streamContainers = {};
-        this.communicationAllowed = false;
-    }
-
-    public goOffline(): void {
-        this.closeConnections(); // here we close the connections early.
-        this.offlineBroadcastService.goOffline(OfflineReason.ConnectionLost);
-    }
-
-    private close(streamContainer: StreamContainer): void {
-        if (this.streamContainers[streamContainer.id]) {
-            this.streamContainers[streamContainer.id].stream.close();
-            delete this.streamContainers[streamContainer.id];
-        }
-    }
-
-    // Checks the operator: If we do not have a valid user,
-    // do not even try to connect again..
-    private shouldRetryConnecting(): boolean {
-        return this.isOperatorAuthenticated;
-    }
-
-    public setIsOperatorAuthenticated(isAuthenticated: boolean): void {
-        this.isOperatorAuthenticated = isAuthenticated;
-    }
-
-    public async isCommunicationServiceOnline(): Promise<boolean> {
+    private async _connect(container: StreamContainerWithCloseFn): Promise<void> {
         try {
-            const response = await this.http.get<{ healthy: boolean }>('/system/health');
-            if (response.healthy) {
-                return true;
-            } else {
-                return false;
-            }
+            container.closeFn = await this.streamingCommunicationService.connect(container);
         } catch (e) {
-            return false;
+            if (!(e instanceof OfflineError)) {
+                throw e;
+            }
         }
+    }
+
+    public startCommunication(): void {
+        if (this.isRunning) {
+            return;
+        }
+
+        this.isRunning = true;
+
+        // Do not do it asynchronous blocking: just start everything up and do not care about the succeeding
+        for (const container of Object.values(this.requestedStreams)) {
+            this._connect(container);
+        }
+    }
+
+    private stopCommunication(): void {
+        this.isRunning = false;
+        this.streamingCommunicationService.closeConnections();
+        for (const container of Object.values(this.requestedStreams)) {
+            if (container.stream) {
+                container.stream.close();
+            }
+            container.stream = null;
+        }
+    }
+
+    private close(container: StreamContainerWithCloseFn): void {
+        if (container.closeFn) {
+            container.closeFn();
+        }
+        delete this.requestedStreams[container.id];
     }
 }
