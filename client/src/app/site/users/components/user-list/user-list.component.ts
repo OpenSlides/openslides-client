@@ -6,6 +6,7 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { PblColumnDefinition } from '@pebula/ngrid';
 
 import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
+import { SimplifiedModelRequest, SpecificStructuredField } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService, Permission } from 'app/core/core-services/operator.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
@@ -17,14 +18,13 @@ import { PromptService } from 'app/core/ui-services/prompt.service';
 import { genders } from 'app/shared/models/users/user';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { PollService } from 'app/site/polls/services/poll.service';
 import { UserFilterListService } from '../../services/user-filter-list.service';
 import { UserPdfExportService } from '../../services/user-pdf-export.service';
 import { UserSortListService } from '../../services/user-sort-list.service';
 import { ViewGroup } from '../../models/view-group';
 import { ViewUser } from '../../models/view-user';
-import { SimplifiedModelRequest, SpecificStructuredField } from 'app/core/core-services/model-request-builder.service';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 
 /**
  * Interface for the short editing dialog.

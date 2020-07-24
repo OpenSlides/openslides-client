@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { BehaviorSubject } from 'rxjs';
 
+import { SpecificStructuredField } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService, Permission } from 'app/core/core-services/operator.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
@@ -16,7 +17,6 @@ import { PollService } from 'app/site/polls/services/poll.service';
 import { UserPdfExportService } from '../../services/user-pdf-export.service';
 import { ViewGroup } from '../../models/view-group';
 import { ViewUser } from '../../models/view-user';
-import { SpecificStructuredField } from 'app/core/core-services/model-request-builder.service';
 
 interface UserBackends {
     [name: string]: {
@@ -148,7 +148,7 @@ export class UserDetailComponent extends BaseModelContextComponent {
             ids: [userId],
             follow: [
                 {
-                    idField: SpecificStructuredField('group_$_ids', '1'), // TODO: active meeting id
+                    idField: SpecificStructuredField('group_$_ids', '1') // TODO: active meeting id
                 }
             ]
         });

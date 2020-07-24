@@ -1,209 +1,158 @@
-import {
-    HttpClient,
-    HttpDownloadProgressEvent,
-    HttpEvent,
-    HttpHeaderResponse,
-    HttpHeaders,
-    HttpParams
-} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { Observable, Subscription } from 'rxjs';
+import { EndpointConfiguration } from './http-stream-endpoint.service';
+import { HttpStreamService, StreamContainer } from './http-stream.service';
+import { HttpService } from './http.service';
+import { OfflineBroadcastService, OfflineReasonValue } from './offline-broadcast.service';
+import { SleepPromise } from '../promises/sleep';
 
-import { Deferred } from '../promises/deferred';
-import { HTTPMethod } from '../definitions/http-methods';
+const MAX_CONNECTION_RETRIES = 3;
+const MAX_STREAM_FAILURE_RETRIES = 1;
 
-const HEADER_EVENT_TYPE = 2;
-const PROGRESS_EVENT_TYPE = 3;
-const FINISH_EVENT_TYPE = 4;
-
-export type Params = HttpParams | { [param: string]: string | string[] };
-
-export class StreamConnectionError extends Error {
-    public constructor(public code: number, message: string) {
-        super(message);
-        this.name = 'StreamConnectionError';
+export class OfflineError extends Error {
+    public constructor() {
+        super('');
+        this.name = 'OfflineError';
     }
 }
 
-export class StreamContainer {
-    public readonly id = Math.floor(Math.random() * (900000 - 1) + 100000); // [100000, 999999]
-
-    public hasErroredAmount = 0;
-
-    public stream?: Stream<any>;
-
-    public constructor(
-        public method: HTTPMethod,
-        public url: string,
-        public messageHandler: (message: any) => void,
-        public params: () => Params,
-        public body: () => any
-    ) {}
-}
-
-export class Stream<T> {
-    private subscription: Subscription = null;
-
-    private hasError = false;
-
-    private _statuscode: number;
-    public get statuscode(): number {
-        return this._statuscode;
-    }
-
-    private _errorContent: any;
-    public get errorContent(): any {
-        return this._errorContent;
-    }
-
-    public readonly gotFirstResponse = new Deferred<boolean>();
-
-    /**
-     * This is the index where we checked, if there is a \n in the read buffer (event.partialText)
-     * This position is always >= contentStartIndex and is > contentStartIndex, if the message
-     * was too big to fit into one buffer. So we have just a partial message.
-     *
-     * The difference between this index and contentStartIndex is that this index remembers the position
-     * we checked for a \n which lay in the middle of the next JOSN-packet.
-     */
-    private checkedUntilIndex = 0;
-
-    /**
-     * This index holds always the position of the current JOSN-packet, that we are receiving.
-     */
-    private contentStartIndex = 0;
-
-    private closed = false;
-
-    public constructor(
-        observable: Observable<HttpEvent<string>>,
-        private messageHandler: (message: T) => void,
-        private errorHandler: (error: any) => void
-    ) {
-        this.subscription = observable.subscribe((event: HttpEvent<string>) => {
-            if (this.closed) {
-                console.log('got message, but closed');
-                return;
-            }
-            if (event.type === HEADER_EVENT_TYPE) {
-                const headerResponse = event as HttpHeaderResponse;
-                this._statuscode = headerResponse.status;
-                if (headerResponse.status >= 400) {
-                    this.hasError = true;
-                }
-            } else if ((event as HttpEvent<string>).type === PROGRESS_EVENT_TYPE) {
-                this.handleMessage(event as HttpDownloadProgressEvent);
-            } else if ((event as HttpEvent<string>).type === FINISH_EVENT_TYPE) {
-                this.errorHandler('The stream was closed');
-            }
-        });
-    }
-
-    private handleMessage(event: HttpDownloadProgressEvent): void {
-        if (this.hasError) {
-            if (!this.gotFirstResponse.wasResolved) {
-                this._errorContent = event.partialText;
-                this.gotFirstResponse.resolve(this.hasError);
-            }
-            return;
-        }
-        // Maybe we get multiple messages, so continue, until the complete buffer is checked.
-        while (this.checkedUntilIndex < event.loaded) {
-            // check if there is a \n somewhere in [checkedUntilIndex, ...]
-            const LF_index = event.partialText.indexOf('\n', this.checkedUntilIndex);
-
-            if (LF_index >= 0) {
-                // take string in [contentStartIndex, LF_index-1]. This must be valid JSON.
-                // In substring, the last character is exlusive.
-                const content = event.partialText.substring(this.contentStartIndex, LF_index);
-
-                // move pointer: next JSON starts at LF_index + 1
-                this.checkedUntilIndex = LF_index + 1;
-                this.contentStartIndex = LF_index + 1;
-
-                let parsedContent;
-                try {
-                    parsedContent = JSON.parse(content) as T;
-                } catch (e) {
-                    parsedContent = { error: content };
-                }
-
-                if (parsedContent.error) {
-                    this.hasError = true;
-                    this._errorContent = parsedContent.error;
-                    // Do not trigger the error handler, if the connection-retry-routine is still handling this issue
-                    if (this.gotFirstResponse.wasResolved) {
-                        console.error(parsedContent.error);
-                        this.errorHandler(parsedContent.error);
-                    } else {
-                        this.gotFirstResponse.resolve(this.hasError);
-                    }
-                    return;
-                } else {
-                    this.gotFirstResponse.resolve(this.hasError);
-                    console.log('received', parsedContent);
-                    this.messageHandler(parsedContent);
-                }
-            } else {
-                this.checkedUntilIndex = event.loaded;
-            }
-        }
-    }
-
-    public close(): void {
-        this.subscription.unsubscribe();
-        this.subscription = null;
-        this.closed = true;
-    }
-}
-
-/**
- * BIG TODO: What happens, if the connection breaks? Maybe we should add a allowReconnect-flag
- * to auto-enable reconnection.
- */
 @Injectable({
     providedIn: 'root'
 })
 export class StreamingCommunicationService {
-    public constructor(private http: HttpClient) {}
+    private isOperatorAuthenticated = false;
 
-    public async subscribe<T>(streamContainer: StreamContainer, errorHandler: (error: any) => void): Promise<void> {
-        const options: {
-            body?: any;
-            headers?: HttpHeaders | { [header: string]: string | string[] };
-            observe: 'events';
-            params?: HttpParams | { [param: string]: string | string[] };
-            reportProgress?: boolean;
-            responseType: 'text';
-            withCredentials?: boolean;
-        } = {
-            headers: { 'Content-Type': 'application/json' },
-            responseType: 'text',
-            observe: 'events',
-            reportProgress: true
-        };
-        const params = streamContainer.params();
-        if (params) {
-            options.params = params;
+    private openStreams: { [id: number]: StreamContainer } = {};
+
+    public constructor(
+        private httpStreamService: HttpStreamService,
+        private offlineBroadcastService: OfflineBroadcastService,
+        private http: HttpService
+    ) {}
+
+    public async connect(streamContainer: StreamContainer): Promise<() => void> {
+        let retries = 0;
+        const errorHandler = (error: any) => this.handleError(streamContainer, error);
+        let success = false;
+        while (!success) {
+            try {
+                await this.httpStreamService.connect(streamContainer, errorHandler);
+                success = true;
+            } catch (e) {
+                retries++;
+                if (streamContainer.stream) {
+                    streamContainer.stream.close();
+                    streamContainer.stream = null;
+                }
+
+                let goOffline = false;
+                if (retries < MAX_CONNECTION_RETRIES) {
+                    goOffline = !(await this.delayAndCheckReconnection());
+                } else {
+                    goOffline = true;
+                }
+
+                if (goOffline) {
+                    this.goOffline(streamContainer.endpoint);
+                    throw new OfflineError();
+                }
+            }
         }
-        const body = streamContainer.body();
-        if (body) {
-            options.body = body;
+
+        this.openStreams[streamContainer.id] = streamContainer;
+        return () => this.close(streamContainer);
+    }
+
+    private async handleError(streamContainer: StreamContainer, error: any): Promise<void> {
+        console.log('handle Error', streamContainer, streamContainer.stream, error);
+        streamContainer.stream.close();
+        streamContainer.stream = null;
+
+        streamContainer.hasErroredAmount++;
+        if (streamContainer.hasErroredAmount > MAX_STREAM_FAILURE_RETRIES) {
+            delete this.openStreams[streamContainer.id];
+            this.goOffline(streamContainer.endpoint);
+        } else {
+            // retry it after some time:
+            try {
+                if (await this.delayAndCheckReconnection()) {
+                    await this.connect(streamContainer);
+                }
+            } catch (e) {
+                // connect can throw an OfflineError. This one can be ignored.
+            }
         }
-        const observable = this.http.request(streamContainer.method, streamContainer.url, options);
+    }
 
-        if (streamContainer.stream) {
-            console.error('Illegal state!');
+    /**
+     * Returns true, if a reconnect attempt should be done.
+     */
+    private async delayAndCheckReconnection(): Promise<boolean> {
+        const delay = Math.floor(Math.random() * 3000 + 2000);
+        console.log(`retry again in ${delay} ms`);
+
+        await SleepPromise(delay);
+
+        // do not continue, if we are offline!
+        if (this.offlineBroadcastService.isOffline()) {
+            console.log('we are offline?');
+            return false;
         }
 
-        console.log('StreamingCommunicationService.subscribe');
-        const stream = new Stream<T>(observable, streamContainer.messageHandler, errorHandler);
-        streamContainer.stream = stream;
+        // do not continue, if the operator changed!
+        if (!this.shouldRetryConnecting()) {
+            console.log('operator changed, do not rety');
+            return false;
+        }
 
-        const hasError = await stream.gotFirstResponse;
-        if (hasError) {
-            throw new StreamConnectionError(stream.statuscode, stream.errorContent);
+        return true;
+    }
+
+    public closeConnections(): void {
+        for (const streamWrapper of Object.values(this.openStreams)) {
+            if (streamWrapper.stream) {
+                streamWrapper.stream.close();
+                streamWrapper.stream = null;
+            }
+        }
+        this.openStreams = {};
+    }
+
+    private goOffline(endpoint: EndpointConfiguration): void {
+        this.closeConnections(); // here we close the connections early.
+        this.offlineBroadcastService.goOffline({
+            type: OfflineReasonValue.ConnectionLost,
+            endpoint: endpoint
+        });
+    }
+
+    private close(streamContainer: StreamContainer): void {
+        if (this.openStreams[streamContainer.id]) {
+            this.openStreams[streamContainer.id].stream.close();
+            delete this.openStreams[streamContainer.id];
+        }
+    }
+
+    // Checks the operator: If we do not have a valid user,
+    // do not even try to connect again..
+    private shouldRetryConnecting(): boolean {
+        return this.isOperatorAuthenticated;
+    }
+
+    public setIsOperatorAuthenticated(isAuthenticated: boolean): void {
+        this.isOperatorAuthenticated = isAuthenticated;
+    }
+
+    public async isCommunicationServiceOnline(): Promise<boolean> {
+        try {
+            const response = await this.http.get<{ healthy: boolean }>('/system/health');
+            if (response.healthy) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (e) {
+            return false;
         }
     }
 }
