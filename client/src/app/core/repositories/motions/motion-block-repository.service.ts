@@ -34,7 +34,6 @@ export class MotionBlockRepositoryService extends BaseIsAgendaItemAndListOfSpeak
         const listFields: (keyof MotionBlock)[] = titleFields.concat(['internal']);
         return {
             [DEFAULT_FIELDSET]: listFields,
-            list: listFields,
             title: titleFields
         };
     }

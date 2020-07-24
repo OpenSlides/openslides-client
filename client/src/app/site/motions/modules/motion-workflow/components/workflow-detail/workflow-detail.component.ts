@@ -5,7 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, take, publish } from 'rxjs/operators';
 
 import { MotionStateRepositoryService } from 'app/core/repositories/motions/motion-state-repository.service';
 import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/motion-workflow-repository.service';
@@ -13,7 +13,7 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { MergeAmendment, MotionState, Restriction } from 'app/shared/models/motions/motion-state';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
-import { BaseComponent } from 'app/site/base/components/base.component';
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewMotionState } from 'app/site/motions/models/view-motion-state';
 import { ViewMotionWorkflow } from 'app/site/motions/models/view-motion-workflow';
 
@@ -71,7 +71,7 @@ interface RestrictionShape {
     styleUrls: ['./workflow-detail.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WorkflowDetailComponent extends BaseComponent implements OnInit {
+export class WorkflowDetailComponent extends BaseModelContextComponent implements OnInit {
     /**
      * Reference to the workflow dialog
      */
@@ -107,7 +107,7 @@ export class WorkflowDetailComponent extends BaseComponent implements OnInit {
         { name: 'Allow support', selector: 'allow_support', type: 'check' },
         { name: 'Allow create poll', selector: 'allow_create_poll', type: 'check' },
         { name: 'Allow submitter edit', selector: 'allow_submitter_edit', type: 'check' },
-        { name: 'Do not set number', selector: 'dont_set_number', type: 'check' },
+        { name: 'Set number', selector: 'set_number', type: 'check' },
         { name: 'Show state extension field', selector: 'show_state_extension_field', type: 'check' },
         {
             name: 'Show recommendation extension field',
@@ -168,25 +168,53 @@ export class WorkflowDetailComponent extends BaseComponent implements OnInit {
      * Observe the parameters of the URL and loads the specified workflow
      */
     public ngOnInit(): void {
-        const paramsId = parseInt(this.route.snapshot.paramMap.get('id'), 10);
+        const workflowId = Number(this.route.snapshot.paramMap.get('id'));
+
+        this.requestModels({
+            viewModelCtor: ViewMotionWorkflow,
+            ids: [workflowId],
+            follow: [
+                {
+                    idField: 'first_state_id',
+                    fieldset: 'title'
+                },
+                {
+                    idField: 'state_ids',
+                    follow: [
+                        {
+                            idField: 'next_state_ids',
+                            fieldset: 'title'
+                        }
+                    ]
+                }
+            ]
+        });
 
         this.subscriptions.push(
-            this.workflowRepo.getViewModelObservable(paramsId).subscribe(newWorkflow => {
+            this.workflowRepo.getViewModelObservable(workflowId).subscribe(newWorkflow => {
                 if (newWorkflow) {
                     this.workflow = newWorkflow;
                     this.updateRowDef();
                     this.cd.markForCheck();
                 }
-            }),
-
-            this.stateRepo
-                .getViewModelListObservable()
-                .pipe(map(states => states.filter(state => this.workflow.state_ids.includes(state.id))))
-                .subscribe(states => {
-                    if (states) {
-                        this.cd.markForCheck();
-                    }
-                })
+            })
+            /**
+             * FIXME :
+             * this was supposed to call for updates after changes to any of the current view states occure.
+             * Cannot be done anymore, since "state_ids" will appear far later than this observable fires
+             * could be done using deffered, rxjs publish-magic or entirely differently.
+             * settings states active need to work to develop this again
+             */
+            // this.stateRepo
+            //     .getViewModelListObservable()
+            //     .pipe(
+            //         map(states => states.filter(state => this.workflow.state_ids.includes(state.id)))
+            //     )
+            //     .subscribe(states => {
+            //         if (states) {
+            //             this.cd.markForCheck();
+            //         }
+            //     })
         );
     }
 
@@ -394,6 +422,10 @@ export class WorkflowDetailComponent extends BaseComponent implements OnInit {
         // reset the rowDef list first
         this.headerRowDef = ['perm'];
         if (this.workflow) {
+            /**
+             * FIXME:
+             * relations work. Why is states of length 0?
+             */
             this.workflow.states.forEach(state => {
                 this.headerRowDef.push(this.getColumnDef(state));
             });

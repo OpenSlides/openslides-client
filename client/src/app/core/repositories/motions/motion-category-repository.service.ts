@@ -30,8 +30,13 @@ export class MotionCategoryRepositoryService extends MeetingModelBaseRepository<
     }
 
     public getFieldsets(): Fieldsets<MotionCategory> {
+        const detailFields: (keyof MotionCategory)[] = ['name', 'prefix'];
+        const sortListFields: (keyof MotionCategory)[] = detailFields.concat(['weight']);
+        const listFields: (keyof MotionCategory)[] = sortListFields.concat(['name', 'prefix', 'motion_ids']);
         return {
-            [DEFAULT_FIELDSET]: ['child_ids', 'parent_id', 'name', 'prefix', 'weight']
+            [DEFAULT_FIELDSET]: detailFields,
+            list: listFields,
+            sortList: sortListFields
         };
     }
 

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 
+import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { MotionWorkflow } from 'app/shared/models/motions/motion-workflow';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionState } from 'app/site/motions/models/view-motion-state';
 import { ViewMotionWorkflow } from 'app/site/motions/models/view-motion-workflow';
-import { BaseRepository } from '../base-repository';
 import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
@@ -24,6 +24,13 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 export class MotionWorkflowRepositoryService extends MeetingModelBaseRepository<ViewMotionWorkflow, MotionWorkflow> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, MotionWorkflow);
+    }
+
+    public getFieldsets(): Fieldsets<MotionWorkflow> {
+        const detailFields: (keyof MotionWorkflow)[] = ['name'];
+        return {
+            [DEFAULT_FIELDSET]: detailFields
+        };
     }
 
     public getTitle = (viewMotionWorkflow: ViewMotionWorkflow) => {

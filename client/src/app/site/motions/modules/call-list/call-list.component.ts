@@ -13,6 +13,7 @@ import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { MotionCsvExportService } from 'app/site/motions/services/motion-csv-export.service';
 import { MotionPdfExportService } from 'app/site/motions/services/motion-pdf-export.service';
 import { ViewTag } from 'app/site/tags/models/view-tag';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 
 /**
  * Sort view for the call list.
@@ -106,6 +107,17 @@ export class CallListComponent extends BaseSortTreeComponent<ViewMotion> impleme
      * Initializes filters and filter subscriptions
      */
     public ngOnInit(): void {
+        this.requestModels({
+            viewModelCtor: ViewMeeting,
+            ids: [1], // TODO
+            follow: [
+                {
+                    idField: 'motion_ids',
+                    fieldset: 'callList'
+                }
+            ]
+        });
+
         this.subscriptions.push(
             this.activeTagFilters.subscribe((value: number[]) => this.onSubscribedFilterChange('tag', value))
         );
