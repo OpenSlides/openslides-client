@@ -1,45 +1,25 @@
-import { ApplicationRef, Component } from '@angular/core';
+import { AfterViewInit, ApplicationRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { TranslateService } from '@ngx-translate/core';
 import { filter, take } from 'rxjs/operators';
 
+import { ActiveMeetingService } from './core/core-services/active-meeting.service';
 import { CountUsersService } from './core/ui-services/count-users.service';
 import { DataStoreUpgradeService } from './core/core-services/data-store-upgrade.service';
+import { Deferred } from './core/promises/deferred';
+import { LifecycleService } from './core/core-services/lifecycle.service';
 import { LoadFontService } from './core/ui-services/load-font.service';
 import { LoginDataService } from './core/ui-services/login-data.service';
 import { OfflineService } from './core/core-services/offline.service';
 import { OperatorService } from './core/core-services/operator.service';
 import { OrganisationSettingsService } from './core/ui-services/organisation-settings.service';
 import { OverlayService } from './core/ui-services/overlay.service';
+import { OpenSlidesService } from './core/core-services/openslides.service';
+import { overloadJsFunctions } from './shared/overload-js-functions';
 import { RoutingStateService } from './core/ui-services/routing-state.service';
-import { ServertimeService } from './core/core-services/servertime.service';
 import { ThemeService } from './core/ui-services/theme.service';
 import { VotingBannerService } from './core/ui-services/voting-banner.service';
-
-declare global {
-    /**
-     * Enhance array with own functions
-     * TODO: Remove once flatMap made its way into official JS/TS (ES 2019?)
-     */
-    interface Array<T> {
-        flatMap(o: any): any[];
-        intersect(a: T[]): T[];
-        mapToObject(f: (item: T) => { [key: string]: any }): { [key: string]: any };
-    }
-
-    interface Set<T> {
-        equals(other: Set<T>): boolean;
-    }
-
-    /**
-     * Enhances the number object to calculate real modulo operations.
-     * (not remainder)
-     */
-    interface Number {
-        modulo(n: number): number;
-    }
-}
 
 /**
  * Angular's global App Component
@@ -49,7 +29,9 @@ declare global {
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+    private onInitDone = new Deferred();
+
     /**
      * Master-component of all apps.
      *
@@ -63,8 +45,10 @@ export class AppComponent {
      */
     public constructor(
         translate: TranslateService,
-        appRef: ApplicationRef,
-        servertimeService: ServertimeService,
+        private appRef: ApplicationRef,
+        private openslidesService: OpenSlidesService,
+        private activeMeetingService: ActiveMeetingService,
+        private lifecycleService: LifecycleService,
         router: Router,
         offlineService: OfflineService,
         operator: OperatorService,
@@ -76,7 +60,8 @@ export class AppComponent {
         loadFontService: LoadFontService,
         dataStoreUpgradeService: DataStoreUpgradeService, // to start it.
         routingState: RoutingStateService,
-        votingBannerService: VotingBannerService // needed for initialisation
+        votingBannerService: VotingBannerService, // needed for initialisation
+        offlineSerice: OfflineService
     ) {
         // manually add the supported languages
         translate.addLangs(['en', 'de', 'cs', 'ru']);
@@ -88,111 +73,29 @@ export class AppComponent {
         translate.use(translate.getLangs().includes(browserLang) ? browserLang : 'en');
 
         // change default JS functions
-        this.overloadArrayFunctions();
-        this.overloadSetFunctions();
-        this.overloadModulo();
+        overloadJsFunctions();
 
+        this.waitForAppLoaded();
+    }
+
+    private async waitForAppLoaded(): Promise<void> {
         // Wait until the App reaches a stable state.
         // Required for the Service Worker.
-        appRef.isStable
+        await this.appRef.isStable
             .pipe(
                 // take only the stable state
                 filter(s => s),
                 take(1)
             )
-            .subscribe(() => servertimeService.startScheduler());
+            .toPromise();
+        await this.onInitDone;
+
+        setTimeout(() => {
+            this.lifecycleService.appLoaded.next();
+        }, 0);
     }
 
-    private overloadArrayFunctions(): void {
-        Object.defineProperty(Array.prototype, 'toString', {
-            value: function (): string {
-                let string = '';
-                const iterations = Math.min(this.length, 3);
-
-                for (let i = 0; i <= iterations; i++) {
-                    if (i < iterations) {
-                        string += this[i];
-                    }
-
-                    if (i < iterations - 1) {
-                        string += ', ';
-                    } else if (i === iterations && this.length > iterations) {
-                        string += ', ...';
-                    }
-                }
-                return string;
-            },
-            enumerable: false
-        });
-
-        Object.defineProperty(Array.prototype, 'flatMap', {
-            value: function (o: any): any[] {
-                const concatFunction = (x: any, y: any[]) => x.concat(y);
-                const flatMapLogic = (f: any, xs: any) => xs.map(f).reduce(concatFunction, []);
-                return flatMapLogic(o, this);
-            },
-            enumerable: false
-        });
-
-        Object.defineProperty(Array.prototype, 'intersect', {
-            value: function <T>(other: T[]): T[] {
-                let a = this;
-                let b = other;
-                // indexOf to loop over shorter
-                if (b.length > a.length) {
-                    [a, b] = [b, a];
-                }
-                return a.filter(e => b.indexOf(e) > -1);
-            },
-            enumerable: false
-        });
-
-        Object.defineProperty(Array.prototype, 'mapToObject', {
-            value: function <T>(f: (item: T) => { [key: string]: any }): { [key: string]: any } {
-                return this.reduce((aggr, item) => {
-                    const res = f(item);
-                    for (const key in res) {
-                        if (res.hasOwnProperty(key)) {
-                            aggr[key] = res[key];
-                        }
-                    }
-                    return aggr;
-                }, {});
-            },
-            enumerable: false
-        });
-    }
-
-    /**
-     * Adds some functions to Set.
-     */
-    private overloadSetFunctions(): void {
-        Object.defineProperty(Set.prototype, 'equals', {
-            value: function <T>(other: Set<T>): boolean {
-                const difference = new Set(this);
-                for (const elem of other) {
-                    if (difference.has(elem)) {
-                        difference.delete(elem);
-                    } else {
-                        return false;
-                    }
-                }
-                return !difference.size;
-            },
-            enumerable: false
-        });
-    }
-
-    /**
-     * Enhances the number object with a real modulo operation (not remainder).
-     * TODO: Remove this, if the remainder operation is changed to modulo.
-     */
-    private overloadModulo(): void {
-        Object.defineProperty(Number.prototype, 'modulo', {
-            value: function (n: number): number {
-                return ((this % n) + n) % n;
-            },
-            enumerable: false
-        });
+    public ngOnInit(): void {
+        this.onInitDone.resolve();
     }
 }
