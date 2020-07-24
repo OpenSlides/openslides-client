@@ -31,7 +31,7 @@
 
     <!-- Amount -->
     <div *pblNgridCellDef="'amount'; row as category" class="cell-slot fill">
-        <span class="os-amount-chip" matTooltip="{{ 'Motions' | translate }}">{{ category.motions.length }}</span>
+        <span class="os-amount-chip" matTooltip="{{ 'Motions' | translate }}">{{ getMotionAmount(category) }}</span>
     </div>
 </os-list-view-table>
 

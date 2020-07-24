@@ -10,6 +10,8 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
 import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 
 /**
  * Table for categories
@@ -89,7 +91,25 @@ export class CategoryListComponent extends BaseListViewComponent<ViewMotionCateg
      * Observe the agendaItems for changes.
      */
     public ngOnInit(): void {
+        super.ngOnInit();
         super.setTitle('Categories');
+    }
+
+    protected getModelRequest(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [1], // TODO
+            follow: [
+                {
+                    idField: 'motion_category_ids',
+                    fieldset: 'list'
+                }
+            ]
+        };
+    }
+
+    public getMotionAmount(category: ViewMotionCategory): number {
+        return category.motion_ids?.length;
     }
 
     /**

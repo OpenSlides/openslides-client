@@ -14,6 +14,9 @@ import { ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
 import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
 import { MotionBlockSortService } from 'app/site/motions/services/motion-block-sort.service';
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
+import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
 
 /**
  * Table for the motion blocks
@@ -114,8 +117,35 @@ export class MotionBlockListComponent extends BaseListViewComponent<ViewMotionBl
      * Observe the agendaItems for changes.
      */
     public ngOnInit(): void {
+        super.ngOnInit();
         super.setTitle('Motion blocks');
         this.items = this.itemRepo.getViewModelListBehaviorSubject();
+    }
+
+    protected getModelRequest(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [1], // TODO
+            follow: [
+                {
+                    idField: 'motion_block_ids',
+                    follow: [
+                        {
+                            idField: 'motion_ids',
+                            // since effectively we do not need any info here
+                            fieldset: [],
+                            follow: [
+                                {
+                                    idField: 'state_id',
+                                    fieldset: 'hasNextState'
+                                }
+                            ]
+                        },
+                        SPEAKER_BUTTON_FOLLOW
+                    ]
+                }
+            ]
+        };
     }
 
     /**
@@ -168,6 +198,30 @@ export class MotionBlockListComponent extends BaseListViewComponent<ViewMotionBl
         if (event.key === 'Escape') {
             this.resetForm();
             this.dialogRef.close();
+        }
+    }
+
+    public getMotionAmount(block: ViewMotionBlock): number {
+        return block.motions.length;
+    }
+
+    public getIndicatingIcon(block: ViewMotionBlock): string | null {
+        if (block.isFinished) {
+            return 'check';
+        } else if (block.internal) {
+            return 'lock';
+        } else {
+            return null;
+        }
+    }
+
+    public getIndicatingTooltip(block: ViewMotionBlock): string {
+        if (block.isFinished) {
+            return 'Finished';
+        } else if (block.internal) {
+            return 'Internal';
+        } else {
+            return '';
         }
     }
 }

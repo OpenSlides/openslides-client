@@ -27,9 +27,9 @@
         <div class="innerTable">
             <os-icon-container
                 [noWrap]="true"
-                [icon]="block.isFinished ? 'check' : block.internal ? 'lock' : null"
+                [icon]="getIndicatingIcon(block)"
                 size="large"
-                [iconTooltip]="block.isFinished ? 'Finished' : block.internal ? 'Internal' : ('' | translate)"
+                [iconTooltip]="getIndicatingTooltip(block) | translate"
             >
                 <os-icon-container
                     [noWrap]="true"
@@ -48,7 +48,7 @@
 
     <!-- Amount -->
     <div *pblNgridCellDef="'amount'; row as block" class="cell-slot fill">
-        <span class="os-amount-chip" matTooltip="{{ 'Motions' | translate }}">{{ block.motions.length }}</span>
+        <span class="os-amount-chip" matTooltip="{{ 'Motions' | translate }}">{{ getMotionAmount(block) }}</span>
     </div>
 
     <!-- Menu -->
