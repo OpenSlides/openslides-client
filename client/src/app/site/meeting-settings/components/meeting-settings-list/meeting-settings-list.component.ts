@@ -1,10 +1,19 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChildren, QueryList } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    OnDestroy,
+    OnInit,
+    QueryList,
+    ViewChildren
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { Subscription } from 'rxjs';
 
 import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
+import { MeetingRepositoryService } from 'app/core/repositories/event-management/meeting-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
@@ -12,8 +21,10 @@ import { CanComponentDeactivate } from 'app/shared/utils/watch-for-changes.guard
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { SettingsGroup } from '../../../../core/repositories/event-management/meeting-settings';
-import { SettingsFieldUpdate, MeetingSettingsFieldComponent } from '../meeting-settings-field/meeting-settings-field.component';
-import { MeetingRepositoryService } from 'app/core/repositories/event-management/meeting-repository.service';
+import {
+    MeetingSettingsFieldComponent,
+    SettingsFieldUpdate
+} from '../meeting-settings-field/meeting-settings-field.component';
 
 /**
  * List view for the global settings
@@ -41,7 +52,7 @@ export class MeetingSettingsListComponent extends BaseModelContextComponent
     private changedSettings: { [key: string]: any } = {};
 
     /** Provides access to all created settings fields. */
-    @ViewChildren("settingsFields") settingsFields: QueryList<MeetingSettingsFieldComponent>;
+    @ViewChildren('settingsFields') public settingsFields: QueryList<MeetingSettingsFieldComponent>;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -86,13 +97,16 @@ export class MeetingSettingsListComponent extends BaseModelContextComponent
      */
     public saveAll(): void {
         this.cd.detach();
-        this.repo.update(this.changedSettings, this.meeting).then(result => {
-            this.changedSettings = {};
-            this.cd.reattach();
-            this.cd.markForCheck();
-        }, errors => {
-            this.errors = errors;
-        });
+        this.repo.update(this.changedSettings, this.meeting).then(
+            result => {
+                this.changedSettings = {};
+                this.cd.reattach();
+                this.cd.markForCheck();
+            },
+            errors => {
+                this.errors = errors;
+            }
+        );
     }
 
     /**
@@ -103,7 +117,7 @@ export class MeetingSettingsListComponent extends BaseModelContextComponent
             'Are you sure you want to reset all options to factory defaults? All changes of this settings group will be lost!'
         );
         if (await this.promptDialog.open(title)) {
-            for (let settingsField of this.settingsFields) {
+            for (const settingsField of this.settingsFields) {
                 settingsField.onResetButton();
             }
         }

@@ -70,7 +70,7 @@ export class AuthService {
      */
     public async redirectUser(): Promise<void> {
         if (!this.OpenSlides.isBooted) {
-            await this.OpenSlides.afterLoginBootup();
+            this.OpenSlides.afterAuthenticatedBootup();
         }
 
         let redirect = this.OpenSlides.redirectUrl ? this.OpenSlides.redirectUrl : '/';

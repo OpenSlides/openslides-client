@@ -2,7 +2,14 @@ import { Injectable } from '@angular/core';
 
 import { BaseModel } from 'app/shared/models/base/base-model';
 import { BaseViewModel, ViewModelConstructor } from 'app/site/base/base-view-model';
-import { FieldDescriptor, Fields, ModelRequest, StructuredFieldDecriptor, GenericRelationFieldDecriptor, RelationFieldDescriptor } from './autoupdate.service';
+import {
+    FieldDescriptor,
+    Fields,
+    GenericRelationFieldDecriptor,
+    ModelRequest,
+    RelationFieldDescriptor,
+    StructuredFieldDecriptor
+} from './autoupdate.service';
 import { CollectionMapperService } from './collection-mapper.service';
 import { Deferred } from '../promises/deferred';
 import { Collection, Field, Id } from '../definitions/key-types';
@@ -101,7 +108,11 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
         }
     }
 
-    private calculateDataFields(collection: Collection, fieldset?: Fieldset, additionalFields?: (Field | ISpecificStructuredField)[]): Field[] {
+    private calculateDataFields(
+        collection: Collection,
+        fieldset?: Fieldset,
+        additionalFields?: (Field | ISpecificStructuredField)[]
+    ): Field[] {
         let fields: Field[];
         if (!fieldset) {
             fieldset = DEFAULT_FIELDSET;
@@ -205,8 +216,8 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
 
     private getStructuredFieldDescriptor(relation: Relation, follow: Follow): StructuredFieldDecriptor {
         const descriptor: StructuredFieldDecriptor = {
-            type: "template"
-        }
+            type: 'template'
+        };
 
         if (!follow.onlyValues) {
             if (relation.generic) {
@@ -218,7 +229,6 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
 
         return descriptor;
     }
-
 
     private addGenericRelation(
         possibleViewModels: ViewModelConstructor<BaseViewModel>[],

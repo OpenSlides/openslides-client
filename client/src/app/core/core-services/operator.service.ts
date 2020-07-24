@@ -14,6 +14,7 @@ import { DataStoreService } from './data-store.service';
 import { HttpService } from './http.service';
 import { SimplifiedModelRequest, SpecificStructuredField } from './model-request-builder.service';
 import { OnAfterAppsLoaded } from '../definitions/on-after-apps-loaded';
+import { StreamingCommunicationService } from './streaming-communication.service';
 import { User } from '../../shared/models/users/user';
 import { ShortNameInformation, UserRepositoryService } from '../repositories/users/user-repository.service';
 
@@ -162,7 +163,7 @@ export class OperatorService implements OnAfterAppsLoaded {
         private autoupdateService: AutoupdateService,
         private activeMeetingService: ActiveMeetingService,
         private collectionMapper: CollectionMapperService,
-        private communicationManagerService: CommunicationManagerService
+        private streamingCommunicationService: StreamingCommunicationService
     ) {
         this._loaded = this.operatorUpdatedEvent.pipe(take(1)).toPromise();
 
@@ -279,7 +280,7 @@ export class OperatorService implements OnAfterAppsLoaded {
         }
 
         this.operatorIdSubject.next(this.whoAmIData.user_id);
-        this.communicationManagerService.setIsOperatorAuthenticated(this.isAuthenticated);
+        this.streamingCommunicationService.setIsOperatorAuthenticated(this.isAuthenticated);
 
         if (this.whoAmIData.user_id) {
             await this.refreshUserSubscription();

@@ -4,6 +4,7 @@ import { environment } from 'environments/environment.prod';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { HttpService } from './http.service';
+import { LifecycleService } from './lifecycle.service';
 
 /**
  * This service provides the timeoffset to the server and a user of this service
@@ -26,7 +27,9 @@ export class ServertimeService {
      */
     private serverOffsetSubject = new BehaviorSubject<number>(0);
 
-    public constructor(private http: HttpService) {}
+    public constructor(private http: HttpService, private lifecycleService: LifecycleService) {
+        this.lifecycleService.appLoaded.subscribe(() => this.startScheduler);
+    }
 
     /**
      * Starts the scheduler to sync with the server.

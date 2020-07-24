@@ -2,41 +2,60 @@ import { Injectable } from '@angular/core';
 
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
-import { Meeting } from 'app/shared/models/event-management/meeting';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { AutoupdateService, ModelSubscription } from './autoupdate.service';
+import { LifecycleService } from './lifecycle.service';
 import { MeetingRepositoryService } from '../repositories/event-management/meeting-repository.service';
-import { DEFAULT_FIELDSET, SimplifiedModelRequest } from './model-request-builder.service';
+import { SimplifiedModelRequest } from './model-request-builder.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ActiveMeetingService {
     private meetingIdSubject = new BehaviorSubject<number | null>(null);
+    private meetingIdSubscription: Subscription = null;
 
     private meetingSubject = new BehaviorSubject<ViewMeeting | null>(null);
-    private meetingSubcription: Subscription;
+    private meetingSubcription: Subscription = null;
 
-    protected modelSubscription: ModelSubscription | null = null;
+    protected modelAutoupdateSubscription: ModelSubscription | null = null;
 
-    public constructor(private repo: MeetingRepositoryService, private autoupdateService: AutoupdateService) {
-        this.meetingIdSubject.subscribe(id => {
-            this.closeModelSubscription();
-            if (id) {
-                this.requestModel();
+    public constructor(
+        private repo: MeetingRepositoryService,
+        private autoupdateService: AutoupdateService,
+        private lifecycleService: LifecycleService
+    ) {
+        this.lifecycleService.openslidesBooted.subscribe(() => this.start());
+    }
 
-                if (this.meetingSubcription) {
-                    this.meetingSubcription.unsubscribe();
-                }
-                this.meetingSubcription = this.repo.getViewModelObservable(id).subscribe(meeting => {
-                    this.meetingSubject.next(meeting);
-                });
-            } else {
-                this.meetingSubject.next(null);
-            }
-        });
+    public start(): void {
+        if (this.meetingIdSubscription) {
+            this.meetingIdSubscription.unsubscribe();
+            this.meetingIdSubscription = null;
+        }
+        this.meetingIdSubscription = this.meetingIdSubject.subscribe(id => this.setupModelSubscription(id));
 
         this.meetingIdSubject.next(1);
+    }
+
+    private async setupModelSubscription(id: number | null): Promise<void> {
+        if (this.modelAutoupdateSubscription) {
+            this.modelAutoupdateSubscription.close();
+            this.modelAutoupdateSubscription = null;
+        }
+
+        if (id) {
+            this.modelAutoupdateSubscription = await this.autoupdateService.simpleRequest(this.getModelRequest());
+
+            if (this.meetingSubcription) {
+                this.meetingSubcription.unsubscribe();
+            }
+            this.meetingSubcription = this.repo.getViewModelObservable(id).subscribe(meeting => {
+                this.meetingSubject.next(meeting);
+            });
+        } else {
+            this.meetingSubject.next(null);
+        }
     }
 
     public getMeetingIdObservable(): Observable<number | null> {
@@ -61,17 +80,5 @@ export class ActiveMeetingService {
             ids: [this.getMeetingId()],
             fieldset: 'settings'
         };
-    }
-
-    private async requestModel(): Promise<void> {
-        this.closeModelSubscription();
-        this.modelSubscription = await this.autoupdateService.simpleRequest(this.getModelRequest());
-    }
-
-    private closeModelSubscription(): void {
-        if (this.modelSubscription) {
-            this.modelSubscription.close();
-            this.modelSubscription = null;
-        }
     }
 }
