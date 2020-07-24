@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 
 import { MotionSubmitter } from 'app/shared/models/motions/motion-submitter';
 import { ViewMotionSubmitter } from 'app/site/motions/models/view-motion-submitter';
-import { BaseRepository } from '../base-repository';
 import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
+import { Fieldsets, DEFAULT_FIELDSET } from 'app/core/core-services/model-request-builder.service';
 
 @Injectable({
     providedIn: 'root'
@@ -12,6 +12,14 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 export class MotionSubmitterRepositoryService extends MeetingModelBaseRepository<ViewMotionSubmitter, MotionSubmitter> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, MotionSubmitter);
+    }
+
+    public getFieldsets(): Fieldsets<MotionSubmitter> {
+        const listFields: (keyof MotionSubmitter)[] = ['user_id'];
+
+        return {
+            [DEFAULT_FIELDSET]: listFields
+        };
     }
 
     public getTitle = (finnWasHere: ViewMotionSubmitter) => {

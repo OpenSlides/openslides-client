@@ -20,6 +20,7 @@ import { BaseListViewComponent } from 'app/site/base/components/base-list-view.c
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
 import { BlockDetailFilterListService } from 'app/site/motions/services/block-detail-filter-list.service';
+import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
 
 /**
  * Detail component to display one motion block
@@ -123,7 +124,11 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
         public vp: ViewportService
     ) {
         super(componentServiceCollector);
-        this.blockId = parseInt(this.route.snapshot.params.id, 10);
+        this.blockId = Number(this.route.snapshot.params.id);
+
+        /**
+         * TODO: This "might" nit be needed anymore, since filtering can now work implicitly using the requests
+         */
         this.filterService.blockId = this.blockId;
     }
 
@@ -132,6 +137,37 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
      * Sets the title, observes the block and the motions belonging in this block
      */
     public ngOnInit(): void {
+        this.requestModels({
+            viewModelCtor: ViewMotionBlock,
+            ids: [this.blockId],
+            follow: [
+                {
+                    idField: 'motion_ids',
+                    fieldset: 'blockList',
+                    follow: [
+                        {
+                            idField: 'state_id',
+                            fieldset: 'blockList'
+                        },
+                        {
+                            idField: 'recommendation_id',
+                            fieldset: 'list'
+                        },
+                        {
+                            idField: 'submitter_ids',
+                            follow: [
+                                {
+                                    idField: 'user_id',
+                                    fieldset: 'shortName'
+                                }
+                            ]
+                        },
+                        SPEAKER_BUTTON_FOLLOW
+                    ]
+                }
+            ]
+        });
+
         // pseudo filter
         this.subscriptions.push(
             this.repo.getViewModelObservable(this.blockId).subscribe(newBlock => {

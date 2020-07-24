@@ -10,6 +10,8 @@ import { MotionWorkflow } from 'app/shared/models/motions/motion-workflow';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
 import { ViewMotionWorkflow } from 'app/site/motions/models/view-motion-workflow';
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 
 /**
  * List view for workflows
@@ -66,7 +68,21 @@ export class WorkflowListComponent extends BaseListViewComponent<ViewMotionWorkf
      * Init. Observe the repository
      */
     public ngOnInit(): void {
+        super.ngOnInit();
         super.setTitle('Workflows');
+    }
+
+    protected getModelRequest(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [1], // TODO
+            follow: [
+                {
+                    idField: 'motion_workflow_ids'
+                }
+            ],
+            fieldset: []
+        };
     }
 
     /**

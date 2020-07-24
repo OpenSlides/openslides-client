@@ -4,11 +4,12 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { BaseComponent } from 'app/site/base/components/base.component';
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionComment } from 'app/site/motions/models/view-motion-comment';
 import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-comment-section';
 import { MotionPdfExportService } from 'app/site/motions/services/motion-pdf-export.service';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 
 /**
  * Component for the motion comments view
@@ -18,7 +19,7 @@ import { MotionPdfExportService } from 'app/site/motions/services/motion-pdf-exp
     templateUrl: './motion-comments.component.html',
     styleUrls: ['./motion-comments.component.scss']
 })
-export class MotionCommentsComponent extends BaseComponent implements OnInit {
+export class MotionCommentsComponent extends BaseModelContextComponent implements OnInit {
     /**
      * An array of all sections the operator can see.
      */
@@ -63,6 +64,18 @@ export class MotionCommentsComponent extends BaseComponent implements OnInit {
     }
 
     public ngOnInit(): void {
+        this.requestModels({
+            viewModelCtor: ViewMeeting,
+            ids: [1], // TODO
+            follow: [
+                {
+                    idField: 'motion_comment_section_ids',
+                    fieldset: 'comment',
+                    follow: ['comment_ids']
+                }
+            ]
+        });
+
         this.subscriptions.push(
             this.commentRepo.getViewModelListObservable().subscribe(sections => {
                 if (sections && sections.length) {
@@ -81,8 +94,16 @@ export class MotionCommentsComponent extends BaseComponent implements OnInit {
      * sets the `sections` member with sections, if the operator has reading permissions.
      */
     private filterSections(): void {
-        if (this.sections && this.sections.length) {
-            this.sections = this.sections.filter(section => this.operator.isInGroupIds(...section.read_group_ids));
+        if (this.sections?.length) {
+            this.sections = this.sections.filter(section => this.canReadSection(section));
+        }
+    }
+
+    private canReadSection(section: ViewMotionCommentSection): boolean {
+        if (section.read_group_ids?.length) {
+            return this.operator.isInGroupIds(...section.read_group_ids);
+        } else {
+            return false;
         }
     }
 
@@ -92,7 +113,15 @@ export class MotionCommentsComponent extends BaseComponent implements OnInit {
      * @param section The section to judge about
      */
     public canEditSection(section: ViewMotionCommentSection): boolean {
-        return this.operator.isInGroupIds(...section.write_group_ids);
+        if (section.write_group_ids?.length) {
+            /**
+             * FIXME:
+             * section.write_group_ids is undefined.
+             */
+            return this.operator.isInGroupIds(...section.write_group_ids);
+        } else {
+            return false;
+        }
     }
 
     /**

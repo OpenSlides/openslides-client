@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { BaseComponent } from 'app/site/base/components/base.component';
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-comment-section';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 
 /**
  * Sorting view for motion comments
@@ -13,7 +14,7 @@ import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-co
     templateUrl: './motion-comment-section-sort.component.html',
     styleUrls: ['./motion-comment-section-sort.component.scss']
 })
-export class MotionCommentSectionSortComponent extends BaseComponent implements OnInit {
+export class MotionCommentSectionSortComponent extends BaseModelContextComponent implements OnInit {
     /**
      * Holds the models
      */
@@ -39,6 +40,11 @@ export class MotionCommentSectionSortComponent extends BaseComponent implements 
      * Get the view models from the repo
      */
     public ngOnInit(): void {
+        this.requestModels({
+            viewModelCtor: ViewMeeting,
+            ids: [1], // TODO
+            follow: ['motion_comment_section_ids']
+        });
         this.repo.getViewModelListObservable().subscribe(comments => (this.comments = comments));
     }
 

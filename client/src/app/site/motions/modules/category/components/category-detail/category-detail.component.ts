@@ -10,7 +10,7 @@ import { MotionRepositoryService } from 'app/core/repositories/motions/motion-re
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
-import { BaseComponent } from 'app/site/base/components/base.component';
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
 
@@ -22,7 +22,7 @@ import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category
     templateUrl: './category-detail.component.html',
     styleUrls: ['./category-detail.component.scss']
 })
-export class CategoryDetailComponent extends BaseComponent implements OnInit {
+export class CategoryDetailComponent extends BaseModelContextComponent implements OnInit {
     /**
      * The one selected category
      */
@@ -63,13 +63,9 @@ export class CategoryDetailComponent extends BaseComponent implements OnInit {
 
     /**
      * Constructor for motion block details
-     *
-     * @param titleService Setting the title
-     * @param translate translations
-     * @param matSnackBar showing errors
+     * @param route determine the blocks ID by the route
      * @param operator the current user
      * @param router navigating
-     * @param route determine the blocks ID by the route
      * @param repo the motion blocks repository
      * @param motionRepo the motion repository
      * @param promptService the displaying prompts before deleting
@@ -93,7 +89,22 @@ export class CategoryDetailComponent extends BaseComponent implements OnInit {
      * Sets the title, observes the block and the motions belonging in this block
      */
     public ngOnInit(): void {
-        const selectedCategoryId = parseInt(this.route.snapshot.params.id, 10);
+        const selectedCategoryId = Number(this.route.snapshot.params.id);
+        this.loadCategoryById(selectedCategoryId);
+    }
+
+    private loadCategoryById(selectedCategoryId: number): void {
+        this.requestModels({
+            viewModelCtor: ViewMotionCategory,
+            ids: [selectedCategoryId],
+            follow: [
+                {
+                    idField: 'motion_ids',
+                    fieldset: 'title',
+                    follow: ['state_id', 'recommendation_id']
+                }
+            ]
+        });
 
         this.subscriptions.push(
             this.repo.getViewModelListObservable().subscribe(categories => {

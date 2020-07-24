@@ -459,7 +459,7 @@
             {{ motion.origin }}
         </div>
 
-        <!-- Ammendments -->
+        <!-- Amendments -->
         <div *ngIf="!editMotion && amendments && amendments.length > 0">
             <h4>{{ 'Amendments' | translate }}</h4>
             <a [routerLink]="['/motions/amendments', motion.id]" [state]="{ back: 'true' }">

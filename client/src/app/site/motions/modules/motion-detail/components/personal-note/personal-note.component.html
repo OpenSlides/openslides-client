@@ -40,7 +40,7 @@
     <ng-container class="meta-text-block-content">
         <ng-container *ngIf="!isEditMode">
             <div *ngIf="personalNoteText" [innerHTML]="personalNoteText | trust: 'html'"></div>
-            <div class="no-content" *ngIf="!motion || motion.personal_notes.length === 0">
+            <div class="no-content" *ngIf="!hasPersonalNote">
                 {{ 'No personal note' | translate }}
             </div>
         </ng-container>

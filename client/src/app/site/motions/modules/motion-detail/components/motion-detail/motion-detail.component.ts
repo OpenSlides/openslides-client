@@ -34,11 +34,12 @@ import { LinenumberingService } from 'app/core/ui-services/linenumbering.service
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
+import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
 import { Mediafile } from 'app/shared/models/mediafiles/mediafile';
 import { Motion } from 'app/shared/models/motions/motion';
 import { ViewUnifiedChange } from 'app/shared/models/motions/view-unified-change';
 import { infoDialogSettings, mediumDialogSettings } from 'app/shared/utils/dialog-settings';
-import { BaseComponent } from 'app/site/base/components/base.component';
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { CreateMotion } from 'app/site/motions/models/create-motion';
 import { ViewCreateMotion } from 'app/site/motions/models/view-create-motion';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
@@ -85,7 +86,7 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class MotionDetailComponent extends BaseComponent implements OnInit, OnDestroy {
+export class MotionDetailComponent extends BaseModelContextComponent implements OnInit, OnDestroy {
     /**
      * Motion content. Can be a new version
      */
@@ -194,7 +195,11 @@ export class MotionDetailComponent extends BaseComponent implements OnInit, OnDe
     /**
      * Value of the config variable `motions_min_supporters`
      */
-    public minSupporters: number;
+    // public minSupporters: number;
+    /**
+     * TODO service does not exist
+     */
+    public minSupporters = 1;
 
     /**
      * Value of the config variable `motions_preamble`
@@ -448,15 +453,7 @@ export class MotionDetailComponent extends BaseComponent implements OnInit, OnDe
      * Sets all required subjects and fills in the required information
      */
     public ngOnInit(): void {
-        // get required information from the repositories
-        this.tagObserver = this.tagRepo.getViewModelListBehaviorSubject();
-        this.workflowObserver = this.workflowRepo.getViewModelListBehaviorSubject();
-        this.blockObserver = this.blockRepo.getViewModelListBehaviorSubject();
-        this.motionObserver = this.repo.getViewModelListBehaviorSubject();
-        this.submitterObserver = this.userRepo.getViewModelListBehaviorSubject();
-        this.supporterObserver = this.userRepo.getViewModelListBehaviorSubject();
-        this.categoryObserver = this.categoryRepo.getViewModelListBehaviorSubject();
-
+        this.registerSubjects();
         this.createForm();
         this.observeRoute();
         this.getMotionByUrl();
@@ -471,9 +468,10 @@ export class MotionDetailComponent extends BaseComponent implements OnInit, OnDe
         this.organisationSettingsService
             .get<boolean>('motions_hide_referring_motions')
             .subscribe(show => (this.showReferringMotions = !show));
-        this.organisationSettingsService
-            .get<number>('motions_min_supporters')
-            .subscribe(supporters => (this.minSupporters = supporters));
+        // FIXME: Does not yet exist
+        // this.organisationSettingsService
+        //     .get<number>('motions_min_supporters')
+        //     .subscribe(supporters => (this.minSupporters = supporters));
         this.organisationSettingsService
             .get<string>('motions_preamble')
             .subscribe(preamble => (this.preamble = preamble));
@@ -560,6 +558,29 @@ export class MotionDetailComponent extends BaseComponent implements OnInit, OnDe
         });
     }
 
+    private registerSubjects(): void {
+        // get required information from the repositories
+        this.tagObserver = this.tagRepo.getViewModelListBehaviorSubject();
+        this.workflowObserver = this.workflowRepo.getViewModelListBehaviorSubject();
+        this.blockObserver = this.blockRepo.getViewModelListBehaviorSubject();
+        this.motionObserver = this.repo.getViewModelListBehaviorSubject();
+        this.submitterObserver = this.userRepo.getViewModelListBehaviorSubject();
+        this.supporterObserver = this.userRepo.getViewModelListBehaviorSubject();
+        this.categoryObserver = this.categoryRepo.getViewModelListBehaviorSubject();
+
+        // since updates are usually not commig at the same time, every change to
+        // any subject has to mark the view for chekcing
+        this.subscriptions.push(
+            this.tagObserver.subscribe(() => this.cd.markForCheck()),
+            this.workflowObserver.subscribe(() => this.cd.markForCheck()),
+            this.blockObserver.subscribe(() => this.cd.markForCheck()),
+            this.motionObserver.subscribe(() => this.cd.markForCheck()),
+            this.submitterObserver.subscribe(() => this.cd.markForCheck()),
+            this.supporterObserver.subscribe(() => this.cd.markForCheck()),
+            this.categoryObserver.subscribe(() => this.cd.markForCheck())
+        );
+    }
+
     /**
      * Subscribes to all new amendment's change recommendations so we can access their data for the diff view
      */
@@ -641,47 +662,7 @@ export class MotionDetailComponent extends BaseComponent implements OnInit, OnDe
      * determine the motion to display using the URL
      */
     public getMotionByUrl(): void {
-        const params = this.route.snapshot.params;
-        if (params && params.id) {
-            // existing motion
-            const motionId: number = +params.id;
-
-            // the following subscriptions need to be cleared when the route changes
-            this.subscriptions.push(
-                this.repo.getViewModelObservable(motionId).subscribe(motion => {
-                    if (motion) {
-                        if (motion.isParagraphBasedAmendment()) {
-                            this.contentForm.get('text').clearValidators();
-                            this.contentForm.get('text').updateValueAndValidity();
-                        }
-                        const title = motion.getTitle();
-                        super.setTitle(title);
-                        this.motion = motion;
-                        this.newStateExtension = this.motion.stateExtension;
-                        this.recommendationStateExtension = this.motion.recommendationExtension;
-                        if (!this.editMotion) {
-                            this.patchForm(this.motion);
-                        }
-                        this.cd.markForCheck();
-                    }
-                }),
-
-                this.repo.amendmentsTo(motionId).subscribe((amendments: ViewMotion[]): void => {
-                    this.amendments = amendments;
-                    this.resetAmendmentChangeRecoListener();
-                    this.recalcUnifiedChanges();
-                }),
-                this.repo
-                    .getRecommendationReferencingMotions(motionId)
-                    .subscribe(motions => (this.recommendationReferencingMotions = motions)),
-                this.changeRecoRepo
-                    .getChangeRecosOfMotionObservable(motionId)
-                    .subscribe((recos: ViewMotionChangeRecommendation[]) => {
-                        this.changeRecommendations = recos;
-                        this.recalcUnifiedChanges();
-                    })
-            );
-        } else {
+        if (this.route.snapshot.url[0] && this.route.snapshot.url[0].path === 'new') {
             super.setTitle('New motion');
             // new motion
             this.newMotion = true;
@@ -712,7 +693,93 @@ export class MotionDetailComponent extends BaseComponent implements OnInit, OnDe
                 }
             }
             this.motion = new ViewCreateMotion(new CreateMotion(defaultMotion));
+        } else {
+            this.subscriptions.push(
+                this.route.params.subscribe(params => {
+                    this.loadMotionById(Number(params.id));
+                })
+            );
         }
+    }
+
+    private loadMotionById(motionId: number): void {
+        this.requestModels({
+            viewModelCtor: ViewMotion,
+            ids: [motionId],
+            follow: [
+                'block_id',
+                'category_id',
+                'lead_motion_id',
+                {
+                    idField: 'amendment_ids',
+                    follow: [
+                        {
+                            idField: 'lead_motion_id',
+                            fieldset: 'amendment'
+                        }
+                    ]
+                },
+                {
+                    idField: 'submitter_ids',
+                    follow: [
+                        {
+                            idField: 'user_id',
+                            fieldset: 'shortName'
+                        }
+                    ]
+                },
+                {
+                    idField: 'supporter_ids',
+                    fieldset: 'shortName'
+                },
+                {
+                    idField: 'state_id',
+                    follow: [
+                        {
+                            idField: 'next_state_ids'
+                        }
+                    ]
+                },
+                SPEAKER_BUTTON_FOLLOW
+            ]
+        });
+
+        this.subscriptions.push(
+            this.repo.getViewModelObservable(motionId).subscribe(motion => {
+                if (motion) {
+                    console.log('the motion we got: ', motion);
+
+                    if (motion.isParagraphBasedAmendment()) {
+                        this.contentForm.get('text').clearValidators();
+                        this.contentForm.get('text').updateValueAndValidity();
+                    }
+                    const title = motion.getTitle();
+                    super.setTitle(title);
+                    this.motion = motion;
+                    this.newStateExtension = this.motion.stateExtension;
+                    this.recommendationStateExtension = this.motion.recommendationExtension;
+                    if (!this.editMotion) {
+                        this.patchForm(this.motion);
+                    }
+                    this.cd.markForCheck();
+                }
+            }),
+
+            this.repo.amendmentsTo(motionId).subscribe((amendments: ViewMotion[]): void => {
+                this.amendments = amendments;
+                this.resetAmendmentChangeRecoListener();
+                this.recalcUnifiedChanges();
+            }),
+            this.repo
+                .getRecommendationReferencingMotions(motionId)
+                .subscribe(motions => (this.recommendationReferencingMotions = motions)),
+            this.changeRecoRepo
+                .getChangeRecosOfMotionObservable(motionId)
+                .subscribe((recos: ViewMotionChangeRecommendation[]) => {
+                    this.changeRecommendations = recos;
+                    this.recalcUnifiedChanges();
+                })
+        );
     }
 
     /**
