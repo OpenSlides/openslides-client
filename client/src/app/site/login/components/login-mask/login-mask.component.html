@@ -1,8 +1,7 @@
 <div class="form-wrapper">
-
     <!-- Install notice -->
     <div class="login-container" *ngIf="installationNotice">
-        <mat-card [innerHTML]="(installationNotice) | translate"></mat-card>
+        <mat-card [innerHTML]="installationNotice | translate"></mat-card>
     </div>
 
     <!-- login form -->
@@ -14,7 +13,6 @@
                 required
                 placeholder="{{ 'Username' | translate }}"
                 formControlName="username"
-                [errorStateMatcher]="parentErrorStateMatcher"
             />
         </mat-form-field>
         <br />
@@ -25,7 +23,6 @@
                 placeholder="{{ 'Password' | translate }}"
                 formControlName="password"
                 [type]="!hide ? 'password' : 'text'"
-                [errorStateMatcher]="parentErrorStateMatcher"
             />
             <mat-icon color="primary" matSuffix (click)="hide = !hide">{{ hide ? 'visibility_off' : 'visibility_on' }}</mat-icon>
 
@@ -41,14 +38,10 @@
         <!-- login button -->
         <br />
         <!-- TODO: Next to each other...-->
-        <button mat-raised-button color="primary" class="login-button" type="submit">{{ 'Login' | translate }}</button>
-        <button
-            mat-stroked-button
-            *ngIf="areGuestsEnabled()"
-            class="login-button"
-            type="button"
-            (click)="guestLogin()"
-        >
+        <button mat-raised-button color="primary" class="login-button" type="submit" [disabled]="loginForm.invalid">
+            {{ 'Login' | translate }}
+        </button>
+        <button mat-stroked-button *ngIf="areGuestsEnabled()" class="login-button" type="button" (click)="guestLogin()">
             {{ 'Login as guest' | translate }}
         </button>
         <!--<a
