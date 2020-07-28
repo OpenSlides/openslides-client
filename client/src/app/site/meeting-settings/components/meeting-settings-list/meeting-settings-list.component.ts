@@ -35,7 +35,8 @@ import {
     styleUrls: ['./meeting-settings-list.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MeetingSettingsListComponent extends BaseModelContextComponent
+export class MeetingSettingsListComponent
+    extends BaseModelContextComponent
     implements CanComponentDeactivate, OnInit, OnDestroy {
     public settingsGroup: SettingsGroup;
 

@@ -170,7 +170,7 @@ export class PermissionsService {
                 );
             }
             case 'can_manage_config': {
-                return this.operator.hasPerms(Permission.coreCanManageConfig);
+                return this.operator.hasPerms(Permission.coreCanManageSettings);
             }
             case 'manage': {
                 return this.operator.hasPerms(Permission.motionsCanManage);

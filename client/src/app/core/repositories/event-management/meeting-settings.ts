@@ -620,7 +620,7 @@ export const meetingSettings: SettingsGroup[] = [
                     {
                         key: 'assignment_poll_default_method',
                         label: 'Default election method',
-                        default: AssignmentPollMethod.Votes,
+                        default: AssignmentPollMethod.Y,
                         type: 'choice',
                         choices: AssignmentPollMethod
                     },

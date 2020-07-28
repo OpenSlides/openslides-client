@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { AuthService } from 'app/core/core-services/auth.service';
 import { ModelRequestService } from 'app/core/core-services/model-request.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
+import { TokenService } from 'app/core/core-services/token.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { LoginDataService } from 'app/core/ui-services/login-data.service';
@@ -43,6 +44,7 @@ export class UserMenuComponent extends BaseModelContextComponent implements OnIn
         componentServiceCollector: ComponentServiceCollector,
         private operator: OperatorService,
         private authService: AuthService,
+        private tokenService: TokenService,
         private overlayService: OverlayService,
         private loginDataService: LoginDataService,
         private router: Router,
@@ -54,6 +56,15 @@ export class UserMenuComponent extends BaseModelContextComponent implements OnIn
     public ngOnInit(): void {
         /*this.operator.authType.subscribe(authType => (this.authType = authType));*/
 
+        this.tokenService.getAccessTokenAsObservable().subscribe(() => {
+            this.isLoggedIn = !this.operator.isAnonymous;
+            this.username = this.isLoggedIn ? this.operator.shortName : this.translate.instant('Guest');
+            const userId = this.operator.operatorId;
+            if (this._userId !== userId) {
+                this._userId = userId;
+                this.userUpdate();
+            }
+        });
         this.operator.operatorUpdatedEvent.subscribe(() => {
             this.isLoggedIn = !this.operator.isAnonymous;
             this.username = this.isLoggedIn ? this.operator.shortName : this.translate.instant('Guest');

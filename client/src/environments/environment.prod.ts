@@ -1,4 +1,5 @@
 export const environment = {
     production: true,
-    urlPrefix: '/apps'
+    urlPrefix: '/apps',
+    authUrlPrefix: '/system/auth'
 };

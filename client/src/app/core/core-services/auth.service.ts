@@ -3,11 +3,20 @@ import { Router } from '@angular/router';
 
 import { environment } from 'environments/environment';
 
-import { OperatorService, WhoAmI } from 'app/core/core-services/operator.service';
+import { OperatorService } from 'app/core/core-services/operator.service';
 import { DataStoreService } from './data-store.service';
 import { HttpService } from './http.service';
 import { OpenSlidesService } from './openslides.service';
-import { StorageService } from './storage.service';
+import { TokenService } from './token.service';
+
+/**
+ * Response from a login request.
+ */
+export interface LoginResponse {
+    message: string;
+    success: boolean;
+    token?: string;
+}
 
 interface LoginData {
     username: string;
@@ -22,6 +31,8 @@ interface LoginData {
     providedIn: 'root'
 })
 export class AuthService {
+    private accessToken: string = null;
+
     /**
      * Initializes the httpClient and the {@link OperatorService}.
      *
@@ -32,46 +43,38 @@ export class AuthService {
      */
     public constructor(
         private http: HttpService,
+        private tokenService: TokenService,
         private operator: OperatorService,
         private OpenSlides: OpenSlidesService,
         private router: Router,
-        private DS: DataStoreService,
-        private storageService: StorageService
+        private DS: DataStoreService
     ) {}
 
     /**
      * Try to log in a user with a given auth type
-     *
-     * - Type "default": username and password needed; the earlySuccessCallback will be called.
-     * - Type "saml": The windows location will be changed to the single-sign-on service initiator.
      */
-    // TODO: remove auth type
-    /*public async login(
-        authType: UserAuthType,
-        username: string,
-        password: string,
-        earlySuccessCallback: () => void
-    ): Promise<void> {
-        if (authType === 'default') {
-            const data: LoginData = {
-                username: username,
-                password: password
-            };
-            if (!navigator.cookieEnabled) {
-                data.cookies = false;
-            }
-            const response = await this.http.post<WhoAmI>(environment.urlPrefix + '/users/login/', data);
-            earlySuccessCallback();
-            await this.OpenSlides.shutdown();
-            await this.operator.setWhoAmI(response);
-            await this.OpenSlides.afterLoginBootup();
-            await this.redirectUser();
-        } else if (authType === 'saml') {
-            window.location.href = environment.urlPrefix + '/saml/?sso'; // Bye
-        } else {
-            throw new Error(`Unsupported auth type "${authType}"`);
+    public async login(username: string, password: string, earlySuccessCallback: () => void): Promise<void> {
+        // if (authType === 'default') {
+        const user = {
+            username: username,
+            password: password
+        };
+        const response = await this.http.post<LoginResponse>(environment.authUrlPrefix + '/login/', user);
+        if (response.token) {
+            this.setAccessToken(response.token);
         }
-    }*/
+        earlySuccessCallback();
+        await this.OpenSlides.shutdown();
+        // await this.operator.setWhoAmI(response);
+        // await this.OpenSlides.afterLoginBootup();
+        await this.redirectUser();
+
+        // } else if (authType === 'saml') {
+        //     window.location.href = environment.urlPrefix + '/saml/?sso'; // Bye
+        // } else {
+        //     throw new Error(`Unsupported auth type "${authType}"`);
+        // }
+    }
 
     /**
      * Redirects the user to the page where he came from. Boots OpenSlides,
@@ -105,6 +108,12 @@ export class AuthService {
      * send a `post`-request to `/apps/users/logout/'`. Restarts OpenSlides.
      */
     public async logout(): Promise<void> {
+        const response = await this.http.post<LoginResponse>(environment.authUrlPrefix + '/api/logout/');
+        if (response.success) {
+            this.setAccessToken('');
+        }
+        this.router.navigate(['/']);
+        await this.OpenSlides.reboot();
         /*const authType = this.operator.authType.getValue();
         if (authType === DEFAULT_AUTH_TYPE) {
             let response = null;
@@ -126,6 +135,15 @@ export class AuthService {
         } else {
             throw new Error(`Unsupported auth type "${authType}"`);
         }*/
-        throw new Error('TODO'); // just ignore the SAML case for now..
+        // throw new Error('TODO'); // just ignore the SAML case for now..
+    }
+
+    public isAuthenticated(): boolean {
+        return !!this.accessToken;
+    }
+
+    private setAccessToken(token: string): void {
+        this.accessToken = token;
+        this.tokenService.nextAccessToken(token);
     }
 }

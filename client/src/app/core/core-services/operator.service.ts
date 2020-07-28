@@ -7,6 +7,7 @@ import { auditTime, take } from 'rxjs/operators';
 import { ActiveMeetingService } from './active-meeting.service';
 import { Group } from 'app/shared/models/users/group';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { LoginResponse } from './auth.service';
 import { AutoupdateService, ModelSubscription } from './autoupdate.service';
 import { CollectionMapperService } from './collection-mapper.service';
 import { CommunicationManagerService } from './communication-manager.service';
@@ -16,6 +17,7 @@ import { SimplifiedModelRequest, SpecificStructuredField } from './model-request
 import { OfflineBroadcastService, OfflineReason } from './offline-broadcast.service';
 import { OnAfterAppsLoaded } from '../definitions/on-after-apps-loaded';
 import { StreamingCommunicationService } from './streaming-communication.service';
+import { TokenService } from './token.service';
 import { User } from '../../shared/models/users/user';
 import { ShortNameInformation, UserRepositoryService } from '../repositories/users/user-repository.service';
 
@@ -100,15 +102,15 @@ export class OperatorService implements OnAfterAppsLoaded {
     private whoAmIData: WhoAmI = this.getDefaultWhoAmIData();
 
     public get operatorId(): number | null {
-        return this.whoAmIData.user_id;
+        return this.tokenService.whoAmI().userId;
     }
 
     public get shortName(): string {
-        return this.whoAmIData.short_name;
+        return this.tokenService.whoAmI().username;
     }
 
     public get isAnonymous(): boolean {
-        return !this.whoAmIData.user_id;
+        return !this.tokenService.whoAmI().userId;
     }
 
     public get isSuperAdmin(): boolean {
@@ -120,7 +122,7 @@ export class OperatorService implements OnAfterAppsLoaded {
     }
 
     public get isAuthenticated(): boolean {
-        return this.isAnonymous || this.guestEnabled;
+        return !!this.tokenService.accessToken || this.guestEnabled;
     }
 
     /**
@@ -160,6 +162,7 @@ export class OperatorService implements OnAfterAppsLoaded {
 
     public constructor(
         private http: HttpService,
+        private tokenService: TokenService,
         private DS: DataStoreService,
         private autoupdateService: AutoupdateService,
         private activeMeetingService: ActiveMeetingService,
@@ -239,19 +242,21 @@ export class OperatorService implements OnAfterAppsLoaded {
         let online = true;
         try {
             // const response = await this.http.get(environment.urlPrefix + '/users/whoami/');
+            const loginResponse = await this.http.post<LoginResponse>(`${environment.authUrlPrefix}/who-am-i/`);
 
             // FAKE WhoAmI
             const response = {
                 user_id: 1,
-                guest_enabled: true,
+                guest_enabled: false,
                 group_ids: [2],
                 short_name_information: { username: 'TODO' },
                 auth_type: 'default',
                 permissions: []
             };
 
-            if (isWhoAmI(response)) {
+            if (isWhoAmI(response) && loginResponse.token) {
                 await this.setWhoAmI(response);
+                this.tokenService.nextAccessToken(loginResponse.token);
             } else {
                 online = false;
             }
