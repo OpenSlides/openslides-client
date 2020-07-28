@@ -143,21 +143,21 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
      * Send username and password to the {@link AuthService}
      */
     public async formLogin(/*authType: UserAuthType*/): Promise<void> {
-        /*this.loginErrorMsg = '';
+        this.loginErrorMsg = '';
         try {
-            this.overlayService.logout(); // Ensures displaying spinner, if logging in
-            this.overlayService.showSpinner(this.translate.instant(this.loginMessage), true);
-            await this.authService.login(authType, this.loginForm.value.username, this.loginForm.value.password, () => {
-                this.clearOperatorSubscription(); // We take control, not the subscription.
+            // this.overlayService.logout(); // Ensures displaying spinner, if logging in
+            // this.overlayService.showSpinner(this.translate.instant(this.loginMessage), true);
+            await this.authService.login(this.loginForm.value.username, this.loginForm.value.password, () => {
+                // this.clearOperatorSubscription(); // We take control, not the subscription.
             });
         } catch (e) {
-            this.overlayService.hideSpinner();
+            // this.overlayService.hideSpinner();
             this.loginForm.setErrors({
                 notFound: true
             });
             this.loginErrorMsg = e;
-        }*/
-        throw new Error('TODO'); // Ingore SAML for now...
+        }
+        // throw new Error('TODO'); // Ingore SAML for now...
     }
 
     /**
