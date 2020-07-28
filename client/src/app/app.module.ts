@@ -1,4 +1,4 @@
-import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
+import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -14,6 +14,7 @@ import { environment } from '../environments/environment';
 import { LoginModule } from './site/login/login.module';
 import { OpenSlidesTranslateModule } from './core/translate/openslides-translate-module';
 import { SlidesModule } from './slides/slides.module';
+import { TokenInterceptorService } from './core/core-services/token-interceptor.service';
 
 /**
  * Returns a function that returns a promis that will be resolved, if all apps are loaded.
@@ -44,7 +45,14 @@ export function AppLoaderFactory(appLoadService: AppLoadService): () => Promise<
         SlidesModule.forRoot(),
         StorageModule.forRoot({ IDBNoWrap: false })
     ],
-    providers: [{ provide: APP_INITIALIZER, useFactory: AppLoaderFactory, deps: [AppLoadService], multi: true }],
+    providers: [
+        { provide: APP_INITIALIZER, useFactory: AppLoaderFactory, deps: [AppLoadService], multi: true },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: TokenInterceptorService,
+            multi: true
+        }
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule {}

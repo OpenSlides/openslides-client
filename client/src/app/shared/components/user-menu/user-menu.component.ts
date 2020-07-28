@@ -13,6 +13,7 @@ import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { TokenService } from 'app/core/core-services/token.service';
 
 @Component({
     selector: 'os-user-menu',
@@ -43,6 +44,7 @@ export class UserMenuComponent extends BaseModelContextComponent implements OnIn
         componentServiceCollector: ComponentServiceCollector,
         private operator: OperatorService,
         private authService: AuthService,
+        private tokenService: TokenService,
         private overlayService: OverlayService,
         private loginDataService: LoginDataService,
         private router: Router,
@@ -54,6 +56,15 @@ export class UserMenuComponent extends BaseModelContextComponent implements OnIn
     public ngOnInit(): void {
         /*this.operator.authType.subscribe(authType => (this.authType = authType));*/
 
+        this.tokenService.getAccessTokenAsObservable().subscribe(() => {
+            this.isLoggedIn = !this.operator.isAnonymous;
+            this.username = this.isLoggedIn ? this.operator.shortName : this.translate.instant('Guest');
+            const userId = this.operator.operatorId;
+            if (this._userId !== userId) {
+                this._userId = userId;
+                this.userUpdate();
+            }
+        });
         this.operator.operatorUpdatedEvent.subscribe(() => {
             this.isLoggedIn = !this.operator.isAnonymous;
             this.username = this.isLoggedIn ? this.operator.shortName : this.translate.instant('Guest');
