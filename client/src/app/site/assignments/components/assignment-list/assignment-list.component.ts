@@ -13,6 +13,9 @@ import { AssignmentFilterListService } from '../../services/assignment-filter-li
 import { AssignmentPdfExportService } from '../../services/assignment-pdf-export.service';
 import { AssignmentSortListService } from '../../services/assignment-sort-list.service';
 import { AssignmentPhases, ViewAssignment } from '../../models/view-assignment';
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
+import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
 
 /**
  * List view for the assignments
@@ -93,7 +96,23 @@ export class AssignmentListComponent extends BaseListViewComponent<ViewAssignmen
      * Sets the title, inits the table
      */
     public ngOnInit(): void {
+        super.ngOnInit();
         super.setTitle('Elections');
+    }
+
+    protected getModelRequest(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [1], // TODO
+            follow: [
+                {
+                    idField: 'assignment_ids',
+                    follow: [SPEAKER_BUTTON_FOLLOW],
+                    fieldset: 'list'
+                }
+            ],
+            fieldset: []
+        };
     }
 
     /**
@@ -125,6 +144,10 @@ export class AssignmentListComponent extends BaseListViewComponent<ViewAssignmen
      */
     public downloadAssignmentButton(assignments?: ViewAssignment[]): void {
         this.pdfService.exportMultipleAssignments(assignments ? assignments : this.repo.getViewModelList());
+    }
+
+    public getCandidateAmount(assignments: ViewAssignment): number {
+        return assignments.candidateAmount
     }
 
     /**

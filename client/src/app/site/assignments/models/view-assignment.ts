@@ -46,7 +46,7 @@ export class ViewAssignment extends BaseProjectableViewModel<Assignment> {
     }
 
     public get candidatesAsUsers(): ViewUser[] {
-        return this.candidates.map(candidate => candidate.user).filter(x => !!x);
+        return this.candidates?.map(candidate => candidate.user).filter(x => !!x);
     }
 
     public get phaseString(): string {
@@ -75,7 +75,7 @@ export class ViewAssignment extends BaseProjectableViewModel<Assignment> {
      * @returns the amount of candidates in the assignment's candidate list
      */
     public get candidateAmount(): number {
-        return this.candidates.length;
+        return this.candidate_ids.length;
     }
 
     public formatForSearch(): SearchRepresentation {
