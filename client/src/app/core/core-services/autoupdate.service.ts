@@ -3,11 +3,13 @@ import { Injectable } from '@angular/core';
 import { autoupdateFormatToModelData, AutoupdateModelData, ModelData } from './autoupdate-helpers';
 import { BaseModel } from '../../shared/models/base/base-model';
 import { CollectionMapperService } from './collection-mapper.service';
-import { CommunicationManagerService, OfflineError } from './communication-manager.service';
+import { CommunicationManagerService } from './communication-manager.service';
 import { DataStoreService, DataStoreUpdateManagerService } from './data-store.service';
 import { HTTPMethod } from '../definitions/http-methods';
+import { HttpStreamEndpointService } from './http-stream-endpoint.service';
 import { ModelRequestBuilderService, SimplifiedModelRequest } from './model-request-builder.service';
 import { Mutex } from '../promises/mutex';
+import { StreamingCommunicationService } from './streaming-communication.service';
 
 const META_DELETED = 'meta_deleted';
 
@@ -61,8 +63,6 @@ interface ChangedModels {
 export class AutoupdateService {
     private mutex = new Mutex();
 
-    private activeRequests: { [id: number]: { request: ModelRequest; closeFn: () => void } } = {};
-
     /**
      * Constructor to create the AutoupdateService. Calls the constructor of the parent class.
      * @param websocketService
@@ -76,21 +76,12 @@ export class AutoupdateService {
         private modelRequestBuilder: ModelRequestBuilderService,
         private communicationManager: CommunicationManagerService
     ) {
-        this.communicationManager.startCommunicationEvent.subscribe(() => this.startAllAutoupdates());
-    }
-
-    public async startAllAutoupdates(): Promise<void> {
-        try {
-            for (const id of Object.keys(this.activeRequests)) {
-                this.startAutoupdate(+id);
-            }
-        } catch (e) {
-            if (e instanceof OfflineError) {
-                console.log(e);
-            } else {
-                console.log('???', e);
-            }
-        }
+        this.communicationManager.registerEndpoint(
+            'autoupdate',
+            '/system/autoupdate',
+            '/system/autoupdate/health',
+            HTTPMethod.POST
+        );
     }
 
     public async simpleRequest(simpleRequest: SimplifiedModelRequest): Promise<ModelSubscription> {
@@ -100,40 +91,12 @@ export class AutoupdateService {
     }
 
     public async request(request: ModelRequest): Promise<ModelSubscription> {
-        const id = Math.floor(Math.random() * (900000 - 1) + 100000); // [100000, 999999]
-        this.activeRequests[id] = {
-            request,
-            closeFn: () => {
-                delete this.activeRequests[id];
-            }
-        };
-        try {
-            await this.startAutoupdate(id);
-        } catch (e) {
-            if (e instanceof OfflineError) {
-                console.log(e);
-            } else {
-                console.log('???', e);
-            }
-        }
-        return { close: this.activeRequests[id].closeFn };
-    }
-
-    private async startAutoupdate(id: number): Promise<void> {
-        const closeFn = await this.communicationManager.subscribe<AutoupdateModelData>(
-            HTTPMethod.POST,
-            '/system/autoupdate',
-            message => {
-                console.log('Got message', message);
-                this.handleAutoupdateWithStupidFormat(message);
-            },
-            () => [this.activeRequests[id].request]
+        const closeFn = await this.communicationManager.connect<AutoupdateModelData>(
+            'autoupdate',
+            message => this.handleAutoupdateWithStupidFormat(message),
+            () => [request]
         );
-
-        this.activeRequests[id].closeFn = () => {
-            delete this.activeRequests[id];
-            closeFn();
-        };
+        return { close: closeFn };
     }
 
     private async handleAutoupdateWithStupidFormat(autoupdateData: AutoupdateModelData): Promise<void> {
@@ -168,7 +131,6 @@ export class AutoupdateService {
                 }
             }
         }
-        console.log(changedModels, deletedModels);
         await this.handleChangedAndDeletedModels(changedModels, deletedModels);
         unlock();
     }

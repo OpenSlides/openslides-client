@@ -42,7 +42,7 @@ export class LegalNoticeComponent extends BaseComponent implements OnInit {
     }
 
     public resetCache(): void {
-        this.openSlidesService.reset();
+        this.openSlidesService.reboot();
     }
 
     public checkForUpdate(): void {

@@ -4,7 +4,8 @@ import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 
 import { DataStoreService } from './data-store.service';
-import { OfflineBroadcastService, OfflineReason } from './offline-broadcast.service';
+import { LifecycleService } from './lifecycle.service';
+import { OfflineBroadcastService, OfflineReason, OfflineReasonValue } from './offline-broadcast.service';
 import { OperatorService, WhoAmI } from './operator.service';
 import { StorageService } from './storage.service';
 
@@ -20,17 +21,13 @@ export class OpenSlidesService {
      */
     public redirectUrl: string;
 
-    /**
-     * Subject to hold the flag `booted`.
-     */
-    public readonly booted = new BehaviorSubject(false);
-
+    private _isBooted = false;
     /**
      * Saves, if OpenSlides is fully booted. This means, that a user must be logged in
      * (Anonymous is also a user in this case). This is the case after `afterLoginBootup`.
      */
     public get isBooted(): boolean {
-        return this.booted.value;
+        return this._isBooted;
     }
 
     /**
@@ -43,13 +40,13 @@ export class OpenSlidesService {
      * @param DS
      */
     public constructor(
-        private storageService: StorageService,
         private operator: OperatorService,
         private router: Router,
         private DS: DataStoreService,
-        private offlineBroadcastService: OfflineBroadcastService
+        private offlineBroadcastService: OfflineBroadcastService,
+        private lifecycleService: LifecycleService
     ) {
-        this.bootup();
+        this.lifecycleService.appLoaded.subscribe(() => this.bootup());
     }
 
     /**
@@ -59,7 +56,9 @@ export class OpenSlidesService {
     public async bootup(): Promise<void> {
         const response = await this.operator.doWhoAmIRequest();
         if (!response.online) {
-            this.offlineBroadcastService.goOffline(OfflineReason.WhoAmIFailed);
+            this.offlineBroadcastService.goOffline({
+                type: OfflineReasonValue.WhoAmIFailed
+            });
         }
 
         if (!this.operator.isAuthenticated) {
@@ -68,7 +67,7 @@ export class OpenSlidesService {
             }
             this.redirectToLoginIfNotSubpage();
         } else {
-            await this.afterLoginBootup();
+            this.afterAuthenticatedBootup();
         }
     }
 
@@ -88,84 +87,34 @@ export class OpenSlidesService {
         }
     }
 
-    /**
-     * the login bootup-sequence: Check (and maybe clear) the cache und setup the DataStore
-     * and websocket. This "login" also may be the "login" of an anonymous when he is using
-     * OpenSlides as a guest.
-     * @param userId the id or null for guest
-     */
-    public async afterLoginBootup(/*userId: number | null*/): Promise<void> {
-        /*
-        // Check, which user was logged in last time
-        const lastUserId = await this.storageService.get<number>('lastUserLoggedIn');
-        // if the user changed, reset the cache and save the new user.
-        if (userId !== lastUserId) {
-            await this.DS.clear();
-            await this.storageService.set('lastUserLoggedIn', userId);
-        }
-        await this.setupDataStoreAndWebSocket();
-        */
-
+    public afterAuthenticatedBootup(): void {
         this.DS.clear();
-
-        // Now finally booted.
-        this.booted.next(true);
+        this._isBooted = true;
+        this.lifecycleService.openslidesBooted.next();
     }
-
-    /**
-     * Init DS from cache and after this start the websocket service.
-     */
-    /*private async setupDataStoreAndWebSocket(): Promise<void> {
-        let changeId = await this.DS.initFromStorage();
-        // disconnect the WS connection, if there was one. This is needed
-        // to update the connection parameters, namely the cookies. If the user
-        // is changed, the WS needs to reconnect, so the new connection holds the new
-        // user information.
-        if (this.websocketService.isConnected) {
-            await this.websocketService.close(); // Wait for the disconnect.
-        }
-        await this.websocketService.connect(changeId); // Request changes after changeId.
-    }*/
 
     /**
      * Shuts down OpenSlides. The websocket connection is closed and the operator is not set.
      */
-    public async shutdown(): Promise<void> {
-        // await this.websocketService.close();
-        this.booted.next(false);
+    public shutdown(): void {
+        this._isBooted = false;
+        this.lifecycleService.openslidesShutdowned.next();
     }
 
     /**
      * Shutdown and bootup.
      */
-    public async reboot(): Promise<void> {
-        await this.shutdown();
-        await this.bootup();
+    public reboot(): void {
+        this.shutdown();
+        this.bootup();
     }
 
-    /**
-     * Clears the client cache and restarts OpenSlides. Results in "flickering" of the
-     * login mask, because the cached operator is also cleared.
-     */
-    public async reset(): Promise<void> {
-        await this.shutdown();
-        await this.storageService.clear();
-        await this.bootup();
-    }
-
-    /**
-     * Verify that the operator is the same as it was before. Should be alled on a reconnect.
-     *
-     * @returns true, if the user is still logged in
-     */
-    public async checkWhoAmI(whoami: WhoAmI): Promise<boolean> {
-        let isLoggedIn = false;
+    public async checkWhoAmI(whoami: WhoAmI): Promise<void> {
         // User logged off.
         if (!whoami.user_id && !whoami.guest_enabled) {
             await this.shutdown();
             this.redirectToLoginIfNotSubpage();
         } else {
-            isLoggedIn = true;
             console.warn('TODO: did the user change?');
             /*if (
                 (this.operator.user && this.operator.user.id !== whoami.user_id) ||
@@ -176,7 +125,5 @@ export class OpenSlidesService {
                 await this.reboot();
             }*/
         }
-
-        return isLoggedIn;
     }
 }
