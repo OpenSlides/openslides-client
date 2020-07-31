@@ -16,6 +16,7 @@ import { columnFactory, createDS, PblColumnDefinition } from '@pebula/ngrid';
 import { PblNgridDataMatrixRow } from '@pebula/ngrid/target-events';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService, Permission } from 'app/core/core-services/operator.service';
 import { MediafileRepositoryService } from 'app/core/repositories/mediafiles/mediafile-repository.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
@@ -26,6 +27,7 @@ import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { Mediafile } from 'app/shared/models/mediafiles/mediafile';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { ViewGroup } from 'app/site/users/models/view-group';
 import { MediafilesSortListService } from '../../services/mediafiles-sort-list.service';
@@ -216,6 +218,7 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
      * Set the title, make the edit Form and observe Mediafiles
      */
     public ngOnInit(): void {
+        super.ngOnInit();
         super.setTitle('Files');
 
         this.repo.getDirectoryIdByPath(this.route.snapshot.url.map(x => x.path)).then(directoryId => {
@@ -223,11 +226,16 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
         });
 
         // Observe the logo actions
+        /**
+         * TODO: Media manage / Config service missing?
+         */
         this.mediaManage.getLogoActions().subscribe(action => {
             this.logoActions = action;
         });
 
-        // Observe the font actions
+        /**
+         * TODO: Media manage / Config service missing?
+         */
         this.mediaManage.getFontActions().subscribe(action => {
             this.fontActions = action;
         });
@@ -239,6 +247,19 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
         super.ngOnDestroy();
         this.clearSubscriptions();
         this.cd.detach();
+    }
+
+    protected getModelRequest(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [1], // TODO
+            follow: [
+                {
+                    idField: 'mediafile_ids',
+                    follow: ['access_group_ids', 'inherited_access_group_ids']
+                }
+            ]
+        };
     }
 
     /**
@@ -412,9 +433,9 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
     public getFileSettings(file: ViewMediafile): string[] {
         let uses = [];
         if (file) {
-            if (file.isFont()) {
+            if (file.isFont() && this.fontActions?.length) {
                 uses = this.fontActions.filter(action => this.isUsedAs(file, action));
-            } else if (file.isImage()) {
+            } else if (file.isImage() && this.logoActions?.length) {
                 uses = this.logoActions.filter(action => this.isUsedAs(file, action));
             }
         }
