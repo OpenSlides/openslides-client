@@ -11,12 +11,13 @@ export class Group extends BaseModel<Group> {
 
     public id: Id;
     public name: string;
-    public is_superadmin_group: boolean;
-    public is_default_group: boolean;
     public permissions: Permission[];
 
     public user_ids: Id[]; // (user/group_$<meeting_id>_ids)[];
+    public default_group_for_meeting_id: Id; // meeting/default_group_id;
+    public superadmin_group_for_meeting_id: Id; // meeting/superadmin_group_id;
     public mediafile_access_group_ids: Id[]; // (mediafile/access_group_ids)[];
+    public mediafile_inherited_access_group_ids: Id[]; // (mediafile/inherited_access_group_ids)[];
     public read_comment_section_ids: Id[]; // (motion_comment_section/read_group_ids)[];
     public write_comment_section_ids: Id[]; // (motion_comment_section/write_group_ids)[];
     public motion_poll_ids: Id[]; // (motion_poll/entitled_group_ids)[];

@@ -63,5 +63,7 @@ interface IMeetingRelations {
     temporary_users: ViewUser[];
     guests: ViewUser[];
     reference_projector: ViewProjector;
+    default_group: ViewGroup;
+    superadmin_group: ViewGroup;
 }
 export interface ViewMeeting extends Meeting, IMeetingRelations {}
