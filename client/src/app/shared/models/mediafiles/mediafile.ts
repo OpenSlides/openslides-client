@@ -25,19 +25,16 @@ export class Mediafile extends BaseModel<Mediafile> {
     public pdf_information: PdfInformation;
     public create_timestamp: string;
     public path: string;
-    public inherited_access_group_ids: boolean | number[];
+    public has_inherited_access_groups: boolean;
 
     public access_group_ids: Id[]; // (group/mediafile_access_group_ids)[];
+    public inherited_access_group_ids: Id[]; // (group/mediafile_inherited_access_group_ids)[];  // Note: calculated
     public parent_id: Id; // mediafile/child_ids;
     public child_ids: Id[]; // (mediafile/parent_id)[];
     public attachment_ids: Fqid[]; // (*/attachment_ids)[];
     public meeting_id: Id; // meeting/mediafile_ids;
     public used_as_logo_$_in_meeting: string[]; // meeting/logo_$<token>;
     public used_as_font_$_in_meeting: string[]; // meeting/font_$<token>;
-
-    public get has_inherited_access_groups(): boolean {
-        return typeof this.inherited_access_group_ids !== 'boolean';
-    }
 
     public constructor(input?: any) {
         super(Mediafile.COLLECTION, input);
