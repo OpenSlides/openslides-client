@@ -146,6 +146,9 @@ export class Meeting extends BaseModel<Meeting> {
     public guest_ids: Id[]; // (user/guest_meeting_ids)[];
     public reference_projector_id: Id; // projector/used_as_reference_projector_meeting_id;
 
+    public default_group_id: Id; // group/default_group_for_meeting_id;
+    public superadmin_group_id: Id; // group/superadmin_group_for_meeting_id;
+
     public constructor(input?: any) {
         super(Meeting.COLLECTION, input);
     }
