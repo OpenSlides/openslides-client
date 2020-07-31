@@ -2,15 +2,12 @@ import { StructuredRelation } from 'app/core/definitions/relations';
 import { SearchRepresentation } from 'app/core/ui-services/search.service';
 import { HasAttachmentIds } from 'app/shared/models/base/has-attachment-ids';
 import { Mediafile } from 'app/shared/models/mediafiles/mediafile';
-import { HasAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { HasListOfSpeakers, ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { Searchable } from 'app/site/base/searchable';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
-import { ViewProjection } from 'app/site/projector/models/view-projection';
-import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { ViewGroup } from 'app/site/users/models/view-group';
 
 export const IMAGE_MIMETYPES = ['image/png', 'image/jpeg', 'image/gif'];
@@ -151,15 +148,12 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
 }
 interface IMediafileRelations {
     access_groups: ViewGroup[];
+    inherited_access_groups: ViewGroup[];
     parent?: ViewMediafile;
     children: ViewMediafile[];
     attachments: (BaseViewModel & HasAttachment)[];
     meeting: ViewMeeting;
     used_as_logo_in_meeting: StructuredRelation<string, ViewMeeting | null>;
     used_as_font_in_meeting: StructuredRelation<string, ViewMeeting | null>;
-
-    // this one is speacial: It is a one-sided relation, which must only be accessed, if
-    // has_inherited_access_groups is true.
-    inherited_access_groups?: ViewGroup[];
 }
 export interface ViewMediafile extends Mediafile, IMediafileRelations, Searchable, HasListOfSpeakers {}
