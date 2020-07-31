@@ -41,7 +41,7 @@
                     *ngIf="!last"
                 >
                     <span class="folder-text">
-                        {{ directory.filename }}
+                        {{ directory.title }}
                     </span>
                 </button>
                 <button
@@ -53,11 +53,11 @@
                     *ngIf="last && showFileMenu(directory)"
                 >
                     <os-icon-container icon="arrow_drop_down" swap="true" size="large" [noWrap]="true">
-                        {{ directory.filename }}
+                        {{ directory.title }}
                     </os-icon-container>
                 </button>
                 <span class="folder fake-folder folder-text" *ngIf="last && !showFileMenu(directory)">
-                    {{ directory.filename }}
+                    {{ directory.title }}
                 </span>
             </span>
         </span>
@@ -118,10 +118,10 @@
         </a>
         <div class="innerTable">
             <div class="file-title ellipsis-overflow">
-                {{ mediafile.filename }}
+                {{ mediafile.title }}
             </div>
             <div class="info-text" *ngIf="!mediafile.is_directory">
-                <span> {{ getDateFromTimestamp(mediafile.timestamp) }} · {{ mediafile.filesize }} </span>
+                <span> {{ getDateFromTimestamp(mediafile.create_timestamp) }} · {{ mediafile.filesize }} </span>
             </div>
         </div>
     </div>
