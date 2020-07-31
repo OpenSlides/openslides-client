@@ -127,7 +127,7 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
             fields = fieldset;
         }
 
-        fields.push("id");
+        fields.push('id');
 
         if (additionalFields) {
             fields = fields.concat(additionalFields.map(f => this.ensureField(f)));

@@ -7,6 +7,7 @@ import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-co
 import { BaseRepository } from '../base-repository';
 import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
+import { Fieldsets, DEFAULT_FIELDSET } from 'app/core/core-services/model-request-builder.service';
 
 /**
  * Repository Services for Categories
@@ -34,6 +35,15 @@ export class MotionCommentSectionRepositoryService extends MeetingModelBaseRepos
             } else {
                 return a.weight - b.weight;
             }
+        };
+    }
+
+    public getFieldsets(): Fieldsets<ViewMotionCommentSection> {
+        const listFields: (keyof ViewMotionCommentSection)[] = ['name', 'weight'];
+        const commentFields: (keyof ViewMotionCommentSection)[] = ['name', 'read_group_ids', 'write_group_ids'];
+        return {
+            [DEFAULT_FIELDSET]: listFields,
+            comment: commentFields
         };
     }
 

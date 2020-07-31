@@ -10,9 +10,10 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { MotionCommentSection } from 'app/shared/models/motions/motion-comment-section';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
-import { BaseComponent } from 'app/site/base/components/base.component';
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-comment-section';
 import { ViewGroup } from 'app/site/users/models/view-group';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 
 /**
  * List view for the comment sections.
@@ -22,7 +23,7 @@ import { ViewGroup } from 'app/site/users/models/view-group';
     templateUrl: './motion-comment-section-list.component.html',
     styleUrls: ['./motion-comment-section-list.component.scss']
 })
-export class MotionCommentSectionListComponent extends BaseComponent implements OnInit {
+export class MotionCommentSectionListComponent extends BaseModelContextComponent implements OnInit {
     @ViewChild('motionCommentDialog', { static: true })
     private motionCommentDialog: TemplateRef<string>;
 
@@ -75,6 +76,23 @@ export class MotionCommentSectionListComponent extends BaseComponent implements 
      */
     public ngOnInit(): void {
         super.setTitle('Comment fields');
+        this.requestModels({
+            viewModelCtor: ViewMeeting,
+            ids: [1], // TODO
+            follow: [
+                {
+                    idField: 'motion_comment_section_ids',
+                    // FIXME: partially depends on the group repository
+                    follow: ['comment_ids', 'read_group_ids', 'write_group_ids']
+                }
+            ]
+        });
+
+        /**
+         * Not entirely sure how to get the groups here.
+         * Another call of requestModels?
+         * FIXME: partially depends on the group repository
+         */
         this.groups = this.groupRepo.getViewModelListBehaviorSubject();
         this.repo.getViewModelListObservable().subscribe(newViewSections => (this.commentSections = newViewSections));
     }

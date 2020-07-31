@@ -273,38 +273,34 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
     }
 
     protected getModelRequest(): SimplifiedModelRequest {
-        /*return {
-            collection: ViewMeeting.COLLECTION,
-            ids: [1], // TODO
-            fields: {
-                motion_ids: {
-                    type: 'relation-list',
-                    collection: ViewMotion.COLLECTION,
-                    fields: {
-                        title: null,
-                        number: null,
-                        category_id: {
-                            type: "relation",
-                            collection: ViewMotionCategory.COLLECTION,
-                            fields: {
-                                prefix: null,
-                                name: null,
-                                weight: null,
-                                motion_ids: null,
-                            }
-                        }
-                        // TODO: Speaker
-                    }
-                },
-            }
-        }*/
         return {
             viewModelCtor: ViewMeeting,
             ids: [1], // TODO
             follow: [
                 {
                     idField: 'motion_ids',
-                    follow: ['category_id', SPEAKER_BUTTON_FOLLOW],
+                    follow: [
+                        'category_id',
+                        'block_id',
+                        {
+                            idField: 'state_id',
+                            fieldset: 'list'
+                        },
+                        {
+                            idField: 'recommendation_id',
+                            fieldset: 'list'
+                        },
+                        {
+                            idField: 'submitter_ids',
+                            follow: [
+                                {
+                                    idField: 'user_id',
+                                    fieldset: 'shortName'
+                                }
+                            ]
+                        },
+                        SPEAKER_BUTTON_FOLLOW
+                    ],
                     fieldset: 'list'
                 }
             ],

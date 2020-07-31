@@ -183,7 +183,9 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     public getNumberOrTitle: () => string;
 
     public getPersonalNote(): ViewPersonalNote | null {
-        return this.personal_notes[0] || null;
+        if (this.personal_notes?.length) {
+            return this.personal_notes[0] || null;
+        }
     }
 
     /**
@@ -272,7 +274,8 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     }
 
     public hasSupporters(): boolean {
-        return !!(this.supporters && this.supporters.length > 0);
+        return true
+        // return !!(this.supporters && this.supporters.length > 0);
     }
 
     public hasAttachments(): boolean {
