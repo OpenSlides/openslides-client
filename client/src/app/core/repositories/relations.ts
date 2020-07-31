@@ -441,6 +441,18 @@ export const RELATIONS: Relation[] = [
         AField: 'reference_projector',
         BField: 'used_as_reference_projector_in_meeting'
     }),
+    ...makeO2O({
+        AViewModel: ViewMeeting,
+        BViewModel: ViewGroup,
+        AField: 'default_group',
+        BField: 'default_group_for_meeting'
+    }),
+    ...makeO2O({
+        AViewModel: ViewMeeting,
+        BViewModel: ViewGroup,
+        AField: 'superadmin_group',
+        BField: 'superadmin_group_for_meeting'
+    }),
     // Logo -> meeting
     {
         ownViewModels: [ViewMediafile],
@@ -709,6 +721,12 @@ export const RELATIONS: Relation[] = [
         BViewModel: ViewGroup,
         AField: 'access_groups',
         BField: 'mediafile_access_groups'
+    }),
+    ...makeM2M({
+        AViewModel: ViewMediafile,
+        BViewModel: ViewGroup,
+        AField: 'inherited_access_groups',
+        BField: 'mediafile_inherited_access_groups'
     }),
     ...makeM2O({
         MViewModel: ViewMediafile,

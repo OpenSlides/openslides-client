@@ -6,10 +6,8 @@ import { CollectionMapperService } from './collection-mapper.service';
 import { CommunicationManagerService } from './communication-manager.service';
 import { DataStoreService, DataStoreUpdateManagerService } from './data-store.service';
 import { HTTPMethod } from '../definitions/http-methods';
-import { HttpStreamEndpointService } from './http-stream-endpoint.service';
 import { ModelRequestBuilderService, SimplifiedModelRequest } from './model-request-builder.service';
 import { Mutex } from '../promises/mutex';
-import { StreamingCommunicationService } from './streaming-communication.service';
 
 const META_DELETED = 'meta_deleted';
 
@@ -39,7 +37,7 @@ export interface RelationFieldDescriptor extends HasFields {
 
 export interface StructuredFieldDecriptor {
     type: 'template';
-    values?: FieldDescriptor;
+    values?: RelationFieldDescriptor | GenericRelationFieldDecriptor;
 }
 
 export interface ModelSubscription {
