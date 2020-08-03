@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 
+import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { MotionComment } from 'app/shared/models/motions/motion-comment';
 import { ViewMotionComment } from 'app/site/motions/models/view-motion-comment';
-import { BaseRepository } from '../base-repository';
 import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
-import { Fieldsets, DEFAULT_FIELDSET } from 'app/core/core-services/model-request-builder.service';
 
 @Injectable({
     providedIn: 'root'
@@ -26,7 +25,7 @@ export class MotionCommentRepositoryService extends MeetingModelBaseRepository<V
     public getFieldsets(): Fieldsets<ViewMotionComment> {
         const commentFields: (keyof ViewMotionComment)[] = ['comment'];
         return {
-            [DEFAULT_FIELDSET]: commentFields,
+            [DEFAULT_FIELDSET]: commentFields
         };
     }
 }

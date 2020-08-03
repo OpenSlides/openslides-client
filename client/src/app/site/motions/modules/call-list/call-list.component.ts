@@ -8,12 +8,12 @@ import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { FlatNode } from 'app/core/ui-services/tree.service';
-import { BaseSortTreeComponent, SortTreeFilterOption } from 'app/site/base/components/base-sort-tree.component';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { MotionCsvExportService } from 'app/site/motions/services/motion-csv-export.service';
 import { MotionPdfExportService } from 'app/site/motions/services/motion-pdf-export.service';
 import { ViewTag } from 'app/site/tags/models/view-tag';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
+import { BaseSortTreeComponent, SortTreeFilterOption } from 'app/site/base/components/base-sort-tree.component';
 
 /**
  * Sort view for the call list.

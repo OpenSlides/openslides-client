@@ -12,6 +12,7 @@ import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
+import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
 import { Assignment } from 'app/shared/models/assignments/assignment';
 import { ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
@@ -25,7 +26,6 @@ import { AssignmentPollService } from '../../modules/assignment-poll/services/as
 import { AssignmentPhases, ViewAssignment } from '../../models/view-assignment';
 import { ViewAssignmentCandidate } from '../../models/view-assignment-candidate';
 import { ViewAssignmentPoll } from '../../models/view-assignment-poll';
-import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
 
 /**
  * Component for the assignment detail view
