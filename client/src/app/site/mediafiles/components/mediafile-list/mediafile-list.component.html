@@ -175,12 +175,12 @@
 </pbl-ngrid>
 
 <!-- Template for the managing buttons -->
-<ng-template #manageButton let-mediafile="mediafile" let-action="action">
-    <button mat-menu-item (click)="onManageButton($event, mediafile, action)">
+<ng-template #manageButton let-mediafile="mediafile" let-option="option">
+    <button mat-menu-item (click)="onManageButton($event, mediafile, option)">
         <mat-icon color="accent">
-            {{ isUsedAs(mediafile, action) ? 'check_box' : 'check_box_outline_blank' }}
+            {{ isUsedAs(mediafile, option) ? 'check_box' : 'check_box_outline_blank' }}
         </mat-icon>
-        <span>{{ getNameOfAction(action) }}</span>
+        <span>{{ getOptionName(option) }}</span>
     </button>
 </ng-template>
 
@@ -190,18 +190,18 @@
         <div *osPerms="permission.coreCanManageLogosAndFonts">
             <!-- Exclusive for images -->
             <div *ngIf="mediafile.isImage()">
-                <div *ngFor="let action of logoActions">
+                <div *ngFor="let option of logoOptions">
                     <ng-container
-                        *ngTemplateOutlet="manageButton; context: { mediafile: mediafile, action: action }"
+                        *ngTemplateOutlet="manageButton; context: { mediafile: mediafile, option: option }"
                     ></ng-container>
                 </div>
             </div>
 
             <!-- Exclusive for fonts -->
             <div *ngIf="mediafile.isFont()">
-                <div *ngFor="let action of fontActions">
+                <div *ngFor="let option of FontOptions">
                     <ng-container
-                        *ngTemplateOutlet="manageButton; context: { mediafile: mediafile, action: action }"
+                        *ngTemplateOutlet="manageButton; context: { mediafile: mediafile, option: option }"
                     ></ng-container>
                 </div>
             </div>
