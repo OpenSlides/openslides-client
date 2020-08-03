@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 
-import { HttpService } from 'app/core/core-services/http.service';
+import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Mediafile } from 'app/shared/models/mediafiles/mediafile';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
@@ -42,6 +42,26 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
         return this.translate.instant(plural ? 'Files' : 'File');
     };
 
+    public getFieldsets(): Fieldsets<Mediafile> {
+        const fileSelectionFields: (keyof Mediafile)[] = ['title', 'filename'];
+        const listFields: (keyof Mediafile)[] = [
+            'title',
+            'filename',
+            'path',
+            'mimetype',
+            'filesize',
+            'create_timestamp',
+            'is_directory',
+            'has_inherited_access_groups',
+            'parent_id'
+        ];
+
+        return {
+            [DEFAULT_FIELDSET]: listFields,
+            fileSelection: fileSelectionFields
+        };
+    }
+
     public async getDirectoryIdByPath(pathSegments: string[]): Promise<number | null> {
         let parentId = null;
 
@@ -62,7 +82,15 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
     public getListObservableDirectory(parentId: number | null): Observable<ViewMediafile[]> {
         return this.getViewModelListObservable().pipe(
             map(mediafiles => {
-                return mediafiles.filter(mediafile => mediafile.parent_id === parentId);
+                return mediafiles.filter(mediafile => {
+                    // instead of being null or undefined, for the root dir
+                    // mediafile.parent_id is simply not the in object
+                    if (!mediafile.parent_id && !parentId) {
+                        return true;
+                    } else {
+                        return mediafile.parent_id === parentId;
+                    }
+                });
             })
         );
     }
