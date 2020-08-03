@@ -5,18 +5,18 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { PblColumnDefinition } from '@pebula/ngrid';
 import { BehaviorSubject } from 'rxjs';
 
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService, Permission } from 'app/core/core-services/operator.service';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
 import { MotionBlockSortService } from 'app/site/motions/services/motion-block-sort.service';
-import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
-import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
 
 /**
  * Table for the motion blocks

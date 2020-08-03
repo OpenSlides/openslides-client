@@ -11,9 +11,9 @@ import { PromptService } from 'app/core/ui-services/prompt.service';
 import { MotionCommentSection } from 'app/shared/models/motions/motion-comment-section';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-comment-section';
 import { ViewGroup } from 'app/site/users/models/view-group';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 
 /**
  * List view for the comment sections.

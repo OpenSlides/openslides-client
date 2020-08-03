@@ -5,11 +5,11 @@ import { OperatorService } from 'app/core/core-services/operator.service';
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionComment } from 'app/site/motions/models/view-motion-comment';
 import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-comment-section';
 import { MotionPdfExportService } from 'app/site/motions/services/motion-pdf-export.service';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 
 /**
  * Component for the motion comments view

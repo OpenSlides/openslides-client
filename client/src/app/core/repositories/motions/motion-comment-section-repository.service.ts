@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 
 import { HttpService } from 'app/core/core-services/http.service';
+import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { MotionCommentSection } from 'app/shared/models/motions/motion-comment-section';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-comment-section';
 import { BaseRepository } from '../base-repository';
 import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
-import { Fieldsets, DEFAULT_FIELDSET } from 'app/core/core-services/model-request-builder.service';
 
 /**
  * Repository Services for Categories

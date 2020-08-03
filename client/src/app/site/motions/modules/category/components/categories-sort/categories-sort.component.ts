@@ -8,8 +8,8 @@ import { PromptService } from 'app/core/ui-services/prompt.service';
 import { SortingTreeComponent } from 'app/shared/components/sorting-tree/sorting-tree.component';
 import { CanComponentDeactivate } from 'app/shared/utils/watch-for-changes.guard';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
-import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
+import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
 
 /**
  * Sort view for the call list.

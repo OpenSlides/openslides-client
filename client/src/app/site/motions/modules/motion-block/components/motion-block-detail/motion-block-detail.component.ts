@@ -14,13 +14,13 @@ import { OrganisationSettingsService } from 'app/core/ui-services/organisation-s
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { ColumnRestriction } from 'app/shared/components/list-view-table/list-view-table.component';
+import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
 import { MotionBlock } from 'app/shared/models/motions/motion-block';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
 import { BlockDetailFilterListService } from 'app/site/motions/services/block-detail-filter-list.service';
-import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
 
 /**
  * Detail component to display one motion block
