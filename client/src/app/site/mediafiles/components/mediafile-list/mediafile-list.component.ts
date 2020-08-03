@@ -21,7 +21,13 @@ import { OperatorService, Permission } from 'app/core/core-services/operator.ser
 import { MediafileRepositoryService } from 'app/core/repositories/mediafiles/mediafile-repository.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { MediaManageService } from 'app/core/ui-services/media-manage.service';
+import {
+    FontConfigObject,
+    FontOptions,
+    ImageConfigObject,
+    LogoOptions,
+    MediaManageService
+} from 'app/core/ui-services/media-manage.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { Mediafile } from 'app/shared/models/mediafiles/mediafile';
@@ -44,14 +50,14 @@ import { MediafilesSortListService } from '../../services/mediafiles-sort-list.s
 })
 export class MediafileListComponent extends BaseListViewComponent<ViewMediafile> implements OnInit, OnDestroy {
     /**
-     * Holds the actions for logos. Updated via an observable
+     * Holds the options for logos. Updated via an observable
      */
-    public logoActions: string[];
+    public logoOptions = LogoOptions;
 
     /**
-     * Holds the actions for fonts. Update via an observable
+     * Holds the options for fonts. Update via an observable
      */
-    public fontActions: string[];
+    public fontOptions = FontOptions;
 
     /**
      * Holds the file to edit
@@ -225,21 +231,6 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
             this.changeDirectory(directoryId);
         });
 
-        // Observe the logo actions
-        /**
-         * TODO: Media manage / Config service missing?
-         */
-        this.mediaManage.getLogoActions().subscribe(action => {
-            this.logoActions = action;
-        });
-
-        /**
-         * TODO: Media manage / Config service missing?
-         */
-        this.mediaManage.getFontActions().subscribe(action => {
-            this.fontActions = action;
-        });
-
         this.createDataSource();
     }
 
@@ -395,9 +386,12 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
      *
      * @param mediaFileAction Logo or font action
      * @returns the display name of the selected action
+     *
+     * FIXME: Requires rewrite (WIP)
      */
-    public getNameOfAction(mediaFileAction: string): string {
-        return this.translate.instant(this.mediaManage.getMediaConfig(mediaFileAction).display_name);
+    public getOptionName(mediaFileAction: string): string {
+        const configObject: ImageConfigObject | FontConfigObject = this.mediaManage.getMediaConfig(mediaFileAction);
+        return this.translate.instant(configObject?.display_name) ?? null;
     }
 
     /**
@@ -408,8 +402,8 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
      */
     public formatIndicatorTooltip(file: ViewMediafile): string {
         const settings = this.getFileSettings(file);
-        const actionNames = settings.map(option => this.getNameOfAction(option));
-        return actionNames.join('\n');
+        const optionNames = settings.map(option => this.getOptionName(option));
+        return optionNames.join('\n');
     }
 
     /**
@@ -434,10 +428,10 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
     public getFileSettings(file: ViewMediafile): string[] {
         let uses = [];
         if (file) {
-            if (file.isFont() && this.fontActions?.length) {
-                uses = this.fontActions.filter(action => this.isUsedAs(file, action));
-            } else if (file.isImage() && this.logoActions?.length) {
-                uses = this.logoActions.filter(action => this.isUsedAs(file, action));
+            if (file.isFont() && this.fontOptions?.length) {
+                uses = this.fontOptions.filter(action => this.isUsedAs(file, action));
+            } else if (file.isImage() && this.logoOptions?.length) {
+                uses = this.logoOptions.filter(action => this.isUsedAs(file, action));
             }
         }
         return uses;
