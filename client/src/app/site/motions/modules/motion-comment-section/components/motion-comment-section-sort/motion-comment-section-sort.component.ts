@@ -3,8 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
-import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-comment-section';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
+import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-comment-section';
 
 /**
  * Sorting view for motion comments

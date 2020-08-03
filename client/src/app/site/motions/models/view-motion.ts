@@ -278,7 +278,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     }
 
     public hasSupporters(): boolean {
-        return true
+        return true;
         // return !!(this.supporters && this.supporters.length > 0);
     }
 
