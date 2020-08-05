@@ -39,6 +39,7 @@ import { Motion } from 'app/shared/models/motions/motion';
 import { ViewUnifiedChange } from 'app/shared/models/motions/view-unified-change';
 import { infoDialogSettings, mediumDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { CreateMotion } from 'app/site/motions/models/create-motion';
 import { ViewCreateMotion } from 'app/site/motions/models/view-create-motion';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
@@ -457,6 +458,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
      * Sets all required subjects and fills in the required information
      */
     public ngOnInit(): void {
+        this.requestUpdates();
         this.registerSubjects();
         this.createForm();
         this.observeRoute();
@@ -588,6 +590,30 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         );
     }
 
+    private requestUpdates(): void {
+        this.requestModels({
+            viewModelCtor: ViewMeeting,
+            ids: [1], // TODO
+            follow: [
+                {
+                    idField: 'user_ids',
+                    fieldset: 'shortName'
+                },
+                {
+                    idField: 'motion_category_ids'
+                },
+                {
+                    idField: 'motion_block_ids',
+                    fieldset: 'title'
+                },
+                {
+                    idField: 'mediafile_ids',
+                    fieldset: 'fileSelection'
+                }
+            ]
+        });
+    }
+
     /**
      * Subscribes to all new amendment's change recommendations so we can access their data for the diff view
      */
@@ -667,7 +693,13 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
      * determine the motion to display using the URL
      */
     public getMotionByUrl(): void {
-        if (this.route.snapshot.url[0] && this.route.snapshot.url[0].path === 'new') {
+        if (this.route.snapshot.params?.id) {
+            this.subscriptions.push(
+                this.route.params.subscribe(routeParams => {
+                    this.loadMotionById(Number(routeParams.id));
+                })
+            );
+        } else {
             super.setTitle('New motion');
             // new motion
             this.newMotion = true;
@@ -696,12 +728,6 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
                 }
             }
             this.motion = new ViewCreateMotion(new CreateMotion(defaultMotion));
-        } else {
-            this.subscriptions.push(
-                this.route.params.subscribe(params => {
-                    this.loadMotionById(Number(params.id));
-                })
-            );
         }
     }
 
