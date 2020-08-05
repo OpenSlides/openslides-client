@@ -4,12 +4,17 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 
 import { Permission } from 'app/core/core-services/operator.service';
-import { AppPermissions, GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
+import {
+    AppPermissions,
+    GroupRepositoryService,
+    PermDefinition
+} from 'app/core/repositories/users/group-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { Group } from 'app/shared/models/users/group';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
-import { BaseComponent } from 'app/site/base/components/base.component';
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewGroup } from '../../models/view-group';
 
 /**
@@ -20,7 +25,7 @@ import { ViewGroup } from '../../models/view-group';
     templateUrl: './group-list.component.html',
     styleUrls: ['./group-list.component.scss']
 })
-export class GroupListComponent extends BaseComponent implements OnInit {
+export class GroupListComponent extends BaseModelContextComponent implements OnInit {
     /**
      * Holds all Groups
      */
@@ -78,6 +83,33 @@ export class GroupListComponent extends BaseComponent implements OnInit {
         private formBuilder: FormBuilder
     ) {
         super(componentServiceCollector);
+    }
+
+    /**
+     * Init function.
+     *
+     * Monitor the repository for changes and update the local groups array
+     */
+    public ngOnInit(): void {
+        super.setTitle('Groups');
+
+        this.requestModels({
+            viewModelCtor: ViewMeeting,
+            ids: [1], // TODO
+            follow: [
+                {
+                    idField: 'group_ids',
+                    fieldset: 'list'
+                }
+            ]
+        });
+
+        this.repo.getViewModelListObservable().subscribe(newViewGroups => {
+            if (newViewGroups) {
+                this.groups = newViewGroups;
+                this.updateRowDef();
+            }
+        });
     }
 
     /**
@@ -207,18 +239,7 @@ export class GroupListComponent extends BaseComponent implements OnInit {
         }
     }
 
-    /**
-     * Init function.
-     *
-     * Monitor the repository for changes and update the local groups array
-     */
-    public ngOnInit(): void {
-        super.setTitle('Groups');
-        this.repo.getViewModelListObservable().subscribe(newViewGroups => {
-            if (newViewGroups) {
-                this.groups = newViewGroups;
-                this.updateRowDef();
-            }
-        });
+    public hasGroupPerm(group: ViewGroup, perm: PermDefinition): boolean {
+        return group.hasPermission(perm.value);
     }
 }

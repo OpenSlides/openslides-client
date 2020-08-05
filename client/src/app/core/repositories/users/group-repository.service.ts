@@ -15,7 +15,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 /**
  * Shape of a permission
  */
-interface PermDefinition {
+export interface PermDefinition {
     display_name: string;
     value: Permission;
 }
@@ -53,8 +53,11 @@ export class GroupRepositoryService extends MeetingModelBaseRepository<ViewGroup
     }
 
     public getFieldsets(): Fieldsets<Group> {
+        const titleFields: (keyof Group)[] = ['name'];
+        const listFields: (keyof Group)[] = titleFields.concat(['permissions']);
         return {
-            [DEFAULT_FIELDSET]: ['name']
+            [DEFAULT_FIELDSET]: titleFields,
+            list: listFields
         };
     }
 

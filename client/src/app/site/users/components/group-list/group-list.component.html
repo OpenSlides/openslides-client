@@ -10,7 +10,7 @@
 </div>
 
 <mat-accordion *ngFor="let app of appPermissions">
-    <mat-expansion-panel class="mat-elevation-z0" [expanded]="true">
+    <mat-expansion-panel class="mat-elevation-z0" [expanded]="true" *ngIf="app">
         <mat-expansion-panel-header>
             <mat-panel-title>
                 {{ app.name | translate }}
@@ -37,7 +37,7 @@
                             <div class="inner-table">
                                 <mat-checkbox
                                     *ngIf="group.id !== 2"
-                                    [checked]="group.hasPermission(perm.value)"
+                                    [checked]="hasGroupPerm(group, perm)"
                                     (change)="togglePerm(group, perm.value)"
                                 ></mat-checkbox>
                                 <mat-checkbox *ngIf="group.id === 2" [checked]="true" [disabled]="true"></mat-checkbox>
