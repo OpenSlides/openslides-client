@@ -16,7 +16,7 @@ export class ViewGroup extends BaseViewModel<Group> {
     }
 
     public hasPermission(perm: Permission): boolean {
-        return this.permissions.includes(perm);
+        return this.permissions?.includes(perm);
     }
 }
 interface IGroupRelations {
