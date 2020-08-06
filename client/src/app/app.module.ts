@@ -14,7 +14,8 @@ import { environment } from '../environments/environment';
 import { LoginModule } from './site/login/login.module';
 import { OpenSlidesTranslateModule } from './core/translate/openslides-translate-module';
 import { SlidesModule } from './slides/slides.module';
-import { TokenInterceptorService } from './core/core-services/token-interceptor.service';
+import { TokenInterceptorService } from './core/core-services/auth-token-interceptor.service';
+import { AuthTokenService } from './core/core-services/auth-token.service';
 
 /**
  * Returns a function that returns a promis that will be resolved, if all apps are loaded.
@@ -50,6 +51,7 @@ export function AppLoaderFactory(appLoadService: AppLoadService): () => Promise<
         {
             provide: HTTP_INTERCEPTORS,
             useClass: TokenInterceptorService,
+            deps: [AuthTokenService],
             multi: true
         }
     ],

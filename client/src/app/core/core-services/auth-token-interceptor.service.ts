@@ -11,24 +11,23 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-import { TokenService } from './token.service';
+import { AuthTokenService } from './auth-token.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class TokenInterceptorService implements HttpInterceptor {
-    public constructor(private tokenService: TokenService) {}
+    public constructor(private authTokenService: AuthTokenService) {}
 
     public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        if (!this.tokenService.accessToken) {
-            // redirect to /login ??
+        if (this.authTokenService.rawAccessToken) {
+            request = request.clone({
+                setHeaders: {
+                    authentication: this.authTokenService.rawAccessToken
+                }
+            });
         }
-        const copy = request.clone({
-            setHeaders: {
-                authentication: this.tokenService.accessToken
-            }
-        });
-        return next.handle(copy).pipe(
+        return next.handle(request).pipe(
             tap(
                 httpEvent => {
                     if (httpEvent instanceof HttpResponse) {

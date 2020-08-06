@@ -10,7 +10,7 @@ import { BannerDefinition, BannerService } from '../ui-services/banner.service';
 @Injectable({
     providedIn: 'root'
 })
-export class OpenSlidesStatusService {
+export class HistoryService {
     /**
      * in History mode, saves the history point.
      */

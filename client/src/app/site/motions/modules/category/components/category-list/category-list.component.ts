@@ -5,7 +5,8 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { PblColumnDefinition } from '@pebula/ngrid';
 
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
-import { OperatorService, Permission } from 'app/core/core-services/operator.service';
+import { OperatorService } from 'app/core/core-services/operator.service';
+import { Permission} from 'app/core/core-services/permission';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';

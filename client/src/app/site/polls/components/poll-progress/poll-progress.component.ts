@@ -96,7 +96,7 @@ export class PollProgressComponent extends BaseComponent implements OnDestroy {
         allUsers = allUsers.filter(
             user =>
                 user.isPresentInMeeting() &&
-                this.poll.entitled_group_ids.intersect(user.group_ids(this.activeMeetingService.getMeetingId())).length
+                this.poll.entitled_group_ids.intersect(user.group_ids(this.activeMeetingService.meetingId)).length
         );
 
         this.max = allUsers.length;

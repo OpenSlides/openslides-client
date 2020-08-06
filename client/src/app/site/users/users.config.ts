@@ -1,5 +1,5 @@
 import { AppConfig } from '../../core/definitions/app-config';
-import { Permission } from 'app/core/core-services/operator.service';
+import { Permission} from 'app/core/core-services/permission';;
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { PersonalNoteRepositoryService } from 'app/core/repositories/users/personal-note-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';

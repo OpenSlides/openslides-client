@@ -4,16 +4,13 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { AuthService } from 'app/core/core-services/auth.service';
-import { ModelRequestService } from 'app/core/core-services/model-request.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { LoginDataService } from 'app/core/ui-services/login-data.service';
 import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
-import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewUser } from 'app/site/users/models/view-user';
-import { TokenService } from 'app/core/core-services/token.service';
 
 @Component({
     selector: 'os-user-menu',
@@ -44,7 +41,6 @@ export class UserMenuComponent extends BaseModelContextComponent implements OnIn
         componentServiceCollector: ComponentServiceCollector,
         private operator: OperatorService,
         private authService: AuthService,
-        private tokenService: TokenService,
         private overlayService: OverlayService,
         private loginDataService: LoginDataService,
         private router: Router,
@@ -54,17 +50,6 @@ export class UserMenuComponent extends BaseModelContextComponent implements OnIn
     }
 
     public ngOnInit(): void {
-        /*this.operator.authType.subscribe(authType => (this.authType = authType));*/
-
-        this.tokenService.getAccessTokenAsObservable().subscribe(() => {
-            this.isLoggedIn = !this.operator.isAnonymous;
-            this.username = this.isLoggedIn ? this.operator.shortName : this.translate.instant('Guest');
-            const userId = this.operator.operatorId;
-            if (this._userId !== userId) {
-                this._userId = userId;
-                this.userUpdate();
-            }
-        });
         this.operator.operatorUpdatedEvent.subscribe(() => {
             this.isLoggedIn = !this.operator.isAnonymous;
             this.username = this.isLoggedIn ? this.operator.shortName : this.translate.instant('Guest');
@@ -150,8 +135,9 @@ export class UserMenuComponent extends BaseModelContextComponent implements OnIn
     }
 
     public toggleUserIsPresent(): void {
-        const present = this.user.isPresentInMeeting();
-        this.operator.setPresence(!present).catch(this.raiseError);
+        // FIXME: move to user repo.
+        //const present = this.user.isPresentInMeeting();
+        //this.operator.setPresence(!present).catch(this.raiseError);
     }
 
     public onClickNavEntry(): void {
@@ -162,9 +148,6 @@ export class UserMenuComponent extends BaseModelContextComponent implements OnIn
      * Function to log out the current user
      */
     public logout(): void {
-        if (this.operator.guestEnabled) {
-            this.overlayService.showSpinner(null, true);
-        }
         this.authService.logout();
         this.overlayService.logout();
     }
