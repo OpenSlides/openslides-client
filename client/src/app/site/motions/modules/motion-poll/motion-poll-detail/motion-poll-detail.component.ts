@@ -5,7 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { PblColumnDefinition } from '@pebula/ngrid';
 
-import { OperatorService, Permission } from 'app/core/core-services/operator.service';
+import { OperatorService } from 'app/core/core-services/operator.service';
+import { Permission } from 'app/core/core-services/permission';
 import { MotionPollRepositoryService } from 'app/core/repositories/motions/motion-poll-repository.service';
 import { MotionVoteRepositoryService } from 'app/core/repositories/motions/motion-vote-repository.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';

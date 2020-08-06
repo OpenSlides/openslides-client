@@ -11,7 +11,8 @@ import {
     SimpleChanges
 } from '@angular/core';
 
-import { OperatorService, Permission } from 'app/core/core-services/operator.service';
+import { OperatorService } from 'app/core/core-services/operator.service';
+import { Permission } from 'app/core/core-services/permission';
 import { LineRange, ModificationType } from 'app/core/ui-services/diff.service';
 import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
 

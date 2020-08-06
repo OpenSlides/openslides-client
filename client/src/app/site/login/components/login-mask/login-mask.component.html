@@ -41,17 +41,5 @@
         <button mat-raised-button color="primary" class="login-button" type="submit" [disabled]="loginForm.invalid">
             {{ 'Login' | translate }}
         </button>
-        <button mat-stroked-button *ngIf="areGuestsEnabled()" class="login-button" type="button" (click)="guestLogin()">
-            {{ 'Login as guest' | translate }}
-        </button>
-        <!--<a
-            mat-stroked-button
-            *ngIf="samlLoginButtonText"
-            class="login-button"
-            type="button"
-            (click)="formLogin('saml')"
-        >
-            {{ samlLoginButtonText | translate }}
-        </a>-->
     </form>
 </div>

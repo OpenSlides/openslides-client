@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
 
-import { OpenSlidesStatusService } from 'app/core/core-services/openslides-status.service';
-import { OperatorService, Permission } from 'app/core/core-services/operator.service';
+import { HistoryService } from 'app/core/core-services/history.service';
+import { OperatorService } from 'app/core/core-services/operator.service';
+import { Permission } from 'app/core/core-services/permission';
 import { StorageService } from 'app/core/core-services/storage.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
@@ -156,7 +157,7 @@ export class MotionFilterListService extends BaseFilterListService<ViewMotion> {
      */
     public constructor(
         store: StorageService,
-        OSStatus: OpenSlidesStatusService,
+        historyService: HistoryService,
         categoryRepo: MotionCategoryRepositoryService,
         motionBlockRepo: MotionBlockRepositoryService,
         commentRepo: MotionCommentSectionRepositoryService,
@@ -166,7 +167,7 @@ export class MotionFilterListService extends BaseFilterListService<ViewMotion> {
         private operator: OperatorService,
         private config: OrganisationSettingsService
     ) {
-        super(store, OSStatus);
+        super(store, historyService);
         this.getWorkflowConfig();
         this.getShowAmendmentConfig();
 

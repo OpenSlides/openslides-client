@@ -2,12 +2,11 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { environment } from 'environments/environment';
+import { Observable } from 'rxjs';
 
-import { OperatorService } from 'app/core/core-services/operator.service';
-import { DataStoreService } from './data-store.service';
+import { AuthToken, AuthTokenService } from './auth-token.service';
 import { HttpService } from './http.service';
-import { OpenSlidesService } from './openslides.service';
-import { TokenService } from './token.service';
+import { LifecycleService } from './lifecycle.service';
 
 /**
  * Response from a login request.
@@ -31,61 +30,41 @@ interface LoginData {
     providedIn: 'root'
 })
 export class AuthService {
-    private accessToken: string = null;
-
     /**
-     * Initializes the httpClient and the {@link OperatorService}.
-     *
-     * @param http HttpService to send requests to the server
-     * @param operator Who is using OpenSlides
-     * @param OpenSlides The openslides service
-     * @param router To navigate
+     * If the user tries to access a certain URL without being authenticated, the URL will be stored here
      */
+    public redirectUrl: string;
+
+    public get authTokenObservable(): Observable<AuthToken | null> {
+        return this.authTokenService.accessTokenObservable;
+    }
+
+    public get authToken(): AuthToken | null {
+        return this.authTokenService.accessToken;
+    }
+
     public constructor(
         private http: HttpService,
-        private tokenService: TokenService,
-        private operator: OperatorService,
-        private OpenSlides: OpenSlidesService,
+        private lifecycleService: LifecycleService,
         private router: Router,
-        private DS: DataStoreService
+        private authTokenService: AuthTokenService
     ) {}
 
-    /**
-     * Try to log in a user with a given auth type
-     */
-    public async login(username: string, password: string, earlySuccessCallback: () => void): Promise<void> {
-        // if (authType === 'default') {
+    public async login(username: string, password: string): Promise<void> {
         const user = {
             username: username,
             password: password
         };
         const response = await this.http.post<LoginResponse>(environment.authUrlPrefix + '/login/', user);
-        if (response.token) {
-            this.setAccessToken(response.token);
+        if (response.success) {
+            this.authTokenService.setRawAccessToken(response.token);
+            await this.lifecycleService.reboot();
+            await this.redirectUser();
         }
-        earlySuccessCallback();
-        await this.OpenSlides.shutdown();
-        // await this.operator.setWhoAmI(response);
-        // await this.OpenSlides.afterLoginBootup();
-        await this.redirectUser();
-
-        // } else if (authType === 'saml') {
-        //     window.location.href = environment.urlPrefix + '/saml/?sso'; // Bye
-        // } else {
-        //     throw new Error(`Unsupported auth type "${authType}"`);
-        // }
     }
 
-    /**
-     * Redirects the user to the page where he came from. Boots OpenSlides,
-     * if it wasn't done before.
-     */
     public async redirectUser(): Promise<void> {
-        if (!this.OpenSlides.isBooted) {
-            this.OpenSlides.afterAuthenticatedBootup();
-        }
-
-        let redirect = this.OpenSlides.redirectUrl ? this.OpenSlides.redirectUrl : '/';
+        let redirect = this.redirectUrl ? this.redirectUrl : '/';
 
         const excludedUrls = ['login'];
         if (excludedUrls.some(url => redirect.includes(url))) {
@@ -94,56 +73,31 @@ export class AuthService {
         this.router.navigate([redirect]);
     }
 
-    /**
-     * Login for guests.
-     */
-    public async guestLogin(): Promise<void> {
-        this.redirectUser();
-    }
-
-    /**
-     * Logout function for both the client and the server.
-     *
-     * Will clear the datastore, update the current operator and
-     * send a `post`-request to `/apps/users/logout/'`. Restarts OpenSlides.
-     */
     public async logout(): Promise<void> {
         const response = await this.http.post<LoginResponse>(environment.authUrlPrefix + '/api/logout/');
         if (response.success) {
-            this.setAccessToken('');
+            this.authTokenService.setRawAccessToken(null);
         }
         this.router.navigate(['/']);
-        await this.OpenSlides.reboot();
-        /*const authType = this.operator.authType.getValue();
-        if (authType === DEFAULT_AUTH_TYPE) {
-            let response = null;
-            try {
-                response = await this.http.post<WhoAmI>(environment.urlPrefix + '/users/logout/', {});
-            } catch (e) {
-                // We do nothing on failures. Reboot OpenSlides anyway.
-            }
-            this.router.navigate(['/']);
-            await this.storageService.clear();
-            await this.DS.clear();
-            await this.operator.setWhoAmI(response);
-            await this.OpenSlides.reboot();
-        } else if (authType === 'saml') {
-            await this.storageService.clear();
-            await this.DS.clear();
-            await this.operator.setWhoAmI(null);
-            window.location.href = environment.urlPrefix + '/saml/?slo'; // Bye
-        } else {
-            throw new Error(`Unsupported auth type "${authType}"`);
-        }*/
-        // throw new Error('TODO'); // just ignore the SAML case for now..
+        await this.lifecycleService.reboot();
     }
 
     public isAuthenticated(): boolean {
-        return !!this.accessToken;
+        return !!this.authTokenService.accessToken;
     }
 
-    private setAccessToken(token: string): void {
-        this.accessToken = token;
-        this.tokenService.nextAccessToken(token);
+    /**
+     * Calls `/apps/users/whoami` to find out the real operator.
+     *
+     * @returns true, if the request was successful (=online)
+     */
+    public async doWhoAmIRequest(): Promise<boolean> {
+        try {
+            const loginResponse = await this.http.post<LoginResponse>(`${environment.authUrlPrefix}/who-am-i/`);
+            this.authTokenService.setRawAccessToken(loginResponse.token);
+            return true;
+        } catch (e) {
+            return false;
+        }
     }
 }

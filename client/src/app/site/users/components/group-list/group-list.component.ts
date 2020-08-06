@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 
-import { Permission } from 'app/core/core-services/operator.service';
+import { Permission } from 'app/core/core-services/permission';
 import {
     AppPermissions,
     GroupRepositoryService,

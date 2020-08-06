@@ -1,4 +1,4 @@
-import { Permission } from 'app/core/core-services/operator.service';
+import { Permission } from 'app/core/core-services/permission';
 import { Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
 

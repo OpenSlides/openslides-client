@@ -166,9 +166,7 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
         try {
             // this.overlayService.logout(); // Ensures displaying spinner, if logging in
             // this.overlayService.showSpinner(this.translate.instant(this.loginMessage), true);
-            await this.authService.login(this.loginForm.value.username, this.loginForm.value.password, () => {
-                // this.clearOperatorSubscription(); // We take control, not the subscription.
-            });
+            await this.authService.login(this.loginForm.value.username, this.loginForm.value.password);
         } catch (e) {
             // this.overlayService.hideSpinner();
             this.loginForm.setErrors({
@@ -184,20 +182,5 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
      */
     public resetPassword(): void {
         this.router.navigate(['./reset-password'], { relativeTo: this.route });
-    }
-
-    /**
-     * returns if the anonymous is enabled.
-     */
-    public areGuestsEnabled(): boolean {
-        return this.operator.guestEnabled;
-    }
-
-    /**
-     * Guests (if enabled) can navigate directly to the main page.
-     */
-    public guestLogin(): void {
-        this.overlayService.showSpinner(this.translate.instant(this.loginMessage));
-        this.authService.guestLogin();
     }
 }

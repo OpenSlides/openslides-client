@@ -80,13 +80,15 @@ export abstract class PollPdfService {
             case 'NUMBER_OF_ALL_PARTICIPANTS':
                 return this.userRepo.getViewModelList().length;
             case 'NUMBER_OF_DELEGATES':
-                return this.userRepo
+                throw new Error('TODO');
+            // TODO: the hard-coded 2 is not correct.
+            /*return this.userRepo
                     .getViewModelList()
                     .filter(
                         user =>
-                            user.group_ids(this.activeMeetingService.getMeetingId()) &&
-                            user.group_ids(this.activeMeetingService.getMeetingId()).includes(2)
-                    ).length;
+                            user.group_ids(this.activeMeetingService.meetingId) &&
+                            user.group_ids(this.activeMeetingService.meetingId).includes(2)
+                    ).length;*/
             case 'CUSTOM_NUMBER':
                 return this.ballotCustomCount;
             default:

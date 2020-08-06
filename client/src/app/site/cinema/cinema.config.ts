@@ -1,4 +1,4 @@
-import { Permission } from 'app/core/core-services/operator.service';
+import { Permission } from 'app/core/core-services/permission';
 import { AppConfig } from 'app/core/definitions/app-config';
 
 export const CinemaAppConfig: AppConfig = {

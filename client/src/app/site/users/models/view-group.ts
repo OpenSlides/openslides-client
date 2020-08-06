@@ -1,4 +1,4 @@
-import { Permission } from 'app/core/core-services/operator.service';
+import { Permission } from 'app/core/core-services/permission';
 import { Group } from 'app/shared/models/users/group';
 import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';

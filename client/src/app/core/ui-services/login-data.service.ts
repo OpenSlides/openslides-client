@@ -5,8 +5,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { auditTime } from 'rxjs/operators';
 
 import { ConfigurationService } from '../core-services/configuration.service';
+import { HistoryService } from '../core-services/history.service';
 import { HttpService } from '../core-services/http.service';
-import { OpenSlidesStatusService } from '../core-services/openslides-status.service';
 import { OrganisationSettingsService } from './organisation-settings.service';
 import { StorageService } from '../core-services/storage.service';
 
@@ -142,7 +142,7 @@ export class LoginDataService {
     public constructor(
         private organisationSettingsService: OrganisationSettingsService,
         private storageService: StorageService,
-        private OSStatus: OpenSlidesStatusService,
+        private historyService: HistoryService,
         private configurationService: ConfigurationService
     ) {
         this.storeLoginDataRequests.pipe(auditTime(100)).subscribe(() => this.storeLoginData());
@@ -209,7 +209,7 @@ export class LoginDataService {
      */
     private async _refresh(): Promise<void> {
         try {
-            throw new Error('TODO');
+            console.log('TODO: login data');
             // const loginData = await this.httpService.get<LoginData>(environment.urlPrefix + '/users/login/');
             // this.setLoginData(loginData);
             this.storeLoginDataRequests.next();
@@ -249,7 +249,7 @@ export class LoginDataService {
      * taken form all subjects.
      */
     private storeLoginData(): void {
-        if (this.OSStatus.isInHistoryMode) {
+        if (this.historyService.isInHistoryMode) {
             return;
         }
         const loginData = {

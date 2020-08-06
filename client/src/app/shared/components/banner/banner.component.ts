@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
 
-import { OpenSlidesStatusService } from 'app/core/core-services/openslides-status.service';
+import { HistoryService } from 'app/core/core-services/history.service';
 import { TimeTravelService } from 'app/core/core-services/time-travel.service';
 import { BannerDefinition, BannerService } from 'app/core/ui-services/banner.service';
 import { langToLocale } from 'app/shared/utils/lang-to-locale';
@@ -16,7 +16,7 @@ export class BannerComponent implements OnInit {
     public banners: BannerDefinition[] = [];
 
     public constructor(
-        private OSStatus: OpenSlidesStatusService,
+        private historyService: HistoryService,
         protected translate: TranslateService,
         public timeTravel: TimeTravelService,
         private banner: BannerService
@@ -35,6 +35,6 @@ export class BannerComponent implements OnInit {
      * @returns the timestamp as string
      */
     public getHistoryTimestamp(): string {
-        return this.OSStatus.getHistoryTimeStamp(langToLocale(this.translate.currentLang));
+        return this.historyService.getHistoryTimeStamp(langToLocale(this.translate.currentLang));
     }
 }

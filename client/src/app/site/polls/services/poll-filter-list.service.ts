@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
 
-import { OpenSlidesStatusService } from 'app/core/core-services/openslides-status.service';
+import { HistoryService } from 'app/core/core-services/history.service';
 import { StorageService } from 'app/core/core-services/storage.service';
 import { BaseFilterListService, OsFilter } from 'app/core/ui-services/base-filter-list.service';
 import { PollState } from 'app/shared/models/poll/base-poll';
@@ -17,8 +17,8 @@ export class PollFilterListService extends BaseFilterListService<BaseViewPoll> {
      */
     protected storageKey = 'PollList';
 
-    public constructor(store: StorageService, OSStatus: OpenSlidesStatusService, private translate: TranslateService) {
-        super(store, OSStatus);
+    public constructor(store: StorageService, historyService: HistoryService, private translate: TranslateService) {
+        super(store, historyService);
     }
 
     /**

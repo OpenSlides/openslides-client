@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 
+import { AuthService } from './auth.service';
 import { EndpointConfiguration } from './http-stream-endpoint.service';
 import { HttpStreamService, StreamContainer } from './http-stream.service';
 import { HttpService } from './http.service';
@@ -20,14 +21,13 @@ export class OfflineError extends Error {
     providedIn: 'root'
 })
 export class StreamingCommunicationService {
-    private isOperatorAuthenticated = false;
-
     private openStreams: { [id: number]: StreamContainer } = {};
 
     public constructor(
         private httpStreamService: HttpStreamService,
         private offlineBroadcastService: OfflineBroadcastService,
-        private http: HttpService
+        private http: HttpService,
+        private authService: AuthService
     ) {}
 
     public async connect(streamContainer: StreamContainer): Promise<() => void> {
@@ -136,11 +136,7 @@ export class StreamingCommunicationService {
     // Checks the operator: If we do not have a valid user,
     // do not even try to connect again..
     private shouldRetryConnecting(): boolean {
-        return this.isOperatorAuthenticated;
-    }
-
-    public setIsOperatorAuthenticated(isAuthenticated: boolean): void {
-        this.isOperatorAuthenticated = isAuthenticated;
+        return this.authService.isAuthenticated();
     }
 
     public async isCommunicationServiceOnline(): Promise<boolean> {

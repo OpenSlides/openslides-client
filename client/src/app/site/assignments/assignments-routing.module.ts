@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
 
-import { Permission } from 'app/core/core-services/operator.service';
+import { Permission } from 'app/core/core-services/permission';
 import { AssignmentDetailComponent } from './components/assignment-detail/assignment-detail.component';
 import { AssignmentListComponent } from './components/assignment-list/assignment-list.component';
 

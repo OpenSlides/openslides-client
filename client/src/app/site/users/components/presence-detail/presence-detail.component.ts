@@ -4,7 +4,8 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
-import { OperatorService, Permission } from 'app/core/core-services/operator.service';
+import { OperatorService } from 'app/core/core-services/operator.service';
+import { Permission } from 'app/core/core-services/permission';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { ViewUser } from '../../models/view-user';

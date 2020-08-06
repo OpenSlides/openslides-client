@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Subject } from 'rxjs';
 
-import { Permission } from './operator.service';
+import { Permission } from './permission';
 
 /**
  * This represents one entry in the main menu

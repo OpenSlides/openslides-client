@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 import { BaseSortService, OsSortingDefinition, OsSortingOption } from './base-sort.service';
 import { BaseViewModel } from '../../site/base/base-view-model';
-import { OpenSlidesStatusService } from '../core-services/openslides-status.service';
+import { HistoryService } from '../core-services/history.service';
 import { StorageService } from '../core-services/storage.service';
 
 /**
@@ -108,7 +108,7 @@ export abstract class BaseSortListService<V extends BaseViewModel> extends BaseS
     public constructor(
         protected translate: TranslateService,
         private store: StorageService,
-        private OSStatus: OpenSlidesStatusService
+        private historyService: HistoryService
     ) {
         super(translate);
     }
@@ -136,7 +136,7 @@ export abstract class BaseSortListService<V extends BaseViewModel> extends BaseS
         }
 
         if (!this.sortDefinition) {
-            if (this.OSStatus.isInHistoryMode) {
+            if (this.historyService.isInHistoryMode) {
                 this.sortDefinition = null;
             } else {
                 this.sortDefinition = await this.store.get<OsSortingDefinition<V> | null>('sorting_' + this.storageKey);
@@ -204,7 +204,7 @@ export abstract class BaseSortListService<V extends BaseViewModel> extends BaseS
      */
     private updateSortDefinitions(): void {
         this.updateSortedData();
-        if (!this.OSStatus.isInHistoryMode) {
+        if (!this.historyService.isInHistoryMode) {
             this.store.set('sorting_' + this.storageKey, this.sortDefinition);
         }
     }

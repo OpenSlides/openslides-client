@@ -1,5 +1,5 @@
 import { AppConfig } from '../../core/definitions/app-config';
-import { Permission } from 'app/core/core-services/operator.service';
+import { Permission } from 'app/core/core-services/permission';
 
 export const SettingsAppConfig: AppConfig = {
     name: 'settings',

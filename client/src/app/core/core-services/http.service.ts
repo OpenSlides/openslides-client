@@ -4,8 +4,8 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 
+import { HistoryService } from './history.service';
 import { HTTPMethod } from '../definitions/http-methods';
-import { OpenSlidesStatusService } from './openslides-status.service';
 import { formatQueryParams, QueryParams } from '../definitions/query-params';
 
 export interface ErrorDetailResponse {
@@ -48,7 +48,7 @@ export class HttpService {
     public constructor(
         private http: HttpClient,
         private translate: TranslateService,
-        private OSStatus: OpenSlidesStatusService
+        private historyService: HistoryService
     ) {
         this.defaultHeaders = new HttpHeaders().set('Content-Type', 'application/json');
     }
@@ -74,7 +74,7 @@ export class HttpService {
         responseType?: string
     ): Promise<T> {
         // end early, if we are in history mode
-        if (this.OSStatus.isInHistoryMode && method !== HTTPMethod.GET) {
+        if (this.historyService.isInHistoryMode && method !== HTTPMethod.GET) {
             throw this.processError('You cannot make changes while in history mode');
         }
 

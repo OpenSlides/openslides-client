@@ -3,6 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 
 import { CollectionMapperService } from 'app/core/core-services/collection-mapper.service';
 import { collectionFromFqid } from 'app/core/core-services/key-transforms';
+import { OperatorService } from 'app/core/core-services/operator.service';
+import { Permission } from 'app/core/core-services/permission';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';

@@ -18,7 +18,8 @@ import { PblNgridDataMatrixRow } from '@pebula/ngrid/target-events';
 import { Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
 
-import { OperatorService, Permission } from 'app/core/core-services/operator.service';
+import { OperatorService } from 'app/core/core-services/operator.service';
+import { Permission } from 'app/core/core-services/permission';
 import { ProjectorService } from 'app/core/core-services/projector.service';
 import { StorageService } from 'app/core/core-services/storage.service';
 import { HasViewModelListObservable } from 'app/core/definitions/has-view-model-list-observable';

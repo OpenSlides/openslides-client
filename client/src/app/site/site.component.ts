@@ -7,14 +7,14 @@ import { ActivationEnd, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
 import { navItemAnim } from '../shared/animations';
+import { HistoryService } from 'app/core/core-services/history.service';
 import { OfflineBroadcastService } from 'app/core/core-services/offline-broadcast.service';
+import { TimeTravelService } from 'app/core/core-services/time-travel.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { UpdateService } from 'app/core/ui-services/update.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { MainMenuEntry, MainMenuService } from '../core/core-services/main-menu.service';
-import { OpenSlidesStatusService } from '../core/core-services/openslides-status.service';
-import { TimeTravelService } from '../core/core-services/time-travel.service';
 import { ViewportService } from '../core/ui-services/viewport.service';
 
 /**
@@ -70,7 +70,7 @@ export class SiteComponent extends BaseComponent implements OnInit {
      * @param translate
      * @param dialog
      * @param mainMenuService
-     * @param OSStatus
+     * @param historyService
      * @param timeTravel
      */
     public constructor(
@@ -81,7 +81,7 @@ export class SiteComponent extends BaseComponent implements OnInit {
         public vp: ViewportService,
         public dialog: MatDialog,
         private mainMenuService: MainMenuService,
-        public OSStatus: OpenSlidesStatusService,
+        public historyService: HistoryService,
         public timeTravel: TimeTravelService,
         private overlayService: OverlayService
     ) {
