@@ -1,18 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { ActionService, ActionType } from 'app/core/core-services/action.service';
-import { AutoupdateService } from 'app/core/core-services/autoupdate.service';
-import { ModelRequestBuilderService } from 'app/core/core-services/model-request-builder.service';
-import { OperatorService, Permission } from 'app/core/core-services/operator.service';
-import { MeetingRepositoryService } from 'app/core/repositories/event-management/meeting-repository.service';
-import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
-import { MotionStateRepositoryService } from 'app/core/repositories/motions/motion-state-repository.service';
-import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
+import { OperatorService } from 'app/core/core-services/operator.service';
+import { Permission} from 'app/core/core-services/permission';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 
 /**
  * Interface describes the keys for the fields at start-component.
@@ -60,39 +53,13 @@ export class StartComponent extends BaseComponent implements OnInit {
         componentServiceCollector: ComponentServiceCollector,
         private organisationSettingsService: OrganisationSettingsService,
         private formBuilder: FormBuilder,
-        private operator: OperatorService,
-
-        // For testing
-        private meetingRepo: MeetingRepositoryService,
-        private motionRepo: MotionRepositoryService,
-        private stateRepo: MotionStateRepositoryService,
-        private userRepo: UserRepositoryService,
-        private actions: ActionService,
-        private modelRequestBuilder: ModelRequestBuilderService,
-        private autoupdateService: AutoupdateService
+        private operator: OperatorService
     ) {
         super(componentServiceCollector);
         this.startForm = this.formBuilder.group({
             general_event_welcome_title: ['', Validators.required],
             general_event_welcome_text: ''
         });
-    }
-
-    public async t(): Promise<void> {
-        const a = await this.modelRequestBuilder.build({
-            viewModelCtor: ViewMeeting,
-            ids: [1],
-            follow: [
-                {
-                    idField: 'logo_$',
-                    fieldset: ['path', 'mimetype'],
-                    onlyValues: true
-                }
-            ],
-            fieldset: []
-        });
-        console.log(a);
-        this.autoupdateService.request(a);
     }
 
     /**

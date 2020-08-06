@@ -7,7 +7,8 @@ import { PblColumnDefinition } from '@pebula/ngrid';
 
 import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { SimplifiedModelRequest, SpecificStructuredField } from 'app/core/core-services/model-request-builder.service';
-import { OperatorService, Permission } from 'app/core/core-services/operator.service';
+import { OperatorService } from 'app/core/core-services/operator.service';
+import { Permission} from 'app/core/core-services/permission';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ChoiceService } from 'app/core/ui-services/choice.service';
@@ -264,7 +265,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         ev.stopPropagation();
         this.infoDialog = {
             name: user.username,
-            groups_id: user.group_ids(this.activeMeetingService.getMeetingId()),
+            groups_id: user.group_ids(this.activeMeetingService.meetingId),
             gender: user.gender,
             structure_level: user.structure_level,
             number: user.number

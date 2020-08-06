@@ -30,8 +30,8 @@ interface ISpecificStructuredField {
     templateValue: string;
 }
 
-export function SpecificStructuredField(templateIdField: string, templateValue: string): ISpecificStructuredField {
-    return { templateIdField, templateValue };
+export function SpecificStructuredField(templateIdField: string, templateValue: string | number): ISpecificStructuredField {
+    return { templateIdField, templateValue: templateValue.toString() };
 }
 
 export interface Follow extends BaseSimplifiedModelRequest {

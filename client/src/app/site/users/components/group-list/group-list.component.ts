@@ -3,12 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 
-import { Permission } from 'app/core/core-services/operator.service';
-import {
-    AppPermissions,
-    GroupRepositoryService,
-    PermDefinition
-} from 'app/core/repositories/users/group-repository.service';
+import { Permission} from 'app/core/core-services/permission';
+import { AppPermissions, GroupRepositoryService, PermDefinition } from 'app/core/repositories/users/group-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { Group } from 'app/shared/models/users/group';

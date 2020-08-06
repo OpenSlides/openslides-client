@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { PblColumnDefinition } from '@pebula/ngrid';
 
-import { Permission } from 'app/core/core-services/operator.service';
+import { Permission} from 'app/core/core-services/permission';;
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';

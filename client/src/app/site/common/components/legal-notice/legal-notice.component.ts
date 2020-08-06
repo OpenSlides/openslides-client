@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 
 import { DataStoreService } from 'app/core/core-services/data-store.service';
-import { OpenSlidesService } from 'app/core/core-services/openslides.service';
-import { OperatorService, Permission } from 'app/core/core-services/operator.service';
+import { OperatorService } from 'app/core/core-services/operator.service';
+import { Permission} from 'app/core/core-services/permission';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { UpdateService } from 'app/core/ui-services/update.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { LifecycleService } from 'app/core/core-services/lifecycle.service';
 
 @Component({
     selector: 'os-legal-notice',
@@ -29,7 +30,7 @@ export class LegalNoticeComponent extends BaseComponent implements OnInit {
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        private openSlidesService: OpenSlidesService,
+        private lifecycleService: LifecycleService,
         private update: UpdateService,
         private operator: OperatorService,
         private DS: DataStoreService
@@ -42,7 +43,7 @@ export class LegalNoticeComponent extends BaseComponent implements OnInit {
     }
 
     public resetCache(): void {
-        this.openSlidesService.reboot();
+        this.lifecycleService.reboot();
     }
 
     public checkForUpdate(): void {

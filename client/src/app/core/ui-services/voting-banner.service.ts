@@ -8,7 +8,7 @@ import { ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
 import { BaseViewPoll } from 'app/site/polls/models/base-view-poll';
 import { PollListObservableService } from 'app/site/polls/services/poll-list-observable.service';
 import { BannerDefinition, BannerService } from './banner.service';
-import { OpenSlidesStatusService } from '../core-services/openslides-status.service';
+import { HistoryService } from '../core-services/history.service';
 import { VotingService } from './voting.service';
 
 @Injectable({
@@ -23,7 +23,7 @@ export class VotingBannerService {
         pollListObservableService: PollListObservableService,
         private banner: BannerService,
         private translate: TranslateService,
-        private OSStatus: OpenSlidesStatusService,
+        private historyService: HistoryService,
         private votingService: VotingService
     ) {
         pollListObservableService.getViewModelListObservable().subscribe(polls => this.checkForVotablePolls(polls));
@@ -36,7 +36,7 @@ export class VotingBannerService {
     private checkForVotablePolls(polls: BaseViewPoll[]): void {
         // display no banner if in history mode or there are no polls to vote
         const pollsToVote = polls.filter(poll => this.votingService.canVote(poll) && !poll.user_has_voted);
-        if ((this.OSStatus.isInHistoryMode && this.currentBanner) || !pollsToVote.length) {
+        if ((this.historyService.isInHistoryMode && this.currentBanner) || !pollsToVote.length) {
             this.sliceBanner();
             return;
         }

@@ -6,7 +6,8 @@ import { PblColumnDefinition } from '@pebula/ngrid';
 import { BehaviorSubject } from 'rxjs';
 
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
-import { OperatorService, Permission } from 'app/core/core-services/operator.service';
+import { OperatorService } from 'app/core/core-services/operator.service';
+import { Permission} from 'app/core/core-services/permission';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';

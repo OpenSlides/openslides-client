@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { OperatorService, Permission } from 'app/core/core-services/operator.service';
+import { OperatorService } from 'app/core/core-services/operator.service';
+import { Permission} from 'app/core/core-services/permission';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { ViewMotion } from '../models/view-motion';
 

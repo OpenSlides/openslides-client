@@ -29,7 +29,7 @@ export abstract class MeetingModelBaseRepository<
      */
     public async create(model: M): Promise<Identifiable> {
         const data = {
-            meeting_id: this.activeMeetingService.getMeetingId(),
+            meeting_id: this.activeMeetingService.meetingId,
             ...model
         };
         return super.create(data);

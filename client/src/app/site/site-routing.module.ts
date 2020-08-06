@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { Permission } from 'app/core/core-services/operator.service';
+import { Permission} from 'app/core/core-services/permission';;
 import { AuthGuard } from '../core/core-services/auth-guard.service';
 import { SiteComponent } from './site.component';
 

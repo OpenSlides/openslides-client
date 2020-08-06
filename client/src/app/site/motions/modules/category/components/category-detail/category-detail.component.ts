@@ -4,7 +4,8 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { OperatorService, Permission } from 'app/core/core-services/operator.service';
+import { OperatorService } from 'app/core/core-services/operator.service';
+import { Permission} from 'app/core/core-services/permission';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
