@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { LocalStorage } from '@ngx-pwa/local-storage';
 import { Observable } from 'rxjs';
 
-import { OpenSlidesStatusService } from './openslides-status.service';
+import { HistoryService } from './history.service';
 
 /**
  * Provides an async API to an key-value store using ngx-pwa which is internally
@@ -19,7 +19,7 @@ export class StorageService {
      * Constructor to create the StorageService. Needs the localStorage service.
      * @param localStorage
      */
-    public constructor(private localStorage: LocalStorage, private OSStatus: OpenSlidesStatusService) {}
+    public constructor(private localStorage: LocalStorage, private historyService: HistoryService) {}
 
     public addNoClearKey(key: string): void {
         this.noClearKeys.push(key);
@@ -83,7 +83,7 @@ export class StorageService {
      * Throws an error, if we are in history mode.
      */
     private assertNotHistoryMode(): void {
-        if (this.OSStatus.isInHistoryMode) {
+        if (this.historyService.isInHistoryMode) {
             throw new Error('You cannot use the storageService in histroy mode.');
         }
     }

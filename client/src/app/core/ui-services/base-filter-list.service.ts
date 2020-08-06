@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { BaseModel } from 'app/shared/models/base/base-model';
 import { BaseRepository } from '../repositories/base-repository';
 import { BaseViewModel } from '../../site/base/base-view-model';
-import { OpenSlidesStatusService } from '../core-services/openslides-status.service';
+import { HistoryService } from '../core-services/history.service';
 import { StorageService } from '../core-services/storage.service';
 
 /**
@@ -157,7 +157,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
      * @param name the name of the filter service
      * @param store storage service, to read saved filter variables
      */
-    public constructor(private store: StorageService, private OSStatus: OpenSlidesStatusService) {}
+    public constructor(private store: StorageService, private historyService: HistoryService) {}
 
     /**
      * Initializes the filterService.
@@ -166,7 +166,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
      */
     public async initFilters(inputData: Observable<V[]>): Promise<void> {
         let storedFilter: OsFilter[] = null;
-        if (!this.OSStatus.isInHistoryMode) {
+        if (!this.historyService.isInHistoryMode) {
             storedFilter = await this.store.get<OsFilter[]>('filter_' + this.storageKey);
         }
 
@@ -237,7 +237,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
             const newDefinitions = this.getFilterDefinitions();
 
             let storedFilter = null;
-            if (!this.OSStatus.isInHistoryMode) {
+            if (!this.historyService.isInHistoryMode) {
                 storedFilter = await this.store.get<OsFilter[]>('filter_' + this.storageKey);
             }
 
@@ -329,7 +329,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
      */
     public storeActiveFilters(): void {
         this.updateFilteredData();
-        if (!this.OSStatus.isInHistoryMode) {
+        if (!this.historyService.isInHistoryMode) {
             this.store.set('filter_' + this.storageKey, this.filterDefinitions);
         }
     }

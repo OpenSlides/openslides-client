@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
 
-import { Permission } from 'app/core/core-services/operator.service';
+import { Permission} from 'app/core/core-services/permission';;
 import { MediaUploadComponent } from './components/media-upload/media-upload.component';
 import { MediafileListComponent } from './components/mediafile-list/mediafile-list.component';
 

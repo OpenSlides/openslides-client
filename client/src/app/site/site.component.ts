@@ -12,10 +12,10 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { UpdateService } from 'app/core/ui-services/update.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { MainMenuEntry, MainMenuService } from '../core/core-services/main-menu.service';
-import { OpenSlidesStatusService } from '../core/core-services/openslides-status.service';
-import { TimeTravelService } from '../core/core-services/time-travel.service';
+import { MainMenuService, MainMenuEntry } from '../core/core-services/main-menu.service';
 import { ViewportService } from '../core/ui-services/viewport.service';
+import { HistoryService } from 'app/core/core-services/history.service';
+import { TimeTravelService } from 'app/core/core-services/time-travel.service';
 
 /**
  * Interface to describe possible routing data
@@ -75,7 +75,7 @@ export class SiteComponent extends BaseComponent implements OnInit {
      * @param translate
      * @param dialog
      * @param mainMenuService
-     * @param OSStatus
+     * @param historyService
      * @param timeTravel
      */
     public constructor(
@@ -86,7 +86,7 @@ export class SiteComponent extends BaseComponent implements OnInit {
         public vp: ViewportService,
         public dialog: MatDialog,
         private mainMenuService: MainMenuService,
-        public OSStatus: OpenSlidesStatusService,
+        public historyService: HistoryService,
         public timeTravel: TimeTravelService,
         private overlayService: OverlayService
     ) {

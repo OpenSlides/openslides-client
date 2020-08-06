@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
 
-import { OpenSlidesStatusService } from 'app/core/core-services/openslides-status.service';
+import { HistoryService } from 'app/core/core-services/history.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { StorageService } from 'app/core/core-services/storage.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
@@ -36,7 +36,7 @@ export class BlockDetailFilterListService extends MotionFilterListService {
     /**
      *
      * @param store
-     * @param OSStatus
+     * @param historyService
      * @param categoryRepo
      * @param motionBlockRepo
      * @param commentRepo
@@ -48,7 +48,7 @@ export class BlockDetailFilterListService extends MotionFilterListService {
      */
     public constructor(
         store: StorageService,
-        OSStatus: OpenSlidesStatusService,
+        historyService: HistoryService,
         categoryRepo: MotionCategoryRepositoryService,
         motionBlockRepo: MotionBlockRepositoryService,
         commentRepo: MotionCommentSectionRepositoryService,
@@ -60,7 +60,7 @@ export class BlockDetailFilterListService extends MotionFilterListService {
     ) {
         super(
             store,
-            OSStatus,
+            historyService,
             categoryRepo,
             motionBlockRepo,
             commentRepo,

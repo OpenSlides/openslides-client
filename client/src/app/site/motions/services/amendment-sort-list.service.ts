@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
 
-import { OpenSlidesStatusService } from 'app/core/core-services/openslides-status.service';
+import { HistoryService } from 'app/core/core-services/history.service';
 import { StorageService } from 'app/core/core-services/storage.service';
 import { OsSortingDefinition, OsSortingOption } from 'app/core/ui-services/base-sort.service';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
@@ -28,10 +28,10 @@ export class AmendmentSortListService extends MotionSortListService {
     public constructor(
         protected translate: TranslateService,
         store: StorageService,
-        OSStatus: OpenSlidesStatusService,
+        historyService: HistoryService,
         config: OrganisationSettingsService
     ) {
-        super(translate, store, OSStatus, config);
+        super(translate, store, historyService, config);
     }
 
     protected getSortOptions(): OsSortingOption<ViewMotion>[] {

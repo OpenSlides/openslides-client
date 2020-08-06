@@ -1,5 +1,5 @@
 import { AppConfig } from '../../core/definitions/app-config';
-import { Permission } from 'app/core/core-services/operator.service';
+import { Permission} from 'app/core/core-services/permission';;
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { MotionChangeRecommendationRepositoryService } from 'app/core/repositories/motions/motion-change-recommendation-repository.service';

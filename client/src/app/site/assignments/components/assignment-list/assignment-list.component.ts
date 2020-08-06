@@ -4,7 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PblColumnDefinition } from '@pebula/ngrid';
 
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
-import { OperatorService, Permission } from 'app/core/core-services/operator.service';
+import { OperatorService } from 'app/core/core-services/operator.service';
+import { Permission} from 'app/core/core-services/permission';
 import { AssignmentRepositoryService } from 'app/core/repositories/assignments/assignment-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';

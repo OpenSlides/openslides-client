@@ -23,5 +23,35 @@ export class LifecycleService {
      */
     public readonly openslidesShutdowned = new EventEmitter<void>();
 
+    private _isBooted = false;
+    /**
+     * Saves, if OpenSlides is fully booted. This means, that a user must be logged in
+     * (Anonymous is also a user in this case). This is the case after `afterLoginBootup`.
+     */
+    public get isBooted(): boolean {
+        return this._isBooted;
+    }
+
     public constructor() {}
+
+    public bootup(): void {
+        this._isBooted = false;
+        this.openslidesBooted.next();
+    }
+
+    /**
+     * Shuts down OpenSlides. The websocket connection is closed and the operator is not set.
+     */
+    public shutdown(): void {
+        this._isBooted = false;
+        this.openslidesShutdowned.next();
+    }
+
+    /**
+     * Shutdown and bootup.
+     */
+    public reboot(): void {
+        this.shutdown();
+        this.bootup();
+    }
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
 
-import { OpenSlidesStatusService } from 'app/core/core-services/openslides-status.service';
+import { HistoryService } from 'app/core/core-services/history.service';
 import { StorageService } from 'app/core/core-services/storage.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { BaseFilterListService, OsFilter, OsFilterOption } from 'app/core/ui-services/base-filter-list.service';
@@ -36,11 +36,11 @@ export class AgendaFilterListService extends BaseFilterListService<ViewAgendaIte
      */
     public constructor(
         store: StorageService,
-        OSStatus: OpenSlidesStatusService,
+        historyService: HistoryService,
         private translate: TranslateService,
         tagRepo: TagRepositoryService
     ) {
-        super(store, OSStatus);
+        super(store, historyService);
 
         this.updateFilterForRepo(tagRepo, this.tagFilterOptions, this.translate.instant('No tags'));
     }

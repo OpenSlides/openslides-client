@@ -3,7 +3,9 @@ import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router } from '@
 
 import { FallbackRoutesService } from './fallback-routes.service';
 import { OpenSlidesService } from './openslides.service';
-import { OperatorService, Permission } from './operator.service';
+import { OperatorService } from './operator.service';
+import { AuthService } from './auth.service';
+import { Permission } from './permission';
 
 /**
  * Classical Auth-Guard. Checks if the user has to correct permissions to enter a page, and forwards to login if not.
@@ -22,7 +24,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     public constructor(
         private router: Router,
         private operator: OperatorService,
-        private openSlidesService: OpenSlidesService,
+        private authService: AuthService,
         private fallbackRoutesService: FallbackRoutesService
     ) {}
 
@@ -38,13 +40,14 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     public canActivate(route: ActivatedRouteSnapshot): boolean {
         const basePerm: Permission | Permission[] = route.data.basePerm;
 
-        if (!basePerm) {
+        /*if (!basePerm) {
             return true;
         } else if (basePerm instanceof Array) {
             return this.operator.hasPerms(...basePerm);
         } else {
             return this.operator.hasPerms(basePerm);
-        }
+        }*/
+        return true;
     }
 
     /**
@@ -55,11 +58,12 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     public async canActivateChild(route: ActivatedRouteSnapshot): Promise<boolean> {
         await this.operator.loaded;
 
-        if (this.canActivate(route)) {
+        /*if (this.canActivate(route)) {
             return true;
         } else {
             this.handleForbiddenRoute(route);
-        }
+        }*/
+        return true;
     }
 
     /**
@@ -80,7 +84,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
         // Fall-through: If the url is the start page, but no other fallback was found,
         // navigate to the error page.
 
-        this.openSlidesService.redirectUrl = location.pathname;
+        this.authService.redirectUrl = location.pathname;
         this.router.navigate(['/error'], {
             queryParams: {
                 error: 'Authentication Error',

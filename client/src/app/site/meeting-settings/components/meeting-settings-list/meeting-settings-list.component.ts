@@ -79,7 +79,7 @@ export class MeetingSettingsListComponent extends BaseModelContextComponent
                 this.cd.markForCheck();
             }
         });
-        this.activeMeetingService.getMeetingObservable().subscribe(meeting => {
+        this.activeMeetingService.meetingObservable.subscribe(meeting => {
             this.meeting = meeting;
         });
     }

@@ -1,92 +1,20 @@
 import { EventEmitter, Injectable } from '@angular/core';
 
-import { environment } from 'environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { auditTime, take } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 
-import { ActiveMeetingService } from './active-meeting.service';
+import { ActiveMeetingService, NoActiveMeeting } from './active-meeting.service';
 import { Group } from 'app/shared/models/users/group';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { AutoupdateService, ModelSubscription } from './autoupdate.service';
-import { CollectionMapperService } from './collection-mapper.service';
-import { CommunicationManagerService } from './communication-manager.service';
 import { DataStoreService } from './data-store.service';
-import { HttpService } from './http.service';
 import { SimplifiedModelRequest, SpecificStructuredField } from './model-request-builder.service';
-import { OnAfterAppsLoaded } from '../definitions/on-after-apps-loaded';
-import { StreamingCommunicationService } from './streaming-communication.service';
-import { User } from '../../shared/models/users/user';
-import { ShortNameInformation, UserRepositoryService } from '../repositories/users/user-repository.service';
-import { TokenService } from './token.service';
-import { LoginResponse } from './auth.service';
-
-/**
- * Permissions on the client are just strings. This makes clear, that
- * permissions instead of arbitrary strings should be given.
- */
-export enum Permission {
-    agendaCanManage = 'agenda.can_manage',
-    agendaCanSee = 'agenda.can_see',
-    agendaCanSeeInternalItems = 'agenda.can_see_internal_items',
-    agendaCanManageListOfSpeakers = 'agenda.can_manage_list_of_speakers',
-    agendaCanSeeListOfSpeakers = 'agenda.can_see_list_of_speakers',
-    agendaCanBeSpeaker = 'agenda.can_be_speaker',
-    assignmentsCanManage = 'assignments.can_manage',
-    assignmentsCanNominateOther = 'assignments.can_nominate_other',
-    assignmentsCanNominateSelf = 'assignments.can_nominate_self',
-    assignmentsCanSee = 'assignments.can_see',
-    coreCanManageSettings = 'core.can_manage_settings',
-    coreCanManageLogosAndFonts = 'core.can_manage_logos_and_fonts',
-    coreCanSeeHistory = 'core.can_see_history',
-    coreCanManageProjector = 'core.can_manage_projector',
-    coreCanSeeFrontpage = 'core.can_see_frontpage',
-    coreCanSeeProjector = 'core.can_see_projector',
-    coreCanManageTags = 'core.can_manage_tags',
-    coreCanSeeLiveStream = 'core.can_see_livestream',
-    coreCanSeeAutopilot = 'core.can_see_autopilot',
-    mediafilesCanManage = 'mediafiles.can_manage',
-    mediafilesCanSee = 'mediafiles.can_see',
-    motionsCanCreate = 'motions.can_create',
-    motionsCanCreateAmendments = 'motions.can_create_amendments',
-    motionsCanManage = 'motions.can_manage',
-    motionsCanManageMetadata = 'motions.can_manage_metadata',
-    motionsCanManagePolls = 'motions.can_manage_polls',
-    motionsCanSee = 'motions.can_see',
-    motionsCanSeeInternal = 'motions.can_see_internal',
-    motionsCanSupport = 'motions.can_support',
-    usersCanChangePassword = 'users.can_change_password',
-    usersCanManage = 'users.can_manage',
-    usersCanSeeExtraData = 'users.can_see_extra_data',
-    usersCanSeeName = 'users.can_see_name'
-}
-
-/**
- * Response format of the WhoAmI request.
- */
-export interface WhoAmI {
-    user_id: number | null;
-    guest_enabled: boolean;
-    group_ids: number[] | null; // Null meaning, that no active meeting is selected, so groups are not relevant.
-    short_name_information: ShortNameInformation;
-    short_name?: string;
-    // auth_type: UserAuthType;
-    permissions: Permission[];
-}
-
-function isWhoAmI(obj: any): obj is WhoAmI {
-    if (!obj) {
-        return false;
-    }
-    const whoAmI = obj as WhoAmI;
-    return (
-        whoAmI.guest_enabled !== undefined &&
-        whoAmI.group_ids !== undefined &&
-        whoAmI.user_id !== undefined &&
-        whoAmI.short_name_information !== undefined &&
-        whoAmI.permissions !== undefined
-        // whoAmI.auth_type !== undefined
-    );
-}
+import { UserRepositoryService } from '../repositories/users/user-repository.service';
+import { AuthService } from './auth.service';
+import { Id } from '../definitions/key-types';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
+import { GroupRepositoryService } from '../repositories/users/group-repository.service';
+import { Permission } from './permission';
 
 /**
  * The operator represents the user who is using OpenSlides.
@@ -97,31 +25,38 @@ function isWhoAmI(obj: any): obj is WhoAmI {
 @Injectable({
     providedIn: 'root'
 })
-export class OperatorService implements OnAfterAppsLoaded {
-    private whoAmIData: WhoAmI = this.getDefaultWhoAmIData();
-
+export class OperatorService {
     public get operatorId(): number | null {
-        return this.tokenService.whoAmI().userId;
-    }
-
-    public get shortName(): string {
-        return this.tokenService.whoAmI().username;
+        return this.isAnonymous ? null : this.authService.authToken.userId;
     }
 
     public get isAnonymous(): boolean {
-        return !this.tokenService.whoAmI().userId;
-    }
-
-    public get isSuperAdmin(): boolean {
-        return this.isInGroupIdsNonAdminCheck(2);
-    }
-
-    public get guestEnabled(): boolean {
-        return this.whoAmIData.guest_enabled;
+        return !this.authService.authToken;
     }
 
     public get isAuthenticated(): boolean {
-        return !!this.tokenService.accessToken || this.guestEnabled;
+        return !this.isAnonymous;
+    }
+
+    public get shortName(): string {
+        return this._shortName;
+    }
+    private _shortName: string;
+
+    // permissions and groupIds are bound to the active meeting.
+    // If there is no active meeting, both will be null.
+    // If groupIds is null or [], the default group must be used.
+
+    private permissions: Permission[] | null = null;
+    private groupIds: Id[] | null = null;
+    private roleId: Id | null = null;
+
+    public get isSuperAdmin(): boolean {
+        if (this.defaultGroupId) {
+            return this.isInGroupIdsNonAdminCheck(this.defaultGroupId);
+        } else {
+            throw new NoActiveMeeting();
+        }
     }
 
     /**
@@ -145,190 +80,137 @@ export class OperatorService implements OnAfterAppsLoaded {
         return this.operatorShortNameSubject.asObservable();
     }
 
-    // public readonly authType: BehaviorSubject<UserAuthType> = new BehaviorSubject(DEFAULT_AUTH_TYPE);
-
-    private userRepository: UserRepositoryService | null;
-
     private _loaded: Promise<void>;
     public get loaded(): Promise<void> {
         return this._loaded;
     }
 
-    private currentUserSubscription: ModelSubscription | null = null;
-    private currentDefaultGroupSubscription: ModelSubscription | null = null;
+    private currentOperatorDataSubscription: ModelSubscription | null = null;
 
-    private activeMeetingId: number | null = null;
+    private get activeMeetingId(): number | null {
+        return this.activeMeetingService.meetingId;
+    }
+    private get defaultGroupId(): number | null {
+        const activeMeeting = this.activeMeetingService.meeting;
+        return activeMeeting ? activeMeeting.default_group.id : null;
+    }
+    private get superadminGroupId(): number | null {
+        const activeMeeting = this.activeMeetingService.meeting;
+        return activeMeeting ? activeMeeting.superadmin_group.id : null;
+    }
+
+    private _lastActiveMeetingId;
+    private _lastDefaultGroupId;
 
     public constructor(
-        private http: HttpService,
-        private tokenService: TokenService,
+        private authService: AuthService,
         private DS: DataStoreService,
         private autoupdateService: AutoupdateService,
         private activeMeetingService: ActiveMeetingService,
-        private collectionMapper: CollectionMapperService,
-        private streamingCommunicationService: StreamingCommunicationService
+        private userRepo: UserRepositoryService,
+        private groupRepo: GroupRepositoryService,
     ) {
         this._loaded = this.operatorUpdatedEvent.pipe(take(1)).toPromise();
 
-        this.activeMeetingService.getMeetingIdObservable().subscribe(id => {
-            this.activeMeetingId = id;
+        this.authService.authTokenObservable.subscribe(() => {
+            this.refreshOperatorDataSubscription();
+        });
+        this.activeMeetingService.meetingObservable.subscribe(meeting => {
+            if (!meeting && this._lastActiveMeetingId ||
+                (meeting && (meeting.id !== this._lastActiveMeetingId || meeting.default_group_id !== this._lastDefaultGroupId))) {
+                this._lastActiveMeetingId = meeting ? meeting.id : null;
+                this._lastDefaultGroupId = meeting ? meeting.default_group_id : null;
 
-            if (!this.isAnonymous) {
-                this.updateGroupIds();
+                this.refreshOperatorDataSubscription();
             }
         });
 
-        this.DS.getChangeObservable(User).subscribe(user => {
-            if (user !== undefined && this.whoAmIData && this.whoAmIData.user_id === user.id) {
-                if (this.userRepository) {
-                    this.whoAmIData.short_name = this.userRepository.getShortName(user);
-                }
-                this.whoAmIData.permissions = this.calcPermissions();
+        this.userRepo.getGeneralViewModelObservable().subscribe(user => {
+            if (user !== undefined && this.operatorId === user.id) {
+                this._shortName = this.userRepo.getShortName(user);
 
                 if (this.activeMeetingId) {
-                    this.whoAmIData.group_ids = user.group_ids(this.activeMeetingId);
+                    this.groupIds = user.group_ids(this.activeMeetingId);
+                    this.permissions = this.calcPermissions();
                 }
 
-                this.operatorShortNameSubject.next(this.whoAmIData.short_name);
+                this.roleId = user.role_id;
+
+                this.operatorShortNameSubject.next(this._shortName);
                 this.operatorUpdatedEvent.emit();
             }
         });
-        this.DS.getChangeObservable(Group)
-            .pipe(auditTime(10))
+        this.groupRepo.getGeneralViewModelObservable()
             .subscribe(group => {
-                if (this.isAnonymous && group.id === 1) {
-                    this.whoAmIData.permissions = this.calcPermissions();
+                if (!this.activeMeetingId) {
+                    return;
+                }
+
+                if (this.isAnonymous && group.id === this.defaultGroupId) {
+                    this.permissions = this.calcPermissions();
                     this.operatorUpdatedEvent.emit();
-                } else {
-                    this.updateGroupIds();
+                } else if (!this.isAnonymous) {
                     if (
-                        this.whoAmIData.group_ids === null ||
-                        this.whoAmIData.group_ids.includes(group.id) ||
-                        (this.whoAmIData.group_ids.length === 0 && group.id === 1)
+                        ((!this.groupIds  || this.groupIds.length === 0) && group.id === this.defaultGroupId) ||
+                        (this.groupIds && this.groupIds.length > 0 && this.groupIds.includes(group.id))
                     ) {
-                        this.whoAmIData.permissions = this.calcPermissions();
+                        this.permissions = this.calcPermissions();
                         this.operatorUpdatedEvent.emit();
                     }
                 }
             });
     }
 
-    public onAfterAppsLoaded(): void {
-        this.userRepository = this.collectionMapper.getRepository(User.COLLECTION) as UserRepositoryService;
-    }
-
-    private updateGroupIds(): void {
-        if (!this.whoAmIData.user_id) {
-            return;
+    private async refreshOperatorDataSubscription(): Promise<void> {
+        if (this.currentOperatorDataSubscription) {
+            this.currentOperatorDataSubscription.close();
+            this.currentOperatorDataSubscription = null;
         }
+
+        let operatorRequest: SimplifiedModelRequest = null;
         if (this.activeMeetingId) {
-            const user = this.DS.get(User, this.whoAmIData.user_id);
-            if (!user) {
-                return;
-            }
-            this.whoAmIData.group_ids = user.group_ids(this.activeMeetingId);
-        } else {
-            this.whoAmIData.group_ids = null;
-        }
-    }
-
-    /**
-     * Calls `/apps/users/whoami` to find out the real operator.
-     *
-     * @returns The response of the WhoAmI request.
-     */
-    public async doWhoAmIRequest(): Promise<{ whoami: WhoAmI; online: boolean }> {
-        let online = true;
-        try {
-            // const response = await this.http.get(environment.urlPrefix + '/users/whoami/');
-            const loginResponse = await this.http.post<LoginResponse>(`${environment.authUrlPrefix}/who-am-i/`);
-
-            // FAKE WhoAmI
-            const response = {
-                user_id: 1,
-                guest_enabled: false,
-                group_ids: [2],
-                short_name_information: { username: 'TODO' },
-                auth_type: 'default',
-                permissions: []
-            };
-
-            if (isWhoAmI(response) && loginResponse.token) {
-                await this.setWhoAmI(response);
-                this.tokenService.nextAccessToken(loginResponse.token);
+            if (this.isAuthenticated) {
+                operatorRequest = {
+                    ids: [this.operatorId],
+                    viewModelCtor: ViewUser,
+                    fieldset: 'shortName',
+                    follow: [
+                        {
+                            idField: SpecificStructuredField('group_$_ids', this.activeMeetingId),
+                            fieldset: ['permissions']
+                        }
+                    ]
+                };
             } else {
-                online = false;
+                operatorRequest = {
+                    ids: [this.activeMeetingId],
+                    viewModelCtor: ViewMeeting,
+                    follow: [
+                        {
+                            idField: 'default_group_id',
+                            fieldset: ['permissions']
+                        }
+                    ],
+                    fieldset: []
+                };
             }
-        } catch (e) {
-            online = false;
-        }
-        return { whoami: this.whoAmIData, online };
-    }
-
-    /**
-     * Sets the operator user. Will be saved to storage
-     * @param user The new operator.
-     */
-    public async setWhoAmI(whoami: WhoAmI | null): Promise<void> {
-        if (whoami === null) {
-            whoami = this.getDefaultWhoAmIData();
-        }
-        this.whoAmIData = whoami;
-
-        if (this.userRepository) {
-            this.whoAmIData.short_name = this.userRepository.getShortName(this.whoAmIData.short_name_information);
+        } else {
+            if (this.isAuthenticated) {
+                operatorRequest = {
+                    ids: [this.operatorId],
+                    viewModelCtor: ViewUser,
+                    fieldset: 'shortName'
+                };
+            }
+            // No else-case: A non-authed no meeting is not possible (or: there are no usefull information).
         }
 
-        if (this.currentDefaultGroupSubscription) {
-            this.currentDefaultGroupSubscription.close();
-            this.currentDefaultGroupSubscription = null;
+        if (operatorRequest) {
+            // Do not wait for the subscription to be done...
+            (async () => {
+                this.currentOperatorDataSubscription = await this.autoupdateService.simpleRequest(operatorRequest);
+            })();
         }
-
-        this.operatorIdSubject.next(this.whoAmIData.user_id);
-        this.streamingCommunicationService.setIsOperatorAuthenticated(this.isAuthenticated);
-
-        if (this.whoAmIData.user_id) {
-            await this.refreshUserSubscription();
-        }
-    }
-
-    /**
-     * Returns a default WhoAmI response
-     */
-    private getDefaultWhoAmIData(): WhoAmI {
-        return {
-            user_id: null,
-            guest_enabled: false,
-            group_ids: null,
-            short_name_information: {
-                username: 'TODO'
-            },
-            // auth_type: DEFAULT_AUTH_TYPE,
-            permissions: []
-        };
-    }
-
-    private async refreshUserSubscription(): Promise<void> {
-        if (this.currentUserSubscription) {
-            this.currentUserSubscription.close();
-            this.currentUserSubscription = null;
-        }
-
-        const simpleUserRequest: SimplifiedModelRequest = {
-            ids: [this.whoAmIData.user_id],
-            viewModelCtor: ViewUser,
-            fieldset: 'shortName',
-            follow: [
-                {
-                    idField: SpecificStructuredField('group_$_ids', '1'), // TODO: active meeting id
-                    fieldset: ['permissions']
-                }
-            ]
-        };
-        // Do not wait for the subscription to be done...
-        (async () => {
-            this.currentUserSubscription = await this.autoupdateService.simpleRequest(simpleUserRequest);
-        })();
     }
 
     /**
@@ -337,17 +219,19 @@ export class OperatorService implements OnAfterAppsLoaded {
      */
     private calcPermissions(): Permission[] {
         let permissions;
-        if (this.whoAmIData.group_ids === null) {
+        if (this.groupIds === null) {
             permissions = [];
-        } else if (this.isAnonymous || this.whoAmIData.group_ids.length === 0) {
+        } else if (this.isAnonymous || this.groupIds.length === 0) {
             // Anonymous or users in the default group.
             const defaultGroup = this.DS.get<Group>('users/group', 1);
             if (defaultGroup && defaultGroup.permissions instanceof Array) {
                 permissions = defaultGroup.permissions;
+            } else {
+                permissions = [];
             }
         } else {
             const permissionSet = new Set<string>();
-            this.DS.getMany(Group, this.whoAmIData.group_ids).forEach(group => {
+            this.DS.getMany(Group, this.groupIds).forEach(group => {
                 group.permissions.forEach(permission => {
                     permissionSet.add(permission);
                 });
@@ -355,29 +239,32 @@ export class OperatorService implements OnAfterAppsLoaded {
             permissions = Array.from(permissionSet.values());
         }
 
-        this.operatorUpdatedEvent.next();
         return permissions;
     }
 
     /**
      * Checks, if the operator has at least one of the given permissions.
      * @param checkPerms The permissions to check, if at least one matches.
+     *
+     * TODO: what if no active meeting??
      */
     public hasPerms(...checkPerms: Permission[]): boolean {
-        if (this.whoAmIData.group_ids === null) {
+        if (this.groupIds === null) {
             return false;
         }
-        if (this.whoAmIData.user_id && this.whoAmIData.group_ids.includes(2)) {
+        if (this.isAuthenticated && this.groupIds.includes(this.superadminGroupId)) {
             return true;
         }
         return checkPerms.some(permission => {
-            return this.whoAmIData.permissions.includes(permission);
+            return this.permissions.includes(permission);
         });
     }
 
     /**
      * Returns true, if the operator is in at least one group or he is in the admin group.
      * @param groups The groups to check
+     *
+     * TODO: what if no active meeting??
      */
     public isInGroup(...groups: Group[]): boolean {
         return this.isInGroupIds(...groups.map(group => group.id));
@@ -386,14 +273,16 @@ export class OperatorService implements OnAfterAppsLoaded {
     /**
      * Returns true, if the operator is in at least one group or he is in the admin group.
      * @param groups The group ids to check
+     *
+     * TODO: what if no active meeting??
      */
     public isInGroupIds(...groupIds: number[]): boolean {
-        if (this.whoAmIData.group_ids === null) {
+        if (this.groupIds === null) {
             return false;
         }
         if (!this.isInGroupIdsNonAdminCheck(...groupIds)) {
             // An admin has all perms and is technically in every group.
-            return this.whoAmIData.group_ids.includes(2);
+            return this.groupIds.includes(this.superadminGroupId);
         }
         return true;
     }
@@ -403,19 +292,12 @@ export class OperatorService implements OnAfterAppsLoaded {
      * @param groups The group ids to check
      */
     public isInGroupIdsNonAdminCheck(...groupIds: number[]): boolean {
-        if (this.whoAmIData.group_ids === null) {
+        if (this.groupIds === null) {
             return false;
         }
         if (this.isAnonymous) {
-            return groupIds.includes(1); // any anonymous is in the default group.
+            return groupIds.includes(this.defaultGroupId); // any anonymous is in the default group.
         }
-        return groupIds.some(id => this.whoAmIData.group_ids.includes(id));
-    }
-
-    /**
-     * Set the operators presence to isPresent
-     */
-    public async setPresence(isPresent: boolean): Promise<void> {
-        await this.http.post(environment.urlPrefix + '/users/setpresence/', isPresent);
+        return groupIds.some(id => this.groupIds.includes(id));
     }
 }

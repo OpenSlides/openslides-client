@@ -8,6 +8,8 @@ import { LifecycleService } from './lifecycle.service';
 import { MeetingRepositoryService } from '../repositories/event-management/meeting-repository.service';
 import { SimplifiedModelRequest } from './model-request-builder.service';
 
+export class NoActiveMeeting extends Error {}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -19,6 +21,27 @@ export class ActiveMeetingService {
     private meetingSubcription: Subscription = null;
 
     protected modelAutoupdateSubscription: ModelSubscription | null = null;
+
+    public get guestsEnabled(): boolean {
+        const activeMeeting = this.meetingSubject.getValue();
+        return activeMeeting ? activeMeeting.enable_anonymous : false;
+    }
+
+    public get meetingIdObservable(): Observable<number | null> {
+        return this.meetingIdSubject.asObservable();
+    }
+
+    public get meetingId(): number | null {
+        return this.meetingIdSubject.getValue();
+    }
+
+    public get meetingObservable(): Observable<ViewMeeting | null> {
+        return this.meetingSubject.asObservable();
+    }
+
+    public get meeting(): ViewMeeting | null {
+        return this.meetingSubject.getValue();
+    }
 
     public constructor(
         private repo: MeetingRepositoryService,
@@ -58,26 +81,14 @@ export class ActiveMeetingService {
         }
     }
 
-    public getMeetingIdObservable(): Observable<number | null> {
-        return this.meetingIdSubject.asObservable();
-    }
-
-    public getMeetingId(): number | null {
-        return this.meetingIdSubject.getValue();
-    }
-
-    public getMeetingObservable(): Observable<ViewMeeting | null> {
-        return this.meetingSubject.asObservable();
-    }
-
-    public getMeeting(): ViewMeeting | null {
-        return this.meetingSubject.getValue();
-    }
-
     private getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [this.getMeetingId()],
+            ids: [this.meetingId],
+            follow: [
+                {idField: 'default_group_id'}, // needed by the operator!
+                {idField: 'superadmin_group_id'}
+            ],
             fieldset: 'settings'
         };
     }

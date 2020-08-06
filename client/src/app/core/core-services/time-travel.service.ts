@@ -7,8 +7,9 @@ import { History } from 'app/shared/models/core/history';
 import { CollectionMapperService } from './collection-mapper.service';
 import { DataStoreService, DataStoreUpdateManagerService } from './data-store.service';
 import { HttpService } from './http.service';
-import { OpenSlidesStatusService } from './openslides-status.service';
+import { HistoryService } from './history.service';
 import { OpenSlidesService } from './openslides.service';
+import { LifecycleService } from './lifecycle.service';
 
 interface HistoryData {
     [collection: string]: BaseModel[];
@@ -26,21 +27,12 @@ interface HistoryData {
     providedIn: 'root'
 })
 export class TimeTravelService {
-    /**
-     * Constructs the time travel service
-     *
-     * @param httpService To fetch the history data
-     * @param modelMapperService to cast history objects into models
-     * @param DS to overwrite the dataStore
-     * @param OSStatus Sets the history status
-     * @param OpenSlides For restarting OpenSlide when exiting the history mode
-     */
     public constructor(
         private httpService: HttpService,
         private modelMapperService: CollectionMapperService,
         private DS: DataStoreService,
-        private OSStatus: OpenSlidesStatusService,
-        private OpenSlides: OpenSlidesService,
+        private historyService: HistoryService,
+        private lifecycleService: LifecycleService,
         private DSUpdateManager: DataStoreUpdateManagerService
     ) {}
 
@@ -73,9 +65,9 @@ export class TimeTravelService {
      * all missed auto updates are requested.
      */
     public async resumeTime(): Promise<void> {
-        this.OSStatus.leaveHistoryMode();
+        this.historyService.leaveHistoryMode();
         await this.DS.set();
-        await this.OpenSlides.reboot();
+        await this.lifecycleService.reboot();
     }
 
     /**
@@ -99,6 +91,6 @@ export class TimeTravelService {
     private async stopTime(history: History): Promise<void> {
         // await this.webSocketService.close();
         await this.DS.set(); // Same as clear, but not persistent.
-        this.OSStatus.enterHistoryMode(history);
+        this.historyService.enterHistoryMode(history);
     }
 }
