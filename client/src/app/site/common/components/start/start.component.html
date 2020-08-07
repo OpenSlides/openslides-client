@@ -21,6 +21,10 @@
 
             <div [innerHTML]="startContent.general_event_welcome_text | trust: 'html'"></div>
         </div>
+        <button mat-button (click)="apiAuthRequestWithTokenCookie()">API Hello World</button>
+        <button mat-button (click)="apiAuthRequestWithCookie()">API Request Only Cookie</button>
+        <button mat-button (click)="apiAuthRequestWithExpiredToken()">API Request with expired Token</button>
+        <button mat-button (click)="apiAuthRequestWithInvalidToken()">API Request with invalid Token</button>
     </ng-container>
 
     <ng-container *ngIf="isEditing">

@@ -166,7 +166,9 @@ export class OverlayService {
      */
     public logout(): void {
         this.hasBooted = false;
-        this.user = null;
-        this.upgradeChecked = false;
+
+        // Fix for spinner
+        // this.user = null;
+        // this.upgradeChecked = false;
     }
 }

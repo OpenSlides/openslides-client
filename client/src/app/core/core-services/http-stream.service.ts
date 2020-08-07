@@ -1,6 +1,7 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
+import { HttpOptions } from '../definitions/http-options';
 import { EndpointConfiguration } from './http-stream-endpoint.service';
 import { Stream } from './stream';
 
@@ -26,16 +27,6 @@ export class StreamContainer {
         public params: () => Params,
         public body: () => any
     ) {}
-}
-
-interface HttpOptions {
-    body?: any;
-    headers?: HttpHeaders | { [header: string]: string | string[] };
-    observe: 'events';
-    params?: HttpParams | { [param: string]: string | string[] };
-    reportProgress?: boolean;
-    responseType: 'text';
-    withCredentials?: boolean;
 }
 
 @Injectable({

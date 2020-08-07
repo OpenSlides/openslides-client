@@ -80,9 +80,9 @@ export abstract class PollPdfService {
             case 'NUMBER_OF_ALL_PARTICIPANTS':
                 return this.userRepo.getViewModelList().length;
             case 'NUMBER_OF_DELEGATES':
-                throw new Error("TODO");
-                // TODO: the hard-coded 2 is not correct.
-                /*return this.userRepo
+                throw new Error('TODO');
+            // TODO: the hard-coded 2 is not correct.
+            /*return this.userRepo
                     .getViewModelList()
                     .filter(
                         user =>

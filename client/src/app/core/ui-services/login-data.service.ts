@@ -5,8 +5,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { auditTime } from 'rxjs/operators';
 
 import { ConfigurationService } from '../core-services/configuration.service';
-import { HttpService } from '../core-services/http.service';
 import { HistoryService } from '../core-services/history.service';
+import { HttpService } from '../core-services/http.service';
 import { OrganisationSettingsService } from './organisation-settings.service';
 import { StorageService } from '../core-services/storage.service';
 

@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { timer } from 'rxjs';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { Permission} from 'app/core/core-services/permission';
+import { Permission } from 'app/core/core-services/permission';
 import { ProjectorService } from 'app/core/core-services/projector.service';
 import { ProjectorCountdownRepositoryService } from 'app/core/repositories/projector/projector-countdown-repository.service';
 import { ProjectorMessageRepositoryService } from 'app/core/repositories/projector/projector-message-repository.service';

@@ -1,5 +1,5 @@
 import { AppConfig } from '../../core/definitions/app-config';
-import { Permission} from 'app/core/core-services/permission';;
+import { Permission } from 'app/core/core-services/permission';
 import { AssignmentCandidateRepositoryService } from 'app/core/repositories/assignments/assignment-candidate-repository.service';
 import { AssignmentOptionRepositoryService } from 'app/core/repositories/assignments/assignment-option-repository.service';
 import { AssignmentPollRepositoryService } from 'app/core/repositories/assignments/assignment-poll-repository.service';
