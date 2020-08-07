@@ -4,14 +4,14 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 import { PblColumnDefinition } from '@pebula/ngrid';
 
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService, Permission } from 'app/core/core-services/operator.service';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
-import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
-import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
+import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
 
 /**
  * Table for categories

@@ -5,7 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 
 import { Observable } from 'rxjs';
-import { map, take, publish } from 'rxjs/operators';
+import { map, publish, take } from 'rxjs/operators';
 
 import { MotionStateRepositoryService } from 'app/core/repositories/motions/motion-state-repository.service';
 import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/motion-workflow-repository.service';

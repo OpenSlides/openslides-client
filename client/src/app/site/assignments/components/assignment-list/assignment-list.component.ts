@@ -3,19 +3,19 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { PblColumnDefinition } from '@pebula/ngrid';
 
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService, Permission } from 'app/core/core-services/operator.service';
 import { AssignmentRepositoryService } from 'app/core/repositories/assignments/assignment-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
+import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { AssignmentFilterListService } from '../../services/assignment-filter-list.service';
 import { AssignmentPdfExportService } from '../../services/assignment-pdf-export.service';
 import { AssignmentSortListService } from '../../services/assignment-sort-list.service';
 import { AssignmentPhases, ViewAssignment } from '../../models/view-assignment';
-import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
-import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
 
 /**
  * List view for the assignments
@@ -147,7 +147,7 @@ export class AssignmentListComponent extends BaseListViewComponent<ViewAssignmen
     }
 
     public getCandidateAmount(assignments: ViewAssignment): number {
-        return assignments.candidateAmount
+        return assignments.candidateAmount;
     }
 
     /**

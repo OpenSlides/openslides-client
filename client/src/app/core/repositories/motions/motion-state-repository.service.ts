@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 
+import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { MotionState } from 'app/shared/models/motions/motion-state';
 import { ViewMotionState } from 'app/site/motions/models/view-motion-state';
 import { BaseRepository } from '../base-repository';
 import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
-import { Fieldsets, DEFAULT_FIELDSET } from 'app/core/core-services/model-request-builder.service';
 
 /**
  * Repository Services for States
@@ -37,10 +37,10 @@ export class MotionStateRepositoryService extends MeetingModelBaseRepository<Vie
             'set_number',
             'show_state_extension_field',
             'merge_amendment_into_final',
-            'show_recommendation_extension_field',
+            'show_recommendation_extension_field'
         ]);
-        const hasNextStateFields: (keyof MotionState)[] = ["next_state_ids"]
-        const blockListFields: (keyof MotionState)[] = listFields.concat(hasNextStateFields)
+        const hasNextStateFields: (keyof MotionState)[] = ['next_state_ids'];
+        const blockListFields: (keyof MotionState)[] = listFields.concat(hasNextStateFields);
         return {
             [DEFAULT_FIELDSET]: detailFields,
             title: titleFields,
