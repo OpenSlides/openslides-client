@@ -7,7 +7,6 @@ import { ActiveMeetingService, NoActiveMeeting } from './active-meeting.service'
 import { Group } from 'app/shared/models/users/group';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewUser } from 'app/site/users/models/view-user';
-import { LoginResponse } from './auth.service';
 import { AuthService } from './auth.service';
 import { AutoupdateService, ModelSubscription } from './autoupdate.service';
 import { DataStoreService } from './data-store.service';

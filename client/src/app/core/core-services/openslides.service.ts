@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { AuthService } from './auth.service';
-import { CommunicationManagerService } from './communication-manager.service';
 import { DataStoreService } from './data-store.service';
 import { LifecycleService } from './lifecycle.service';
 import { OfflineBroadcastService, OfflineReasonValue } from './offline-broadcast.service';

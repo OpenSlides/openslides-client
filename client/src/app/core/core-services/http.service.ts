@@ -1,11 +1,12 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 import { HistoryService } from './history.service';
 import { HTTPMethod } from '../definitions/http-methods';
+import { HttpOptions } from '../definitions/http-options';
 import { formatQueryParams, QueryParams } from '../definitions/query-params';
 
 export interface ErrorDetailResponse {
@@ -91,14 +92,18 @@ export class HttpService {
             url = '/' + url;
         }
 
-        const options = {
+        const options: HttpOptions = {
+            observe: 'response',
             body: data,
             headers: customHeader ? customHeader : this.defaultHeaders,
             responseType: responseType as 'json'
         };
 
         try {
-            return await this.http.request<T>(method, url, options).toPromise();
+            const response = await (this.http.request<T>(method, url, options as any) as Observable<
+                HttpResponse<T>
+            >).toPromise();
+            return response.body;
         } catch (error) {
             throw this.processError(error);
         }

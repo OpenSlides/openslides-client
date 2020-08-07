@@ -4,8 +4,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 export interface AuthToken {
     expiresAt: Date;
-    // FIXME: username not used.
-    // username: string;
     userId: number;
     sessionId: string;
     iat: number;
@@ -43,6 +41,34 @@ export class AuthTokenService {
 
         this.accessTokenSubject.next(token);
     }
+
+    /**
+     * Only for test purposes
+     */
+    public resetAccessTokenToExpired(): void {
+        this.setRawAccessToken(
+            'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.' +
+                'eyJleHBpcmVzSW4iOiIxMG0iLCJzZXNzaW9uSWQiOiI2NjUzYWMwNmJhNjVkYmQzNDE5NTQwOGQ1MDI5NjU1ZSIsIn' +
+                'VzZXJJZCI6MSwiaWF0IjoxNTk3MTQ5NDI0LCJleHAiOjE1OTcxNTAwMjR9.' +
+                'z21-bSIj_xZAoCbwXTqqf_ODAIEbbeSehYIE33dmYUs'
+        );
+    }
+
+    public resetAccessTokenToInvalid(): void {
+        this.setRawAccessToken(
+            'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.' +
+                'eyJleHBpcmVzSW4iOiIxMG0iLCJzZXNzaW9uSWQiOiI2NjUzYWMwNmJhNjVkYmQzNDE5NTQwOGQ1MDI5NjU1ZSIsIn' +
+                'VzZXJJZCI6MSwiaWF0IjoxNTk3MTQ5NDI0LCJleHAiOjE1OTcxNTAwMjR9.' +
+                'z21-bSIj_xZAoCbwXTqqf_ODAIEbbeSehYIE33YUs'
+        );
+    }
+
+    public resetAccessTokenToNull(): void {
+        this.setRawAccessToken(null);
+    }
+    /**
+     * End of test purposes
+     */
 
     private parseToken(rawToken?: string): AuthToken | null {
         if (!rawToken) {

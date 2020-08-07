@@ -57,8 +57,7 @@ export class AuthService {
         };
         const response = await this.http.post<LoginResponse>(environment.authUrlPrefix + '/login/', user);
         if (response.success) {
-            this.authTokenService.setRawAccessToken(response.token);
-            await this.lifecycleService.reboot();
+            this.lifecycleService.reboot();
             await this.redirectUser();
         }
     }
@@ -79,7 +78,7 @@ export class AuthService {
             this.authTokenService.setRawAccessToken(null);
         }
         this.router.navigate(['/']);
-        await this.lifecycleService.reboot();
+        this.lifecycleService.reboot();
     }
 
     public isAuthenticated(): boolean {
@@ -93,8 +92,7 @@ export class AuthService {
      */
     public async doWhoAmIRequest(): Promise<boolean> {
         try {
-            const loginResponse = await this.http.post<LoginResponse>(`${environment.authUrlPrefix}/who-am-i/`);
-            this.authTokenService.setRawAccessToken(loginResponse.token);
+            await this.http.post<LoginResponse>(`${environment.authUrlPrefix}/who-am-i/`);
             return true;
         } catch (e) {
             return false;
