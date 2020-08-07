@@ -14,7 +14,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject, timer } from 'rxjs';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { Permission} from 'app/core/core-services/permission';
+import { Permission } from 'app/core/core-services/permission';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { Projector } from 'app/shared/models/projector/projector';

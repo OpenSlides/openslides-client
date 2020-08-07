@@ -1,8 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+import { environment } from 'environments/environment';
+
+import { AuthTokenService } from 'app/core/core-services/auth-token.service';
+import { HttpService } from 'app/core/core-services/http.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { Permission} from 'app/core/core-services/permission';
+import { Permission } from 'app/core/core-services/permission';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
@@ -53,7 +57,9 @@ export class StartComponent extends BaseComponent implements OnInit {
         componentServiceCollector: ComponentServiceCollector,
         private organisationSettingsService: OrganisationSettingsService,
         private formBuilder: FormBuilder,
-        private operator: OperatorService
+        private operator: OperatorService,
+        private http: HttpService,
+        private authTokenService: AuthTokenService
     ) {
         super(componentServiceCollector);
         this.startForm = this.formBuilder.group({
@@ -112,4 +118,31 @@ export class StartComponent extends BaseComponent implements OnInit {
     public canManage(): boolean {
         return this.operator.hasPerms(Permission.coreCanManageSettings);
     }
+
+    /**
+     * Only testing purposes
+     */
+
+    public apiAuthRequestWithTokenCookie(): void {
+        this.http.get(`${environment.authUrlPrefix}/api/hello`).then(response => console.log('response', response));
+    }
+
+    public apiAuthRequestWithCookie(): void {
+        this.authTokenService.resetAccessTokenToNull();
+        this.apiAuthRequestWithTokenCookie();
+    }
+
+    public apiAuthRequestWithInvalidToken(): void {
+        this.authTokenService.resetAccessTokenToInvalid();
+        this.apiAuthRequestWithTokenCookie();
+    }
+
+    public apiAuthRequestWithExpiredToken(): void {
+        this.authTokenService.resetAccessTokenToExpired();
+        this.apiAuthRequestWithTokenCookie();
+    }
+
+    /**
+     * End of testing purposes
+     */
 }

@@ -86,8 +86,8 @@ export class ActiveMeetingService {
             viewModelCtor: ViewMeeting,
             ids: [this.meetingId],
             follow: [
-                {idField: 'default_group_id'}, // needed by the operator!
-                {idField: 'superadmin_group_id'}
+                { idField: 'default_group_id' }, // needed by the operator!
+                { idField: 'superadmin_group_id' }
             ],
             fieldset: 'settings'
         };

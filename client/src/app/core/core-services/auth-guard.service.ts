@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router } from '@angular/router';
 
+import { AuthService } from './auth.service';
 import { FallbackRoutesService } from './fallback-routes.service';
 import { OpenSlidesService } from './openslides.service';
 import { OperatorService } from './operator.service';
-import { AuthService } from './auth.service';
 import { Permission } from './permission';
 
 /**

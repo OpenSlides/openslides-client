@@ -6,10 +6,10 @@ import { BaseModel } from 'app/shared/models/base/base-model';
 import { History } from 'app/shared/models/core/history';
 import { CollectionMapperService } from './collection-mapper.service';
 import { DataStoreService, DataStoreUpdateManagerService } from './data-store.service';
-import { HttpService } from './http.service';
 import { HistoryService } from './history.service';
-import { OpenSlidesService } from './openslides.service';
+import { HttpService } from './http.service';
 import { LifecycleService } from './lifecycle.service';
+import { OpenSlidesService } from './openslides.service';
 
 interface HistoryData {
     [collection: string]: BaseModel[];

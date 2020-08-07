@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 
 import { DataStoreService } from 'app/core/core-services/data-store.service';
+import { LifecycleService } from 'app/core/core-services/lifecycle.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { Permission} from 'app/core/core-services/permission';
+import { Permission } from 'app/core/core-services/permission';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { UpdateService } from 'app/core/ui-services/update.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { LifecycleService } from 'app/core/core-services/lifecycle.service';
 
 @Component({
     selector: 'os-legal-notice',
