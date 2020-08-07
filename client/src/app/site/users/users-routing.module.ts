@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
 
-import { Permission} from 'app/core/core-services/permission';;
+import { Permission } from 'app/core/core-services/permission';
 import { GroupListComponent } from './components/group-list/group-list.component';
 import { PasswordComponent } from './components/password/password.component';
 import { PresenceDetailComponent } from './components/presence-detail/presence-detail.component';

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 
+import { AuthService } from './auth.service';
 import { HttpStreamEndpointService } from './http-stream-endpoint.service';
 import { OfflineBroadcastService, OfflineReason, OfflineReasonValue } from './offline-broadcast.service';
 import { OpenSlidesService } from './openslides.service';
-import { AuthService } from './auth.service';
 
 /**
  * This service handles everything connected with being offline.

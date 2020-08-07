@@ -1,5 +1,5 @@
 import { AppConfig } from '../../core/definitions/app-config';
-import { Permission} from 'app/core/core-services/permission';;
+import { Permission } from 'app/core/core-services/permission';
 import { MediafileRepositoryService } from 'app/core/repositories/mediafiles/mediafile-repository.service';
 import { Mediafile } from '../../shared/models/mediafiles/mediafile';
 import { ViewMediafile } from './models/view-mediafile';

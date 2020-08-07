@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { Permission} from 'app/core/core-services/permission';
+import { Permission } from 'app/core/core-services/permission';
 import { MotionPollRepositoryService } from 'app/core/repositories/motions/motion-poll-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';

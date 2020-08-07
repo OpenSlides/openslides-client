@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 
+import { AuthService } from './auth.service';
 import { EndpointConfiguration } from './http-stream-endpoint.service';
 import { HttpStreamService, StreamContainer } from './http-stream.service';
 import { HttpService } from './http.service';
 import { OfflineBroadcastService, OfflineReasonValue } from './offline-broadcast.service';
 import { SleepPromise } from '../promises/sleep';
-import { AuthService } from './auth.service';
 
 const MAX_CONNECTION_RETRIES = 3;
 const MAX_STREAM_FAILURE_RETRIES = 1;

@@ -9,13 +9,13 @@ import { StorageModule } from '@ngx-pwa/local-storage';
 import { AppLoadService } from './core/core-services/app-load.service';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { TokenInterceptorService } from './core/core-services/auth-token-interceptor.service';
+import { AuthTokenService } from './core/core-services/auth-token.service';
 import { CoreModule } from './core/core.module';
 import { environment } from '../environments/environment';
 import { LoginModule } from './site/login/login.module';
 import { OpenSlidesTranslateModule } from './core/translate/openslides-translate-module';
 import { SlidesModule } from './slides/slides.module';
-import { TokenInterceptorService } from './core/core-services/auth-token-interceptor.service';
-import { AuthTokenService } from './core/core-services/auth-token.service';
 
 /**
  * Returns a function that returns a promis that will be resolved, if all apps are loaded.

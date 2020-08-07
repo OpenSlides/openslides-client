@@ -33,7 +33,7 @@ export class UserMenuComponent extends BaseModelContextComponent implements OnIn
     @Output()
     private navEvent: EventEmitter<void> = new EventEmitter();
 
-    private _userId: number | null = null;
+    private _userId: number | null = undefined; // to distinguish from null!
 
     private userSubscription: Subscription | null = null;
 
@@ -50,15 +50,7 @@ export class UserMenuComponent extends BaseModelContextComponent implements OnIn
     }
 
     public ngOnInit(): void {
-        this.operator.operatorUpdatedEvent.subscribe(() => {
-            this.isLoggedIn = !this.operator.isAnonymous;
-            this.username = this.isLoggedIn ? this.operator.shortName : this.translate.instant('Guest');
-            const userId = this.operator.operatorId;
-            if (this._userId !== userId) {
-                this._userId = userId;
-                this.userUpdate();
-            }
-        });
+        this.operator.operatorUpdatedEvent.subscribe(() => this.onOperatorUpdate());
 
         this.loginDataService.samlSettings.subscribe(
             samlSettings => (this.samlChangePasswordUrl = samlSettings ? samlSettings.changePasswordUrl : null)
@@ -67,10 +59,23 @@ export class UserMenuComponent extends BaseModelContextComponent implements OnIn
         /*this.configService
             .get<boolean>(this.selfPresentConfStr)
             .subscribe(allowed => (this.allowSelfSetPresent = allowed));*/
+
+        this.onOperatorUpdate();
+    }
+
+    private onOperatorUpdate(): void {
+        this.isLoggedIn = !this.operator.isAnonymous;
+        this.username = this.isLoggedIn ? this.operator.shortName : this.translate.instant('Guest');
+        const userId = this.operator.operatorId;
+        console.log(userId);
+        if (this._userId !== userId) {
+            this._userId = userId;
+            this.userUpdate();
+        }
     }
 
     private userUpdate(): void {
-        if (this._userId === null) {
+        if (!this._userId) {
             this.user = null;
             return;
         }
@@ -136,8 +141,8 @@ export class UserMenuComponent extends BaseModelContextComponent implements OnIn
 
     public toggleUserIsPresent(): void {
         // FIXME: move to user repo.
-        //const present = this.user.isPresentInMeeting();
-        //this.operator.setPresence(!present).catch(this.raiseError);
+        // const present = this.user.isPresentInMeeting();
+        // this.operator.setPresence(!present).catch(this.raiseError);
     }
 
     public onClickNavEntry(): void {

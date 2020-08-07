@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PblColumnDefinition } from '@pebula/ngrid';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { Permission} from 'app/core/core-services/permission';
+import { Permission } from 'app/core/core-services/permission';
 import { AssignmentPollRepositoryService } from 'app/core/repositories/assignments/assignment-poll-repository.service';
 import { AssignmentVoteRepositoryService } from 'app/core/repositories/assignments/assignment-vote-repository.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';

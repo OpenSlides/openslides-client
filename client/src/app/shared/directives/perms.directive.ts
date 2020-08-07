@@ -3,7 +3,7 @@ import { Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } fr
 import { Subscription } from 'rxjs';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { Permission} from 'app/core/core-services/permission';
+import { Permission } from 'app/core/core-services/permission';
 
 /**
  * Directive to check if the {@link OperatorService} has the correct permissions to access certain functions

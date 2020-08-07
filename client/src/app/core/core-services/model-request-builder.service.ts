@@ -30,7 +30,10 @@ interface ISpecificStructuredField {
     templateValue: string;
 }
 
-export function SpecificStructuredField(templateIdField: string, templateValue: string | number): ISpecificStructuredField {
+export function SpecificStructuredField(
+    templateIdField: string,
+    templateValue: string | number
+): ISpecificStructuredField {
     return { templateIdField, templateValue: templateValue.toString() };
 }
 

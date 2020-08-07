@@ -30,8 +30,9 @@ export class TokenInterceptorService implements HttpInterceptor {
         return next.handle(request).pipe(
             tap(
                 httpEvent => {
-                    if (httpEvent instanceof HttpResponse) {
+                    if (httpEvent instanceof HttpResponse && httpEvent.headers.get('Authentication')) {
                         // Successful request
+                        this.authTokenService.setRawAccessToken(httpEvent.headers.get('Authentication'));
                     }
                 },
                 error => {

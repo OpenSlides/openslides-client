@@ -1,6 +1,6 @@
 import { AgendaItem } from '../../shared/models/agenda/agenda-item';
 import { AppConfig } from '../../core/definitions/app-config';
-import { Permission} from 'app/core/core-services/permission';;
+import { Permission } from 'app/core/core-services/permission';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
 import { SpeakerRepositoryService } from 'app/core/repositories/agenda/speaker-repository.service';

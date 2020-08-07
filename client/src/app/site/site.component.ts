@@ -13,9 +13,9 @@ import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { UpdateService } from 'app/core/ui-services/update.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { MainMenuService, MainMenuEntry } from '../core/core-services/main-menu.service';
+import { HistoryService } from '../core/core-services/history.service';
+import { TimeTravelService } from '../core/core-services/time-travel.service';
 import { ViewportService } from '../core/ui-services/viewport.service';
-import { HistoryService } from 'app/core/core-services/history.service';
-import { TimeTravelService } from 'app/core/core-services/time-travel.service';
 
 /**
  * Interface to describe possible routing data

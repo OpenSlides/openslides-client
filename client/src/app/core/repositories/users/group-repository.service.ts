@@ -5,11 +5,11 @@ import { map } from 'rxjs/operators';
 
 import { HttpService } from 'app/core/core-services/http.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
+import { Permission } from 'app/core/core-services/permission';
 import { Group } from 'app/shared/models/users/group';
 import { ViewGroup } from 'app/site/users/models/view-group';
 import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
-import { Permission } from 'app/core/core-services/permission';
 
 /**
  * Shape of a permission

@@ -5,16 +5,16 @@ import { take } from 'rxjs/operators';
 
 import { ActiveMeetingService, NoActiveMeeting } from './active-meeting.service';
 import { Group } from 'app/shared/models/users/group';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { AuthService } from './auth.service';
 import { AutoupdateService, ModelSubscription } from './autoupdate.service';
 import { DataStoreService } from './data-store.service';
-import { SimplifiedModelRequest, SpecificStructuredField } from './model-request-builder.service';
-import { UserRepositoryService } from '../repositories/users/user-repository.service';
-import { AuthService } from './auth.service';
-import { Id } from '../definitions/key-types';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { GroupRepositoryService } from '../repositories/users/group-repository.service';
+import { Id } from '../definitions/key-types';
+import { SimplifiedModelRequest, SpecificStructuredField } from './model-request-builder.service';
 import { Permission } from './permission';
+import { UserRepositoryService } from '../repositories/users/user-repository.service';
 
 /**
  * The operator represents the user who is using OpenSlides.
@@ -108,7 +108,7 @@ export class OperatorService {
         private autoupdateService: AutoupdateService,
         private activeMeetingService: ActiveMeetingService,
         private userRepo: UserRepositoryService,
-        private groupRepo: GroupRepositoryService,
+        private groupRepo: GroupRepositoryService
     ) {
         this._loaded = this.operatorUpdatedEvent.pipe(take(1)).toPromise();
 
@@ -116,8 +116,11 @@ export class OperatorService {
             this.refreshOperatorDataSubscription();
         });
         this.activeMeetingService.meetingObservable.subscribe(meeting => {
-            if (!meeting && this._lastActiveMeetingId ||
-                (meeting && (meeting.id !== this._lastActiveMeetingId || meeting.default_group_id !== this._lastDefaultGroupId))) {
+            if (
+                (!meeting && this._lastActiveMeetingId) ||
+                (meeting &&
+                    (meeting.id !== this._lastActiveMeetingId || meeting.default_group_id !== this._lastDefaultGroupId))
+            ) {
                 this._lastActiveMeetingId = meeting ? meeting.id : null;
                 this._lastDefaultGroupId = meeting ? meeting.default_group_id : null;
 
@@ -140,25 +143,24 @@ export class OperatorService {
                 this.operatorUpdatedEvent.emit();
             }
         });
-        this.groupRepo.getGeneralViewModelObservable()
-            .subscribe(group => {
-                if (!this.activeMeetingId) {
-                    return;
-                }
+        this.groupRepo.getGeneralViewModelObservable().subscribe(group => {
+            if (!this.activeMeetingId) {
+                return;
+            }
 
-                if (this.isAnonymous && group.id === this.defaultGroupId) {
+            if (this.isAnonymous && group.id === this.defaultGroupId) {
+                this.permissions = this.calcPermissions();
+                this.operatorUpdatedEvent.emit();
+            } else if (!this.isAnonymous) {
+                if (
+                    ((!this.groupIds || this.groupIds.length === 0) && group.id === this.defaultGroupId) ||
+                    (this.groupIds && this.groupIds.length > 0 && this.groupIds.includes(group.id))
+                ) {
                     this.permissions = this.calcPermissions();
                     this.operatorUpdatedEvent.emit();
-                } else if (!this.isAnonymous) {
-                    if (
-                        ((!this.groupIds  || this.groupIds.length === 0) && group.id === this.defaultGroupId) ||
-                        (this.groupIds && this.groupIds.length > 0 && this.groupIds.includes(group.id))
-                    ) {
-                        this.permissions = this.calcPermissions();
-                        this.operatorUpdatedEvent.emit();
-                    }
                 }
-            });
+            }
+        });
     }
 
     private async refreshOperatorDataSubscription(): Promise<void> {
