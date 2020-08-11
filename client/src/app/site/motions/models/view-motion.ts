@@ -161,7 +161,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     }
 
     public get diffLines(): DiffLinesInParagraph[] | null {
-        return this.getAmendmentParagraphs();
+        return this.getAmendmentParagraphLines();
     }
 
     /**
@@ -178,7 +178,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     /**
      * This is injected. Do NOT use; see diffLines getter.
      */
-    public getAmendmentParagraphs: () => DiffLinesInParagraph[] | null;
+    public getAmendmentParagraphLines: () => DiffLinesInParagraph[] | null;
     // This is set by the repository
     public getNumberOrTitle: () => string;
 

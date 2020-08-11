@@ -244,6 +244,8 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
         this.organisationSettingsService
             .get<boolean>('motions_amendments_enabled')
             .subscribe(enabled => (this.amendmentsEnabled = enabled));
+        // TODO: remove
+        this.amendmentsEnabled = true;
         this.organisationSettingsService.get<string>('motions_recommendations_by').subscribe(recommender => {
             this.recommendationEnabled = !!recommender;
         });
