@@ -8,6 +8,7 @@ import { switchMap } from 'rxjs/operators';
 
 import { AmendmentFilterListService } from '../../services/amendment-filter-list.service';
 import { AmendmentSortListService } from '../../services/amendment-sort-list.service';
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { LinenumberingService } from 'app/core/ui-services/linenumbering.service';
@@ -15,6 +16,7 @@ import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { ItemVisibilityChoices } from 'app/shared/models/agenda/agenda-item';
 import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { MotionExportDialogComponent } from '../shared-motion/motion-export-dialog/motion-export-dialog.component';
 import { MotionExportInfo, MotionExportService } from '../../services/motion-export.service';
 import { MotionMultiselectService } from '../../services/motion-multiselect.service';
@@ -95,6 +97,7 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
     }
 
     public ngOnInit(): void {
+        super.ngOnInit();
         // determine if a paramter exists.
         if (this.route.snapshot.paramMap.get('id')) {
             // set the parentMotion observable. This will "only" fire
@@ -114,6 +117,39 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
         /*this.configService
             .get<boolean>('motions_show_sequential_numbers')
             .subscribe(show => (this.showSequentialNumber = show));*/
+    }
+
+    protected getModelRequest(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [1], // TODO
+            follow: [
+                {
+                    idField: 'motion_ids',
+                    follow: [
+                        {
+                            idField: 'state_id',
+                            fieldset: 'list'
+                        },
+                        {
+                            idField: 'recommendation_id',
+                            fieldset: 'list'
+                        },
+                        {
+                            idField: 'submitter_ids',
+                            follow: [
+                                {
+                                    idField: 'user_id',
+                                    fieldset: 'shortName'
+                                }
+                            ]
+                        }
+                    ],
+                    fieldset: 'amendment'
+                }
+            ],
+            fieldset: []
+        };
     }
 
     /**

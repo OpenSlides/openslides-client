@@ -101,7 +101,9 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         const listFields: (keyof Motion)[] = titleFields.concat([
             'sequential_number',
             'sort_weight',
-            'category_weight'
+            'category_weight',
+            'lead_motion_id', // needed for filtering
+            'amendment_ids'
         ]);
         const blockListFields: (keyof Motion)[] = titleFields.concat(['block_id']);
         const detailFields: (keyof Motion)[] = titleFields.concat([
@@ -111,7 +113,11 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
             'amendment_paragraphs',
             'modified_final_version'
         ]);
-        const amendmentFields: (keyof Motion)[] = ['amendment_paragraphs'];
+        const amendmentFields: (keyof Motion)[] = listFields.concat([
+            'amendment_paragraphs',
+            'lead_motion_id',
+            'amendment_ids'
+        ]);
         const callListFields: (keyof Motion)[] = titleFields.concat(['sort_weight']);
         return {
             [DEFAULT_FIELDSET]: detailFields,
@@ -176,11 +182,26 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         return { title: this.getAgendaSlideTitle(viewMotion), subtitle };
     };
 
-    protected createViewModelWithTitles(model: Motion): ViewMotion {
+    protected createViewModel(model: Motion): ViewMotion {
         const viewModel = super.createViewModel(model);
 
         viewModel.getNumberOrTitle = () => this.getNumberOrTitle(viewModel);
         viewModel.getProjectorTitle = () => this.getProjectorTitle(viewModel);
+
+        viewModel.getAmendmentParagraphLines = () => {
+            if (viewModel.lead_motion && viewModel.isParagraphBasedAmendment()) {
+                const changeRecos = viewModel.change_recommendations.filter(changeReco => changeReco.showInFinalView());
+                return this.getAmendmentParagraphLines(
+                    viewModel,
+                    this.motionLineLength,
+                    ChangeRecoMode.Changed,
+                    changeRecos,
+                    false
+                );
+            } else {
+                return [];
+            }
+        };
 
         return viewModel;
     }
@@ -416,12 +437,10 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         const targetMotion = this.getViewModel(id);
         if (targetMotion && targetMotion.text) {
             if (!crMode) {
-                console.warn("formatMotion has no crMode mode. Fall back to 'original'");
                 crMode = ChangeRecoMode.Original;
             }
 
             if (!lineLength) {
-                console.warn("formatMotion has no lineLength. Fall back to '80'");
                 lineLength = 80;
             }
 
