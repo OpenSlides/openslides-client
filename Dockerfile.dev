@@ -5,6 +5,7 @@ WORKDIR /app
 COPY client/package.json .
 COPY client/package-lock.json .
 RUN npm ci
+RUN npm run postinstall
 
 COPY client ./
 
