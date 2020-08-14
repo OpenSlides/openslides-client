@@ -294,7 +294,8 @@ export const RELATIONS: Relation[] = [
         OViewModel: ViewMeeting,
         MViewModel: ViewAgendaItem,
         OField: 'agenda_items',
-        MField: 'meeting'
+        MField: 'meeting',
+        order: 'weight'
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,

@@ -78,15 +78,6 @@ export class AgendaFilterListService extends BaseFilterListService<ViewAgendaIte
     }
 
     /**
-     * @override from base filter list service
-     *
-     * @returns the list of ViewItems without the types
-     */
-    protected preFilter(viewItems: ViewAgendaItem[]): ViewAgendaItem[] {
-        return viewItems.filter(item => item.type !== undefined);
-    }
-
-    /**
      * helper function to create options for visibility filters
      *
      * @returns a list of choices to filter from
