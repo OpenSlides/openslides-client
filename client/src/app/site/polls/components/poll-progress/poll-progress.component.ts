@@ -6,6 +6,7 @@ import { UserRepositoryService } from 'app/core/repositories/users/user-reposito
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { BaseViewPoll } from '../../models/base-view-poll';
+import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 
 @Component({
     selector: 'os-poll-progress',
@@ -21,7 +22,11 @@ export class PollProgressComponent extends BaseComponent implements OnInit {
         return this.poll?.votescast || 0;
     }
 
-    public constructor(componentServiceCollector: ComponentServiceCollector, private userRepo: UserRepositoryService) {
+    public constructor(
+        componentServiceCollector: ComponentServiceCollector,
+        private userRepo: UserRepositoryService,
+        private activeMeetingService: ActiveMeetingService,
+    ) {
         super(componentServiceCollector);
     }
 
@@ -31,20 +36,14 @@ export class PollProgressComponent extends BaseComponent implements OnInit {
                 this.userRepo
                     .getViewModelListObservable()
                     .pipe(
-                        map(users => {
-                            /**
-                             * Filter the users who would be able to vote:
-                             * They are present or have their right to vote delegated
-                             * They are in one of the voting groups
-                             */
-                            console.error('TODO');
-                            /*return users.filter(
+                        map(users =>
+                            users.filter(
                                 user =>
-                                    (user.is_present || user.isVoteRightDelegated) &&
-                                    this.poll.groups_id.intersect(user.groups_id).length
-                            )*/
-                            return [];
-                        })
+                                    user.isPresentInMeeting &&
+                                    this.poll.entitled_group_ids.intersect(user.group_ids(this.activeMeetingService.meetingId)).length
+
+                            )
+                        )
                     )
                     .subscribe(users => {
                         this.max = users.length;

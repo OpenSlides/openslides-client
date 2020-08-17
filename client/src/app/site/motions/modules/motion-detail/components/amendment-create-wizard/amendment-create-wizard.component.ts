@@ -258,7 +258,8 @@ export class AmendmentCreateWizardComponent extends BaseComponent implements OnI
                 return null;
             }
         });
-        const newMotionValues = {
+        throw new Error("TODO");
+        /*const newMotionValues = {
             ...this.contentForm.value,
             title: this.translate.instant('Amendment to') + ' ' + this.motion.getNumberOrTitle(),
             text: text, // Workaround as 'text' is required from the backend
@@ -266,7 +267,8 @@ export class AmendmentCreateWizardComponent extends BaseComponent implements OnI
             category_id: this.motion.category_id,
             tag_ids: this.motion.tag_ids,
             motion_block_id: this.motion.block_id,
-            amendment_paragraphs: amendedParagraphs
+            amendment_paragraphs: amendedParagraphs,
+            // TODO
             // workflow_id: this.configService.instant<number>('motions_amendments_workflow')
         };
 
@@ -274,6 +276,6 @@ export class AmendmentCreateWizardComponent extends BaseComponent implements OnI
         motion.deserialize(newMotionValues);
 
         const response = await this.repo.create(motion);
-        this.router.navigate(['./motions/' + response.id]);
+        this.router.navigate(['./motions/' + response.id]);*/
     }
 }
