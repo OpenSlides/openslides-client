@@ -56,8 +56,9 @@ export class PollProgressComponent extends BaseComponent implements OnInit {
                             console.error('TODO');
                             /*return users.filter(
                                 user =>
-                                    (user.is_present || user.isVoteRightDelegated) &&
-                                    this.poll.groups_id.intersect(user.groups_id).length
+                                    user.isPresentInMeeting &&
+                                    this.poll.entitled_group_ids.intersect(user.group_ids(this.activeMeetingService.meetingId)).length
+
                             )*/
                             return [];
                         })

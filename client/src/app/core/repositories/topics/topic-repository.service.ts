@@ -42,7 +42,7 @@ export class TopicRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCon
     };
 
     public getListTitle = (topic: ViewTopic) => {
-        if (topic.agenda_item.item_number) {
+        if (topic.agenda_item && topic.agenda_item.item_number) {
             return `${topic.agenda_item.item_number} · ${topic.title}`;
         } else {
             return this.getTitle(topic);

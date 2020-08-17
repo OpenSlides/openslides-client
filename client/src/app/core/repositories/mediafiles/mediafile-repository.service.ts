@@ -12,6 +12,7 @@ import { Mediafile } from 'app/shared/models/mediafiles/mediafile';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { BaseIsListOfSpeakersContentObjectRepository } from '../base-is-list-of-speakers-content-object-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
+import { HttpService } from 'app/core/core-services/http.service';
 
 /**
  * Repository for MediaFiles
@@ -22,7 +23,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjectRepository<ViewMediafile, Mediafile> {
     private directoryBehaviorSubject: BehaviorSubject<ViewMediafile[]>;
 
-    public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
+    public constructor(repositoryServiceCollector: RepositoryServiceCollector, private http: HttpService) {
         super(repositoryServiceCollector, Mediafile);
         this.directoryBehaviorSubject = new BehaviorSubject([]);
         this.getViewModelListObservable().subscribe(mediafiles => {
@@ -108,7 +109,7 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
     public async uploadFile(file: any): Promise<Identifiable> {
         const emptyHeader = new HttpHeaders();
         throw new Error('TODO');
-        // return this.httpService.post<Identifiable>('/rest/mediafiles/mediafile/', file, {}, emptyHeader);
+        // return this.http.post<Identifiable>('/rest/mediafiles/mediafile/', file, {}, emptyHeader);
     }
 
     public async downloadArchive(archiveName: string, files: ViewMediafile[]): Promise<void> {
@@ -116,7 +117,7 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
         /*const zip = new JSZip();
         for (const file of files) {
             if (!file.is_directory) {
-                const base64Data = await this.httpService.downloadAsBase64(file.url);
+                const base64Data = await this.http.downloadAsBase64(file.url);
                 zip.file(file.filename, base64Data, { base64: true });
             }
         }
@@ -129,7 +130,7 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
     }
 
     public async move(mediafiles: ViewMediafile[], directoryId: number | null): Promise<void> {
-        // return await this.httpService.post('/rest/mediafiles/mediafile/move/', {
+        // return await this.http.post('/rest/mediafiles/mediafile/move/', {
         //     ids: mediafiles.map(mediafile => mediafile.id),
         //     directory_id: directoryId
         // });
@@ -142,7 +143,7 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
      * @param mediafiles The users to delete
      */
     public async bulkDelete(mediafiles: ViewMediafile[]): Promise<void> {
-        // await this.httpService.post('/rest/mediafiles/mediafile/bulk_delete/', {
+        // await this.http.post('/rest/mediafiles/mediafile/bulk_delete/', {
         //     ids: mediafiles.map(mediafile => mediafile.id)
         // });
         throw new Error('TODO');
