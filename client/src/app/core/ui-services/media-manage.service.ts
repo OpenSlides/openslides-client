@@ -1,15 +1,12 @@
 import { Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs';
-
-import { HttpService } from 'app/core/core-services/http.service';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { ViewMediafile } from '../../site/mediafiles/models/view-mediafile';
 
 /**
  * The structure of an image config object
  */
-interface ImageConfigObject {
+export interface ImageConfigObject {
     display_name: string;
     key: string;
     path: string;
@@ -18,7 +15,7 @@ interface ImageConfigObject {
 /**
  * The structure of a font config
  */
-interface FontConfigObject {
+export interface FontConfigObject {
     display_name: string;
     default: string;
     path: string;
@@ -34,6 +31,19 @@ interface ManagementPayload {
     value: ImageConfigObject | FontConfigObject;
 }
 
+export const LogoOptions = [
+    'projector_main',
+    'projector_header',
+    'web_header',
+    'pdf_header_L',
+    'pdf_header_R',
+    'pdf_footer_L',
+    'pdf_footer_R',
+    'pdf_ballot_paper'
+];
+
+export const FontOptions = ['regular', 'italic', 'bold', 'bold_italic', 'monospace'];
+
 /**
  * The service to manage Mediafiles.
  *
@@ -43,6 +53,14 @@ interface ManagementPayload {
     providedIn: 'root'
 })
 export class MediaManageService {
+    public get logoSettings(): string[] {
+        return LogoOptions;
+    }
+
+    public get fontSettings(): string[] {
+        return FontOptions;
+    }
+
     /**
      * Constructor for the MediaManage service
      *
@@ -92,24 +110,6 @@ export class MediaManageService {
         if (object !== undefined) {
             return (<ImageConfigObject>object).path !== undefined;
         }
-    }
-
-    /**
-     * Get all actions that can be executed on images
-     *
-     * @returns observable array of strings with the actions for images
-     */
-    public getLogoActions(): Observable<string[]> {
-        return this.config.get('logos_available');
-    }
-
-    /**
-     * Get all actions that can be executed on fonts
-     *
-     * @returns observable array of string with the actions for fonts
-     */
-    public getFontActions(): Observable<string[]> {
-        return this.config.get('fonts_available');
     }
 
     /**
