@@ -329,12 +329,12 @@ export abstract class PollService {
         return data;
     }
 
-    protected getPollDataFields(poll: PollData | ViewBasePoll): CalculablePollKey[] {
-        const isAssignment: boolean = (poll as ViewBasePoll).pollClassType === 'assignment';
+    protected getPollDataFields(poll: PollData | BaseViewPoll): CalculablePollKey[] {
+        const isAssignment: boolean = (poll as BaseViewPoll).pollClassType === 'assignment';
         return isAssignment ? this.getPollDataFieldsByMethod(poll) : this.getPollDataFieldsByPercentBase(poll);
     }
 
-    private getPollDataFieldsByMethod(poll: PollData | ViewBasePoll): CalculablePollKey[] {
+    private getPollDataFieldsByMethod(poll: PollData | BaseViewPoll): CalculablePollKey[] {
         switch (poll.pollmethod) {
             case AssignmentPollMethod.YNA: {
                 return ['yes', 'no', 'abstain'];
@@ -348,7 +348,7 @@ export abstract class PollService {
         }
     }
 
-    private getPollDataFieldsByPercentBase(poll: PollData | ViewBasePoll): CalculablePollKey[] {
+    private getPollDataFieldsByPercentBase(poll: PollData | BaseViewPoll): CalculablePollKey[] {
         switch (poll.onehundred_percent_base) {
             case PercentBase.YN: {
                 return ['yes', 'no'];

@@ -350,7 +350,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
      *
      * @param candidate A ViewAssignmentUser currently in the list of related users
      */
-    public async removeUser(candidate: ViewAssignmentRelatedUser): Promise<void> {
+    public async removeUser(candidate: ViewAssignmentCandidate): Promise<void> {
         await this.repo.changeCandidate(candidate.user.id, this.assignment, false).catch(this.raiseError);
     }
 
@@ -422,7 +422,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
             this.candidatesForm.valueChanges.subscribe(formResult => {
                 // resetting a form triggers a form.next(null) - check if data is present
                 if (formResult && formResult.userId) {
-                    this.addUserAsCandidate(formResult.userId);
+                    this.addUser(formResult.userId);
                     this.candidatesForm.setValue({ userId: null });
                 }
             })

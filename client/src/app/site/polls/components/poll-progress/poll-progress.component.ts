@@ -5,7 +5,8 @@ import { map } from 'rxjs/operators';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { ViewBasePoll } from 'app/site/polls/models/view-base-poll';
+import { BaseViewPoll } from '../../models/base-view-poll';
+import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 
 @Component({
     selector: 'os-poll-progress',
@@ -14,7 +15,7 @@ import { ViewBasePoll } from 'app/site/polls/models/view-base-poll';
 })
 export class PollProgressComponent extends BaseComponent implements OnInit {
     @Input()
-    public poll: ViewBasePoll;
+    public poll: BaseViewPoll;
     public max: number;
 
     public get votescast(): number {
@@ -23,7 +24,8 @@ export class PollProgressComponent extends BaseComponent implements OnInit {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        private userRepo: UserRepositoryService
+        private userRepo: UserRepositoryService,
+        private activeMeetingService: ActiveMeetingService,
     ) {
         super(componentServiceCollector);
     }
@@ -36,7 +38,10 @@ export class PollProgressComponent extends BaseComponent implements OnInit {
                     .pipe(
                         map(users =>
                             users.filter(
-                                user => user.is_present && this.poll.groups_id.intersect(user.groups_id).length
+                                user =>
+                                    user.isPresentInMeeting &&
+                                    this.poll.entitled_group_ids.intersect(user.group_ids(this.activeMeetingService.meetingId)).length
+
                             )
                         )
                     )

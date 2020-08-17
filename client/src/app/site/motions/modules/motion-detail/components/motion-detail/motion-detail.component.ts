@@ -27,7 +27,6 @@ import { MotionStatuteParagraphRepositoryService } from 'app/core/repositories/m
 import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/motion-workflow-repository.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { NewUser, UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
-import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DiffLinesInParagraph, LineRange } from 'app/core/ui-services/diff.service';
 import { LinenumberingService } from 'app/core/ui-services/linenumbering.service';
@@ -718,11 +717,12 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
                     tag_ids: parentMotion.tag_ids
                 });
 
-                const amendmentTextMode = this.configService.instant<string>('motions_amendments_text_mode');
+                throw new Error("TODO");
+                /*const amendmentTextMode = this.configService.instant<string>('motions_amendments_text_mode');
                 if (amendmentTextMode === 'fulltext') {
                     defaultMotion.text = parentMotion.text;
                     this.contentForm.patchValue({ text: defaultMotion.text });
-                }
+                }*/
             }
             this.motion = new ViewCreateMotion(new CreateMotion(defaultMotion));
         }
@@ -1268,15 +1268,16 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
      * Goes to the amendment creation wizard. Executed via click.
      */
     public createAmendment(): void {
-        const amendmentTextMode = this.configService.instant<string>('motions_amendments_text_mode');
-        if (amendmentTextMode === 'paragraph') {
+        throw new Error("TODO");
+        // const amendmentTextMode = this.configService.instant<string>('motions_amendments_text_mode');
+        /*if (amendmentTextMode === 'paragraph') {
             this.router.navigate(['./create-amendment'], { relativeTo: this.route });
         } else {
             this.router.navigate(['./motions/new-amendment'], {
                 relativeTo: this.route.snapshot.params.relativeTo,
                 queryParams: { parent: this.motion.id || null }
             });
-        }
+        }*/
     }
 
     /**
