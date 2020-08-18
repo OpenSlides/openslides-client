@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { ActionService, ActionType } from 'app/core/core-services/action.service';
+import { ActionType } from 'app/core/core-services/action.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { TreeIdNode } from 'app/core/ui-services/tree.service';
@@ -8,7 +8,6 @@ import { AgendaItem } from 'app/shared/models/agenda/agenda-item';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { HasAgendaItem, ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { BaseViewModel } from 'app/site/base/base-view-model';
-import { BaseRepository } from '../base-repository';
 import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
@@ -128,13 +127,17 @@ export class AgendaItemRepositoryService extends MeetingModelBaseRepository<View
     }
 
     public async addItemToAgenda(contentObject: BaseViewModel & HasAgendaItem): Promise<Identifiable> {
-        return await this.create({ id: contentObject.id } as AgendaItem);
+        return await this.actions.sendRequest(ActionType.AGENDA_ITEM_CREATE, {
+            content_object_id: contentObject.getModel().fqid,
+            meeting_id: this.activeMeetingService.meetingId
+        });
     }
 
     public async removeFromAgenda(item: ViewAgendaItem): Promise<void> {
-        return await this.delete(item);
+        return await this.actions.sendRequest(ActionType.AGENDA_ITEM_DELETE, {
+            id: item.id
+        });
     }
-
     public async create(item: AgendaItem): Promise<Identifiable> {
         throw new Error('Use `addItemToAgenda` for creations');
     }

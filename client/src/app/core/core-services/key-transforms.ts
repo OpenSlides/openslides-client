@@ -2,6 +2,10 @@ import { Collection, Field, Fqfield, Fqid, Id } from '../definitions/key-types';
 
 export const KEYSEPERATOR = '/';
 
+export function fqidFromCollectionAndId(collection: string, id: number | string): string {
+    return `${collection}${KEYSEPERATOR}${id}`;
+}
+
 export function fqfieldFromCollectionIdField(collection: string, id: number | string, field: string): string {
     return `${collection}${KEYSEPERATOR}${id}${KEYSEPERATOR}${field}`;
 }
