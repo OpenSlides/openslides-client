@@ -349,7 +349,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
     public async sortMotions(data: TreeIdNode[]): Promise<void> {
         const payload: MotionAction.SortPayload = {
             meeting_id: this.activeMeetingService.meetingId,
-            nodes: data
+            tree: data
         };
         return await this.actions.sendRequest(ActionType.MOTION_SORT, payload);
     }
