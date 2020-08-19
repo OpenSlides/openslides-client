@@ -12,6 +12,7 @@ export enum ActionType {
     AGENDA_ITEM_CREATE = 'agenda_item.create',
     AGENDA_ITEM_UPDATE = 'agenda_item.update',
     AGENDA_ITEM_DELETE = 'agenda_item.delete',
+    AGENDA_ITEM_NUMBERING = 'agenda_item.numbering',
     MOTION_UPDATE = 'motion.update',
     MOTION_DELETE = 'motion.delete',
     MOTION_SORT = 'motion.sort',

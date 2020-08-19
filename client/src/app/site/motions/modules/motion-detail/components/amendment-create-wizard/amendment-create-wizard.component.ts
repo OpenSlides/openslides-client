@@ -257,7 +257,7 @@ export class AmendmentCreateWizardComponent extends BaseComponent implements OnI
                 return null;
             }
         });
-        throw new Error("TODO");
+        throw new Error('TODO');
         /*const newMotionValues = {
             ...this.contentForm.value,
             title: this.translate.instant('Amendment to') + ' ' + this.motion.getIdentifierOrTitle(),

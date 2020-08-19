@@ -104,27 +104,9 @@ export class AgendaItemRepositoryService extends MeetingModelBaseRepository<View
      * Trigger the automatic numbering sequence on the server
      */
     public async autoNumbering(): Promise<void> {
-        // await this.httpService.post('/rest/agenda/item/numbering/');
-        throw new Error('TODO');
-    }
-
-    /**
-     * META-TODO: can this be removed?
-     * TODO: Copied from BaseRepository and added the cloned model to write back the
-     * item_number correctly. This must be reverted with #4738 (indroduced with #4639)
-     *
-     * Saves the (full) update to an existing model. So called "update"-function
-     * Provides a default procedure, but can be overwritten if required
-     *
-     * @param update the update that should be created
-     * @param viewModel the view model that the update is based on
-     */
-    public async update(update: Partial<AgendaItem>, viewModel: ViewAgendaItem): Promise<void> {
-        (<any>update)._itemNumber = update.item_number;
-        const sendUpdate = viewModel.getUpdatedModelData(update);
-        const clone = JSON.parse(JSON.stringify(sendUpdate));
-        clone.item_number = clone._itemNumber;
-        return await super.update(clone, viewModel);
+        return await this.actions.sendRequest(ActionType.AGENDA_ITEM_NUMBERING, {
+            meeting_id: this.activeMeetingService.meetingId
+        });
     }
 
     public async addItemToAgenda(contentObject: BaseViewModel & HasAgendaItem): Promise<Identifiable> {

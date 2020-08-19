@@ -1,12 +1,12 @@
 import { SearchRepresentation } from 'app/core/ui-services/search.service';
 import { Topic } from 'app/shared/models/topics/topic';
+import { HasAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { HasListOfSpeakers, ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { HasAttachment, ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { HasTags, ViewTag } from 'app/site/tags/models/view-tag';
-import { HasAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 
 /**
  * Provides "safe" access to topic with all it's components

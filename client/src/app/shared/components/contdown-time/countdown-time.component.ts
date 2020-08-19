@@ -111,7 +111,7 @@ export class CountdownTimeComponent implements OnInit, OnDestroy {
                     });
             }
         });*/
-        console.error("TODO");
+        console.error('TODO');
     }
 
     /**
