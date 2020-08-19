@@ -15,6 +15,7 @@ export class ViewOrganisation extends BaseViewModel<Organisation> {
 interface IOrganisationRelations {
     committees: ViewCommittee[];
     roles: ViewRole[];
+    superadmin_role: ViewRole;
     resources: ViewResource[];
 }
 export interface ViewOrganisation extends Organisation, IOrganisationRelations {}

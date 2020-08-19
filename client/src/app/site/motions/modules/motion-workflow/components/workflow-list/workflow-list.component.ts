@@ -9,7 +9,7 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { MotionWorkflow } from 'app/shared/models/motions/motion-workflow';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
-import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
+import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewMotionWorkflow } from 'app/site/motions/models/view-motion-workflow';
 

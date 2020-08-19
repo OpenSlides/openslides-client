@@ -24,7 +24,7 @@ import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { ColumnRestriction } from 'app/shared/components/list-view-table/list-view-table.component';
 import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
-import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
+import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
 import { isProjectable, ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewTopic } from 'app/site/topics/models/view-topic';

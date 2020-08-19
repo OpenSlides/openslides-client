@@ -111,7 +111,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
             'text',
             'reason',
             'amendment_paragraphs',
-            'modified_final_version'
+            'modified_final_version',
+            'agenda_item_id' // for add/remove from agenda
         ]);
         const amendmentFields: (keyof Motion)[] = listFields.concat([
             'amendment_paragraphs',

@@ -15,7 +15,7 @@ import { LinenumberingService } from 'app/core/ui-services/linenumbering.service
 import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { ItemVisibilityChoices } from 'app/shared/models/agenda/agenda-item';
 import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
-import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
+import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { MotionExportDialogComponent } from '../shared-motion/motion-export-dialog/motion-export-dialog.component';
 import { MotionExportInfo, MotionExportService } from '../../services/motion-export.service';

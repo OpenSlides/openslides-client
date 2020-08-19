@@ -108,7 +108,7 @@ export class Stream<T> {
                     return;
                 } else {
                     this.gotFirstResponse.resolve(this.hasError);
-                    console.log('received', parsedContent);
+                    // console.log('received', parsedContent);
                     this.messageHandler(parsedContent);
                 }
             } else {

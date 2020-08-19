@@ -14,7 +14,7 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
-import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
+import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
 import { MotionBlockSortService } from 'app/site/motions/services/motion-block-sort.service';

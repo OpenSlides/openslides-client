@@ -820,8 +820,6 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         this.subscriptions.push(
             this.repo.getViewModelObservable(motionId).subscribe(motion => {
                 if (motion) {
-                    console.log('the motion we got: ', motion);
-
                     if (motion.isParagraphBasedAmendment()) {
                         this.contentForm.get('text').clearValidators();
                         this.contentForm.get('text').updateValueAndValidity();

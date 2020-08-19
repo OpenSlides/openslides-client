@@ -19,7 +19,7 @@ import { OrganisationSettingsService } from 'app/core/ui-services/organisation-s
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { genders } from 'app/shared/models/users/user';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
-import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
+import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { PollService } from 'app/site/polls/services/poll.service';
 import { UserFilterListService } from '../../services/user-filter-list.service';
@@ -235,27 +235,10 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
     }
 
     protected getModelRequest(): SimplifiedModelRequest {
-        // Note: There is no direct relation between metting<->user.
-        // A user is a member of a meeting, if he is in at least one group.
-        // So we have to take the way from meeting->group->user to get all
-        // users belonging to this meeting.
-        // there is no `fieldset: []` for groups since we do need groups to be
-        // displayed, but an extra additionalField to retrieve group ids for each
-        // user to link them.
         return {
             viewModelCtor: ViewMeeting,
             ids: [1], // TODO
-            follow: [
-                {
-                    idField: 'group_ids',
-                    follow: [
-                        {
-                            idField: 'user_ids',
-                            additionalFields: [SpecificStructuredField('group_$_ids', '1')] // TODO: Active meeting id.
-                        }
-                    ]
-                }
-            ],
+            follow: ['user_ids'],
             fieldset: []
         };
     }

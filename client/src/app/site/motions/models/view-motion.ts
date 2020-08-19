@@ -4,17 +4,16 @@ import { Id } from 'app/core/definitions/key-types';
 import { DiffLinesInParagraph } from 'app/core/ui-services/diff.service';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { SearchProperty, SearchRepresentation } from 'app/core/ui-services/search.service';
-import { Motion } from 'app/shared/models/motions/motion';
-import { HasAgendaItem, ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
-import { HasListOfSpeakers, ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
+import { HasReferencedMotionInRecommendationExtensionIds, Motion } from 'app/shared/models/motions/motion';
+import { HasAgendaItem } from 'app/site/agenda/models/view-agenda-item';
+import { HasListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
+import { BaseViewModel } from 'app/site/base/base-view-model';
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { Searchable } from 'app/site/base/searchable';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
-import { HasAttachment, ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
-import { ViewProjection } from 'app/site/projector/models/view-projection';
-import { ViewProjector } from 'app/site/projector/models/view-projector';
-import { HasTags, ViewTag } from 'app/site/tags/models/view-tag';
+import { HasAttachment } from 'app/site/mediafiles/models/view-mediafile';
+import { HasTags } from 'app/site/tags/models/view-tag';
 import { HasPersonalNote, ViewPersonalNote } from 'app/site/users/models/view-personal-note';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { AmendmentType } from '../motions.constants';
@@ -28,6 +27,10 @@ import { ViewMotionState } from './view-motion-state';
 import { ViewMotionStatuteParagraph } from './view-motion-statute-paragraph';
 import { ViewMotionSubmitter } from './view-motion-submitter';
 import { ViewMotionWorkflow } from './view-motion-workflow';
+
+export interface HasReferencedMotionsInRecommendationExtension extends HasReferencedMotionInRecommendationExtensionIds {
+    referenced_in_motion_recommendation_extension: ViewMotion[];
+}
 
 /**
  * Motion class for the View
@@ -355,9 +358,11 @@ interface IMotionRelations {
     sort_children: ViewMotion[];
     origin?: ViewMotion;
     derived_motions: ViewMotion[];
+    forwarding_tree_motions: ViewMotion[];
     state?: ViewMotionState;
     workflow?: ViewMotionWorkflow;
     recommendation?: ViewMotionState;
+    recommendation_extension_reference: (BaseViewModel & HasReferencedMotionsInRecommendationExtension)[];
     category?: ViewMotionCategory;
     block?: ViewMotionBlock;
     submitters: ViewMotionSubmitter[];
@@ -377,4 +382,5 @@ export interface ViewMotion
         HasPersonalNote,
         HasTags,
         HasAgendaItem,
-        HasListOfSpeakers {}
+        HasListOfSpeakers,
+        HasReferencedMotionsInRecommendationExtension {}

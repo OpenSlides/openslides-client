@@ -62,6 +62,7 @@ interface IMeetingRelations {
     present_users: ViewUser[];
     temporary_users: ViewUser[];
     guests: ViewUser[];
+    users: ViewUser[];
     reference_projector: ViewProjector;
     default_group: ViewGroup;
     superadmin_group: ViewGroup;

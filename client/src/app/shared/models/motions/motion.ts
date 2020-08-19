@@ -1,4 +1,4 @@
-import { Id } from 'app/core/definitions/key-types';
+import { Fqid, Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
 import { HasAgendaItemId } from '../base/has-agenda-item-id';
 import { HasAttachmentIds } from '../base/has-attachment-ids';
@@ -6,6 +6,10 @@ import { HasListOfSpeakersId } from '../base/has-list-of-speakers-id';
 import { HasPersonalNoteIds } from '../base/has-personal-note-ids';
 import { HasProjectableIds } from '../base/has-projectable-ids';
 import { HasTagIds } from '../base/has-tag-ids';
+
+export interface HasReferencedMotionInRecommendationExtensionIds {
+    referenced_in_motion_recommendation_extension_ids: Id[]; // (motion/recommendation_extension_reference_ids)[];
+}
 
 /**
  * Representation of Motion.
@@ -39,9 +43,13 @@ export class Motion extends BaseModel<Motion> {
     // Note: The related motions in origin_id/derived_motion_ids may not be in the same meeting
     public origin_id: Id; // motion/derived_motion_ids;
     public derived_motion_ids: Id[]; // (motion/origin_id)[];
+    public forwarding_tree_motion_ids: Id[]; // Calculated: All children (derived_motion_ids),
+    // grand children, ... and all parents (origin_id).
     public state_id: Id; // motion_state/motion_ids;
     public workflow_id: Id; // motion_workflow/motion_ids;
     public recommendation_id: Id; // motion_state/motion_recommendation_ids;
+    public recommendation_extension_reference_ids: Fqid[]; // (*/referenced_in_motion_recommendation_extension_ids)[];
+    // current option: motion
     public category_id: Id; // category/motion_ids;
     public block_id: Id; // block/motion_ids;
     public submitter_ids: Id[]; // (motion_submitter/motion_id)[];
@@ -62,4 +70,5 @@ export interface Motion
         HasTagIds,
         HasAttachmentIds,
         HasPersonalNoteIds,
-        HasProjectableIds {}
+        HasProjectableIds,
+        HasReferencedMotionInRecommendationExtensionIds {}

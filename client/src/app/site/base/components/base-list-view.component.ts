@@ -1,4 +1,4 @@
-import { OnDestroy } from '@angular/core';
+import { OnDestroy, Directive } from '@angular/core';
 
 import { PblColumnDefinition, PblDataSource } from '@pebula/ngrid';
 
@@ -7,6 +7,7 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { BaseModelContextComponent } from './base-model-context.component';
 import { BaseViewModel } from '../base-view-model';
 
+@Directive()
 export abstract class BaseListViewComponent<V extends BaseViewModel>
     extends BaseModelContextComponent
     implements OnDestroy {

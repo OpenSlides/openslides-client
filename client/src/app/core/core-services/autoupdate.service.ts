@@ -84,7 +84,7 @@ export class AutoupdateService {
 
     public async simpleRequest(simpleRequest: SimplifiedModelRequest): Promise<ModelSubscription> {
         const request = await this.modelRequestBuilder.build(simpleRequest);
-        console.log(simpleRequest, request);
+        console.log('request send:', simpleRequest, request);
         return await this.request(request);
     }
 

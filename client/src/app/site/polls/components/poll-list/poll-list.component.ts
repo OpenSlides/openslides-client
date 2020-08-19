@@ -4,7 +4,7 @@ import { PblColumnDefinition } from '@pebula/ngrid';
 
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { VotingService } from 'app/core/ui-services/voting.service';
-import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
+import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
 import { BaseViewPoll } from '../../models/base-view-poll';
 import { PollFilterListService } from '../../services/poll-filter-list.service';
 import { PollListObservableService } from '../../services/poll-list-observable.service';
