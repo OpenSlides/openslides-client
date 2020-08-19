@@ -7,9 +7,9 @@ export class Role extends BaseModel<Role> {
     public id: Id;
     public name: string;
     public permissions: string[];
-    public is_superadmin_role: boolean;
 
     public organisation_id: Id; // organisation/role_ids;
+    public superadmin_role_for_organisation_id?: Id; // organisation/superadmin_role_id;
     public user_ids: Id[]; // (user/role_id)[];
 
     public constructor(input?: any) {
