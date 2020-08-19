@@ -717,7 +717,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
                     tag_ids: parentMotion.tag_ids
                 });
 
-                throw new Error("TODO");
+                throw new Error('TODO');
                 /*const amendmentTextMode = this.configService.instant<string>('motions_amendments_text_mode');
                 if (amendmentTextMode === 'fulltext') {
                     defaultMotion.text = parentMotion.text;
@@ -773,8 +773,6 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         this.subscriptions.push(
             this.repo.getViewModelObservable(motionId).subscribe(motion => {
                 if (motion) {
-                    console.log('the motion we got: ', motion);
-
                     if (motion.isParagraphBasedAmendment()) {
                         this.contentForm.get('text').clearValidators();
                         this.contentForm.get('text').updateValueAndValidity();
@@ -1268,7 +1266,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
      * Goes to the amendment creation wizard. Executed via click.
      */
     public createAmendment(): void {
-        throw new Error("TODO");
+        throw new Error('TODO');
         // const amendmentTextMode = this.configService.instant<string>('motions_amendments_text_mode');
         /*if (amendmentTextMode === 'paragraph') {
             this.router.navigate(['./create-amendment'], { relativeTo: this.route });

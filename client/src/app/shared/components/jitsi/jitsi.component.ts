@@ -1,22 +1,14 @@
-import {
-    Component,
-    ElementRef,
-    HostListener,
-    OnDestroy,
-    OnInit,
-    ViewChild,
-    ViewEncapsulation
-} from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 
 import { StorageMap } from '@ngx-pwa/local-storage';
 import { delay, distinctUntilChanged, map } from 'rxjs/operators';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Deferred } from 'app/core/promises/deferred';
+import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { CurrentListOfSpeakersService } from 'app/site/projector/services/current-list-of-speakers.service';
 
 declare var JitsiMeetExternalAPI: any;
@@ -281,7 +273,7 @@ export class JitsiComponent extends BaseComponent implements OnInit, OnDestroy {
         );
 
         await this.lockLoaded;*/
-        throw new Error('TODO');
+        console.log('Jitsi: TODO');
         /*this.constantsService.get<JitsiSettings>('Settings').subscribe(settings => {
             if (settings) {
                 this.jitsiDomain = settings.JITSI_DOMAIN;

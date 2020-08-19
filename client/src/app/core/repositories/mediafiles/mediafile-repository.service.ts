@@ -6,13 +6,13 @@ import * as JSZip from 'jszip';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 
+import { HttpService } from 'app/core/core-services/http.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Mediafile } from 'app/shared/models/mediafiles/mediafile';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { BaseIsListOfSpeakersContentObjectRepository } from '../base-is-list-of-speakers-content-object-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
-import { HttpService } from 'app/core/core-services/http.service';
 
 /**
  * Repository for MediaFiles

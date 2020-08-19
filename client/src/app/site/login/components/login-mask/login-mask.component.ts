@@ -11,8 +11,8 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { LoginDataService } from 'app/core/ui-services/login-data.service';
 import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { ParentErrorStateMatcher } from 'app/shared/parent-error-state-matcher';
-import { BrowserSupportService } from '../../services/browser-support.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { BrowserSupportService } from '../../services/browser-support.service';
 
 /**
  * Login mask component.

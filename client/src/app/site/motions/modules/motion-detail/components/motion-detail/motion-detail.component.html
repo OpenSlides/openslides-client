@@ -26,14 +26,14 @@
         <div *ngIf="previousMotion">
             <button mat-button (click)="navigateToMotion(previousMotion)">
                 <os-icon-container icon="chevron_left">
-                    {{ previousMotion.identifier }}
+                    {{ previousMotion.number }}
                 </os-icon-container>
             </button>
         </div>
         <div *ngIf="nextMotion">
             <button mat-button (click)="navigateToMotion(nextMotion)">
                 <os-icon-container icon="chevron_right" [swap]="true">
-                    {{ nextMotion.identifier }}
+                    {{ nextMotion.number }}
                 </os-icon-container>
             </button>
         </div>
@@ -77,11 +77,11 @@
             ></os-projector-button>
             <!-- Add/remove to/from agenda -->
             <div *osPerms="'agenda.can_manage'">
-                <button mat-menu-item (click)="addToAgenda()" *ngIf="motion && !motion.item">
+                <button mat-menu-item (click)="addToAgenda()" *ngIf="motion && !motion.agenda_item_id">
                     <mat-icon>add</mat-icon>
                     <span>{{ 'Add to agenda' | translate }}</span>
                 </button>
-                <button mat-menu-item (click)="removeFromAgenda()" *ngIf="motion && motion.item">
+                <button mat-menu-item (click)="removeFromAgenda()" *ngIf="motion && motion.agenda_item_id">
                     <mat-icon>remove</mat-icon>
                     <span>{{ 'Remove from agenda' | translate }}</span>
                 </button>
@@ -143,7 +143,7 @@
                 (click)="toggleFavorite()"
                 matTooltip="{{ 'Mark as personal favorite' | translate }}"
             >
-                <mat-icon>{{ motion.star ? 'star' : 'star_border' }}</mat-icon>
+                <!--<mat-icon>{{ motion.star ? 'star' : 'star_border' }}</mat-icon>-->
             </button>
         </div>
 
@@ -894,10 +894,10 @@
         <!-- If the array exists, we do not have an error -->
         <div *ngIf="motion.diffLines">
             <div class="alert alert-info" *ngIf="motion.diffLines.length === 0">
-                <i *ngIf="motion.parent">{{ 'No changes at the text.' | translate }}</i>
-                <i *ngIf="!motion.parent">{{ 'The parent motion was deleted' | translate }}</i>
+                <i *ngIf="motion.lead_motion">{{ 'No changes at the text.' | translate }}</i>
+                <i *ngIf="!motion.lead_motion">{{ 'The lead motion was deleted' | translate }}</i>
             </div>
-            <ng-container *ngIf="motion.parent && !isRecoMode(ChangeRecoMode.Diff) && !isFinalEdit">
+            <ng-container *ngIf="motion.lead_motion && !isRecoMode(ChangeRecoMode.Diff) && !isFinalEdit">
                 <div
                     *ngFor="let paragraph of getAmendmentParagraphs()"
                     class="motion-text motion-text-diff amendment-view"
