@@ -67,7 +67,6 @@ export class UserMenuComponent extends BaseModelContextComponent implements OnIn
         this.isLoggedIn = !this.operator.isAnonymous;
         this.username = this.isLoggedIn ? this.operator.shortName : this.translate.instant('Guest');
         const userId = this.operator.operatorId;
-        console.log(userId);
         if (this._userId !== userId) {
             this._userId = userId;
             this.userUpdate();

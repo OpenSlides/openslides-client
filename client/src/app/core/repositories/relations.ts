@@ -122,6 +122,12 @@ export const RELATIONS: Relation[] = [
         OField: 'roles',
         MField: 'organisation'
     }),
+    ...makeO2O({
+        AViewModel: ViewOrganisation,
+        BViewModel: ViewRole,
+        AField: 'superadmin_role',
+        BField: 'superadmin_role_for_organisation'
+    }),
     ...makeM2O({
         OViewModel: ViewOrganisation,
         MViewModel: ViewResource,
@@ -494,6 +500,16 @@ export const RELATIONS: Relation[] = [
         generic: false,
         structured: true
     },
+    // meeting/user_ids -> user
+    {
+        ownViewModels: [ViewMeeting],
+        foreignViewModel: ViewUser,
+        ownField: 'users',
+        ownIdField: 'user_ids',
+        many: true,
+        generic: false,
+        structured: false
+    },
     // ########## Personal notes
     ...makeGenericO2O<ViewPersonalNote, HasPersonalNote>({
         viewModel: ViewPersonalNote,
@@ -556,6 +572,16 @@ export const RELATIONS: Relation[] = [
         MField: 'origin',
         OField: 'derived_motions'
     }),
+    // motion/forwarding_tree_motion_ids -> Motion
+    {
+        ownViewModels: [ViewMotion],
+        foreignViewModel: ViewMotion,
+        ownField: 'forwarding_tree_motions',
+        ownIdField: 'forwarding_tree_motion_ids',
+        many: true,
+        generic: false,
+        structured: false
+    },
     ...makeM2O({
         MViewModel: ViewMotion,
         OViewModel: ViewMotionState,
@@ -567,6 +593,12 @@ export const RELATIONS: Relation[] = [
         OViewModel: ViewMotionState,
         MField: 'recommendation',
         OField: 'motions'
+    }),
+    ...makeGenericM2M({
+        viewModel: ViewMotion,
+        possibleViewModels: [ViewMotion],
+        viewModelField: 'recommendation_extension_reference_ids',
+        possibleViewModelsField: 'referenced_in_motion_recommendation_extension'
     }),
     ...makeM2O({
         MViewModel: ViewMotion,

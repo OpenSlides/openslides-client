@@ -144,6 +144,7 @@ export class Meeting extends BaseModel<Meeting> {
     public present_user_ids: Id[]; // (user/is_present_in_meeting_ids)[];
     public temporary_user_ids: Id[]; // (user/meeting_id)[];
     public guest_ids: Id[]; // (user/guest_meeting_ids)[];
+    public user_ids: Id[]; // Calculated: All ids from temporary_user_ids, guest_ids and all users assigned to groups.
     public reference_projector_id: Id; // projector/used_as_reference_projector_meeting_id;
 
     public default_group_id: Id; // group/default_group_for_meeting_id;

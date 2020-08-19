@@ -77,11 +77,11 @@
             ></os-projector-button>
             <!-- Add/remove to/from agenda -->
             <div *osPerms="'agenda.can_manage'">
-                <button mat-menu-item (click)="addToAgenda()" *ngIf="motion && !motion.item">
+                <button mat-menu-item (click)="addToAgenda()" *ngIf="motion && !motion.agenda_item_id">
                     <mat-icon>add</mat-icon>
                     <span>{{ 'Add to agenda' | translate }}</span>
                 </button>
-                <button mat-menu-item (click)="removeFromAgenda()" *ngIf="motion && motion.item">
+                <button mat-menu-item (click)="removeFromAgenda()" *ngIf="motion && motion.agenda_item_id">
                     <mat-icon>remove</mat-icon>
                     <span>{{ 'Remove from agenda' | translate }}</span>
                 </button>
@@ -137,15 +137,14 @@
 
                 {{ getTitleWithChanges() }}
             </h1>
-            <!--<button
+            <button
                 class="primary-accent-by-theme"
                 mat-icon-button
                 (click)="toggleFavorite()"
                 matTooltip="{{ 'Mark as personal favorite' | translate }}"
             >
-                <mat-icon>{{ motion.personal_note.star ? 'star' : 'star_border' }}</mat-icon>
-            </button>-->
-            TODO
+                <!--<mat-icon>{{ motion.star ? 'star' : 'star_border' }}</mat-icon>-->
+            </button>
         </div>
 
         <!-- Sequential number -->
@@ -899,7 +898,11 @@
         <div *ngIf="motion.diffLines">
             <div class="alert alert-info" *ngIf="motion.diffLines.length === 0">
                 <i *ngIf="motion.lead_motion">{{ 'No changes at the text.' | translate }}</i>
+<<<<<<< HEAD
                 <i *ngIf="!motion.lead_motion">{{ 'The parent motion was deleted.' | translate }}</i>
+=======
+                <i *ngIf="!motion.lead_motion">{{ 'The lead motion was deleted' | translate }}</i>
+>>>>>>> e1a93fe26... fixes
             </div>
             <ng-container *ngIf="motion.lead_motion && !isRecoMode(ChangeRecoMode.Diff) && !isFinalEdit">
                 <div
