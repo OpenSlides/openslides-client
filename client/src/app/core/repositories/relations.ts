@@ -13,8 +13,8 @@ import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewOrganisation } from 'app/site/event-management/models/view-organisation';
 import { ViewResource } from 'app/site/event-management/models/view-resource';
 import { ViewRole } from 'app/site/event-management/models/view-role';
-import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
-import { ViewMotion } from 'app/site/motions/models/view-motion';
+import { HasAttachment, ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
+import { HasReferencedMotionsInRecommendationExtension, ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
 import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
 import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
@@ -594,7 +594,7 @@ export const RELATIONS: Relation[] = [
         MField: 'recommendation',
         OField: 'motions'
     }),
-    ...makeGenericM2M({
+    ...makeGenericM2M<ViewMotion, HasReferencedMotionsInRecommendationExtension>({
         viewModel: ViewMotion,
         possibleViewModels: [ViewMotion],
         viewModelField: 'recommendation_extension_reference_ids',
@@ -760,6 +760,12 @@ export const RELATIONS: Relation[] = [
         BViewModel: ViewGroup,
         AField: 'inherited_access_groups',
         BField: 'mediafile_inherited_access_groups'
+    }),
+    ...makeGenericM2M<ViewMediafile, HasAttachment>({
+        viewModel: ViewMediafile,
+        possibleViewModels: [ViewTopic, ViewMotion, ViewAssignment],
+        viewModelField: 'attachment_ids',
+        possibleViewModelsField: 'attachment_ids'
     }),
     ...makeM2O({
         MViewModel: ViewMediafile,
