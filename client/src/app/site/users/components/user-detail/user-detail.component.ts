@@ -10,6 +10,7 @@ import { Permission } from 'app/core/core-services/permission';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { genders } from 'app/shared/models/users/user';
 import { OneOfValidator } from 'app/shared/validators/one-of-validator';
@@ -82,10 +83,10 @@ export class UserDetailComponent extends BaseModelContextComponent {
 
     private userBackends: UserBackends | null = null;
 
-    private isVoteWeightActive: boolean;
+    private voteWeightEnabled: boolean;
 
     public get showVoteWeight(): boolean {
-        return this.pollService.isElectronicVotingEnabled && this.isVoteWeightActive;
+        return this.pollService.isElectronicVotingEnabled && this.voteWeightEnabled;
     }
 
     /**
@@ -113,22 +114,16 @@ export class UserDetailComponent extends BaseModelContextComponent {
         private promptService: PromptService,
         private pdfService: UserPdfExportService,
         private groupRepo: GroupRepositoryService,
-        private pollService: PollService
+        private pollService: PollService,
+        private meetingSettingsService: MeetingSettingsService
     ) {
         super(componentServiceCollector);
         this.getUserByUrl();
         this.createForm();
 
-        // TODO
-        // console.warn('TODO: get user backends from the server. Does user backends even exists in OS4?');
-        // this.constantsService.get<UserBackends>('UserBackends')
-        //      .subscribe(backends => (this.userBackends = backends));
-
-        /*
-        configService
-            .get<boolean>('users_activate_vote_weight')
-            .subscribe(active => (this.isVoteWeightActive = active));
-        */
+        this.meetingSettingsService
+            .get('users_enable_vote_weight')
+            .subscribe(enabled => (this.voteWeightEnabled = enabled));
 
         this.groupRepo.getViewModelListObservableWithoutDefaultGroup().subscribe(this.groups);
         this.users = this.repo.getViewModelListBehaviorSubject();

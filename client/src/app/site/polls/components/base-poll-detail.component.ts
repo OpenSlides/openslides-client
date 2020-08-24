@@ -11,6 +11,7 @@ import { BaseRepository } from 'app/core/repositories/base-repository';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { BasePollDialogService } from 'app/core/ui-services/base-poll-dialog.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { BaseVote } from 'app/shared/models/poll/base-vote';
 import { BaseComponent } from 'app/site/base/components/base.component';
@@ -72,6 +73,8 @@ export abstract class BasePollDetailComponent<V extends BaseViewPoll, S extends 
 
     protected optionsLoaded = new Deferred();
 
+    public voteWeightEnabled: boolean;
+
     /**
      * Constructor
      *
@@ -97,9 +100,13 @@ export abstract class BasePollDetailComponent<V extends BaseViewPoll, S extends 
         protected pollService: S,
         protected votesRepo: BaseRepository<BaseViewVote, BaseVote>,
         protected operator: OperatorService,
-        protected cd: ChangeDetectorRef
+        protected cd: ChangeDetectorRef,
+        protected meetingSettingsService: MeetingSettingsService
     ) {
         super(componentServiceCollector);
+        this.meetingSettingsService
+            .get('users_enable_vote_weight')
+            .subscribe(active => (this.voteWeightEnabled = active));
         this.setup();
     }
 

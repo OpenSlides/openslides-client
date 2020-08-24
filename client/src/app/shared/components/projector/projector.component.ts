@@ -6,7 +6,8 @@ import { OfflineBroadcastService } from 'app/core/core-services/offline-broadcas
 import { ProjectorDataService, SlideData } from 'app/core/core-services/projector-data.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { MediaManageService } from 'app/core/ui-services/media-manage.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { Projector } from 'app/shared/models/projector/projector';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
@@ -150,22 +151,14 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
     public eventDate;
     public eventLocation;
 
-    /**
-     * Listen to all related config variables. Register the resizeSubject.
-     *
-     * @param titleService
-     * @param translate
-     * @param projectorDataService
-     * @param projectorRepository
-     * @param organisationSettingsService
-     */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private projectorDataService: ProjectorDataService,
         private projectorRepository: ProjectorRepositoryService,
-        private organisationSettingsService: OrganisationSettingsService,
+        private meetingSettingsService: MeetingSettingsService,
         private offlineBroadcastService: OfflineBroadcastService,
-        private elementRef: ElementRef
+        private elementRef: ElementRef,
+        private mediaManageService: MediaManageService
     ) {
         super(componentServiceCollector);
 
@@ -176,31 +169,19 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
         document.head.appendChild(this.styleElement);
 
         // projector logo / background-image
-        this.organisationSettingsService.get<{ path?: string }>('logo_projector_main').subscribe(val => {
-            if (val && val.path) {
-                this.projectorLogo = val.path;
-            } else {
-                this.projectorLogo = '';
-            }
+        this.mediaManageService.getLogoUrlObservable('projector_main').subscribe(url => {
+            this.projectorLogo = url ? url : '';
         });
-        this.organisationSettingsService.get<{ path?: string }>('logo_projector_header').subscribe(val => {
-            if (val && val.path) {
-                this.css.headerFooter.backgroundImage = "url('" + val.path + "')";
-            } else {
-                this.css.headerFooter.backgroundImage = 'none';
-            }
+        this.mediaManageService.getLogoUrlObservable('projector_header').subscribe(url => {
+            this.css.headerFooter.backgroundImage = url ? `url('${url}')` : 'none';
             this.updateCSS();
         });
 
         // event data
-        this.organisationSettingsService.get<string>('general_event_name').subscribe(val => (this.eventName = val));
-        this.organisationSettingsService
-            .get<string>('general_event_description')
-            .subscribe(val => (this.eventDescription = val));
-        this.organisationSettingsService.get<string>('general_event_date').subscribe(val => (this.eventDate = val));
-        this.organisationSettingsService
-            .get<string>('general_event_location')
-            .subscribe(val => (this.eventLocation = val));
+        this.meetingSettingsService.get('name').subscribe(val => (this.eventName = val));
+        this.meetingSettingsService.get('description').subscribe(val => (this.eventDescription = val));
+        this.meetingSettingsService.get('start_time').subscribe(val => (this.eventDate = val));
+        this.meetingSettingsService.get('location').subscribe(val => (this.eventLocation = val));
 
         // Watches for resizing of the container.
         this.resizeSubject.subscribe(() => {

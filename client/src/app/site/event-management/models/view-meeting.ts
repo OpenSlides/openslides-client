@@ -33,7 +33,8 @@ export class ViewMeeting extends BaseViewModel<Meeting> {
 }
 interface IMeetingRelations {
     motions_default_workflow: ViewMotionWorkflow;
-    motions_default_statute_amendments_workflow: ViewMotionWorkflow;
+    motions_default_amendment_workflow: ViewMotionWorkflow;
+    motions_default_statute_amendment_workflow: ViewMotionWorkflow;
     motion_poll_default_groups: ViewGroup[];
     assignment_poll_default_groups: ViewGroup[];
     projectors: ViewProjector[];

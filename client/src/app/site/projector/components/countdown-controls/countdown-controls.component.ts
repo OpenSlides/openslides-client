@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { StorageService } from 'app/core/core-services/storage.service';
 import { ProjectorCountdownRepositoryService } from 'app/core/repositories/projector/projector-countdown-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { ProjectionDialogService } from 'app/core/ui-services/projection-dialog.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { Projector } from 'app/shared/models/projector/projector';
@@ -47,28 +47,18 @@ export class CountdownControlsComponent extends BaseComponent {
      */
     private storageKey = 'projectorElementOptions';
 
-    /**
-     * Constructor
-     *
-     * @param titleService
-     * @param translate
-     * @param matSnackBar
-     * @param repo
-     * @param organisationSettingsService
-     * @param promptService
-     */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private repo: ProjectorCountdownRepositoryService,
-        private organisationSettingsService: OrganisationSettingsService,
+        private meetingSettingsService: MeetingSettingsService,
         private promptService: PromptService,
         private projectionDialogService: ProjectionDialogService,
         private storage: StorageService
     ) {
         super(componentServiceCollector);
 
-        this.organisationSettingsService
-            .get<number>('agenda_countdown_warning_time')
+        this.meetingSettingsService
+            .get('projector_countdown_warning_time')
             .subscribe(time => (this.warningTime = time));
     }
 

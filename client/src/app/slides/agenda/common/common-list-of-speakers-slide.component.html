@@ -6,7 +6,7 @@
         </h1>
         <h2>
             {{ getTitle() }}
-            <span *ngIf="getSpeakersCount() > 0 && !hideAmountOfSpeakers">
+            <span *ngIf="getSpeakersCount() > 0 && data.data.list_of_speakers_show_amount_of_speakers_on_slide">
                 &ndash; {{ getSpeakersCount() }} <span>{{ 'Speakers' | translate }}</span>
             </span>
         </h2>

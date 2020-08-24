@@ -1,4 +1,4 @@
-import { OnDestroy, Directive } from '@angular/core';
+import { Directive, OnDestroy } from '@angular/core';
 
 import { PblColumnDefinition, PblDataSource } from '@pebula/ngrid';
 

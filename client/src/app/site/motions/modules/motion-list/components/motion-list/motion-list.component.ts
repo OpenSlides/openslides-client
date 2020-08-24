@@ -14,7 +14,7 @@ import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/m
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { OsFilterOptionCondition } from 'app/core/ui-services/base-filter-list.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
@@ -190,7 +190,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
      * @param filterService filtering
      * @param router Router
      * @param route Current route
-     * @param organisationSettingsService The configuration provider
+     * @param meetingSettingsService The configuration provider
      * @param repo Motion Repository
      * @param tagRepo Tag Repository
      * @param motionBlockRepo
@@ -210,7 +210,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
         public filterService: MotionFilterListService,
         public sortService: MotionSortListService,
         private router: Router,
-        private organisationSettingsService: OrganisationSettingsService,
+        private meetingSettingsService: MeetingSettingsService,
         private tagRepo: TagRepositoryService,
         private motionBlockRepo: MotionBlockRepositoryService,
         private categoryRepo: MotionCategoryRepositoryService,
@@ -238,19 +238,19 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
         super.ngOnInit();
         super.setTitle('Motions');
 
-        this.organisationSettingsService
-            .get<boolean>('motions_statutes_enabled')
+        this.meetingSettingsService
+            .get('motions_statutes_enabled')
             .subscribe(enabled => (this.statutesEnabled = enabled));
-        this.organisationSettingsService
-            .get<boolean>('motions_amendments_enabled')
+        this.meetingSettingsService
+            .get('motions_amendments_enabled')
             .subscribe(enabled => (this.amendmentsEnabled = enabled));
         // TODO: remove
         this.amendmentsEnabled = true;
-        this.organisationSettingsService.get<string>('motions_recommendations_by').subscribe(recommender => {
+        this.meetingSettingsService.get('motions_recommendations_by').subscribe(recommender => {
             this.recommendationEnabled = !!recommender;
         });
-        this.organisationSettingsService
-            .get<boolean>('motions_show_sequential_numbers')
+        this.meetingSettingsService
+            .get('motions_show_sequential_number')
             .subscribe(show => (this.showSequential = show));
         this.motionBlockRepo.getViewModelListObservable().subscribe(mBs => {
             this.motionBlocks = mBs;

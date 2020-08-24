@@ -8,7 +8,7 @@ import { auditTime } from 'rxjs/operators';
 
 import { StorageService } from 'app/core/core-services/storage.service';
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-comment-section';
 import {
     ChangeRecoMode,
@@ -107,20 +107,20 @@ export class MotionExportDialogComponent implements OnInit {
      *
      * @param formBuilder Creates the export form
      * @param dialogRef Make the dialog available
-     * @param organisationSettingsService
+     * @param meetingSettingsService
      * @param commentRepo
      */
     public constructor(
         public formBuilder: FormBuilder,
         public dialogRef: MatDialogRef<MotionExportDialogComponent>,
-        public organisationSettingsService: OrganisationSettingsService,
+        public meetingSettingsService: MeetingSettingsService,
         public commentRepo: MotionCommentSectionRepositoryService,
         private store: StorageService
     ) {
-        this.defaults.lnMode = this.organisationSettingsService.instant('motions_default_line_numbering');
-        this.defaults.crMode = this.organisationSettingsService.instant('motions_recommendation_text_mode');
+        this.defaults.lnMode = this.meetingSettingsService.instant('motions_default_line_numbering');
+        this.defaults.crMode = this.meetingSettingsService.instant('motions_recommendation_text_mode');
         this.commentsSubject = this.commentRepo.getViewModelListBehaviorSubject();
-        if (this.organisationSettingsService.instant('motions_show_sequential_numbers')) {
+        if (this.meetingSettingsService.instant('motions_show_sequential_number')) {
             this.defaults.metaInfo.push('id');
         }
         // Get the export order, exclude everything that does not count as meta-data

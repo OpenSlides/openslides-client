@@ -9,7 +9,7 @@ import { ActionType } from 'app/core/core-services/action.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { DiffLinesInParagraph, DiffService } from 'app/core/ui-services/diff.service';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { TreeIdNode } from 'app/core/ui-services/tree.service';
 import { Motion } from 'app/shared/models/motions/motion';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from 'app/shared/models/motions/view-unified-change';
@@ -80,18 +80,18 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
         agendaItemRepo: AgendaItemRepositoryService,
-        config: OrganisationSettingsService,
+        private meetingsSettingsService: MeetingSettingsService,
         private readonly lineNumbering: LinenumberingService,
         private readonly diff: DiffService,
         private operator: OperatorService
     ) {
         super(repositoryServiceCollector, Motion, agendaItemRepo);
-        config.get<SortProperty>('motions_motions_sorting').subscribe(conf => {
-            this.sortProperty = conf;
+        this.meetingsSettingsService.get('motions_default_sorting').subscribe(conf => {
+            this.sortProperty = conf as SortProperty;
             this.setConfigSortFn();
         });
 
-        config.get<number>('motions_line_length').subscribe(lineLength => {
+        this.meetingsSettingsService.get('motions_line_length').subscribe(lineLength => {
             this.motionLineLength = lineLength;
         });
     }

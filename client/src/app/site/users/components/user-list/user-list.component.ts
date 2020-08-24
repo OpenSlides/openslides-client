@@ -15,7 +15,7 @@ import { UserRepositoryService } from 'app/core/repositories/users/user-reposito
 import { ChoiceService } from 'app/core/ui-services/choice.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { CsvExportService } from 'app/core/ui-services/csv-export.service';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { genders } from 'app/shared/models/users/user';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
@@ -113,7 +113,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         return this._presenceViewConfigured && this.operator.hasPerms(Permission.usersCanManage);
     }
 
-    private isVoteWeightActive: boolean;
+    private voteWeightEnabled: boolean;
 
     /**
      * Helper to check for main button permissions
@@ -129,7 +129,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
     }
 
     public get showVoteWeight(): boolean {
-        return this.pollService.isElectronicVotingEnabled && this.isVoteWeightActive;
+        return this.pollService.isElectronicVotingEnabled && this.voteWeightEnabled;
     }
 
     public get totalVoteWeight(): number {
@@ -164,28 +164,8 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
      */
     public filterProps = ['full_name', 'groups', 'structure_level', 'number', 'delegationName'];
 
-    private selfPresentConfStr = 'users_allow_self_set_present';
-
     private allowSelfSetPresent: boolean;
 
-    /**
-     * The usual constructor for components
-     * @param titleService Serivce for setting the title
-     * @param translate Service for translation handling
-     * @param matSnackBar Helper to diplay errors
-     * @param repo the user repository
-     * @param groupRepo: The user group repository
-     * @param router the router service
-     * @param route the local route
-     * @param operator
-     * @param csvExport CSV export Service,
-     * @param promptService
-     * @param groupRepo
-     * @param filterService
-     * @param sortService
-     * @param config ConfigService
-     * @param userPdf Service for downloading pdf
-     */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private route: ActivatedRoute,
@@ -198,7 +178,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         private promptService: PromptService,
         public filterService: UserFilterListService,
         public sortService: UserSortListService,
-        config: OrganisationSettingsService,
+        private meetingSettingsService: MeetingSettingsService,
         private userPdf: UserPdfExportService,
         private dialog: MatDialog,
         private pollService: PollService,
@@ -208,10 +188,15 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
 
         // enable multiSelect for this listView
         this.canMultiSelect = true;
-        this.users = this.repo.getViewModelListBehaviorSubject();
-        config.get<boolean>('users_enable_presence_view').subscribe(state => (this._presenceViewConfigured = state));
-        config.get<boolean>('users_activate_vote_weight').subscribe(active => (this.isVoteWeightActive = active));
-        config.get<boolean>(this.selfPresentConfStr).subscribe(allowed => (this.allowSelfSetPresent = allowed));
+        this.meetingSettingsService
+            .get('users_enable_presence_view')
+            .subscribe(state => (this._presenceViewConfigured = state));
+        this.meetingSettingsService
+            .get('users_enable_vote_weight')
+            .subscribe(enabled => (this.voteWeightEnabled = enabled));
+        this.meetingSettingsService
+            .get('users_allow_self_set_present')
+            .subscribe(allowed => (this.allowSelfSetPresent = allowed));
     }
 
     /**

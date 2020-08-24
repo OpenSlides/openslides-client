@@ -11,6 +11,7 @@ import { MotionPollRepositoryService } from 'app/core/repositories/motions/motio
 import { MotionVoteRepositoryService } from 'app/core/repositories/motions/motion-vote-repository.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
@@ -59,6 +60,7 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
         votesRepo: MotionVoteRepositoryService,
         operator: OperatorService,
         cd: ChangeDetectorRef,
+        meetingSettingsService: MeetingSettingsService,
         private router: Router
     ) {
         super(
@@ -71,7 +73,8 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
             pollService,
             votesRepo,
             operator,
-            cd
+            cd,
+            meetingSettingsService
         );
         // TODO: Get this from the active meeting.
         // TODO: refactor this into the BasePollDetailComponent and also remove from assignment-poll-detail

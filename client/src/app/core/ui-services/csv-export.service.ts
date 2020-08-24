@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { BaseViewModel } from '../../site/base/base-view-model';
 import { FileExportService } from './file-export.service';
-import { OrganisationSettingsService } from './organisation-settings.service';
+import { MeetingSettingsService } from './meeting-settings.service';
 
 /**
  * Defines a csv column with a property of the model and an optional label. If this is not given, the
@@ -66,7 +66,7 @@ export class CsvExportService {
     public constructor(
         protected exporter: FileExportService,
         private translate: TranslateService,
-        private config: OrganisationSettingsService
+        private meetingSettingsService: MeetingSettingsService
     ) {}
 
     /**
@@ -84,8 +84,8 @@ export class CsvExportService {
         filename: string,
         {
             lineSeparator = '\r\n',
-            columnSeparator = this.config.instant('general_csv_separator'),
-            encoding = this.config.instant('general_csv_encoding')
+            columnSeparator = this.meetingSettingsService.instant('export_csv_separator'),
+            encoding = this.meetingSettingsService.instant('export_csv_encoding')
         }: {
             lineSeparator?: string;
             columnSeparator?: string;
@@ -177,7 +177,7 @@ export class CsvExportService {
     }
 
     public dummyCSVExport(header: string[], rows: (string | number | boolean | null)[][], filename: string): void {
-        const separator = this.config.instant<string>('general_csv_separator');
+        const separator = this.meetingSettingsService.instant('export_csv_separator');
         const headerRow = [header.map(item => this.translate.instant(item)).join(separator)];
         const content = rows.map(row =>
             row
@@ -198,7 +198,7 @@ export class CsvExportService {
                 .join(separator)
         );
         const csvContentAsString = headerRow.concat(content).join('\r\n');
-        const encoding = this.config.instant<'utf-8' | 'iso-8859-15'>('general_csv_encoding');
+        const encoding = this.meetingSettingsService.instant('export_csv_encoding');
         if (encoding === 'iso-8859-15') {
             this.exporter.saveFile(this.exporter.convertTo8859_15(csvContentAsString), filename, 'text/csv');
         } else {

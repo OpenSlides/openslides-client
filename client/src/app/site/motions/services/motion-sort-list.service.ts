@@ -8,7 +8,7 @@ import { StorageService } from 'app/core/core-services/storage.service';
 import { Deferred } from 'app/core/promises/deferred';
 import { BaseSortListService } from 'app/core/ui-services/base-sort-list.service';
 import { OsSortingDefinition, OsSortingOption } from 'app/core/ui-services/base-sort.service';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { ViewMotion } from '../models/view-motion';
 
 /**
@@ -59,19 +59,19 @@ export class MotionSortListService extends BaseSortListService<ViewMotion> {
         translate: TranslateService,
         store: StorageService,
         historyService: HistoryService,
-        config: OrganisationSettingsService
+        private meetingSettingsService: MeetingSettingsService
     ) {
         super(translate, store, historyService);
 
         this.defaultMotionSorting = 'number';
         this.defaultSortingLoaded.resolve();
 
-        /*config.get<string>('motions_motions_sorting').subscribe(defSortProp => {
+        this.meetingSettingsService.get('motions_default_sorting').subscribe(defSortProp => {
             if (defSortProp) {
                 this.defaultMotionSorting = defSortProp;
                 this.defaultSortingLoaded.resolve();
             }
-        });*/
+        });
     }
 
     protected getSortOptions(): OsSortingOption<ViewMotion>[] {

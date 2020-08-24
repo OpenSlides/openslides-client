@@ -6,7 +6,10 @@ import { collectionFromFqid } from 'app/core/core-services/key-transforms';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
+import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { DurationService } from 'app/core/ui-services/duration.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { ListOfSpeakersContentComponent } from 'app/shared/components/list-of-speakers-content/list-of-speakers-content.component';
@@ -16,6 +19,7 @@ import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { CurrentListOfSpeakersSlideService } from 'app/site/projector/services/current-list-of-speakers-slide.service';
 import { CurrentListOfSpeakersService } from 'app/site/projector/services/current-list-of-speakers.service';
 import { ViewListOfSpeakers } from '../../models/view-list-of-speakers';
+import { ViewSpeaker } from '../../models/view-speaker';
 
 /**
  * The list of speakers for agenda items.
@@ -87,7 +91,7 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
         private currentListOfSpeakersService: CurrentListOfSpeakersService,
         private currentListOfSpeakersSlideService: CurrentListOfSpeakersSlideService,
         private viewport: ViewportService,
-        private collectionMapper: CollectionMapperService
+        private collectionMapper: CollectionMapperService,
     ) {
         super(componentServiceCollector);
     }

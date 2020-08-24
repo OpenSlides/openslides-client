@@ -1,11 +1,11 @@
 import { ValidatorFn, Validators } from '@angular/forms';
 
-import { Observable } from 'rxjs';
 import dedent from 'ts-dedent';
 
 import { AssignmentPollMethod } from 'app/shared/models/assignments/assignment-poll';
+import { Settings } from 'app/shared/models/event-management/meeting';
 import { MotionWorkflow } from 'app/shared/models/motions/motion-workflow';
-import { MajorityMethod, PercentBase, PollType } from 'app/shared/models/poll/base-poll';
+import { PercentBase } from 'app/shared/models/poll/base-poll';
 import { AssignmentPollMethodVerbose } from 'app/site/assignments/models/view-assignment-poll';
 import { MajorityMethodVerbose, PercentBaseVerbose, PollTypeVerbose } from 'app/site/polls/models/base-view-poll';
 
@@ -36,7 +36,7 @@ export interface ChoicesFunctionDefinition {
 }
 
 export interface SettingsItem {
-    key: string;
+    key: keyof Settings;
     label: string;
     type?: SettingsType; // default: text
     choices?: ChoicesMap;
@@ -92,8 +92,12 @@ export const meetingSettings: SettingsGroup[] = [
                         validators: [Validators.maxLength(100)]
                     },
                     {
-                        key: 'date',
-                        label: 'Event date'
+                        key: 'start_time',
+                        label: 'Event start date'
+                    },
+                    {
+                        key: 'end_time',
+                        label: 'Event end date'
                     },
                     {
                         key: 'location',
@@ -162,6 +166,7 @@ export const meetingSettings: SettingsGroup[] = [
                         default: 'utf-8',
                         type: 'choice',
                         choices: {
+                            // matches ExportCsvEncoding
                             'UTF-8': 'utf-8',
                             'ISO-8859-15': 'iso-8859-15'
                         }
@@ -264,6 +269,7 @@ export const meetingSettings: SettingsGroup[] = [
                         default: 'default_yes',
                         type: 'choice',
                         choices: {
+                            // matches AgendaItemCreation
                             Always: 'always',
                             Never: 'never',
                             'Ask, default yes': 'default_yes',
@@ -364,7 +370,18 @@ export const meetingSettings: SettingsGroup[] = [
                         }
                     },
                     {
-                        key: 'motions_default_statute_amendments_workflow_id',
+                        key: 'motions_default_amendment_workflow_id',
+                        label: 'Workflow of new amendments',
+                        default: 1,
+                        type: 'choice',
+                        choicesFunc: {
+                            collection: MotionWorkflow.COLLECTION,
+                            idKey: 'id',
+                            labelKey: 'name'
+                        }
+                    },
+                    {
+                        key: 'motions_default_statute_amendment_workflow_id',
                         label: 'Workflow of new statute amendments',
                         default: 1,
                         type: 'choice',
@@ -385,6 +402,7 @@ export const meetingSettings: SettingsGroup[] = [
                         default: 'outside',
                         type: 'choice',
                         choices: {
+                            // matches LineNumberingMode
                             outside: 'outside',
                             inline: 'inline',
                             Disabled: 'none'
@@ -456,6 +474,7 @@ export const meetingSettings: SettingsGroup[] = [
                         default: 'diff',
                         type: 'choice',
                         choices: {
+                            // matches ChangeRecoMode
                             'Original version': 'original',
                             'Changed version': 'changed',
                             'Diff version': 'diff',
@@ -749,6 +768,7 @@ export const meetingSettings: SettingsGroup[] = [
                         default: 'first_name',
                         type: 'choice',
                         choices: {
+                            // matches UserSortProperty
                             'Given name': 'first_name',
                             Surname: 'last_name',
                             'Participant number': 'number'

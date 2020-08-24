@@ -1,6 +1,6 @@
 <os-head-bar [goBack]="true" [nav]="false">
     <div class="title-slot">
-        <h2 *ngIf="poll">{{ 'Motion' | translate }} {{ poll.motion.identifierOrTitle }}</h2>
+        <h2 *ngIf="poll">{{ 'Motion' | translate }} {{ poll.motion.numberOrTitle }}</h2>
     </div>
 
     <div class="menu-slot" *osPerms="'motions.can_manage_polls'">
@@ -62,7 +62,7 @@
                             </div>
 
                             <!-- Vote weight -->
-                            <div *ngIf="isVoteWeightActive">
+                            <div *ngIf="voteWeightEnabled">
                                 {{ 'Vote weight' | translate }}: {{ vote.user.vote_weight }}
                             </div>
 
@@ -90,11 +90,11 @@
         </div>
 
         <div class="poll-content">
-            <small *ngIf="poll.groups && poll.type && poll.type !== 'analog'">
+            <small *ngIf="poll.entitled_groups && poll.type && poll.type !== 'analog'">
                 {{ 'Groups' | translate }}:
 
-                <span *ngFor="let group of poll.groups; let i = index">
-                    {{ group.getTitle() | translate }}<span *ngIf="i < poll.groups.length - 1">, </span>
+                <span *ngFor="let group of poll.entitled_groups; let last = last">
+                    {{ group.getTitle() | translate }}<span *ngIf="!last">, </span>
                 </span>
             </small>
             <small>{{ '100% base' | translate }}: {{ poll.percentBaseVerbose | translate }}</small>

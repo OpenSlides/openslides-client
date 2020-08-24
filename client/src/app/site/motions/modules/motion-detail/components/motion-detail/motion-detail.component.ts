@@ -30,10 +30,11 @@ import { NewUser, UserRepositoryService } from 'app/core/repositories/users/user
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DiffLinesInParagraph, LineRange } from 'app/core/ui-services/diff.service';
 import { LinenumberingService } from 'app/core/ui-services/linenumbering.service';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
+import { Settings } from 'app/shared/models/event-management/meeting';
 import { Mediafile } from 'app/shared/models/mediafiles/mediafile';
 import { Motion } from 'app/shared/models/motions/motion';
 import { ViewUnifiedChange } from 'app/shared/models/motions/view-unified-change';
@@ -446,7 +447,6 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         public repo: MotionRepositoryService,
         private changeRecoRepo: MotionChangeRecommendationRepositoryService,
         private statuteRepo: MotionStatuteParagraphRepositoryService,
-        private organisationSettingsService: OrganisationSettingsService,
         private promptService: PromptService,
         private pdfExport: MotionPdfExportService,
         private linenumberingService: LinenumberingService,
@@ -463,7 +463,8 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         private amendmentFilterService: AmendmentFilterListService,
         private cd: ChangeDetectorRef,
         private pollDialog: MotionPollDialogService,
-        private motionPollService: MotionPollService
+        private motionPollService: MotionPollService,
+        private meetingSettingsService: MeetingSettingsService
     ) {
         super(componentServiceCollector);
     }
@@ -480,40 +481,36 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         this.getMotionByUrl();
 
         // load config variables
-        this.organisationSettingsService
-            .get<boolean>('motions_statutes_enabled')
+        this.meetingSettingsService
+            .get('motions_statutes_enabled')
             .subscribe(enabled => (this.statutesEnabled = enabled));
-        this.organisationSettingsService
-            .get<boolean>('motions_reason_required')
+        this.meetingSettingsService
+            .get('motions_reason_required')
             .subscribe(required => (this.reasonRequired = required));
-        this.organisationSettingsService
-            .get<boolean>('motions_hide_referring_motions')
-            .subscribe(show => (this.showReferringMotions = !show));
-        // FIXME: Does not yet exist
-        // this.organisationSettingsService
-        //     .get<number>('motions_min_supporters')
-        //     .subscribe(supporters => (this.minSupporters = supporters));
-        this.organisationSettingsService
-            .get<string>('motions_preamble')
-            .subscribe(preamble => (this.preamble = preamble));
-        this.organisationSettingsService
-            .get<boolean>('motions_amendments_enabled')
+        this.meetingSettingsService
+            .get('motions_show_referring_motions')
+            .subscribe(show => (this.showReferringMotions = show));
+        this.meetingSettingsService
+            .get('motions_supporters_min_amount')
+            .subscribe(supporters => (this.minSupporters = supporters));
+        this.meetingSettingsService.get('motions_preamble').subscribe(preamble => (this.preamble = preamble));
+        this.meetingSettingsService
+            .get('motions_amendments_enabled')
             .subscribe(enabled => (this.amendmentsEnabled = enabled));
-        this.organisationSettingsService.get<number>('motions_line_length').subscribe(lineLength => {
+        this.meetingSettingsService.get('motions_line_length').subscribe(lineLength => {
             this.lineLength = lineLength;
             this.sortedChangingObjects = null;
         });
-        this.organisationSettingsService
-            .get<LineNumberingMode>('motions_default_line_numbering')
-            .subscribe(mode => (this.lnMode = mode));
-        this.organisationSettingsService.get<ChangeRecoMode>('motions_recommendation_text_mode').subscribe(mode => {
+        this.meetingSettingsService
+            .get('motions_default_line_numbering')
+            .subscribe(mode => (this.lnMode = mode as LineNumberingMode));
+        this.meetingSettingsService.get('motions_recommendation_text_mode').subscribe(mode => {
             if (mode) {
-                this.defaultCrMode = mode;
-                this.resetCrMode();
+                this.crMode = this.determineCrMode(mode as ChangeRecoMode);
             }
         });
-        this.organisationSettingsService
-            .get<boolean>('motions_show_sequential_numbers')
+        this.meetingSettingsService
+            .get('motions_show_sequential_number')
             .subscribe(shown => (this.showSequential = shown));
 
         // Update statute paragraphs
@@ -522,7 +519,8 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         });
 
         // use the filter and the search service to get the current sorting
-        if (this.organisationSettingsService.instant<boolean>('motions_amendments_main_table')) {
+        // TODO: the `instant` can fail, if the page reloads.
+        if (this.meetingSettingsService.instant('motions_amendments_in_main_list')) {
             this.motionFilterService.initFilters(this.motionObserver);
             this.motionSortService.initSorting(this.motionFilterService.outputObservable);
             this.sortedMotionsObservable = this.motionSortService.outputObservable;
@@ -764,12 +762,11 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
                     tag_ids: parentMotion.tag_ids
                 });
 
-                throw new Error('TODO');
-                /*const amendmentTextMode = this.configService.instant<string>('motions_amendments_text_mode');
+                const amendmentTextMode = this.meetingSettingsService.instant('motions_amendments_text_mode');
                 if (amendmentTextMode === 'fulltext') {
                     defaultMotion.text = parentMotion.text;
                     this.contentForm.patchValue({ text: defaultMotion.text });
-                }*/
+                }
             }
             this.motion = new ViewCreateMotion(new CreateMotion(defaultMotion));
         }
@@ -1322,8 +1319,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
      * Goes to the amendment creation wizard. Executed via click.
      */
     public createAmendment(): void {
-        throw new Error('TODO');
-        /*const amendmentTextMode = this.configService.instant<string>('motions_amendments_text_mode');
+        const amendmentTextMode = this.meetingSettingsService.instant('motions_amendments_text_mode');
         if (amendmentTextMode === 'paragraph') {
             this.router.navigate(['./create-amendment'], { relativeTo: this.route });
         } else {
@@ -1331,7 +1327,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
                 relativeTo: this.route.snapshot.params.relativeTo,
                 queryParams: { parent: this.motion.id || null }
             });
-        }*/
+        }
     }
 
     /**
@@ -1401,16 +1397,16 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
      * Sets the default workflow ID during form creation
      */
     public updateWorkflowIdForCreateForm(paragraph?: number): void {
-        let configKey: string;
+        let configKey: keyof Settings;
 
         if (!!this.contentForm.get('statute_amendment').value && !!paragraph) {
-            configKey = 'motions_statute_amendments_workflow';
+            configKey = 'motions_default_statute_amendment_workflow_id';
         } else if (!!this.route.snapshot.queryParams.parent) {
-            configKey = 'motions_amendments_workflow';
+            configKey = 'motions_default_amendment_workflow_id';
         } else {
-            configKey = 'motions_workflow';
+            configKey = 'motions_default_workflow_id';
         }
-        const workflowId = this.organisationSettingsService.instant<string>(configKey);
+        const workflowId = this.meetingSettingsService.instant(configKey);
         this.contentForm.patchValue({ workflow_id: +workflowId });
     }
 
@@ -1572,17 +1568,15 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
      */
     public setupRecommender(): void {
         if (this.motion) {
-            const configKey = this.motion.isStatuteAmendment()
+            const configKey: keyof Settings = this.motion.isStatuteAmendment()
                 ? 'motions_statute_recommendations_by'
                 : 'motions_recommendations_by';
             if (this.recommenderSubscription) {
                 this.recommenderSubscription.unsubscribe();
             }
-            this.recommenderSubscription = this.organisationSettingsService
-                .get<string>(configKey)
-                .subscribe(recommender => {
-                    this.recommender = recommender;
-                });
+            this.recommenderSubscription = this.meetingSettingsService.get(configKey).subscribe(recommender => {
+                this.recommender = recommender;
+            });
         }
     }
 

@@ -6,7 +6,8 @@ import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-reques
 import { PreventedInDemo } from 'app/core/definitions/custom-errors';
 import { Id } from 'app/core/definitions/key-types';
 import { NewEntry } from 'app/core/ui-services/base-import.service';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
+import { UserSortProperty } from 'app/shared/models/event-management/meeting';
 import { User } from 'app/shared/models/users/user';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { BaseRepository } from '../base-repository';
@@ -30,8 +31,6 @@ export interface NewUser {
  * See {@link parseUserString} for implementations
  */
 type StringNamingSchema = 'lastCommaFirst' | 'firstSpaceLast';
-
-type SortProperty = 'first_name' | 'last_name' | 'number';
 
 export interface ShortNameInformation {
     title?: string;
@@ -59,17 +58,17 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
     /**
      * The property the incoming data is sorted by
      */
-    protected sortProperty: SortProperty;
+    protected sortProperty: UserSortProperty;
 
     private demoModeUserIds: number[] | null = null;
 
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
-        private organisationSettingsService: OrganisationSettingsService
+        private meetingSettingsService: MeetingSettingsService
     ) {
         super(repositoryServiceCollector, User);
-        this.sortProperty = this.organisationSettingsService.instant('users_sort_by');
-        this.organisationSettingsService.get<SortProperty>('users_sort_by').subscribe(conf => {
+        this.sortProperty = this.meetingSettingsService.instant('users_sort_by');
+        this.meetingSettingsService.get('users_sort_by').subscribe(conf => {
             this.sortProperty = conf;
             this.setConfigSortFn();
         });
@@ -350,8 +349,8 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
     public async bulkSendInvitationEmail(users: ViewUser[]): Promise<string> {
         this.preventInDemo();
         const user_ids = users.map(user => user.id);
-        const users_email_subject = this.organisationSettingsService.instant<string>('users_email_subject');
-        const users_email_body = this.organisationSettingsService.instant<string>('users_email_body');
+        const users_email_subject = this.meetingSettingsService.instant('users_email_subject');
+        const users_email_body = this.meetingSettingsService.instant('users_email_body');
         const subject = this.translate.instant(users_email_subject);
         const message = this.translate.instant(users_email_body);
 

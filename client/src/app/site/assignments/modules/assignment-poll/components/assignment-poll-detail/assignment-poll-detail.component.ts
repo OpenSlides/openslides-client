@@ -9,6 +9,7 @@ import { AssignmentPollRepositoryService } from 'app/core/repositories/assignmen
 import { AssignmentVoteRepositoryService } from 'app/core/repositories/assignments/assignment-vote-repository.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ChartData } from 'app/shared/components/charts/charts.component';
 import { VoteValue } from 'app/shared/models/poll/base-vote';
@@ -33,7 +34,7 @@ export class AssignmentPollDetailComponent extends BasePollDetailComponent<ViewA
 
     public candidatesLabels: string[] = [];
 
-    public isVoteWeightActive: boolean;
+    public voteWeightEnabled: boolean;
 
     public get showResults(): boolean {
         return this.hasPerms() || this.poll.isPublished;
@@ -54,6 +55,7 @@ export class AssignmentPollDetailComponent extends BasePollDetailComponent<ViewA
         votesRepo: AssignmentVoteRepositoryService,
         operator: OperatorService,
         cd: ChangeDetectorRef,
+        meetingSettingsService: MeetingSettingsService,
         private router: Router
     ) {
         super(
@@ -66,7 +68,8 @@ export class AssignmentPollDetailComponent extends BasePollDetailComponent<ViewA
             pollService,
             votesRepo,
             operator,
-            cd
+            cd,
+            meetingSettingsService
         );
         // TODO: Get this from the active meeting.
         /*configService

@@ -24,7 +24,6 @@ export class Mediafile extends BaseModel<Mediafile> {
     public mimetype?: string;
     public pdf_information: PdfInformation;
     public create_timestamp: string;
-    public path: string;
     public has_inherited_access_groups: boolean;
 
     public access_group_ids: Id[]; // (group/mediafile_access_group_ids)[];
@@ -33,19 +32,19 @@ export class Mediafile extends BaseModel<Mediafile> {
     public child_ids: Id[]; // (mediafile/parent_id)[];
     public attachment_ids: Fqid[]; // (*/attachment_ids)[];
     public meeting_id: Id; // meeting/mediafile_ids;
-    public used_as_logo_$_in_meeting: string[]; // meeting/logo_$<token>;
-    public used_as_font_$_in_meeting: string[]; // meeting/font_$<token>;
+    public used_as_logo_$_in_meeting_id: string[]; // meeting/logo_$<place>_id;
+    public used_as_font_$_in_meeting_id: string[]; // meeting/font_$<place>_id;
 
     public constructor(input?: any) {
         super(Mediafile.COLLECTION, input);
     }
 
-    public used_ad_logo_in_meeting(token: string): Id | null {
-        return this[`used_as_logo_${token}_in_meeting`] || null;
+    public used_as_logo_in_meeting_id(place: string): Id | null {
+        return this[`used_as_logo_${place}_in_meeting_id`] || null;
     }
 
-    public used_ad_font_in_meeting(token: string): Id | null {
-        return this[`used_as_font_${token}_in_meeting`] || null;
+    public used_as_font_in_meeting_id(place: string): Id | null {
+        return this[`used_as_font_${place}_in_meeting_id`] || null;
     }
 
     /**
@@ -54,7 +53,7 @@ export class Mediafile extends BaseModel<Mediafile> {
      * @returns the download URL for the specific file as string
      */
     public get url(): string {
-        return `${Mediafile.MEDIA_URL_PREFIX}${this.path}`;
+        return this.is_directory ? `/mediafiles/${this.id}` : `/system/media/get/${this.id}`;
     }
 }
 export interface Mediafile extends HasProjectableIds, HasListOfSpeakersId {}

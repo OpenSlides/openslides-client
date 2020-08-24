@@ -15,4 +15,5 @@ export interface CommonListOfSpeakersSlideData {
     };
     content_object_collection?: string;
     closed?: boolean;
+    list_of_speakers_show_amount_of_speakers_on_slide?: boolean;
 }

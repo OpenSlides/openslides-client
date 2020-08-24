@@ -14,7 +14,6 @@ import { LoginDataService } from './core/ui-services/login-data.service';
 import { OfflineService } from './core/core-services/offline.service';
 import { OpenSlidesService } from './core/core-services/openslides.service';
 import { OperatorService } from './core/core-services/operator.service';
-import { OrganisationSettingsService } from './core/ui-services/organisation-settings.service';
 import { OverlayService } from './core/ui-services/overlay.service';
 import { overloadJsFunctions } from './shared/overload-js-functions';
 import { RoutingStateService } from './core/ui-services/routing-state.service';
@@ -56,7 +55,6 @@ export class AppComponent implements OnInit {
         themeService: ThemeService,
         overlayService: OverlayService,
         countUsersService: CountUsersService, // Needed to register itself.
-        organisationSettingsService: OrganisationSettingsService,
         loadFontService: LoadFontService,
         dataStoreUpgradeService: DataStoreUpgradeService, // to start it.
         routingState: RoutingStateService,

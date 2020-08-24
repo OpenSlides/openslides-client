@@ -292,8 +292,14 @@ export const RELATIONS: Relation[] = [
     ...makeO2O({
         AViewModel: ViewMeeting,
         BViewModel: ViewMotionWorkflow,
-        AField: 'motions_default_statute_amendments_workflow',
-        BField: 'default_statute_amendments_meeting'
+        AField: 'motions_default_amendment_workflow',
+        BField: 'default_amendment_workflow_meeting'
+    }),
+    ...makeO2O({
+        AViewModel: ViewMeeting,
+        BViewModel: ViewMotionWorkflow,
+        AField: 'motions_default_statute_amendment_workflow',
+        BField: 'default_statute_amendment_workflow_meeting'
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
@@ -465,7 +471,7 @@ export const RELATIONS: Relation[] = [
         ownViewModels: [ViewMediafile],
         foreignViewModel: ViewMeeting,
         ownField: 'used_as_logo_in_meeting',
-        ownIdField: 'used_as_logo_$_in_meeting',
+        ownIdField: 'used_as_logo_$_in_meeting_id',
         many: false,
         generic: false,
         structured: true
@@ -475,7 +481,7 @@ export const RELATIONS: Relation[] = [
         ownViewModels: [ViewMeeting],
         foreignViewModel: ViewMediafile,
         ownField: 'logo',
-        ownIdField: 'logo_$',
+        ownIdField: 'logo_$_id',
         many: false,
         generic: false,
         structured: true
@@ -485,7 +491,7 @@ export const RELATIONS: Relation[] = [
         ownViewModels: [ViewMediafile],
         foreignViewModel: ViewMeeting,
         ownField: 'used_as_font_in_meeting',
-        ownIdField: 'used_as_font_$_in_meeting',
+        ownIdField: 'used_as_font_$_in_meeting_id',
         many: false,
         generic: false,
         structured: true
@@ -495,7 +501,7 @@ export const RELATIONS: Relation[] = [
         ownViewModels: [ViewMeeting],
         foreignViewModel: ViewMediafile,
         ownField: 'font',
-        ownIdField: 'font_$',
+        ownIdField: 'font_$_id',
         many: false,
         generic: false,
         structured: true
