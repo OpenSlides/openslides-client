@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { ActionService, ActionType } from 'app/core/core-services/action.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { TreeIdNode } from 'app/core/ui-services/tree.service';
 import { AgendaItem } from 'app/shared/models/agenda/agenda-item';
 import { Identifiable } from 'app/shared/models/base/identifiable';
@@ -28,7 +28,7 @@ export interface AgendaListTitle {
 export class AgendaItemRepositoryService extends MeetingModelBaseRepository<ViewAgendaItem, AgendaItem> {
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
-        private config: OrganisationSettingsService
+        private meetingSettingsService: MeetingSettingsService
     ) {
         super(repositoryServiceCollector, AgendaItem);
 
@@ -160,7 +160,7 @@ export class AgendaItemRepositoryService extends MeetingModelBaseRepository<View
      * @returns a Date object or null
      */
     public calculateEndTime(): Date {
-        const startTime = this.config.instant<number>('agenda_start_event_date_time'); // a timestamp
+        const startTime = this.meetingSettingsService.instant('start_time'); // a timestamp
         const duration = this.calculateDuration();
         if (!startTime || !duration) {
             return null;

@@ -15,12 +15,12 @@ import { ActiveMeetingService } from 'app/core/core-services/active-meeting.serv
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { MeetingRepositoryService } from 'app/core/repositories/event-management/meeting-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
+import { MeetingSettingsDefinitionProvider } from 'app/core/ui-services/meeting-settings-definition-provider.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { CanComponentDeactivate } from 'app/shared/utils/watch-for-changes.guard';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
-import { SettingsGroup } from '../../../../core/repositories/event-management/meeting-settings';
+import { SettingsGroup } from '../../../../core/repositories/event-management/meeting-settings-definition';
 import {
     MeetingSettingsFieldComponent,
     SettingsFieldUpdate
@@ -54,7 +54,7 @@ export class MeetingSettingsListComponent extends BaseModelContextComponent
         private cd: ChangeDetectorRef,
         private route: ActivatedRoute,
         private promptDialog: PromptService,
-        private meetingSettingsService: MeetingSettingsService,
+        private meetingSettingsDefinitionProvider: MeetingSettingsDefinitionProvider,
         private activeMeetingService: ActiveMeetingService,
         private repo: MeetingRepositoryService
     ) {
@@ -69,7 +69,7 @@ export class MeetingSettingsListComponent extends BaseModelContextComponent
         const settings = this.translate.instant('Settings');
         this.route.params.subscribe(params => {
             if (params.group) {
-                this.settingsGroup = this.meetingSettingsService.getSettingsGroup(params.group);
+                this.settingsGroup = this.meetingSettingsDefinitionProvider.getSettingsGroup(params.group);
                 const groupName = this.translate.instant(this.settingsGroup.label);
                 super.setTitle(`${settings} - ${groupName}`);
                 this.cd.markForCheck();

@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { MotionRepositoryService, ParagraphToChoose } from 'app/core/repositories/motions/motion-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { CreateMotion } from 'app/site/motions/models/create-motion';
@@ -61,22 +61,9 @@ export class AmendmentCreateWizardComponent extends BaseComponent implements OnI
      */
     public multipleParagraphsAllowed: boolean;
 
-    /**
-     * Constructs this component.
-     *
-     * @param titleService set the browser title
-     * @param translate the translation service
-     * @param organisationSettingsService The configuration provider
-     * @param formBuilder Form builder
-     * @param repo Motion Repository
-     * @param route The activated route
-     * @param router The router
-     * @param promptService Show a prompt by leaving the view
-     * @param matSnackBar Material Design SnackBar
-     */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        private organisationSettingsService: OrganisationSettingsService,
+        private meetingSettingsService: MeetingSettingsService,
         private formBuilder: FormBuilder,
         private repo: MotionRepositoryService,
         private route: ActivatedRoute,
@@ -88,16 +75,16 @@ export class AmendmentCreateWizardComponent extends BaseComponent implements OnI
     }
 
     public ngOnInit(): void {
-        this.organisationSettingsService.get<number>('motions_line_length').subscribe(lineLength => {
+        this.meetingSettingsService.get('motions_line_length').subscribe(lineLength => {
             this.lineLength = lineLength;
             this.getMotionByUrl();
         });
 
-        this.organisationSettingsService.get<boolean>('motions_reason_required').subscribe(required => {
+        this.meetingSettingsService.get('motions_reason_required').subscribe(required => {
             this.reasonRequired = required;
         });
 
-        this.organisationSettingsService.get<boolean>('motions_amendments_multiple_paragraphs').subscribe(allowed => {
+        this.meetingSettingsService.get('motions_amendments_multiple_paragraphs').subscribe(allowed => {
             this.multipleParagraphsAllowed = allowed;
         });
     }
@@ -257,24 +244,21 @@ export class AmendmentCreateWizardComponent extends BaseComponent implements OnI
                 return null;
             }
         });
-        throw new Error('TODO');
-        /*const newMotionValues = {
+        const newMotionValues = {
             ...this.contentForm.value,
-            title: this.translate.instant('Amendment to') + ' ' + this.motion.getIdentifierOrTitle(),
-            text: text, // Workaround as 'text' is required from the backend
+            title: this.translate.instant('Amendment to') + ' ' + this.motion.getNumberOrTitle(),
             parent_id: this.motion.id,
             category_id: this.motion.category_id,
             tag_ids: this.motion.tag_ids,
             motion_block_id: this.motion.block_id,
             amendment_paragraphs: amendedParagraphs,
-            // TODO
-            // workflow_id: this.configService.instant<number>('motions_amendments_workflow')
+            workflow_id: this.meetingSettingsService.instant('motions_default_workflow_id')
         };
 
         const motion = new CreateMotion();
         motion.deserialize(newMotionValues);
 
         const response = await this.repo.create(motion);
-        this.router.navigate(['./motions/' + response.id]);*/
+        this.router.navigate(['./motions/' + response.id]);
     }
 }

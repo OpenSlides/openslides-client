@@ -75,17 +75,6 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
      */
     public filterProps = ['submitters', 'title', 'number', 'amendment_paragraphs'];
 
-    /**
-     *
-     * @param titleService set the title
-     * @param translate translate stuff
-     * @param matSnackBar show errors
-     * @param storage store and recall
-     * @param motionRepo get the motions
-     * @param motionSortService the default motion sorter
-     *
-     * @param organisationSettingsService get config vars
-     */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private route: ActivatedRoute,

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { ViewMotion } from '../models/view-motion';
 
 @Injectable({
@@ -13,19 +13,16 @@ export class PermissionsService {
     private amendmentEnabled: boolean;
     private amendmentOfAmendment: boolean;
 
-    public constructor(
-        private operator: OperatorService,
-        private organisationSettingsService: OrganisationSettingsService
-    ) {
+    public constructor(private operator: OperatorService, private meetingSettingsService: MeetingSettingsService) {
         // load config variables
-        this.organisationSettingsService
-            .get<number>('motions_min_supporters')
+        this.meetingSettingsService
+            .get('motions_supporters_min_amount')
             .subscribe(supporters => (this.configMinSupporters = supporters));
-        this.organisationSettingsService
-            .get<boolean>('motions_amendments_enabled')
+        this.meetingSettingsService
+            .get('motions_amendments_enabled')
             .subscribe(enabled => (this.amendmentEnabled = enabled));
-        this.organisationSettingsService
-            .get<boolean>('motions_amendments_of_amendments')
+        this.meetingSettingsService
+            .get('motions_amendments_of_amendments')
             .subscribe(enabled => (this.amendmentOfAmendment = enabled));
     }
 

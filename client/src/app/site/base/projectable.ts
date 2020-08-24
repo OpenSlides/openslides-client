@@ -1,5 +1,5 @@
 import { ProjectorTitle } from 'app/core/core-services/projector.service';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { HasProjectableIds } from 'app/shared/models/base/has-projectable-ids';
 import { Displayable } from 'app/site/base/displayable';
 import { SlideOptions } from './slide-options';
@@ -41,5 +41,5 @@ export interface Projectable extends Displayable, HasProjectableIds {
 
     getProjectorTitle: () => ProjectorTitle;
 
-    getSlide(configSerice?: OrganisationSettingsService): ProjectorElementBuildDeskriptor;
+    getSlide(meetingSettingsService?: MeetingSettingsService): ProjectorElementBuildDeskriptor;
 }

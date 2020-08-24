@@ -3,7 +3,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { CollectionMapperService } from 'app/core/core-services/collection-mapper.service';
 import { SlideData } from 'app/core/core-services/projector-data.service';
 import { isBaseIsAgendaItemContentObjectRepository } from 'app/core/repositories/base-is-agenda-item-content-object-repository';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { BaseSlideComponent } from 'app/slides/base-slide-component';
 import { CommonListOfSpeakersSlideData } from './common-list-of-speakers-slide-data';
 
@@ -12,8 +11,7 @@ import { CommonListOfSpeakersSlideData } from './common-list-of-speakers-slide-d
     templateUrl: './common-list-of-speakers-slide.component.html',
     styleUrls: ['./common-list-of-speakers-slide.component.scss']
 })
-export class CommonListOfSpeakersSlideComponent extends BaseSlideComponent<CommonListOfSpeakersSlideData>
-    implements OnInit {
+export class CommonListOfSpeakersSlideComponent extends BaseSlideComponent<CommonListOfSpeakersSlideData> {
     @Input()
     public set data(value: SlideData<CommonListOfSpeakersSlideData>) {
         // In the case of projected references without ListOfSpeakers Slide
@@ -29,26 +27,8 @@ export class CommonListOfSpeakersSlideComponent extends BaseSlideComponent<Commo
 
     private _data: SlideData<CommonListOfSpeakersSlideData>;
 
-    /**
-     * Boolean, whether the amount of speakers should be shown.
-     */
-    public hideAmountOfSpeakers: boolean;
-
-    public constructor(
-        private collectionMapperService: CollectionMapperService,
-        private organisationSettingsService: OrganisationSettingsService
-    ) {
+    public constructor(private collectionMapperService: CollectionMapperService) {
         super();
-    }
-
-    /**
-     * OnInit-function.
-     * Load the config for `agenda_hide_amount_of_speakers`.
-     */
-    public ngOnInit(): void {
-        this.organisationSettingsService
-            .get<boolean>('agenda_hide_amount_of_speakers')
-            .subscribe(enabled => (this.hideAmountOfSpeakers = enabled));
     }
 
     public getTitle(): string {

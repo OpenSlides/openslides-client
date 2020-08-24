@@ -17,7 +17,7 @@ import {
     OsFilterOption,
     OsFilterOptions
 } from 'app/core/ui-services/base-filter-list.service';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { Restriction } from 'app/shared/models/motions/motion-state';
 import { AmendmentType } from '../motions.constants';
 import { ViewMotion } from '../models/view-motion';
@@ -165,7 +165,7 @@ export class MotionFilterListService extends BaseFilterListService<ViewMotion> {
         private workflowRepo: MotionWorkflowRepositoryService,
         private translate: TranslateService,
         private operator: OperatorService,
-        private config: OrganisationSettingsService
+        private meetingSettingsService: MeetingSettingsService
     ) {
         super(store, historyService);
         this.getWorkflowConfig();
@@ -203,21 +203,21 @@ export class MotionFilterListService extends BaseFilterListService<ViewMotion> {
      * Listen to changes for the 'motions_amendments_main_table' config value
      */
     private getShowAmendmentConfig(): void {
-        this.config.get<boolean>('motions_amendments_main_table').subscribe(show => {
+        this.meetingSettingsService.get('motions_amendments_in_main_list').subscribe(show => {
             this.showAmendmentsInMainTable = show;
         });
     }
 
     private getWorkflowConfig(): void {
-        this.config.get<string>('motions_statute_amendments_workflow').subscribe(id => {
+        this.meetingSettingsService.get('motions_default_statute_amendment_workflow_id').subscribe(id => {
             this.enabledWorkflows.statute = +id;
         });
 
-        this.config.get<string>('motions_workflow').subscribe(id => {
+        this.meetingSettingsService.get('motions_default_workflow_id').subscribe(id => {
             this.enabledWorkflows.motion = +id;
         });
 
-        this.config.get<boolean>('motions_statutes_enabled').subscribe(bool => {
+        this.meetingSettingsService.get('motions_statutes_enabled').subscribe(bool => {
             this.enabledWorkflows.statuteEnabled = bool;
         });
     }

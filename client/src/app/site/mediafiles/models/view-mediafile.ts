@@ -51,7 +51,6 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
         const type = this.is_directory ? 'directory' : this.mimetype;
         const properties = [
             { key: 'Title', value: this.getTitle() },
-            { key: 'Path', value: this.path },
             { key: 'Type', value: type },
             { key: 'Timestamp', value: this.timestamp },
             { key: 'Size', value: this.filesize ? this.filesize : '0' }
@@ -63,12 +62,8 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
         };
     }
 
-    public get url(): string {
-        return this.mediafile.url;
-    }
-
     public getDetailStateURL(): string {
-        return this.is_directory ? ('/mediafiles/files/' + this.path).slice(0, -1) : this.url;
+        return this.url;
     }
 
     public getSlide(): ProjectorElementBuildDeskriptor {

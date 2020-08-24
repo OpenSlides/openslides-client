@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
 
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { ViewUser } from '../models/view-user';
 
 /**
@@ -23,12 +23,9 @@ export class UserPdfService {
      * Constructor
      *
      * @param translate handle translations
-     * @param organisationSettingsService Read config variables
+     * @param meetingSettingsService Read settings
      */
-    public constructor(
-        private translate: TranslateService,
-        private organisationSettingsService: OrganisationSettingsService
-    ) {}
+    public constructor(private translate: TranslateService, private meetingSettingsService: MeetingSettingsService) {}
 
     /**
      * Converts a user to PdfMake doc definition, containing access information
@@ -95,7 +92,7 @@ export class UserPdfService {
                 style: 'userDataTopic'
             },
             {
-                text: this.organisationSettingsService.instant<string>('users_pdf_wlan_ssid') || '-',
+                text: this.meetingSettingsService.instant('users_pdf_wlan_ssid') || '-',
                 style: 'userDataValue'
             },
             {
@@ -103,7 +100,7 @@ export class UserPdfService {
                 style: 'userDataTopic'
             },
             {
-                text: this.organisationSettingsService.instant<string>('users_pdf_wlan_password') || '-',
+                text: this.meetingSettingsService.instant('users_pdf_wlan_password') || '-',
                 style: 'userDataValue'
             },
             {
@@ -111,7 +108,7 @@ export class UserPdfService {
                 style: 'userDataTopic'
             },
             {
-                text: this.organisationSettingsService.instant<string>('users_pdf_wlan_encryption') || '-',
+                text: this.meetingSettingsService.instant('users_pdf_wlan_encryption') || '-',
                 style: 'userDataValue'
             },
             {
@@ -119,16 +116,16 @@ export class UserPdfService {
             }
         ];
         if (
-            this.organisationSettingsService.instant<string>('users_pdf_wlan_ssid') &&
-            this.organisationSettingsService.instant<string>('users_pdf_wlan_encryption')
+            this.meetingSettingsService.instant('users_pdf_wlan_ssid') &&
+            this.meetingSettingsService.instant('users_pdf_wlan_encryption')
         ) {
             const wifiQrCode =
                 'WIFI:S:' +
-                this.organisationSettingsService.instant<string>('users_pdf_wlan_ssid') +
+                this.meetingSettingsService.instant('users_pdf_wlan_ssid') +
                 ';T:' +
-                this.organisationSettingsService.instant<string>('users_pdf_wlan_encryption') +
+                this.meetingSettingsService.instant('users_pdf_wlan_encryption') +
                 ';P:' +
-                this.organisationSettingsService.instant<string>('users_pdf_wlan_password') +
+                this.meetingSettingsService.instant('users_pdf_wlan_password') +
                 ';;';
             wifiColumn.push(
                 {
@@ -179,8 +176,8 @@ export class UserPdfService {
                 style: 'userDataTopic'
             },
             {
-                text: this.organisationSettingsService.instant<string>('users_pdf_url') || '-',
-                link: this.organisationSettingsService.instant<string>('users_pdf_url'),
+                text: this.meetingSettingsService.instant('users_pdf_url') || '-',
+                link: this.meetingSettingsService.instant('users_pdf_url'),
                 style: 'userDataValue'
             },
             {
@@ -188,10 +185,10 @@ export class UserPdfService {
             }
         ];
         // url qr code
-        if (this.organisationSettingsService.instant<string>('users_pdf_url')) {
+        if (this.meetingSettingsService.instant('users_pdf_url')) {
             columnOpenSlides.push(
                 {
-                    qr: this.organisationSettingsService.instant<string>('users_pdf_url'),
+                    qr: this.meetingSettingsService.instant('users_pdf_url'),
                     fit: 120,
                     margin: [0, 0, 0, 8]
                 },
@@ -210,8 +207,8 @@ export class UserPdfService {
      * @returns pdfMake definitions
      */
     private createWelcomeText(): object {
-        const users_pdf_welcometitle = this.organisationSettingsService.instant<string>('users_pdf_welcometitle');
-        const users_pdf_welcometext = this.organisationSettingsService.instant<string>('users_pdf_welcometext');
+        const users_pdf_welcometitle = this.meetingSettingsService.instant('users_pdf_welcometitle');
+        const users_pdf_welcometext = this.meetingSettingsService.instant('users_pdf_welcometext');
         return [
             {
                 text: this.translate.instant(users_pdf_welcometitle),

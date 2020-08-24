@@ -12,7 +12,7 @@ export interface CustomTranslation {
 export type CustomTranslations = CustomTranslation[];
 
 /**
- * Custom translate parser. Intercepts and use custom translations from the configservice.
+ * Custom translate parser. Intercepts and use custom translations from the organisation settings service.
  */
 @Injectable()
 export class OpenSlidesTranslateParser extends TranslateDefaultParser {
@@ -22,15 +22,15 @@ export class OpenSlidesTranslateParser extends TranslateDefaultParser {
     private customTranslations: CustomTranslations = [];
 
     /**
-     * Subscribes to the config services and watches for updated custom translations.
-     *
-     * @param config
-     * @param translateStore
+     * Subscribes to the custom translations and watches for updated custom translations.
      */
-    public constructor(config: OrganisationSettingsService, private translateStore: TranslateStore) {
+    public constructor(
+        organisationSettingsService: OrganisationSettingsService,
+        private translateStore: TranslateStore
+    ) {
         super();
 
-        config.get<CustomTranslations>('translations').subscribe(ct => {
+        organisationSettingsService.get<CustomTranslations>('translations').subscribe(ct => {
             if (!ct) {
                 ct = [];
             }

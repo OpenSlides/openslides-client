@@ -21,7 +21,8 @@ interface IWorkflowRelations {
     first_state: ViewMotionState;
     motions: ViewMotion[];
     default_workflow_meeting?: ViewMeeting;
-    default_statute_amendments_meeting?: ViewMeeting;
+    default_amendment_workflow_meeting?: ViewMeeting;
+    default_statute_amendment_workflow_meeting?: ViewMeeting;
     meeting: ViewMeeting;
 }
 export interface ViewMotionWorkflow extends MotionWorkflow, IWorkflowRelations {}
