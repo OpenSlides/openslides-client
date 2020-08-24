@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { AssignmentPollRepositoryService } from 'app/core/repositories/assignments/assignment-poll-repository.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import {
     AssignmentPoll,
@@ -44,30 +45,33 @@ export class AssignmentPollService extends PollService {
 
     private sortByVote: boolean;
 
-    /**
-     * Constructor. Subscribes to the configuration values needed
-     * @param config ConfigService
-     */
     public constructor(
-        constants: OrganisationSettingsService,
+        organisationSettingsService: OrganisationSettingsService,
         pollKeyVerbose: PollKeyVerbosePipe,
         parsePollNumber: ParsePollNumberPipe,
         protected translate: TranslateService,
-        private pollRepo: AssignmentPollRepositoryService
+        private pollRepo: AssignmentPollRepositoryService,
+        private meetingSettingsService: MeetingSettingsService
     ) {
-        super(constants, translate, pollKeyVerbose, parsePollNumber);
-        /*config
-            .get<AssignmentPollPercentBase>('assignment_poll_default_100_percent_base')
+        super(organisationSettingsService, translate, pollKeyVerbose, parsePollNumber);
+        this.meetingSettingsService
+            .get('assignment_poll_default_100_percent_base')
             .subscribe(base => (this.defaultPercentBase = base));
-        config
-            .get<MajorityMethod>('assignment_poll_default_majority_method')
+        this.meetingSettingsService
+            .get('assignment_poll_default_majority_method')
             .subscribe(method => (this.defaultMajorityMethod = method));
-        config.get<number[]>('assignment_poll_default_groups').subscribe(ids => (this.defaultGroupIds = ids));
-        config
-            .get<AssignmentPollMethod>('assignment_poll_method')
+        this.meetingSettingsService
+            .get('assignment_poll_default_group_ids')
+            .subscribe(ids => (this.defaultGroupIds = ids));
+        this.meetingSettingsService
+            .get('assignment_poll_default_method')
             .subscribe(method => (this.defaultPollMethod = method));
-        config.get<PollType>('assignment_poll_default_type').subscribe(type => (this.defaultPollType = type));
-        config.get<boolean>('assignment_poll_sort_poll_result_by_votes').subscribe(sort => (this.sortByVote = sort));*/
+        this.meetingSettingsService
+            .get('assignment_poll_default_type')
+            .subscribe(type => (this.defaultPollType = type));
+        this.meetingSettingsService
+            .get('assignment_poll_sort_poll_result_by_votes')
+            .subscribe(sort => (this.sortByVote = sort));
     }
 
     public getDefaultPollData(contextId?: number): AssignmentPoll {

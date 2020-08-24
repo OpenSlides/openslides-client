@@ -15,9 +15,9 @@
 <mat-card class="spacer-bottom-60" [ngClass]="isEditing ? 'os-form-card' : 'os-card'">
     <ng-container *ngIf="!isEditing">
         <div class="app-content">
-            <h1>{{ startContent.general_event_welcome_title | translate }}</h1>
+            <h1>{{ startContent.welcome_title | translate }}</h1>
 
-            <div [innerHTML]="startContent.general_event_welcome_text | trust: 'html'"></div>
+            <div [innerHTML]="startContent.welcome_text | trust: 'html'"></div>
         </div>
         <button mat-button (click)="apiAuthRequestWithTokenCookie()">API Hello World</button>
         <button mat-button (click)="apiAuthRequestWithCookie()">API Request Only Cookie</button>
@@ -30,13 +30,13 @@
             <mat-form-field>
                 <input
                     matInput
-                    formControlName="general_event_welcome_title"
+                    formControlName="welcome_title"
                     required
                     placeholder="{{ 'Front page title' | translate }}"
                 />
                 <mat-error>{{ 'The title is required' | translate }}</mat-error>
             </mat-form-field>
-            <editor formControlName="general_event_welcome_text" [init]="tinyMceSettings"></editor>
+            <editor formControlName="welcome_text" [init]="tinyMceSettings"></editor>
         </form>
     </ng-container>
 </mat-card>

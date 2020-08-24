@@ -12,11 +12,11 @@
         </ngx-file-drop>
     </div>
 
-    <!-- Directory selector, if no external directory is provided -->
-    <div *ngIf="showDirectorySelector" [formGroup]="directorySelectionForm">
+    <!-- Directory selector-->
+    <div [formGroup]="directorySelectionForm">
         <mat-form-field>
             <os-search-value-selector
-                formControlName="parent_id"
+                formControlName="directoryId"
                 [multiple]="false"
                 [includeNone]="true"
                 [noneTitle]="'Base folder'"
@@ -29,8 +29,8 @@
     <div>
         <span> {{ 'Upload to:' | translate }}</span>
         &nbsp;
-        <i *ngIf="selectedDirectoryId === null">{{ 'Base folder' | translate }}</i>
-        <i *ngIf="selectedDirectoryId !== null">{{ getDirectory(selectedDirectoryId).title }}</i>
+        <i *ngIf="!directoryId">{{ 'Base folder' | translate }}</i>
+        <i *ngIf="directoryId">{{ getDirectoryTitle() }}</i>
     </div>
 
     <div class="table-container" *ngIf="uploadList.data.length > 0">
@@ -52,7 +52,7 @@
                 <th mat-header-cell *matHeaderCellDef>
                     <span>{{ 'File name' | translate }}</span>
                 </th>
-                <td mat-cell *matCellDef="let file">{{ file.filename }}</td>
+                <td mat-cell *matCellDef="let file">{{ file.mediafile.name }}</td>
             </ng-container>
 
             <!-- File information -->
@@ -82,7 +82,7 @@
                 <td mat-cell *matCellDef="let file" [formGroup]="file.form">
                     <mat-form-field>
                         <os-search-value-selector
-                            formControlName="access_groups_id"
+                            formControlName="access_group_ids"
                             [multiple]="true"
                             placeholder="{{ 'Access groups' | translate }}"
                             [inputListValues]="groupsBehaviorSubject"

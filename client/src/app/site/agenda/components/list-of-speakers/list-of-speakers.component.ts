@@ -7,6 +7,8 @@ import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { DurationService } from 'app/core/ui-services/duration.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
@@ -86,6 +88,7 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
         private promptService: PromptService,
         private currentListOfSpeakersService: CurrentListOfSpeakersService,
         private currentListOfSpeakersSlideService: CurrentListOfSpeakersSlideService,
+        private meetingSettingsService: MeetingSettingsService,
         private viewport: ViewportService,
         private collectionMapper: CollectionMapperService
     ) {
@@ -110,7 +113,62 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
             this.setListOfSpeakersById(id);
         }
 
-        this.subscriptions.push(this.viewport.isMobileSubject.subscribe(isMobile => (this.isMobile = isMobile)));
+        this.subscriptions.push(
+            // Observe the user list
+            this.userRepository.getViewModelListObservable().subscribe(users => {
+                this.users.next(users);
+                this.filterUsers();
+                this.cd.markForCheck();
+            }),
+            // ovserve changes to the add-speaker form
+            this.addSpeakerForm.valueChanges.subscribe(formResult => {
+                // resetting a form triggers a form.next(null) - check if user_id
+                if (formResult && formResult.user_id) {
+                    this.addNewSpeaker(formResult.user_id);
+                }
+            }),
+            // observe changes to the viewport
+            this.viewport.isMobileSubject.subscribe(isMobile => this.checkSortMode(isMobile)),
+            this.meetingSettingsService.get('list_of_speakers_present_users_only').subscribe(() => {
+                this.filterUsers();
+            }),
+            this.meetingSettingsService.get('list_of_speakers_show_first_contribution').subscribe(show => {
+                this.showFistContributionHint = show;
+            })
+        );
+    }
+
+    public opCanManage(): boolean {
+        return this.operator.hasPerms(Permission.agendaCanManageListOfSpeakers);
+    }
+
+    /**
+     * Shows the current list of speakers (CLOS) of a given projector.
+     */
+    private updateClosProjector(): void {
+        if (!this.projectors.length) {
+            return;
+        }
+        throw new Error('TODO'); // Get the reference projector from the active meeting
+        /*const referenceProjector = this.projectors[0].referenceProjector;
+        if (!referenceProjector || referenceProjector.id === this.closReferenceProjectorId) {
+            return;
+        }
+        this.closReferenceProjectorId = referenceProjector.id;
+
+        if (this.projectorSubscription) {
+            this.projectorSubscription.unsubscribe();
+            this.viewListOfSpeakers = null;
+        }
+
+        this.projectorSubscription = this.currentListOfSpeakersService
+            .getListOfSpeakersObservable(referenceProjector)
+            .subscribe(listOfSpeakers => {
+                if (listOfSpeakers) {
+                    this.setListOfSpeakers(listOfSpeakers);
+                }
+            });
+        this.subscriptions.push(this.projectorSubscription);*/
     }
 
     /**
@@ -203,5 +261,80 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
         if (await this.promptService.open(title)) {
             this.listOfSpeakersRepo.deleteAllSpeakers(this.viewListOfSpeakers);
         }
+    }
+
+    /**
+     * returns a locale-specific version of the starting time for the given speaker item
+     *
+     * @param speaker
+     * @returns a time string using the current language setting of the client
+     */
+    public startTimeToString(speaker: ViewSpeaker): string {
+        return new Date(speaker.begin_time).toLocaleString(this.translate.currentLang);
+    }
+
+    /**
+     * get the duration of a speech
+     *
+     * @param speaker
+     * @returns string representation of the duration in `[MM]M:SS minutes` format
+     */
+    public durationString(speaker: ViewSpeaker): string {
+        const duration = Math.floor(
+            (new Date(speaker.end_time).valueOf() - new Date(speaker.begin_time).valueOf()) / 1000
+        );
+        return `${this.durationService.durationToString(duration, 'm')}`;
+    }
+
+    /**
+     * Imports a new user by the given username.
+     *
+     * @param username The name of the new user.
+     */
+    public async onCreateUser(username: string): Promise<void> {
+        const newUser = await this.userRepository.createFromString(username);
+        this.addNewSpeaker(newUser.id);
+    }
+
+    /**
+     * Triggers an update of the filter for the list of available potential speakers
+     * (triggered on an update of users or config)
+     */
+    private filterUsers(): void {
+        const presentUsersOnly = this.meetingSettingsService.instant('list_of_speakers_present_users_only');
+        const users = presentUsersOnly
+            ? this.users.getValue().filter(u => u.isPresentInMeeting())
+            : this.users.getValue();
+        if (!this.speakers || !this.speakers.length) {
+            this.filteredUsers.next(users);
+        } else {
+            this.filteredUsers.next(users.filter(u => !this.speakers.some(speaker => speaker.user_id === u.id)));
+        }
+    }
+
+    /**
+     * send the current order of the sorting list to the server
+     *
+     * @param sortedSpeakerList The list to save.
+     */
+    private onSaveSorting(sortedSpeakerList: Selectable[]): void {
+        if (this.isSortMode) {
+            this.listOfSpeakersRepo
+                .sortSpeakers(
+                    this.viewListOfSpeakers,
+                    sortedSpeakerList.map(el => el.id)
+                )
+                .catch(this.raiseError);
+        }
+    }
+
+    /**
+     * Check, that the sorting mode is immediately active, if not in mobile-view.
+     *
+     * @param isMobile If currently a mobile device is used.
+     */
+    private checkSortMode(isMobile: boolean): void {
+        this.isMobile = isMobile;
+        this.isSortMode = !isMobile;
     }
 }

@@ -2,7 +2,7 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 import { Id } from 'app/core/definitions/key-types';
 import { DiffLinesInParagraph } from 'app/core/ui-services/diff.service';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { SearchProperty, SearchRepresentation } from 'app/core/ui-services/search.service';
 import { HasReferencedMotionInRecommendationExtensionIds, Motion } from 'app/shared/models/motions/motion';
 import { HasAgendaItem } from 'app/site/agenda/models/view-agenda-item';
@@ -312,7 +312,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         return this.amendment_paragraphs && this.amendment_paragraphs.length > 0;
     }
 
-    public getSlide(organisationSettingsService: OrganisationSettingsService): ProjectorElementBuildDeskriptor {
+    public getSlide(meetingSettingsService: MeetingSettingsService): ProjectorElementBuildDeskriptor {
         const slideOptions = [];
         if (
             (this.change_recommendations && this.change_recommendations.length) ||
@@ -321,7 +321,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
             slideOptions.push({
                 key: 'mode',
                 displayName: _('Which version?'),
-                default: organisationSettingsService.instant('motions_recommendation_text_mode'),
+                default: meetingSettingsService.instant('motions_recommendation_text_mode'),
                 choices: [
                     { value: 'original', displayName: 'Original version' },
                     { value: 'changed', displayName: 'Changed version' },

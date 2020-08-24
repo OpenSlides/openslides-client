@@ -9,6 +9,7 @@ import { AssignmentPollRepositoryService } from 'app/core/repositories/assignmen
 import { AssignmentVoteRepositoryService } from 'app/core/repositories/assignments/assignment-vote-repository.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { VoteValue } from 'app/shared/models/poll/base-vote';
 import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
@@ -34,7 +35,7 @@ export class AssignmentPollDetailComponent extends BasePollDetailComponent<
 
     public candidatesLabels: string[] = [];
 
-    public isVoteWeightActive: boolean;
+    public voteWeightEnabled: boolean;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -43,18 +44,23 @@ export class AssignmentPollDetailComponent extends BasePollDetailComponent<
         groupRepo: GroupRepositoryService,
         prompt: PromptService,
         pollDialog: AssignmentPollDialogService,
-        protected pollService: AssignmentPollService,
+        pollService: AssignmentPollService,
         votesRepo: AssignmentVoteRepositoryService,
+        meetingSettingsService: MeetingSettingsService,
         private operator: OperatorService,
         private router: Router
     ) {
-        super(componentServiceCollector, repo, route, groupRepo, prompt, pollDialog, pollService, votesRepo);
-        // TODO: Get this from the active meeting.
-        /*configService
-            .get<boolean>('users_activate_vote_weight')
-            .subscribe(active => (this.isVoteWeightActive = active));
-        */
-        console.warn('TODO: assignment-poll-detail.component');
+        super(
+            componentServiceCollector,
+            repo,
+            route,
+            groupRepo,
+            prompt,
+            pollDialog,
+            pollService,
+            votesRepo,
+            meetingSettingsService
+        );
     }
 
     protected createVotesData(): void {

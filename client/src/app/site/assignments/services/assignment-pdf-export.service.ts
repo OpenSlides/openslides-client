@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { PdfDocumentService, PdfError } from 'app/core/pdf-services/pdf-document.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { AssignmentPdfService } from './assignment-pdf.service';
 import { ViewAssignment } from '../models/view-assignment';
 
@@ -23,7 +24,8 @@ export class AssignmentPdfExportService {
     public constructor(
         private translate: TranslateService,
         private assignmentPdfService: AssignmentPdfService,
-        private pdfDocumentService: PdfDocumentService
+        private pdfDocumentService: PdfDocumentService,
+        private meetingSettingsService: MeetingSettingsService
     ) {}
 
     /**
@@ -82,8 +84,10 @@ export class AssignmentPdfExportService {
 
         if (assignments.length > 1) {
             doc.push(
-                this.pdfDocumentService.createTitle('assignments_pdf_title'),
-                this.pdfDocumentService.createPreamble('assignments_pdf_preamble'),
+                this.pdfDocumentService.createTitle(this.meetingSettingsService.instant('assignments_export_title')),
+                this.pdfDocumentService.createPreamble(
+                    this.meetingSettingsService.instant('assignments_export_preamble')
+                ),
                 this.createToc(assignments)
             );
         }

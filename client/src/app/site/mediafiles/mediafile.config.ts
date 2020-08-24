@@ -17,7 +17,7 @@ export const MediafileAppConfig: AppConfig = {
     ],
     mainMenuEntries: [
         {
-            route: '/mediafiles/files',
+            route: '/mediafiles',
             displayName: 'Files',
             icon: 'attach_file',
             weight: 600,

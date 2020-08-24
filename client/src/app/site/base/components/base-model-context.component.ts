@@ -22,7 +22,6 @@ export abstract class BaseModelContextComponent extends BaseComponent implements
 
     public ngOnInit(): void {
         const simplifiedModelRequest = this.getModelRequest();
-        console.log(simplifiedModelRequest);
         if (simplifiedModelRequest) {
             this.requestModels(simplifiedModelRequest);
         }

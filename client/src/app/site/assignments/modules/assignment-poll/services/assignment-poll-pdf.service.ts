@@ -3,11 +3,12 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
-import { AbstractPollData, BallotCountChoices, PollPdfService } from 'app/core/pdf-services/base-poll-pdf-service';
+import { AbstractPollData, PollPdfService } from 'app/core/pdf-services/base-poll-pdf-service';
 import { PdfDocumentService } from 'app/core/pdf-services/pdf-document.service';
 import { AssignmentRepositoryService } from 'app/core/repositories/assignments/assignment-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { MediaManageService } from 'app/core/ui-services/media-manage.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { AssignmentPollMethod } from 'app/shared/models/assignments/assignment-poll';
 import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
 
@@ -24,29 +25,21 @@ import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-
     providedIn: 'root'
 })
 export class AssignmentPollPdfService extends PollPdfService {
-    /**
-     * Constructor. Subscribes to configuration values
-     *
-     * @param translate handle translations
-     * @param motionRepo get parent motions
-     * @param organisationSettingsService Read config variables
-     * @param userRepo User repository for counting amount of ballots needed
-     * @param pdfService the pdf document creation service
-     */
     public constructor(
-        organisationSettingsService: OrganisationSettingsService,
+        protected meetingSettingService: MeetingSettingsService,
         userRepo: UserRepositoryService,
         activeMeetingService: ActiveMeetingService,
+        mediaManageService: MediaManageService,
         private translate: TranslateService,
         private assignmentRepo: AssignmentRepositoryService,
         private pdfService: PdfDocumentService
     ) {
-        super(organisationSettingsService, userRepo, activeMeetingService);
-        this.organisationSettingsService
-            .get<number>('assignments_pdf_ballot_papers_number')
+        super(meetingSettingService, userRepo, activeMeetingService, mediaManageService);
+        this.meetingSettingService
+            .get('assignment_poll_ballot_paper_number')
             .subscribe(count => (this.ballotCustomCount = count));
-        this.organisationSettingsService
-            .get<BallotCountChoices>('assignments_pdf_ballot_papers_selection')
+        this.meetingSettingService
+            .get('assignment_poll_ballot_paper_selection')
             .subscribe(selection => (this.ballotCountSelection = selection));
     }
 
@@ -104,7 +97,7 @@ export class AssignmentPollPdfService extends PollPdfService {
         this.pdfService.downloadWithBallotPaper(
             this.getPages(rowsPerPage, { sheetend: sheetEnd, title: title, subtitle: subtitle, poll: poll }),
             fileName,
-            this.logo
+            this.logoUrl
         );
     }
 

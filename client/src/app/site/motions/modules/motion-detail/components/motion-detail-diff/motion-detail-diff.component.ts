@@ -6,7 +6,7 @@ import { MotionRepositoryService } from 'app/core/repositories/motions/motion-re
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DiffService, LineRange } from 'app/core/ui-services/diff.service';
 import { LineNumberedString, LinenumberingService } from 'app/core/ui-services/linenumbering.service';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from 'app/shared/models/motions/view-unified-change';
 import { mediumDialogSettings } from 'app/shared/utils/dialog-settings';
@@ -96,7 +96,7 @@ export class MotionDetailDiffComponent extends BaseComponent implements AfterVie
      * @param recoRepo
      * @param motionRepo
      * @param dialogService
-     * @param organisationSettingsService
+     * @param meetingSettingsService
      * @param el
      * @param promptService
      */
@@ -107,17 +107,13 @@ export class MotionDetailDiffComponent extends BaseComponent implements AfterVie
         private recoRepo: MotionChangeRecommendationRepositoryService,
         private motionRepo: MotionRepositoryService,
         private dialogService: MatDialog,
-        private organisationSettingsService: OrganisationSettingsService,
+        private meetingSettingsService: MeetingSettingsService,
         private el: ElementRef,
         private promptService: PromptService
     ) {
         super(componentServiceCollector);
-        this.organisationSettingsService
-            .get<number>('motions_line_length')
-            .subscribe(lineLength => (this.lineLength = lineLength));
-        this.organisationSettingsService
-            .get<string>('motions_preamble')
-            .subscribe(preamble => (this.preamble = preamble));
+        this.meetingSettingsService.get('motions_line_length').subscribe(lineLength => (this.lineLength = lineLength));
+        this.meetingSettingsService.get('motions_preamble').subscribe(preamble => (this.preamble = preamble));
     }
 
     /**

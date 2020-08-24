@@ -20,11 +20,11 @@ import { CollectionMapperService } from 'app/core/core-services/collection-mappe
 import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/motion-workflow-repository.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
+import { MeetingSettingsDefinitionProvider } from 'app/core/ui-services/meeting-settings-definition-provider.service';
 import { ParentErrorStateMatcher } from 'app/shared/parent-error-state-matcher';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewGroup } from 'app/site/users/models/view-group';
-import { SettingsItem } from '../../../../core/repositories/event-management/meeting-settings';
+import { SettingsItem } from '../../../../core/repositories/event-management/meeting-settings-definition';
 
 export interface SettingsFieldUpdate {
     key: string;
@@ -110,7 +110,7 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
         private formBuilder: FormBuilder,
         private cd: ChangeDetectorRef,
         private groupRepo: GroupRepositoryService,
-        public meetingSettingsService: MeetingSettingsService,
+        public meetingSettingsDefinitionProvider: MeetingSettingsDefinitionProvider,
         private mapper: CollectionMapperService
     ) {
         super(componentServiceCollector);
@@ -147,7 +147,7 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
             date: [''],
             time: ['']
         });
-        this.translatedValue = this.value ?? this.meetingSettingsService.getDefaultValue(this.setting);
+        this.translatedValue = this.value ?? this.meetingSettingsDefinitionProvider.getDefaultValue(this.setting);
         if (this.setting.type === 'string' || this.setting.type === 'markupText' || this.setting.type === 'text') {
             if (typeof this.value === 'string' && this.value !== '') {
                 this.translatedValue = this.translate.instant(this.value);
@@ -246,7 +246,7 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
      * Triggers a reset to the default value
      */
     public onResetButton(): void {
-        this.form.controls.value.setValue(this.meetingSettingsService.getDefaultValue(this.setting));
+        this.form.controls.value.setValue(this.meetingSettingsDefinitionProvider.getDefaultValue(this.setting));
     }
 
     /**

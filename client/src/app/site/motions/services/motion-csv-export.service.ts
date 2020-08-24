@@ -11,7 +11,7 @@ import {
     CsvExportService
 } from 'app/core/ui-services/csv-export.service';
 import { LinenumberingService } from 'app/core/ui-services/linenumbering.service';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { ViewUnifiedChange } from 'app/shared/models/motions/view-unified-change';
 import { reconvertChars } from 'app/shared/utils/reconvert-chars';
 import { stripHtmlTags } from 'app/shared/utils/strip-html-tags';
@@ -25,21 +25,10 @@ import { ViewMotion } from '../models/view-motion';
     providedIn: 'root'
 })
 export class MotionCsvExportService {
-    public numberOrTitle;
-    /**
-     * Does nothing.
-     *
-     * @param csvExport CsvExportService
-     * @param translate TranslateService
-     * @param organisationSettingsService ConfigService
-     * @param linenumberingService LinenumberingService
-     * @param changeRecoRepo ChangeRecommendationRepositoryService
-     * @param motionRepo MotionRepositoryService
-     */
     public constructor(
         private csvExport: CsvExportService,
         private translate: TranslateService,
-        private organisationSettingsService: OrganisationSettingsService,
+        private meetingSettingsService: MeetingSettingsService,
         private linenumberingService: LinenumberingService,
         private changeRecoRepo: MotionChangeRecommendationRepositoryService,
         private motionRepo: MotionRepositoryService,
@@ -55,7 +44,7 @@ export class MotionCsvExportService {
      */
     private createText(motion: ViewMotion, crMode: ChangeRecoMode): string {
         // get the line length from the config
-        const lineLength = this.organisationSettingsService.instant<number>('motions_line_length');
+        const lineLength = this.meetingSettingsService.instant('motions_line_length');
 
         // lead motion or normal amendments
         // TODO: Consider title change recommendation
@@ -102,7 +91,7 @@ export class MotionCsvExportService {
         crMode?: ChangeRecoMode
     ): void {
         if (!crMode) {
-            crMode = this.organisationSettingsService.instant('motions_recommendation_text_mode');
+            crMode = this.meetingSettingsService.instant('motions_recommendation_text_mode');
         }
 
         const properties = sortMotionPropertyList(['number', 'title'].concat(contentToExport));

@@ -74,7 +74,7 @@
                                 <div *ngIf="vote.user.getLevelAndNumber()">
                                     {{ vote.user.getLevelAndNumber() }}
                                 </div>
-                                <div *ngIf="isVoteWeightActive">
+                                <div *ngIf="voteWeightEnabled">
                                     {{ 'Vote weight' | translate }}: {{ vote.user.vote_weight }}
                                 </div>
                             </div>

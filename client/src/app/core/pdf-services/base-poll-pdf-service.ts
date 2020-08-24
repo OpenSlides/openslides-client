@@ -1,17 +1,9 @@
 import { ActiveMeetingService } from '../core-services/active-meeting.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { BallotPaperSelection } from 'app/shared/models/event-management/meeting';
 import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
-
-/**
- * Server side ballot choice definitions.
- * Server-defined methods to determine the number of ballots to print
- * Options are:
- * - NUMBER_OF_DELEGATES Amount of users belonging to the predefined 'delegates' group (group id 2)
- * - NUMBER_OF_ALL_PARTICIPANTS The amount of all registered users
- * - CUSTOM_NUMBER a given number of ballots (see {@link ballotCustomCount})
- */
-export type BallotCountChoices = 'NUMBER_OF_DELEGATES' | 'NUMBER_OF_ALL_PARTICIPANTS' | 'CUSTOM_NUMBER';
+import { MediaManageService } from '../ui-services/media-manage.service';
+import { MeetingSettingsService } from '../ui-services/meeting-settings.service';
 
 /**
  * Workaround data definitions. The implementation for the different model's classes might have different needs,
@@ -29,9 +21,9 @@ export abstract class PollPdfService {
     /**
      * Definition of method to decide which amount of ballots to print. The implementations
      * are expected to fetch this information from the configuration service
-     * @see BallotCountChoices
+     * @see BallotPaperSelection
      */
-    protected ballotCountSelection: BallotCountChoices;
+    protected ballotCountSelection: BallotPaperSelection;
 
     /**
      * An arbitrary number of ballots to print, if {@link ballotCountSelection} is set
@@ -40,34 +32,23 @@ export abstract class PollPdfService {
     protected ballotCustomCount: number;
 
     /**
-     * The event name (as set in config `general_event_name`)
+     * The event name
      */
     protected eventName: string;
 
     /**
-     * The url of the logo to be printed (as set in config `logo_pdf_ballot_paper`)
+     * The url of the logo to be printed
      */
-    protected logo: string;
+    protected logoUrl: string;
 
-    /**
-     * Contructor. Subscribes to the logo path and event name
-     * @param organisationSettingsService Configzuration
-     * @param userRepo user Repository for determining the number of ballots
-     */
     public constructor(
-        protected organisationSettingsService: OrganisationSettingsService,
+        protected meetingSettingsService: MeetingSettingsService,
         protected userRepo: UserRepositoryService,
-        protected activeMeetingService: ActiveMeetingService
+        protected activeMeetingService: ActiveMeetingService,
+        protected mediaManageService: MediaManageService
     ) {
-        this.organisationSettingsService.get<string>('general_event_name').subscribe(name => (this.eventName = name));
-        this.organisationSettingsService.get<{ path?: string }>('logo_pdf_ballot_paper').subscribe(url => {
-            if (url && url.path) {
-                if (url.path.indexOf('/') === 0) {
-                    url.path = url.path.substr(1); // remove prepending slash
-                }
-                this.logo = url.path;
-            }
-        });
+        this.meetingSettingsService.get('name').subscribe(name => (this.eventName = name));
+        this.mediaManageService.getLogoUrlObservable('pdf_ballot_paper').subscribe(url => (this.logoUrl = url));
     }
 
     /**
@@ -209,9 +190,9 @@ export abstract class PollPdfService {
             width: '60%'
         });
 
-        if (this.logo) {
+        if (this.logoUrl) {
             columns.push({
-                image: this.logo,
+                image: this.logoUrl,
                 fit: [90, 25],
                 alignment: 'right',
                 width: '40%'

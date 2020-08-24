@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
+import { MeetingSettingsDefinitionProvider } from 'app/core/ui-services/meeting-settings-definition-provider.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { SettingsGroup } from '../../../../core/repositories/event-management/meeting-settings';
+import { SettingsGroup } from '../../../../core/repositories/event-management/meeting-settings-definition';
 
 /**
  * List view for the global settings
@@ -20,11 +20,11 @@ export class MeetingSettingsOverviewComponent extends BaseComponent {
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private promptDialog: PromptService,
-        private meetingSettingsService: MeetingSettingsService
+        private meetingSettingsDefinitionProvider: MeetingSettingsDefinitionProvider
     ) {
         super(componentServiceCollector);
 
-        this.groups = this.meetingSettingsService.getSettings();
+        this.groups = this.meetingSettingsDefinitionProvider.getSettings();
     }
 
     /**

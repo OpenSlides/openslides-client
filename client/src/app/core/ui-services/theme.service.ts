@@ -15,19 +15,16 @@ export class ThemeService {
     public static DEFAULT_THEME = 'openslides-default-light-theme';
 
     /**
-     * Constant path of the logo with dark colors for bright themes.
-     */
-    public static STANDARD_LOGO = '/assets/img/openslides-logo.svg';
-
-    /**
-     * Constant path of the logo with white colors for dark themes.
-     */
-    public static STANDARD_LOGO_DARK_THEME = '/assets/img/openslides-logo-dark.svg';
-
-    /**
      * Holds the current theme as member.
      */
     private currentTheme: string;
+
+    public get isDarkTheme(): boolean {
+        if (!this.currentTheme) {
+            return false;
+        }
+        return this.currentTheme.includes('dark');
+    }
 
     /**
      * Here it will subscribe to the observer from login data service. The stheme is part of
@@ -61,22 +58,5 @@ export class ThemeService {
             classList.remove(...toRemove); // Remove all old themes.
         }
         classList.add(theme, ThemeService.DEFAULT_THEME); // Add the new theme.
-    }
-
-    /**
-     * Returns the logo relative to the used theme.
-     *
-     * @param shouldDefault If this method should return the default logo.
-     *
-     * @returns the path to the logo.
-     */
-    public getLogoRelativeToTheme(shouldDefault?: boolean): string {
-        if (this.currentTheme) {
-            return this.currentTheme.includes('dark') && !shouldDefault
-                ? ThemeService.STANDARD_LOGO_DARK_THEME
-                : ThemeService.STANDARD_LOGO;
-        } else {
-            return null;
-        }
     }
 }

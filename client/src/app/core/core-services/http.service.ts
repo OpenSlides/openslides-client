@@ -8,6 +8,7 @@ import { HistoryService } from './history.service';
 import { HTTPMethod } from '../definitions/http-methods';
 import { HttpOptions } from '../definitions/http-options';
 import { formatQueryParams, QueryParams } from '../definitions/query-params';
+import { toBase64 } from '../to-base64';
 
 export interface ErrorDetailResponse {
     detail: string | string[];
@@ -256,18 +257,8 @@ export class HttpService {
      * @returns a promise with a base64 string
      */
     public async downloadAsBase64(url: string): Promise<string> {
-        return new Promise<string>(async (resolve, reject) => {
-            const headers = new HttpHeaders();
-            const file = await this.get<Blob>(url, {}, {}, headers, 'blob');
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => {
-                const resultStr: string = reader.result as string;
-                resolve(resultStr.split(',')[1]);
-            };
-            reader.onerror = error => {
-                reject(error);
-            };
-        });
+        const headers = new HttpHeaders();
+        const file = await this.get<Blob>(url, {}, {}, headers, 'blob');
+        return await toBase64(file);
     }
 }

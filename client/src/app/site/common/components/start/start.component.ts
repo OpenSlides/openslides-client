@@ -8,15 +8,15 @@ import { HttpService } from 'app/core/core-services/http.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
 
 /**
  * Interface describes the keys for the fields at start-component.
  */
 interface IStartContent {
-    general_event_welcome_title: string;
-    general_event_welcome_text: string;
+    welcome_title: string;
+    welcome_text: string;
 }
 
 /**
@@ -42,20 +42,13 @@ export class StartComponent extends BaseComponent implements OnInit {
      * Holding the values for the content.
      */
     public startContent: IStartContent = {
-        general_event_welcome_title: '',
-        general_event_welcome_text: ''
+        welcome_title: '',
+        welcome_text: ''
     };
 
-    /**
-     * Constructor of the StartComponent
-     *
-     * @param titleService the title serve
-     * @param translate to translation module
-     * @param organisationSettingsService read out config values
-     */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        private organisationSettingsService: OrganisationSettingsService,
+        private meetingSettingsService: MeetingSettingsService,
         private formBuilder: FormBuilder,
         private operator: OperatorService,
         private http: HttpService,
@@ -63,8 +56,8 @@ export class StartComponent extends BaseComponent implements OnInit {
     ) {
         super(componentServiceCollector);
         this.startForm = this.formBuilder.group({
-            general_event_welcome_title: ['', Validators.required],
-            general_event_welcome_text: ''
+            welcome_title: ['', Validators.required],
+            welcome_text: ''
         });
     }
 
@@ -77,13 +70,13 @@ export class StartComponent extends BaseComponent implements OnInit {
         super.setTitle('Home');
 
         // set the welcome title
-        this.organisationSettingsService
-            .get<string>('general_event_welcome_title')
-            .subscribe(welcomeTitle => (this.startContent.general_event_welcome_title = welcomeTitle));
+        this.meetingSettingsService
+            .get('welcome_title')
+            .subscribe(welcomeTitle => (this.startContent.welcome_title = welcomeTitle));
 
         // set the welcome text
-        this.organisationSettingsService.get<string>('general_event_welcome_text').subscribe(welcomeText => {
-            this.startContent.general_event_welcome_text = this.translate.instant(welcomeText);
+        this.meetingSettingsService.get('welcome_text').subscribe(welcomeText => {
+            this.startContent.welcome_text = this.translate.instant(welcomeText);
         });
     }
 

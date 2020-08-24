@@ -1,12 +1,19 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 import { BehaviorSubject } from 'rxjs';
 
+import { ModelSubscription } from 'app/core/core-services/autoupdate.service';
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
+import { ModelRequestService } from 'app/core/core-services/model-request.service';
 import { MediafileRepositoryService } from 'app/core/repositories/mediafiles/mediafile-repository.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
+import { toBase64 } from 'app/core/to-base64';
+import { CreateMediafile } from 'app/shared/models/mediafiles/create-mediafile';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { ViewGroup } from 'app/site/users/models/view-group';
 
@@ -15,7 +22,6 @@ import { ViewGroup } from 'app/site/users/models/view-group';
  */
 interface FileData {
     mediafile: File;
-    filename: string;
     title: string;
     form: FormGroup;
 }
@@ -25,7 +31,7 @@ interface FileData {
     templateUrl: './media-upload-content.component.html',
     styleUrls: ['./media-upload-content.component.scss']
 })
-export class MediaUploadContentComponent implements OnInit {
+export class MediaUploadContentComponent implements OnInit, OnDestroy {
     /**
      * Columns to display in the upload-table
      */
@@ -84,18 +90,7 @@ export class MediaUploadContentComponent implements OnInit {
 
     public directorySelectionForm: FormGroup;
 
-    public get showDirectorySelector(): boolean {
-        return this.directoryId === undefined;
-    }
-
-    public get selectedDirectoryId(): number | null {
-        if (this.showDirectorySelector) {
-            const parent = this.directorySelectionForm.controls.parent_id;
-            return !parent.value || typeof parent.value !== 'number' ? null : parent.value;
-        } else {
-            return this.directoryId;
-        }
-    }
+    public modelSubscription: ModelSubscription | null = null;
 
     /**
      * Constructor for the media upload page
@@ -106,25 +101,57 @@ export class MediaUploadContentComponent implements OnInit {
     public constructor(
         private repo: MediafileRepositoryService,
         private formBuilder: FormBuilder,
-        private groupRepo: GroupRepositoryService
+        private groupRepo: GroupRepositoryService,
+        private modelRequestService: ModelRequestService,
+        private router: Router
     ) {
         this.directoryBehaviorSubject = this.repo.getDirectoryBehaviorSubject();
         this.groupsBehaviorSubject = this.groupRepo.getViewModelListBehaviorSubject();
-        this.directorySelectionForm = this.formBuilder.group({
-            parent_id: null
-        });
     }
 
     /**
      * Init
      * Creates a new uploadList as consumable data source
      */
-    public ngOnInit(): void {
+    public async ngOnInit(): Promise<void> {
         this.uploadList = new MatTableDataSource<FileData>();
+
+        this.directorySelectionForm = this.formBuilder.group({
+            directoryId: this.directoryId || null
+        });
+
+        // detect changes in the form
+        this.directorySelectionForm.valueChanges.subscribe(formResult => {
+            // undefined == none selection.
+            if (formResult.directoryId || formResult.directoryId === undefined) {
+                this.directoryId = formResult.directoryId || null;
+                let url = '/mediafiles/upload';
+                if (this.directoryId) {
+                    url += `/${this.directoryId}`;
+                }
+                this.router.navigate([url], {
+                    replaceUrl: true
+                });
+            }
+        });
+
+        const modelRequest: SimplifiedModelRequest = {
+            viewModelCtor: ViewMeeting,
+            ids: [1], // TODO
+            follow: [{ idField: 'mediafile_ids', fieldset: 'fileCreation' }],
+            fieldset: []
+        };
+        this.modelSubscription = await this.modelRequestService.requestModels(modelRequest);
     }
 
-    public getDirectory(directoryId: number): ViewMediafile {
-        return this.repo.getViewModel(directoryId);
+    public ngOnDestroy(): void {
+        if (this.modelSubscription) {
+            this.modelSubscription.close();
+        }
+    }
+
+    public getDirectoryTitle(): string {
+        return this.repo.getViewModel(this.directoryId)?.title;
     }
 
     /**
@@ -134,19 +161,16 @@ export class MediaUploadContentComponent implements OnInit {
      * @param fileData the file to upload to the server, should fit to the FileData interface
      */
     public async uploadFile(fileData: FileData): Promise<void> {
-        const input = new FormData();
-        input.set('mediafile', fileData.mediafile);
-        input.set('title', fileData.title);
-        const access_groups_id = fileData.form.value.access_groups_id || [];
-        if (access_groups_id.length > 0) {
-            input.set('access_groups_id', JSON.stringify(access_groups_id));
-        }
-        if (this.selectedDirectoryId) {
-            input.set('parent_id', '' + this.selectedDirectoryId);
-        }
+        const data = {
+            filename: fileData.mediafile.name,
+            file: await toBase64(fileData.mediafile),
+            title: fileData.title,
+            parent_id: this.directoryId,
+            access_group_ids: fileData.form.value.access_group_ids || []
+        };
 
         // raiseError will automatically ignore existing files
-        await this.repo.uploadFile(input).then(
+        await this.repo.create(data as CreateMediafile).then(
             fileId => {
                 this.filesUploadedIds.push(fileId.id);
                 // remove the uploaded file from the array
@@ -201,10 +225,9 @@ export class MediaUploadContentComponent implements OnInit {
     public addFile(file: File): void {
         const newFile: FileData = {
             mediafile: file,
-            filename: file.name,
             title: file.name,
             form: this.formBuilder.group({
-                access_groups_id: [[]]
+                access_group_ids: [[]]
             })
         };
         this.uploadList.data.push(newFile);
@@ -268,7 +291,7 @@ export class MediaUploadContentComponent implements OnInit {
                 this.uploadSuccessEvent.next(this.filesUploadedIds);
             } else {
                 this.table.renderRows();
-                const filenames = this.uploadList.data.map(file => file.filename);
+                const filenames = this.uploadList.data.map(file => file.mediafile.name);
                 this.errorEvent.next(`${this.errorMessage}\n${filenames}`);
             }
         }

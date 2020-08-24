@@ -10,7 +10,7 @@ import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { ColumnRestriction } from 'app/shared/components/list-view-table/list-view-table.component';
@@ -111,7 +111,7 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        private organisationSettingsService: OrganisationSettingsService,
+        private meetingSettingsService: MeetingSettingsService,
         private route: ActivatedRoute,
         private router: Router,
         protected repo: MotionBlockRepositoryService,
@@ -178,8 +178,8 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
             })
         );
         // load config variables
-        this.organisationSettingsService
-            .get<boolean>('motions_show_sequential_numbers')
+        this.meetingSettingsService
+            .get('motions_show_sequential_number')
             .subscribe(show => (this.showSequential = show));
         (<any>window).comp = this;
     }

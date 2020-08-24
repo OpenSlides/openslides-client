@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 import { BorderType, PdfDocumentService, PdfError, StyleType } from 'app/core/pdf-services/pdf-document.service';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { MotionExportInfo } from './motion-export.service';
 import { MotionPdfService } from './motion-pdf.service';
 import { ViewMotion } from '../models/view-motion';
@@ -26,20 +26,13 @@ import { ViewMotionCategory } from '../models/view-motion-category';
 export class MotionPdfCatalogService {
     private categoryObserver: BehaviorSubject<ViewMotionCategory[]>;
 
-    /**
-     * Constructor
-     *
-     * @param translate handle translations
-     * @param organisationSettingsService read out config variables
-     * @param motionPdfService handle motion to pdf conversion
-     */
     public constructor(
         private translate: TranslateService,
-        private organisationSettingsService: OrganisationSettingsService,
         private motionPdfService: MotionPdfService,
         private pdfService: PdfDocumentService,
         private motionRepo: MotionRepositoryService,
-        private categoryRepo: MotionCategoryRepositoryService
+        private categoryRepo: MotionCategoryRepositoryService,
+        private meetingSettingsService: MeetingSettingsService
     ) {
         this.categoryObserver = this.categoryRepo.getViewModelListBehaviorSubject();
     }
@@ -88,8 +81,8 @@ export class MotionPdfCatalogService {
         // print extra data (title, preamble, categories, toc) only if there are more than 1 motion
         if (motions.length > 1 && (!exportInfo.pdfOptions || printToc)) {
             doc.push(
-                this.pdfService.createTitle('motions_export_title'),
-                this.pdfService.createPreamble('motions_export_preamble'),
+                this.pdfService.createTitle(this.meetingSettingsService.instant('motions_export_title')),
+                this.pdfService.createPreamble(this.meetingSettingsService.instant('motions_export_preamble')),
                 this.createToc(motions)
             );
         }
@@ -116,7 +109,7 @@ export class MotionPdfCatalogService {
             text: this.translate.instant('Table of contents'),
             style: 'heading2'
         };
-        const exportSubmitterRecommendation = this.organisationSettingsService.instant<boolean>(
+        const exportSubmitterRecommendation = this.meetingSettingsService.instant(
             'motions_export_submitter_recommendation'
         );
 

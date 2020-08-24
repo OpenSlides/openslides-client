@@ -5,7 +5,7 @@ import { MotionBlockRepositoryService } from 'app/core/repositories/motions/moti
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
@@ -54,22 +54,13 @@ export class MotionMultiselectActionsComponent extends BaseComponent implements 
      */
     public motionBlocks: ViewMotionBlock[] = [];
 
-    /**
-     * The default constructor.
-     *
-     * @param multiselectService
-     * @param categoryRepo
-     * @param motionBlockRepo
-     * @param tagRepo
-     * @param organisationSettingsService
-     */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         public multiselectService: MotionMultiselectService,
         private categoryRepo: MotionCategoryRepositoryService,
         private motionBlockRepo: MotionBlockRepositoryService,
         private tagRepo: TagRepositoryService,
-        private organisationSettingsService: OrganisationSettingsService,
+        private meetingSettingsService: MeetingSettingsService,
         private dialog: MatDialog,
         private motionExport: MotionExportService
     ) {
@@ -86,7 +77,7 @@ export class MotionMultiselectActionsComponent extends BaseComponent implements 
             this.categoryRepo.getViewModelListObservable().subscribe(categories => (this.categories = categories)),
             this.motionBlockRepo.getViewModelListObservable().subscribe(blocks => (this.motionBlocks = blocks)),
             this.tagRepo.getViewModelListObservable().subscribe(tags => (this.tags = tags)),
-            this.organisationSettingsService.get<string>('motions_recommendations_by').subscribe(recommender => {
+            this.meetingSettingsService.get('motions_recommendations_by').subscribe(recommender => {
                 this.recommendationEnabled = !!recommender;
             })
         );

@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { ViewUser } from '../../models/view-user';
 
 /**
@@ -62,16 +62,17 @@ export class PresenceDetailComponent implements OnInit {
      * @param formBuilder FormBuilder input form
      * @param operator OperatorService fetch the current user for a permission check
      * @param translate Translation service
-     * @param config ConfigService checking if the feature is enabled
      */
     public constructor(
         private userRepo: UserRepositoryService,
         private formBuilder: FormBuilder,
         private operator: OperatorService,
         private translate: TranslateService,
-        config: OrganisationSettingsService
+        private meetingSettingsService: MeetingSettingsService
     ) {
-        config.get<boolean>('users_enable_presence_view').subscribe(conf => (this._enabledInConfig = conf));
+        this.meetingSettingsService
+            .get('users_enable_presence_view')
+            .subscribe(enabled => (this._enabledInConfig = enabled));
     }
 
     /**
