@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DurationService } from 'app/core/ui-services/duration.service';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
 
 /**
@@ -36,26 +36,15 @@ export class CountdownDialogComponent extends BaseComponent implements OnInit {
      */
     private defaultTime: number;
 
-    /**
-     * Constructor
-     *
-     * @param title Title service. Required by parent
-     * @param matSnackBar Required by parent
-     * @param organisationSettingsService Read out config variables
-     * @param translate Required by parent
-     * @param formBuilder To build the form
-     * @param durationService Converts duration numbers to string
-     * @param data The mat dialog data, contains the values to display (if any)
-     */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        organisationSettingsService: OrganisationSettingsService,
+        meetingSettingsService: MeetingSettingsService,
         private formBuilder: FormBuilder,
         private durationService: DurationService,
         @Inject(MAT_DIALOG_DATA) public data: CountdownData
     ) {
         super(componentServiceCollector);
-        this.defaultTime = organisationSettingsService.instant<number>('projector_default_countdown');
+        this.defaultTime = meetingSettingsService.instant('projector_countdown_warning_time');
     }
 
     /**

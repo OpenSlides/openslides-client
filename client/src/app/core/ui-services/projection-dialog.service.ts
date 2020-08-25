@@ -6,7 +6,7 @@ import {
     ProjectionDialogReturnType
 } from 'app/shared/components/projection-dialog/projection-dialog.component';
 import { isProjectable, Projectable, ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
-import { OrganisationSettingsService } from './organisation-settings.service';
+import { MeetingSettingsService } from './meeting-settings.service';
 import { ProjectorService } from '../core-services/projector.service';
 
 /**
@@ -25,7 +25,7 @@ export class ProjectionDialogService {
     public constructor(
         private dialog: MatDialog,
         private projectorService: ProjectorService,
-        private organisationSettingsService: OrganisationSettingsService
+        private meetingSettingsService: MeetingSettingsService
     ) {}
 
     /**
@@ -37,7 +37,7 @@ export class ProjectionDialogService {
     public async openProjectDialogFor(obj: Projectable | ProjectorElementBuildDeskriptor): Promise<object> {
         let descriptor: ProjectorElementBuildDeskriptor;
         if (isProjectable(obj)) {
-            descriptor = obj.getSlide(this.organisationSettingsService);
+            descriptor = obj.getSlide(this.meetingSettingsService);
         } else {
             descriptor = obj;
         }

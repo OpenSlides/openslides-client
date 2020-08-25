@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { VotingPrivacyWarningComponent } from 'app/shared/components/voting-privacy-warning/voting-privacy-warning.component';
 import { AssignmentPollMethod, AssignmentPollPercentBase } from 'app/shared/models/assignments/assignment-poll';
 import { PercentBase } from 'app/shared/models/poll/base-poll';
@@ -104,7 +105,8 @@ export class PollFormComponent<T extends BaseViewPoll, S extends PollService> ex
         componentServiceCollector: ComponentServiceCollector,
         private formBuilder: FormBuilder,
         private groupRepo: GroupRepositoryService,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private meetingSettingsService: MeetingSettingsService
     ) {
         super(componentServiceCollector);
         this.initContentForm();
@@ -128,8 +130,7 @@ export class PollFormComponent<T extends BaseViewPoll, S extends PollService> ex
                     this.data.votes_amount = this.data.assignment.open_posts;
                 }
                 if (!this.data.pollmethod) {
-                    // TODO: Enable the config service
-                    // this.data.pollmethod = this.configService.instant('assignment_poll_method');
+                    this.data.pollmethod = this.meetingSettingsService.instant('assignment_poll_default_method');
                 }
             }
 

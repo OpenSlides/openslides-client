@@ -7,10 +7,9 @@ import { AbstractPollData, PollPdfService } from 'app/core/pdf-services/base-pol
 import { PdfDocumentService } from 'app/core/pdf-services/pdf-document.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { MediaManageService } from 'app/core/ui-services/media-manage.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { MotionPoll } from 'app/shared/models/motions/motion-poll';
-
-type BallotCountChoices = 'NUMBER_OF_DELEGATES' | 'NUMBER_OF_ALL_PARTICIPANTS' | 'CUSTOM_NUMBER';
 
 /**
  * Creates a pdf for a motion poll. Takes as input any motionPoll
@@ -25,29 +24,21 @@ type BallotCountChoices = 'NUMBER_OF_DELEGATES' | 'NUMBER_OF_ALL_PARTICIPANTS' |
     providedIn: 'root'
 })
 export class MotionPollPdfService extends PollPdfService {
-    /**
-     * Constructor. Subscribes to configuration values
-     *
-     * @param translate handle translations
-     * @param motionRepo get parent motions
-     * @param organisationSettingsService Read config variables
-     * @param userRepo User repository for counting amount of ballots needed
-     * @param pdfService the pdf document creation service
-     */
     public constructor(
-        organisationSettingsService: OrganisationSettingsService,
+        meetingSettingsService: MeetingSettingsService,
         userRepo: UserRepositoryService,
         activeMeetingService: ActiveMeetingService,
+        mediaManageService: MediaManageService,
         private translate: TranslateService,
         private motionRepo: MotionRepositoryService,
         private pdfService: PdfDocumentService
     ) {
-        super(organisationSettingsService, userRepo, activeMeetingService);
-        this.organisationSettingsService
-            .get<number>('motions_pdf_ballot_papers_number')
+        super(meetingSettingsService, userRepo, activeMeetingService, mediaManageService);
+        this.meetingSettingsService
+            .get('motion_poll_ballot_paper_number')
             .subscribe(count => (this.ballotCustomCount = count));
-        this.organisationSettingsService
-            .get<BallotCountChoices>('motions_pdf_ballot_papers_selection')
+        this.meetingSettingsService
+            .get('motion_poll_ballot_paper_selection')
             .subscribe(selection => (this.ballotCountSelection = selection));
     }
 
@@ -87,7 +78,7 @@ export class MotionPollPdfService extends PollPdfService {
         this.pdfService.downloadWithBallotPaper(
             this.getPages(rowsPerPage, { sheetend: 40, title: title, subtitle: subtitle }),
             fileName,
-            this.logo
+            this.logoUrl
         );
     }
 

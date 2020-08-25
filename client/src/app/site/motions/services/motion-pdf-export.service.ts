@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { AmendmentListPdfService } from './amendment-list-pdf.service';
 import { PdfDocumentService } from 'app/core/pdf-services/pdf-document.service';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { MotionExportInfo } from './motion-export.service';
 import { MotionPdfCatalogService } from './motion-pdf-catalog.service';
 import { MotionPdfService } from './motion-pdf.service';
@@ -18,17 +18,9 @@ import { ViewMotionCommentSection } from '../models/view-motion-comment-section'
     providedIn: 'root'
 })
 export class MotionPdfExportService {
-    /**
-     * Constructor
-     *
-     * @param translate handle translations
-     * @param organisationSettingsService Read out Config variables
-     * @param motionPdfService Converting actual motions to PDF
-     * @param pdfDocumentService Actual pdfmake functions and global doc definitions
-     */
     public constructor(
         private translate: TranslateService,
-        private organisationSettingsService: OrganisationSettingsService,
+        private meetingSettingsService: MeetingSettingsService,
         private motionPdfService: MotionPdfService,
         private amendmentListPdfService: AmendmentListPdfService,
         private pdfCatalogService: MotionPdfCatalogService,
@@ -63,7 +55,7 @@ export class MotionPdfExportService {
      */
     public exportMotionCatalog(motions: ViewMotion[], exportInfo: MotionExportInfo): void {
         const doc = this.pdfCatalogService.motionListToDocDef(motions, exportInfo);
-        const motions_export_title = this.organisationSettingsService.instant<string>('motions_export_title');
+        const motions_export_title = this.meetingSettingsService.instant('motions_export_title');
         const filename = this.translate.instant(motions_export_title);
         const metadata = {
             title: filename

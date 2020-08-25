@@ -1,95 +1,69 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 
-import { Observable, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
 
-import { Meeting } from 'app/shared/models/event-management/meeting';
-import { BaseViewModel } from 'app/site/base/base-view-model';
-import { CollectionMapperService } from '../core-services/collection-mapper.service';
-import {
-    ChoicesFunctionDefinition,
-    ChoicesMap,
-    meetingSettings,
-    SettingsGroup,
-    SettingsItem
-} from '../repositories/event-management/meeting-settings';
-import { MotionWorkflowRepositoryService } from '../repositories/motions/motion-workflow-repository.service';
-import { RepositoryServiceCollector } from '../repositories/repository-service-collector';
+import { ActiveMeetingService } from '../core-services/active-meeting.service';
+import { Meeting, Settings } from 'app/shared/models/event-management/meeting';
 
+/**
+ * Handler for setting variables for organsations.
+ *
+ * @example
+ * ```ts
+ * this.MeetingSettingsService.get('general_event_name').subscribe(value => {
+ *     console.log(value);
+ * });
+ * ```
+ *
+ * @example
+ * ```ts
+ * const value = this.MeetingSettingsService.instant('general_event_name');
+ * ```
+ */
 @Injectable({
     providedIn: 'root'
 })
 export class MeetingSettingsService {
-    private settingsMap: { [key: string]: SettingsItem } = {};
+    /**
+     * Stores a subject per key. Values are published, if the DataStore gets an update.
+     */
+    private settingSubjects: { [key: string]: BehaviorSubject<any> } = {};
 
-    public constructor() {
-        for (const group of meetingSettings) {
-            for (const subgroup of group.subgroups) {
-                for (const setting of subgroup.settings) {
-                    this.validateSetting(setting);
-                    this.settingsMap[setting.key] = setting;
+    /**
+     * Listen for changes of setting variables.
+     */
+    public constructor(private activeMeetingService: ActiveMeetingService) {
+        this.activeMeetingService.meetingObservable.subscribe(meeting => {
+            if (meeting) {
+                for (const key of Object.keys(this.settingSubjects)) {
+                    this.settingSubjects[key].next(meeting[key]);
                 }
             }
+        });
+    }
+
+    /**
+     * Get the constant named by key from the DataStore. If the DataStore isn't up to date or
+     * not filled via autoupdates the results may be wrong/empty. Use this with caution.
+     *
+     * Usefull for synchronos code, e.g. during generation of PDFs, when the DataStore is filled.
+     *
+     * @param key The setting value to get from.
+     */
+    public instant<T extends keyof Settings>(key: T): Settings[T] {
+        const meeting = this.activeMeetingService.meeting;
+        return meeting ? meeting[key] : null;
+    }
+
+    /**
+     * Get an observer for the setting value given by the key.
+     *
+     * @param key The setting value to get from.
+     */
+    public get<T extends keyof Settings>(key: T): Observable<Settings[T]> {
+        if (!this.settingSubjects[key]) {
+            this.settingSubjects[key] = new BehaviorSubject<any>(this.instant(key));
         }
-    }
-
-    private validateSetting(setting: SettingsItem): void {
-        if (setting.type === 'choice') {
-            if (!setting.choices && !setting.choicesFunc) {
-                throw new Error(`You must provide choices for ${setting.key}`);
-            }
-            if (setting.choices && setting.default && !Object.values(setting.choices).includes(setting.default)) {
-                throw new Error(`Invalid default for ${setting.key}: ${setting.default}`);
-            }
-        }
-        if (setting.default) {
-            if (setting.type === 'integer' && typeof setting.default !== 'number') {
-                throw new Error(`Invalid default for ${setting.key}: ${setting.default} (${typeof setting.default})`);
-            }
-            if (setting.type === 'boolean' && typeof setting.default !== 'boolean') {
-                throw new Error(`Invalid default for ${setting.key}: ${setting.default} (${typeof setting.default})`);
-            }
-        }
-    }
-
-    public getSettings(): SettingsGroup[] {
-        return meetingSettings;
-    }
-
-    public getSettingsGroup(name: string): SettingsGroup {
-        return meetingSettings.find(group => group.label.toLowerCase() === name);
-    }
-
-    public getSettingsKeys(): (keyof Meeting)[] {
-        return Object.keys(this.settingsMap) as (keyof Meeting)[];
-    }
-
-    public getDefaultValue(setting: string | SettingsItem): any {
-        if (typeof setting === 'string') {
-            setting = this.settingsMap[setting];
-        }
-        return setting.default ?? this.getDefaultValueForType(setting);
-    }
-
-    public getDefaultValueForType(setting: SettingsItem): any {
-        switch (setting.type) {
-            case 'integer':
-                return 0;
-            case 'boolean':
-                return false;
-            case 'choice':
-                return Object.values(setting.choices)[0];
-            case 'groups':
-            case 'translations':
-                return [];
-            case 'datetime':
-                return null;
-            case 'string':
-            case 'text':
-            case 'markupText':
-            default:
-                // default type is text
-                return '';
-        }
+        return this.settingSubjects[key].asObservable() as Observable<Settings[T]>;
     }
 }

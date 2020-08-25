@@ -140,7 +140,6 @@
     <!-- Indicator column -->
     <div *pblNgridCellDef="'indicator'; row as mediafile" class="fill">
         <div
-            *ngIf="getFileSettings(mediafile).length > 0"
             [matMenuTriggerFor]="singleMediafileMenu"
             [matMenuTriggerData]="{ mediafile: mediafile }"
             [matTooltip]="formatIndicatorTooltip(mediafile)"
@@ -169,35 +168,31 @@
     </div>
 </pbl-ngrid>
 
-<!-- Template for the managing buttons -->
-<ng-template #manageButton let-mediafile="mediafile" let-option="option">
-    <button mat-menu-item (click)="onManageButton($event, mediafile, option)">
-        <mat-icon color="accent">
-            {{ isUsedAs(mediafile, option) ? 'check_box' : 'check_box_outline_blank' }}
-        </mat-icon>
-        <span>{{ getOptionName(option) }}</span>
-    </button>
-</ng-template>
-
 <!-- Menu for single files in the list -->
 <mat-menu #singleMediafileMenu="matMenu">
     <ng-template matMenuContent let-mediafile="mediafile">
         <div *osPerms="'core.can_manage_logos_and_fonts'">
             <!-- Exclusive for images -->
             <div *ngIf="mediafile.isImage()">
-                <div *ngFor="let option of logoOptions">
-                    <ng-container
-                        *ngTemplateOutlet="manageButton; context: { mediafile: mediafile, option: option }"
-                    ></ng-container>
+                <div *ngFor="let place of logoPlaces">
+                    <button mat-menu-item (click)="toggleLogoUsage($event, mediafile, place)">
+                        <mat-icon color="accent">
+                            {{ mediafile.used_as_logo_in_meeting(place) ? 'check_box' : 'check_box_outline_blank' }}
+                        </mat-icon>
+                        <span>{{ logoDisplayNames[place] | translate }}</span>
+                    </button>
                 </div>
             </div>
 
             <!-- Exclusive for fonts -->
             <div *ngIf="mediafile.isFont()">
-                <div *ngFor="let option of FontOptions">
-                    <ng-container
-                        *ngTemplateOutlet="manageButton; context: { mediafile: mediafile, option: option }"
-                    ></ng-container>
+                <div *ngFor="let place of fontPlaces">
+                    <button mat-menu-item (click)="toggleFontUsage($event, mediafile, place)">
+                        <mat-icon color="accent">
+                            {{ mediafile.used_ad_font_in_meeting(place) ? 'check_box' : 'check_box_outline_blank' }}
+                        </mat-icon>
+                        <span>{{ fontDisplayNames[place] | translate }}</span>
+                    </button>
                 </div>
             </div>
             <mat-divider *ngIf="mediafile.isFont() || mediafile.isImage()"></mat-divider>
@@ -288,7 +283,7 @@
 
             <mat-form-field>
                 <os-search-value-selector
-                    formControlName="access_groups_id"
+                    formControlName="access_group_ids"
                     [multiple]="true"
                     placeholder="{{ 'Access groups' | translate }}"
                     [inputListValues]="groupsBehaviorSubject"
@@ -324,7 +319,7 @@
 
             <mat-form-field>
                 <os-search-value-selector
-                    formControlName="access_groups_id"
+                    formControlName="access_group_ids"
                     [multiple]="true"
                     placeholder="{{ 'Access groups' | translate }}"
                     [inputListValues]="groupsBehaviorSubject"

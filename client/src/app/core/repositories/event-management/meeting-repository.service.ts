@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
-import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
+import { MeetingSettingsDefinitionProvider } from 'app/core/ui-services/meeting-settings-definition-provider.service';
 import { Meeting } from 'app/shared/models/event-management/meeting';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { BaseRepository } from '../base-repository';
@@ -13,7 +13,7 @@ import { RepositoryServiceCollectorWithoutActiveMeetingService } from '../reposi
 export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meeting> {
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollectorWithoutActiveMeetingService,
-        private meetingSettingsService: MeetingSettingsService
+        private meetingSettingsDefinitionProvider: MeetingSettingsDefinitionProvider
     ) {
         super(repositoryServiceCollector, Meeting);
     }
@@ -21,7 +21,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
     public getFieldsets(): Fieldsets<Meeting> {
         return {
             [DEFAULT_FIELDSET]: ['description'],
-            settings: this.meetingSettingsService.getSettingsKeys()
+            settings: this.meetingSettingsDefinitionProvider.getSettingsKeys()
         };
     }
 

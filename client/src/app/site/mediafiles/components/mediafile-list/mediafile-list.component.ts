@@ -23,14 +23,16 @@ import { MediafileRepositoryService } from 'app/core/repositories/mediafiles/med
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import {
-    FontConfigObject,
-    FontOptions,
-    ImageConfigObject,
-    LogoOptions,
+    FontDisplayNames,
+    FontPlace,
+    LogoDisplayNames,
+    LogoPlace,
     MediaManageService
 } from 'app/core/ui-services/media-manage.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
+import { CreateMediafile } from 'app/shared/models/mediafiles/create-mediafile';
 import { Mediafile } from 'app/shared/models/mediafiles/mediafile';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
@@ -50,15 +52,10 @@ import { MediafilesSortListService } from '../../services/mediafiles-sort-list.s
     encapsulation: ViewEncapsulation.None
 })
 export class MediafileListComponent extends BaseListViewComponent<ViewMediafile> implements OnInit, OnDestroy {
-    /**
-     * Holds the options for logos. Updated via an observable
-     */
-    public logoOptions = LogoOptions;
-
-    /**
-     * Holds the options for fonts. Update via an observable
-     */
-    public fontOptions = FontOptions;
+    public logoPlaces: string[];
+    public logoDisplayNames = LogoDisplayNames;
+    public fontPlaces: string[];
+    public fontDisplayNames = FontDisplayNames;
 
     /**
      * Holds the file to edit
@@ -175,22 +172,6 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
 
     private directoryObservable: Observable<ViewMediafile[]> = new Observable();
 
-    /**
-     * Constructs the component
-     *
-     * @param titleService sets the browser title
-     * @param translate translation for the parent
-     * @param matSnackBar showing errors and sucsess messages
-     * @param router angulars router
-     * @param route anduglars ActivatedRoute
-     * @param repo the repository for mediafiles
-     * @param mediaManage service to manage media files (setting images as logos)
-     * @param promptService prevent deletion by accident
-     * @param vp viewport Service to check screen size
-     * @param fitlerService MediaFileFilterService for advanced filtering
-     * @param sortService MediaFileSortService sort for advanced sorting
-     * @param operator permission check
-     */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private route: ActivatedRoute,
@@ -204,14 +185,18 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
         private dialog: MatDialog,
         private formBuilder: FormBuilder,
         private groupRepo: GroupRepositoryService,
-        private cd: ChangeDetectorRef
+        private cd: ChangeDetectorRef,
+        private meetingSettingsService: MeetingSettingsService
     ) {
         super(componentServiceCollector);
         this.canMultiSelect = true;
 
+        this.logoPlaces = this.mediaManage.allLogoPlaces;
+        this.fontPlaces = this.mediaManage.allFontPlaces;
+
         this.newDirectoryForm = this.formBuilder.group({
             title: ['', Validators.required],
-            access_groups_id: []
+            access_group_ids: []
         });
         this.moveForm = this.formBuilder.group({
             directory_id: []
@@ -227,12 +212,10 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
     public ngOnInit(): void {
         super.ngOnInit();
         super.setTitle('Files');
-
-        this.repo.getDirectoryIdByPath(this.route.snapshot.url.map(x => x.path)).then(directoryId => {
-            this.changeDirectory(directoryId);
-        });
-
         this.createDataSource();
+
+        const directoryId = this.route.snapshot.url.length > 0 ? +this.route.snapshot.url[0].path : null;
+        this.changeDirectory(directoryId);
     }
 
     public ngOnDestroy(): void {
@@ -303,12 +286,12 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
                 if (newDirectory) {
                     this.directoryChain = newDirectory.getDirectoryChain();
                     // Update the URL.
-                    this.router.navigate(['/mediafiles/files/' + newDirectory.path], {
+                    this.router.navigate(['/mediafiles/' + newDirectory.id], {
                         replaceUrl: true
                     });
                 } else {
                     this.directoryChain = [];
-                    this.router.navigate(['/mediafiles/files/'], {
+                    this.router.navigate(['/mediafiles'], {
                         replaceUrl: true
                     });
                 }
@@ -316,14 +299,14 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
         } else {
             this.directory = null;
             this.directoryChain = [];
-            this.router.navigate(['/mediafiles/files/'], {
+            this.router.navigate(['/mediafiles'], {
                 replaceUrl: true
             });
         }
     }
 
     public onMainEvent(): void {
-        const path = '/mediafiles/upload/' + (this.directory ? this.directory.path : '');
+        const path = '/mediafiles/upload/' + (this.directory ? this.directory.id : '');
         this.router.navigate([path]);
     }
 
@@ -382,74 +365,35 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
     }
 
     /**
-     * Returns the display name of an action
-     *
-     * @param mediaFileAction Logo or font action
-     * @returns the display name of the selected action
-     *
-     * FIXME: Requires rewrite (WIP)
-     */
-    public getOptionName(mediaFileAction: string): string {
-        const configObject: ImageConfigObject | FontConfigObject = this.mediaManage.getMediaConfig(mediaFileAction);
-        return this.translate.instant(configObject?.display_name) ?? null;
-    }
-
-    /**
      * Returns a formated string for the tooltip containing all the action names.
      *
      * @param file the target file where the tooltip should be shown
      * @returns getNameOfAction with formated strings.
      */
     public formatIndicatorTooltip(file: ViewMediafile): string {
-        const settings = this.getFileSettings(file);
-        const optionNames = settings.map(option => this.getOptionName(option));
+        const settings = this.mediaManage.getPlacesDisplayNames(file);
+        const optionNames = settings.map(displayName => this.translate.instant(displayName));
         return optionNames.join('\n');
     }
 
-    /**
-     * Checks if the given file is used in the following action
-     * i.e checks if a image is used as projector logo
-     *
-     * @param mediaFileAction the action to check for
-     * @param media the mediafile to check
-     * @returns whether the file is used
-     */
-    public isUsedAs(file: ViewMediafile, mediaFileAction: string): boolean {
-        const config = this.mediaManage.getMediaConfig(mediaFileAction);
-        return config ? config.path === file.url : false;
-    }
-
-    /**
-     * Look up the managed options for the given file
-     *
-     * @param file the file to look up
-     * @returns array of actions
-     */
-    public getFileSettings(file: ViewMediafile): string[] {
-        let uses = [];
-        if (file) {
-            if (file.isFont() && this.fontOptions?.length) {
-                uses = this.fontOptions.filter(action => this.isUsedAs(file, action));
-            } else if (file.isImage() && this.logoOptions?.length) {
-                uses = this.logoOptions.filter(action => this.isUsedAs(file, action));
-            }
-        }
-        return uses;
-    }
-
-    /**
-     * Set the given image as the given option
-     *
-     * @param event The fired event after clicking the button
-     * @param file the selected file
-     * @param action the action that should be executed
-     */
-    public onManageButton(event: any, file: ViewMediafile, action: string): void {
+    public async toggleLogoUsage(event: any, file: ViewMediafile, place: LogoPlace): Promise<void> {
         // prohibits automatic closing
         event.stopPropagation();
-        this.mediaManage.setAs(file, action).then(() => {
-            this.cd.markForCheck();
-        });
+        if (file.used_as_logo_in_meeting(place)) {
+            file = null; // remove the file instead of setting it.
+        }
+        await this.mediaManage.setLogo(place, file);
+        this.cd.markForCheck();
+    }
+
+    public async toggleFontUsage(event: any, file: ViewMediafile, place: FontPlace): Promise<void> {
+        // prohibits automatic closing
+        event.stopPropagation();
+        if (file.used_as_font_in_meeting(place)) {
+            file = null; // remove the file instead of setting it.
+        }
+        await this.mediaManage.setFont(place, file);
+        this.cd.markForCheck();
     }
 
     public createNewFolder(templateRef: TemplateRef<string>): void {
@@ -458,7 +402,7 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                const mediafile = new Mediafile({
+                const mediafile = new CreateMediafile({
                     ...this.newDirectoryForm.value,
                     parent_id: this.directory ? this.directory.id : null,
                     is_directory: true
@@ -469,17 +413,15 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
     }
 
     public downloadMultiple(mediafiles: ViewMediafile[] = this.dataSource.source): void {
-        /**
-         * TODO: naming the files is discussable
-         */
-        /*const eventName = this.configService.instant<string>('general_event_name');
+        const eventName = this.meetingSettingsService.instant('name');
         const dirName = this.directory?.filename ?? this.translate.instant('Files');
         const archiveName = `${eventName} - ${dirName}`.trim();
-        this.repo.downloadArchive(archiveName, mediafiles);*/
+        this.repo.downloadArchive(archiveName, mediafiles);
     }
 
     public move(templateRef: TemplateRef<string>, mediafiles: ViewMediafile[]): void {
-        this.moveForm.reset();
+        throw new Error('TODO');
+        /*this.moveForm.reset();
 
         if (mediafiles.some(file => file.is_directory)) {
             this.filteredDirectoryBehaviorSubject.next(
@@ -499,7 +441,7 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
                     this.cd.markForCheck();
                 }, this.raiseError);
             }
-        });
+        });*/
     }
 
     /**

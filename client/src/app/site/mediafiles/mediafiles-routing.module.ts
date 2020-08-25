@@ -7,20 +7,30 @@ import { MediafileListComponent } from './components/mediafile-list/mediafile-li
 
 const routes: Routes = [
     {
-        path: '',
-        redirectTo: 'files',
-        pathMatch: 'full'
+        path: ':id',
+        pathMatch: 'full',
+        component: MediafileListComponent
     },
     {
-        path: 'files',
-        children: [{ path: '**', component: MediafileListComponent }],
-        pathMatch: 'prefix'
+        path: '',
+        pathMatch: 'full',
+        component: MediafileListComponent
     },
     {
         path: 'upload',
         data: { basePerm: Permission.mediafilesCanManage },
-        children: [{ path: '**', component: MediaUploadComponent }],
-        pathMatch: 'prefix'
+        children: [
+            {
+                path: ':id',
+                component: MediaUploadComponent,
+                pathMatch: 'full'
+            },
+            {
+                path: '',
+                component: MediaUploadComponent,
+                pathMatch: 'full'
+            }
+        ]
     }
 ];
 

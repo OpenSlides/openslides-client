@@ -14,7 +14,7 @@ import { ProjectorRepositoryService } from 'app/core/repositories/projector/proj
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DurationService } from 'app/core/ui-services/duration.service';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { Selectable } from 'app/shared/components/selectable';
@@ -169,7 +169,7 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
         private userRepository: UserRepositoryService,
         private collectionMapper: CollectionMapperService,
         private currentListOfSpeakersSlideService: CurrentListOfSpeakersSlideService,
-        private config: OrganisationSettingsService,
+        private meetingSettingsService: MeetingSettingsService,
         private viewport: ViewportService,
         private cd: ChangeDetectorRef,
         private activeMeetingService: ActiveMeetingService
@@ -221,12 +221,10 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
             }),
             // observe changes to the viewport
             this.viewport.isMobileSubject.subscribe(isMobile => this.checkSortMode(isMobile)),
-            // observe changes the agenda_present_speakers_only config
-            this.config.get('agenda_present_speakers_only').subscribe(() => {
+            this.meetingSettingsService.get('list_of_speakers_present_users_only').subscribe(() => {
                 this.filterUsers();
             }),
-            // observe changes to the agenda_show_first_contribution config
-            this.config.get<boolean>('agenda_show_first_contribution').subscribe(show => {
+            this.meetingSettingsService.get('list_of_speakers_show_first_contribution').subscribe(show => {
                 this.showFistContributionHint = show;
             })
         );
@@ -548,7 +546,7 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
      * (triggered on an update of users or config)
      */
     private filterUsers(): void {
-        const presentUsersOnly = this.config.instant('agenda_present_speakers_only');
+        const presentUsersOnly = this.meetingSettingsService.instant('list_of_speakers_present_users_only');
         const users = presentUsersOnly
             ? this.users.getValue().filter(u => u.isPresentInMeeting())
             : this.users.getValue();

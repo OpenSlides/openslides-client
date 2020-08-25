@@ -2,7 +2,6 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { MediafileRepositoryService } from 'app/core/repositories/mediafiles/mediafile-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';
 
@@ -35,16 +34,13 @@ export class MediaUploadComponent extends BaseComponent implements OnInit {
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private location: Location,
-        private route: ActivatedRoute,
-        private repo: MediafileRepositoryService
+        private route: ActivatedRoute
     ) {
         super(componentServiceCollector);
     }
 
     public ngOnInit(): void {
-        this.repo.getDirectoryIdByPath(this.route.snapshot.url.map(x => x.path)).then(directoryId => {
-            this.directoryId = directoryId;
-        });
+        this.directoryId = this.route.snapshot.url.length > 0 ? +this.route.snapshot.url[0].path : null;
     }
 
     /**

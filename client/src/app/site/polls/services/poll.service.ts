@@ -197,12 +197,12 @@ export abstract class PollService {
 
     public constructor(
         // TODO: remove public. it is only here, so the linter doesn't complain about this unused variable
-        public constants: OrganisationSettingsService,
+        public organisationSettingsService: OrganisationSettingsService,
         protected translate: TranslateService,
         protected pollKeyVerbose: PollKeyVerbosePipe,
         protected parsePollNumber: ParsePollNumberPipe
     ) {
-        /*constants
+        /*organisationSettingsService
             .get<OpenSlidesSettings>('Settings')
             .subscribe(settings => (this.isElectronicVotingEnabled = settings.ENABLE_ELECTRONIC_VOTING));*/
         this.isElectronicVotingEnabled = false;

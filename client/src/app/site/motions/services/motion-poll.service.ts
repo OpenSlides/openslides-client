@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { MotionPollRepositoryService } from 'app/core/repositories/motions/motion-poll-repository.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { MotionPoll, MotionPollMethod } from 'app/shared/models/motions/motion-poll';
 import { MajorityMethod, PercentBase, PollType } from 'app/shared/models/poll/base-poll';
@@ -39,25 +40,23 @@ export class MotionPollService extends PollService {
 
     public defaultPollType: PollType;
 
-    /**
-     * Constructor. Subscribes to the configuration values needed
-     * @param config ConfigService
-     */
     public constructor(
-        constants: OrganisationSettingsService,
+        organisationSettingsService: OrganisationSettingsService,
         pollKeyVerbose: PollKeyVerbosePipe,
         parsePollNumber: ParsePollNumberPipe,
         protected translate: TranslateService,
-        private pollRepo: MotionPollRepositoryService
+        private pollRepo: MotionPollRepositoryService,
+        private meetingSettingsService: MeetingSettingsService
     ) {
-        super(constants, translate, pollKeyVerbose, parsePollNumber);
-        /*config.get<PercentBase>('motion_poll_default_100_percent_base')
+        super(organisationSettingsService, translate, pollKeyVerbose, parsePollNumber);
+        this.meetingSettingsService
+            .get('motion_poll_default_100_percent_base')
             .subscribe(base => (this.defaultPercentBase = base));
-        config.get<MajorityMethod>('motion_poll_default_majority_method')
+        this.meetingSettingsService
+            .get('motion_poll_default_majority_method')
             .subscribe(method => (this.defaultMajorityMethod = method));
-        config.get<PollType>('motion_poll_default_type').subscribe(type => (this.defaultPollType = type));
-
-        config.get<number[]>('motion_poll_default_groups').subscribe(ids => (this.defaultGroupIds = ids));*/
+        this.meetingSettingsService.get('motion_poll_default_type').subscribe(type => (this.defaultPollType = type));
+        this.meetingSettingsService.get('motion_poll_default_group_ids').subscribe(ids => (this.defaultGroupIds = ids));
     }
 
     public getDefaultPollData(contextId?: number): MotionPoll {

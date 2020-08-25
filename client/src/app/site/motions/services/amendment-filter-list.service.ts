@@ -12,7 +12,7 @@ import { MotionRepositoryService } from 'app/core/repositories/motions/motion-re
 import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/motion-workflow-repository.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { OsFilter } from 'app/core/ui-services/base-filter-list.service';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { MotionFilterListService } from './motion-filter-list.service';
 import { ViewMotion } from '../models/view-motion';
 
@@ -65,7 +65,7 @@ export class AmendmentFilterListService extends MotionFilterListService {
         workflowRepo: MotionWorkflowRepositoryService,
         translate: TranslateService,
         operator: OperatorService,
-        organisationSettingsService: OrganisationSettingsService,
+        meetingSettingsService: MeetingSettingsService,
         motionRepo: MotionRepositoryService
     ) {
         super(
@@ -78,7 +78,7 @@ export class AmendmentFilterListService extends MotionFilterListService {
             workflowRepo,
             translate,
             operator,
-            organisationSettingsService
+            meetingSettingsService
         );
 
         this.updateFilterForRepo(motionRepo, this.motionFilterOptions, null, (model: ViewMotion) =>

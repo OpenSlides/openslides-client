@@ -18,7 +18,7 @@ import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/li
 import { TopicRepositoryService } from 'app/core/repositories/topics/topic-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DurationService } from 'app/core/ui-services/duration.service';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { ColumnRestriction } from 'app/shared/components/list-view-table/list-view-table.component';
@@ -45,11 +45,6 @@ export class AgendaListComponent extends BaseListViewComponent<ViewAgendaItem> i
      * Show or hide the numbering button
      */
     public isNumberingAllowed: boolean;
-
-    /**
-     * A boolean, that decides, if the optional subtitles should be shown.
-     */
-    public showSubtitle: boolean;
 
     /**
      * Helper to check main button permissions
@@ -127,7 +122,7 @@ export class AgendaListComponent extends BaseListViewComponent<ViewAgendaItem> i
         public repo: AgendaItemRepositoryService,
         private promptService: PromptService,
         private dialog: MatDialog,
-        private config: OrganisationSettingsService,
+        private meetingsSettingsService: MeetingSettingsService,
         public vp: ViewportService,
         public durationService: DurationService,
         private csvExport: AgendaCsvExportService,
@@ -148,10 +143,9 @@ export class AgendaListComponent extends BaseListViewComponent<ViewAgendaItem> i
     public ngOnInit(): void {
         super.ngOnInit();
         super.setTitle('Agenda');
-        this.config
-            .get<boolean>('agenda_enable_numbering')
+        this.meetingsSettingsService
+            .get('agenda_enable_numbering')
             .subscribe(autoNumbering => (this.isNumberingAllowed = autoNumbering));
-        this.config.get<boolean>('agenda_show_subtitle').subscribe(showSubtitle => (this.showSubtitle = showSubtitle));
     }
 
     protected getModelRequest(): SimplifiedModelRequest {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { OrganisationSettingsService } from './organisation-settings.service';
+import { MediaManageService } from './media-manage.service';
 
 /**
  * Enables the usage of the FontFace constructor
@@ -30,12 +30,7 @@ export class LoadFontService {
      */
     private urlPrefix = window.location.origin;
 
-    /**
-     * Constructor
-     *
-     * @param organisationSettingsService To observe the config variables
-     */
-    public constructor(private organisationSettingsService: OrganisationSettingsService) {
+    public constructor(private mediaManageService: MediaManageService) {
         this.loadCustomFont();
     }
 
@@ -46,15 +41,15 @@ export class LoadFontService {
      * Falls back to the normal OSFont when no custom  font was set.
      */
     private loadCustomFont(): void {
-        this.organisationSettingsService.get<any>('font_regular').subscribe(regular => {
-            if (regular) {
-                this.setCustomProjectorFont(regular, 400);
+        this.mediaManageService.getFontUrlObservable('regular').subscribe(url => {
+            if (url) {
+                this.setCustomProjectorFont(url, 400);
             }
         });
 
-        this.organisationSettingsService.get<any>('font_bold').subscribe(bold => {
-            if (bold) {
-                this.setCustomProjectorFont(bold, 500);
+        this.mediaManageService.getFontUrlObservable('bold').subscribe(url => {
+            if (url) {
+                this.setCustomProjectorFont(url, 500);
             }
         });
     }
@@ -63,12 +58,10 @@ export class LoadFontService {
      * Sets a new font for the custom projector. Weight is required to
      * differentiate between bold and normal fonts
      *
-     * @param font the font object from the config service
+     * @param url the font url
      * @param weight the desired weight of the font
      */
-    private setCustomProjectorFont(font: any, weight: number): void {
-        const path = font.path ? font.path : font.default;
-        const url = font.path ? `${this.urlPrefix}${path}` : path;
+    private setCustomProjectorFont(url: string, weight: number): void {
         const fontFace = new FontFace('customProjectorFont', `url(${url})`, { weight: weight });
         fontFace
             .load()

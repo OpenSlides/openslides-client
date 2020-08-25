@@ -8,7 +8,9 @@ import { first, map } from 'rxjs/operators';
 
 import { HttpService } from 'app/core/core-services/http.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
+import { Id } from 'app/core/definitions/key-types';
 import { Identifiable } from 'app/shared/models/base/identifiable';
+import { CreateMediafile } from 'app/shared/models/mediafiles/create-mediafile';
 import { Mediafile } from 'app/shared/models/mediafiles/mediafile';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { BaseIsListOfSpeakersContentObjectRepository } from '../base-is-list-of-speakers-content-object-repository';
@@ -46,40 +48,19 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
     };
 
     public getFieldsets(): Fieldsets<Mediafile> {
-        const fileSelectionFields: (keyof Mediafile)[] = ['title', 'filename'];
-        const listFields: (keyof Mediafile)[] = [
-            'title',
-            'filename',
-            'path',
+        const fileSelectionFields: (keyof Mediafile)[] = ['title', 'is_directory'];
+        const fileCreationFields: (keyof Mediafile)[] = fileSelectionFields.concat(['parent_id', 'child_ids']);
+        const listFields: (keyof Mediafile)[] = fileCreationFields.concat([
             'mimetype',
             'filesize',
             'create_timestamp',
-            'is_directory',
-            'has_inherited_access_groups',
-            'parent_id'
-        ];
-
+            'has_inherited_access_groups'
+        ]);
         return {
             [DEFAULT_FIELDSET]: listFields,
-            fileSelection: fileSelectionFields
+            fileSelection: fileSelectionFields,
+            fileCreation: fileCreationFields
         };
-    }
-
-    public async getDirectoryIdByPath(pathSegments: string[]): Promise<number | null> {
-        let parentId = null;
-
-        const mediafiles = await this.unsafeViewModelListSubject.pipe(first(x => !!x)).toPromise();
-
-        pathSegments.forEach(segment => {
-            const mediafile = mediafiles.find(m => m.is_directory && m.title === segment && m.parent_id === parentId);
-            if (!mediafile) {
-                parentId = null;
-                return;
-            } else {
-                parentId = mediafile.id;
-            }
-        });
-        return parentId;
     }
 
     public getListObservableDirectory(parentId: number | null): Observable<ViewMediafile[]> {
@@ -98,18 +79,8 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
         );
     }
 
-    /**
-     * Uploads a file to the server.
-     * The HttpHeader should be Application/FormData, the empty header will
-     * set the the required boundary automatically
-     *
-     * @param file created UploadData, containing a file
-     * @returns the promise to a new mediafile.
-     */
-    public async uploadFile(file: any): Promise<Identifiable> {
-        const emptyHeader = new HttpHeaders();
-        throw new Error('TODO');
-        // return this.http.post<Identifiable>('/rest/mediafiles/mediafile/', file, {}, emptyHeader);
+    public async create(mediafile: CreateMediafile): Promise<Identifiable> {
+        return super.create(mediafile);
     }
 
     public async downloadArchive(archiveName: string, files: ViewMediafile[]): Promise<void> {
