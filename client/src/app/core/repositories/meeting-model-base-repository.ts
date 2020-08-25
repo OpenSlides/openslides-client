@@ -27,7 +27,7 @@ export abstract class MeetingModelBaseRepository<
      *
      * @param model the model to create on the server
      */
-    public async create(model: M): Promise<Identifiable> {
+    public async create(model: Partial<M>): Promise<Identifiable> {
         const data = {
             meeting_id: this.activeMeetingService.meetingId,
             ...model

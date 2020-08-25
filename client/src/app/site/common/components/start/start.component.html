@@ -20,6 +20,8 @@
 
             <div [innerHTML]="startContent.welcome_text | trust: 'html'"></div>
         </div>
+        <button mat-button (click)="testCreateTopic()">Test: create topic</button>
+        <button mat-button (click)="testCreateTopicWithExpiredToken()">Test: create topic with expired token</button>
         <button mat-button (click)="apiAuthRequestWithTokenCookie()">API Hello World</button>
         <button mat-button (click)="apiAuthRequestWithCookie()">API Request Only Cookie</button>
         <button mat-button (click)="apiAuthRequestWithExpiredToken()">API Request with expired Token</button>

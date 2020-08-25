@@ -7,6 +7,7 @@ import { AuthTokenService } from 'app/core/core-services/auth-token.service';
 import { HttpService } from 'app/core/core-services/http.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
+import { TopicRepositoryService } from 'app/core/repositories/topics/topic-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
@@ -52,7 +53,8 @@ export class StartComponent extends BaseComponent implements OnInit {
         private formBuilder: FormBuilder,
         private operator: OperatorService,
         private http: HttpService,
-        private authTokenService: AuthTokenService
+        private authTokenService: AuthTokenService,
+        private topicRepo: TopicRepositoryService
     ) {
         super(componentServiceCollector);
         this.startForm = this.formBuilder.group({
@@ -115,6 +117,18 @@ export class StartComponent extends BaseComponent implements OnInit {
     /**
      * Only testing purposes
      */
+    private async createTopic(): Promise<any> {
+        return await this.topicRepo.create({ text: 'Ich mag Kuchen', title: 'Hallo Kekse' });
+    }
+
+    public async testCreateTopic(): Promise<any> {
+        return await this.createTopic();
+    }
+
+    public async testCreateTopicWithExpiredToken(): Promise<any> {
+        this.authTokenService.resetAccessTokenToExpired();
+        return await this.createTopic();
+    }
 
     public apiAuthRequestWithTokenCookie(): void {
         this.http.get(`${environment.authUrlPrefix}/api/hello`).then(response => console.log('response', response));
