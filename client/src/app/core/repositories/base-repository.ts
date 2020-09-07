@@ -272,7 +272,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      *
      * @param model the model to create on the server
      */
-    public async create(model: M): Promise<Identifiable> {
+    public async create(model: Partial<M>): Promise<Identifiable> {
         const actionType = `${this.collection}.create` as ActionType;
         return await this.actions.sendRequest(actionType, model);
     }
