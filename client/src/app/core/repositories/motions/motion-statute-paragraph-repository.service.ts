@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { MotionStatuteParagraph } from 'app/shared/models/motions/motion-statute-paragraph';
 import { ViewMotionStatuteParagraph } from 'app/site/motions/models/view-motion-statute-paragraph';
-import { BaseRepository } from '../base-repository';
-import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
+import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 /**
@@ -16,7 +15,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class MotionStatuteParagraphRepositoryService extends MeetingModelBaseRepository<
+export class MotionStatuteParagraphRepositoryService extends BaseRepositoryWithActiveMeeting<
     ViewMotionStatuteParagraph,
     MotionStatuteParagraph
 > {

@@ -137,14 +137,15 @@ export class MotionCommentSectionListComponent extends BaseModelContextComponent
     private save(): void {
         if (this.commentFieldForm.valid) {
             // eiher update or create
-            if (this.currentComment) {
-                this.repo
-                    .update(this.commentFieldForm.value as Partial<MotionCommentSection>, this.currentComment)
-                    .catch(this.raiseError);
-            } else {
-                const comment = new MotionCommentSection(this.commentFieldForm.value);
-                this.repo.create(comment).catch(this.raiseError);
-            }
+            throw new Error('TODO');
+            // if (this.currentComment) {
+            //     this.repo
+            //         .update(this.commentFieldForm.value as Partial<MotionCommentSection>, this.currentComment)
+            //         .catch(this.raiseError);
+            // } else {
+            //     const comment = new MotionCommentSection(this.commentFieldForm.value);
+            //     this.repo.create(comment).catch(this.raiseError);
+            // }
             this.commentFieldForm.reset();
         }
     }
@@ -157,7 +158,8 @@ export class MotionCommentSectionListComponent extends BaseModelContextComponent
         const title = this.translate.instant('Are you sure you want to delete this comment field?');
         const content = viewSection.name;
         if (await this.promptService.open(title, content)) {
-            this.repo.delete(viewSection).catch(this.raiseError);
+            throw new Error('TODO');
+            // this.repo.delete(viewSection).catch(this.raiseError);
         }
     }
 }

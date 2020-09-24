@@ -10,10 +10,7 @@ import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.se
 import { UserSortProperty } from 'app/shared/models/event-management/meeting';
 import { User } from 'app/shared/models/users/user';
 import { ViewUser } from 'app/site/users/models/view-user';
-import { BaseRepository } from '../base-repository';
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
-import { environment } from '../../../../environments/environment';
-import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 export interface MassImportResult {
@@ -426,9 +423,10 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
      * @returns Promise with a created user id and the raw name used as input
      */
     public async createFromString(user: string): Promise<NewUser> {
-        const newUser = this.parseUserString(user);
-        const createdUser = await this.create(newUser);
-        return { id: createdUser.id, name: user } as NewUser;
+        // const newUser = this.parseUserString(user);
+        // const createdUser = await this.create(newUser);
+        // return { id: createdUser.id, name: user } as NewUser;
+        throw new Error('TODO!');
     }
 
     /**

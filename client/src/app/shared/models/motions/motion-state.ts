@@ -32,7 +32,7 @@ export class MotionState extends BaseModel<MotionState> {
     public name: string;
     public recommendation_label: string;
     public css_class: string;
-    public restriction: Restriction[];
+    public restrictions: Restriction[];
     public allow_support: boolean;
     public allow_create_poll: boolean;
     public allow_submitter_edit: boolean;

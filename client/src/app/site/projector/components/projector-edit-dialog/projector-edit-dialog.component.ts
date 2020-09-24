@@ -166,12 +166,13 @@ export class ProjectorEditDialogComponent extends BaseComponent implements OnIni
     public async applyChanges(): Promise<void> {
         const updateProjector: Projector = new Projector();
         Object.assign(updateProjector, this.updateForm.value);
-        try {
-            await this.clockSlideService.setProjectedOn(this.projector, this.updateForm.value.clock);
-            await this.repo.update(updateProjector, this.projector);
-        } catch (e) {
-            this.raiseError(e);
-        }
+        throw new Error('TODO!');
+        // try {
+        //     await this.clockSlideService.setProjectedOn(this.projector, this.updateForm.value.clock);
+        //     await this.repo.update(updateProjector, this.projector);
+        // } catch (e) {
+        //     this.raiseError(e);
+        // }
     }
 
     /**

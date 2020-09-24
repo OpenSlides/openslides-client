@@ -3,8 +3,7 @@ import { Injectable } from '@angular/core';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { MotionState } from 'app/shared/models/motions/motion-state';
 import { ViewMotionState } from 'app/site/motions/models/view-motion-state';
-import { BaseRepository } from '../base-repository';
-import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
+import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 /**
@@ -20,7 +19,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class MotionStateRepositoryService extends MeetingModelBaseRepository<ViewMotionState, MotionState> {
+export class MotionStateRepositoryService extends BaseRepositoryWithActiveMeeting<ViewMotionState, MotionState> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, MotionState);
     }
@@ -30,7 +29,7 @@ export class MotionStateRepositoryService extends MeetingModelBaseRepository<Vie
         const listFields: (keyof MotionState)[] = titleFields.concat(['css_class']);
         const detailFields: (keyof MotionState)[] = listFields.concat([
             'recommendation_label',
-            'restriction',
+            'restrictions',
             'allow_support',
             'allow_create_poll',
             'allow_submitter_edit',

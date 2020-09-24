@@ -93,18 +93,19 @@ export class MeetingSettingsListComponent extends BaseModelContextComponent
      */
     public saveAll(): void {
         this.cd.detach();
-        this.repo.update(this.changedSettings, this.meeting).then(
-            result => {
-                this.changedSettings = {};
-                this.cd.reattach();
-                this.cd.markForCheck();
-            },
-            error => {
-                this.matSnackBar.open(error, this.translate.instant('Ok'), {
-                    duration: 0
-                });
-            }
-        );
+        // this.repo.update(this.changedSettings, this.meeting).then(
+        //     result => {
+        //         this.changedSettings = {};
+        //         this.cd.reattach();
+        //         this.cd.markForCheck();
+        //     },
+        //     error => {
+        //         this.matSnackBar.open(error, this.translate.instant('Ok'), {
+        //             duration: 0
+        //         });
+        //     }
+        // );
+        throw new Error('TODO!');
     }
 
     /**

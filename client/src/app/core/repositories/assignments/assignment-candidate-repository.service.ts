@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { AssignmentCandidate } from 'app/shared/models/assignments/assignment-candidate';
 import { ViewAssignmentCandidate } from 'app/site/assignments/models/view-assignment-candidate';
-import { BaseRepository } from '../base-repository';
-import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
+import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 /**
@@ -14,7 +13,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class AssignmentCandidateRepositoryService extends MeetingModelBaseRepository<
+export class AssignmentCandidateRepositoryService extends BaseRepositoryWithActiveMeeting<
     ViewAssignmentCandidate,
     AssignmentCandidate
 > {

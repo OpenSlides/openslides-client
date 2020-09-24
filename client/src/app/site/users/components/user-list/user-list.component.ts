@@ -262,7 +262,8 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.repo.update(result, user);
+                throw new Error('TODO!');
+                // this.repo.update(result, user);
             }
         });
     }

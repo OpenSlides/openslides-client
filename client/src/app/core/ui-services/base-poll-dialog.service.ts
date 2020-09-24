@@ -27,6 +27,7 @@ export abstract class BasePollDialogService<V extends BaseViewPoll, S extends Po
      * @param data Passing the (existing or new) data for the poll
      */
     public async openDialog(viewPoll: Partial<V> & Collection): Promise<void> {
+        throw new Error('TODO!');
         const dialogRef = this.dialog.open(this.dialogComponent, {
             data: viewPoll,
             ...mediumDialogSettings
@@ -35,7 +36,7 @@ export abstract class BasePollDialogService<V extends BaseViewPoll, S extends Po
         if (result) {
             const repo = this.mapper.getRepository(viewPoll.collection);
             if (!viewPoll.poll) {
-                await repo.create(result);
+                // await repo.create(result);
             } else {
                 let update = result;
                 if (viewPoll.state !== PollState.Created) {
@@ -53,7 +54,7 @@ export abstract class BasePollDialogService<V extends BaseViewPoll, S extends Po
                         };
                     }
                 }
-                await repo.update(update, <V>viewPoll);
+                // await repo.update(update, <V>viewPoll);
             }
         }
     }

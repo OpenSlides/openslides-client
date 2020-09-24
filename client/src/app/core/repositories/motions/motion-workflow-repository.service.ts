@@ -5,7 +5,7 @@ import { MotionWorkflow } from 'app/shared/models/motions/motion-workflow';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionState } from 'app/site/motions/models/view-motion-state';
 import { ViewMotionWorkflow } from 'app/site/motions/models/view-motion-workflow';
-import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
+import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 /**
@@ -21,7 +21,10 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class MotionWorkflowRepositoryService extends MeetingModelBaseRepository<ViewMotionWorkflow, MotionWorkflow> {
+export class MotionWorkflowRepositoryService extends BaseRepositoryWithActiveMeeting<
+    ViewMotionWorkflow,
+    MotionWorkflow
+> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, MotionWorkflow);
     }
