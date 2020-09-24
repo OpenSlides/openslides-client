@@ -4,9 +4,7 @@ import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-reques
 import { TreeIdNode } from 'app/core/ui-services/tree.service';
 import { MotionCategory } from 'app/shared/models/motions/motion-category';
 import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
-import { BaseRepository } from '../base-repository';
-import { HttpService } from '../../core-services/http.service';
-import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
+import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 /**
@@ -22,7 +20,10 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class MotionCategoryRepositoryService extends MeetingModelBaseRepository<ViewMotionCategory, MotionCategory> {
+export class MotionCategoryRepositoryService extends BaseRepositoryWithActiveMeeting<
+    ViewMotionCategory,
+    MotionCategory
+> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, MotionCategory);
 

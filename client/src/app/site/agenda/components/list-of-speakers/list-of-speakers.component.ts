@@ -481,8 +481,9 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
      * Closes the current list of speakers
      */
     public closeSpeakerList(): Promise<void> {
+        throw new Error('TODO!');
         if (!this.viewListOfSpeakers.closed) {
-            return this.listOfSpeakersRepo.update({ closed: true }, this.viewListOfSpeakers).catch(this.raiseError);
+            // return this.listOfSpeakersRepo.update({ closed: true }, this.viewListOfSpeakers).catch(this.raiseError);
         }
     }
 
@@ -490,8 +491,9 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
      * Opens the list of speaker for the current item
      */
     public openSpeakerList(): Promise<void> {
+        throw new Error('TODO!');
         if (this.viewListOfSpeakers.closed) {
-            return this.listOfSpeakersRepo.update({ closed: false }, this.viewListOfSpeakers).catch(this.raiseError);
+            // return this.listOfSpeakersRepo.update({ closed: false }, this.viewListOfSpeakers).catch(this.raiseError);
         }
     }
 

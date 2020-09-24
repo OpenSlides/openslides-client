@@ -1,14 +1,11 @@
 import { Injectable } from '@angular/core';
 
-import { HttpService } from 'app/core/core-services/http.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { ListOfSpeakers } from 'app/shared/models/agenda/list-of-speakers';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { ViewSpeaker } from 'app/site/agenda/models/view-speaker';
-import { BaseRepository } from '../base-repository';
-import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
-import { RepositoryServiceCollector } from '../repository-service-collector';
+import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 
 /**
  * An object, that contains information about structure-level,
@@ -29,11 +26,10 @@ export interface SpeakingTimeStructureLevelObject {
 @Injectable({
     providedIn: 'root'
 })
-export class ListOfSpeakersRepositoryService extends MeetingModelBaseRepository<ViewListOfSpeakers, ListOfSpeakers> {
-    public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
-        super(repositoryServiceCollector, ListOfSpeakers);
-    }
-
+export class ListOfSpeakersRepositoryService extends BaseRepositoryWithActiveMeeting<
+    ViewListOfSpeakers,
+    ListOfSpeakers
+> {
     public getFieldsets(): Fieldsets<ListOfSpeakers> {
         return { [DEFAULT_FIELDSET]: ['closed', 'content_object_id', 'speaker_ids'] };
     }

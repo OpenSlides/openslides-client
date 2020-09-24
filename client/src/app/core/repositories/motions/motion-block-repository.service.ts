@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { AgendaItemRepositoryService } from '../agenda/agenda-item-repository.service';
-import { HttpService } from 'app/core/core-services/http.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { MotionBlock } from 'app/shared/models/motions/motion-block';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
@@ -27,6 +26,18 @@ export class MotionBlockRepositoryService extends BaseIsAgendaItemAndListOfSpeak
     ) {
         super(repositoryServiceCollector, MotionBlock, agendaItemRepo);
         this.initSorting();
+    }
+
+    public create(partialModel: Partial<MotionBlock>): Promise<any> {
+        throw new Error('TODO');
+    }
+
+    public update(update: Partial<MotionBlock>, viewModel: ViewMotionBlock): Promise<any> {
+        throw new Error('TODO');
+    }
+
+    public delete(viewModel: ViewMotionBlock): Promise<any> {
+        throw new Error('TODO');
     }
 
     public getFieldsets(): Fieldsets<MotionBlock> {

@@ -258,7 +258,8 @@ export class AmendmentCreateWizardComponent extends BaseComponent implements OnI
         const motion = new CreateMotion();
         motion.deserialize(newMotionValues);
 
-        const response = await this.repo.create(motion);
-        this.router.navigate(['./motions/' + response.id]);
+        // const response = await this.repo.create(motion);
+        // this.router.navigate(['./motions/' + response.id]);
+        throw new Error('TODO!');
     }
 }

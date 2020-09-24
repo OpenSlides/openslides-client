@@ -142,8 +142,9 @@ export abstract class BasePollDetailComponent<V extends BaseViewPoll, S extends 
     public async deletePoll(): Promise<void> {
         const title = this.translate.instant('Are you sure you want to delete this vote?');
         if (await this.promptService.open(title)) {
-            this.repo.delete(this.poll).then(() => this.onDeleted(), this.raiseError);
+            // this.repo.delete(this.poll).then(() => this.onDeleted(), this.raiseError);
         }
+        throw new Error('TODO!');
     }
 
     public async pseudoanonymizePoll(): Promise<void> {

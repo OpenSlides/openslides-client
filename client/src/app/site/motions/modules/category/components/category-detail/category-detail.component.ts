@@ -156,7 +156,8 @@ export class CategoryDetailComponent extends BaseModelContextComponent implement
         const title = this.translate.instant('Are you sure you want to delete this category and all subcategories?');
         const content = this.selectedCategory.prefixedName;
         if (await this.promptService.open(title, content)) {
-            await this.repo.delete(this.selectedCategory);
+            throw new Error('TODO');
+            // await this.repo.delete(this.selectedCategory);
             this.router.navigate(['../'], { relativeTo: this.route });
         }
     }
@@ -179,10 +180,11 @@ export class CategoryDetailComponent extends BaseModelContextComponent implement
      * Save event handler
      */
     public save(): void {
-        this.repo
-            .update(this.editForm.value, this.selectedCategory)
-            .then(() => this.dialogRef.close())
-            .catch(this.raiseError);
+        throw new Error('TODO');
+        // this.repo
+        //     .update(this.editForm.value, this.selectedCategory)
+        //     .then(() => this.dialogRef.close())
+        //     .catch(this.raiseError);
     }
 
     /**

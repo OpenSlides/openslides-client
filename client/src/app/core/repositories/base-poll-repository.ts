@@ -1,16 +1,18 @@
 import { HttpService } from 'app/core/core-services/http.service';
-import { BaseRepository } from 'app/core/repositories/base-repository';
 import { RepositoryServiceCollector } from 'app/core/repositories/repository-service-collector';
 import { VotingService } from 'app/core/ui-services/voting.service';
 import { ModelConstructor } from 'app/shared/models/base/base-model';
 import { BasePoll, PollState } from 'app/shared/models/poll/base-poll';
+import { BaseRepositoryWithActiveMeeting } from './base-repository-with-active-meeting';
 import { BaseViewPoll } from '../../site/polls/models/base-view-poll';
-import { MeetingModelBaseRepository } from './meeting-model-base-repository';
+
+export type PollMethodYNA = 'Y' | 'N' | 'A';
+export type PollMethodYN = 'Y' | 'N';
 
 export abstract class BasePollRepository<
     V extends BaseViewPoll = any,
     M extends BasePoll = any
-> extends MeetingModelBaseRepository<V, M> {
+> extends BaseRepositoryWithActiveMeeting<V, M> {
     // just passing everything to superclass
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
@@ -31,17 +33,17 @@ export abstract class BasePollRepository<
         return viewModel;
     }
 
-    public changePollState(poll: BasePoll): Promise<void> {
+    public async changePollState(poll: BasePoll): Promise<void> {
         const path = this.restPath(poll);
         switch (poll.state) {
             case PollState.Created:
-                return this.http.post(`${path}/start/`);
+            // return this.http.post(`${path}/start/`);
             case PollState.Started:
-                return this.http.post(`${path}/stop/`);
+            // return this.http.post(`${path}/stop/`);
             case PollState.Finished:
-                return this.http.post(`${path}/publish/`);
+            // return this.http.post(`${path}/publish/`);
             case PollState.Published:
-                return this.resetPoll(poll);
+            // return this.resetPoll(poll);
         }
     }
 
@@ -49,15 +51,15 @@ export abstract class BasePollRepository<
         return `/rest/${poll.collection}/${poll.id}`;
     }
 
-    public resetPoll(poll: BasePoll): Promise<void> {
-        return this.http.post(`${this.restPath(poll)}/reset/`);
+    public async resetPoll(poll: BasePoll): Promise<void> {
+        // return this.http.post(`${this.restPath(poll)}/reset/`);
     }
 
-    public pseudoanonymize(poll: BasePoll): Promise<void> {
-        return this.http.post(`${this.restPath(poll)}/pseudoanonymize/`);
+    public async pseudoanonymize(poll: BasePoll): Promise<void> {
+        // return this.http.post(`${this.restPath(poll)}/pseudoanonymize/`);
     }
 
-    public refresh(poll: BasePoll): Promise<void> {
-        return this.http.post(`${this.restPath(poll)}/refresh/`);
+    public async refresh(poll: BasePoll): Promise<void> {
+        // return this.http.post(`${this.restPath(poll)}/refresh/`);
     }
 }

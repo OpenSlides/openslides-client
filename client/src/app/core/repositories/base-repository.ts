@@ -3,20 +3,17 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { auditTime } from 'rxjs/operators';
 
 import { ActionService, ActionType } from '../core-services/action.service';
-import { ActiveMeetingService } from '../core-services/active-meeting.service';
 import { Collection } from 'app/shared/models/base/collection';
 import { BaseModel, ModelConstructor } from '../../shared/models/base/base-model';
 import { BaseViewModel, ViewModelConstructor } from '../../site/base/base-view-model';
 import { CollectionMapperService } from '../core-services/collection-mapper.service';
 import { DataStoreService } from '../core-services/data-store.service';
 import { HasViewModelListObservable } from '../definitions/has-view-model-list-observable';
-import { Identifiable } from '../../shared/models/base/identifiable';
 import { Id } from '../definitions/key-types';
-import { DEFAULT_FIELDSET, Fieldsets } from '../core-services/model-request-builder.service';
+import { Fieldsets } from '../core-services/model-request-builder.service';
 import { OnAfterAppsLoaded } from '../definitions/on-after-apps-loaded';
 import { RelationManagerService } from '../core-services/relation-manager.service';
 import { Relation } from '../definitions/relations';
-import { RepositoryServiceCollector } from './repository-service-collector';
 import { RepositoryServiceCollectorWithoutActiveMeetingService } from './repository-service-collector-without-active-meeting-service';
 import { ViewModelStoreService } from '../core-services/view-model-store.service';
 
@@ -241,43 +238,6 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     }
 
     /**
-     * Saves the (partial) update to an existing model. So called "update"-function
-     * Provides a default procedure, but can be overwritten if required
-     *
-     * @param update the update that should be created
-     * @param viewModel the view model that the update is based on
-     */
-    public async update(update: Partial<M>, viewModel: V): Promise<void> {
-        if (!update.id) {
-            update.id = viewModel.id;
-        }
-        const actionType = `${this.collection}.update` as ActionType;
-        return await this.actions.sendRequest(actionType, update);
-    }
-
-    /**
-     * Deletes a given Model
-     * Provides a default procedure, but can be overwritten if required
-     *
-     * @param viewModel the view model to delete
-     */
-    public async delete(viewModel: V): Promise<void> {
-        const actionType = `${this.collection}.delete` as ActionType;
-        return await this.actions.sendRequest(actionType, { id: viewModel.id });
-    }
-
-    /**
-     * Creates a new model.
-     * Provides a default procedure, but can be overwritten if required
-     *
-     * @param model the model to create on the server
-     */
-    public async create(model: Partial<M>): Promise<Identifiable> {
-        const actionType = `${this.collection}.create` as ActionType;
-        return await this.actions.sendRequest(actionType, model);
-    }
-
-    /**
      * Clears the repository.
      */
     protected clear(): void {
@@ -374,5 +334,13 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         modelIds.forEach(id => {
             this.updateViewModelObservable(id);
         });
+    }
+
+    protected raiseError = (errorMessage: string | Error) => {
+        this.repositoryServiceCollector.errorService.showError(errorMessage);
+    };
+
+    protected sendActionToBackend(actionType: ActionType, payload: any): Promise<any> {
+        return this.actions.sendRequest(actionType, payload).catch(this.raiseError);
     }
 }

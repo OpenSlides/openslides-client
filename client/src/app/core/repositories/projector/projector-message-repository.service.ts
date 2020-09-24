@@ -2,14 +2,13 @@ import { Injectable } from '@angular/core';
 
 import { ProjectorMessage } from 'app/shared/models/projector/projector-message';
 import { ViewProjectorMessage } from 'app/site/projector/models/view-projector-message';
-import { BaseRepository } from '../base-repository';
-import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
+import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 @Injectable({
     providedIn: 'root'
 })
-export class ProjectorMessageRepositoryService extends MeetingModelBaseRepository<
+export class ProjectorMessageRepositoryService extends BaseRepositoryWithActiveMeeting<
     ViewProjectorMessage,
     ProjectorMessage
 > {
