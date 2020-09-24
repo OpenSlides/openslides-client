@@ -3,14 +3,14 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { Identifiable } from 'app/shared/models/base/identifiable';
+import { MotionChangeRecommendationAction } from 'app/core/actions/motion-change-recommendation-action';
+import { ActionType } from 'app/core/core-services/action.service';
 import { MotionChangeRecommendation } from 'app/shared/models/motions/motion-change-reco';
 import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
 import { ChangeRecoMode } from 'app/site/motions/motions.constants';
-import { BaseRepository } from '../base-repository';
+import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { DiffService, LineRange, ModificationType } from '../../ui-services/diff.service';
 import { LinenumberingService } from '../../ui-services/linenumbering.service';
-import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 import { ViewMotion } from '../../../site/motions/models/view-motion';
 import { ViewUnifiedChange } from '../../../shared/models/motions/view-unified-change';
@@ -28,7 +28,7 @@ import { ViewUnifiedChange } from '../../../shared/models/motions/view-unified-c
 @Injectable({
     providedIn: 'root'
 })
-export class MotionChangeRecommendationRepositoryService extends MeetingModelBaseRepository<
+export class MotionChangeRecommendationRepositoryService extends BaseRepositoryWithActiveMeeting<
     ViewMotionChangeRecommendation,
     MotionChangeRecommendation
 > {
@@ -47,15 +47,6 @@ export class MotionChangeRecommendationRepositoryService extends MeetingModelBas
     public getVerboseName = (plural: boolean = false) => {
         return this.translate.instant(plural ? 'Change recommendations' : 'Change recommendation');
     };
-
-    /**
-     * Given a change recommendation view object, a entry in the backend is created.
-     * @param view
-     * @returns The id of the created change recommendation
-     */
-    public async createByViewModel(view: ViewMotionChangeRecommendation): Promise<Identifiable> {
-        return await this.create(view.changeRecommendation);
-    }
 
     /**
      * return the Observable of all change recommendations belonging to the given motion
@@ -103,7 +94,7 @@ export class MotionChangeRecommendationRepositoryService extends MeetingModelBas
      * @param {boolean} internal
      */
     public async setInternal(changeRecommendation: ViewMotionChangeRecommendation, internal: boolean): Promise<void> {
-        await this.update({ internal: internal }, changeRecommendation);
+        await this.update({ internal }, changeRecommendation);
     }
 
     public getTitleWithChanges = (originalTitle: string, change: ViewUnifiedChange, crMode: ChangeRecoMode): string => {
@@ -214,5 +205,34 @@ export class MotionChangeRecommendationRepositoryService extends MeetingModelBas
         changeReco.motion_id = motion.id;
 
         return new ViewMotionChangeRecommendation(changeReco);
+    }
+
+    public create(model: Partial<MotionChangeRecommendation>): Promise<any> {
+        const payload: MotionChangeRecommendationAction.CreatePayload = {
+            internal: model.internal,
+            line_from: model.line_from,
+            line_to: model.line_to,
+            motion_id: model.motion_id,
+            other_description: model.other_description,
+            rejected: model.rejected,
+            text: model.text,
+            type: model.type
+        };
+        return this.sendActionToBackend(ActionType.MOTION_CHANGE_RECOMMENDATION_CREATE, payload);
+    }
+
+    public update(
+        update: Partial<MotionChangeRecommendation>,
+        viewModel: ViewMotionChangeRecommendation
+    ): Promise<any> {
+        const payload: MotionChangeRecommendationAction.UpdatePayload = {
+            id: viewModel.id,
+            internal: update.internal,
+            other_description: update.other_description,
+            rejected: update.rejected,
+            text: update.text,
+            type: update.type
+        };
+        return this.sendActionToBackend(ActionType.MOTION_CHANGE_RECOMMENDATION_UPDATE, payload);
     }
 }

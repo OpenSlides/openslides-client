@@ -8,7 +8,7 @@ import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-reques
 import { Permission } from 'app/core/core-services/permission';
 import { Group } from 'app/shared/models/users/group';
 import { ViewGroup } from 'app/site/users/models/view-group';
-import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
+import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 /**
@@ -40,7 +40,7 @@ export interface AppPermissions {
 @Injectable({
     providedIn: 'root'
 })
-export class GroupRepositoryService extends MeetingModelBaseRepository<ViewGroup, Group> {
+export class GroupRepositoryService extends BaseRepositoryWithActiveMeeting<ViewGroup, Group> {
     /**
      * holds sorted permissions per app.
      */

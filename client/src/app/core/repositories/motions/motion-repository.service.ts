@@ -5,6 +5,7 @@ import { Action } from 'rxjs/internal/scheduler/Action';
 import { map } from 'rxjs/operators';
 
 import { AgendaItemRepositoryService, AgendaListTitle } from '../agenda/agenda-item-repository.service';
+import { MotionAction } from 'app/core/actions/motion-action';
 import { ActionType } from 'app/core/core-services/action.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
@@ -94,6 +95,18 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         this.meetingsSettingsService.get('motions_line_length').subscribe(lineLength => {
             this.motionLineLength = lineLength;
         });
+    }
+
+    public create(partialMotion: Partial<Motion>): Promise<any> {
+        throw new Error('TODO');
+    }
+
+    public update(update: Partial<Motion>, viewModel: ViewMotion): Promise<any> {
+        throw new Error('TODO');
+    }
+
+    public delete(viewModel: ViewMotion): Promise<any> {
+        throw new Error('TODO');
     }
 
     public getFieldsets(): Fieldsets<Motion> {
@@ -274,8 +287,9 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param viewMotion target motion
      * @param categoryId the number that indicates the category
      */
-    public async setCatetory(viewMotion: ViewMotion, categoryId: number): Promise<void> {
-        await this.update({ category_id: categoryId }, viewMotion);
+    public async setCategory(viewMotion: ViewMotion, categoryId: number): Promise<void> {
+        // await this.update({ category_id: categoryId }, viewMotion);
+        throw new Error('TODO!');
     }
 
     /**
@@ -285,7 +299,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param blockId the ID of the motion block
      */
     public async setBlock(viewMotion: ViewMotion, blockId: number): Promise<void> {
-        await this.update({ block_id: blockId }, viewMotion);
+        // await this.update({ block_id: blockId }, viewMotion);
+        throw new Error('TODO!');
     }
 
     /**
@@ -305,7 +320,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
             // remove tag from motion
             tag_ids.splice(tagIndex, 1);
         }
-        await this.update({ tag_ids: tag_ids }, viewMotion);
+        // await this.update({ tag_ids: tag_ids }, viewMotion);
+        throw new Error('TODO!');
     }
 
     /**
@@ -332,8 +348,11 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param data The reordered data from the sorting
      */
     public async sortMotions(data: TreeIdNode[]): Promise<void> {
-        throw new Error('TODO');
-        // await this.httpService.post('/rest/motions/motion/sort/', data);
+        const payload: MotionAction.SortPayload = {
+            meeting_id: this.activeMeetingService.meetingId,
+            nodes: data
+        };
+        return await this.actions.sendRequest(ActionType.MOTION_SORT, payload);
     }
 
     /**
@@ -865,7 +884,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      */
     public async setStateExtension(viewMotion: ViewMotion, value: string): Promise<void> {
         if (viewMotion.state.show_state_extension_field) {
-            return this.update({ state_extension: value }, viewMotion);
+            // return this.update({ state_extension: value }, viewMotion);
+            throw new Error('TODO!');
         }
     }
 
@@ -877,7 +897,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      */
     public async setRecommendationExtension(viewMotion: ViewMotion, value: string): Promise<void> {
         if (viewMotion.recommendation.show_recommendation_extension_field) {
-            return this.update({ recommendation_extension: value }, viewMotion);
+            // return this.update({ recommendation_extension: value }, viewMotion);
+            throw new Error('TODO!');
         }
     }
 

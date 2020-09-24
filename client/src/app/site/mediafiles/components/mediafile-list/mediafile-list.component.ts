@@ -338,9 +338,10 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
      * Click on the save button in edit mode
      */
     public onSaveEditedFile(value: Partial<Mediafile>): void {
-        this.repo.update(value, this.fileToEdit).then(() => {
-            this.dialogRef.close();
-        }, this.raiseError);
+        // this.repo.update(value, this.fileToEdit).then(() => {
+        //     this.dialogRef.close();
+        // }, this.raiseError);
+        throw new Error('TODO!');
     }
 
     /**
@@ -352,7 +353,8 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
         const title = this.translate.instant('Are you sure you want to delete this file?');
         const content = file.getTitle();
         if (await this.promptService.open(title, content)) {
-            this.repo.delete(file);
+            // this.repo.delete(file);
+            throw new Error('TODO!');
         }
     }
 
@@ -407,7 +409,7 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
                     parent_id: this.directory ? this.directory.id : null,
                     is_directory: true
                 });
-                this.repo.create(mediafile).catch(this.raiseError);
+                this.repo.createDirectory(mediafile).catch(this.raiseError);
             }
         });
     }

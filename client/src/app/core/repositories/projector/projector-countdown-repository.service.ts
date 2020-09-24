@@ -3,14 +3,13 @@ import { Injectable } from '@angular/core';
 import { ServertimeService } from 'app/core/core-services/servertime.service';
 import { ProjectorCountdown } from 'app/shared/models/projector/projector-countdown';
 import { ViewProjectorCountdown } from 'app/site/projector/models/view-projector-countdown';
-import { BaseRepository } from '../base-repository';
-import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
+import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 @Injectable({
     providedIn: 'root'
 })
-export class ProjectorCountdownRepositoryService extends MeetingModelBaseRepository<
+export class ProjectorCountdownRepositoryService extends BaseRepositoryWithActiveMeeting<
     ViewProjectorCountdown,
     ProjectorCountdown
 > {
@@ -38,7 +37,8 @@ export class ProjectorCountdownRepositoryService extends MeetingModelBaseReposit
      */
     public async start(countdown: ViewProjectorCountdown): Promise<void> {
         const endTime = this.servertimeService.getServertime() / 1000 + countdown.countdown_time;
-        await this.update({ running: true, countdown_time: endTime }, countdown);
+        // await this.update({ running: true, countdown_time: endTime }, countdown);
+        throw new Error('TODO!');
     }
 
     /**
@@ -48,7 +48,8 @@ export class ProjectorCountdownRepositoryService extends MeetingModelBaseReposit
      * @param countdown The countdown to stop.
      */
     public async stop(countdown: ViewProjectorCountdown): Promise<void> {
-        await this.update({ running: false, countdown_time: countdown.default_time }, countdown);
+        // await this.update({ running: false, countdown_time: countdown.default_time }, countdown);
+        throw new Error('TODO!');
     }
 
     /**
@@ -58,6 +59,7 @@ export class ProjectorCountdownRepositoryService extends MeetingModelBaseReposit
      */
     public async pause(countdown: ViewProjectorCountdown): Promise<void> {
         const endTime = countdown.countdown_time - this.servertimeService.getServertime() / 1000;
-        await this.update({ running: false, countdown_time: endTime }, countdown);
+        // await this.update({ running: false, countdown_time: endTime }, countdown);
+        throw new Error('TODO!');
     }
 }

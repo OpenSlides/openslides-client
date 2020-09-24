@@ -157,10 +157,11 @@ export class AssignmentListComponent extends BaseListViewComponent<ViewAssignmen
      */
     public async deleteSelected(): Promise<void> {
         const title = this.translate.instant('Are you sure you want to delete all selected elections?');
-        if (await this.promptService.open(title)) {
-            for (const assignment of this.selectedRows) {
-                await this.repo.delete(assignment);
-            }
-        }
+        // if (await this.promptService.open(title)) {
+        //     for (const assignment of this.selectedRows) {
+        //         await this.repo.delete(assignment);
+        //     }
+        // }
+        throw new Error('TODO!');
     }
 }

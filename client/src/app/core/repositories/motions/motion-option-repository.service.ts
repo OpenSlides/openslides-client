@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { MotionOption } from 'app/shared/models/motions/motion-option';
 import { ViewMotionOption } from 'app/site/motions/models/view-motion-option';
-import { BaseRepository } from '../base-repository';
-import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
+import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 /**
@@ -14,7 +13,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class MotionOptionRepositoryService extends MeetingModelBaseRepository<ViewMotionOption, MotionOption> {
+export class MotionOptionRepositoryService extends BaseRepositoryWithActiveMeeting<ViewMotionOption, MotionOption> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, MotionOption);
     }

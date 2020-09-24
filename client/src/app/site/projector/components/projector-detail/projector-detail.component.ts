@@ -150,8 +150,9 @@ export class ProjectorDetailComponent extends BaseComponent implements OnInit {
     public async onDeleteProjectorButton(): Promise<void> {
         const title = this.translate.instant('Are you sure you want to delete this projector?');
         if (await this.promptService.open(title, this.projector.name)) {
-            this.repo.delete(this.projector).catch(this.raiseError);
+            // this.repo.delete(this.projector).catch(this.raiseError);
         }
+        throw new Error('TODO!');
     }
 
     /**
@@ -328,11 +329,12 @@ export class ProjectorDetailComponent extends BaseComponent implements OnInit {
             countdown_time: viewCountdown && viewCountdown.running ? null : defaultTime
         });
 
-        if (viewCountdown) {
-            this.countdownRepo.update(sendData, viewCountdown).then(() => {}, this.raiseError);
-        } else {
-            this.countdownRepo.create(sendData).then(() => {}, this.raiseError);
-        }
+        throw new Error('TODO!');
+        // if (viewCountdown) {
+        //     this.countdownRepo.update(sendData, viewCountdown).then(() => {}, this.raiseError);
+        // } else {
+        //     this.countdownRepo.create(sendData).then(() => {}, this.raiseError);
+        // }
     }
 
     /**
@@ -346,10 +348,11 @@ export class ProjectorDetailComponent extends BaseComponent implements OnInit {
             message: data.text
         });
 
-        if (viewMessage) {
-            this.messageRepo.update(sendData, viewMessage).then(() => {}, this.raiseError);
-        } else {
-            this.messageRepo.create(sendData).then(() => {}, this.raiseError);
-        }
+        throw new Error('TODO!');
+        // if (viewMessage) {
+        //     this.messageRepo.update(sendData, viewMessage).then(() => {}, this.raiseError);
+        // } else {
+        //     this.messageRepo.create(sendData).then(() => {}, this.raiseError);
+        // }
     }
 }

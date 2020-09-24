@@ -1,16 +1,13 @@
-import { HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { saveAs } from 'file-saver';
 import * as JSZip from 'jszip';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { first, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 import { HttpService } from 'app/core/core-services/http.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
-import { Id } from 'app/core/definitions/key-types';
 import { Identifiable } from 'app/shared/models/base/identifiable';
-import { CreateMediafile } from 'app/shared/models/mediafiles/create-mediafile';
 import { Mediafile } from 'app/shared/models/mediafiles/mediafile';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { BaseIsListOfSpeakersContentObjectRepository } from '../base-is-list-of-speakers-content-object-repository';
@@ -79,10 +76,6 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
         );
     }
 
-    public async create(mediafile: CreateMediafile): Promise<Identifiable> {
-        return super.create(mediafile);
-    }
-
     public async downloadArchive(archiveName: string, files: ViewMediafile[]): Promise<void> {
         throw new Error('TODO');
         /*const zip = new JSZip();
@@ -118,5 +111,13 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
         //     ids: mediafiles.map(mediafile => mediafile.id)
         // });
         throw new Error('TODO');
+    }
+
+    public async createFile(data: Partial<Mediafile>): Promise<Identifiable> {
+        throw new Error('Todo');
+    }
+
+    public async createDirectory(partialMediaFile: Partial<Mediafile>): Promise<Identifiable> {
+        throw new Error('Todo');
     }
 }

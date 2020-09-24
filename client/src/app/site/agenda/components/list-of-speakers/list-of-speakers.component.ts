@@ -91,7 +91,7 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
         private currentListOfSpeakersService: CurrentListOfSpeakersService,
         private currentListOfSpeakersSlideService: CurrentListOfSpeakersSlideService,
         private viewport: ViewportService,
-        private collectionMapper: CollectionMapperService,
+        private collectionMapper: CollectionMapperService
     ) {
         super(componentServiceCollector);
     }

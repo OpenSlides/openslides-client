@@ -88,7 +88,8 @@ export class MotionPollComponent extends BasePollComponent<ViewMotionPoll, Motio
         const content = this.poll.getTitle();
 
         if (await this.promptService.open(title, content)) {
-            this.repo.delete(this.poll).catch(this.raiseError);
+            // this.repo.delete(this.poll).catch(this.raiseError);
         }
+        throw new Error('TODO!');
     }
 }

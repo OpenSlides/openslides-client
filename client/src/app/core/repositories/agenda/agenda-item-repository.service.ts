@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 
-import { ActionService, ActionType } from 'app/core/core-services/action.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { TreeIdNode } from 'app/core/ui-services/tree.service';
@@ -8,8 +7,7 @@ import { AgendaItem } from 'app/shared/models/agenda/agenda-item';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { HasAgendaItem, ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { BaseViewModel } from 'app/site/base/base-view-model';
-import { BaseRepository } from '../base-repository';
-import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
+import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 export interface AgendaListTitle {
@@ -25,7 +23,7 @@ export interface AgendaListTitle {
 @Injectable({
     providedIn: 'root'
 })
-export class AgendaItemRepositoryService extends MeetingModelBaseRepository<ViewAgendaItem, AgendaItem> {
+export class AgendaItemRepositoryService extends BaseRepositoryWithActiveMeeting<ViewAgendaItem, AgendaItem> {
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
         private meetingSettingsService: MeetingSettingsService
@@ -114,11 +112,12 @@ export class AgendaItemRepositoryService extends MeetingModelBaseRepository<View
      * @param viewModel the view model that the update is based on
      */
     public async update(update: Partial<AgendaItem>, viewModel: ViewAgendaItem): Promise<void> {
-        (<any>update)._itemNumber = update.item_number;
-        const sendUpdate = viewModel.getUpdatedModelData(update);
-        const clone = JSON.parse(JSON.stringify(sendUpdate));
-        clone.item_number = clone._itemNumber;
-        return await super.update(clone, viewModel);
+        // (<any>update)._itemNumber = update.item_number;
+        // const sendUpdate = viewModel.getUpdatedModelData(update);
+        // const clone = JSON.parse(JSON.stringify(sendUpdate));
+        // clone.item_number = clone._itemNumber;
+        // return await super.update(clone, viewModel);
+        throw new Error('TODO');
     }
 
     public async addItemToAgenda(contentObject: BaseViewModel & HasAgendaItem): Promise<Identifiable> {

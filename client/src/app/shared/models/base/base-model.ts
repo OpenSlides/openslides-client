@@ -1,3 +1,4 @@
+import { fqidFromCollectionAndId } from 'app/core/core-services/key-transforms';
 import { Fqid, Id } from 'app/core/definitions/key-types';
 import { Collection } from './collection';
 import { Deserializer } from './deserializer';
@@ -13,9 +14,13 @@ export interface ModelConstructor<T extends BaseModel<T>> {
  * When inherit from this class, give the subclass as the type. E.g. `class Motion extends BaseModel<Motion>`
  */
 export abstract class BaseModel<T = any> extends Deserializer implements Identifiable, Collection {
+    /**
+     * @returns The full-qualified id of an object.
+     */
     public get fqid(): Fqid {
-        return `${this.collection}/${this.id}`;
+        return fqidFromCollectionAndId(this.collection, this.id);
     }
+
     /**
      * force children of BaseModel to have an id
      */

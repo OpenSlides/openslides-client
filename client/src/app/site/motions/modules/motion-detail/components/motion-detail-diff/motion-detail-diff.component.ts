@@ -311,8 +311,9 @@ export class MotionDetailDiffComponent extends BaseComponent implements AfterVie
         $event.preventDefault();
         const title = this.translate.instant('Are you sure you want to delete this change recommendation?');
         if (await this.promptService.open(title)) {
-            this.recoRepo.delete(reco).catch(this.raiseError);
+            // this.recoRepo.delete(reco).catch(this.raiseError);
         }
+        throw new Error('TODO!');
     }
 
     /**

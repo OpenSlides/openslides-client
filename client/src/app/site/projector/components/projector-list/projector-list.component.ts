@@ -105,19 +105,20 @@ export class ProjectorListComponent extends BaseComponent implements OnInit, Aft
      * @param dialog
      */
     public createNewProjector(dialog: TemplateRef<string>): void {
-        this.createForm.reset();
-        const dialogRef = this.dialogService.open(dialog, { ...infoDialogSettings, disableClose: true });
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                const projectorToCreate: Partial<Projector> = {
-                    name: this.createForm.value.name
-                };
+        throw new Error('TODO!');
+        // this.createForm.reset();
+        // const dialogRef = this.dialogService.open(dialog, { ...infoDialogSettings, disableClose: true });
+        // dialogRef.afterClosed().subscribe(result => {
+        //     if (result) {
+        //         const projectorToCreate: Partial<Projector> = {
+        //             name: this.createForm.value.name
+        //         };
 
-                this.repo.create(projectorToCreate as Projector).then(() => {
-                    this.cd.detectChanges();
-                }, this.raiseError);
-            }
-        });
+        //         this.repo.create(projectorToCreate as Projector).then(() => {
+        //             this.cd.detectChanges();
+        //         }, this.raiseError);
+        //     }
+        // });
     }
 
     /**

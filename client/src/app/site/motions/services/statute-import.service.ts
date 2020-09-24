@@ -86,13 +86,14 @@ export class StatuteImportService extends BaseImportService<MotionStatuteParagra
      * them to the server. The entries will receive the status 'done' on success.
      */
     public async doImport(): Promise<void> {
-        for (const entry of this.entries) {
-            if (entry.status !== 'new') {
-                continue;
-            }
-            await this.repo.create(entry.newEntry);
-            entry.status = 'done';
-        }
+        // for (const entry of this.entries) {
+        //     if (entry.status !== 'new') {
+        //         continue;
+        //     }
+        //     await this.repo.create(entry.newEntry);
+        //     entry.status = 'done';
+        // }
+        throw new Error('TODO!');
         this.updatePreview();
     }
 }

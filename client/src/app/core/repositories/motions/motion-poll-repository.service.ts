@@ -7,6 +7,15 @@ import { UserVote, VoteValue } from 'app/shared/models/poll/base-vote';
 import { ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
+export interface MotionAnalogVoteData {
+    Y: number;
+    N: number;
+    A?: number; // Only if pollmethod is YNA
+    votesvalid?: number;
+    votesinvalid?: number;
+    votescast?: number;
+}
+
 /**
  * Repository Service for Assignments.
  *

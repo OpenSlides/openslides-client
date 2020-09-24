@@ -1,9 +1,8 @@
 import { HasListOfSpeakersId } from 'app/shared/models/base/has-list-of-speakers-id';
 import { HasListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { BaseModel, ModelConstructor } from '../../shared/models/base/base-model';
-import { BaseRepository } from './base-repository';
+import { BaseRepositoryWithActiveMeeting } from './base-repository-with-active-meeting';
 import { BaseViewModel } from '../../site/base/base-view-model';
-import { MeetingModelBaseRepository } from './meeting-model-base-repository';
 import { RepositoryServiceCollector } from './repository-service-collector';
 
 export function isBaseIsListOfSpeakersContentObjectRepository(
@@ -19,7 +18,7 @@ export function isBaseIsListOfSpeakersContentObjectRepository(
 export interface IBaseIsListOfSpeakersContentObjectRepository<
     V extends BaseViewModel & HasListOfSpeakers,
     M extends BaseModel & HasListOfSpeakersId
-> extends MeetingModelBaseRepository<V, M> {
+> extends BaseRepositoryWithActiveMeeting<V, M> {
     getListOfSpeakersTitle: (viewModel: V) => string;
     getListOfSpeakersSlideTitle: (viewModel: V) => string;
 }
@@ -31,7 +30,7 @@ export abstract class BaseIsListOfSpeakersContentObjectRepository<
         V extends BaseViewModel & HasListOfSpeakers,
         M extends BaseModel & HasListOfSpeakersId
     >
-    extends MeetingModelBaseRepository<V, M>
+    extends BaseRepositoryWithActiveMeeting<V, M>
     implements IBaseIsListOfSpeakersContentObjectRepository<V, M> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector, baseModelCtor: ModelConstructor<M>) {
         super(repositoryServiceCollector, baseModelCtor);

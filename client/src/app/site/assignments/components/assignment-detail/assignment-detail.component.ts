@@ -486,7 +486,8 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
      * @param value the phase to set
      */
     public async onSetPhaseButton(value: number): Promise<void> {
-        this.repo.update({ phase: value }, this.assignment).catch(this.raiseError);
+        throw new Error('TODO!');
+        // this.repo.update({ phase: value }, this.assignment).catch(this.raiseError);
     }
 
     public onDownloadPdf(): void {
@@ -497,26 +498,28 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
      * Creates an assignment. Calls the "patchValues" function
      */
     public async createAssignment(): Promise<void> {
-        const newAssignmentValues = { ...this.assignmentForm.value };
+        throw new Error('TODO!');
+        // const newAssignmentValues = { ...this.assignmentForm.value };
 
-        if (!newAssignmentValues.agenda_parent_id) {
-            delete newAssignmentValues.agenda_parent_id;
-        }
-        try {
-            const response = await this.repo.create(newAssignmentValues);
-            this.router.navigate(['./assignments/' + response.id]);
-        } catch (e) {
-            this.raiseError(this.translate.instant(e));
-        }
+        // if (!newAssignmentValues.agenda_parent_id) {
+        //     delete newAssignmentValues.agenda_parent_id;
+        // }
+        // try {
+        //     const response = await this.repo.create(newAssignmentValues);
+        //     this.router.navigate(['./assignments/' + response.id]);
+        // } catch (e) {
+        //     this.raiseError(this.translate.instant(e));
+        // }
     }
 
     public async updateAssignmentFromForm(): Promise<void> {
-        try {
-            await this.repo.update({ ...this.assignmentForm.value }, this.assignment);
-            this.editAssignment = false;
-        } catch (e) {
-            this.raiseError(e);
-        }
+        throw new Error('TODO!');
+        // try {
+        //     await this.repo.update({ ...this.assignmentForm.value }, this.assignment);
+        //     this.editAssignment = false;
+        // } catch (e) {
+        //     this.raiseError(e);
+        // }
     }
 
     /**

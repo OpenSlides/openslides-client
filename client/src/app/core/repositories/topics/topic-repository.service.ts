@@ -28,6 +28,18 @@ export class TopicRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCon
         super(repositoryServiceCollector, Topic, agendaItemRepo);
     }
 
+    public create(partialTopic: Partial<Topic>): Promise<any> {
+        throw new Error('TOOD');
+    }
+
+    public update(update: Partial<Topic>, viewModel: ViewTopic): Promise<any> {
+        throw new Error('TODO');
+    }
+
+    public delete(viewModel: ViewTopic): Promise<any> {
+        throw new Error('TODO');
+    }
+
     public getFieldsets(): Fieldsets<Topic> {
         const titleFields: (keyof Topic)[] = ['title'];
         return {

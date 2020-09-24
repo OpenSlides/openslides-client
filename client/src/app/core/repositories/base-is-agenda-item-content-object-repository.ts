@@ -3,8 +3,7 @@ import { HasAgendaItemId } from 'app/shared/models/base/has-agenda-item-id';
 import { HasAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { BaseModel, ModelConstructor } from '../../shared/models/base/base-model';
-import { BaseRepository } from './base-repository';
-import { MeetingModelBaseRepository } from './meeting-model-base-repository';
+import { BaseRepositoryWithActiveMeeting } from './base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from './repository-service-collector';
 
 export function isBaseIsAgendaItemContentObjectRepository(
@@ -20,7 +19,7 @@ export function isBaseIsAgendaItemContentObjectRepository(
 export interface IBaseIsAgendaItemContentObjectRepository<
     V extends BaseViewModel & HasAgendaItem,
     M extends BaseModel & HasAgendaItemId
-> extends MeetingModelBaseRepository<V, M> {
+> extends BaseRepositoryWithActiveMeeting<V, M> {
     getAgendaListTitle: (viewModel: V) => AgendaListTitle;
     getAgendaSlideTitle: (viewModel: V) => string;
 }
@@ -32,7 +31,7 @@ export abstract class BaseIsAgendaItemContentObjectRepository<
         V extends BaseViewModel & HasAgendaItem,
         M extends BaseModel & HasAgendaItemId
     >
-    extends MeetingModelBaseRepository<V, M>
+    extends BaseRepositoryWithActiveMeeting<V, M>
     implements IBaseIsAgendaItemContentObjectRepository<V, M> {
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,

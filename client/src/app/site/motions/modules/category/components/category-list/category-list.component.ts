@@ -131,7 +131,8 @@ export class CategoryListComponent extends BaseListViewComponent<ViewMotionCateg
      */
     private save(): void {
         if (this.createForm.valid) {
-            this.repo.create(this.createForm.value).catch(this.raiseError);
+            throw new Error('TODO');
+            // this.repo.create(this.createForm.value).catch(this.raiseError);
         }
     }
 

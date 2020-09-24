@@ -116,8 +116,9 @@ export class CountdownControlsComponent extends BaseComponent {
         const content =
             this.translate.instant('Delete countdown') + ` ${this.translate.instant(this.countdown.title)}?`;
         if (await this.promptService.open('Are you sure?', content)) {
-            this.repo.delete(this.countdown).then(() => {}, this.raiseError);
+            // this.repo.delete(this.countdown).then(() => {}, this.raiseError);
         }
+        throw new Error('TODO!');
     }
 
     /**

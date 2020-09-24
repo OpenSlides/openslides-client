@@ -103,7 +103,8 @@ export class ProjectorListEntryComponent extends BaseComponent implements OnInit
     public async onDeleteButton(): Promise<void> {
         const title = this.translate.instant('Are you sure you want to delete this projector?');
         if (await this.promptService.open(title, this.projector.name)) {
-            this.repo.delete(this.projector).catch(this.raiseError);
+            // this.repo.delete(this.projector).catch(this.raiseError);
         }
+        throw new Error('TODO!');
     }
 }
