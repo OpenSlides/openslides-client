@@ -9,8 +9,6 @@ import { HTTPMethod } from '../definitions/http-methods';
 import { ModelRequestBuilderService, SimplifiedModelRequest } from './model-request-builder.service';
 import { Mutex } from '../promises/mutex';
 
-const META_DELETED = 'meta_deleted';
-
 export type FieldDescriptor = RelationFieldDescriptor | GenericRelationFieldDecriptor | StructuredFieldDecriptor;
 
 export interface Fields {
@@ -99,11 +97,11 @@ export class AutoupdateService {
 
     private async handleAutoupdateWithStupidFormat(autoupdateData: AutoupdateModelData): Promise<void> {
         const modelData = autoupdateFormatToModelData(autoupdateData);
+        console.log('handle autoupdate', modelData, 'raw data:', autoupdateData);
         await this.handleAutoupdate(modelData);
     }
 
     private async handleAutoupdate(modelData: ModelData): Promise<void> {
-        console.log('handle autoupdate', modelData);
         const unlock = await this.mutex.lock();
 
         const deletedModels: DeletedModels = {};
@@ -112,7 +110,7 @@ export class AutoupdateService {
         for (const collection of Object.keys(modelData)) {
             for (const id of Object.keys(modelData[collection])) {
                 const model = modelData[collection][id];
-                if (model[META_DELETED] === true) {
+                if (!model.id) {
                     if (deletedModels[collection] === undefined) {
                         deletedModels[collection] = [];
                     }
@@ -121,7 +119,6 @@ export class AutoupdateService {
                     if (changedModels[collection] === undefined) {
                         changedModels[collection] = [];
                     }
-                    model.id = +id;
                     const basemodel = this.mapObjectToBaseModel(collection, model);
                     if (basemodel) {
                         changedModels[collection].push(basemodel);
