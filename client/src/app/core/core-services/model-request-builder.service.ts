@@ -130,7 +130,8 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
             fields = fieldset;
         }
 
-        fields.push('id');
+        fields.push('id'); // Important: The id is used to detect, if a model was deleted, becuase this issues
+        // an autoupdate with id=null
 
         if (additionalFields) {
             fields = fields.concat(additionalFields.map(f => this.ensureField(f)));

@@ -33,7 +33,7 @@ export function autoupdateFormatToModelData(data: AutoupdateModelData): ModelDat
             modelData[collection] = {};
         }
         if (modelData[collection][id] === undefined) {
-            modelData[collection][id] = { id }; // Inject the id into the model
+            modelData[collection][id] = {}; // Do not inject the id, to distinguish between update/create and delete id
         }
         modelData[collection][id][field] = data[fqfield];
     }

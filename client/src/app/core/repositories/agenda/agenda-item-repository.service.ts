@@ -62,13 +62,7 @@ export class AgendaItemRepositoryService extends MeetingModelBaseRepository<View
         if (viewAgendaItem.content_object) {
             return viewAgendaItem.content_object.getAgendaListTitle();
         } else {
-            throw new Error('TODO');
-            /*const collection = collectionFromFqid(titleInformation.content_object_id);
-            const repo = this.collectionMapperService.getRepository(
-                collection
-            ) as BaseIsAgendaItemContentObjectRepository<any, any, any>;
-            return repo.getAgendaListTitle(titleInformation.title_information);*/
-            // This has to be decided: do we stick to titleInformation or not?
+            return { title: '<missing content object>' };
         }
     }
 
