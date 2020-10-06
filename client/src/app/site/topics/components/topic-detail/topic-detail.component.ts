@@ -112,15 +112,9 @@ export class TopicDetailComponent extends BaseModelContextComponent {
 
         try {
             if (this.newTopic) {
-                if (!this.topicForm.value.agenda_parent_id) {
-                    delete this.topicForm.value.agenda_parent_id;
-                }
-                delete this.topicForm.value.agenda_type; // TODO: remove
-                await this.repo.create(this.topicForm.value);
-                this.router.navigate([`/agenda/`]);
+                await this.createTopic();
             } else {
-                await this.repo.update(this.topicForm.value, this.topic);
-                this.setEditMode(false);
+                await this.updateTopic();
             }
         } catch (e) {
             this.raiseError(e);
@@ -243,5 +237,15 @@ export class TopicDetailComponent extends BaseModelContextComponent {
         if (event.key === 'Escape') {
             this.setEditMode(false);
         }
+    }
+
+    private async createTopic(): Promise<void> {
+        await this.repo.create(this.topicForm.value);
+        this.router.navigate([`/agenda/`]);
+    }
+
+    public async updateTopic(): Promise<void> {
+        await this.repo.update(this.topicForm.value, this.topic);
+        this.setEditMode(false);
     }
 }

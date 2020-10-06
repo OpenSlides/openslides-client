@@ -1,6 +1,6 @@
-import { TreeIdNode } from 'app/core/ui-services/tree.service';
-import { HasMeetingId } from 'app/shared/models/base/has-meeting-id';
+import { HasMeetingId } from 'app/core/actions/common/has-meeting-id';
 import { Identifiable } from 'app/shared/models/base/identifiable';
+import { BaseSortPayload } from './common/base-sort-payload';
 import { Fqid, Id } from '../definitions/key-types';
 
 export namespace AgendaItemAction {
@@ -27,8 +27,6 @@ export namespace AgendaItemAction {
         ids: Id[];
         parent_id: Id;
     }
-    export interface SortPayload extends HasMeetingId {
-        tree: TreeIdNode[];
-    }
+    export interface SortPayload extends HasMeetingId, BaseSortPayload {}
     export interface NumberingPayload extends HasMeetingId {}
 }

@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 
+import { AgendaItemAction } from 'app/core/actions/agenda-item-action';
+import { ActionType } from 'app/core/core-services/action.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { TreeIdNode } from 'app/core/ui-services/tree.service';
@@ -96,15 +98,13 @@ export class AgendaItemRepositoryService extends BaseRepositoryWithActiveMeeting
      * Trigger the automatic numbering sequence on the server
      */
     public async autoNumbering(): Promise<void> {
-        // await this.httpService.post('/rest/agenda/item/numbering/');
-        throw new Error('TODO');
+        const payload: AgendaItemAction.NumberingPayload = {
+            meeting_id: this.activeMeetingService.meetingId
+        };
+        return await this.actions.sendRequest(ActionType.AGENDA_ITEM_NUMBERING, payload);
     }
 
     /**
-     * META-TODO: can this be removed?
-     * TODO: Copied from BaseRepository and added the cloned model to write back the
-     * item_number correctly. This must be reverted with #4738 (indroduced with #4639)
-     *
      * Saves the (full) update to an existing model. So called "update"-function
      * Provides a default procedure, but can be overwritten if required
      *
@@ -112,28 +112,28 @@ export class AgendaItemRepositoryService extends BaseRepositoryWithActiveMeeting
      * @param viewModel the view model that the update is based on
      */
     public async update(update: Partial<AgendaItem>, viewModel: ViewAgendaItem): Promise<void> {
-        // (<any>update)._itemNumber = update.item_number;
-        // const sendUpdate = viewModel.getUpdatedModelData(update);
-        // const clone = JSON.parse(JSON.stringify(sendUpdate));
-        // clone.item_number = clone._itemNumber;
-        // return await super.update(clone, viewModel);
-        throw new Error('TODO');
+        const payload: AgendaItemAction.UpdatePayload = {
+            id: viewModel.id,
+            closed: update.closed,
+            comment: update.comment,
+            duration: update.duration,
+            item_number: update.item_number,
+            tag_ids: update.tag_ids,
+            type: update.type,
+            weight: update.weight
+        };
+        return await this.actions.sendRequest(ActionType.AGENDA_ITEM_UPDATE, payload);
     }
 
     public async addItemToAgenda(contentObject: BaseViewModel & HasAgendaItem): Promise<Identifiable> {
-        return await this.create({ id: contentObject.id } as AgendaItem);
+        const payload: AgendaItemAction.CreatePayload = {
+            content_object_id: contentObject.getModel().fqid
+        };
+        return await this.actions.sendRequest(ActionType.AGENDA_ITEM_CREATE, payload);
     }
 
     public async removeFromAgenda(item: ViewAgendaItem): Promise<void> {
-        return await this.delete(item);
-    }
-
-    public async create(item: AgendaItem): Promise<Identifiable> {
-        throw new Error('Use `addItemToAgenda` for creations');
-    }
-
-    public async delete(item: ViewAgendaItem): Promise<void> {
-        throw new Error('Use `removeFromAgenda` for deletions');
+        return await this.actions.sendRequest(ActionType.AGENDA_ITEM_DELETE, { id: item.id });
     }
 
     /**
@@ -142,8 +142,11 @@ export class AgendaItemRepositoryService extends BaseRepositoryWithActiveMeeting
      * @param data The reordered data from the sorting
      */
     public async sortItems(data: TreeIdNode[]): Promise<void> {
-        // await this.httpService.post('/rest/agenda/item/sort/', data);
-        throw new Error('TODO');
+        const payload: AgendaItemAction.SortPayload = {
+            meeting_id: this.activeMeetingService.meetingId,
+            tree: data
+        };
+        return await this.actions.sendRequest(ActionType.AGENDA_ITEM_SORT, payload);
     }
 
     /**

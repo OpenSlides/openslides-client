@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
 
 import { AgendaItemRepositoryService } from '../agenda/agenda-item-repository.service';
+import { TopicAction } from 'app/core/actions/topic-action';
+import { ActionType } from 'app/core/core-services/action.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
+import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Topic } from 'app/shared/models/topics/topic';
 import { CreateTopic } from 'app/site/topics/models/create-topic';
 import { ViewTopic } from 'app/site/topics/models/view-topic';
 import { BaseIsAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-is-agenda-item-and-list-of-speakers-content-object-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
+
+interface T {}
 
 /**
  * Repository for topics
@@ -28,16 +33,35 @@ export class TopicRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCon
         super(repositoryServiceCollector, Topic, agendaItemRepo);
     }
 
-    public create(partialTopic: Partial<Topic>): Promise<any> {
-        throw new Error('TOOD');
+    public create(partialTopic: Partial<TopicAction.CreatePayload>): Promise<Identifiable> {
+        const payload: TopicAction.CreatePayload = {
+            meeting_id: this.activeMeetingService.meetingId,
+            title: partialTopic.title,
+            text: partialTopic.text,
+            tag_ids: partialTopic.tag_ids,
+            agenda_parent_id: partialTopic.agenda_parent_id,
+            agenda_type: partialTopic.agenda_type,
+            agenda_comment: partialTopic.agenda_comment,
+            agenda_duration: partialTopic.agenda_duration,
+            agenda_weight: partialTopic.agenda_weight,
+            attachment_ids: partialTopic.attachment_ids
+        };
+        return this.sendActionToBackend(ActionType.TOPIC_CREATE, payload);
     }
 
-    public update(update: Partial<Topic>, viewModel: ViewTopic): Promise<any> {
-        throw new Error('TODO');
+    public update(update: Partial<Topic>, viewModel: ViewTopic): Promise<void> {
+        const payload: TopicAction.UpdatePayload = {
+            id: viewModel.id,
+            text: update.text,
+            title: update.title,
+            attachment_ids: update.attachment_ids || [],
+            tag_ids: update.tag_ids || []
+        };
+        return this.sendActionToBackend(ActionType.TOPIC_UPDATE, payload);
     }
 
-    public delete(viewModel: ViewTopic): Promise<any> {
-        throw new Error('TODO');
+    public delete(viewModel: ViewTopic): Promise<void> {
+        return this.sendActionToBackend(ActionType.TOPIC_DELETE, { id: viewModel.id });
     }
 
     public getFieldsets(): Fieldsets<Topic> {
