@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 
+import { TagAction } from 'app/core/actions/tag-action';
+import { ActionType } from 'app/core/core-services/action.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
+import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Tag } from 'app/shared/models/core/tag';
 import { ViewTag } from 'app/site/tags/models/view-tag';
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
@@ -23,6 +26,26 @@ export class TagRepositoryService extends BaseRepositoryWithActiveMeeting<ViewTa
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, Tag);
         this.initSorting();
+    }
+
+    public async create(partialTag: Partial<Tag>): Promise<Identifiable> {
+        const payload: TagAction.CreatePayload = {
+            name: partialTag.name,
+            meeting_id: this.activeMeetingService.meetingId
+        };
+        return this.sendActionToBackend(ActionType.TAG_CREATE, payload);
+    }
+
+    public async update(update: Partial<Tag>, viewModel: ViewTag): Promise<void> {
+        const payload: TagAction.UpdatePayload = {
+            id: viewModel.id,
+            name: update.name
+        };
+        return this.sendActionToBackend(ActionType.TOPIC_UPDATE, payload);
+    }
+
+    public async delete(viewModel: ViewTag): Promise<void> {
+        return this.sendActionToBackend(ActionType.TOPIC_DELETE, { id: viewModel.id });
     }
 
     public getFieldsets(): Fieldsets<Tag> {
