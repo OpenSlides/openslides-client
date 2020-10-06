@@ -5,7 +5,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 
 import { Observable } from 'rxjs';
-import { map, publish, take } from 'rxjs/operators';
 
 import { MotionStateRepositoryService } from 'app/core/repositories/motions/motion-state-repository.service';
 import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/motion-workflow-repository.service';
@@ -63,7 +62,7 @@ interface RestrictionShape {
 }
 
 /**
- * Motion workflow management detail view
+ * Motion workflow detail view to manage corresponding motion states.
  */
 @Component({
     selector: 'os-workflow-detail',
@@ -227,19 +226,10 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
     public onClickStateName(state: ViewMotionState): void {
         this.openEditDialog(state.name, 'Rename state', '', true).subscribe(result => {
             if (result) {
-                this.cd.detectChanges();
                 if (result.action === 'update') {
-                    throw new Error('TODO');
-                    // this.stateRepo.update({ name: result.value }, state).then(() => {}, this.raiseError);
+                    this.updateWorkflowStateName(result.value, state);
                 } else if (result.action === 'delete') {
-                    const content = this.translate.instant('Delete') + ` ${state.name}?`;
-
-                    this.promptService.open('Are you sure', content).then(promptResult => {
-                        if (promptResult) {
-                            throw new Error('TODO');
-                            // this.stateRepo.delete(state).then(() => {}, this.raiseError);
-                        }
-                    });
+                    this.deleteWorkflowState(state);
                 }
             }
         });
@@ -257,8 +247,7 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
                         name: result.value,
                         workflow_id: this.workflow.id
                     });
-                    throw new Error('TODO');
-                    // this.stateRepo.create(state).then(() => {}, this.raiseError);
+                    this.handleRequest(this.stateRepo.create(state));
                 }
             }
         );
@@ -271,8 +260,7 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
     public onEditWorkflowButton(): void {
         this.openEditDialog(this.workflow.name, 'Edit name', 'Please enter a new workflow name:').subscribe(result => {
             if (result && result.action === 'update') {
-                throw new Error('TODO');
-                // this.workflowRepo.update({ name: result.value }, this.workflow).then(() => {}, this.raiseError);
+                this.handleRequest(this.workflowRepo.update({ name: result.value }, this.workflow));
             }
         });
     }
@@ -286,12 +274,14 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
      */
     public onClickInputPerm(perm: StatePerm, state: ViewMotionState): void {
         this.openEditDialog(state[perm.selector], 'Edit', perm.name, false, true).subscribe(result => {
+            if (!result) {
+                return;
+            }
             if (result.value === '') {
                 result.value = null;
             }
             if (result && result.action === 'update') {
-                throw new Error('TODO');
-                // this.stateRepo.update({ [perm.selector]: result.value }, state).then(() => {}, this.raiseError);
+                this.handleRequest(this.stateRepo.update({ [perm.selector]: result.value }, state));
             }
         });
     }
@@ -304,8 +294,7 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
      * @param event The change event.
      */
     public onToggleStatePerm(state: ViewMotionState, perm: string, event: MatCheckboxChange): void {
-        throw new Error('TODO');
-        // this.stateRepo.update({ [perm]: event.checked }, state).then(() => {}, this.raiseError);
+        this.handleRequest(this.stateRepo.update({ [perm]: event.checked }, state));
     }
 
     /**
@@ -316,8 +305,7 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
      * @param color The selected color
      */
     public onSelectColor(state: ViewMotionState, color: string): void {
-        throw new Error('TODO');
-        // this.stateRepo.update({ css_class: color }, state).then(() => {}, this.raiseError);
+        this.handleRequest(this.stateRepo.update({ css_class: color }, state));
     }
 
     /**
@@ -335,8 +323,7 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
         } else {
             ids.splice(stateIdIndex, 1);
         }
-        throw new Error('TODO');
-        // this.stateRepo.update({ next_state_ids: ids }, state).then(() => {}, this.raiseError);
+        this.handleRequest(this.stateRepo.update({ next_state_ids: ids }, state));
     }
 
     /**
@@ -354,8 +341,7 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
         } else {
             restrictions.splice(restrictionIndex, 1);
         }
-        throw new Error('TODO');
-        // this.stateRepo.update({ restriction: restrictions }, state).then(() => {}, this.raiseError);
+        this.handleRequest(this.stateRepo.update({ restrictions: restrictions }, state));
     }
 
     /**
@@ -373,8 +359,7 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
      * @param state the state to change
      */
     public setMergeAmendment(amendment: number, state: ViewMotionState): void {
-        throw new Error('TODO');
-        // this.stateRepo.update({ merge_amendment_into_final: amendment }, state).then(() => {}, this.raiseError);
+        this.handleRequest(this.stateRepo.update({ merge_amendment_into_final: amendment }, state));
     }
 
     /**
@@ -460,5 +445,27 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
      */
     public trackElement(index: number): number {
         return index;
+    }
+
+    private deleteWorkflowState(state: ViewMotionState): void {
+        const content = this.translate.instant('Delete') + ` ${state.name}?`;
+
+        this.promptService.open('Are you sure', content).then(promptResult => {
+            if (promptResult) {
+                this.handleRequest(this.stateRepo.delete(state));
+            }
+        });
+    }
+
+    private updateWorkflowStateName(name: string, state: ViewMotionState): void {
+        this.handleRequest(this.stateRepo.update({ name }, state));
+    }
+
+    private handleRequest(request: Promise<any>): void {
+        request.then(() => this.updateView(), this.raiseError);
+    }
+
+    private updateView(): void {
+        this.cd.detectChanges();
     }
 }

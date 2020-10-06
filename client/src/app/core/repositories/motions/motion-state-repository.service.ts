@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 
+import { MotionWorkflowAction } from 'app/core/actions/motion-workflow-action';
+import { ActionType } from 'app/core/core-services/action.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
+import { Identifiable } from 'app/shared/models/base/identifiable';
 import { MotionState } from 'app/shared/models/motions/motion-state';
 import { ViewMotionState } from 'app/site/motions/models/view-motion-state';
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
@@ -56,4 +59,44 @@ export class MotionStateRepositoryService extends BaseRepositoryWithActiveMeetin
     public getVerboseName = (plural: boolean = false) => {
         return this.translate.instant(plural ? 'Workflows' : 'Workflow');
     };
+
+    public async create(model: Partial<ViewMotionState>): Promise<Identifiable> {
+        const payload: MotionWorkflowAction.CreatePayload = {
+            meeting_id: this.activeMeetingService.meetingId,
+            workflow_id: model.workflow_id,
+            name: model.name,
+            ...this.getAttributesOfMotionState(model)
+        };
+        return this.actions.sendRequest(ActionType.MOTION_STATE_CREATE, payload);
+    }
+
+    public async update(update: Partial<MotionState>, viewModel: ViewMotionState): Promise<void> {
+        const payload: MotionWorkflowAction.UpdatePayload = {
+            id: viewModel.id,
+            next_state_ids: update.next_state_ids,
+            previous_state_ids: update.previous_state_ids,
+            ...this.getAttributesOfMotionState(update)
+        };
+        return this.actions.sendRequest(ActionType.MOTION_STATE_UPDATE, payload);
+    }
+
+    public async delete(viewModel: ViewMotionState): Promise<void> {
+        return this.actions.sendRequest(ActionType.MOTION_STATE_DELETE, { id: viewModel.id });
+    }
+
+    private getAttributesOfMotionState(model: Partial<MotionState>): Partial<MotionState> {
+        return {
+            name: model.name,
+            recommendation_label: model.recommendation_label,
+            css_class: model.css_class,
+            restrictions: model.restrictions,
+            allow_support: model.allow_support,
+            allow_create_poll: model.allow_create_poll,
+            allow_submitter_edit: model.allow_submitter_edit,
+            set_number: model.set_number,
+            show_state_extension_field: model.show_state_extension_field,
+            merge_amendment_into_final: model.merge_amendment_into_final,
+            show_recommendation_extension_field: model.show_recommendation_extension_field
+        };
+    }
 }

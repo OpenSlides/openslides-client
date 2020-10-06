@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 
+import { MotionWorkflowAction } from 'app/core/actions/motion-workflow-action';
+import { ActionType } from 'app/core/core-services/action.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
+import { Identifiable } from 'app/shared/models/base/identifiable';
 import { MotionWorkflow } from 'app/shared/models/motions/motion-workflow';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionState } from 'app/site/motions/models/view-motion-state';
@@ -63,5 +66,26 @@ export class MotionWorkflowRepositoryService extends BaseRepositoryWithActiveMee
             name: nameFields,
             list: listFields
         };
+    }
+
+    public create(partialModel: Partial<MotionWorkflow>): Promise<Identifiable> {
+        const payload: MotionWorkflowAction.CreatePayload = {
+            name: partialModel.name,
+            meeting_id: this.activeMeetingService.meetingId
+        };
+        return this.sendActionToBackend(ActionType.MOTION_WORKFLOW_CREATE, payload);
+    }
+
+    public update(update: Partial<MotionWorkflow>, viewModel: ViewMotionWorkflow): Promise<void> {
+        const payload: MotionWorkflowAction.UpdatePayload = {
+            id: viewModel.id,
+            name: update.name,
+            first_state_id: update.first_state_id
+        };
+        return this.sendActionToBackend(ActionType.MOTION_WORKFLOW_UPDATE, payload);
+    }
+
+    public delete(viewModel: ViewMotionWorkflow): Promise<void> {
+        return this.sendActionToBackend(ActionType.MOTION_WORKFLOW_DELETE, { id: viewModel.id });
     }
 }
