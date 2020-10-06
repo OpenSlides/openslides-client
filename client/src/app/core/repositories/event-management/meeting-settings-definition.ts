@@ -484,11 +484,11 @@ export const meetingSettings: SettingsGroup[] = [
                     {
                         key: 'motions_default_sorting',
                         label: 'Sort motions by',
-                        default: 'identifier',
+                        default: 'number',
                         type: 'choice',
                         choices: {
                             'Call list': 'weight',
-                            Identifier: 'identifier'
+                            number: 'number'
                         }
                     }
                 ]
@@ -497,8 +497,8 @@ export const meetingSettings: SettingsGroup[] = [
                 label: 'Numbering',
                 settings: [
                     {
-                        key: 'motions_identifier_type',
-                        label: 'Identifier',
+                        key: 'motions_number_type',
+                        label: 'Number',
                         default: 'per_category',
                         type: 'choice',
                         choices: {
@@ -508,16 +508,16 @@ export const meetingSettings: SettingsGroup[] = [
                         }
                     },
                     {
-                        key: 'motions_identifier_min_digits',
-                        label: 'Number of minimal digits for identifier',
+                        key: 'motions_number_min_digits',
+                        label: 'Number of minimal digits for number',
                         default: 1,
                         type: 'integer',
-                        helpText: 'Uses leading zeros to sort motions correctly by identifier.',
+                        helpText: 'Uses leading zeros to sort motions correctly by number.',
                         validators: [Validators.min(1)]
                     },
                     {
-                        key: 'motions_identifier_with_blank',
-                        label: 'Allow blank in identifier',
+                        key: 'motions_number_with_blank',
+                        label: 'Allow blank in number',
                         type: 'boolean',
                         helpText: "Blank between prefix and number, e.g. 'A 001'."
                     }
@@ -549,7 +549,7 @@ export const meetingSettings: SettingsGroup[] = [
                     },
                     {
                         key: 'motions_amendments_prefix',
-                        label: 'Prefix for the identifier for amendments',
+                        label: 'Prefix for the number for amendments',
                         default: '-'
                     },
                     {

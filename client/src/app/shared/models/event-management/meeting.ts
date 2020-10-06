@@ -89,9 +89,9 @@ export interface Settings {
     motions_statute_recommendations_by: string;
     motions_recommendation_text_mode: ChangeRecoMode;
     motions_default_sorting: string;
-    motions_identifier_type: string;
-    motions_identifier_min_digits: number;
-    motions_identifier_with_blank: boolean;
+    motions_number_type: string;
+    motions_number_min_digits: number;
+    motions_number_with_blank: boolean;
     motions_statutes_enabled: boolean;
     motions_amendments_enabled: boolean;
     motions_amendments_in_main_list: boolean;

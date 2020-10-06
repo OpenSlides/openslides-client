@@ -98,7 +98,7 @@ export enum MotionEditNotificationType {
  * Defines the column order for csv/xlsx export/import of motions.
  */
 export const motionImportExportHeaderOrder: string[] = [
-    'identifier',
+    'number',
     'submitters',
     'supporters',
     'title',
