@@ -108,7 +108,7 @@ export class MotionCategoryRepositoryService extends BaseRepositoryWithActiveMee
     public async sortCategories(data: TreeIdNode[]): Promise<void> {
         const payload: MotionCategoryAction.SortPayload = {
             meeting_id: this.activeMeetingService.meetingId,
-            nodes: data
+            tree: data
         };
         return this.actions.sendRequest(ActionType.MOTION_CATEGORY_SORT, payload);
     }

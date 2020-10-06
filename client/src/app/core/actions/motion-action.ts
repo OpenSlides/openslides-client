@@ -1,7 +1,7 @@
-import { HasMeetingId } from 'app/shared/models/base/has-meeting-id';
+import { HasMeetingId } from 'app/core/actions/common/has-meeting-id';
 import { Identifiable } from 'app/shared/models/base/identifiable';
+import { BaseSortPayload } from './common/base-sort-payload';
 import { Id, UnsafeHtml } from '../definitions/key-types';
-import { SortingPayload } from './sorting-payload';
 
 export namespace MotionAction {
     interface OptionalPayload {
@@ -68,6 +68,6 @@ export namespace MotionAction {
         state_id: Id;
     }
     export interface ResetStatePayload extends Identifiable {}
-    export interface SortPayload extends HasMeetingId, SortingPayload {}
+    export interface SortPayload extends HasMeetingId, BaseSortPayload {}
     export interface FollowRecommendationPayload extends Identifiable {}
 }
