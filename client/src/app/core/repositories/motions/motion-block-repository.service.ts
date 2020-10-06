@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 
 import { AgendaItemRepositoryService } from '../agenda/agenda-item-repository.service';
+import { MotionBlockAction } from 'app/core/actions/motion-block-action';
+import { ActionType } from 'app/core/core-services/action.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
+import { Identifiable } from 'app/shared/models/base/identifiable';
 import { MotionBlock } from 'app/shared/models/motions/motion-block';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
@@ -28,16 +31,27 @@ export class MotionBlockRepositoryService extends BaseIsAgendaItemAndListOfSpeak
         this.initSorting();
     }
 
-    public create(partialModel: Partial<MotionBlock>): Promise<any> {
-        throw new Error('TODO');
+    public create(partialModel: Partial<MotionBlock>): Promise<Identifiable> {
+        const payload: MotionBlockAction.CreatePayload = {
+            meeting_id: this.activeMeetingService.meetingId,
+            title: partialModel.title,
+            internal: partialModel.internal
+        };
+        return this.sendActionToBackend(ActionType.MOTION_BLOCK_CREATE, payload);
     }
 
-    public update(update: Partial<MotionBlock>, viewModel: ViewMotionBlock): Promise<any> {
-        throw new Error('TODO');
+    public update(update: Partial<MotionBlock>, viewModel: ViewMotionBlock): Promise<void> {
+        const payload: MotionBlockAction.UpdatePayload = {
+            id: viewModel.id,
+            title: update.title,
+            motion_ids: update.motion_ids,
+            internal: update.internal
+        };
+        return this.sendActionToBackend(ActionType.MOTION_BLOCK_UPDATE, payload);
     }
 
     public delete(viewModel: ViewMotionBlock): Promise<any> {
-        throw new Error('TODO');
+        return this.sendActionToBackend(ActionType.MOTION_BLOCK_DELETE, { id: viewModel.id });
     }
 
     public getFieldsets(): Fieldsets<MotionBlock> {
@@ -84,9 +98,12 @@ export class MotionBlockRepositoryService extends BaseIsAgendaItemAndListOfSpeak
      * @param motionBlock
      */
     public async followRecommendation(motionBlock: ViewMotionBlock): Promise<void> {
-        const restPath = `/rest/motions/motion-block/${motionBlock.id}/follow_recommendations/`;
-        // await this.httpService.post(restPath);
-        throw new Error('TODO');
+        return this.sendBulkActionToBackend(
+            ActionType.MOTION_FOLLOW_RECOMMENDATION,
+            motionBlock.motion_ids.map(id => ({
+                id
+            }))
+        );
     }
 
     /**
