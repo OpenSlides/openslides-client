@@ -110,11 +110,12 @@ export class TagListComponent extends BaseListViewComponent<ViewTag> implements 
         if (!this.tagForm.value || !this.tagForm.valid) {
             return;
         }
-        if (this.currentTag) {
-            this.repo.update(new Tag(this.tagForm.value), this.currentTag).catch(this.raiseError);
-        } else {
-            this.repo.create(this.tagForm.value).catch(this.raiseError);
-        }
+        throw new Error('TODO');
+        // if (this.currentTag) {
+        //     this.repo.update(new Tag(this.tagForm.value), this.currentTag).catch(this.raiseError);
+        // } else {
+        //     this.repo.create(this.tagForm.value).catch(this.raiseError);
+        // }
         this.tagForm.reset(); // reset here so pressing shift+enter wont save when dialog isnt open
     }
 
@@ -125,7 +126,8 @@ export class TagListComponent extends BaseListViewComponent<ViewTag> implements 
         const title = this.translate.instant('Are you sure you want to delete this tag?');
         const content = tag.name;
         if (await this.promptService.open(title, content)) {
-            this.repo.delete(tag).catch(this.raiseError);
+            throw new Error('TODO');
+            // this.repo.delete(tag).catch(this.raiseError);
         }
     }
 

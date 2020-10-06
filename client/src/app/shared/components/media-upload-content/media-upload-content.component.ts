@@ -170,7 +170,7 @@ export class MediaUploadContentComponent implements OnInit, OnDestroy {
         };
 
         // raiseError will automatically ignore existing files
-        await this.repo.create(data as CreateMediafile).then(
+        await this.repo.createFile(data as CreateMediafile).then(
             fileId => {
                 this.filesUploadedIds.push(fileId.id);
                 // remove the uploaded file from the array

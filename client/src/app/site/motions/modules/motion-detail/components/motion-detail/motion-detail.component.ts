@@ -1479,7 +1479,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         if (id === this.motion.category_id) {
             id = null;
         }
-        this.repo.setCatetory(this.motion, id).catch(this.raiseError);
+        this.repo.setCategory(this.motion, id).catch(this.raiseError);
     }
 
     /**

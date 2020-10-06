@@ -3,8 +3,7 @@ import { Injectable } from '@angular/core';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Projectiondefault } from 'app/shared/models/projector/projection-default';
 import { ViewProjectiondefault } from 'app/site/projector/models/view-projectiondefault';
-import { BaseRepository } from '../base-repository';
-import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
+import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 /**
@@ -13,7 +12,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class ProjectiondefaultRepositoryService extends MeetingModelBaseRepository<
+export class ProjectiondefaultRepositoryService extends BaseRepositoryWithActiveMeeting<
     ViewProjectiondefault,
     Projectiondefault
 > {

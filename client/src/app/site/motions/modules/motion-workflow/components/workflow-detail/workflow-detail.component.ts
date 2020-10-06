@@ -115,7 +115,7 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
             type: 'check'
         },
         { name: 'Show amendment in parent motion', selector: 'merge_amendment_into_final', type: 'amendment' },
-        { name: 'Restrictions', selector: 'restriction', type: 'restriction' },
+        { name: 'Restrictions', selector: 'restrictions', type: 'restrictions' },
         { name: 'Label color', selector: 'css_class', type: 'color' },
         { name: 'Next states', selector: 'next_states_id', type: 'state' }
     ] as StatePerm[];
@@ -229,13 +229,15 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
             if (result) {
                 this.cd.detectChanges();
                 if (result.action === 'update') {
-                    this.stateRepo.update({ name: result.value }, state).then(() => {}, this.raiseError);
+                    throw new Error('TODO');
+                    // this.stateRepo.update({ name: result.value }, state).then(() => {}, this.raiseError);
                 } else if (result.action === 'delete') {
                     const content = this.translate.instant('Delete') + ` ${state.name}?`;
 
                     this.promptService.open('Are you sure', content).then(promptResult => {
                         if (promptResult) {
-                            this.stateRepo.delete(state).then(() => {}, this.raiseError);
+                            throw new Error('TODO');
+                            // this.stateRepo.delete(state).then(() => {}, this.raiseError);
                         }
                     });
                 }
@@ -255,7 +257,8 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
                         name: result.value,
                         workflow_id: this.workflow.id
                     });
-                    this.stateRepo.create(state).then(() => {}, this.raiseError);
+                    throw new Error('TODO');
+                    // this.stateRepo.create(state).then(() => {}, this.raiseError);
                 }
             }
         );
@@ -268,7 +271,8 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
     public onEditWorkflowButton(): void {
         this.openEditDialog(this.workflow.name, 'Edit name', 'Please enter a new workflow name:').subscribe(result => {
             if (result && result.action === 'update') {
-                this.workflowRepo.update({ name: result.value }, this.workflow).then(() => {}, this.raiseError);
+                throw new Error('TODO');
+                // this.workflowRepo.update({ name: result.value }, this.workflow).then(() => {}, this.raiseError);
             }
         });
     }
@@ -286,7 +290,8 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
                 result.value = null;
             }
             if (result && result.action === 'update') {
-                this.stateRepo.update({ [perm.selector]: result.value }, state).then(() => {}, this.raiseError);
+                throw new Error('TODO');
+                // this.stateRepo.update({ [perm.selector]: result.value }, state).then(() => {}, this.raiseError);
             }
         });
     }
@@ -299,7 +304,8 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
      * @param event The change event.
      */
     public onToggleStatePerm(state: ViewMotionState, perm: string, event: MatCheckboxChange): void {
-        this.stateRepo.update({ [perm]: event.checked }, state).then(() => {}, this.raiseError);
+        throw new Error('TODO');
+        // this.stateRepo.update({ [perm]: event.checked }, state).then(() => {}, this.raiseError);
     }
 
     /**
@@ -310,7 +316,8 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
      * @param color The selected color
      */
     public onSelectColor(state: ViewMotionState, color: string): void {
-        this.stateRepo.update({ css_class: color }, state).then(() => {}, this.raiseError);
+        throw new Error('TODO');
+        // this.stateRepo.update({ css_class: color }, state).then(() => {}, this.raiseError);
     }
 
     /**
@@ -328,7 +335,8 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
         } else {
             ids.splice(stateIdIndex, 1);
         }
-        this.stateRepo.update({ next_state_ids: ids }, state).then(() => {}, this.raiseError);
+        throw new Error('TODO');
+        // this.stateRepo.update({ next_state_ids: ids }, state).then(() => {}, this.raiseError);
     }
 
     /**
@@ -338,7 +346,7 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
      * @param state the state to change
      */
     public onSetRestriction(restriction: Restriction, state: ViewMotionState): void {
-        const restrictions = state.restriction.map(r => r);
+        const restrictions = state.restrictions.map(r => r);
         const restrictionIndex = restrictions.findIndex(r => r === restriction);
 
         if (restrictionIndex < 0) {
@@ -346,7 +354,8 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
         } else {
             restrictions.splice(restrictionIndex, 1);
         }
-        this.stateRepo.update({ restriction: restrictions }, state).then(() => {}, this.raiseError);
+        throw new Error('TODO');
+        // this.stateRepo.update({ restriction: restrictions }, state).then(() => {}, this.raiseError);
     }
 
     /**
@@ -364,7 +373,8 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
      * @param state the state to change
      */
     public setMergeAmendment(amendment: number, state: ViewMotionState): void {
-        this.stateRepo.update({ merge_amendment_into_final: amendment }, state).then(() => {}, this.raiseError);
+        throw new Error('TODO');
+        // this.stateRepo.update({ merge_amendment_into_final: amendment }, state).then(() => {}, this.raiseError);
     }
 
     /**

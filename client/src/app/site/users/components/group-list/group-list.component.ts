@@ -140,11 +140,12 @@ export class GroupListComponent extends BaseModelContextComponent implements OnI
      * Creates or updates a group.
      */
     public saveGroup(value: { name: string }): void {
-        if (this.editGroup && this.newGroup) {
-            this.repo.create(value as Group).then(() => this.cancelEditing(), this.raiseError);
-        } else if (this.editGroup && !this.newGroup) {
-            this.repo.update(value, this.selectedGroup).then(() => this.cancelEditing(), this.raiseError);
-        }
+        // if (this.editGroup && this.newGroup) {
+        //     this.repo.create(value as Group).then(() => this.cancelEditing(), this.raiseError);
+        // } else if (this.editGroup && !this.newGroup) {
+        //     this.repo.update(value, this.selectedGroup).then(() => this.cancelEditing(), this.raiseError);
+        // }
+        throw new Error('TODO!');
     }
 
     /**
@@ -161,9 +162,10 @@ export class GroupListComponent extends BaseModelContextComponent implements OnI
     public async deleteSelectedGroup(): Promise<void> {
         const title = this.translate.instant('Are you sure you want to delete this group?');
         const content = this.translate.instant(this.selectedGroup.name);
-        if (await this.promptService.open(title, content)) {
-            this.repo.delete(this.selectedGroup).then(() => this.cancelEditing(), this.raiseError);
-        }
+        // if (await this.promptService.open(title, content)) {
+        //     this.repo.delete(this.selectedGroup).then(() => this.cancelEditing(), this.raiseError);
+        // }
+        throw new Error('TODO!');
     }
 
     /**

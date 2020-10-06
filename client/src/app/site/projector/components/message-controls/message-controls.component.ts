@@ -80,7 +80,8 @@ export class MessageControlsComponent extends BaseComponent implements OnInit {
         const content =
             this.translate.instant('Delete message') + ` ${this.translate.instant(this.message.getTitle())}?`;
         if (await this.promptService.open('Are you sure?', content)) {
-            this.repo.delete(this.message).then(() => {}, this.raiseError);
+            // this.repo.delete(this.message).then(() => {}, this.raiseError);
         }
+        throw new Error('TODO!');
     }
 }

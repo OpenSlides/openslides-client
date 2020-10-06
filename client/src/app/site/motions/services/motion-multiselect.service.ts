@@ -65,21 +65,22 @@ export class MotionMultiselectService {
      */
     public async delete(motions: ViewMotion[]): Promise<void> {
         const title = this.translate.instant('Are you sure you want to delete all selected motions?');
-        if (await this.promptService.open(title)) {
-            let i = 0;
+        // if (await this.promptService.open(title)) {
+        //     let i = 0;
 
-            for (const motion of motions) {
-                ++i;
-                const message =
-                    this.translate.instant(this.messageForSpinner) +
-                    `\n${i} ` +
-                    this.translate.instant('of') +
-                    ` ${motions.length}`;
-                this.overlayService.showSpinner(message, true);
-                await this.repo.delete(motion);
-            }
-            this.overlayService.hideSpinner();
-        }
+        //     for (const motion of motions) {
+        //         ++i;
+        //         const message =
+        //             this.translate.instant(this.messageForSpinner) +
+        //             `\n${i} ` +
+        //             this.translate.instant('of') +
+        //             ` ${motions.length}`;
+        //         this.overlayService.showSpinner(message, true);
+        //         await this.repo.delete(motion);
+        //     }
+        //     this.overlayService.hideSpinner();
+        // }
+        throw new Error('TODO!');
     }
 
     /**

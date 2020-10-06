@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>{{ 'New change recommendation' | translate }}</h1>
 <mat-dialog-content>
-    <form class="motion-content" [formGroup]="contentForm" (ngSubmit)="saveChangeRecommendation()">
+    <form class="motion-content" [formGroup]="contentForm" (ngSubmit)="submitChanges()">
         <mat-form-field>
             <input matInput placeholder="{{ 'Changed title' | translate }}" formControlName="title" />
         </mat-form-field>
@@ -10,7 +10,7 @@
 </mat-dialog-content>
 <mat-dialog-actions>
     <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
-    <button mat-button (click)="saveChangeRecommendation()">
+    <button mat-button (click)="submitChanges()">
         <span>{{ 'Save' | translate }}</span>
     </button>
     <button mat-button mat-dialog-close>

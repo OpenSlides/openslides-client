@@ -181,7 +181,8 @@ export class MotionImportService extends BaseImportService<Motion> {
                 this.updatePreview();
                 continue;
             }
-            await this.repo.create(entry.newEntry as ImportCreateMotion);
+            throw new Error('TODO!');
+            // await this.repo.create(entry.newEntry as ImportCreateMotion);
             entry.status = 'done';
         }
         this.updatePreview();
@@ -346,13 +347,14 @@ export class MotionImportService extends BaseImportService<Motion> {
      */
     private async createNewMotionBlocks(): Promise<CsvMapping[]> {
         const promises: Promise<CsvMapping>[] = [];
-        for (const block of this.newMotionBlocks) {
-            promises.push(
-                this.motionBlockRepo.create(new MotionBlock({ title: block.name })).then(identifiable => {
-                    return { name: block.name, id: identifiable.id };
-                })
-            );
-        }
+        // for (const block of this.newMotionBlocks) {
+        //     promises.push(
+        //         this.motionBlockRepo.create(new MotionBlock({ title: block.name })).then(identifiable => {
+        //             return { name: block.name, id: identifiable.id };
+        //         })
+        //     );
+        // }
+        throw new Error('TODO!');
         return await Promise.all(promises);
     }
 
@@ -363,21 +365,22 @@ export class MotionImportService extends BaseImportService<Motion> {
      */
     private async createNewCategories(): Promise<CsvMapping[]> {
         const promises: Promise<CsvMapping>[] = [];
-        for (const category of this.newCategories) {
-            const cat = this.splitCategoryString(category.name);
-            promises.push(
-                this.categoryRepo
-                    .create(
-                        new MotionCategory({
-                            name: cat.name,
-                            prefix: cat.prefix ? cat.prefix : null
-                        })
-                    )
-                    .then(identifiable => {
-                        return { name: category.name, id: identifiable.id };
-                    })
-            );
-        }
+        // for (const category of this.newCategories) {
+        //     const cat = this.splitCategoryString(category.name);
+        //     promises.push(
+        //         this.categoryRepo
+        //             .create(
+        //                 new MotionCategory({
+        //                     name: cat.name,
+        //                     prefix: cat.prefix ? cat.prefix : null
+        //                 })
+        //             )
+        //             .then(identifiable => {
+        //                 return { name: category.name, id: identifiable.id };
+        //             })
+        //     );
+        // }
+        throw new Error('TODO!');
         return await Promise.all(promises);
     }
 
@@ -388,13 +391,14 @@ export class MotionImportService extends BaseImportService<Motion> {
      */
     private async createNewTags(): Promise<CsvMapping[]> {
         const promises: Promise<CsvMapping>[] = [];
-        for (const tag of this.newTags) {
-            promises.push(
-                this.tagRepo
-                    .create(new Tag({ name: tag.name }))
-                    .then(identifiable => ({ name: tag.name, id: identifiable.id }))
-            );
-        }
+        // for (const tag of this.newTags) {
+        //     promises.push(
+        //         this.tagRepo
+        //             .create(new Tag({ name: tag.name }))
+        //             .then(identifiable => ({ name: tag.name, id: identifiable.id }))
+        //     );
+        // }
+        throw new Error('TODO!');
         return await Promise.all(promises);
     }
 

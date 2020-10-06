@@ -225,15 +225,16 @@ export class UserImportService extends BaseImportService<User> {
      * @returns The group mapping with (on success) new ids
      */
     private async createNewGroups(): Promise<CsvMapping[]> {
-        const promises: Promise<CsvMapping>[] = [];
-        for (const group of this.newGroups) {
-            promises.push(
-                this.groupRepo.create(new Group({ name: group.name })).then(identifiable => {
-                    return { name: group.name, id: identifiable.id };
-                })
-            );
-        }
-        return await Promise.all(promises);
+        // const promises: Promise<CsvMapping>[] = [];
+        // for (const group of this.newGroups) {
+        //     promises.push(
+        //         this.groupRepo.create(new Group({ name: group.name })).then(identifiable => {
+        //             return { name: group.name, id: identifiable.id };
+        //         })
+        //     );
+        // }
+        // return await Promise.all(promises);
+        throw new Error('TODO!');
     }
 
     /**

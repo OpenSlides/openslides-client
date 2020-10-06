@@ -316,17 +316,19 @@ export class UserDetailComponent extends BaseModelContextComponent {
             return;
         }
 
-        try {
-            if (this.newUser) {
-                await this.repo.create(this.personalInfoForm.value);
-                this.router.navigate([`./users/`]);
-            } else {
-                await this.repo.update(this.personalInfoForm.value, this.user);
-                this.setEditMode(false);
-            }
-        } catch (e) {
-            this.raiseError(e);
-        }
+        throw new Error('TODO!');
+
+        // try {
+        //     if (this.newUser) {
+        //         await this.repo.create(this.personalInfoForm.value);
+        //         this.router.navigate([`./users/`]);
+        //     } else {
+        //         await this.repo.update(this.personalInfoForm.value, this.user);
+        //         this.setEditMode(false);
+        //     }
+        // } catch (e) {
+        //     this.raiseError(e);
+        // }
     }
 
     /**
@@ -354,7 +356,8 @@ export class UserDetailComponent extends BaseModelContextComponent {
         const title = this.translate.instant('Are you sure you want to delete this participant?');
         const content = this.user.full_name;
         if (await this.promptService.open(title, content)) {
-            this.repo.delete(this.user).then(() => this.router.navigate(['./users/']), this.raiseError);
+            throw new Error('TODO!');
+            // this.repo.delete(this.user).then(() => this.router.navigate(['./users/']), this.raiseError);
         }
     }
 

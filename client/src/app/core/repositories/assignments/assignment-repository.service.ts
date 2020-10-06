@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
 
 import { AgendaItemRepositoryService } from '../agenda/agenda-item-repository.service';
-import { HttpService } from 'app/core/core-services/http.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Assignment } from 'app/shared/models/assignments/assignment';
 import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
-import { ViewUser } from 'app/site/users/models/view-user';
 import { BaseIsAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-is-agenda-item-and-list-of-speakers-content-object-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
@@ -30,6 +28,10 @@ export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeake
         agendaItemRepo: AgendaItemRepositoryService
     ) {
         super(repositoryServiceCollector, Assignment, agendaItemRepo);
+    }
+
+    public delete(viewModel: ViewAssignment): Promise<any> {
+        throw new Error('TODO');
     }
 
     public getFieldsets(): Fieldsets<Assignment> {

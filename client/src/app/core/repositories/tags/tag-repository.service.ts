@@ -3,8 +3,7 @@ import { Injectable } from '@angular/core';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Tag } from 'app/shared/models/core/tag';
 import { ViewTag } from 'app/site/tags/models/view-tag';
-import { BaseRepository } from '../base-repository';
-import { MeetingModelBaseRepository } from '../meeting-model-base-repository';
+import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 /**
@@ -20,7 +19,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class TagRepositoryService extends MeetingModelBaseRepository<ViewTag, Tag> {
+export class TagRepositoryService extends BaseRepositoryWithActiveMeeting<ViewTag, Tag> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, Tag);
         this.initSorting();
