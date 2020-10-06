@@ -1,7 +1,7 @@
-import { HasMeetingId } from 'app/shared/models/base/has-meeting-id';
+import { HasMeetingId } from 'app/core/actions/common/has-meeting-id';
 import { Identifiable } from 'app/shared/models/base/identifiable';
+import { BaseSortPayload } from './common/base-sort-payload';
 import { Id } from '../definitions/key-types';
-import { SortingPayload } from './sorting-payload';
 
 export namespace MotionCategoryAction {
     export interface CreatePayload extends HasMeetingId {
@@ -14,7 +14,7 @@ export namespace MotionCategoryAction {
         prefix?: string;
         motion_ids?: Id[];
     }
-    export interface SortPayload extends HasMeetingId, SortingPayload {}
+    export interface SortPayload extends HasMeetingId, BaseSortPayload {}
     export interface SortMotionsInCategoryPayload extends Identifiable {
         motion_ids: Id[];
     }

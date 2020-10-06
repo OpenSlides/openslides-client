@@ -6,6 +6,7 @@ import { Identifiable } from 'app/shared/models/base/identifiable';
 import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { ViewSpeaker } from 'app/site/agenda/models/view-speaker';
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
+import { RepositoryServiceCollector } from '../repository-service-collector';
 
 /**
  * An object, that contains information about structure-level,
@@ -30,6 +31,10 @@ export class ListOfSpeakersRepositoryService extends BaseRepositoryWithActiveMee
     ViewListOfSpeakers,
     ListOfSpeakers
 > {
+    public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
+        super(repositoryServiceCollector, ListOfSpeakers);
+    }
+
     public getFieldsets(): Fieldsets<ListOfSpeakers> {
         return { [DEFAULT_FIELDSET]: ['closed', 'content_object_id', 'speaker_ids'] };
     }
