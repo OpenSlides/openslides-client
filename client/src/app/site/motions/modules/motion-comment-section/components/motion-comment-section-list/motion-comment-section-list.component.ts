@@ -8,6 +8,7 @@ import { MotionCommentSectionRepositoryService } from 'app/core/repositories/mot
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
+import { Identifiable } from 'app/shared/models/base/identifiable';
 import { MotionCommentSection } from 'app/shared/models/motions/motion-comment-section';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
@@ -135,19 +136,16 @@ export class MotionCommentSectionListComponent extends BaseModelContextComponent
      * saves the current data, either updating an existing comment or creating a new one.
      */
     private save(): void {
-        if (this.commentFieldForm.valid) {
-            // eiher update or create
-            throw new Error('TODO');
-            // if (this.currentComment) {
-            //     this.repo
-            //         .update(this.commentFieldForm.value as Partial<MotionCommentSection>, this.currentComment)
-            //         .catch(this.raiseError);
-            // } else {
-            //     const comment = new MotionCommentSection(this.commentFieldForm.value);
-            //     this.repo.create(comment).catch(this.raiseError);
-            // }
-            this.commentFieldForm.reset();
+        if (!this.commentFieldForm.valid) {
+            return;
         }
+        // eiher update or create
+        if (this.currentComment) {
+            this.handleRequest(this.updateSection());
+        } else {
+            this.handleRequest(this.createNewSection());
+        }
+        this.commentFieldForm.reset();
     }
 
     /**
@@ -158,8 +156,24 @@ export class MotionCommentSectionListComponent extends BaseModelContextComponent
         const title = this.translate.instant('Are you sure you want to delete this comment field?');
         const content = viewSection.name;
         if (await this.promptService.open(title, content)) {
-            throw new Error('TODO');
-            // this.repo.delete(viewSection).catch(this.raiseError);
+            this.handleRequest(this.deleteSection(viewSection));
         }
+    }
+
+    private updateSection(): Promise<void> {
+        return this.repo.update(this.commentFieldForm.value as Partial<MotionCommentSection>, this.currentComment);
+    }
+
+    private createNewSection(): Promise<Identifiable> {
+        const comment = new MotionCommentSection(this.commentFieldForm.value);
+        return this.repo.create(comment);
+    }
+
+    private deleteSection(viewSection: ViewMotionCommentSection): Promise<void> {
+        return this.repo.delete(viewSection);
+    }
+
+    private handleRequest(request: Promise<any>): void {
+        request.catch(this.raiseError);
     }
 }

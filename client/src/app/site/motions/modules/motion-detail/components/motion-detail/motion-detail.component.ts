@@ -18,6 +18,7 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 import { NotifyService } from 'app/core/core-services/notify.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
+import { Id } from 'app/core/definitions/key-types';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
@@ -393,6 +394,8 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
      */
     public NOTIFICATION_EDIT_MOTION = 'notifyEditMotion';
 
+    public commentIds: Id[] = [];
+
     /**
      * Array to recognize, if there are other persons working on the same
      * motion and see, if those persons leave the editing-view.
@@ -734,6 +737,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
                 'block_id',
                 'category_id',
                 'lead_motion_id',
+                'comment_ids',
                 {
                     idField: 'amendment_ids',
                     follow: [
@@ -779,6 +783,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
                     super.setTitle(title);
                     this.motion = motion;
                     this.newStateExtension = this.motion.stateExtension;
+                    this.commentIds = motion.comment_ids;
                     this.recommendationStateExtension = this.motion.recommendationExtension;
                     if (!this.editMotion) {
                         this.patchForm(this.motion);

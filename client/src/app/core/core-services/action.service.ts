@@ -30,6 +30,7 @@ export enum ActionType {
     MOTION_COMMENT_SECTION_CREATE = 'motion_comment_section.create',
     MOTION_COMMENT_SECTION_UPDATE = 'motion_comment_section.update',
     MOTION_COMMENT_SECTION_DELETE = 'motion_comment_section.delete',
+    MOTION_COMMENT_SECTION_SORT = 'motion_comment_section.sort',
     MOTION_STATE_CREATE = 'motion_state.create',
     MOTION_STATE_UPDATE = 'motion_state.update',
     MOTION_STATE_DELETE = 'motion_state.delete',
