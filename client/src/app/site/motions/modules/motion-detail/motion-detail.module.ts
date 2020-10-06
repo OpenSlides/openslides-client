@@ -5,6 +5,7 @@ import { AmendmentCreateWizardComponent } from './components/amendment-create-wi
 import { SharedModule } from 'app/shared/shared.module';
 import { ManageSubmittersComponent } from './components/manage-submitters/manage-submitters.component';
 import { MotionChangeRecommendationDialogComponent } from './components/motion-change-recommendation-dialog/motion-change-recommendation-dialog.component';
+import { MotionCommentComponent } from './components/motion-comment/motion-comment.component';
 import { MotionCommentsComponent } from './components/motion-comments/motion-comments.component';
 import { MotionDetailDiffComponent } from './components/motion-detail-diff/motion-detail-diff.component';
 import { MotionDetailOriginalChangeRecommendationsComponent } from './components/motion-detail-original-change-recommendations/motion-detail-original-change-recommendations.component';
@@ -25,7 +26,8 @@ import { PersonalNoteComponent } from './components/personal-note/personal-note.
         MotionDetailDiffComponent,
         MotionDetailOriginalChangeRecommendationsComponent,
         MotionChangeRecommendationDialogComponent,
-        MotionTitleChangeRecommendationDialogComponent
+        MotionTitleChangeRecommendationDialogComponent,
+        MotionCommentComponent
     ]
 })
 export class MotionDetailModule {}

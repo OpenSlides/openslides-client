@@ -1,0 +1,65 @@
+<os-meta-text-block [showActionRow]="canBeEdited" [disableExpandControl]="isCommentEdited" icon="comment">
+    <ng-container class="meta-text-block-title">
+        <span>{{ section.getTitle() }}</span>
+    </ng-container>
+
+    <ng-container class="meta-text-block-content">
+        <ng-container *ngIf="!isCommentEdited">
+            <div *ngIf="comment" [innerHTML]="comment.comment | trust: 'html'"></div>
+            <div class="no-content" *ngIf="!comment">
+                {{ 'No comment' | translate }}
+            </div>
+        </ng-container>
+        <form [formGroup]="commentForm" *ngIf="isCommentEdited">
+            <!-- The HTML Editor -->
+            <editor
+                [id]="section.id"
+                formControlName="comment"
+                [init]="tinyMceSettings"
+                (onInit)="onInitTinyMce($event)"
+                (onRemove)="onLeaveTinyMce($event)"
+            ></editor>
+        </form>
+        <div *ngIf="saveHint">
+            <span>{{ 'Touch the book icon to enter text' | translate }}</span>
+            <br />
+            <span class="red-warning-text">{{ 'Do not forget to save your changes!' | translate }}</span>
+        </div>
+    </ng-container>
+
+    <ng-container class="meta-text-block-action-row">
+        <button
+            mat-icon-button
+            *ngIf="!isCommentEdited && canBeEdited"
+            (click)="editComment()"
+            matTooltip="{{ 'Edit' | translate }}"
+        >
+            <mat-icon>edit</mat-icon>
+        </button>
+        <button
+            mat-icon-button
+            *ngIf="!isCommentEdited && hasComment()"
+            (click)="exportCommentAsPDf()"
+            matTooltip="{{ 'Export comment' | translate }}"
+        >
+            <mat-icon>picture_as_pdf</mat-icon>
+        </button>
+        <button
+            mat-icon-button
+            color="warn"
+            *ngIf="isCommentEdited"
+            (click)="saveComment()"
+            matTooltip="{{ 'Save' | translate }}"
+        >
+            <mat-icon>save</mat-icon>
+        </button>
+        <button
+            mat-icon-button
+            *ngIf="isCommentEdited"
+            (click)="cancelEditing()"
+            matTooltip="{{ 'Cancel edit' | translate }}"
+        >
+            <mat-icon>close</mat-icon>
+        </button>
+    </ng-container>
+</os-meta-text-block>
