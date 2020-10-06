@@ -6,9 +6,6 @@ import { HttpService } from './http.service';
  * Currently supported actions
  */
 export enum ActionType {
-    TOPIC_CREATE = 'topic.create',
-    TOPIC_DELETE = 'topic.delete',
-    TOPIC_UPDATE = 'topic.update',
     AGENDA_ITEM_CREATE = 'agenda_item.create',
     AGENDA_ITEM_UPDATE = 'agenda_item.update',
     AGENDA_ITEM_DELETE = 'agenda_item.delete',
@@ -42,7 +39,13 @@ export enum ActionType {
     MEETING_DELETE = 'meeting.delete',
     SPEAKER_CREATE = 'speaker.create',
     SPEAKER_UPDATE = 'speaker.update',
-    SPEAKER_DELETE = 'speaker.delete'
+    SPEAKER_DELETE = 'speaker.delete',
+    TAG_CREATE = 'tag.create',
+    TAG_DELETE = 'tag.delete',
+    TAG_UPDATE = 'tag.update',
+    TOPIC_CREATE = 'topic.create',
+    TOPIC_DELETE = 'topic.delete',
+    TOPIC_UPDATE = 'topic.update'
 }
 
 export interface RequestInfo {
