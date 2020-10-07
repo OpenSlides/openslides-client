@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
@@ -9,7 +8,6 @@ import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionComment } from 'app/site/motions/models/view-motion-comment';
 import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-comment-section';
-import { MotionPdfExportService } from 'app/site/motions/services/motion-pdf-export.service';
 
 /**
  * Component for the motion comments view
@@ -26,26 +24,16 @@ export class MotionCommentsComponent extends BaseModelContextComponent implement
     public sections: ViewMotionCommentSection[] = [];
 
     /**
-     * An object of forms for one comment mapped to the section id.
-     */
-    public commentForms: { [id: number]: FormGroup } = {};
-
-    /**
      * The motion, which these comments belong to.
      */
     @Input()
     public motion: ViewMotion;
 
     /**
-     * Set to true if an error was detected to prevent automatic navigation
-     */
-    public error = false;
-
-    /**
      * Watches for changes in sections and the operator. If one of them changes, the sections are reloaded
      * and the comments updated.
      *
-     * @param commentRepo The repository that handles server communication
+     * @param commentSectionRepo The repository that handles server communication
      * @param formBuilder Form builder to handle text editing
      * @param operator service to get the sections
      * @param pdfService service to export a comment section to pdf
@@ -55,10 +43,8 @@ export class MotionCommentsComponent extends BaseModelContextComponent implement
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        private commentRepo: MotionCommentSectionRepositoryService,
-        private formBuilder: FormBuilder,
-        private operator: OperatorService,
-        private pdfService: MotionPdfExportService
+        private commentSectionRepo: MotionCommentSectionRepositoryService,
+        private operator: OperatorService
     ) {
         super(componentServiceCollector);
     }
@@ -71,13 +57,13 @@ export class MotionCommentsComponent extends BaseModelContextComponent implement
                 {
                     idField: 'motion_comment_section_ids',
                     fieldset: 'comment',
-                    follow: ['comment_ids']
+                    follow: [{ idField: 'comment_ids', fieldset: ['section_id', 'motion_id'] }]
                 }
             ]
         });
 
         this.subscriptions.push(
-            this.commentRepo.getViewModelListObservable().subscribe(sections => {
+            this.commentSectionRepo.getViewModelListObservable().subscribe(sections => {
                 if (sections && sections.length) {
                     this.sections = sections;
                     this.filterSections();
@@ -122,75 +108,5 @@ export class MotionCommentsComponent extends BaseModelContextComponent implement
         } else {
             return false;
         }
-    }
-
-    /**
-     * Puts the comment into edit mode.
-     *
-     * @param section The section for the comment.
-     */
-    public editComment(section: ViewMotionCommentSection): void {
-        const comment = this.motion.getCommentForSection(section);
-        const form = this.formBuilder.group({
-            comment: [comment ? comment.comment : '']
-        });
-        this.commentForms[section.id] = form;
-    }
-
-    /**
-     * Saves the comment.
-     *
-     * @param section The section for the comment to save
-     */
-    public saveComment(section: ViewMotionCommentSection): void {
-        const commentText = this.commentForms[section.id].get('comment').value;
-        this.commentRepo.saveComment(this.motion, section, commentText).then(
-            () => {
-                this.cancelEditing(section);
-            },
-            error => {
-                this.error = true;
-                this.raiseError(`${error} :"${section.name}"`);
-            }
-        );
-    }
-
-    /**
-     * Cancles the editing for a comment.
-     *
-     * @param section The section for the comment
-     */
-    public cancelEditing(section: ViewMotionCommentSection): void {
-        delete this.commentForms[section.id];
-    }
-
-    /**
-     * Check if a section is visible at all
-     *
-     * @param section
-     * @returns true if there is any content or the user is allowed to edit
-     */
-    public sectionVisible(section: ViewMotionCommentSection): boolean {
-        const comment = this.motion.getCommentForSection(section);
-        return this.canEditSection(section) || (!!comment && !!comment.comment);
-    }
-
-    /**
-     * Returns true, if the comment is edited.
-     *
-     * @param section The section for the comment.
-     * @returns a boolean of the comments is edited
-     */
-    public isCommentEdited(section: ViewMotionCommentSection): boolean {
-        return Object.keys(this.commentForms).includes('' + section.id);
-    }
-
-    /**
-     * Triggers a direct pdf export of this comment
-     *
-     * @param section
-     */
-    public pdfExportSection(section: ViewMotionCommentSection): void {
-        this.pdfService.exportComment(section, this.motion);
     }
 }

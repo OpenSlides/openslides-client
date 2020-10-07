@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 
-import { HttpService } from 'app/core/core-services/http.service';
+import { MotionCommentSectionAction } from 'app/core/actions/motion-comment-section-action';
+import { ActionType } from 'app/core/core-services/action.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
+import { Identifiable } from 'app/shared/models/base/identifiable';
 import { MotionCommentSection } from 'app/shared/models/motions/motion-comment-section';
-import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-comment-section';
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
@@ -25,7 +26,7 @@ export class MotionCommentSectionRepositoryService extends BaseRepositoryWithAct
     ViewMotionCommentSection,
     MotionCommentSection
 > {
-    public constructor(repositoryServiceCollector: RepositoryServiceCollector, private http: HttpService) {
+    public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, MotionCommentSection);
 
         this.viewModelSortFn = (a: ViewMotionCommentSection, b: ViewMotionCommentSection) => {
@@ -54,46 +55,38 @@ export class MotionCommentSectionRepositoryService extends BaseRepositoryWithAct
         return this.translate.instant(plural ? 'Comment sections' : 'Comment section');
     };
 
-    /**
-     * Saves a comment made at a MotionCommentSection. Does an update, if
-     * there is a comment text. Deletes the comment, if the text is empty.
-     *
-     * @param motion the motion
-     * @param section the section where the comment was made
-     * @param sectionComment the comment text
-     * @returns the promise from the HTTP request
-     */
-    public async saveComment(motion: ViewMotion, section: ViewMotionCommentSection, comment: string): Promise<void> {
-        if (comment) {
-            return await this.updateComment(motion, section, comment);
-        } else {
-            return await this.deleteComment(motion, section);
-        }
+    public async create(partialModel: Partial<MotionCommentSection>): Promise<Identifiable> {
+        const payload: MotionCommentSectionAction.CreatePayload = {
+            meeting_id: this.activeMeetingService.meetingId,
+            name: partialModel.name,
+            read_group_ids: partialModel.read_group_ids,
+            write_group_ids: partialModel.write_group_ids
+        };
+        return this.sendActionToBackend(ActionType.MOTION_COMMENT_SECTION_CREATE, payload);
     }
 
-    /**
-     * Updates the comment. Saves it on the server.
-     */
-    private async updateComment(motion: ViewMotion, section: ViewMotionCommentSection, comment: string): Promise<void> {
-        return await this.http.post(`/rest/motions/motion/${motion.id}/manage_comments/`, {
-            section_id: section.id,
-            comment: comment
-        });
+    public async update(update: Partial<ViewMotionCommentSection>, viewModel: ViewMotionCommentSection): Promise<void> {
+        const payload: MotionCommentSectionAction.UpdatePayload = {
+            id: viewModel.id,
+            name: update.name,
+            read_group_ids: update.read_group_ids,
+            write_group_ids: update.write_group_ids
+        };
+        return this.sendActionToBackend(ActionType.MOTION_COMMENT_SECTION_UPDATE, payload);
     }
 
-    /**
-     * Deletes a comment from the server
-     */
-    private async deleteComment(motion: ViewMotion, section: ViewMotionCommentSection): Promise<void> {
-        return await this.http.delete(`/rest/motions/motion/${motion.id}/manage_comments/`, { section_id: section.id });
+    public async delete(viewModel: ViewMotionCommentSection): Promise<void> {
+        return this.sendActionToBackend(ActionType.MOTION_COMMENT_SECTION_DELETE, { id: viewModel.id });
     }
 
     /**
      * Sort all comment sections. All sections must be given excatly once.
      */
     public async sortCommentSections(sections: ViewMotionCommentSection[]): Promise<void> {
-        return await this.http.post('/rest/motions/motion-comment-section/sort/', {
-            ids: sections.map(section => section.id)
-        });
+        const payload: MotionCommentSectionAction.SortPayload = {
+            meeting_id: this.activeMeetingService.meetingId,
+            motion_comment_section_ids: sections.map(section => section.id)
+        };
+        return this.actions.sendRequest(ActionType.MOTION_COMMENT_SECTION_SORT, payload);
     }
 }
