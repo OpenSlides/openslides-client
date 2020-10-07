@@ -99,13 +99,13 @@
                             [matMenuTriggerData]="{ state: state }"
                         ></div>
                     </div>
-                    <div *ngIf="perm.type === 'restriction'">
+                    <div *ngIf="perm.type === 'restrictions'">
                         <div class="inner-table">
-                            <div *ngIf="!state.restriction.length">
+                            <div *ngIf="!state.restrictions.length">
                                 -
                             </div>
-                            <div *ngIf="state.restriction.length">
-                                <div *ngFor="let restriction of state.restriction; let last = last">
+                            <div *ngIf="state.restrictions.length">
+                                <div *ngFor="let restriction of state.restrictions; let last = last">
                                     {{ getRestrictionLabel(restriction) | translate }}
                                     <span *ngIf="!last">,&nbsp;</span>
                                 </div>
@@ -177,7 +177,7 @@
     <ng-template let-state="state" matMenuContent>
         <div *ngFor="let nextState of workflow.states">
             <button mat-menu-item *ngIf="nextState.name !== state.name" (click)="onSetNextState(nextState, state)">
-                <mat-icon *ngIf="state.next_states_id.includes(nextState.id)">check</mat-icon>
+                <mat-icon *ngIf="state.next_state_ids.includes(nextState.id)">check</mat-icon>
                 <span>{{ nextState.name | translate }}</span>
             </button>
         </div>
@@ -192,7 +192,7 @@
             *ngFor="let restriction of restrictions"
             (click)="onSetRestriction(restriction.key, state)"
         >
-            <mat-icon *ngIf="state.restriction.includes(restriction.key)">check</mat-icon>
+            <mat-icon *ngIf="state.restrictions.includes(restriction.key)">check</mat-icon>
             <span>{{ restriction.label | translate }}</span>
         </button>
     </ng-template>
