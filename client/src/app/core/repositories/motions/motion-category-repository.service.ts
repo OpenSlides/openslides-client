@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 
+import { MotionCategoryAction } from 'app/core/actions/motion-category-action';
+import { ActionType } from 'app/core/core-services/action.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { TreeIdNode } from 'app/core/ui-services/tree.service';
+import { Identifiable } from 'app/shared/models/base/identifiable';
 import { MotionCategory } from 'app/shared/models/motions/motion-category';
 import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
@@ -28,6 +31,29 @@ export class MotionCategoryRepositoryService extends BaseRepositoryWithActiveMee
         super(repositoryServiceCollector, MotionCategory);
 
         this.setSortFunction((a, b) => a.weight - b.weight);
+    }
+
+    public create(partialCategory: Partial<MotionCategory>): Promise<Identifiable> {
+        const payload: MotionCategoryAction.CreatePayload = {
+            meeting_id: this.activeMeetingService.meetingId,
+            name: partialCategory.name,
+            prefix: partialCategory.prefix,
+            parent_id: partialCategory.parent_id
+        };
+        return this.sendActionToBackend(ActionType.MOTION_CATEGORY_CREATE, payload);
+    }
+
+    public update(update: Partial<MotionCategory>, viewModel: ViewMotionCategory): Promise<void> {
+        const payload: MotionCategoryAction.UpdatePayload = {
+            id: viewModel.id,
+            name: update.name,
+            prefix: update.prefix
+        };
+        return this.sendActionToBackend(ActionType.MOTION_CATEGORY_UPDATE, payload);
+    }
+
+    public delete(viewModel: ViewMotionCategory): Promise<void> {
+        return this.sendActionToBackend(ActionType.MOTION_CATEGORY_DELETE, { id: viewModel.id });
     }
 
     public getFieldsets(): Fieldsets<MotionCategory> {
@@ -57,8 +83,7 @@ export class MotionCategoryRepositoryService extends BaseRepositoryWithActiveMee
      * @param viewMotionCategory the category it should be updated in
      */
     public async numberMotionsInCategory(viewMotionCategory: ViewMotionCategory): Promise<void> {
-        // await this.httpService.post(`/rest/motions/category/${viewMotionCategory.id}/numbering/`);
-        throw new Error('TODO');
+        return this.actions.sendRequest(ActionType.MOTION_CATEGORY_NUMBER_MOTIONS, { id: viewMotionCategory.id });
     }
 
     /**
@@ -68,10 +93,11 @@ export class MotionCategoryRepositoryService extends BaseRepositoryWithActiveMee
      * @param motionIds the list of motion ids on this category
      */
     public async sortMotionsInCategory(viewMotionCategory: MotionCategory, motionIds: number[]): Promise<void> {
-        // await this.httpService.post(`/rest/motions/category/${viewMotionCategory.id}/sort_motions/`, {
-        //     motions: motionIds
-        // });
-        throw new Error('TODO');
+        const payload: MotionCategoryAction.SortMotionsInCategoryPayload = {
+            id: viewMotionCategory.id,
+            motion_ids: motionIds
+        };
+        return this.actions.sendRequest(ActionType.MOTION_CATEGORY_SORT_MOTIONS, payload);
     }
 
     /**
@@ -80,7 +106,10 @@ export class MotionCategoryRepositoryService extends BaseRepositoryWithActiveMee
      * @param data The reordered data from the sorting
      */
     public async sortCategories(data: TreeIdNode[]): Promise<void> {
-        // await this.httpService.post('/rest/motions/category/sort_categories/', data);
-        throw new Error('TODO');
+        const payload: MotionCategoryAction.SortPayload = {
+            meeting_id: this.activeMeetingService.meetingId,
+            nodes: data
+        };
+        return this.actions.sendRequest(ActionType.MOTION_CATEGORY_SORT, payload);
     }
 }

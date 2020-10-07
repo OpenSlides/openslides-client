@@ -343,4 +343,8 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     protected sendActionToBackend(actionType: ActionType, payload: any): Promise<any> {
         return this.actions.sendRequest(actionType, payload).catch(this.raiseError);
     }
+
+    protected sendBulkActionToBackend(actionType: ActionType, payload: any[]): Promise<any> {
+        return this.sendBulkActionToBackend(actionType, payload).catch(this.raiseError);
+    }
 }
