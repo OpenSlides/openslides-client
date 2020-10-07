@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
@@ -60,7 +60,8 @@ export class TagListComponent extends BaseListViewComponent<ViewTag> implements 
         public repo: TagRepositoryService,
         private dialog: MatDialog,
         private formBuilder: FormBuilder,
-        private promptService: PromptService
+        private promptService: PromptService,
+        private cd: ChangeDetectorRef
     ) {
         super(componentServiceCollector);
     }
@@ -104,30 +105,13 @@ export class TagListComponent extends BaseListViewComponent<ViewTag> implements 
     }
 
     /**
-     * Submit the form and create or update a tag.
-     */
-    private save(): void {
-        if (!this.tagForm.value || !this.tagForm.valid) {
-            return;
-        }
-        throw new Error('TODO');
-        // if (this.currentTag) {
-        //     this.repo.update(new Tag(this.tagForm.value), this.currentTag).catch(this.raiseError);
-        // } else {
-        //     this.repo.create(this.tagForm.value).catch(this.raiseError);
-        // }
-        this.tagForm.reset(); // reset here so pressing shift+enter wont save when dialog isnt open
-    }
-
-    /**
      * Deletes the given Tag after a successful confirmation.
      */
     public async onDeleteButton(tag: ViewTag): Promise<void> {
         const title = this.translate.instant('Are you sure you want to delete this tag?');
         const content = tag.name;
         if (await this.promptService.open(title, content)) {
-            throw new Error('TODO');
-            // this.repo.delete(tag).catch(this.raiseError);
+            this.deleteTag(tag);
         }
     }
 
@@ -145,5 +129,39 @@ export class TagListComponent extends BaseListViewComponent<ViewTag> implements 
         if (event.key === 'Escape') {
             this.dialogRef.close();
         }
+    }
+
+    /**
+     * Submit the form and create or update a tag.
+     */
+    private save(): void {
+        if (!this.tagForm.value || !this.tagForm.valid) {
+            return;
+        }
+        if (this.currentTag) {
+            this.updateTag();
+        } else {
+            this.createTag();
+        }
+        this.reset();
+    }
+
+    private updateTag(): void {
+        this.repo.update(new Tag(this.tagForm.value), this.currentTag).catch(this.raiseError);
+    }
+
+    private createTag(): void {
+        this.repo.create(this.tagForm.value).catch(this.raiseError);
+    }
+
+    private deleteTag(tag: ViewTag): void {
+        this.repo
+            .delete(tag)
+            .then(() => this.cd.detectChanges())
+            .catch(this.raiseError);
+    }
+
+    private reset(): void {
+        this.tagForm.reset();
     }
 }
