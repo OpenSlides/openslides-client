@@ -156,7 +156,7 @@ export class MeetingSettingsListComponent
             follow: [
                 {
                     idField: 'group_ids',
-                    fieldset: 'name'
+                    fieldset: 'name' // TODO: this one is invalid!
                 },
                 {
                     idField: 'motion_workflow_ids',

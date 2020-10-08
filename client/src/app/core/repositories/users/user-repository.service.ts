@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 
-import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
-import { HttpService } from 'app/core/core-services/http.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { PreventedInDemo } from 'app/core/definitions/custom-errors';
 import { Id } from 'app/core/definitions/key-types';
