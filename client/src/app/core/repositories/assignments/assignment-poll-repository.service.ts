@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 import { HttpService } from 'app/core/core-services/http.service';
 import { BasePollRepository } from 'app/core/repositories/base-poll-repository';
 import { AssignmentPoll } from 'app/shared/models/assignments/assignment-poll';
+import { UserVote } from 'app/shared/models/poll/base-vote';
 import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
 import { RepositoryServiceCollector } from '../repository-service-collector';
-import { UserVote } from 'app/shared/models/poll/base-vote';
 
 export interface AssignmentAnalogVoteData {
     options: {
@@ -38,10 +38,7 @@ export type GlobalVote = 'A' | 'N';
     providedIn: 'root'
 })
 export class AssignmentPollRepositoryService extends BasePollRepository<ViewAssignmentPoll, AssignmentPoll> {
-    public constructor(
-        repositoryServiceCollector: RepositoryServiceCollector,
-        http: HttpService
-    ) {
+    public constructor(repositoryServiceCollector: RepositoryServiceCollector, http: HttpService) {
         super(repositoryServiceCollector, AssignmentPoll, http);
     }
 

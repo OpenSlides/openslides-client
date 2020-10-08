@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { SlideData } from 'app/core/core-services/projector-data.service';
 import { MotionChangeRecommendationRepositoryService } from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
+import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { DiffLinesInParagraph, DiffService, LineRange } from 'app/core/ui-services/diff.service';
 import { LineNumberedString, LinenumberingService } from 'app/core/ui-services/linenumbering.service';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from 'app/shared/models/motions/view-unified-change';
@@ -13,7 +14,6 @@ import { BaseMotionSlideComponent } from '../base/base-motion-slide';
 import { MotionSlideData, MotionSlideDataAmendment } from './motion-slide-data';
 import { MotionSlideObjAmendmentParagraph } from './motion-slide-obj-amendment-paragraph';
 import { MotionSlideObjChangeReco } from './motion-slide-obj-change-reco';
-import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 
 @Component({
     selector: 'os-motion-slide',

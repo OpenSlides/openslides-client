@@ -1,4 +1,4 @@
-import { OnDestroy } from '@angular/core';
+import { Directive, OnDestroy } from '@angular/core';
 
 import { PblColumnDefinition, PblDataSource } from '@pebula/ngrid';
 
@@ -7,7 +7,9 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { BaseModelContextComponent } from './base-model-context.component';
 import { BaseViewModel } from '../base-view-model';
 
-export abstract class BaseListViewComponent<V extends BaseViewModel> extends BaseModelContextComponent
+@Directive()
+export abstract class BaseListViewComponent<V extends BaseViewModel>
+    extends BaseModelContextComponent
     implements OnDestroy {
     /**
      * The source of the table data, will be filled by an event emitter

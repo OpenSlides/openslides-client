@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
-import { HttpService } from 'app/core/core-services/http.service';
-import { PreventedInDemo } from 'app/core/definitions/custom-errors';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
+import { PreventedInDemo } from 'app/core/definitions/custom-errors';
 import { Id } from 'app/core/definitions/key-types';
 import { NewEntry } from 'app/core/ui-services/base-import.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
@@ -263,18 +261,6 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
         });
         // return await this.httpService.post<MassImportResult>(`/rest/users/user/mass_import/`, { users: data });
         throw new Error('TODO');
-    }
-
-    public async update(update: Partial<User>, viewModel: ViewUser): Promise<void> {
-        this.preventAlterationOnDemoUsers(viewModel);
-        console.log('update: ', update);
-
-        return super.update(update, viewModel);
-    }
-
-    public async delete(viewModel: ViewUser): Promise<void> {
-        this.preventInDemo();
-        return super.delete(viewModel);
     }
 
     /**

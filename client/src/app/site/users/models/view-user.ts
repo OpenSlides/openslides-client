@@ -20,7 +20,6 @@ import { ViewMotionSubmitter } from 'app/site/motions/models/view-motion-submitt
 import { ViewGroup } from './view-group';
 import { ViewPersonalNote } from './view-personal-note';
 
-
 export enum DelegationType {
     Transferred = 1,
     Received,
@@ -194,7 +193,7 @@ export class ViewUser extends BaseProjectableViewModel<User> implements Searchab
 
     public canVoteFor(user: ViewUser): boolean {
         throw new Error('TODO');
-        //return this.vote_delegations_from_users_id.includes(user.id);
+        // return this.vote_delegations_from_users_id.includes(user.id);
     }
 }
 type UserManyStructuredRelation<Result> = (arg?: Id) => Result[];

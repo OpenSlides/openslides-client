@@ -241,16 +241,15 @@ export class MotionPdfService {
                 })
                 .join(', ');
 
-                metaTableBody.push([
-                    {
-                        text: `${this.translate.instant('Supporters')}:`,
-                        style: 'boldText'
-                    },
-                    {
-                        text: supporters
-                    }
-                ]);
-            }
+            metaTableBody.push([
+                {
+                    text: `${this.translate.instant('Supporters')}:`,
+                    style: 'boldText'
+                },
+                {
+                    text: supporters
+                }
+            ]);
         }
 
         // state

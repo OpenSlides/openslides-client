@@ -35,7 +35,8 @@ import {
     styleUrls: ['./meeting-settings-list.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MeetingSettingsListComponent extends BaseModelContextComponent
+export class MeetingSettingsListComponent
+    extends BaseModelContextComponent
     implements CanComponentDeactivate, OnInit, OnDestroy {
     public settingsGroup: SettingsGroup;
 
@@ -155,7 +156,7 @@ export class MeetingSettingsListComponent extends BaseModelContextComponent
             follow: [
                 {
                     idField: 'group_ids',
-                    fieldset: 'name'
+                    fieldset: 'name' // TODO: this one is invalid!
                 },
                 {
                     idField: 'motion_workflow_ids',

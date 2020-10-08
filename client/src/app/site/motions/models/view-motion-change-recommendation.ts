@@ -10,7 +10,8 @@ import { ViewUnifiedChange, ViewUnifiedChangeType } from '../../../shared/models
  * Provides "safe" access to variables and functions in {@link MotionChangeRecommendation}
  * @ignore
  */
-export class ViewMotionChangeRecommendation extends BaseViewModel<MotionChangeRecommendation>
+export class ViewMotionChangeRecommendation
+    extends BaseViewModel<MotionChangeRecommendation>
     implements ViewUnifiedChange {
     public static COLLECTION = MotionChangeRecommendation.COLLECTION;
     protected _collection = MotionChangeRecommendation.COLLECTION;

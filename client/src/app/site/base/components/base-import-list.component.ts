@@ -1,4 +1,4 @@
-import { OnInit, ViewChild, Directive } from '@angular/core';
+import { Directive, OnInit, ViewChild } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 

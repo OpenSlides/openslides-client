@@ -23,10 +23,7 @@ import { AssignmentPollService } from '../../services/assignment-poll.service';
     styleUrls: ['./assignment-poll-detail.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class AssignmentPollDetailComponent extends BasePollDetailComponent<
-    ViewAssignmentPoll,
-    AssignmentPollService
-> {
+export class AssignmentPollDetailComponent extends BasePollDetailComponent<ViewAssignmentPoll, AssignmentPollService> {
     public columnDefinitionSingleVotes: PblColumnDefinition[];
 
     public filterProps = ['user.getFullName'];

@@ -1,4 +1,4 @@
-import { OnDestroy, OnInit, Directive } from '@angular/core';
+import { Directive, OnDestroy, OnInit } from '@angular/core';
 
 import { ModelSubscription } from 'app/core/core-services/autoupdate.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';

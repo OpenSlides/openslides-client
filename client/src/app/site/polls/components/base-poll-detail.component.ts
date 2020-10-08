@@ -1,4 +1,4 @@
-import { OnInit, Directive } from '@angular/core';
+import { Directive, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { Label } from 'ng2-charts';

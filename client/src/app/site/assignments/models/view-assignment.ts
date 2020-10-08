@@ -75,7 +75,7 @@ export class ViewAssignment extends BaseProjectableViewModel<Assignment> {
      * @returns the amount of candidates in the assignment's candidate list
      */
     public get candidateAmount(): number {
-        return this.candidate_ids.length;
+        return this.candidate_ids?.length;
     }
 
     public formatForSearch(): SearchRepresentation {

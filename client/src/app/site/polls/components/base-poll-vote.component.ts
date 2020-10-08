@@ -1,4 +1,4 @@
-import { Input, Directive } from '@angular/core';
+import { Directive, Input } from '@angular/core';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { VotingData } from 'app/core/repositories/assignments/assignment-poll-repository.service';
