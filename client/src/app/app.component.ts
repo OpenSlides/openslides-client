@@ -19,6 +19,7 @@ import { overloadJsFunctions } from './shared/overload-js-functions';
 import { RoutingStateService } from './core/ui-services/routing-state.service';
 import { ThemeService } from './core/ui-services/theme.service';
 import { VotingBannerService } from './core/ui-services/voting-banner.service';
+import { ServertimeService } from './core/core-services/servertime.service';
 
 /**
  * Angular's global App Component
@@ -37,10 +38,6 @@ export class AppComponent implements OnInit {
      * Inits the translation service, the operator, the login data and the constants.
      *
      * Handles the altering of Array.toString()
-     *
-     * @param translate To set the default language
-     * @param servertimeService executes the scheduler early on
-     * @param themeService used to listen to theme-changes
      */
     public constructor(
         translate: TranslateService,
@@ -50,6 +47,7 @@ export class AppComponent implements OnInit {
         private lifecycleService: LifecycleService,
         router: Router,
         offlineService: OfflineService,
+        servertimeService: ServertimeService,
         operator: OperatorService,
         loginDataService: LoginDataService,
         themeService: ThemeService,

@@ -6,6 +6,10 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpService } from './http.service';
 import { LifecycleService } from './lifecycle.service';
 
+interface ServertimeResponse {
+    server_time: number;
+}
+
 /**
  * This service provides the timeoffset to the server and a user of this service
  * can query the servertime.
@@ -28,15 +32,14 @@ export class ServertimeService {
     private serverOffsetSubject = new BehaviorSubject<number>(0);
 
     public constructor(private http: HttpService, private lifecycleService: LifecycleService) {
-        this.lifecycleService.appLoaded.subscribe(() => this.startScheduler);
+        this.lifecycleService.appLoaded.subscribe(() => this.startScheduler());
     }
 
     /**
      * Starts the scheduler to sync with the server.
      */
     public startScheduler(): void {
-        console.warn('TODO: Enable Servertime service');
-        // this.scheduleNextRefresh(0.1);
+        this.scheduleNextRefresh(0.1);
     }
 
     /**
@@ -68,10 +71,20 @@ export class ServertimeService {
      */
     private async refreshServertime(): Promise<void> {
         // servertime is the time in seconds.
-        const servertime = await this.http.get<number>(environment.urlPrefix + '/core/servertime/');
-        if (typeof servertime !== 'number') {
-            throw new Error('The returned servertime is not a number');
+        const payload = [
+            {
+                presenter: 'server_time'
+            }
+        ];
+        const servertimeResponse = await this.http.post<ServertimeResponse[]>(
+            '/system/presenter/handle_request/',
+            payload
+        );
+        if (servertimeResponse?.length !== 1 || typeof servertimeResponse[0]?.server_time !== 'number') {
+            console.error('The returned servertime has a wrong format:', servertimeResponse);
+            throw new Error();
         }
+        const servertime = servertimeResponse[0].server_time;
         this.serverOffsetSubject.next(Math.floor(Date.now() - servertime * 1000));
     }
 
