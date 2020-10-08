@@ -9,6 +9,7 @@ import {
     AssignmentPollRepositoryService,
     GlobalVote
 } from 'app/core/repositories/assignments/assignment-poll-repository.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { VotingService } from 'app/core/ui-services/voting.service';
 import { AssignmentPollMethod } from 'app/shared/models/assignments/assignment-poll';
@@ -18,7 +19,6 @@ import { ViewAssignmentOption } from 'app/site/assignments/models/view-assignmen
 import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
 import { BasePollVoteComponent, VoteOption } from 'app/site/polls/components/base-poll-vote.component';
 import { ViewUser } from 'app/site/users/models/view-user';
-import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 
 @Component({
     selector: 'os-assignment-poll-vote',

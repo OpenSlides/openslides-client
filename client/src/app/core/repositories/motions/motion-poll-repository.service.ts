@@ -25,10 +25,7 @@ export interface MotionAnalogVoteData {
     providedIn: 'root'
 })
 export class MotionPollRepositoryService extends BasePollRepository<ViewMotionPoll, MotionPoll> {
-    public constructor(
-        repositoryServiceCollector: RepositoryServiceCollector,
-        http: HttpService
-    ) {
+    public constructor(repositoryServiceCollector: RepositoryServiceCollector, http: HttpService) {
         super(repositoryServiceCollector, MotionPoll, http);
     }
 

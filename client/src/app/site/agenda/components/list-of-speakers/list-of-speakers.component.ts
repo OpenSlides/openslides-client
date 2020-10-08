@@ -6,18 +6,21 @@ import { collectionFromFqid } from 'app/core/core-services/key-transforms';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
+import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DurationService } from 'app/core/ui-services/duration.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
+import { ListOfSpeakersContentComponent } from 'app/shared/components/list-of-speakers-content/list-of-speakers-content.component';
+import { Selectable } from 'app/shared/components/selectable';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { CurrentListOfSpeakersSlideService } from 'app/site/projector/services/current-list-of-speakers-slide.service';
 import { CurrentListOfSpeakersService } from 'app/site/projector/services/current-list-of-speakers.service';
 import { ViewListOfSpeakers } from '../../models/view-list-of-speakers';
-import { ListOfSpeakersContentComponent } from 'app/shared/components/list-of-speakers-content/list-of-speakers-content.component';
+import { ViewSpeaker } from '../../models/view-speaker';
 
 /**
  * The list of speakers for agenda items.
@@ -113,6 +116,8 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
             this.setListOfSpeakersById(id);
         }
 
+        throw new Error('TODO');
+        /*
         this.subscriptions.push(
             // Observe the user list
             this.userRepository.getViewModelListObservable().subscribe(users => {
@@ -135,11 +140,12 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
             this.meetingSettingsService.get('list_of_speakers_show_first_contribution').subscribe(show => {
                 this.showFistContributionHint = show;
             })
-        );
+        );*/
     }
 
     public opCanManage(): boolean {
-        return this.operator.hasPerms(Permission.agendaCanManageListOfSpeakers);
+        throw new Error('TODO');
+        // return this.operator.hasPerms(Permission.agendaCanManageListOfSpeakers);
     }
 
     /**
@@ -282,10 +288,13 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
      * @returns string representation of the duration in `[MM]M:SS minutes` format
      */
     public durationString(speaker: ViewSpeaker): string {
+        throw new Error('TODO!');
+        /*
         const duration = Math.floor(
             (new Date(speaker.end_time).valueOf() - new Date(speaker.begin_time).valueOf()) / 1000
         );
         return `${this.durationService.durationToString(duration, 'm')}`;
+        */
     }
 
     /**
@@ -294,8 +303,10 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
      * @param username The name of the new user.
      */
     public async onCreateUser(username: string): Promise<void> {
-        const newUser = await this.userRepository.createFromString(username);
+        throw new Error('TODO!');
+        /*const newUser = await this.userRepository.createFromString(username);
         this.addNewSpeaker(newUser.id);
+        */
     }
 
     /**
@@ -303,7 +314,8 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
      * (triggered on an update of users or config)
      */
     private filterUsers(): void {
-        const presentUsersOnly = this.meetingSettingsService.instant('list_of_speakers_present_users_only');
+        throw new Error('TODO!');
+        /*const presentUsersOnly = this.meetingSettingsService.instant('list_of_speakers_present_users_only');
         const users = presentUsersOnly
             ? this.users.getValue().filter(u => u.isPresentInMeeting())
             : this.users.getValue();
@@ -311,7 +323,7 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
             this.filteredUsers.next(users);
         } else {
             this.filteredUsers.next(users.filter(u => !this.speakers.some(speaker => speaker.user_id === u.id)));
-        }
+        }*/
     }
 
     /**
@@ -320,14 +332,15 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
      * @param sortedSpeakerList The list to save.
      */
     private onSaveSorting(sortedSpeakerList: Selectable[]): void {
-        if (this.isSortMode) {
+        throw new Error('TODO!');
+        /*if (this.isSortMode) {
             this.listOfSpeakersRepo
                 .sortSpeakers(
                     this.viewListOfSpeakers,
                     sortedSpeakerList.map(el => el.id)
                 )
                 .catch(this.raiseError);
-        }
+        }*/
     }
 
     /**
@@ -337,6 +350,7 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
      */
     private checkSortMode(isMobile: boolean): void {
         this.isMobile = isMobile;
-        this.isSortMode = !isMobile;
+        throw new Error('TODO!');
+        // this.isSortMode = !isMobile;
     }
 }

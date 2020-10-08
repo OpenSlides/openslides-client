@@ -1,4 +1,4 @@
-import { OnDestroy, Directive } from '@angular/core';
+import { Directive, OnDestroy } from '@angular/core';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material/snack-bar';
 import { Title } from '@angular/platform-browser';
 

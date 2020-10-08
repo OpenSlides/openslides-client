@@ -27,9 +27,11 @@ export interface IBaseIsListOfSpeakersContentObjectRepository<
  * The base repository for objects with a list of speakers.
  */
 export abstract class BaseIsListOfSpeakersContentObjectRepository<
-    V extends BaseViewModel & HasListOfSpeakers,
-    M extends BaseModel & HasListOfSpeakersId
-> extends BaseRepositoryWithActiveMeeting<V, M> implements IBaseIsListOfSpeakersContentObjectRepository<V, M> {
+        V extends BaseViewModel & HasListOfSpeakers,
+        M extends BaseModel & HasListOfSpeakersId
+    >
+    extends BaseRepositoryWithActiveMeeting<V, M>
+    implements IBaseIsListOfSpeakersContentObjectRepository<V, M> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector, baseModelCtor: ModelConstructor<M>) {
         super(repositoryServiceCollector, baseModelCtor);
     }

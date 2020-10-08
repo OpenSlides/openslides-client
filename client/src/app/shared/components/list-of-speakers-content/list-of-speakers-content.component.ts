@@ -19,9 +19,9 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { DurationService } from 'app/core/ui-services/duration.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
+import { SpeakerState } from 'app/shared/models/agenda/speaker';
 import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { ViewSpeaker } from 'app/site/agenda/models/view-speaker';
-import { SpeakerState } from 'app/shared/models/agenda/speaker';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { Selectable } from '../selectable';

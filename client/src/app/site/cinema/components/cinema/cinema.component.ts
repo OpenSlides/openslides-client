@@ -7,9 +7,9 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { DetailNavigable, isDetailNavigable } from 'app/site/base/detail-navigable';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { CurrentListOfSpeakersService } from 'app/site/projector/services/current-list-of-speakers.service';
-import { isDetailNavigable, DetailNavigable } from 'app/site/base/detail-navigable';
 
 @Component({
     selector: 'os-cinema',

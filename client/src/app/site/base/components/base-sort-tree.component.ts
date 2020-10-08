@@ -1,4 +1,4 @@
-import { EventEmitter, ViewChild, Directive } from '@angular/core';
+import { Directive, EventEmitter, ViewChild } from '@angular/core';
 
 import { SortDefinition } from 'app/core/ui-services/base-sort.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
