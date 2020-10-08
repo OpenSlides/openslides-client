@@ -39,10 +39,6 @@ export class AppComponent implements OnInit {
      * Inits the translation service, the operator, the login data and the constants.
      *
      * Handles the altering of Array.toString()
-     *
-     * @param translate To set the default language
-     * @param servertimeService executes the scheduler early on
-     * @param themeService used to listen to theme-changes
      */
     public constructor(
         translate: TranslateService,
@@ -51,6 +47,7 @@ export class AppComponent implements OnInit {
         private activeMeetingService: ActiveMeetingService,
         private lifecycleService: LifecycleService,
         router: Router,
+        servertimeService: ServertimeService,
         operator: OperatorService,
         loginDataService: LoginDataService,
         themeService: ThemeService,
