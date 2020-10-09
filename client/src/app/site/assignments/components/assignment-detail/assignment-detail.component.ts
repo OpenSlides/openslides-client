@@ -1,16 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { BehaviorSubject } from 'rxjs';
 
+import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
+import { ModelRequest, ModelSubscription } from 'app/core/core-services/autoupdate.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
+import { AssignmentCandidateRepositoryService } from 'app/core/repositories/assignments/assignment-candidate-repository.service';
 import { AssignmentRepositoryService } from 'app/core/repositories/assignments/assignment-repository.service';
 import { MediafileRepositoryService } from 'app/core/repositories/mediafiles/mediafile-repository.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
-import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
+import { AllUsersInMeetingRequest, UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
@@ -36,7 +39,7 @@ import { ViewAssignmentPoll } from '../../models/view-assignment-poll';
     templateUrl: './assignment-detail.component.html',
     styleUrls: ['./assignment-detail.component.scss']
 })
-export class AssignmentDetailComponent extends BaseModelContextComponent implements OnInit {
+export class AssignmentDetailComponent extends BaseModelContextComponent implements OnInit, OnDestroy {
     /**
      * Determines if the assignment is new
      */
@@ -53,16 +56,16 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
     public phaseOptions = AssignmentPhases;
 
     /**
-     * List of users available as candidates (used as raw data for {@link filteredCandidates})
+     * List of users.
      */
-    private availableCandidates = new BehaviorSubject<ViewUser[]>([]);
+    private allUsers = new BehaviorSubject<ViewUser[]>([]);
 
     /**
      * A BehaviourSubject with a filtered list of users (excluding users already
      * in the list of candidates). It is updated each time {@link filterCandidates}
      * is called (triggered by autoupdates)
      */
-    public filteredCandidates = new BehaviorSubject<ViewUser[]>([]);
+    public usersAsPossibleCandidates = new BehaviorSubject<ViewUser[]>([]);
 
     /**
      * Form for adding/removing candidates.
@@ -113,17 +116,15 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
      */
     private _assignment: ViewAssignment;
 
-    public get candidates(): ViewUser[] {
-        return this.assignment.candidatesAsUsers;
-    }
-
     /**
      * Check if the operator is a candidate
      *
      * @returns true if they are in the list of candidates
      */
     public get isSelfCandidate(): boolean {
-        return this.assignment.candidatesAsUsers.find(user => user.id === this.operator.operatorId) ? true : false;
+        return this.assignment.candidates.find(candidate => candidate.user_id === this.operator.operatorId)
+            ? true
+            : false;
     }
 
     /**
@@ -147,6 +148,8 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
         return this.agendaObserver.getValue().length > 0;
     }
 
+    private possibleCandidatesRequest: ModelSubscription | null = null;
+
     /**
      * Constructor. Build forms and subscribe to needed configs and updates
      *
@@ -158,7 +161,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
      * @param router
      * @param route
      * @param formBuilder
-     * @param repo
+     * @param assignmentRepo
      * @param userRepo
      * @param pollService
      * @param itemRepo
@@ -168,11 +171,13 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private operator: OperatorService,
+        private activeMeetingService: ActiveMeetingService,
         public perms: PermissionsService,
         private router: Router,
         private route: ActivatedRoute,
         formBuilder: FormBuilder,
-        public repo: AssignmentRepositoryService,
+        public assignmentRepo: AssignmentRepositoryService,
+        private assignmentCandidateRepo: AssignmentCandidateRepositoryService,
         private userRepo: UserRepositoryService,
         private itemRepo: AgendaItemRepositoryService,
         private tagRepo: TagRepositoryService,
@@ -184,16 +189,22 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
     ) {
         super(componentServiceCollector);
         this.subscriptions.push(
-            /* List of eligible users */
             this.userRepo.getViewModelListObservable().subscribe(users => {
-                this.availableCandidates.next(users);
+                this.allUsers.next(users);
                 this.filterCandidates();
+            }),
+            this.operator.operatorUpdatedEvent.subscribe(async () => {
+                if (!this.possibleCandidatesRequest && this.hasPerms('addOthers')) {
+                    const request = AllUsersInMeetingRequest(this.activeMeetingService.meetingId);
+                    const requester = this.componentServiceCollector.modelRequestService.requestModels;
+                    this.possibleCandidatesRequest = await requester(request);
+                }
             })
         );
         this.assignmentForm = formBuilder.group({
             phase: null,
-            tag_ids: [],
-            attachment_ids: [],
+            tag_ids: [[]],
+            attachment_ids: [[]],
             title: ['', Validators.required],
             description: [''],
             default_poll_description: [''],
@@ -230,7 +241,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
      * @param operation the action requested
      * @returns true if the user is able to perform the action
      */
-    public hasPerms(operation: string): boolean {
+    public hasPerms(operation: 'addSelf' | 'addOthers' | 'createPoll' | 'manage'): boolean {
         const isManager = this.operator.hasPerms(Permission.assignmentsCanManage);
         switch (operation) {
             case 'addSelf':
@@ -238,7 +249,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
                     return true;
                 } else {
                     return (
-                        this.assignment.isSearchingForCandidates &&
+                        this.assignment?.isSearchingForCandidates &&
                         this.operator.hasPerms(Permission.assignmentsCanNominateSelf) &&
                         !this.assignment.isFinished
                     );
@@ -248,7 +259,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
                     return true;
                 } else {
                     return (
-                        this.assignment.isSearchingForCandidates &&
+                        this.assignment?.isSearchingForCandidates &&
                         this.operator.hasPerms(Permission.assignmentsCanNominateOther) &&
                         !this.assignment.isFinished
                     );
@@ -259,8 +270,6 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
                 );
             case 'manage':
                 return isManager;
-            default:
-                return false;
         }
     }
 
@@ -324,14 +333,17 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
      * Adds the operator to list of candidates
      */
     public async addSelf(): Promise<void> {
-        await this.repo.addSelf(this.assignment).catch(this.raiseError);
+        await this.addCandidate(this.operator.operatorId);
     }
 
     /**
      * Removes the operator from list of candidates
      */
     public async removeSelf(): Promise<void> {
-        await this.repo.deleteSelf(this.assignment).catch(this.raiseError);
+        const candidate = this.assignment.candidates.find(c => c.user_id === this.operator.operatorId);
+        if (candidate) {
+            await this.removeCandidate(candidate);
+        }
     }
 
     /**
@@ -339,9 +351,9 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
      *
      * @param userId the id of a ViewUser
      */
-    public async addUser(userId: number): Promise<void> {
+    public async addCandidate(userId: number): Promise<void> {
         if (userId) {
-            await this.repo.changeCandidate(userId, this.assignment, true).catch(this.raiseError);
+            await this.assignmentCandidateRepo.create(this.assignment, userId);
         }
     }
 
@@ -350,8 +362,8 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
      *
      * @param candidate A ViewAssignmentUser currently in the list of related users
      */
-    public async removeUser(candidate: ViewAssignmentCandidate): Promise<void> {
-        await this.repo.changeCandidate(candidate.user.id, this.assignment, false).catch(this.raiseError);
+    public async removeCandidate(candidate: ViewAssignmentCandidate): Promise<void> {
+        await this.assignmentCandidateRepo.delete(candidate);
     }
 
     /**
@@ -359,7 +371,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
      */
     public async createNewCandidate(username: string): Promise<void> {
         const newUserObj = await this.userRepo.createFromString(username);
-        await this.addUser(newUserObj.id);
+        await this.addCandidate(newUserObj.id);
     }
 
     /**
@@ -374,7 +386,8 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
         } else {
             this.subscriptions.push(
                 this.route.params.subscribe(params => {
-                    this.loadAssignmentById(Number(params.id));
+                    console.log(params);
+                    this.loadAssignmentById(+params.id);
                 })
             );
         }
@@ -409,7 +422,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
         });
 
         this.subscriptions.push(
-            this.repo.getViewModelObservable(assignmentId).subscribe(assignment => {
+            this.assignmentRepo.getViewModelObservable(assignmentId).subscribe(assignment => {
                 if (assignment) {
                     const title = assignment.getTitle();
                     super.setTitle(title);
@@ -422,7 +435,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
             this.candidatesForm.valueChanges.subscribe(formResult => {
                 // resetting a form triggers a form.next(null) - check if data is present
                 if (formResult && formResult.userId) {
-                    this.addUser(formResult.userId);
+                    this.addCandidate(formResult.userId);
                     this.candidatesForm.setValue({ userId: null });
                 }
             })
@@ -435,27 +448,19 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
     public async onDeleteAssignmentButton(): Promise<void> {
         const title = this.translate.instant('Are you sure you want to delete this election?');
         if (await this.promptService.open(title, this.assignment.getTitle())) {
-            this.repo.delete(this.assignment).then(() => this.router.navigate(['../']), this.raiseError);
+            this.assignmentRepo.delete(this.assignment).then(() => this.router.navigate(['../']));
         }
     }
 
     /**
-     * Handler for actions to be done on change of displayed poll
-     * TODO: needed?
-     */
-    public onTabChange(): void {}
-
-    /**
      * Handler for changing the phase of an assignment
      *
-     * TODO: only with existing assignments, else it should fail
      * TODO check permissions and conditions
      *
      * @param value the phase to set
      */
     public async onSetPhaseButton(value: number): Promise<void> {
-        throw new Error('TODO!');
-        // this.repo.update({ phase: value }, this.assignment).catch(this.raiseError);
+        this.assignmentRepo.update({ phase: value }, this.assignment);
     }
 
     public onDownloadPdf(): void {
@@ -466,28 +471,23 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
      * Creates an assignment. Calls the "patchValues" function
      */
     public async createAssignment(): Promise<void> {
-        throw new Error('TODO!');
-        // const newAssignmentValues = { ...this.assignmentForm.value };
-
-        // if (!newAssignmentValues.agenda_parent_id) {
-        //     delete newAssignmentValues.agenda_parent_id;
-        // }
-        // try {
-        //     const response = await this.repo.create(newAssignmentValues);
-        //     this.router.navigate(['./assignments/' + response.id]);
-        // } catch (e) {
-        //     this.raiseError(this.translate.instant(e));
-        // }
+        try {
+            /*const response = */ await this.assignmentRepo.create(this.assignmentForm.value);
+            console.error('TODO: wait for returned id and navigate to it');
+            this.router.navigate([`./assignments/`]);
+            // this.router.navigate([`./assignments/${response.id}`]);
+        } catch (e) {
+            this.raiseError(e);
+        }
     }
 
     public async updateAssignmentFromForm(): Promise<void> {
-        throw new Error('TODO!');
-        // try {
-        //     await this.repo.update({ ...this.assignmentForm.value }, this.assignment);
-        //     this.editAssignment = false;
-        // } catch (e) {
-        //     this.raiseError(e);
-        // }
+        try {
+            await this.assignmentRepo.update(this.assignmentForm.value, this.assignment);
+            this.editAssignment = false;
+        } catch (e) {
+            this.raiseError(e);
+        }
     }
 
     /**
@@ -510,34 +510,39 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
      * (triggered on an autoupdate of either users or the assignment)
      */
     private filterCandidates(): void {
-        if (this.assignment?.candidatesAsUsers?.length) {
-            this.filteredCandidates.next(
-                this.availableCandidates
+        if (this.assignment?.candidates?.length) {
+            this.usersAsPossibleCandidates.next(
+                this.allUsers
                     .getValue()
-                    .filter(u => !this.assignment.candidatesAsUsers.some(user => user.id === u.id))
+                    .filter(user => !this.assignment.candidates.some(candidate => candidate.user_id === user.id))
             );
         } else {
-            this.filteredCandidates.next(this.availableCandidates.getValue());
+            this.usersAsPossibleCandidates.next(this.allUsers.getValue());
         }
     }
 
     /**
      * Triggers an update of the sorting.
      */
-    public onSortingChange(listInNewOrder: ViewAssignmentCandidate[]): void {
-        this.repo
-            .sortCandidates(
-                listInNewOrder.map(relatedUser => relatedUser.id),
-                this.assignment
-            )
-            .catch(this.raiseError);
+    public async onSortingChange(candidates: ViewAssignmentCandidate[]): Promise<void> {
+        console.log(
+            candidates,
+            candidates.map(x => [x.id, x.collection])
+        );
+        await this.assignmentCandidateRepo.sort(this.assignment, candidates);
     }
 
     public addToAgenda(): void {
-        this.itemRepo.addItemToAgenda(this.assignment).catch(this.raiseError);
+        this.itemRepo.addItemToAgenda(this.assignment);
     }
 
     public removeFromAgenda(): void {
-        this.itemRepo.removeFromAgenda(this.assignment.agenda_item).catch(this.raiseError);
+        this.itemRepo.removeFromAgenda(this.assignment.agenda_item);
+    }
+
+    public ngOnDestroy(): void {
+        if (this.possibleCandidatesRequest) {
+            this.possibleCandidatesRequest.close();
+        }
     }
 }
