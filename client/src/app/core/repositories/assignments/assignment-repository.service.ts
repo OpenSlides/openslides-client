@@ -1,8 +1,13 @@
 import { Injectable } from '@angular/core';
 
 import { AgendaItemRepositoryService } from '../agenda/agenda-item-repository.service';
+import { AssignmentAction } from 'app/core/actions/assignment-action';
+import { AssignmentCandidateAction } from 'app/core/actions/assignment-candidate-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
+import { OperatorService } from 'app/core/core-services/operator.service';
+import { Id } from 'app/core/definitions/key-types';
 import { Assignment } from 'app/shared/models/assignments/assignment';
+import { Identifiable } from 'app/shared/models/base/identifiable';
 import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { BaseIsAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-is-agenda-item-and-list-of-speakers-content-object-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
@@ -19,10 +24,6 @@ export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeake
     ViewAssignment,
     Assignment
 > {
-    private readonly restPath = '/rest/assignments/assignment/';
-    private readonly candidatureOtherPath = '/candidature_other/';
-    private readonly candidatureSelfPath = '/candidature_self/';
-
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
         agendaItemRepo: AgendaItemRepositoryService
@@ -30,8 +31,25 @@ export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeake
         super(repositoryServiceCollector, Assignment, agendaItemRepo);
     }
 
+    public create(partialAssignment: Partial<Assignment>): Promise<Identifiable> {
+        partialAssignment.phase = undefined;
+        const payload: AssignmentAction.CreatePayload = {
+            meeting_id: this.activeMeetingService.meetingId,
+            ...this.getPartialPayload(partialAssignment)
+        };
+        return this.sendActionToBackend(AssignmentAction.CREATE, payload);
+    }
+
+    public update(update: Partial<Assignment>, viewModel: ViewAssignment): Promise<void> {
+        const payload: AssignmentAction.UpdatePayload = {
+            id: viewModel.id,
+            ...this.getPartialPayload(update)
+        };
+        return this.sendActionToBackend(AssignmentAction.UPDATE, payload);
+    }
+
     public delete(viewModel: ViewAssignment): Promise<any> {
-        throw new Error('TODO');
+        return this.sendActionToBackend(AssignmentAction.DELETE, { id: viewModel.id });
     }
 
     public getFieldsets(): Fieldsets<Assignment> {
@@ -56,56 +74,17 @@ export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeake
         return this.translate.instant(plural ? 'Elections' : 'Election');
     };
 
-    /**
-     * Adds/removes another user to/from the candidates list of an assignment
-     *
-     * @param user A ViewUser
-     * @param assignment The assignment to add the candidate to
-     * @param adding optional boolean to force an add (true)/ remove (false)
-     * of the candidate. Else, the candidate will be added if not on the list,
-     * and removed if on the list
-     */
-    public async changeCandidate(userId: number, assignment: ViewAssignment, adding?: boolean): Promise<void> {
-        const data = { user: userId };
-        if (assignment.candidates.some(candidate => candidate.id === userId) && adding !== true) {
-            throw new Error('TODO');
-            // await this.httpService.delete(this.restPath + assignment.id + this.candidatureOtherPath, data);
-        } else if (adding !== false) {
-            throw new Error('TODO');
-            // await this.httpService.post(this.restPath + assignment.id + this.candidatureOtherPath, data);
-        }
-    }
-
-    /**
-     * Add the operator as candidate to the assignment
-     *
-     * @param assignment The assignment to add the candidate to
-     */
-    public async addSelf(assignment: ViewAssignment): Promise<void> {
-        throw new Error('TODO');
-        // await this.httpService.post(this.restPath + assignment.id + this.candidatureSelfPath);
-    }
-
-    /**
-     * Removes the current user (operator) from the list of candidates for an assignment
-     *
-     * @param assignment The assignment to remove ourself from
-     */
-    public async deleteSelf(assignment: ViewAssignment): Promise<void> {
-        // await this.httpService.delete(this.restPath + assignment.id + this.candidatureSelfPath);
-        throw new Error('TODO');
-    }
-
-    /**
-     * Sends a request to sort an assignment's candidates
-     *
-     * @param sortedCandidates the id of the assignment related users (note: NOT viewUsers)
-     * @param assignment
-     */
-    public async sortCandidates(sortedCandidates: number[], assignment: ViewAssignment): Promise<void> {
-        const restPath = `/rest/assignments/assignment/${assignment.id}/sort_related_users/`;
-        const data = { related_users: sortedCandidates };
-        // await this.httpService.post(restPath, data);
-        throw new Error('TODO');
+    private getPartialPayload(model: Partial<ViewAssignment>): any {
+        console.log(model.phase);
+        return {
+            attachment_ids: model.attachment_ids,
+            default_poll_description: model.default_poll_description,
+            description: model.description,
+            number_poll_candidates: model.number_poll_candidates,
+            open_posts: model.open_posts,
+            phase: model.phase,
+            tag_ids: model.tag_ids,
+            title: model.title
+        };
     }
 }

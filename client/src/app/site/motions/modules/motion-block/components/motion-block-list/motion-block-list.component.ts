@@ -176,11 +176,7 @@ export class MotionBlockListComponent extends BaseListViewComponent<ViewMotionBl
      */
     private save(): void {
         if (this.createBlockForm.valid) {
-            const block = this.createBlockForm.value;
-            if (!block.agenda_parent_id) {
-                delete block.agenda_parent_id;
-            }
-            this.repo.create(block).catch(this.raiseError);
+            this.repo.create(this.createBlockForm.value);
             this.resetForm();
         }
     }

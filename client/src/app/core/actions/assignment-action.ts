@@ -1,8 +1,12 @@
 import { HasMeetingId } from 'app/shared/models/base/has-meeting-id';
 import { Identifiable } from 'app/shared/models/base/identifiable';
-import { UnsafeHtml, Id } from '../definitions/key-types';
+import { Id, UnsafeHtml } from '../definitions/key-types';
 
 export namespace AssignmentAction {
+    export const CREATE = 'assignment.create';
+    export const UPDATE = 'assignment.update';
+    export const DELETE = 'assignment.delete';
+
     export interface CreatePayload extends HasMeetingId {
         // Required
         title: string;
@@ -27,16 +31,5 @@ export namespace AssignmentAction {
 
         tag_ids?: Id[];
         attachment_ids?: Id[];
-    }
-    export interface WithdrawSelfPayload extends Identifiable {}
-    export interface WithdrawOtherPayload extends Identifiable {
-        user_id: Id;
-    }
-    export interface NominateSelfPayload extends Identifiable {}
-    export interface NominateOtherPayload extends Identifiable {
-        user_id: Id;
-    }
-    export interface SortCandidatesPayload extends Identifiable {
-        candidate_ids: Id[];
     }
 }

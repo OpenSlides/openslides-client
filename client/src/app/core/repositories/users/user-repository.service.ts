@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
 
 import { UserAction } from 'app/core/actions/user-action';
-import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
+import {
+    DEFAULT_FIELDSET,
+    Fieldsets,
+    SimplifiedModelRequest
+} from 'app/core/core-services/model-request-builder.service';
 import { PreventedInDemo } from 'app/core/definitions/custom-errors';
 import { Id } from 'app/core/definitions/key-types';
 import { NewEntry } from 'app/core/ui-services/base-import.service';
@@ -10,6 +14,7 @@ import { Identifiable } from 'app/shared/models/base/identifiable';
 import { UserSortProperty } from 'app/shared/models/event-management/meeting';
 import { User } from 'app/shared/models/users/user';
 import { toDecimal } from 'app/shared/utils/to-decimal';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
@@ -22,6 +27,14 @@ export interface MassImportResult {
 export interface NewUser {
     id: number;
     name: string;
+}
+
+export function AllUsersInMeetingRequest(meetingId: Id): SimplifiedModelRequest {
+    return {
+        viewModelCtor: ViewMeeting,
+        ids: [meetingId],
+        follow: [{ idField: 'user_ids', fieldset: 'shortName' }]
+    };
 }
 
 /**

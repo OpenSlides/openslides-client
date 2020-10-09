@@ -31,11 +31,14 @@ export class MotionBlockRepositoryService extends BaseIsAgendaItemAndListOfSpeak
         this.initSorting();
     }
 
-    public create(partialModel: Partial<MotionBlock>): Promise<Identifiable> {
+    public create(partialModel: Partial<MotionBlockAction.CreatePayload>): Promise<Identifiable> {
         const payload: MotionBlockAction.CreatePayload = {
             meeting_id: this.activeMeetingService.meetingId,
             title: partialModel.title,
-            internal: partialModel.internal
+            internal: partialModel.internal,
+            agenda_create: partialModel.agenda_create,
+            agenda_parent_id: partialModel.agenda_parent_id,
+            agenda_type: partialModel.agenda_type
         };
         return this.sendActionToBackend(MotionBlockAction.CREATE, payload);
     }
