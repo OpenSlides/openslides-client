@@ -11,7 +11,7 @@ import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-mo
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { Searchable } from 'app/site/base/searchable';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
+import { HasMeeting, ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { HasAttachment } from 'app/site/mediafiles/models/view-mediafile';
 import { HasTags } from 'app/site/tags/models/view-tag';
 import { HasPersonalNote, ViewPersonalNote } from 'app/site/users/models/view-personal-note';
@@ -371,13 +371,13 @@ interface IMotionRelations {
     change_recommendations: ViewMotionChangeRecommendation[];
     statute_paragraph?: ViewMotionStatuteParagraph;
     comments: ViewMotionComment[];
-    meeting: ViewMeeting;
 }
 
 export interface ViewMotion
     extends Motion,
         IMotionRelations,
         Searchable,
+        HasMeeting,
         HasAttachment,
         HasPersonalNote,
         HasTags,

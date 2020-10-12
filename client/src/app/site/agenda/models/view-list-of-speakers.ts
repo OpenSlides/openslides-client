@@ -6,7 +6,7 @@ import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-mo
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { DetailNavigable } from 'app/site/base/detail-navigable';
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
+import { HasMeeting, ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewSpeaker } from './view-speaker';
 
 export function hasListOfSpeakers(obj: any): obj is HasListOfSpeakers {
@@ -74,6 +74,5 @@ export class ViewListOfSpeakers extends BaseProjectableViewModel<ListOfSpeakers>
 interface IListOfSpeakersRelations {
     content_object?: BaseViewModel & HasListOfSpeakers;
     speakers: ViewSpeaker[];
-    meeting: ViewMeeting;
 }
-export interface ViewListOfSpeakers extends ListOfSpeakers, IListOfSpeakersRelations {}
+export interface ViewListOfSpeakers extends ListOfSpeakers, IListOfSpeakersRelations, HasMeeting {}

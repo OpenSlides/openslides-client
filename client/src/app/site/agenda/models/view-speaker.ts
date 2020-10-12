@@ -1,5 +1,6 @@
 import { Speaker, SpeakerState } from 'app/shared/models/agenda/speaker';
 import { BaseViewModel } from 'app/site/base/base-view-model';
+import { HasMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { ViewListOfSpeakers } from './view-list-of-speakers';
 
@@ -42,4 +43,4 @@ interface ISpeakerRelations {
     user: ViewUser;
     list_of_speakers: ViewListOfSpeakers;
 }
-export interface ViewSpeaker extends Speaker, ISpeakerRelations {}
+export interface ViewSpeaker extends Speaker, ISpeakerRelations, HasMeeting {}

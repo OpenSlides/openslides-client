@@ -1,7 +1,7 @@
 import { SearchRepresentation } from 'app/core/ui-services/search.service';
 import { MotionCategory } from 'app/shared/models/motions/motion-category';
 import { Searchable } from 'app/site/base/searchable';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
+import { HasMeeting, ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { BaseViewModel } from '../../base/base-view-model';
 import { ViewMotion } from './view-motion';
 
@@ -99,6 +99,5 @@ interface IMotionCategoryRelations {
     parent?: ViewMotionCategory;
     children: ViewMotionCategory[];
     motions: ViewMotion[];
-    meeting: ViewMeeting;
 }
-export interface ViewMotionCategory extends MotionCategory, IMotionCategoryRelations {}
+export interface ViewMotionCategory extends MotionCategory, IMotionCategoryRelations, HasMeeting {}

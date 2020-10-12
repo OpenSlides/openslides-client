@@ -1,5 +1,6 @@
 import { Fqid, Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
+import { HasMeetingId } from '../base/has-meeting-id';
 
 export class Projection extends BaseModel<Projection> {
     public static COLLECTION = 'projection';
@@ -16,3 +17,4 @@ export class Projection extends BaseModel<Projection> {
         super(Projection.COLLECTION, input);
     }
 }
+export interface Projection extends HasMeetingId {}

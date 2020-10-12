@@ -1,7 +1,7 @@
 import { Permission } from 'app/core/core-services/permission';
 import { Group } from 'app/shared/models/users/group';
 import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
+import { HasMeeting, ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-comment-section';
 import { ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
@@ -31,6 +31,5 @@ interface IGroupRelations {
     assignment_polls: ViewAssignmentPoll[];
     used_as_motion_poll_default?: ViewMeeting;
     used_as_assignment_poll_default?: ViewMeeting;
-    meeting: ViewMeeting;
 }
-export interface ViewGroup extends Group, IGroupRelations {}
+export interface ViewGroup extends Group, IGroupRelations, HasMeeting {}

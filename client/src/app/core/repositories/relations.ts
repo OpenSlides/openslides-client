@@ -321,6 +321,12 @@ export const RELATIONS: Relation[] = [
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
+        MViewModel: ViewProjection,
+        OField: 'projections',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
         MViewModel: ViewProjectiondefault,
         OField: 'projectiondefaults',
         MField: 'meeting'
@@ -359,6 +365,12 @@ export const RELATIONS: Relation[] = [
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
+        MViewModel: ViewSpeaker,
+        OField: 'speaker_ids',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
         MViewModel: ViewTopic,
         OField: 'topics',
         MField: 'meeting'
@@ -367,6 +379,12 @@ export const RELATIONS: Relation[] = [
         OViewModel: ViewMeeting,
         MViewModel: ViewGroup,
         OField: 'groups',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewPersonalNote,
+        OField: 'personal_notes',
         MField: 'meeting'
     }),
     ...makeM2O({
@@ -389,6 +407,12 @@ export const RELATIONS: Relation[] = [
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
+        MViewModel: ViewMotionComment,
+        OField: 'motion_comments',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
         MViewModel: ViewMotionCategory,
         OField: 'motion_categories',
         OIdField: 'motion_category_ids',
@@ -402,8 +426,26 @@ export const RELATIONS: Relation[] = [
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
+        MViewModel: ViewMotionSubmitter,
+        OField: 'motion_submitters',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewMotionChangeRecommendation,
+        OField: 'motion_change_recommendations',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
         MViewModel: ViewMotionWorkflow,
         OField: 'motion_workflows',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewMotionState,
+        OField: 'motion_states',
         MField: 'meeting'
     }),
     ...makeM2O({
@@ -420,14 +462,44 @@ export const RELATIONS: Relation[] = [
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
+        MViewModel: ViewMotionOption,
+        OField: 'motion_options',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewMotionVote,
+        OField: 'motion_votes',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
         MViewModel: ViewAssignment,
         OField: 'assignments',
         MField: 'meeting'
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
+        MViewModel: ViewAssignmentCandidate,
+        OField: 'assignment_candidates',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
         MViewModel: ViewAssignmentPoll,
         OField: 'assignment_polls',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewAssignmentOption,
+        OField: 'assignment_options',
+        MField: 'meeting'
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewAssignmentVote,
+        OField: 'assignment_votes',
         MField: 'meeting'
     }),
     ...makeM2O({

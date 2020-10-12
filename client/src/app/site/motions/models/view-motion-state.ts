@@ -1,4 +1,5 @@
 import { MotionState } from 'app/shared/models/motions/motion-state';
+import { HasMeeting } from 'app/site/event-management/models/view-meeting';
 import { BaseViewModel } from '../../base/base-view-model';
 import { ViewMotion } from './view-motion';
 import { ViewMotionWorkflow } from './view-motion-workflow';
@@ -27,4 +28,4 @@ interface IStateRelations {
     workflow: ViewMotionWorkflow;
     first_state_of_workflow?: ViewMotionWorkflow;
 }
-export interface ViewMotionState extends MotionState, IStateRelations {}
+export interface ViewMotionState extends MotionState, IStateRelations, HasMeeting {}

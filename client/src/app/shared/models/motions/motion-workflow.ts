@@ -1,5 +1,6 @@
 import { Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
+import { HasMeetingId } from '../base/has-meeting-id';
 
 /**
  * Representation of a motion workflow. Has the nested property 'states'
@@ -17,9 +18,9 @@ export class MotionWorkflow extends BaseModel<MotionWorkflow> {
     public default_workflow_meeting_id: Id; // meeting/motions_default_workflow_id;
     public default_amendment_workflow_meeting_id: Id; // meeting/motions_default_amendment_workflow_id;
     public default_statute_amendment_workflow_meeting_id: Id; // meeting/motions_default_statute_amendments_workflow_id;
-    public meeting_id: Id; // meeting/motion_workflow_ids;
 
     public constructor(input?: any) {
         super(MotionWorkflow.COLLECTION, input);
     }
 }
+export interface MotionWorkflow extends HasMeetingId {}

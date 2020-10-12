@@ -3,6 +3,7 @@ import { BaseModel } from '../base/base-model';
 import { HasAgendaItemId } from '../base/has-agenda-item-id';
 import { HasAttachmentIds } from '../base/has-attachment-ids';
 import { HasListOfSpeakersId } from '../base/has-list-of-speakers-id';
+import { HasMeetingId } from '../base/has-meeting-id';
 import { HasPersonalNoteIds } from '../base/has-personal-note-ids';
 import { HasProjectableIds } from '../base/has-projectable-ids';
 import { HasTagIds } from '../base/has-tag-ids';
@@ -57,14 +58,14 @@ export class Motion extends BaseModel<Motion> {
     public change_recommendation_ids: Id[]; // (motion_change_recommendation/motion_id)[];
     public statute_paragraph_id: Id; // motion_statute_paragraph/motion_ids;
     public comment_ids: Id[]; // (motion_comment/motion_id)[];
-    public meeting_id: Id; // meeting/motion_ids;
 
     public constructor(input?: any) {
         super(Motion.COLLECTION, input);
     }
 }
 export interface Motion
-    extends HasAgendaItemId,
+    extends HasMeetingId,
+        HasAgendaItemId,
         HasListOfSpeakersId,
         HasTagIds,
         HasAttachmentIds,

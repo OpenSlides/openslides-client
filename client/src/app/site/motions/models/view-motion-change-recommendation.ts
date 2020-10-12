@@ -1,4 +1,5 @@
 import { MotionChangeRecommendation } from 'app/shared/models/motions/motion-change-reco';
+import { HasMeeting } from 'app/site/event-management/models/view-meeting';
 import { BaseViewModel } from '../../base/base-view-model';
 import { ViewMotion } from './view-motion';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from '../../../shared/models/motions/view-unified-change';
@@ -72,4 +73,5 @@ interface IMotionChangeRecommendationRelations {
 }
 export interface ViewMotionChangeRecommendation
     extends MotionChangeRecommendation,
-        IMotionChangeRecommendationRelations {}
+        IMotionChangeRecommendationRelations,
+        HasMeeting {}

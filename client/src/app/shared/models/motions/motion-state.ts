@@ -1,5 +1,6 @@
 import { Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
+import { HasMeetingId } from '../base/has-meeting-id';
 
 /**
  * Specifies if an amendment of this state/recommendation should be merged into the motion
@@ -52,3 +53,4 @@ export class MotionState extends BaseModel<MotionState> {
         super(MotionState.COLLECTION, input);
     }
 }
+export interface MotionState extends HasMeetingId {}

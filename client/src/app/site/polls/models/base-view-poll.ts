@@ -2,7 +2,7 @@ import { BasePoll } from 'app/shared/models/poll/base-poll';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
+import { HasMeeting, ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewProjection } from 'app/site/projector/models/view-projection';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { ViewGroup } from 'app/site/users/models/view-group';
@@ -130,7 +130,6 @@ interface IBasePollRelations<O extends BaseViewOption> {
     voted: ViewUser[];
     entitled_groups: ViewGroup[];
     options: O[];
-    meeting: ViewMeeting;
 }
 export interface BaseViewPoll<
     M extends BasePoll<M, any, PM, PB> = any,
@@ -138,4 +137,5 @@ export interface BaseViewPoll<
     PM extends string = string,
     PB extends string = string
 > extends BasePoll<M, any, PM, PB>,
-        IBasePollRelations<O> {}
+        IBasePollRelations<O>,
+        HasMeeting {}

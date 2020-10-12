@@ -5,7 +5,7 @@ import { HasListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers'
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { Searchable } from 'app/site/base/searchable';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
+import { HasMeeting, ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewProjection } from 'app/site/projector/models/view-projection';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { ViewMotion } from './view-motion';
@@ -62,11 +62,11 @@ export class ViewMotionBlock extends BaseProjectableViewModel {
 }
 interface IMotionBlockRelations {
     motions: ViewMotion[];
-    meeting: ViewMeeting;
 }
 export interface ViewMotionBlock
     extends MotionBlock,
         IMotionBlockRelations,
         Searchable,
+        HasMeeting,
         HasAgendaItem,
         HasListOfSpeakers {}

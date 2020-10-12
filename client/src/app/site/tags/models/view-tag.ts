@@ -3,7 +3,7 @@ import { SearchRepresentation } from 'app/core/ui-services/search.service';
 import { HasTagIds } from 'app/shared/models/base/has-tag-ids';
 import { Tag } from 'app/shared/models/core/tag';
 import { Searchable } from 'app/site/base/searchable';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
+import { HasMeeting, ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { BaseViewModel } from '../../base/base-view-model';
 
 export interface HasTags extends HasTagIds {
@@ -35,6 +35,5 @@ export class ViewTag extends BaseViewModel<Tag> implements Searchable {
 }
 interface ITagRelations {
     tagged: (BaseViewModel & HasTags)[];
-    meeting: ViewMeeting;
 }
-export interface ViewTag extends Tag, ITagRelations {}
+export interface ViewTag extends Tag, ITagRelations, HasMeeting {}
