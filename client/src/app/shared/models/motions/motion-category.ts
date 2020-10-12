@@ -1,5 +1,6 @@
 import { Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
+import { HasMeetingId } from '../base/has-meeting-id';
 
 /**
  * Representation of a motion category. Has the nested property "File"
@@ -17,9 +18,9 @@ export class MotionCategory extends BaseModel<MotionCategory> {
     public parent_id: Id; // motion_category/child_ids;
     public child_ids: Id[]; // (motion_category/parent_id)[];
     public motion_ids: Id[]; // (motion/category_id)[];
-    public meeting_id: Id; // meeting/category_ids;
 
     public constructor(input?: any) {
         super(MotionCategory.COLLECTION, input);
     }
 }
+export interface MotionCategory extends HasMeetingId {}

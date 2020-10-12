@@ -1,5 +1,6 @@
 import { Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
+import { HasMeetingId } from '../base/has-meeting-id';
 
 /**
  * Representation of a motion workflow. Has the nested property 'states'
@@ -18,3 +19,4 @@ export class MotionComment extends BaseModel<MotionComment> {
         super(MotionComment.COLLECTION, input);
     }
 }
+export interface MotionComment extends HasMeetingId {}

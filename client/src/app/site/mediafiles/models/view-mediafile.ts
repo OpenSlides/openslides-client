@@ -7,7 +7,7 @@ import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-mo
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { Searchable } from 'app/site/base/searchable';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
+import { HasMeeting, ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewGroup } from 'app/site/users/models/view-group';
 
 export const IMAGE_MIMETYPES = ['image/png', 'image/jpeg', 'image/gif'];
@@ -147,8 +147,7 @@ interface IMediafileRelations {
     parent?: ViewMediafile;
     children: ViewMediafile[];
     attachments: (BaseViewModel & HasAttachment)[];
-    meeting: ViewMeeting;
     used_as_logo_in_meeting: StructuredRelation<string, ViewMeeting | null>;
     used_as_font_in_meeting: StructuredRelation<string, ViewMeeting | null>;
 }
-export interface ViewMediafile extends Mediafile, IMediafileRelations, Searchable, HasListOfSpeakers {}
+export interface ViewMediafile extends Mediafile, IMediafileRelations, Searchable, HasMeeting, HasListOfSpeakers {}

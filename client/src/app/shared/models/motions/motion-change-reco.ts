@@ -1,5 +1,6 @@
 import { Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
+import { HasMeetingId } from '../base/has-meeting-id';
 
 /**
  * Representation of a motion change recommendation.
@@ -24,3 +25,4 @@ export class MotionChangeRecommendation extends BaseModel<MotionChangeRecommenda
         super(MotionChangeRecommendation.COLLECTION, input);
     }
 }
+export interface MotionChangeRecommendation extends HasMeetingId {}

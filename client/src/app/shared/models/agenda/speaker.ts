@@ -1,5 +1,6 @@
 import { Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
+import { HasMeetingId } from '../base/has-meeting-id';
 
 /**
  * Determine the state of the speaker
@@ -39,3 +40,4 @@ export class Speaker extends BaseModel<Speaker> {
         super(Speaker.COLLECTION, input);
     }
 }
+export interface Speaker extends HasMeetingId {}

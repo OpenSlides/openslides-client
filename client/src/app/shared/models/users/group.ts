@@ -1,6 +1,7 @@
 import { Permission } from 'app/core/core-services/permission';
 import { Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
+import { HasMeetingId } from '../base/has-meeting-id';
 
 /**
  * Representation of user group.
@@ -24,9 +25,9 @@ export class Group extends BaseModel<Group> {
     public assignment_poll_ids: Id[]; // (assignment_poll/entitled_group_ids)[];
     public used_as_motion_poll_default_id: Id; // meeting/motion_poll_default_group_ids;
     public used_as_assignment_poll_default_id: Id; // meeting/assignment_poll_default_group_ids;
-    public meeting_id: Id; // meeting/group_ids;
 
     public constructor(input?: Partial<Group>) {
         super(Group.COLLECTION, input);
     }
 }
+export interface Group extends HasMeetingId {}

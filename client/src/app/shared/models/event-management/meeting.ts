@@ -150,24 +150,36 @@ export class Meeting extends BaseModel<Meeting> {
     public id: Id;
 
     public projector_ids: Id[]; // (projector/meeting_id)[];
+    public projection_ids: Id[]; // (projection/meeting_id)[];
     public projectiondefault_ids: Id[]; // (projectiondefault/meeting_id)[];
     public projector_message_ids: Id[]; // (projector_message/meeting_id)[];
     public projector_countdown_ids: Id[]; // (projector_countdown/meeting_id)[];
     public tag_ids: Id[]; // (tag/meeting_id)[];
     public agenda_item_ids: Id[]; // (agenda_item/meeting_id)[];
     public list_of_speakers_ids: Id[]; // (list_of_speakers/meeting_id)[];
+    public speaker_ids: Id[]; // (speaker/meeting_id)[];
     public topic_ids: Id[]; // (topic/meeting_id)[];
     public group_ids: Id[]; // (group/meeting_id)[];
+    public personal_note_ids: Id[]; // (personal_note/meeting_id)[];
     public mediafile_ids: Id[]; // (mediafile/meeting_id)[];
     public motion_ids: Id[]; // (motion/meeting_id)[];
     public motion_comment_section_ids: Id[]; // (motion_comment_section/meeting_id)[];
+    public motion_comment_ids: Id[]; // (motion_comment/meeting_id)[];
     public motion_category_ids: Id[]; // (motion_category/meeting_id)[];
-    public motion_block_ids: Id[]; // (block/meeting_id)[];
+    public motion_block_ids: Id[]; // (motion_block/meeting_id)[];
+    public motion_submitter_ids: Id[]; // (motion_submitter/meeting_id)[];
+    public motion_change_recommendation_ids: Id[]; // (motion_change_recommendation/meeting_id)[];
     public motion_workflow_ids: Id[]; // (motion_workflow/meeting_id)[];
+    public motion_state_ids: Id[]; // (motion_state/meeting_id)[];
     public motion_statute_paragraph_ids: Id[]; // (motion_statute_paragraph/meeting_id)[];
     public motion_poll_ids: Id[]; // (motion_poll/meeting_id)[];
+    public motion_option_ids: Id[]; // (motion_option/meeting_id)[];
+    public motion_vote_ids: Id[]; // (motion_vote/meeting_id)[];
     public assignment_ids: Id[]; // (assignment/meeting_id)[];
+    public assignment_candidate_ids: Id[]; // (assignment_candidate/meeting_id)[];
     public assignment_poll_ids: Id[]; // (assignment_poll/meeting_id)[];
+    public assignment_option_ids: Id[]; // (assignment_option/meeting_id)[];
+    public assignment_vote_ids: Id[]; // (assignment_vote/meeting_id)[];
 
     // Logos and Fonts
     public logo_$_id: string[]; // mediafile/used_as_logo_$<place>_in_meeting_id;

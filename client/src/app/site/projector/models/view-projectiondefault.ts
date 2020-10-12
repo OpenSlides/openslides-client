@@ -1,5 +1,5 @@
 import { Projectiondefault } from 'app/shared/models/projector/projection-default';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
+import { HasMeeting, ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { BaseViewModel } from '../../base/base-view-model';
 import { ViewProjector } from './view-projector';
 
@@ -13,6 +13,5 @@ export class ViewProjectiondefault extends BaseViewModel<Projectiondefault> {
 }
 interface IProjectionDefaultRelations {
     projector: ViewProjector;
-    meeting: ViewMeeting;
 }
-export interface ViewProjectiondefault extends Projectiondefault, IProjectionDefaultRelations {}
+export interface ViewProjectiondefault extends Projectiondefault, IProjectionDefaultRelations, HasMeeting {}

@@ -1,4 +1,4 @@
-import { HasMeetingId } from 'app/core/actions/common/has-meeting-id';
+import { HasMeetingId } from 'app/shared/models/base/has-meeting-id';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { BaseSortPayload } from './common/base-sort-payload';
 import { Id } from '../definitions/key-types';

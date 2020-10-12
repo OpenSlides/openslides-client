@@ -1,5 +1,6 @@
 import { Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
+import { HasMeetingId } from '../base/has-meeting-id';
 
 /**
  * Representation of a Motion Submitter.
@@ -19,3 +20,4 @@ export class MotionSubmitter extends BaseModel<MotionSubmitter> {
         super(MotionSubmitter.COLLECTION, input);
     }
 }
+export interface MotionSubmitter extends HasMeetingId {}

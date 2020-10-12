@@ -2,6 +2,7 @@ import { Id } from 'app/core/definitions/key-types';
 import { HasPersonalNoteIds } from 'app/shared/models/base/has-personal-note-ids';
 import { PersonalNote } from 'app/shared/models/users/personal-note';
 import { BaseViewModel } from 'app/site/base/base-view-model';
+import { HasMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewUser } from './view-user';
 
 export interface HasPersonalNote extends HasPersonalNoteIds {
@@ -20,4 +21,4 @@ interface IPersonalNoteRelations {
     user: ViewUser;
     content_object?: BaseViewModel & HasPersonalNote;
 }
-export interface ViewPersonalNote extends PersonalNote, IPersonalNoteRelations {}
+export interface ViewPersonalNote extends PersonalNote, IPersonalNoteRelations, HasMeeting {}

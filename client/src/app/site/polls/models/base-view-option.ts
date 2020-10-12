@@ -1,4 +1,5 @@
 import { BaseOption } from 'app/shared/models/poll/base-option';
+import { HasMeeting } from 'app/site/event-management/models/view-meeting';
 import { BaseViewModel } from '../../base/base-view-model';
 import { BaseViewPoll } from './base-view-poll';
 import { BaseViewVote } from './base-view-vote';
@@ -21,4 +22,5 @@ export interface BaseViewOption<
     P extends BaseViewPoll = any,
     V extends BaseViewVote = any
 > extends BaseOption<M>,
-        IBaseOptionRelations<P, V> {}
+        IBaseOptionRelations<P, V>,
+        HasMeeting {}

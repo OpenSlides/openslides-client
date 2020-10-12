@@ -1,5 +1,6 @@
 import { Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
+import { HasMeetingId } from '../base/has-meeting-id';
 
 /**
  * Representation of a statute paragraph.
@@ -14,9 +15,9 @@ export class MotionStatuteParagraph extends BaseModel<MotionStatuteParagraph> {
     public weight: number;
 
     public motion_ids: Id[]; // (motion/statute_paragraph_id)[];
-    public meeting_id: Id; // meeting/motion_statute_paragraph_ids;
 
     public constructor(input?: any) {
         super(MotionStatuteParagraph.COLLECTION, input);
     }
 }
+export interface MotionStatuteParagraph extends HasMeetingId {}

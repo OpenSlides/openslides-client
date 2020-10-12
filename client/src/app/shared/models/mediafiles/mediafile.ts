@@ -1,6 +1,7 @@
 import { Fqid, Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
 import { HasListOfSpeakersId } from '../base/has-list-of-speakers-id';
+import { HasMeetingId } from '../base/has-meeting-id';
 import { HasProjectableIds } from '../base/has-projectable-ids';
 
 interface PdfInformation {
@@ -31,7 +32,6 @@ export class Mediafile extends BaseModel<Mediafile> {
     public parent_id: Id; // mediafile/child_ids;
     public child_ids: Id[]; // (mediafile/parent_id)[];
     public attachment_ids: Fqid[]; // (*/attachment_ids)[];
-    public meeting_id: Id; // meeting/mediafile_ids;
     public used_as_logo_$_in_meeting_id: string[]; // meeting/logo_$<place>_id;
     public used_as_font_$_in_meeting_id: string[]; // meeting/font_$<place>_id;
 
@@ -56,4 +56,4 @@ export class Mediafile extends BaseModel<Mediafile> {
         return this.is_directory ? `/mediafiles/${this.id}` : `/system/media/get/${this.id}`;
     }
 }
-export interface Mediafile extends HasProjectableIds, HasListOfSpeakersId {}
+export interface Mediafile extends HasMeetingId, HasProjectableIds, HasListOfSpeakersId {}

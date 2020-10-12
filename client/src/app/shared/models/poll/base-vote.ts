@@ -1,5 +1,6 @@
 import { Id } from 'app/core/definitions/key-types';
 import { BaseDecimalModel } from '../base/base-decimal-model';
+import { HasMeetingId } from '../base/has-meeting-id';
 
 export type VoteValue = 'Y' | 'N' | 'A';
 
@@ -41,3 +42,4 @@ export abstract class BaseVote<T = any> extends BaseDecimalModel<T> {
         return ['weight'];
     }
 }
+export interface BaseVote<T> extends HasMeetingId {}

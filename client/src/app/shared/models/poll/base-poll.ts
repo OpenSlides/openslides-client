@@ -1,6 +1,7 @@
 import { Id } from 'app/core/definitions/key-types';
 import { BaseDecimalModel } from '../base/base-decimal-model';
 import { BaseOption } from './base-option';
+import { HasMeetingId } from '../base/has-meeting-id';
 import { HasProjectableIds } from '../base/has-projectable-ids';
 
 export enum PollColor {
@@ -67,7 +68,6 @@ export abstract class BasePoll<
     public voted_ids: Id[]; // (user/(assignment|motion)_poll_voted_$<meeting_id>_ids)[];
     public entitled_group_ids: Id[]; // (group/(assignment|motion)_poll_ids)[];
     public option_ids: Id[]; // ((assignment|motion)_option/poll_id)[];
-    public meeting_id: Id; // meeting/(assignment|motion)_poll_ids;
 
     public get isCreated(): boolean {
         return this.state === PollState.Created;
@@ -121,4 +121,5 @@ export interface BasePoll<
     O extends BaseOption<any> = any,
     PM extends string = string,
     PB extends string = string
-> extends HasProjectableIds {}
+> extends HasMeetingId,
+        HasProjectableIds {}

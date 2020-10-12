@@ -1,5 +1,6 @@
 import { Fqid, Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
+import { HasMeetingId } from '../base/has-meeting-id';
 import { HasProjectableIds } from '../base/has-projectable-ids';
 import { HasTagIds } from '../base/has-tag-ids';
 
@@ -34,10 +35,9 @@ export class AgendaItem extends BaseModel<AgendaItem> {
     public content_object_id: Fqid; // */agenda_item_id;
     public parent_id?: Id; // agenda_item/child_ids;
     public child_ids: Id[]; // (agenda_item/parent_id)[];
-    public meeting_id: Id; // meeting/agenda_item_ids;
 
     public constructor(input?: any) {
         super(AgendaItem.COLLECTION, input);
     }
 }
-export interface AgendaItem extends HasProjectableIds, HasTagIds {}
+export interface AgendaItem extends HasMeetingId, HasProjectableIds, HasTagIds {}
