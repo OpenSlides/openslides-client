@@ -105,7 +105,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
     }
 
     public delete(viewModel: ViewMotion): Promise<any> {
-        throw new Error('TODO');
+        return this.sendActionToBackend(MotionAction.DELETE, { id: viewModel.id });
     }
 
     public getFieldsets(): Fieldsets<Motion> {
