@@ -11,6 +11,7 @@ export namespace MotionStatuteParagraphAction {
         title?: string;
         text?: UnsafeHtml;
     }
+    export interface DeletePayload extends Identifiable {}
     export interface SortPayload extends HasMeetingId {
         statute_paragraph_ids: Id[];
     }

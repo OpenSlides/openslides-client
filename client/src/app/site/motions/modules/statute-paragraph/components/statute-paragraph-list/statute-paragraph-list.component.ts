@@ -103,18 +103,16 @@ export class StatuteParagraphListComponent extends BaseComponent implements OnIn
     private save(): void {
         if (this.statuteParagraphForm.valid) {
             // eiher update or create
-            // if (this.currentStatuteParagraph) {
-            //     this.repo
-            //         .update(
-            //             this.statuteParagraphForm.value as Partial<MotionStatuteParagraph>,
-            //             this.currentStatuteParagraph
-            //         )
-            //         .catch(this.raiseError);
-            // } else {
-            //     const paragraph = new MotionStatuteParagraph(this.statuteParagraphForm.value);
-            //     this.repo.create(paragraph).catch(this.raiseError);
-            // }
-            throw new Error('TODO!');
+            if (this.currentStatuteParagraph) {
+                this.repo
+                    .update(
+                        this.statuteParagraphForm.value as Partial<MotionStatuteParagraph>,
+                        this.currentStatuteParagraph
+                    );
+            } else {
+                const paragraph = new MotionStatuteParagraph(this.statuteParagraphForm.value);
+                this.repo.create(paragraph);
+            }
             this.statuteParagraphForm.reset();
         }
     }
@@ -127,8 +125,7 @@ export class StatuteParagraphListComponent extends BaseComponent implements OnIn
         const title = this.translate.instant('Are you sure you want to delete this statute paragraph?');
         const content = viewStatuteParagraph.title;
         if (await this.promptService.open(title, content)) {
-            // this.repo.delete(viewStatuteParagraph).catch(this.raiseError);
-            throw new Error('TODO!');
+            this.repo.delete(viewStatuteParagraph);
         }
     }
 
