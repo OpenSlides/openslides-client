@@ -13,7 +13,7 @@
     </span>
 
     <!-- List of finished speakers -->
-    <mat-expansion-panel *ngIf="finishedSpeakers?.length" class="finished-list">
+    <mat-expansion-panel *ngIf="finishedSpeakers.length" class="finished-list">
         <mat-expansion-panel-header>
             <mat-panel-title>{{ 'Last speakers' | translate }}</mat-panel-title>
         </mat-expansion-panel-header>
@@ -30,7 +30,7 @@
                             mat-icon-button
                             matTooltip="{{ 'Remove' | translate }}"
                             *osPerms="'agenda.can_manage_list_of_speakers'"
-                            (click)="onDeleteButton(speaker)"
+                            (click)="removeSpeaker(speaker)"
                         >
                             <mat-icon>close</mat-icon>
                         </button>
@@ -115,7 +115,7 @@
                     </button>
 
                     <!-- delete button -->
-                    <button mat-icon-button matTooltip="{{ 'Remove' | translate }}" (click)="onDeleteButton(speaker)">
+                    <button mat-icon-button matTooltip="{{ 'Remove' | translate }}" (click)="removeSpeaker(speaker)">
                         <mat-icon>close</mat-icon>
                     </button>
                 </span>
@@ -132,17 +132,13 @@
 
     <!-- Search for speakers -->
     <div *osPerms="'agenda.can_manage_list_of_speakers'">
-        <form
-            *ngIf="waitingSpeakers && filteredUsers?.value?.length"
-            [formGroup]="addSpeakerForm"
-            class="search-new-speaker-form"
-        >
+        <form *ngIf="filteredUsers.length" [formGroup]="addSpeakerForm" class="search-new-speaker-form">
             <mat-form-field class="search-users-field">
                 <os-search-value-selector
                     class="search-users"
                     formControlName="user_id"
                     placeholder="{{ 'Select or search new speaker ...' | translate }}"
-                    [inputListValues]="filteredUsers"
+                    [inputListValues]="filteredUsersSubject"
                     [showNotFoundButton]="true"
                     (clickNotFound)="onCreateUser($event)"
                 >
@@ -157,12 +153,12 @@
 
     <!-- Add me and remove me if OP has correct permission -->
     <div *osPerms="'agenda.can_be_speaker'" class="add-self-buttons">
-        <div *ngIf="waitingSpeakers && !closed">
-            <button mat-stroked-button [disabled]="closed" (click)="addNewSpeaker()" *ngIf="!isOpInList && canAddSelf">
+        <div *ngIf="!closed">
+            <button mat-stroked-button [disabled]="closed" (click)="addMyself()" *ngIf="!isOpInList && canAddSelf">
                 <mat-icon>add</mat-icon>
                 <span>{{ 'Add me' | translate }}</span>
             </button>
-            <button mat-stroked-button (click)="onDeleteButton()" *ngIf="isOpInList">
+            <button mat-stroked-button (click)="removeMyself()" *ngIf="isOpInList">
                 <mat-icon>remove</mat-icon>
                 <span>{{ 'Remove me' | translate }}</span>
             </button>

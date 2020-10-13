@@ -75,9 +75,14 @@ export class OperatorService {
     public readonly operatorUpdatedEvent: EventEmitter<void> = new EventEmitter();
 
     private operatorShortNameSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
+    private userSubject = new BehaviorSubject<ViewUser | null>(null);
 
     public get operatorShortNameObservable(): Observable<string | null> {
         return this.operatorShortNameSubject.asObservable();
+    }
+
+    public get userObservable(): Observable<ViewUser | null> {
+        return this.userSubject.asObservable();
     }
 
     private _loaded: Promise<void>;
@@ -140,6 +145,7 @@ export class OperatorService {
                 this.roleId = user.role_id;
 
                 this.operatorShortNameSubject.next(this._shortName);
+                this.userSubject.next(user);
                 this.operatorUpdatedEvent.emit();
             }
         });

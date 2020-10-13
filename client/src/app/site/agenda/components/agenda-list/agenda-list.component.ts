@@ -9,12 +9,13 @@ import { AgendaCsvExportService } from '../../services/agenda-csv-export.service
 import { AgendaFilterListService } from '../../services/agenda-filter-list.service';
 import { AgendaItemInfoDialogComponent } from '../agenda-item-info-dialog/agenda-item-info-dialog.component';
 import { AgendaPdfService } from '../../services/agenda-pdf.service';
+import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { PdfDocumentService } from 'app/core/pdf-services/pdf-document.service';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
-import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
+import { MeetingRepositoryService } from 'app/core/repositories/event-management/meeting-repository.service';
 import { TopicRepositoryService } from 'app/core/repositories/topics/topic-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DurationService } from 'app/core/ui-services/duration.service';
@@ -123,14 +124,15 @@ export class AgendaListComponent extends BaseListViewComponent<ViewAgendaItem> i
         private promptService: PromptService,
         private dialog: MatDialog,
         private meetingsSettingsService: MeetingSettingsService,
+        private activeMeetingService: ActiveMeetingService,
         public vp: ViewportService,
         public durationService: DurationService,
         private csvExport: AgendaCsvExportService,
         public filterService: AgendaFilterListService,
         private agendaPdfService: AgendaPdfService,
         private pdfService: PdfDocumentService,
-        private listOfSpeakersRepo: ListOfSpeakersRepositoryService,
-        private topicRepo: TopicRepositoryService
+        private topicRepo: TopicRepositoryService,
+        private meetingRepo: MeetingRepositoryService
     ) {
         super(componentServiceCollector);
         this.canMultiSelect = true;
@@ -362,7 +364,7 @@ export class AgendaListComponent extends BaseListViewComponent<ViewAgendaItem> i
         const title = this.translate.instant('Are you sure you want to clear all speakers of all lists?');
         const content = this.translate.instant('All lists of speakers will be cleared.');
         if (await this.promptService.open(title, content)) {
-            this.listOfSpeakersRepo.deleteAllSpeakersOfAllListsOfSpeakers().catch(this.raiseError);
+            this.meetingRepo.deleteAllSpeakersOfAllListsOfSpeakersInAMeeting(this.activeMeetingService.meetingId);
         }
     }
 
