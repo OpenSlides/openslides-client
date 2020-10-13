@@ -67,12 +67,10 @@ export class PermissionsService {
                 return (
                     this.operator.hasPerms(Permission.motionsCanSupport) &&
                     this.configMinSupporters > 0 &&
-                    motion.state &&
-                    motion.state.allow_support &&
-                    motion.submitters &&
-                    !motion.submitters.map(submitter => submitter.user_id).includes(this.operator.operatorId) &&
-                    motion.supporters &&
-                    !motion.supporter_ids.includes(this.operator.operatorId)
+                    motion.state?.allow_support &&
+                    (!motion.submitters ||
+                        !motion.submitters.map(submitter => submitter.user_id).includes(this.operator.operatorId)) &&
+                    (!motion.supporters || motion.supporter_ids.includes(this.operator.operatorId))
                 );
             }
             case 'unsupport': {
@@ -83,7 +81,7 @@ export class PermissionsService {
                     motion.state &&
                     motion.state.allow_support &&
                     motion.supporters &&
-                    motion.supporter_ids.indexOf(this.operator.operatorId) !== -1
+                    motion.supporter_ids?.indexOf(this.operator.operatorId) !== -1
                 );
             }
             case 'createpoll': {

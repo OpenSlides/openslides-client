@@ -4,6 +4,7 @@ import { BaseSortPayload } from './common/base-sort-payload';
 import { Id, UnsafeHtml } from '../definitions/key-types';
 
 export namespace MotionAction {
+    export const DELETE = 'motion.delete';
     export const FOLLOW_RECOMMENDATION = 'motion.follow_recommendation';
 
     interface OptionalPayload {
