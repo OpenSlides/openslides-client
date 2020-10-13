@@ -110,7 +110,7 @@ export class CategoryListComponent extends BaseListViewComponent<ViewMotionCateg
     }
 
     public getMotionAmount(category: ViewMotionCategory): number {
-        return category.motion_ids?.length;
+        return category.motion_ids?.length || 0;
     }
 
     /**

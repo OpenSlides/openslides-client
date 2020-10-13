@@ -649,7 +649,7 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
                 break;
 
             case Direction.NOWAY:
-                if (!possibleParent) {
+                if (possibleParent) {
                     if (this.nextNode.level <= possibleParent.level + 1) {
                         this.placeholderLevel = this.nextNode.level;
                     } else {
