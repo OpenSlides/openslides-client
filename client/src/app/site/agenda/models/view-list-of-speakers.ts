@@ -1,4 +1,5 @@
 import { ProjectorTitle } from 'app/core/core-services/projector.service';
+import { Id } from 'app/core/definitions/key-types';
 import { ListOfSpeakers } from 'app/shared/models/agenda/list-of-speakers';
 import { SpeakerState } from 'app/shared/models/agenda/speaker';
 import { HasListOfSpeakersId } from 'app/shared/models/base/has-list-of-speakers-id';
@@ -45,11 +46,11 @@ export class ViewListOfSpeakers extends BaseProjectableViewModel<ListOfSpeakers>
      * Gets the amount of waiting speakers
      */
     public get waitingSpeakerAmount(): number {
-        return this.waitingSpeakers.length;
+        return this.waitingSpeakers ? this.waitingSpeakers.length : 0;
     }
 
-    public get waitingSpeakers(): ViewSpeaker[] {
-        return this.speakers.filter(speaker => speaker.state === SpeakerState.WAITING);
+    public get waitingSpeakers(): ViewSpeaker[] | undefined {
+        return this.speakers?.filter(speaker => speaker.state === SpeakerState.WAITING);
     }
 
     public get listOfSpeakersUrl(): string {
@@ -91,6 +92,14 @@ export class ViewListOfSpeakers extends BaseProjectableViewModel<ListOfSpeakers>
                 return UserListIndexType.NotOnList;
             }
         }
+    }
+
+    public getSpeakerByUserId(userId: Id): ViewSpeaker {
+        return this.speakers.find(speaker => speaker.user_id === userId);
+    }
+
+    public isUserOnList(userId: number): boolean {
+        return !!this.speakers.find(speaker => speaker.user_id === userId);
     }
 }
 interface IListOfSpeakersRelations {

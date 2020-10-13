@@ -11,7 +11,7 @@
     </span>
 
     <!-- List of finished speakers -->
-    <mat-expansion-panel *ngIf="finishedSpeakers?.length" class="finished-list">
+    <mat-expansion-panel *ngIf="finishedSpeakers.length" class="finished-list">
         <mat-expansion-panel-header>
             <mat-panel-title>{{ 'Last speakers' | translate }}</mat-panel-title>
         </mat-expansion-panel-header>
@@ -154,17 +154,13 @@
 
     <!-- Search for speakers -->
     <div *osPerms="'agenda.can_manage_list_of_speakers'">
-        <form
-            *ngIf="waitingSpeakers && filteredUsers?.value?.length"
-            [formGroup]="addSpeakerForm"
-            class="search-new-speaker-form"
-        >
+        <form *ngIf="filteredUsers.length" [formGroup]="addSpeakerForm" class="search-new-speaker-form">
             <mat-form-field class="search-users-field">
                 <os-search-value-selector
                     class="search-users"
                     formControlName="user_id"
                     placeholder="{{ 'Select or search new speaker ...' | translate }}"
-                    [inputListValues]="filteredUsers"
+                    [inputListValues]="filteredUsersSubject"
                     [showNotFoundButton]="true"
                     (clickNotFound)="onCreateUser($event)"
                 >

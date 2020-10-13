@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 
+import { ListOfSpeakersAction } from 'app/core/actions/list-of-speakers-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { ListOfSpeakers } from 'app/shared/models/agenda/list-of-speakers';
-import { Identifiable } from 'app/shared/models/base/identifiable';
 import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { ViewSpeaker } from 'app/site/agenda/models/view-speaker';
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
@@ -49,53 +49,14 @@ export class ListOfSpeakersRepositoryService extends BaseRepositoryWithActiveMee
         }
     };
 
-    public async delete(viewModel: ViewListOfSpeakers): Promise<void> {
-        throw new Error('Not supported');
+    public async closeListOfSpeakers(listOfSpeakers: ViewListOfSpeakers): Promise<void> {
+        const payload: ListOfSpeakersAction.UpdatePayload = { id: listOfSpeakers.id, closed: true };
+        return await this.sendActionToBackend(ListOfSpeakersAction.UPDATE, payload);
     }
 
-    public async create(model: ListOfSpeakers): Promise<Identifiable> {
-        throw new Error('Not supported');
-    }
-
-    /**
-     * Add a new speaker to a list of speakers.
-     * Sends the users id to the server
-     *
-     * @param userId {@link User} id of the new speaker
-     * @param listOfSpeakers the target agenda item
-     */
-    public async createSpeaker(
-        listOfSpeakers: ViewListOfSpeakers,
-        userId: number,
-        pointOfOrder?: boolean
-    ): Promise<Identifiable> {
-        const restUrl = this.getRestUrl(listOfSpeakers.id, 'manage_speaker');
-        // return await this.httpService.post<Identifiable>(restUrl, { user: userId, point_of_order: pointOfOrder });
-        throw new Error('TODO');
-    }
-
-    /**
-     * Removes the given speaker for the list of speakers
-     *
-     * @param listOfSpeakers the target list of speakers
-     * @param speakerId (otional) the speakers id. If no id is given, the speaker with the
-     * current operator is removed.
-     */
-    public async deleteSpeaker(
-        listOfSpeakers: ViewListOfSpeakers,
-        speakerId?: number,
-        pointOfOrder?: boolean
-    ): Promise<void> {
-        const restUrl = this.getRestUrl(listOfSpeakers.id, 'manage_speaker');
-        const payload: { speaker?: number; point_of_order?: boolean } = {};
-        if (speakerId) {
-            payload.speaker = speakerId;
-        }
-        if (pointOfOrder) {
-            payload.point_of_order = pointOfOrder;
-        }
-        // await this.httpService.delete(restUrl, payload);
-        throw new Error('TODO');
+    public async reopenListOfSpeakers(listOfSpeakers: ViewListOfSpeakers): Promise<void> {
+        const payload: ListOfSpeakersAction.UpdatePayload = { id: listOfSpeakers.id, closed: false };
+        return await this.sendActionToBackend(ListOfSpeakersAction.UPDATE, payload);
     }
 
     /**
@@ -104,21 +65,10 @@ export class ListOfSpeakersRepositoryService extends BaseRepositoryWithActiveMee
      * @param listOfSpeakers the target list of speakers
      */
     public async deleteAllSpeakers(listOfSpeakers: ViewListOfSpeakers): Promise<void> {
-        const restUrl = this.getRestUrl(listOfSpeakers.id, 'manage_speaker');
-        // await this.httpService.delete(restUrl, { speaker: listOfSpeakers.speakers.map(speaker => speaker.id) });
-        throw new Error('TODO');
-    }
-
-    /**
-     * Posts an (manually) sorted speaker list to the server
-     *
-     * @param listOfSpeakers the target list of speakers, which speaker-list is changed.
-     * @param speakerIds array of speaker id numbers
-     */
-    public async sortSpeakers(listOfSpeakers: ViewListOfSpeakers, speakerIds: number[]): Promise<void> {
-        const restUrl = this.getRestUrl(listOfSpeakers.id, 'sort_speakers');
-        // await this.httpService.post(restUrl, { speakers: speakerIds });
-        throw new Error('TODO');
+        const payload: ListOfSpeakersAction.DeleteAllSpeakersPayload = {
+            id: listOfSpeakers.id
+        };
+        return await this.sendActionToBackend(ListOfSpeakersAction.DELETE_ALL_SPEAKERS, payload);
     }
 
     /**
@@ -127,50 +77,10 @@ export class ListOfSpeakersRepositoryService extends BaseRepositoryWithActiveMee
      * @param listOfSpeakers the list of speakers to modify
      */
     public async readdLastSpeaker(listOfSpeakers: ViewListOfSpeakers): Promise<void> {
-        const restUrl = this.getRestUrl(listOfSpeakers.id, 'readd_last_speaker');
-        // await this.httpService.post(restUrl);
-        throw new Error('TODO');
-    }
-
-    /**
-     * Marks all speakers for a given user
-     *
-     * @param userId {@link User} id of the user
-     * @param marked determine if the user should be marked or not
-     * @param listOfSpeakers the target list of speakers
-     */
-    public async markSpeaker(listOfSpeakers: ViewListOfSpeakers, speaker: ViewSpeaker, marked: boolean): Promise<void> {
-        const restUrl = this.getRestUrl(listOfSpeakers.id, 'manage_speaker');
-        // await this.httpService.patch(restUrl, { user: speaker.user.id, marked: marked });
-        throw new Error('TODO');
-    }
-
-    /**
-     * Stops the current speaker
-     *
-     * @param listOfSpeakers the target list of speakers
-     */
-    public async stopCurrentSpeaker(listOfSpeakers: ViewListOfSpeakers): Promise<void> {
-        const restUrl = this.getRestUrl(listOfSpeakers.id, 'speak');
-        // await this.httpService.delete(restUrl);
-        throw new Error('TODO');
-    }
-
-    /**
-     * Sets the given speaker id to speak
-     *
-     * @param speakerId the speakers id
-     * @param listOfSpeakers the target list of speakers
-     */
-    public async startSpeaker(listOfSpeakers: ViewListOfSpeakers, speaker: ViewSpeaker): Promise<void> {
-        const restUrl = this.getRestUrl(listOfSpeakers.id, 'speak');
-        // await this.httpService.put(restUrl, { speaker: speaker.id });
-        throw new Error('TODO');
-    }
-
-    public async deleteAllSpeakersOfAllListsOfSpeakers(): Promise<void> {
-        // await this.httpService.post('/rest/agenda/list-of-speakers/delete_all_speakers/');
-        throw new Error('TODO');
+        const payload: ListOfSpeakersAction.ReAddLastPayload = {
+            id: listOfSpeakers.id
+        };
+        return await this.sendActionToBackend(ListOfSpeakersAction.RE_ADD_LAST_SPEAKER, payload);
     }
 
     public isFirstContribution(speaker: ViewSpeaker): boolean {
@@ -267,18 +177,5 @@ export class ListOfSpeakersRepositoryService extends BaseRepositoryWithActiveMee
      */
     private getSpeakingTimeAsNumber(speaker: ViewSpeaker): number {
         return Math.floor((new Date(speaker.end_time).valueOf() - new Date(speaker.begin_time).valueOf()) / 1000);
-    }
-
-    /**
-     * Helper function get the url to the speaker rest address
-     *
-     * @param listOfSpeakersId id of the list of speakers
-     * @param method the desired speaker action
-     */
-    private getRestUrl(
-        listOfSpeakersId: number,
-        method: 'manage_speaker' | 'sort_speakers' | 'speak' | 'readd_last_speaker'
-    ): string {
-        return `/rest/agenda/list-of-speakers/${listOfSpeakersId}/${method}/`;
     }
 }

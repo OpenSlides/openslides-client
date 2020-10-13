@@ -12,7 +12,7 @@ export enum SpeakerState {
 }
 
 /**
- * Representation of a speaker in a lit of speakers.
+ * Representation of a speaker in a list of speakers.
  */
 export class Speaker extends BaseModel<Speaker> {
     public static COLLECTION = 'speaker';
@@ -20,14 +20,14 @@ export class Speaker extends BaseModel<Speaker> {
     public id: Id;
 
     /**
-     * Unixtime. Null if the speaker has not started yet.
+     * Unixtime. Null if the speaker has not started yet. This time is in seconds.
      */
     public begin_time?: number;
 
     /**
-     * Unixtime. Null if the speech has not ended yet.
+     * Unixtime. Null if the speech has not ended yet. This time is in seconds.
      */
-    public end_time: string;
+    public end_time: number;
 
     public weight: number;
     public marked: boolean;

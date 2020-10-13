@@ -1,6 +1,8 @@
 import { SummaryResolver } from '@angular/compiler';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+
+import { Subscription } from 'rxjs';
 
 import { CollectionMapperService } from 'app/core/core-services/collection-mapper.service';
 import { collectionFromFqid } from 'app/core/core-services/key-transforms';
@@ -24,7 +26,7 @@ import { ViewListOfSpeakers } from '../../models/view-list-of-speakers';
     templateUrl: './list-of-speakers.component.html',
     styleUrls: ['./list-of-speakers.component.scss']
 })
-export class ListOfSpeakersComponent extends BaseModelContextComponent implements OnInit {
+export class ListOfSpeakersComponent extends BaseModelContextComponent implements OnInit, OnDestroy {
     @ViewChild('content')
     private listOfSpeakersContentComponent: ListOfSpeakersContentComponent;
 
@@ -64,6 +66,8 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
      */
     public canReaddLastSpeaker: boolean;
 
+    private losSubscription: Subscription;
+
     /**
      * Constructor for speaker list component. Generates the forms.
      *
@@ -92,7 +96,8 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
     }
 
     public ngOnInit(): void {
-        super.ngOnInit();
+        const id = parseInt(this.route.snapshot.url[this.route.snapshot.url.length - 1].path, 10);
+        this.setListOfSpeakersById(id);
         // Check, if we are on the current list of speakers.
         this.isCurrentListOfSpeakers =
             this.route.snapshot.url.length > 0
@@ -106,7 +111,6 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
                 })
             );
         } else {
-            const id = +this.route.snapshot.url[this.route.snapshot.url.length - 1].path;
             this.setListOfSpeakersById(id);
         }
 
@@ -126,13 +130,26 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
      * @param id the list of speakers id
      */
     private setListOfSpeakersById(id: number): void {
-        this.subscriptions.push(
-            this.listOfSpeakersRepo.getViewModelObservable(id).subscribe(listOfSpeakers => {
-                if (listOfSpeakers) {
-                    this.setListOfSpeakers(listOfSpeakers);
-                }
-            })
-        );
+        if (this.losSubscription) {
+            this.losSubscription.unsubscribe();
+        }
+        this.losSubscription = this.listOfSpeakersRepo.getViewModelObservable(id).subscribe(listOfSpeakers => {
+            if (listOfSpeakers) {
+                this.setListOfSpeakers(listOfSpeakers);
+            }
+        });
+
+        this.requestModels({
+            viewModelCtor: ViewListOfSpeakers,
+            ids: [id],
+            follow: [
+                {
+                    idField: 'speaker_ids',
+                    follow: [{ idField: 'user_id', fieldset: 'shortName' }]
+                },
+                'content_object_id' // To retreive the title
+            ]
+        });
     }
 
     private setListOfSpeakers(listOfSpeakers: ViewListOfSpeakers): void {

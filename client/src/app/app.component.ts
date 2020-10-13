@@ -17,9 +17,9 @@ import { OperatorService } from './core/core-services/operator.service';
 import { OverlayService } from './core/ui-services/overlay.service';
 import { overloadJsFunctions } from './shared/overload-js-functions';
 import { RoutingStateService } from './core/ui-services/routing-state.service';
+import { ServertimeService } from './core/core-services/servertime.service';
 import { ThemeService } from './core/ui-services/theme.service';
 import { VotingBannerService } from './core/ui-services/voting-banner.service';
-import { ServertimeService } from './core/core-services/servertime.service';
 
 /**
  * Angular's global App Component
