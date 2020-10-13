@@ -226,7 +226,7 @@ export const RELATIONS: Relation[] = [
         foreignViewModel: ViewUser,
         ownField: 'vote_delegated_to',
         ownIdField: 'vote_delegated_$_to_id',
-        many: true,
+        many: false,
         generic: false,
         structured: true,
         ownIdFieldDefaultAttribute: 'active-meeting'
@@ -237,7 +237,7 @@ export const RELATIONS: Relation[] = [
         foreignViewModel: ViewUser,
         ownField: 'vote_delegations_from',
         ownIdField: 'vote_delegations_$_from_ids',
-        many: false,
+        many: true,
         generic: false,
         structured: true,
         ownIdFieldDefaultAttribute: 'active-meeting'

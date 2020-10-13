@@ -127,8 +127,8 @@ export class User extends BaseDecimalModel<User> {
         return this[`assignment_delegated_vote_${meetingId}_ids`] || [];
     }
 
-    public vote_delegated_to_id(meetingId: Id): Id[] {
-        return this[`vote_delegated_${meetingId}_to_id`] || [];
+    public vote_delegated_to_id(meetingId: Id): Id {
+        return this[`vote_delegated_${meetingId}_to_id`];
     }
 
     public vote_delegations_from_ids(meetingId: Id): Id[] {
