@@ -148,7 +148,7 @@ export class ViewUser extends BaseProjectableViewModel<User> implements Searchab
         return this.user.assignment_delegated_vote_ids(meetingId || this.getEnsuredActiveMeetingId());
     }
 
-    public vote_delegated_to_id(meetingId?: Id): Id[] {
+    public vote_delegated_to_id(meetingId?: Id): Id {
         return this.user.vote_delegated_to_id(meetingId || this.getEnsuredActiveMeetingId());
     }
 

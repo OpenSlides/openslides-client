@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 
 import { BehaviorSubject, Observable } from 'rxjs';
 
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ItemVisibilityChoices } from 'app/shared/models/agenda/agenda-item';
 import { BaseSortTreeComponent, SortTreeFilterOption } from 'app/site/base/components/base-sort-tree.component';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewAgendaItem } from '../../models/view-agenda-item';
 
 /**
@@ -54,6 +56,25 @@ export class AgendaSortComponent extends BaseSortTreeComponent<ViewAgendaItem> i
         this.itemsObservable = this.agendaRepo.getViewModelListObservable();
     }
 
+    public getModelRequest(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [1], // TODO
+            follow: [
+                {
+                    idField: 'agenda_item_ids',
+                    follow: [
+                        {
+                            idField: 'content_object_id',
+                            fieldset: 'title'
+                        }
+                    ]
+                }
+            ],
+            fieldset: []
+        };
+    }
+
     /**
      * Function to emit the active filters.
      * Filters will be stored in an array to prevent duplicated options.
@@ -76,6 +97,7 @@ export class AgendaSortComponent extends BaseSortTreeComponent<ViewAgendaItem> i
      * OnInit method
      */
     public ngOnInit(): void {
+        super.ngOnInit();
         /**
          * Passes the active filters as an array to the subject.
          */

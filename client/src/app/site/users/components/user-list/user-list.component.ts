@@ -209,7 +209,25 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         return {
             viewModelCtor: ViewMeeting,
             ids: [1], // TODO
-            follow: ['user_ids'],
+            follow: [
+                {
+                    idField: 'user_ids',
+                    follow: [
+                        {
+                            idField: {
+                                templateIdField: 'group_$_ids',
+                                templateValue: '1' // TODO: Active meeting
+                            }
+                        },
+                        {
+                            idField: {
+                                templateIdField: 'vote_delegated_$_to_id',
+                                templateValue: '1' // TODO: Active meeting
+                            }
+                        }
+                    ]
+                }
+            ],
             fieldset: []
         };
     }
