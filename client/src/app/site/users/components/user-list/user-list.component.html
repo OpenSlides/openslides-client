@@ -63,7 +63,7 @@
         (click)="openEditInfo(user, $event)"
     >
         <div class="groupsCell">
-            <div *ngIf="user.groups && user.groups.length">
+            <div *ngIf="user.groups() && user.groups().length">
                 <os-icon-container icon="people" noWrap="true">
                     <span *ngFor="let group of user.groups(); let last = last">
                         {{ group.getTitle() | translate }}<span *ngIf="!last">,</span>
@@ -77,8 +77,8 @@
                 <os-icon-container icon="perm_identity">{{ user.number }}</os-icon-container>
             </div>
 
-            <div *ngIf="user.vote_delegated_to_id" class="spacer-top-5" matTooltip="{{ 'Voting right delegated to (proxy)' | translate }}">
-                <os-icon-container icon="forward" noWrap="true">{{ user.voteDelegatedTo }}</os-icon-container>
+            <div *ngIf="user.vote_delegted_to()" class="spacer-top-5" matTooltip="{{ 'Voting right delegated to (proxy)' | translate }}">
+                <os-icon-container icon="forward" noWrap="true">{{ user.vote_delegated_to() }}</os-icon-container>
             </div>
 
             <div *ngIf="user.vote_delegated_from_users_id?.length" class="spacer-top-5" matTooltip="{{ 'Voting right received from (principals)' | translate }}">
@@ -284,7 +284,7 @@
         </mat-form-field>
         <mat-form-field>
             <os-search-value-selector
-                [(ngModel)]="infoDialog.vote_delegated_from_users_id"
+                [(ngModel)]="infoDialog.vote_delegations_from_ids"
                 [multiple]="true"
                 placeholder="{{ 'Voting right received from (principals)' | translate }}"
                 [inputListValues]="users"
@@ -329,7 +329,7 @@
             color="accent"
             [mat-dialog-close]="{
                 groups_id: infoDialog.groups_id,
-                vote_delegated_from_users_id: infoDialog.vote_delegated_from_users_id,
+                vote_delegations_from_ids: infoDialog.vote_delegations_from_ids,
                 vote_delegated_to_id: infoDialog.vote_delegated_to_id,
                 gender: infoDialog.gender,
                 number: infoDialog.number,

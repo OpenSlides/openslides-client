@@ -234,7 +234,7 @@ export class OperatorService {
         } else {
             const permissionSet = new Set<string>();
             this.DS.getMany(Group, this.groupIds).forEach(group => {
-                group.permissions.forEach(permission => {
+                group.permissions?.forEach(permission => {
                     permissionSet.add(permission);
                 });
             });
