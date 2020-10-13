@@ -4,7 +4,7 @@ import { HasAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { HasListOfSpeakers, ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
+import { HasMeeting, ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { HasAttachment, ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { HasTags, ViewTag } from 'app/site/tags/models/view-tag';
 
@@ -63,7 +63,4 @@ export class ViewTopic extends BaseProjectableViewModel<Topic> {
         return this.attachments && this.attachments.length > 0;
     }
 }
-interface ITopicRelations {
-    meeting: ViewMeeting;
-}
-export interface ViewTopic extends Topic, ITopicRelations, HasAttachment, HasTags, HasAgendaItem, HasListOfSpeakers {}
+export interface ViewTopic extends Topic, HasAttachment, HasTags, HasAgendaItem, HasListOfSpeakers, HasMeeting {}

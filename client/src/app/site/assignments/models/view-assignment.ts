@@ -4,7 +4,7 @@ import { HasAgendaItem, ViewAgendaItem } from 'app/site/agenda/models/view-agend
 import { HasListOfSpeakers, ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
+import { HasMeeting, ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { HasAttachment, ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { HasViewPolls } from 'app/site/polls/models/has-view-polls';
 import { ViewProjection } from 'app/site/projector/models/view-projection';
@@ -102,11 +102,11 @@ export class ViewAssignment extends BaseProjectableViewModel<Assignment> {
 interface IAssignmentRelations extends HasViewPolls<ViewAssignmentPoll> {
     candidates: ViewAssignmentCandidate[];
     polls: ViewAssignmentPoll[];
-    meeting: ViewMeeting;
 }
 export interface ViewAssignment
     extends Assignment,
         IAssignmentRelations,
+        HasMeeting,
         HasAttachment,
         HasTags,
         HasAgendaItem,

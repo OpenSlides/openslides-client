@@ -3,6 +3,7 @@ import { BaseModel } from '../base/base-model';
 import { HasAgendaItemId } from '../base/has-agenda-item-id';
 import { HasAttachmentIds } from '../base/has-attachment-ids';
 import { HasListOfSpeakersId } from '../base/has-list-of-speakers-id';
+import { HasMeetingId } from '../base/has-meeting-id';
 import { HasTagIds } from '../base/has-tag-ids';
 
 /**
@@ -16,10 +17,8 @@ export class Topic extends BaseModel<Topic> {
     public title: string;
     public text: string;
 
-    public meeting_id: Id; // meeting/topic_ids;
-
     public constructor(input?: Partial<Topic>) {
         super(Topic.COLLECTION, input);
     }
 }
-export interface Topic extends HasAgendaItemId, HasListOfSpeakersId, HasAttachmentIds, HasTagIds {}
+export interface Topic extends HasMeetingId, HasAgendaItemId, HasListOfSpeakersId, HasAttachmentIds, HasTagIds {}

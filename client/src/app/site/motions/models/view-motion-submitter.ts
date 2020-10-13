@@ -1,5 +1,6 @@
 import { MotionSubmitter } from 'app/shared/models/motions/motion-submitter';
 import { BaseViewModel } from 'app/site/base/base-view-model';
+import { HasMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { ViewMotion } from './view-motion';
 
@@ -15,4 +16,4 @@ interface IMotionSubmitterRelations {
     user: ViewUser;
     motion: ViewMotion;
 }
-export interface ViewMotionSubmitter extends MotionSubmitter, IMotionSubmitterRelations {}
+export interface ViewMotionSubmitter extends MotionSubmitter, IMotionSubmitterRelations, HasMeeting {}

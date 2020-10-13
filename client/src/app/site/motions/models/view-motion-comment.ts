@@ -1,4 +1,5 @@
 import { MotionComment } from 'app/shared/models/motions/motion-comment';
+import { HasMeeting } from 'app/site/event-management/models/view-meeting';
 import { BaseViewModel } from '../../base/base-view-model';
 import { ViewMotion } from './view-motion';
 import { ViewMotionCommentSection } from './view-motion-comment-section';
@@ -15,4 +16,4 @@ interface ICommentRelations {
     motion: ViewMotion;
     section: ViewMotionCommentSection;
 }
-export interface ViewMotionComment extends MotionComment, ICommentRelations {}
+export interface ViewMotionComment extends MotionComment, ICommentRelations, HasMeeting {}

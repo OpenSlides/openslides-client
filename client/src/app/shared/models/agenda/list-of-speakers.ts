@@ -1,5 +1,6 @@
 import { Fqid, Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
+import { HasMeetingId } from '../base/has-meeting-id';
 import { HasProjectableIds } from '../base/has-projectable-ids';
 
 /**
@@ -14,10 +15,9 @@ export class ListOfSpeakers extends BaseModel<ListOfSpeakers> {
 
     public content_object_id: Fqid; // */list_of_speakers_id;
     public speaker_ids: Id[]; // (speaker/list_of_speakers_id)[];
-    public meeting_id: Id; // meeting/list_of_speakers_ids;
 
     public constructor(input?: any) {
         super(ListOfSpeakers.COLLECTION, input);
     }
 }
-export interface ListOfSpeakers extends HasProjectableIds {}
+export interface ListOfSpeakers extends HasMeetingId, HasProjectableIds {}

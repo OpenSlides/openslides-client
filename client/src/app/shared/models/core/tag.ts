@@ -1,5 +1,6 @@
 import { Fqid, Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
+import { HasMeetingId } from '../base/has-meeting-id';
 
 /**
  * Representation of a tag.
@@ -12,9 +13,9 @@ export class Tag extends BaseModel<Tag> {
     public name: string;
 
     public tagged_ids: Fqid[]; // (*/tag_ids)[];
-    public meeting_id: Id; // meeting/tag_ids;
 
     public constructor(input?: any) {
         super(Tag.COLLECTION, input);
     }
 }
+export interface Tag extends HasMeetingId {}

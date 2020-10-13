@@ -1,5 +1,6 @@
 import { Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
+import { HasMeetingId } from '../base/has-meeting-id';
 
 /**
  * Content of the 'assignment_related_users' property.
@@ -17,3 +18,4 @@ export class AssignmentCandidate extends BaseModel<AssignmentCandidate> {
         super(AssignmentCandidate.COLLECTION, input);
     }
 }
+export interface AssignmentCandidate extends HasMeetingId {}

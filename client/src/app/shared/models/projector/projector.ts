@@ -1,5 +1,6 @@
 import { Fqid, Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
+import { HasMeetingId } from '../base/has-meeting-id';
 
 /**
  * Representation of a projector.
@@ -33,7 +34,6 @@ export class Projector extends BaseModel<Projector> {
     public history_projection_ids: Id[]; // (projection/history_projector_id)[];
     public used_as_reference_projector_meeting_id: Id; // meeting/reference_projector_id;
     public projectiondefault_ids: Id; // projectiondefault[];
-    public meeting_id: Id; // meeting/projector_ids;
 
     /**
      * @returns Calculate the height of the projector
@@ -154,3 +154,4 @@ export class Projector extends BaseModel<Projector> {
         );
     }*/
 }
+export interface Projector extends HasMeetingId {}

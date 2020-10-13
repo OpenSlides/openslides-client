@@ -1,5 +1,6 @@
 import { Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
+import { HasMeetingId } from '../base/has-meeting-id';
 
 /**
  * Representation of users personal note.
@@ -19,3 +20,4 @@ export class PersonalNote extends BaseModel<PersonalNote> {
         super(PersonalNote.COLLECTION, input);
     }
 }
+export interface PersonalNote extends HasMeetingId {}
