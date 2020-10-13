@@ -24,6 +24,20 @@ function isErrorDetailResponse(obj: any): obj is ErrorDetailResponse {
     );
 }
 
+export interface ErrorMessageResponse {
+    message: string;
+    success: boolean;
+}
+
+function isErrorMessageResponse(obj: any): obj is ErrorMessageResponse {
+    return (
+        obj &&
+        typeof obj === 'object' &&
+        typeof obj.message === 'string' &&
+        (obj as ErrorMessageResponse).success === false
+    );
+}
+
 /**
  * Service for managing HTTP requests. Allows to send data for every method. Also (TODO) will do generic error handling.
  */
@@ -140,16 +154,17 @@ export class HttpService {
         } else if (typeof e.error === 'object') {
             if (isErrorDetailResponse(e.error)) {
                 error += this.processErrorDetailResponse(e.error);
+            } else if (isErrorMessageResponse(e.error)) {
+                error += e.error.message;
             } else {
                 const errorList = Object.keys(e.error).map(key => {
                     const capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1);
-                    let detail = e.error[key];
-                    if (detail instanceof Array) {
-                        detail = detail.join(' ');
+                    const message = e.error[key];
+                    if (typeof message === 'string') {
+                        return `${this.translate.instant(capitalizedKey)}: ${message}`;
                     } else {
-                        detail = this.processErrorDetailResponse(detail);
+                        return `${this.translate.instant(capitalizedKey)}: ${this.processErrorDetailResponse(message)}`;
                     }
-                    return `${this.translate.instant(capitalizedKey)}: ${detail}`;
                 });
                 error = errorList.join(', ');
             }

@@ -110,7 +110,8 @@ export class AutoupdateService {
         for (const collection of Object.keys(modelData)) {
             for (const id of Object.keys(modelData[collection])) {
                 const model = modelData[collection][id];
-                if (!model.id) {
+                const isDeleted = model.id === null;
+                if (isDeleted) {
                     if (deletedModels[collection] === undefined) {
                         deletedModels[collection] = [];
                     }
@@ -119,6 +120,8 @@ export class AutoupdateService {
                     if (changedModels[collection] === undefined) {
                         changedModels[collection] = [];
                     }
+                    // Important: our model system needs to have an id in the model, even if it is partial
+                    model.id = +id;
                     const basemodel = this.mapObjectToBaseModel(collection, model);
                     if (basemodel) {
                         changedModels[collection].push(basemodel);
@@ -127,6 +130,7 @@ export class AutoupdateService {
             }
         }
         await this.handleChangedAndDeletedModels(changedModels, deletedModels);
+
         unlock();
     }
 

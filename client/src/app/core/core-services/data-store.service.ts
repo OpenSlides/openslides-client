@@ -453,29 +453,19 @@ export class DataStoreService {
      * Add one or multiple models to dataStore.
      *
      * @param models BaseModels to add to the store
-     * @param changeId The changeId of this update. If given, the storage will be flushed to the
-     * cache. Else one can call {@method flushToStorage} to do this manually.
      * @example this.DS.add([new User(1)])
      * @example this.DS.add([new User(2), new User(3)])
-     * @example this.DS.add(arrayWithUsers, changeId)
+     * @example this.DS.add(arrayWithUsers)
      */
-    public async add(models: BaseModel[] /*, changeId?: number*/): Promise<void> {
+    public async add(models: BaseModel[]): Promise<void> {
         models.forEach(model => {
             const collection = model.collection;
             if (this.modelStore[collection] === undefined) {
                 this.modelStore[collection] = {};
             }
             this.modelStore[collection][model.id] = model;
-
-            /*if (this.jsonStore[collection] === undefined) {
-                this.jsonStore[collection] = {};
-            }
-            this.jsonStore[collection][model.id] = JSON.stringify(model);*/
             this.publishChangedInformation(model);
         });
-        /*if (changeId) {
-            await this.flushToStorage(changeId);
-        }*/
     }
 
     /**
