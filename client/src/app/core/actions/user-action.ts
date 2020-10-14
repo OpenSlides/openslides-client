@@ -37,6 +37,7 @@ export namespace UserAction {
 
         is_present_in_meeting_ids?: Id[]; // can only contain the given meeting_id
         group_ids?: Id[]; // the structured field is only valid for the meeting_id
+        vote_delegations_from_ids?: Id[];
     }
 
     interface PartialUserPayload extends BaseTemporaryUserPayload {
