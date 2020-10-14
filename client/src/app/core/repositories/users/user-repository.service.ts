@@ -110,7 +110,8 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
                 'last_email_send',
                 'number',
                 'structure_level',
-                'vote_weight'
+                'vote_weight',
+                'meeting_id'
             ])
         };
     }
@@ -119,7 +120,7 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
         const username = partialUser.username || partialUser.first_name + partialUser.last_name;
         const payload: UserAction.CreatePayload = {
             username,
-            ...this.getPartialTemporaryUserPayload(partialUser)
+            ...this.getPartialUserPayload(partialUser)
         };
         return this.sendActionToBackend(UserAction.CREATE, payload);
     }
@@ -127,7 +128,7 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
     public update(update: Partial<UserAction.UpdatePayload>, viewUser: ViewUser): Promise<void> {
         const payload: UserAction.UpdatePayload = {
             id: viewUser.id,
-            ...this.getPartialTemporaryUserPayload(update)
+            ...this.getPartialUserPayload(update)
         };
         return this.sendActionToBackend(UserAction.UPDATE, payload);
     }
@@ -645,8 +646,8 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
     }
 
     private getPartialTemporaryUserPayload(
-        partialUser: Partial<UserAction.UpdatePayload>
-    ): Partial<UserAction.UpdatePayload> {
+        partialUser: Partial<UserAction.UpdateTemporaryPayload>
+    ): Partial<UserAction.UpdateTemporaryPayload> {
         return {
             // Required:
             username: partialUser.username,
@@ -666,7 +667,12 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
             email: partialUser.email,
             vote_weight: toDecimal(partialUser.vote_weight as any),
             is_present_in_meeting_ids: partialUser.is_present_in_meeting_ids,
-            group_ids: partialUser.group_ids
+            group_ids: partialUser.group_ids,
+            vote_delegations_from_ids: partialUser.vote_delegations_from_ids
         };
+    }
+
+    private getPartialUserPayload(partialUser: Partial<UserAction.UpdatePayload>): Partial<UserAction.UpdatePayload> {
+        return this.getPartialTemporaryUserPayload(partialUser);
     }
 }
