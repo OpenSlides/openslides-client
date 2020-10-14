@@ -124,20 +124,20 @@ export class PasswordComponent extends BaseComponent implements OnInit {
                     return;
                 }
                 const password = this.adminPasswordForm.value.newPassword;
-                await this.repo.resetPassword(this.user, password);
+                await this.repo.setPasswordTemporary(this.user, password);
                 this.router.navigate([`./users/${this.user.id}`]);
             } else if (this.ownPage) {
                 if (!this.userPasswordForm.valid) {
                     return;
                 }
                 const oldPassword = this.userPasswordForm.value.oldPassword;
-                const newPassword1 = this.userPasswordForm.value.newPassword1;
-                const newPassword2 = this.userPasswordForm.value.newPassword2;
+                const newPassword = this.userPasswordForm.value.newPassword1;
+                const newPasswordConfirmation = this.userPasswordForm.value.newPassword2;
 
-                if (newPassword1 !== newPassword2) {
+                if (newPassword !== newPasswordConfirmation) {
                     this.raiseError(this.translate.instant('Error: The new passwords do not match.'));
                 } else {
-                    await this.repo.setNewPassword(this.user, oldPassword, newPassword1);
+                    await this.repo.setPasswordSelf(this.user, oldPassword, newPassword);
                     this.router.navigate(['./']);
                 }
             }

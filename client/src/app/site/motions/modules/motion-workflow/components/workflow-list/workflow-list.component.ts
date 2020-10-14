@@ -96,8 +96,7 @@ export class WorkflowListComponent extends BaseListViewComponent<ViewMotionWorkf
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                throw new Error('TODO');
-                // this.workflowRepo.create(new MotionWorkflow({ name: result })).then(() => {}, this.raiseError);
+                this.workflowRepo.create(new MotionWorkflow({ name: result }));
             }
         });
     }
@@ -111,8 +110,7 @@ export class WorkflowListComponent extends BaseListViewComponent<ViewMotionWorkf
         const title = this.translate.instant('Are you sure you want to delete this workflow?');
         const content = selected.getTitle();
         if (await this.promptService.open(title, content)) {
-            throw new Error('TODO');
-            // this.workflowRepo.delete(selected).then(() => {}, this.raiseError);
+            this.workflowRepo.delete(selected);
         }
     }
 }

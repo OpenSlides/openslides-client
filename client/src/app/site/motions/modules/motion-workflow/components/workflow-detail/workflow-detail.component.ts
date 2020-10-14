@@ -96,7 +96,7 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
     /**
      * Determine label colors. Where they should come from is currently now know
      */
-    public labelColors: string[] = ['grey', 'red', 'green', 'lightblue', 'yellow'];
+    public labelColors: string[] = ['gray', 'red', 'green', 'lightblue', 'yellow'];
 
     /**
      * Holds state permissions

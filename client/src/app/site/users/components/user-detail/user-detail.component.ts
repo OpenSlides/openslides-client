@@ -118,8 +118,8 @@ export class UserDetailComponent extends BaseModelContextComponent {
         private meetingSettingsService: MeetingSettingsService
     ) {
         super(componentServiceCollector);
-        this.getUserByUrl();
         this.createForm();
+        this.getUserByUrl();
 
         this.meetingSettingsService
             .get('users_enable_vote_weight')
@@ -181,7 +181,7 @@ export class UserDetailComponent extends BaseModelContextComponent {
                 number: [''],
                 vote_weight: [],
                 about_me: [''],
-                groups_id: [''],
+                group_ids: [[]],
                 vote_delegated_from_users_id: [''],
                 is_present: [true],
                 is_committee: [false],
@@ -306,33 +306,19 @@ export class UserDetailComponent extends BaseModelContextComponent {
      */
     public async saveUser(): Promise<void> {
         if (this.personalInfoForm.invalid) {
-            let hint = '';
-            if (this.personalInfoForm.errors) {
-                hint = 'At least one of username, first name or last name has to be set.';
-            } else {
-                for (const formControl in this.personalInfoForm.controls) {
-                    if (this.personalInfoForm.get(formControl).errors) {
-                        hint = formControl + ' is incorrect.';
-                    }
-                }
-            }
-            this.raiseError(this.translate.instant(hint));
+            this.checkFormForErrors();
             return;
         }
 
-        throw new Error('TODO!');
-
-        // try {
-        //     if (this.newUser) {
-        //         await this.repo.create(this.personalInfoForm.value);
-        //         this.router.navigate([`./users/`]);
-        //     } else {
-        //         await this.repo.update(this.personalInfoForm.value, this.user);
-        //         this.setEditMode(false);
-        //     }
-        // } catch (e) {
-        //     this.raiseError(e);
-        // }
+        try {
+            if (this.newUser) {
+                this.createTemporaryUser();
+            } else {
+                this.updateTemporaryUser();
+            }
+        } catch (e) {
+            this.raiseError(e);
+        }
     }
 
     /**
@@ -360,8 +346,7 @@ export class UserDetailComponent extends BaseModelContextComponent {
         const title = this.translate.instant('Are you sure you want to delete this participant?');
         const content = this.user.full_name;
         if (await this.promptService.open(title, content)) {
-            throw new Error('TODO!');
-            // this.repo.delete(this.user).then(() => this.router.navigate(['./users/']), this.raiseError);
+            this.repo.deleteTemporary(this.user).then(() => this.router.navigate(['./users/']), this.raiseError);
         }
     }
 
@@ -400,5 +385,29 @@ export class UserDetailComponent extends BaseModelContextComponent {
             return this.translate.instant('No email sent');
         }
         return this.repo.lastSentEmailTimeString(this.user);
+    }
+
+    private async createTemporaryUser(): Promise<void> {
+        await this.repo.createTemporary(this.personalInfoForm.value);
+        this.router.navigate([`./users/`]);
+    }
+
+    private async updateTemporaryUser(): Promise<void> {
+        await this.repo.updateTemporary(this.personalInfoForm.value, this.user);
+        this.setEditMode(false);
+    }
+
+    private checkFormForErrors(): void {
+        let hint = '';
+        if (this.personalInfoForm.errors) {
+            hint = 'At least one of username, first name or last name has to be set.';
+        } else {
+            for (const formControl in this.personalInfoForm.controls) {
+                if (this.personalInfoForm.get(formControl).errors) {
+                    hint = formControl + ' is incorrect.';
+                }
+            }
+        }
+        this.raiseError(this.translate.instant(hint));
     }
 }
