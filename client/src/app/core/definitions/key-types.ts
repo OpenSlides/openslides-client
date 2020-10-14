@@ -5,3 +5,4 @@ export type Collection = string;
 export type Field = string;
 export type Id = number;
 export type UnsafeHtml = string;
+export type Decimal = string;

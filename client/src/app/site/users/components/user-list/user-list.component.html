@@ -77,7 +77,7 @@
                 <os-icon-container icon="perm_identity">{{ user.number }}</os-icon-container>
             </div>
 
-            <div *ngIf="user.vote_delegted_to()" class="spacer-top-5" matTooltip="{{ 'Voting right delegated to (proxy)' | translate }}">
+            <div *ngIf="user.vote_delegated_to()" class="spacer-top-5" matTooltip="{{ 'Voting right delegated to (proxy)' | translate }}">
                 <os-icon-container icon="forward" noWrap="true">{{ user.vote_delegated_to() }}</os-icon-container>
             </div>
 

@@ -1,4 +1,3 @@
-import { HasMeetingId } from 'app/shared/models/base/has-meeting-id';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Id } from '../definitions/key-types';
 
