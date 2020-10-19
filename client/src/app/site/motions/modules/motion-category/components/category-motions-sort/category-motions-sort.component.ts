@@ -10,7 +10,7 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { SortingListComponent } from 'app/shared/components/sorting-list/sorting-list.component';
 import { CanComponentDeactivate } from 'app/shared/utils/watch-for-changes.guard';
-import { BaseComponent } from 'app/site/base/components/base.component';
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
 
@@ -24,7 +24,7 @@ import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category
     templateUrl: './category-motions-sort.component.html',
     styleUrls: ['./category-motions-sort.component.scss']
 })
-export class CategoryMotionsSortComponent extends BaseComponent implements OnInit, CanComponentDeactivate {
+export class CategoryMotionsSortComponent extends BaseModelContextComponent implements OnInit, CanComponentDeactivate {
     /**
      * The current category. Determined by the route
      */
@@ -100,12 +100,26 @@ export class CategoryMotionsSortComponent extends BaseComponent implements OnIni
      * Subscribes to the category and motions of this category.
      */
     public ngOnInit(): void {
-        const category_id: number = +this.route.snapshot.params.id;
-        this.repo.getViewModelObservable(category_id).subscribe(cat => {
+        super.ngOnInit();
+        const categoryId: number = +this.route.snapshot.params.id;
+
+        this.requestModels({
+            viewModelCtor: ViewMotionCategory,
+            ids: [categoryId],
+            follow: [
+                {
+                    idField: 'motion_ids',
+                    fieldset: 'title',
+                    additionalFields: ['category_weight', 'category_id']
+                }
+            ]
+        });
+
+        this.repo.getViewModelObservable(categoryId).subscribe(cat => {
             this.category = cat;
         });
         this.motionRepo.getViewModelListObservable().subscribe(motions => {
-            const filtered = motions.filter(m => m.category_id === category_id);
+            const filtered = motions.filter(m => m.category_id === categoryId);
             this.motionsBackup = [...filtered];
             this.motionsCount = filtered.length;
             if (this.motionsCopy.length === 0) {

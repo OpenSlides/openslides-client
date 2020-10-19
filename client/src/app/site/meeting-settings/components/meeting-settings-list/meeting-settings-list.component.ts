@@ -90,21 +90,18 @@ export class MeetingSettingsListComponent
     /**
      * Saves every field in this config-group.
      */
-    public saveAll(): void {
+    public async saveAll(): Promise<void> {
         this.cd.detach();
-        // this.repo.update(this.changedSettings, this.meeting).then(
-        //     result => {
-        //         this.changedSettings = {};
-        //         this.cd.reattach();
-        //         this.cd.markForCheck();
-        //     },
-        //     error => {
-        //         this.matSnackBar.open(error, this.translate.instant('Ok'), {
-        //             duration: 0
-        //         });
-        //     }
-        // );
-        throw new Error('TODO!');
+        try {
+            await this.repo.update(this.changedSettings, this.meeting);
+            this.changedSettings = {};
+            this.cd.reattach();
+            this.cd.markForCheck();
+        } catch (e) {
+            this.matSnackBar.open(e, this.translate.instant('Ok'), {
+                duration: 0
+            });
+        }
     }
 
     /**
@@ -147,14 +144,13 @@ export class MeetingSettingsListComponent
         return true;
     }
 
-    protected getModelRequest(): SimplifiedModelRequest {
+    public getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [1], // TODO
+            ids: [this.activeMeetingService.meetingId],
             follow: [
                 {
-                    idField: 'group_ids',
-                    fieldset: 'name' // TODO: this one is invalid!
+                    idField: 'group_ids'
                 },
                 {
                     idField: 'motion_workflow_ids',

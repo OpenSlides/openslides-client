@@ -2,6 +2,8 @@ import { Component, ViewChild } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
+import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
@@ -46,21 +48,25 @@ export class CategoriesSortComponent extends BaseModelContextComponent implement
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        private activeMeetingIdService: ActiveMeetingIdService,
         private categoryRepo: MotionCategoryRepositoryService,
         private promptService: PromptService
     ) {
         super(componentServiceCollector);
-        this.requestModels({
+        this.categoriesObservable = this.categoryRepo.getViewModelListObservable();
+    }
+
+    public getModelRequest(): SimplifiedModelRequest {
+        return {
             viewModelCtor: ViewMeeting,
-            ids: [1], // TODO
+            ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
                     idField: 'motion_category_ids',
                     fieldset: 'sortList'
                 }
             ]
-        });
-        this.categoriesObservable = this.categoryRepo.getViewModelListObservable();
+        };
     }
 
     /**

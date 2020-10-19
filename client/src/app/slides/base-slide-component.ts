@@ -13,7 +13,13 @@ export abstract class BaseSlideComponent<T extends object> {
      * Each slide must take slide data.
      */
     @Input()
-    public data: SlideData<T>;
+    public set data(value: SlideData<T>) {}
+
+    public get data(): SlideData<T> {
+        return this._data;
+    }
+
+    protected _data: SlideData<T>;
 
     /**
      * The projector where this slide is projected on.

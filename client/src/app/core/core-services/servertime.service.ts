@@ -77,7 +77,7 @@ export class ServertimeService {
             }
         ];
         const servertimeResponse = await this.http.post<ServertimeResponse[]>(
-            '/system/presenter/handle_request/',
+            '/system/presenter/handle_request',
             payload
         );
         if (servertimeResponse?.length !== 1 || typeof servertimeResponse[0]?.server_time !== 'number') {

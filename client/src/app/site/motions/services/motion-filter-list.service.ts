@@ -6,6 +6,7 @@ import { HistoryService } from 'app/core/core-services/history.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { StorageService } from 'app/core/core-services/storage.service';
+import { Id } from 'app/core/definitions/key-types';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
@@ -256,92 +257,102 @@ export class MotionFilterListService extends BaseFilterListService<ViewMotion> {
      */
     private subscribeWorkflows(): void {
         this.workflowRepo.getViewModelListObservable().subscribe(workflows => {
-            if (workflows && workflows.length) {
-                const workflowFilters: WorkflowFilterDesc[] = [];
-                const recoFilters: WorkflowFilterDesc[] = [];
+            if (!workflows || !workflows.length) {
+                return;
+            }
+            const workflowFilters: WorkflowFilterDesc[] = [];
+            const recoFilters: WorkflowFilterDesc[] = [];
 
-                const finalStates: number[] = [];
-                const nonFinalStates: number[] = [];
+            const finalStates: number[] = [];
+            const nonFinalStates: number[] = [];
 
-                // get all relevant information
-                for (const workflow of workflows) {
-                    if (this.isWorkflowEnabled(workflow.id)) {
-                        workflowFilters.push({
-                            name: workflow.name,
-                            filter: []
-                        });
+            // get all relevant information
+            for (const workflow of workflows) {
+                if (this.isWorkflowEnabled(workflow.id)) {
+                    workflowFilters.push({
+                        name: workflow.name,
+                        filter: []
+                    });
 
-                        recoFilters.push({
-                            name: workflow.name,
-                            filter: []
-                        });
+                    recoFilters.push({
+                        name: workflow.name,
+                        filter: []
+                    });
 
-                        for (const state of workflow.states) {
-                            // get the restriction array, but remove the is_submitter condition, if present
-                            const restrictions = (state.restrictions.filter(
-                                r => r !== Restriction.motionsIsSubmitter
-                            ) as unknown) as Permission[];
+                    for (const state of workflow.states) {
+                        // get the restriction array, but remove the is_submitter condition, if present
+                        const restrictions = (state.restrictions.filter(
+                            r => r !== Restriction.motionsIsSubmitter
+                        ) as unknown) as Permission[];
 
-                            if (!restrictions.length || this.operator.hasPerms(...restrictions)) {
-                                // sort final and non final states
-                                state.isFinalState ? finalStates.push(state.id) : nonFinalStates.push(state.id);
+                        if (!restrictions.length || this.operator.hasPerms(...restrictions)) {
+                            // sort final and non final states
+                            state.isFinalState ? finalStates.push(state.id) : nonFinalStates.push(state.id);
 
-                                workflowFilters[workflowFilters.length - 1].filter.push({
+                            workflowFilters[workflowFilters.length - 1].filter.push({
+                                condition: state.id,
+                                label: state.name
+                            });
+
+                            if (state.recommendation_label) {
+                                recoFilters[workflowFilters.length - 1].filter.push({
                                     condition: state.id,
-                                    label: state.name
+                                    label: state.recommendation_label
                                 });
-
-                                if (state.recommendation_label) {
-                                    recoFilters[workflowFilters.length - 1].filter.push({
-                                        condition: state.id,
-                                        label: state.recommendation_label
-                                    });
-                                }
                             }
                         }
                     }
                 }
-
-                // convert to filter options
-                if (workflowFilters && workflowFilters.length) {
-                    let workflowOptions: OsFilterOptions = [];
-                    // add "done" and "undone"
-                    workflowOptions.push({
-                        label: 'Done',
-                        condition: finalStates
-                    });
-                    workflowOptions.push({
-                        label: this.translate.instant('Undone'),
-                        condition: nonFinalStates
-                    });
-                    workflowOptions.push('-');
-
-                    for (const filterDef of workflowFilters) {
-                        workflowOptions.push(filterDef.name);
-                        workflowOptions = workflowOptions.concat(filterDef.filter);
-                    }
-
-                    this.stateFilterOptions.options = workflowOptions;
-                }
-
-                if (recoFilters && recoFilters.length) {
-                    let recoOptions: OsFilterOptions = [];
-
-                    for (const filterDef of recoFilters) {
-                        recoOptions.push(filterDef.name);
-                        recoOptions = recoOptions.concat(filterDef.filter);
-                    }
-
-                    recoOptions.push('-');
-                    recoOptions.push({
-                        label: this.translate.instant('No recommendation'),
-                        condition: null
-                    });
-                    this.recommendationFilterOptions.options = recoOptions;
-                }
-                this.setFilterDefinitions();
             }
+
+            this.setStateFilters(workflowFilters, finalStates, nonFinalStates);
+            this.setRecommendationFilters(recoFilters);
+            this.setFilterDefinitions();
         });
+    }
+
+    private setStateFilters(workflowFilters: WorkflowFilterDesc[], finalStates: Id[], nonFinalStates: Id[]): void {
+        // convert to filter options
+        if (!workflowFilters || !workflowFilters.length) {
+            return;
+        }
+        let workflowOptions: OsFilterOptions = [];
+        // add "done" and "undone"
+        workflowOptions.push({
+            label: 'Done',
+            condition: finalStates
+        });
+        workflowOptions.push({
+            label: this.translate.instant('Undone'),
+            condition: nonFinalStates
+        });
+        workflowOptions.push('-');
+
+        for (const filterDef of workflowFilters) {
+            workflowOptions.push(filterDef.name);
+            workflowOptions = workflowOptions.concat(filterDef.filter);
+        }
+
+        this.stateFilterOptions.options = workflowOptions;
+    }
+
+    private setRecommendationFilters(recoFilters: WorkflowFilterDesc[]): void {
+        if (!recoFilters || !recoFilters.length) {
+            return;
+        }
+        let recoOptions: OsFilterOptions = [];
+
+        for (const filterDef of recoFilters) {
+            recoOptions.push(filterDef.name);
+            recoOptions = recoOptions.concat(filterDef.filter);
+        }
+
+        recoOptions.push('-');
+        recoOptions.push({
+            label: this.translate.instant('No recommendation'),
+            condition: null
+        });
+        this.recommendationFilterOptions.options = recoOptions;
     }
 
     protected isWorkflowEnabled(workflowId: number): boolean {

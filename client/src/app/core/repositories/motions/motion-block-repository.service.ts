@@ -6,6 +6,7 @@ import { MotionBlockAction } from 'app/core/actions/motion-block-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { MotionBlock } from 'app/shared/models/motions/motion-block';
+import { createAgendaItem } from 'app/shared/utils/create-agenda-item';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
 import { BaseIsAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-is-agenda-item-and-list-of-speakers-content-object-repository';
@@ -36,9 +37,7 @@ export class MotionBlockRepositoryService extends BaseIsAgendaItemAndListOfSpeak
             meeting_id: this.activeMeetingIdService.meetingId,
             title: partialModel.title,
             internal: partialModel.internal,
-            agenda_create: partialModel.agenda_create,
-            agenda_parent_id: partialModel.agenda_parent_id,
-            agenda_type: partialModel.agenda_type
+            ...createAgendaItem(partialModel)
         };
         return this.sendActionToBackend(MotionBlockAction.CREATE, payload);
     }

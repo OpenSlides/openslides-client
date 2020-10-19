@@ -234,4 +234,8 @@ export class MotionChangeRecommendationRepositoryService extends BaseRepositoryW
         };
         return this.sendActionToBackend(MotionChangeRecommendationAction.UPDATE, payload);
     }
+
+    public delete(viewModel: ViewMotion): Promise<void> {
+        return this.sendActionToBackend(MotionChangeRecommendationAction.DELETE, { id: viewModel.id });
+    }
 }

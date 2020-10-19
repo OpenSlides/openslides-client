@@ -5,19 +5,23 @@ import { map } from 'rxjs/operators';
 
 import { AgendaItemRepositoryService, AgendaListTitle } from '../agenda/agenda-item-repository.service';
 import { MotionAction } from 'app/core/actions/motion-action';
-import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
+import { DEFAULT_FIELDSET, Fieldsets, Follow } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { DiffLinesInParagraph, DiffService } from 'app/core/ui-services/diff.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { TreeIdNode } from 'app/core/ui-services/tree.service';
+import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Motion } from 'app/shared/models/motions/motion';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from 'app/shared/models/motions/view-unified-change';
+import { createAgendaItem } from 'app/shared/utils/create-agenda-item';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
-import { ViewMotionAmendedParagraph } from 'app/site/motions/models/view-motion-amended-paragraph';
+import {
+    ViewMotionAmendedParagraph,
+    ViewMotionAmendedParagraphs
+} from 'app/site/motions/models/view-motion-amended-paragraph';
 import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
 import { ViewMotionStatuteParagraph } from 'app/site/motions/models/view-motion-statute-paragraph';
 import { ChangeRecoMode } from 'app/site/motions/motions.constants';
-import { ViewUser } from 'app/site/users/models/view-user';
 import { BaseIsAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-is-agenda-item-and-list-of-speakers-content-object-repository';
 import { LineNumberedString, LinenumberingService, LineNumberRange } from '../../ui-services/linenumbering.service';
 import { RepositoryServiceCollector } from '../repository-service-collector';
@@ -48,6 +52,16 @@ export interface ParagraphToChoose {
      */
     lineTo: number;
 }
+
+export const GET_POSSIBLE_RECOMMENDATIONS: Follow = {
+    idField: 'workflow_id',
+    follow: [
+        {
+            idField: 'state_ids',
+            fieldset: ['recommendation_label', 'show_recommendation_extension_field']
+        }
+    ]
+};
 
 /**
  * Repository Services for motions (and potentially categories)
@@ -95,15 +109,56 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         });
     }
 
-    public create(partialMotion: Partial<Motion>): Promise<any> {
-        throw new Error('TODO');
+    public create(partialMotion: Partial<MotionAction.CreatePayload>): Promise<Identifiable> {
+        const payload: MotionAction.CreatePayload = {
+            meeting_id: this.activeMeetingIdService.meetingId,
+            title: partialMotion.title,
+            text: partialMotion.text,
+            origin_id: partialMotion.origin_id,
+            submitter_ids: partialMotion.submitter_ids,
+            workflow_id: partialMotion.workflow_id,
+            category_id: partialMotion.category_id,
+            attachment_ids: partialMotion.attachment_ids,
+            reason: partialMotion.reason,
+            number: partialMotion.number,
+            block_id: partialMotion.block_id,
+            state_extension: partialMotion.state_extension,
+            statute_paragraph_id: partialMotion.statute_paragraph_id,
+            sort_parent_id: partialMotion.sort_parent_id,
+            tag_ids: partialMotion.tag_ids,
+            supporter_ids: partialMotion.supporter_ids,
+            ...createAgendaItem(partialMotion)
+        };
+        return this.sendActionToBackend(MotionAction.CREATE, payload);
     }
 
-    public update(update: Partial<Motion>, viewModel: ViewMotion): Promise<any> {
-        throw new Error('TODO');
+    public update(update: Partial<Motion>, viewModel: ViewMotion): Promise<void> {
+        const payload: MotionAction.UpdatePayload = {
+            id: viewModel.id,
+            number: update.number,
+            modified_final_version: update.modified_final_version,
+            reason: update.reason,
+            text: update.text,
+            title: update.title
+        };
+        return this.sendActionToBackend(MotionAction.UPDATE, payload);
     }
 
-    public delete(viewModel: ViewMotion): Promise<any> {
+    private updateMetadata(update: Partial<MotionAction.UpdateMetadataPayload>, viewMotion: ViewMotion): Promise<void> {
+        const payload: MotionAction.UpdateMetadataPayload = {
+            id: viewMotion.id,
+            attachment_ids: update.attachment_ids,
+            category_id: update.category_id,
+            block_id: update.block_id,
+            recommendation_extension: update.recommendation_extension,
+            state_extension: update.state_extension,
+            supporter_ids: update.supporter_ids,
+            tag_ids: update.tag_ids
+        };
+        return this.sendActionToBackend(MotionAction.UPDATE_METADATA, payload);
+    }
+
+    public delete(viewModel: ViewMotion): Promise<void> {
         return this.sendActionToBackend(MotionAction.DELETE, { id: viewModel.id });
     }
 
@@ -121,16 +176,13 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
             'sequential_number',
             'text',
             'reason',
-            'amendment_paragraphs',
             'modified_final_version',
+            'state_extension',
+            'recommendation_extension',
             'agenda_item_id' // for add/remove from agenda
         ]);
-        const amendmentFields: (keyof Motion)[] = listFields.concat([
-            'amendment_paragraphs',
-            'lead_motion_id',
-            'amendment_ids'
-        ]);
-        const callListFields: (keyof Motion)[] = titleFields.concat(['sort_weight']);
+        const amendmentFields: (keyof Motion)[] = listFields.concat(['lead_motion_id', 'amendment_ids']);
+        const callListFields: (keyof Motion)[] = titleFields.concat(['sort_weight', 'sort_parent_id']);
         return {
             [DEFAULT_FIELDSET]: detailFields,
             list: listFields,
@@ -225,50 +277,13 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param stateId the number that indicates the state
      */
     public async setState(viewMotion: ViewMotion, stateId: number): Promise<void> {
-        throw new Error('TODO!');
-        // await this.actions.sendRequest(ActionType.MOTION_UPDATE_METADATA, [{ id: viewMotion.id, state: stateId }]);
+        const payload: MotionAction.SetStatePayload = { id: viewMotion.id, state_id: stateId };
+        await this.sendActionToBackend(MotionAction.SET_STATE, payload);
     }
 
-    /**
-     * Set the state of motions in bulk
-     *
-     * @param viewMotions target motions
-     * @param stateId the number that indicates the state
-     */
-    public async setMultiState(viewMotions: ViewMotion[], stateId: number): Promise<void> {
-        const motionsIdMap: { id: number; state: number }[] = viewMotions.map(motion => {
-            return { id: motion.id, state: stateId };
-        });
-        throw new Error('TODO!');
-        // await this.actions.sendRequest(ActionType.MOTION_UPDATE_METADATA, motionsIdMap);
-    }
-
-    /**
-     * Set the motion blocks of motions in bulk
-     *
-     * @param viewMotions target motions
-     * @param motionblockId the number that indicates the motion block
-     */
-    public async setMultiMotionBlock(viewMotions: ViewMotion[], motionblockId: number): Promise<void> {
-        const motionsIdMap: { id: number; block: number }[] = viewMotions.map(motion => {
-            return { id: motion.id, block: motionblockId };
-        });
-        throw new Error('TODO!');
-        // await this.actions.sendRequest(ActionType.MOTION_UPDATE_METADATA, motionsIdMap);
-    }
-
-    /**
-     * Set the category of motions in bulk
-     *
-     * @param viewMotions target motions
-     * @param categoryId the number that indicates the category
-     */
-    public async setMultiCategory(viewMotions: ViewMotion[], categoryId: number): Promise<void> {
-        const motionsIdMap: { id: number; category: number }[] = viewMotions.map(motion => {
-            return { id: motion.id, category: categoryId };
-        });
-        throw new Error('TODO!');
-        // await this.actions.sendRequest(ActionType.MOTION_UPDATE_METADATA, motionsIdMap);
+    public async resetState(viewMotion: ViewMotion): Promise<void> {
+        const payload: MotionAction.ResetStatePayload = { id: viewMotion.id };
+        return this.sendActionToBackend(MotionAction.RESET_STATE, payload);
     }
 
     /**
@@ -278,10 +293,55 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param recommendationId the number that indicates the recommendation
      */
     public async setRecommendation(viewMotion: ViewMotion, recommendationId: number): Promise<void> {
-        // await this.actions.sendRequest(ActionType.MOTION_UPDATE_METADATA, [
-        //     { id: viewMotion.id, recommendation: recommendationId }
-        // ]);
-        throw new Error('TODO!');
+        const payload: MotionAction.SetRecommendationPayload = {
+            id: viewMotion.id,
+            recommendation_id: recommendationId
+        };
+        await this.sendActionToBackend(MotionAction.SET_RECOMMENDATION, payload);
+    }
+
+    public async resetRecommendation(viewMotion: ViewMotion): Promise<void> {
+        const payload: MotionAction.ResetRecommendationPayload = { id: viewMotion.id };
+        return this.sendActionToBackend(MotionAction.RESET_RECOMMENDATION, payload);
+    }
+
+    /**
+     * Set the state of motions in bulk
+     *
+     * @param viewMotions target motions
+     * @param stateId the number that indicates the state
+     */
+    public async setMultiState(viewMotions: ViewMotion[], stateId: number): Promise<void> {
+        const payload: MotionAction.SetStatePayload[] = viewMotions.map(motion => {
+            return { id: motion.id, state_id: stateId };
+        });
+        await this.sendBulkActionToBackend(MotionAction.UPDATE_METADATA, payload);
+    }
+
+    /**
+     * Set the motion blocks of motions in bulk
+     *
+     * @param viewMotions target motions
+     * @param motionblockId the number that indicates the motion block
+     */
+    public async setMultiMotionBlock(viewMotions: ViewMotion[], motionblockId: number): Promise<void> {
+        const payload: MotionAction.UpdateMetadataPayload[] = viewMotions.map(motion => {
+            return { id: motion.id, block_id: motionblockId };
+        });
+        await this.sendBulkActionToBackend(MotionAction.UPDATE_METADATA, payload);
+    }
+
+    /**
+     * Set the category of motions in bulk
+     *
+     * @param viewMotions target motions
+     * @param categoryId the number that indicates the category
+     */
+    public async setMultiCategory(viewMotions: ViewMotion[], categoryId: number): Promise<void> {
+        const payload: MotionAction.UpdateMetadataPayload[] = viewMotions.map(motion => {
+            return { id: motion.id, category_id: categoryId };
+        });
+        await this.sendBulkActionToBackend(MotionAction.UPDATE_METADATA, payload);
     }
 
     /**
@@ -291,8 +351,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param categoryId the number that indicates the category
      */
     public async setCategory(viewMotion: ViewMotion, categoryId: number): Promise<void> {
-        // await this.update({ category_id: categoryId }, viewMotion);
-        throw new Error('TODO!');
+        return this.updateMetadata({ category_id: categoryId }, viewMotion);
     }
 
     /**
@@ -302,8 +361,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param blockId the ID of the motion block
      */
     public async setBlock(viewMotion: ViewMotion, blockId: number): Promise<void> {
-        // await this.update({ block_id: blockId }, viewMotion);
-        throw new Error('TODO!');
+        return this.updateMetadata({ block_id: blockId }, viewMotion);
     }
 
     /**
@@ -313,7 +371,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param tagId the tags id to add or remove
      */
     public async toggleTag(viewMotion: ViewMotion, tagId: number): Promise<void> {
-        const tag_ids = viewMotion.motion.tag_ids.map(tag => tag);
+        const tag_ids = viewMotion.motion.tag_ids?.map(tag => tag) || [];
         const tagIndex = tag_ids.findIndex(tag => tag === tagId);
 
         if (tagIndex === -1) {
@@ -323,8 +381,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
             // remove tag from motion
             tag_ids.splice(tagIndex, 1);
         }
-        // await this.update({ tag_ids: tag_ids }, viewMotion);
-        throw new Error('TODO!');
+        return this.updateMetadata({ tag_ids: tag_ids }, viewMotion);
     }
 
     /**
@@ -334,16 +391,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param submitterUserIds The submitters to set
      */
     public async setSubmitters(viewMotion: ViewMotion, submitterUserIds: number[]): Promise<void> {
-        const requestData = {
-            motions: [
-                {
-                    id: viewMotion.id,
-                    submitters: submitterUserIds
-                }
-            ]
-        };
-        throw new Error('TODO!');
-        // await this.actions.sendRequest(ActionType.MOTION_UPDATE_METADATA, requestData.motions);
+        return this.update({ submitter_ids: submitterUserIds }, viewMotion);
     }
 
     /**
@@ -356,8 +404,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
             meeting_id: this.activeMeetingIdService.meetingId,
             tree: data
         };
-        throw new Error('TODO!');
-        // return await this.actions.sendRequest(ActionType.MOTION_SORT, payload);
+        return await this.sendActionToBackend(MotionAction.SORT, payload);
     }
 
     /**
@@ -366,9 +413,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param viewMotion target motion
      */
     public async support(viewMotion: ViewMotion): Promise<void> {
-        const url = `/rest/motions/motion/${viewMotion.id}/support/`;
-        // await this.httpService.post(url);
-        throw new Error('TODO');
+        const nextSupporterIds = [...viewMotion.supporter_ids, this.operator.operatorId];
+        return this.updateMetadata({ supporter_ids: nextSupporterIds }, viewMotion);
     }
 
     /**
@@ -377,9 +423,13 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param viewMotion target motion
      */
     public async unsupport(viewMotion: ViewMotion): Promise<void> {
-        const url = `/rest/motions/motion/${viewMotion.id}/support/`;
-        // await this.httpService.delete(url);
-        throw new Error('TODO');
+        if (!viewMotion.supporter_ids || !viewMotion.supporter_ids.length) {
+            return;
+        }
+        const nextSupporterIds = viewMotion.supporter_ids.filter(
+            supporterId => supporterId !== this.operator.operatorId
+        );
+        return this.updateMetadata({ supporter_ids: nextSupporterIds }, viewMotion);
     }
 
     /**
@@ -589,7 +639,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         return this.getTextParagraphs(parent, true, lineLength).map((paragraph: string, index: number) => {
             let localParagraph;
             if (motion.hasLeadMotion) {
-                localParagraph = motion.amendment_paragraphs[index] ? motion.amendment_paragraphs[index] : paragraph;
+                localParagraph = motion.amendment_paragraph(index) ? motion.amendment_paragraph(index) : paragraph;
             } else {
                 localParagraph = paragraph;
             }
@@ -606,8 +656,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
             const parent = amendment.lead_motion;
 
             return this.getTextParagraphs(parent, true, lineLength).map((paragraph: string, index: number) => {
-                const diffedParagraph = amendment.amendment_paragraphs[index]
-                    ? this.diff.diff(paragraph, amendment.amendment_paragraphs[index], lineLength)
+                const diffedParagraph = amendment.amendment_paragraph(index)
+                    ? this.diff.diff(paragraph, amendment.amendment_paragraph(index), lineLength)
                     : paragraph;
                 return this.extractAffectedParagraphs(diffedParagraph, index);
             });
@@ -630,7 +680,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
     }
 
     /**
-     * Returns the amended paragraphs by an amendment. Correlates to the amendment_paragraphs field,
+     * Returns the amended paragraphs by an amendment. Correlates to the amendment_paragraph field,
      * but also considers relevant change recommendations.
      * The returned array includes "null" values for paragraphs that have not been changed.
      *
@@ -660,17 +710,13 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
             }
         });
 
-        return amendment.amendment_paragraphs?.map((newText: string, paraNo: number) => {
-            let paragraph: string;
-            let paragraphHasChanges;
+        return baseParagraphs.map((paragraph: string, paraNo: number) => {
+            let paragraphHasChanges = false;
 
-            if (newText === null) {
-                paragraph = baseParagraphs[paraNo];
-                paragraphHasChanges = false;
-            } else {
+            if (amendment.amendment_paragraph(paraNo)) {
                 // Add line numbers to newText, relative to the baseParagraph, by creating a diff
                 // to the line numbered base version any applying it right away
-                const diff = this.diff.diff(baseParagraphs[paraNo], newText);
+                const diff = this.diff.diff(paragraph, amendment.amendment_paragraph(paraNo));
                 paragraph = this.diff.diffHtmlToFinalText(diff);
                 paragraphHasChanges = true;
             }
@@ -724,7 +770,9 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         if (crMode === ChangeRecoMode.Changed) {
             amendmentParagraphs = this.applyChangesToAmendment(amendment, lineLength, changeRecommendations, true);
         } else {
-            amendmentParagraphs = amendment.amendment_paragraphs || [];
+            amendmentParagraphs = baseParagraphs.map((_: string, paraNo: number) => {
+                return amendment.amendment_paragraph(paraNo);
+            });
         }
 
         return amendmentParagraphs
@@ -825,7 +873,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
 
     /**
      * For unchanged paragraphs, this returns the original motion paragraph, including line numbers.
-     * For changed paragraphs, this returns the content of the amendment_paragraphs-field,
+     * For changed paragraphs, this returns the content of the amendment_paragraph-field,
      *     but including line numbers relative to the original motion line numbers,
      *     so they can be used for the amendment change recommendations
      *
@@ -842,10 +890,9 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         const motion = amendment.lead_motion;
         const baseParagraphs = this.getTextParagraphs(motion, true, lineLength);
 
-        return (amendment.amendment_paragraphs || []).map((newText: string, paraNo: number): string => {
-            const origText = baseParagraphs[paraNo];
-
-            if (newText === null) {
+        return baseParagraphs.map((origText: string, paraNo: number): string => {
+            const newText = amendment.amendment_paragraph(paraNo);
+            if (!newText) {
                 return origText;
             }
 
@@ -866,9 +913,10 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      */
     public async followRecommendation(motion: ViewMotion): Promise<void> {
         if (motion.recommendation_id) {
-            const restPath = `/rest/motions/motion/${motion.id}/follow_recommendation/`;
-            // await this.httpService.post(restPath);
-            throw new Error('TODO');
+            const payload: MotionAction.FollowRecommendationPayload = {
+                id: motion.id
+            };
+            return this.sendActionToBackend(MotionAction.FOLLOW_RECOMMENDATION, payload);
         }
     }
     /**
@@ -889,8 +937,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      */
     public async setStateExtension(viewMotion: ViewMotion, value: string): Promise<void> {
         if (viewMotion.state.show_state_extension_field) {
-            // return this.update({ state_extension: value }, viewMotion);
-            throw new Error('TODO!');
+            return this.updateMetadata({ state_extension: value }, viewMotion);
         }
     }
 
@@ -902,8 +949,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      */
     public async setRecommendationExtension(viewMotion: ViewMotion, value: string): Promise<void> {
         if (viewMotion.recommendation.show_recommendation_extension_field) {
-            // return this.update({ recommendation_extension: value }, viewMotion);
-            throw new Error('TODO!');
+            return this.updateMetadata({ recommendation_extension: value }, viewMotion);
         }
     }
 

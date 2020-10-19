@@ -35,7 +35,7 @@ const routes: Route[] = [
     },
     {
         path: 'category',
-        loadChildren: () => import('./modules/category/category.module').then(m => m.CategoryModule),
+        loadChildren: () => import('./modules/motion-category/category.module').then(m => m.CategoryModule),
         data: { basePerm: Permission.motionsCanSee }
     },
     {

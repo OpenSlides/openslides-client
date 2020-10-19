@@ -55,10 +55,6 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         return this.number ? this.number : this.title;
     }
 
-    public get possibleRecommendations(): ViewMotionState[] {
-        return this.workflow ? this.workflow.states.filter(state => state.recommendation_label) : [];
-    }
-
     public get agenda_type(): number | null {
         return this.agenda_item ? this.agenda_item.type : null;
     }
@@ -226,10 +222,10 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         properties.push({ key: 'Submitters', value: this.submittersAsUsers.map(user => user.full_name).join(', ') });
         properties.push({ key: 'Text', value: this.text, trusted: true });
         properties.push({ key: 'Reason', value: this.reason, trusted: true });
-        if (this.amendment_paragraphs) {
+        if (this.amendment_paragraph_$?.length) {
             properties.push({
                 key: 'Amendments',
-                value: this.amendment_paragraphs.filter(x => !!x).join('\n'),
+                value: this.amendment_paragraph_$.map(paraNo => this.amendment_paragraph(paraNo)).join('\n'),
                 trusted: true
             });
         }
@@ -306,10 +302,10 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
 
     /**
      * It's a paragraph-based amendments if only one paragraph is to be changed,
-     * specified by amendment_paragraphs-array
+     * specified by -array
      */
     public isParagraphBasedAmendment(): boolean {
-        return this.amendment_paragraphs && this.amendment_paragraphs.length > 0;
+        return this.amendment_paragraph_$?.length > 0;
     }
 
     public getSlide(meetingSettingsService: MeetingSettingsService): ProjectorElementBuildDeskriptor {
@@ -360,7 +356,6 @@ interface IMotionRelations {
     derived_motions: ViewMotion[];
     forwarding_tree_motions: ViewMotion[];
     state?: ViewMotionState;
-    workflow?: ViewMotionWorkflow;
     recommendation?: ViewMotionState;
     recommendation_extension_reference: (BaseViewModel & HasReferencedMotionsInRecommendationExtension)[];
     category?: ViewMotionCategory;

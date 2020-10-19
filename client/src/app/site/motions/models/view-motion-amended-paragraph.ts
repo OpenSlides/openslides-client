@@ -3,6 +3,10 @@ import { MergeAmendment } from 'app/shared/models/motions/motion-state';
 import { ViewMotion } from './view-motion';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from '../../../shared/models/motions/view-unified-change';
 
+export interface ViewMotionAmendedParagraphs {
+    [index: number]: ViewMotionAmendedParagraph;
+}
+
 /**
  * This represents the Unified Diff part of an amendments.
  *
