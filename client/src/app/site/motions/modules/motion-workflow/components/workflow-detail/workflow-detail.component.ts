@@ -317,7 +317,7 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
      * @param state the state to add or remove another state to
      */
     public onSetNextState(nextState: ViewMotionState, state: ViewMotionState): void {
-        const ids = state.next_state_ids.map(id => id);
+        const ids = (state.next_state_ids || []).map(id => id);
         const stateIdIndex = ids.findIndex(id => id === nextState.id);
 
         if (stateIdIndex < 0) {
@@ -398,7 +398,7 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
      * Returns a merge amendment label from state
      */
     public getMergeAmendmentLabel(mergeAmendment: MergeAmendment): string {
-        return this.amendmentIntoFinal.find(amendment => amendment.merge === mergeAmendment).label;
+        return this.amendmentIntoFinal.find(amendment => amendment.merge === mergeAmendment)?.label || '-';
     }
 
     /**

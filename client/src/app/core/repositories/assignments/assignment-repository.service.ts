@@ -75,7 +75,6 @@ export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeake
     };
 
     private getPartialPayload(model: Partial<ViewAssignment>): any {
-        console.log(model.phase);
         return {
             attachment_ids: model.attachment_ids,
             default_poll_description: model.default_poll_description,

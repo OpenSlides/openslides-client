@@ -1,3 +1,4 @@
+import { AgendaItemCreationPayload } from './common/agenda-item-creation-payload';
 import { HasMeetingId } from 'app/shared/models/base/has-meeting-id';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Id } from '../definitions/key-types';
@@ -7,17 +8,9 @@ export namespace MotionBlockAction {
     export const UPDATE = 'motion_block.update';
     export const DELETE = 'motion_block.delete';
 
-    export interface CreatePayload extends HasMeetingId {
+    export interface CreatePayload extends HasMeetingId, AgendaItemCreationPayload {
         title: string;
         internal: boolean;
-
-        // Non-model fields for customizing the agenda item creation, optional
-        agenda_create?: boolean;
-        agenda_type?: number;
-        agenda_parent_id?: number;
-        agenda_comment?: string;
-        agenda_duration?: number;
-        agenda_weight?: number;
     }
     export interface UpdatePayload extends Identifiable {
         title?: string;

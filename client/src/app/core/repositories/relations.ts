@@ -416,7 +416,8 @@ export const RELATIONS: Relation[] = [
         MViewModel: ViewMotionCategory,
         OField: 'motion_categories',
         OIdField: 'motion_category_ids',
-        MField: 'meeting'
+        MField: 'meeting',
+        order: 'weight'
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,

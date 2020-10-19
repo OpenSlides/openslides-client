@@ -9,7 +9,10 @@ import { SimplifiedModelRequest } from 'app/core/core-services/model-request-bui
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
-import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
+import {
+    GET_POSSIBLE_RECOMMENDATIONS,
+    MotionRepositoryService
+} from 'app/core/repositories/motions/motion-repository.service';
 import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/motion-workflow-repository.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { OsFilterOptionCondition } from 'app/core/ui-services/base-filter-list.service';
@@ -24,6 +27,7 @@ import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
 import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
+import { ViewMotionState } from 'app/site/motions/models/view-motion-state';
 import { ViewMotionWorkflow } from 'app/site/motions/models/view-motion-workflow';
 import { MotionExportInfo, MotionExportService } from 'app/site/motions/services/motion-export.service';
 import { MotionFilterListService } from 'app/site/motions/services/motion-filter-list.service';
@@ -289,6 +293,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
                         'block_id',
                         {
                             idField: 'state_id',
+                            follow: ['next_state_ids', GET_POSSIBLE_RECOMMENDATIONS],
                             fieldset: 'list'
                         },
                         {
@@ -382,6 +387,11 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
         this.createCategoryTiles(Array.from(localCategories));
 
         this.createTileList();
+    }
+
+    public getPossibleRecommendations(motion: ViewMotion): ViewMotionState[] {
+        const allStates = motion.state.workflow.states;
+        return allStates.filter(state => state.recommendation_label);
     }
 
     /**

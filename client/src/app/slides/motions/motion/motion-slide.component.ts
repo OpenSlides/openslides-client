@@ -60,8 +60,6 @@ export class MotionSlideComponent
      */
     public referencingMotions = [];
 
-    private _data: SlideData<MotionSlideData>;
-
     @Input()
     public set data(value: SlideData<MotionSlideData>) {
         this._data = value;

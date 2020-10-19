@@ -24,8 +24,6 @@ export class ItemListSlideComponent extends BaseSlideComponent<ItemListSlideData
         return this._data;
     }
 
-    private _data: SlideData<ItemListSlideData>;
-
     public constructor(private collectionMapperService: CollectionMapperService) {
         super();
     }

@@ -13,7 +13,6 @@ export class AssignmentSlideComponent extends BaseSlideComponent<AssignmentSlide
     // TODO: Remove the following block, if not needed.
     // This is just for debugging to get a console statement with all recieved
     // data from the server
-    private _data: SlideData<AssignmentSlideData>;
     @Input()
     public set data(data: SlideData<AssignmentSlideData>) {
         this._data = data;

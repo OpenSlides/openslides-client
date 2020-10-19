@@ -6,6 +6,7 @@ import { MotionRepositoryService, ParagraphToChoose } from 'app/core/repositorie
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
+import { AmendmentParagraphs } from 'app/shared/models/motions/motion';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { CreateMotion } from 'app/site/motions/models/create-motion';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
@@ -231,36 +232,26 @@ export class AmendmentCreateWizardComponent extends BaseComponent implements OnI
 
     /**
      * Saves the amendment and navigates to detail view of this amendment
-     *
-     * @returns {Promise<void>}
      */
     public async saveAmendment(): Promise<void> {
-        console.error('TODO: workflow_id from meetingssettingsservice');
-        let text = '';
-        const amendedParagraphs = this.paragraphs.map((paragraph: ParagraphToChoose, index: number): string => {
-            if (this.contentForm.value.selectedParagraphs.find(para => para.paragraphNo === index)) {
-                text = this.contentForm.value['text_' + index];
-                return this.contentForm.value['text_' + index];
-            } else {
-                return null;
+        const amendmentParagraphs: AmendmentParagraphs = {};
+        this.paragraphs.forEach((paragraph: ParagraphToChoose, paraNo: number) => {
+            if (this.contentForm.value.selectedParagraphs.find(para => para.paragraphNo === paraNo)) {
+                amendmentParagraphs[paraNo] = this.contentForm.value['text_' + paraNo];
             }
         });
-        const newMotionValues = {
+        const motionCreate = {
             ...this.contentForm.value,
             title: this.translate.instant('Amendment to') + ' ' + this.motion.getNumberOrTitle(),
             parent_id: this.motion.id,
             category_id: this.motion.category_id,
             tag_ids: this.motion.tag_ids,
             motion_block_id: this.motion.block_id,
-            amendment_paragraphs: amendedParagraphs,
+            amendment_paragraphs: amendmentParagraphs,
             workflow_id: this.meetingSettingsService.instant('motions_default_workflow_id')
         };
 
-        const motion = new CreateMotion();
-        motion.deserialize(newMotionValues);
-
-        // const response = await this.repo.create(motion);
-        // this.router.navigate(['./motions/' + response.id]);
-        throw new Error('TODO!');
+        const response = await this.repo.create(motionCreate);
+        this.router.navigate(['./motions/' + response.id]);
     }
 }

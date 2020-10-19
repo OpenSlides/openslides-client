@@ -57,7 +57,12 @@ export class MotionCategoryRepositoryService extends BaseRepositoryWithActiveMee
 
     public getFieldsets(): Fieldsets<MotionCategory> {
         const detailFields: (keyof MotionCategory)[] = ['name', 'prefix'];
-        const sortListFields: (keyof MotionCategory)[] = detailFields.concat(['weight', 'parent_id', 'child_ids']);
+        const sortListFields: (keyof MotionCategory)[] = detailFields.concat([
+            'weight',
+            'level',
+            'parent_id',
+            'child_ids'
+        ]);
         const listFields: (keyof MotionCategory)[] = sortListFields.concat(['motion_ids']);
         return {
             [DEFAULT_FIELDSET]: detailFields,

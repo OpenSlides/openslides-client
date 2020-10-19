@@ -5,6 +5,7 @@ import { TopicAction } from 'app/core/actions/topic-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Topic } from 'app/shared/models/topics/topic';
+import { createAgendaItem } from 'app/shared/utils/create-agenda-item';
 import { CreateTopic } from 'app/site/topics/models/create-topic';
 import { ViewTopic } from 'app/site/topics/models/view-topic';
 import { BaseIsAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-is-agenda-item-and-list-of-speakers-content-object-repository';
@@ -36,12 +37,8 @@ export class TopicRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCon
             title: partialTopic.title,
             text: partialTopic.text,
             tag_ids: partialTopic.tag_ids,
-            agenda_parent_id: partialTopic.agenda_parent_id,
-            agenda_type: partialTopic.agenda_type,
-            agenda_comment: partialTopic.agenda_comment,
-            agenda_duration: partialTopic.agenda_duration,
-            agenda_weight: partialTopic.agenda_weight,
-            attachment_ids: partialTopic.attachment_ids
+            attachment_ids: partialTopic.attachment_ids,
+            ...createAgendaItem(partialTopic)
         };
         return this.sendActionToBackend(TopicAction.CREATE, payload);
     }

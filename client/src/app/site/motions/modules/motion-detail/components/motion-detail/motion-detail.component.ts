@@ -16,6 +16,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
+import { MotionAction } from 'app/core/actions/motion-action';
 import { NotifyService } from 'app/core/core-services/notify.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Id } from 'app/core/definitions/key-types';
@@ -23,7 +24,11 @@ import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { MotionChangeRecommendationRepositoryService } from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
-import { MotionRepositoryService, ParagraphToChoose } from 'app/core/repositories/motions/motion-repository.service';
+import {
+    GET_POSSIBLE_RECOMMENDATIONS,
+    MotionRepositoryService,
+    ParagraphToChoose
+} from 'app/core/repositories/motions/motion-repository.service';
 import { MotionStatuteParagraphRepositoryService } from 'app/core/repositories/motions/motion-statute-paragraph-repository.service';
 import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/motion-workflow-repository.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
@@ -49,6 +54,7 @@ import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
 import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
 import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
 import { ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
+import { ViewMotionState } from 'app/site/motions/models/view-motion-state';
 import { ViewMotionStatuteParagraph } from 'app/site/motions/models/view-motion-statute-paragraph';
 import { ViewMotionWorkflow } from 'app/site/motions/models/view-motion-workflow';
 import { MotionEditNotification } from 'app/site/motions/motion-edit-notification';
@@ -626,6 +632,9 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
                 {
                     idField: 'mediafile_ids',
                     fieldset: 'fileSelection'
+                },
+                {
+                    idField: 'tag_ids'
                 }
             ]
         });
@@ -814,9 +823,12 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
                     follow: [
                         {
                             idField: 'next_state_ids'
-                        }
+                        },
+                        GET_POSSIBLE_RECOMMENDATIONS
                     ]
                 },
+                'recommendation_id',
+                'tag_ids',
                 SPEAKER_BUTTON_FOLLOW
             ]
         });
@@ -869,21 +881,18 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
 
         if (formMotion.isParagraphBasedAmendment()) {
             contentPatch.selected_paragraphs = [];
-            const parentMotion = this.repo.getViewModel(formMotion.lead_motion_id);
+            const leadMotion = formMotion.lead_motion;
             // Hint: lineLength is sometimes not loaded yet when this form is initialized;
             // This doesn't hurt as long as patchForm is called when editing mode is started, i.e., later.
-            if (parentMotion && this.lineLength) {
-                const paragraphsToChoose = this.repo.getParagraphsToChoose(parentMotion, this.lineLength);
+            if (leadMotion && this.lineLength) {
+                const paragraphsToChoose = this.repo.getParagraphsToChoose(leadMotion, this.lineLength);
 
                 paragraphsToChoose.forEach((paragraph: ParagraphToChoose, paragraphNo: number): void => {
-                    if (formMotion.amendment_paragraphs[paragraphNo] !== null) {
+                    const amendmentParagraph = formMotion.amendment_paragraph(paragraphNo);
+                    if (amendmentParagraph) {
                         this.contentForm.addControl('text_' + paragraphNo, new FormControl(''));
-
                         contentPatch.selected_paragraphs.push(paragraph);
-
-                        // Workaround as 'text' is required from the backend
-                        contentPatch.text = formMotion.amendment_paragraphs[paragraphNo];
-                        contentPatch['text_' + paragraphNo] = formMotion.amendment_paragraphs[paragraphNo];
+                        contentPatch['text_' + paragraphNo] = amendmentParagraph;
                     }
                 });
             }
@@ -964,67 +973,38 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
     }
 
     /**
-     * Before updating or creating, the motions needs to be prepared for paragraph based amendments.
-     * A motion of type T is created, prepared and deserialized from the given motionValues
-     *
-     * @param motionValues valus for the new motion
-     * @param ctor The motion constructor, so different motion types can be created.
-     *
-     * @returns the motion to save
-     */
-    private prepareMotionForSave<T extends Motion>(motionValues: any, ctor: new (...args: any[]) => T): T {
-        const motion = new ctor();
-        if (this.motion.isParagraphBasedAmendment()) {
-            motion.amendment_paragraphs = this.motion.amendment_paragraphs.map(
-                (paragraph: string, paragraphNo: number): string => {
-                    if (paragraph === null) {
-                        return null;
-                    } else {
-                        return motionValues['text_' + paragraphNo];
-                    }
-                }
-            );
-            motionValues.text = '';
-        }
-
-        motion.deserialize(motionValues);
-        return motion;
-    }
-
-    /**
      * Creates a motion. Calls the "patchValues" function in the MotionObject
      */
     public async createMotion(): Promise<void> {
-        const newMotionValues = { ...this.contentForm.value };
-
-        if (!newMotionValues.agenda_parent_id) {
-            delete newMotionValues.agenda_parent_id;
-        }
-
-        const motion = this.prepareMotionForSave(newMotionValues, CreateMotion);
-
+        const newMotionValues: Partial<MotionAction.CreatePayload> = { ...this.contentForm.value };
+        const motion = new CreateMotion(newMotionValues);
         try {
             const response = await this.repo.create(motion);
             this.router.navigate(['./motions/' + response.id]);
         } catch (e) {
-            this.raiseError(this.translate.instant(e));
+            this.raiseError(e);
         }
     }
 
     /**
      * Save a motion. Calls the "patchValues" function in the MotionObject
      */
-    private updateMotionFromForm(): void {
+    private async updateMotionFromForm(): Promise<void> {
         const newMotionValues = { ...this.contentForm.value };
-        this.updateMotion(newMotionValues, this.motion).then(() => {
+        try {
+            await this.updateMotion(newMotionValues, this.motion);
             this.editMotion = false;
             this.amendmentEdit = false;
-        }, this.raiseError);
+        } catch (e) {
+            this.raiseError(e);
+        }
     }
 
-    private async updateMotion(newMotionValues: Partial<Motion>, motion: ViewMotion): Promise<void> {
-        const updateMotion = this.prepareMotionForSave(newMotionValues, Motion);
-        await this.repo.update(updateMotion, motion);
+    private async updateMotion(
+        newMotionValues: Partial<MotionAction.UpdatePayload>,
+        motion: ViewMotion
+    ): Promise<void> {
+        await this.repo.update(newMotionValues, motion);
     }
 
     /**
@@ -1038,6 +1018,11 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
             // When saving the changes, notify other users if they edit the same motion.
             this.unsubscribeEditNotifications(MotionEditNotificationType.TYPE_SAVING_EDITING_MOTION);
         }
+    }
+
+    public getPossibleRecommendations(): ViewMotionState[] {
+        const allStates = this.motion.state.workflow.states;
+        return allStates.filter(state => state.recommendation_label);
     }
 
     /**
@@ -1511,6 +1496,10 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         this.repo.setState(this.motion, id).catch(this.raiseError);
     }
 
+    public resetState(): void {
+        this.repo.resetState(this.motion).catch(this.raiseError);
+    }
+
     /**
      * triggers the update this motion's state extension according to the current string
      * in {@link newStateExtension}
@@ -1526,6 +1515,10 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
      */
     public setRecommendation(id: number): void {
         this.repo.setRecommendation(this.motion, id);
+    }
+
+    public resetRecommendation(): void {
+        this.repo.resetRecommendation(this.motion);
     }
 
     /**

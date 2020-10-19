@@ -34,8 +34,6 @@ export abstract class BasePollSlideComponent<
         return this._data;
     }
 
-    private _data: SlideData<T>;
-
     public constructor(
         @Inject(forwardRef(() => PollService))
         public pollService: S

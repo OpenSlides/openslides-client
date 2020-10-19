@@ -35,6 +35,14 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         return this.translate.instant(plural ? 'Meetings' : 'Meeting');
     };
 
+    public update(update: MeetingAction.OptionalUpdatePayload, meeting: ViewMeeting): Promise<void> {
+        const payload: MeetingAction.UpdatePayload = {
+            ...update,
+            id: meeting.id
+        };
+        return this.sendActionToBackend(MeetingAction.UPDATE, payload);
+    }
+
     public deleteAllSpeakersOfAllListsOfSpeakersInAMeeting(meetingId: Id): Promise<void> {
         const payload: MeetingAction.DeleteAllSpeakersOfAllListsPayload = {
             id: meetingId

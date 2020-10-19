@@ -33,8 +33,6 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
      */
     private languageCollator: Intl.Collator;
 
-    private _data: SlideData<MotionBlockSlideData>;
-
     /**
      * Sort the motions given.
      */

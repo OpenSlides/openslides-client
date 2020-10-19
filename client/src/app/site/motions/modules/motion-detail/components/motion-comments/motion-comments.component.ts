@@ -104,14 +104,7 @@ export class MotionCommentsComponent extends BaseModelContextComponent implement
      * @param section The section to judge about
      */
     public canEditSection(section: ViewMotionCommentSection): boolean {
-        if (section.write_group_ids?.length) {
-            /**
-             * FIXME:
-             * section.write_group_ids is undefined.
-             */
-            return this.operator.isInGroupIds(...section.write_group_ids);
-        } else {
-            return false;
-        }
+        const groupIds = section.write_group_ids || [];
+        return this.operator.isInGroupIds(...groupIds);
     }
 }

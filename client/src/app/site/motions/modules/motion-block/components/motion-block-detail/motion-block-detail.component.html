@@ -172,11 +172,11 @@
     <os-projector-button *ngIf="block" [object]="block" [menuItem]="true"></os-projector-button>
 
     <div *osPerms="'agenda.can_manage'">
-        <button mat-menu-item (click)="addToAgenda()" *ngIf="block && !block.item">
+        <button mat-menu-item (click)="addToAgenda()" *ngIf="block && !block.agenda_item">
             <mat-icon>add</mat-icon>
             <span>{{ 'Add to agenda' | translate }}</span>
         </button>
-        <button mat-menu-item (click)="removeFromAgenda()" *ngIf="block && block.item">
+        <button mat-menu-item (click)="removeFromAgenda()" *ngIf="block && block.agenda_item">
             <mat-icon>remove</mat-icon>
             <span>{{ 'Remove from agenda' | translate }}</span>
         </button>

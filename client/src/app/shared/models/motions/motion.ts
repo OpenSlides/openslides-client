@@ -12,6 +12,10 @@ export interface HasReferencedMotionInRecommendationExtensionIds {
     referenced_in_motion_recommendation_extension_ids: Id[]; // (motion/recommendation_extension_reference_ids)[];
 }
 
+export interface AmendmentParagraphs {
+    [index: number]: string;
+}
+
 /**
  * Representation of Motion.
  *
@@ -27,7 +31,6 @@ export class Motion extends BaseModel<Motion> {
     public sequential_number: number;
     public title: string;
     public text: string;
-    public amendment_paragraphs: string[] | null; // TODO: structured field
     public modified_final_version: string;
     public reason: string;
     public category_weight: number;
@@ -36,6 +39,7 @@ export class Motion extends BaseModel<Motion> {
     public sort_weight: number;
     public created: number;
     public last_modified: number;
+    public amendment_paragraph_$: number[];
 
     public lead_motion_id: Id; // motion/amendment_ids;
     public amendment_ids: Id[]; // (motion/lead_motion_id)[];
@@ -62,6 +66,10 @@ export class Motion extends BaseModel<Motion> {
 
     public constructor(input?: any) {
         super(Motion.COLLECTION, input);
+    }
+
+    public amendment_paragraph(paragraphNumber: number): string | null {
+        return this[`amendment_paragraph_$${paragraphNumber}`] || null;
     }
 }
 export interface Motion

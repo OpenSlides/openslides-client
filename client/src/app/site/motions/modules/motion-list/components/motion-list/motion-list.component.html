@@ -114,7 +114,7 @@
 
                 <!-- Recommendation -->
                 <div
-                    *ngIf="motion.recommendation && motion.state.next_states_id.length > 0"
+                    *ngIf="motion.recommendation && motion.state.next_state_ids.length > 0"
                     class="ellipsis-overflow white spacer-top-3"
                 >
                     <mat-basic-chip class="bluegrey" [disabled]="true">
@@ -402,8 +402,8 @@
         <!-- Recommendation -->
         <mat-form-field *ngIf="perms.isAllowed('change_state', selectedMotion)">
             <mat-select placeholder="{{ 'Recommendation' | translate }}" [(ngModel)]="infoDialog.recommendation_id">
-                <mat-option *ngFor="let state of selectedMotion.possibleRecommendations" [value]="state.id">
-                    {{ state.recommendation_label | translate }}
+                <mat-option *ngFor="let recommendation of getPossibleRecommendations(selectedMotion)" [value]="recommendation.id">
+                    {{ recommendation.recommendation_label | translate }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
