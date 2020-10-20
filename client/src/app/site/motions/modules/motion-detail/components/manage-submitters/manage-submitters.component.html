@@ -10,16 +10,27 @@
     >
         <mat-icon>edit</mat-icon>
     </button>
+    <button
+        class="small-button"
+        type="button"
+        mat-icon-button
+        disableRipple
+        *ngIf="isEditMode && perms.isAllowed('change_metadata')"
+        (click)="onClose()"
+    >
+        <mat-icon>close</mat-icon>
+    </button>
 </h4>
 
 <div *ngIf="!isEditMode || !perms.isAllowed('change_metadata')">
-    <mat-chip-list *ngFor="let user of motion.submittersAsUsers" class="user">
-        <mat-basic-chip disableRipple *ngIf="user">{{ user.getTitle() }}</mat-basic-chip>
+    <mat-chip-list *ngFor="let submitter of motion.submitters" class="user">
+        <mat-basic-chip disableRipple>{{ submitter.user?.getTitle() }}</mat-basic-chip>
     </mat-chip-list>
 </div>
 
 <div *ngIf="isEditMode && perms.isAllowed('change_metadata')">
     <os-sorting-list
+        *ngIf="motion.submitters.length"
         [input]="editSubmitterObservable"
         [live]="true"
         [count]="false"
@@ -49,13 +60,4 @@
             </os-search-value-selector>
         </mat-form-field>
     </form>
-
-    <p>
-        <button type="button" mat-button (click)="onSave()">
-            <span>{{ 'Save' | translate }}</span>
-        </button>
-        <button type="button" mat-button (click)="onCancel()">
-            <span>{{ 'Cancel' | translate }}</span>
-        </button>
-    </p>
 </div>

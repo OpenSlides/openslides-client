@@ -3,13 +3,13 @@ import { FormControl, FormGroup } from '@angular/forms';
 
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { ViewModelStoreService } from 'app/core/core-services/view-model-store.service';
-import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
+import { Id } from 'app/core/definitions/key-types';
+import { MotionSubmitterRepositoryService } from 'app/core/repositories/motions/motion-submitter-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { Selectable } from 'app/shared/components/selectable';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
+import { ViewMotionSubmitter } from 'app/site/motions/models/view-motion-submitter';
 import { PermissionsService } from 'app/site/motions/services/permissions.service';
 import { ViewUser } from 'app/site/users/models/view-user';
 
@@ -26,7 +26,14 @@ export class ManageSubmittersComponent extends BaseComponent {
      * The motion, which the personal note belong to.
      */
     @Input()
-    public motion: ViewMotion;
+    public set motion(value: ViewMotion) {
+        this._motion = value;
+        this.editSubmitterSubject.next(value.submitters);
+    }
+    public get motion(): ViewMotion {
+        return this._motion;
+    }
+    private _motion: ViewMotion;
 
     /**
      * Keep all users to display them.
@@ -41,34 +48,23 @@ export class ManageSubmittersComponent extends BaseComponent {
     /**
      * The current list of submitters.
      */
-    public readonly editSubmitterSubject: BehaviorSubject<Selectable[]> = new BehaviorSubject([]);
+    public readonly editSubmitterSubject: BehaviorSubject<ViewMotionSubmitter[]> = new BehaviorSubject([]);
 
     /**
      * The observable from editSubmitterSubject. Fixing this value is a performance boost, because
      * it is just set one time at loading instead of calling .asObservable() every time.
      */
-    public editSubmitterObservable: Observable<Selectable[]>;
+    public editSubmitterObservable: Observable<ViewMotionSubmitter[]>;
 
     /**
      * Saves, if the users edits the note.
      */
     public isEditMode = false;
 
-    /**
-     * Sets up the form and observables.
-     *
-     * @param title
-     * @param translate
-     * @param matSnackBar
-     * @param DS
-     * @param motionRepository
-     * @param perms permission checks for the motion
-     */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        private viewModelStore: ViewModelStoreService,
-        private motionRepository: MotionRepositoryService,
         private userRepository: UserRepositoryService,
+        private motionSubmitterRepository: MotionSubmitterRepositoryService,
         public perms: PermissionsService
     ) {
         super(componentServiceCollector);
@@ -79,8 +75,7 @@ export class ManageSubmittersComponent extends BaseComponent {
         // detect changes in the form
         this.addSubmitterForm.valueChanges.subscribe(formResult => {
             if (formResult && formResult.userId) {
-                const submitter = this.viewModelStore.get(ViewUser, formResult.userId);
-                this.addNewSubmitter(submitter);
+                this.addUserAsSubmitter(formResult.userId);
             }
         });
     }
@@ -90,7 +85,7 @@ export class ManageSubmittersComponent extends BaseComponent {
      */
     public onEdit(): void {
         this.isEditMode = true;
-        this.editSubmitterSubject.next(this.motion.submittersAsUsers);
+        this.editSubmitterSubject.next(this.motion.submitters);
         this.addSubmitterForm.reset();
 
         // get all users for the submitter add form
@@ -98,55 +93,35 @@ export class ManageSubmittersComponent extends BaseComponent {
     }
 
     /**
-     * Save the submitters
-     */
-    public onSave(): void {
-        this.motionRepository
-            .setSubmitters(
-                this.motion,
-                this.editSubmitterSubject.getValue().map(user => user.id)
-            )
-            .then(() => (this.isEditMode = false), this.raiseError);
-    }
-
-    /**
      * Close the edit view.
      */
-    public onCancel(): void {
+    public onClose(): void {
         this.isEditMode = false;
     }
 
     public async createNewSubmitter(username: string): Promise<void> {
         const newUserObj = await this.userRepository.createFromString(username);
-        const selectableUser: Selectable = {
-            id: newUserObj.id,
-            getTitle: () => newUserObj.name,
-            getListTitle: () => newUserObj.name
-        };
-        this.addNewSubmitter(selectableUser);
+        await this.addUserAsSubmitter(newUserObj.id);
     }
 
     /**
      * Adds the user to the submitters, if he isn't already in there.
      *
-     * @param userId The user to add
+     * @param user The user to add
      */
-    public addNewSubmitter(user: Selectable): void {
-        const submitters = this.editSubmitterSubject.getValue();
-        if (!submitters.map(u => u.id).includes(user.id)) {
-            submitters.push(user);
-            this.editSubmitterSubject.next(submitters);
-        }
-        this.addSubmitterForm.reset();
+    public async addUserAsSubmitter(userId: Id): Promise<void> {
+        throw new Error('TODO: selector does not work + wait for user repo');
+        /* await this.motionSubmitterRepository.create(userId, this.motion);
+        this.addSubmitterForm.reset(); */
     }
 
     /**
      * A sort event occures. Saves the new order into the editSubmitterSubject.
      *
-     * @param users The new, sorted users.
+     * @param submitters The new, sorted submitters.
      */
-    public onSortingChange(users: Selectable[]): void {
-        this.editSubmitterSubject.next(users);
+    public onSortingChange(submitters: ViewMotionSubmitter[]): void {
+        this.motionSubmitterRepository.sort(submitters, this.motion);
     }
 
     /**
@@ -154,8 +129,7 @@ export class ManageSubmittersComponent extends BaseComponent {
      *
      * @param user The user to remove as a submitters
      */
-    public onRemove(user: Selectable): void {
-        const submitters = this.editSubmitterSubject.getValue();
-        this.editSubmitterSubject.next(submitters.filter(u => u.id !== user.id));
+    public onRemove(submitter: ViewMotionSubmitter): void {
+        this.motionSubmitterRepository.delete(submitter.id);
     }
 }
