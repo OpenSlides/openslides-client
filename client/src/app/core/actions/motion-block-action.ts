@@ -3,6 +3,10 @@ import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Id } from '../definitions/key-types';
 
 export namespace MotionBlockAction {
+    export const CREATE = 'motion_block.create';
+    export const UPDATE = 'motion_block.update';
+    export const DELETE = 'motion_block.delete';
+
     export interface CreatePayload extends HasMeetingId {
         title: string;
         internal: boolean;

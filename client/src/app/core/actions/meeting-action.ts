@@ -1,6 +1,11 @@
 import { Id, UnsafeHtml } from '../definitions/key-types';
 
 export namespace MeetingAction {
+    export const CREATE = 'meeting.create';
+    export const UPDATE = 'meeting.update';
+    export const DELETE = 'meeting.delete';
+    export const CREATE_FROM_TEMPLATE = 'meeting.create_from_template';
+
     export interface CreatePayload {
         // Required
         committee_id: Id;

@@ -4,6 +4,12 @@ import { BaseSortPayload } from './common/base-sort-payload';
 import { Fqid, Id } from '../definitions/key-types';
 
 export namespace AgendaItemAction {
+    export const CREATE = 'agenda_item.create';
+    export const UPDATE = 'agenda_item.update';
+    export const DELETE = 'agenda_item.delete';
+    export const SORT = 'agenda_item.sort';
+    export const NUMBERING = 'agenda_item.numbering';
+
     interface OptionalPayload {
         item_number?: string;
         comment?: string;

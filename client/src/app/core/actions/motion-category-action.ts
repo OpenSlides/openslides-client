@@ -4,6 +4,13 @@ import { BaseSortPayload } from './common/base-sort-payload';
 import { Id } from '../definitions/key-types';
 
 export namespace MotionCategoryAction {
+    export const CREATE = 'motion_category.create';
+    export const UPDATE = 'motion_category.update';
+    export const DELETE = 'motion_category.delete';
+    export const SORT = 'motion_category.sort';
+    export const SORT_MOTIONS_IN_CATEGORY = 'motion_category.sort_motions_in_category';
+    export const NUMBER_MOTIONS = 'motion_category.number_motions';
+
     export interface CreatePayload extends HasMeetingId {
         name: string;
         prefix: string;
