@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { MotionWorkflowAction } from 'app/core/actions/motion-workflow-action';
-import { ActionType } from 'app/core/core-services/action.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { MotionWorkflow } from 'app/shared/models/motions/motion-workflow';
@@ -73,7 +72,7 @@ export class MotionWorkflowRepositoryService extends BaseRepositoryWithActiveMee
             name: partialModel.name,
             meeting_id: this.activeMeetingService.meetingId
         };
-        return this.sendActionToBackend(ActionType.MOTION_WORKFLOW_CREATE, payload);
+        return this.sendActionToBackend(MotionWorkflowAction.CREATE, payload);
     }
 
     public update(update: Partial<MotionWorkflow>, viewModel: ViewMotionWorkflow): Promise<void> {
@@ -82,10 +81,10 @@ export class MotionWorkflowRepositoryService extends BaseRepositoryWithActiveMee
             name: update.name,
             first_state_id: update.first_state_id
         };
-        return this.sendActionToBackend(ActionType.MOTION_WORKFLOW_UPDATE, payload);
+        return this.sendActionToBackend(MotionWorkflowAction.UPDATE, payload);
     }
 
     public delete(viewModel: ViewMotionWorkflow): Promise<void> {
-        return this.sendActionToBackend(ActionType.MOTION_WORKFLOW_DELETE, { id: viewModel.id });
+        return this.sendActionToBackend(MotionWorkflowAction.DELETE, { id: viewModel.id });
     }
 }

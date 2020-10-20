@@ -2,6 +2,10 @@ import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Id, UnsafeHtml } from '../definitions/key-types';
 
 export namespace CommitteeAction {
+    export const CREATE = 'committee.create';
+    export const UPDATE = 'committee.update';
+    export const DELETE = 'committee.delete';
+
     interface PartialPayload {
         description?: UnsafeHtml;
         member_ids?: Id[];

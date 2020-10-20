@@ -5,7 +5,6 @@ import { map } from 'rxjs/operators';
 
 import { AgendaItemRepositoryService, AgendaListTitle } from '../agenda/agenda-item-repository.service';
 import { MotionAction } from 'app/core/actions/motion-action';
-import { ActionType } from 'app/core/core-services/action.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { DiffLinesInParagraph, DiffService } from 'app/core/ui-services/diff.service';
@@ -226,7 +225,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param stateId the number that indicates the state
      */
     public async setState(viewMotion: ViewMotion, stateId: number): Promise<void> {
-        await this.actions.sendRequest(ActionType.MOTION_UPDATE_METADATA, [{ id: viewMotion.id, state: stateId }]);
+        throw new Error('TODO!');
+        // await this.actions.sendRequest(ActionType.MOTION_UPDATE_METADATA, [{ id: viewMotion.id, state: stateId }]);
     }
 
     /**
@@ -239,7 +239,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         const motionsIdMap: { id: number; state: number }[] = viewMotions.map(motion => {
             return { id: motion.id, state: stateId };
         });
-        await this.actions.sendRequest(ActionType.MOTION_UPDATE_METADATA, motionsIdMap);
+        throw new Error('TODO!');
+        // await this.actions.sendRequest(ActionType.MOTION_UPDATE_METADATA, motionsIdMap);
     }
 
     /**
@@ -252,7 +253,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         const motionsIdMap: { id: number; block: number }[] = viewMotions.map(motion => {
             return { id: motion.id, block: motionblockId };
         });
-        await this.actions.sendRequest(ActionType.MOTION_UPDATE_METADATA, motionsIdMap);
+        throw new Error('TODO!');
+        // await this.actions.sendRequest(ActionType.MOTION_UPDATE_METADATA, motionsIdMap);
     }
 
     /**
@@ -265,7 +267,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         const motionsIdMap: { id: number; category: number }[] = viewMotions.map(motion => {
             return { id: motion.id, category: categoryId };
         });
-        await this.actions.sendRequest(ActionType.MOTION_UPDATE_METADATA, motionsIdMap);
+        throw new Error('TODO!');
+        // await this.actions.sendRequest(ActionType.MOTION_UPDATE_METADATA, motionsIdMap);
     }
 
     /**
@@ -275,9 +278,10 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param recommendationId the number that indicates the recommendation
      */
     public async setRecommendation(viewMotion: ViewMotion, recommendationId: number): Promise<void> {
-        await this.actions.sendRequest(ActionType.MOTION_UPDATE_METADATA, [
-            { id: viewMotion.id, recommendation: recommendationId }
-        ]);
+        // await this.actions.sendRequest(ActionType.MOTION_UPDATE_METADATA, [
+        //     { id: viewMotion.id, recommendation: recommendationId }
+        // ]);
+        throw new Error('TODO!');
     }
 
     /**
@@ -338,7 +342,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
                 }
             ]
         };
-        await this.actions.sendRequest(ActionType.MOTION_UPDATE_METADATA, requestData.motions);
+        throw new Error('TODO!');
+        // await this.actions.sendRequest(ActionType.MOTION_UPDATE_METADATA, requestData.motions);
     }
 
     /**
@@ -351,7 +356,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
             meeting_id: this.activeMeetingService.meetingId,
             tree: data
         };
-        return await this.actions.sendRequest(ActionType.MOTION_SORT, payload);
+        throw new Error('TODO!');
+        // return await this.actions.sendRequest(ActionType.MOTION_SORT, payload);
     }
 
     /**

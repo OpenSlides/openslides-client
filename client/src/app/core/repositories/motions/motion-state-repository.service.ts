@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { MotionWorkflowAction } from 'app/core/actions/motion-workflow-action';
-import { ActionType } from 'app/core/core-services/action.service';
+import { MotionStateAction } from 'app/core/actions/motion-state-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { MotionState } from 'app/shared/models/motions/motion-state';
@@ -61,27 +60,26 @@ export class MotionStateRepositoryService extends BaseRepositoryWithActiveMeetin
     };
 
     public async create(model: Partial<ViewMotionState>): Promise<Identifiable> {
-        const payload: MotionWorkflowAction.CreatePayload = {
-            meeting_id: this.activeMeetingService.meetingId,
+        const payload: MotionStateAction.CreatePayload = {
             workflow_id: model.workflow_id,
             name: model.name,
             ...this.getAttributesOfMotionState(model)
         };
-        return this.actions.sendRequest(ActionType.MOTION_STATE_CREATE, payload);
+        return this.actions.sendRequest(MotionStateAction.CREATE, payload);
     }
 
     public async update(update: Partial<MotionState>, viewModel: ViewMotionState): Promise<void> {
-        const payload: MotionWorkflowAction.UpdatePayload = {
+        const payload: MotionStateAction.UpdatePayload = {
             id: viewModel.id,
             next_state_ids: update.next_state_ids,
             previous_state_ids: update.previous_state_ids,
             ...this.getAttributesOfMotionState(update)
         };
-        return this.actions.sendRequest(ActionType.MOTION_STATE_UPDATE, payload);
+        return this.actions.sendRequest(MotionStateAction.UPDATE, payload);
     }
 
     public async delete(viewModel: ViewMotionState): Promise<void> {
-        return this.actions.sendRequest(ActionType.MOTION_STATE_DELETE, { id: viewModel.id });
+        return this.actions.sendRequest(MotionStateAction.DELETE, { id: viewModel.id });
     }
 
     private getAttributesOfMotionState(model: Partial<MotionState>): Partial<MotionState> {

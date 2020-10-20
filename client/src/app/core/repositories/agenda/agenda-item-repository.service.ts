@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { AgendaItemAction } from 'app/core/actions/agenda-item-action';
-import { ActionType } from 'app/core/core-services/action.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { TreeIdNode } from 'app/core/ui-services/tree.service';
@@ -101,7 +100,7 @@ export class AgendaItemRepositoryService extends BaseRepositoryWithActiveMeeting
         const payload: AgendaItemAction.NumberingPayload = {
             meeting_id: this.activeMeetingService.meetingId
         };
-        return await this.actions.sendRequest(ActionType.AGENDA_ITEM_NUMBERING, payload);
+        return await this.actions.sendRequest(AgendaItemAction.NUMBERING, payload);
     }
 
     /**
@@ -122,18 +121,18 @@ export class AgendaItemRepositoryService extends BaseRepositoryWithActiveMeeting
             type: update.type,
             weight: update.weight
         };
-        return await this.actions.sendRequest(ActionType.AGENDA_ITEM_UPDATE, payload);
+        return await this.actions.sendRequest(AgendaItemAction.UPDATE, payload);
     }
 
     public async addItemToAgenda(contentObject: BaseViewModel & HasAgendaItem): Promise<Identifiable> {
         const payload: AgendaItemAction.CreatePayload = {
             content_object_id: contentObject.getModel().fqid
         };
-        return await this.actions.sendRequest(ActionType.AGENDA_ITEM_CREATE, payload);
+        return await this.actions.sendRequest(AgendaItemAction.CREATE, payload);
     }
 
     public async removeFromAgenda(item: ViewAgendaItem): Promise<void> {
-        return await this.actions.sendRequest(ActionType.AGENDA_ITEM_DELETE, { id: item.id });
+        return await this.actions.sendRequest(AgendaItemAction.DELETE, { id: item.id });
     }
 
     /**
@@ -146,7 +145,7 @@ export class AgendaItemRepositoryService extends BaseRepositoryWithActiveMeeting
             meeting_id: this.activeMeetingService.meetingId,
             tree: data
         };
-        return await this.actions.sendRequest(ActionType.AGENDA_ITEM_SORT, payload);
+        return await this.actions.sendRequest(AgendaItemAction.SORT, payload);
     }
 
     /**

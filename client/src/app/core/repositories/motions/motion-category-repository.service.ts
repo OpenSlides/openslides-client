@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { MotionCategoryAction } from 'app/core/actions/motion-category-action';
-import { ActionType } from 'app/core/core-services/action.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { TreeIdNode } from 'app/core/ui-services/tree.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
@@ -40,7 +39,7 @@ export class MotionCategoryRepositoryService extends BaseRepositoryWithActiveMee
             prefix: partialCategory.prefix,
             parent_id: partialCategory.parent_id
         };
-        return this.sendActionToBackend(ActionType.MOTION_CATEGORY_CREATE, payload);
+        return this.sendActionToBackend(MotionCategoryAction.CREATE, payload);
     }
 
     public update(update: Partial<MotionCategory>, viewModel: ViewMotionCategory): Promise<void> {
@@ -49,11 +48,11 @@ export class MotionCategoryRepositoryService extends BaseRepositoryWithActiveMee
             name: update.name,
             prefix: update.prefix
         };
-        return this.sendActionToBackend(ActionType.MOTION_CATEGORY_UPDATE, payload);
+        return this.sendActionToBackend(MotionCategoryAction.UPDATE, payload);
     }
 
     public delete(viewModel: ViewMotionCategory): Promise<void> {
-        return this.sendActionToBackend(ActionType.MOTION_CATEGORY_DELETE, { id: viewModel.id });
+        return this.sendActionToBackend(MotionCategoryAction.DELETE, { id: viewModel.id });
     }
 
     public getFieldsets(): Fieldsets<MotionCategory> {
@@ -83,7 +82,7 @@ export class MotionCategoryRepositoryService extends BaseRepositoryWithActiveMee
      * @param viewMotionCategory the category it should be updated in
      */
     public async numberMotionsInCategory(viewMotionCategory: ViewMotionCategory): Promise<void> {
-        return this.actions.sendRequest(ActionType.MOTION_CATEGORY_NUMBER_MOTIONS, { id: viewMotionCategory.id });
+        return this.actions.sendRequest(MotionCategoryAction.NUMBER_MOTIONS, { id: viewMotionCategory.id });
     }
 
     /**
@@ -97,7 +96,7 @@ export class MotionCategoryRepositoryService extends BaseRepositoryWithActiveMee
             id: viewMotionCategory.id,
             motion_ids: motionIds
         };
-        return this.actions.sendRequest(ActionType.MOTION_CATEGORY_SORT_MOTIONS, payload);
+        return this.actions.sendRequest(MotionCategoryAction.SORT_MOTIONS_IN_CATEGORY, payload);
     }
 
     /**
@@ -110,6 +109,6 @@ export class MotionCategoryRepositoryService extends BaseRepositoryWithActiveMee
             meeting_id: this.activeMeetingService.meetingId,
             tree: data
         };
-        return this.actions.sendRequest(ActionType.MOTION_CATEGORY_SORT, payload);
+        return this.actions.sendRequest(MotionCategoryAction.SORT, payload);
     }
 }
