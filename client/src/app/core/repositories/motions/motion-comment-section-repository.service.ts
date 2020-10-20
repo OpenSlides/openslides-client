@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { MotionCommentSectionAction } from 'app/core/actions/motion-comment-section-action';
-import { ActionType } from 'app/core/core-services/action.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { MotionCommentSection } from 'app/shared/models/motions/motion-comment-section';
@@ -62,7 +61,7 @@ export class MotionCommentSectionRepositoryService extends BaseRepositoryWithAct
             read_group_ids: partialModel.read_group_ids,
             write_group_ids: partialModel.write_group_ids
         };
-        return this.sendActionToBackend(ActionType.MOTION_COMMENT_SECTION_CREATE, payload);
+        return this.sendActionToBackend(MotionCommentSectionAction.CREATE, payload);
     }
 
     public async update(update: Partial<ViewMotionCommentSection>, viewModel: ViewMotionCommentSection): Promise<void> {
@@ -72,11 +71,11 @@ export class MotionCommentSectionRepositoryService extends BaseRepositoryWithAct
             read_group_ids: update.read_group_ids,
             write_group_ids: update.write_group_ids
         };
-        return this.sendActionToBackend(ActionType.MOTION_COMMENT_SECTION_UPDATE, payload);
+        return this.sendActionToBackend(MotionCommentSectionAction.UPDATE, payload);
     }
 
     public async delete(viewModel: ViewMotionCommentSection): Promise<void> {
-        return this.sendActionToBackend(ActionType.MOTION_COMMENT_SECTION_DELETE, { id: viewModel.id });
+        return this.sendActionToBackend(MotionCommentSectionAction.DELETE, { id: viewModel.id });
     }
 
     /**
@@ -87,6 +86,6 @@ export class MotionCommentSectionRepositoryService extends BaseRepositoryWithAct
             meeting_id: this.activeMeetingService.meetingId,
             motion_comment_section_ids: sections.map(section => section.id)
         };
-        return this.actions.sendRequest(ActionType.MOTION_COMMENT_SECTION_SORT, payload);
+        return this.actions.sendRequest(MotionCommentSectionAction.SORT, payload);
     }
 }

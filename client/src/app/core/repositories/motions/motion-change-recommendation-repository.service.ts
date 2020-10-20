@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { MotionChangeRecommendationAction } from 'app/core/actions/motion-change-recommendation-action';
-import { ActionType } from 'app/core/core-services/action.service';
 import { MotionChangeRecommendation } from 'app/shared/models/motions/motion-change-reco';
 import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
 import { ChangeRecoMode } from 'app/site/motions/motions.constants';
@@ -218,7 +217,7 @@ export class MotionChangeRecommendationRepositoryService extends BaseRepositoryW
             text: model.text,
             type: model.type
         };
-        return this.sendActionToBackend(ActionType.MOTION_CHANGE_RECOMMENDATION_CREATE, payload);
+        return this.sendActionToBackend(MotionChangeRecommendationAction.CREATE, payload);
     }
 
     public update(
@@ -233,6 +232,6 @@ export class MotionChangeRecommendationRepositoryService extends BaseRepositoryW
             text: update.text,
             type: update.type
         };
-        return this.sendActionToBackend(ActionType.MOTION_CHANGE_RECOMMENDATION_UPDATE, payload);
+        return this.sendActionToBackend(MotionChangeRecommendationAction.UPDATE, payload);
     }
 }

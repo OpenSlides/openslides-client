@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 
 import { AgendaItemRepositoryService } from '../agenda/agenda-item-repository.service';
+import { MotionAction } from 'app/core/actions/motion-action';
 import { MotionBlockAction } from 'app/core/actions/motion-block-action';
-import { ActionType } from 'app/core/core-services/action.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { MotionBlock } from 'app/shared/models/motions/motion-block';
@@ -37,7 +37,7 @@ export class MotionBlockRepositoryService extends BaseIsAgendaItemAndListOfSpeak
             title: partialModel.title,
             internal: partialModel.internal
         };
-        return this.sendActionToBackend(ActionType.MOTION_BLOCK_CREATE, payload);
+        return this.sendActionToBackend(MotionBlockAction.CREATE, payload);
     }
 
     public update(update: Partial<MotionBlock>, viewModel: ViewMotionBlock): Promise<void> {
@@ -47,11 +47,11 @@ export class MotionBlockRepositoryService extends BaseIsAgendaItemAndListOfSpeak
             motion_ids: update.motion_ids,
             internal: update.internal
         };
-        return this.sendActionToBackend(ActionType.MOTION_BLOCK_UPDATE, payload);
+        return this.sendActionToBackend(MotionBlockAction.UPDATE, payload);
     }
 
     public delete(viewModel: ViewMotionBlock): Promise<any> {
-        return this.sendActionToBackend(ActionType.MOTION_BLOCK_DELETE, { id: viewModel.id });
+        return this.sendActionToBackend(MotionBlockAction.DELETE, { id: viewModel.id });
     }
 
     public getFieldsets(): Fieldsets<MotionBlock> {
@@ -99,7 +99,7 @@ export class MotionBlockRepositoryService extends BaseIsAgendaItemAndListOfSpeak
      */
     public async followRecommendation(motionBlock: ViewMotionBlock): Promise<void> {
         return this.sendBulkActionToBackend(
-            ActionType.MOTION_FOLLOW_RECOMMENDATION,
+            MotionAction.FOLLOW_RECOMMENDATION,
             motionBlock.motion_ids.map(id => ({
                 id
             }))

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { MotionCommentAction } from 'app/core/actions/motion-comment-action';
-import { ActionType } from 'app/core/core-services/action.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { MotionComment } from 'app/shared/models/motions/motion-comment';
@@ -38,7 +37,7 @@ export class MotionCommentRepositoryService extends BaseRepositoryWithActiveMeet
             section_id: partialModel.section_id,
             motion_id: partialModel.motion_id
         };
-        return this.sendActionToBackend(ActionType.MOTION_COMMENT_CREATE, payload);
+        return this.sendActionToBackend(MotionCommentAction.CREATE, payload);
     }
 
     public async update(update: Partial<MotionComment>, viewModel: ViewMotionComment): Promise<void> {
@@ -46,10 +45,10 @@ export class MotionCommentRepositoryService extends BaseRepositoryWithActiveMeet
             comment: update.comment,
             id: viewModel.id
         };
-        return this.sendActionToBackend(ActionType.MOTION_COMMENT_UPDATE, payload);
+        return this.sendActionToBackend(MotionCommentAction.UPDATE, payload);
     }
 
     public async delete(viewModel: ViewMotionComment): Promise<void> {
-        return this.sendActionToBackend(ActionType.MOTION_COMMENT_DELETE, { id: viewModel.id });
+        return this.sendActionToBackend(MotionCommentAction.DELETE, { id: viewModel.id });
     }
 }

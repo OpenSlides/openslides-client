@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { TagAction } from 'app/core/actions/tag-action';
-import { ActionType } from 'app/core/core-services/action.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Tag } from 'app/shared/models/core/tag';
@@ -33,7 +32,7 @@ export class TagRepositoryService extends BaseRepositoryWithActiveMeeting<ViewTa
             name: partialTag.name,
             meeting_id: this.activeMeetingService.meetingId
         };
-        return this.sendActionToBackend(ActionType.TAG_CREATE, payload);
+        return this.sendActionToBackend(TagAction.CREATE, payload);
     }
 
     public async update(update: Partial<Tag>, viewModel: ViewTag): Promise<void> {
@@ -41,11 +40,11 @@ export class TagRepositoryService extends BaseRepositoryWithActiveMeeting<ViewTa
             id: viewModel.id,
             name: update.name
         };
-        return this.sendActionToBackend(ActionType.TOPIC_UPDATE, payload);
+        return this.sendActionToBackend(TagAction.UPDATE, payload);
     }
 
     public async delete(viewModel: ViewTag): Promise<void> {
-        return this.sendActionToBackend(ActionType.TOPIC_DELETE, { id: viewModel.id });
+        return this.sendActionToBackend(TagAction.DELETE, { id: viewModel.id });
     }
 
     public getFieldsets(): Fieldsets<Tag> {

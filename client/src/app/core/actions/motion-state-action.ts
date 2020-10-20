@@ -3,7 +3,11 @@ import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Id } from '../definitions/key-types';
 
 export namespace MotionStateAction {
-    export interface CreatePayload extends HasMeetingId {
+    export const CREATE = 'motion_state.create';
+    export const UPDATE = 'motion_state.update';
+    export const DELETE = 'motion_state.delete';
+
+    export interface CreatePayload {
         name: string;
         workflow_id: Id;
 

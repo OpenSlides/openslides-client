@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { SpeakerAction } from 'app/core/actions/speaker-action';
-import { ActionType } from 'app/core/core-services/action.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Speaker } from 'app/shared/models/agenda/speaker';
 import { ViewSpeaker } from 'app/site/agenda/models/view-speaker';
@@ -36,7 +35,7 @@ export class SpeakerRepositoryService extends BaseRepositoryWithActiveMeeting<Vi
             user_id: data.user_id,
             marked: data.marked
         };
-        return this.sendActionToBackend(ActionType.SPEAKER_CREATE, payload);
+        return this.sendActionToBackend(SpeakerAction.CREATE, payload);
     }
 
     public update(update: Partial<Speaker>, viewModel: ViewSpeaker): Promise<any> {
@@ -44,6 +43,6 @@ export class SpeakerRepositoryService extends BaseRepositoryWithActiveMeeting<Vi
             id: viewModel.id,
             marked: update.marked
         };
-        return this.sendActionToBackend(ActionType.SPEAKER_UPDATE, payload);
+        return this.sendActionToBackend(SpeakerAction.UPDATE, payload);
     }
 }
