@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, take } from 'rxjs/operators';
 
+import { ActiveMeetingIdService } from './core/core-services/active-meeting-id.service';
 import { ActiveMeetingService } from './core/core-services/active-meeting.service';
 import { CountUsersService } from './core/ui-services/count-users.service';
 import { DataStoreUpgradeService } from './core/core-services/data-store-upgrade.service';
@@ -43,6 +44,7 @@ export class AppComponent implements OnInit {
         translate: TranslateService,
         private appRef: ApplicationRef,
         private openslidesService: OpenSlidesService,
+        private activeMeetingIdService: ActiveMeetingIdService,
         private activeMeetingService: ActiveMeetingService,
         private lifecycleService: LifecycleService,
         router: Router,

@@ -354,7 +354,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      */
     public async sortMotions(data: TreeIdNode[]): Promise<void> {
         const payload: MotionAction.SortPayload = {
-            meeting_id: this.activeMeetingService.meetingId,
+            meeting_id: this.activeMeetingIdService.meetingId,
             tree: data
         };
         throw new Error('TODO!');

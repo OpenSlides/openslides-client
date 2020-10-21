@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 
+import { ActiveMeetingIdService } from './active-meeting-id.service';
 import { RELATIONS } from 'app/core/repositories/relations';
 import { BaseModel } from 'app/shared/models/base/base-model';
 import { BaseViewModel } from 'app/site/base/base-view-model';
@@ -19,7 +20,10 @@ export class RelationManagerService {
         [collection: string]: Relation[];
     } = {};
 
-    public constructor(private viewModelStoreService: ViewModelStoreService) {
+    public constructor(
+        private viewModelStoreService: ViewModelStoreService,
+        private activeMeetingIdService: ActiveMeetingIdService
+    ) {
         this.loadRelations();
     }
 
@@ -55,11 +59,13 @@ export class RelationManagerService {
         }
     }
 
+    // 'prefix_$_suffix' -> ['prefix_$', '_suffix']
     private getPrefixSuffix(idField: string): [string, string] {
         const parts = idField.split('$');
         if (parts.length !== 2) {
             throw new Error('The id field of a structured field must include exactly one $');
         }
+        parts[0] += '$';
         return parts as [string, string];
     }
 
@@ -114,11 +120,16 @@ export class RelationManagerService {
         }
     }
 
-    private handleStructuredRelation<M extends BaseModel>(model: M, relation: Relation): any {
-        return attr => {
+    private handleStructuredRelation<M extends BaseModel>(model: M, relation: Relation): (attr: string) => any {
+        return (attr: string) => {
             if (!attr) {
                 if (relation.ownIdFieldDefaultAttribute === 'active-meeting') {
-                    attr = '1'; // TODO: get active meeting here.
+                    const meetingId = this.activeMeetingIdService.meetingId;
+                    if (!meetingId) {
+                        console.error(model, attr, relation);
+                        throw new Error('No active meeting to query the structured relation!');
+                    }
+                    attr = meetingId.toString();
                 } else {
                     console.error(model, attr, relation);
                     throw new Error('You must give a non-empty attribute for this structured relation');

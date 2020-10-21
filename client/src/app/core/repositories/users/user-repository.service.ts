@@ -140,7 +140,7 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
     public createTemporary(partialUser: Partial<UserAction.CreateTemporaryPayload>): Promise<Identifiable> {
         const username = partialUser.username || partialUser.first_name + partialUser.last_name;
         const payload: UserAction.CreateTemporaryPayload = {
-            meeting_id: this.activeMeetingService.meetingId,
+            meeting_id: this.activeMeetingIdService.meetingId,
             username,
             ...this.getPartialTemporaryUserPayload(partialUser)
         };
@@ -260,7 +260,7 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
         viewModel.getShortName = () => this.getShortName(viewModel);
         viewModel.getLevelAndNumber = () => this.getLevelAndNumber(viewModel);
         viewModel.getEnsuredActiveMeetingId = () => {
-            const meetingId = this.activeMeetingService.meetingId;
+            const meetingId = this.activeMeetingIdService.meetingId;
             if (!meetingId) {
                 throw new Error('No active meeting selected!');
             }
@@ -385,7 +385,7 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
     ): Promise<MassImportResult> {
         const data: UserAction.CreateTemporaryPayload[] = newEntries.map(entry => {
             return {
-                meeting_id: this.activeMeetingService.meetingId,
+                meeting_id: this.activeMeetingIdService.meetingId,
                 username: entry.newEntry.username,
                 importTrackId: entry.importTrackId,
                 ...this.getPartialTemporaryUserPayload(entry.newEntry)

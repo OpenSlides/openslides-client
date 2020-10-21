@@ -148,8 +148,13 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
         if (typeof field === 'string') {
             return field;
         } else {
-            return field.templateIdField.replace('$', field.templateValue);
+            return this.fillTemplateValueInTempalteField(field.templateIdField, field.templateValue);
         }
+    }
+
+    // E.g. (group_$_ids, 4) -> group_$4_ids
+    private fillTemplateValueInTempalteField(field: Field, value: string): Field {
+        return field.replace('$', '$' + value);
     }
 
     private addFollowedRelations(collection: Collection, followList: FollowList, fields: Fields): void {
@@ -168,14 +173,14 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
 
     private getFollowedRelation(collection: Collection, follow: Follow, fields: Fields): void {
         let effectiveIdField: Field; // the id field of the model. For specific structured fields
-        // it is the structured field, not template field, e.g. group_1_ids instead of group_$_ids.
+        // it is the structured field, not template field, e.g. group_$1_ids instead of group_$_ids.
         let queryIdField: Field; // The field to query the relation for. For specific structured relations
         // it is the template field.
         if (typeof follow.idField === 'string') {
             effectiveIdField = queryIdField = follow.idField;
         } else {
             queryIdField = follow.idField.templateIdField;
-            effectiveIdField = queryIdField.replace('$', follow.idField.templateValue);
+            effectiveIdField = this.fillTemplateValueInTempalteField(queryIdField, follow.idField.templateValue);
         }
         const isSpecificStructuredField = queryIdField !== effectiveIdField;
 

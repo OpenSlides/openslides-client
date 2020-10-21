@@ -27,7 +27,7 @@ export class UpdateSlot {
     /**
      * Count instnaces of this class to easily compare them.
      */
-    private static ID_COUTNER = 1;
+    private static ID_COUNTER = 1;
 
     /**
      * Mapping of changed model ids to their collection.
@@ -48,7 +48,7 @@ export class UpdateSlot {
      * @param DS Carries the DataStore: TODO (see below `DataStoreUpdateManagerService.getNewUpdateSlot`)
      */
     public constructor(public readonly DS: DataStoreService) {
-        this._id = UpdateSlot.ID_COUTNER++;
+        this._id = UpdateSlot.ID_COUNTER++;
     }
 
     /**

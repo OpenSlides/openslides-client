@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
+import { ActiveMeetingIdService } from './active-meeting-id.service';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { AutoupdateService, ModelSubscription } from './autoupdate.service';
 import { LifecycleService } from './lifecycle.service';
@@ -14,9 +15,6 @@ export class NoActiveMeeting extends Error {}
     providedIn: 'root'
 })
 export class ActiveMeetingService {
-    private meetingIdSubject = new BehaviorSubject<number | null>(null);
-    private meetingIdSubscription: Subscription = null;
-
     private meetingSubject = new BehaviorSubject<ViewMeeting | null>(null);
     private meetingSubcription: Subscription = null;
 
@@ -28,11 +26,11 @@ export class ActiveMeetingService {
     }
 
     public get meetingIdObservable(): Observable<number | null> {
-        return this.meetingIdSubject.asObservable();
+        return this.activeMeetingIdService.meetingIdObservable;
     }
 
     public get meetingId(): number | null {
-        return this.meetingIdSubject.getValue();
+        return this.activeMeetingIdService.meetingId;
     }
 
     public get meetingObservable(): Observable<ViewMeeting | null> {
@@ -44,21 +42,15 @@ export class ActiveMeetingService {
     }
 
     public constructor(
+        private activeMeetingIdService: ActiveMeetingIdService,
         private repo: MeetingRepositoryService,
-        private autoupdateService: AutoupdateService,
-        private lifecycleService: LifecycleService
+        private autoupdateService: AutoupdateService
     ) {
-        this.lifecycleService.openslidesBooted.subscribe(() => this.start());
-    }
-
-    public start(): void {
-        if (this.meetingIdSubscription) {
-            this.meetingIdSubscription.unsubscribe();
-            this.meetingIdSubscription = null;
-        }
-        this.meetingIdSubscription = this.meetingIdSubject.subscribe(id => this.setupModelSubscription(id));
-
-        this.meetingIdSubject.next(1);
+        this.activeMeetingIdService.meetingIdObservable.subscribe(id => {
+            if (id !== undefined) {
+                this.setupModelSubscription(id);
+            }
+        });
     }
 
     private async setupModelSubscription(id: number | null): Promise<void> {

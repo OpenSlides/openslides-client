@@ -203,11 +203,11 @@ export class Meeting extends BaseModel<Meeting> {
     }
 
     public logo_id(place: string): Id | null {
-        return this[`logo_${place}_id`];
+        return this[`logo_$${place}_id`];
     }
 
     public font_id(place: string): Id | null {
-        return this[`fomt_${place}_id`];
+        return this[`fomt_$${place}_id`];
     }
 }
 export interface Meeting extends Settings {}
