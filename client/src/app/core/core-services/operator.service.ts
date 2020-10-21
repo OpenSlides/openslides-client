@@ -3,7 +3,8 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 
-import { ActiveMeetingService, NoActiveMeeting } from './active-meeting.service';
+import { ActiveMeetingIdService, NoActiveMeeting } from './active-meeting-id.service';
+import { ActiveMeetingService } from './active-meeting.service';
 import { Group } from 'app/shared/models/users/group';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewUser } from 'app/site/users/models/view-user';
@@ -231,7 +232,7 @@ export class OperatorService {
             permissions = [];
         } else if (this.isAnonymous || this.groupIds.length === 0) {
             // Anonymous or users in the default group.
-            const defaultGroup = this.DS.get<Group>('users/group', 1);
+            const defaultGroup = this.DS.get<Group>('users/group', 1); // HUGE TODO: THIS IS NOT HARDCODED ANYMORE
             if (defaultGroup && defaultGroup.permissions instanceof Array) {
                 permissions = defaultGroup.permissions;
             } else {

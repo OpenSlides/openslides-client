@@ -34,7 +34,7 @@ export class MotionCategoryRepositoryService extends BaseRepositoryWithActiveMee
 
     public create(partialCategory: Partial<MotionCategory>): Promise<Identifiable> {
         const payload: MotionCategoryAction.CreatePayload = {
-            meeting_id: this.activeMeetingService.meetingId,
+            meeting_id: this.activeMeetingIdService.meetingId,
             name: partialCategory.name,
             prefix: partialCategory.prefix,
             parent_id: partialCategory.parent_id
@@ -106,7 +106,7 @@ export class MotionCategoryRepositoryService extends BaseRepositoryWithActiveMee
      */
     public async sortCategories(data: TreeIdNode[]): Promise<void> {
         const payload: MotionCategoryAction.SortPayload = {
-            meeting_id: this.activeMeetingService.meetingId,
+            meeting_id: this.activeMeetingIdService.meetingId,
             tree: data
         };
         return this.actions.sendRequest(MotionCategoryAction.SORT, payload);

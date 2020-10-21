@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { map } from 'rxjs/operators';
 
-import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
+import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';
@@ -25,7 +25,7 @@ export class PollProgressComponent extends BaseComponent implements OnInit {
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private userRepo: UserRepositoryService,
-        private activeMeetingService: ActiveMeetingService
+        private activeMeetingIdService: ActiveMeetingIdService
     ) {
         super(componentServiceCollector);
     }
@@ -41,7 +41,7 @@ export class PollProgressComponent extends BaseComponent implements OnInit {
                                 user =>
                                     user.isPresentInMeeting &&
                                     this.poll.entitled_group_ids.intersect(
-                                        user.group_ids(this.activeMeetingService.meetingId)
+                                        user.group_ids(this.activeMeetingIdService.meetingId)
                                     ).length
                             )
                         )

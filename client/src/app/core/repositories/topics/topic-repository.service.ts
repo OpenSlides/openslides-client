@@ -32,7 +32,7 @@ export class TopicRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCon
 
     public create(partialTopic: Partial<TopicAction.CreatePayload>): Promise<Identifiable> {
         const payload: TopicAction.CreatePayload = {
-            meeting_id: this.activeMeetingService.meetingId,
+            meeting_id: this.activeMeetingIdService.meetingId,
             title: partialTopic.title,
             text: partialTopic.text,
             tag_ids: partialTopic.tag_ids,

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
 
-import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
+import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { AbstractPollData, PollPdfService } from 'app/core/pdf-services/base-poll-pdf-service';
 import { PdfDocumentService } from 'app/core/pdf-services/pdf-document.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
@@ -27,13 +27,13 @@ export class MotionPollPdfService extends PollPdfService {
     public constructor(
         meetingSettingsService: MeetingSettingsService,
         userRepo: UserRepositoryService,
-        activeMeetingService: ActiveMeetingService,
+        activeMeetingIdService: ActiveMeetingIdService,
         mediaManageService: MediaManageService,
         private translate: TranslateService,
         private motionRepo: MotionRepositoryService,
         private pdfService: PdfDocumentService
     ) {
-        super(meetingSettingsService, userRepo, activeMeetingService, mediaManageService);
+        super(meetingSettingsService, userRepo, activeMeetingIdService, mediaManageService);
         this.meetingSettingsService
             .get('motion_poll_ballot_paper_number')
             .subscribe(count => (this.ballotCustomCount = count));

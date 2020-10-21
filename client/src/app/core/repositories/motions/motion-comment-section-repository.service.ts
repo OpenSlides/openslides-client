@@ -56,7 +56,7 @@ export class MotionCommentSectionRepositoryService extends BaseRepositoryWithAct
 
     public async create(partialModel: Partial<MotionCommentSection>): Promise<Identifiable> {
         const payload: MotionCommentSectionAction.CreatePayload = {
-            meeting_id: this.activeMeetingService.meetingId,
+            meeting_id: this.activeMeetingIdService.meetingId,
             name: partialModel.name,
             read_group_ids: partialModel.read_group_ids,
             write_group_ids: partialModel.write_group_ids
@@ -83,7 +83,7 @@ export class MotionCommentSectionRepositoryService extends BaseRepositoryWithAct
      */
     public async sortCommentSections(sections: ViewMotionCommentSection[]): Promise<void> {
         const payload: MotionCommentSectionAction.SortPayload = {
-            meeting_id: this.activeMeetingService.meetingId,
+            meeting_id: this.activeMeetingIdService.meetingId,
             motion_comment_section_ids: sections.map(section => section.id)
         };
         return this.actions.sendRequest(MotionCommentSectionAction.SORT, payload);

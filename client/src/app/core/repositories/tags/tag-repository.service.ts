@@ -30,7 +30,7 @@ export class TagRepositoryService extends BaseRepositoryWithActiveMeeting<ViewTa
     public async create(partialTag: Partial<Tag>): Promise<Identifiable> {
         const payload: TagAction.CreatePayload = {
             name: partialTag.name,
-            meeting_id: this.activeMeetingService.meetingId
+            meeting_id: this.activeMeetingIdService.meetingId
         };
         return this.sendActionToBackend(TagAction.CREATE, payload);
     }

@@ -1,10 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { BehaviorSubject, Operator } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
-import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
+import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { ModelSubscription } from 'app/core/core-services/autoupdate.service';
 import { SpecificStructuredField } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
@@ -22,12 +22,6 @@ import { PollService } from 'app/site/polls/services/poll.service';
 import { UserPdfExportService } from '../../services/user-pdf-export.service';
 import { ViewGroup } from '../../models/view-group';
 import { ViewUser } from '../../models/view-user';
-
-interface UserBackends {
-    [name: string]: {
-        disallowedUpdateKeys: string[];
-    };
-}
 
 /**
  * Users detail component for both new and existing users
@@ -109,7 +103,6 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        private activeMeetingService: ActiveMeetingService,
         private operatorService: OperatorService,
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
@@ -120,7 +113,8 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
         private pdfService: UserPdfExportService,
         private groupRepo: GroupRepositoryService,
         private pollService: PollService,
-        private meetingSettingsService: MeetingSettingsService
+        private meetingSettingsService: MeetingSettingsService,
+        private activeMeetingIdService: ActiveMeetingIdService
     ) {
         super(componentServiceCollector);
         this.createForm();
@@ -163,7 +157,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
             ids: [userId],
             follow: [
                 {
-                    idField: SpecificStructuredField('group_$_ids', '1') // TODO: active meeting id
+                    idField: SpecificStructuredField('group_$_ids', this.activeMeetingIdService.meetingId.toString())
                 }
             ]
         });
@@ -347,7 +341,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
         if (!this.editModelsSubscription) {
             this.editModelsSubscription = await this.componentServiceCollector.modelRequestService.requestModels({
                 viewModelCtor: ViewMeeting,
-                ids: [this.activeMeetingService.meetingId],
+                ids: [this.activeMeetingIdService.meetingId],
                 follow: ['group_ids', { idField: 'user_ids', fieldset: 'shortName' }]
             });
         }
