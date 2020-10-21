@@ -805,6 +805,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
                         }
                     ]
                 },
+                'tag_ids',
                 SPEAKER_BUTTON_FOLLOW
             ]
         });
