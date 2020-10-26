@@ -7,6 +7,10 @@ export namespace MeetingAction {
     export const DELETE = 'meeting.delete';
     export const CREATE_FROM_TEMPLATE = 'meeting.create_from_template';
     export const DELETE_ALL_SPEAKERS_OF_ALL_LISTS = 'meeting.delete_all_speakers_of_all_lists';
+    export const SET_FONT = 'meeting.set_font';
+    export const SET_LOGO = 'meeting.set_logo';
+    export const UNSET_FONT = 'meeting.unset_font';
+    export const UNSET_LOGO = 'meeting.unset_logo';
 
     export interface CreatePayload {
         // Required
@@ -161,4 +165,19 @@ export namespace MeetingAction {
     }
 
     export interface DeleteAllSpeakersOfAllListsPayload extends Identifiable {}
+
+    export interface SetLogoPayload extends Identifiable {
+        place: string;
+        mediafile_id: Id;
+    }
+    export interface SetFontPayload extends Identifiable {
+        place: string;
+        mediafile_id: Id;
+    }
+    export interface UnsetLogoPayload extends Identifiable {
+        place: string;
+    }
+    export interface UnsetFontPayload extends Identifiable {
+        place: string;
+    }
 }

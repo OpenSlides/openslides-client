@@ -9,12 +9,18 @@ const routes: Route[] = [
     {
         path: ':id',
         pathMatch: 'full',
-        component: MediafileListComponent
+        component: MediafileListComponent,
+        data: {
+            reuseComponent: true
+        }
     },
     {
         path: '',
         pathMatch: 'full',
-        component: MediafileListComponent
+        component: MediafileListComponent,
+        data: {
+            reuseComponent: true
+        }
     },
     {
         path: 'upload',

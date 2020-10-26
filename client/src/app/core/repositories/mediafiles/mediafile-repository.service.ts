@@ -5,13 +5,26 @@ import * as JSZip from 'jszip';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { MediafileAction } from 'app/core/actions/mediafile-action';
 import { HttpService } from 'app/core/core-services/http.service';
+import { Follow } from 'app/core/core-services/model-request-builder.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Mediafile } from 'app/shared/models/mediafiles/mediafile';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { BaseIsListOfSpeakersContentObjectRepository } from '../base-is-list-of-speakers-content-object-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
+
+export const LOGO_FONT_VALUES: Follow[] = [
+    {
+        idField: 'used_as_font_$_in_meeting_id',
+        onlyValues: true
+    },
+    {
+        idField: 'used_as_logo_$_in_meeting_id',
+        onlyValues: true
+    }
+];
 
 /**
  * Repository for MediaFiles
@@ -94,11 +107,12 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
     }
 
     public async move(mediafiles: ViewMediafile[], directoryId: number | null): Promise<void> {
-        // return await this.http.post('/rest/mediafiles/mediafile/move/', {
-        //     ids: mediafiles.map(mediafile => mediafile.id),
-        //     directory_id: directoryId
-        // });
-        throw new Error('TODO');
+        const payload: MediafileAction.MovePayload = {
+            ids: mediafiles.map(mediafile => mediafile.id),
+            parent_id: directoryId,
+            meeting_id: this.activeMeetingIdService.meetingId
+        };
+        return this.sendActionToBackend(MediafileAction.MOVE, payload);
     }
 
     /**
@@ -107,17 +121,42 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
      * @param mediafiles The users to delete
      */
     public async bulkDelete(mediafiles: ViewMediafile[]): Promise<void> {
-        // await this.http.post('/rest/mediafiles/mediafile/bulk_delete/', {
-        //     ids: mediafiles.map(mediafile => mediafile.id)
-        // });
-        throw new Error('TODO');
+        const payload = mediafiles.map(mediafile => ({ id: mediafile.id }));
+        return this.sendBulkActionToBackend(MediafileAction.DELETE, payload);
     }
 
-    public async createFile(data: Partial<Mediafile>): Promise<Identifiable> {
-        throw new Error('Todo');
+    public async uploadFile(partialMediafile: Partial<MediafileAction.CreateFilePayload>): Promise<Identifiable> {
+        const payload: MediafileAction.CreateFilePayload = {
+            meeting_id: this.activeMeetingIdService.meetingId,
+            file: partialMediafile.file,
+            filename: partialMediafile.filename,
+            title: partialMediafile.title,
+            access_group_ids: partialMediafile.access_group_ids,
+            parent_id: partialMediafile.parent_id
+        };
+        return this.sendActionToBackend(MediafileAction.CREATE_FILE, payload);
     }
 
-    public async createDirectory(partialMediaFile: Partial<Mediafile>): Promise<Identifiable> {
-        throw new Error('Todo');
+    public async createDirectory(partialMediafile: Partial<Mediafile>): Promise<Identifiable> {
+        const payload: MediafileAction.CreateDirectoryPayload = {
+            meeting_id: this.activeMeetingIdService.meetingId,
+            title: partialMediafile.title,
+            access_group_ids: partialMediafile.access_group_ids,
+            parent_id: partialMediafile.parent_id
+        };
+        return this.sendActionToBackend(MediafileAction.CREATE_DIRECTORY, payload);
+    }
+
+    public async update(update: Partial<MediafileAction.UpdatePayload>, viewMediafile: ViewMediafile): Promise<void> {
+        const payload: MediafileAction.UpdatePayload = {
+            id: viewMediafile.id,
+            access_group_ids: update.access_group_ids,
+            title: update.title
+        };
+        return this.sendActionToBackend(MediafileAction.UPDATE, payload);
+    }
+
+    public async delete(viewMediafile: ViewMediafile): Promise<void> {
+        return this.sendActionToBackend(MediafileAction.DELETE, { id: viewMediafile.id });
     }
 }

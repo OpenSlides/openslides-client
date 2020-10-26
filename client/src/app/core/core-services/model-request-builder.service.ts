@@ -254,7 +254,7 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
         for (const viewModel of possibleViewModels) {
             let datafields: string[] = [];
             try {
-                datafields = this.calculateDataFields(viewModel.COLLECTION, request.fieldset);
+                datafields = this.calculateDataFields(viewModel.COLLECTION, request.fieldset, request.additionalFields);
             } catch (e) {
                 console.warn(e);
             }
