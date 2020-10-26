@@ -6,3 +6,4 @@ export type Field = string;
 export type Id = number;
 export type UnsafeHtml = string;
 export type Decimal = string;
+export type Base64Encoded = string;

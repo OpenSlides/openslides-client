@@ -161,7 +161,11 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
                         {
                             idField: 'content_object_id',
                             follow: [SPEAKER_BUTTON_FOLLOW],
-                            fieldset: 'title'
+                            fieldset: 'title',
+
+                            // To enable the reverse relation from content_object->agenda_item.
+                            // Needed for getItemNumberPrefix
+                            additionalFields: ['agenda_item_id']
                         }
                     ]
                 }

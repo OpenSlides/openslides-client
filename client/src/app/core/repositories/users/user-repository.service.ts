@@ -137,8 +137,20 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
         return this.sendActionToBackend(UserAction.DELETE, { id: viewUser.id });
     }
 
+    private getUsername(partialUser: Partial<UserAction.CreateTemporaryPayload>): string | null {
+        if (partialUser.username) {
+            return partialUser.username.trim();
+        }
+        const parts = [partialUser.first_name, partialUser.last_name].filter(x => !!x);
+        return parts.join(' ').trim() || null;
+    }
+
     public createTemporary(partialUser: Partial<UserAction.CreateTemporaryPayload>): Promise<Identifiable> {
-        const username = partialUser.username || partialUser.first_name + partialUser.last_name;
+        const username = this.getUsername(partialUser);
+        if (!username) {
+            this.raiseError('first name or last name must not be empty.');
+            return;
+        }
         const payload: UserAction.CreateTemporaryPayload = {
             meeting_id: this.activeMeetingIdService.meetingId,
             username,
