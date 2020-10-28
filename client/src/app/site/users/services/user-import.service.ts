@@ -166,7 +166,7 @@ export class UserImportService extends BaseImportService<User> {
         }
         while (importUsers.length) {
             const subSet = importUsers.splice(0, 100); // don't send bulks too large
-            const result = await this.repo.bulkCreate(subSet);
+            const result = await this.repo.bulkCreateTemporary(subSet as any);
             subSet.forEach(importUser => {
                 // const importModel = this.entries.find(e => e.importTrackId === importUser.importTrackId);
                 if (importUser && result.importedTrackIds.includes(importUser.importTrackId)) {

@@ -11,7 +11,7 @@ import { SimplifiedModelRequest, SpecificStructuredField } from 'app/core/core-s
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
-import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
+import { UserRepositoryService, UserStateField } from 'app/core/repositories/users/user-repository.service';
 import { ChoiceService } from 'app/core/ui-services/choice.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { CsvExportService } from 'app/core/ui-services/csv-export.service';
@@ -280,8 +280,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                throw new Error('TODO!');
-                // this.repo.update(result, user);
+                this.repo.updateTemporary(result, user);
             }
         });
     }
@@ -309,8 +308,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
                 },
                 { property: 'comment' },
                 { property: 'is_active', label: 'Is active' },
-                // TODO
-                // { property: 'is_present', label: 'Is present' },
+                { property: 'is_present_in_meetings', label: 'Is present in meeting' },
                 { property: 'is_committee', label: 'Is a committee' },
                 { property: 'default_password', label: 'Initial password' },
                 { property: 'email' },
@@ -344,7 +342,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
     public async deleteSelected(): Promise<void> {
         const title = this.translate.instant('Are you sure you want to delete all selected participants?');
         if (await this.promptService.open(title)) {
-            this.repo.bulkDelete(this.selectedRows).catch(this.raiseError);
+            this.repo.bulkDeleteTemporary(this.selectedRows).catch(this.raiseError);
         }
     }
 
@@ -370,7 +368,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
      * Handler for bulk setting/unsetting the 'active' attribute.
      * Uses selectedRows defined via multiSelect mode.
      */
-    public async setStateSelected(field: 'is_active' | 'is_present' | 'is_committee'): Promise<void> {
+    public async setStateSelected(field: UserStateField): Promise<void> {
         let options: [string, string];
         let verboseStateName: string;
         switch (field) {
@@ -378,7 +376,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
                 options = [_('active'), _('inactive')];
                 verboseStateName = 'active';
                 break;
-            case 'is_present':
+            case 'is_present_in_meetings':
                 options = [_('present'), _('absent')];
                 verboseStateName = 'present';
                 break;
@@ -392,7 +390,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         const selectedChoice = await this.choiceService.open(content, null, false, options);
         if (selectedChoice) {
             const value = selectedChoice.action === options[0];
-            this.repo.bulkSetState(this.selectedRows, field, value).catch(this.raiseError);
+            this.repo.bulkSetStateTemporary(this.selectedRows, field, value).catch(this.raiseError);
         }
     }
 

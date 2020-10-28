@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 
+import { UserAction } from 'app/core/actions/user-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { PreventedInDemo } from 'app/core/definitions/custom-errors';
 import { Id } from 'app/core/definitions/key-types';
 import { NewEntry } from 'app/core/ui-services/base-import.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
+import { Identifiable } from 'app/shared/models/base/identifiable';
 import { UserSortProperty } from 'app/shared/models/event-management/meeting';
 import { User } from 'app/shared/models/users/user';
+import { toDecimal } from 'app/shared/utils/to-decimal';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
@@ -20,6 +23,11 @@ export interface NewUser {
     id: number;
     name: string;
 }
+
+/**
+ * Unified type name for state fields like `is_active`, `is_committee` and `is_present_in_meetings`.
+ */
+export type UserStateField = 'is_active' | 'is_present_in_meetings' | 'is_committee';
 
 /**
  * type for determining the user name from a string during import.
@@ -92,6 +100,49 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
                 'vote_weight'
             ])
         };
+    }
+
+    public create(partialUser: Partial<UserAction.CreatePayload>): Promise<Identifiable> {
+        const username = partialUser.username || partialUser.first_name + partialUser.last_name;
+        const payload: UserAction.CreatePayload = {
+            username,
+            ...this.getPartialTemporaryUserPayload(partialUser)
+        };
+        return this.sendActionToBackend(UserAction.CREATE, payload);
+    }
+
+    public update(update: Partial<UserAction.UpdatePayload>, viewUser: ViewUser): Promise<void> {
+        const payload: UserAction.UpdatePayload = {
+            id: viewUser.id,
+            ...this.getPartialTemporaryUserPayload(update)
+        };
+        return this.sendActionToBackend(UserAction.UPDATE, payload);
+    }
+
+    public delete(viewUser: ViewUser): Promise<void> {
+        return this.sendActionToBackend(UserAction.DELETE, { id: viewUser.id });
+    }
+
+    public createTemporary(partialUser: Partial<UserAction.CreateTemporaryPayload>): Promise<Identifiable> {
+        const username = partialUser.username || partialUser.first_name + partialUser.last_name;
+        const payload: UserAction.CreateTemporaryPayload = {
+            meeting_id: this.activeMeetingService.meetingId,
+            username,
+            ...this.getPartialTemporaryUserPayload(partialUser)
+        };
+        return this.sendActionToBackend(UserAction.CREATE_TEMPORARY, payload);
+    }
+
+    public updateTemporary(update: Partial<UserAction.UpdateTemporaryPayload>, viewUser: ViewUser): Promise<void> {
+        const payload: UserAction.UpdateTemporaryPayload = {
+            id: viewUser.id,
+            ...this.getPartialTemporaryUserPayload(update)
+        };
+        return this.sendActionToBackend(UserAction.UPDATE_TEMPORARY, payload);
+    }
+
+    public deleteTemporary(viewUser: ViewUser): Promise<void> {
+        return this.sendActionToBackend(UserAction.DELETE_TEMPORARY, { id: viewUser.id });
     }
 
     public getTitle = (viewUser: ViewUser) => {
@@ -198,13 +249,47 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
      *
      * @param user The user to update
      * @param password The password to set
-     * @param updateDefaultPassword Control, if the default password should be updated.
+     * @param setAsDefault Control, if the default password should be updated. Defaults to `true`.
      */
-    public async resetPassword(user: ViewUser, password: string): Promise<void> {
+    public async setPassword(user: ViewUser, password: string, setAsDefault: boolean = true): Promise<void> {
+        const payload: UserAction.SetPasswordPayload = {
+            id: user.id,
+            password,
+            set_as_default: setAsDefault
+        };
+        return this.sendActionToBackend(UserAction.SET_PASSWORD, payload);
+    }
+
+    /**
+     * Updates the password and sets the password without checking for the old one.
+     * Also resets the 'default password' to the newly created one.
+     *
+     * @param user The user to update
+     * @param password The password to set
+     * @param setAsDefault Control, if the default password should be updated. Defaults to `true`.
+     */
+    public async setPasswordTemporary(user: ViewUser, password: string, setAsDefault: boolean = true): Promise<void> {
         this.preventAlterationOnDemoUsers(user);
-        const path = `/rest/users/user/${user.id}/reset_password/`;
-        // await this.httpService.post(path, { password: password });
-        throw new Error('TODO');
+        const payload: UserAction.SetPasswordTemporaryPayload = {
+            id: user.id,
+            password,
+            set_as_default: setAsDefault
+        };
+        return this.sendActionToBackend(UserAction.SET_PASSWORD_TEMPORARY, payload);
+    }
+
+    public async resetPasswordToDefault(user: ViewUser): Promise<void> {
+        const payload: UserAction.ResetPasswordToDefaultPayload = {
+            id: user.id
+        };
+        return this.sendActionToBackend(UserAction.RESET_PASSWORD_TO_DEFAULT, payload);
+    }
+
+    public async resetPasswordToDefaultTemporary(user: ViewUser): Promise<void> {
+        const payload: UserAction.ResetPasswordToDefaultTemporaryPayload = {
+            id: user.id
+        };
+        return this.sendActionToBackend(UserAction.RESET_PASSWORD_TO_DEFAULT_TEMPORARY, payload);
     }
 
     /**
@@ -213,13 +298,13 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
      * @param oldPassword the old password
      * @param newPassword the new password
      */
-    public async setNewPassword(user: ViewUser, oldPassword: string, newPassword: string): Promise<void> {
-        this.preventAlterationOnDemoUsers(user);
-        /*await this.httpService.post(`${environment.urlPrefix}/users/setpassword/`, {
+    public async setPasswordSelf(user: ViewUser, oldPassword: string, newPassword: string): Promise<void> {
+        this.preventAlterationOnDemoUsers(user); // What does this do?
+        const payload: UserAction.SetPasswordSelfPayload = {
             old_password: oldPassword,
             new_password: newPassword
-        });*/
-        throw new Error('TODO');
+        };
+        return this.sendActionToBackend(UserAction.SET_PASSWORD_SELF, payload);
     }
 
     /**
@@ -230,10 +315,20 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
      */
     public async bulkResetPasswordsToDefault(users: ViewUser[]): Promise<void> {
         this.preventInDemo();
-        /*await this.httpService.post('/rest/users/user/bulk_reset_passwords_to_default/', {
-            user_ids: users.map(user => user.id)
-        });*/
-        throw new Error('TODO');
+        const payload: UserAction.ResetPasswordToDefaultPayload[] = users.map(user => ({ id: user.id }));
+        return this.sendBulkActionToBackend(UserAction.RESET_PASSWORD_TO_DEFAULT, payload);
+    }
+
+    /**
+     * Resets the passwords of all given users to their default ones. The operator will
+     * not be changed (if provided in `users`).
+     *
+     * @param users The users to reset the passwords from
+     */
+    public async bulkResetPasswordsToDefaultTemporary(users: ViewUser[]): Promise<void> {
+        this.preventInDemo();
+        const payload: UserAction.ResetPasswordToDefaultTemporaryPayload[] = users.map(user => ({ id: user.id }));
+        return this.sendBulkActionToBackend(UserAction.RESET_PASSWORD_TO_DEFAULT_TEMPORARY, payload);
     }
 
     /**
@@ -244,10 +339,14 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
      */
     public async bulkGenerateNewPasswords(users: ViewUser[]): Promise<void> {
         this.preventInDemo();
-        /*await this.httpService.post('/rest/users/user/bulk_generate_passwords/', {
-            user_ids: users.map(user => user.id)
-        });*/
-        throw new Error('TODO');
+        const payload: UserAction.GenerateNewPassword[] = users.map(user => ({ id: user.id }));
+        return this.sendBulkActionToBackend(UserAction.GENERATE_NEW_PASSWORD, payload);
+    }
+
+    public async bulkGenerateNewPasswordsTemporary(users: ViewUser[]): Promise<void> {
+        this.preventInDemo();
+        const payload: UserAction.GenerateNewPasswordTemporary[] = users.map(user => ({ id: user.id }));
+        return this.sendBulkActionToBackend(UserAction.GENERATE_NEW_PASSWORD_TEMPORARY, payload);
     }
 
     /**
@@ -255,12 +354,18 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
      *
      * @param newEntries
      */
-    public async bulkCreate(newEntries: NewEntry<User>[]): Promise<MassImportResult> {
-        const data = newEntries.map(entry => {
-            return { ...entry.newEntry, importTrackId: entry.importTrackId };
+    public async bulkCreateTemporary(
+        newEntries: NewEntry<UserAction.CreateTemporaryPayload>[]
+    ): Promise<MassImportResult> {
+        const data: UserAction.CreateTemporaryPayload[] = newEntries.map(entry => {
+            return {
+                meeting_id: this.activeMeetingService.meetingId,
+                username: entry.newEntry.username,
+                importTrackId: entry.importTrackId,
+                ...this.getPartialTemporaryUserPayload(entry.newEntry)
+            };
         });
-        // return await this.httpService.post<MassImportResult>(`/rest/users/user/mass_import/`, { users: data });
-        throw new Error('TODO');
+        return this.sendBulkActionToBackend(UserAction.CREATE_TEMPORARY, data);
     }
 
     /**
@@ -268,10 +373,12 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
      *
      * @param users The users to delete
      */
-    public async bulkDelete(users: ViewUser[]): Promise<void> {
+    public async bulkDeleteTemporary(users: ViewUser[]): Promise<void> {
         this.preventInDemo();
-        // await this.httpService.post('/rest/users/user/bulk_delete/', { user_ids: users.map(user => user.id) });
-        throw new Error('TODO');
+        return this.sendBulkActionToBackend(
+            UserAction.DELETE_TEMPORARY,
+            users.map(user => ({ id: user.id }))
+        );
     }
 
     /**
@@ -281,18 +388,10 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
      * @param field The boolean field to set
      * @param value The value to set this field to.
      */
-    public async bulkSetState(
-        users: ViewUser[],
-        field: 'is_active' | 'is_present' | 'is_committee',
-        value: boolean
-    ): Promise<void> {
+    public async bulkSetStateTemporary(users: ViewUser[], field: UserStateField, value: boolean): Promise<void> {
         this.preventAlterationOnDemoUsers(users);
-        /*await this.httpService.post('/rest/users/user/bulk_set_state/', {
-            user_ids: users.map(user => user.id),
-            field: field,
-            value: value
-        });*/
-        throw new Error('TODO');
+        const payload: UserAction.UpdateTemporaryPayload[] = users.map(user => ({ id: user.id, [field]: value }));
+        return this.sendBulkActionToBackend(UserAction.UPDATE_TEMPORARY, payload);
     }
 
     /**
@@ -409,10 +508,9 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
      * @returns Promise with a created user id and the raw name used as input
      */
     public async createFromString(user: string): Promise<NewUser> {
-        // const newUser = this.parseUserString(user);
-        // const createdUser = await this.create(newUser);
-        // return { id: createdUser.id, name: user } as NewUser;
-        throw new Error('TODO!');
+        const newUser = this.parseUserString(user) as any;
+        const createdUser = await this.createTemporary(newUser);
+        return { id: createdUser.id, name: user } as NewUser;
     }
 
     /**
@@ -519,5 +617,31 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
         if (this.demoModeUserIds && this.demoModeUserIds.length) {
             throw new PreventedInDemo();
         }
+    }
+
+    private getPartialTemporaryUserPayload(
+        partialUser: Partial<UserAction.UpdatePayload>
+    ): Partial<UserAction.UpdatePayload> {
+        return {
+            // Required:
+            username: partialUser.username,
+
+            // Optional:
+            title: partialUser.title,
+            first_name: partialUser.first_name,
+            last_name: partialUser.last_name,
+            is_active: partialUser.is_active,
+            is_committee: partialUser.is_committee,
+            default_password: partialUser.default_password,
+            about_me: partialUser.about_me,
+            gender: partialUser.gender,
+            comment: partialUser.comment,
+            number: partialUser.number,
+            structure_level: partialUser.structure_level,
+            email: partialUser.email,
+            vote_weight: toDecimal(partialUser.vote_weight as any),
+            is_present_in_meeting_ids: partialUser.is_present_in_meeting_ids,
+            group_ids: partialUser.group_ids
+        };
     }
 }
