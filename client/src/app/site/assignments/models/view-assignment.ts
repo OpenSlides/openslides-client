@@ -22,12 +22,12 @@ import { ViewAssignmentPoll } from './view-assignment-poll';
 export const AssignmentPhases: { name: string; value: number; display_name: string }[] = [
     {
         name: 'PHASE_SEARCH',
-        value: 0,
+        value: 1,
         display_name: 'Searching for candidates'
     },
     {
         name: 'PHASE_VOTING',
-        value: 1,
+        value: 2,
         display_name: 'In the election process'
     },
     {

@@ -11,10 +11,6 @@ export class CreateTopic extends Topic {
     public agenda_duration: number;
     public agenda_weight: number;
 
-    public constructor(input?: any) {
-        super(input);
-    }
-
     /**
      * Checks if the CreateTopic is valid. Currently only requires an existing title
      *
@@ -22,5 +18,9 @@ export class CreateTopic extends Topic {
      */
     public get isValid(): boolean {
         return this.title ? true : false;
+    }
+
+    public constructor(input?: Partial<CreateTopic>) {
+        super(input);
     }
 }

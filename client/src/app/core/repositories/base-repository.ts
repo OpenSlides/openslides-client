@@ -345,6 +345,6 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     }
 
     protected sendBulkActionToBackend(action: string, payload: any[]): Promise<any> {
-        return this.sendBulkActionToBackend(action, payload).catch(this.raiseError);
+        return this.actions.sendBulkRequest(action, payload).catch(this.raiseError);
     }
 }

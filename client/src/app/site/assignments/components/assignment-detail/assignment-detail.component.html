@@ -35,11 +35,11 @@
 
         <!-- Add/remove to/from agenda -->
         <div *osPerms="'agenda.can_manage'">
-            <button mat-menu-item (click)="addToAgenda()" *ngIf="assignment && !assignment.item">
+            <button mat-menu-item (click)="addToAgenda()" *ngIf="assignment && !assignment.agenda_item">
                 <mat-icon>add</mat-icon>
                 <span>{{ 'Add to agenda' | translate }}</span>
             </button>
-            <button mat-menu-item (click)="removeFromAgenda()" *ngIf="assignment && assignment.item">
+            <button mat-menu-item (click)="removeFromAgenda()" *ngIf="assignment && assignment.agenda_item">
                 <mat-icon>remove</mat-icon>
                 <span>{{ 'Remove from agenda' | translate }}</span>
             </button>
@@ -138,9 +138,9 @@
         <ng-container>
             <h3>{{ 'Candidates' | translate }}</h3>
             <div>
-                <div class="candidates-list" *ngIf="candidates && candidates.length">
+                <div class="candidates-list" *ngIf="assignment.candidates && assignment.candidates.length">
                     <os-sorting-list
-                        [input]="candidates"
+                        [input]="assignment.candidates"
                         [live]="true"
                         [count]="assignment.number_poll_candidates"
                         [enable]="hasPerms('manage')"
@@ -167,9 +167,9 @@
                         <form
                             *ngIf="
                                 hasPerms('addOthers') &&
-                                filteredCandidates &&
-                                filteredCandidates.value &&
-                                filteredCandidates.value.length
+                                usersAsPossibleCandidates &&
+                                usersAsPossibleCandidates.value &&
+                                usersAsPossibleCandidates.value.length
                             "
                             [formGroup]="candidatesForm"
                         >
@@ -178,7 +178,7 @@
                                     formControlName="userId"
                                     [multiple]="false"
                                     placeholder="{{ 'Select a new candidate' | translate }}"
-                                    [inputListValues]="filteredCandidates"
+                                    [inputListValues]="usersAsPossibleCandidates"
                                     [showNotFoundButton]="true"
                                     (clickNotFound)="createNewCandidate($event)"
                                 >
@@ -192,7 +192,7 @@
                     </div>
 
                     <!-- Add me and remove me if OP has correct permission -->
-                    <div *ngIf="assignment && hasPerms('addSelf') && assignment.assignment_candidates">
+                    <div *ngIf="assignment && hasPerms('addSelf')">
                         <div>
                             <button mat-button color="accent" (click)="addSelf()" *ngIf="!isSelfCandidate">
                                 <mat-icon>add</mat-icon>
