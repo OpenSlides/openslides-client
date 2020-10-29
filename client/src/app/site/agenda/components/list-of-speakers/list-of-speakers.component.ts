@@ -1,3 +1,4 @@
+import { SummaryResolver } from '@angular/compiler';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
@@ -91,6 +92,7 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
     }
 
     public ngOnInit(): void {
+        super.ngOnInit();
         // Check, if we are on the current list of speakers.
         this.isCurrentListOfSpeakers =
             this.route.snapshot.url.length > 0

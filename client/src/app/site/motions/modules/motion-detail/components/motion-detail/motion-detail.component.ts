@@ -477,6 +477,8 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
      * Sets all required subjects and fills in the required information
      */
     public ngOnInit(): void {
+        super.ngOnInit();
+
         this.requestUpdates();
         this.registerSubjects();
         this.createForm();
@@ -560,11 +562,12 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
      * Sends a notification to user editors of the motion was edited
      */
     public ngOnDestroy(): void {
+        super.ngOnDestroy();
+
         this.unsubscribeEditNotifications(MotionEditNotificationType.TYPE_CLOSING_EDITING_MOTION);
         if (this.navigationSubscription) {
             this.navigationSubscription.unsubscribe();
         }
-        super.ngOnDestroy();
         this.cd.detach();
     }
 

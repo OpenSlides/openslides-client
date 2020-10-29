@@ -52,6 +52,7 @@ export class UserMenuComponent extends BaseModelContextComponent implements OnIn
     }
 
     public ngOnInit(): void {
+        super.ngOnInit();
         this.operator.operatorUpdatedEvent.subscribe(() => this.onOperatorUpdate());
 
         this.loginDataService.samlSettings.subscribe(

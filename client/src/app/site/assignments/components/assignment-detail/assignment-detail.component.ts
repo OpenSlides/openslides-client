@@ -231,6 +231,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
      * Init data
      */
     public ngOnInit(): void {
+        super.ngOnInit();
         this.observeRoute();
         this.getAssignmentByUrl();
         this.agendaObserver = this.itemRepo.getViewModelListBehaviorSubject();
@@ -244,6 +245,9 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
     public ngOnDestroy(): void {
         if (this.navigationSubscription) {
             this.navigationSubscription.unsubscribe();
+        }
+        if (this.possibleCandidatesRequest) {
+            this.possibleCandidatesRequest.close();
         }
         super.ngOnDestroy();
     }
@@ -570,11 +574,5 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
 
     public removeFromAgenda(): void {
         this.itemRepo.removeFromAgenda(this.assignment.agenda_item);
-    }
-
-    public ngOnDestroy(): void {
-        if (this.possibleCandidatesRequest) {
-            this.possibleCandidatesRequest.close();
-        }
     }
 }
