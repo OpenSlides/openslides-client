@@ -17,7 +17,9 @@ export class StreamConnectionError extends Error {
 export class StreamContainer {
     public readonly id = Math.floor(Math.random() * (900000 - 1) + 100000); // [100000, 999999]
 
+    public retries = 0;
     public hasErroredAmount = 0;
+    public errorHandler: (error: any) => void = null;
 
     public stream?: Stream<any>;
 
@@ -42,7 +44,7 @@ export class HttpStreamService {
      * This method returnes after the first response (First part of the response body) is
      * received. This implies, that it might be long time idle, if an service choose not to send anything.
      */
-    public async connect<T>(streamContainer: StreamContainer, errorHandler: (error: any) => void): Promise<void> {
+    public async connect<T>(streamContainer: StreamContainer): Promise<void> {
         if (streamContainer.stream) {
             console.error('Illegal state!');
             return;
@@ -50,7 +52,7 @@ export class HttpStreamService {
 
         const options = this.getOptions(streamContainer);
         const observable = this.http.request(streamContainer.endpoint.method, streamContainer.endpoint.url, options);
-        const stream = new Stream<T>(observable, streamContainer.messageHandler, errorHandler);
+        const stream = new Stream<T>(observable, streamContainer.messageHandler, streamContainer.errorHandler);
         streamContainer.stream = stream;
 
         const hasError = await stream.gotFirstResponse;

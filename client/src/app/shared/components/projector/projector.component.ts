@@ -313,6 +313,7 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
      * Deregister the projector from the projectordataservice.
      */
     public ngOnDestroy(): void {
+        super.ngOnDestroy();
         if (this.projectorId > 0) {
             this.projectorDataService.projectorClosed(this.projectorId);
         }

@@ -10,18 +10,11 @@ import { SleepPromise } from '../promises/sleep';
 const MAX_CONNECTION_RETRIES = 3;
 const MAX_STREAM_FAILURE_RETRIES = 1;
 
-export class OfflineError extends Error {
-    public constructor() {
-        super('');
-        this.name = 'OfflineError';
-    }
-}
-
 @Injectable({
     providedIn: 'root'
 })
 export class StreamingCommunicationService {
-    private openStreams: { [id: number]: StreamContainer } = {};
+    private streams: { [id: number]: StreamContainer } = {};
 
     public constructor(
         private httpStreamService: HttpStreamService,
@@ -31,36 +24,45 @@ export class StreamingCommunicationService {
     ) {}
 
     public async connect(streamContainer: StreamContainer): Promise<() => void> {
-        let retries = 0;
-        const errorHandler = (error: any) => this.handleError(streamContainer, error);
-        let success = false;
-        while (!success) {
-            try {
-                await this.httpStreamService.connect(streamContainer, errorHandler);
-                success = true;
-            } catch (e) {
-                retries++;
-                if (streamContainer.stream) {
-                    streamContainer.stream.close();
-                    streamContainer.stream = null;
-                }
+        streamContainer.retries = 0;
+        streamContainer.errorHandler = (error: any) => this.handleError(streamContainer, error);
+        return await this._connect(streamContainer);
+    }
 
-                let goOffline = false;
-                if (retries < MAX_CONNECTION_RETRIES) {
-                    goOffline = !(await this.delayAndCheckReconnection());
-                } else {
-                    goOffline = true;
-                }
+    public async _connect(streamContainer: StreamContainer): Promise<() => void> {
+        this.streams[streamContainer.id] = streamContainer;
+        try {
+            await this.httpStreamService.connect(streamContainer);
+        } catch (e) {
+            setTimeout(() => {
+                this.handleConnectionError(streamContainer);
+            }, 0);
+        }
+        return () => this.close(streamContainer);
+    }
 
-                if (goOffline) {
-                    this.goOffline(streamContainer.endpoint);
-                    throw new OfflineError();
-                }
-            }
+    private async handleConnectionError(streamContainer: StreamContainer): Promise<void> {
+        streamContainer.retries++;
+        if (streamContainer.stream) {
+            streamContainer.stream.close();
+            streamContainer.stream = null;
         }
 
-        this.openStreams[streamContainer.id] = streamContainer;
-        return () => this.close(streamContainer);
+        let goOffline = false;
+        if (streamContainer.retries < MAX_CONNECTION_RETRIES) {
+            goOffline = !(await this.delayAndCheckReconnection());
+        } else {
+            goOffline = true;
+        }
+
+        if (goOffline) {
+            this.goOffline(streamContainer.endpoint);
+            return;
+        }
+
+        if (this.isStreamOpen(streamContainer)) {
+            this._connect(streamContainer);
+        }
     }
 
     private async handleError(streamContainer: StreamContainer, error: any): Promise<void> {
@@ -70,16 +72,12 @@ export class StreamingCommunicationService {
 
         streamContainer.hasErroredAmount++;
         if (streamContainer.hasErroredAmount > MAX_STREAM_FAILURE_RETRIES) {
-            delete this.openStreams[streamContainer.id];
+            delete this.streams[streamContainer.id];
             this.goOffline(streamContainer.endpoint);
         } else {
             // retry it after some time:
-            try {
-                if (await this.delayAndCheckReconnection()) {
-                    await this.connect(streamContainer);
-                }
-            } catch (e) {
-                // connect can throw an OfflineError. This one can be ignored.
+            if (await this.delayAndCheckReconnection()) {
+                await this.connect(streamContainer);
             }
         }
     }
@@ -109,13 +107,13 @@ export class StreamingCommunicationService {
     }
 
     public closeConnections(): void {
-        for (const streamWrapper of Object.values(this.openStreams)) {
+        for (const streamWrapper of Object.values(this.streams)) {
             if (streamWrapper.stream) {
                 streamWrapper.stream.close();
                 streamWrapper.stream = null;
             }
         }
-        this.openStreams = {};
+        this.streams = {};
     }
 
     private goOffline(endpoint: EndpointConfiguration): void {
@@ -127,10 +125,14 @@ export class StreamingCommunicationService {
     }
 
     private close(streamContainer: StreamContainer): void {
-        if (this.openStreams[streamContainer.id]) {
-            this.openStreams[streamContainer.id].stream.close();
-            delete this.openStreams[streamContainer.id];
+        if (this.isStreamOpen(streamContainer)) {
+            this.streams[streamContainer.id].stream.close();
+            delete this.streams[streamContainer.id];
         }
+    }
+
+    private isStreamOpen(streamContainer: StreamContainer): boolean {
+        return !!this.streams[streamContainer.id];
     }
 
     // Checks the operator: If we do not have a valid user,

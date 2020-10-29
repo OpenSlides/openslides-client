@@ -96,6 +96,7 @@ export class MetaTextBlockComponent extends BaseComponent implements OnInit, OnD
      * Deletes and unsubscribes to subscription.
      */
     public ngOnDestroy(): void {
+        super.ngOnDestroy();
         if (this.contentSubscription) {
             this.contentSubscription.unsubscribe();
             this.contentSubscription = null;

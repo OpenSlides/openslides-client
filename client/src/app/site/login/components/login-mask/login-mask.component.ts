@@ -127,6 +127,7 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
      * Clear the subscription on destroy.
      */
     public ngOnDestroy(): void {
+        super.ngOnDestroy();
         this.clearOperatorSubscription();
     }
 
