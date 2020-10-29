@@ -29,9 +29,11 @@ export abstract class BaseModelContextComponent extends BaseComponent implements
 
     protected async requestModels(simplifiedModelRequest: SimplifiedModelRequest): Promise<void> {
         this.cleanCurrentModelSub();
+        console.log('requesting...', simplifiedModelRequest);
         this.localModelSub = await this.componentServiceCollector.modelRequestService.requestModels(
             simplifiedModelRequest
         );
+        console.log('Done!', simplifiedModelRequest);
     }
 
     public ngOnDestroy(): void {

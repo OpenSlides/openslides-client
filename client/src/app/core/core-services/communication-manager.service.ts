@@ -6,7 +6,7 @@ import { HttpStreamEndpointService } from './http-stream-endpoint.service';
 import { StreamContainer } from './http-stream.service';
 import { LifecycleService } from './lifecycle.service';
 import { OfflineBroadcastService } from './offline-broadcast.service';
-import { OfflineError, StreamingCommunicationService } from './streaming-communication.service';
+import { StreamingCommunicationService } from './streaming-communication.service';
 
 type HttpParamsGetter = () => HttpParams | { [param: string]: string | string[] };
 type HttpBodyGetter = () => any;
@@ -75,13 +75,7 @@ export class CommunicationManagerService {
     }
 
     private async _connect(container: StreamContainerWithCloseFn): Promise<void> {
-        try {
-            container.closeFn = await this.streamingCommunicationService.connect(container);
-        } catch (e) {
-            if (!(e instanceof OfflineError)) {
-                throw e;
-            }
-        }
+        container.closeFn = await this.streamingCommunicationService.connect(container);
     }
 
     public startCommunication(): void {

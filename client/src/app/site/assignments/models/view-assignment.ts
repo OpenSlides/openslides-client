@@ -50,7 +50,7 @@ export class ViewAssignment extends BaseProjectableViewModel<Assignment> {
     }
 
     public get phaseString(): string {
-        const phase = AssignmentPhases.find(ap => ap.value === this.assignment.phase);
+        const phase = AssignmentPhases.find(ap => ap.value === this.phase);
         return phase ? phase.display_name : '';
     }
 
@@ -75,7 +75,7 @@ export class ViewAssignment extends BaseProjectableViewModel<Assignment> {
      * @returns the amount of candidates in the assignment's candidate list
      */
     public get candidateAmount(): number {
-        return this.candidate_ids?.length;
+        return this.candidate_ids?.length || 0;
     }
 
     public formatForSearch(): SearchRepresentation {

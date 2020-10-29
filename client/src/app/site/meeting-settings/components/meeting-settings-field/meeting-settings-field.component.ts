@@ -173,6 +173,7 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
      * Stops the change detection
      */
     public ngOnDestroy(): void {
+        super.ngOnDestroy();
         this.cd.detach();
     }
 
