@@ -224,6 +224,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
      * Init data
      */
     public ngOnInit(): void {
+        super.ngOnInit();
         this.agendaObserver = this.itemRepo.getViewModelListBehaviorSubject();
         this.tagsObserver = this.tagRepo.getViewModelListBehaviorSubject();
         this.mediafilesObserver = this.mediafileRepo.getViewModelListBehaviorSubject();

@@ -2,12 +2,15 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { MotionStatuteParagraphRepositoryService } from 'app/core/repositories/motions/motion-statute-paragraph-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { MotionStatuteParagraph } from 'app/shared/models/motions/motion-statute-paragraph';
 import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewMotionStatuteParagraph } from 'app/site/motions/models/view-motion-statute-paragraph';
 import { StatuteCsvExportService } from 'app/site/motions/services/statute-csv-export.service';
 
@@ -19,7 +22,7 @@ import { StatuteCsvExportService } from 'app/site/motions/services/statute-csv-e
     templateUrl: './statute-paragraph-list.component.html',
     styleUrls: ['./statute-paragraph-list.component.scss']
 })
-export class StatuteParagraphListComponent extends BaseComponent implements OnInit {
+export class StatuteParagraphListComponent extends BaseModelContextComponent implements OnInit {
     @ViewChild('statuteParagraphDialog', { static: true })
     private statuteParagraphDialog: TemplateRef<string>;
 
@@ -71,10 +74,20 @@ export class StatuteParagraphListComponent extends BaseComponent implements OnIn
      * Sets the title and gets/observes statute paragraphs from DataStore
      */
     public ngOnInit(): void {
+        super.ngOnInit();
         super.setTitle('Statute');
         this.repo.getViewModelListObservable().subscribe(newViewStatuteParagraphs => {
             this.statuteParagraphs = newViewStatuteParagraphs;
         });
+    }
+
+    protected getModelRequest(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [1], // TODO
+            follow: ['motion_statute_paragraph_ids'],
+            fieldset: []
+        };
     }
 
     /**

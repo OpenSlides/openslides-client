@@ -167,6 +167,8 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
      * Observe the parameters of the URL and loads the specified workflow
      */
     public ngOnInit(): void {
+        super.ngOnInit();
+
         const workflowId = Number(this.route.snapshot.paramMap.get('id'));
 
         this.requestModels({

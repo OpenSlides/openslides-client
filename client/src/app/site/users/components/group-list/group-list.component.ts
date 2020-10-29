@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { Permission } from 'app/core/core-services/permission';
 import {
     AppPermissions,
@@ -91,9 +92,20 @@ export class GroupListComponent extends BaseModelContextComponent implements OnI
      * Monitor the repository for changes and update the local groups array
      */
     public ngOnInit(): void {
+        super.ngOnInit();
+
         super.setTitle('Groups');
 
-        this.requestModels({
+        this.repo.getViewModelListObservable().subscribe(newViewGroups => {
+            if (newViewGroups) {
+                this.groups = newViewGroups;
+                this.updateRowDef();
+            }
+        });
+    }
+
+    public getModelRequest(): SimplifiedModelRequest {
+        return {
             viewModelCtor: ViewMeeting,
             ids: [1], // TODO
             follow: [
@@ -102,14 +114,7 @@ export class GroupListComponent extends BaseModelContextComponent implements OnI
                     fieldset: 'list'
                 }
             ]
-        });
-
-        this.repo.getViewModelListObservable().subscribe(newViewGroups => {
-            if (newViewGroups) {
-                this.groups = newViewGroups;
-                this.updateRowDef();
-            }
-        });
+        };
     }
 
     /**

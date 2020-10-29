@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
@@ -40,12 +41,16 @@ export class MotionCommentSectionSortComponent extends BaseModelContextComponent
      * Get the view models from the repo
      */
     public ngOnInit(): void {
-        this.requestModels({
+        super.ngOnInit();
+        this.repo.getViewModelListObservable().subscribe(comments => (this.comments = comments));
+    }
+
+    public getModelRequest(): SimplifiedModelRequest {
+        return {
             viewModelCtor: ViewMeeting,
             ids: [1], // TODO
             follow: ['motion_comment_section_ids']
-        });
-        this.repo.getViewModelListObservable().subscribe(comments => (this.comments = comments));
+        };
     }
 
     /**

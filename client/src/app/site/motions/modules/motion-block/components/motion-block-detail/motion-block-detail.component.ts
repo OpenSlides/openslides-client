@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { PblColumnDefinition } from '@pebula/ngrid';
 
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { Permission } from 'app/core/core-services/permission';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
@@ -137,7 +138,26 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
      * Sets the title, observes the block and the motions belonging in this block
      */
     public ngOnInit(): void {
-        this.requestModels({
+        super.ngOnInit();
+
+        // pseudo filter
+        this.subscriptions.push(
+            this.repo.getViewModelObservable(this.blockId).subscribe(newBlock => {
+                if (newBlock) {
+                    super.setTitle(`${this.translate.instant('Motion block')} - ${newBlock.getTitle()}`);
+                    this.block = newBlock;
+                }
+            })
+        );
+        // load config variables
+        this.meetingSettingsService
+            .get('motions_show_sequential_number')
+            .subscribe(show => (this.showSequential = show));
+        (<any>window).comp = this;
+    }
+
+    public getModelRequest(): SimplifiedModelRequest {
+        return {
             viewModelCtor: ViewMotionBlock,
             ids: [this.blockId],
             follow: [
@@ -166,22 +186,7 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
                     ]
                 }
             ]
-        });
-
-        // pseudo filter
-        this.subscriptions.push(
-            this.repo.getViewModelObservable(this.blockId).subscribe(newBlock => {
-                if (newBlock) {
-                    super.setTitle(`${this.translate.instant('Motion block')} - ${newBlock.getTitle()}`);
-                    this.block = newBlock;
-                }
-            })
-        );
-        // load config variables
-        this.meetingSettingsService
-            .get('motions_show_sequential_number')
-            .subscribe(show => (this.showSequential = show));
-        (<any>window).comp = this;
+        };
     }
 
     /**

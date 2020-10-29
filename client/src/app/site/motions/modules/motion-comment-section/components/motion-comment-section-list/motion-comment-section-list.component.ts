@@ -4,6 +4,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 import { BehaviorSubject } from 'rxjs';
 
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -76,8 +77,20 @@ export class MotionCommentSectionListComponent extends BaseModelContextComponent
      * Init function.
      */
     public ngOnInit(): void {
+        super.ngOnInit();
         super.setTitle('Comment fields');
-        this.requestModels({
+
+        /**
+         * Not entirely sure how to get the groups here.
+         * Another call of requestModels?
+         * FIXME: partially depends on the group repository
+         */
+        this.groups = this.groupRepo.getViewModelListBehaviorSubject();
+        this.repo.getViewModelListObservable().subscribe(newViewSections => (this.commentSections = newViewSections));
+    }
+
+    public getModelRequest(): SimplifiedModelRequest {
+        return {
             viewModelCtor: ViewMeeting,
             ids: [1], // TODO
             follow: [
@@ -87,15 +100,7 @@ export class MotionCommentSectionListComponent extends BaseModelContextComponent
                     follow: ['comment_ids', 'read_group_ids', 'write_group_ids']
                 }
             ]
-        });
-
-        /**
-         * Not entirely sure how to get the groups here.
-         * Another call of requestModels?
-         * FIXME: partially depends on the group repository
-         */
-        this.groups = this.groupRepo.getViewModelListBehaviorSubject();
-        this.repo.getViewModelListObservable().subscribe(newViewSections => (this.commentSections = newViewSections));
+        };
     }
 
     /**

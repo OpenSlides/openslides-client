@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { MotionStatuteParagraphAction } from 'app/core/actions/motion-statue-paragraph-action';
+import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Id } from 'app/core/definitions/key-types';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { MotionStatuteParagraph } from 'app/shared/models/motions/motion-statute-paragraph';
@@ -24,6 +25,12 @@ export class MotionStatuteParagraphRepositoryService extends BaseRepositoryWithA
 > {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, MotionStatuteParagraph);
+    }
+
+    public getFieldsets(): Fieldsets<MotionStatuteParagraph> {
+        return {
+            [DEFAULT_FIELDSET]: ['title', 'text', 'weight']
+        };
     }
 
     public create(partialStatuteParagraph: Partial<MotionStatuteParagraph>): Promise<Identifiable> {
