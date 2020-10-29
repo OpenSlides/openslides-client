@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -50,17 +51,7 @@ export class MotionCommentsComponent extends BaseModelContextComponent implement
     }
 
     public ngOnInit(): void {
-        this.requestModels({
-            viewModelCtor: ViewMeeting,
-            ids: [1], // TODO
-            follow: [
-                {
-                    idField: 'motion_comment_section_ids',
-                    fieldset: 'comment',
-                    follow: [{ idField: 'comment_ids', fieldset: ['section_id', 'motion_id'] }]
-                }
-            ]
-        });
+        super.ngOnInit();
 
         this.subscriptions.push(
             this.commentSectionRepo.getViewModelListObservable().subscribe(sections => {
@@ -70,6 +61,20 @@ export class MotionCommentsComponent extends BaseModelContextComponent implement
                 }
             })
         );
+    }
+
+    public getModelRequest(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [1], // TODO
+            follow: [
+                {
+                    idField: 'motion_comment_section_ids',
+                    fieldset: 'comment',
+                    follow: [{ idField: 'comment_ids', fieldset: ['section_id', 'motion_id'] }]
+                }
+            ]
+        };
     }
 
     public getCommentForSection(section: ViewMotionCommentSection): ViewMotionComment {

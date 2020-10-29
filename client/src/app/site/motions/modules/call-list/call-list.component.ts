@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { BehaviorSubject, Observable } from 'rxjs';
 
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
@@ -107,17 +108,7 @@ export class CallListComponent extends BaseSortTreeComponent<ViewMotion> impleme
      * Initializes filters and filter subscriptions
      */
     public ngOnInit(): void {
-        this.requestModels({
-            viewModelCtor: ViewMeeting,
-            ids: [1], // TODO
-            follow: [
-                {
-                    idField: 'motion_ids',
-                    fieldset: 'callList'
-                }
-            ]
-        });
-
+        super.ngOnInit();
         this.subscriptions.push(
             this.activeTagFilters.subscribe((value: number[]) => this.onSubscribedFilterChange('tag', value))
         );
@@ -181,6 +172,19 @@ export class CallListComponent extends BaseSortTreeComponent<ViewMotion> impleme
                 }
             })
         );
+    }
+
+    public getModelRequest(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [1], // TODO
+            follow: [
+                {
+                    idField: 'motion_ids',
+                    fieldset: 'callList'
+                }
+            ]
+        };
     }
 
     /**

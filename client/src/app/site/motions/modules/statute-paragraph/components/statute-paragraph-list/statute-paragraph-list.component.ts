@@ -2,12 +2,15 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { MotionStatuteParagraphRepositoryService } from 'app/core/repositories/motions/motion-statute-paragraph-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { MotionStatuteParagraph } from 'app/shared/models/motions/motion-statute-paragraph';
 import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewMotionStatuteParagraph } from 'app/site/motions/models/view-motion-statute-paragraph';
 import { StatuteCsvExportService } from 'app/site/motions/services/statute-csv-export.service';
 
@@ -19,7 +22,7 @@ import { StatuteCsvExportService } from 'app/site/motions/services/statute-csv-e
     templateUrl: './statute-paragraph-list.component.html',
     styleUrls: ['./statute-paragraph-list.component.scss']
 })
-export class StatuteParagraphListComponent extends BaseComponent implements OnInit {
+export class StatuteParagraphListComponent extends BaseModelContextComponent implements OnInit {
     @ViewChild('statuteParagraphDialog', { static: true })
     private statuteParagraphDialog: TemplateRef<string>;
 
@@ -71,10 +74,20 @@ export class StatuteParagraphListComponent extends BaseComponent implements OnIn
      * Sets the title and gets/observes statute paragraphs from DataStore
      */
     public ngOnInit(): void {
+        super.ngOnInit();
         super.setTitle('Statute');
         this.repo.getViewModelListObservable().subscribe(newViewStatuteParagraphs => {
             this.statuteParagraphs = newViewStatuteParagraphs;
         });
+    }
+
+    protected getModelRequest(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [1], // TODO
+            follow: ['motion_statute_paragraph_ids'],
+            fieldset: []
+        };
     }
 
     /**
@@ -101,22 +114,16 @@ export class StatuteParagraphListComponent extends BaseComponent implements OnIn
      * creates a new statute paragraph or updates the current one
      */
     private save(): void {
-        if (this.statuteParagraphForm.valid) {
-            // eiher update or create
-            // if (this.currentStatuteParagraph) {
-            //     this.repo
-            //         .update(
-            //             this.statuteParagraphForm.value as Partial<MotionStatuteParagraph>,
-            //             this.currentStatuteParagraph
-            //         )
-            //         .catch(this.raiseError);
-            // } else {
-            //     const paragraph = new MotionStatuteParagraph(this.statuteParagraphForm.value);
-            //     this.repo.create(paragraph).catch(this.raiseError);
-            // }
-            throw new Error('TODO!');
-            this.statuteParagraphForm.reset();
+        if (!this.statuteParagraphForm.valid) {
+            return;
         }
+        // eiher update or create
+        if (this.currentStatuteParagraph) {
+            this.updateStatuteParagraph();
+        } else {
+            this.createStatuteParagraph();
+        }
+        this.statuteParagraphForm.reset();
     }
 
     /**
@@ -127,8 +134,7 @@ export class StatuteParagraphListComponent extends BaseComponent implements OnIn
         const title = this.translate.instant('Are you sure you want to delete this statute paragraph?');
         const content = viewStatuteParagraph.title;
         if (await this.promptService.open(title, content)) {
-            // this.repo.delete(viewStatuteParagraph).catch(this.raiseError);
-            throw new Error('TODO!');
+            await this.repo.delete(viewStatuteParagraph);
         }
     }
 
@@ -160,5 +166,17 @@ export class StatuteParagraphListComponent extends BaseComponent implements OnIn
      */
     public onCsvExport(): void {
         this.csvExportService.exportStatutes(this.statuteParagraphs);
+    }
+
+    private async createStatuteParagraph(): Promise<void> {
+        const paragraph = new MotionStatuteParagraph(this.statuteParagraphForm.value);
+        await this.repo.create(paragraph);
+    }
+
+    private async updateStatuteParagraph(): Promise<void> {
+        await this.repo.update(
+            this.statuteParagraphForm.value as Partial<MotionStatuteParagraph>,
+            this.currentStatuteParagraph
+        );
     }
 }

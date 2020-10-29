@@ -90,6 +90,7 @@ export class CategoryDetailComponent extends BaseModelContextComponent implement
      * Sets the title, observes the block and the motions belonging in this block
      */
     public ngOnInit(): void {
+        super.ngOnInit();
         const selectedCategoryId = Number(this.route.snapshot.params.id);
         this.loadCategoryById(selectedCategoryId);
     }
