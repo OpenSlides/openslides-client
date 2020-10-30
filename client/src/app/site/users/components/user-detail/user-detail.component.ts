@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Operator } from 'rxjs';
 
+import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
+import { ModelSubscription } from 'app/core/core-services/autoupdate.service';
 import { SpecificStructuredField } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
@@ -15,6 +17,7 @@ import { PromptService } from 'app/core/ui-services/prompt.service';
 import { genders } from 'app/shared/models/users/user';
 import { OneOfValidator } from 'app/shared/validators/one-of-validator';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { PollService } from 'app/site/polls/services/poll.service';
 import { UserPdfExportService } from '../../services/user-pdf-export.service';
 import { ViewGroup } from '../../models/view-group';
@@ -34,7 +37,7 @@ interface UserBackends {
     templateUrl: './user-detail.component.html',
     styleUrls: ['./user-detail.component.scss']
 })
-export class UserDetailComponent extends BaseModelContextComponent {
+export class UserDetailComponent extends BaseModelContextComponent implements OnDestroy {
     /**
      * Info form object
      */
@@ -81,13 +84,13 @@ export class UserDetailComponent extends BaseModelContextComponent {
      */
     public genderList = genders;
 
-    private userBackends: UserBackends | null = null;
-
     private voteWeightEnabled: boolean;
 
     public get showVoteWeight(): boolean {
         return this.pollService.isElectronicVotingEnabled && this.voteWeightEnabled;
     }
+
+    private editModelsSubscription: ModelSubscription;
 
     /**
      * Constructor for user
@@ -106,6 +109,8 @@ export class UserDetailComponent extends BaseModelContextComponent {
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        private activeMeetingService: ActiveMeetingService,
+        private operatorService: OperatorService,
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
@@ -121,12 +126,23 @@ export class UserDetailComponent extends BaseModelContextComponent {
         this.createForm();
         this.getUserByUrl();
 
+        this.operatorService.operatorUpdatedEvent.subscribe(() => {
+            this.updateFormControlsAccesibility();
+        });
+
         this.meetingSettingsService
             .get('users_enable_vote_weight')
             .subscribe(enabled => (this.voteWeightEnabled = enabled));
 
         this.groupRepo.getViewModelListObservableWithoutDefaultGroup().subscribe(this.groups);
         this.users = this.repo.getViewModelListBehaviorSubject();
+    }
+
+    public ngOnDestroy(): void {
+        super.ngOnDestroy();
+        if (this.editModelsSubscription) {
+            this.editModelsSubscription.close();
+        }
     }
 
     private getUserByUrl(): void {
@@ -182,7 +198,7 @@ export class UserDetailComponent extends BaseModelContextComponent {
                 vote_weight: [],
                 about_me: [''],
                 group_ids: [[]],
-                vote_delegated_from_users_id: [''],
+                vote_delegations_from_ids: [''],
                 is_present: [true],
                 is_committee: [false],
                 email: ['', Validators.email],
@@ -248,7 +264,11 @@ export class UserDetailComponent extends BaseModelContextComponent {
     public patchFormValues(): void {
         const personalInfoPatch = {};
         Object.keys(this.personalInfoForm.controls).forEach(ctrl => {
-            personalInfoPatch[ctrl] = this.user[ctrl];
+            if (ctrl === 'group_ids') {
+                personalInfoPatch[ctrl] = this.user.group_ids();
+            } else {
+                personalInfoPatch[ctrl] = this.user[ctrl];
+            }
         });
         this.personalInfoForm.patchValue(personalInfoPatch);
     }
@@ -272,13 +292,6 @@ export class UserDetailComponent extends BaseModelContextComponent {
                 }
             });
         }
-
-        // TODO: remove auth type?
-        /*if (!this.newUser && this.user.auth_type && this.userBackends && this.userBackends[this.user.auth_type]) {
-            this.userBackends[this.user.auth_type].disallowedUpdateKeys.forEach(key => {
-                this.personalInfoForm.get(key).disable();
-            });
-        }*/
     }
 
     /**
@@ -325,7 +338,20 @@ export class UserDetailComponent extends BaseModelContextComponent {
      * sets editUser variable and editable form
      * @param edit
      */
-    public setEditMode(edit: boolean): void {
+    public async setEditMode(edit: boolean): Promise<void> {
+        if (this.user && edit && !this.user.meeting_id) {
+            throw new Error('No edit on temporary users here!');
+            // TODO: Disable the button for non-temporary users
+        }
+
+        if (!this.editModelsSubscription) {
+            this.editModelsSubscription = await this.componentServiceCollector.modelRequestService.requestModels({
+                viewModelCtor: ViewMeeting,
+                ids: [this.activeMeetingService.meetingId],
+                follow: ['group_ids', { idField: 'user_ids', fieldset: 'shortName' }]
+            });
+        }
+
         this.editUser = edit;
         this.updateFormControlsAccesibility();
 
