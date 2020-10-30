@@ -12,17 +12,23 @@ import { FormControl, FormGroup } from '@angular/forms';
 
 import { BehaviorSubject } from 'rxjs';
 
+import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
+import { SpeakerRepositoryService } from 'app/core/repositories/agenda/speaker-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DurationService } from 'app/core/ui-services/duration.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { SpeakerState } from 'app/shared/models/agenda/speaker';
 import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { ViewSpeaker } from 'app/site/agenda/models/view-speaker';
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { Selectable } from '../selectable';
 import { SortingListComponent } from '../sorting-list/sorting-list.component';
@@ -33,13 +39,13 @@ import { SortingListComponent } from '../sorting-list/sorting-list.component';
     styleUrls: ['./list-of-speakers-content.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListOfSpeakersContentComponent extends BaseComponent implements OnInit {
+export class ListOfSpeakersContentComponent extends BaseModelContextComponent implements OnInit {
     @ViewChild(SortingListComponent)
     public listElement: SortingListComponent;
 
-    private viewListOfSpeakers: ViewListOfSpeakers;
-    public finishedSpeakers: ViewSpeaker[];
-    public waitingSpeakers: ViewSpeaker[];
+    private _listOfSpeakers: ViewListOfSpeakers;
+    public finishedSpeakers: ViewSpeaker[] = [];
+    public waitingSpeakers: ViewSpeaker[] = [];
     public activeSpeaker: ViewSpeaker;
 
     /**
@@ -47,8 +53,8 @@ export class ListOfSpeakersContentComponent extends BaseComponent implements OnI
      */
     public addSpeakerForm: FormGroup;
 
-    public users = new BehaviorSubject<ViewUser[]>([]);
-    public filteredUsers = new BehaviorSubject<ViewUser[]>([]);
+    public usersSubject = new BehaviorSubject<ViewUser[]>([]);
+    public filteredUsersSubject = new BehaviorSubject<ViewUser[]>([]);
 
     public isSortMode: boolean;
 
@@ -57,11 +63,15 @@ export class ListOfSpeakersContentComponent extends BaseComponent implements OnI
     public showFistContributionHint: boolean;
 
     public get title(): string {
-        return this.viewListOfSpeakers?.getTitle();
+        return this._listOfSpeakers?.getTitle();
+    }
+
+    public get filteredUsers(): ViewUser[] {
+        return this.filteredUsersSubject.value;
     }
 
     public get closed(): boolean {
-        return this.viewListOfSpeakers?.closed;
+        return this._listOfSpeakers?.closed;
     }
 
     public get opCanManage(): boolean {
@@ -73,13 +83,23 @@ export class ListOfSpeakersContentComponent extends BaseComponent implements OnI
     }
 
     public get canAddSelf(): boolean {
-        throw new Error('TODO');
-        // return !this.config.instant('agenda_present_speakers_only') || this.operator.user.is_present;
+        return !this.onlyPresentUsers || this.currentUser.isPresentInMeeting();
+    }
+
+    private get onlyPresentUsers(): boolean {
+        return this.meetingSettingService.instant('list_of_speakers_present_users_only');
     }
 
     @Input()
-    public set speakers(los: ViewListOfSpeakers) {
-        this.setListOfSpeakers(los);
+    public set listOfSpeakers(los: ViewListOfSpeakers) {
+        if (los) {
+            this._listOfSpeakers = los;
+            this.updateSpeakers();
+        }
+    }
+
+    public get listOfSpeakers(): ViewListOfSpeakers {
+        return this._listOfSpeakers;
     }
 
     @Input()
@@ -99,14 +119,19 @@ export class ListOfSpeakersContentComponent extends BaseComponent implements OnI
     @Output()
     private hasFinishesSpeakersEvent = new EventEmitter<boolean>();
 
+    private currentUser: ViewUser = null;
+
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private listOfSpeakersRepo: ListOfSpeakersRepositoryService,
+        private activeMeetingService: ActiveMeetingService,
+        private meetingSettingsService: MeetingSettingsService,
+        private speakerRepo: SpeakerRepositoryService,
         private operator: OperatorService,
         private promptService: PromptService,
         private durationService: DurationService,
         private userRepository: UserRepositoryService,
-        // private config: ConfigService,
+        private meetingSettingService: MeetingSettingsService,
         private viewport: ViewportService,
         private cd: ChangeDetectorRef
     ) {
@@ -115,10 +140,11 @@ export class ListOfSpeakersContentComponent extends BaseComponent implements OnI
     }
 
     public ngOnInit(): void {
+        super.ngOnInit();
         this.subscriptions.push(
             // Observe the user list
             this.userRepository.getViewModelListObservable().subscribe(users => {
-                this.users.next(users);
+                this.usersSubject.next(users);
                 this.filterUsers();
                 this.cd.markForCheck();
             }),
@@ -133,30 +159,30 @@ export class ListOfSpeakersContentComponent extends BaseComponent implements OnI
             this.viewport.isMobileSubject.subscribe(isMobile => {
                 this.isMobile = isMobile;
                 this.cd.markForCheck();
-            })
-            // TODO
-            // observe changes the agenda_present_speakers_only config
-            /*this.config.get('agenda_present_speakers_only').subscribe(() => {
+            }),
+            this.speakerRepo.getViewModelListObservable().subscribe(() => {
+                this.updateSpeakers();
+                this.cd.markForCheck();
+            }),
+            this.operator.userObservable.subscribe(user => (this.currentUser = user)),
+            // observe changes the agenda_present_speakers_only setting
+            this.meetingSettingsService.get('list_of_speakers_present_users_only').subscribe(() => {
                 this.filterUsers();
             }),
-            // observe changes to the agenda_show_first_contribution config
-            this.config.get<boolean>('agenda_show_first_contribution').subscribe(show => {
+            // observe changes to the agenda_show_first_contribution setting
+            this.meetingSettingsService.get('list_of_speakers_show_first_contribution').subscribe(show => {
                 this.showFistContributionHint = show;
-            })*/
+            })
         );
     }
 
-    private isListOfSpeakersEmpty(): void {
-        if (this.waitingSpeakers && this.waitingSpeakers.length) {
-            this.isListOfSpeakersEmptyEvent.emit(false);
-        } else if (this.finishedSpeakers && this.finishedSpeakers.length) {
-            this.isListOfSpeakersEmptyEvent.emit(false);
-        }
-        return this.isListOfSpeakersEmptyEvent.emit(!this.activeSpeaker);
-    }
-
-    private hasFinishesSpeakers(): void {
-        this.hasFinishesSpeakersEvent.emit(this.finishedSpeakers?.length > 0);
+    public getModelRequest(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [this.activeMeetingService.meetingId],
+            follow: [{ idField: 'user_ids', fieldset: 'shortName' }],
+            fieldset: []
+        };
     }
 
     /**
@@ -164,10 +190,12 @@ export class ListOfSpeakersContentComponent extends BaseComponent implements OnI
      *
      * @param userId the user id to add to the list. No parameter adds the operators user as speaker.
      */
-    public addNewSpeaker(userId?: number): void {
-        this.listOfSpeakersRepo
-            .createSpeaker(this.viewListOfSpeakers, userId)
-            .then(() => this.addSpeakerForm.reset(), this.raiseError);
+    public addNewSpeaker(userId: number): void {
+        this.speakerRepo.create(this._listOfSpeakers, userId).then(() => this.addSpeakerForm.reset(), this.raiseError);
+    }
+
+    public addMyself(): void {
+        this.addNewSpeaker(this.currentUser.id);
     }
 
     /**
@@ -176,18 +204,22 @@ export class ListOfSpeakersContentComponent extends BaseComponent implements OnI
      * @param speaker optional speaker to remove. If none is given,
      * the operator themself is removed
      */
-    public async onDeleteButton(speaker?: ViewSpeaker): Promise<void> {
+    public async removeSpeaker(speaker: ViewSpeaker): Promise<void> {
         const title = this.translate.instant(
             'Are you sure you want to delete this speaker from this list of speakers?'
         );
         if (await this.promptService.open(title)) {
             try {
-                await this.listOfSpeakersRepo.delete(this.viewListOfSpeakers, speaker ? speaker.id : null);
+                await this.speakerRepo.delete(speaker);
                 this.filterUsers();
             } catch (e) {
                 this.raiseError(e);
             }
         }
+    }
+
+    public removeMyself(): void {
+        this.removeSpeaker(this._listOfSpeakers.getSpeakerByUserId(this.currentUser.id));
     }
 
     /**
@@ -197,7 +229,7 @@ export class ListOfSpeakersContentComponent extends BaseComponent implements OnI
      */
     public async onStartButton(speaker: ViewSpeaker): Promise<void> {
         try {
-            await this.listOfSpeakersRepo.startSpeaker(this.viewListOfSpeakers, speaker);
+            await this.speakerRepo.startToSpeak(speaker);
             this.filterUsers();
         } catch (e) {
             this.raiseError(e);
@@ -209,7 +241,7 @@ export class ListOfSpeakersContentComponent extends BaseComponent implements OnI
      */
     public async onStopButton(): Promise<void> {
         try {
-            await this.listOfSpeakersRepo.stopCurrentSpeaker(this.viewListOfSpeakers);
+            await this.speakerRepo.stopToSpeak(this.activeSpeaker);
             this.filterUsers();
         } catch (e) {
             this.raiseError(e);
@@ -221,8 +253,8 @@ export class ListOfSpeakersContentComponent extends BaseComponent implements OnI
      *
      * @param speaker The speaker clicked on.
      */
-    public onMarkButton(speaker: ViewSpeaker): void {
-        this.listOfSpeakersRepo.markSpeaker(this.viewListOfSpeakers, speaker, !speaker.marked).catch(this.raiseError);
+    public async onMarkButton(speaker: ViewSpeaker): Promise<void> {
+        await this.speakerRepo.changeMarkingOfSpeaker(speaker, !speaker.marked).catch(this.raiseError);
     }
 
     /**
@@ -241,33 +273,37 @@ export class ListOfSpeakersContentComponent extends BaseComponent implements OnI
      *
      * @param sortedSpeakerList The list to save.
      */
-    public async onSaveSorting(sortedSpeakerList: Selectable[] = this.listElement.sortedItems): Promise<void> {
-        return await this.listOfSpeakersRepo
+    public onSaveSorting(sortedSpeakerList: Selectable[] = this.listElement.sortedItems): void {
+        this.speakerRepo
             .sortSpeakers(
-                this.viewListOfSpeakers,
+                this._listOfSpeakers,
                 sortedSpeakerList.map(el => el.id)
             )
             .catch(this.raiseError);
     }
 
-    private setListOfSpeakers(viewListOfSpeakers: ViewListOfSpeakers | undefined): void {
-        this.viewListOfSpeakers = viewListOfSpeakers;
-        const allSpeakers = viewListOfSpeakers?.speakers.sort((a, b) => a.weight - b.weight);
-        this.waitingSpeakers = allSpeakers?.filter(speaker => speaker.state === SpeakerState.WAITING);
-        this.waitingSpeakers?.sort((a: ViewSpeaker, b: ViewSpeaker) => a.weight - b.weight);
-        this.filterUsers();
-        this.finishedSpeakers = allSpeakers?.filter(speaker => speaker.state === SpeakerState.FINISHED);
+    private updateSpeakers(): void {
+        if (!this.listOfSpeakers) {
+            return;
+        }
+
+        const allSpeakers = this.listOfSpeakers.speakers.sort((a, b) => a.weight - b.weight);
+        this.waitingSpeakers = allSpeakers.filter(speaker => speaker.state === SpeakerState.WAITING);
+        this.finishedSpeakers = allSpeakers.filter(speaker => speaker.state === SpeakerState.FINISHED);
 
         // convert begin time to date and sort
-        this.finishedSpeakers?.sort((a: ViewSpeaker, b: ViewSpeaker) => {
+        this.finishedSpeakers.sort((a: ViewSpeaker, b: ViewSpeaker) => {
             const aTime = new Date(a.begin_time).getTime();
             const bTime = new Date(b.begin_time).getTime();
             return aTime - bTime;
         });
 
-        this.activeSpeaker = allSpeakers?.find(speaker => speaker.state === SpeakerState.CURRENT);
-        this.hasFinishesSpeakers();
-        this.isListOfSpeakersEmpty();
+        this.activeSpeaker = allSpeakers.find(speaker => speaker.state === SpeakerState.CURRENT);
+
+        this.hasFinishesSpeakersEvent.emit(this.finishedSpeakers?.length > 0);
+        const hasSpeakers = !!this.waitingSpeakers.length || !!this.finishedSpeakers.length || !!this.activeSpeaker;
+        this.isListOfSpeakersEmptyEvent.emit(!hasSpeakers);
+        this.cd.markForCheck();
     }
 
     /**
@@ -275,14 +311,13 @@ export class ListOfSpeakersContentComponent extends BaseComponent implements OnI
      * (triggered on an update of users or config)
      */
     private filterUsers(): void {
-        // const presentUsersOnly = this.config.instant('agenda_present_speakers_only');
-        throw new Error('TODO');
-        /*const users = presentUsersOnly ? this.users.getValue().filter(u => u.is_present) : this.users.getValue();
-        if (!this.waitingSpeakers || !this.waitingSpeakers.length) {
-            this.filteredUsers.next(users);
-        } else {
-            this.filteredUsers.next(users.filter(u => !this.waitingSpeakers.some(speaker => speaker.user_id === u.id)));
-        }*/
+        const availableUsers = this.usersSubject.getValue().filter(user => {
+            return (
+                (!this.onlyPresentUsers || user.isPresentInMeeting()) &&
+                !this.waitingSpeakers.some(speaker => speaker.user_id === user.id)
+            );
+        });
+        this.filteredUsersSubject.next(availableUsers);
     }
 
     /**
@@ -302,11 +337,7 @@ export class ListOfSpeakersContentComponent extends BaseComponent implements OnI
      * @returns 0 or the number of times a speaker occurs in finishedSpeakers
      */
     public hasSpokenCount(speaker: ViewSpeaker): number {
-        return this.finishedSpeakers.filter(finishedSpeaker => {
-            if (finishedSpeaker && finishedSpeaker.user) {
-                return finishedSpeaker.user.id === speaker.user.id;
-            }
-        }).length;
+        return this.finishedSpeakers.filter(finishedSpeaker => finishedSpeaker.user_id === speaker.user_id).length;
     }
 
     /**
@@ -326,9 +357,9 @@ export class ListOfSpeakersContentComponent extends BaseComponent implements OnI
      */
     public durationString(speaker: ViewSpeaker): string {
         const duration = Math.floor(
-            (new Date(speaker.end_time).valueOf() - new Date(speaker.begin_time).valueOf()) / 1000
+            (speaker.getEndTimeAsDate().valueOf() - speaker.getBeginTimeAsDate().valueOf()) / 1000
         );
-        return `${this.durationService.durationToString(duration, 'm')}`;
+        return this.durationService.durationToString(duration, 'm');
     }
 
     /**
@@ -338,6 +369,6 @@ export class ListOfSpeakersContentComponent extends BaseComponent implements OnI
      * @returns a time string using the current language setting of the client
      */
     public startTimeToString(speaker: ViewSpeaker): string {
-        return new Date(speaker.begin_time).toLocaleString(this.translate.currentLang);
+        return speaker.getBeginTimeAsDate().toLocaleString(this.translate.currentLang);
     }
 }

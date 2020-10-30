@@ -84,7 +84,7 @@ export class ViewUser extends BaseProjectableViewModel<User> implements Searchab
         if (!meetingId) {
             meetingId = this.getEnsuredActiveMeetingId();
         }
-        return this.is_present_in_meeting_ids.includes(meetingId);
+        return this.is_present_in_meeting_ids?.includes(meetingId);
     }
 
     public hasVoteRightFromOthers(meetingId?: Id): boolean {

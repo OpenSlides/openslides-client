@@ -1,11 +1,15 @@
 import { SummaryResolver } from '@angular/compiler';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
+import { Subscription } from 'rxjs';
+
+import { ModelSubscription } from 'app/core/core-services/autoupdate.service';
 import { CollectionMapperService } from 'app/core/core-services/collection-mapper.service';
 import { collectionFromFqid } from 'app/core/core-services/key-transforms';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
+import { Id } from 'app/core/definitions/key-types';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -31,7 +35,7 @@ import { ViewSpeaker } from '../../models/view-speaker';
     templateUrl: './list-of-speakers.component.html',
     styleUrls: ['./list-of-speakers.component.scss']
 })
-export class ListOfSpeakersComponent extends BaseModelContextComponent implements OnInit {
+export class ListOfSpeakersComponent extends BaseModelContextComponent implements OnInit, OnDestroy {
     @ViewChild('content')
     private listOfSpeakersContentComponent: ListOfSpeakersContentComponent;
 
@@ -71,6 +75,8 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
      */
     public hasFinishedSpeakers: boolean;
 
+    private losSubscription: Subscription;
+
     /**
      * Constructor for speaker list component. Generates the forms.
      *
@@ -94,60 +100,35 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
         private currentListOfSpeakersSlideService: CurrentListOfSpeakersSlideService,
         private meetingSettingsService: MeetingSettingsService,
         private viewport: ViewportService,
-        private collectionMapper: CollectionMapperService
+        private collectionMapper: CollectionMapperService,
+        private operator: OperatorService
     ) {
         super(componentServiceCollector);
     }
 
     public ngOnInit(): void {
-        super.ngOnInit();
+        const id = parseInt(this.route.snapshot.url[this.route.snapshot.url.length - 1].path, 10);
+        this.setListOfSpeakersById(id);
         // Check, if we are on the current list of speakers.
-        this.isCurrentListOfSpeakers =
-            this.route.snapshot.url.length > 0
-                ? this.route.snapshot.url[this.route.snapshot.url.length - 1].path === 'speakers'
-                : true;
+        // this.isCurrentListOfSpeakers =
+        //     this.route.snapshot.url.length > 0
+        //         ? this.route.snapshot.url[this.route.snapshot.url.length - 1].path === 'speakers'
+        //         : true;
 
-        if (this.isCurrentListOfSpeakers) {
-            this.subscriptions.push(
-                this.currentListOfSpeakersService.currentListOfSpeakersObservable.subscribe(clos => {
-                    this.setListOfSpeakers(clos);
-                })
-            );
-        } else {
-            const id = +this.route.snapshot.url[this.route.snapshot.url.length - 1].path;
-            this.setListOfSpeakersById(id);
-        }
-
-        throw new Error('TODO');
-        /*
-        this.subscriptions.push(
-            // Observe the user list
-            this.userRepository.getViewModelListObservable().subscribe(users => {
-                this.users.next(users);
-                this.filterUsers();
-                this.cd.markForCheck();
-            }),
-            // ovserve changes to the add-speaker form
-            this.addSpeakerForm.valueChanges.subscribe(formResult => {
-                // resetting a form triggers a form.next(null) - check if user_id
-                if (formResult && formResult.user_id) {
-                    this.addNewSpeaker(formResult.user_id);
-                }
-            }),
-            // observe changes to the viewport
-            this.viewport.isMobileSubject.subscribe(isMobile => this.checkSortMode(isMobile)),
-            this.meetingSettingsService.get('list_of_speakers_present_users_only').subscribe(() => {
-                this.filterUsers();
-            }),
-            this.meetingSettingsService.get('list_of_speakers_show_first_contribution').subscribe(show => {
-                this.showFistContributionHint = show;
-            })
-        );*/
+        // if (this.isCurrentListOfSpeakers) {
+        //     this.subscriptions.push(
+        //         this.currentListOfSpeakersService.currentListOfSpeakersObservable.subscribe(clos => {
+        //             this.setListOfSpeakers(clos);
+        //         })
+        //     );
+        // } else {
+        //     const id = +this.route.snapshot.url[this.route.snapshot.url.length - 1].path;
+        //     this.setListOfSpeakersById(id);
+        // }
     }
 
     public opCanManage(): boolean {
-        throw new Error('TODO');
-        // return this.operator.hasPerms(Permission.agendaCanManageListOfSpeakers);
+        return this.operator.hasPerms(Permission.agendaCanManageListOfSpeakers);
     }
 
     /**
@@ -192,13 +173,26 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
      * @param id the list of speakers id
      */
     private setListOfSpeakersById(id: number): void {
-        this.subscriptions.push(
-            this.listOfSpeakersRepo.getViewModelObservable(id).subscribe(listOfSpeakers => {
-                if (listOfSpeakers) {
-                    this.setListOfSpeakers(listOfSpeakers);
-                }
-            })
-        );
+        if (this.losSubscription) {
+            this.losSubscription.unsubscribe();
+        }
+        this.losSubscription = this.listOfSpeakersRepo.getViewModelObservable(id).subscribe(listOfSpeakers => {
+            if (listOfSpeakers) {
+                this.setListOfSpeakers(listOfSpeakers);
+            }
+        });
+
+        this.requestModels({
+            viewModelCtor: ViewListOfSpeakers,
+            ids: [id],
+            follow: [
+                {
+                    idField: 'speaker_ids',
+                    follow: [{ idField: 'user_id', fieldset: 'shortName' }]
+                },
+                'content_object_id' // To retreive the title
+            ]
+        });
     }
 
     private setListOfSpeakers(listOfSpeakers: ViewListOfSpeakers): void {
@@ -244,9 +238,8 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
      * Closes the current list of speakers
      */
     public closeSpeakerList(): Promise<void> {
-        throw new Error('TODO!');
         if (!this.viewListOfSpeakers.closed) {
-            // return this.listOfSpeakersRepo.update({ closed: true }, this.viewListOfSpeakers).catch(this.raiseError);
+            return this.listOfSpeakersRepo.closeListOfSpeakers(this.viewListOfSpeakers);
         }
     }
 
@@ -254,9 +247,8 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
      * Opens the list of speaker for the current item
      */
     public openSpeakerList(): Promise<void> {
-        throw new Error('TODO!');
         if (this.viewListOfSpeakers.closed) {
-            // return this.listOfSpeakersRepo.update({ closed: false }, this.viewListOfSpeakers).catch(this.raiseError);
+            return this.listOfSpeakersRepo.reopenListOfSpeakers(this.viewListOfSpeakers);
         }
     }
 
@@ -354,5 +346,12 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
         this.isMobile = isMobile;
         throw new Error('TODO!');
         // this.isSortMode = !isMobile;
+    }
+
+    public ngOnDestroy(): void {
+        super.ngOnDestroy();
+        if (this.losSubscription) {
+            this.losSubscription.unsubscribe();
+        }
     }
 }

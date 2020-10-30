@@ -1,3 +1,4 @@
+import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Id, UnsafeHtml } from '../definitions/key-types';
 
 export namespace MeetingAction {
@@ -5,6 +6,7 @@ export namespace MeetingAction {
     export const UPDATE = 'meeting.update';
     export const DELETE = 'meeting.delete';
     export const CREATE_FROM_TEMPLATE = 'meeting.create_from_template';
+    export const DELETE_ALL_SPEAKERS_OF_ALL_LISTS = 'meeting.delete_all_speakers_of_all_lists';
 
     export interface CreatePayload {
         // Required
@@ -156,4 +158,6 @@ export namespace MeetingAction {
         guest_ids: Id[];
         default_meeting_for_committee_id: Id;
     }
+
+    export interface DeleteAllSpeakersOfAllListsPayload extends Identifiable {}
 }

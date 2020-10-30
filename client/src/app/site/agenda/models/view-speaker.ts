@@ -38,6 +38,14 @@ export class ViewSpeaker extends BaseViewModel<Speaker> {
     public get gender(): string {
         return this.user ? this.user.gender : '';
     }
+
+    public getBeginTimeAsDate(): Date | null {
+        return this.begin_time ? new Date(this.begin_time * 1000) : null;
+    }
+
+    public getEndTimeAsDate(): Date | null {
+        return this.end_time ? new Date(this.end_time * 1000) : null;
+    }
 }
 interface ISpeakerRelations {
     user: ViewUser;
