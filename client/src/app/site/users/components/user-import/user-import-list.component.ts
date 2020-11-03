@@ -157,7 +157,7 @@ export class UserImportListComponent extends BaseImportListComponent<User> {
     private guessType(userProperty: keyof User): 'string' | 'number' | 'boolean' {
         const numberProperties: (keyof User)[] = ['id', 'vote_weight'];
         console.error('TODO');
-        const booleanProperties: (keyof User)[] = [/*'is_present', */ 'is_committee', 'is_active'];
+        const booleanProperties: (keyof User)[] = [/*'is_present', */ 'is_physical_person', 'is_active'];
         if (numberProperties.includes(userProperty)) {
             return 'number';
         } else if (booleanProperties.includes(userProperty)) {

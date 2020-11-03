@@ -55,7 +55,7 @@ export class UserFilterListService extends BaseFilterListService<ViewUser> {
     protected getFilterDefinitions(): OsFilter[] {
         const staticFilterOptions: OsFilter[] = [
             {
-                property: 'is_present',
+                property: 'isPresentInMeeting',
                 label: 'Presence',
                 options: [
                     { condition: true, label: this.translate.instant('Is present') },
@@ -71,11 +71,11 @@ export class UserFilterListService extends BaseFilterListService<ViewUser> {
                 ]
             },
             {
-                property: 'is_committee',
+                property: 'is_physical_person',
                 label: this.translate.instant('Committee'),
                 options: [
-                    { condition: true, label: 'Is a committee' },
-                    { condition: false, label: this.translate.instant('Is not a committee') }
+                    { condition: true, label: this.translate.instant('Is not a committee') },
+                    { condition: false, label: 'Is a committee' }
                 ]
             },
             {

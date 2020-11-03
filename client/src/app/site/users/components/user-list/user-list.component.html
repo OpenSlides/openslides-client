@@ -45,7 +45,7 @@
                 </div>
             </div>
             <div class="icon-group">
-                <mat-icon matTooltip="{{ 'Is committee' | translate }}" *ngIf="user.is_committee">
+                <mat-icon matTooltip="{{ 'Is committee' | translate }}" *ngIf="!user.is_physical_person">
                     account_balance
                 </mat-icon>
                 <mat-icon matTooltip="{{ 'Inactive' | translate }}" *ngIf="!user.is_active && canSeeExtra">
@@ -231,9 +231,9 @@
                     <span>{{ 'Set presence ...' | translate }}</span>
                 </button>
 
-                <button mat-menu-item [disabled]="!selectedRows.length" (click)="setStateSelected('is_committee')">
+                <button mat-menu-item [disabled]="!selectedRows.length" (click)="setStateSelected('is_physical_person')">
                     <mat-icon>account_balance</mat-icon>
-                    <span>{{ 'Set committee ...' | translate }}</span>
+                    <span>{{ 'Set physical person ...' | translate }}</span>
                 </button>
 
                 <mat-divider></mat-divider>

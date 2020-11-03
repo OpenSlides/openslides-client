@@ -29,7 +29,7 @@ export class UserSortListService extends BaseSortListService<ViewUser> {
         // TODO
         // { property: 'is_present', label: 'Presence' },
         { property: 'is_active', label: 'Is active' },
-        { property: 'is_committee', label: 'Is committee' },
+        { property: 'is_physical_person', label: 'Is a physical person' },
         { property: 'number', label: 'Participant number' },
         { property: 'structure_level', label: 'Structure level' },
         { property: 'vote_weight', label: 'Vote weight' },
