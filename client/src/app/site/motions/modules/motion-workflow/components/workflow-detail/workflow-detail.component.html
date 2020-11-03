@@ -101,10 +101,10 @@
                     </div>
                     <div *ngIf="perm.type === 'restrictions'">
                         <div class="inner-table">
-                            <div *ngIf="!state.restrictions.length">
+                            <div *ngIf="!state.restrictions?.length">
                                 -
                             </div>
-                            <div *ngIf="state.restrictions.length">
+                            <div *ngIf="state.restrictions?.length">
                                 <div *ngFor="let restriction of state.restrictions; let last = last">
                                     {{ getRestrictionLabel(restriction) | translate }}
                                     <span *ngIf="!last">,&nbsp;</span>
@@ -177,7 +177,7 @@
     <ng-template let-state="state" matMenuContent>
         <div *ngFor="let nextState of workflow.states">
             <button mat-menu-item *ngIf="nextState.name !== state.name" (click)="onSetNextState(nextState, state)">
-                <mat-icon *ngIf="state.next_state_ids.includes(nextState.id)">check</mat-icon>
+                <mat-icon *ngIf="state.next_state_ids?.includes(nextState.id)">check</mat-icon>
                 <span>{{ nextState.name | translate }}</span>
             </button>
         </div>

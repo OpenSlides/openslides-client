@@ -202,7 +202,7 @@ export class TopicDetailComponent extends BaseModelContextComponent {
         const content = this.topic.title;
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(this.topic).catch(this.raiseError);
-            this.router.navigate(['/agenda']);
+            // this.router.navigate(['/agenda']);
         }
     }
 

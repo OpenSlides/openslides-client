@@ -275,7 +275,7 @@
                             <mat-icon>arrow_back</mat-icon> {{ state.name | translate }}
                             <span *ngIf="state.show_state_extension_field">&nbsp;...</span>
                         </button>
-                        <button mat-menu-item (click)="setState(null)">
+                        <button mat-menu-item (click)="resetState()">
                             <mat-icon>replay</mat-icon> {{ 'Reset state' | translate }}
                         </button>
                     </div>
@@ -288,7 +288,7 @@
             *ngIf="
                 (perms.isAllowed('change_metadata') || motion.recommendation) &&
                 recommender &&
-                motion.possibleRecommendations.length &&
+                getPossibleRecommendations().length &&
                 !editMotion
             "
         >
@@ -306,7 +306,7 @@
             >
                 <span class="trigger-menu">
                     <button
-                        *ngFor="let recommendation of motion.possibleRecommendations"
+                        *ngFor="let recommendation of getPossibleRecommendations()"
                         mat-menu-item
                         (click)="setRecommendation(recommendation.id)"
                     >
@@ -314,7 +314,7 @@
                         <span *ngIf="recommendation.show_recommendation_extension_field">&nbsp;...</span>
                     </button>
                     <mat-divider></mat-divider>
-                    <button mat-menu-item (click)="setRecommendation(null)">
+                    <button mat-menu-item (click)="resetRecommendation()">
                         <mat-icon>replay</mat-icon> {{ 'Reset recommendation' | translate }}
                     </button>
                 </span>
@@ -537,9 +537,7 @@
                     type="button"
                     mat-button
                     [matMenuTriggerFor]="changeRecoMenu"
-                    *ngIf="
-                        motion && (hasChangingObjects() || motion.modified_final_version)
-                    "
+                    *ngIf="motion && (hasChangingObjects() || motion.modified_final_version)"
                 >
                     <mat-icon>rate_review</mat-icon>
                     &nbsp;<span>{{ verboseChangeRecoMode[crMode] | translate }}</span>
@@ -665,7 +663,9 @@
         </div>
 
         <!-- Text (hide preamble, if diff mode. The preample is included in the motion-detail-diff component) -->
-        <span *ngIf="showPreamble && !isRecoMode(ChangeRecoMode.Diff)" class="text-prefix-label">{{ preamble | translate }}</span>
+        <span *ngIf="showPreamble && !isRecoMode(ChangeRecoMode.Diff)" class="text-prefix-label">
+            {{ preamble | translate }}
+        </span>
 
         <!-- Regular motions or traditional amendments -->
         <ng-container *ngIf="!editMotion && !motion.isStatuteAmendment() && !motion.isParagraphBasedAmendment()">
@@ -893,11 +893,7 @@
         <div *ngIf="motion.diffLines">
             <div class="alert alert-info" *ngIf="motion.diffLines.length === 0">
                 <i *ngIf="motion.lead_motion">{{ 'No changes at the text.' | translate }}</i>
-<<<<<<< HEAD
                 <i *ngIf="!motion.lead_motion">{{ 'The parent motion was deleted.' | translate }}</i>
-=======
-                <i *ngIf="!motion.lead_motion">{{ 'The lead motion was deleted' | translate }}</i>
->>>>>>> e1a93fe26... fixes
             </div>
             <ng-container *ngIf="motion.lead_motion && !isRecoMode(ChangeRecoMode.Diff) && !isFinalEdit">
                 <div

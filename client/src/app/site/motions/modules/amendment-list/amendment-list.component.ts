@@ -75,7 +75,7 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
     /**
      * To filter stuff
      */
-    public filterProps = ['submitters', 'title', 'number', 'amendment_paragraphs'];
+    public filterProps = ['submitters', 'title', 'number'];
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,

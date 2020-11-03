@@ -36,12 +36,12 @@ import { hasListOfSpeakers } from '../../models/view-list-of-speakers';
  * List view for the agenda.
  */
 @Component({
-    selector: 'os-agenda-list',
-    templateUrl: './agenda-list.component.html',
+    selector: 'os-agenda-item-list',
+    templateUrl: './agenda-item-list.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    styleUrls: ['./agenda-list.component.scss']
+    styleUrls: ['./agenda-item-list.component.scss']
 })
-export class AgendaListComponent extends BaseListViewComponent<ViewAgendaItem> implements OnInit {
+export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaItem> implements OnInit {
     /**
      * Show or hide the numbering button
      */

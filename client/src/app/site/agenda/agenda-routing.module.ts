@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
 
-import { AgendaListComponent } from './components/agenda-list/agenda-list.component';
+import { AgendaItemListComponent } from './components/agenda-item-list/agenda-item-list.component';
 import { AgendaSortComponent } from './components/agenda-sort/agenda-sort.component';
 import { Permission } from 'app/core/core-services/permission';
 import { WatchForChangesGuard } from 'app/shared/utils/watch-for-changes.guard';
@@ -9,7 +9,7 @@ import { TopicImportListComponent } from 'app/site/topics/components/topic-impor
 import { ListOfSpeakersComponent } from './components/list-of-speakers/list-of-speakers.component';
 
 const routes: Route[] = [
-    { path: '', component: AgendaListComponent, pathMatch: 'full' },
+    { path: '', component: AgendaItemListComponent, pathMatch: 'full' },
     { path: 'import', component: TopicImportListComponent, data: { basePerm: Permission.agendaCanManage } },
     {
         path: 'sort-agenda',

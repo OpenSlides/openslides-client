@@ -5,6 +5,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { PblColumnDefinition } from '@pebula/ngrid';
 import { BehaviorSubject } from 'rxjs';
 
+import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
@@ -96,6 +97,7 @@ export class MotionBlockListComponent extends BaseListViewComponent<ViewMotionBl
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        private activeMeetingIdService: ActiveMeetingIdService,
         public repo: MotionBlockRepositoryService,
         private formBuilder: FormBuilder,
         private itemRepo: AgendaItemRepositoryService,
@@ -126,7 +128,7 @@ export class MotionBlockListComponent extends BaseListViewComponent<ViewMotionBl
     protected getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [1], // TODO
+            ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
                     idField: 'motion_block_ids',

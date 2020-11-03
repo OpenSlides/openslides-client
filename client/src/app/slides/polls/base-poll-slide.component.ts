@@ -26,8 +26,6 @@ export class BasePollSlideComponent<T extends BasePollSlideData, S extends PollS
         return this._data;
     }
 
-    private _data: SlideData<T>;
-
     public constructor(
         @Inject(forwardRef(() => PollService))
         public pollService: S

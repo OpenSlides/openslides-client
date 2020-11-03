@@ -184,7 +184,8 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
                         },
                         SPEAKER_BUTTON_FOLLOW
                     ]
-                }
+                },
+                'agenda_item_id'
             ]
         };
     }

@@ -4,6 +4,8 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
@@ -12,6 +14,7 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
 
@@ -73,6 +76,7 @@ export class CategoryDetailComponent extends BaseModelContextComponent implement
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        private activeMeetingIdService: ActiveMeetingIdService,
         private route: ActivatedRoute,
         private operator: OperatorService,
         private router: Router,
@@ -91,27 +95,37 @@ export class CategoryDetailComponent extends BaseModelContextComponent implement
      */
     public ngOnInit(): void {
         super.ngOnInit();
-        const selectedCategoryId = Number(this.route.snapshot.params.id);
-        this.loadCategoryById(selectedCategoryId);
+        const categoryId = +this.route.snapshot.params.id;
+        this.loadCategoryById(categoryId);
     }
 
-    private loadCategoryById(selectedCategoryId: number): void {
-        this.requestModels({
-            viewModelCtor: ViewMotionCategory,
-            ids: [selectedCategoryId],
+    public getModelRequest(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
-                    idField: 'motion_ids',
-                    fieldset: 'title',
-                    follow: ['state_id', 'recommendation_id']
+                    idField: 'motion_category_ids',
+                    follow: [
+                        {
+                            idField: 'motion_ids',
+                            fieldset: 'title',
+                            follow: ['state_id', 'recommendation_id'],
+                            additionalFields: ['category_weight']
+                        }
+                    ],
+                    fieldset: 'sortList'
                 }
-            ]
-        });
+            ],
+            fieldset: []
+        };
+    }
 
+    private loadCategoryById(categoryId: number): void {
         this.subscriptions.push(
             this.repo.getViewModelListObservable().subscribe(categories => {
-                // Extract all categories, that is the selected one and all child categories
-                const selectedCategoryIndex = categories.findIndex(category => category.id === selectedCategoryId);
+                // Extract all sub-categories: The selected one and all child categories
+                const selectedCategoryIndex = categories.findIndex(category => category.id === categoryId);
 
                 if (selectedCategoryIndex < 0) {
                     return;

@@ -25,8 +25,6 @@ export class CommonListOfSpeakersSlideComponent extends BaseSlideComponent<Commo
         return this._data;
     }
 
-    private _data: SlideData<CommonListOfSpeakersSlideData>;
-
     public constructor(private collectionMapperService: CollectionMapperService) {
         super();
     }
