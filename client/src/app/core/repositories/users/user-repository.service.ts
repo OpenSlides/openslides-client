@@ -38,9 +38,9 @@ export function AllUsersInMeetingRequest(meetingId: Id): SimplifiedModelRequest 
 }
 
 /**
- * Unified type name for state fields like `is_active`, `is_committee` and `is_present_in_meetings`.
+ * Unified type name for state fields like `is_active`, `is_physical_person` and `is_present_in_meetings`.
  */
-export type UserStateField = 'is_active' | 'is_present_in_meetings' | 'is_committee';
+export type UserStateField = 'is_active' | 'is_present_in_meetings' | 'is_physical_person';
 
 /**
  * type for determining the user name from a string during import.
@@ -105,7 +105,7 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
                 'email',
                 'gender',
                 'is_active',
-                'is_committee',
+                'is_physical_person',
                 'is_present_in_meeting_ids',
                 'last_email_send',
                 'number',
@@ -396,7 +396,7 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
     }
 
     /**
-     * Sets the state of many users. The "state" means any boolean attribute of a user like active or committee.
+     * Sets the state of many users. The "state" means any boolean attribute of a user like active or physical person.
      *
      * @param users The users to set the state
      * @param field The boolean field to set
@@ -645,7 +645,7 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
             first_name: partialUser.first_name,
             last_name: partialUser.last_name,
             is_active: partialUser.is_active,
-            is_committee: partialUser.is_committee,
+            is_physical_person: partialUser.is_physical_person,
             default_password: partialUser.default_password,
             about_me: partialUser.about_me,
             gender: partialUser.gender,

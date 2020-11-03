@@ -31,7 +31,7 @@ export class UserImportService extends BaseImportService<User> {
         'comment',
         'is_active',
         // 'is_present',
-        'is_committee',
+        'is_physical_person',
         'default_password',
         'email',
         'username',
@@ -106,7 +106,7 @@ export class UserImportService extends BaseImportService<User> {
                     user.csvGroups = this.getGroups(line[idx]);
                     break;
                 case 'is_active':
-                case 'is_committee':
+                case 'is_physical_person':
                 case 'is_present':
                     try {
                         user[this.expectedHeader[idx]] = this.toBoolean(line[idx]);

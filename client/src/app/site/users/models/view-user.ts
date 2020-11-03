@@ -33,11 +33,6 @@ export class ViewUser extends BaseProjectableViewModel<User> implements Searchab
         return this._model;
     }
 
-    public get isSamlUser(): boolean {
-        throw new Error('TODO');
-        // return this.auth_type === 'saml';
-    }
-
     public get isLastEmailSend(): boolean {
         return !!this.user.last_email_send;
     }

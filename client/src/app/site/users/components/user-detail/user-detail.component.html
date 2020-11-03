@@ -244,10 +244,10 @@
 
             <!-- Commitee? -->
             <mat-checkbox
-                formControlName="is_committee"
-                matTooltip="{{ 'Designates whether this user should be treated as a committee.' | translate }}"
+                formControlName="is_physical_person"
+                matTooltip="{{ 'Designates whether this user is a physical person.' | translate }}"
             >
-                <span>{{ 'Is a committee' | translate }}</span>
+                <span>{{ 'Is a physical person' | translate }}</span>
             </mat-checkbox>
         </div>
     </form>
@@ -260,17 +260,15 @@
             <h4>{{ 'Name' | translate }}</h4>
             <span class="state-icons">
                 <span>{{ user.short_name }}</span>
-                <mat-icon *ngIf="user.is_present && isAllowed('seeName')" matTooltip="{{ 'Is present' | translate }}"
+                <mat-icon *ngIf="user.isPresentInMeeting() && isAllowed('seeName')" matTooltip="{{ 'Is present' | translate }}"
                     >check_box</mat-icon
                 >
-                <mat-icon
-                    *ngIf="user.is_committee && isAllowed('seeName')"
-                    matTooltip="{{ 'Is committee' | translate }}"
-                    >account_balance</mat-icon
-                >
-                <mat-icon *ngIf="!user.is_active && isAllowed('seeExtra')" matTooltip="{{ 'Inactive' | translate }}"
-                    >block</mat-icon
-                >
+                <mat-icon *ngIf="!user.is_physical_person && isAllowed('seeName')" matTooltip="{{ 'Is committee' | translate }}">
+                    account_balance
+                </mat-icon>
+                <mat-icon *ngIf="!user.is_active && isAllowed('seeExtra')" matTooltip="{{ 'Inactive' | translate }}">
+                    block
+                </mat-icon>
             </span>
         </div>
 
@@ -314,15 +312,15 @@
 
         <div *ngIf="isAllowed('manage')">
             <!-- Own Vote delegations -->
-            <div *ngIf="user.voteDelegatedTo">
+            <div *ngIf="user.vote_delegated_to">
                 <h4>{{ 'Vote right delegated to:' | translate }}</h4>
-                <span>{{ user.voteDelegatedTo }}</span>
+                <span>{{ user.vote_delegated_to }}</span>
             </div>
 
             <!-- Received Vote delegations -->
-            <div *ngIf="user.voteDelegationsFrom && user.voteDelegationsFrom.length">
+            <div *ngIf="user.vote_delegations_from?.length > 0">
                 <h4>{{ 'Vote delegations from' | translate }}</h4>
-                <span>{{ user.voteDelegationsFrom }}</span>
+                <span>{{ user.vote_delegations_from }}</span>
             </div>
 
             <!-- Vote weight -->
