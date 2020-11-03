@@ -9,7 +9,7 @@ import { AgendaCsvExportService } from '../../services/agenda-csv-export.service
 import { AgendaFilterListService } from '../../services/agenda-filter-list.service';
 import { AgendaItemInfoDialogComponent } from '../agenda-item-info-dialog/agenda-item-info-dialog.component';
 import { AgendaPdfService } from '../../services/agenda-pdf.service';
-import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
+import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
@@ -124,7 +124,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
         private promptService: PromptService,
         private dialog: MatDialog,
         private meetingsSettingsService: MeetingSettingsService,
-        private activeMeetingService: ActiveMeetingService,
+        private activeMeetingIdService: ActiveMeetingIdService,
         public vp: ViewportService,
         public durationService: DurationService,
         private csvExport: AgendaCsvExportService,
@@ -153,7 +153,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
     protected getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [1], // TODO
+            ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
                     idField: 'agenda_item_ids',
@@ -364,7 +364,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
         const title = this.translate.instant('Are you sure you want to clear all speakers of all lists?');
         const content = this.translate.instant('All lists of speakers will be cleared.');
         if (await this.promptService.open(title, content)) {
-            this.meetingRepo.deleteAllSpeakersOfAllListsOfSpeakersInAMeeting(this.activeMeetingService.meetingId);
+            this.meetingRepo.deleteAllSpeakersOfAllListsOfSpeakersInAMeeting(this.activeMeetingIdService.meetingId);
         }
     }
 

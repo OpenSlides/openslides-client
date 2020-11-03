@@ -309,7 +309,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
                 { property: 'comment' },
                 { property: 'is_active', label: 'Is active' },
                 { property: 'is_present_in_meetings', label: 'Is present in meeting' },
-                { property: 'is_committee', label: 'Is a committee' },
+                { property: 'is_physical_person', label: 'Is a physical person' },
                 { property: 'default_password', label: 'Initial password' },
                 { property: 'email' },
                 { property: 'username' },
@@ -380,8 +380,8 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
                 options = [_('present'), _('absent')];
                 verboseStateName = 'present';
                 break;
-            case 'is_committee':
-                options = [_('committee'), _('no committee')];
+            case 'is_physical_person':
+                options = [_('no committee'), _('committee')]; // switched order: no committee=physical person
                 verboseStateName = 'committee';
                 break;
         }

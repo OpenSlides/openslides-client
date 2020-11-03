@@ -25,7 +25,7 @@ export namespace UserAction {
         first_name?: string;
         last_name?: string;
         is_active?: boolean;
-        is_committee?: boolean;
+        is_physical_person?: boolean;
         default_password?: string;
         about_me?: UnsafeHtml;
         gender?: string;
