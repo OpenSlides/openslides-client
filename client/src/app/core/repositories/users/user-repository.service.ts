@@ -485,21 +485,46 @@ export class UserRepositoryService
         return this.sendBulkActionToBackend(UserAction.UPDATE_TEMPORARY, payload);
     }
 
-    /**
-     * Alters groups of all given users. Either adds or removes the given groups.
-     *
-     * @param users Affected users
-     * @param action add or remove the groups
-     * @param groupIds All group ids to add or remove
-     */
-    public async bulkAlterGroups(users: ViewUser[], action: 'add' | 'remove', groupIds: Id[]): Promise<void> {
+    public bulkAddGroupsToUsers(users: ViewUser[], groupIds: Id[]): Promise<void> {
         this.preventAlterationOnDemoUsers(users);
-        /* await this.httpService.post('/rest/users/user/bulk_alter_groups/', {
-            user_ids: users.map(user => user.id),
-            action: action,
-            group_ids: groupIds
-        }); */
-        throw new Error('TODO');
+        const payload: UserAction.UpdatePayload[] = users.map(user => {
+            groupIds = groupIds.concat(user.group_ids());
+            return {
+                id: user.id,
+                group_ids: groupIds.filter((groupId, index, self) => self.indexOf(groupId) === index)
+            };
+        });
+        return this.sendBulkActionToBackend(UserAction.UPDATE, payload);
+    }
+
+    public bulkRemoveGroupsFromUsers(users: ViewUser[], groupIds: Id[]): Promise<void> {
+        this.preventAlterationOnDemoUsers(users);
+        const payload: UserAction.UpdatePayload[] = users.map(user => ({
+            id: user.id,
+            group_ids: user.group_ids().filter(groupId => !groupIds.includes(groupId))
+        }));
+        return this.sendBulkActionToBackend(UserAction.UPDATE, payload);
+    }
+
+    public bulkAddGroupsToTemporaryUsers(users: ViewUser[], groupIds: Id[]): Promise<void> {
+        this.preventAlterationOnDemoUsers(users);
+        const payload: UserAction.UpdateTemporaryPayload[] = users.map(user => {
+            groupIds = groupIds.concat(user.group_ids());
+            return {
+                id: user.id,
+                group_ids: groupIds.filter((groupId, index, self) => self.indexOf(groupId) === index)
+            };
+        });
+        return this.sendBulkActionToBackend(UserAction.UPDATE_TEMPORARY, payload);
+    }
+
+    public bulkRemoveGroupsFromTemporaryUsers(users: ViewUser[], groupIds: Id[]): Promise<void> {
+        this.preventAlterationOnDemoUsers(users);
+        const payload: UserAction.UpdateTemporaryPayload[] = users.map(user => ({
+            id: user.id,
+            group_ids: user.group_ids().filter(groupId => !groupIds.includes(groupId))
+        }));
+        return this.sendBulkActionToBackend(UserAction.UPDATE_TEMPORARY, payload);
     }
 
     /**

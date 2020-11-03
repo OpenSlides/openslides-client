@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 import { Permission } from 'app/core/core-services/permission';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
-import { ItemVisibilityChoices } from 'app/shared/models/agenda/agenda-item';
+import { ItemTypeChoices } from 'app/shared/models/agenda/agenda-item';
 import { ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 
 @Component({
@@ -27,7 +27,7 @@ export class AgendaContentObjectFormComponent implements OnInit {
     /**
      * Determine visibility states for the agenda that will be created implicitly
      */
-    public ItemVisibilityChoices = ItemVisibilityChoices;
+    public ItemVisibilityChoices = ItemTypeChoices;
 
     /**
      * Subject for agenda items

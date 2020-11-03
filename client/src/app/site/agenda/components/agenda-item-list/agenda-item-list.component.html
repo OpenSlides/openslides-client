@@ -189,13 +189,13 @@
         <mat-divider></mat-divider>
         <div *osPerms="permission.agendaItemCanManage">
             <!-- Close selected -->
-            <button mat-menu-item [disabled]="!selectedRows.length" (click)="setClosedSelected(true)">
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="closeSelectedItems()">
                 <mat-icon>done</mat-icon>
                 <span>{{ 'Close' | translate }}</span>
             </button>
 
             <!-- Open selected -->
-            <button mat-menu-item [disabled]="!selectedRows.length" (click)="setClosedSelected(false)">
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="openSelectedItems()">
                 <mat-icon>redo</mat-icon>
                 <span>{{ 'Open' | translate }}</span>
             </button>
@@ -203,19 +203,19 @@
             <mat-divider></mat-divider>
 
             <!-- Set multiple to public -->
-            <button mat-menu-item [disabled]="!selectedRows.length" (click)="setAgendaType(1)">
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="setAgendaType(AGENDA_TYPE_PUBLIC)">
                 <mat-icon>public</mat-icon>
                 <span>{{ 'Set public' | translate }}</span>
             </button>
 
             <!-- Set multiple to internal -->
-            <button mat-menu-item [disabled]="!selectedRows.length" (click)="setAgendaType(2)">
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="setAgendaType(AGENDA_TYPE_INTERNAL)">
                 <mat-icon>visibility</mat-icon>
                 <span>{{ 'Set internal' | translate }}</span>
             </button>
 
             <!-- Set multiple to hidden -->
-            <button mat-menu-item [disabled]="!selectedRows.length" (click)="setAgendaType(3)">
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="setAgendaType(AGENDA_TYPE_HIDDEN)">
                 <mat-icon>visibility_off</mat-icon>
                 <span>{{ 'Set hidden' | translate }}</span>
             </button>
@@ -259,13 +259,13 @@
             </button>
 
             <!-- Duplicate button -->
-            <button mat-menu-item (click)="duplicateTopic(item.contentObject)" *ngIf="isTopic(item.contentObject)">
+            <button mat-menu-item (click)="duplicateTopic(item)" *ngIf="isTopic(item.content_object)">
                 <mat-icon>file_copy</mat-icon>
                 <span>{{ 'Duplicate' | translate }}</span>
             </button>
 
             <!-- Delete Button -->
-            <button mat-menu-item (click)="removeFromAgenda(item)" *ngIf="!isTopic(item.contentObject)">
+            <button mat-menu-item (click)="removeFromAgenda(item)" *ngIf="!isTopic(item.content_object)">
                 <mat-icon>remove</mat-icon>
                 <span>{{ 'Remove from agenda' | translate }}</span>
             </button>
@@ -274,7 +274,7 @@
                 mat-menu-item
                 class="red-warning-text"
                 (click)="deleteTopic(item)"
-                *ngIf="isTopic(item.contentObject)"
+                *ngIf="isTopic(item.content_object)"
             >
                 <mat-icon>delete</mat-icon>
                 <span>{{ 'Delete' | translate }}</span>

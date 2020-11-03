@@ -1,5 +1,5 @@
 import { AgendaListTitle } from 'app/core/repositories/agenda/agenda-item-repository.service';
-import { AgendaItem, ItemVisibilityChoices } from 'app/shared/models/agenda/agenda-item';
+import { AgendaItem, ItemTypeChoices } from 'app/shared/models/agenda/agenda-item';
 import { HasAgendaItemId } from 'app/shared/models/base/has-agenda-item-id';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { BaseViewModel } from 'app/site/base/base-view-model';
@@ -46,7 +46,7 @@ export class ViewAgendaItem extends BaseProjectableViewModel<AgendaItem> {
         if (!this.type) {
             return '';
         }
-        const type = ItemVisibilityChoices.find(choice => choice.key === this.type);
+        const type = ItemTypeChoices.find(choice => choice.key === this.type);
         return type ? type.name : '';
     }
 
@@ -67,7 +67,7 @@ export class ViewAgendaItem extends BaseProjectableViewModel<AgendaItem> {
         if (!this.type) {
             return '';
         }
-        const type = ItemVisibilityChoices.find(choice => choice.key === this.type);
+        const type = ItemTypeChoices.find(choice => choice.key === this.type);
         return type ? type.csvName : '';
     }
 }

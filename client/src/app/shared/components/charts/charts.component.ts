@@ -68,7 +68,7 @@ export class ChartsComponent extends BaseComponent {
      * The general data for the chart.
      * This is only needed for `type == 'bar' || 'line'`
      */
-    public chartData: ChartData;
+    public chartData: ChartData | number[];
 
     @Input()
     public set data(inputData: ChartData) {

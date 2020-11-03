@@ -1,10 +1,13 @@
-import { Component, Inject, ViewEncapsulation } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
+import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Displayable } from 'app/site/base/displayable';
+
+type Choice = Displayable & Identifiable;
 
 /**
  * All data needed for this dialog
@@ -23,7 +26,7 @@ interface ChoiceDialogData {
     /**
      * The choices to display
      */
-    choices?: Observable<Displayable[]> | Displayable[];
+    choices?: Observable<Choice[]> | Choice[];
 
     /**
      * Additional action buttons which will add their value to the
@@ -35,7 +38,13 @@ interface ChoiceDialogData {
      * An optional string for 'explicitly select none of the options'. Only
      * displayed in the single-select variation
      */
-    clearChoice?: string;
+    clearChoiceOption?: string;
+}
+
+interface ChoiceDialogResult {
+    action?: string;
+    items: number | number[];
+    itemModels: Displayable | Displayable[];
 }
 
 /**
@@ -43,7 +52,7 @@ interface ChoiceDialogData {
  * it will be an array of numbers and optionally an action string for multichoice
  * dialogs
  */
-export type ChoiceAnswer = undefined | { action?: string; items: number | number[] };
+export type ChoiceAnswer = undefined | ChoiceDialogResult;
 
 /**
  * A dialog with choice fields.
@@ -55,7 +64,7 @@ export type ChoiceAnswer = undefined | { action?: string; items: number | number
     styleUrls: ['./choice-dialog.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class ChoiceDialogComponent {
+export class ChoiceDialogComponent implements OnInit, OnDestroy {
     /**
      * One number selected, if this is a single select choice
      * User over template
@@ -89,8 +98,12 @@ export class ChoiceDialogComponent {
      */
     public selectedMultiChoices: number[] = [];
 
+    private displayableChoices: Choice[] = [];
+
+    private choicesSubscription: Subscription = null;
+
     public constructor(
-        public dialogRef: MatDialogRef<ChoiceDialogComponent>,
+        public dialogRef: MatDialogRef<ChoiceDialogComponent, ChoiceAnswer>,
         private formBuilder: FormBuilder,
         @Inject(MAT_DIALOG_DATA) public data: ChoiceDialogData
     ) {
@@ -99,20 +112,47 @@ export class ChoiceDialogComponent {
         });
     }
 
+    public ngOnInit(): void {
+        if (this.data.choices instanceof Observable) {
+            this.choicesSubscription = this.data.choices.subscribe(
+                displayableChoices => (this.displayableChoices = displayableChoices)
+            );
+        } else {
+            this.displayableChoices = this.data.choices;
+        }
+    }
+
+    public ngOnDestroy(): void {
+        if (this.choicesSubscription) {
+            this.choicesSubscription.unsubscribe();
+            this.choicesSubscription = null;
+        }
+    }
+
     /**
      * Closes the dialog with the selected choices
      */
     public closeDialog(ok: boolean, action?: string): void {
         if (!this.data.multiSelect && this.selectedChoice === null) {
-            action = this.data.clearChoice;
+            action = this.data.clearChoiceOption;
         }
         if (ok) {
+            const resultValue = this.selectForm.get('select').value;
             this.dialogRef.close({
                 action: action ? action : null,
-                items: this.selectForm.get('select').value
+                items: resultValue,
+                itemModels: this.filterResultChoices(resultValue)
             });
         } else {
             this.dialogRef.close();
+        }
+    }
+
+    private filterResultChoices(resultValue: number | number[]): Choice | Choice[] {
+        if (Array.isArray(resultValue)) {
+            return this.displayableChoices.filter(choice => resultValue.includes(choice.id));
+        } else {
+            return this.displayableChoices.find(choice => choice.id === resultValue);
         }
     }
 }

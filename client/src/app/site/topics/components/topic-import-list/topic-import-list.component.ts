@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { CsvExportService } from 'app/core/ui-services/csv-export.service';
 import { DurationService } from 'app/core/ui-services/duration.service';
-import { AgendaItemVisibility, ItemVisibilityChoices } from 'app/shared/models/agenda/agenda-item';
+import { AgendaItemType, ItemTypeChoices } from 'app/shared/models/agenda/agenda-item';
 import { BaseImportListComponent } from 'app/site/base/components/base-import-list.component';
 import { CreateTopic } from 'app/site/topics/models/create-topic';
 import { TopicImportService } from '../../../topics/services/topic-import.service';
@@ -67,8 +67,8 @@ export class TopicImportListComponent extends BaseImportListComponent<CreateTopi
      * @param type
      * @returns A string, which may be empty if the type is not found in the visibilityChoices
      */
-    public getTypeString(type: AgendaItemVisibility): string {
-        const visibility = ItemVisibilityChoices.find(choice => choice.key === type);
+    public getTypeString(type: AgendaItemType): string {
+        const visibility = ItemTypeChoices.find(choice => choice.key === type);
         return visibility ? visibility.name : '';
     }
 

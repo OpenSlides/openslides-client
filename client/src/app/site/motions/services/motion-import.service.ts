@@ -10,11 +10,8 @@ import { MotionRepositoryService } from 'app/core/repositories/motions/motion-re
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { BaseImportService, NewEntry } from 'app/core/ui-services/base-import.service';
-import { Tag } from 'app/shared/models/core/tag';
 import { Motion } from 'app/shared/models/motions/motion';
-import { MotionBlock } from 'app/shared/models/motions/motion-block';
-import { MotionCategory } from 'app/shared/models/motions/motion-category';
-import { CsvMapping } from 'app/site/common/import/csv-mapping';
+import { CsvMapping } from '../models/import-create-motion';
 import { motionExportOnly, motionImportExportHeaderOrder } from '../motions.constants';
 
 /**
@@ -109,7 +106,7 @@ export class MotionImportService extends BaseImportService<Motion> {
         for (let idx = 0; idx < headerLength; idx++) {
             switch (this.expectedHeader[idx]) {
                 case 'submitters':
-                    newEntry.csvSubmitters = this.getSubmitters(line[idx]);
+                    newEntry.csvSubmitters = this.getExistingUsers(line[idx]);
                     break;
                 case 'category':
                     newEntry.csvCategory = this.getCategory(line[idx]);
@@ -150,40 +147,40 @@ export class MotionImportService extends BaseImportService<Motion> {
         throw new Error('TODO');
         this.newMotionBlocks = await this.createNewMotionBlocks();
         this.newCategories = await this.createNewCategories();
-        this.newSubmitters = await this.createNewUsers();
+        this.newSubmitters = await this.createNewSubmitters();
         this.newTags = await this.createNewTags();
 
-        // for (const entry of this.entries) {
-        //     if (entry.status !== 'new') {
-        //         continue;
-        //     }
-        //     const openBlocks = (entry.newEntry as ImportCreateMotion).solveMotionBlocks(this.newMotionBlocks);
-        //     if (openBlocks) {
-        //         this.setError(entry, 'MotionBlock');
-        //         this.updatePreview();
-        //         continue;
-        //     }
-        //     const openCategories = (entry.newEntry as ImportCreateMotion).solveCategory(this.newCategories);
-        //     if (openCategories) {
-        //         this.setError(entry, 'Category');
-        //         this.updatePreview();
-        //         continue;
-        //     }
-        //     const openUsers = (entry.newEntry as ImportCreateMotion).solveSubmitters(this.newSubmitters);
-        //     if (openUsers) {
-        //         this.setError(entry, 'Submitters');
-        //         this.updatePreview();
-        //         continue;
-        //     }
-        //     const openTags = (entry.newEntry as ImportCreateMotion).solveTags(this.newTags);
-        //     if (openTags) {
-        //         this.setError(entry, 'Tags');
-        //         this.updatePreview();
-        //         continue;
-        //     }
-        //     // await this.repo.create(entry.newEntry as ImportCreateMotion);
-        //     entry.status = 'done';
-        // }
+        /*for (const entry of this.entries) {
+            if (entry.status !== 'new') {
+                continue;
+            }
+            const openBlocks = (entry.newEntry as ImportCreateMotion).solveMotionBlocks(this.newMotionBlocks);
+            if (openBlocks) {
+                this.setError(entry, 'MotionBlock');
+                this.updatePreview();
+                continue;
+            }
+            const openCategories = (entry.newEntry as ImportCreateMotion).solveCategory(this.newCategories);
+            if (openCategories) {
+                this.setError(entry, 'Category');
+                this.updatePreview();
+                continue;
+            }
+            const openUsers = (entry.newEntry as ImportCreateMotion).solveSubmitters(this.newSubmitters);
+            if (openUsers) {
+                this.setError(entry, 'Submitters');
+                this.updatePreview();
+                continue;
+            }
+            const openTags = (entry.newEntry as ImportCreateMotion).solveTags(this.newTags);
+            if (openTags) {
+                this.setError(entry, 'Tags');
+                this.updatePreview();
+                continue;
+            }
+            await this.repo.create(entry.newEntry as ImportCreateMotion);
+            entry.status = 'done';
+        }*/
         this.updatePreview();
     }
 
@@ -191,15 +188,15 @@ export class MotionImportService extends BaseImportService<Motion> {
      * Checks the provided submitter(s) and returns an object with mapping of
      * existing users and of users that need to be created
      *
-     * @param submitterlist
+     * @param userList
      * @returns a list of submitters mapped with (if already existing) their id
      */
-    public getSubmitters(submitterlist: string): CsvMapping[] {
+    public getExistingUsers(userList: string): CsvMapping[] {
         const result: CsvMapping[] = [];
-        if (!submitterlist) {
+        if (!userList) {
             return result;
         }
-        const submitterArray = submitterlist.split(','); // TODO fails with 'full name'
+        const submitterArray = userList.split(','); // TODO fails with 'full name'
         for (const submitter of submitterArray) {
             const existingSubmitters = this.userRepo.getUsersByName(submitter.trim());
             if (!existingSubmitters.length) {
@@ -331,12 +328,13 @@ export class MotionImportService extends BaseImportService<Motion> {
      *
      * @returns a promise with list of new Submitters, updated with newly created ids
      */
-    private async createNewUsers(): Promise<CsvMapping[]> {
-        const promises: Promise<CsvMapping>[] = [];
-        for (const user of this.newSubmitters) {
-            promises.push(this.userRepo.createFromString(user.name));
-        }
-        return await Promise.all(promises);
+    private async createNewSubmitters(): Promise<CsvMapping[]> {
+        // const promises: Promise<CsvMapping>[] = [];
+        // for (const user of this.newSubmitters) {
+        //     promises.push(this.userRepo.createFromString(user.name));
+        // }
+        // return await Promise.all(promises);
+        throw new Error('Todo');
     }
 
     /**
@@ -345,16 +343,8 @@ export class MotionImportService extends BaseImportService<Motion> {
      * @returns a promise with list of new MotionBlocks, updated with newly created ids
      */
     private async createNewMotionBlocks(): Promise<CsvMapping[]> {
-        const promises: Promise<CsvMapping>[] = [];
-        // for (const block of this.newMotionBlocks) {
-        //     promises.push(
-        //         this.motionBlockRepo.create(new MotionBlock({ title: block.name })).then(identifiable => {
-        //             return { name: block.name, id: identifiable.id };
-        //         })
-        //     );
-        // }
-        throw new Error('TODO!');
-        return await Promise.all(promises);
+        const blockIds = await this.motionBlockRepo.bulkCreate(this.newMotionBlocks);
+        return blockIds.map((blockId, index) => ({ id: blockId.id, name: this.newMotionBlocks[index].name }));
     }
 
     /**
@@ -363,24 +353,8 @@ export class MotionImportService extends BaseImportService<Motion> {
      * @returns a promise with list of new Categories, updated with newly created ids
      */
     private async createNewCategories(): Promise<CsvMapping[]> {
-        const promises: Promise<CsvMapping>[] = [];
-        // for (const category of this.newCategories) {
-        //     const cat = this.splitCategoryString(category.name);
-        //     promises.push(
-        //         this.categoryRepo
-        //             .create(
-        //                 new MotionCategory({
-        //                     name: cat.name,
-        //                     prefix: cat.prefix ? cat.prefix : null
-        //                 })
-        //             )
-        //             .then(identifiable => {
-        //                 return { name: category.name, id: identifiable.id };
-        //             })
-        //     );
-        // }
-        throw new Error('TODO!');
-        return await Promise.all(promises);
+        const categoryIds = await this.categoryRepo.bulkCreate(this.newCategories);
+        return categoryIds.map((categoryId, index) => ({ id: categoryId.id, name: this.newCategories[index].name }));
     }
 
     /**
@@ -389,16 +363,8 @@ export class MotionImportService extends BaseImportService<Motion> {
      * @returns {Promise} One promise containing all promises to create a new tag.
      */
     private async createNewTags(): Promise<CsvMapping[]> {
-        const promises: Promise<CsvMapping>[] = [];
-        // for (const tag of this.newTags) {
-        //     promises.push(
-        //         this.tagRepo
-        //             .create(new Tag({ name: tag.name }))
-        //             .then(identifiable => ({ name: tag.name, id: identifiable.id }))
-        //     );
-        // }
-        throw new Error('TODO!');
-        return await Promise.all(promises);
+        const tagIds = await this.tagRepo.bulkCreate(this.newTags);
+        return tagIds.map((tagId, index) => ({ id: tagId.id, name: this.newTags[index].name }));
     }
 
     /**

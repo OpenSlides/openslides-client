@@ -4,20 +4,19 @@ import { HasMeetingId } from '../base/has-meeting-id';
 import { HasProjectableIds } from '../base/has-projectable-ids';
 import { HasTagIds } from '../base/has-tag-ids';
 
-export enum AgendaItemVisibility {
+export enum AgendaItemType {
     common = 'common',
     internal = 'internal',
     hidden = 'hidden'
 }
 
 /**
- * Determine visibility states for agenda items
- * Coming from "ConfigVariables" property "agenda_hide_internal_items_on_projector"
+ * Determine type for agenda items
  */
-export const ItemVisibilityChoices = [
-    { key: AgendaItemVisibility.common, name: 'public', csvName: '' },
-    { key: AgendaItemVisibility.internal, name: 'internal', csvName: 'internal' },
-    { key: AgendaItemVisibility.hidden, name: 'hidden', csvName: 'hidden' }
+export const ItemTypeChoices = [
+    { key: AgendaItemType.common, name: 'public', csvName: '' },
+    { key: AgendaItemType.internal, name: 'internal', csvName: 'internal' },
+    { key: AgendaItemType.hidden, name: 'hidden', csvName: 'hidden' }
 ];
 
 /**
@@ -31,7 +30,7 @@ export class AgendaItem extends BaseModel<AgendaItem> {
     public item_number: string;
     public comment: string;
     public closed: boolean;
-    public type: AgendaItemVisibility;
+    public type: AgendaItemType;
     public is_hidden: boolean;
     public is_internal: boolean;
     public duration: number; // in seconds

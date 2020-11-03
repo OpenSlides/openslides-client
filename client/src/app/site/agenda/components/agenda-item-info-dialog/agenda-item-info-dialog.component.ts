@@ -4,7 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { DurationService } from 'app/core/ui-services/duration.service';
-import { ItemVisibilityChoices } from 'app/shared/models/agenda/agenda-item';
+import { ItemTypeChoices } from 'app/shared/models/agenda/agenda-item';
 import { durationValidator } from 'app/shared/validators/custom-validators';
 import { ViewTag } from 'app/site/tags/models/view-tag';
 import { ViewAgendaItem } from '../../models/view-agenda-item';
@@ -26,7 +26,7 @@ export class AgendaItemInfoDialogComponent implements OnInit {
     /**
      * Hold item visibility
      */
-    public itemVisibility = ItemVisibilityChoices;
+    public itemVisibility = ItemTypeChoices;
 
     public tags: ViewTag[] = [];
 

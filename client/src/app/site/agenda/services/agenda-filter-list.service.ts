@@ -6,8 +6,11 @@ import { HistoryService } from 'app/core/core-services/history.service';
 import { StorageService } from 'app/core/core-services/storage.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { BaseFilterListService, OsFilter, OsFilterOption } from 'app/core/ui-services/base-filter-list.service';
-import { ItemVisibilityChoices } from 'app/shared/models/agenda/agenda-item';
+import { ItemTypeChoices } from 'app/shared/models/agenda/agenda-item';
+import { Assignment } from 'app/shared/models/assignments/assignment';
 import { Motion } from 'app/shared/models/motions/motion';
+import { MotionBlock } from 'app/shared/models/motions/motion-block';
+import { Topic } from 'app/shared/models/topics/topic';
 import { ViewAgendaItem } from '../models/view-agenda-item';
 
 /**
@@ -69,9 +72,9 @@ export class AgendaFilterListService extends BaseFilterListService<ViewAgendaIte
                 property: 'collection',
                 options: [
                     { label: this.translate.instant('Motions'), condition: Motion.COLLECTION },
-                    { label: this.translate.instant('Topics'), condition: 'topics/topic' },
-                    { label: this.translate.instant('Motion blocks'), condition: 'motions/motion-block' },
-                    { label: this.translate.instant('Elections'), condition: 'assignments/assignment' }
+                    { label: this.translate.instant('Topics'), condition: Topic.COLLECTION },
+                    { label: this.translate.instant('Motion blocks'), condition: MotionBlock.COLLECTION },
+                    { label: this.translate.instant('Elections'), condition: Assignment.COLLECTION }
                 ]
             }
         ];
@@ -83,7 +86,7 @@ export class AgendaFilterListService extends BaseFilterListService<ViewAgendaIte
      * @returns a list of choices to filter from
      */
     private createVisibilityFilterOptions(): OsFilterOption[] {
-        return ItemVisibilityChoices.map(choice => ({
+        return ItemTypeChoices.map(choice => ({
             condition: choice.key,
             label: choice.name
         }));

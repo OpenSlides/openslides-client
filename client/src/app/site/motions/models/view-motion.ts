@@ -4,7 +4,7 @@ import { Id } from 'app/core/definitions/key-types';
 import { DiffLinesInParagraph } from 'app/core/ui-services/diff.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { SearchProperty, SearchRepresentation } from 'app/core/ui-services/search.service';
-import { AgendaItemVisibility } from 'app/shared/models/agenda/agenda-item';
+import { AgendaItemType } from 'app/shared/models/agenda/agenda-item';
 import { HasReferencedMotionInRecommendationExtensionIds, Motion } from 'app/shared/models/motions/motion';
 import { HasAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { HasListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
@@ -56,7 +56,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         return this.number ? this.number : this.title;
     }
 
-    public get agenda_type(): AgendaItemVisibility | null {
+    public get agenda_type(): AgendaItemType | null {
         return this.agenda_item ? this.agenda_item.type : null;
     }
 

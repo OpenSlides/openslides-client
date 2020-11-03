@@ -354,13 +354,16 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         const content = this.translate.instant(
             'This will add or remove the following groups for all selected participants:'
         );
-        const choices = [_('add group(s)'), _('remove group(s)')];
+        const ADD = _('add group(s)');
+        const REMOVE = _('remove group(s)');
+        const choices = [ADD, REMOVE];
         const selectedChoice = await this.choiceService.open(content, this.groupRepo.getViewModelList(), true, choices);
         if (selectedChoice) {
-            const action = selectedChoice.action === choices[0] ? 'add' : 'remove';
-            this.repo
-                .bulkAlterGroups(this.selectedRows, action, selectedChoice.items as number[])
-                .catch(this.raiseError);
+            if (selectedChoice.action === ADD) {
+                this.repo.bulkAddGroupsToTemporaryUsers(this.selectedRows, selectedChoice.items as number[]);
+            } else {
+                this.repo.bulkRemoveGroupsFromTemporaryUsers(this.selectedRows, selectedChoice.items as number[]);
+            }
         }
     }
 

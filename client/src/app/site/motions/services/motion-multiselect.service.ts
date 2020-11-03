@@ -2,12 +2,18 @@ import { Injectable } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
 
-import { HttpService } from 'app/core/core-services/http.service';
+import { AgendaItemAction } from 'app/core/actions/agenda-item-action';
+import { MotionAction } from 'app/core/actions/motion-action';
+import { MotionSubmitterAction } from 'app/core/actions/motion-submitter-action';
+import { ActionService } from 'app/core/core-services/action.service';
+import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
+import { Id } from 'app/core/definitions/key-types';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/motion-workflow-repository.service';
+import { RepositoryServiceCollector } from 'app/core/repositories/repository-service-collector';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ChoiceService } from 'app/core/ui-services/choice.service';
@@ -16,6 +22,7 @@ import { PromptService } from 'app/core/ui-services/prompt.service';
 import { TreeService } from 'app/core/ui-services/tree.service';
 import { Displayable } from 'app/site/base/displayable';
 import { ViewMotion } from '../models/view-motion';
+import { ViewMotionState } from '../models/view-motion-state';
 
 /**
  * Contains all multiselect actions for the motion list view.
@@ -24,6 +31,14 @@ import { ViewMotion } from '../models/view-motion';
     providedIn: 'root'
 })
 export class MotionMultiselectService {
+    private get activeMeetingId(): ActiveMeetingIdService {
+        return this.serviceCollector.activeMeetingIdService;
+    }
+
+    private get actionService(): ActionService {
+        return this.serviceCollector.actionService;
+    }
+
     private messageForSpinner = this.translate.instant('Motions are in process. Please wait ...');
 
     /**
@@ -55,7 +70,8 @@ export class MotionMultiselectService {
         private agendaRepo: AgendaItemRepositoryService,
         private motionBlockRepo: MotionBlockRepositoryService,
         private treeService: TreeService,
-        private overlayService: OverlayService
+        private overlayService: OverlayService,
+        private serviceCollector: RepositoryServiceCollector
     ) {}
 
     /**
@@ -65,22 +81,10 @@ export class MotionMultiselectService {
      */
     public async delete(motions: ViewMotion[]): Promise<void> {
         const title = this.translate.instant('Are you sure you want to delete all selected motions?');
-        // if (await this.promptService.open(title)) {
-        //     let i = 0;
-
-        //     for (const motion of motions) {
-        //         ++i;
-        //         const message =
-        //             this.translate.instant(this.messageForSpinner) +
-        //             `\n${i} ` +
-        //             this.translate.instant('of') +
-        //             ` ${motions.length}`;
-        //         this.overlayService.showSpinner(message, true);
-        //         await this.repo.delete(motion);
-        //     }
-        //     this.overlayService.hideSpinner();
-        // }
-        throw new Error('TODO!');
+        if (await this.promptService.open(title)) {
+            await this.bulkDelete(motions);
+            this.overlayService.hideSpinner();
+        }
     }
 
     /**
@@ -91,12 +95,12 @@ export class MotionMultiselectService {
         const choices = this.agendaRepo.getViewModelListObservable();
         const selectedChoice = await this.choiceService.open(title, choices);
         if (selectedChoice) {
-            const requestData = {
-                items: motions.map(motion => motion.agenda_item_id),
-                parent_id: selectedChoice.items as number
+            const requestData: AgendaItemAction.AssignPayload = {
+                ids: motions.map(motion => motion.agenda_item_id),
+                parent_id: selectedChoice.items as number,
+                meeting_id: this.activeMeetingId.meetingId
             };
-            throw new Error('TODO');
-            // await this.httpService.post('/rest/agenda/item/assign/', requestData);
+            return this.actionService.sendRequest(AgendaItemAction.ASSIGN, requestData);
         }
     }
 
@@ -106,7 +110,8 @@ export class MotionMultiselectService {
      * @param motions The motions to change
      */
     public async setStateOfMultiple(motions: ViewMotion[]): Promise<void> {
-        if (motions.every(motion => motion.state.workflow_id === motions[0].state.workflow_id)) {
+        throw new Error('Todo');
+        /*if (motions.every(motion => motion.state.workflow_id === motions[0].state.workflow_id)) {
             const title = this.translate.instant('This will set the following state for all selected motions:');
             const choices = this.workflowRepo.getWorkflowStatesForMotions(motions);
             const selectedChoice = await this.choiceService.open(title, choices);
@@ -117,7 +122,7 @@ export class MotionMultiselectService {
             }
         } else {
             throw new Error(this.translate.instant('You cannot change the state of motions in different workflows!'));
-        }
+        }*/
     }
 
     /**
@@ -180,7 +185,7 @@ export class MotionMultiselectService {
         if (selectedChoice) {
             const message = this.translate.instant(this.messageForSpinner);
             this.overlayService.showSpinner(message, true);
-            await this.repo.setMultiCategory(motions, selectedChoice.items as number);
+            await this.setMultiCategory(motions, selectedChoice.items as number);
         }
     }
 
@@ -193,7 +198,9 @@ export class MotionMultiselectService {
         const title = this.translate.instant(
             'This will add or remove the following submitters for all selected motions:'
         );
-        const choices = [this.translate.instant('Add'), this.translate.instant('Remove')];
+        const ADD = this.translate.instant('Add');
+        const REMOVE = this.translate.instant('Remove');
+        const choices = [ADD, REMOVE];
         const selectedChoice = await this.choiceService.open(
             title,
             this.userRepo.getViewModelListObservable(),
@@ -201,38 +208,22 @@ export class MotionMultiselectService {
             choices
         );
         if (selectedChoice) {
-            let requestData = null;
-            if (selectedChoice.action === choices[0]) {
-                requestData = motions.map(motion => {
-                    let submitterIds = [
-                        ...motion.submitters.map(submitter => submitter.id),
-                        ...(selectedChoice.items as number[])
-                    ];
-                    // remove duplicates
-                    submitterIds = submitterIds.filter((id, index, self) => self.indexOf(id) === index);
-                    return {
-                        id: motion.id,
-                        submitters: submitterIds
-                    };
-                });
-            } else if (selectedChoice.action === choices[1]) {
-                requestData = motions.map(motion => {
-                    const submitterIdsToRemove = selectedChoice.items as number[];
-                    const submitterIds = motion.submitters
-                        .map(submitter => submitter.id)
-                        .filter(id => !submitterIdsToRemove.includes(id));
-                    return {
-                        id: motion.id,
-                        submitters: submitterIds
-                    };
-                });
+            let promise: Promise<any> = null;
+            if (selectedChoice.action === ADD) {
+                const payload: MotionSubmitterAction.CreatePayload[] = (selectedChoice.items as number[]).flatMap(
+                    userId => motions.map(motion => ({ user_id: userId, motion_id: motion.id }))
+                );
+                promise = this.sendBulkActionToBackend(MotionSubmitterAction.CREATE, payload);
+            } else if (selectedChoice.action === REMOVE) {
+                const payload: MotionSubmitterAction.DeletePayload[] = (selectedChoice.items as number[]).map(
+                    submitterId => ({ id: submitterId })
+                );
+                promise = this.sendBulkActionToBackend(MotionSubmitterAction.DELETE, payload);
             }
 
             const message = `${motions.length} ` + this.translate.instant(this.messageForSpinner);
             this.overlayService.showSpinner(message, true);
-            throw new Error('TODO');
-            // await this.httpService.post('/rest/motions/motion/manage_multiple_submitters/',
-            // { motions: requestData });
+            return await promise;
         }
     }
 
@@ -243,7 +234,9 @@ export class MotionMultiselectService {
      */
     public async changeTags(motions: ViewMotion[]): Promise<void> {
         const title = this.translate.instant('This will add or remove the following tags for all selected motions:');
-        const choices = [this.translate.instant('Add'), this.translate.instant('Remove')];
+        const ADD = this.translate.instant('Add');
+        const REMOVE = this.translate.instant('Remove');
+        const choices = [ADD, REMOVE];
         const selectedChoice = await this.choiceService.open(
             title,
             this.tagRepo.getViewModelListObservable(),
@@ -252,38 +245,35 @@ export class MotionMultiselectService {
             this.translate.instant('Clear tags')
         );
         if (selectedChoice) {
-            let requestData = null;
-            if (selectedChoice.action === choices[0]) {
+            let requestData: MotionAction.UpdateMetadataPayload[] = null;
+            if (selectedChoice.action === ADD) {
                 requestData = motions.map(motion => {
-                    let tagIds = [...motion.tag_ids, ...(selectedChoice.items as number[])];
-                    tagIds = tagIds.filter((id, index, self) => self.indexOf(id) === index); // remove duplicates
+                    const tagIds = [...motion.tag_ids, ...(selectedChoice.items as number[])];
                     return {
                         id: motion.id,
-                        tags: tagIds
+                        tag_ids: tagIds.filter((id, index, self) => self.indexOf(id) === index) // Remove duplicates
                     };
                 });
-            } else if (selectedChoice.action === choices[1]) {
+            } else if (selectedChoice.action === REMOVE) {
                 requestData = motions.map(motion => {
                     const tagIdsToRemove = selectedChoice.items as number[];
-                    const tagIds = motion.tag_ids.filter(id => !tagIdsToRemove.includes(id));
                     return {
                         id: motion.id,
-                        tags: tagIds
+                        tag_ids: motion.tag_ids.filter(id => !tagIdsToRemove.includes(id))
                     };
                 });
             } else {
                 requestData = motions.map(motion => {
                     return {
                         id: motion.id,
-                        tags: []
+                        tag_ids: []
                     };
                 });
             }
 
             const message = `${motions.length} ` + this.translate.instant(this.messageForSpinner);
             this.overlayService.showSpinner(message, true);
-            throw new Error('TODO');
-            // await this.httpService.post('/rest/motions/motion/manage_multiple_tags/', { motions: requestData });
+            return this.sendBulkActionToBackend(MotionAction.UPDATE_METADATA, requestData);
         }
     }
 
@@ -306,7 +296,7 @@ export class MotionMultiselectService {
             const message = this.translate.instant(this.messageForSpinner);
             this.overlayService.showSpinner(message, true);
             const blockId = selectedChoice.action ? null : (selectedChoice.items as number);
-            await this.repo.setMultiMotionBlock(motions, blockId);
+            await this.setMultiMotionBlock(motions, blockId);
         }
     }
 
@@ -371,5 +361,66 @@ export class MotionMultiselectService {
             this.overlayService.showSpinner(message, true);
             await this.personalNoteService.bulkSetStar(motions, setOrUnset);
         }*/
+    }
+
+    private bulkDelete(motions: ViewMotion[]): Promise<void> {
+        return this.sendBulkActionToBackend(
+            MotionAction.DELETE,
+            motions.map(motion => ({ id: motion.id }))
+        );
+    }
+
+    /**
+     * Set the state of motions in bulk
+     *
+     * @param viewMotions target motions
+     * @param stateId the number that indicates the state
+     */
+    private async setMultiState(viewMotions: ViewMotion[], stateId: Id): Promise<void> {
+        const payload: MotionAction.SetStatePayload[] = viewMotions.map(motion => {
+            return { id: motion.id, state_id: stateId };
+        });
+        await this.sendBulkActionToBackend(MotionAction.SET_STATE, payload);
+    }
+
+    private async setMultiRecommendation(viewMotions: ViewMotion[], recommendationId: Id): Promise<void> {
+        const payload: MotionAction.SetRecommendationPayload[] = viewMotions.map(motion => {
+            return { id: motion.id, recommendation_id: recommendationId };
+        });
+        return this.sendBulkActionToBackend(MotionAction.SET_RECOMMENDATION, payload);
+    }
+
+    /**
+     * Set the motion blocks of motions in bulk
+     *
+     * @param viewMotions target motions
+     * @param motionblockId the number that indicates the motion block
+     */
+    private async setMultiMotionBlock(viewMotions: ViewMotion[], motionblockId: number): Promise<void> {
+        const payload: MotionAction.UpdateMetadataPayload[] = viewMotions.map(motion => {
+            return { id: motion.id, block_id: motionblockId };
+        });
+        await this.sendBulkActionToBackend(MotionAction.UPDATE_METADATA, payload);
+    }
+
+    /**
+     * Set the category of motions in bulk
+     *
+     * @param viewMotions target motions
+     * @param categoryId the number that indicates the category
+     */
+    private async setMultiCategory(viewMotions: ViewMotion[], categoryId: number): Promise<void> {
+        const payload: MotionAction.UpdateMetadataPayload[] = viewMotions.map(motion => {
+            return { id: motion.id, category_id: categoryId };
+        });
+        await this.sendBulkActionToBackend(MotionAction.UPDATE_METADATA, payload);
+    }
+
+    private isMotionInWorkflow(motion: ViewMotion, workflowId: Id): boolean {
+        return motion.state && motion.state.workflow_id === workflowId;
+    }
+
+    private sendBulkActionToBackend(action: string, payload: any[]): Promise<any> {
+        return this.actionService.sendBulkRequest(action, payload);
     }
 }

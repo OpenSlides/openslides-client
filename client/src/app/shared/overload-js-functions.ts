@@ -4,7 +4,7 @@ declare global {
      * TODO: Remove once flatMap made its way into official JS/TS (ES 2019?)
      */
     interface Array<T> {
-        flatMap(o: any): any[];
+        flatMap<U>(callbackFn: (currentValue: T, index: number, array: T[]) => U, thisArg?: any): U;
         intersect(a: T[]): T[];
         mapToObject(f: (item: T) => { [key: string]: any }): { [key: string]: any };
     }

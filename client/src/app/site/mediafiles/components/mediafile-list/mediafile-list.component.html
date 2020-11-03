@@ -229,16 +229,25 @@
 <!-- Menu for Mediafiles -->
 <mat-menu #mediafilesMenu="matMenu">
     <div *ngIf="!isMultiSelect">
-        <button mat-menu-item (click)="downloadMultiple()">
-            <mat-icon>cloud_download</mat-icon>
-            <span>{{ 'Download folder' | translate }}</span>
-        </button>
         <button mat-menu-item (click)="toggleMultiSelect()">
             <mat-icon>library_add</mat-icon>
             <span>{{ 'Multiselect' | translate }}</span>
         </button>
+        <button mat-menu-item (click)="downloadMultiple()">
+            <mat-icon>cloud_download</mat-icon>
+            <span>{{ 'Download folder' | translate }}</span>
+        </button>
     </div>
     <div *ngIf="isMultiSelect">
+        <button mat-menu-item (click)="selectAll()">
+            <mat-icon>done_all</mat-icon>
+            <span>{{ 'Select all' | translate }}</span>
+        </button>
+        <button mat-menu-item [disabled]="!selectedRows.length" (click)="deselectAll()">
+            <mat-icon>clear</mat-icon>
+            <span>{{ 'Deselect all' | translate }}</span>
+        </button>
+        <mat-divider *osPerms="permission.mediafilesCanManage"></mat-divider>
         <button mat-menu-item [disabled]="!selectedRows.length" (click)="downloadMultiple(selectedRows)">
             <mat-icon>cloud_download</mat-icon>
             <span>{{ 'Download' | translate }}</span>
@@ -253,15 +262,6 @@
             <span>{{ 'Move' | translate }}</span>
         </button>
         <mat-divider></mat-divider>
-        <button mat-menu-item (click)="selectAll()">
-            <mat-icon>done_all</mat-icon>
-            <span>{{ 'Select all' | translate }}</span>
-        </button>
-        <button mat-menu-item [disabled]="!selectedRows.length" (click)="deselectAll()">
-            <mat-icon>clear</mat-icon>
-            <span>{{ 'Deselect all' | translate }}</span>
-        </button>
-        <mat-divider *osPerms="permission.mediafilesCanManage"></mat-divider>
         <button
             mat-menu-item
             *osPerms="permission.mediafilesCanManage"

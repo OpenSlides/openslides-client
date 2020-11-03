@@ -454,13 +454,14 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
     }
 
     /**
-     * Checks if a given ViewBaseModel passes the filter.
+     * Checks if a given ViewBaseModel passes a filter.
      *
      * @param item Usually a view model
      * @param filter The filter to check
      * @returns true if the item is to be displayed according to the filter
      */
     private checkIncluded(item: V, filter: OsFilter): boolean {
+        console.log('checkIncluded', item, filter);
         const nullFilter = filter.options.find(
             option => typeof option !== 'string' && option.isActive && option.condition === null
         );

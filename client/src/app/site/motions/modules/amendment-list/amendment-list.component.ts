@@ -13,7 +13,7 @@ import { MotionRepositoryService } from 'app/core/repositories/motions/motion-re
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { LinenumberingService } from 'app/core/ui-services/linenumbering.service';
 import { OverlayService } from 'app/core/ui-services/overlay.service';
-import { ItemVisibilityChoices } from 'app/shared/models/agenda/agenda-item';
+import { ItemTypeChoices } from 'app/shared/models/agenda/agenda-item';
 import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component.';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
@@ -48,7 +48,7 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
     /**
      * Hold item visibility
      */
-    public itemVisibility = ItemVisibilityChoices;
+    public itemVisibility = ItemTypeChoices;
 
     public showSequentialNumber: boolean;
 

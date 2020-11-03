@@ -101,16 +101,19 @@ export const PollMajorityMethod: CalculableMajorityMethod[] = [
     }
 ];
 
-export interface PollData {
-    pollmethod: string;
-    type: string;
-    onehundred_percent_base: string;
-    options: PollDataOption[];
+export interface BasePollData<PM, PB> {
+    pollmethod: PM;
+    onehundred_percent_base: PB;
     votesvalid: number;
     votesinvalid: number;
     votescast: number;
+}
+
+export interface PollData extends BasePollData<string, string> {
+    type: string;
     amount_global_no?: number;
     amount_global_abstain?: number;
+    options: PollDataOption[];
 }
 
 export interface PollDataOption {

@@ -6,6 +6,7 @@ import {
     Fieldsets,
     SimplifiedModelRequest
 } from 'app/core/core-services/model-request-builder.service';
+import { Id } from 'app/core/definitions/key-types';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { MotionWorkflow } from 'app/shared/models/motions/motion-workflow';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
@@ -36,6 +37,16 @@ export class MotionWorkflowRepositoryService
         super(repositoryServiceCollector, MotionWorkflow);
     }
 
+    public getFieldsets(): Fieldsets<MotionWorkflow> {
+        const nameFields: (keyof MotionWorkflow)[] = ['name'];
+        const listFields: (keyof MotionWorkflow)[] = nameFields;
+        return {
+            [DEFAULT_FIELDSET]: listFields,
+            name: nameFields,
+            list: listFields
+        };
+    }
+
     public getTitle = (viewMotionWorkflow: ViewMotionWorkflow) => {
         return viewMotionWorkflow.name;
     };
@@ -48,6 +59,7 @@ export class MotionWorkflowRepositoryService
      * Returns all workflowStates that cover the list of viewMotions given
      *
      * @param motions The motions to get the workflows from
+     *
      * @returns The workflow states to the given motion
      */
     public getWorkflowStatesForMotions(motions: ViewMotion[]): ViewMotionState[] {
@@ -62,14 +74,8 @@ export class MotionWorkflowRepositoryService
         return states;
     }
 
-    public getFieldsets(): Fieldsets<MotionWorkflow> {
-        const nameFields: (keyof MotionWorkflow)[] = ['name'];
-        const listFields: (keyof MotionWorkflow)[] = nameFields;
-        return {
-            [DEFAULT_FIELDSET]: listFields,
-            name: nameFields,
-            list: listFields
-        };
+    public getWorkflowByStateId(stateId: Id): ViewMotionWorkflow {
+        return this.getViewModelList().find(workflow => workflow.state_ids.includes(stateId));
     }
 
     public create(partialModel: Partial<MotionWorkflow>): Promise<Identifiable> {

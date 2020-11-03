@@ -7,7 +7,7 @@ import { Papa } from 'ngx-papaparse';
 import { TopicRepositoryService } from 'app/core/repositories/topics/topic-repository.service';
 import { BaseImportService, NewEntry } from 'app/core/ui-services/base-import.service';
 import { DurationService } from 'app/core/ui-services/duration.service';
-import { AgendaItemVisibility, ItemVisibilityChoices } from 'app/shared/models/agenda/agenda-item';
+import { AgendaItemType, ItemTypeChoices } from 'app/shared/models/agenda/agenda-item';
 import { CreateTopic } from '../models/create-topic';
 
 @Injectable({
@@ -101,7 +101,7 @@ export class TopicImportService extends BaseImportService<CreateTopic> {
 
         // set type to 'public' if none is given in import
         if (!newEntry.agenda_type) {
-            newEntry.agenda_type = AgendaItemVisibility.common;
+            newEntry.agenda_type = AgendaItemType.common;
         }
         const mappedEntry: NewEntry<CreateTopic> = {
             newEntry: newEntry,
@@ -151,17 +151,17 @@ export class TopicImportService extends BaseImportService<CreateTopic> {
      * @param input
      * @returns a number as defined for the itemVisibilityChoices
      */
-    public parseType(input: string | number): AgendaItemVisibility {
+    public parseType(input: string | number): AgendaItemType {
         if (!input) {
-            return AgendaItemVisibility.common; // default, public item
+            return AgendaItemType.common; // default, public item
         } else if (typeof input === 'string') {
-            const visibility = ItemVisibilityChoices.find(choice => choice.csvName === input);
+            const visibility = ItemTypeChoices.find(choice => choice.csvName === input);
             if (visibility) {
                 return visibility.key;
             }
         } else if (input === 1) {
             // Compatibility with the old client's isInternal column
-            const visibility = ItemVisibilityChoices.find(choice => choice.name === 'Internal item');
+            const visibility = ItemTypeChoices.find(choice => choice.name === 'Internal item');
             if (visibility) {
                 return visibility.key;
             }
@@ -187,7 +187,7 @@ export class TopicImportService extends BaseImportService<CreateTopic> {
             const newTopic = new CreateTopic(
                 new CreateTopic({
                     title: line,
-                    agenda_type: AgendaItemVisibility.common // set type to 'public item' by default
+                    agenda_type: AgendaItemType.common // set type to 'public item' by default
                 })
             );
             const newEntry: NewEntry<CreateTopic> = {

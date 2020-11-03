@@ -1,4 +1,4 @@
-import { AgendaItemVisibility } from 'app/shared/models/agenda/agenda-item';
+import { AgendaItemType } from 'app/shared/models/agenda/agenda-item';
 import { HasMeetingId } from 'app/shared/models/base/has-meeting-id';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { BaseSortPayload } from './common/base-sort-payload';
@@ -10,12 +10,13 @@ export namespace AgendaItemAction {
     export const DELETE = 'agenda_item.delete';
     export const SORT = 'agenda_item.sort';
     export const NUMBERING = 'agenda_item.numbering';
+    export const ASSIGN = 'agenda_item.assign';
 
     interface OptionalPayload {
         item_number?: string;
         comment?: string;
         closed?: boolean;
-        type?: AgendaItemVisibility;
+        type?: AgendaItemType;
         duration?: number; // in seconds
         weight?: number;
         tag_ids?: Id[];
@@ -30,6 +31,8 @@ export namespace AgendaItemAction {
     }
 
     export interface UpdatePayload extends Identifiable, OptionalPayload {}
+    export interface DeletePayload extends Identifiable {}
+
     export interface AssignPayload extends HasMeetingId {
         ids: Id[];
         parent_id: Id;

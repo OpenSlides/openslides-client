@@ -641,6 +641,9 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
                 {
                     idField: 'personal_note_ids'
                 }
+                // {
+                //     idField: 'motion_workflow_ids'
+                // }
             ]
         });
     }
@@ -699,6 +702,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
                 'category_id',
                 'lead_motion_id',
                 'comment_ids',
+                // 'workflow_id',
                 {
                     idField: 'change_recommendation_ids'
                 },
@@ -732,6 +736,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
                         },
                         GET_POSSIBLE_RECOMMENDATIONS
                     ]
+                    // fieldset: 'list'
                 },
                 'recommendation_id',
                 'tag_ids',
@@ -806,6 +811,11 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
             // When saving the changes, notify other users if they edit the same motion.
             // this.unsubscribeEditNotifications(MotionEditNotificationType.TYPE_SAVING_EDITING_MOTION);
         }
+    }
+
+    public getPossibleRecommendations(): ViewMotionState[] {
+        const allStates = this.motion.state?.workflow.states || [];
+        return allStates.filter(state => state.recommendation_label);
     }
 
     /**

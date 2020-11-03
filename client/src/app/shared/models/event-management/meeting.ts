@@ -1,4 +1,4 @@
-import { AgendaItemVisibility } from '../agenda/agenda-item';
+import { AgendaItemType } from '../agenda/agenda-item';
 import { Id } from 'app/core/definitions/key-types';
 import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.constants';
 import { AssignmentPollMethod, AssignmentPollPercentBase } from '../assignments/assignment-poll';
@@ -61,7 +61,7 @@ export interface Settings {
     agenda_number_prefix: string;
     agenda_numeral_system: string;
     agenda_item_creation: AgendaItemCreation;
-    agenda_new_items_default_visibility: AgendaItemVisibility;
+    agenda_new_items_default_visibility: AgendaItemType;
     agenda_show_internal_items_on_projector: boolean;
 
     // List of speakers
