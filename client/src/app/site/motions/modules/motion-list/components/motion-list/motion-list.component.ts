@@ -242,43 +242,47 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
         super.ngOnInit();
         super.setTitle('Motions');
 
-        this.meetingSettingsService
-            .get('motions_statutes_enabled')
-            .subscribe(enabled => (this.statutesEnabled = enabled));
-        this.meetingSettingsService
-            .get('motions_amendments_enabled')
-            .subscribe(enabled => (this.amendmentsEnabled = enabled));
+        this.subscriptions.push(
+            this.meetingSettingsService
+                .get('motions_statutes_enabled')
+                .subscribe(enabled => (this.statutesEnabled = enabled)),
+            this.meetingSettingsService
+                .get('motions_amendments_enabled')
+                .subscribe(enabled => (this.amendmentsEnabled = enabled)),
+
+            this.meetingSettingsService.get('motions_recommendations_by').subscribe(recommender => {
+                this.recommendationEnabled = !!recommender;
+            }),
+            this.meetingSettingsService
+                .get('motions_show_sequential_number')
+                .subscribe(show => (this.showSequential = show)),
+            this.motionBlockRepo.getViewModelListObservable().subscribe(mBs => {
+                this.motionBlocks = mBs;
+            }),
+            this.categoryRepo.getViewModelListObservable().subscribe(cats => {
+                this.categories = cats;
+                if (cats.length > 0) {
+                    this.storage.get<string>('motionListView').then((savedView: MotionListviewType) => {
+                        this.selectedView = savedView ? savedView : 'tiles';
+                    });
+                } else {
+                    this.selectedView = 'list';
+                }
+            }),
+            this.tagRepo.getViewModelListObservable().subscribe(tags => {
+                this.tags = tags;
+            }),
+            this.workflowRepo.getViewModelListObservable().subscribe(wfs => {
+                this.workflows = wfs;
+            }),
+            this.motionRepo.getViewModelListObservable().subscribe(motions => {
+                if (motions && motions.length) {
+                    this.createMotionTiles(motions);
+                }
+            })
+        );
         // TODO: remove
         this.amendmentsEnabled = true;
-        this.meetingSettingsService.get('motions_recommendations_by').subscribe(recommender => {
-            this.recommendationEnabled = !!recommender;
-        });
-        this.meetingSettingsService
-            .get('motions_show_sequential_number')
-            .subscribe(show => (this.showSequential = show));
-        this.motionBlockRepo.getViewModelListObservable().subscribe(mBs => {
-            this.motionBlocks = mBs;
-        });
-        this.categoryRepo.getViewModelListObservable().subscribe(cats => {
-            this.categories = cats;
-            if (cats.length > 0) {
-                this.storage.get<string>('motionListView').then((savedView: MotionListviewType) => {
-                    this.selectedView = savedView ? savedView : 'tiles';
-                });
-            } else {
-                this.selectedView = 'list';
-            }
-        });
-        this.tagRepo.getViewModelListObservable().subscribe(tags => {
-            this.tags = tags;
-        });
-        this.workflowRepo.getViewModelListObservable().subscribe(wfs => (this.workflows = wfs));
-
-        this.motionRepo.getViewModelListObservable().subscribe(motions => {
-            if (motions && motions.length) {
-                this.createMotionTiles(motions);
-            }
-        });
     }
 
     protected getModelRequest(): SimplifiedModelRequest {
@@ -510,7 +514,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
             delete result.title; // Do not update the title!
 
             try {
-                await this.motionRepo.update(result, motion);
+                await this.motionRepo.updateMetadata(result, motion);
                 if (result.state_id !== motion.state_id) {
                     await this.motionRepo.setState(motion, result.state_id);
                 }

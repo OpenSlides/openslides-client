@@ -6,7 +6,8 @@ import { SimplifiedModelRequest } from 'app/core/core-services/model-request-bui
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
-import { AgendaItemVisibility, ItemVisibilityChoices } from 'app/shared/models/agenda/agenda-item';
+import { ItemTypeChoices } from 'app/shared/models/agenda/agenda-item';
+import { AgendaItemType } from 'app/shared/models/agenda/agenda-item';
 import { BaseSortTreeComponent, SortTreeFilterOption } from 'app/site/base/components/base-sort-tree.component';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewAgendaItem } from '../../models/view-agenda-item';
@@ -30,8 +31,8 @@ export class AgendaSortComponent extends BaseSortTreeComponent<ViewAgendaItem> i
      * Adds the property `state` to identify if the option is marked as active.
      * When reset the filters, the option `state` will be set to `false`.
      */
-    public filterOptions: SortTreeFilterOption[] = ItemVisibilityChoices.map(item => {
-        return { label: item.name, id: this.getNumericValueForAgendaItemVisibility(item.key), state: false };
+    public filterOptions: SortTreeFilterOption[] = ItemTypeChoices.map(item => {
+        return { label: item.name, id: this.getNumericValueForAgendaItemType(item.key), state: false };
     });
 
     /**
@@ -104,7 +105,7 @@ export class AgendaSortComponent extends BaseSortTreeComponent<ViewAgendaItem> i
         const filter = this.activeFilters.subscribe((value: number[]) => {
             this.hasActiveFilter = value.length === 0 ? false : true;
             this.changeFilter.emit((item: ViewAgendaItem): boolean => {
-                return !(value.includes(this.getNumericValueForAgendaItemVisibility(item.type)) || value.length === 0);
+                return !(value.includes(this.getNumericValueForAgendaItemType(item.type)) || value.length === 0);
             });
         });
         this.subscriptions.push(filter);
@@ -156,13 +157,13 @@ export class AgendaSortComponent extends BaseSortTreeComponent<ViewAgendaItem> i
         }
     }
 
-    private getNumericValueForAgendaItemVisibility(visibility: AgendaItemVisibility): number {
-        switch (visibility) {
-            case AgendaItemVisibility.common:
+    private getNumericValueForAgendaItemType(type: AgendaItemType): number {
+        switch (type) {
+            case AgendaItemType.common:
                 return 1;
-            case AgendaItemVisibility.hidden:
+            case AgendaItemType.hidden:
                 return 3;
-            case AgendaItemVisibility.internal:
+            case AgendaItemType.internal:
                 return 2;
         }
     }

@@ -33,13 +33,13 @@ export class MotionBlockRepositoryService extends BaseIsAgendaItemAndListOfSpeak
     }
 
     public create(partialModel: Partial<MotionBlockAction.CreatePayload>): Promise<Identifiable> {
-        const payload: MotionBlockAction.CreatePayload = {
-            meeting_id: this.activeMeetingIdService.meetingId,
-            title: partialModel.title,
-            internal: partialModel.internal,
-            ...createAgendaItem(partialModel)
-        };
+        const payload: MotionBlockAction.CreatePayload = this.getCreatePayload(partialModel);
         return this.sendActionToBackend(MotionBlockAction.CREATE, payload);
+    }
+
+    public bulkCreate(motionBlocks: Partial<MotionBlock>[]): Promise<Identifiable[]> {
+        const payload: MotionBlockAction.CreatePayload[] = motionBlocks.map(block => this.getCreatePayload(block));
+        return this.sendBulkActionToBackend(MotionBlockAction.CREATE, payload);
     }
 
     public update(update: Partial<MotionBlock>, viewModel: ViewMotionBlock): Promise<void> {
@@ -115,5 +115,14 @@ export class MotionBlockRepositoryService extends BaseIsAgendaItemAndListOfSpeak
         this.setSortFunction((a: ViewMotionBlock, b: ViewMotionBlock) => {
             return this.languageCollator.compare(a.title, b.title);
         });
+    }
+
+    private getCreatePayload(partialModel: Partial<MotionBlockAction.CreatePayload>): MotionBlockAction.CreatePayload {
+        return {
+            meeting_id: this.activeMeetingIdService.meetingId,
+            title: partialModel.title,
+            internal: partialModel.internal,
+            ...createAgendaItem(partialModel)
+        };
     }
 }

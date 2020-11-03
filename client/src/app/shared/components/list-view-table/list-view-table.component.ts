@@ -260,6 +260,10 @@ export class ListViewTableComponent<V extends BaseViewModel | BaseProjectableVie
 
     public readonly permission = Permission;
 
+    private isHoldingShiftKey = false;
+
+    private previousSelectedRow: V = null;
+
     /**
      * Collect subsciptions
      */
@@ -569,10 +573,14 @@ export class ListViewTableComponent<V extends BaseViewModel | BaseProjectableVie
         if (this.multiSelect) {
             const clickedModel: V = event.row;
             const alreadySelected = this.dataSource.selection.isSelected(clickedModel);
+            if (this.isHoldingShiftKey) {
+                this.selectMultipleRows(clickedModel, this.previousSelectedRow);
+            }
             if (alreadySelected) {
                 this.dataSource.selection.deselect(clickedModel);
             } else {
                 this.dataSource.selection.select(clickedModel);
+                this.previousSelectedRow = clickedModel;
             }
         }
     }
@@ -653,6 +661,18 @@ export class ListViewTableComponent<V extends BaseViewModel | BaseProjectableVie
         this.inputValue = await this.store.get<string>(`query_${this.listStorageKey}`);
     }
 
+    public onKeyDown(keyEvent: KeyboardEvent): void {
+        if (keyEvent.key === 'Shift') {
+            this.isHoldingShiftKey = true;
+        }
+    }
+
+    public onKeyUp(keyEvent: KeyboardEvent): void {
+        if (keyEvent.key === 'Shift') {
+            this.isHoldingShiftKey = false;
+        }
+    }
+
     /**
      * Automatically scrolls to a stored scroll position
      */
@@ -671,6 +691,28 @@ export class ListViewTableComponent<V extends BaseViewModel | BaseProjectableVie
             document.documentElement.style.setProperty('--pbl-height', this.vScrollFixed + 'px');
         } else {
             document.documentElement.style.removeProperty('--pbl-height');
+        }
+    }
+
+    /**
+     * Selects multiple rows between `firstRow` and `secondRow`.
+     * The indices of the two rows are compared to each other to
+     * get a subarray beginning at the lower index up to the higher one.
+     *
+     * @param firstRow The first one of two selected rows.
+     * @param secondRow The second one of two selected rows.
+     */
+    private selectMultipleRows(firstRow: V, secondRow: V): void {
+        const sourceArray = this.dataSource.source;
+        const index = sourceArray.findIndex(row => row.id === firstRow.id);
+        const previousIndex = sourceArray.findIndex(row => row.id === secondRow.id);
+        if (index === previousIndex) {
+            return;
+        }
+        if (index > previousIndex) {
+            this.dataSource.selection.select(...sourceArray.slice(previousIndex, index));
+        } else {
+            this.dataSource.selection.select(...sourceArray.slice(index, previousIndex));
         }
     }
 

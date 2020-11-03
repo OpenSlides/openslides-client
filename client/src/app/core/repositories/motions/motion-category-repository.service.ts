@@ -38,13 +38,15 @@ export class MotionCategoryRepositoryService
     }
 
     public create(partialCategory: Partial<MotionCategory>): Promise<Identifiable> {
-        const payload: MotionCategoryAction.CreatePayload = {
-            meeting_id: this.activeMeetingIdService.meetingId,
-            name: partialCategory.name,
-            prefix: !!partialCategory.prefix ? partialCategory.prefix : null, // "" -> null
-            parent_id: partialCategory.parent_id
-        };
+        const payload: MotionCategoryAction.CreatePayload = this.getCreatePayload(partialCategory);
         return this.sendActionToBackend(MotionCategoryAction.CREATE, payload);
+    }
+
+    public bulkCreate(categories: Partial<MotionCategoryAction.CreatePayload>[]): Promise<Identifiable[]> {
+        const payload: MotionCategoryAction.CreatePayload[] = categories.map(category =>
+            this.getCreatePayload(category)
+        );
+        return this.sendBulkActionToBackend(MotionCategoryAction.CREATE, payload);
     }
 
     public update(update: Partial<MotionCategory>, viewModel: ViewMotionCategory): Promise<void> {
@@ -120,6 +122,15 @@ export class MotionCategoryRepositoryService
             tree: data
         };
         return this.actions.sendRequest(MotionCategoryAction.SORT, payload);
+    }
+
+    private getCreatePayload(partialCategory: Partial<MotionCategory>): MotionCategoryAction.CreatePayload {
+        return {
+            meeting_id: this.activeMeetingIdService.meetingId,
+            name: partialCategory.name,
+            prefix: partialCategory.prefix,
+            parent_id: partialCategory.parent_id
+        };
     }
 
     public getRequestToGetAllModels(): SimplifiedModelRequest {

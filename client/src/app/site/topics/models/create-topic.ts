@@ -1,4 +1,4 @@
-import { AgendaItemVisibility } from 'app/shared/models/agenda/agenda-item';
+import { AgendaItemType } from 'app/shared/models/agenda/agenda-item';
 import { Topic } from 'app/shared/models/topics/topic';
 
 /**
@@ -6,7 +6,7 @@ import { Topic } from 'app/shared/models/topics/topic';
  */
 export class CreateTopic extends Topic {
     public attachment_ids: number[];
-    public agenda_type: AgendaItemVisibility;
+    public agenda_type: AgendaItemType;
     public agenda_parent_id: number;
     public agenda_comment: string;
     public agenda_duration: number;
@@ -22,6 +22,6 @@ export class CreateTopic extends Topic {
     }
 
     public constructor(input?: Partial<CreateTopic>) {
-        super(input);
+        super({ ...input, text: input?.text || '' });
     }
 }

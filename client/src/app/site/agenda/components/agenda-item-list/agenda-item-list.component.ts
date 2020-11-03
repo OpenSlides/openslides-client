@@ -24,7 +24,7 @@ import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { ColumnRestriction } from 'app/shared/components/list-view-table/list-view-table.component';
 import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
-import { AgendaItemVisibility } from 'app/shared/models/agenda/agenda-item';
+import { AgendaItemType } from 'app/shared/models/agenda/agenda-item';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
 import { isProjectable, ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
@@ -43,6 +43,10 @@ import { hasListOfSpeakers } from '../../models/view-list-of-speakers';
     styleUrls: ['./agenda-item-list.component.scss']
 })
 export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaItem> implements OnInit {
+    public readonly AGENDA_TYPE_PUBLIC = 1;
+    public readonly AGENDA_TYPE_INTERNAL = 2;
+    public readonly AGENDA_TYPE_HIDDEN = 3;
+
     /**
      * Show or hide the numbering button
      */
@@ -280,13 +284,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
         const content = this.translate.instant("All topics will be deleted and won't be accessible afterwards.");
         if (await this.promptService.open(title, content)) {
             try {
-                for (const item of this.selectedRows) {
-                    if (item.content_object instanceof ViewTopic) {
-                        await this.topicRepo.delete(item.content_object);
-                    } else {
-                        await this.repo.removeFromAgenda(item);
-                    }
-                }
+                await this.repo.bulkRemoveItemsFromAgenda(this.selectedRows);
             } catch (e) {
                 this.raiseError(e);
             }
@@ -294,16 +292,24 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
     }
 
     /**
-     * Sets multiple entries' open/closed state. Needs items in selectedRows, which
+     * Sets multiple entries' open state. Needs items in selectedRows, which
      * is only filled with any data in multiSelect mode
-     *
-     * @param closed true if the item is to be considered done
      */
-    public async setClosedSelected(closed: boolean): Promise<void> {
+    public async openSelectedItems(): Promise<void> {
         try {
-            for (const item of this.selectedRows) {
-                await this.repo.update({ closed: closed }, item);
-            }
+            await this.repo.bulkOpenItems(this.selectedRows);
+        } catch (e) {
+            this.raiseError(e);
+        }
+    }
+
+    /**
+     * Sets multiple entries' open state. Needs items in selectedRows, which
+     * is only filled with any data in multiSelect mode
+     */
+    public async closeSelectedItems(): Promise<void> {
+        try {
+            await this.repo.bulkCloseItems(this.selectedRows);
         } catch (e) {
             this.raiseError(e);
         }
@@ -312,14 +318,10 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
     /**
      * Sets multiple entries' agenda type. Needs items in selectedRows, which
      * is only filled with any data in multiSelect mode.
-     *
-     * @param visible true if the item is to be shown
      */
-    public async setAgendaType(agendaType: AgendaItemVisibility): Promise<void> {
+    public async setAgendaType(type: AgendaItemType): Promise<void> {
         try {
-            for (const item of this.selectedRows) {
-                await this.repo.update({ type: agendaType }, item).catch(this.raiseError);
-            }
+            await this.repo.bulkSetAgendaType(this.selectedRows, type);
         } catch (e) {
             this.raiseError(e);
         }
@@ -378,8 +380,8 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
      *
      * @param item The item to duplicte.
      */
-    public duplicateTopic(topic: ViewTopic): void {
-        this.topicRepo.duplicateTopic(topic);
+    public duplicateTopic(topicAgendaItem: ViewAgendaItem): void {
+        this.topicRepo.duplicateTopic(topicAgendaItem);
     }
 
     /**
@@ -388,11 +390,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
      * @param selectedItems All selected items.
      */
     public duplicateMultipleTopics(selectedItems: ViewAgendaItem[]): void {
-        for (const item of selectedItems) {
-            if (this.isTopic(item.content_object)) {
-                this.duplicateTopic(item.content_object);
-            }
-        }
+        this.topicRepo.duplicateMultipleTopics(selectedItems.filter(item => this.isTopic(item.content_object)));
     }
 
     /**

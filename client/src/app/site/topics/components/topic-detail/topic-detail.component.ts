@@ -11,7 +11,7 @@ import { TopicRepositoryService } from 'app/core/repositories/topics/topic-repos
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
-import { AgendaItemVisibility, ItemVisibilityChoices } from 'app/shared/models/agenda/agenda-item';
+import { AgendaItemType, ItemTypeChoices } from 'app/shared/models/agenda/agenda-item';
 import { Topic } from 'app/shared/models/topics/topic';
 import { ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
@@ -54,7 +54,7 @@ export class TopicDetailComponent extends BaseModelContextComponent {
     /**
      * Determine visibility states for the agenda that will be created implicitly
      */
-    public itemVisibility = ItemVisibilityChoices;
+    public itemVisibility = ItemTypeChoices;
 
     /**
      * Constructor for the topic detail page.
@@ -133,7 +133,7 @@ export class TopicDetailComponent extends BaseModelContextComponent {
             title: ['', Validators.required]
         });
 
-        this.topicForm.get('agenda_type').setValue(AgendaItemVisibility.common);
+        this.topicForm.get('agenda_type').setValue(AgendaItemType.common);
     }
 
     /**

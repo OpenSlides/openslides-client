@@ -131,7 +131,7 @@ export class MotionPdfService {
         }
 
         if (!contentToExport || contentToExport.includes('reason')) {
-            const reason = this.createReason(motion, lnMode);
+            const reason = this.createReason(motion);
             motionPdfContent.push(reason);
         }
 
@@ -621,28 +621,32 @@ export class MotionPdfService {
      * @returns
      */
     private getUnifiedChanges(motion: ViewMotion, lineLength: number): ViewUnifiedChange[] {
-        const motionChangeRecos = this.changeRecoRepo.getChangeRecoOfMotion(motion.id);
+        throw new Error('Todo');
+        /*const motionChangeRecos = this.changeRecoRepo.getChangeRecoOfMotion(motion.id);
 
-        const motionAmendments = this.motionRepo.getAmendmentsInstantly(motion.id).flatMap((amendment: ViewMotion) => {
-            const changeRecos = this.changeRecoRepo
-                .getChangeRecoOfMotion(amendment.id)
-                .filter(reco => reco.showInFinalView());
-            return this.motionLineNumbering.getAmendmentAmendedParagraphs(amendment, lineLength, changeRecos);
-        });
+        const motionAmendments: any[] = this.motionRepo
+            .getAmendmentsInstantly(motion.id)
+            .flatMap((amendment: ViewMotion) => {
+                const changeRecos = this.changeRecoRepo
+                    .getChangeRecoOfMotion(amendment.id)
+                    .filter(reco => reco.showInFinalView());
+                return this.motionRepo.getAmendmentAmendedParagraphs(amendment, lineLength, changeRecos);
+            });
 
         return motionChangeRecos
             .concat(motionAmendments)
             .filter(change => !!change)
-            .sort((a, b) => a.getLineFrom() - b.getLineFrom()) as ViewUnifiedChange[];
+            .sort((a, b) => a.getLineFrom() - b.getLineFrom()) as ViewUnifiedChange[];*/
     }
 
     /**
      * Creates the motion reason - uses HTML to PDF
      *
      * @param motion the target motion
+     *
      * @returns doc def for the reason as array
      */
-    private createReason(motion: ViewMotion, lnMode: LineNumberingMode): object {
+    private createReason(motion: ViewMotion): object {
         if (motion.reason) {
             const reason = [];
 

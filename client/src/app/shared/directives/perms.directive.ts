@@ -25,7 +25,7 @@ export class PermsDirective implements OnInit, OnDestroy {
      * Holds the value of the last permission check. Therefore one can check, if the
      * permission has changes, to save unnecessary view updates, if not.
      */
-    private lastPermissionCheckResult = false;
+    private lastPermissionCheckResult: boolean | null = null; // take null to also catch a first "false" update
 
     /**
      * Alternative to the permissions. Used in special case where a combination

@@ -2,7 +2,7 @@ import { ValidatorFn, Validators } from '@angular/forms';
 
 import dedent from 'ts-dedent';
 
-import { AgendaItemVisibility } from 'app/shared/models/agenda/agenda-item';
+import { AgendaItemType } from 'app/shared/models/agenda/agenda-item';
 import { AssignmentPollMethod } from 'app/shared/models/assignments/assignment-poll';
 import { Settings } from 'app/shared/models/event-management/meeting';
 import { MotionWorkflow } from 'app/shared/models/motions/motion-workflow';
@@ -280,12 +280,12 @@ export const meetingSettings: SettingsGroup[] = [
                     {
                         key: 'agenda_new_items_default_visibility',
                         label: 'Default visibility for new agenda items (except topics)',
-                        default: AgendaItemVisibility.internal,
+                        default: AgendaItemType.internal,
                         type: 'choice',
                         choices: {
-                            'Public item': AgendaItemVisibility.common,
-                            'Internal item': AgendaItemVisibility.internal,
-                            'Hidden item': AgendaItemVisibility.hidden
+                            'Public item': AgendaItemType.common,
+                            'Internal item': AgendaItemType.internal,
+                            'Hidden item': AgendaItemType.hidden
                         }
                     },
                     {

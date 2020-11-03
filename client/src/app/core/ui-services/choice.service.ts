@@ -29,7 +29,7 @@ export class ChoiceService {
      *  The answer.items will then be an array.
      * @param actions optional strings for buttons replacing the regular confirmation.
      * The answer.action will reflect the button selected
-     * @param clearChoice A string for an extra, visually slightly separated
+     * @param clearChoiceOption A string for an extra, visually slightly separated
      * choice for 'explicitly set an empty selection'. The answer's action may
      * have this string's value
      * @returns an answer {@link ChoiceAnswer}
@@ -39,7 +39,7 @@ export class ChoiceService {
         choices?: Observable<Displayable[]> | Displayable[],
         multiSelect: boolean = false,
         actions?: string[],
-        clearChoice?: string
+        clearChoiceOption?: string
     ): Promise<ChoiceAnswer> {
         const dialogRef = this.dialog.open(ChoiceDialogComponent, {
             ...infoDialogSettings,
@@ -48,7 +48,7 @@ export class ChoiceService {
                 choices: choices,
                 multiSelect: multiSelect,
                 actionButtons: actions,
-                clearChoice: clearChoice
+                clearChoiceOption: clearChoiceOption
             }
         });
         return dialogRef.afterClosed().toPromise();

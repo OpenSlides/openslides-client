@@ -97,16 +97,19 @@ export class OperatorService {
     private get activeMeetingId(): number | null {
         return this.activeMeetingService.meetingId;
     }
+    private get activeMeeting(): ViewMeeting | null {
+        return this.activeMeetingService.meeting;
+    }
     private get anonymousEnabled(): boolean {
         return this.activeMeetingService.guestsEnabled;
     }
     private get defaultGroupId(): number | null {
         const activeMeeting = this.activeMeetingService.meeting;
-        return activeMeeting ? activeMeeting.default_group.id : null;
+        return activeMeeting ? activeMeeting.default_group_id : null;
     }
-    private get superadminGroupId(): number | null {
+    private get adminGroupId(): number | null {
         const activeMeeting = this.activeMeetingService.meeting;
-        return activeMeeting ? activeMeeting.admin_group?.id || 1 : null;
+        return activeMeeting ? activeMeeting.admin_group_id : null;
     }
 
     private _lastActiveMeetingId;
@@ -245,12 +248,7 @@ export class OperatorService {
             permissions = [];
         } else if (this.isAnonymous || this.groupIds.length === 0) {
             // Anonymous or users in the default group.
-            const defaultGroup = this.DS.get<Group>('users/group', 1); // HUGE TODO: THIS IS NOT HARDCODED ANYMORE
-            if (defaultGroup && defaultGroup.permissions instanceof Array) {
-                permissions = defaultGroup.permissions;
-            } else {
-                permissions = [];
-            }
+            permissions = this.activeMeeting?.default_group?.permissions || [];
         } else {
             const permissionSet = new Set<string>();
             this.DS.getMany(Group, this.groupIds).forEach(group => {
@@ -274,7 +272,7 @@ export class OperatorService {
         if (this.groupIds === null) {
             return false;
         }
-        if (this.isAuthenticated && this.groupIds.includes(this.superadminGroupId)) {
+        if (this.isAuthenticated && this.groupIds.includes(this.adminGroupId)) {
             return true;
         }
         return checkPerms.some(permission => {
@@ -304,7 +302,7 @@ export class OperatorService {
         }
         if (!this.isInGroupIdsNonAdminCheck(...groupIds)) {
             // An admin has all perms and is technically in every group.
-            return this.groupIds.includes(this.superadminGroupId);
+            return this.groupIds.includes(this.adminGroupId);
         }
         return true;
     }

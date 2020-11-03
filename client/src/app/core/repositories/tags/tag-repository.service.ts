@@ -28,11 +28,13 @@ export class TagRepositoryService extends BaseRepositoryWithActiveMeeting<ViewTa
     }
 
     public async create(partialTag: Partial<Tag>): Promise<Identifiable> {
-        const payload: TagAction.CreatePayload = {
-            name: partialTag.name,
-            meeting_id: this.activeMeetingIdService.meetingId
-        };
+        const payload: TagAction.CreatePayload = this.getCreatePayload(partialTag);
         return this.sendActionToBackend(TagAction.CREATE, payload);
+    }
+
+    public bulkCreate(tags: Partial<Tag>[]): Promise<Identifiable[]> {
+        const payload: TagAction.CreatePayload[] = tags.map(tag => this.getCreatePayload(tag));
+        return this.sendBulkActionToBackend(TagAction.CREATE, payload);
     }
 
     public async update(update: Partial<Tag>, viewModel: ViewTag): Promise<void> {
@@ -68,5 +70,12 @@ export class TagRepositoryService extends BaseRepositoryWithActiveMeeting<ViewTa
         this.setSortFunction((a: ViewTag, b: ViewTag) => {
             return this.languageCollator.compare(a.name, b.name);
         });
+    }
+
+    private getCreatePayload(partialTag: Partial<Tag>): TagAction.CreatePayload {
+        return {
+            name: partialTag.name,
+            meeting_id: this.activeMeetingIdService.meetingId
+        };
     }
 }

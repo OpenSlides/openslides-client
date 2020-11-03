@@ -133,7 +133,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         return this.sendActionToBackend(MotionAction.CREATE, payload);
     }
 
-    public update(update: Partial<Motion>, viewModel: ViewMotion): Promise<void> {
+    public update(update: Partial<MotionAction.UpdatePayload>, viewModel: ViewMotion): Promise<void> {
         const payload: MotionAction.UpdatePayload = {
             id: viewModel.id,
             number: update.number,
@@ -145,7 +145,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         return this.sendActionToBackend(MotionAction.UPDATE, payload);
     }
 
-    private updateMetadata(update: Partial<MotionAction.UpdateMetadataPayload>, viewMotion: ViewMotion): Promise<void> {
+    public updateMetadata(update: Partial<MotionAction.UpdateMetadataPayload>, viewMotion: ViewMotion): Promise<void> {
         const payload: MotionAction.UpdateMetadataPayload = {
             id: viewMotion.id,
             attachment_ids: update.attachment_ids,
@@ -223,7 +223,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
     public getAgendaListTitle = (viewMotion: ViewMotion) => {
         const numberPrefix = this.agendaItemRepo.getItemNumberPrefix(viewMotion);
         // Append the verbose name only, if not the special format 'Motion <number>' is used.
-        let title;
+        let title: string;
         if (viewMotion.number) {
             title = `${numberPrefix}${this.translate.instant('Motion')} ${viewMotion.number} · ${viewMotion.title}`;
         } else {
@@ -307,45 +307,6 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
     }
 
     /**
-     * Set the state of motions in bulk
-     *
-     * @param viewMotions target motions
-     * @param stateId the number that indicates the state
-     */
-    public async setMultiState(viewMotions: ViewMotion[], stateId: number): Promise<void> {
-        const payload: MotionAction.SetStatePayload[] = viewMotions.map(motion => {
-            return { id: motion.id, state_id: stateId };
-        });
-        await this.sendBulkActionToBackend(MotionAction.UPDATE_METADATA, payload);
-    }
-
-    /**
-     * Set the motion blocks of motions in bulk
-     *
-     * @param viewMotions target motions
-     * @param motionblockId the number that indicates the motion block
-     */
-    public async setMultiMotionBlock(viewMotions: ViewMotion[], motionblockId: number): Promise<void> {
-        const payload: MotionAction.UpdateMetadataPayload[] = viewMotions.map(motion => {
-            return { id: motion.id, block_id: motionblockId };
-        });
-        await this.sendBulkActionToBackend(MotionAction.UPDATE_METADATA, payload);
-    }
-
-    /**
-     * Set the category of motions in bulk
-     *
-     * @param viewMotions target motions
-     * @param categoryId the number that indicates the category
-     */
-    public async setMultiCategory(viewMotions: ViewMotion[], categoryId: number): Promise<void> {
-        const payload: MotionAction.UpdateMetadataPayload[] = viewMotions.map(motion => {
-            return { id: motion.id, category_id: categoryId };
-        });
-        await this.sendBulkActionToBackend(MotionAction.UPDATE_METADATA, payload);
-    }
-
-    /**
      * Set the category of a motion
      *
      * @param viewMotion target motion
@@ -383,16 +344,6 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
             tag_ids.splice(tagIndex, 1);
         }
         return this.updateMetadata({ tag_ids: tag_ids }, viewMotion);
-    }
-
-    /**
-     * Sets the submitters by sending a request to the server,
-     *
-     * @param viewMotion The motion to change the submitters from
-     * @param submitterUserIds The submitters to set
-     */
-    public async setSubmitters(viewMotion: ViewMotion, submitterUserIds: number[]): Promise<void> {
-        return this.update({ submitter_ids: submitterUserIds }, viewMotion);
     }
 
     /**

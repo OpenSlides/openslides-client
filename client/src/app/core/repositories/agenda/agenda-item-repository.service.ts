@@ -4,7 +4,7 @@ import { AgendaItemAction } from 'app/core/actions/agenda-item-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { TreeIdNode } from 'app/core/ui-services/tree.service';
-import { AgendaItem } from 'app/shared/models/agenda/agenda-item';
+import { AgendaItem, AgendaItemType } from 'app/shared/models/agenda/agenda-item';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { HasAgendaItem, ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { BaseViewModel } from 'app/site/base/base-view-model';
@@ -177,5 +177,25 @@ export class AgendaItemRepositoryService extends BaseRepositoryWithActiveMeeting
             }
         });
         return duration;
+    }
+
+    public bulkOpenItems(items: ViewAgendaItem[]): Promise<void> {
+        const payload: AgendaItemAction.UpdatePayload[] = items.map(item => ({ closed: false, id: item.id }));
+        return this.sendBulkActionToBackend(AgendaItemAction.UPDATE, payload);
+    }
+
+    public bulkCloseItems(items: ViewAgendaItem[]): Promise<void> {
+        const payload: AgendaItemAction.UpdatePayload[] = items.map(item => ({ closed: true, id: item.id }));
+        return this.sendBulkActionToBackend(AgendaItemAction.UPDATE, payload);
+    }
+
+    public bulkSetAgendaType(items: ViewAgendaItem[], agendaType: AgendaItemType): Promise<void> {
+        const payload: AgendaItemAction.UpdatePayload[] = items.map(item => ({ id: item.id, type: agendaType }));
+        return this.sendBulkActionToBackend(AgendaItemAction.UPDATE, payload);
+    }
+
+    public bulkRemoveItemsFromAgenda(items: ViewAgendaItem[]): Promise<void> {
+        const payload: AgendaItemAction.DeletePayload[] = items.map(item => ({ id: item.id }));
+        return this.sendBulkActionToBackend(AgendaItemAction.DELETE, payload);
     }
 }

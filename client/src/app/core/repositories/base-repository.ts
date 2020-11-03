@@ -336,8 +336,9 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         });
     }
 
-    protected raiseError = (errorMessage: string | Error) => {
-        this.repositoryServiceCollector.errorService.showError(errorMessage);
+    protected raiseError = (error: string | Error) => {
+        this.repositoryServiceCollector.errorService.showError(error);
+        throw error;
     };
 
     protected async sendActionToBackend(action: string, payload: any): Promise<any> {

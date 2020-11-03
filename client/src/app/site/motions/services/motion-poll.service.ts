@@ -9,7 +9,7 @@ import { MotionPoll, MotionPollMethod } from 'app/shared/models/motions/motion-p
 import { MajorityMethod, PercentBase, PollType } from 'app/shared/models/poll/base-poll';
 import { ParsePollNumberPipe } from 'app/shared/pipes/parse-poll-number.pipe';
 import { PollKeyVerbosePipe } from 'app/shared/pipes/poll-key-verbose.pipe';
-import { PollData, PollService, PollTableData, VotingResult } from 'app/site/polls/services/poll.service';
+import { BasePollData, PollData, PollService, PollTableData, VotingResult } from 'app/site/polls/services/poll.service';
 import { ViewMotionOption } from '../models/view-motion-option';
 import { ViewMotionPoll } from '../models/view-motion-poll';
 
@@ -76,17 +76,21 @@ export class MotionPollService extends PollService {
     }
 
     public generateTableData(poll: PollData | ViewMotionPoll): PollTableData[] {
-        let tableData: PollTableData[] = poll.options.flatMap(vote =>
-            super.getVoteTableKeys(poll).map(key => this.createTableDataEntry(poll, key, vote))
-        );
-        tableData.push(...super.getSumTableKeys(poll).map(key => this.createTableDataEntry(poll, key)));
+        if (poll instanceof ViewMotionPoll) {
+            let tableData: PollTableData[] = poll.options.flatMap(vote =>
+                super.getVoteTableKeys(poll).map(key => this.createTableDataEntry(poll, key, vote))
+            );
+            tableData.push(...super.getSumTableKeys(poll).map(key => this.createTableDataEntry(poll, key)));
 
-        tableData = tableData.filter(localeTableData => !localeTableData.value.some(result => result.hide));
-        return tableData;
+            tableData = tableData.filter(localeTableData => !localeTableData.value.some(result => result.hide));
+            return tableData;
+        } else {
+            return [];
+        }
     }
 
     private createTableDataEntry(
-        poll: PollData | ViewMotionPoll,
+        poll: BasePollData<any, any>,
         result: VotingResult,
         vote?: ViewMotionOption
     ): PollTableData {

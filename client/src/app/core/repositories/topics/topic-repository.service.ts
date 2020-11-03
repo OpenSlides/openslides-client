@@ -6,6 +6,7 @@ import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-reques
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Topic } from 'app/shared/models/topics/topic';
 import { createAgendaItem } from 'app/shared/utils/create-agenda-item';
+import { ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { CreateTopic } from 'app/site/topics/models/create-topic';
 import { ViewTopic } from 'app/site/topics/models/view-topic';
 import { BaseIsAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-is-agenda-item-and-list-of-speakers-content-object-repository';
@@ -32,14 +33,7 @@ export class TopicRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCon
     }
 
     public create(partialTopic: Partial<TopicAction.CreatePayload>): Promise<Identifiable> {
-        const payload: TopicAction.CreatePayload = {
-            meeting_id: this.activeMeetingIdService.meetingId,
-            title: partialTopic.title,
-            text: partialTopic.text,
-            tag_ids: partialTopic.tag_ids,
-            attachment_ids: partialTopic.attachment_ids,
-            ...createAgendaItem(partialTopic)
-        };
+        const payload: TopicAction.CreatePayload = this.getCreatePayload(partialTopic);
         return this.sendActionToBackend(TopicAction.CREATE, payload);
     }
 
@@ -91,14 +85,35 @@ export class TopicRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCon
         return this.translate.instant(plural ? 'Topics' : 'Topic');
     };
 
-    public duplicateTopic(topic: ViewTopic): void {
-        this.create(
-            new CreateTopic({
-                ...topic.topic,
-                agenda_type: topic.agenda_item.type,
-                agenda_parent_id: topic.agenda_item.parent_id,
-                agenda_weight: topic.agenda_item.weight
-            })
+    public duplicateTopic(topicAgendaItem: ViewAgendaItem): Promise<Identifiable> {
+        return this.create(this.getDuplicatedTopic(topicAgendaItem));
+    }
+
+    public duplicateMultipleTopics(agendaItems: ViewAgendaItem[]): Promise<void> {
+        const payload: TopicAction.CreatePayload[] = agendaItems.map(item =>
+            this.getCreatePayload(this.getDuplicatedTopic(item))
         );
+        return this.sendBulkActionToBackend(TopicAction.CREATE, payload);
+    }
+
+    private getDuplicatedTopic(topicAgendaItem: ViewAgendaItem): CreateTopic {
+        const viewTopic = topicAgendaItem.content_object as ViewTopic;
+        return new CreateTopic({
+            ...viewTopic.topic,
+            agenda_type: topicAgendaItem.type,
+            agenda_parent_id: topicAgendaItem.parent_id,
+            agenda_weight: topicAgendaItem.weight
+        });
+    }
+
+    private getCreatePayload(partialTopic: Partial<TopicAction.CreatePayload>): TopicAction.CreatePayload {
+        return {
+            meeting_id: this.activeMeetingIdService.meetingId,
+            title: partialTopic.title,
+            text: partialTopic.text,
+            tag_ids: partialTopic.tag_ids,
+            attachment_ids: partialTopic.attachment_ids,
+            ...createAgendaItem(partialTopic)
+        };
     }
 }

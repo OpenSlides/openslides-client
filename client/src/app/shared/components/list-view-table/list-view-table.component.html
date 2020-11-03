@@ -1,5 +1,5 @@
 <mat-drawer-container class="list-view-frame" *ngIf="columns && columnSet">
-    <div class="list-view-table-wrapper">
+    <div class="list-view-table-wrapper" (keydown)="onKeyDown($event)" (keyup)="onKeyUp($event)">
         <os-sort-filter-bar
             class="sort-filter-bar"
             *ngIf="showFilterBar"

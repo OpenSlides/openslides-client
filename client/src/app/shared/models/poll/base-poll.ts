@@ -1,4 +1,5 @@
 import { Id } from 'app/core/definitions/key-types';
+import { BasePollData } from 'app/site/polls/services/poll.service';
 import { BaseDecimalModel } from '../base/base-decimal-model';
 import { BaseOption } from './base-option';
 import { HasMeetingId } from '../base/has-meeting-id';
@@ -131,4 +132,5 @@ export interface BasePoll<
     PM extends string = string,
     PB extends string = string
 > extends HasMeetingId,
-        HasProjectableIds {}
+        HasProjectableIds,
+        BasePollData<PM, PB> {}

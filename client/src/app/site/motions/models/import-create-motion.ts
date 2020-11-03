@@ -1,3 +1,4 @@
+import { Id } from 'app/core/definitions/key-types';
 import { CreateMotion } from './create-motion';
 
 /**
@@ -124,7 +125,7 @@ export class ImportCreateMotion extends CreateMotion {
      */
     public solveTags(tags: CsvMapping[]): number {
         let open = 0;
-        const ids: number[] = [];
+        const ids: Id[] = [];
         for (const tag of this.csvTags) {
             if (tag.id) {
                 ids.push(tag.id);

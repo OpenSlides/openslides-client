@@ -80,8 +80,7 @@ export class WorkflowListComponent extends BaseListViewComponent<ViewMotionWorkf
                 {
                     idField: 'motion_workflow_ids'
                 }
-            ],
-            fieldset: []
+            ]
         };
     }
 
