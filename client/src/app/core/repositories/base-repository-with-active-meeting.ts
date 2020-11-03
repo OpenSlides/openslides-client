@@ -1,4 +1,4 @@
-import { ActiveMeetingService } from '../core-services/active-meeting.service';
+import { ActiveMeetingIdService } from '../core-services/active-meeting-id.service';
 import { BaseModel, ModelConstructor } from '../../shared/models/base/base-model';
 import { BaseRepository } from './base-repository';
 import { BaseViewModel, ViewModelConstructor } from '../../site/base/base-view-model';
@@ -13,8 +13,8 @@ export abstract class BaseRepositoryWithActiveMeeting<
     V extends BaseViewModel,
     M extends BaseModel
 > extends BaseRepository<V, M> {
-    protected get activeMeetingService(): ActiveMeetingService {
-        return this.fullRepositoryServiceCollector.activeMeetingService;
+    protected get activeMeetingIdService(): ActiveMeetingIdService {
+        return this.fullRepositoryServiceCollector.activeMeetingIdService;
     }
 
     public constructor(

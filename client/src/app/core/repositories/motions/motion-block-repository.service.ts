@@ -33,7 +33,7 @@ export class MotionBlockRepositoryService extends BaseIsAgendaItemAndListOfSpeak
 
     public create(partialModel: Partial<MotionBlockAction.CreatePayload>): Promise<Identifiable> {
         const payload: MotionBlockAction.CreatePayload = {
-            meeting_id: this.activeMeetingService.meetingId,
+            meeting_id: this.activeMeetingIdService.meetingId,
             title: partialModel.title,
             internal: partialModel.internal,
             agenda_create: partialModel.agenda_create,

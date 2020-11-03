@@ -6,7 +6,7 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { PblColumnDefinition } from '@pebula/ngrid';
 import { BehaviorSubject } from 'rxjs';
 
-import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
+import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest, SpecificStructuredField } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
@@ -168,7 +168,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         private userPdf: UserPdfExportService,
         private dialog: MatDialog,
         private pollService: PollService,
-        private activeMeetingService: ActiveMeetingService
+        private activeMeetingIdService: ActiveMeetingIdService
     ) {
         super(componentServiceCollector);
 
@@ -216,13 +216,13 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
                         {
                             idField: {
                                 templateIdField: 'group_$_ids',
-                                templateValue: '1' // TODO: Active meeting
+                                templateValue: this.activeMeetingIdService.meetingId.toString()
                             }
                         },
                         {
                             idField: {
                                 templateIdField: 'vote_delegated_$_to_id',
-                                templateValue: '1' // TODO: Active meeting
+                                templateValue: this.activeMeetingIdService.meetingId.toString()
                             }
                         }
                     ]
@@ -263,7 +263,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         ev.stopPropagation();
         this.infoDialog = {
             name: user.username,
-            groups_id: user.group_ids(this.activeMeetingService.meetingId),
+            groups_id: user.group_ids(this.activeMeetingIdService.meetingId),
             gender: user.gender,
             structure_level: user.structure_level,
             number: user.number,

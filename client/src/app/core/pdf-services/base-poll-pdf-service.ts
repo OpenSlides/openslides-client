@@ -1,4 +1,4 @@
-import { ActiveMeetingService } from '../core-services/active-meeting.service';
+import { ActiveMeetingIdService } from '../core-services/active-meeting-id.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { BallotPaperSelection } from 'app/shared/models/event-management/meeting';
 import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
@@ -44,7 +44,7 @@ export abstract class PollPdfService {
     public constructor(
         protected meetingSettingsService: MeetingSettingsService,
         protected userRepo: UserRepositoryService,
-        protected activeMeetingService: ActiveMeetingService,
+        protected activeMeetingIdService: ActiveMeetingIdService,
         protected mediaManageService: MediaManageService
     ) {
         this.meetingSettingsService.get('name').subscribe(name => (this.eventName = name));
@@ -67,8 +67,8 @@ export abstract class PollPdfService {
                     .getViewModelList()
                     .filter(
                         user =>
-                            user.group_ids(this.activeMeetingService.meetingId) &&
-                            user.group_ids(this.activeMeetingService.meetingId).includes(2)
+                            user.group_ids(this.activeMeetingIdService.meetingId) &&
+                            user.group_ids(this.activeMeetingIdService.meetingId).includes(2)
                     ).length;*/
             case 'CUSTOM_NUMBER':
                 return this.ballotCustomCount;

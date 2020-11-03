@@ -40,11 +40,11 @@ export class Mediafile extends BaseModel<Mediafile> {
     }
 
     public used_as_logo_in_meeting_id(place: string): Id | null {
-        return this[`used_as_logo_${place}_in_meeting_id`] || null;
+        return this[`used_as_logo_$${place}_in_meeting_id`] || null;
     }
 
     public used_as_font_in_meeting_id(place: string): Id | null {
-        return this[`used_as_font_${place}_in_meeting_id`] || null;
+        return this[`used_as_font_$${place}_in_meeting_id`] || null;
     }
 
     /**

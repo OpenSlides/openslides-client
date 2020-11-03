@@ -70,7 +70,7 @@ export class MotionWorkflowRepositoryService extends BaseRepositoryWithActiveMee
     public create(partialModel: Partial<MotionWorkflow>): Promise<Identifiable> {
         const payload: MotionWorkflowAction.CreatePayload = {
             name: partialModel.name,
-            meeting_id: this.activeMeetingService.meetingId
+            meeting_id: this.activeMeetingIdService.meetingId
         };
         return this.sendActionToBackend(MotionWorkflowAction.CREATE, payload);
     }

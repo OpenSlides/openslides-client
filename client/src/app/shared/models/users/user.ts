@@ -76,63 +76,63 @@ export class User extends BaseDecimalModel<User> {
     }
 
     public group_ids(meetingId: Id): Id[] {
-        return this[`group_${meetingId}_ids`] || [];
+        return this[`group_$${meetingId}_ids`] || [];
     }
 
     public speaker_ids(meetingId: Id): Id[] {
-        return this[`speaker_${meetingId}_ids`] || [];
+        return this[`speaker_$${meetingId}_ids`] || [];
     }
 
     public personal_note_ids(meetingId: Id): Id[] {
-        return this[`personal_note_${meetingId}_ids`] || [];
+        return this[`personal_note_$${meetingId}_ids`] || [];
     }
 
     public supported_motion_ids(meetingId: Id): Id[] {
-        return this[`supported_motion_${meetingId}_ids`] || [];
+        return this[`supported_motion_$${meetingId}_ids`] || [];
     }
 
     public submitted_motion_ids(meetingId: Id): Id[] {
-        return this[`submitted_motion_${meetingId}_ids`] || [];
+        return this[`submitted_motion_$${meetingId}_ids`] || [];
     }
 
     public motion_poll_voted_ids(meetingId: Id): Id[] {
-        return this[`motion_poll_voted_${meetingId}_ids`] || [];
+        return this[`motion_poll_voted_$${meetingId}_ids`] || [];
     }
 
     public motion_vote_ids(meetingId: Id): Id[] {
-        return this[`motion_vote_${meetingId}_ids`] || [];
+        return this[`motion_vote_$${meetingId}_ids`] || [];
     }
 
     public motion_delegated_vote_ids(meetingId: Id): Id[] {
-        return this[`motion_delegated_vote_${meetingId}_ids`] || [];
+        return this[`motion_delegated_vote_$${meetingId}_ids`] || [];
     }
 
     public assignment_candidate_ids(meetingId: Id): Id[] {
-        return this[`assignment_candidate_${meetingId}_ids`] || [];
+        return this[`assignment_candidate_$${meetingId}_ids`] || [];
     }
 
     public assignment_poll_voted_ids(meetingId: Id): Id[] {
-        return this[`assignment_poll_voted_${meetingId}_ids`] || [];
+        return this[`assignment_poll_voted_$${meetingId}_ids`] || [];
     }
 
     public assignment_option_ids(meetingId: Id): Id[] {
-        return this[`assignment_option_${meetingId}_ids`] || [];
+        return this[`assignment_option_$${meetingId}_ids`] || [];
     }
 
     public assignment_vote_ids(meetingId: Id): Id[] {
-        return this[`assignment_vote_${meetingId}_ids`] || [];
+        return this[`assignment_vote_$${meetingId}_ids`] || [];
     }
 
     public assignment_delegated_vote_ids(meetingId: Id): Id[] {
-        return this[`assignment_delegated_vote_${meetingId}_ids`] || [];
+        return this[`assignment_delegated_vote_$${meetingId}_ids`] || [];
     }
 
     public vote_delegated_to_id(meetingId: Id): Id {
-        return this[`vote_delegated_${meetingId}_to_id`];
+        return this[`vote_delegated_$${meetingId}_to_id`];
     }
 
     public vote_delegations_from_ids(meetingId: Id): Id[] {
-        return this[`vote_delegations_${meetingId}_from_ids`] || [];
+        return this[`vote_delegations_$${meetingId}_from_ids`] || [];
     }
 
     protected getDecimalFields(): string[] {

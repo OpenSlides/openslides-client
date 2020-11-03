@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { ActiveMeetingService } from '../core-services/active-meeting.service';
-import { Meeting, Settings } from 'app/shared/models/event-management/meeting';
+import { Settings } from 'app/shared/models/event-management/meeting';
 
 /**
  * Handler for setting variables for organsations.
