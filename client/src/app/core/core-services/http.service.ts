@@ -10,21 +10,7 @@ import { HttpOptions } from '../definitions/http-options';
 import { formatQueryParams, QueryParams } from '../definitions/query-params';
 import { toBase64 } from '../to-base64';
 
-export interface ErrorDetailResponse {
-    detail: string | string[];
-    args?: string[];
-}
-
-function isErrorDetailResponse(obj: any): obj is ErrorDetailResponse {
-    return (
-        obj &&
-        typeof obj === 'object' &&
-        (typeof obj.detail === 'string' || obj.detail instanceof Array) &&
-        (!obj.args || obj.args instanceof Array)
-    );
-}
-
-export interface ErrorMessageResponse {
+interface ErrorMessageResponse {
     message: string;
     success: boolean;
 }
@@ -142,27 +128,16 @@ export class HttpService {
             return error;
         }
 
-        if (e.status === 405) {
-            // this should only happen, if the url is wrong -> a bug.
-            error += this.translate.instant(
-                'The requested method is not allowed. Please contact your system administrator.'
-            );
-        } else if (!e.error) {
+        if (!e.error) {
             error += this.translate.instant("The server didn't respond.");
         } else if (typeof e.error === 'object') {
-            if (isErrorDetailResponse(e.error)) {
-                error += this.processErrorDetailResponse(e.error);
-            } else if (isErrorMessageResponse(e.error)) {
+            if (isErrorMessageResponse(e.error)) {
                 error += e.error.message;
             } else {
                 const errorList = Object.keys(e.error).map(key => {
                     const capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1);
                     const message = e.error[key];
-                    if (typeof message === 'string') {
-                        return `${this.translate.instant(capitalizedKey)}: ${message}`;
-                    } else {
-                        return `${this.translate.instant(capitalizedKey)}: ${this.processErrorDetailResponse(message)}`;
-                    }
+                    return `${this.translate.instant(capitalizedKey)}: ${message}`;
                 });
                 error = errorList.join(', ');
             }
@@ -177,29 +152,6 @@ export class HttpService {
         }
 
         return error;
-    }
-
-    /**
-     * Errors from the servers may be string or array of strings. This function joins the strings together,
-     * if an array is send.
-     * @param str a string or a string array to join together.
-     * @returns Error text(s) as single string
-     */
-    private processErrorDetailResponse(response: ErrorDetailResponse): string {
-        let message: string;
-        if (response.detail instanceof Array) {
-            message = response.detail.join(' ');
-        } else {
-            message = response.detail;
-        }
-        message = this.translate.instant(message);
-
-        if (response.args && response.args.length > 0) {
-            for (let i = 0; i < response.args.length; i++) {
-                message = message.replace(`{${i}}`, response.args[i].toString());
-            }
-        }
-        return message;
     }
 
     /**
