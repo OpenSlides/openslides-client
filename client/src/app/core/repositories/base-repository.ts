@@ -340,11 +340,21 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         this.repositoryServiceCollector.errorService.showError(errorMessage);
     };
 
-    protected sendActionToBackend(action: string, payload: any): Promise<any> {
-        return this.actions.sendRequest(action, payload).catch(this.raiseError);
+    protected async sendActionToBackend(action: string, payload: any): Promise<any> {
+        try {
+            return await this.actions.sendRequest(action, payload);
+        } catch (e) {
+            this.raiseError(e);
+            throw e;
+        }
     }
 
-    protected sendBulkActionToBackend(action: string, payload: any[]): Promise<any> {
-        return this.actions.sendBulkRequest(action, payload).catch(this.raiseError);
+    protected async sendBulkActionToBackend(action: string, payload: any[]): Promise<any> {
+        try {
+            return await this.actions.sendBulkRequest(action, payload);
+        } catch (e) {
+            this.raiseError(e);
+            throw e;
+        }
     }
 }
