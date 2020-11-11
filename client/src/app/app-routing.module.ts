@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { Route, RouterModule } from '@angular/router';
+import { Injectable, NgModule } from '@angular/core';
+import { ActivatedRouteSnapshot, DetachedRouteHandle, Route, RouteReuseStrategy, RouterModule } from '@angular/router';
 
 import { LoginLegalNoticeComponent } from './site/login/components/login-legal-notice/login-legal-notice.component';
 import { LoginMaskComponent } from './site/login/components/login-mask/login-mask.component';
@@ -35,8 +35,26 @@ const routes: Route[] = [
     { path: '**', redirectTo: '' }
 ];
 
+@Injectable()
+export class MyStrategy extends RouteReuseStrategy {
+    public shouldDetach(route: ActivatedRouteSnapshot): boolean {
+        return false;
+    }
+    public store(route: ActivatedRouteSnapshot, detachedTree: DetachedRouteHandle): void {}
+    public shouldAttach(route: ActivatedRouteSnapshot): boolean {
+        return false;
+    }
+    public retrieve(route: ActivatedRouteSnapshot): DetachedRouteHandle | null {
+        return null;
+    }
+    public shouldReuseRoute(future: ActivatedRouteSnapshot, curr: ActivatedRouteSnapshot): boolean {
+        return future.routeConfig === curr.routeConfig || (future?.data.reuseComponent && curr?.data.reuseComponent);
+    }
+}
+
 @NgModule({
     imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })],
-    exports: [RouterModule]
+    exports: [RouterModule],
+    providers: [{ provide: RouteReuseStrategy, useClass: MyStrategy }]
 })
 export class AppRoutingModule {}

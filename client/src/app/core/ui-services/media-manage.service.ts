@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
 
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
+import { ActionService } from '../core-services/action.service';
 import { ActiveMeetingService } from '../core-services/active-meeting.service';
 import { Id } from '../definitions/key-types';
+import { MediafileAction } from '../actions/mediafile-action';
+import { MeetingAction } from '../actions/meeting-action';
 import { ViewMediafile } from '../../site/mediafiles/models/view-mediafile';
 
 export type LogoPlace =
@@ -76,8 +79,8 @@ export class MediaManageService {
      *
      * @param httpService OpenSlides own HttpService
      */
-    public constructor(private activeMeetingService: ActiveMeetingService) {
-        this.activeMeetingService.meetingObservable.subscribe(meeting => {
+    public constructor(private activeMeetingService: ActiveMeetingService, private actionService: ActionService) {
+        this.activeMeetingService.meetingObservable.subscribe(_ => {
             for (const place of Object.keys(this.logoUrlSubjects)) {
                 this.logoUrlSubjects[place].next(this.getLogoUrl(place as LogoPlace));
             }
@@ -87,18 +90,38 @@ export class MediaManageService {
         });
     }
 
-    /**
-     * Sets the logo for the place. Do not provide the mediafile, if the place should be cleared.
-     */
-    public async setLogo(place: LogoPlace, mediafile?: ViewMediafile): Promise<void> {
-        throw new Error('TODO');
+    public async setLogo(place: LogoPlace, mediafile: ViewMediafile): Promise<void> {
+        const payload: MeetingAction.SetLogoPayload = {
+            id: this.activeMeetingService.meetingId,
+            mediafile_id: mediafile.id,
+            place
+        };
+        return this.actionService.sendRequest(MeetingAction.SET_LOGO, payload);
     }
 
-    /**
-     * Sets the font for the place. Do not provide the mediafile, if the place should be cleared.
-     */
-    public async setFont(place: FontPlace, mediafile?: ViewMediafile): Promise<void> {
-        throw new Error('TODO');
+    public async unsetLogo(place: LogoPlace): Promise<void> {
+        const payload: MeetingAction.UnsetLogoPayload = {
+            id: this.activeMeetingService.meetingId,
+            place
+        };
+        return this.actionService.sendRequest(MeetingAction.UNSET_LOGO, payload);
+    }
+
+    public async setFont(place: FontPlace, mediafile: ViewMediafile): Promise<void> {
+        const payload: MeetingAction.SetFontPayload = {
+            id: this.activeMeetingService.meetingId,
+            mediafile_id: mediafile.id,
+            place
+        };
+        return this.actionService.sendRequest(MeetingAction.SET_FONT, payload);
+    }
+
+    public async unsetFont(place: FontPlace): Promise<void> {
+        const payload: MeetingAction.UnsetFontPayload = {
+            id: this.activeMeetingService.meetingId,
+            place
+        };
+        return this.actionService.sendRequest(MeetingAction.UNSET_FONT, payload);
     }
 
     public getLogoUrlObservable(place: LogoPlace): Observable<string> {

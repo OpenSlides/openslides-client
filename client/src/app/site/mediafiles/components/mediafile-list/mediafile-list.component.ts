@@ -16,10 +16,14 @@ import { columnFactory, createDS, PblColumnDefinition } from '@pebula/ngrid';
 import { PblNgridDataMatrixRow } from '@pebula/ngrid/target-events';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
+import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
-import { MediafileRepositoryService } from 'app/core/repositories/mediafiles/mediafile-repository.service';
+import {
+    LOGO_FONT_VALUES,
+    MediafileRepositoryService
+} from 'app/core/repositories/mediafiles/mediafile-repository.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import {
@@ -174,6 +178,7 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        private activeMeetingIdService: ActiveMeetingIdService,
         private route: ActivatedRoute,
         private router: Router,
         public repo: MediafileRepositoryService,
@@ -210,6 +215,7 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
      * Set the title, make the edit Form and observe Mediafiles
      */
     public ngOnInit(): void {
+        console.log('On init');
         super.ngOnInit();
         super.setTitle('Files');
         this.createDataSource();
@@ -225,14 +231,16 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
     }
 
     protected getModelRequest(): SimplifiedModelRequest {
+        console.log('Get model request');
         return {
             viewModelCtor: ViewMeeting,
-            ids: [1], // TODO
+            ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
                     idField: 'mediafile_ids',
-                    follow: ['access_group_ids', 'inherited_access_group_ids']
-                }
+                    follow: ['access_group_ids', 'inherited_access_group_ids', ...LOGO_FONT_VALUES]
+                },
+                'group_ids'
             ]
         };
     }
@@ -320,28 +328,20 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
             this.fileToEdit = file;
 
             this.fileEditForm = this.formBuilder.group({
-                title: [file.filename, Validators.required],
+                title: [file.title, Validators.required],
                 access_group_ids: [file.access_group_ids]
             });
 
             this.dialogRef = this.dialog.open(this.fileEditDialog, infoDialogSettings);
-
-            this.dialogRef.keydownEvents().subscribe((event: KeyboardEvent) => {
-                if (event.key === 'Enter' && event.shiftKey && this.fileEditForm.valid) {
-                    this.onSaveEditedFile(this.fileEditForm.value);
-                }
-            });
         }
     }
 
     /**
      * Click on the save button in edit mode
      */
-    public onSaveEditedFile(value: Partial<Mediafile>): void {
-        // this.repo.update(value, this.fileToEdit).then(() => {
-        //     this.dialogRef.close();
-        // }, this.raiseError);
-        throw new Error('TODO!');
+    public async onSaveEditedFile(value: Partial<Mediafile>): Promise<void> {
+        await this.repo.update(value, this.fileToEdit);
+        this.dialogRef.close();
     }
 
     /**
@@ -353,8 +353,7 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
         const title = this.translate.instant('Are you sure you want to delete this file?');
         const content = file.getTitle();
         if (await this.promptService.open(title, content)) {
-            // this.repo.delete(file);
-            throw new Error('TODO!');
+            await this.repo.delete(file);
         }
     }
 
@@ -382,9 +381,10 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
         // prohibits automatic closing
         event.stopPropagation();
         if (file.used_as_logo_in_meeting(place)) {
-            file = null; // remove the file instead of setting it.
+            await this.mediaManage.unsetLogo(place);
+        } else {
+            await this.mediaManage.setLogo(place, file);
         }
-        await this.mediaManage.setLogo(place, file);
         this.cd.markForCheck();
     }
 
@@ -392,9 +392,10 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
         // prohibits automatic closing
         event.stopPropagation();
         if (file.used_as_font_in_meeting(place)) {
-            file = null; // remove the file instead of setting it.
+            await this.mediaManage.unsetFont(place);
+        } else {
+            await this.mediaManage.setFont(place, file);
         }
-        await this.mediaManage.setFont(place, file);
         this.cd.markForCheck();
     }
 
@@ -422,13 +423,12 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
     }
 
     public move(templateRef: TemplateRef<string>, mediafiles: ViewMediafile[]): void {
-        throw new Error('TODO');
-        /*this.moveForm.reset();
+        this.moveForm.reset();
 
         if (mediafiles.some(file => file.is_directory)) {
             this.filteredDirectoryBehaviorSubject.next(
                 this.directoryBehaviorSubject.value.filter(
-                    dir => !mediafiles.some(file => dir.path.startsWith(file.path))
+                    dir => !mediafiles.some(file => dir.url.startsWith(file.url))
                 )
             );
         } else {
@@ -443,7 +443,7 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
                     this.cd.markForCheck();
                 }, this.raiseError);
             }
-        });*/
+        });
     }
 
     /**
