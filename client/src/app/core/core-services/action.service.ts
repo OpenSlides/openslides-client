@@ -49,7 +49,7 @@ export class ActionService {
 
     public async sendBulkRequest<T>(action: string, data: any[]): Promise<T[] | null> {
         const results = await this._sendRequest<T>({ action, data });
-        if (results.length !== data.length) {
+        if (results && results.length !== data.length) {
             throw new Error(`Inner resultlength is not ${data.length} from the action service`);
         }
         return results;

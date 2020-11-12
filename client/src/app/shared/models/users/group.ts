@@ -26,6 +26,14 @@ export class Group extends BaseModel<Group> {
     public used_as_motion_poll_default_id: Id; // meeting/motion_poll_default_group_ids;
     public used_as_assignment_poll_default_id: Id; // meeting/assignment_poll_default_group_ids;
 
+    public get isSuperadminGroup(): boolean {
+        return !!this.superadmin_group_for_meeting_id;
+    }
+
+    public get isDefaultGroup(): boolean {
+        return !!this.default_group_for_meeting_id;
+    }
+
     public constructor(input?: Partial<Group>) {
         super(Group.COLLECTION, input);
     }

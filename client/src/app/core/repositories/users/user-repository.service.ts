@@ -37,6 +37,10 @@ export function AllUsersInMeetingRequest(meetingId: Id): SimplifiedModelRequest 
     };
 }
 
+interface CreateTemporaryPayloadWithPresent extends UserAction.CreateTemporaryPayload {
+    is_present: boolean;
+}
+
 /**
  * Unified type name for state fields like `is_active`, `is_physical_person` and `is_present_in_meetings`.
  */
@@ -97,22 +101,22 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
     }
 
     public getFieldsets(): Fieldsets<User> {
+        const listFields = SHORT_NAME_FIELDS.concat([
+            'email',
+            'gender',
+            'is_active',
+            'is_physical_person',
+            'is_present_in_meeting_ids',
+            'last_email_send',
+            'number',
+            'structure_level',
+            'vote_weight',
+            'meeting_id'
+        ]);
         return {
             shortName: SHORT_NAME_FIELDS,
-            [DEFAULT_FIELDSET]: SHORT_NAME_FIELDS.concat([
-                'about_me',
-                'comment',
-                'email',
-                'gender',
-                'is_active',
-                'is_physical_person',
-                'is_present_in_meeting_ids',
-                'last_email_send',
-                'number',
-                'structure_level',
-                'vote_weight',
-                'meeting_id'
-            ])
+            list: listFields,
+            [DEFAULT_FIELDSET]: listFields.concat(['about_me', 'comment', 'default_password'])
         };
     }
 
@@ -145,16 +149,19 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
         return parts.join(' ').trim() || null;
     }
 
-    public createTemporary(partialUser: Partial<UserAction.CreateTemporaryPayload>): Promise<Identifiable> {
+    public createTemporary(partialUser: Partial<CreateTemporaryPayloadWithPresent>): Promise<Identifiable> {
         const username = this.getUsername(partialUser);
         if (!username) {
             this.raiseError('first name or last name must not be empty.');
             return;
         }
         const payload: UserAction.CreateTemporaryPayload = {
+            ...this.getPartialTemporaryUserPayload(partialUser),
+
+            // overwrite some attribues from getPartialTemporaryUserPayload
             meeting_id: this.activeMeetingIdService.meetingId,
-            username,
-            ...this.getPartialTemporaryUserPayload(partialUser)
+            is_present_in_meeting_ids: partialUser.is_present ? [this.activeMeetingIdService.meetingId] : [],
+            username
         };
         return this.sendActionToBackend(UserAction.CREATE_TEMPORARY, payload);
     }
@@ -165,6 +172,43 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
             ...this.getPartialTemporaryUserPayload(update)
         };
         return this.sendActionToBackend(UserAction.UPDATE_TEMPORARY, payload);
+    }
+
+    private getPartialTemporaryUserPayload(
+        partialUser: Partial<UserAction.UpdateTemporaryPayload>
+    ): Partial<UserAction.UpdateTemporaryPayload> {
+        return {
+            // Required:
+            username: partialUser.username,
+
+            // Optional:
+            title: partialUser.title,
+            first_name: partialUser.first_name,
+            last_name: partialUser.last_name,
+            is_active: partialUser.is_active,
+            is_physical_person: partialUser.is_physical_person,
+            default_password: partialUser.default_password,
+            about_me: partialUser.about_me,
+            gender: partialUser.gender,
+            comment: partialUser.comment,
+            number: partialUser.number,
+            structure_level: partialUser.structure_level,
+            email: partialUser.email,
+            vote_weight: toDecimal(partialUser.vote_weight as any),
+            is_present_in_meeting_ids: partialUser.is_present_in_meeting_ids,
+            group_ids: partialUser.group_ids,
+            vote_delegations_from_ids: partialUser.vote_delegations_from_ids
+        };
+    }
+
+    private getPartialUserPayload(partialUser: Partial<UserAction.UpdatePayload>): Partial<UserAction.UpdatePayload> {
+        return {
+            ...this.getPartialTemporaryUserPayload(partialUser),
+            role_id: partialUser.role_id,
+            guest_meeting_ids: partialUser.guest_meeting_ids,
+            committee_as_member_ids: partialUser.committee_as_member_ids,
+            committee_as_manager_ids: partialUser.committee_as_manager_ids
+        };
     }
 
     public deleteTemporary(viewUser: ViewUser): Promise<void> {
@@ -655,36 +699,5 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
         if (this.demoModeUserIds && this.demoModeUserIds.length) {
             throw new PreventedInDemo();
         }
-    }
-
-    private getPartialTemporaryUserPayload(
-        partialUser: Partial<UserAction.UpdateTemporaryPayload>
-    ): Partial<UserAction.UpdateTemporaryPayload> {
-        return {
-            // Required:
-            username: partialUser.username,
-
-            // Optional:
-            title: partialUser.title,
-            first_name: partialUser.first_name,
-            last_name: partialUser.last_name,
-            is_active: partialUser.is_active,
-            is_physical_person: partialUser.is_physical_person,
-            default_password: partialUser.default_password,
-            about_me: partialUser.about_me,
-            gender: partialUser.gender,
-            comment: partialUser.comment,
-            number: partialUser.number,
-            structure_level: partialUser.structure_level,
-            email: partialUser.email,
-            vote_weight: toDecimal(partialUser.vote_weight as any),
-            is_present_in_meeting_ids: partialUser.is_present_in_meeting_ids,
-            group_ids: partialUser.group_ids,
-            vote_delegations_from_ids: partialUser.vote_delegations_from_ids
-        };
-    }
-
-    private getPartialUserPayload(partialUser: Partial<UserAction.UpdatePayload>): Partial<UserAction.UpdatePayload> {
-        return this.getPartialTemporaryUserPayload(partialUser);
     }
 }

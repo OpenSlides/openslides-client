@@ -450,7 +450,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
                 )
             );
         }
-        this.repo.bulkResetPasswordsToDefault(this.selectedRows).catch(this.raiseError);
+        this.repo.bulkResetPasswordsToDefaultTemporary(this.selectedRows).catch(this.raiseError);
     }
 
     /**
@@ -474,7 +474,8 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
                 )
             );
         }
-        this.repo.bulkGenerateNewPasswords(this.selectedRows).catch(this.raiseError);
+        const rows = this.selectedRows.filter(row => row.user.id !== this.operator.operatorId);
+        this.repo.bulkGenerateNewPasswordsTemporary(rows).catch(this.raiseError);
     }
 
     /**

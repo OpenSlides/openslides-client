@@ -322,15 +322,15 @@
 
         <div *ngIf="isAllowed('manage') || ownPage">
             <!-- Own Vote delegations -->
-            <div *ngIf="user.vote_delegated_to">
+            <div *ngIf="user.vote_delegated_to()">
                 <h4>{{ 'Voting right delegated to (proxy)' | translate }}</h4>
-                <span>{{ user.vote_delegated_to }}</span>
+                <span>{{ user.vote_delegated_to() }}</span>
             </div>
 
             <!-- Received Vote delegations -->
-            <div *ngIf="user.vote_delegations_from?.length > 0">
+            <div *ngIf="user.vote_delegations_from()?.length > 0">
                 <h4>{{ 'Voting right received from (principals)' | translate }}</h4>
-                <span>{{ user.vote_delegations_from }}</span>
+                <span>{{ user.vote_delegations_from() }}</span>
             </div>
 
             <!-- Vote weight -->
