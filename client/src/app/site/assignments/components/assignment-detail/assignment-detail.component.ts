@@ -515,10 +515,8 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
      */
     public async createAssignment(): Promise<void> {
         try {
-            /*const response = */ await this.assignmentRepo.create(this.assignmentForm.value);
-            console.error('TODO: wait for returned id and navigate to it');
-            this.router.navigate([`./assignments/`]);
-            // this.router.navigate([`./assignments/${response.id}`]);
+            const response = await this.assignmentRepo.create(this.assignmentForm.value);
+            this.router.navigate([`./assignments/${response.id}`]);
         } catch (e) {
             this.raiseError(e);
         }
