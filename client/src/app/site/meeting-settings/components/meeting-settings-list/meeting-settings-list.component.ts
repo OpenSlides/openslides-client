@@ -150,7 +150,8 @@ export class MeetingSettingsListComponent
             ids: [this.activeMeetingService.meetingId],
             follow: [
                 {
-                    idField: 'group_ids'
+                    idField: 'group_ids',
+                    fieldset: 'title'
                 },
                 {
                     idField: 'motion_workflow_ids',

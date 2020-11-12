@@ -3,16 +3,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 
+import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
-import { Permission } from 'app/core/core-services/permission';
-import {
-    AppPermissions,
-    GroupRepositoryService,
-    PermDefinition
-} from 'app/core/repositories/users/group-repository.service';
+import { AppPermission, DisplayPermission, Permission, PERMISSIONS } from 'app/core/core-services/permission';
+import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
-import { Group } from 'app/shared/models/users/group';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
@@ -63,8 +59,8 @@ export class GroupListComponent extends BaseModelContextComponent implements OnI
 
     private dialogRef: MatDialogRef<any>;
 
-    public get appPermissions(): AppPermissions[] {
-        return this.repo.appPermissions;
+    public get permissionsPerApp(): AppPermission[] {
+        return PERMISSIONS;
     }
 
     /**
@@ -81,7 +77,8 @@ export class GroupListComponent extends BaseModelContextComponent implements OnI
         private dialog: MatDialog,
         private repo: GroupRepositoryService,
         private promptService: PromptService,
-        private formBuilder: FormBuilder
+        private formBuilder: FormBuilder,
+        private activeMeetingIdService: ActiveMeetingIdService
     ) {
         super(componentServiceCollector);
     }
@@ -107,11 +104,10 @@ export class GroupListComponent extends BaseModelContextComponent implements OnI
     public getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [1], // TODO
+            ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
-                    idField: 'group_ids',
-                    fieldset: 'list'
+                    idField: 'group_ids'
                 }
             ]
         };
@@ -144,13 +140,17 @@ export class GroupListComponent extends BaseModelContextComponent implements OnI
     /**
      * Creates or updates a group.
      */
-    public saveGroup(value: { name: string }): void {
-        // if (this.editGroup && this.newGroup) {
-        //     this.repo.create(value as Group).then(() => this.cancelEditing(), this.raiseError);
-        // } else if (this.editGroup && !this.newGroup) {
-        //     this.repo.update(value, this.selectedGroup).then(() => this.cancelEditing(), this.raiseError);
-        // }
-        throw new Error('TODO!');
+    public async saveGroup(value: { name: string }): Promise<void> {
+        if (!this.editGroup) {
+            return;
+        }
+
+        if (this.newGroup) {
+            await this.repo.create(value);
+        } else {
+            await this.repo.update(value, this.selectedGroup);
+        }
+        this.cancelEditing();
     }
 
     /**
@@ -167,10 +167,10 @@ export class GroupListComponent extends BaseModelContextComponent implements OnI
     public async deleteSelectedGroup(): Promise<void> {
         const title = this.translate.instant('Are you sure you want to delete this group?');
         const content = this.translate.instant(this.selectedGroup.name);
-        // if (await this.promptService.open(title, content)) {
-        //     this.repo.delete(this.selectedGroup).then(() => this.cancelEditing(), this.raiseError);
-        // }
-        throw new Error('TODO!');
+        if (await this.promptService.open(title, content)) {
+            await this.repo.delete(this.selectedGroup);
+            this.cancelEditing();
+        }
     }
 
     /**
@@ -184,19 +184,12 @@ export class GroupListComponent extends BaseModelContextComponent implements OnI
     }
 
     /**
-     * Prevent deleting group 1 and 2 (default and admin)
-     */
-    public canDeleteGroup(group: ViewGroup): boolean {
-        return group.id !== 1 && group.id !== 2;
-    }
-
-    /**
      * Triggers when a permission was toggled
      * @param viewGroup
      * @param perm
      */
-    public togglePerm(viewGroup: ViewGroup, perm: Permission): void {
-        this.repo.togglePerm(viewGroup, perm);
+    public togglePermission(viewGroup: ViewGroup, perm: Permission): void {
+        this.repo.togglePermission(viewGroup, perm);
     }
 
     /**
@@ -234,7 +227,7 @@ export class GroupListComponent extends BaseModelContextComponent implements OnI
      * @param group ViewGroup
      */
     public isProtected(group: ViewGroup): boolean {
-        return group.id === 1 || group.id === 2;
+        return group.isSuperadminGroup || group.isDefaultGroup;
     }
 
     /**
@@ -246,7 +239,7 @@ export class GroupListComponent extends BaseModelContextComponent implements OnI
         }
     }
 
-    public hasGroupPerm(group: ViewGroup, perm: PermDefinition): boolean {
+    public hasGroupPerm(group: ViewGroup, perm: DisplayPermission): boolean {
         return group.hasPermission(perm.value);
     }
 }

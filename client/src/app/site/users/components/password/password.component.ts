@@ -6,6 +6,7 @@ import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewUser } from '../../models/view-user';
 
@@ -17,7 +18,7 @@ import { ViewUser } from '../../models/view-user';
     templateUrl: './password.component.html',
     styleUrls: ['./password.component.scss']
 })
-export class PasswordComponent extends BaseComponent implements OnInit {
+export class PasswordComponent extends BaseModelContextComponent implements OnInit {
     /**
      * the user that is currently worked own
      */
@@ -70,11 +71,17 @@ export class PasswordComponent extends BaseComponent implements OnInit {
      * Initializes the forms and some of the frontend options
      */
     public ngOnInit(): void {
+        super.ngOnInit();
         super.setTitle(this.translate.instant('Change password'));
         this.route.params.subscribe(params => {
             if (params.id) {
                 this.urlUserId = +params.id;
-                this.repo.getViewModelObservable(this.urlUserId).subscribe(() => {
+                this.requestModels({
+                    viewModelCtor: ViewUser,
+                    ids: [this.urlUserId]
+                });
+                this.repo.getViewModelObservable(this.urlUserId).subscribe(user => {
+                    this.user = user;
                     this.updateUser();
                 });
             }
@@ -98,7 +105,6 @@ export class PasswordComponent extends BaseComponent implements OnInit {
 
     private updateUser(): void {
         this.ownPage = this.urlUserId ? this.operator.operatorId === this.urlUserId : true;
-        this.user = this.repo.getViewModel(this.urlUserId);
         this.canManage = this.operator.hasPerms(Permission.usersCanManage);
     }
 

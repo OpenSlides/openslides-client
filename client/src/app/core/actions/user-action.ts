@@ -19,7 +19,7 @@ export namespace UserAction {
     export const GENERATE_NEW_PASSWORD = 'user.generate_new_password';
     export const GENERATE_NEW_PASSWORD_TEMPORARY = 'user.generate_new_password_temporary';
 
-    interface BaseTemporaryUserPayload {
+    interface TemporaryUserPayload {
         // Optional:
         title?: string;
         first_name?: string;
@@ -40,7 +40,7 @@ export namespace UserAction {
         vote_delegations_from_ids?: Id[];
     }
 
-    interface PartialUserPayload extends BaseTemporaryUserPayload {
+    interface UserPayload extends TemporaryUserPayload {
         role_id?: Id;
         guest_meeting_ids?: Id[];
         committee_as_member_ids?: Id[];
@@ -54,19 +54,19 @@ export namespace UserAction {
         set_as_default?: boolean;
     }
 
-    export interface CreatePayload extends PartialUserPayload {
+    export interface CreatePayload extends UserPayload {
         username: string;
     }
 
-    export interface UpdatePayload extends Identifiable, PartialUserPayload {
+    export interface UpdatePayload extends Identifiable, UserPayload {
         username?: string;
     }
 
-    export interface CreateTemporaryPayload extends HasMeetingId, BaseTemporaryUserPayload {
+    export interface CreateTemporaryPayload extends HasMeetingId, TemporaryUserPayload {
         // Required:
         username: string;
     }
-    export interface UpdateTemporaryPayload extends Identifiable, BaseTemporaryUserPayload {
+    export interface UpdateTemporaryPayload extends Identifiable, TemporaryUserPayload {
         // Optional:
         username?: string;
     }

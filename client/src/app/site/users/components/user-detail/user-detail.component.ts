@@ -192,7 +192,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
                 vote_weight: [],
                 about_me: [''],
                 group_ids: [[]],
-                vote_delegations_from_ids: [''],
+                vote_delegations_from_ids: [[]],
                 is_present: [true],
                 is_physical_person: [true],
                 email: ['', Validators.email],
