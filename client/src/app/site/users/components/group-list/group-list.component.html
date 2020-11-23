@@ -9,16 +9,16 @@
     <div class="hint-text">
         <span>{{ 'All your changes are saved immediately.' | translate }}</span>
     </div>
-    <mat-accordion *ngFor="let app of appPermissions">
+    <mat-accordion *ngFor="let appPermissions of permissionsPerApp">
         <mat-expansion-panel class="mat-elevation-z0" [expanded]="true">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    {{ app.name | translate }}
+                    {{ appPermissions.name | translate }}
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
             <div class="scrollable-perm-matrix">
-                <table mat-table [dataSource]="getTableDataSource(app.permissions)">
+                <table mat-table [dataSource]="getTableDataSource(appPermissions.permissions)">
                     <ng-container matColumnDef="perm" sticky>
                         <mat-header-cell *matHeaderCellDef>{{ 'Permissions' | translate }}</mat-header-cell>
                         <mat-cell *matCellDef="let perm">
@@ -36,11 +36,11 @@
                             <mat-cell *matCellDef="let perm">
                                 <div class="inner-table">
                                     <mat-checkbox
-                                        *ngIf="group.id !== 2"
+                                        *ngIf="!group.isSuperadminGroup"
                                         [checked]="group.hasPermission(perm.value)"
-                                        (change)="togglePerm(group, perm.value)"
+                                        (change)="togglePermission(group, perm.value)"
                                     ></mat-checkbox>
-                                    <mat-checkbox *ngIf="group.id === 2" [checked]="true" [disabled]="true"></mat-checkbox>
+                                    <mat-checkbox *ngIf="group.isSuperadminGroup" [checked]="true" [disabled]="true"></mat-checkbox>
                                 </div>
                             </mat-cell>
                         </ng-container>
@@ -88,7 +88,7 @@
         </button>
         <button
             *ngIf="selectedGroup"
-            [disabled]="!canDeleteGroup(selectedGroup)"
+            [disabled]="!isProtected(selectedGroup)"
             type="button"
             mat-button
             color="warn"

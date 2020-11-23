@@ -3,34 +3,15 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { GroupAction } from 'app/core/actions/group-action';
 import { HttpService } from 'app/core/core-services/http.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Permission } from 'app/core/core-services/permission';
+import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Group } from 'app/shared/models/users/group';
 import { ViewGroup } from 'app/site/users/models/view-group';
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
-
-/**
- * Shape of a permission
- */
-export interface PermDefinition {
-    display_name: string;
-    value: Permission;
-}
-
-const PERMISSIONS: PermDefinition[] = [
-    { display_name: 'Do it!', value: Permission.agendaCanBeSpeaker },
-    { display_name: "Don't do it!", value: Permission.agendaCanSee }
-];
-
-/**
- * Set rules to define the shape of an app permission
- */
-export interface AppPermissions {
-    name: string;
-    permissions: PermDefinition[];
-}
 
 /**
  * Repository service for Groups
@@ -41,22 +22,21 @@ export interface AppPermissions {
     providedIn: 'root'
 })
 export class GroupRepositoryService extends BaseRepositoryWithActiveMeeting<ViewGroup, Group> {
-    /**
-     * holds sorted permissions per app.
-     */
-    public appPermissions: AppPermissions[] = [];
-
     public constructor(repositoryServiceCollector: RepositoryServiceCollector, private http: HttpService) {
         super(repositoryServiceCollector, Group);
-        this.sortPermsPerApp();
     }
 
     public getFieldsets(): Fieldsets<Group> {
         const titleFields: (keyof Group)[] = ['name'];
         const listFields: (keyof Group)[] = titleFields.concat(['permissions']);
+        const detailFields: (keyof Group)[] = listFields.concat([
+            'superadmin_group_for_meeting_id',
+            'default_group_for_meeting_id'
+        ]);
         return {
-            [DEFAULT_FIELDSET]: titleFields,
-            list: listFields
+            title: titleFields,
+            list: listFields,
+            [DEFAULT_FIELDSET]: detailFields
         };
     }
 
@@ -75,118 +55,39 @@ export class GroupRepositoryService extends BaseRepositoryWithActiveMeeting<View
             .join(', ');
     }
 
+    public create(group: GroupAction.CreateParameters): Promise<Identifiable> {
+        const payload: GroupAction.CreatePayload = {
+            ...group,
+            meeting_id: this.activeMeetingIdService.meetingId
+        };
+        return this.sendActionToBackend(GroupAction.CREATE, payload);
+    }
+
+    public update(update: Partial<Group>, group: ViewGroup): Promise<void> {
+        const payload: GroupAction.UpdatePayload = {
+            id: group.id,
+            name: update.name
+        };
+        return this.sendActionToBackend(GroupAction.UPDATE, payload);
+    }
+
+    public delete(group: ViewGroup): Promise<void> {
+        return this.sendActionToBackend(GroupAction.DELETE, { id: group.id });
+    }
+
     /**
      * Toggles the given permisson.
      *
      * @param group The group
-     * @param perm The permission to toggle
+     * @param permission The permission to toggle
      */
-    public async togglePerm(group: ViewGroup, perm: Permission): Promise<void> {
-        const set = !group.permissions.includes(perm);
-        return await this.http.post(`/rest/${group.collection}/${group.id}/set_permission/`, {
-            perm: perm,
-            set: set
-        });
-    }
-
-    /**
-     * Add an entry to appPermissions
-     *
-     * @param appId number that indicates the app
-     * @param perm certain permission as string
-     * @param appName Indicates the header in the Permission Matrix
-     */
-    private addAppPerm(appId: number, perm: PermDefinition, appName: string): void {
-        if (!this.appPermissions[appId]) {
-            this.appPermissions[appId] = {
-                name: appName,
-                permissions: []
-            };
-        }
-        this.appPermissions[appId].permissions.push(perm);
-    }
-
-    /**
-     * read the constants, add them to an array of apps
-     */
-    private sortPermsPerApp(): void {
-        this.appPermissions = [];
-        let pluginCounter = 0;
-        for (const perm of PERMISSIONS) {
-            // extract the apps name
-            const permApp = perm.value.split('.')[0];
-            switch (permApp) {
-                case 'core':
-                    if (perm.value.indexOf('projector') > -1) {
-                        this.addAppPerm(0, perm, 'Projector');
-                    } else {
-                        this.addAppPerm(6, perm, 'General');
-                    }
-                    break;
-                case 'agenda':
-                    this.addAppPerm(1, perm, 'Agenda');
-                    break;
-                case 'motions':
-                    this.addAppPerm(2, perm, 'Motions');
-                    break;
-                case 'assignments':
-                    this.addAppPerm(3, perm, 'Elections');
-                    break;
-                case 'mediafiles':
-                    this.addAppPerm(4, perm, 'Files');
-                    break;
-                case 'users':
-                    this.addAppPerm(5, perm, 'Participants');
-                    break;
-                default:
-                    // plugins
-                    const displayName = `${permApp.charAt(0).toUpperCase()}${permApp.slice(1)}`;
-                    // check if the plugin exists as app. The appPermissions array might have empty
-                    // entries, so pay attention in the findIndex below.
-                    const result = this.appPermissions.findIndex(app => {
-                        return app ? app.name === displayName : false;
-                    });
-                    let pluginId: number;
-                    if (result >= 0) {
-                        pluginId = result;
-                    } else {
-                        // Ensure plugins to be behind the 7 core apps.
-                        pluginId = pluginCounter + 7;
-                        pluginCounter++;
-                    }
-                    this.addAppPerm(pluginId, perm, displayName);
-                    break;
-            }
-        }
-        this.sortPermsByPower();
-    }
-
-    /**
-     * sort each app: first all permission with 'see', then 'manage', then the rest
-     * save the permissions in different lists an concat them in the right order together
-     * Special Users: the two "see"-permissions are normally swapped. To create the right
-     * order, we could simply reverse the whole permissions.
-     */
-    private sortPermsByPower(): void {
-        this.appPermissions.forEach((app: AppPermissions) => {
-            if (app.name === 'Users') {
-                app.permissions.reverse();
-            } else {
-                const see = [];
-                const manage = [];
-                const others = [];
-                for (const perm of app.permissions) {
-                    if (perm.value.indexOf('see') > -1) {
-                        see.push(perm);
-                    } else if (perm.value.indexOf('manage') > -1) {
-                        manage.push(perm);
-                    } else {
-                        others.push(perm);
-                    }
-                }
-                app.permissions = see.concat(manage.concat(others));
-            }
-        });
+    public async togglePermission(group: ViewGroup, permission: Permission): Promise<void> {
+        const payload: GroupAction.SetPermissionPayload = {
+            id: group.id,
+            permission,
+            set: !group.permissions.includes(permission)
+        };
+        return this.sendActionToBackend(GroupAction.SET_PERMISSION, payload);
     }
 
     /**
