@@ -5,7 +5,8 @@
 export const environment = {
     production: false,
     urlPrefix: '/apps',
-    authUrlPrefix: '/system/auth'
+    authUrlPrefix: '/system/auth',
+    authSecurePrefix: '/secure'
 };
 
 /*
