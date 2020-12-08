@@ -55,7 +55,7 @@ export class AuthService {
             username: username,
             password: password
         };
-        const response = await this.http.post<LoginResponse>(environment.authUrlPrefix + '/login/', user);
+        const response = await this.http.post<LoginResponse>(`${environment.authUrlPrefix}/login/`, user);
         if (response.success) {
             this.lifecycleService.reboot();
             await this.redirectUser();
@@ -73,7 +73,9 @@ export class AuthService {
     }
 
     public async logout(): Promise<void> {
-        const response = await this.http.post<LoginResponse>(environment.authUrlPrefix + '/api/logout/');
+        const response = await this.http.post<LoginResponse>(
+            `${environment.authUrlPrefix}${environment.authSecurePrefix}/logout/`
+        );
         if (response.success) {
             this.authTokenService.setRawAccessToken(null);
         }
