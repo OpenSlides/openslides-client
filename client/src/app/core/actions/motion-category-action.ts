@@ -13,7 +13,7 @@ export namespace MotionCategoryAction {
 
     export interface CreatePayload extends HasMeetingId {
         name: string;
-        prefix: string;
+        prefix?: string;
         parent_id?: Id;
     }
     export interface UpdatePayload extends Identifiable {
