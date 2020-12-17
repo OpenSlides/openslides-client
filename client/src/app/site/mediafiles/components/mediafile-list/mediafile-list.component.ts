@@ -215,7 +215,6 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
      * Set the title, make the edit Form and observe Mediafiles
      */
     public ngOnInit(): void {
-        console.log('On init');
         super.ngOnInit();
         super.setTitle('Files');
         this.createDataSource();
@@ -231,7 +230,6 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
     }
 
     protected getModelRequest(): SimplifiedModelRequest {
-        console.log('Get model request');
         return {
             viewModelCtor: ViewMeeting,
             ids: [this.activeMeetingIdService.meetingId],
@@ -444,6 +442,10 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
                 }, this.raiseError);
             }
         });
+    }
+
+    public getMediaUrl(mediaFile: Mediafile): string {
+        return `/download/${mediaFile.id}`;
     }
 
     /**

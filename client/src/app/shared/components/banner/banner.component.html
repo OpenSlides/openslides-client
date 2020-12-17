@@ -1,6 +1,6 @@
 <div
     *ngFor="let banner of banners"
-    class="banner"
+    class="banner flex-center"
     [ngClass]="[
         banner.type === 'history' ? 'history-mode-indicator' : '',
         banner.class ? banner.class : '',

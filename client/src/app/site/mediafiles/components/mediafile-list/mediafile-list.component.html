@@ -101,7 +101,7 @@
         <a
             class="detail-link"
             target="_blank"
-            [routerLink]="mediafile.url"
+            [routerLink]="getMediaUrl(mediafile)"
             *ngIf="!mediafile.is_directory && !isMultiSelect"
         >
         </a>
@@ -115,7 +115,7 @@
         <a
             class="detail-link"
             target="_blank"
-            [routerLink]="mediafile.url"
+            [routerLink]="getMediaUrl(mediafile)"
             *ngIf="!mediafile.is_directory && !isMultiSelect"
         >
         </a>
