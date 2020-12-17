@@ -1,0 +1,8 @@
+<div class="stretch-to-fill-parent flex-center">
+    <ng-container *ngIf="!hasLoaded">
+        <os-global-spinner></os-global-spinner>
+    </ng-container>
+    <ng-container *ngIf="hasLoaded">
+        <os-resource [source]="resourceUrl"></os-resource>
+    </ng-container>
+</div>

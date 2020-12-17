@@ -24,6 +24,8 @@ function isErrorMessageResponse(obj: any): obj is ErrorMessageResponse {
     );
 }
 
+type ResponseType = 'arraybuffer' | 'blob' | 'json' | 'text';
+
 /**
  * Service for managing HTTP requests. Allows to send data for every method. Also (TODO) will do generic error handling.
  */
@@ -73,7 +75,7 @@ export class HttpService {
         data?: any,
         queryParams?: QueryParams,
         customHeader?: HttpHeaders,
-        responseType?: string
+        responseType?: ResponseType
     ): Promise<T> {
         // end early, if we are in history mode
         if (this.historyService.isInHistoryMode && method !== HTTPMethod.GET) {
@@ -170,7 +172,7 @@ export class HttpService {
         data?: any,
         queryParams?: QueryParams,
         header?: HttpHeaders,
-        responseType?: string
+        responseType: ResponseType = 'json'
     ): Promise<T> {
         return await this.send<T>(path, HTTPMethod.GET, data, queryParams, header, responseType);
     }

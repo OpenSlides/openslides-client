@@ -46,6 +46,7 @@ $narrow-spacing: (
 @import './app/shared/components/list-view-table/list-view-table.component.scss-theme.scss';
 @import './app/site/common/components/user-statistics/user-statistics.component.scss-theme.scss';
 @import './app/site/login/components/login-wrapper/login-wrapper.component.scss-theme.scss';
+@import './app/shared/components/resource/resource.component.scss-theme.scss';
 
 /** Mix the component-related style-rules. Every single custom style goes here */
 @mixin openslides-components-theme($theme) {
@@ -72,6 +73,7 @@ $narrow-spacing: (
     @include os-list-view-table-theme($theme);
     @include os-user-statistics-style($theme);
     @include os-login-wrapper-theme($theme);
+    @include os-resource-theme($theme);
 }
 
 .openslides-default-light-theme {
@@ -126,7 +128,7 @@ $narrow-spacing: (
 /**
  * Custom configuration for light themes
  */
- [class^="openslides-"][class*="-light-theme"] {
+[class^='openslides-'][class*='-light-theme'] {
     .logo-container {
         img.dark {
             display: none;
@@ -140,7 +142,7 @@ $narrow-spacing: (
 /**
  * Custom configuration for dark themes
  */
- [class^="openslides-"][class*="-dark-theme"] {
+[class^='openslides-'][class*='-dark-theme'] {
     color: white;
     .logo-container {
         img.dark {

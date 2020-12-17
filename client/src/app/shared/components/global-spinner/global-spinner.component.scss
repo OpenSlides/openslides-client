@@ -2,9 +2,6 @@
 
 @mixin os-global-spinner-theme($theme) {
     .spinner-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
         height: 100%;
 
         .spinner-text {

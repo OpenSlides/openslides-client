@@ -1,0 +1,16 @@
+@import '~@angular/material/theming';
+
+@mixin os-resource-theme($theme) {
+    $os-background: map-get($theme, background);
+    $os-foreground: map-get($theme, foreground);
+    $background-color: mat-color($os-background, background);
+    $font-color: mat-color($os-foreground, text);
+
+    .text--background {
+        background: $background-color;
+
+        .text--content {
+            color: $font-color;
+        }
+    }
+}
