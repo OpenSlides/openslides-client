@@ -17,6 +17,7 @@ import { toDecimal } from 'app/shared/utils/to-decimal';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
+import { ModelRequestRepository } from '../model-request-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 export interface MassImportResult {
@@ -74,7 +75,9 @@ const SHORT_NAME_FIELDS: (keyof User)[] = ['title', 'username', 'first_name', 'l
 @Injectable({
     providedIn: 'root'
 })
-export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewUser, User> {
+export class UserRepositoryService
+    extends BaseRepositoryWithActiveMeeting<ViewUser, User>
+    implements ModelRequestRepository {
     /**
      * The property the incoming data is sorted by
      */
@@ -232,6 +235,10 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
     public getTitle = (viewUser: ViewUser) => {
         return this.getFullName(viewUser);
     };
+
+    public getRequestToGetAllModels(): SimplifiedModelRequest {
+        return AllUsersInMeetingRequest(this.activeMeetingIdService.meetingId);
+    }
 
     /**
      * Getter for the short name (Title, given name, surname)

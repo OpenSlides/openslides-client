@@ -1,12 +1,18 @@
 import { Injectable } from '@angular/core';
 
 import { MotionCategoryAction } from 'app/core/actions/motion-category-action';
-import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
+import {
+    DEFAULT_FIELDSET,
+    Fieldsets,
+    SimplifiedModelRequest
+} from 'app/core/core-services/model-request-builder.service';
 import { TreeIdNode } from 'app/core/ui-services/tree.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { MotionCategory } from 'app/shared/models/motions/motion-category';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
+import { ModelRequestRepository } from '../model-request-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 /**
@@ -22,10 +28,9 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class MotionCategoryRepositoryService extends BaseRepositoryWithActiveMeeting<
-    ViewMotionCategory,
-    MotionCategory
-> {
+export class MotionCategoryRepositoryService
+    extends BaseRepositoryWithActiveMeeting<ViewMotionCategory, MotionCategory>
+    implements ModelRequestRepository {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, MotionCategory);
 
@@ -115,5 +120,17 @@ export class MotionCategoryRepositoryService extends BaseRepositoryWithActiveMee
             tree: data
         };
         return this.actions.sendRequest(MotionCategoryAction.SORT, payload);
+    }
+
+    public getRequestToGetAllModels(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [this.activeMeetingIdService.meetingId],
+            follow: [
+                {
+                    idField: 'motion_category_ids'
+                }
+            ]
+        };
     }
 }
