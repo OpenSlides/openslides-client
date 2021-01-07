@@ -29,7 +29,8 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class MotionWorkflowRepositoryService extends BaseRepositoryWithActiveMeeting<ViewMotionWorkflow, MotionWorkflow>
+export class MotionWorkflowRepositoryService
+    extends BaseRepositoryWithActiveMeeting<ViewMotionWorkflow, MotionWorkflow>
     implements ModelRequestRepository {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, MotionWorkflow);

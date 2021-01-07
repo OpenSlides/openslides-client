@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 
+import { PersonalNoteAction } from 'app/core/actions/personal-note-action';
+import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { PersonalNote } from 'app/shared/models/users/personal-note';
 import { ViewPersonalNote } from 'app/site/users/models/view-personal-note';
@@ -28,13 +30,11 @@ export class PersonalNoteRepositoryService extends BaseRepositoryWithActiveMeeti
         return this.translate.instant(plural ? 'Personal notes' : 'Personal note');
     };
 
-    /**
-     * Overwrite the default procedure
-     *
-     * @ignore
-     */
-    public async create(): Promise<Identifiable> {
-        throw new Error('Not supported');
+    public getFieldsets(): Fieldsets<PersonalNote> {
+        const detailFields: (keyof PersonalNote)[] = ['id', 'star', 'note'];
+        return {
+            [DEFAULT_FIELDSET]: detailFields
+        };
     }
 
     /**
@@ -42,8 +42,16 @@ export class PersonalNoteRepositoryService extends BaseRepositoryWithActiveMeeti
      *
      * @ignore
      */
-    public async update(): Promise<void> {
-        throw new Error('Not supported');
+    public async create(data: PersonalNoteAction.CreatePayload): Promise<Identifiable> {
+        if (!data.star && !data.note) {
+            throw new Error('At least one of note or star has to be given!');
+        }
+        const payload: PersonalNoteAction.CreatePayload = {
+            content_object_id: data.content_object_id,
+            star: data.star,
+            note: data.note
+        };
+        return this.actions.sendRequest(PersonalNoteAction.CREATE, payload);
     }
 
     /**
@@ -51,8 +59,13 @@ export class PersonalNoteRepositoryService extends BaseRepositoryWithActiveMeeti
      *
      * @ignore
      */
-    public async patch(): Promise<void> {
-        throw new Error('Not supported');
+    public async update(data: Partial<PersonalNoteAction.UpdatePayload>, model: PersonalNote): Promise<void> {
+        const payload: PersonalNoteAction.UpdatePayload = {
+            id: model.id,
+            star: data.star,
+            note: data.note
+        };
+        return this.actions.sendRequest(PersonalNoteAction.UPDATE, payload);
     }
 
     /**
@@ -60,7 +73,10 @@ export class PersonalNoteRepositoryService extends BaseRepositoryWithActiveMeeti
      *
      * @ignore
      */
-    public async delete(): Promise<void> {
-        throw new Error('Not supported');
+    public async delete(model: PersonalNote): Promise<void> {
+        const payload: PersonalNoteAction.DeletePayload = {
+            id: model.id
+        };
+        return this.actions.sendRequest(PersonalNoteAction.DELETE, payload);
     }
 }

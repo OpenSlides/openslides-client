@@ -1,14 +1,5 @@
 import { User } from 'app/shared/models/users/user';
-
-/**
- * Interface for correlating between strings representing BaseModels and existing
- * BaseModels.
- */
-export interface CsvMapping {
-    name: string;
-    id?: number;
-    multiId?: number[];
-}
+import { CsvMapping } from 'app/site/common/import/csv-mapping';
 
 /**
  * View class for a new User during text imports. Offers a mapping and matching

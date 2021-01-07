@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
 
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
     selector: 'os-extension-field',
@@ -50,7 +50,7 @@ export class ExtensionFieldComponent implements OnInit, OnDestroy {
      * BehaviourSubject for the search-list.
      */
     @Input()
-    public searchList: BehaviorSubject<object[]>;
+    public searchList: Observable<object[]>;
 
     /**
      * Boolean, whether the input and the search-list can be changed.

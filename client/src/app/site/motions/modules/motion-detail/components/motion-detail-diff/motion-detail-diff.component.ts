@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, View
 import { MatDialog } from '@angular/material/dialog';
 
 import { MotionChangeRecommendationRepositoryService } from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
+import { MotionLineNumberingService } from 'app/core/repositories/motions/motion-line-numbering.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DiffService, LineRange } from 'app/core/ui-services/diff.service';
@@ -106,6 +107,7 @@ export class MotionDetailDiffComponent extends BaseComponent implements AfterVie
         private lineNumbering: LinenumberingService,
         private recoRepo: MotionChangeRecommendationRepositoryService,
         private motionRepo: MotionRepositoryService,
+        private motionLineNumbering: MotionLineNumberingService,
         private dialogService: MatDialog,
         private meetingSettingsService: MeetingSettingsService,
         private el: ElementRef,
@@ -135,7 +137,7 @@ export class MotionDetailDiffComponent extends BaseComponent implements AfterVie
 
         let baseText: LineNumberedString;
         if (this.motion.isParagraphBasedAmendment()) {
-            baseText = this.motionRepo
+            baseText = this.motionLineNumbering
                 .getAllAmendmentParagraphsWithOriginalLineNumbers(this.motion, this.lineLength, true)
                 .join('\n');
         } else {
@@ -179,7 +181,7 @@ export class MotionDetailDiffComponent extends BaseComponent implements AfterVie
         }
         let baseText: LineNumberedString;
         if (this.motion.isParagraphBasedAmendment()) {
-            baseText = this.motionRepo
+            baseText = this.motionLineNumbering
                 .getAllAmendmentParagraphsWithOriginalLineNumbers(this.motion, this.lineLength, true)
                 .join('\n');
         } else {

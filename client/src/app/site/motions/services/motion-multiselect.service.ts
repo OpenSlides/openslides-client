@@ -106,7 +106,7 @@ export class MotionMultiselectService {
      * @param motions The motions to change
      */
     public async setStateOfMultiple(motions: ViewMotion[]): Promise<void> {
-        if (motions.every(motion => motion.workflow_id === motions[0].workflow_id)) {
+        if (motions.every(motion => motion.state.workflow_id === motions[0].state.workflow_id)) {
             const title = this.translate.instant('This will set the following state for all selected motions:');
             const choices = this.workflowRepo.getWorkflowStatesForMotions(motions);
             const selectedChoice = await this.choiceService.open(title, choices);
@@ -126,7 +126,7 @@ export class MotionMultiselectService {
      * @param motions The motions to change
      */
     public async setRecommendation(motions: ViewMotion[]): Promise<void> {
-        if (motions.every(motion => motion.workflow_id === motions[0].workflow_id)) {
+        if (motions.every(motion => motion.state.workflow_id === motions[0].state.workflow_id)) {
             const title = this.translate.instant(
                 'This will set the following recommendation for all selected motions:'
             );

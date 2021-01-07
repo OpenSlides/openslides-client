@@ -2,13 +2,16 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { MotionRepositoryService, ParagraphToChoose } from 'app/core/repositories/motions/motion-repository.service';
+import {
+    MotionLineNumberingService,
+    ParagraphToChoose
+} from 'app/core/repositories/motions/motion-line-numbering.service';
+import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { AmendmentParagraphs } from 'app/shared/models/motions/motion';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { CreateMotion } from 'app/site/motions/models/create-motion';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 
 /**
@@ -67,6 +70,7 @@ export class AmendmentCreateWizardComponent extends BaseComponent implements OnI
         private meetingSettingsService: MeetingSettingsService,
         private formBuilder: FormBuilder,
         private repo: MotionRepositoryService,
+        private motionLineNumbering: MotionLineNumberingService,
         private route: ActivatedRoute,
         private router: Router,
         private promptService: PromptService
@@ -98,12 +102,15 @@ export class AmendmentCreateWizardComponent extends BaseComponent implements OnI
         this.route.params.subscribe(params => {
             this.repo.getViewModelObservable(params.id).subscribe(newViewMotion => {
                 if (newViewMotion) {
-                    this.paragraphs = this.repo.getParagraphsToChoose(newViewMotion, this.lineLength);
+                    this.paragraphs = this.motionLineNumbering.getParagraphsToChoose(newViewMotion, this.lineLength);
 
                     if (newViewMotion.hasLeadMotion) {
                         this.isAmendmentOfAmendment = true;
                         this.motion = newViewMotion.lead_motion;
-                        this.diffedParagraphs = this.repo.getDiffedParagraphToChoose(newViewMotion, this.lineLength);
+                        this.diffedParagraphs = this.motionLineNumbering.getDiffedParagraphToChoose(
+                            newViewMotion,
+                            this.lineLength
+                        );
                     } else {
                         this.isAmendmentOfAmendment = false;
                         this.motion = newViewMotion;

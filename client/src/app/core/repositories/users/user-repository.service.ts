@@ -75,7 +75,8 @@ const SHORT_NAME_FIELDS: (keyof User)[] = ['title', 'username', 'first_name', 'l
 @Injectable({
     providedIn: 'root'
 })
-export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewUser, User>
+export class UserRepositoryService
+    extends BaseRepositoryWithActiveMeeting<ViewUser, User>
     implements ModelRequestRepository {
     /**
      * The property the incoming data is sorted by

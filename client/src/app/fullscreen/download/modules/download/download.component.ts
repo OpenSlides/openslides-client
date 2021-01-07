@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { AuthService } from 'app/core/core-services/auth.service';
+import { OperatorService } from 'app/core/core-services/operator.service';
 
 @Component({
     selector: 'os-download',
@@ -21,15 +22,12 @@ export class DownloadComponent implements OnInit {
 
     private _resourceUrl: string;
 
-    public constructor(private activeRoute: ActivatedRoute, private auth: AuthService) {}
+    public constructor(private activeRoute: ActivatedRoute, private operator: OperatorService) {}
 
-    public ngOnInit(): void {
-        this.auth.firstTimeWhoAmI.subscribe(loaded => {
-            if (loaded) {
-                this.loaded = loaded;
-                this.loadResourceById();
-            }
-        });
+    public async ngOnInit(): Promise<void> {
+        await this.operator.loaded;
+        this.loaded = true;
+        this.loadResourceById();
     }
 
     private loadResourceById(): void {
