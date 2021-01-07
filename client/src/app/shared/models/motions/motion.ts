@@ -51,7 +51,6 @@ export class Motion extends BaseModel<Motion> {
     public forwarding_tree_motion_ids: Id[]; // Calculated: All children (derived_motion_ids),
     // grand children, ... and all parents (origin_id).
     public state_id: Id; // motion_state/motion_ids;
-    public workflow_id: Id; // motion_workflow/motion_ids;
     public recommendation_id: Id; // motion_state/motion_recommendation_ids;
     public recommendation_extension_reference_ids: Fqid[]; // (*/referenced_in_motion_recommendation_extension_ids)[];
     // current option: motion

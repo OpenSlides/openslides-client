@@ -128,7 +128,6 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
         private promptService: PromptService,
         private durationService: DurationService,
         private userRepository: UserRepositoryService,
-        private meetingSettingService: MeetingSettingsService,
         private viewport: ViewportService,
         private cd: ChangeDetectorRef
     ) {

@@ -9,7 +9,8 @@ import { UserRepositoryService } from 'app/core/repositories/users/user-reposito
 import { BaseImportService, NewEntry } from 'app/core/ui-services/base-import.service';
 import { Group } from 'app/shared/models/users/group';
 import { User } from 'app/shared/models/users/user';
-import { CsvMapping, ImportCreateUser } from '../models/import-create-user';
+import { CsvMapping } from 'app/site/common/import/csv-mapping';
+import { ImportCreateUser } from '../models/import-create-user';
 import { ViewUser } from '../models/view-user';
 
 @Injectable({

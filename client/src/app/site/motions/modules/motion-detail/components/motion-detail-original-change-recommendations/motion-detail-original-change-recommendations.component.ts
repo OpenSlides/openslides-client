@@ -66,11 +66,11 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
     public html: string;
 
     @Input()
-    public changeRecommendations: ViewMotionChangeRecommendation[];
+    public changeRecommendations: ViewMotionChangeRecommendation[] = [];
 
     public showChangeRecommendations = false;
 
-    public can_manage = false;
+    public can_manage = true; // change
 
     // Calculated from the embedded line numbers after the text has been set.
     // Hint: this numbering refers to the actual lines, not the line number markers;
@@ -161,12 +161,15 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
      * Resetting the selection. All selected lines are unselected, and the selectable lines are marked as such
      */
     private startCreating(): void {
+        console.log('startCreating', this.element, this.can_manage);
         if (!this.can_manage || !this.element) {
             return;
         }
 
         const alreadyAffectedLines = this.getAffectedLineNumbers();
+        console.log('alreadyAffectedLines', alreadyAffectedLines);
         Array.from(this.element.querySelectorAll('.os-line-number')).forEach((lineNumber: Element) => {
+            console.log('lineNumber', lineNumber);
             lineNumber.classList.remove('selected');
             if (alreadyAffectedLines.indexOf(parseInt(lineNumber.getAttribute('data-line-number'), 10)) === -1) {
                 lineNumber.classList.add('selectable');
@@ -301,6 +304,7 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
 
         this.renderer.listen(this.el.nativeElement, 'mouseover', (ev: MouseEvent) => {
             const element = <Element>ev.target;
+            console.log(element.classList.contains('os-line-number'), element.classList.contains('selectable'));
             if (element.classList.contains('os-line-number') && element.classList.contains('selectable')) {
                 this.hoverLineNumber(parseInt(element.getAttribute('data-line-number'), 10));
             }

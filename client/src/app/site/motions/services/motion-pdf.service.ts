@@ -6,6 +6,7 @@ import { HtmlToPdfService } from 'app/core/pdf-services/html-to-pdf.service';
 import { PdfDocumentService } from 'app/core/pdf-services/pdf-document.service';
 import { MotionChangeRecommendationRepositoryService } from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
+import { MotionLineNumberingService } from 'app/core/repositories/motions/motion-line-numbering.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { MotionStatuteParagraphRepositoryService } from 'app/core/repositories/motions/motion-statute-paragraph-repository.service';
 import { LinenumberingService } from 'app/core/ui-services/linenumbering.service';
@@ -44,6 +45,7 @@ export class MotionPdfService {
     public constructor(
         private translate: TranslateService,
         private motionRepo: MotionRepositoryService,
+        private motionLineNumbering: MotionLineNumberingService,
         private statuteRepo: MotionStatuteParagraphRepositoryService,
         private changeRecoRepo: MotionChangeRecommendationRepositoryService,
         private meetingSettingsService: MeetingSettingsService,
@@ -566,7 +568,7 @@ export class MotionPdfService {
             // this is logically redundant with the formation of amendments in the motion-detail html.
             // Should be refactored in a way that a service returns the correct html for both cases
             const changeRecos = this.changeRecoRepo.getChangeRecoOfMotion(motion.id);
-            const amendmentParas = this.motionRepo.getAmendmentParagraphLines(
+            const amendmentParas = this.motionLineNumbering.getAmendmentParagraphLines(
                 motion,
                 lineLength,
                 crMode,
@@ -574,7 +576,7 @@ export class MotionPdfService {
                 false
             );
             for (const paragraph of amendmentParas) {
-                motionText += '<h3>' + this.motionRepo.getAmendmentParagraphLinesTitle(paragraph) + '</h3>';
+                motionText += '<h3>' + this.motionLineNumbering.getAmendmentParagraphLinesTitle(paragraph) + '</h3>';
                 motionText += `<div class="paragraphcontext">${paragraph.textPre}</div>`;
                 motionText += paragraph.text;
                 motionText += `<div class="paragraphcontext">${paragraph.textPost}</div>`;
@@ -582,7 +584,7 @@ export class MotionPdfService {
         } else if (motion.isStatuteAmendment()) {
             // statute amendments
             const statutes = this.statuteRepo.getViewModelList();
-            motionText = this.motionRepo.formatStatuteAmendment(statutes, motion, lineLength);
+            motionText = this.motionLineNumbering.formatStatuteAmendment(statutes, motion, lineLength);
         } else {
             // lead motion or normal amendments
 
@@ -599,7 +601,7 @@ export class MotionPdfService {
                     changedTitle +
                     '</span><br>';
             }
-            const formattedText = this.motionRepo.formatMotion(motion.id, crMode, textChanges, lineLength);
+            const formattedText = this.motionLineNumbering.formatMotion(motion, crMode, textChanges, lineLength);
             // reformat motion text to split long HTML elements to easier convert into PDF
             motionText += this.linenumberingService.splitInlineElementsAtLineBreaks(formattedText);
         }
@@ -625,7 +627,7 @@ export class MotionPdfService {
             const changeRecos = this.changeRecoRepo
                 .getChangeRecoOfMotion(amendment.id)
                 .filter(reco => reco.showInFinalView());
-            return this.motionRepo.getAmendmentAmendedParagraphs(amendment, lineLength, changeRecos);
+            return this.motionLineNumbering.getAmendmentAmendedParagraphs(amendment, lineLength, changeRecos);
         });
 
         return motionChangeRecos

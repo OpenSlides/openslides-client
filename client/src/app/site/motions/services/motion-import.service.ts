@@ -14,8 +14,7 @@ import { Tag } from 'app/shared/models/core/tag';
 import { Motion } from 'app/shared/models/motions/motion';
 import { MotionBlock } from 'app/shared/models/motions/motion-block';
 import { MotionCategory } from 'app/shared/models/motions/motion-category';
-import { CreateMotion } from '../models/create-motion';
-import { CsvMapping, ImportCreateMotion } from '../models/import-create-motion';
+import { CsvMapping } from 'app/site/common/import/csv-mapping';
 import { motionExportOnly, motionImportExportHeaderOrder } from '../motions.constants';
 
 /**
@@ -105,7 +104,7 @@ export class MotionImportService extends BaseImportService<Motion> {
      * @returns a new Entry representing a Motion
      */
     public mapData(line: string): NewEntry<Motion> {
-        const newEntry = new ImportCreateMotion(new CreateMotion());
+        const newEntry: any = {};
         const headerLength = Math.min(this.expectedHeader.length, line.length);
         for (let idx = 0; idx < headerLength; idx++) {
             switch (this.expectedHeader[idx]) {
@@ -148,43 +147,43 @@ export class MotionImportService extends BaseImportService<Motion> {
      * 'done' on success.
      */
     public async doImport(): Promise<void> {
+        throw new Error('TODO');
         this.newMotionBlocks = await this.createNewMotionBlocks();
         this.newCategories = await this.createNewCategories();
         this.newSubmitters = await this.createNewUsers();
         this.newTags = await this.createNewTags();
 
-        for (const entry of this.entries) {
-            if (entry.status !== 'new') {
-                continue;
-            }
-            const openBlocks = (entry.newEntry as ImportCreateMotion).solveMotionBlocks(this.newMotionBlocks);
-            if (openBlocks) {
-                this.setError(entry, 'MotionBlock');
-                this.updatePreview();
-                continue;
-            }
-            const openCategories = (entry.newEntry as ImportCreateMotion).solveCategory(this.newCategories);
-            if (openCategories) {
-                this.setError(entry, 'Category');
-                this.updatePreview();
-                continue;
-            }
-            const openUsers = (entry.newEntry as ImportCreateMotion).solveSubmitters(this.newSubmitters);
-            if (openUsers) {
-                this.setError(entry, 'Submitters');
-                this.updatePreview();
-                continue;
-            }
-            const openTags = (entry.newEntry as ImportCreateMotion).solveTags(this.newTags);
-            if (openTags) {
-                this.setError(entry, 'Tags');
-                this.updatePreview();
-                continue;
-            }
-            throw new Error('TODO!');
-            // await this.repo.create(entry.newEntry as ImportCreateMotion);
-            entry.status = 'done';
-        }
+        // for (const entry of this.entries) {
+        //     if (entry.status !== 'new') {
+        //         continue;
+        //     }
+        //     const openBlocks = (entry.newEntry as ImportCreateMotion).solveMotionBlocks(this.newMotionBlocks);
+        //     if (openBlocks) {
+        //         this.setError(entry, 'MotionBlock');
+        //         this.updatePreview();
+        //         continue;
+        //     }
+        //     const openCategories = (entry.newEntry as ImportCreateMotion).solveCategory(this.newCategories);
+        //     if (openCategories) {
+        //         this.setError(entry, 'Category');
+        //         this.updatePreview();
+        //         continue;
+        //     }
+        //     const openUsers = (entry.newEntry as ImportCreateMotion).solveSubmitters(this.newSubmitters);
+        //     if (openUsers) {
+        //         this.setError(entry, 'Submitters');
+        //         this.updatePreview();
+        //         continue;
+        //     }
+        //     const openTags = (entry.newEntry as ImportCreateMotion).solveTags(this.newTags);
+        //     if (openTags) {
+        //         this.setError(entry, 'Tags');
+        //         this.updatePreview();
+        //         continue;
+        //     }
+        //     // await this.repo.create(entry.newEntry as ImportCreateMotion);
+        //     entry.status = 'done';
+        // }
         this.updatePreview();
     }
 

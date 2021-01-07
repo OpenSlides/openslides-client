@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { MotionChangeRecommendationAction } from 'app/core/actions/motion-change-recommendation-action';
+import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { MotionChangeRecommendation } from 'app/shared/models/motions/motion-change-reco';
 import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
 import { ChangeRecoMode } from 'app/site/motions/motions.constants';
@@ -136,7 +137,8 @@ export class MotionChangeRecommendationRepositoryService extends BaseRepositoryW
     ): ViewMotionChangeRecommendation {
         const motionText = this.lineNumbering.insertLineNumbers(motion.text, lineLength);
 
-        const changeReco = new MotionChangeRecommendation();
+        const changeReco: any = {};
+        // const changeReco = new MotionChangeRecommendation();
         changeReco.line_from = lineRange.from;
         changeReco.line_to = lineRange.to;
         changeReco.type = ModificationType.TYPE_REPLACEMENT;
@@ -144,7 +146,8 @@ export class MotionChangeRecommendationRepositoryService extends BaseRepositoryW
         changeReco.rejected = false;
         changeReco.motion_id = motion.id;
 
-        return new ViewMotionChangeRecommendation(changeReco);
+        return changeReco;
+        // return new ViewMotionChangeRecommendation(changeReco);
     }
 
     /**
@@ -191,10 +194,7 @@ export class MotionChangeRecommendationRepositoryService extends BaseRepositoryW
      * @param {ViewMotion} motion
      * @param {number} lineLength
      */
-    public createTitleChangeRecommendationTemplate(
-        motion: ViewMotion,
-        lineLength: number
-    ): ViewMotionChangeRecommendation {
+    public createTitleChangeRecommendationTemplate(motion: ViewMotion): ViewMotionChangeRecommendation {
         const changeReco = new MotionChangeRecommendation();
         changeReco.line_from = 0;
         changeReco.line_to = 0;
@@ -237,5 +237,22 @@ export class MotionChangeRecommendationRepositoryService extends BaseRepositoryW
 
     public delete(viewModel: ViewMotion): Promise<void> {
         return this.sendActionToBackend(MotionChangeRecommendationAction.DELETE, { id: viewModel.id });
+    }
+
+    public getFieldsets(): Fieldsets<MotionChangeRecommendation> {
+        const detailFields: (keyof MotionChangeRecommendation)[] = [
+            'id',
+            'motion_id',
+            'line_from',
+            'line_to',
+            'internal',
+            'text',
+            'type',
+            'other_description',
+            'rejected'
+        ];
+        return {
+            [DEFAULT_FIELDSET]: detailFields
+        };
     }
 }

@@ -1,7 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
+import { PersonalNoteAction } from 'app/core/actions/personal-note-action';
+import { PersonalNoteRepositoryService } from 'app/core/repositories/users/personal-note-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { PersonalNote } from 'app/shared/models/users/personal-note';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { MotionPdfExportService } from 'app/site/motions/services/motion-pdf-export.service';
@@ -37,7 +40,11 @@ export class PersonalNoteComponent extends BaseComponent {
     }
 
     public get hasPersonalNote(): boolean {
-        return this.motion?.personal_notes?.length > 0;
+        return !!this.motion.getPersonalNote();
+    }
+
+    public get personalNote(): PersonalNote | null {
+        return this.motion.getPersonalNote();
     }
 
     /**
@@ -50,6 +57,7 @@ export class PersonalNoteComponent extends BaseComponent {
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         formBuilder: FormBuilder,
+        private repo: PersonalNoteRepositoryService,
         private pdfService: MotionPdfExportService
     ) {
         super(componentServiceCollector);
@@ -73,23 +81,12 @@ export class PersonalNoteComponent extends BaseComponent {
      * Saves the personal note. If it does not exists, it will be created.
      */
     public async savePersonalNote(): Promise<void> {
-        throw new Error('TODO');
-        /*let content: PersonalNoteContent;
-        if (this.motion.personalNote) {
-            content = Object.assign({}, this.motion.personalNote);
-            content.note = this.personalNoteForm.get('note').value;
+        if (this.hasPersonalNote) {
+            await this.updatePersonalNote();
         } else {
-            content = {
-                note: this.personalNoteForm.get('note').value,
-                star: false
-            };
+            await this.createPersonalNote();
         }
-        try {
-            await this.personalNoteService.savePersonalNote(this.motion.motion, content);
-            this.isEditMode = false;
-        } catch (e) {
-            this.raiseError(e);
-        }*/
+        this.isEditMode = false;
     }
 
     /**
@@ -97,5 +94,19 @@ export class PersonalNoteComponent extends BaseComponent {
      */
     public printPersonalNote(): void {
         this.pdfService.exportPersonalNote(this.motion);
+    }
+
+    private async createPersonalNote(): Promise<void> {
+        const content: PersonalNoteAction.CreatePayload = {
+            content_object_id: this.motion.fqid,
+            note: this.personalNoteForm.get('note').value,
+            star: false
+        };
+        await this.repo.create(content);
+    }
+
+    private async updatePersonalNote(): Promise<void> {
+        const note = this.personalNoteForm.get('note').value;
+        await this.repo.update({ note }, this.personalNote);
     }
 }

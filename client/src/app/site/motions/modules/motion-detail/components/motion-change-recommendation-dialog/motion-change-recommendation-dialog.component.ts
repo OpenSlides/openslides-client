@@ -76,17 +76,20 @@ export class MotionChangeRecommendationDialogComponent extends BaseChangeRecomme
         dialogRef: MatDialogRef<MotionChangeRecommendationDialogComponent>
     ) {
         super(componentServiceCollector, data, formBuilder, repo, dialogRef);
+        console.log('dialog data', data);
     }
 
     /**
      * Creates the forms for the Motion and the MotionVersion
      */
     protected createForm(): void {
+        console.log('changeReco', this.changeReco, this.changeReco.text);
         this.contentForm = this.formBuilder.group({
             text: [this.changeReco.text, Validators.required],
             diffType: [this.changeReco.type, Validators.required],
             public: [!this.changeReco.internal]
         });
+        console.log('this.contentForm', this.contentForm);
     }
 
     protected initializeDialogData(): void {

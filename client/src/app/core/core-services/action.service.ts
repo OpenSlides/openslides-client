@@ -56,6 +56,7 @@ export class ActionService {
     }
 
     private async _sendRequest<T>(request: ActionRequest): Promise<T[] | null> {
+        console.log('sendRequest:', request);
         const response = await this.http.post<T>(this.ACTION_URL, [request]);
         if (isActionError(response)) {
             throw response.message;
