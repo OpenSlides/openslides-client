@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router } from '@angular/router';
 
+import { ActiveMeetingService } from './active-meeting.service';
 import { AuthService } from './auth.service';
 import { FallbackRoutesService } from './fallback-routes.service';
 import { OpenSlidesService } from './openslides.service';
@@ -25,6 +26,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
         private router: Router,
         private operator: OperatorService,
         private authService: AuthService,
+        private activeMeeting: ActiveMeetingService,
         private fallbackRoutesService: FallbackRoutesService
     ) {}
 
@@ -40,14 +42,12 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     public canActivate(route: ActivatedRouteSnapshot): boolean {
         const basePerm: Permission | Permission[] = route.data.basePerm;
 
-        /*if (!basePerm) {
-            return true;
-        } else if (basePerm instanceof Array) {
-            return this.operator.hasPerms(...basePerm);
+        if ((this.operator.isAnonymous && this.activeMeeting.guestsEnabled) || this.operator.isAuthenticated) {
+            return this.hasPerms(basePerm);
         } else {
-            return this.operator.hasPerms(basePerm);
-        }*/
-        return true;
+            this.router.navigate(['login']);
+            return false;
+        }
     }
 
     /**
@@ -58,12 +58,21 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     public async canActivateChild(route: ActivatedRouteSnapshot): Promise<boolean> {
         await this.operator.loaded;
 
-        /*if (this.canActivate(route)) {
+        if (this.canActivate(route)) {
             return true;
         } else {
             this.handleForbiddenRoute(route);
-        }*/
-        return true;
+        }
+    }
+
+    private hasPerms(basePerm: Permission | Permission[]): boolean {
+        if (!basePerm) {
+            return true;
+        } else if (basePerm instanceof Array) {
+            return this.operator.hasPerms(...basePerm);
+        } else {
+            return this.operator.hasPerms(basePerm);
+        }
     }
 
     /**
