@@ -6,6 +6,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { BehaviorSubject } from 'rxjs';
 import { auditTime } from 'rxjs/operators';
 
+import { Permission } from 'app/core/core-services/permission';
 import { StorageService } from 'app/core/core-services/storage.service';
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
@@ -33,6 +34,8 @@ export class MotionExportDialogComponent implements OnInit {
      * import PERSONAL_NOTE_ID for use in template
      */
     public PERSONAL_NOTE_ID = PERSONAL_NOTE_ID;
+
+    public readonly permission = Permission;
 
     /**
      * For using the enum constants from the template.

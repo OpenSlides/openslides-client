@@ -15,9 +15,9 @@ export enum MergeAmendment {
  * Restrictions are usually processed in the motion workflow
  */
 export enum Restriction {
-    motionsCanManage = 'motions.can_manage',
-    motionsCanSeeInternal = 'motions.can_see_internal',
-    motionsCanManageMetadata = 'motions.can_manage_metadata',
+    motionsCanManage = 'motion.can_manage',
+    motionsCanSeeInternal = 'motion.can_see_internal',
+    motionsCanManageMetadata = 'motion.can_manage_metadata',
     motionsIsSubmitter = 'is_submitter'
 }
 

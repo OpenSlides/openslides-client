@@ -53,7 +53,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
      * @returns true if the operator can manage agenda items
      */
     public get canManage(): boolean {
-        return this.operator.hasPerms(Permission.agendaCanManage);
+        return this.operator.hasPerms(Permission.agendaItemCanManage);
     }
 
     public itemListSlide: ProjectorElementBuildDeskriptor = {
@@ -89,7 +89,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
     public restrictedColumns: ColumnRestriction[] = [
         {
             columnName: 'menu',
-            permission: Permission.agendaCanManage
+            permission: Permission.agendaItemCanManage
         }
     ];
 

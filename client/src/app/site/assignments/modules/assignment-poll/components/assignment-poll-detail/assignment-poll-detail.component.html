@@ -3,7 +3,7 @@
         <h2 *ngIf="!!poll">{{ poll.title }}</h2>
     </div>
 
-    <div class="menu-slot" *osPerms="'assignments.can_manage'">
+    <div class="menu-slot" *osPerms="permission.assignmentsCanManage">
         <button type="button" mat-icon-button [matMenuTriggerFor]="pollDetailMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
@@ -113,21 +113,25 @@
 
 <!-- More Menu -->
 <mat-menu #pollDetailMenu="matMenu">
-    <os-projector-button [menuItem]="true" [object]="poll" *osPerms="'core.can_manage_projector'"></os-projector-button>
-    <button *osPerms="'assignments.can_manage'" mat-menu-item (click)="openDialog(poll)">
+    <os-projector-button
+        [menuItem]="true"
+        [object]="poll"
+        *osPerms="permission.projectorCanManage"
+    ></os-projector-button>
+    <button *osPerms="permission.assignmentsCanManage" mat-menu-item (click)="openDialog(poll)">
         <mat-icon>edit</mat-icon>
         <span>{{ 'Edit' | translate }}</span>
     </button>
     <button
         mat-menu-item
-        *osPerms="'assignments.can_manage'; and: poll && poll.type === 'named'"
+        *osPerms="permission.assignmentsCanManage; and: poll && poll.type === 'named'"
         (click)="pseudoanonymizePoll()"
     >
         <mat-icon>warning</mat-icon>
         <span>{{ 'Anonymize votes' | translate }}</span>
     </button>
     <mat-divider></mat-divider>
-    <button *osPerms="'assignments.can_manage'" mat-menu-item (click)="deletePoll()">
+    <button *osPerms="permission.assignmentsCanManage" mat-menu-item (click)="deletePoll()">
         <mat-icon color="warn">delete</mat-icon>
         <span>{{ 'Delete' | translate }}</span>
     </button>

@@ -31,7 +31,7 @@ export const AgendaAppConfig: AppConfig = {
             displayName: 'Agenda',
             icon: 'today', // 'calendar_today' aligns wrong!
             weight: 200,
-            permission: Permission.agendaCanSee
+            permission: Permission.agendaItemCanSee
         }
     ]
 };

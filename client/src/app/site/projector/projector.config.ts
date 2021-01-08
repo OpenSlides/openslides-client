@@ -51,7 +51,7 @@ export const ProjectorAppConfig: AppConfig = {
             displayName: 'Projector',
             icon: 'videocam',
             weight: 700,
-            permission: Permission.coreCanSeeProjector
+            permission: Permission.projectorCanSee
         }
     ]
 };

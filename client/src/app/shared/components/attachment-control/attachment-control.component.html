@@ -8,7 +8,12 @@
             [inputListValues]="mediaFileList"
         ></os-search-value-selector>
     </mat-form-field>
-    <button type="button" mat-icon-button (click)="openUploadDialog(uploadDialog)" *osPerms="'mediafiles.can_manage'">
+    <button
+        type="button"
+        mat-icon-button
+        (click)="openUploadDialog(uploadDialog)"
+        *osPerms="permission.mediafilesCanManage"
+    >
         <mat-icon>cloud_upload</mat-icon>
     </button>
 </div>

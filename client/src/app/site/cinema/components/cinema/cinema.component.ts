@@ -37,7 +37,7 @@ export class CinemaComponent extends BaseComponent implements OnInit {
     }
 
     public get closUrl(): string {
-        if (this.listOfSpeakers && this.operator.hasPerms(this.permission.agendaCanManageListOfSpeakers)) {
+        if (this.listOfSpeakers && this.operator.hasPerms(this.permission.listOfSpeakersCanManage)) {
             return this.listOfSpeakers?.listOfSpeakersUrl;
         } else {
             return '';
@@ -58,7 +58,7 @@ export class CinemaComponent extends BaseComponent implements OnInit {
 
     public get projectorUrl(): string {
         if (this.projector) {
-            if (this.operator.hasPerms(this.permission.coreCanManageProjector)) {
+            if (this.operator.hasPerms(this.permission.projectorCanManage)) {
                 return `/projectors/detail/${this.projector.id}`;
             } else {
                 return `/projector/${this.projector.id}`;
@@ -69,7 +69,7 @@ export class CinemaComponent extends BaseComponent implements OnInit {
     }
 
     public get projectionTarget(): '_blank' | '_self' {
-        if (this.operator.hasPerms(this.permission.coreCanManageProjector)) {
+        if (this.operator.hasPerms(this.permission.projectorCanManage)) {
             return '_self';
         } else {
             return '_blank';

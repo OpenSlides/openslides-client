@@ -17,6 +17,7 @@ import { MatFormFieldControl } from '@angular/material/form-field';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { Permission } from 'app/core/core-services/permission';
 import { MediafileRepositoryService } from 'app/core/repositories/mediafiles/mediafile-repository.service';
 import { BaseFormControlComponent } from 'app/shared/components/base-form-control';
 import { mediumDialogSettings } from 'app/shared/utils/dialog-settings';
@@ -35,6 +36,8 @@ export class AttachmentControlComponent extends BaseFormControlComponent<ViewMed
      */
     @Output()
     public errorHandler: EventEmitter<string> = new EventEmitter();
+
+    public readonly permission = Permission;
 
     private dialogRef: MatDialogRef<any>;
 

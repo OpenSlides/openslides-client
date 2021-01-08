@@ -12,7 +12,7 @@
         </div>
 
         <!-- Dot Menu -->
-        <span class="poll-actions" *osPerms="'motions.can_manage_polls'">
+        <span class="poll-actions" *osPerms="permission.motionsCanManagePolls">
             <button mat-icon-button [matMenuTriggerFor]="pollDetailMenu">
                 <mat-icon class="small-icon">more_horiz</mat-icon>
             </button>
@@ -21,7 +21,7 @@
 
     <!-- Subtitle -->
     <div class="italic spacer-bottom-20">
-        <span *osPerms="'motions.can_manage_polls'; and: poll.type === 'pseudoanonymous'">
+        <span *osPerms="permission.motionsCanManagePolls; and: poll.type === 'pseudoanonymous'">
             <button mat-icon-button color="warn" (click)="openVotingWarning()">
                 <mat-icon>
                     warning
@@ -41,8 +41,13 @@
     </div>
 
     <!-- Change state button -->
-    <div *osPerms="'motions.can_manage_polls'; and: !hideChangeState">
-        <button mat-stroked-button [ngClass]="pollStateActions[poll.state].css" (click)="changeState(poll.nextState)" [disabled]="stateChangePending">
+    <div *osPerms="permission.motionsCanManagePolls; and: !hideChangeState">
+        <button
+            mat-stroked-button
+            [ngClass]="pollStateActions[poll.state].css"
+            (click)="changeState(poll.nextState)"
+            [disabled]="stateChangePending"
+        >
             <mat-icon> {{ pollStateActions[poll.state].icon }}</mat-icon>
             <span class="next-state-label">
                 <ng-container *ngIf="!stateChangePending">
@@ -57,7 +62,7 @@
 
     <!-- Results -->
     <ng-container *ngIf="poll && !poll.stateHasVotes && poll.type !== 'analog'; else votingResult">
-        <div *osPerms="'motions.can_manage_polls'; and: poll && poll.isStarted">
+        <div *osPerms="permission.motionsCanManagePolls; and: poll && poll.isStarted">
             <os-poll-progress [poll]="poll"></os-poll-progress>
         </div>
         <os-motion-poll-vote [poll]="poll" *ngIf="poll.canBeVotedFor()"></os-motion-poll-vote>
@@ -83,9 +88,8 @@
 
 <ng-template #viewTemplate>
     <!-- Result Chart and legend -->
-    <div class="poll-chart-wrapper" *osPerms="'motions.can_manage_polls'; or: poll.isPublished">
+    <div class="poll-chart-wrapper" *osPerms="permission.motionsCanManagePolls; or: poll.isPublished">
         <div class="vote-legend" [routerLink]="pollLink">
-
             <!-- any (click)-binding in an *ngFor-loop of dynamic length will break the view on iOS.
                 Therefore, we have to provide the trackBy-function here.
                 I suppose there would be debug output, but i-devices are not giving any.
@@ -105,7 +109,7 @@
     </div>
 
     <!-- In Progress hint -->
-    <div class="motion-couting-in-progress-hint" *osPerms="'motions.can_manage_polls'; complement: true">
+    <div class="motion-couting-in-progress-hint" *osPerms="permission.motionsCanManagePolls; complement: true">
         <span *ngIf="poll.isFinished">
             {{ 'Counting of votes is in progress ...' | translate }}
         </span>
@@ -113,23 +117,27 @@
 </ng-template>
 
 <ng-template #emptyTemplate>
-    <div *osPerms="'motions.can_manage_polls'; and: poll.type === 'analog'">
+    <div *osPerms="permission.motionsCanManagePolls; and: poll.type === 'analog'">
         {{ 'Edit to enter votes.' | translate }}
     </div>
 </ng-template>
 
 <!-- More Menu -->
 <mat-menu #pollDetailMenu="matMenu">
-    <button *osPerms="'motions.can_manage_polls'" mat-menu-item (click)="openDialog()">
+    <button *osPerms="permission.motionsCanManagePolls" mat-menu-item (click)="openDialog()">
         <mat-icon>edit</mat-icon>
         <span>{{ 'Edit' | translate }}</span>
     </button>
-    <os-projector-button [menuItem]="true" [object]="poll" *osPerms="'core.can_manage_projector'"></os-projector-button>
+    <os-projector-button
+        [menuItem]="true"
+        [object]="poll"
+        *osPerms="permission.projectorCanManage"
+    ></os-projector-button>
     <button mat-menu-item (click)="downloadPdf()">
         <mat-icon>picture_as_pdf</mat-icon>
         <span>{{ 'Ballot papers' | translate }}</span>
     </button>
-    <div *osPerms="'motions.can_manage_polls'">
+    <div *osPerms="permission.motionsCanManagePolls">
         <mat-divider></mat-divider>
         <!-- Refresh Button -->
         <button mat-menu-item (click)="refreshPoll()">

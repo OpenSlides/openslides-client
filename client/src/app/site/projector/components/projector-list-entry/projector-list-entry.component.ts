@@ -34,7 +34,7 @@ export class ProjectorListEntryComponent extends BaseComponent implements OnInit
     }
 
     public get projectionTarget(): '_blank' | '_self' {
-        if (this.operator.hasPerms(Permission.coreCanManageProjector)) {
+        if (this.operator.hasPerms(Permission.projectorCanManage)) {
             return '_self';
         } else {
             return '_blank';
@@ -90,7 +90,7 @@ export class ProjectorListEntryComponent extends BaseComponent implements OnInit
      * and not the detail view
      */
     public getDetailLink(): string {
-        if (this.operator.hasPerms(Permission.coreCanManageProjector)) {
+        if (this.operator.hasPerms(Permission.projectorCanManage)) {
             return `/projectors/detail/${this.projector.id}`;
         } else {
             return `/projector/${this.projector.id}`;

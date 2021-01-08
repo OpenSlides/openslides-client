@@ -31,7 +31,7 @@
     <!-- Extra Controls -->
     <div class="extra-controls-slot" *ngIf="!vp.isMobile">
         <button
-            *osPerms="['motions.can_manage', 'motions.can_manage_metadata']"
+            *osPerms="[permission.motionsCanManage, permission.motionsCanManageMetadata]"
             mat-button
             (click)="onFollowRecButton()"
             [disabled]="isFollowingProhibited()"
@@ -157,7 +157,7 @@
 <mat-menu #motionBlockMenu="matMenu">
     <div *ngIf="vp.isMobile">
         <button
-            *osPerms="['motions.can_manage', 'motions.can_manage_metadata']"
+            *osPerms="[permission.motionsCanManage, permission.motionsCanManageMetadata]"
             mat-menu-item
             (click)="onFollowRecButton()"
             [disabled]="isFollowingProhibited()"
@@ -171,7 +171,7 @@
 
     <os-projector-button *ngIf="block" [object]="block" [menuItem]="true"></os-projector-button>
 
-    <div *osPerms="'agenda.can_manage'">
+    <div *osPerms="permission.agendaItemCanManage">
         <button mat-menu-item (click)="addToAgenda()" *ngIf="block && !block.agenda_item">
             <mat-icon>add</mat-icon>
             <span>{{ 'Add to agenda' | translate }}</span>
@@ -182,7 +182,7 @@
         </button>
     </div>
 
-    <div *osPerms="['motions.can_manage', 'motions.can_manage_metadata']">
+    <div *osPerms="[permission.motionsCanManage, permission.motionsCanManageMetadata]">
         <button mat-menu-item (click)="toggleEditMode()">
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit' | translate }}</span>

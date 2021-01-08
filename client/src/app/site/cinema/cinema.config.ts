@@ -10,7 +10,7 @@ export const CinemaAppConfig: AppConfig = {
             displayName: 'Autopilot',
             icon: 'sync',
             weight: 150,
-            permission: Permission.coreCanSeeAutopilot
+            permission: Permission.meetingCanSeeAutopilot
         }
     ]
 };

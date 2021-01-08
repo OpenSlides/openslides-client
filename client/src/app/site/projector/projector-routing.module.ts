@@ -14,7 +14,7 @@ const routes: Route[] = [
     {
         path: 'detail/:id',
         component: ProjectorDetailComponent,
-        data: { basePerm: Permission.coreCanManageProjector }
+        data: { basePerm: Permission.projectorCanManage }
     }
 ];
 

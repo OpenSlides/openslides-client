@@ -29,7 +29,7 @@
                         <button
                             mat-icon-button
                             matTooltip="{{ 'Remove' | translate }}"
-                            *osPerms="'agenda.can_manage_list_of_speakers'"
+                            *osPerms="permission.listOfSpeakersCanManage"
                             (click)="removeSpeaker(speaker)"
                         >
                             <mat-icon>close</mat-icon>
@@ -57,7 +57,7 @@
             <button
                 mat-icon-button
                 matTooltip="{{ 'End speech' | translate }}"
-                *osPerms="'agenda.can_manage_list_of_speakers'"
+                *osPerms="permission.listOfSpeakersCanManage"
                 (click)="onStopButton()"
             >
                 <mat-icon>stop</mat-icon>
@@ -76,7 +76,7 @@
         >
             <!-- implicit speaker references into the component using ng-template slot -->
             <ng-template let-speaker>
-                <span *osPerms="'agenda.can_manage_list_of_speakers'">
+                <span *osPerms="permission.listOfSpeakersCanManage">
                     <!-- Speaker count -->
                     <span *ngIf="hasSpokenCount(speaker)" class="red-warning-text speaker-warning">
                         {{ hasSpokenCount(speaker) + 1 }}. <span>{{ 'contribution' | translate }}</span>
@@ -95,7 +95,7 @@
                 </span>
 
                 <!-- Start, start and delete buttons -->
-                <span *osPerms="'agenda.can_manage_list_of_speakers'">
+                <span *osPerms="permission.listOfSpeakersCanManage">
                     <!-- start button -->
                     <button
                         mat-icon-button
@@ -121,7 +121,7 @@
                 </span>
 
                 <!-- For thouse without LOS -->
-                <span *osPerms="'agenda.can_manage_list_of_speakers'; complement: true">
+                <span *osPerms="permission.listOfSpeakersCanManage; complement: true">
                     <mat-icon *ngIf="speaker.marked">
                         star
                     </mat-icon>
@@ -131,7 +131,7 @@
     </div>
 
     <!-- Search for speakers -->
-    <div *osPerms="'agenda.can_manage_list_of_speakers'">
+    <div *osPerms="permission.listOfSpeakersCanManage">
         <form *ngIf="filteredUsers.length" [formGroup]="addSpeakerForm" class="search-new-speaker-form">
             <mat-form-field class="search-users-field">
                 <os-search-value-selector
@@ -152,7 +152,7 @@
     </div>
 
     <!-- Add me and remove me if OP has correct permission -->
-    <div *osPerms="'agenda.can_be_speaker'" class="add-self-buttons">
+    <div *osPerms="permission.listOfSpeakersCanBeSpeaker" class="add-self-buttons">
         <div *ngIf="!closed">
             <button mat-stroked-button [disabled]="closed" (click)="addMyself()" *ngIf="!isOpInList && canAddSelf">
                 <mat-icon>add</mat-icon>
