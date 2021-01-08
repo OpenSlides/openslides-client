@@ -1,8 +1,4 @@
-<os-head-bar
-    [hasMainButton]="canManageAssignments"
-    (mainEvent)="onPlusButton()"
-    [multiSelectMode]="isMultiSelect"
->
+<os-head-bar [hasMainButton]="canManageAssignments" (mainEvent)="onPlusButton()" [multiSelectMode]="isMultiSelect">
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Elections' | translate }}</h2>
@@ -90,7 +86,7 @@
 
 <mat-menu #assignmentMenu="matMenu">
     <div *ngIf="!isMultiSelect">
-        <button mat-menu-item *osPerms="'assignment.can_manage'" (click)="toggleMultiSelect()">
+        <button mat-menu-item *osPerms="permission.assignmentsCanManage" (click)="toggleMultiSelect()">
             <mat-icon>library_add</mat-icon>
             <span>{{ 'Multiselect' | translate }}</span>
         </button>
@@ -98,7 +94,7 @@
             <mat-icon>archive</mat-icon>
             <span>{{ 'Export as PDF' | translate }}</span>
         </button>
-        <div *osPerms="'core.can_manage_config'">
+        <div *osPerms="permission.meetingCanManageSettings">
             <mat-divider></mat-divider>
             <!-- Settings -->
             <button mat-menu-item routerLink="/settings/elections">
@@ -119,7 +115,7 @@
         </button>
         <mat-divider></mat-divider>
         <button
-            *osPerms="'assignment.can_manage'"
+            *osPerms="permission.assignmentsCanManage"
             mat-menu-item
             [disabled]="!selectedRows.length"
             (click)="downloadAssignmentButton(selectedRows)"
@@ -131,7 +127,7 @@
         <button
             mat-menu-item
             class="red-warning-text"
-            *osPerms="'assignment.can_manage'"
+            *osPerms="permission.assignmentsCanManage"
             [disabled]="!selectedRows.length"
             (click)="deleteSelected()"
         >

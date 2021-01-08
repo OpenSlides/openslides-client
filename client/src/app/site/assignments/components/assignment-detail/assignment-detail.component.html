@@ -34,7 +34,7 @@
         <os-projector-button [object]="assignment" [menuItem]="true"></os-projector-button>
 
         <!-- Add/remove to/from agenda -->
-        <div *osPerms="'agenda.can_manage'">
+        <div *osPerms="permission.agendaItemCanManage">
             <button mat-menu-item (click)="addToAgenda()" *ngIf="assignment && !assignment.agenda_item">
                 <mat-icon>add</mat-icon>
                 <span>{{ 'Add to agenda' | translate }}</span>

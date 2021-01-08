@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 
 import { BehaviorSubject } from 'rxjs';
 
+import { Permission } from 'app/core/core-services/permission';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { ItemVisibilityChoices } from 'app/shared/models/agenda/agenda-item';
@@ -16,6 +17,8 @@ import { ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 export class AgendaContentObjectFormComponent implements OnInit {
     @Input()
     public form: FormGroup;
+
+    public permission = Permission;
 
     public showForm = false;
 

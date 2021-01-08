@@ -10,7 +10,7 @@
 
             <!-- Type and State -->
             <div class="italic spacer-bottom-20">
-                <span *osPerms="'assignments.can_manage'; and: poll.type === 'pseudoanonymous'">
+                <span *osPerms="permission.assignmentsCanManage; and: poll.type === 'pseudoanonymous'">
                     <button mat-icon-button color="warn" (click)="openVotingWarning()">
                         <mat-icon>
                             warning
@@ -28,7 +28,7 @@
                 <!-- Buttons -->
                 <button
                     mat-icon-button
-                    *osPerms="['core.can_manage_projector', 'assignments.can_manage']"
+                    *osPerms="[permission.projectorCanManage, permission.assignmentsCanManage]"
                     [matMenuTriggerFor]="pollItemMenu"
                     (click)="$event.stopPropagation()"
                 >
@@ -37,7 +37,7 @@
             </div>
 
             <!-- Change state button -->
-            <div *osPerms="'assignments.can_manage'; and: !hideChangeState">
+            <div *osPerms="permission.assignmentsCanManage; and: !hideChangeState">
                 <button
                     mat-stroked-button
                     [ngClass]="pollStateActions[poll.state].css"
@@ -57,14 +57,14 @@
             </div>
 
             <!-- Enter Votes Hint -->
-            <div *osPerms="'assignments.can_manage'; and: poll.type === 'analog' && !poll.stateHasVotes">
+            <div *osPerms="permission.assignmentsCanManage; and: poll.type === 'analog' && !poll.stateHasVotes">
                 {{ 'Edit to enter votes.' | translate }}
             </div>
         </div>
 
         <!-- Chart / Table -->
         <div *ngIf="poll.stateHasVotes" class="poll-result-wrapper">
-            <div *osPerms="'assignments.can_manage'; or: poll.isPublished">
+            <div *osPerms="permission.assignmentsCanManage; or: poll.isPublished">
                 <os-assignment-poll-detail-content
                     routerLink="/assignments/polls/{{ poll.id }}"
                     [poll]="poll"
@@ -72,7 +72,7 @@
             </div>
 
             <!-- Cannot see unpublished -->
-            <div *osPerms="'assignments.can_manage'; complement: true">
+            <div *osPerms="permission.assignmentsCanManage; complement: true">
                 <span *ngIf="poll.isFinished">
                     {{ 'Counting of votes is in progress ...' | translate }}
                 </span>
@@ -80,7 +80,7 @@
         </div>
 
         <!-- Poll progress bar -->
-        <div *osPerms="'assignments.can_manage'; and: poll && poll.isStarted">
+        <div *osPerms="permission.assignmentsCanManage; and: poll && poll.isStarted">
             <os-poll-progress [poll]="poll"></os-poll-progress>
         </div>
 
@@ -104,16 +104,16 @@
 </mat-card>
 
 <mat-menu #pollItemMenu="matMenu">
-    <div *osPerms="'assignments.can_manage'">
+    <div *osPerms="permission.assignmentsCanManage">
         <button mat-menu-item (click)="openDialog()">
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit' | translate }}</span>
         </button>
     </div>
-    <div *osPerms="'core.can_manage_projector'">
+    <div *osPerms="permission.projectorCanManage">
         <os-projector-button menuItem="true" [object]="poll"></os-projector-button>
     </div>
-    <div *osPerms="'assignments.can_manage'">
+    <div *osPerms="permission.assignmentsCanManage">
         <button mat-menu-item (click)="printBallot()">
             <mat-icon>picture_as_pdf</mat-icon>
             <span>{{ 'Ballot papers' | translate }}</span>

@@ -88,9 +88,9 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
      */
     public get canAccessFileMenu(): boolean {
         return (
-            this.operator.hasPerms(Permission.coreCanManageProjector) ||
-            this.operator.hasPerms(Permission.agendaCanSeeListOfSpeakers) ||
-            this.operator.hasPerms(Permission.coreCanManageLogosAndFonts) ||
+            this.operator.hasPerms(Permission.projectorCanManage) ||
+            this.operator.hasPerms(Permission.listOfSpeakersCanSee) ||
+            this.operator.hasPerms(Permission.meetingCanManageLogosAndFonts) ||
             this.canEdit
         );
     }
@@ -252,9 +252,9 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
      */
     public showFileMenu(file: ViewMediafile): boolean {
         return (
-            (file.isProjectable() && this.operator.hasPerms(Permission.coreCanManageProjector)) ||
-            (file.isFont() && this.operator.hasPerms(Permission.coreCanManageLogosAndFonts)) ||
-            (file.isImage() && this.operator.hasPerms(Permission.coreCanManageLogosAndFonts)) ||
+            (file.isProjectable() && this.operator.hasPerms(Permission.projectorCanManage)) ||
+            (file.isFont() && this.operator.hasPerms(Permission.meetingCanManageLogosAndFonts)) ||
+            (file.isImage() && this.operator.hasPerms(Permission.meetingCanManageLogosAndFonts)) ||
             this.canEdit
         );
     }

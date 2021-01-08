@@ -159,7 +159,7 @@ export class ProjectorDetailComponent extends BaseComponent implements OnInit {
      * @returns true if the operator can manage
      */
     public canManage(): boolean {
-        return this.opertator.hasPerms(Permission.coreCanManageProjector);
+        return this.opertator.hasPerms(Permission.projectorCanManage);
     }
 
     /**

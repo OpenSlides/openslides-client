@@ -128,7 +128,7 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
     }
 
     public opCanManage(): boolean {
-        return this.operator.hasPerms(Permission.agendaCanManageListOfSpeakers);
+        return this.operator.hasPerms(Permission.listOfSpeakersCanManage);
     }
 
     /**

@@ -60,7 +60,7 @@
                 <mat-button-toggle *ngFor="let metaInfo of metaInfoExportOrder" [value]="metaInfo">
                     <span>{{ getLabelForMetadata(metaInfo) | translate }}</span>
                 </mat-button-toggle>
-                <mat-button-toggle *osPerms="'agenda.can_see_list_of_speakers'" value="speakers" #speakersButton>
+                <mat-button-toggle *osPerms="permission.listOfSpeakersCanSee" value="speakers" #speakersButton>
                     <span>{{ 'Speakers' | translate }}</span>
                 </mat-button-toggle>
                 <mat-button-toggle value="polls" #votingResultButton>

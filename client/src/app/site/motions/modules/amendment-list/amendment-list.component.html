@@ -116,7 +116,7 @@
 
 <mat-menu #amendmentListMenu="matMenu">
     <div *ngIf="!isMultiSelect">
-        <div *osPerms="'motions.can_manage'">
+        <div *osPerms="permission.motionsCanManage">
             <button mat-menu-item (click)="toggleMultiSelect()">
                 <mat-icon>library_add</mat-icon>
                 <span>{{ 'Multiselect' | translate }}</span>
@@ -141,7 +141,7 @@
             <span>{{ 'Deselect all' | translate }}</span>
         </button>
 
-        <ng-container *osPerms="'motions.can_manage'; or: 'motions.can_manage_metadata'">
+        <ng-container *osPerms="permission.motionsCanManage; or: permission.motionsCanManageMetadata">
             <mat-divider></mat-divider>
             <os-motion-multiselect-actions [selectedMotions]="selectedRows" (action)="multiselectWrapper($event)">
             </os-motion-multiselect-actions>

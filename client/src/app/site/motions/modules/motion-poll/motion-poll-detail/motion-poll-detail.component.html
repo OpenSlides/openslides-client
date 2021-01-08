@@ -3,7 +3,7 @@
         <h2 *ngIf="poll">{{ 'Motion' | translate }} {{ poll.motion.identifierOrTitle }}</h2>
     </div>
 
-    <div class="menu-slot" *osPerms="'motions.can_manage_polls'">
+    <div class="menu-slot" *osPerms="permission.motionsCanManagePolls">
         <button type="button" mat-icon-button [matMenuTriggerFor]="pollDetailMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
@@ -98,21 +98,25 @@
 
 <!-- More Menu -->
 <mat-menu #pollDetailMenu="matMenu">
-    <os-projector-button [menuItem]="true" [object]="poll" *osPerms="'core.can_manage_projector'"></os-projector-button>
-    <button *osPerms="'motions.can_manage_polls'" mat-menu-item (click)="openDialog(poll)">
+    <os-projector-button
+        [menuItem]="true"
+        [object]="poll"
+        *osPerms="permission.projectorCanManage"
+    ></os-projector-button>
+    <button *osPerms="permission.motionsCanManagePolls" mat-menu-item (click)="openDialog(poll)">
         <mat-icon>edit</mat-icon>
         <span>{{ 'Edit' | translate }}</span>
     </button>
     <button
         mat-menu-item
-        *osPerms="'motions.can_manage_polls'; and: poll && poll.type === 'named'"
+        *osPerms="permission.motionsCanManagePolls; and: poll && poll.type === 'named'"
         (click)="pseudoanonymizePoll()"
     >
         <mat-icon>warning</mat-icon>
         <span>{{ 'Anonymize votes' | translate }}</span>
     </button>
     <mat-divider></mat-divider>
-    <button *osPerms="'motions.can_manage_polls'" mat-menu-item (click)="deletePoll()">
+    <button *osPerms="permission.motionsCanManagePolls" mat-menu-item (click)="deletePoll()">
         <mat-icon color="warn">delete</mat-icon>
         <span>{{ 'Delete' | translate }}</span>
     </button>

@@ -32,7 +32,7 @@ export const UsersAppConfig: AppConfig = {
             displayName: 'Participants',
             icon: 'people',
             weight: 500,
-            permission: Permission.usersCanSeeName
+            permission: Permission.usersCanSee
         }
     ]
 };

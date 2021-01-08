@@ -232,7 +232,7 @@
 
             <!-- Active? -->
             <mat-checkbox
-                *osPerms="'users.can_see_extra_data'"
+                *osPerms="permission.usersCanSeeExtraData"
                 formControlName="is_active"
                 matTooltip="{{
                     'Designates whether this user should be treated as active. Unselect this instead of deleting the account.'
@@ -260,10 +260,15 @@
             <h4>{{ 'Name' | translate }}</h4>
             <span class="state-icons">
                 <span>{{ user.short_name }}</span>
-                <mat-icon *ngIf="user.isPresentInMeeting() && isAllowed('seeName')" matTooltip="{{ 'Is present' | translate }}"
+                <mat-icon
+                    *ngIf="user.isPresentInMeeting() && isAllowed('seeName')"
+                    matTooltip="{{ 'Is present' | translate }}"
                     >check_box</mat-icon
                 >
-                <mat-icon *ngIf="!user.is_physical_person && isAllowed('seeName')" matTooltip="{{ 'Is committee' | translate }}">
+                <mat-icon
+                    *ngIf="!user.is_physical_person && isAllowed('seeName')"
+                    matTooltip="{{ 'Is committee' | translate }}"
+                >
                     account_balance
                 </mat-icon>
                 <mat-icon *ngIf="!user.is_active && isAllowed('seeExtra')" matTooltip="{{ 'Inactive' | translate }}">

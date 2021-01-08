@@ -16,9 +16,7 @@
                     </span>
                     <span *ngIf="change.isTitleChange()">{{ 'Title' | translate }}</span>
                     <span *ngIf="isChangeRecommendation(change)"> ({{ 'Change recommendation' | translate }})</span>
-                    <span *ngIf="isAmendment(change)">
-                        ({{ 'Amendment' | translate }} {{ change.getChangeId() }})</span
-                    >
+                    <span *ngIf="isAmendment(change)"> ({{ 'Amendment' | translate }} {{ change.getChangeId() }})</span>
                     <span class="operation" *ngIf="isChangeRecommendation(change)">
                         – {{ getRecommendationTypeName(change) | translate }}
                         <!--
@@ -49,7 +47,7 @@
     <div class="motion-text-with-diffs">
         <div *ngIf="getTitleChangingObject() as changedTitle">
             <div class="diff-box diff-box-{{ changedTitle.getChangeId() }} clearfix">
-                <div class="action-row" *osPerms="'motions.can_manage'">
+                <div class="action-row" *osPerms="permission.motionsCanManage">
                     <button
                         mat-icon-button
                         *ngIf="isRecommendation(changedTitle)"
@@ -97,7 +95,7 @@
                 <div class="collission-hint" *ngIf="hasCollissions(change, getAllTextChangingObjects())">
                     <mat-icon matTooltip="{{ 'This change collides with another one.' | translate }}">warning</mat-icon>
                 </div>
-                <div class="action-row" *osPerms="'motions.can_manage'">
+                <div class="action-row" *osPerms="permission.motionsCanManage">
                     <button
                         mat-icon-button
                         *ngIf="isRecommendation(change)"
@@ -124,19 +122,18 @@
                         <i class="fa fa-info"></i>
                         {{ change.original.number }}
                     </a>
-                -->
-            </div>
-            <div class="status-row" *ngIf="isChangeRecommendation(change) && change.isRejected()">
-                <i class="grey">{{ 'Rejected' | translate }}</i>
-            </div>
+                --></div>
+                <div class="status-row" *ngIf="isChangeRecommendation(change) && change.isRejected()">
+                    <i class="grey">{{ 'Rejected' | translate }}</i>
+                </div>
 
-            <!-- If it's an amendment, only accepted ones will be passed to this component
+                <!-- If it's an amendment, only accepted ones will be passed to this component
                  by default (== !showAllAmendments). In this case, don't show the prefix.
                  However, if showAllAmendments === true, the prefix should be shown alwayes,
                  even if it's accepted -->
-            <div class="status-row" *ngIf="isAmendment(change) && showAllAmendments">
-                <i class="grey">{{ change.amendment.number }} - {{ change.amendment.state.name | translate }}</i>
-            </div>
+                <div class="status-row" *ngIf="isAmendment(change) && showAllAmendments">
+                    <i class="grey">{{ change.amendment.number }} - {{ change.amendment.state.name | translate }}</i>
+                </div>
 
                 <div
                     class="motion-text motion-text-diff"

@@ -237,7 +237,7 @@ export class MotionFilterListService extends BaseFilterListService<ViewMotion> {
         ];
 
         // only add the filter if the user has the correct permission
-        if (this.operator.hasPerms(Permission.agendaCanSeeListOfSpeakers)) {
+        if (this.operator.hasPerms(Permission.listOfSpeakersCanSee)) {
             filterDefinitions.push(this.hasSpeakerOptions);
         }
 

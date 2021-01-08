@@ -143,18 +143,18 @@
 
 <mat-menu #userMenu="matMenu">
     <div *ngIf="!isMultiSelect">
-        <button mat-menu-item *osPerms="'users.can_manage'" (click)="toggleMultiSelect()">
+        <button mat-menu-item *osPerms="permission.usersCanManage" (click)="toggleMultiSelect()">
             <mat-icon>library_add</mat-icon>
             <span>{{ 'Multiselect' | translate }}</span>
         </button>
 
-        <button mat-menu-item *osPerms="'users.can_manage'" routerLink="groups">
+        <button mat-menu-item *osPerms="permission.usersCanManage" routerLink="groups">
             <mat-icon>people</mat-icon>
             <span>{{ 'Groups' | translate }}</span>
         </button>
 
         <div *ngIf="presenceViewConfigured">
-            <button mat-menu-item *osPerms="'users.can_manage'" routerLink="presence">
+            <button mat-menu-item *osPerms="permission.usersCanManage" routerLink="presence">
                 <mat-icon>transfer_within_a_station</mat-icon>
                 <span>{{ 'Presence' | translate }}</span>
             </button>
@@ -165,22 +165,22 @@
             <span>{{ 'List of participants (PDF)' | translate }}</span>
         </button>
 
-        <button mat-menu-item *osPerms="'users.can_manage'" (click)="onDownloadAccessPdf()">
+        <button mat-menu-item *osPerms="permission.usersCanManage" (click)="onDownloadAccessPdf()">
             <mat-icon>picture_as_pdf</mat-icon>
             <span>{{ 'Access data (PDF)' | translate }}</span>
         </button>
 
-        <button mat-menu-item *osPerms="'users.can_manage'" (click)="csvExportUserList()">
+        <button mat-menu-item *osPerms="permission.usersCanManage" (click)="csvExportUserList()">
             <mat-icon>archive</mat-icon>
             <span>{{ 'Export as CSV' | translate }}</span>
         </button>
 
-        <button mat-menu-item *osPerms="'users.can_manage'" routerLink="import">
+        <button mat-menu-item *osPerms="permission.usersCanManage" routerLink="import">
             <mat-icon>cloud_upload</mat-icon>
             <span>{{ 'Import' | translate }}</span>
         </button>
 
-        <div *osPerms="'core.can_manage_config'">
+        <div *osPerms="permission.meetingCanManageSettings">
             <mat-divider></mat-divider>
 
             <!-- Settings -->
@@ -201,14 +201,14 @@
             <span>{{ 'Deselect all' | translate }}</span>
         </button>
 
-        <div *osPerms="'users.can_manage'">
+        <div *osPerms="permission.usersCanManage">
             <mat-divider></mat-divider>
             <button mat-menu-item [disabled]="!selectedRows.length" (click)="setGroupSelected()">
                 <mat-icon>people</mat-icon>
                 <span>{{ 'Add/remove groups ...' | translate }}</span>
             </button>
 
-            <div *osPerms="'users.can_manage'">
+            <div *osPerms="permission.usersCanManage">
                 <mat-divider></mat-divider>
 
                 <button mat-menu-item [disabled]="!selectedRows.length" (click)="setStateSelected('is_active')">
@@ -221,7 +221,11 @@
                     <span>{{ 'Set presence ...' | translate }}</span>
                 </button>
 
-                <button mat-menu-item [disabled]="!selectedRows.length" (click)="setStateSelected('is_physical_person')">
+                <button
+                    mat-menu-item
+                    [disabled]="!selectedRows.length"
+                    (click)="setStateSelected('is_physical_person')"
+                >
                     <mat-icon>account_balance</mat-icon>
                     <span>{{ 'Set physical person ...' | translate }}</span>
                 </button>

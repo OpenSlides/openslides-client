@@ -2,7 +2,7 @@
     <ng-container class="meta-text-block-title">
         {{ projector.getTitle() | translate }}
     </ng-container>
-    <ng-container class="meta-text-block-action-row" *osPerms="'core.can_manage_projector'">
+    <ng-container class="meta-text-block-action-row" *osPerms="permission.projectorCanManage">
         <button
             mat-icon-button
             (click)="onSetAsClosRef()"

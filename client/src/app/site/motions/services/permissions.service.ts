@@ -31,7 +31,7 @@ export class PermissionsService {
      * in mobile mode
      */
     public canAccessMobileDotMenu(): boolean {
-        return this.operator.hasPerms(Permission.agendaCanSeeListOfSpeakers, Permission.coreCanManageProjector);
+        return this.operator.hasPerms(Permission.listOfSpeakersCanSee, Permission.projectorCanManage);
     }
 
     /**

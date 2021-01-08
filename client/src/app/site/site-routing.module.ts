@@ -22,12 +22,12 @@ const routes: Route[] = [
             {
                 path: 'agenda',
                 loadChildren: () => import('./agenda/agenda.module').then(m => m.AgendaModule),
-                data: { basePerm: Permission.agendaCanSee }
+                data: { basePerm: Permission.agendaItemCanSee }
             },
             {
                 path: 'topics',
                 loadChildren: () => import('./topics/topics.module').then(m => m.TopicsModule),
-                data: { basePerm: Permission.agendaCanSee }
+                data: { basePerm: Permission.agendaItemCanSee }
             },
             {
                 path: 'assignments',
@@ -48,7 +48,7 @@ const routes: Route[] = [
                 path: 'settings',
                 loadChildren: () =>
                     import('./meeting-settings/meeting-settings.module').then(m => m.MeetingSettingsModule),
-                data: { basePerm: Permission.coreCanManageSettings }
+                data: { basePerm: Permission.meetingCanManageSettings }
             },
             {
                 path: 'users',
@@ -59,17 +59,17 @@ const routes: Route[] = [
             {
                 path: 'tags',
                 loadChildren: () => import('./tags/tag.module').then(m => m.TagModule),
-                data: { basePerm: Permission.coreCanManageTags }
+                data: { basePerm: Permission.tagsCanManage }
             },
             {
                 path: 'history',
                 loadChildren: () => import('./history/history.module').then(m => m.HistoryModule),
-                data: { basePerm: Permission.coreCanSeeHistory }
+                data: { basePerm: Permission.meetingCanSeeHistory }
             },
             {
                 path: 'projectors',
                 loadChildren: () => import('./projector/projector.module').then(m => m.ProjectorModule),
-                data: { basePerm: Permission.coreCanSeeProjector }
+                data: { basePerm: Permission.projectorCanSee }
             },
             {
                 path: 'polls',
@@ -80,7 +80,7 @@ const routes: Route[] = [
             {
                 path: 'autopilot',
                 loadChildren: () => import('./cinema/cinema.module').then(m => m.CinemaModule),
-                data: { basePerm: Permission.coreCanSeeAutopilot }
+                data: { basePerm: Permission.meetingCanSeeAutopilot }
             }
         ],
         canActivateChild: [AuthGuard]

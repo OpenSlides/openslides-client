@@ -215,9 +215,9 @@ export class TopicDetailComponent extends BaseModelContextComponent {
     public isAllowed(action: string): boolean {
         switch (action) {
             case 'see':
-                return this.operator.hasPerms(Permission.agendaCanSee);
+                return this.operator.hasPerms(Permission.agendaItemCanSee);
             case 'edit':
-                return this.operator.hasPerms(Permission.agendaCanManage);
+                return this.operator.hasPerms(Permission.agendaItemCanManage);
             case 'default':
                 return false;
         }

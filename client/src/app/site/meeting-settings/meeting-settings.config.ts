@@ -9,7 +9,7 @@ export const SettingsAppConfig: AppConfig = {
             displayName: 'Settings',
             icon: 'settings',
             weight: 1300,
-            permission: Permission.coreCanManageSettings
+            permission: Permission.meetingCanManageSettings
         }
     ]
 };

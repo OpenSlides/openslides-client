@@ -90,7 +90,7 @@ export class FullscreenProjectorComponent implements OnInit {
         });
 
         this.operator.operatorUpdatedEvent.subscribe(() => {
-            this.canSeeProjector = this.operator.hasPerms(Permission.coreCanSeeProjector);
+            this.canSeeProjector = this.operator.hasPerms(Permission.projectorCanSee);
         });
     }
 

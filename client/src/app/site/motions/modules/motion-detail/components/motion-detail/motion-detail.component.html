@@ -67,16 +67,20 @@
                 <span>{{ 'PDF' | translate }}</span>
             </button>
             <mat-divider
-                *osPerms="['core.can_manage_projector', 'agenda.can_manage', 'core.can_see_history']"
+                *osPerms="[
+                    permission.projectorCanManage,
+                    permission.agendaItemCanManage,
+                    permission.meetingCanSeeHistory
+                ]"
             ></mat-divider>
             <!-- Project -->
             <os-projector-button
                 [object]="motion"
                 [menuItem]="true"
-                *osPerms="'core.can_manage_projector'"
+                *osPerms="permission.projectorCanManage"
             ></os-projector-button>
             <!-- Add/remove to/from agenda -->
-            <div *osPerms="'agenda.can_manage'">
+            <div *osPerms="permission.agendaItemCanManage">
                 <button mat-menu-item (click)="addToAgenda()" *ngIf="motion && !motion.agenda_item_id">
                     <mat-icon>add</mat-icon>
                     <span>{{ 'Add to agenda' | translate }}</span>
@@ -88,7 +92,7 @@
             </div>
             <button
                 mat-menu-item
-                *osPerms="'core.can_see_history'"
+                *osPerms="permission.meetingCanSeeHistory"
                 [routerLink]="['/history']"
                 [queryParams]="{ element: motion.fqid }"
             >
@@ -130,7 +134,7 @@
                     ></span>
                     <span
                         class="change-title"
-                        *osPerms="'motions.can_manage'; and: !getTitleChangingObject()"
+                        *osPerms="permission.motionsCanManage; and: !getTitleChangingObject()"
                         (click)="createTitleChangeRecommendation()"
                     ></span>
                 </span>
@@ -545,7 +549,7 @@
             </div>
 
             <!-- Final edit buttons -->
-            <div *osPerms="'motions.can_manage'">
+            <div *osPerms="permission.motionsCanManage">
                 <!-- create final version -->
                 <button
                     type="button"
@@ -829,7 +833,7 @@
                         </mat-list-item>
                     </mat-list>
                 </div>
-                <div *osPerms="'motions.can_manage'; and: editMotion">
+                <div *osPerms="permission.motionsCanManage; and: editMotion">
                     <os-attachment-control
                         formControlName="attachment_ids"
                         (errorHandler)="showUploadError($event)"
