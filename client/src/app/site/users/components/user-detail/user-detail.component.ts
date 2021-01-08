@@ -86,6 +86,8 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
 
     private editModelsSubscription: ModelSubscription;
 
+    private isTemporaryUser = true;
+
     /**
      * Constructor for user
      *
@@ -164,7 +166,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
 
         this.subscriptions.push(
             this.repo.getViewModelObservable(userId).subscribe(user => {
-                if (user && !this.editUser) {
+                if (user) {
                     const title = user.getTitle();
                     super.setTitle(title);
                     this.user = user;
@@ -260,6 +262,8 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
         Object.keys(this.personalInfoForm.controls).forEach(ctrl => {
             if (ctrl === 'group_ids') {
                 personalInfoPatch[ctrl] = this.user.group_ids();
+            } else if (ctrl === 'vote_delegations_from_ids') {
+                personalInfoPatch[ctrl] = this.user.vote_delegations_from_ids();
             } else {
                 personalInfoPatch[ctrl] = this.user[ctrl];
             }
@@ -318,13 +322,25 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
         }
 
         try {
-            if (this.newUser) {
-                this.createTemporaryUser();
-            } else {
-                this.updateTemporaryUser();
-            }
+            this.createOrUpdateUser();
         } catch (e) {
             this.raiseError(e);
+        }
+    }
+
+    private async createOrUpdateUser(): Promise<void> {
+        if (this.isTemporaryUser) {
+            if (this.newUser) {
+                await this.createTemporaryUser();
+            } else {
+                await this.updateTemporaryUser();
+            }
+        } else {
+            if (this.newUser) {
+                await this.createRealUser();
+            } else {
+                await this.updateRealUser();
+            }
         }
     }
 
@@ -334,8 +350,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
      */
     public async setEditMode(edit: boolean): Promise<void> {
         if (this.user && edit && !this.user.meeting_id) {
-            throw new Error('No edit on temporary users here!');
-            // TODO: Disable the button for non-temporary users
+            this.isTemporaryUser = false;
         }
 
         if (!this.editModelsSubscription) {
@@ -407,6 +422,24 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
         return this.repo.lastSentEmailTimeString(this.user);
     }
 
+    private async createRealUser(): Promise<void> {
+        const payload = {
+            ...this.personalInfoForm.value,
+            ...this.createVoteDelegationObject(this.personalInfoForm.value)
+        };
+        await this.repo.create(payload);
+        this.router.navigate(['./users/']);
+    }
+
+    private async updateRealUser(): Promise<void> {
+        const payload = {
+            ...this.personalInfoForm.value,
+            ...this.createVoteDelegationObject(this.personalInfoForm.value)
+        };
+        await this.repo.update(payload, this.user);
+        this.setEditMode(false);
+    }
+
     private async createTemporaryUser(): Promise<void> {
         await this.repo.createTemporary(this.personalInfoForm.value);
         this.router.navigate([`./users/`]);
@@ -429,5 +462,13 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
             }
         }
         this.raiseError(this.translate.instant(hint));
+    }
+
+    private createVoteDelegationObject(payload: any): any {
+        return {
+            vote_delegations_from_ids: {
+                [this.activeMeetingIdService.meetingId]: payload.vote_delegations_from_ids
+            }
+        };
     }
 }
