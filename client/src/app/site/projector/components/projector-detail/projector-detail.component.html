@@ -13,7 +13,7 @@
     <!-- Menu -->
     <div class="menu-slot">
         <button
-            *osPerms="'core.can_manage_projector'"
+            *osPerms="permission.projectorCanManage"
             type="button"
             mat-icon-button
             [matMenuTriggerFor]="projectorExtraMenu"
@@ -47,7 +47,7 @@
                 </div>
             </a>
             <!-- Controls under the projector preview -->
-            <div *osPerms="'core.can_manage_projector'" class="control-group projector-controls">
+            <div *osPerms="permission.projectorCanManage" class="control-group projector-controls">
                 <!-- scale down -->
                 <button
                     type="button"
@@ -134,7 +134,7 @@
         </div>
     </os-tile>
     <os-tile [preferredSize]="projectorTileSizeRight">
-        <div *osPerms="'core.can_manage_projector'">
+        <div *osPerms="permission.projectorCanManage">
             <div class="control-group slide-controls">
                 <button
                     type="button"

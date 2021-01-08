@@ -231,9 +231,9 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
             case 'manage':
                 return this.operator.hasPerms(Permission.usersCanManage);
             case 'seeName':
-                return this.operator.hasPerms(Permission.usersCanSeeName, Permission.usersCanManage) || this.ownPage;
+                return this.operator.hasPerms(Permission.usersCanSee, Permission.usersCanManage) || this.ownPage;
             case 'seeOtherUsers':
-                return this.operator.hasPerms(Permission.usersCanSeeName, Permission.usersCanManage);
+                return this.operator.hasPerms(Permission.usersCanSee, Permission.usersCanManage);
             case 'seeExtra':
                 return this.operator.hasPerms(Permission.usersCanSeeExtraData, Permission.usersCanManage);
             case 'seePersonal':
@@ -244,7 +244,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
                 return this.operator.hasPerms(Permission.usersCanManage) || this.ownPage;
             case 'changePassword':
                 return (
-                    (this.ownPage && this.operator.hasPerms(Permission.usersCanChangePassword)) ||
+                    (this.ownPage && this.operator.hasPerms(Permission.usersCanChangeOwnPassword)) ||
                     this.operator.hasPerms(Permission.usersCanManage)
                 );
             default:

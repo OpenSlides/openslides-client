@@ -30,7 +30,7 @@ export class PollProgressComponent extends BaseComponent implements OnInit {
         } else if (this.poll?.pollClassType === PollClassType.Assignment) {
             canManage = this.operator.hasPerms(this.permission.assignmentsCanManage);
         }
-        return canManage && this.operator.hasPerms(this.permission.usersCanSeeName);
+        return canManage && this.operator.hasPerms(this.permission.usersCanSee);
     }
 
     public constructor(

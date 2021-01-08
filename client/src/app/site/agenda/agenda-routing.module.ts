@@ -10,18 +10,18 @@ import { ListOfSpeakersComponent } from './components/list-of-speakers/list-of-s
 
 const routes: Route[] = [
     { path: '', component: AgendaItemListComponent, pathMatch: 'full' },
-    { path: 'import', component: TopicImportListComponent, data: { basePerm: Permission.agendaCanManage } },
+    { path: 'import', component: TopicImportListComponent, data: { basePerm: Permission.agendaItemCanManage } },
     {
         path: 'sort-agenda',
         component: AgendaSortComponent,
         canDeactivate: [WatchForChangesGuard],
-        data: { basePerm: Permission.agendaCanManage }
+        data: { basePerm: Permission.agendaItemCanManage }
     },
-    { path: 'speakers', component: ListOfSpeakersComponent, data: { basePerm: Permission.agendaCanSeeListOfSpeakers } },
+    { path: 'speakers', component: ListOfSpeakersComponent, data: { basePerm: Permission.listOfSpeakersCanSee } },
     {
         path: 'speakers/:id',
         component: ListOfSpeakersComponent,
-        data: { basePerm: Permission.agendaCanSeeListOfSpeakers }
+        data: { basePerm: Permission.listOfSpeakersCanSee }
     }
 ];
 

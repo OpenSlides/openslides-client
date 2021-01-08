@@ -12,7 +12,7 @@ const routes: Route[] = [
         path: '',
         component: StartComponent,
         pathMatch: 'full',
-        data: { basePerm: Permission.coreCanSeeFrontpage }
+        data: { basePerm: Permission.meetingCanSeeFrontpage }
     },
     {
         path: 'legalnotice',

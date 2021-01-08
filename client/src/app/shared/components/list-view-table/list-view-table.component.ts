@@ -258,13 +258,15 @@ export class ListViewTableComponent<V extends BaseViewModel | BaseProjectableVie
      */
     public inputValue: string;
 
+    public readonly permission = Permission;
+
     /**
      * Collect subsciptions
      */
     private subs: Subscription[] = [];
 
     private get projectorColumnWidth(): number {
-        if (this.operator.hasPerms(Permission.coreCanManageProjector)) {
+        if (this.operator.hasPerms(Permission.projectorCanManage)) {
             return 60;
         } else {
             return 24;
@@ -345,11 +347,7 @@ export class ListViewTableComponent<V extends BaseViewModel | BaseProjectableVie
         }
 
         // hide the speakers in mobile
-        if (
-            this.isMobile ||
-            !this.operator.hasPerms(Permission.agendaCanSeeListOfSpeakers) ||
-            !this.showListOfSpeakers
-        ) {
+        if (this.isMobile || !this.operator.hasPerms(Permission.listOfSpeakersCanSee) || !this.showListOfSpeakers) {
             hidden.push('speaker');
         }
 

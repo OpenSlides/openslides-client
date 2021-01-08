@@ -292,7 +292,7 @@
             </button>
 
             <!-- Tags -->
-            <button mat-menu-item routerLink="/tags" *osPerms="'core.can_manage_tags'">
+            <button mat-menu-item routerLink="/tags" *osPerms="permission.tagsCanManage">
                 <mat-icon>local_offer</mat-icon>
                 <span>{{ 'Tags' | translate }}</span>
             </button>
@@ -314,7 +314,7 @@
             </button>
         </div>
 
-        <div *osPerms="'core.can_manage_config'">
+        <div *osPerms="permission.meetingCanManageSettings">
             <mat-divider></mat-divider>
 
             <!-- Settings -->
@@ -402,7 +402,10 @@
         <!-- Recommendation -->
         <mat-form-field *ngIf="perms.isAllowed('change_state', selectedMotion)">
             <mat-select placeholder="{{ 'Recommendation' | translate }}" [(ngModel)]="infoDialog.recommendation_id">
-                <mat-option *ngFor="let recommendation of getPossibleRecommendations(selectedMotion)" [value]="recommendation.id">
+                <mat-option
+                    *ngFor="let recommendation of getPossibleRecommendations(selectedMotion)"
+                    [value]="recommendation.id"
+                >
                     {{ recommendation.recommendation_label | translate }}
                 </mat-option>
             </mat-select>

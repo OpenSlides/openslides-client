@@ -31,7 +31,7 @@ export class PermissionsService {
      * in mobile mode
      */
     public canAccessMobileDotMenu(): boolean {
-        return this.operator.hasPerms(Permission.agendaCanSeeListOfSpeakers, Permission.coreCanManageProjector);
+        return this.operator.hasPerms(Permission.listOfSpeakersCanSee, Permission.projectorCanManage);
     }
 
     /**
@@ -166,7 +166,7 @@ export class PermissionsService {
                 );
             }
             case 'can_manage_config': {
-                return this.operator.hasPerms(Permission.coreCanManageSettings);
+                return this.operator.hasPerms(Permission.meetingCanManageSettings);
             }
             case 'manage': {
                 return this.operator.hasPerms(Permission.motionsCanManage);

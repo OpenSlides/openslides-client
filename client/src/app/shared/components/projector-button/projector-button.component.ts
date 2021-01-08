@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
+import { Permission } from 'app/core/core-services/permission';
 import { ProjectorService } from 'app/core/core-services/projector.service';
 import { StorageService } from 'app/core/core-services/storage.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
@@ -29,6 +30,7 @@ import {
     styleUrls: ['./projector-button.component.scss']
 })
 export class ProjectorButtonComponent implements OnInit, OnDestroy {
+    public readonly permission = Permission;
     /**
      * The object to project.
      */

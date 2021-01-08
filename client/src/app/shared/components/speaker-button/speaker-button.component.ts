@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
 import { Follow } from 'app/core/core-services/model-request-builder.service';
+import { Permission } from 'app/core/core-services/permission';
 import { Fqid } from 'app/core/definitions/key-types';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
 import { HasListOfSpeakers, hasListOfSpeakers, ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
@@ -71,6 +72,8 @@ export class SpeakerButtonComponent implements OnDestroy {
     }
 
     private losSub: Subscription;
+
+    public readonly permission = Permission;
 
     /**
      * The constructor

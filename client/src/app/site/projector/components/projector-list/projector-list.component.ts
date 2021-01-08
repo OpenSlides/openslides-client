@@ -54,7 +54,7 @@ export class ProjectorListComponent extends BaseComponent implements OnInit, Aft
      * @returns true if the user can manage projectors
      */
     public get canManage(): boolean {
-        return this.operator.hasPerms(Permission.coreCanManageProjector);
+        return this.operator.hasPerms(Permission.projectorCanManage);
     }
 
     /**

@@ -1,4 +1,4 @@
-<ng-container *osPerms="'agenda.can_see_list_of_speakers'">
+<ng-container *osPerms="permission.listOfSpeakersCanSee">
     <ng-container *ngIf="listOfSpeakers">
         <a class="anchor-button" *ngIf="!menuItem" [routerLink]="listOfSpeakersUrl">
             <button type="button" mat-icon-button [disabled]="disabled" [matTooltip]="tooltip | translate">

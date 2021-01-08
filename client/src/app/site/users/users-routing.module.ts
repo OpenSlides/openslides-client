@@ -14,12 +14,12 @@ const routes: Route[] = [
         path: '',
         component: UserListComponent,
         pathMatch: 'full',
-        data: { basePerm: Permission.usersCanSeeName }
+        data: { basePerm: Permission.usersCanSee }
     },
     {
         path: 'password',
         component: PasswordComponent,
-        data: { basePerm: Permission.usersCanChangePassword }
+        data: { basePerm: Permission.usersCanChangeOwnPassword }
     },
     {
         path: 'password/:id',

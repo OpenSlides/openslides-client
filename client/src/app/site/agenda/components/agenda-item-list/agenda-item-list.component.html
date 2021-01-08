@@ -76,7 +76,7 @@
             </div>
 
             <!-- Visibility (Internal, Public, Hidden) -->
-            <div *osPerms="'agenda.can_manage'; and: item.verboseType" class="spacer-top-5">
+            <div *osPerms="permission.agendaItemCanManage; and: item.verboseType" class="spacer-top-5">
                 <os-icon-container icon="visibility">{{ item.verboseType | translate }}</os-icon-container>
             </div>
 
@@ -105,7 +105,7 @@
 
 <mat-menu #agendaMenu="matMenu">
     <div *ngIf="!isMultiSelect">
-        <div *osPerms="'agenda.can_manage'">
+        <div *osPerms="permission.agendaItemCanManage">
             <!-- Enable multi select -->
             <button mat-menu-item (click)="toggleMultiSelect()">
                 <mat-icon>library_add</mat-icon>
@@ -129,13 +129,13 @@
         <os-projector-button [object]="itemListSlide" [menuItem]="true"></os-projector-button>
 
         <!-- Current list of speakers -->
-        <button mat-menu-item *osPerms="'agenda.can_see_list_of_speakers'" routerLink="speakers">
+        <button mat-menu-item *osPerms="permission.listOfSpeakersCanSee" routerLink="speakers">
             <mat-icon>mic</mat-icon>
             <span>{{ 'Current list of speakers' | translate }}</span>
         </button>
 
         <!-- Tags -->
-        <button mat-menu-item routerLink="/tags" *osPerms="'core.can_manage_tags'">
+        <button mat-menu-item routerLink="/tags" *osPerms="permission.tagsCanManage">
             <mat-icon>local_offer</mat-icon>
             <span>{{ 'Tags' | translate }}</span>
         </button>
@@ -143,7 +143,7 @@
         <mat-divider></mat-divider>
 
         <!-- CSV export -->
-        <button mat-menu-item *osPerms="'agenda.can_manage'" (click)="csvExportItemList()">
+        <button mat-menu-item *osPerms="permission.agendaItemCanManage" (click)="csvExportItemList()">
             <mat-icon>archive</mat-icon>
             <span>{{ 'Export as CSV' | translate }}</span>
         </button>
@@ -153,22 +153,18 @@
             <span>{{ 'Export as PDF' | translate }}</span>
         </button>
         <!-- Import -->
-        <button mat-menu-item *osPerms="'agenda.can_manage'" routerLink="import">
+        <button mat-menu-item *osPerms="permission.agendaItemCanManage" routerLink="import">
             <mat-icon>cloud_upload</mat-icon>
             <span>{{ 'Import' | translate }}</span>
         </button>
-        <div *osPerms="'agenda.can_manage'">
+        <div *osPerms="permission.agendaItemCanManage">
             <mat-divider></mat-divider>
-            <button
-                mat-menu-item
-                class="red-warning-text"
-                (click)="deleteAllSpeakersOfAllListsOfSpeakers()"
-            >
+            <button mat-menu-item class="red-warning-text" (click)="deleteAllSpeakersOfAllListsOfSpeakers()">
                 <mat-icon>delete</mat-icon>
                 <span>{{ 'Clear all list of speakers' | translate }}</span>
             </button>
         </div>
-        <div *osPerms="'core.can_manage_config'">
+        <div *osPerms="permission.meetingCanManageSettings">
             <mat-divider></mat-divider>
             <!-- Settings -->
             <button mat-menu-item routerLink="/settings/agenda">
@@ -191,7 +187,7 @@
             <span>{{ 'Deselect all' | translate }}</span>
         </button>
         <mat-divider></mat-divider>
-        <div *osPerms="'agenda.can_manage'">
+        <div *osPerms="permission.agendaItemCanManage">
             <!-- Close selected -->
             <button mat-menu-item [disabled]="!selectedRows.length" (click)="setClosedSelected(true)">
                 <mat-icon>done</mat-icon>
@@ -249,7 +245,7 @@
         </div>
 
         <!-- Agenda entries -->
-        <div *osPerms="'agenda.can_manage'">
+        <div *osPerms="permission.agendaItemCanManage">
             <!-- Done check -->
             <button mat-menu-item (click)="onDoneSingleButton(item)">
                 <mat-icon color="accent"> {{ item.closed ? 'check_box' : 'check_box_outline_blank' }} </mat-icon>

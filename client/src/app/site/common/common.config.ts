@@ -9,7 +9,7 @@ export const CommonAppConfig: AppConfig = {
             displayName: 'Home',
             icon: 'home',
             weight: 100,
-            permission: Permission.coreCanSeeFrontpage
+            permission: Permission.meetingCanSeeFrontpage
         }
     ]
 };

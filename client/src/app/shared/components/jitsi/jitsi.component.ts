@@ -277,7 +277,7 @@ export class JitsiComponent extends BaseComponent implements OnInit, OnDestroy {
                 .getUserObservable()
                 .pipe(delay(0))
                 .subscribe(() => {
-                    this.canManageSpeaker = this.operator.hasPerms(this.permission.agendaCanManageListOfSpeakers);
+                    this.canManageSpeaker = this.operator.hasPerms(this.permission.agendaItemCanManageListOfSpeakers);
                     this.canSeeLiveStream = this.operator.hasPerms(this.permission.coreCanSeeLiveStream);
                     this.isEnterMeetingRoomVisible = this.canManageSpeaker;
                 }),

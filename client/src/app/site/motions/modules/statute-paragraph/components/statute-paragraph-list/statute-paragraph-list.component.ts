@@ -9,7 +9,6 @@ import { PromptService } from 'app/core/ui-services/prompt.service';
 import { MotionStatuteParagraph } from 'app/shared/models/motions/motion-statute-paragraph';
 import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
-import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewMotionStatuteParagraph } from 'app/site/motions/models/view-motion-statute-paragraph';
 import { StatuteCsvExportService } from 'app/site/motions/services/statute-csv-export.service';
@@ -28,7 +27,7 @@ export class StatuteParagraphListComponent extends BaseModelContextComponent imp
 
     private dialogRef: MatDialogRef<any>;
 
-    private currentStatuteParagraph: ViewMotionStatuteParagraph | null;
+    public currentStatuteParagraph: ViewMotionStatuteParagraph | null;
 
     /**
      * Source of the Data
