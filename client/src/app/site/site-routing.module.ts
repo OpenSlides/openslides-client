@@ -83,6 +83,7 @@ const routes: Route[] = [
                 data: { basePerm: Permission.meetingCanSeeAutopilot }
             }
         ],
+        canActivate: [AuthGuard],
         canActivateChild: [AuthGuard]
     }
 ];
