@@ -630,6 +630,9 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
                     fieldset: 'title'
                 },
                 {
+                    idField: 'motion_workflow_ids'
+                },
+                {
                     idField: 'mediafile_ids',
                     fieldset: 'fileSelection'
                 },
@@ -918,7 +921,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
             title: ['', Validators.required],
             text: ['', Validators.required],
             reason: reason,
-            category_id: [''],
+            category_id: [],
             attachment_ids: [[]],
             agenda_create: [''],
             agenda_parent_id: [],
@@ -926,11 +929,11 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
             submitters_id: [],
             supporters_id: [[]],
             workflow_id: [],
-            tag_ids: [],
+            tag_ids: [[]],
             origin: [''],
             selected_paragraphs: [],
             statute_amendment: [''], // Internal value for the checkbox, not saved to the model
-            statute_paragraph_id: [''],
+            statute_paragraph_id: [],
             block_id: [],
             parent_id: [],
             modified_final_version: ['']
@@ -976,8 +979,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
      * Creates a motion. Calls the "patchValues" function in the MotionObject
      */
     public async createMotion(): Promise<void> {
-        const newMotionValues: Partial<MotionAction.CreatePayload> = { ...this.contentForm.value };
-        const motion = new CreateMotion(newMotionValues);
+        const motion: Partial<MotionAction.CreatePayload> = { ...this.contentForm.value };
         try {
             const response = await this.repo.create(motion);
             this.router.navigate(['./motions/' + response.id]);
@@ -1021,8 +1023,14 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
     }
 
     public getPossibleRecommendations(): ViewMotionState[] {
-        const allStates = this.motion.state.workflow.states;
-        return allStates.filter(state => state.recommendation_label);
+        if (this.motion) {
+            const motionState = this.motion.state;
+            const workflow = motionState?.workflow;
+            const allStates = workflow?.states || [];
+            return allStates.filter(state => state.recommendation_label);
+        } else {
+            return [];
+        }
     }
 
     /**
