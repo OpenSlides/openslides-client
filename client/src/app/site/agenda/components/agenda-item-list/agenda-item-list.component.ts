@@ -15,6 +15,7 @@ import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { PdfDocumentService } from 'app/core/pdf-services/pdf-document.service';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
+import { AgendaItemVisibility } from 'app/core/repositories/agenda/agenda-item-visibility';
 import { MeetingRepositoryService } from 'app/core/repositories/event-management/meeting-repository.service';
 import { TopicRepositoryService } from 'app/core/repositories/topics/topic-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -314,7 +315,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
      *
      * @param visible true if the item is to be shown
      */
-    public async setAgendaType(agendaType: number): Promise<void> {
+    public async setAgendaType(agendaType: AgendaItemVisibility): Promise<void> {
         try {
             for (const item of this.selectedRows) {
                 await this.repo.update({ type: agendaType }, item).catch(this.raiseError);

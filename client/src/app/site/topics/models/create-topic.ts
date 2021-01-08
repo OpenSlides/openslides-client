@@ -1,3 +1,4 @@
+import { AgendaItemVisibility } from 'app/core/repositories/agenda/agenda-item-visibility';
 import { Topic } from 'app/shared/models/topics/topic';
 
 /**
@@ -5,7 +6,7 @@ import { Topic } from 'app/shared/models/topics/topic';
  */
 export class CreateTopic extends Topic {
     public attachment_ids: number[];
-    public agenda_type: number;
+    public agenda_type: AgendaItemVisibility;
     public agenda_parent_id: number;
     public agenda_comment: string;
     public agenda_duration: number;

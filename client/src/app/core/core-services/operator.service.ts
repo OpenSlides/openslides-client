@@ -102,7 +102,7 @@ export class OperatorService {
     }
     private get superadminGroupId(): number | null {
         const activeMeeting = this.activeMeetingService.meeting;
-        return activeMeeting ? activeMeeting.superadmin_group.id : null;
+        return activeMeeting ? activeMeeting.admin_group?.id || 1 : null;
     }
 
     private _lastActiveMeetingId;

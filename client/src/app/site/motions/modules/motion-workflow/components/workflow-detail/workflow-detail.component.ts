@@ -360,7 +360,7 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
      * @param amendment determines the amendment
      * @param state the state to change
      */
-    public setMergeAmendment(amendment: number, state: ViewMotionState): void {
+    public setMergeAmendment(amendment: MergeAmendment, state: ViewMotionState): void {
         this.handleRequest(this.stateRepo.update({ merge_amendment_into_final: amendment }, state));
     }
 

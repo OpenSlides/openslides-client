@@ -14,10 +14,10 @@ export enum PollColor {
 }
 
 export enum PollState {
-    Created = 1,
-    Started,
-    Finished,
-    Published
+    Created = 'created',
+    Started = 'started',
+    Finished = 'finished',
+    Published = 'published'
 }
 
 export enum PollType {
@@ -113,7 +113,16 @@ export abstract class BasePoll<
     }
 
     public get nextState(): PollState {
-        return this.state + 1;
+        switch (this.state) {
+            case PollState.Created:
+                return PollState.Started;
+            case PollState.Started:
+                return PollState.Finished;
+            case PollState.Finished:
+                return PollState.Published;
+            case PollState.Published:
+                return PollState.Created;
+        }
     }
 
     protected getDecimalFields(): string[] {

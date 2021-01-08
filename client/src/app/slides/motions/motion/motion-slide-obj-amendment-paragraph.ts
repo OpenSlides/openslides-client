@@ -1,4 +1,5 @@
-import { LineRange } from 'app/core/ui-services/diff.service';
+import { LineRange, ModificationType } from 'app/core/ui-services/diff.service';
+import { MergeAmendment } from 'app/shared/models/motions/motion-state';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from 'app/shared/models/motions/view-unified-change';
 import { MotionSlideDataAmendment } from './motion-slide-data';
 
@@ -9,7 +10,7 @@ import { MotionSlideDataAmendment } from './motion-slide-data';
 export class MotionSlideObjAmendmentParagraph implements ViewUnifiedChange {
     public id: number;
     public type: number;
-    public merge_amendment_into_final: number;
+    public merge_amendment_into_final: MergeAmendment;
     public merge_amendment_into_diff: number;
 
     public constructor(
@@ -44,11 +45,11 @@ export class MotionSlideObjAmendmentParagraph implements ViewUnifiedChange {
     }
 
     public isAccepted(): boolean {
-        return this.merge_amendment_into_final === 1;
+        return this.merge_amendment_into_final === MergeAmendment.YES;
     }
 
     public isRejected(): boolean {
-        return this.merge_amendment_into_final === 0;
+        return this.merge_amendment_into_final === MergeAmendment.UNDEFINED;
     }
 
     public showInDiffView(): boolean {
@@ -56,7 +57,7 @@ export class MotionSlideObjAmendmentParagraph implements ViewUnifiedChange {
     }
 
     public showInFinalView(): boolean {
-        return this.merge_amendment_into_final === 1;
+        return this.merge_amendment_into_final === MergeAmendment.YES;
     }
 
     public isTitleChange(): boolean {

@@ -1,4 +1,5 @@
 import { Fqid, Id } from 'app/core/definitions/key-types';
+import { AgendaItemVisibility } from 'app/core/repositories/agenda/agenda-item-visibility';
 import { BaseModel } from '../base/base-model';
 import { HasMeetingId } from '../base/has-meeting-id';
 import { HasProjectableIds } from '../base/has-projectable-ids';
@@ -9,9 +10,9 @@ import { HasTagIds } from '../base/has-tag-ids';
  * Coming from "ConfigVariables" property "agenda_hide_internal_items_on_projector"
  */
 export const ItemVisibilityChoices = [
-    { key: 1, name: 'public', csvName: '' },
-    { key: 2, name: 'internal', csvName: 'internal' },
-    { key: 3, name: 'hidden', csvName: 'hidden' }
+    { key: AgendaItemVisibility.common, name: 'public', csvName: '' },
+    { key: AgendaItemVisibility.internal, name: 'internal', csvName: 'internal' },
+    { key: AgendaItemVisibility.hidden, name: 'hidden', csvName: 'hidden' }
 ];
 
 /**
@@ -25,7 +26,7 @@ export class AgendaItem extends BaseModel<AgendaItem> {
     public item_number: string;
     public comment: string;
     public closed: boolean;
-    public type: number;
+    public type: AgendaItemVisibility;
     public is_hidden: boolean;
     public is_internal: boolean;
     public duration: number; // in seconds

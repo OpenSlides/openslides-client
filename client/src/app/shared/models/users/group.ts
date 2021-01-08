@@ -16,7 +16,7 @@ export class Group extends BaseModel<Group> {
 
     public user_ids: Id[]; // (user/group_$<meeting_id>_ids)[];
     public default_group_for_meeting_id: Id; // meeting/default_group_id;
-    public superadmin_group_for_meeting_id: Id; // meeting/superadmin_group_id;
+    public admin_group_for_meeting_id: Id; // meeting/admin_group_id;
     public mediafile_access_group_ids: Id[]; // (mediafile/access_group_ids)[];
     public mediafile_inherited_access_group_ids: Id[]; // (mediafile/inherited_access_group_ids)[];
     public read_comment_section_ids: Id[]; // (motion_comment_section/read_group_ids)[];
@@ -26,8 +26,8 @@ export class Group extends BaseModel<Group> {
     public used_as_motion_poll_default_id: Id; // meeting/motion_poll_default_group_ids;
     public used_as_assignment_poll_default_id: Id; // meeting/assignment_poll_default_group_ids;
 
-    public get isSuperadminGroup(): boolean {
-        return !!this.superadmin_group_for_meeting_id;
+    public get isAdminGroup(): boolean {
+        return !!this.admin_group_for_meeting_id;
     }
 
     public get isDefaultGroup(): boolean {

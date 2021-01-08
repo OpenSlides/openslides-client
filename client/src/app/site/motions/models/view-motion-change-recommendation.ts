@@ -1,3 +1,4 @@
+import { ModificationType } from 'app/core/ui-services/diff.service';
 import { MotionChangeRecommendation } from 'app/shared/models/motions/motion-change-reco';
 import { HasMeeting } from 'app/site/event-management/models/view-meeting';
 import { BaseViewModel } from '../../base/base-view-model';
@@ -21,7 +22,7 @@ export class ViewMotionChangeRecommendation
         return this._model;
     }
 
-    public updateChangeReco(type: number, text: string, internal: boolean): void {
+    public updateChangeReco(type: ModificationType, text: string, internal: boolean): void {
         // @TODO HTML sanitazion
         this.changeRecommendation.type = type;
         this.changeRecommendation.text = text;

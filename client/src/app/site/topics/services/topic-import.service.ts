@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Papa } from 'ngx-papaparse';
 
+import { AgendaItemVisibility } from 'app/core/repositories/agenda/agenda-item-visibility';
 import { TopicRepositoryService } from 'app/core/repositories/topics/topic-repository.service';
 import { BaseImportService, NewEntry } from 'app/core/ui-services/base-import.service';
 import { DurationService } from 'app/core/ui-services/duration.service';
@@ -101,7 +102,7 @@ export class TopicImportService extends BaseImportService<CreateTopic> {
 
         // set type to 'public' if none is given in import
         if (!newEntry.agenda_type) {
-            newEntry.agenda_type = 1;
+            newEntry.agenda_type = AgendaItemVisibility.common;
         }
         const mappedEntry: NewEntry<CreateTopic> = {
             newEntry: newEntry,
@@ -151,9 +152,9 @@ export class TopicImportService extends BaseImportService<CreateTopic> {
      * @param input
      * @returns a number as defined for the itemVisibilityChoices
      */
-    public parseType(input: string | number): number {
+    public parseType(input: string | number): AgendaItemVisibility {
         if (!input) {
-            return 1; // default, public item
+            return AgendaItemVisibility.common; // default, public item
         } else if (typeof input === 'string') {
             const visibility = ItemVisibilityChoices.find(choice => choice.csvName === input);
             if (visibility) {
@@ -187,7 +188,7 @@ export class TopicImportService extends BaseImportService<CreateTopic> {
             const newTopic = new CreateTopic(
                 new CreateTopic({
                     title: line,
-                    agenda_type: 1 // set type to 'public item' by default
+                    agenda_type: AgendaItemVisibility.common // set type to 'public item' by default
                 })
             );
             const newEntry: NewEntry<CreateTopic> = {

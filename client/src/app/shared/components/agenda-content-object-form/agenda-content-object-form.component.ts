@@ -59,7 +59,7 @@ export class AgendaContentObjectFormComponent implements OnInit {
 
         // Set the default visibility using observers
         this.meetingSettingsService.get('agenda_new_items_default_visibility').subscribe(visibility => {
-            this.form.get('agenda_type').setValue(+visibility);
+            this.form.get('agenda_type').setValue(visibility);
         });
 
         this.itemObserver = this.itemRepo.getViewModelListBehaviorSubject();

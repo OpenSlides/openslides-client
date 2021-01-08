@@ -1,3 +1,4 @@
+import { MergeAmendment } from 'app/shared/models/motions/motion-state';
 import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.constants';
 import { ReferencedMotions, ReferencedMotionTitleInformation } from '../base/base-motion-slide';
 
@@ -9,7 +10,7 @@ export interface MotionSlideDataAmendment {
     id: number;
     title: string;
     amendment_paragraphs: string[];
-    merge_amendment_into_final: number;
+    merge_amendment_into_final: MergeAmendment;
     merge_amendment_into_diff: number;
 }
 

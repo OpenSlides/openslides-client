@@ -2,6 +2,7 @@ import { ValidatorFn, Validators } from '@angular/forms';
 
 import dedent from 'ts-dedent';
 
+import { AgendaItemVisibility } from '../agenda/agenda-item-visibility';
 import { AssignmentPollMethod } from 'app/shared/models/assignments/assignment-poll';
 import { Settings } from 'app/shared/models/event-management/meeting';
 import { MotionWorkflow } from 'app/shared/models/motions/motion-workflow';
@@ -279,12 +280,12 @@ export const meetingSettings: SettingsGroup[] = [
                     {
                         key: 'agenda_new_items_default_visibility',
                         label: 'Default visibility for new agenda items (except topics)',
-                        default: 2,
+                        default: AgendaItemVisibility.internal,
                         type: 'choice',
                         choices: {
-                            'Public item': 1,
-                            'Internal item': 2,
-                            'Hidden item': 3
+                            'Public item': AgendaItemVisibility.common,
+                            'Internal item': AgendaItemVisibility.internal,
+                            'Hidden item': AgendaItemVisibility.hidden
                         }
                     },
                     {
@@ -580,11 +581,6 @@ export const meetingSettings: SettingsGroup[] = [
                         type: 'integer',
                         helpText: 'Choose 0 to disable the supporting system.',
                         validators: [Validators.min(0)]
-                    },
-                    {
-                        key: 'motions_supporters_enable_autoremove',
-                        label: 'Remove all supporters of a motion if a submitter edits his motion in early state',
-                        type: 'boolean'
                     }
                 ]
             },

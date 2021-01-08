@@ -1,3 +1,4 @@
+import { AgendaItemVisibility } from '../repositories/agenda/agenda-item-visibility';
 import { HasMeetingId } from 'app/shared/models/base/has-meeting-id';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { BaseSortPayload } from './common/base-sort-payload';
@@ -14,7 +15,7 @@ export namespace AgendaItemAction {
         item_number?: string;
         comment?: string;
         closed?: boolean;
-        type?: number;
+        type?: AgendaItemVisibility;
         duration?: number; // in seconds
         weight?: number;
         tag_ids?: Id[];
