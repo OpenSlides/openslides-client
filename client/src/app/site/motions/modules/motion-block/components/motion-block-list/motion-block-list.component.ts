@@ -10,6 +10,7 @@ import { SimplifiedModelRequest } from 'app/core/core-services/model-request-bui
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
+import { AgendaItemVisibility } from 'app/core/repositories/agenda/agenda-item-visibility';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
@@ -48,7 +49,7 @@ export class MotionBlockListComponent extends BaseListViewComponent<ViewMotionBl
     /**
      * Determine the default agenda visibility
      */
-    public defaultVisibility: number;
+    public defaultVisibility = AgendaItemVisibility.internal;
 
     /**
      * Defines the properties the `sort-filter-bar` can search for.

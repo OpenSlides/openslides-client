@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
+import { AgendaItemVisibility } from 'app/core/repositories/agenda/agenda-item-visibility';
 import { TopicRepositoryService } from 'app/core/repositories/topics/topic-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
@@ -133,7 +134,7 @@ export class TopicDetailComponent extends BaseModelContextComponent {
             title: ['', Validators.required]
         });
 
-        this.topicForm.get('agenda_type').setValue(1);
+        this.topicForm.get('agenda_type').setValue(AgendaItemVisibility.common);
     }
 
     /**
