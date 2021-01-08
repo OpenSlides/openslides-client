@@ -19,14 +19,13 @@ export namespace UserAction {
     export const GENERATE_NEW_PASSWORD = 'user.generate_new_password';
     export const GENERATE_NEW_PASSWORD_TEMPORARY = 'user.generate_new_password_temporary';
 
-    interface TemporaryUserPayload {
+    export interface CommonUserPayload {
         // Optional:
         title?: string;
         first_name?: string;
         last_name?: string;
         is_active?: boolean;
         is_physical_person?: boolean;
-        default_password?: string;
         about_me?: UnsafeHtml;
         gender?: string;
         comment?: UnsafeHtml;
@@ -37,14 +36,22 @@ export namespace UserAction {
 
         is_present_in_meeting_ids?: Id[]; // can only contain the given meeting_id
         group_ids?: Id[]; // the structured field is only valid for the meeting_id
+    }
+
+    interface TemporaryUserPayload extends CommonUserPayload {
+        // Optional
+        default_password?: string;
         vote_delegations_from_ids?: Id[];
     }
 
-    interface UserPayload extends TemporaryUserPayload {
+    interface UserPayload extends CommonUserPayload {
         role_id?: Id;
         guest_meeting_ids?: Id[];
         committee_as_member_ids?: Id[];
         committee_as_manager_ids?: Id[];
+        vote_delegations_from_ids?: {
+            [meeting_id: number]: Id[];
+        };
     }
 
     interface PartialSetPasswordPayload {

@@ -174,20 +174,16 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
         return this.sendActionToBackend(UserAction.UPDATE_TEMPORARY, payload);
     }
 
-    private getPartialTemporaryUserPayload(
-        partialUser: Partial<UserAction.UpdateTemporaryPayload>
-    ): Partial<UserAction.UpdateTemporaryPayload> {
+    private getPartialCommonUserPayload(
+        partialUser: Partial<UserAction.CommonUserPayload>
+    ): Partial<UserAction.CommonUserPayload> {
         return {
-            // Required:
-            username: partialUser.username,
-
             // Optional:
             title: partialUser.title,
             first_name: partialUser.first_name,
             last_name: partialUser.last_name,
             is_active: partialUser.is_active,
             is_physical_person: partialUser.is_physical_person,
-            default_password: partialUser.default_password,
             about_me: partialUser.about_me,
             gender: partialUser.gender,
             comment: partialUser.comment,
@@ -196,18 +192,36 @@ export class UserRepositoryService extends BaseRepositoryWithActiveMeeting<ViewU
             email: partialUser.email,
             vote_weight: toDecimal(partialUser.vote_weight as any),
             is_present_in_meeting_ids: partialUser.is_present_in_meeting_ids,
-            group_ids: partialUser.group_ids,
+            group_ids: partialUser.group_ids
+        };
+    }
+
+    private getPartialTemporaryUserPayload(
+        partialUser: Partial<UserAction.UpdateTemporaryPayload>
+    ): Partial<UserAction.UpdateTemporaryPayload> {
+        return {
+            // Required:
+            username: partialUser.username,
+            // Optional:
+            ...this.getPartialCommonUserPayload(partialUser),
+            default_password: partialUser.default_password,
             vote_delegations_from_ids: partialUser.vote_delegations_from_ids
         };
     }
 
     private getPartialUserPayload(partialUser: Partial<UserAction.UpdatePayload>): Partial<UserAction.UpdatePayload> {
+        if (Array.isArray(partialUser.vote_delegations_from_ids)) {
+            console.warn('Vote delegations have to be an object!');
+            delete partialUser.vote_delegations_from_ids;
+        }
         return {
-            ...this.getPartialTemporaryUserPayload(partialUser),
+            username: partialUser.username,
+            ...this.getPartialCommonUserPayload(partialUser),
             role_id: partialUser.role_id,
             guest_meeting_ids: partialUser.guest_meeting_ids,
             committee_as_member_ids: partialUser.committee_as_member_ids,
-            committee_as_manager_ids: partialUser.committee_as_manager_ids
+            committee_as_manager_ids: partialUser.committee_as_manager_ids,
+            vote_delegations_from_ids: partialUser.vote_delegations_from_ids || {}
         };
     }
 

@@ -196,6 +196,10 @@ export class SearchValueSelectorComponent extends BaseFormControlComponent<Selec
     }
 
     protected updateForm(value: Selectable[] | null): void {
-        this.contentForm.setValue(value);
+        if (typeof value === 'function') {
+            console.warn('Trying to set a function as value:', value);
+        } else {
+            this.contentForm.setValue(value);
+        }
     }
 }
