@@ -182,7 +182,7 @@ export class TopicDetailComponent extends BaseModelContextComponent {
         this.repo.getViewModelObservable(id).subscribe(newViewTopic => {
             // repo sometimes delivers undefined values
             // also ensures edition cannot be interrupted by autoupdate
-            if (newViewTopic && !this.editTopic) {
+            if (newViewTopic) {
                 const title = newViewTopic.getTitle();
                 super.setTitle(title);
                 this.topic = newViewTopic;
