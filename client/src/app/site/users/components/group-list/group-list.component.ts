@@ -227,7 +227,7 @@ export class GroupListComponent extends BaseModelContextComponent implements OnI
      * @param group ViewGroup
      */
     public isProtected(group: ViewGroup): boolean {
-        return group.isSuperadminGroup || group.isDefaultGroup;
+        return group.isAdminGroup || group.isDefaultGroup;
     }
 
     /**

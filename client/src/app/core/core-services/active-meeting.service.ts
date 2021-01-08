@@ -79,7 +79,7 @@ export class ActiveMeetingService {
             ids: [this.meetingId],
             follow: [
                 { idField: 'default_group_id' }, // needed by the operator!
-                { idField: 'superadmin_group_id' },
+                { idField: 'admin_group_id' },
                 { idField: 'logo_$_id', onlyValues: true }, // needed by the media manage service
                 { idField: 'font_$_id', onlyValues: true }
             ],

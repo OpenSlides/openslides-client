@@ -6,9 +6,9 @@ import { HasMeetingId } from '../base/has-meeting-id';
  * Specifies if an amendment of this state/recommendation should be merged into the motion
  */
 export enum MergeAmendment {
-    NO = -1,
-    UNDEFINED = 0,
-    YES = 1
+    NO = 'do_not_merge',
+    UNDEFINED = 'undefined',
+    YES = 'do_merge'
 }
 
 /**

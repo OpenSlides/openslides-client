@@ -1,4 +1,5 @@
 import { Identifiable } from 'app/shared/models/base/identifiable';
+import { ModificationType } from '../ui-services/diff.service';
 import { Id, UnsafeHtml } from '../definitions/key-types';
 
 export namespace MotionChangeRecommendationAction {
@@ -9,7 +10,7 @@ export namespace MotionChangeRecommendationAction {
     interface MotionChangeRecommendationAttributes {
         rejected?: boolean;
         internal?: boolean;
-        type?: number;
+        type?: ModificationType;
         other_description?: string;
     }
 

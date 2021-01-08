@@ -22,7 +22,7 @@ export class ViewGroup extends BaseViewModel<Group> {
 interface IGroupRelations {
     users: ViewUser[];
     default_group_for_meeting: ViewMeeting;
-    superadmin_group_for_meeting: ViewMeeting;
+    admin_group_for_meeting: ViewMeeting;
     mediafile_access_groups: ViewMediafile[];
     mediafile_inherited_access_groups: ViewMediafile[];
     read_comment_sections: ViewMotionCommentSection[];

@@ -19,9 +19,10 @@ const DOCUMENT_FRAGMENT_NODE = 11;
  * This enumeration is used when _automatically_ detecting the change type of an amendment / change recommendation.
  */
 export enum ModificationType {
-    TYPE_REPLACEMENT,
-    TYPE_INSERTION,
-    TYPE_DELETION
+    TYPE_REPLACEMENT = 'replacement',
+    TYPE_INSERTION = 'insertion',
+    TYPE_DELETION = 'deletion',
+    TYPE_OTHER = 'other'
 }
 
 /**

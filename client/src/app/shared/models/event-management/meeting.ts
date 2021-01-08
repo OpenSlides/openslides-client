@@ -1,4 +1,5 @@
 import { Id } from 'app/core/definitions/key-types';
+import { AgendaItemVisibility } from 'app/core/repositories/agenda/agenda-item-visibility';
 import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.constants';
 import { AssignmentPollMethod, AssignmentPollPercentBase } from '../assignments/assignment-poll';
 import { BaseModel } from '../base/base-model';
@@ -60,7 +61,7 @@ export interface Settings {
     agenda_number_prefix: string;
     agenda_numeral_system: string;
     agenda_item_creation: AgendaItemCreation;
-    agenda_new_items_default_visibility: number;
+    agenda_new_items_default_visibility: AgendaItemVisibility;
     agenda_show_internal_items_on_projector: boolean;
 
     // List of speakers
@@ -101,7 +102,6 @@ export interface Settings {
     motions_amendments_text_mode: string;
     motions_amendments_multiple_paragraphs: boolean;
     motions_supporters_min_amount: number;
-    motions_supporters_enable_autoremove: boolean;
     motions_export_title: string;
     motions_export_preamble: string;
     motions_export_submitter_recommendation: boolean;
@@ -196,7 +196,7 @@ export class Meeting extends BaseModel<Meeting> {
     public reference_projector_id: Id; // projector/used_as_reference_projector_meeting_id;
 
     public default_group_id: Id; // group/default_group_for_meeting_id;
-    public superadmin_group_id: Id; // group/superadmin_group_for_meeting_id;
+    public admin_group_id: Id; // group/admin_group_for_meeting_id;
 
     public constructor(input?: any) {
         super(Meeting.COLLECTION, input);

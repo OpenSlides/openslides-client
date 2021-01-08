@@ -1,5 +1,6 @@
 import { HasMeetingId } from 'app/shared/models/base/has-meeting-id';
 import { Identifiable } from 'app/shared/models/base/identifiable';
+import { AssignmentPhase } from '../repositories/assignments/assignment-phase';
 import { Id, UnsafeHtml } from '../definitions/key-types';
 
 export namespace AssignmentAction {
@@ -14,7 +15,7 @@ export namespace AssignmentAction {
         // Optional
         description?: UnsafeHtml;
         open_posts?: number;
-        phase?: number;
+        phase?: AssignmentPhase;
         default_poll_description?: string;
         number_poll_candidates?: boolean;
         tag_ids?: Id[];
@@ -25,7 +26,7 @@ export namespace AssignmentAction {
         title?: string;
         description?: UnsafeHtml;
         open_posts?: number;
-        phase?: number;
+        phase?: AssignmentPhase;
         default_poll_description?: string;
         number_poll_candidates?: boolean;
 
