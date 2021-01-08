@@ -221,17 +221,21 @@ export class SearchValueSelectorComponent extends BaseFormControlComponent<Selec
     }
 
     protected updateForm(value: Selectable[] | null): void {
-        this.contentForm.setValue(value);
-        if (value?.length) {
-            /**
-             * Hack:
-             * for loaded or preselected form, add existing values to selected IDs.
-             * These are usually always numbers,
-             * Would be easier to absolutely always use Selectable and never use IDs,
-             * Could save some work, but every second form has to change for that.
-             * -> os4 todo
-             */
-            this.selectedIds = value as any;
+        if (typeof value === 'function') {
+            console.warn('Trying to set a function as value:', value);
+        } else {
+            this.contentForm.setValue(value);
+            if (value?.length) {
+                /**
+                 * Hack:
+                 * for loaded or preselected form, add existing values to selected IDs.
+                 * These are usually always numbers,
+                 * Would be easier to absolutely always use Selectable and never use IDs,
+                 * Could save some work, but every second form has to change for that.
+                 * -> os4 todo
+                 */
+                this.selectedIds = value as any;
+            }
         }
     }
 }
