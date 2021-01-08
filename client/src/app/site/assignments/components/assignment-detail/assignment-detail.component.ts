@@ -10,6 +10,7 @@ import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { AssignmentCandidateRepositoryService } from 'app/core/repositories/assignments/assignment-candidate-repository.service';
+import { AssignmentPhase } from 'app/core/repositories/assignments/assignment-phase';
 import { AssignmentRepositoryService } from 'app/core/repositories/assignments/assignment-repository.service';
 import { MediafileRepositoryService } from 'app/core/repositories/mediafiles/mediafile-repository.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
@@ -502,7 +503,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
      *
      * @param value the phase to set
      */
-    public async onSetPhaseButton(value: number): Promise<void> {
+    public async onSetPhaseButton(value: AssignmentPhase): Promise<void> {
         this.assignmentRepo.update({ phase: value }, this.assignment);
     }
 

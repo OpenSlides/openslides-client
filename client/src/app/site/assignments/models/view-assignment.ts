@@ -1,3 +1,4 @@
+import { AssignmentPhase } from 'app/core/repositories/assignments/assignment-phase';
 import { SearchRepresentation } from 'app/core/ui-services/search.service';
 import { Assignment } from 'app/shared/models/assignments/assignment';
 import { HasAgendaItem, ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
@@ -19,20 +20,20 @@ import { ViewAssignmentPoll } from './view-assignment-poll';
  * representations as numerical value, string as used in server, and the display
  * name.
  */
-export const AssignmentPhases: { name: string; value: number; display_name: string }[] = [
+export const AssignmentPhases: { name: string; value: AssignmentPhase; display_name: string }[] = [
     {
         name: 'PHASE_SEARCH',
-        value: 0,
+        value: AssignmentPhase.Search,
         display_name: 'Searching for candidates'
     },
     {
         name: 'PHASE_VOTING',
-        value: 1,
+        value: AssignmentPhase.Voting,
         display_name: 'In the election process'
     },
     {
         name: 'PHASE_FINISHED',
-        value: 2,
+        value: AssignmentPhase.Finished,
         display_name: 'Finished'
     }
 ];

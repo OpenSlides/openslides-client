@@ -536,8 +536,8 @@ export const RELATIONS: Relation[] = [
     ...makeO2O({
         AViewModel: ViewMeeting,
         BViewModel: ViewGroup,
-        AField: 'superadmin_group',
-        BField: 'superadmin_group_for_meeting'
+        AField: 'admin_group',
+        BField: 'admin_group_for_meeting'
     }),
     // Logo -> meeting
     {

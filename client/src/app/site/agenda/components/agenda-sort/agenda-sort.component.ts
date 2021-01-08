@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
+import { AgendaItemVisibility } from 'app/core/repositories/agenda/agenda-item-visibility';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ItemVisibilityChoices } from 'app/shared/models/agenda/agenda-item';
@@ -31,7 +32,7 @@ export class AgendaSortComponent extends BaseSortTreeComponent<ViewAgendaItem> i
      * When reset the filters, the option `state` will be set to `false`.
      */
     public filterOptions: SortTreeFilterOption[] = ItemVisibilityChoices.map(item => {
-        return { label: item.name, id: item.key, state: false };
+        return { label: item.name, id: this.getNumericValueForAgendaItemVisibility(item.key), state: false };
     });
 
     /**
@@ -104,7 +105,7 @@ export class AgendaSortComponent extends BaseSortTreeComponent<ViewAgendaItem> i
         const filter = this.activeFilters.subscribe((value: number[]) => {
             this.hasActiveFilter = value.length === 0 ? false : true;
             this.changeFilter.emit((item: ViewAgendaItem): boolean => {
-                return !(value.includes(item.type) || value.length === 0);
+                return !(value.includes(this.getNumericValueForAgendaItemVisibility(item.type)) || value.length === 0);
             });
         });
         this.subscriptions.push(filter);
@@ -153,6 +154,17 @@ export class AgendaSortComponent extends BaseSortTreeComponent<ViewAgendaItem> i
                 return 'visibility';
             case 'hidden item':
                 return 'visibility_off';
+        }
+    }
+
+    private getNumericValueForAgendaItemVisibility(visibility: AgendaItemVisibility): number {
+        switch (visibility) {
+            case AgendaItemVisibility.common:
+                return 1;
+            case AgendaItemVisibility.hidden:
+                return 3;
+            case AgendaItemVisibility.internal:
+                return 2;
         }
     }
 }

@@ -30,7 +30,7 @@ export class GroupRepositoryService extends BaseRepositoryWithActiveMeeting<View
         const titleFields: (keyof Group)[] = ['name'];
         const listFields: (keyof Group)[] = titleFields.concat(['permissions']);
         const detailFields: (keyof Group)[] = listFields.concat([
-            'superadmin_group_for_meeting_id',
+            'admin_group_for_meeting_id',
             'default_group_for_meeting_id'
         ]);
         return {

@@ -84,7 +84,7 @@ export class AgendaFilterListService extends BaseFilterListService<ViewAgendaIte
      */
     private createVisibilityFilterOptions(): OsFilterOption[] {
         return ItemVisibilityChoices.map(choice => ({
-            condition: choice.key as number,
+            condition: choice.key,
             label: choice.name
         }));
     }

@@ -1,4 +1,5 @@
 import { Id } from 'app/core/definitions/key-types';
+import { AssignmentPhase } from 'app/core/repositories/assignments/assignment-phase';
 import { BaseModel } from '../base/base-model';
 import { HasAgendaItemId } from '../base/has-agenda-item-id';
 import { HasAttachmentIds } from '../base/has-attachment-ids';
@@ -18,7 +19,7 @@ export class Assignment extends BaseModel<Assignment> {
     public title: string;
     public description: string;
     public open_posts: number;
-    public phase: number;
+    public phase: AssignmentPhase;
     public default_poll_description: string;
     public number_poll_candidates: boolean;
 

@@ -1,4 +1,5 @@
 import { Identifiable } from 'app/shared/models/base/identifiable';
+import { MergeAmendment } from 'app/shared/models/motions/motion-state';
 import { Id } from '../definitions/key-types';
 
 export namespace MotionStateAction {
@@ -19,7 +20,7 @@ export namespace MotionStateAction {
         allow_submitter_edit?: boolean;
         set_number?: boolean;
         show_state_extension_field?: boolean;
-        merge_amendment_into_final?: number;
+        merge_amendment_into_final?: MergeAmendment;
         show_recommendation_extension_field?: boolean;
     }
 
@@ -37,7 +38,7 @@ export namespace MotionStateAction {
         allow_submitter_edit?: boolean;
         set_number?: boolean;
         show_state_extension_field?: boolean;
-        merge_amendment_into_final?: number;
+        merge_amendment_into_final?: MergeAmendment;
         show_recommendation_extension_field?: boolean;
         next_state_ids?: Id[];
         previous_state_ids?: Id[];

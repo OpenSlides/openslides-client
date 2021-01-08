@@ -1,3 +1,4 @@
+import { AgendaItemVisibility } from '../repositories/agenda/agenda-item-visibility';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Id, UnsafeHtml } from '../definitions/key-types';
 
@@ -76,7 +77,7 @@ export namespace MeetingAction {
         agenda_number_prefix?: string;
         agenda_numeral_system?: string;
         agenda_item_creation?: string;
-        agenda_new_items_default_visibility?: number;
+        agenda_new_items_default_visibility?: AgendaItemVisibility;
         agenda_show_internal_items_on_projector?: boolean;
 
         // List of speakers
@@ -116,7 +117,6 @@ export namespace MeetingAction {
         motions_amendments_text_mode?: string;
         motions_amendments_multiple_paragraphs?: boolean;
         motions_supporters_min_amount?: number;
-        motions_supporters_enable_autoremove?: boolean;
         motions_export_title?: string;
         motions_export_preamble?: string;
         motions_export_submitter_recommendation?: boolean;

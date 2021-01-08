@@ -1,6 +1,7 @@
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 import { Id } from 'app/core/definitions/key-types';
+import { AgendaItemVisibility } from 'app/core/repositories/agenda/agenda-item-visibility';
 import { DiffLinesInParagraph } from 'app/core/ui-services/diff.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { SearchProperty, SearchRepresentation } from 'app/core/ui-services/search.service';
@@ -55,7 +56,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         return this.number ? this.number : this.title;
     }
 
-    public get agenda_type(): number | null {
+    public get agenda_type(): AgendaItemVisibility | null {
         return this.agenda_item ? this.agenda_item.type : null;
     }
 

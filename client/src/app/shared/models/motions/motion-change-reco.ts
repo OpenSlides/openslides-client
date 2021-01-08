@@ -1,4 +1,5 @@
 import { Id } from 'app/core/definitions/key-types';
+import { ModificationType } from 'app/core/ui-services/diff.service';
 import { BaseModel } from '../base/base-model';
 import { HasMeetingId } from '../base/has-meeting-id';
 
@@ -12,7 +13,7 @@ export class MotionChangeRecommendation extends BaseModel<MotionChangeRecommenda
     public id: Id;
     public rejected: boolean;
     public internal: boolean;
-    public type: number;
+    public type: ModificationType;
     public other_description: string;
     public line_from: number;
     public line_to: number;

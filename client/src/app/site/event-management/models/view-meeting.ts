@@ -94,6 +94,6 @@ interface IMeetingRelations {
     users: ViewUser[];
     reference_projector: ViewProjector;
     default_group: ViewGroup;
-    superadmin_group: ViewGroup;
+    admin_group: ViewGroup;
 }
 export interface ViewMeeting extends Meeting, IMeetingRelations {}
