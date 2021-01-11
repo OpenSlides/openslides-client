@@ -23,9 +23,14 @@ export class ActiveMeetingIdService {
 
     public constructor(private lifecycleService: LifecycleService) {
         this.lifecycleService.openslidesBooted.subscribe(() => this.start());
+        this.lifecycleService.openslidesShutdowned.subscribe(() => this.shutDown());
     }
 
     public start(): void {
         this.meetingIdSubject.next(1);
+    }
+
+    private shutDown(): void {
+        this.meetingIdSubject.next(undefined);
     }
 }

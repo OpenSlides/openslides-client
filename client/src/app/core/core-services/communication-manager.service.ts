@@ -47,6 +47,7 @@ export class CommunicationManagerService {
         this.offlineBroadcastService.goOfflineObservable.subscribe(() => this.stopCommunication());
         this.offlineBroadcastService.goOnlineObservable.subscribe(() => this.startCommunication());
         this.lifecycleService.openslidesBooted.subscribe(() => this.startCommunication());
+        this.lifecycleService.openslidesShutdowned.subscribe(() => this.stopCommunication());
     }
 
     public registerEndpoint(name: string, url: string, healthUrl: string, method?: HTTPMethod): void {
@@ -70,7 +71,6 @@ export class CommunicationManagerService {
         if (this.isRunning) {
             await this._connect(streamContainer);
         }
-
         return () => this.close(streamContainer);
     }
 
@@ -99,6 +99,7 @@ export class CommunicationManagerService {
                 container.stream.close();
             }
             container.stream = null;
+            this.close(container);
         }
     }
 
