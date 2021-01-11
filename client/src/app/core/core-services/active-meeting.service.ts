@@ -5,7 +5,6 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { ActiveMeetingIdService } from './active-meeting-id.service';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { AutoupdateService, ModelSubscription } from './autoupdate.service';
-import { LifecycleService } from './lifecycle.service';
 import { MeetingRepositoryService } from '../repositories/event-management/meeting-repository.service';
 import { SimplifiedModelRequest } from './model-request-builder.service';
 

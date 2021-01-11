@@ -24,14 +24,16 @@
                 formControlName="password"
                 [type]="!hide ? 'password' : 'text'"
             />
-            <mat-icon color="primary" matSuffix (click)="hide = !hide">{{ hide ? 'visibility_off' : 'visibility_on' }}</mat-icon>
+            <mat-icon color="primary" matSuffix (click)="hide = !hide">{{
+                hide ? 'visibility_off' : 'visibility_on'
+            }}</mat-icon>
 
             <mat-error>{{ loginErrorMsg | translate }}</mat-error>
         </mat-form-field>
 
         <!-- forgot password button -->
         <br />
-        <button mat-button color="primary" type="button" class="forgot-password-button" (click)="resetPassword()" >
+        <button mat-button color="primary" type="button" class="forgot-password-button" (click)="resetPassword()">
             {{ 'Forgot Password?' | translate }}
         </button>
 

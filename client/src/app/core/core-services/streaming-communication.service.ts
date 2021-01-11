@@ -99,7 +99,7 @@ export class StreamingCommunicationService {
 
         // do not continue, if the operator changed!
         if (!this.shouldRetryConnecting()) {
-            console.log('operator changed, do not rety');
+            console.log('operator changed, do not retry');
             return false;
         }
 
@@ -126,7 +126,7 @@ export class StreamingCommunicationService {
 
     private close(streamContainer: StreamContainer): void {
         if (this.isStreamOpen(streamContainer)) {
-            this.streams[streamContainer.id].stream.close();
+            this.streams[streamContainer.id].stream?.close();
             delete this.streams[streamContainer.id];
         }
     }

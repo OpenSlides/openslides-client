@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { environment } from 'environments/environment';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { AuthToken, AuthTokenService } from './auth-token.service';
 import { HttpService } from './http.service';
@@ -29,6 +29,14 @@ export class AuthService {
      */
     public redirectUrl: string;
 
+    /**
+     * An observable to wait for the first time `who-am-i` is called.
+     * Necessary to wait until an accesstoken is received or not.
+     */
+    public get firstTimeWhoAmI(): Observable<boolean> {
+        return this.firstTimeWhoAmISubject.asObservable();
+    }
+
     public get authTokenObservable(): Observable<AuthToken | null> {
         return this.authTokenService.accessTokenObservable;
     }
@@ -36,6 +44,8 @@ export class AuthService {
     public get authToken(): AuthToken | null {
         return this.authTokenService.accessToken;
     }
+
+    private firstTimeWhoAmISubject = new BehaviorSubject<boolean>(false);
 
     public constructor(
         private http: HttpService,
@@ -67,6 +77,7 @@ export class AuthService {
     }
 
     public async logout(): Promise<void> {
+        this.lifecycleService.shutdown();
         const response = await this.http.post<LoginResponse>(
             `${environment.authUrlPrefix}${environment.authSecurePrefix}/logout/`
         );
@@ -74,7 +85,7 @@ export class AuthService {
             this.authTokenService.setRawAccessToken(null);
         }
         this.router.navigate(['/']);
-        this.lifecycleService.reboot();
+        this.lifecycleService.bootup();
     }
 
     public isAuthenticated(): boolean {
@@ -82,16 +93,23 @@ export class AuthService {
     }
 
     /**
-     * Calls `/apps/users/whoami` to find out the real operator.
+     * Calls `/system/auth/who-am-i` to find out the real operator.
      *
      * @returns true, if the request was successful (=online)
      */
     public async doWhoAmIRequest(): Promise<boolean> {
         try {
             await this.http.post<LoginResponse>(`${environment.authUrlPrefix}/who-am-i/`);
+            this.whoAmIRequestFinished();
             return true;
         } catch (e) {
+            this.whoAmIRequestFinished();
             return false;
         }
+    }
+
+    private whoAmIRequestFinished(): void {
+        this.firstTimeWhoAmISubject.next(true);
+        this.firstTimeWhoAmISubject.complete();
     }
 }

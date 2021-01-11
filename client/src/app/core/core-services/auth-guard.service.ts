@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, UrlTree } from '@angular/router';
+
+import { Observable } from 'rxjs';
 
 import { ActiveMeetingService } from './active-meeting.service';
 import { AuthService } from './auth.service';
 import { FallbackRoutesService } from './fallback-routes.service';
-import { OpenSlidesService } from './openslides.service';
 import { OperatorService } from './operator.service';
 import { Permission } from './permission';
 
@@ -39,15 +40,19 @@ export class AuthGuard implements CanActivate, CanActivateChild {
      *
      * @param route the route the user wants to navigate to
      */
-    public canActivate(route: ActivatedRouteSnapshot): boolean {
+    public canActivate(
+        route: ActivatedRouteSnapshot
+    ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         const basePerm: Permission | Permission[] = route.data.basePerm;
 
-        if ((this.operator.isAnonymous && this.activeMeeting.guestsEnabled) || this.operator.isAuthenticated) {
-            return this.hasPerms(basePerm);
-        } else {
-            this.router.navigate(['login']);
-            return false;
-        }
+        return this.authService.firstTimeWhoAmI.toPromise().then(() => {
+            if ((this.operator.isAnonymous && this.activeMeeting.guestsEnabled) || this.operator.isAuthenticated) {
+                return this.hasPerms(basePerm);
+            } else {
+                this.router.navigate(['login']);
+                return false;
+            }
+        });
     }
 
     /**
