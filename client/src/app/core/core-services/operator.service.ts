@@ -3,7 +3,7 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 
-import { ActiveMeetingIdService, NoActiveMeeting } from './active-meeting-id.service';
+import { NoActiveMeeting } from './active-meeting-id.service';
 import { ActiveMeetingService } from './active-meeting.service';
 import { Group } from 'app/shared/models/users/group';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
@@ -16,6 +16,8 @@ import { Id } from '../definitions/key-types';
 import { SimplifiedModelRequest, SpecificStructuredField } from './model-request-builder.service';
 import { Permission } from './permission';
 import { UserRepositoryService } from '../repositories/users/user-repository.service';
+
+const UNKOWN_USER_ID = -1; // this is an invalid id **and** not equal to 0, null, undefined.
 
 /**
  * The operator represents the user who is using OpenSlides.
@@ -50,7 +52,6 @@ export class OperatorService {
 
     private permissions: Permission[] | null = null;
     private groupIds: Id[] | null = null;
-    private roleId: Id | null = null;
 
     public get isSuperAdmin(): boolean {
         if (this.defaultGroupId) {
@@ -107,6 +108,7 @@ export class OperatorService {
 
     private _lastActiveMeetingId;
     private _lastDefaultGroupId;
+    private _lastUserId = UNKOWN_USER_ID;
 
     public constructor(
         private authService: AuthService,
@@ -118,8 +120,12 @@ export class OperatorService {
     ) {
         this._loaded = this.operatorUpdatedEvent.pipe(take(1)).toPromise();
 
-        this.authService.authTokenObservable.subscribe(() => {
-            this.refreshOperatorDataSubscription();
+        this.authService.authTokenObservable.subscribe(token => {
+            const id = token ? token.userId : null;
+            if (id !== this._lastUserId) {
+                this._lastUserId = id;
+                this.refreshOperatorDataSubscription();
+            }
         });
         this.activeMeetingService.meetingObservable.subscribe(meeting => {
             if (
@@ -143,7 +149,7 @@ export class OperatorService {
                     this.permissions = this.calcPermissions();
                 }
 
-                this.roleId = user.role_id;
+                // TODO: get users role
 
                 this.operatorShortNameSubject.next(this._shortName);
                 this.userSubject.next(user);
