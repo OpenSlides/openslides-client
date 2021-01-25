@@ -1,6 +1,6 @@
+import { AssignmentPhase } from 'app/shared/models/assignments/assignment';
 import { HasMeetingId } from 'app/shared/models/base/has-meeting-id';
 import { Identifiable } from 'app/shared/models/base/identifiable';
-import { AssignmentPhase } from '../repositories/assignments/assignment-phase';
 import { Id, UnsafeHtml } from '../definitions/key-types';
 
 export namespace AssignmentAction {

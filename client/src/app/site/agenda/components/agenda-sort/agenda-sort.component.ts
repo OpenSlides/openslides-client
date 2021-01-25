@@ -4,10 +4,9 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
-import { AgendaItemVisibility } from 'app/core/repositories/agenda/agenda-item-visibility';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
-import { ItemVisibilityChoices } from 'app/shared/models/agenda/agenda-item';
+import { AgendaItemVisibility, ItemVisibilityChoices } from 'app/shared/models/agenda/agenda-item';
 import { BaseSortTreeComponent, SortTreeFilterOption } from 'app/site/base/components/base-sort-tree.component';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewAgendaItem } from '../../models/view-agenda-item';

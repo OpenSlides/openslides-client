@@ -1,5 +1,4 @@
 import { Id } from 'app/core/definitions/key-types';
-import { AssignmentPhase } from 'app/core/repositories/assignments/assignment-phase';
 import { BaseModel } from '../base/base-model';
 import { HasAgendaItemId } from '../base/has-agenda-item-id';
 import { HasAttachmentIds } from '../base/has-attachment-ids';
@@ -7,6 +6,12 @@ import { HasListOfSpeakersId } from '../base/has-list-of-speakers-id';
 import { HasMeetingId } from '../base/has-meeting-id';
 import { HasProjectableIds } from '../base/has-projectable-ids';
 import { HasTagIds } from '../base/has-tag-ids';
+
+export enum AssignmentPhase {
+    Search = 'search',
+    Voting = 'voting',
+    Finished = 'finished'
+}
 
 /**
  * Representation of an assignment.

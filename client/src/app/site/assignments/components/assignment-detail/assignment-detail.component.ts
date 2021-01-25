@@ -10,7 +10,6 @@ import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { AssignmentCandidateRepositoryService } from 'app/core/repositories/assignments/assignment-candidate-repository.service';
-import { AssignmentPhase } from 'app/core/repositories/assignments/assignment-phase';
 import { AssignmentRepositoryService } from 'app/core/repositories/assignments/assignment-repository.service';
 import { MediafileRepositoryService } from 'app/core/repositories/mediafiles/mediafile-repository.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
@@ -18,7 +17,7 @@ import { AllUsersInMeetingRequest, UserRepositoryService } from 'app/core/reposi
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
-import { Assignment } from 'app/shared/models/assignments/assignment';
+import { Assignment, AssignmentPhase } from 'app/shared/models/assignments/assignment';
 import { ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';

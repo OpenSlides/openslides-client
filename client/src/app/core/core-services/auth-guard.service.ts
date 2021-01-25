@@ -40,19 +40,15 @@ export class AuthGuard implements CanActivate, CanActivateChild {
      *
      * @param route the route the user wants to navigate to
      */
-    public canActivate(
-        route: ActivatedRouteSnapshot
-    ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    public async canActivate(route: ActivatedRouteSnapshot): Promise<boolean | UrlTree> {
         const basePerm: Permission | Permission[] = route.data.basePerm;
-
-        return this.authService.firstTimeWhoAmI.toPromise().then(() => {
-            if ((this.operator.isAnonymous && this.activeMeeting.guestsEnabled) || this.operator.isAuthenticated) {
-                return this.hasPerms(basePerm);
-            } else {
-                this.router.navigate(['login']);
-                return false;
-            }
-        });
+        await this.operator.loaded;
+        if ((this.operator.isAnonymous && this.activeMeeting.guestsEnabled) || this.operator.isAuthenticated) {
+            return this.hasPerms(basePerm);
+        } else {
+            this.router.navigate(['login']);
+            return false;
+        }
     }
 
     /**
