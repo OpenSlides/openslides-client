@@ -1,9 +1,14 @@
 import { Fqid, Id } from 'app/core/definitions/key-types';
-import { AgendaItemVisibility } from 'app/core/repositories/agenda/agenda-item-visibility';
 import { BaseModel } from '../base/base-model';
 import { HasMeetingId } from '../base/has-meeting-id';
 import { HasProjectableIds } from '../base/has-projectable-ids';
 import { HasTagIds } from '../base/has-tag-ids';
+
+export enum AgendaItemVisibility {
+    common = 'common',
+    internal = 'internal',
+    hidden = 'hidden'
+}
 
 /**
  * Determine visibility states for agenda items

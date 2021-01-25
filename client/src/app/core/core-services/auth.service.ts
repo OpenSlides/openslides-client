@@ -35,14 +35,6 @@ export class AuthService {
      */
     public redirectUrl: string;
 
-    /**
-     * An observable to wait for the first time `who-am-i` is called.
-     * Necessary to wait until an accesstoken is received or not.
-     */
-    public get firstTimeWhoAmI(): Observable<boolean> {
-        return this.firstTimeWhoAmISubject.asObservable();
-    }
-
     // This is a wrapper around authTokenService.accessTokenObservable
     // We need to control the point, when specific token changes should be propagated
     private authTokenSubject = new BehaviorSubject<AuthToken | null>(null);
@@ -55,8 +47,6 @@ export class AuthService {
     public get authToken(): AuthToken | null {
         return this.authTokenSubject.getValue();
     }
-
-    private firstTimeWhoAmISubject = new BehaviorSubject<boolean>(false);
 
     public constructor(
         private http: HttpService,
@@ -127,17 +117,10 @@ export class AuthService {
     public async doWhoAmIRequest(): Promise<boolean> {
         try {
             await this.http.post<LoginResponse>(`${environment.authUrlPrefix}/who-am-i/`);
-            this.whoAmIRequestFinished();
             return true;
         } catch (e) {
-            this.whoAmIRequestFinished();
             return false;
         }
-    }
-
-    private whoAmIRequestFinished(): void {
-        this.firstTimeWhoAmISubject.next(true);
-        this.firstTimeWhoAmISubject.complete();
     }
 
     private resumeTokenSubscription(): void {

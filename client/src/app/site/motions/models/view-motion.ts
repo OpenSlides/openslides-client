@@ -1,10 +1,10 @@
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 import { Id } from 'app/core/definitions/key-types';
-import { AgendaItemVisibility } from 'app/core/repositories/agenda/agenda-item-visibility';
 import { DiffLinesInParagraph } from 'app/core/ui-services/diff.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { SearchProperty, SearchRepresentation } from 'app/core/ui-services/search.service';
+import { AgendaItemVisibility } from 'app/shared/models/agenda/agenda-item';
 import { HasReferencedMotionInRecommendationExtensionIds, Motion } from 'app/shared/models/motions/motion';
 import { HasAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { HasListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';

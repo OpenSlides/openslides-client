@@ -1,4 +1,4 @@
-import { AgendaItemVisibility } from '../repositories/agenda/agenda-item-visibility';
+import { AgendaItemVisibility } from 'app/shared/models/agenda/agenda-item';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Id, UnsafeHtml } from '../definitions/key-types';
 
