@@ -36,7 +36,7 @@ export class MotionCategoryRepositoryService extends BaseRepositoryWithActiveMee
         const payload: MotionCategoryAction.CreatePayload = {
             meeting_id: this.activeMeetingIdService.meetingId,
             name: partialCategory.name,
-            prefix: partialCategory.prefix,
+            prefix: !!partialCategory.prefix ? partialCategory.prefix : null, // "" -> null
             parent_id: partialCategory.parent_id
         };
         return this.sendActionToBackend(MotionCategoryAction.CREATE, payload);
@@ -46,7 +46,7 @@ export class MotionCategoryRepositoryService extends BaseRepositoryWithActiveMee
         const payload: MotionCategoryAction.UpdatePayload = {
             id: viewModel.id,
             name: update.name,
-            prefix: update.prefix
+            prefix: !!update.prefix ? update.prefix : null // "" -> null
         };
         return this.sendActionToBackend(MotionCategoryAction.UPDATE, payload);
     }
