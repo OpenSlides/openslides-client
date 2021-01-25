@@ -1,5 +1,5 @@
+import { AgendaItemVisibility } from '../agenda/agenda-item';
 import { Id } from 'app/core/definitions/key-types';
-import { AgendaItemVisibility } from 'app/core/repositories/agenda/agenda-item-visibility';
 import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.constants';
 import { AssignmentPollMethod, AssignmentPollPercentBase } from '../assignments/assignment-poll';
 import { BaseModel } from '../base/base-model';

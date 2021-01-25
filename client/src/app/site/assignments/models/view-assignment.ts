@@ -1,6 +1,5 @@
-import { AssignmentPhase } from 'app/core/repositories/assignments/assignment-phase';
 import { SearchRepresentation } from 'app/core/ui-services/search.service';
-import { Assignment } from 'app/shared/models/assignments/assignment';
+import { Assignment, AssignmentPhase } from 'app/shared/models/assignments/assignment';
 import { HasAgendaItem, ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { HasListOfSpeakers, ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';

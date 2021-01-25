@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { HtmlToPdfService } from 'app/core/pdf-services/html-to-pdf.service';
-import { AssignmentPhase } from 'app/core/repositories/assignments/assignment-phase';
+import { AssignmentPhase } from 'app/shared/models/assignments/assignment';
 import { AssignmentPollMethod } from 'app/shared/models/assignments/assignment-poll';
 import { ParsePollNumberPipe } from 'app/shared/pipes/parse-poll-number.pipe';
 import { PollKeyVerbosePipe } from 'app/shared/pipes/poll-key-verbose.pipe';

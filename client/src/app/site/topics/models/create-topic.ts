@@ -1,4 +1,4 @@
-import { AgendaItemVisibility } from 'app/core/repositories/agenda/agenda-item-visibility';
+import { AgendaItemVisibility } from 'app/shared/models/agenda/agenda-item';
 import { Topic } from 'app/shared/models/topics/topic';
 
 /**

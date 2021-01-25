@@ -1,4 +1,4 @@
-import { AgendaItemVisibility } from '../repositories/agenda/agenda-item-visibility';
+import { AgendaItemVisibility } from 'app/shared/models/agenda/agenda-item';
 import { HasMeetingId } from 'app/shared/models/base/has-meeting-id';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { BaseSortPayload } from './common/base-sort-payload';

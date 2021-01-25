@@ -1,4 +1,4 @@
-import { AgendaItemVisibility } from 'app/core/repositories/agenda/agenda-item-visibility';
+import { AgendaItemVisibility } from 'app/shared/models/agenda/agenda-item';
 
 export interface AgendaItemCreationPayload {
     // Non-model fields for customizing the agenda item creation, optional
