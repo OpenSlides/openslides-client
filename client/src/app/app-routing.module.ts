@@ -28,8 +28,14 @@ const routes: Route[] = [
     {
         path: 'projector',
         loadChildren: () =>
-            import('./fullscreen-projector/fullscreen-projector.module').then(m => m.FullscreenProjectorModule),
+            import('./fullscreen/fullscreen-projector/fullscreen-projector.module').then(
+                m => m.FullscreenProjectorModule
+            ),
         data: { noInterruption: true }
+    },
+    {
+        path: 'download',
+        loadChildren: () => import('./fullscreen/download/download.module').then(m => m.DownloadModule)
     },
     { path: '', loadChildren: () => import('./site/site.module').then(m => m.SiteModule) },
     { path: '**', redirectTo: '' }

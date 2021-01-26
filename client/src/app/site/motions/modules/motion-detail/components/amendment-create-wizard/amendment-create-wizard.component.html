@@ -43,14 +43,14 @@
                 >
                     <mat-checkbox
                         *ngIf="multipleParagraphsAllowed"
-                        class="paragraph-select"
+                        class="flex-center paragraph-select"
                         [checked]="isParagraphSelected(paragraph)"
                         (click)="checkboxClicked($event)"
                     >
                     </mat-checkbox>
                     <mat-radio-button
                         *ngIf="!multipleParagraphsAllowed"
-                        class="paragraph-select"
+                        class="flex-center paragraph-select"
                         [checked]="isParagraphSelected(paragraph)"
                     >
                     </mat-radio-button>

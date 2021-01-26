@@ -14,6 +14,10 @@ export interface QueryParams {
  * @returns the formatted query params as string
  */
 export function formatQueryParams(queryParams: QueryParams = {}): string {
+    if (!queryParams) {
+        // handle null
+        return '';
+    }
     let params = '';
     const keys: string[] = Object.keys(queryParams);
     if (keys.length > 0) {

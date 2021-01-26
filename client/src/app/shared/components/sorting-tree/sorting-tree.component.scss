@@ -22,11 +22,8 @@
 
     // Overwrite the handler
     .cdk-drag-handle {
-        display: flex;
         cursor: move;
         width: 50px;
-        align-items: center;
-        justify-content: center;
     }
 
     // Overwrite the preview

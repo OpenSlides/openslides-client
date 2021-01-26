@@ -3,10 +3,6 @@
 }
 
 .overlay-component {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
     .overlay-content {
         z-index: 900;
         position: absolute;
