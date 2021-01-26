@@ -7,13 +7,14 @@ import { Subscription } from 'rxjs';
 
 import { Permission } from 'app/core/core-services/permission';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 
 /**
  * Provides functionalities that will be used by most components
  * currently able to set the title with the suffix ' - OpenSlides'
  *
  * A BaseComponent is an OpenSlides Component.
- * Components in the 'Side'- or 'projector' Folder are BaseComponents
+ * Components in the 'Site'- or 'projector' Folder are BaseComponents
  */
 @Directive()
 export abstract class BaseComponent implements OnDestroy {
@@ -94,6 +95,10 @@ export abstract class BaseComponent implements OnDestroy {
         return this.componentServiceCollector.matSnackBar;
     }
 
+    protected get meetingSettingService(): MeetingSettingsService {
+        return this.componentServiceCollector.meetingSettingService;
+    }
+
     public constructor(protected componentServiceCollector: ComponentServiceCollector) {
         this.tinyMceSettings.language_url = '/assets/tinymce/langs/' + this.translate.currentLang + '.js';
         this.tinyMceSettings.language = this.translate.currentLang;
@@ -136,6 +141,7 @@ export abstract class BaseComponent implements OnDestroy {
      * @param message The message to show or an "real" error, which will be passed to the console.
      */
     protected raiseError = (message: string | Error): void => {
+        console.log('raiseError', message);
         let errorNotification: string;
         if (message instanceof Error) {
             if (message.message) {

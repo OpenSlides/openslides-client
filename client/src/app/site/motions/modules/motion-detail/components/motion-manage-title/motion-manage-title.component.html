@@ -1,0 +1,45 @@
+<div class="title" *ngIf="motion">
+    <div class="title-line">
+        <h1 class="motion-title">
+            <span *ngIf="titleCanBeChanged()">
+                <span
+                    class="title-change-indicator"
+                    *ngIf="getTitleChangingObject()"
+                    (click)="gotoChangeRecommendation(getTitleChangingObject())"
+                ></span>
+                <span
+                    class="change-title"
+                    *osPerms="'motions.can_manage'; and: !getTitleChangingObject()"
+                    (click)="createTitleChangeRecommendation()"
+                ></span>
+            </span>
+
+            {{ getTitleWithChanges() }}
+        </h1>
+        <button
+            class="primary-accent-by-theme"
+            mat-icon-button
+            (click)="toggleFavorite()"
+            matTooltip="{{ 'Mark as personal favorite' | translate }}"
+        >
+            <mat-icon>{{ isFavorite() ? 'star' : 'star_border' }}</mat-icon>
+        </button>
+    </div>
+
+    <!-- Sequential number -->
+    <span class="main-nav-color title-font">
+        <span *ngIf="showSequential">
+            <span>{{ 'Sequential number' | translate }}</span
+            >&nbsp;{{ motion.sequential_number }}
+        </span>
+        <span *ngIf="showSequential && motion.lead_motion">&#xb7;&nbsp;</span>
+        <span *ngIf="motion.lead_motion">
+            <span>
+                <span>{{ 'Amendment to' | translate }}</span
+                >&nbsp;<a [routerLink]="motion.lead_motion.getDetailStateURL()" [state]="{ back: 'true' }">
+                    {{ motion.lead_motion.number || motion.lead_motion.title }}
+                </a>
+            </span>
+        </span>
+    </span>
+</div>

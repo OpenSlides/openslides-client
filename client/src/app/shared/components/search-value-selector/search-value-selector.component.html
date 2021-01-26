@@ -30,12 +30,6 @@
             <ng-content select="[notFoundDescription]"></ng-content>
         </button>
     </ng-container>
-    <ng-container *ngIf="!multiple && includeNone">
-        <mat-option [value]="null">
-            {{ noneTitle | translate }}
-        </mat-option>
-        <mat-divider></mat-divider>
-    </ng-container>
     <cdk-virtual-scroll-viewport class="vscroll-viewport" minBufferPx="200" maxBufferPx="300" [itemSize]="50">
         <mat-option *cdkVirtualFor="let selectedItem of getFilteredItems()" [value]="selectedItem.id">
             {{ selectedItem.getTitle() | translate }}

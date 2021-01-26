@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { MotionChangeRecommendationRepositoryService } from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
+import { MotionLineNumberingService } from 'app/core/repositories/motions/motion-line-numbering.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import {
     CsvColumnDefinitionMap,
@@ -32,6 +33,7 @@ export class MotionCsvExportService {
         private linenumberingService: LinenumberingService,
         private changeRecoRepo: MotionChangeRecommendationRepositoryService,
         private motionRepo: MotionRepositoryService,
+        private motionLineNumbering: MotionLineNumberingService,
         private commentRepo: MotionCommentSectionRepositoryService
     ) {}
 
@@ -57,7 +59,7 @@ export class MotionCsvExportService {
                 const changeRecos = this.changeRecoRepo
                     .getChangeRecoOfMotion(amendment.id)
                     .filter(reco => reco.showInFinalView());
-                const changedParagraphs = this.motionRepo.getAmendmentAmendedParagraphs(
+                const changedParagraphs = this.motionLineNumbering.getAmendmentAmendedParagraphs(
                     amendment,
                     lineLength,
                     changeRecos
@@ -72,7 +74,7 @@ export class MotionCsvExportService {
         // otherwise, formatMotion will make unexpected results by messing up the
         // order of changes applied to the motion
         changes.sort((a, b) => a.getLineFrom() - b.getLineFrom());
-        const text = this.motionRepo.formatMotion(motion.id, crMode, changes, lineLength);
+        const text = this.motionLineNumbering.formatMotion(motion, crMode, changes, lineLength);
 
         return this.linenumberingService.stripLineNumbers(text);
     }

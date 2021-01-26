@@ -506,22 +506,21 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
         });
 
         const result: InfoDialog = await dialogRef.afterClosed().toPromise();
-        throw new Error('TODO!');
-        // if (result) {
-        //     delete result.title; // Do not update the title!
+        if (result) {
+            delete result.title; // Do not update the title!
 
-        //     try {
-        //         await this.motionRepo.update(result, motion);
-        //         if (result.state_id !== motion.state_id) {
-        //             await this.motionRepo.setState(motion, result.state_id);
-        //         }
-        //         if (result.recommendation_id !== motion.recommendation_id) {
-        //             await this.motionRepo.setRecommendation(motion, result.recommendation_id);
-        //         }
-        //     } catch (e) {
-        //         this.raiseError(e);
-        //     }
-        // }
+            try {
+                await this.motionRepo.update(result, motion);
+                if (result.state_id !== motion.state_id) {
+                    await this.motionRepo.setState(motion, result.state_id);
+                }
+                if (result.recommendation_id !== motion.recommendation_id) {
+                    await this.motionRepo.setRecommendation(motion, result.recommendation_id);
+                }
+            } catch (e) {
+                this.raiseError(e);
+            }
+        }
 
         this.selectedMotion = null;
     }

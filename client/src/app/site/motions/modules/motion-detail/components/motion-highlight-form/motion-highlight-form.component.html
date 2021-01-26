@@ -1,0 +1,183 @@
+<div class="motion-text-toolbar-wrapper" *ngIf="!isStatuteAmendment">
+    <div class="motion-text-controls">
+        <mat-form-field class="motion-goto-line" *ngIf="highlightedLineOpened">
+            <input
+                type="number"
+                min="1"
+                matInput
+                placeholder="{{ 'Go to line' | translate }}"
+                osAutofocus
+                osOnlyNumber
+                [(ngModel)]="highlightedLineTyping"
+            />
+            <mat-error *ngIf="highlightedLineTyping > 10">{{ 'Invalid line number' | translate }}</mat-error>
+            <button
+                type="submit"
+                mat-button
+                matSuffix
+                mat-icon-button
+                aria-label="Go to line"
+                *ngIf="highlightedLineTyping"
+                (click)="gotoHighlightedLine(highlightedLineTyping); highlightedLineTyping = ''"
+            >
+                <mat-icon>redo</mat-icon>
+            </button>
+        </mat-form-field>
+        <button mat-icon-button (click)="highlightedLineOpened = false" *ngIf="highlightedLineOpened">
+            <mat-icon>cancel</mat-icon>
+        </button>
+
+        <button type="button" mat-button [matMenuTriggerFor]="lineNumberingMenu">
+            <mat-icon>format_list_numbered</mat-icon>
+            &nbsp;<span>{{ 'Line numbering' | translate }}</span>
+            <span *ngIf="lnMode === LineNumberingMode.None">
+                &nbsp;(<span>{{ 'none' | translate }}</span
+                >)
+            </span>
+        </button>
+        <button
+            type="button"
+            mat-button
+            [matMenuTriggerFor]="changeRecoMenu"
+            *ngIf="motion && (hasChangingObjects() || motion.modified_final_version)"
+        >
+            <mat-icon>rate_review</mat-icon>
+            &nbsp;<span>{{ verboseChangeRecoMode[crMode] | translate }}</span>
+        </button>
+    </div>
+
+    <!-- Final edit buttons -->
+    <div *osPerms="'motions.can_manage'">
+        <!-- create final version -->
+        <button
+            type="button"
+            mat-icon-button
+            matTooltip="{{ 'Create final print template' | translate }}"
+            *ngIf="showCreateFinalVersionButton"
+            (click)="createModifiedFinalVersion()"
+        >
+            <mat-icon>file_copy</mat-icon>
+        </button>
+
+        <!-- edit final version -->
+        <button
+            type="button"
+            mat-icon-button
+            *ngIf="isRecoMode(ChangeRecoMode.ModifiedFinal) && !isFinalEdit"
+            matTooltip="{{ 'Edit final print template' | translate }}"
+            (click)="editModifiedFinal()"
+        >
+            <mat-icon>edit</mat-icon>
+        </button>
+        <!-- save final version -->
+        <button
+            type="button"
+            *ngIf="isRecoMode(ChangeRecoMode.ModifiedFinal) && isFinalEdit"
+            mat-icon-button
+            [disabled]="!finalVersionEdited"
+            matTooltip="{{ 'Save final print template' | translate }}"
+            (click)="onSubmitFinalVersion()"
+        >
+            <mat-icon>save</mat-icon>
+        </button>
+        <!-- cancel final version edit -->
+        <button
+            type="button"
+            *ngIf="isRecoMode(ChangeRecoMode.ModifiedFinal) && isFinalEdit"
+            mat-icon-button
+            matTooltip="{{ 'Cancel editing without saving' | translate }}"
+            (click)="cancelFinalVersionEdit()"
+        >
+            <mat-icon>close</mat-icon>
+        </button>
+        <!-- delete final version edit -->
+        <button
+            type="button"
+            class="red-warning-text"
+            *ngIf="isRecoMode(ChangeRecoMode.ModifiedFinal) && !isFinalEdit"
+            mat-icon-button
+            matTooltip="{{ 'Delete final print template' | translate }}"
+            (click)="deleteModifiedFinalVersion()"
+        >
+            <mat-icon>delete</mat-icon>
+        </button>
+    </div>
+</div>
+
+<!-- Line number Menu -->
+<mat-menu #lineNumberingMenu="matMenu">
+    <div *ngIf="motion">
+        <button
+            mat-menu-item
+            (click)="setLineNumberingMode(LineNumberingMode.None)"
+            [ngClass]="{ selected: lnMode === LineNumberingMode.None }"
+        >
+            {{ 'none' | translate }}
+        </button>
+        <button
+            mat-menu-item
+            (click)="setLineNumberingMode(LineNumberingMode.Inside)"
+            [ngClass]="{ selected: lnMode === LineNumberingMode.Inside }"
+        >
+            {{ 'inline' | translate }}
+        </button>
+        <button
+            mat-menu-item
+            (click)="setLineNumberingMode(LineNumberingMode.Outside)"
+            [ngClass]="{ selected: lnMode === LineNumberingMode.Outside }"
+        >
+            {{ 'outside' | translate }}
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item *ngIf="!highlightedLineOpened" (click)="highlightedLineOpened = true">
+            <mat-icon>redo</mat-icon>
+            <span>{{ 'Go to line' | translate }}</span>
+        </button>
+    </div>
+</mat-menu>
+
+<!-- Diff View Menu
+     For motions, all items are available if there are changing objects. The final print template only after is has been created.
+     For paragraph-based amendments, only the original and the diff version is available.
+-->
+<mat-menu #changeRecoMenu="matMenu">
+    <button
+        mat-menu-item
+        (click)="setChangeRecoMode(ChangeRecoMode.Original)"
+        [ngClass]="{ selected: crMode === ChangeRecoMode.Original }"
+    >
+        {{ 'Original version' | translate }}
+    </button>
+    <button
+        mat-menu-item
+        (click)="setChangeRecoMode(ChangeRecoMode.Changed)"
+        [ngClass]="{ selected: crMode === ChangeRecoMode.Changed }"
+        *ngIf="hasChangingObjects()"
+    >
+        {{ 'Changed version' | translate }}
+    </button>
+    <button
+        mat-menu-item
+        (click)="setChangeRecoMode(ChangeRecoMode.Diff)"
+        [ngClass]="{ selected: crMode === ChangeRecoMode.Diff }"
+        *ngIf="hasChangingObjects()"
+    >
+        {{ 'Diff version' | translate }}
+    </button>
+    <button
+        mat-menu-item
+        (click)="setChangeRecoMode(ChangeRecoMode.Final)"
+        [ngClass]="{ selected: crMode === ChangeRecoMode.Final }"
+        *ngIf="!isParagraphBasedAmendment && hasChangingObjects()"
+    >
+        {{ 'Final version' | translate }}
+    </button>
+    <button
+        mat-menu-item
+        *ngIf="motion && motion.modified_final_version && !motion.isParagraphBasedAmendment()"
+        (click)="setChangeRecoMode(ChangeRecoMode.ModifiedFinal)"
+        [ngClass]="{ selected: crMode === ChangeRecoMode.ModifiedFinal }"
+    >
+        {{ 'Final print template' | translate }}
+    </button>
+</mat-menu>

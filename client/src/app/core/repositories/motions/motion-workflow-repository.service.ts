@@ -1,13 +1,19 @@
 import { Injectable } from '@angular/core';
 
 import { MotionWorkflowAction } from 'app/core/actions/motion-workflow-action';
-import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
+import {
+    DEFAULT_FIELDSET,
+    Fieldsets,
+    SimplifiedModelRequest
+} from 'app/core/core-services/model-request-builder.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { MotionWorkflow } from 'app/shared/models/motions/motion-workflow';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionState } from 'app/site/motions/models/view-motion-state';
 import { ViewMotionWorkflow } from 'app/site/motions/models/view-motion-workflow';
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
+import { ModelRequestRepository } from '../model-request-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 /**
@@ -23,10 +29,9 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class MotionWorkflowRepositoryService extends BaseRepositoryWithActiveMeeting<
-    ViewMotionWorkflow,
-    MotionWorkflow
-> {
+export class MotionWorkflowRepositoryService
+    extends BaseRepositoryWithActiveMeeting<ViewMotionWorkflow, MotionWorkflow>
+    implements ModelRequestRepository {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, MotionWorkflow);
     }
@@ -48,7 +53,7 @@ export class MotionWorkflowRepositoryService extends BaseRepositoryWithActiveMee
     public getWorkflowStatesForMotions(motions: ViewMotion[]): ViewMotionState[] {
         let states: ViewMotionState[] = [];
         const workflowIds = motions
-            .map(motion => motion.workflow_id)
+            .map(motion => motion.state?.workflow_id)
             .filter((value, index, self) => self.indexOf(value) === index);
         workflowIds.forEach(id => {
             const workflow = this.getViewModel(id);
@@ -86,5 +91,17 @@ export class MotionWorkflowRepositoryService extends BaseRepositoryWithActiveMee
 
     public delete(viewModel: ViewMotionWorkflow): Promise<void> {
         return this.sendActionToBackend(MotionWorkflowAction.DELETE, { id: viewModel.id });
+    }
+
+    public getRequestToGetAllModels(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [this.activeMeetingIdService.meetingId],
+            follow: [
+                {
+                    idField: 'motion_workflow_ids'
+                }
+            ]
+        };
     }
 }

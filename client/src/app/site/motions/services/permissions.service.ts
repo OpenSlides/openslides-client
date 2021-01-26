@@ -70,7 +70,7 @@ export class PermissionsService {
                     motion.state?.allow_support &&
                     (!motion.submitters ||
                         !motion.submitters.map(submitter => submitter.user_id).includes(this.operator.operatorId)) &&
-                    (!motion.supporters || motion.supporter_ids.includes(this.operator.operatorId))
+                    (!motion.supporters || motion.supporter_ids?.includes(this.operator.operatorId))
                 );
             }
             case 'unsupport': {

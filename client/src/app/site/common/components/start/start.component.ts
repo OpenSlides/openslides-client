@@ -149,6 +149,21 @@ export class StartComponent extends BaseComponent implements OnInit {
         this.apiAuthRequestWithTokenCookie();
     }
 
+    public async doAuthenticate(): Promise<void> {
+        // try {
+        //     await this.http.post(`https://auth:9004/internal/auth/api/authenticate`);
+        // } catch (e) {
+        //     console.log('Error while authenticating', e);
+        // }
+        const payload = [
+            {
+                presenter: 'server_time'
+            }
+        ];
+        const servertimeResponse = await this.http.post<any[]>('/system/presenter/handle_request', payload);
+        console.log('servertimeResponse', servertimeResponse);
+    }
+
     /**
      * End of testing purposes
      */

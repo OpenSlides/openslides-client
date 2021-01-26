@@ -4,9 +4,8 @@
     prevUrl="../.."
     [nav]="false"
     [editMode]="editMotion"
-    [isSaveButtonEnabled]="contentForm.valid"
     (mainEvent)="createAmendment()"
-    (cancelEditEvent)="setEditMode(false)"
+    (cancelEditEvent)="leaveEditMotion()"
     (saveEvent)="saveMotion()"
 >
     <!-- Title -->
@@ -15,7 +14,7 @@
             <span>{{ 'Motion' | translate }}</span>
             <!-- Whitespace between "Motion" and number -->
             <span>&nbsp;</span> <span *ngIf="!editMotion">{{ motion.number }}</span>
-            <span *ngIf="editMotion">{{ contentForm.get('number').value }}</span>
+            <!-- <span *ngIf="editMotion">{{ contentForm.get('number').value }}</span> -->
         </h2>
         <h2 *ngIf="newMotion && !amendmentEdit">{{ 'New motion' | translate }}</h2>
         <h2 *ngIf="amendmentEdit">{{ 'New amendment' | translate }}</h2>
@@ -103,7 +102,7 @@
             </button>
             <mat-divider *ngIf="perms.isAllowed('update', motion) || perms.isAllowed('manage')"></mat-divider>
             <!-- Edit-->
-            <button mat-menu-item (click)="setEditMode(true)" *ngIf="perms.isAllowed('update', motion)">
+            <button mat-menu-item (click)="enterEditMotion()" *ngIf="perms.isAllowed('update', motion)">
                 <mat-icon>edit</mat-icon>
                 <span>{{ 'Edit' | translate }}</span>
             </button>
@@ -124,49 +123,7 @@
 <div class="content-container spacer-bottom-60" (touchstart)="swipe($event, 'start')" (touchend)="swipe($event, 'end')">
     <!-- Title -->
     <div class="title" *ngIf="motion && !editMotion">
-        <div class="title-line">
-            <h1 class="motion-title">
-                <span *ngIf="titleCanBeChanged()">
-                    <span
-                        class="title-change-indicator"
-                        *ngIf="getTitleChangingObject()"
-                        (click)="gotoChangeRecommendation(getTitleChangingObject())"
-                    ></span>
-                    <span
-                        class="change-title"
-                        *osPerms="permission.motionsCanManage; and: !getTitleChangingObject()"
-                        (click)="createTitleChangeRecommendation()"
-                    ></span>
-                </span>
-
-                {{ getTitleWithChanges() }}
-            </h1>
-            <button
-                class="primary-accent-by-theme"
-                mat-icon-button
-                (click)="toggleFavorite()"
-                matTooltip="{{ 'Mark as personal favorite' | translate }}"
-            >
-                <!--<mat-icon>{{ motion.star ? 'star' : 'star_border' }}</mat-icon>-->
-            </button>
-        </div>
-
-        <!-- Sequential number -->
-        <span class="main-nav-color title-font">
-            <span *ngIf="showSequential">
-                <span>{{ 'Sequential number' | translate }}</span
-                >&nbsp;{{ motion.sequential_number }}
-            </span>
-            <span *ngIf="showSequential && motion.lead_motion">&#xb7;&nbsp;</span>
-            <span *ngIf="motion.lead_motion">
-                <span>
-                    <span>{{ 'Amendment to' | translate }}</span
-                    >&nbsp;<a [routerLink]="motion.lead_motion.getDetailStateURL()" [state]="{ back: 'true' }">
-                        {{ motion.lead_motion.number || motion.lead_motion.title }}
-                    </a>
-                </span>
-            </span>
-        </span>
+        <os-motion-manage-title [motion]="motion" [crMode]="crMode"></os-motion-manage-title>
     </div>
 
     <ng-container *ngIf="vp.isMobile; then mobileView; else desktopView"></ng-container>
@@ -179,7 +136,12 @@
 
         <!-- Content -->
         <mat-card [ngClass]="editMotion ? 'os-form-card-mobile' : 'os-card'">
-            <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+            <os-motion-content
+                [motion]="motion"
+                [editMotion]="editMotion"
+                [newMotion]="newMotion"
+                (save)="saveMotion($event)"
+            ></os-motion-content>
         </mat-card>
 
         <!-- Comments -->
@@ -191,10 +153,12 @@
 </ng-template>
 
 <ng-template #desktopView>
-    <div class="desktop-view" *ngIf="motion">
+    <div class="desktop-view" *ngIf="motion || newMotion">
         <div class="desktop-left">
             <!-- Meta Info -->
-            <div><ng-container *ngTemplateOutlet="metaInfoTemplate"></ng-container></div>
+            <div *ngIf="!newMotion && !editMotion">
+                <ng-container *ngTemplateOutlet="metaInfoTemplate"></ng-container>
+            </div>
 
             <os-motion-comments *ngIf="!editMotion" [motion]="motion"></os-motion-comments>
             <os-personal-note *ngIf="!editMotion && !operator.isAnonymous" [motion]="motion"></os-personal-note>
@@ -202,7 +166,23 @@
         <div class="desktop-right">
             <!-- Content -->
             <mat-card [ngClass]="editMotion ? 'os-form-card' : 'os-card'">
-                <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+                <os-motion-highlight-form
+                    #highlightForm
+                    *ngIf="!newMotion && !editMotion"
+                    [motion]="motion"
+                    (changeChangeRecoMode)="crMode = $event"
+                    (changeLineNumberingMode)="lnMode = $event"
+                ></os-motion-highlight-form>
+                <os-motion-content
+                    #content
+                    [motion]="motion"
+                    [editMotion]="editMotion"
+                    [newMotion]="newMotion"
+                    [lnMode]="lnMode"
+                    [changeRecoMode]="crMode"
+                    (save)="saveMotion($event)"
+                    (changeForm)="temporaryMotion = $event"
+                ></os-motion-content>
             </mat-card>
         </div>
     </div>
@@ -210,761 +190,12 @@
 
 <ng-template #metaInfoTemplate>
     <div>
-        <!-- Submitters -->
-        <div *ngIf="motion.submitters || newMotion">
-            <div *ngIf="!editMotion"><os-manage-submitters [motion]="motion"></os-manage-submitters></div>
-        </div>
-
-        <!-- do Support -->
-        <div *ngIf="minSupporters && !editMotion">
-            <h4 *ngIf="perms.isAllowed('support', motion) || motion.hasSupporters()">{{ 'Supporters' | translate }}</h4>
-
-            <!-- support button -->
-            <button
-                type="button"
-                mat-stroked-button
-                color="accent"
-                (click)="support()"
-                *ngIf="perms.isAllowed('support', motion)"
-            >
-                <mat-icon>thumb_up</mat-icon>
-                {{ 'Support' | translate }}
-            </button>
-
-            <!-- unsupport button -->
-            <button
-                type="button"
-                *ngIf="perms.isAllowed('unsupport', motion)"
-                (click)="unsupport()"
-                mat-stroked-button
-                color="accent"
-            >
-                <mat-icon>thumb_down</mat-icon>
-                {{ 'Unsupport' | translate }}
-            </button>
-            <!-- show supporters (TODO: open in dialog) -->
-            <button type="button" *ngIf="motion.hasSupporters()" (click)="openSupportersDialog()" mat-button>
-                {{ motion.supporters.length }} {{ 'supporters' | translate }}
-            </button>
-            <p *ngIf="showSupporters" class="supporters">
-                <span *ngFor="let supporter of motion.supporters; let last = last">
-                    {{ supporter.full_name }}<span *ngIf="!last">, </span>
-                </span>
-            </p>
-        </div>
-
-        <!-- Set State -->
-        <div *ngIf="!editMotion">
-            <os-extension-field
-                title="{{ 'State' | translate }}"
-                [canBeEdited]="perms.isAllowed('change_state', motion)"
-                [hasExtension]="motion.state && motion.state.show_state_extension_field"
-                [chipValue]="stateLabel"
-                [inputValue]="newStateExtension"
-                [classes]="motion.stateCssColor"
-                extensionLabel="{{ 'Extension' | translate }}"
-                (success)="setStateExtension($event)"
-            >
-                <span class="trigger-menu" *ngIf="motion.state">
-                    <button *ngFor="let state of motion.state.next_states" mat-menu-item (click)="setState(state.id)">
-                        {{ state.name | translate }} <span *ngIf="state.show_state_extension_field">&nbsp;...</span>
-                    </button>
-                    <div>
-                        <mat-divider *ngIf="motion.state.next_states.length > 0"></mat-divider>
-                        <button
-                            *ngFor="let state of motion.state.previous_states"
-                            mat-menu-item
-                            (click)="setState(state.id)"
-                        >
-                            <mat-icon>arrow_back</mat-icon> {{ state.name | translate }}
-                            <span *ngIf="state.show_state_extension_field">&nbsp;...</span>
-                        </button>
-                        <button mat-menu-item (click)="resetState()">
-                            <mat-icon>replay</mat-icon> {{ 'Reset state' | translate }}
-                        </button>
-                    </div>
-                </span>
-            </os-extension-field>
-        </div>
-
-        <!-- Recommendation -->
-        <div
-            *ngIf="
-                (perms.isAllowed('change_metadata') || motion.recommendation) &&
-                recommender &&
-                getPossibleRecommendations().length &&
-                !editMotion
-            "
-        >
-            <os-extension-field
-                title="{{ recommender }}"
-                [inputValue]="recommendationStateExtension"
-                [canBeEdited]="perms.isAllowed('change_metadata', motion)"
-                [chipValue]="recommendationLabel"
-                [hasExtension]="motion.recommendation && motion.recommendation.show_recommendation_extension_field"
-                extensionLabel="{{ 'Extension' | translate }}"
-                [searchList]="motionObserver"
-                searchListLabel="{{ 'Motions' | translate }}"
-                listValuePrefix="motion:"
-                (success)="setRecommendationExtension($event)"
-            >
-                <span class="trigger-menu">
-                    <button
-                        *ngFor="let recommendation of getPossibleRecommendations()"
-                        mat-menu-item
-                        (click)="setRecommendation(recommendation.id)"
-                    >
-                        {{ recommendation.recommendation_label | translate }}
-                        <span *ngIf="recommendation.show_recommendation_extension_field">&nbsp;...</span>
-                    </button>
-                    <mat-divider></mat-divider>
-                    <button mat-menu-item (click)="resetRecommendation()">
-                        <mat-icon>replay</mat-icon> {{ 'Reset recommendation' | translate }}
-                    </button>
-                </span>
-            </os-extension-field>
-
-            <button
-                mat-stroked-button
-                *ngIf="canFollowRecommendation()"
-                (click)="onFollowRecButton()"
-                class="spacer-top-10"
-            >
-                <span>{{ 'Follow recommendation' | translate }}</span>
-            </button>
-        </div>
-
-        <!-- recommendation referencing motions -->
-        <div *ngIf="!editMotion && recommendationReferencingMotions.length > 0 && showReferringMotions">
-            <h4>{{ 'Referring motions' | translate }}</h4>
-            <span *ngFor="let motion of recommendationReferencingMotions; let last = last">
-                <a [routerLink]="motion.getDetailStateURL()" class="nowrap">{{ motion.numberOrTitle }}</a>
-                <span *ngIf="!last"> · </span>
-            </span>
-        </div>
-
-        <!-- Category -->
-        <!-- Disabled during "new motion" since changing has no effect -->
-        <div *ngIf="!editMotion && categoryObserver.value.length">
-            <h4 *ngIf="perms.isAllowed('change_metadata', motion) || motion.category">{{ 'Category' | translate }}</h4>
-            <mat-menu #categoryMenu="matMenu">
-                <button
-                    mat-menu-item
-                    *ngFor="let category of categoryObserver.value"
-                    (click)="setCategory(category.id)"
-                >
-                    <mat-icon *ngIf="motion.category_id === category.id">check</mat-icon>
-                    {{ category.prefixedNameWithParents }}
-                </button>
-            </mat-menu>
-            <mat-basic-chip
-                *ngIf="perms.isAllowed('change_metadata', motion)"
-                [matMenuTriggerFor]="categoryMenu"
-                class="grey multi-line-chip"
-                disableRipple
-            >
-                <div *ngIf="motion.category">
-                    <div *ngIf="motion.category.parent">
-                        {{ motion.category.parent }}
-                    </div>
-                    <span *ngIf="motion.category.parent">{{ 'Subcategory' | translate }}:</span>
-                    {{ motion.category }}
-                </div>
-
-                <span *ngIf="!motion.category">-</span>
-            </mat-basic-chip>
-            <mat-basic-chip
-                *ngIf="!perms.isAllowed('change_metadata', motion) && motion.category"
-                class="grey"
-                disableRipple
-            >
-                <div *ngIf="motion.category">
-                    <div *ngIf="motion.category.parent">
-                        {{ motion.category.parent }}
-                    </div>
-                    <span *ngIf="motion.category.parent">{{ 'Subcategory' | translate }}:</span>
-                    {{ motion.category }}
-                </div>
-            </mat-basic-chip>
-        </div>
-
-        <!-- Tags -->
-        <!-- Disabled during "new motion" since changing has no effect -->
-        <div *ngIf="!editMotion && tagObserver.value.length > 0">
-            <h4 *ngIf="perms.isAllowed('change_metadata', motion) || motion.hasTags()">{{ 'Tags' | translate }}</h4>
-
-            <!-- For privileged users -->
-            <div *ngIf="perms.isAllowed('change_metadata', motion)">
-                <!-- Selection menu -->
-                <mat-menu #tagMenu="matMenu">
-                    <button mat-menu-item *ngFor="let tag of tagObserver.value" (click)="setTag($event, tag.id)">
-                        <mat-icon *ngIf="motion.tags.includes(tag)">check</mat-icon>
-                        {{ tag }}
-                    </button>
-                </mat-menu>
-
-                <!-- Make the whole container a trigger to prevent unexpected menu behavior -->
-                <div [matMenuTriggerFor]="tagMenu">
-                    <!-- No selected tags -->
-                    <mat-basic-chip *ngIf="!motion.hasTags()" class="grey" disabled disableRipple>
-                        {{ '–' }}
-                    </mat-basic-chip>
-
-                    <!-- Display a chip list of tags -->
-                    <mat-chip-list class="mat-chip-list-stacked">
-                        <mat-basic-chip *ngFor="let tag of motion.tags" class="grey" disabled disableRipple>
-                            {{ tag }}
-                        </mat-basic-chip>
-                    </mat-chip-list>
-                </div>
-            </div>
-
-            <!-- For non privileged users -->
-            <div *ngIf="!perms.isAllowed('change_metadata', motion)">
-                <mat-chip-list class="mat-chip-list-stacked">
-                    <mat-basic-chip *ngFor="let tag of motion.tags" class="grey" disableRipple>
-                        {{ tag }}
-                    </mat-basic-chip>
-                </mat-chip-list>
-            </div>
-        </div>
-
-        <!-- Block -->
-        <div *ngIf="!editMotion && blockObserver.value.length > 0">
-            <h4 *ngIf="perms.isAllowed('change_metadata', motion) || motion.block">
-                {{ 'Motion block' | translate }}
-            </h4>
-            <mat-menu #blockMenu="matMenu">
-                <button mat-menu-item *ngFor="let block of blockObserver.value" (click)="setBlock(block.id)">
-                    <mat-icon *ngIf="motion.block_id === block.id">check</mat-icon>
-                    {{ block }}
-                </button>
-            </mat-menu>
-            <mat-basic-chip
-                *ngIf="perms.isAllowed('change_metadata', motion)"
-                [matMenuTriggerFor]="blockMenu"
-                class="grey"
-                disableRipple
-            >
-                {{ motion.block || '–' }}
-            </mat-basic-chip>
-            <mat-basic-chip
-                *ngIf="!perms.isAllowed('change_metadata', motion) && motion.block"
-                class="grey"
-                disableRipple
-            >
-                {{ motion.block }}
-            </mat-basic-chip>
-        </div>
-
-        <!-- Origin - display only -->
-        <div *ngIf="!editMotion && motion.origin">
-            <h4>{{ 'Origin' | translate }}</h4>
-            {{ motion.origin }}
-        </div>
-
-        <!-- Amendments -->
-        <div *ngIf="!editMotion && amendments && amendments.length > 0">
-            <h4>{{ 'Amendments' | translate }}</h4>
-            <a [routerLink]="['/motions/amendments', motion.id]" [state]="{ back: 'true' }">
-                {{ amendments.length }}
-                <span *ngIf="amendments.length === 1">{{ 'Amendment' | translate }}</span>
-                <span *ngIf="amendments.length > 1">{{ 'Amendments' | translate }}</span>
-            </a>
-
-            <br />
-            <mat-checkbox [(ngModel)]="showAllAmendments" *ngIf="isRecoMode(ChangeRecoMode.Diff)">
-                {{ 'Show all changes' | translate }}
-            </mat-checkbox>
-        </div>
-
-        <!-- motion polls -->
-        <div *ngIf="!editMotion" class="spacer-top-20 spacer-bottom-20">
-            <os-motion-poll *ngFor="let poll of motion.polls; trackBy: trackByIndex" [poll]="poll"></os-motion-poll>
-            <button
-                class="create-poll-button"
-                create-poll-button
-                mat-stroked-button
-                (click)="openDialog()"
-                *ngIf="perms.isAllowed('createpoll', motion)"
-            >
-                <mat-icon class="main-nav-color">add</mat-icon>
-                <span>{{ 'New vote' | translate }}</span>
-            </button>
-        </div>
-    </div>
-</ng-template>
-
-<ng-template #contentTemplate>
-    <form class="motion-content" [formGroup]="contentForm" (keydown)="onKeyDown($event)">
-        <!-- Toolbar with text controls and buttonf for managing the (modified) final version-->
-        <div class="motion-text-toolbar-wrapper" *ngIf="!editMotion && !motion.isStatuteAmendment()">
-            <!-- Line Number and Diff buttons -->
-            <div class="motion-text-controls">
-                <mat-form-field class="motion-goto-line" *ngIf="highlightedLineOpened">
-                    <input
-                        type="number"
-                        min="1"
-                        matInput
-                        placeholder="{{ 'Go to line' | translate }}"
-                        osAutofocus
-                        [(ngModel)]="highlightedLineTyping"
-                        [ngModelOptions]="{ standalone: true }"
-                        [errorStateMatcher]="highlightedLineMatcher"
-                    />
-                    <mat-error *ngIf="highlightedLineTyping > 10">{{ 'Invalid line number' | translate }}</mat-error>
-                    <button
-                        type="submit"
-                        mat-button
-                        matSuffix
-                        mat-icon-button
-                        aria-label="Go to line"
-                        *ngIf="highlightedLineTyping"
-                        (click)="gotoHighlightedLine(highlightedLineTyping); highlightedLineTyping = ''"
-                    >
-                        <mat-icon>redo</mat-icon>
-                    </button>
-                </mat-form-field>
-                <button mat-icon-button (click)="highlightedLineOpened = false" *ngIf="highlightedLineOpened">
-                    <mat-icon>cancel</mat-icon>
-                </button>
-
-                <button type="button" mat-button [matMenuTriggerFor]="lineNumberingMenu">
-                    <mat-icon>format_list_numbered</mat-icon>
-                    &nbsp;<span>{{ 'Line numbering' | translate }}</span>
-                    <span *ngIf="lnMode === LineNumberingMode.None">
-                        &nbsp;(<span>{{ 'none' | translate }}</span
-                        >)
-                    </span>
-                </button>
-                <button
-                    type="button"
-                    mat-button
-                    [matMenuTriggerFor]="changeRecoMenu"
-                    *ngIf="motion && (hasChangingObjects() || motion.modified_final_version)"
-                >
-                    <mat-icon>rate_review</mat-icon>
-                    &nbsp;<span>{{ verboseChangeRecoMode[crMode] | translate }}</span>
-                </button>
-            </div>
-
-            <!-- Final edit buttons -->
-            <div *osPerms="permission.motionsCanManage">
-                <!-- create final version -->
-                <button
-                    type="button"
-                    mat-icon-button
-                    matTooltip="{{ 'Create final print template' | translate }}"
-                    *ngIf="showCreateFinalVersionButton"
-                    (click)="createModifiedFinalVersion()"
-                >
-                    <mat-icon>file_copy</mat-icon>
-                </button>
-
-                <!-- edit final version -->
-                <button
-                    type="button"
-                    mat-icon-button
-                    *ngIf="isRecoMode(ChangeRecoMode.ModifiedFinal) && !isFinalEdit"
-                    matTooltip="{{ 'Edit final print template' | translate }}"
-                    (click)="editModifiedFinal()"
-                >
-                    <mat-icon>edit</mat-icon>
-                </button>
-                <!-- save final version -->
-                <button
-                    type="button"
-                    *ngIf="isRecoMode(ChangeRecoMode.ModifiedFinal) && isFinalEdit"
-                    mat-icon-button
-                    [disabled]="!finalVersionEdited"
-                    matTooltip="{{ 'Save final print template' | translate }}"
-                    (click)="onSubmitFinalVersion()"
-                >
-                    <mat-icon>save</mat-icon>
-                </button>
-                <!-- cancel final version edit -->
-                <button
-                    type="button"
-                    *ngIf="isRecoMode(ChangeRecoMode.ModifiedFinal) && isFinalEdit"
-                    mat-icon-button
-                    matTooltip="{{ 'Cancel editing without saving' | translate }}"
-                    (click)="cancelFinalVersionEdit()"
-                >
-                    <mat-icon>close</mat-icon>
-                </button>
-                <!-- delete final version edit -->
-                <button
-                    type="button"
-                    class="red-warning-text"
-                    *ngIf="isRecoMode(ChangeRecoMode.ModifiedFinal) && !isFinalEdit"
-                    mat-icon-button
-                    matTooltip="{{ 'Delete final print template' | translate }}"
-                    (click)="deleteModifiedFinalVersion()"
-                >
-                    <mat-icon>delete</mat-icon>
-                </button>
-            </div>
-        </div>
-
-        <!-- Selecting statute paragraphs for amendment -->
-        <div class="statute-amendment-selector" *ngIf="newMotion && statuteParagraphs.length > 0 && statutesEnabled">
-            <mat-checkbox formControlName="statute_amendment" (change)="onStatuteAmendmentChange($event)">
-                {{ 'Statute amendment' | translate }}
-            </mat-checkbox>
-
-            <mat-form-field *ngIf="contentForm.value.statute_amendment">
-                <mat-select
-                    [placeholder]="'Statute paragraph' | translate"
-                    formControlName="statute_paragraph_id"
-                    (valueChange)="onStatuteParagraphChange($event)"
-                >
-                    <mat-option *ngFor="let paragraph of statuteParagraphs" [value]="paragraph.id">
-                        {{ paragraph.title }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-
-        <!-- Submitter -->
-        <div *ngIf="newMotion" class="content-field">
-            <ng-container *ngIf="perms.isAllowed('change_metadata', motion)">
-                <mat-form-field>
-                    <os-search-value-selector
-                        formControlName="submitters_id"
-                        [multiple]="true"
-                        placeholder="{{ 'Submitters' | translate }}"
-                        [inputListValues]="submitterObserver"
-                        [showNotFoundButton]="true"
-                        (clickNotFound)="createNewSubmitter($event)"
-                    >
-                        <ng-container notFoundDescription>
-                            <mat-icon>add</mat-icon>
-                            {{ 'Create user' | translate }}
-                        </ng-container>
-                    </os-search-value-selector>
-                </mat-form-field>
-            </ng-container>
-        </div>
-
-        <div class="form-id-title">
-            <!-- number -->
-            <div
-                *ngIf="editMotion && !newMotion && perms.isAllowed('change_metadata', motion)"
-                class="content-field form-number"
-            >
-                <mat-form-field *ngIf="editMotion">
-                    <input matInput autofocus placeholder="{{ 'Number' | translate }}" formControlName="number" />
-                </mat-form-field>
-            </div>
-
-            <!-- Title -->
-            <div *ngIf="editMotion" class="content-field form-title">
-                <mat-form-field *ngIf="editMotion">
-                    <input matInput placeholder="{{ 'Title' | translate }}" formControlName="title" required />
-                    <mat-error>{{ 'The title is required' | translate }}</mat-error>
-                </mat-form-field>
-            </div>
-        </div>
-
-        <!-- Text (hide preamble, if diff mode. The preample is included in the motion-detail-diff component) -->
-        <span *ngIf="showPreamble && !isRecoMode(ChangeRecoMode.Diff)" class="text-prefix-label">
-            {{ preamble | translate }}
-        </span>
-
-        <!-- Regular motions or traditional amendments -->
-        <ng-container *ngIf="!editMotion && !motion.isStatuteAmendment() && !motion.isParagraphBasedAmendment()">
-            <div
-                *ngIf="!isRecoMode(ChangeRecoMode.Diff) && !isFinalEdit"
-                class="motion-text"
-                [class.line-numbers-none]="isLineNumberingNone()"
-                [class.line-numbers-inline]="isLineNumberingInline()"
-                [class.line-numbers-outside]="isLineNumberingOutside()"
-            >
-                <os-motion-detail-original-change-recommendations
-                    *ngIf="isLineNumberingOutside() && isRecoMode(ChangeRecoMode.Original)"
-                    [html]="getFormattedTextPlain()"
-                    [changeRecommendations]="changeRecommendations"
-                    (createChangeRecommendation)="createChangeRecommendation($event)"
-                    (gotoChangeRecommendation)="gotoChangeRecommendation($event)"
-                ></os-motion-detail-original-change-recommendations>
-                <div
-                    *ngIf="!isLineNumberingOutside() || !isRecoMode(ChangeRecoMode.Original)"
-                    [innerHTML]="getFormattedTextPlain() | trust: 'html'"
-                ></div>
-            </div>
-            <os-motion-detail-diff
-                *ngIf="isRecoMode(ChangeRecoMode.Diff)"
-                [motion]="motion"
-                [changes]="getChangesForDiffMode()"
-                [scrollToChange]="scrollToChange"
-                [highlightedLine]="highlightedLine"
-                [showAllAmendments]="showAllAmendments"
-                [lineNumberingMode]="lnMode"
-                (createChangeRecommendation)="createChangeRecommendation($event)"
-            ></os-motion-detail-diff>
-
-            <div *ngIf="isFinalEdit">
-                <editor
-                    [hidden]="!isFinalEdit"
-                    formControlName="modified_final_version"
-                    [init]="tinyMceSettings"
-                    required
-                    (onChange)="detectChanges()"
-                ></editor>
-                <div
-                    *ngIf="
-                        contentForm.get('modified_final_version').invalid &&
-                        (contentForm.get('modified_final_version').dirty ||
-                            contentForm.get('modified_final_version').touched)
-                    "
-                    class="red-warning-text"
-                >
-                    {{ 'This field is required.' | translate }}
-                </div>
-            </div>
-        </ng-container>
-
-        <!-- formatted statute amendment -->
-        <div
-            class="motion-text line-numbers-none"
-            *ngIf="!editMotion && motion.isStatuteAmendment()"
-            [innerHTML]="getFormattedStatuteAmendment() | trust: 'html'"
-        ></div>
-
-        <!-- The HTML Editor for motions and traditional amendments -->
-        <ng-container *ngIf="motion && editMotion && !motion.isParagraphBasedAmendment()">
-            <editor formControlName="text" [init]="tinyMceSettings" (ngModelChange)="detectChanges()" required></editor>
-            <div
-                *ngIf="
-                    contentForm.get('text').invalid &&
-                    (contentForm.get('text').dirty || contentForm.get('text').touched)
-                "
-                class="red-warning-text"
-            >
-                {{ 'This field is required.' | translate }}
-            </div>
-        </ng-container>
-
-        <!-- The HTML Editor for paragraph-based amendments -->
-        <ng-container *ngIf="motion && editMotion && motion.isParagraphBasedAmendment()">
-            <section *ngFor="let paragraph of contentForm.value.selected_paragraphs">
-                <h3>
-                    <span *ngIf="paragraph.lineFrom >= paragraph.lineTo - 1" class="line-number">
-                        {{ 'Line' | translate }} {{ paragraph.lineFrom }}
-                    </span>
-                    <span *ngIf="paragraph.lineFrom < paragraph.lineTo - 1" class="line-number">
-                        {{ 'Line' | translate }} {{ paragraph.lineFrom }} - {{ paragraph.lineTo - 1 }}
-                    </span>
-                </h3>
-                <editor [formControlName]="'text_' + paragraph.paragraphNo" [init]="tinyMceSettings"></editor>
-                <div
-                    *ngIf="
-                        contentForm.get('text_' + paragraph.paragraphNo).invalid &&
-                        (contentForm.get('text_' + paragraph.paragraphNo).dirty ||
-                            contentForm.get('text_' + paragraph.paragraphNo).touched)
-                    "
-                    class="red-warning-text"
-                >
-                    {{ 'This field is required.' | translate }}
-                </div>
-            </section>
-        </ng-container>
-
-        <!-- Paragraph-based amendments -->
-        <ng-container *ngIf="!editMotion && motion.isParagraphBasedAmendment()">
-            <ng-container *ngTemplateOutlet="paragraphBasedAmendment"></ng-container>
-        </ng-container>
-
-        <!-- Reason -->
-        <div *ngIf="motion.reason || editMotion">
-            <h3
-                [ngClass]="
-                    reasonRequired &&
-                    contentForm.get('reason').invalid &&
-                    (contentForm.get('reason').dirty || contentForm.get('reason').touched)
-                        ? 'red-warning-text'
-                        : ''
-                "
-            >
-                <span>{{ 'Reason' | translate }}</span
-                >&nbsp;<span *ngIf="reasonRequired && editMotion">*</span>
-            </h3>
-            <div class="motion-text" *ngIf="!editMotion" [innerHtml]="motion.reason | trust: 'html'"></div>
-
-            <!-- The HTML Editor -->
-            <editor
-                formControlName="reason"
-                [init]="tinyMceSettings"
-                *ngIf="editMotion"
-                [required]="reasonRequired"
-            ></editor>
-            <div
-                *ngIf="
-                    reasonRequired &&
-                    contentForm.get('reason').invalid &&
-                    (contentForm.get('reason').dirty || contentForm.get('reason').touched)
-                "
-                class="red-warning-text"
-            >
-                {{ 'This field is required.' | translate }}
-            </div>
-        </div>
-
-        <!-- Category form -->
-        <div class="content-field" *ngIf="newMotion && categoryObserver.value.length > 0">
-            <mat-form-field>
-                <os-search-value-selector
-                    formControlName="category_id"
-                    [includeNone]="true"
-                    placeholder="{{ 'Category' | translate }}"
-                    [inputListValues]="categoryObserver"
-                ></os-search-value-selector>
-            </mat-form-field>
-        </div>
-
-        <div class="extra-data">
-            <!-- Attachments -->
-            <div *ngIf="motion.hasAttachments() || editMotion" class="content-field">
-                <div *ngIf="!editMotion">
-                    <h3>{{ 'Attachments' | translate }}<mat-icon>attach_file</mat-icon></h3>
-                    <mat-list dense>
-                        <mat-list-item *ngFor="let file of motion.attachments">
-                            <a [routerLink]="" (click)="onClickAttachment(file)">{{ file.title }}</a>
-                        </mat-list-item>
-                    </mat-list>
-                </div>
-                <div *osPerms="permission.motionsCanManage; and: editMotion">
-                    <os-attachment-control
-                        formControlName="attachment_ids"
-                        (errorHandler)="showUploadError($event)"
-                    ></os-attachment-control>
-                </div>
-            </div>
-
-            <div *ngIf="newMotion">
-                <os-agenda-content-object-form [form]="contentForm"></os-agenda-content-object-form>
-            </div>
-
-            <!-- Supporter form -->
-            <div class="content-field" *ngIf="editMotion && minSupporters">
-                <div *ngIf="perms.isAllowed('change_metadata', motion)">
-                    <mat-form-field>
-                        <os-search-value-selector
-                            formControlName="supporters_id"
-                            [multiple]="true"
-                            placeholder="{{ 'Supporters' | translate }}"
-                            [inputListValues]="supporterObserver"
-                            [showNotFoundButton]="true"
-                            (clickNotFound)="createNewSupporter($event)"
-                        >
-                            <ng-container notFoundDescription>
-                                <mat-icon>add</mat-icon>
-                                {{ 'Create user' | translate }}
-                            </ng-container>
-                        </os-search-value-selector>
-                    </mat-form-field>
-                </div>
-            </div>
-
-            <!-- Workflow -->
-            <div class="content-field" *ngIf="editMotion && workflowObserver.value.length > 1">
-                <div *ngIf="perms.isAllowed('change_metadata', motion)">
-                    <mat-form-field>
-                        <os-search-value-selector
-                            formControlName="workflow_id"
-                            placeholder="{{ 'Workflow' | translate }}"
-                            [inputListValues]="workflowObserver"
-                        ></os-search-value-selector>
-                    </mat-form-field>
-                </div>
-            </div>
-
-            <!-- Origin form -->
-            <div class="content-field" *ngIf="editMotion">
-                <div *ngIf="perms.isAllowed('change_metadata', motion)">
-                    <mat-form-field>
-                        <input matInput placeholder="{{ 'Origin' | translate }}" formControlName="origin" />
-                    </mat-form-field>
-                </div>
-            </div>
-        </div>
-    </form>
-</ng-template>
-
-<ng-template #paragraphBasedAmendment>
-    <section class="text-holder">
-        <!-- If the array exists, we do not have an error -->
-        <div *ngIf="motion.diffLines">
-            <div class="alert alert-info" *ngIf="motion.diffLines.length === 0">
-                <i *ngIf="motion.lead_motion">{{ 'No changes at the text.' | translate }}</i>
-                <i *ngIf="!motion.lead_motion">{{ 'The parent motion was deleted.' | translate }}</i>
-            </div>
-            <ng-container *ngIf="motion.lead_motion && !isRecoMode(ChangeRecoMode.Diff) && !isFinalEdit">
-                <div
-                    *ngFor="let paragraph of getAmendmentParagraphs()"
-                    class="motion-text motion-text-diff amendment-view"
-                    [class.line-numbers-none]="isLineNumberingNone()"
-                    [class.line-numbers-inline]="isLineNumberingInline()"
-                    [class.line-numbers-outside]="isLineNumberingOutside()"
-                    [class.amendment-context]="showAmendmentContext"
-                >
-                    <h3 class="amendment-line-header" *ngIf="!showAmendmentContext">
-                        {{ getAmendmentParagraphLinesTitle(paragraph) }}
-                    </h3>
-
-                    <os-motion-detail-original-change-recommendations
-                        *ngIf="
-                            isLineNumberingOutside() &&
-                            (isRecoMode(ChangeRecoMode.Original) || isRecoMode(ChangeRecoMode.Changed))
-                        "
-                        [html]="getAmendmentDiffTextWithContext(paragraph)"
-                        [changeRecommendations]="changeRecommendations"
-                        (createChangeRecommendation)="createChangeRecommendation($event)"
-                        (gotoChangeRecommendation)="gotoChangeRecommendation($event)"
-                    ></os-motion-detail-original-change-recommendations>
-                    <div
-                        *ngIf="
-                            !isLineNumberingOutside() ||
-                            !(isRecoMode(ChangeRecoMode.Original) || isRecoMode(ChangeRecoMode.Changed))
-                        "
-                        [outerHTML]="getAmendmentDiffTextWithContext(paragraph) | trust: 'html'"
-                    ></div>
-                    <!-- the <div> element is only a placeholder -> outerHTML to replace it -->
-                </div>
-            </ng-container>
-
-            <os-motion-detail-diff
-                *ngIf="isRecoMode(ChangeRecoMode.Diff)"
-                [motion]="motion"
-                [changes]="getChangesForDiffMode()"
-                [scrollToChange]="scrollToChange"
-                [highlightedLine]="highlightedLine"
-                [showAllAmendments]="showAllAmendments"
-                [lineNumberingMode]="lnMode"
-                (createChangeRecommendation)="createChangeRecommendation($event)"
-            ></os-motion-detail-diff>
-        </div>
-        <div *ngIf="!motion.diffLines">
-            <span class="red-warning-text">{{
-                'There is an error with this amendment. Please edit it manually.' | translate
-            }}</span>
-        </div>
-    </section>
-
-    <!-- Show entire motion text -->
-    <div *ngIf="isRecoMode(ChangeRecoMode.Original) || isRecoMode(ChangeRecoMode.Changed)">
-        <mat-checkbox
-            (change)="showAmendmentContext = !showAmendmentContext"
-            *ngIf="motion && motion.isParagraphBasedAmendment()"
-            class="show-entire-text-check"
-        >
-            <span>{{ 'Show entire motion text' | translate }}</span>
-        </mat-checkbox>
+        <os-motion-meta-data [motion]="motion"></os-motion-meta-data>
     </div>
 </ng-template>
 
 <!-- Line number Menu -->
-<mat-menu #lineNumberingMenu="matMenu">
+<!-- <mat-menu #lineNumberingMenu="matMenu">
     <div *ngIf="motion">
         <button
             mat-menu-item
@@ -993,13 +224,13 @@
             <span>{{ 'Go to line' | translate }}</span>
         </button>
     </div>
-</mat-menu>
+</mat-menu> -->
 
 <!-- Diff View Menu
      For motions, all items are available if there are changing objects. The final print template only after is has been created.
      For paragraph-based amendments, only the original and the diff version is available.
 -->
-<mat-menu #changeRecoMenu="matMenu">
+<!-- <mat-menu #changeRecoMenu="matMenu">
     <button
         mat-menu-item
         (click)="setChangeRecoMode(ChangeRecoMode.Original)"
@@ -1039,4 +270,4 @@
     >
         {{ 'Final print template' | translate }}
     </button>
-</mat-menu>
+</mat-menu> -->

@@ -97,6 +97,9 @@ export class OperatorService {
     private get activeMeetingId(): number | null {
         return this.activeMeetingService.meetingId;
     }
+    private get anonymousEnabled(): boolean {
+        return this.activeMeetingService.guestsEnabled;
+    }
     private get defaultGroupId(): number | null {
         const activeMeeting = this.activeMeetingService.meeting;
         return activeMeeting ? activeMeeting.default_group.id : null;
@@ -196,7 +199,7 @@ export class OperatorService {
                         }
                     ]
                 };
-            } else {
+            } else if (this.anonymousEnabled) {
                 operatorRequest = {
                     ids: [this.activeMeetingId],
                     viewModelCtor: ViewMeeting,
@@ -208,6 +211,10 @@ export class OperatorService {
                     ],
                     fieldset: []
                 };
+            } else {
+                // not logged in and no anonymous. We are done with loading, so we have
+                // to emit the operator update event
+                this.operatorUpdatedEvent.emit();
             }
         } else {
             if (this.isAuthenticated) {

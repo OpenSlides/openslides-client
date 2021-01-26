@@ -50,7 +50,7 @@ export abstract class BaseChangeRecommendationDialogComponent<
     }
 
     public async submitChanges(): Promise<void> {
-        this.applyChangesOnChangeRecommendation();
+        // this.applyChangesOnChangeRecommendation();
         this.saveChangeRecommendation();
     }
 
@@ -81,15 +81,18 @@ export abstract class BaseChangeRecommendationDialogComponent<
     }
 
     private async createChangeRecommendation(): Promise<void> {
-        await this.repo.create(this.changeReco.changeRecommendation);
+        console.log('create changereco', this.changeReco);
+        await this.repo.create(this.changeReco);
     }
 
     private async updateChangeRecommmendation(): Promise<void> {
+        console.log('update changereco', this.changeReco);
         await this.repo.update(this.changeReco.changeRecommendation, this.changeReco);
     }
 
     private handleRequest(request: Promise<any>): Promise<void> {
-        return request.catch(this.raiseError);
+        // return request.catch(this.raiseError);
+        return request;
     }
 
     protected abstract createForm(): void;

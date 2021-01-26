@@ -18,8 +18,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { auditTime } from 'rxjs/operators';
 
-import { BaseFormControlComponent } from 'app/shared/components/base-form-control';
 import { ParentErrorStateMatcher } from 'app/shared/parent-error-state-matcher';
+import { BaseSearchValueSelectorComponent } from '../base-search-value-selector';
 import { Selectable } from '../selectable';
 
 /**
@@ -51,7 +51,7 @@ import { Selectable } from '../selectable';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SearchValueSelectorComponent extends BaseFormControlComponent<Selectable[]> {
+export class SearchValueSelectorComponent extends BaseSearchValueSelectorComponent<Selectable> {
     @ViewChild('chipPlaceholder', { static: false })
     public chipPlaceholder: ElementRef<HTMLElement>;
 
@@ -92,10 +92,12 @@ export class SearchValueSelectorComponent extends BaseFormControlComponent<Selec
             return;
         }
         if (Array.isArray(value)) {
+            console.log('search-value-selector', value);
             this.selectableItems = value;
         } else {
             this.subscriptions.push(
                 value.pipe(auditTime(10)).subscribe(items => {
+                    console.log('search-value-selector', items);
                     this.selectableItems = items;
                     if (this.contentForm) {
                         this.disabled = !items || (!!items && !items.length);
@@ -111,8 +113,6 @@ export class SearchValueSelectorComponent extends BaseFormControlComponent<Selec
     @Output()
     public clickNotFound = new EventEmitter<string>();
 
-    public searchValue: FormControl;
-
     public get empty(): boolean {
         return Array.isArray(this.contentForm.value) ? !this.contentForm.value.length : !this.contentForm.value;
     }
@@ -123,16 +123,19 @@ export class SearchValueSelectorComponent extends BaseFormControlComponent<Selec
             : [];
     }
 
-    public controlType = 'search-value-selector';
-
     public get width(): string {
         return this.chipPlaceholder ? `${this.chipPlaceholder.nativeElement.clientWidth - 16}px` : '100%';
     }
 
-    /**
-     * All items
-     */
-    private selectableItems: Selectable[];
+    public controlType = 'search-value-selector';
+
+    public searchValue: FormControl;
+
+    private noneItem: Selectable = {
+        getListTitle: () => this.noneTitle,
+        getTitle: () => this.noneTitle,
+        id: null
+    };
 
     public constructor(
         protected translate: TranslateService,
@@ -150,20 +153,24 @@ export class SearchValueSelectorComponent extends BaseFormControlComponent<Selec
      * @returns The filtered list of items.
      */
     public getFilteredItems(): Selectable[] {
-        if (this.selectableItems) {
-            const searchValue: string = this.searchValue.value.toLowerCase();
-            return this.selectableItems.filter(item => {
-                const idString = '' + item.id;
-                const foundId = idString.trim().toLowerCase().indexOf(searchValue) !== -1;
-
-                if (foundId) {
-                    return true;
-                }
-
-                return item.toString().toLowerCase().indexOf(searchValue) > -1;
-            });
-        } else {
+        if (!this.selectableItems) {
             return [];
+        }
+        const searchValue: string = this.searchValue.value.toLowerCase();
+        const filteredItems = this.selectableItems.filter(item => {
+            const idString = '' + item.id;
+            const foundId = idString.trim().toLowerCase().indexOf(searchValue) !== -1;
+
+            if (foundId) {
+                return true;
+            }
+
+            return item.toString().toLowerCase().indexOf(searchValue) > -1;
+        });
+        if (!this.multiple && this.includeNone) {
+            return [this.noneItem].concat(filteredItems);
+        } else {
+            return filteredItems;
         }
     }
 
@@ -195,7 +202,7 @@ export class SearchValueSelectorComponent extends BaseFormControlComponent<Selec
         this.searchValue = this.fb.control('');
     }
 
-    protected updateForm(value: Selectable[] | null): void {
+    protected updateForm(value: Selectable[] | Selectable | null): void {
         if (typeof value === 'function') {
             console.warn('Trying to set a function as value:', value);
         } else {

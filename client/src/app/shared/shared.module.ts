@@ -131,6 +131,8 @@ import { VjsPlayerComponent } from './components/vjs-player/vjs-player.component
 import { LiveStreamComponent } from './components/live-stream/live-stream.component';
 import { ListOfSpeakersContentComponent } from './components/list-of-speakers-content/list-of-speakers-content.component';
 import { ResourceComponent } from './components/resource/resource.component';
+import { OnlyNumberDirective } from './directives/only-number.directive';
+import { SearchRepoSelectorComponent } from './components/search-repo-selector/search-repo-selector.component';
 
 /**
  * Share Module for all "dumb" components and pipes.
@@ -302,7 +304,9 @@ import { ResourceComponent } from './components/resource/resource.component';
         VjsPlayerComponent,
         LiveStreamComponent,
         ListOfSpeakersContentComponent,
-        ResourceComponent
+        ResourceComponent,
+        OnlyNumberDirective,
+        SearchRepoSelectorComponent
     ],
     declarations: [
         PermsDirective,
@@ -367,7 +371,9 @@ import { ResourceComponent } from './components/resource/resource.component';
         VjsPlayerComponent,
         LiveStreamComponent,
         ListOfSpeakersContentComponent,
-        ResourceComponent
+        ResourceComponent,
+        OnlyNumberDirective,
+        SearchRepoSelectorComponent
     ],
     providers: [
         {
