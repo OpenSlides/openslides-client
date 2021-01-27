@@ -104,6 +104,7 @@ export const PollMajorityMethod: CalculableMajorityMethod[] = [
 
 export interface BasePollData<PM, PB> {
     pollmethod: PM;
+    state: PollState;
     onehundred_percent_base: PB;
     votesvalid: number;
     votesinvalid: number;

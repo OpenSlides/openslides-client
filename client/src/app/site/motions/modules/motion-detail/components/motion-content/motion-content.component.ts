@@ -716,7 +716,8 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
      * @returns A subscription, only if the user wants to edit this motion, to listen to notifications.
      */
     private listenToEditNotification(): Subscription {
-        return this.notifyService.getMessageObservable(this.NOTIFICATION_EDIT_MOTION).subscribe(message => {
+        throw new Error('TODO');
+        /*return this.notifyService.getMessageObservable(this.NOTIFICATION_EDIT_MOTION).subscribe(message => {
             const content = <MotionEditNotification>message.content;
             if (this.operator.operatorId !== content.senderId && content.motionId === this.motion.id) {
                 let warning = '';
@@ -757,7 +758,7 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
                     this.raiseWarning(warning);
                 }
             }
-        });
+        });*/
     }
 
     /**
