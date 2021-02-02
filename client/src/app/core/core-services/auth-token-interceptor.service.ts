@@ -16,7 +16,7 @@ import { AuthTokenService } from './auth-token.service';
 @Injectable({
     providedIn: 'root'
 })
-export class TokenInterceptorService implements HttpInterceptor {
+export class AuthTokenInterceptorService implements HttpInterceptor {
     public constructor(private authTokenService: AuthTokenService) {}
 
     public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
