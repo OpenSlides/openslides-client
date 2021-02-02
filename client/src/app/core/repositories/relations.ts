@@ -37,7 +37,15 @@ import { ViewTopic } from 'app/site/topics/models/view-topic';
 import { ViewGroup } from 'app/site/users/models/view-group';
 import { HasPersonalNote, ViewPersonalNote } from 'app/site/users/models/view-personal-note';
 import { ViewUser } from 'app/site/users/models/view-user';
-import { makeGenericM2M, makeGenericO2O, makeM2M, makeM2O, makeO2O, Relation } from '../definitions/relations';
+import {
+    makeGenericM2M,
+    makeGenericO2M,
+    makeGenericO2O,
+    makeM2M,
+    makeM2O,
+    makeO2O,
+    Relation
+} from '../definitions/relations';
 
 const PROJECTABLE_VIEW_MODELS: ViewModelConstructor<BaseViewModel & Projectable>[] = [
     ViewMotion,
@@ -590,11 +598,11 @@ export const RELATIONS: Relation[] = [
         structured: false
     },
     // ########## Personal notes
-    ...makeGenericO2O<ViewPersonalNote, HasPersonalNote>({
-        viewModel: ViewPersonalNote,
-        possibleViewModels: [ViewMotion],
-        viewModelField: 'content_object',
-        possibleViewModelsField: 'personal_notes'
+    ...makeGenericO2M<ViewPersonalNote, HasPersonalNote>({
+        OViewModel: ViewPersonalNote,
+        MPossibleViewModels: [ViewMotion],
+        OViewModelField: 'content_object',
+        MPossibleViewModelsField: 'personal_notes'
     }),
     // ########## Tags
     ...makeGenericM2M<ViewTag, HasTags>({
