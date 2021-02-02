@@ -9,7 +9,7 @@ import { StorageModule } from '@ngx-pwa/local-storage';
 import { AppLoadService } from './core/core-services/app-load.service';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { TokenInterceptorService } from './core/core-services/auth-token-interceptor.service';
+import { AuthTokenInterceptorService } from './core/core-services/auth-token-interceptor.service';
 import { AuthTokenService } from './core/core-services/auth-token.service';
 import { CoreModule } from './core/core.module';
 import { environment } from '../environments/environment';
@@ -50,7 +50,7 @@ export function AppLoaderFactory(appLoadService: AppLoadService): () => Promise<
         { provide: APP_INITIALIZER, useFactory: AppLoaderFactory, deps: [AppLoadService], multi: true },
         {
             provide: HTTP_INTERCEPTORS,
-            useClass: TokenInterceptorService,
+            useClass: AuthTokenInterceptorService,
             deps: [AuthTokenService],
             multi: true
         }
