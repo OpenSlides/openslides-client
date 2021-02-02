@@ -153,6 +153,40 @@ export function makeGenericO2O<V extends BaseViewModel, I>(args: {
     ];
 }
 
+export function makeGenericO2M<V extends BaseViewModel, I>(args: {
+    OViewModel: ViewModelConstructor<V>;
+    MPossibleViewModels: ViewModelConstructor<BaseViewModel & I>[];
+    OViewModelField: keyof V & string;
+    MPossibleViewModelsField: keyof I & string;
+    OViewModelIdField?: keyof V & string;
+    MPossibleViewModelsIdField?: keyof I & string;
+    OViewModelOrder?: keyof I & string;
+}): Relation[] {
+    return [
+        // viewModel -> possible view models
+        {
+            ownViewModels: [args.OViewModel],
+            foreignViewModelPossibilities: args.MPossibleViewModels,
+            ownField: args.OViewModelField,
+            ownIdField: args.OViewModelIdField,
+            many: false,
+            generic: true,
+            structured: false
+        },
+        // possible view models -> viewModel
+        {
+            ownViewModels: args.MPossibleViewModels,
+            foreignViewModel: args.OViewModel,
+            ownField: args.MPossibleViewModelsField,
+            ownIdField: args.MPossibleViewModelsIdField,
+            many: true,
+            generic: false,
+            structured: false,
+            order: args.OViewModelOrder
+        }
+    ];
+}
+
 export function makeGenericM2M<V extends BaseViewModel, I>(args: {
     viewModel: ViewModelConstructor<V>;
     possibleViewModels: ViewModelConstructor<BaseViewModel & I>[];
