@@ -1,0 +1,177 @@
+import { Directive, Input, OnDestroy } from '@angular/core';
+
+import { Subscription } from 'rxjs';
+
+import { NotifyService } from 'app/core/core-services/notify.service';
+import { OperatorService } from 'app/core/core-services/operator.service';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { BaseComponent } from 'app/site/base/components/base.component';
+import { EditNotificationType } from 'app/site/base/constants/edit-notification-constants';
+import { EditNotification } from 'app/site/base/edit-notification';
+import { BaseModel } from '../models/base/base-model';
+
+@Directive({
+    selector: '[osListenEditing]'
+})
+export class ListenEditingDirective extends BaseComponent implements OnDestroy {
+    @Input()
+    public set osListenEditing(isSo: boolean) {
+        this.isEditing = isSo;
+        if (isSo) {
+            this.enterEditMode();
+        } else {
+            this.leaveEditMode();
+        }
+    }
+
+    public get osListenEditing(): boolean {
+        return this.isEditing;
+    }
+
+    @Input()
+    public baseModel: BaseModel;
+
+    /**
+     * Array to recognize, if there are other persons working on the same
+     * base-model and see, if those persons leave the editing-view.
+     */
+    private otherWorkOnBaseModel = [];
+
+    /**
+     * The variable to hold the subscription for notifications in editing-view.
+     * Necessary to unsubscribe after leaving the editing-view.
+     */
+    private editNotificationSubscription: Subscription;
+
+    /**
+     * Constant to identify the notification-message.
+     */
+    private EDIT_NOTIFICATION_NAME = 'editNotificationName';
+
+    private isEditing = false;
+
+    public constructor(
+        componentServiceCollector: ComponentServiceCollector,
+        private notifyService: NotifyService,
+        private operator: OperatorService
+    ) {
+        super(componentServiceCollector);
+    }
+
+    public ngOnDestroy(): void {
+        super.ngOnDestroy();
+        this.unsubscribeEditNotifications(EditNotificationType.TYPE_CLOSING_EDITING);
+    }
+
+    private enterEditMode(): void {
+        if (!this.editNotificationSubscription) {
+            this.editNotificationSubscription = this.listenToEditNotification();
+            this.sendEditNotification(EditNotificationType.TYPE_BEGIN_EDITING);
+        }
+    }
+
+    private leaveEditMode(): void {
+        this.unsubscribeEditNotifications(EditNotificationType.TYPE_CLOSING_EDITING);
+    }
+
+    /**
+     * Function to send a notification, so that other persons can recognize editing the same motion,
+     * if they're doing.
+     *
+     * @param type TypeOfNotificationViewMotion defines the type of the notification which is sent.
+     * @param user Optional userId. If set the function will send a notification to the given userId.
+     */
+    private sendEditNotification(type: EditNotificationType, user?: number): void {
+        const content: EditNotification = {
+            baseModelFqid: this.baseModel.fqid,
+            senderId: this.operator.operatorId,
+            senderName: this.operator.shortName,
+            type: type
+        };
+        if (user) {
+            this.notifyService.sendToUsers(this.EDIT_NOTIFICATION_NAME, content, user);
+        } else {
+            this.notifyService.sendToAllUsers<EditNotification>(this.EDIT_NOTIFICATION_NAME, content);
+        }
+    }
+
+    /**
+     * Function to listen to notifications if the user edits this motion.
+     * Handles the notification messages.
+     *
+     * @returns A subscription, only if the user wants to edit this motion, to listen to notifications.
+     */
+    private listenToEditNotification(): Subscription {
+        return this.notifyService
+            .getMessageObservable<EditNotification>(this.EDIT_NOTIFICATION_NAME)
+            .subscribe(message => {
+                const content = <EditNotification>message.message;
+                if (this.operator.operatorId !== content.senderId && content.baseModelFqid === this.baseModel.fqid) {
+                    let warning = '';
+
+                    switch (content.type) {
+                        case EditNotificationType.TYPE_BEGIN_EDITING:
+                        case EditNotificationType.TYPE_ALSO_EDITING: {
+                            if (!this.otherWorkOnBaseModel.includes(content.senderName)) {
+                                this.otherWorkOnBaseModel.push(content.senderName);
+                            }
+
+                            warning = `${this.translate.instant(
+                                'Following users are currently editing this motion:'
+                            )} ${this.otherWorkOnBaseModel}`;
+                            if (content.type === EditNotificationType.TYPE_BEGIN_EDITING) {
+                                this.sendEditNotification(
+                                    EditNotificationType.TYPE_ALSO_EDITING,
+                                    message.sender_user_id
+                                );
+                            }
+                            break;
+                        }
+                        case EditNotificationType.TYPE_CLOSING_EDITING: {
+                            this.recognizeOtherWorkerOnMotion(content.senderName);
+                            break;
+                        }
+                        case EditNotificationType.TYPE_SAVING_EDITING: {
+                            warning = `${content.senderName} ${this.translate.instant(
+                                'has saved his work on this motion.'
+                            )}`;
+                            // Wait, to prevent overlapping snack bars
+                            setTimeout(() => this.recognizeOtherWorkerOnMotion(content.senderName), 2000);
+                            break;
+                        }
+                    }
+
+                    if (warning !== '') {
+                        this.raiseWarning(warning);
+                    }
+                }
+            });
+    }
+
+    /**
+     * Function to handle leaving persons and
+     * recognize if there is no other person editing the same motion anymore.
+     *
+     * @param senderName The name of the sender who has left the editing-view.
+     */
+    private recognizeOtherWorkerOnMotion(senderName: string): void {
+        this.otherWorkOnBaseModel = this.otherWorkOnBaseModel.filter(value => value !== senderName);
+        if (this.otherWorkOnBaseModel.length === 0) {
+            this.closeSnackBar();
+        }
+    }
+
+    /**
+     * Function to unsubscribe the notification subscription.
+     * Before unsubscribing a notification will send with the reason.
+     *
+     * @param unsubscriptionReason The reason for the unsubscription.
+     */
+    private unsubscribeEditNotifications(unsubscriptionReason: EditNotificationType): void {
+        if (this.editNotificationSubscription && !this.editNotificationSubscription.closed) {
+            this.sendEditNotification(unsubscriptionReason);
+            this.closeSnackBar();
+            this.editNotificationSubscription.unsubscribe();
+        }
+    }
+}

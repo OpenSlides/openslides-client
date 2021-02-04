@@ -55,7 +55,7 @@ export class MotionTitleChangeRecommendationDialogComponent extends BaseChangeRe
      */
     protected createForm(): void {
         this.contentForm = this.formBuilder.group({
-            title: [this.changeReco.text, Validators.required],
+            text: [this.changeReco.text, Validators.required],
             public: [!this.changeReco.internal]
         });
     }

@@ -1,17 +1,17 @@
 <section class="text-holder">
     <!-- If the array exists, we do not have an error -->
-    <!-- <div *ngIf="motion.diffLines">
+    <div *ngIf="motion.diffLines">
         <div class="alert alert-info" *ngIf="motion.diffLines.length === 0">
             <i *ngIf="motion.lead_motion">{{ 'No changes at the text.' | translate }}</i>
             <i *ngIf="!motion.lead_motion">{{ 'The parent motion was deleted.' | translate }}</i>
         </div>
-        <ng-container *ngIf="motion.lead_motion && !isRecoMode(ChangeRecoMode.Diff) && !isFinalEdit">
+        <ng-container *ngIf="motion.lead_motion && crMode !== ChangeRecoMode.Diff && !isFinalEdit">
             <div
                 *ngFor="let paragraph of getAmendmentParagraphs()"
                 class="motion-text motion-text-diff amendment-view"
-                [class.line-numbers-none]="isLineNumberingNone()"
-                [class.line-numbers-inline]="isLineNumberingInline()"
-                [class.line-numbers-outside]="isLineNumberingOutside()"
+                [class.line-numbers-none]="lnMode === LineNumberingMode.None"
+                [class.line-numbers-inline]="lnMode === LineNumberingMode.Inside"
+                [class.line-numbers-outside]="lnMode === LineNumberingMode.Outside"
                 [class.amendment-context]="showAmendmentContext"
             >
                 <h3 class="amendment-line-header" *ngIf="!showAmendmentContext">
@@ -20,45 +20,46 @@
 
                 <os-motion-detail-original-change-recommendations
                     *ngIf="
-                        isLineNumberingOutside() &&
-                        (isRecoMode(ChangeRecoMode.Original) || isRecoMode(ChangeRecoMode.Changed))
+                        lnMode === LineNumberingMode.Outside &&
+                        (crMode === ChangeRecoMode.Original || crMode === ChangeRecoMode.Changed)
                     "
                     [html]="getAmendmentDiffTextWithContext(paragraph)"
                     [changeRecommendations]="changeRecommendations"
-                    (createChangeRecommendation)="createChangeRecommendation($event)"
-                    (gotoChangeRecommendation)="gotoChangeRecommendation($event)"
+                    (createChangeRecommendation)="createChangeRecommendation.emit($event)"
+                    (gotoChangeRecommendation)="gotoChangeRecommendation.emit($event)"
                 ></os-motion-detail-original-change-recommendations>
                 <div
                     *ngIf="
-                        !isLineNumberingOutside() ||
-                        !(isRecoMode(ChangeRecoMode.Original) || isRecoMode(ChangeRecoMode.Changed))
+                        lnMode !== LineNumberingMode.Outside ||
+                        crMode !== ChangeRecoMode.Original ||
+                        crMode !== ChangeRecoMode.Changed
                     "
                     [outerHTML]="getAmendmentDiffTextWithContext(paragraph) | trust: 'html'"
-                ></div> -->
-    <!-- the <div> element is only a placeholder -> outerHTML to replace it -->
-    <!-- </div>
+                ></div>
+                <!-- the <div> element is only a placeholder -> outerHTML to replace it -->
+            </div>
         </ng-container>
 
         <os-motion-detail-diff
-            *ngIf="isRecoMode(ChangeRecoMode.Diff)"
+            *ngIf="crMode === ChangeRecoMode.Diff"
             [motion]="motion"
-            [changes]="getChangesForDiffMode()"
+            [changes]="changesForDiffMode"
             [scrollToChange]="scrollToChange"
             [highlightedLine]="highlightedLine"
             [showAllAmendments]="showAllAmendments"
             [lineNumberingMode]="lnMode"
-            (createChangeRecommendation)="createChangeRecommendation($event)"
+            (createChangeRecommendation)="createChangeRecommendation.emit($event)"
         ></os-motion-detail-diff>
     </div>
     <div *ngIf="!motion.diffLines">
         <span class="red-warning-text">{{
             'There is an error with this amendment. Please edit it manually.' | translate
         }}</span>
-    </div> -->
+    </div>
 </section>
 
 <!-- Show entire motion text -->
-<!-- <div *ngIf="isRecoMode(ChangeRecoMode.Original) || isRecoMode(ChangeRecoMode.Changed)">
+<div *ngIf="crMode === ChangeRecoMode.Original || crMode === ChangeRecoMode.Changed">
     <mat-checkbox
         (change)="showAmendmentContext = !showAmendmentContext"
         *ngIf="motion && motion.isParagraphBasedAmendment()"
@@ -66,4 +67,4 @@
     >
         <span>{{ 'Show entire motion text' | translate }}</span>
     </mat-checkbox>
-</div> -->
+</div>

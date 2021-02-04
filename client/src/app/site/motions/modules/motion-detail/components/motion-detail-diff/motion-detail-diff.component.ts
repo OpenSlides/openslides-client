@@ -336,7 +336,7 @@ export class MotionDetailDiffComponent extends BaseComponent implements AfterVie
                 from: reco.getLineFrom(),
                 to: reco.getLineTo()
             },
-            changeRecommendation: reco
+            changeRecommendation: reco.getModel()
         };
         this.dialogService.open(MotionChangeRecommendationDialogComponent, {
             ...mediumDialogSettings,

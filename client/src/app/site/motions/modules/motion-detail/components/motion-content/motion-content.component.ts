@@ -4,11 +4,9 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import { MotionAction } from 'app/core/actions/motion-action';
-import { NotifyService } from 'app/core/core-services/notify.service';
-import { OperatorService } from 'app/core/core-services/operator.service';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { MotionChangeRecommendationRepositoryService } from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
 import {
@@ -23,7 +21,6 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { LineRange } from 'app/core/ui-services/diff.service';
 import { Settings } from 'app/shared/models/event-management/meeting';
 import { Mediafile } from 'app/shared/models/mediafiles/mediafile';
-import { MotionCategory } from 'app/shared/models/motions/motion-category';
 import { ViewUnifiedChange } from 'app/shared/models/motions/view-unified-change';
 import { mediumDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseComponent } from 'app/site/base/components/base.component';
@@ -32,14 +29,13 @@ import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category
 import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
 import { ViewMotionStatuteParagraph } from 'app/site/motions/models/view-motion-statute-paragraph';
 import { ViewMotionWorkflow } from 'app/site/motions/models/view-motion-workflow';
-import { MotionEditNotification } from 'app/site/motions/motion-edit-notification';
-import { ChangeRecoMode, LineNumberingMode, MotionEditNotificationType } from 'app/site/motions/motions.constants';
+import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.constants';
 import { PermissionsService } from 'app/site/motions/services/permissions.service';
-import { ViewUser } from 'app/site/users/models/view-user';
 import {
     MotionChangeRecommendationDialogComponent,
     MotionChangeRecommendationDialogComponentData
 } from '../motion-change-recommendation-dialog/motion-change-recommendation-dialog.component';
+import { MotionViewService } from '../../../services/motion-view.service';
 
 @Component({
     selector: 'os-motion-content',
@@ -66,17 +62,6 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
         return this._isEditing;
     }
 
-    @Input()
-    // public crMode: ChangeRecoMode;
-    public set changeRecoMode(mode: ChangeRecoMode) {
-        console.log('set new crMode', mode);
-        this._crMode = mode;
-    }
-
-    public get changeRecoMode(): ChangeRecoMode {
-        return this._crMode;
-    }
-
     @Output()
     public save = new EventEmitter<ViewMotion>();
 
@@ -84,6 +69,10 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
     public changeForm = new EventEmitter<ViewMotion>();
 
     private finalEditMode = false;
+
+    public get showPreamble(): boolean {
+        return this.motion.showPreamble;
+    }
 
     /**
      * check if the 'final version edit mode' is active
@@ -103,11 +92,19 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
     }
 
     public get isExisting(): boolean {
-        return !!Object.keys(this.motion).length;
+        return this.motion instanceof ViewMotion;
     }
 
     public get motionValues(): Partial<ViewMotion> {
         return this.contentForm.value;
+    }
+
+    public get lnMode(): LineNumberingMode {
+        return this.viewService.currentLineNumberingMode;
+    }
+
+    public get changeRecoMode(): ChangeRecoMode {
+        return this.viewService.currentChangeRecommendationMode;
     }
 
     /**
@@ -136,30 +133,6 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
     public changeRecommendations: ViewMotionChangeRecommendation[];
     private amendments: ViewMotion[] = [];
 
-    private categoryObserver: Observable<ViewMotionCategory[]>;
-
-    /**
-     * Subject for the Categories
-     */
-    private workflowObserver: Observable<ViewMotionWorkflow[]>;
-
-    /**
-     * Subject for the Submitters
-     */
-    public submitterObserver: Observable<ViewUser[]>;
-
-    /**
-     * Subject for the Supporters
-     */
-    public supporterObserver: Observable<ViewUser[]>;
-
-    /**
-     * Subject for (other) motions
-     */
-    private motionObserver: Observable<ViewMotion[]>;
-
-    private statuteParagraphObserver: Observable<ViewMotionStatuteParagraph[]>;
-
     /**
      * statute paragraphs, necessary for amendments
      */
@@ -185,21 +158,7 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
      */
     public minSupporters = 0;
 
-    /**
-     * Array to recognize, if there are other persons working on the same
-     * motion and see, if those persons leave the editing-view.
-     */
-    private otherWorkOnMotion: string[] = [];
-
-    /**
-     * The variable to hold the subscription for notifications in editing-view.
-     * Necessary to unsubscribe after leaving the editing-view.
-     */
-    private editNotificationSubscription: Subscription;
-
     private _isEditing = false;
-
-    private _crMode = ChangeRecoMode.Original;
 
     /**
      * All change recommendations AND amendments, sorted by line number.
@@ -221,13 +180,6 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
      */
     public highlightedLine: number;
 
-    @Input()
-    public lnMode: LineNumberingMode = LineNumberingMode.None;
-
-    public get showPreamble(): boolean {
-        return this.motion.showPreamble;
-    }
-
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private formBuilder: FormBuilder,
@@ -236,13 +188,12 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
         private dialogService: MatDialog,
         private motionLineNumbering: MotionLineNumberingService,
         private router: Router,
-        private operator: OperatorService,
-        private notifyService: NotifyService,
         private route: ActivatedRoute,
         public userRepo: UserRepositoryService,
         public workflowRepo: MotionWorkflowRepositoryService,
         public categoryRepo: MotionCategoryRepositoryService,
         private statuteRepo: MotionStatuteParagraphRepositoryService,
+        private viewService: MotionViewService,
         private cd: ChangeDetectorRef,
         public perms: PermissionsService
     ) {
@@ -250,65 +201,39 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
     }
 
     public ngOnInit(): void {
-        this.initObservers();
-        this.subscriptions.push(...this.subscribeToSettings(), ...this.subscribeToObservers());
-        console.log('this.motion', this.motion, this.motion.text);
         this.contentForm = this.createForm();
+        this.patchForm();
+        this.subscriptions.push(...this.subscribeToSettings(), ...this.subscribeToObservers());
         this.subscriptions.push(this.contentForm.valueChanges.subscribe(value => this.changeForm.emit(value)));
-    }
-
-    public ngOnDestroy(): void {
-        super.ngOnDestroy();
-
-        this.unsubscribeEditNotifications(MotionEditNotificationType.TYPE_CLOSING_EDITING_MOTION);
     }
 
     private enterEditMode(): void {
         this._isEditing = true;
-        this.patchForm(this.motion);
-        if (!this.newMotion) {
-            this.editNotificationSubscription = this.listenToEditNotification();
-            this.sendEditNotification(MotionEditNotificationType.TYPE_BEGIN_EDITING_MOTION);
-        }
+        this.patchForm();
     }
 
     private leaveEditMode(): void {
         this._isEditing = false;
-        if (!this.newMotion) {
-            this.unsubscribeEditNotifications(MotionEditNotificationType.TYPE_CLOSING_EDITING_MOTION);
-        }
     }
 
     /**
      * Async load the values of the motion in the Form.
      */
-    public patchForm(formMotion: ViewMotion): void {
-        const contentPatch: { [key: string]: any } = {};
+    public patchForm(): void {
+        if (!this.contentForm) {
+            this.contentForm = this.createForm();
+        }
+        let contentPatch: { [key: string]: any } = {};
         Object.keys(this.contentForm.controls).forEach(ctrl => {
-            contentPatch[ctrl] = formMotion[ctrl];
+            contentPatch[ctrl] = this.motion[ctrl];
         });
 
-        if (formMotion.isParagraphBasedAmendment()) {
-            contentPatch.selected_paragraphs = [];
-            const leadMotion = formMotion.lead_motion;
-            // Hint: lineLength is sometimes not loaded yet when this form is initialized;
-            // This doesn't hurt as long as patchForm is called when editing mode is started, i.e., later.
-            if (leadMotion && this.lineLength) {
-                const paragraphsToChoose = this.motionLineNumbering.getParagraphsToChoose(leadMotion, this.lineLength);
-
-                paragraphsToChoose.forEach((paragraph: ParagraphToChoose, paragraphNo: number): void => {
-                    const amendmentParagraph = formMotion.amendment_paragraph(paragraphNo);
-                    if (amendmentParagraph) {
-                        this.contentForm.addControl('text_' + paragraphNo, new FormControl(''));
-                        contentPatch.selected_paragraphs.push(paragraph);
-                        contentPatch['text_' + paragraphNo] = amendmentParagraph;
-                    }
-                });
-            }
+        if (this.isExisting && this.motion.isParagraphBasedAmendment()) {
+            contentPatch = { ...contentPatch, ...this.initParagraphBasedAmendment() };
         }
 
         const statuteAmendmentFieldName = 'statute_amendment';
-        contentPatch[statuteAmendmentFieldName] = formMotion.isStatuteAmendment();
+        contentPatch[statuteAmendmentFieldName] = this.isExisting && this.motion.isStatuteAmendment();
         this.contentForm.patchValue(contentPatch);
     }
 
@@ -346,7 +271,6 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
             statute_paragraph_id: null,
             workflow_id: this.getWorkflowIdForCreateFormByParagraph()
         });
-        // this.updateWorkflowIdForCreateForm();
     }
 
     /**
@@ -361,7 +285,6 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
             text: selectedParagraph.text,
             workflow_id: this.getWorkflowIdForCreateFormByParagraph(newValue)
         });
-        // this.updateWorkflowIdForCreateForm(newValue);
     }
 
     /**
@@ -383,13 +306,6 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
     }
 
     /**
-     * Helper function so UI elements can call to detect changes
-     */
-    public detectChanges(): void {
-        this.cd.markForCheck();
-    }
-
-    /**
      * get the diff html from the statute amendment, as SafeHTML for [innerHTML]
      *
      * @returns safe html strings
@@ -399,30 +315,11 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
     }
 
     /**
-     * Returns true if the given version is to be shown
-     *
-     * @param mode The mode to check
-     * @returns true, if the mode is shown
-     */
-    public isRecoMode(mode: ChangeRecoMode): boolean {
-        return this.changeRecoMode === mode;
-    }
-
-    public setLineNumberingMode(mode: LineNumberingMode): void {
-        this.lnMode = mode;
-    }
-
-    public isLineNumberingOn(mode: LineNumberingMode): boolean {
-        return this.lnMode === mode;
-    }
-
-    /**
      * get the formated motion text from the repository.
      *
      * @returns formated motion texts
      */
     public getFormattedTextPlain(): string {
-        // return '';
         // Prevent this.sortedChangingObjects to be reordered from within formatMotion
         let changes: ViewUnifiedChange[];
         if (this.changeRecoMode === ChangeRecoMode.Original) {
@@ -437,9 +334,7 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
             this.lineLength,
             this.highlightedLine
         );
-        console.log('formattedText', formattedText);
         return formattedText;
-        // throw new Error('Todo');
     }
 
     /**
@@ -463,8 +358,7 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
             data.changeRecommendation = this.changeRecoRepo.createAmendmentChangeRecommendationTemplate(
                 this.motion,
                 lineNumberedParagraphs,
-                lineRange,
-                this.lineLength
+                lineRange
             );
         } else {
             data.changeRecommendation = this.changeRecoRepo.createMotionChangeRecommendationTemplate(
@@ -480,20 +374,12 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
     }
 
     /**
-     * Sets the motions change reco mode
-     * @param mode The mode
-     */
-    private setChangeRecoMode(mode: ChangeRecoMode): void {
-        this.changeRecoMode = mode;
-    }
-
-    /**
      * In the original version, a change-recommendation-annotation has been clicked
      * -> Go to the diff view and scroll to the change recommendation
      */
     public gotoChangeRecommendation(changeRecommendation: ViewMotionChangeRecommendation): void {
         this.scrollToChange = changeRecommendation;
-        this.setChangeRecoMode(ChangeRecoMode.Diff);
+        this.viewService.nextChangeRecoMode(ChangeRecoMode.Diff);
     }
 
     public getChangesForDiffMode(): ViewUnifiedChange[] {
@@ -514,6 +400,27 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
     public async createNewSupporter(username: string): Promise<void> {
         const newUserObj = await this.createNewUser(username);
         this.addNewUserToFormCtrl(newUserObj, 'supporters_id');
+    }
+
+    private initParagraphBasedAmendment(): object {
+        const contentPatch: { [key: string]: any } = {};
+        contentPatch.selected_paragraphs = [];
+        const leadMotion = this.motion.lead_motion;
+        // Hint: lineLength is sometimes not loaded yet when this form is initialized;
+        // This doesn't hurt as long as patchForm is called when editing mode is started, i.e., later.
+        if (leadMotion && this.lineLength) {
+            const paragraphsToChoose = this.motionLineNumbering.getParagraphsToChoose(leadMotion, this.lineLength);
+
+            paragraphsToChoose.forEach((paragraph: ParagraphToChoose, paragraphNo: number): void => {
+                const amendmentParagraph = this.motion.amendment_paragraph(paragraphNo);
+                if (amendmentParagraph) {
+                    this.contentForm.addControl('text_' + paragraphNo, new FormControl(''));
+                    contentPatch.selected_paragraphs.push(paragraph);
+                    contentPatch['text_' + paragraphNo] = amendmentParagraph;
+                }
+            });
+        }
+        return contentPatch;
     }
 
     /**
@@ -561,38 +468,22 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
             this.meetingSettingService
                 .get('motions_statutes_enabled')
                 .subscribe(value => (this.statutesEnabled = value))
-            // this.meetingSettingService.get(this.getDefaultWorkflowKeyOfSettingsByParagraph()).subscribe(value => {
-            //     console.log('loaded default workflow_id: ', value);
-            // })
         ];
-    }
-
-    private initObservers(): void {
-        // get required information from the repositories
-        // this.workflowObserver = this.workflowRepo.getViewModelListObservable();
-        this.statuteParagraphObserver = this.statuteRepo.getViewModelListObservable();
-        // this.motionObserver = this.repo.getViewModelListObservable();
-        this.submitterObserver = this.userRepo.getViewModelListObservable();
-        this.supporterObserver = this.userRepo.getViewModelListObservable();
-        // this.categoryObserver = this.categoryRepo.getViewModelListObservable();
     }
 
     private subscribeToObservers(): Subscription[] {
         // since updates are usually not commig at the same time, every change to
         // any subject has to mark the view for checking
         return [
-            // this.workflowObserver.subscribe(value => (this.workflows = value)),
-            // this.motionObserver.subscribe(() => this.cd.markForCheck()),
-            this.submitterObserver.subscribe(() => this.cd.markForCheck()),
-            this.supporterObserver.subscribe(() => this.cd.markForCheck()),
-            // this.categoryObserver.subscribe(value => (this.categories = value)),
+            this.statuteRepo.getViewModelListObservable().subscribe(values => (this.statuteParagraphs = values)),
+            this.userRepo.getViewModelListObservable().subscribe(() => this.cd.markForCheck()),
             this.changeRecoRepo.getChangeRecosOfMotionObservable(this.motion.id).subscribe(changeRecos => {
                 if (changeRecos) {
                     this.changeRecommendations = changeRecos;
                     this.sortedChangingObjects = null;
                 }
             }),
-            this.repo.amendmentsTo(this.motion.id).subscribe((amendments: ViewMotion[]): void => {
+            this.repo.getAmendmentsByMotionAsObservable(this.motion.id).subscribe((amendments: ViewMotion[]): void => {
                 if (amendments) {
                     this.amendments = amendments;
                     this.sortedChangingObjects = null;
@@ -601,29 +492,8 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
         ];
     }
 
-    /**
-     * Save a motion. Calls the "patchValues" function in the MotionObject
-     */
-    private async updateMotionFromForm(): Promise<void> {
-        const newMotionValues = { ...this.contentForm.value };
-        try {
-            await this.updateMotion(newMotionValues, this.motion);
-            this.editMotion = false;
-            // this.amendmentEdit = false;
-        } catch (e) {
-            this.raiseError(e);
-        }
-    }
-
     private getAllTextChangingObjects(): ViewUnifiedChange[] {
         return this.getAllChangingObjectsSorted().filter((obj: ViewUnifiedChange) => !obj.isTitleChange());
-    }
-
-    private async updateMotion(
-        newMotionValues: Partial<MotionAction.UpdatePayload>,
-        motion: ViewMotion
-    ): Promise<void> {
-        await this.repo.update(newMotionValues, motion);
     }
 
     /**
@@ -660,7 +530,6 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
 
     public getDefaultWorkflowKeyOfSettingsByParagraph(paragraph?: number): keyof Settings {
         let configKey: keyof Settings = 'motions_default_workflow_id';
-
         if (!!this.contentForm && !!this.contentForm.get('statute_amendment').value && !!paragraph) {
             configKey = 'motions_default_statute_amendment_workflow_id';
         } else if (!!this.route.snapshot.queryParams.parent) {
@@ -671,106 +540,6 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
 
     private getWorkflowIdForCreateFormByParagraph(paragraph?: number): number {
         const configKey = this.getDefaultWorkflowKeyOfSettingsByParagraph(paragraph);
-        console.log('workflow id', +this.meetingSettingService.instant(configKey));
         return +this.meetingSettingService.instant(configKey);
-    }
-
-    /**
-     * Function to unsubscribe the notification subscription.
-     * Before unsubscribing a notification will send with the reason.
-     *
-     * @param unsubscriptionReason The reason for the unsubscription.
-     */
-    private unsubscribeEditNotifications(unsubscriptionReason: MotionEditNotificationType): void {
-        if (this.editNotificationSubscription && !this.editNotificationSubscription.closed) {
-            this.sendEditNotification(unsubscriptionReason);
-            this.closeSnackBar();
-            this.editNotificationSubscription.unsubscribe();
-        }
-    }
-
-    /**
-     * Function to send a notification, so that other persons can recognize editing the same motion, if they're doing.
-     *
-     * @param type TypeOfNotificationViewMotion defines the type of the notification which is sent.
-     * @param user Optional userId. If set the function will send a notification to the given userId.
-     */
-    private sendEditNotification(type: MotionEditNotificationType, user?: number): void {
-        const content: MotionEditNotification = {
-            motionId: this.motion.id,
-            senderId: this.operator.operatorId,
-            senderName: this.operator.shortName,
-            type: type
-        };
-        if (user) {
-            this.notifyService.sendToUsers(this.NOTIFICATION_EDIT_MOTION, content, user);
-        } else {
-            this.notifyService.sendToAllUsers<MotionEditNotification>(this.NOTIFICATION_EDIT_MOTION, content);
-        }
-    }
-
-    /**
-     * Function to listen to notifications if the user edits this motion.
-     * Handles the notification messages.
-     *
-     * @returns A subscription, only if the user wants to edit this motion, to listen to notifications.
-     */
-    private listenToEditNotification(): Subscription {
-        throw new Error('TODO');
-        /*return this.notifyService.getMessageObservable(this.NOTIFICATION_EDIT_MOTION).subscribe(message => {
-            const content = <MotionEditNotification>message.content;
-            if (this.operator.operatorId !== content.senderId && content.motionId === this.motion.id) {
-                let warning = '';
-
-                switch (content.type) {
-                    case MotionEditNotificationType.TYPE_BEGIN_EDITING_MOTION:
-                    case MotionEditNotificationType.TYPE_ALSO_EDITING_MOTION: {
-                        if (!this.otherWorkOnMotion.includes(content.senderName)) {
-                            this.otherWorkOnMotion.push(content.senderName);
-                        }
-
-                        warning = `${this.translate.instant('Following users are currently editing this motion:')} ${
-                            this.otherWorkOnMotion
-                        }`;
-                        if (content.type === MotionEditNotificationType.TYPE_BEGIN_EDITING_MOTION) {
-                            this.sendEditNotification(
-                                MotionEditNotificationType.TYPE_ALSO_EDITING_MOTION,
-                                message.senderUserId
-                            );
-                        }
-                        break;
-                    }
-                    case MotionEditNotificationType.TYPE_CLOSING_EDITING_MOTION: {
-                        this.recognizeOtherWorkerOnMotion(content.senderName);
-                        break;
-                    }
-                    case MotionEditNotificationType.TYPE_SAVING_EDITING_MOTION: {
-                        warning = `${content.senderName} ${this.translate.instant(
-                            'has saved his work on this motion.'
-                        )}`;
-                        // Wait, to prevent overlapping snack bars
-                        setTimeout(() => this.recognizeOtherWorkerOnMotion(content.senderName), 2000);
-                        break;
-                    }
-                }
-
-                if (warning !== '') {
-                    this.raiseWarning(warning);
-                }
-            }
-        });*/
-    }
-
-    /**
-     * Function to handle leaving persons and
-     * recognize if there is no other person editing the same motion anymore.
-     *
-     * @param senderName The name of the sender who has left the editing-view.
-     */
-    private recognizeOtherWorkerOnMotion(senderName: string): void {
-        this.otherWorkOnMotion = this.otherWorkOnMotion.filter(value => value !== senderName);
-        if (this.otherWorkOnMotion.length === 0) {
-            this.closeSnackBar();
-        }
     }
 }

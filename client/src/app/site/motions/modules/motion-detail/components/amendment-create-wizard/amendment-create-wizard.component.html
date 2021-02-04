@@ -2,7 +2,7 @@
     [nav]="false"
     [editMode]="true"
     saveText="Create"
-    [isSaveButtonEnabled]="matStepper.selectedIndex === 1"
+    [isSaveButtonEnabled]="matStepper.selectedIndex === 1 && contentForm.valid"
     (saveEvent)="saveAmendment()"
     (cancelEditEvent)="cancelCreation()"
 >

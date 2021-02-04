@@ -25,7 +25,7 @@ export namespace MotionAction {
         attachment_ids?: Id[];
     }
 
-    interface PartialMotionPayload extends HasMeetingId, OptionalPayload, AgendaItemCreationPayload {
+    export interface PartialMotionPayload extends HasMeetingId, OptionalPayload, AgendaItemCreationPayload {
         // Required
         title: string;
         meeting_id: Id;
@@ -34,7 +34,6 @@ export namespace MotionAction {
         number?: string;
         sort_parent_id?: Id;
 
-        statute_paragraph_id?: Id;
         reason?: UnsafeHtml; // is required, if special settings are set
         origin_id?: Id;
 
@@ -50,11 +49,6 @@ export namespace MotionAction {
         // Either text or amendment_paragraph_* must be set. Text must be set (required!),
         // if either lead_motion_id is not given or statute_paragraph_id is given. But I'm not sure here.
         text: UnsafeHtml;
-    }
-
-    export interface CreateAmendmentPayload extends PartialMotionPayload {
-        lead_motion_id: Id;
-        [paragraph_number: number]: UnsafeHtml;
     }
 
     export interface UpdatePayload extends Identifiable {

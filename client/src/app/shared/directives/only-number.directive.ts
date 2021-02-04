@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener, Input } from '@angular/core';
+import { Directive, HostListener, Input } from '@angular/core';
 
 @Directive({
     selector: '[osOnlyNumber]'
@@ -12,11 +12,9 @@ export class OnlyNumberDirective {
      * ^: starts with
      * $: ends
      */
-    private regExp = new RegExp('^[0-9]*$');
+    private regExp = new RegExp('^([1-9][0-9]*|0)?$');
 
     private allowedCharacters = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-
-    public constructor() {}
 
     @HostListener('keydown', ['$event'])
     public onKeyDown(event: KeyboardEvent): void {

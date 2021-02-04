@@ -18,6 +18,7 @@ import {
     MotionTitleChangeRecommendationDialogComponent,
     MotionTitleChangeRecommendationDialogComponentData
 } from '../motion-title-change-recommendation-dialog/motion-title-change-recommendation-dialog.component';
+import { MotionViewService } from '../../../services/motion-view.service';
 
 @Component({
     selector: 'os-motion-manage-title',
@@ -28,8 +29,9 @@ export class MotionManageTitleComponent extends BaseComponent implements OnInit 
     @Input()
     public motion: ViewMotion;
 
-    @Input()
-    public crMode: ChangeRecoMode;
+    public get crMode(): ChangeRecoMode {
+        return this.viewService.currentChangeRecommendationMode;
+    }
 
     /**
      * Value for os-motion-detail-diff: when this is set, that component scrolls to the given change
@@ -41,7 +43,7 @@ export class MotionManageTitleComponent extends BaseComponent implements OnInit 
      */
     public showSequential: boolean;
 
-    public changeRecommendations: ViewMotionChangeRecommendation[];
+    public titleChangeRecommendation: ViewMotionChangeRecommendation = null;
 
     private get personalNote(): PersonalNote | null {
         return this.motion.getPersonalNote();
@@ -51,13 +53,14 @@ export class MotionManageTitleComponent extends BaseComponent implements OnInit 
         componentServiceCollector: ComponentServiceCollector,
         private changeRecoRepo: MotionChangeRecommendationRepositoryService,
         private personalNoteRepo: PersonalNoteRepositoryService,
-        private dialogService: MatDialog
+        private dialogService: MatDialog,
+        private viewService: MotionViewService
     ) {
         super(componentServiceCollector);
     }
 
     public ngOnInit(): void {
-        this.subscriptions.push(...this.getSubscriptionsToSettings());
+        this.subscriptions.push(...this.getSubscriptionsToSettings(), ...this.getMotionSubscriptions());
     }
 
     /**
@@ -88,19 +91,11 @@ export class MotionManageTitleComponent extends BaseComponent implements OnInit 
      */
     public gotoChangeRecommendation(changeRecommendation: ViewMotionChangeRecommendation): void {
         this.scrollToChange = changeRecommendation;
-        // this.setChangeRecoMode(ChangeRecoMode.Diff); // Todo
-    }
-
-    public getTitleChangingObject(): ViewUnifiedChange {
-        if (this.changeRecommendations) {
-            return this.changeRecommendations.find(change => change.isTitleChange());
-        } else {
-            return null;
-        }
+        this.viewService.nextChangeRecoMode(ChangeRecoMode.Diff);
     }
 
     public getTitleWithChanges(): string {
-        return this.changeRecoRepo.getTitleWithChanges(this.motion.title, this.getTitleChangingObject(), this.crMode);
+        return this.changeRecoRepo.getTitleWithChanges(this.motion.title, this.titleChangeRecommendation, this.crMode);
     }
 
     /**
@@ -109,20 +104,21 @@ export class MotionManageTitleComponent extends BaseComponent implements OnInit 
     public toggleFavorite(): void {
         if (this.personalNote) {
             this.updateFavorite();
-            // this.motion.personalNote = {
-            //     note: '',
-            //     star: true
-            // };
         } else {
             this.createFavorite();
-            // this.motion.personalNote.star = !this.motion.personalNote.star;
         }
-        // this.personalNoteService.savePersonalNote(this.motion, this.motion.personalNote).catch(this.raiseError);
     }
 
     public isFavorite(): boolean {
-        const personalNote = this.motion.getPersonalNote();
-        return personalNote && personalNote.star;
+        return this.personalNote && this.personalNote.star;
+    }
+
+    private getMotionSubscriptions(): Subscription[] {
+        return [
+            this.changeRecoRepo
+                .getTitleChangeRecoOfMotionObservable(this.motion.id)
+                .subscribe(changeReco => (this.titleChangeRecommendation = changeReco))
+        ];
     }
 
     private getSubscriptionsToSettings(): Subscription[] {

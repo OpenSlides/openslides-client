@@ -47,8 +47,8 @@ interface DifferedViewArguments {
 })
 export class MotionLineNumberingService {
     public constructor(
-        private lineNumbering: LinenumberingService,
-        private diff: DiffService,
+        private lineNumberingService: LinenumberingService,
+        private diffService: DiffService,
         private translate: TranslateService
     ) {}
 
@@ -129,7 +129,7 @@ export class MotionLineNumberingService {
 
     private getOriginalView = (targetMotion: ViewMotion, args: DifferedViewArguments): string => {
         const { lineLength, highlightedLine }: DifferedViewArguments = args;
-        return this.lineNumbering.insertLineNumbers(targetMotion.text, lineLength, highlightedLine);
+        return this.lineNumberingService.insertLineNumbers(targetMotion.text, lineLength, highlightedLine);
     };
 
     private getChangedView = (targetMotion: ViewMotion, args: DifferedViewArguments): string => {
@@ -137,7 +137,7 @@ export class MotionLineNumberingService {
         const filteredChangeRecommendations = changes.filter(
             change => change.getChangeType() === ViewUnifiedChangeType.TYPE_CHANGE_RECOMMENDATION
         );
-        return this.diff.getTextWithChanges(
+        return this.diffService.getTextWithChanges(
             targetMotion.text,
             filteredChangeRecommendations,
             lineLength,
@@ -149,11 +149,11 @@ export class MotionLineNumberingService {
         const { changes, lineLength, highlightedLine }: DifferedViewArguments = args;
         const text = [];
         const changesToShow = changes.filter(change => change.showInDiffView());
-        const motionText = this.lineNumbering.insertLineNumbers(targetMotion.text, lineLength);
+        const motionText = this.lineNumberingService.insertLineNumbers(targetMotion.text, lineLength);
 
         for (let i = 0; i < changesToShow.length; i++) {
             text.push(
-                this.diff.extractMotionLineRange(
+                this.diffService.extractMotionLineRange(
                     motionText,
                     {
                         from: i === 0 ? 1 : changesToShow[i - 1].getLineTo(),
@@ -165,23 +165,25 @@ export class MotionLineNumberingService {
                 )
             );
 
-            text.push(this.diff.getChangeDiff(motionText, changesToShow[i], lineLength, highlightedLine));
+            text.push(this.diffService.getChangeDiff(motionText, changesToShow[i], lineLength, highlightedLine));
         }
 
-        text.push(this.diff.getTextRemainderAfterLastChange(motionText, changesToShow, lineLength, highlightedLine));
+        text.push(
+            this.diffService.getTextRemainderAfterLastChange(motionText, changesToShow, lineLength, highlightedLine)
+        );
         return text.join('');
     };
 
     private getFinalView = (targetMotion: ViewMotion, args: DifferedViewArguments): string => {
         const { changes, lineLength, highlightedLine }: DifferedViewArguments = args;
         const appliedChanges: ViewUnifiedChange[] = changes.filter(change => change.showInFinalView());
-        return this.diff.getTextWithChanges(targetMotion.text, appliedChanges, lineLength, highlightedLine);
+        return this.diffService.getTextWithChanges(targetMotion.text, appliedChanges, lineLength, highlightedLine);
     };
 
     private getModifiedFinalView = (targetMotion: ViewMotion, args: DifferedViewArguments): string => {
         const { changes, lineLength, highlightedLine }: DifferedViewArguments = args;
         if (targetMotion.modified_final_version) {
-            return this.lineNumbering.insertLineNumbers(
+            return this.lineNumberingService.insertLineNumbers(
                 targetMotion.modified_final_version,
                 lineLength,
                 highlightedLine,
@@ -201,8 +203,8 @@ export class MotionLineNumberingService {
     ): string {
         const origParagraph = paragraphs.find(paragraph => paragraph.id === amendment.statute_paragraph_id);
         if (origParagraph) {
-            let diffHtml = this.diff.diff(origParagraph.text, amendment.text);
-            diffHtml = this.lineNumbering.insertLineBreaksWithoutNumbers(diffHtml, lineLength, true);
+            let diffHtml = this.diffService.diff(origParagraph.text, amendment.text);
+            diffHtml = this.lineNumberingService.insertLineBreaksWithoutNumbers(diffHtml, lineLength, true);
             return diffHtml;
         }
     }
@@ -215,8 +217,8 @@ export class MotionLineNumberingService {
      * @return {number}
      */
     public getLastLineNumber(motion: ViewMotion, lineLength: number): number {
-        const numberedHtml = this.lineNumbering.insertLineNumbers(motion.text, lineLength);
-        const range = this.lineNumbering.getLineNumberRange(numberedHtml);
+        const numberedHtml = this.lineNumberingService.insertLineNumbers(motion.text, lineLength);
+        const range = this.lineNumberingService.getLineNumberRange(numberedHtml);
         return range.to;
     }
 
@@ -234,9 +236,9 @@ export class MotionLineNumberingService {
         }
         let html = motion.text;
         if (lineBreaks) {
-            html = this.lineNumbering.insertLineNumbers(html, lineLength);
+            html = this.lineNumberingService.insertLineNumbers(html, lineLength);
         }
-        return this.lineNumbering.splitToParagraphs(html);
+        return this.lineNumberingService.splitToParagraphs(html);
     }
 
     /**
@@ -262,10 +264,10 @@ export class MotionLineNumberingService {
      * Creates a selectable and editable paragraph
      */
     private extractAffectedParagraphs(paragraph: string, index: number): ParagraphToChoose {
-        const affected: LineNumberRange = this.lineNumbering.getLineNumberRange(paragraph);
+        const affected: LineNumberRange = this.lineNumberingService.getLineNumberRange(paragraph);
         return {
             paragraphNo: index,
-            html: this.lineNumbering.stripLineNumbers(paragraph),
+            html: this.lineNumberingService.stripLineNumbers(paragraph),
             lineFrom: affected.from,
             lineTo: affected.to
         } as ParagraphToChoose;
@@ -302,21 +304,21 @@ export class MotionLineNumberingService {
             if (amendment.amendment_paragraph(paraNo)) {
                 // Add line numbers to newText, relative to the baseParagraph, by creating a diff
                 // to the line numbered base version any applying it right away
-                const diff = this.diff.diff(paragraph, amendment.amendment_paragraph(paraNo));
-                paragraph = this.diff.diffHtmlToFinalText(diff);
+                const diff = this.diffService.diff(paragraph, amendment.amendment_paragraph(paraNo));
+                paragraph = this.diffService.diffHtmlToFinalText(diff);
                 paragraphHasChanges = true;
             }
 
-            const affected: LineNumberRange = this.lineNumbering.getLineNumberRange(paragraph);
+            const affected: LineNumberRange = this.lineNumberingService.getLineNumberRange(paragraph);
 
             changes.forEach((change: ViewMotionChangeRecommendation) => {
                 // Hint: this assumes that change recommendations only affect one specific paragraph, not multiple
                 if (change.line_from >= affected.from && change.line_from < affected.to) {
-                    paragraph = this.diff.replaceLines(paragraph, change.text, change.line_from, change.line_to);
+                    paragraph = this.diffService.replaceLines(paragraph, change.text, change.line_from, change.line_to);
 
                     // Reapply relative line numbers
-                    const diff = this.diff.diff(baseParagraphs[paraNo], paragraph);
-                    paragraph = this.diff.diffHtmlToFinalText(diff);
+                    const diff = this.diffService.diff(baseParagraphs[paraNo], paragraph);
+                    paragraph = this.diffService.diffHtmlToFinalText(diff);
 
                     paragraphHasChanges = true;
                 }
@@ -365,7 +367,7 @@ export class MotionLineNumberingService {
             ?.map(
                 (newText: string, paraNo: number): DiffLinesInParagraph => {
                     if (newText !== null) {
-                        return this.diff.getAmendmentParagraphsLines(
+                        return this.diffService.getAmendmentParagraphsLines(
                             paraNo,
                             baseParagraphs[paraNo],
                             newText,
@@ -380,7 +382,7 @@ export class MotionLineNumberingService {
                 // If nothing has changed and we want to keep unchanged paragraphs for the context,
                 // return the original text in "textPre"
                 if (diffLines === null && includeUnchanged) {
-                    const paragraph_line_range = this.lineNumbering.getLineNumberRange(baseParagraphs[paraNo]);
+                    const paragraph_line_range = this.lineNumberingService.getLineNumberRange(baseParagraphs[paraNo]);
                     return {
                         paragraphNo: paraNo,
                         paragraphLineFrom: paragraph_line_range.from,
@@ -395,7 +397,7 @@ export class MotionLineNumberingService {
                     return diffLines;
                 }
             })
-            .filter((para: DiffLinesInParagraph) => para !== null);
+            .filter((para: DiffLinesInParagraph) => !!para);
     }
 
     public getAmendmentParagraphLinesTitle(paragraph: DiffLinesInParagraph): string {
@@ -433,28 +435,33 @@ export class MotionLineNumberingService {
         const changedAmendmentParagraphs = this.applyChangesToAmendment(amendment, lineLength, changeRecos, false);
 
         return changedAmendmentParagraphs
-            ?.map(
-                (newText: string, paraNo: number): ViewMotionAmendedParagraph => {
+            .map(
+                (newText: string, paragraphNumber: number): ViewMotionAmendedParagraph => {
                     if (newText === null) {
                         return null;
                     }
 
-                    const origText = baseParagraphs[paraNo],
-                        diff = this.diff.diff(origText, newText),
-                        affectedLines = this.diff.detectAffectedLineRange(diff);
+                    const origText = baseParagraphs[paragraphNumber],
+                        diff = this.diffService.diff(origText, newText),
+                        affectedLines = this.diffService.detectAffectedLineRange(diff);
 
                     if (affectedLines === null) {
                         return null;
                     }
-                    const affectedDiff = this.diff.formatDiff(
-                        this.diff.extractRangeByLineNumbers(diff, affectedLines.from, affectedLines.to)
+                    const affectedDiff = this.diffService.formatDiff(
+                        this.diffService.extractRangeByLineNumbers(diff, affectedLines.from, affectedLines.to)
                     );
-                    const affectedConsolidated = this.diff.diffHtmlToFinalText(affectedDiff);
+                    const affectedConsolidated = this.diffService.diffHtmlToFinalText(affectedDiff);
 
-                    return new ViewMotionAmendedParagraph(amendment, paraNo, affectedConsolidated, affectedLines);
+                    return new ViewMotionAmendedParagraph(
+                        amendment,
+                        paragraphNumber,
+                        affectedConsolidated,
+                        affectedLines
+                    );
                 }
             )
-            .filter((para: ViewMotionAmendedParagraph) => para !== null);
+            .filter((paragraph: ViewMotionAmendedParagraph) => paragraph !== null);
     }
 
     /**
@@ -482,12 +489,12 @@ export class MotionLineNumberingService {
                 return origText;
             }
 
-            const diff = this.diff.diff(origText, newText);
+            const diff = this.diffService.diff(origText, newText);
 
             if (withDiff) {
                 return diff;
             } else {
-                return this.diff.diffHtmlToFinalText(diff);
+                return this.diffService.diffHtmlToFinalText(diff);
             }
         });
     }
@@ -502,7 +509,7 @@ export class MotionLineNumberingService {
 
             return this.getTextParagraphs(parent, true, lineLength).map((paragraph: string, index: number) => {
                 const diffedParagraph = amendment.amendment_paragraph(index)
-                    ? this.diff.diff(paragraph, amendment.amendment_paragraph(index), lineLength)
+                    ? this.diffService.diff(paragraph, amendment.amendment_paragraph(index), lineLength)
                     : paragraph;
                 return this.extractAffectedParagraphs(diffedParagraph, index);
             });

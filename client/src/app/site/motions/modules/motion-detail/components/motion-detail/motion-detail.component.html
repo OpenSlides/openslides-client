@@ -120,10 +120,15 @@
     </mat-menu>
 </os-head-bar>
 
-<div class="content-container spacer-bottom-60" (touchstart)="swipe($event, 'start')" (touchend)="swipe($event, 'end')">
+<div
+    class="content-container spacer-bottom-60"
+    osSwipe
+    (swipeLeft)="navigateToMotion(previousMotion)"
+    (swipeRight)="navigateToMotion(nextMotion)"
+>
     <!-- Title -->
     <div class="title" *ngIf="motion && !editMotion">
-        <os-motion-manage-title [motion]="motion" [crMode]="crMode"></os-motion-manage-title>
+        <os-motion-manage-title [motion]="motion"></os-motion-manage-title>
     </div>
 
     <ng-container *ngIf="vp.isMobile; then mobileView; else desktopView"></ng-container>
@@ -170,16 +175,12 @@
                     #highlightForm
                     *ngIf="!newMotion && !editMotion"
                     [motion]="motion"
-                    (changeChangeRecoMode)="crMode = $event"
-                    (changeLineNumberingMode)="lnMode = $event"
                 ></os-motion-highlight-form>
                 <os-motion-content
                     #content
                     [motion]="motion"
                     [editMotion]="editMotion"
                     [newMotion]="newMotion"
-                    [lnMode]="lnMode"
-                    [changeRecoMode]="crMode"
                     (save)="saveMotion($event)"
                     (changeForm)="temporaryMotion = $event"
                 ></os-motion-content>
@@ -193,81 +194,3 @@
         <os-motion-meta-data [motion]="motion"></os-motion-meta-data>
     </div>
 </ng-template>
-
-<!-- Line number Menu -->
-<!-- <mat-menu #lineNumberingMenu="matMenu">
-    <div *ngIf="motion">
-        <button
-            mat-menu-item
-            (click)="setLineNumberingMode(LineNumberingMode.None)"
-            [ngClass]="{ selected: lnMode === LineNumberingMode.None }"
-        >
-            {{ 'none' | translate }}
-        </button>
-        <button
-            mat-menu-item
-            (click)="setLineNumberingMode(LineNumberingMode.Inside)"
-            [ngClass]="{ selected: lnMode === LineNumberingMode.Inside }"
-        >
-            {{ 'inline' | translate }}
-        </button>
-        <button
-            mat-menu-item
-            (click)="setLineNumberingMode(LineNumberingMode.Outside)"
-            [ngClass]="{ selected: lnMode === LineNumberingMode.Outside }"
-        >
-            {{ 'outside' | translate }}
-        </button>
-        <mat-divider></mat-divider>
-        <button mat-menu-item *ngIf="!highlightedLineOpened" (click)="highlightedLineOpened = true">
-            <mat-icon>redo</mat-icon>
-            <span>{{ 'Go to line' | translate }}</span>
-        </button>
-    </div>
-</mat-menu> -->
-
-<!-- Diff View Menu
-     For motions, all items are available if there are changing objects. The final print template only after is has been created.
-     For paragraph-based amendments, only the original and the diff version is available.
--->
-<!-- <mat-menu #changeRecoMenu="matMenu">
-    <button
-        mat-menu-item
-        (click)="setChangeRecoMode(ChangeRecoMode.Original)"
-        [ngClass]="{ selected: crMode === ChangeRecoMode.Original }"
-    >
-        {{ 'Original version' | translate }}
-    </button>
-    <button
-        mat-menu-item
-        (click)="setChangeRecoMode(ChangeRecoMode.Changed)"
-        [ngClass]="{ selected: crMode === ChangeRecoMode.Changed }"
-        *ngIf="hasChangingObjects()"
-    >
-        {{ 'Changed version' | translate }}
-    </button>
-    <button
-        mat-menu-item
-        (click)="setChangeRecoMode(ChangeRecoMode.Diff)"
-        [ngClass]="{ selected: crMode === ChangeRecoMode.Diff }"
-        *ngIf="hasChangingObjects()"
-    >
-        {{ 'Diff version' | translate }}
-    </button>
-    <button
-        mat-menu-item
-        (click)="setChangeRecoMode(ChangeRecoMode.Final)"
-        [ngClass]="{ selected: crMode === ChangeRecoMode.Final }"
-        *ngIf="motion && !motion.isParagraphBasedAmendment() && hasChangingObjects()"
-    >
-        {{ 'Final version' | translate }}
-    </button>
-    <button
-        mat-menu-item
-        *ngIf="motion && motion.modified_final_version && !motion.isParagraphBasedAmendment()"
-        (click)="setChangeRecoMode(ChangeRecoMode.ModifiedFinal)"
-        [ngClass]="{ selected: crMode === ChangeRecoMode.ModifiedFinal }"
-    >
-        {{ 'Final print template' | translate }}
-    </button>
-</mat-menu> -->

@@ -14,7 +14,7 @@ export class PersonalNote extends BaseModel<PersonalNote> {
     public star: boolean;
 
     public user_id: Id; // user/personal_note_$<meeting_id>_ids;
-    public content_object_id: Id; // */personal_note_ids;
+    public content_object_id: string; // */personal_note_ids;
 
     public constructor(input: Partial<PersonalNote>) {
         super(PersonalNote.COLLECTION, input);

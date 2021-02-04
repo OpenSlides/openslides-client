@@ -100,7 +100,9 @@ export abstract class BaseSearchValueSelectorComponent<T> extends BaseFormContro
         this.contentForm.setValue(items);
     }
 
-    public onContainerClick(event: MouseEvent): void {}
+    public onContainerClick(event: MouseEvent): void {
+        this.matSelect.open();
+    }
 
     /**
      * Emits the click on 'notFound' and resets the search-value.
