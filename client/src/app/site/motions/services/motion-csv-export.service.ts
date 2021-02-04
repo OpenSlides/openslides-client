@@ -53,7 +53,7 @@ export class MotionCsvExportService {
         const changes: ViewUnifiedChange[] = Object.assign([], this.changeRecoRepo.getChangeRecoOfMotion(motion.id));
 
         // TODO: Cleanup, everything change reco and amendment based needs a unified structure.
-        const amendments = this.motionRepo.getAmendmentsInstantly(motion.id);
+        const amendments = this.motionRepo.getAmendmentsByMotionInstantly(motion.id);
         if (amendments) {
             for (const amendment of amendments) {
                 const changeRecos = this.changeRecoRepo

@@ -2,15 +2,17 @@ import { Inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { MotionChangeRecommendationRepositoryService } from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
+import {
+    MotionChangeRecommendationRepositoryService,
+    RawMotionChangeRecommendation
+} from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
 
 export interface BaseChangeRecommendationData {
     editChangeRecommendation: boolean;
     newChangeRecommendation: boolean;
-    changeRecommendation: ViewMotionChangeRecommendation;
+    changeRecommendation: RawMotionChangeRecommendation;
 }
 
 export abstract class BaseChangeRecommendationDialogComponent<
@@ -29,7 +31,7 @@ export abstract class BaseChangeRecommendationDialogComponent<
     /**
      * The change recommendation
      */
-    public changeReco: ViewMotionChangeRecommendation;
+    public changeReco: RawMotionChangeRecommendation;
 
     /**
      * Change recommendation content.
@@ -50,7 +52,6 @@ export abstract class BaseChangeRecommendationDialogComponent<
     }
 
     public async submitChanges(): Promise<void> {
-        // this.applyChangesOnChangeRecommendation();
         this.saveChangeRecommendation();
     }
 
@@ -63,14 +64,6 @@ export abstract class BaseChangeRecommendationDialogComponent<
             | removeformat | bullist numlist | outdent indent | link charmap code`;
     }
 
-    private applyChangesOnChangeRecommendation(): void {
-        this.changeReco.updateChangeReco(
-            this.contentForm.controls.diffType.value,
-            this.contentForm.controls.text.value,
-            !this.contentForm.controls.public.value
-        );
-    }
-
     private async saveChangeRecommendation(): Promise<void> {
         if (this.newReco) {
             await this.handleRequest(this.createChangeRecommendation());
@@ -81,17 +74,18 @@ export abstract class BaseChangeRecommendationDialogComponent<
     }
 
     private async createChangeRecommendation(): Promise<void> {
-        console.log('create changereco', this.changeReco);
-        await this.repo.create(this.changeReco);
+        await this.repo.create({
+            ...this.changeReco,
+            ...this.contentForm.value,
+            internal: !this.contentForm.value.public
+        });
     }
 
     private async updateChangeRecommmendation(): Promise<void> {
-        console.log('update changereco', this.changeReco);
-        await this.repo.update(this.changeReco.changeRecommendation, this.changeReco);
+        await this.repo.update(this.contentForm.value, this.changeReco);
     }
 
     private handleRequest(request: Promise<any>): Promise<void> {
-        // return request.catch(this.raiseError);
         return request;
     }
 

@@ -39,7 +39,7 @@
             type="button"
             mat-button
             [matMenuTriggerFor]="changeRecoMenu"
-            *ngIf="motion && (hasChangingObjects() || motion.modified_final_version)"
+            *ngIf="motion && (hasChangeRecommendations || motion.modified_final_version)"
         >
             <mat-icon>rate_review</mat-icon>
             &nbsp;<span>{{ verboseChangeRecoMode[crMode] | translate }}</span>
@@ -47,9 +47,9 @@
     </div>
 
     <!-- Final edit buttons -->
-    <div *osPerms="'motions.can_manage'">
-        <!-- create final version -->
-        <button
+    <!-- <div *osPerms="'motions.can_manage'"> -->
+    <!-- create final version -->
+    <!-- <button
             type="button"
             mat-icon-button
             matTooltip="{{ 'Create final print template' | translate }}"
@@ -57,10 +57,10 @@
             (click)="createModifiedFinalVersion()"
         >
             <mat-icon>file_copy</mat-icon>
-        </button>
+        </button> -->
 
-        <!-- edit final version -->
-        <button
+    <!-- edit final version -->
+    <!-- <button
             type="button"
             mat-icon-button
             *ngIf="isRecoMode(ChangeRecoMode.ModifiedFinal) && !isFinalEdit"
@@ -68,9 +68,9 @@
             (click)="editModifiedFinal()"
         >
             <mat-icon>edit</mat-icon>
-        </button>
-        <!-- save final version -->
-        <button
+        </button> -->
+    <!-- save final version -->
+    <!-- <button
             type="button"
             *ngIf="isRecoMode(ChangeRecoMode.ModifiedFinal) && isFinalEdit"
             mat-icon-button
@@ -79,9 +79,9 @@
             (click)="onSubmitFinalVersion()"
         >
             <mat-icon>save</mat-icon>
-        </button>
-        <!-- cancel final version edit -->
-        <button
+        </button> -->
+    <!-- cancel final version edit -->
+    <!-- <button
             type="button"
             *ngIf="isRecoMode(ChangeRecoMode.ModifiedFinal) && isFinalEdit"
             mat-icon-button
@@ -89,9 +89,9 @@
             (click)="cancelFinalVersionEdit()"
         >
             <mat-icon>close</mat-icon>
-        </button>
-        <!-- delete final version edit -->
-        <button
+        </button> -->
+    <!-- delete final version edit -->
+    <!-- <button
             type="button"
             class="red-warning-text"
             *ngIf="isRecoMode(ChangeRecoMode.ModifiedFinal) && !isFinalEdit"
@@ -101,7 +101,7 @@
         >
             <mat-icon>delete</mat-icon>
         </button>
-    </div>
+    </div> -->
 </div>
 
 <!-- Line number Menu -->
@@ -152,7 +152,7 @@
         mat-menu-item
         (click)="setChangeRecoMode(ChangeRecoMode.Changed)"
         [ngClass]="{ selected: crMode === ChangeRecoMode.Changed }"
-        *ngIf="hasChangingObjects()"
+        *ngIf="hasChangeRecommendations"
     >
         {{ 'Changed version' | translate }}
     </button>
@@ -160,7 +160,7 @@
         mat-menu-item
         (click)="setChangeRecoMode(ChangeRecoMode.Diff)"
         [ngClass]="{ selected: crMode === ChangeRecoMode.Diff }"
-        *ngIf="hasChangingObjects()"
+        *ngIf="hasChangeRecommendations"
     >
         {{ 'Diff version' | translate }}
     </button>
@@ -168,7 +168,7 @@
         mat-menu-item
         (click)="setChangeRecoMode(ChangeRecoMode.Final)"
         [ngClass]="{ selected: crMode === ChangeRecoMode.Final }"
-        *ngIf="!isParagraphBasedAmendment && hasChangingObjects()"
+        *ngIf="!isParagraphBasedAmendment && hasChangeRecommendations"
     >
         {{ 'Final version' | translate }}
     </button>

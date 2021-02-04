@@ -85,7 +85,48 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
         private cd: ChangeDetectorRef,
         private operator: OperatorService
     ) {
-        this.operator.operatorUpdatedEvent.subscribe(this.onPermissionsChanged.bind(this));
+        this.operator.operatorUpdatedEvent.subscribe(() => this.checkPermissions());
+    }
+
+    /**
+     * Adding the event listeners: clicking on plus signs next to line numbers
+     * and the hover-event next to the line numbers
+     */
+    public ngOnInit(): void {
+        const nativeElement = <Element>this.el.nativeElement;
+        this.element = <Element>nativeElement.querySelector('.text');
+
+        this.renderer.listen(this.el.nativeElement, 'click', (ev: MouseEvent) => {
+            const element = <Element>ev.target;
+            if (element.classList.contains('os-line-number') && element.classList.contains('selectable')) {
+                this.clickedLineNumber(parseInt(element.getAttribute('data-line-number'), 10));
+            }
+        });
+
+        this.renderer.listen(this.el.nativeElement, 'mouseover', (ev: MouseEvent) => {
+            const element = <Element>ev.target;
+            if (element.classList.contains('os-line-number') && element.classList.contains('selectable')) {
+                this.hoverLineNumber(parseInt(element.getAttribute('data-line-number'), 10));
+            }
+        });
+
+        this.update();
+
+        // The positioning of the change recommendations depends on the rendered HTML
+        // If we show it right away, there will be nasty Angular warnings about changed values, as the position
+        // is changing while the DOM updates
+        window.setTimeout(() => {
+            this.setLineNumberCache();
+            this.showChangeRecommendations = true;
+            this.cd.detectChanges();
+        }, 1);
+    }
+
+    /**
+     * @param changes
+     */
+    public ngOnChanges(changes: SimpleChanges): void {
+        this.update();
     }
 
     /**
@@ -104,7 +145,7 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
     /**
      * The permissions of the user have changed -> activate / deactivate editing functionality
      */
-    private onPermissionsChanged(): void {
+    private checkPermissions(): void {
         if (this.operator.hasPerms(Permission.motionsCanManage)) {
             this.can_manage = true;
             if (this.selectedFrom === null) {
@@ -161,15 +202,12 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
      * Resetting the selection. All selected lines are unselected, and the selectable lines are marked as such
      */
     private startCreating(): void {
-        console.log('startCreating', this.element, this.can_manage);
         if (!this.can_manage || !this.element) {
             return;
         }
 
         const alreadyAffectedLines = this.getAffectedLineNumbers();
-        console.log('alreadyAffectedLines', alreadyAffectedLines);
         Array.from(this.element.querySelectorAll('.os-line-number')).forEach((lineNumber: Element) => {
-            console.log('lineNumber', lineNumber);
             lineNumber.classList.remove('selected');
             if (alreadyAffectedLines.indexOf(parseInt(lineNumber.getAttribute('data-line-number'), 10)) === -1) {
                 lineNumber.classList.add('selectable');
@@ -285,47 +323,5 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
      */
     public gotoReco(reco: ViewMotionChangeRecommendation): void {
         this.gotoChangeRecommendation.emit(reco);
-    }
-
-    /**
-     * Adding the event listeners: clicking on plus signs next to line numbers
-     * and the hover-event next to the line numbers
-     */
-    public ngOnInit(): void {
-        const nativeElement = <Element>this.el.nativeElement;
-        this.element = <Element>nativeElement.querySelector('.text');
-
-        this.renderer.listen(this.el.nativeElement, 'click', (ev: MouseEvent) => {
-            const element = <Element>ev.target;
-            if (element.classList.contains('os-line-number') && element.classList.contains('selectable')) {
-                this.clickedLineNumber(parseInt(element.getAttribute('data-line-number'), 10));
-            }
-        });
-
-        this.renderer.listen(this.el.nativeElement, 'mouseover', (ev: MouseEvent) => {
-            const element = <Element>ev.target;
-            console.log(element.classList.contains('os-line-number'), element.classList.contains('selectable'));
-            if (element.classList.contains('os-line-number') && element.classList.contains('selectable')) {
-                this.hoverLineNumber(parseInt(element.getAttribute('data-line-number'), 10));
-            }
-        });
-
-        this.update();
-
-        // The positioning of the change recommendations depends on the rendered HTML
-        // If we show it right away, there will be nasty Angular warnings about changed values, as the position
-        // is changing while the DOM updates
-        window.setTimeout(() => {
-            this.setLineNumberCache();
-            this.showChangeRecommendations = true;
-            this.cd.detectChanges();
-        }, 1);
-    }
-
-    /**
-     * @param changes
-     */
-    public ngOnChanges(changes: SimpleChanges): void {
-        this.update();
     }
 }

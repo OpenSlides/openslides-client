@@ -32,12 +32,6 @@ import { Selectable } from '../selectable';
     encapsulation: ViewEncapsulation.None
 })
 export class SearchRepoSelectorComponent extends BaseSearchValueSelectorComponent<Selectable> implements OnInit {
-    @ViewChild('matSelect')
-    public matSelect: MatSelect;
-
-    @ViewChild('chipPlaceholder', { static: false })
-    public chipPlaceholder: ElementRef<HTMLElement>;
-
     @Input()
     public repo: BaseRepository<any, any> & ModelRequestRepository;
 
@@ -45,43 +39,10 @@ export class SearchRepoSelectorComponent extends BaseSearchValueSelectorComponen
     public lazyLoading = true;
 
     @Input()
-    public multiple = false;
-
-    @Input()
-    public includeNone = true;
-
-    @Input()
-    public noneTitle = '-';
-
-    @Input()
-    public showChips = true;
-
-    @Input()
-    public showNotFoundButton = true;
-
-    @Input()
     public defaultDataConfigKey: keyof Settings;
 
-    @Input()
-    public errorStateMatcher: ParentErrorStateMatcher;
-
-    @Output()
-    public clickNotFound = new EventEmitter<string>();
-
-    public get empty(): boolean {
-        return Array.isArray(this.contentForm.value) ? !this.contentForm.value.length : !this.contentForm.value;
-    }
     public get controlType(): string {
         return 'search-repo-selector';
-    }
-    public get selectedItems(): Selectable[] {
-        return this.items && this.contentForm.value
-            ? this.items.filter(item => this.contentForm.value.includes(item.id))
-            : [];
-    }
-
-    public get width(): string {
-        return this.chipPlaceholder ? `${this.chipPlaceholder.nativeElement.clientWidth - 16}px` : '100%';
     }
 
     public searchValueForm: FormControl;
@@ -101,42 +62,14 @@ export class SearchRepoSelectorComponent extends BaseSearchValueSelectorComponen
     }
 
     public ngOnInit(): void {
-        if (this.repo && (!this.lazyLoading || this.defaultDataConfigKey)) {
-            this.doModelRequest().then(() => this.initItems());
-        }
-        if (this.defaultDataConfigKey) {
-            this.subscriptions.push(
-                this.componentServiceCollector.meetingSettingService.get(this.defaultDataConfigKey).subscribe(value => {
-                    if (!this.value) {
-                        this.value = value as any;
-                    }
-                })
-            );
-        }
+        this.init();
     }
 
     public onContainerClick(event: MouseEvent): void {
         if (!this.items) {
             this.doModelRequest().then(() => this.initItems());
         }
-        this.matSelect.open();
-    }
-
-    /**
-     * Emits the click on 'notFound' and resets the search-value.
-     */
-    public onNotFoundClick(): void {
-        this.clickNotFound.emit(this.searchValueForm.value);
-        this.searchValueForm.setValue('');
-    }
-
-    public removeItem(itemId: number): void {
-        const items = <number[]>this.contentForm.value;
-        items.splice(
-            items.findIndex(item => item === itemId),
-            1
-        );
-        this.contentForm.setValue(items);
+        super.onContainerClick(event);
     }
 
     public getFilteredItemsBySearchValue(): Selectable[] {
@@ -156,13 +89,20 @@ export class SearchRepoSelectorComponent extends BaseSearchValueSelectorComponen
         });
     }
 
-    protected initializeForm(): void {
-        this.contentForm = this.fb.control([]);
-        this.searchValueForm = this.fb.control('');
-    }
-
-    protected updateForm(value: Selectable[]): void {
-        this.contentForm.setValue(value);
+    private async init(): Promise<void> {
+        if (this.repo && (!this.lazyLoading || this.defaultDataConfigKey || !this.empty)) {
+            await this.doModelRequest();
+            this.initItems();
+        }
+        if (this.defaultDataConfigKey) {
+            this.subscriptions.push(
+                this.componentServiceCollector.meetingSettingService.get(this.defaultDataConfigKey).subscribe(value => {
+                    if (!this.value) {
+                        this.value = value as any;
+                    }
+                })
+            );
+        }
     }
 
     private async doModelRequest(): Promise<void> {

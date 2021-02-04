@@ -58,33 +58,6 @@ export class SearchValueSelectorComponent extends BaseSearchValueSelectorCompone
     public cdkVirtualScrollViewPort: CdkVirtualScrollViewport;
 
     /**
-     * Decide if this should be a single or multi-select-field
-     */
-    @Input()
-    public multiple = false;
-
-    /**
-     * Decide, if none should be included, if multiple is false.
-     */
-    @Input()
-    public includeNone = false;
-
-    @Input()
-    public showChips = true;
-
-    @Input()
-    public noneTitle = '–';
-
-    @Input()
-    public errorStateMatcher: ParentErrorStateMatcher;
-
-    /**
-     * Whether to show a button, if there is no matching option.
-     */
-    @Input()
-    public showNotFoundButton = false;
-
-    /**
      * The inputlist subject. Subscribes to it and updates the selector, if the subject
      * changes its values.
      */
@@ -99,7 +72,6 @@ export class SearchValueSelectorComponent extends BaseSearchValueSelectorCompone
         } else {
             this.subscriptions.push(
                 value.pipe(auditTime(10)).subscribe(items => {
-                    console.log('search-value-selector', items);
                     this.selectableItems = items;
                     if (this.contentForm) {
                         this.disabled = !items || (!!items && !items.length);
@@ -107,16 +79,6 @@ export class SearchValueSelectorComponent extends BaseSearchValueSelectorCompone
                 })
             );
         }
-    }
-
-    /**
-     * Emits the currently searched string.
-     */
-    @Output()
-    public clickNotFound = new EventEmitter<string>();
-
-    public get empty(): boolean {
-        return Array.isArray(this.contentForm.value) ? !this.contentForm.value.length : !this.contentForm.value;
     }
 
     public get selectedItems(): Selectable[] {
@@ -129,12 +91,6 @@ export class SearchValueSelectorComponent extends BaseSearchValueSelectorCompone
     }
 
     public controlType = 'search-value-selector';
-
-    public get width(): string {
-        return this.chipPlaceholder ? `${this.chipPlaceholder.nativeElement.clientWidth - 16}px` : '100%';
-    }
-
-    public searchValue: FormControl;
 
     private noneItem: Selectable = {
         getListTitle: () => this.noneTitle,
@@ -207,28 +163,6 @@ export class SearchValueSelectorComponent extends BaseSearchValueSelectorCompone
             const value = change.source.value;
             this.addRemoveId(value);
         }
-    }
-
-    /**
-     * Satisfy parent
-     */
-    public onContainerClick(event: MouseEvent): void {
-        if ((event.target as Element).tagName.toLowerCase() !== 'select') {
-            // this.element.nativeElement.querySelector('select').focus();
-        }
-    }
-
-    /**
-     * Emits the click on 'notFound' and resets the search-value.
-     */
-    public onNotFoundClick(): void {
-        this.clickNotFound.emit(this.searchValue.value);
-        this.searchValue.setValue('');
-    }
-
-    protected initializeForm(): void {
-        this.contentForm = this.fb.control([]);
-        this.searchValue = this.fb.control('');
     }
 
     protected updateForm(value: Selectable[] | Selectable | null): void {

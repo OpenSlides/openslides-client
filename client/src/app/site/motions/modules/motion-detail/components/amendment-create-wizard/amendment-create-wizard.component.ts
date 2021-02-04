@@ -2,6 +2,8 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { AmendmentAction } from 'app/core/actions/amendment-action';
+import { AmendmentRepositoryService } from 'app/core/repositories/motions/amendment-repository.service';
 import {
     MotionLineNumberingService,
     ParagraphToChoose
@@ -69,7 +71,8 @@ export class AmendmentCreateWizardComponent extends BaseComponent implements OnI
         componentServiceCollector: ComponentServiceCollector,
         private meetingSettingsService: MeetingSettingsService,
         private formBuilder: FormBuilder,
-        private repo: MotionRepositoryService,
+        private repo: AmendmentRepositoryService,
+        private motionRepo: MotionRepositoryService,
         private motionLineNumbering: MotionLineNumberingService,
         private route: ActivatedRoute,
         private router: Router,
@@ -100,7 +103,7 @@ export class AmendmentCreateWizardComponent extends BaseComponent implements OnI
     public getMotionByUrl(): void {
         // load existing motion
         this.route.params.subscribe(params => {
-            this.repo.getViewModelObservable(params.id).subscribe(newViewMotion => {
+            this.motionRepo.getViewModelObservable(params.id).subscribe(newViewMotion => {
                 if (newViewMotion) {
                     this.paragraphs = this.motionLineNumbering.getParagraphsToChoose(newViewMotion, this.lineLength);
 
@@ -205,13 +208,7 @@ export class AmendmentCreateWizardComponent extends BaseComponent implements OnI
             newParagraphs = Object.assign([], oldSelected);
             newParagraphs.push(paragraph);
             newParagraphs.sort((para1: ParagraphToChoose, para2: ParagraphToChoose): number => {
-                if (para1.paragraphNo < para2.paragraphNo) {
-                    return -1;
-                } else if (para1.paragraphNo > para2.paragraphNo) {
-                    return 1;
-                } else {
-                    return 0;
-                }
+                return para1.paragraphNo - para2.paragraphNo;
             });
 
             this.contentForm.addControl(
@@ -247,18 +244,19 @@ export class AmendmentCreateWizardComponent extends BaseComponent implements OnI
                 amendmentParagraphs[paraNo] = this.contentForm.value['text_' + paraNo];
             }
         });
-        const motionCreate = {
+        const motionCreate: AmendmentAction.CreateParagraphbasedPayload = {
             ...this.contentForm.value,
             title: this.translate.instant('Amendment to') + ' ' + this.motion.getNumberOrTitle(),
             parent_id: this.motion.id,
             category_id: this.motion.category_id,
             tag_ids: this.motion.tag_ids,
             motion_block_id: this.motion.block_id,
+            lead_motion_id: this.motion.id,
             amendment_paragraphs: amendmentParagraphs,
             workflow_id: this.meetingSettingsService.instant('motions_default_workflow_id')
         };
 
-        const response = await this.repo.create(motionCreate);
+        const response = await this.repo.createParagraphBased(motionCreate);
         this.router.navigate(['./motions/' + response.id]);
     }
 }

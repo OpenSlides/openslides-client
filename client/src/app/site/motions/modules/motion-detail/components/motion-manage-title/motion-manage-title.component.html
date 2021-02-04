@@ -4,12 +4,12 @@
             <span *ngIf="titleCanBeChanged()">
                 <span
                     class="title-change-indicator"
-                    *ngIf="getTitleChangingObject()"
-                    (click)="gotoChangeRecommendation(getTitleChangingObject())"
+                    *ngIf="titleChangeRecommendation"
+                    (click)="gotoChangeRecommendation(titleChangeRecommendation)"
                 ></span>
                 <span
                     class="change-title"
-                    *osPerms="'motions.can_manage'; and: !getTitleChangingObject()"
+                    *osPerms="'motions.can_manage'; and: !titleChangeRecommendation"
                     (click)="createTitleChangeRecommendation()"
                 ></span>
             </span>

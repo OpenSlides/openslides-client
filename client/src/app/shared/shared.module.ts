@@ -3,48 +3,13 @@ import { RouterModule } from '@angular/router';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-// MaterialUI modules
-import { MatBadgeModule } from '@angular/material/badge';
-import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
-import { MatButtonModule, MatAnchor } from '@angular/material/button';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatCardModule } from '@angular/material/card';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
-import { MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatSliderModule } from '@angular/material/slider';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatSortModule } from '@angular/material/sort';
-import { MatStepperModule } from '@angular/material/stepper';
-import { MatTableModule } from '@angular/material/table';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatRadioModule } from '@angular/material/radio';
-import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatListModule } from '@angular/material/list';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
-import { DragDropModule } from '@angular/cdk/drag-drop';
-import { CdkTreeModule } from '@angular/cdk/tree';
-import { ScrollingModule } from '@angular/cdk/scrolling';
+import { MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 
 // ngx-translate
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 // ngx-file-drop
 import { NgxFileDropModule } from 'ngx-file-drop';
@@ -133,6 +98,93 @@ import { ListOfSpeakersContentComponent } from './components/list-of-speakers-co
 import { ResourceComponent } from './components/resource/resource.component';
 import { OnlyNumberDirective } from './directives/only-number.directive';
 import { SearchRepoSelectorComponent } from './components/search-repo-selector/search-repo-selector.component';
+import { MaterialDesignModule } from './libraries/material-design.module';
+import { SwipeDirective } from './directives/swipe.directive';
+import { ListenEditingDirective } from './directives/listen-editing.directive';
+
+const declarations = [
+    PermsDirective,
+    IsSuperAdminDirective,
+    DomChangeDirective,
+    AutofocusDirective,
+    HeadBarComponent,
+    LegalNoticeContentComponent,
+    PrivacyPolicyContentComponent,
+    SearchValueSelectorComponent,
+    PromptDialogComponent,
+    SortingListComponent,
+    SortingTreeComponent,
+    ChoiceDialogComponent,
+    SortFilterBarComponent,
+    SortBottomSheetComponent,
+    FilterMenuComponent,
+    LogoComponent,
+    CopyrightSignComponent,
+    C4DialogComponent,
+    ProjectorButtonComponent,
+    ProjectionDialogComponent,
+    ResizedDirective,
+    MetaTextBlockComponent,
+    ProjectorComponent,
+    SlideContainerComponent,
+    CountdownTimeComponent,
+    MediaUploadContentComponent,
+    PrecisionPipe,
+    SpeakerButtonComponent,
+    GridLayoutComponent,
+    TileComponent,
+    BlockTileComponent,
+    IconContainerComponent,
+    ListViewTableComponent,
+    AgendaContentObjectFormComponent,
+    ExtensionFieldComponent,
+    AttachmentControlComponent,
+    RoundedInputComponent,
+    ProgressSnackBarComponent,
+    GlobalSpinnerComponent,
+    UserMenuComponent,
+    SuperSearchComponent,
+    OverlayComponent,
+    PreviewComponent,
+    HeightResizingDirective,
+    TrustPipe,
+    LocalizedDatePipe,
+    ChartsComponent,
+    CheckInputComponent,
+    BannerComponent,
+    PollFormComponent,
+    MotionPollDialogComponent,
+    ParsePollNumberPipe,
+    ReversePipe,
+    PollKeyVerbosePipe,
+    PollPercentBasePipe,
+    VotingPrivacyWarningComponent,
+    MotionPollDetailContentComponent,
+    AssignmentPollDetailContentComponent,
+    JitsiComponent,
+    VjsPlayerComponent,
+    LiveStreamComponent,
+    ListOfSpeakersContentComponent,
+    ResourceComponent,
+    OnlyNumberDirective,
+    SearchRepoSelectorComponent,
+    SwipeDirective,
+    ListenEditingDirective
+];
+
+const sharedModules = [
+    EditorModule,
+    PblNgridModule,
+    PblNgridMaterialModule,
+    PblNgridTargetEventsModule,
+    NgxMaterialTimepickerModule,
+    ChartsModule,
+    NgxFileDropModule,
+    NgxMatSelectSearchModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MaterialDesignModule
+];
 
 /**
  * Share Module for all "dumb" components and pipes.
@@ -144,237 +196,9 @@ import { SearchRepoSelectorComponent } from './components/search-repo-selector/s
  * No dependency to the rest of our application.
  */
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule,
-        MatFormFieldModule,
-        MatSelectModule,
-        ReactiveFormsModule,
-        MatAutocompleteModule,
-        MatButtonModule,
-        MatCheckboxModule,
-        MatToolbarModule,
-        MatDatepickerModule,
-        MatMomentDateModule,
-        MatCardModule,
-        MatInputModule,
-        MatTableModule,
-        MatSortModule,
-        MatPaginatorModule,
-        MatProgressBarModule,
-        MatProgressSpinnerModule,
-        MatSidenavModule,
-        MatListModule,
-        MatExpansionModule,
-        MatMenuModule,
-        MatDialogModule,
-        MatSnackBarModule,
-        MatChipsModule,
-        MatBottomSheetModule,
-        MatTooltipModule,
-        MatBadgeModule,
-        // TODO: there is an error with missing icons
-        // we either wait or include a fixed version manually (dirty)
-        // https://github.com/google/material-design-icons/issues/786
-        MatIconModule,
-        MatRadioModule,
-        MatButtonToggleModule,
-        MatStepperModule,
-        MatTabsModule,
-        MatSliderModule,
-        MatSlideToggleModule,
-        MatDividerModule,
-        DragDropModule,
-        OpenSlidesTranslateModule.forChild(),
-        RouterModule,
-        NgxMatSelectSearchModule,
-        NgxFileDropModule,
-        EditorModule,
-        CdkTreeModule,
-        ScrollingModule,
-        PblNgridModule,
-        PblNgridMaterialModule,
-        PblNgridTargetEventsModule,
-        PdfViewerModule,
-        NgxMaterialTimepickerModule,
-        ChartsModule
-    ],
-    exports: [
-        FormsModule,
-        MatAutocompleteModule,
-        MatFormFieldModule,
-        MatSelectModule,
-        ReactiveFormsModule,
-        MatButtonModule,
-        MatCheckboxModule,
-        MatToolbarModule,
-        MatCardModule,
-        MatDatepickerModule,
-        MatInputModule,
-        MatTableModule,
-        MatSortModule,
-        MatPaginatorModule,
-        MatProgressBarModule,
-        MatProgressSpinnerModule,
-        MatSidenavModule,
-        MatListModule,
-        MatExpansionModule,
-        MatMenuModule,
-        MatDialogModule,
-        MatSnackBarModule,
-        MatChipsModule,
-        MatTooltipModule,
-        MatTabsModule,
-        MatBadgeModule,
-        MatIconModule,
-        MatRadioModule,
-        MatButtonToggleModule,
-        MatStepperModule,
-        MatSliderModule,
-        MatSlideToggleModule,
-        MatDividerModule,
-        DragDropModule,
-        NgxMatSelectSearchModule,
-        NgxFileDropModule,
-        TranslateModule,
-        OpenSlidesTranslateModule,
-        PdfViewerModule,
-        PermsDirective,
-        IsSuperAdminDirective,
-        DomChangeDirective,
-        AutofocusDirective,
-        HeadBarComponent,
-        SearchValueSelectorComponent,
-        LegalNoticeContentComponent,
-        PrivacyPolicyContentComponent,
-        PromptDialogComponent,
-        SortingListComponent,
-        EditorModule,
-        SortingTreeComponent,
-        SortFilterBarComponent,
-        LogoComponent,
-        CopyrightSignComponent,
-        C4DialogComponent,
-        ProjectorButtonComponent,
-        ProjectionDialogComponent,
-        ResizedDirective,
-        HeightResizingDirective,
-        MetaTextBlockComponent,
-        ProjectorComponent,
-        SlideContainerComponent,
-        CountdownTimeComponent,
-        MediaUploadContentComponent,
-        AttachmentControlComponent,
-        PrecisionPipe,
-        SpeakerButtonComponent,
-        GridLayoutComponent,
-        TileComponent,
-        BlockTileComponent,
-        ScrollingModule,
-        IconContainerComponent,
-        SpeakerButtonComponent,
-        PblNgridModule,
-        PblNgridMaterialModule,
-        PblNgridTargetEventsModule,
-        ListViewTableComponent,
-        AgendaContentObjectFormComponent,
-        ExtensionFieldComponent,
-        RoundedInputComponent,
-        GlobalSpinnerComponent,
-        UserMenuComponent,
-        OverlayComponent,
-        PreviewComponent,
-        NgxMaterialTimepickerModule,
-        ChartsModule,
-        TrustPipe,
-        LocalizedDatePipe,
-        ChartsComponent,
-        CheckInputComponent,
-        BannerComponent,
-        PollFormComponent,
-        MotionPollDialogComponent,
-        ParsePollNumberPipe,
-        ReversePipe,
-        PollKeyVerbosePipe,
-        PollPercentBasePipe,
-        VotingPrivacyWarningComponent,
-        MotionPollDetailContentComponent,
-        AssignmentPollDetailContentComponent,
-        JitsiComponent,
-        VjsPlayerComponent,
-        LiveStreamComponent,
-        ListOfSpeakersContentComponent,
-        ResourceComponent,
-        OnlyNumberDirective,
-        SearchRepoSelectorComponent
-    ],
-    declarations: [
-        PermsDirective,
-        IsSuperAdminDirective,
-        DomChangeDirective,
-        AutofocusDirective,
-        HeadBarComponent,
-        LegalNoticeContentComponent,
-        PrivacyPolicyContentComponent,
-        SearchValueSelectorComponent,
-        PromptDialogComponent,
-        SortingListComponent,
-        SortingTreeComponent,
-        ChoiceDialogComponent,
-        SortFilterBarComponent,
-        SortBottomSheetComponent,
-        FilterMenuComponent,
-        LogoComponent,
-        CopyrightSignComponent,
-        C4DialogComponent,
-        ProjectorButtonComponent,
-        ProjectionDialogComponent,
-        ResizedDirective,
-        MetaTextBlockComponent,
-        ProjectorComponent,
-        SlideContainerComponent,
-        CountdownTimeComponent,
-        MediaUploadContentComponent,
-        PrecisionPipe,
-        SpeakerButtonComponent,
-        GridLayoutComponent,
-        TileComponent,
-        BlockTileComponent,
-        IconContainerComponent,
-        ListViewTableComponent,
-        AgendaContentObjectFormComponent,
-        ExtensionFieldComponent,
-        AttachmentControlComponent,
-        RoundedInputComponent,
-        ProgressSnackBarComponent,
-        GlobalSpinnerComponent,
-        UserMenuComponent,
-        SuperSearchComponent,
-        OverlayComponent,
-        PreviewComponent,
-        HeightResizingDirective,
-        TrustPipe,
-        LocalizedDatePipe,
-        ChartsComponent,
-        CheckInputComponent,
-        BannerComponent,
-        PollFormComponent,
-        MotionPollDialogComponent,
-        ParsePollNumberPipe,
-        ReversePipe,
-        PollKeyVerbosePipe,
-        PollPercentBasePipe,
-        VotingPrivacyWarningComponent,
-        MotionPollDetailContentComponent,
-        AssignmentPollDetailContentComponent,
-        JitsiComponent,
-        VjsPlayerComponent,
-        LiveStreamComponent,
-        ListOfSpeakersContentComponent,
-        ResourceComponent,
-        OnlyNumberDirective,
-        SearchRepoSelectorComponent
-    ],
+    imports: [CommonModule, OpenSlidesTranslateModule.forChild(), RouterModule, ...sharedModules],
+    exports: [TranslateModule, OpenSlidesTranslateModule, PdfViewerModule, ...sharedModules, ...declarations],
+    declarations: [...declarations],
     providers: [
         {
             provide: DateAdapter,

@@ -241,14 +241,11 @@ export class MotionMetaDataComponent extends BaseComponent implements OnInit {
      * Check if a recommendation can be followed. Checks for permissions and additionally if a recommentadion is present
      */
     public canFollowRecommendation(): boolean {
-        if (
+        return (
             this.perms.isAllowed('createpoll', this.motion) &&
             this.motion.recommendation &&
-            this.motion.recommendation.recommendation_label
-        ) {
-            return true;
-        }
-        return false;
+            !!this.motion.recommendation.recommendation_label
+        );
     }
 
     /**
