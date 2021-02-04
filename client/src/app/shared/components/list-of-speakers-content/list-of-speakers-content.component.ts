@@ -15,6 +15,7 @@ import { BehaviorSubject } from 'rxjs';
 import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
+import { Id } from 'app/core/definitions/key-types';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
 import { SpeakerRepositoryService } from 'app/core/repositories/agenda/speaker-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
@@ -145,12 +146,12 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
                 this.cd.markForCheck();
             }),
             // ovserve changes to the add-speaker form
-            this.addSpeakerForm.valueChanges.subscribe(formResult => {
+            this.addSpeakerForm.valueChanges.subscribe(async formResult => {
                 // resetting a form triggers a form.next(null) - check if user_id
-                throw new Error('TODO');
-                /*if (formResult && formResult.user_id) {
-                    this.addUserAsNewSpeaker(formResult.user_id);
-                }*/
+                if (formResult && formResult.user_id) {
+                    await this.addUserAsNewSpeaker(formResult.user_id);
+                    this.addSpeakerForm.reset();
+                }
             }),
             // observe changes to the viewport
             this.viewport.isMobileSubject.subscribe(isMobile => {
@@ -186,7 +187,7 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
     }
 
     private updateCanReaddLastSpeaker(): void {
-        let canReaddLast;
+        let canReaddLast: boolean;
         if (this.finishedSpeakers?.length > 0) {
             const lastSpeaker = this.finishedSpeakers[this.finishedSpeakers.length - 1];
             const isLastSpeakerWaiting = this.waitingSpeakers.some(speaker => speaker.user_id === lastSpeaker.user_id);
@@ -206,17 +207,9 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
         };
     }
 
-    /**
-     * Create a speaker out of an id
-     *
-     * @param userId the user id to add to the list. No parameter adds the operators user as speaker.
-     */
-    public addNewSpeaker(userId: number): void {
-        this.speakerRepo.create(this._listOfSpeakers, userId).then(() => this.addSpeakerForm.reset(), this.raiseError);
-    }
-
-    public addMyself(): void {
-        this.addNewSpeaker(this.currentUser.id);
+    public async addMyself(): Promise<void> {
+        await this.addUserAsNewSpeaker();
+        this.addSpeakerForm.reset();
     }
 
     /**
@@ -240,15 +233,14 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
     }
 
     public async addPointOfOrder(): Promise<void> {
-        throw new Error('TODO');
-        /*const title = this.translate.instant('Are you sure you want to submit a point of order?');
+        const title = this.translate.instant('Are you sure you want to submit a point of order?');
         if (await this.promptService.open(title)) {
             try {
-                await this.listOfSpeakersRepo.createSpeaker(this.viewListOfSpeakers, undefined, true);
+                await this.speakerRepo.create(this.listOfSpeakers, undefined, true);
             } catch (e) {
                 this.raiseError(e);
             }
-        }*/
+        }
     }
 
     public removePointOfOrder(): void {
@@ -315,8 +307,8 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
      *
      * @param sortedSpeakerList The list to save.
      */
-    public onSaveSorting(sortedSpeakerList: Selectable[] = this.listElement.sortedItems): void {
-        this.speakerRepo
+    public async onSaveSorting(sortedSpeakerList: Selectable[] = this.listElement.sortedItems): Promise<void> {
+        return await this.speakerRepo
             .sortSpeakers(
                 this._listOfSpeakers,
                 sortedSpeakerList.map(el => el.id)
@@ -365,13 +357,21 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
      * @param username The name of the new user.
      */
     public async onCreateUser(username: string): Promise<void> {
-        throw new Error('TODO');
-        /*const newUser = await this.userRepository.createFromString(username);
-        this.addUserAsNewSpeaker(newUser.id);*/
+        const newUser = await this.userRepository.createFromString(username);
+        this.addUserAsNewSpeaker(newUser.id);
     }
 
-    public addUserAsNewSpeaker(): void {
-        throw new Error('TODO');
+    /**
+     * Adds a user as a new speaker to the current list of speakers.
+     * If `userId` is undefined, it is set to the current user (operator).
+     *
+     * @param userId Optional. The id of a user, which is add as speaker.
+     */
+    public async addUserAsNewSpeaker(userId?: Id): Promise<void> {
+        if (!userId) {
+            userId = this.operator.operatorId;
+        }
+        await this.speakerRepo.create(this.listOfSpeakers, userId);
     }
 
     /**

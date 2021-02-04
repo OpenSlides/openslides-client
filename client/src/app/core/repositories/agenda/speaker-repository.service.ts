@@ -21,7 +21,7 @@ export class SpeakerRepositoryService extends BaseRepositoryWithActiveMeeting<Vi
     }
 
     public getFieldsets(): Fieldsets<Speaker> {
-        return { [DEFAULT_FIELDSET]: ['begin_time', 'end_time', 'weight', 'marked'] };
+        return { [DEFAULT_FIELDSET]: ['begin_time', 'end_time', 'weight', 'marked', 'point_of_order'] };
     }
 
     public getVerboseName = (plural: boolean = false) => {
@@ -32,11 +32,12 @@ export class SpeakerRepositoryService extends BaseRepositoryWithActiveMeeting<Vi
         return viewSpeaker.user ? viewSpeaker.user.getShortName() : '';
     };
 
-    public create(listOfSpeakers: ListOfSpeakers, userId: Id): Promise<Identifiable> {
+    public create(listOfSpeakers: ListOfSpeakers, userId: Id, pointOfOrder: boolean = false): Promise<Identifiable> {
         const payload: SpeakerAction.CreatePayload = {
             list_of_speakers_id: listOfSpeakers.id,
             user_id: userId,
-            marked: false
+            marked: false,
+            point_of_order: pointOfOrder
         };
         return this.sendActionToBackend(SpeakerAction.CREATE, payload);
     }
