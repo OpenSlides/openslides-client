@@ -350,8 +350,7 @@ export class MotionMultiselectService {
      * @param motions The motions to set/unset the favorite status for
      */
     public async bulkSetFavorite(motions: ViewMotion[]): Promise<void> {
-        throw new Error('TODO');
-        /*const title = this.translate.instant('This will set the favorite status for all selected motions:');
+        const title = this.translate.instant('This will set the favorite status for all selected motions:');
         const options = [this.translate.instant('Set as favorite'), this.translate.instant('Set as not favorite')];
         const selectedChoice = await this.choiceService.open(title, null, false, options);
         if (selectedChoice && motions.length) {
@@ -359,8 +358,9 @@ export class MotionMultiselectService {
             const setOrUnset = selectedChoice.action === options[0];
             const message = this.translate.instant(`I have ${motions.length} favorite motions. Please wait ...`);
             this.overlayService.showSpinner(message, true);
-            await this.personalNoteService.bulkSetStar(motions, setOrUnset);
-        }*/
+            // await this.personalNoteService.bulkSetStar(motions, setOrUnset);
+            throw new Error('TODO: Is there already a personal note for every motion?');
+        }
     }
 
     private bulkDelete(motions: ViewMotion[]): Promise<void> {

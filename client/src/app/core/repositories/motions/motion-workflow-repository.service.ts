@@ -63,15 +63,14 @@ export class MotionWorkflowRepositoryService
      * @returns The workflow states to the given motion
      */
     public getWorkflowStatesForMotions(motions: ViewMotion[]): ViewMotionState[] {
-        let states: ViewMotionState[] = [];
-        const workflowIds = motions
-            .map(motion => motion.state?.workflow_id)
-            .filter((value, index, self) => self.indexOf(value) === index);
-        workflowIds.forEach(id => {
-            const workflow = this.getViewModel(id);
-            states = states.concat(workflow.states);
-        });
-        return states;
+        const workflows: ViewMotionWorkflow[] = [];
+        for (const motion of motions) {
+            const motionState = motion.state;
+            if (motionState && workflows.indexOf(motionState.workflow) === -1) {
+                workflows.push(motionState.workflow);
+            }
+        }
+        return workflows.flatMap((workflow: ViewMotionWorkflow) => workflow.states);
     }
 
     public getWorkflowByStateId(stateId: Id): ViewMotionWorkflow {

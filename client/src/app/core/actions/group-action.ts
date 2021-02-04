@@ -9,12 +9,15 @@ export namespace GroupAction {
 
     export interface CreateParameters {
         name: string;
+        permissions?: string;
     }
     export interface CreatePayload extends HasMeetingId, CreateParameters {}
 
     export interface UpdatePayload extends Identifiable {
         name?: string;
     }
+
+    export interface DeletePayload extends Identifiable {}
 
     export interface SetPermissionPayload extends Identifiable {
         permission: string;

@@ -43,4 +43,6 @@ export namespace MotionStateAction {
         next_state_ids?: Id[];
         previous_state_ids?: Id[];
     }
+
+    export interface DeletePayload extends Identifiable {}
 }

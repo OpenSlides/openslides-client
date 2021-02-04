@@ -16,7 +16,7 @@ import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.se
 import { ViewUnifiedChange } from 'app/shared/models/motions/view-unified-change';
 import { reconvertChars } from 'app/shared/utils/reconvert-chars';
 import { stripHtmlTags } from 'app/shared/utils/strip-html-tags';
-import { ChangeRecoMode, sortMotionPropertyList } from '../motions.constants';
+import { ChangeRecoMode, getMotionExportHeadersAndVerboseNames, sortMotionPropertyList } from '../motions.constants';
 import { ViewMotion } from '../models/view-motion';
 
 /**
@@ -163,34 +163,20 @@ export class MotionCsvExportService {
         );
     }
 
-    // TODO does not reflect updated export order. any more. Hard coded for now
     public exportDummyMotion(): void {
-        const headerRow = [
-            'number',
-            'Submitters',
-            'Title',
-            'Text',
-            'Reason',
-            'Category',
-            'Tags',
-            'Motion block',
-            'Origin'
-        ];
-        const rows = [
-            [
-                'A1',
-                'Submitter A',
-                'Title 1',
-                'Text 1',
-                'Reason 1',
-                'Category A',
-                'Tag 1, Tag 2',
-                'Block A',
-                'Last Year Conference A'
-            ],
-            ['B1', 'Submitter B', 'Title 2', 'Text 2', 'Reason 2', 'Category B', null, 'Block A', 'Origin B'],
-            ['C2', null, 'Title 3', 'Text 3', null, null, null, null, null]
-        ];
+        const prefixes = ['A', 'B', 'C'];
+        const headersAndVerboseNames = getMotionExportHeadersAndVerboseNames();
+        const headerKeys = Object.keys(headersAndVerboseNames);
+        const headerRow = Object.values<string>(headersAndVerboseNames);
+        const rows = prefixes.map(prefix => {
+            return headerKeys.map(header => {
+                const value = headersAndVerboseNames[header];
+                if (header === 'category') {
+                    return `${prefix} - ${value}`;
+                }
+                return value + prefix;
+            });
+        });
         this.csvExport.dummyCSVExport(headerRow, rows, `${this.translate.instant('motions-example')}.csv`);
     }
 }

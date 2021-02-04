@@ -1,26 +1,25 @@
-import { Fqid, Id, UnsafeHtml } from '../definitions/key-types';
+import { Identifiable } from 'app/shared/models/base/identifiable';
+import { Fqid, UnsafeHtml } from '../definitions/key-types';
 
 export namespace PersonalNoteAction {
     export const CREATE = 'personal_note.create';
     export const UPDATE = 'personal_note.update';
     export const DELETE = 'personal_note.delete';
 
-    export interface CreatePayload {
+    interface BasePayload {
+        star?: boolean;
+        note?: UnsafeHtml;
+    }
+
+    /**
+     * At least `star` or `note` has to be given!
+     */
+    export interface CreatePayload extends BasePayload {
+        // required
         content_object_id: Fqid;
-
-        // At least one of these has to be given:
-        star?: boolean;
-        note?: UnsafeHtml;
     }
 
-    export interface UpdatePayload {
-        id: Id;
+    export interface UpdatePayload extends Identifiable, BasePayload {}
 
-        star?: boolean;
-        note?: UnsafeHtml;
-    }
-
-    export interface DeletePayload {
-        id: Id;
-    }
+    export interface DeletePayload extends Identifiable {}
 }

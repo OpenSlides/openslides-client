@@ -23,4 +23,6 @@ export namespace CommitteeAction {
         default_meeting_id?: Id;
         forward_to_committee_ids?: Id[];
     }
+
+    export interface DeletePayload extends Identifiable {}
 }

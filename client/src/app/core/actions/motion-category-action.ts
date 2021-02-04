@@ -20,6 +20,8 @@ export namespace MotionCategoryAction {
         name?: string;
         prefix?: string;
     }
+    export interface DeletePayload extends Identifiable {}
+
     export interface SortPayload extends HasMeetingId, BaseSortPayload {}
     export interface SortMotionsInCategoryPayload extends Identifiable {
         motion_ids: Id[];

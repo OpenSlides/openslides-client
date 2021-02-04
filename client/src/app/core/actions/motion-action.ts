@@ -31,7 +31,6 @@ export namespace MotionAction {
     export interface PartialMotionCreatePayload extends HasMeetingId, OptionalPayload, AgendaItemCreationPayload {
         // Required
         title: string;
-        meeting_id: Id;
 
         // Optional
         sort_parent_id?: Id;
@@ -58,6 +57,8 @@ export namespace MotionAction {
         amendment_paragraphs?: { [paragraphNumber: number]: string };
         modified_final_version?: string;
     }
+
+    export interface DeletePayload extends Identifiable {}
 
     export interface SetRecommendationPayload extends Identifiable {
         recommendation_id: Id;

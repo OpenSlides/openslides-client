@@ -80,7 +80,17 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
     }
 
     public create(partialMotion: Partial<MotionAction.CreatePayload>): Promise<Identifiable> {
-        const payload: MotionAction.CreatePayload = {
+        const payload: MotionAction.CreatePayload = this.getCreatePayload(partialMotion);
+        return this.sendActionToBackend(MotionAction.CREATE, payload);
+    }
+
+    public bulkCreate(motions: Partial<MotionAction.CreatePayload>[]): Promise<Identifiable[]> {
+        const payload: MotionAction.CreatePayload[] = motions.map(motion => this.getCreatePayload(motion));
+        return this.sendBulkActionToBackend(MotionAction.CREATE, payload);
+    }
+
+    private getCreatePayload(partialMotion: Partial<MotionAction.CreatePayload>): MotionAction.CreatePayload {
+        return {
             meeting_id: this.activeMeetingIdService.meetingId,
             title: partialMotion.title,
             text: partialMotion.text,
@@ -98,7 +108,6 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
             supporter_ids: partialMotion.supporter_ids,
             ...createAgendaItem(partialMotion)
         };
-        return this.sendActionToBackend(MotionAction.CREATE, payload);
     }
 
     private getUpdatePayload(

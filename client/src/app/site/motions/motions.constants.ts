@@ -69,25 +69,26 @@ export const verboseChangeRecoMode = {
 };
 
 // import-export order specific constants
+
+const motionHeadersAndVerboseNames = {
+    number: 'Number',
+    submitters: 'Submitters',
+    supporters: 'Supporters',
+    title: 'Title',
+    text: 'Text',
+    reason: 'Reason',
+    category: 'Category',
+    tags: 'Tags',
+    motion_block: 'Motion block',
+    origin: 'Origin',
+    recommendation: 'Recommendation',
+    state: 'State'
+};
+
 /**
  * Defines the column order for csv/xlsx export/import of motions.
  */
-export const motionImportExportHeaderOrder: string[] = [
-    'number',
-    'submitters',
-    'supporters',
-    'title',
-    'text',
-    'reason',
-    'category',
-    'tags',
-    'motion_block',
-    'origin',
-    'recommendation',
-    'state',
-    'block',
-    'origin'
-];
+export const motionImportExportHeaderOrder: string[] = Object.keys(motionHeadersAndVerboseNames);
 
 /**
  * hints the metaData. This data will be excluded from the meta-data list in the export dialog.
@@ -101,6 +102,10 @@ export const noMetaData: string[] = ['number', 'title', 'text', 'reason'];
  */
 export const motionExportOnly: string[] = ['id', 'recommendation', 'state'];
 
+export const motionExpectedHeaders: string[] = motionImportExportHeaderOrder.filter(
+    header => !motionExportOnly.includes(header)
+);
+
 /**
  * reorders the exported properties according to motionImportExportHeaderOrder
  *
@@ -108,4 +113,12 @@ export const motionExportOnly: string[] = ['id', 'recommendation', 'state'];
  */
 export function sortMotionPropertyList(propertyList: string[]): string[] {
     return motionImportExportHeaderOrder.filter(property => propertyList.includes(property));
+}
+
+export function getVerboseNameOfMotionProperty(propertyName: string): string {
+    return motionHeadersAndVerboseNames[propertyName];
+}
+
+export function getMotionExportHeadersAndVerboseNames(): { [key: string]: string } {
+    return motionExpectedHeaders.mapToObject(item => ({ [item]: getVerboseNameOfMotionProperty(item) }));
 }

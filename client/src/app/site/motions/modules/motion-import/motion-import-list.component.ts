@@ -3,15 +3,18 @@ import { Component } from '@angular/core';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { Motion } from 'app/shared/models/motions/motion';
 import { BaseImportListComponent } from 'app/site/base/components/base-import-list.component';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { MotionCsvExportService } from 'app/site/motions/services/motion-csv-export.service';
 import { MotionImportService } from 'app/site/motions/services/motion-import.service';
+import { getMotionExportHeadersAndVerboseNames, getVerboseNameOfMotionProperty } from '../../motions.constants';
 
 /**
  * Component for the motion import list view.
  */
 @Component({
     selector: 'os-motion-import-list',
-    templateUrl: './motion-import-list.component.html'
+    templateUrl: './motion-import-list.component.html',
+    styleUrls: ['./motion-import-list.component.scss']
 })
 export class MotionImportListComponent extends BaseImportListComponent<Motion> {
     /**
@@ -21,13 +24,7 @@ export class MotionImportListComponent extends BaseImportListComponent<Motion> {
      * @returns a list of strings matching the expected headers
      */
     public get expectedHeader(): string[] {
-        return this.importer.expectedHeader.map(header => {
-            if (header === 'block') {
-                return 'Motion block';
-            } else {
-                return header.charAt(0).toUpperCase() + header.slice(1);
-            }
-        });
+        return Object.values<string>(getMotionExportHeadersAndVerboseNames()).map(item => this.translate.instant(item));
     }
 
     public constructor(
@@ -36,6 +33,33 @@ export class MotionImportListComponent extends BaseImportListComponent<Motion> {
         private motionCSVExport: MotionCsvExportService
     ) {
         super(componentServiceCollector, importer);
+        this.load();
+    }
+
+    private load(): void {
+        this.requestModels({
+            viewModelCtor: ViewMeeting,
+            ids: [1], // TODO
+            follow: [
+                {
+                    idField: 'motion_ids'
+                },
+                {
+                    idField: 'user_ids',
+                    fieldset: 'shortName'
+                },
+                {
+                    idField: 'motion_category_ids'
+                },
+                {
+                    idField: 'motion_block_ids',
+                    fieldset: 'title'
+                },
+                {
+                    idField: 'tag_ids'
+                }
+            ]
+        });
     }
 
     /**
@@ -43,5 +67,9 @@ export class MotionImportListComponent extends BaseImportListComponent<Motion> {
      */
     public downloadCsvExample(): void {
         this.motionCSVExport.exportDummyMotion();
+    }
+
+    public getVerboseName(property: string): string {
+        return getVerboseNameOfMotionProperty(property);
     }
 }

@@ -7,7 +7,6 @@ import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Topic } from 'app/shared/models/topics/topic';
 import { createAgendaItem } from 'app/shared/utils/create-agenda-item';
 import { ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
-import { CreateTopic } from 'app/site/topics/models/create-topic';
 import { ViewTopic } from 'app/site/topics/models/view-topic';
 import { BaseIsAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-is-agenda-item-and-list-of-speakers-content-object-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
@@ -35,6 +34,11 @@ export class TopicRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCon
     public create(partialTopic: Partial<TopicAction.CreatePayload>): Promise<Identifiable> {
         const payload: TopicAction.CreatePayload = this.getCreatePayload(partialTopic);
         return this.sendActionToBackend(TopicAction.CREATE, payload);
+    }
+
+    public bulkCreate(partialTopics: Partial<TopicAction.CreatePayload>[]): Promise<Identifiable[]> {
+        const payload: TopicAction.CreatePayload[] = partialTopics.map(topic => this.getCreatePayload(topic));
+        return this.sendBulkActionToBackend(TopicAction.CREATE, payload);
     }
 
     public update(update: Partial<Topic>, viewModel: ViewTopic): Promise<void> {
@@ -96,14 +100,14 @@ export class TopicRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCon
         return this.sendBulkActionToBackend(TopicAction.CREATE, payload);
     }
 
-    private getDuplicatedTopic(topicAgendaItem: ViewAgendaItem): CreateTopic {
+    private getDuplicatedTopic(topicAgendaItem: ViewAgendaItem): TopicAction.CreatePayload {
         const viewTopic = topicAgendaItem.content_object as ViewTopic;
-        return new CreateTopic({
+        return {
             ...viewTopic.topic,
             agenda_type: topicAgendaItem.type,
             agenda_parent_id: topicAgendaItem.parent_id,
             agenda_weight: topicAgendaItem.weight
-        });
+        };
     }
 
     private getCreatePayload(partialTopic: Partial<TopicAction.CreatePayload>): TopicAction.CreatePayload {

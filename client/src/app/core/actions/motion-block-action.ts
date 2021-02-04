@@ -17,4 +17,6 @@ export namespace MotionBlockAction {
         internal?: boolean;
         motion_ids?: Id[];
     }
+
+    export interface DeletePayload extends Identifiable {}
 }

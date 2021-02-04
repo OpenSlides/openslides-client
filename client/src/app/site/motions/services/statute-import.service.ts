@@ -5,8 +5,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { Papa } from 'ngx-papaparse';
 
 import { MotionStatuteParagraphRepositoryService } from 'app/core/repositories/motions/motion-statute-paragraph-repository.service';
-import { BaseImportService, NewEntry } from 'app/core/ui-services/base-import.service';
+import { BaseImportService, ImportConfig } from 'app/core/ui-services/base-import.service';
 import { MotionStatuteParagraph } from 'app/shared/models/motions/motion-statute-paragraph';
+
+const statuteHeadersAndVerboseNames = {
+    title: 'Title',
+    text: 'Text'
+};
 
 /**
  * Service for motion imports
@@ -41,59 +46,14 @@ export class StatuteImportService extends BaseImportService<MotionStatuteParagra
         matSnackbar: MatSnackBar
     ) {
         super(translate, papa, matSnackbar);
-
-        this.expectedHeader = ['title', 'text'];
     }
 
-    /**
-     * Clears all temporary data specific to this importer.
-     */
-    public clearData(): void {
-        // does nothing
-    }
-
-    /**
-     * Parses a string representing an entry, extracting secondary data, appending
-     * the array of secondary imports as needed
-     *
-     * @param line
-     * @returns a new Entry representing a Motion
-     */
-    public mapData(line: string): NewEntry<MotionStatuteParagraph> {
-        const newEntry = new MotionStatuteParagraph(new MotionStatuteParagraph());
-        const headerLength = Math.min(this.expectedHeader.length, line.length);
-        for (let idx = 0; idx < headerLength; idx++) {
-            switch (this.expectedHeader[idx]) {
-                case 'title':
-                    newEntry.title = line[idx];
-                    break;
-                case 'text':
-                    newEntry.text = line[idx];
-                    break;
-            }
-        }
-        const hasDuplicates = this.repo.getViewModelList().some(paragraph => paragraph.title === newEntry.title);
+    protected getConfig(): ImportConfig<any> {
         return {
-            newEntry: newEntry,
-            hasDuplicates: hasDuplicates,
-            status: hasDuplicates ? 'error' : 'new',
-            errors: hasDuplicates ? ['Duplicates'] : []
+            modelHeadersAndVerboseNames: statuteHeadersAndVerboseNames,
+            hasDuplicatesFn: (entry: Partial<MotionStatuteParagraph>) =>
+                this.repo.getViewModelList().some(paragraph => paragraph.title === entry.title),
+            bulkCreateFn: (entries: any[]) => this.repo.bulkCreate(entries)
         };
-    }
-
-    /**
-     * Executes the import. Creates all entries without errors by submitting
-     * them to the server. The entries will receive the status 'done' on success.
-     */
-    public async doImport(): Promise<void> {
-        // for (const entry of this.entries) {
-        //     if (entry.status !== 'new') {
-        //         continue;
-        //     }
-        //     await this.repo.create(entry.newEntry);
-        //     entry.status = 'done';
-        // }
-        throw new Error('TODO!');
-        this.updatePreview();
     }
 }

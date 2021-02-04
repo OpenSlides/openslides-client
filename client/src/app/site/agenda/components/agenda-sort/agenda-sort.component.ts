@@ -127,9 +127,8 @@ export class AgendaSortComponent extends BaseSortTreeComponent<ViewAgendaItem> i
      * Function to save the tree by click.
      */
     public async onSave(): Promise<void> {
-        await this.agendaRepo
-            .sortItems(this.osSortTree.getTreeData())
-            .then(() => this.osSortTree.setSubscription(), this.raiseError);
+        await this.agendaRepo.sortItems(this.osSortTree.getTreeData());
+        this.osSortTree.setSubscription();
     }
 
     /**

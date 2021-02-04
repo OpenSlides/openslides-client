@@ -6,37 +6,18 @@ import { Papa } from 'ngx-papaparse';
 
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
-import { BaseImportService, NewEntry } from 'app/core/ui-services/base-import.service';
-import { Group } from 'app/shared/models/users/group';
+import { BaseImportService, ImportConfig, NewEntry } from 'app/core/ui-services/base-import.service';
 import { User } from 'app/shared/models/users/user';
-import { CsvMapping } from 'app/site/common/import/csv-mapping';
-import { ImportCreateUser } from '../models/import-create-user';
-import { ViewUser } from '../models/view-user';
+import { ImportHelper } from 'app/site/common/import/import-helper';
+import { GroupImportHelper } from '../import/group-import-helper';
+import { userHeadersAndVerboseNames } from '../users.constants';
+
+const GROUP_PROPERTY = 'group_ids';
 
 @Injectable({
     providedIn: 'root'
 })
 export class UserImportService extends BaseImportService<User> {
-    /**
-     * Helper for mapping the expected header in a typesafe way. Values and order
-     * will be passed to {@link expectedHeader}
-     */
-    public headerMap: (keyof ImportCreateUser)[] = [
-        'title',
-        'first_name',
-        'last_name',
-        'comment',
-        'is_active',
-        'is_physical_person',
-        'default_password',
-        'email',
-        'username',
-        'gender',
-        'default_number',
-        'default_structure_level',
-        'default_vote_weight'
-    ];
-
     /**
      * The minimimal number of header entries needed to successfully create an entry
      */
@@ -56,11 +37,6 @@ export class UserImportService extends BaseImportService<User> {
     };
 
     /**
-     * Storage for tracking new groups to be created prior to importing users
-     */
-    public newGroups: CsvMapping[];
-
-    /**
      * Constructor. Calls parent and sets the expected header
      *
      * @param repo The User repository
@@ -77,163 +53,48 @@ export class UserImportService extends BaseImportService<User> {
         matSnackbar: MatSnackBar
     ) {
         super(translate, papa, matSnackbar);
-        this.expectedHeader = this.headerMap;
     }
 
     /**
-     * Clears all temporary data specific to this importer
-     */
-    public clearData(): void {
-        this.newGroups = [];
-    }
-
-    /**
-     * Parses a string representing an entry, extracting secondary data, appending
-     * the array of secondary imports as needed
+     * parses the data given by the textArea. Expects user names separated by lines.
+     * Comma separated values will be read as Surname(s), given name(s) (lastCommaFirst)
      *
-     * @param line
-     * @returns a new entry representing an User
+     * @param data a string as produced by textArea input
      */
-    public mapData(line: string): NewEntry<User> {
-        const user = new ImportCreateUser();
-        const headerLength = Math.min(this.expectedHeader.length, line.length);
-        let hasErrors = false;
-        for (let idx = 0; idx < headerLength; idx++) {
-            switch (this.expectedHeader[idx]) {
-                case 'groups_id':
-                    user.csvGroups = this.getGroups(line[idx]);
-                    break;
-                case 'is_active':
-                case 'is_physical_person':
-                case 'is_present':
-                    try {
-                        user[this.expectedHeader[idx]] = this.toBoolean(line[idx]);
-                    } catch (e) {
-                        if (e instanceof TypeError) {
-                            console.log(e);
-                            hasErrors = true;
-                            continue;
-                        }
-                    }
-                    break;
-                case 'number':
-                    throw new Error('Todo');
-                    // user.number() = line[idx];
-                    break;
-                case 'vote_weight':
-                    if (!line[idx]) {
-                        user[this.expectedHeader[idx]] = 1;
-                    } else {
-                        user[this.expectedHeader[idx]] = line[idx];
-                    }
-                    break;
-                default:
-                    user[this.expectedHeader[idx]] = line[idx];
-                    break;
-            }
-        }
-        const newEntry = this.userToEntry(user);
-        if (hasErrors) {
-            this.setError(newEntry, 'ParsingErrors');
-        }
-        return newEntry;
-    }
-
-    /**
-     * Executing the import. Creates all secondary data, maps the newly created
-     * secondary data to the new entries, then creates all entries without errors
-     * by submitting them to the server. The entries will receive the status
-     * 'done' on success.
-     */
-    public async doImport(): Promise<void> {
-        this.newGroups = await this.createNewGroups();
-        const importUsers: NewEntry<User>[] = [];
-        let trackId = 1;
-        for (const entry of this.entries) {
-            if (entry.status !== 'new') {
+    public parseTextArea(data: string): void {
+        const newEntries: NewEntry<User>[] = [];
+        this.clearPreview();
+        const lines = data.split('\n');
+        for (const line of lines) {
+            if (!line.length) {
                 continue;
             }
-            const openGroups = (entry.newEntry as ImportCreateUser).solveGroups(this.newGroups);
-            if (openGroups) {
-                this.setError(entry, 'Group');
-                this.updatePreview();
-                continue;
-            }
-            entry.importTrackId = trackId;
-            trackId += 1;
-            importUsers.push(entry);
+            const nameSchema = line.includes(',') ? 'lastCommaFirst' : 'firstSpaceLast';
+            const user = this.repo.parseStringIntoUser(line, nameSchema);
+            newEntries.push(this.parseLineToImportEntry(user));
         }
-        while (importUsers.length) {
-            const subSet = importUsers.splice(0, 100); // don't send bulks too large
-            const result = await this.repo.bulkCreateTemporary(subSet as any);
-            subSet.forEach(importUser => {
-                // const importModel = this.entries.find(e => e.importTrackId === importUser.importTrackId);
-                if (importUser && result.importedTrackIds.includes(importUser.importTrackId)) {
-                    importUser.status = 'done';
-                } else if (result.errors[importUser.importTrackId]) {
-                    this.setError(importUser, result.errors[importUser.importTrackId]);
-                } else {
-                    this.setError(importUser, 'FailedImport');
-                }
-            });
-            this.updatePreview();
-        }
+        this.setParsedEntries(newEntries);
     }
 
-    /**
-     * extracts the group(s) from a csv column and tries to match them against existing groups,
-     * appending to {@link newGroups} if needed.
-     * Also checks for groups matching the translation between english and the language currently set
-     *
-     * @param groupString string from an entry line including one or more comma separated groups
-     * @returns a mapping with (if existing) ids to the group names
-     */
-    private getGroups(groupString: string): CsvMapping[] {
-        const result: CsvMapping[] = [];
-        if (!groupString) {
-            return [];
-        }
-        groupString.trim();
-        const groupArray = groupString.split(',');
-        for (const item of groupArray) {
-            const newGroup = item.trim();
-            let existingGroup = this.groupRepo.getViewModelList().filter(grp => grp.name === newGroup);
-            if (!existingGroup.length) {
-                existingGroup = this.groupRepo
-                    .getViewModelList()
-                    .filter(grp => this.translate.instant(grp.name) === newGroup);
-            }
-            if (!existingGroup.length) {
-                if (!this.newGroups.find(listedGrp => listedGrp.name === newGroup)) {
-                    this.newGroups.push({ name: newGroup });
-                }
-                result.push({ name: newGroup });
-            } else if (existingGroup.length === 1) {
-                result.push({
-                    name: existingGroup[0].name,
-                    id: existingGroup[0].id
-                });
-            }
-        }
-        return result;
+    protected getConfig(): ImportConfig {
+        return {
+            modelHeadersAndVerboseNames: userHeadersAndVerboseNames,
+            hasDuplicatesFn: (entry: Partial<User>) =>
+                this.repo.getViewModelList().some(user => user.username === entry.username),
+            bulkCreateFn: (entries: any[]) => this.repo.bulkCreateTemporary(entries)
+        };
     }
 
-    /**
-     * Handles the creation of new groups collected in {@link newGroups}.
-     *
-     * @returns The group mapping with (on success) new ids
-     */
-    private async createNewGroups(): Promise<CsvMapping[]> {
-        // const promises: Promise<CsvMapping>[] = [];
-        // for (const group of this.newGroups) {
-        //     promises.push(
-        //         this.groupRepo.create(new Group({ name: group.name })).then(identifiable => {
-        //             return { name: group.name, id: identifiable.id };
-        //         })
-        //     );
-        // }
-        // return await Promise.all(promises);
-        throw new Error('TODO!');
+    protected getImportHelpers(): { [key: string]: ImportHelper<User> } {
+        return {
+            [GROUP_PROPERTY]: new GroupImportHelper(this.groupRepo)
+        };
+    }
+
+    protected pipeParseValue(value: string, header: keyof User): any {
+        if (header === 'is_active' || header === 'is_physical_person') {
+            return this.toBoolean(value);
+        }
     }
 
     /**
@@ -253,35 +114,12 @@ export class UserImportService extends BaseImportService<User> {
     }
 
     /**
-     * parses the data given by the textArea. Expects user names separated by lines.
-     * Comma separated values will be read as Surname(s), given name(s) (lastCommaFirst)
-     *
-     * @param data a string as produced by textArea input
-     */
-    public parseTextArea(data: string): void {
-        const newEntries: NewEntry<User>[] = [];
-        this.clearData();
-        this.clearPreview();
-        const lines = data.split('\n');
-        lines.forEach(line => {
-            if (!line.length) {
-                return;
-            }
-            const nameSchema = line.includes(',') ? 'lastCommaFirst' : 'firstSpaceLast';
-            const newUser = new ImportCreateUser(this.repo.parseUserString(line, nameSchema));
-            const newEntry = this.userToEntry(newUser);
-            newEntries.push(newEntry);
-        });
-        this.setParsedEntries(newEntries);
-    }
-
-    /**
      * Checks a newly created ViewCsvCreateuser for validity and duplicates,
      *
      * @param user
      * @returns a NewEntry with duplicate/error information
      */
-    private userToEntry(user: ImportCreateUser): NewEntry<User> {
+    private parseLineToImportEntry(user: any): NewEntry<User> {
         const newEntry: NewEntry<User> = {
             newEntry: user,
             hasDuplicates: false,

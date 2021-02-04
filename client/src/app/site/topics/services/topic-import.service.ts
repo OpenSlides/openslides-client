@@ -4,22 +4,18 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Papa } from 'ngx-papaparse';
 
+import { AgendaItemCreationPayload } from 'app/core/actions/common/agenda-item-creation-payload';
 import { TopicRepositoryService } from 'app/core/repositories/topics/topic-repository.service';
-import { BaseImportService, NewEntry } from 'app/core/ui-services/base-import.service';
+import { BaseImportService, ImportConfig, NewEntry } from 'app/core/ui-services/base-import.service';
 import { DurationService } from 'app/core/ui-services/duration.service';
 import { AgendaItemType, ItemTypeChoices } from 'app/shared/models/agenda/agenda-item';
-import { CreateTopic } from '../models/create-topic';
+import { Topic } from 'app/shared/models/topics/topic';
+import { topicHeadersAndVerboseNames } from '../topics.constants';
 
 @Injectable({
     providedIn: 'root'
 })
-export class TopicImportService extends BaseImportService<CreateTopic> {
-    /**
-     * Helper for mapping the expected header in a typesafe way. Values will be passed to
-     * {@link expectedHeader}
-     */
-    public headerMap: (keyof CreateTopic)[] = ['title', 'text', 'agenda_duration', 'agenda_comment', 'agenda_type'];
-
+export class TopicImportService extends BaseImportService<Topic> {
     /**
      * The minimimal number of header entries needed to successfully create an entry
      */
@@ -50,86 +46,24 @@ export class TopicImportService extends BaseImportService<CreateTopic> {
         matSnackBar: MatSnackBar
     ) {
         super(translate, papa, matSnackBar);
-        this.expectedHeader = this.headerMap;
     }
 
-    /**
-     * Clear all secondary import data. As agenda items have no secondary imports,
-     * this is an empty function
-     */
-    public clearData(): void {}
-
-    /**
-     * Parses a string representing an entry
-     *
-     * @param line a line extracted by the CSV (without the header)
-     * @returns a new entry for a Topic
-     */
-    public mapData(line: string): NewEntry<CreateTopic> {
-        const newEntry = new CreateTopic();
-        const headerLength = Math.min(this.expectedHeader.length, line.length);
-        let hasErrors = false;
-        for (let idx = 0; idx < headerLength; idx++) {
-            switch (this.expectedHeader[idx]) {
-                case 'agenda_duration':
-                    try {
-                        const duration = this.parseDuration(line[idx]);
-                        if (duration > 0) {
-                            newEntry.agenda_duration = duration;
-                        }
-                    } catch (e) {
-                        if (e instanceof TypeError) {
-                            hasErrors = true;
-                            continue;
-                        }
-                    }
-                    break;
-                case 'agenda_type':
-                    try {
-                        newEntry.agenda_type = this.parseType(line[idx]);
-                    } catch (e) {
-                        if (e instanceof TypeError) {
-                            hasErrors = true;
-                            continue;
-                        }
-                    }
-                    break;
-                default:
-                    newEntry[this.expectedHeader[idx]] = line[idx];
-            }
-        }
-
-        // set type to 'public' if none is given in import
-        if (!newEntry.agenda_type) {
-            newEntry.agenda_type = AgendaItemType.common;
-        }
-        const mappedEntry: NewEntry<CreateTopic> = {
-            newEntry: newEntry,
-            status: 'new',
-            errors: []
+    protected getConfig(): ImportConfig<any> {
+        return {
+            modelHeadersAndVerboseNames: topicHeadersAndVerboseNames,
+            hasDuplicatesFn: (entry: Partial<Topic>) =>
+                this.repo.getViewModelList().some(topic => topic.title === entry.title),
+            bulkCreateFn: (entries: any[]) => this.repo.bulkCreate(entries)
         };
-        if (hasErrors) {
-            this.setError(mappedEntry, 'ParsingErrors');
-        }
-        if (!mappedEntry.newEntry.isValid) {
-            this.setError(mappedEntry, 'NoTitle');
-        }
-        return mappedEntry;
     }
 
-    /**
-     * Executing the import. Parses all entries without errors and submits them
-     * to the server. The entries will receive the status 'done' on success.
-     */
-    public async doImport(): Promise<void> {
-        for (const entry of this.entries) {
-            if (entry.status !== 'new') {
-                continue;
-            }
-            await this.repo.create(entry.newEntry);
-            entry.status = 'done';
+    protected pipeParseValue(value: string, header: keyof (Topic & AgendaItemCreationPayload)): any {
+        if (header === 'agenda_duration') {
+            return this.parseDuration(value);
         }
-        this.updatePreview();
+        if (header === 'agenda_type') {
+            return this.parseType(value);
+        }
     }
 
     /**
@@ -176,27 +110,22 @@ export class TopicImportService extends BaseImportService<CreateTopic> {
      * @param data a string as produced by textArea input
      */
     public parseTextArea(data: string): void {
-        const newEntries: NewEntry<CreateTopic>[] = [];
-        this.clearData();
-        this.clearPreview();
+        const newEntries: NewEntry<any>[] = [];
         const lines = data.split('\n');
-        lines.forEach(line => {
+        for (const line of lines) {
             if (!line.length) {
-                return;
+                continue;
             }
-            const newTopic = new CreateTopic(
-                new CreateTopic({
-                    title: line,
-                    agenda_type: AgendaItemType.common // set type to 'public item' by default
-                })
-            );
-            const newEntry: NewEntry<CreateTopic> = {
-                newEntry: newTopic,
+            const topic = {
+                title: line,
+                agenda_type: AgendaItemType.common
+            };
+            newEntries.push({
+                newEntry: topic,
                 status: 'new',
                 errors: []
-            };
-            newEntries.push(newEntry);
-        });
+            });
+        }
         this.setParsedEntries(newEntries);
     }
 }

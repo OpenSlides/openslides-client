@@ -22,4 +22,6 @@ export namespace TopicAction {
     }
 
     export interface UpdatePayload extends Identifiable, PartialPayload {}
+
+    export interface DeletePayload extends Identifiable {}
 }

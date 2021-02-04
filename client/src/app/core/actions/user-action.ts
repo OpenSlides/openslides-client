@@ -108,6 +108,10 @@ export namespace UserAction {
         about_me: UnsafeHtml;
         email: string;
     }
+
+    export interface DeletePayload extends Identifiable {}
+    export interface DeleteTemporaryPayload extends Identifiable {}
+
     export interface MergeToNonTemporaryPayload {}
     export interface SetPasswordTemporaryPayload extends PartialSetPasswordPayload {}
     export interface ResetPasswordToDefaultTemporaryPayload extends Identifiable {}

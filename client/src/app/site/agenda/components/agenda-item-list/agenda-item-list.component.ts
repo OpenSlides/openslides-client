@@ -274,7 +274,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
         const title = this.translate.instant('Are you sure you want to remove this entry from the agenda?');
         const content = item.content_object.getTitle();
         if (await this.promptService.open(title, content)) {
-            await this.repo.removeFromAgenda(item).catch(this.raiseError);
+            await this.repo.removeFromAgenda(item);
         }
     }
 
@@ -285,7 +285,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
         const title = this.translate.instant('Are you sure you want to delete this topic?');
         const content = item.content_object.getTitle();
         if (await this.promptService.open(title, content)) {
-            await this.topicRepo.delete(item.content_object).catch(this.raiseError);
+            await this.topicRepo.delete(item.content_object);
         }
     }
 
@@ -333,9 +333,9 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
      * Sets multiple entries' agenda type. Needs items in selectedRows, which
      * is only filled with any data in multiSelect mode.
      */
-    public async setAgendaType(type: AgendaItemType): Promise<void> {
+    public async setAgendaType(agendaType: AgendaItemType): Promise<void> {
         try {
-            await this.repo.bulkSetAgendaType(this.selectedRows, type);
+            await this.repo.bulkSetAgendaType(this.selectedRows, agendaType);
         } catch (e) {
             this.raiseError(e);
         }
