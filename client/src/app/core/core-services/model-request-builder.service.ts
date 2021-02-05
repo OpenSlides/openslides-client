@@ -17,7 +17,8 @@ import { OnAfterAppsLoaded } from '../definitions/on-after-apps-loaded';
 import { RelationManagerService } from './relation-manager.service';
 import { Relation } from '../definitions/relations';
 
-type Fieldset = string | Field[];
+// fieldsets can now support IAllStructuredFields!! (see example below)
+type Fieldset = string | (Field | IAllStructuredFields)[];
 type FollowList = (string | Follow)[];
 
 export interface SimplifiedModelRequest extends BaseSimplifiedModelRequest {
@@ -25,9 +26,21 @@ export interface SimplifiedModelRequest extends BaseSimplifiedModelRequest {
     ids: Id[];
 }
 
+// Note for Gabiel:
+// usage:
+// fieldset -> [..., 'default_structure_level', {templateField: 'structure_level_$'}, ...]
+
 interface ISpecificStructuredField {
     templateIdField: string;
     templateValue: string;
+}
+
+interface IAllStructuredFields {
+    templateField: string;
+}
+
+function isAllStructuredFields(obj): obj is IAllStructuredFields {
+    return !!obj.templateField;
 }
 
 export function SpecificStructuredField(
@@ -48,13 +61,13 @@ export interface Follow extends BaseSimplifiedModelRequest {
      * structured field has no associated relation and `onlyValues` is not explicitly
      * set to true.
      */
-    onlyValues?: boolean;
+    onlyValues?: boolean;  // TODO: Remove - is obsolete now. For the active meeting service: use {templateField: 'logo_$_ids'},...
 }
 
 interface BaseSimplifiedModelRequest {
     follow?: FollowList;
     fieldset?: Fieldset;
-    additionalFields?: (Field | ISpecificStructuredField)[];
+    additionalFields?: (Field | ISpecificStructuredField | IAllStructuredFields)[];
 }
 
 export interface Fieldsets<M extends BaseModel> {
@@ -101,9 +114,10 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
 
     private addFields(collection: Collection, fields: Fields, request: BaseSimplifiedModelRequest): void {
         // Add datafields
-        for (const field of this.calculateDataFields(collection, request.fieldset, request.additionalFields)) {
+        this.addDataFields(fields, collection, request.fieldset, request.additionalFields)
+        /*for (const field of this.calculateDataFields(collection, request.fieldset, request.additionalFields)) {
             fields[field] = null;
-        }
+        }*/
 
         // Add relations
         if (request.follow) {
@@ -111,44 +125,45 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
         }
     }
 
-    private calculateDataFields(
+    // fields is modified as a side effect
+    private addDataFields(
+        fields: Fields,
         collection: Collection,
         fieldset?: Fieldset,
-        additionalFields?: (Field | ISpecificStructuredField)[]
-    ): Field[] {
-        let fields: Field[];
+        additionalFields?: (Field | ISpecificStructuredField | IAllStructuredFields)[]
+    ): void {
         if (!fieldset) {
             fieldset = DEFAULT_FIELDSET;
         }
+        let fieldsetFields: (Field | ISpecificStructuredField | IAllStructuredFields)[];
         if (typeof fieldset === 'string') {
             const registeredFieldsets = this.fieldsets[collection];
             if (!registeredFieldsets || !registeredFieldsets[fieldset]) {
                 throw new Error(`Unregistered fieldset ${fieldset} for collection ${collection}`);
             }
-            fields = registeredFieldsets[fieldset] as Field[];
+            fieldsetFields = registeredFieldsets[fieldset] as (Field | ISpecificStructuredField | IAllStructuredFields)[];
         } else {
-            fields = fieldset;
+            fieldsetFields = fieldset;
         }
 
-        fields.push('id'); // Important: The id is used to detect, if a model was deleted, becuase this issues
+        fieldsetFields.push('id'); // Important: The id is used to detect, if a model was deleted, becuase this issues
         // an autoupdate with id=null
 
         if (additionalFields) {
-            fields = fields.concat(additionalFields.map(f => this.ensureField(f)));
+            fieldsetFields = fieldsetFields.concat(additionalFields);
         }
 
-        return fields;
-    }
-
-    /**
-     * Takes a field specification (a plain field of a specific structured field) and converts
-     * the latter to a plain field.
-     */
-    private ensureField(field: Field | ISpecificStructuredField): Field {
-        if (typeof field === 'string') {
-            return field;
-        } else {
-            return this.fillTemplateValueInTempalteField(field.templateIdField, field.templateValue);
+        for (const f of fieldsetFields) {
+            if (typeof f === 'string') {
+                fields[f] = null
+            } else if (isAllStructuredFields(f)) {
+                fields[f.templateField] = {
+                    type: 'template'
+                    // no `values` here: Do not follow these, just resolve them.
+                }
+            } else { // Specific structured field
+                fields[this.fillTemplateValueInTempalteField(f.templateIdField, f.templateValue)] = null;
+            }
         }
     }
 
@@ -252,7 +267,7 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
 
         // Add datafields
         for (const viewModel of possibleViewModels) {
-            let datafields: string[] = [];
+            /*let datafields: string[] = [];
             try {
                 datafields = this.calculateDataFields(viewModel.COLLECTION, request.fieldset, request.additionalFields);
             } catch (e) {
@@ -260,7 +275,8 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
             }
             for (const field of datafields) {
                 fields[field] = null;
-            }
+            }*/
+            this.addDataFields(fields, viewModel.COLLECTION, request.fieldset, request.additionalFields)
         }
 
         // Add relations
