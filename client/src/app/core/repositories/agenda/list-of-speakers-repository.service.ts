@@ -139,7 +139,9 @@ export class ListOfSpeakersRepositoryService extends BaseRepositoryWithActiveMee
     private getSpeakingTimeStructureLevelObject(speaker: ViewSpeaker): SpeakingTimeStructureLevelObject {
         return {
             structureLevel:
-                !speaker.user || (speaker.user && !speaker.user.structure_level) ? '–' : speaker.user.structure_level,
+                !speaker.user || (speaker.user && !speaker.user.structure_level())
+                    ? '–'
+                    : speaker.user.structure_level(),
             finishedSpeakers: [speaker],
             speakingTime: this.getSpeakingTimeAsNumber(speaker)
         };

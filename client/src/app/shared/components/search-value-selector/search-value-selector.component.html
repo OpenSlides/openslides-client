@@ -19,7 +19,7 @@
         <ngx-mat-select-search [formControl]="searchValueForm"></ngx-mat-select-search>
     </mat-option>
     <ng-container>
-        <div *ngIf="multiple && showChips" class="h-scroller">
+        <div #chipPlaceholder *ngIf="multiple && showChips" class="h-scroller">
             <div class="os-search-value-selector-chip-container">
                 <mat-chip-list [selectable]="false">
                     <mat-chip

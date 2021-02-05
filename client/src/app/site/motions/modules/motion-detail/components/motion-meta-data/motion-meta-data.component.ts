@@ -16,9 +16,11 @@ import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
 import { ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
 import { ViewMotionState } from 'app/site/motions/models/view-motion-state';
+import { ChangeRecoMode } from 'app/site/motions/motions.constants';
 import { MotionPollDialogService } from 'app/site/motions/services/motion-poll-dialog.service';
 import { MotionPollService } from 'app/site/motions/services/motion-poll.service';
 import { PermissionsService } from 'app/site/motions/services/permissions.service';
+import { MotionViewService } from '../../../services/motion-view.service';
 
 @Component({
     selector: 'os-motion-meta-data',
@@ -77,6 +79,10 @@ export class MotionMetaDataComponent extends BaseComponent implements OnInit {
         return this.repo.getExtendedStateLabel(this.motion);
     }
 
+    public get isDifferedChangeRecoMode(): boolean {
+        return this.viewService.currentChangeRecommendationMode === ChangeRecoMode.Diff;
+    }
+
     /**
      * Custom recommender as set in the settings
      */
@@ -88,6 +94,8 @@ export class MotionMetaDataComponent extends BaseComponent implements OnInit {
      * All amendments to this motion
      */
     public amendments: ViewMotion[];
+
+    public showAllAmendments = false;
 
     private tagObserver: Observable<Tag[]>;
     private blockObserver: Observable<MotionBlock[]>;
@@ -107,7 +115,8 @@ export class MotionMetaDataComponent extends BaseComponent implements OnInit {
         private blockRepo: MotionBlockRepositoryService,
         public perms: PermissionsService,
         private pollDialog: MotionPollDialogService,
-        private motionPollService: MotionPollService
+        private motionPollService: MotionPollService,
+        private viewService: MotionViewService
     ) {
         super(componentServiceCollector);
     }

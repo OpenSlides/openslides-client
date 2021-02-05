@@ -70,18 +70,26 @@
                     </span>
                 </os-icon-container>
             </div>
-            <div *ngIf="user.structure_level" class="spacer-top-5">
-                <os-icon-container icon="flag">{{ user.structure_level }}</os-icon-container>
+            <div *ngIf="user.structure_level()" class="spacer-top-5">
+                <os-icon-container icon="flag">{{ user.structure_level() }}</os-icon-container>
             </div>
-            <div *ngIf="user.number" class="spacer-top-5">
-                <os-icon-container icon="perm_identity">{{ user.number }}</os-icon-container>
+            <div *ngIf="user.number()" class="spacer-top-5">
+                <os-icon-container icon="perm_identity">{{ user.number() }}</os-icon-container>
             </div>
 
-            <div *ngIf="user.vote_delegated_to()" class="spacer-top-5" matTooltip="{{ 'Voting right delegated to (proxy)' | translate }}">
+            <div
+                *ngIf="user.vote_delegated_to()"
+                class="spacer-top-5"
+                matTooltip="{{ 'Voting right delegated to (proxy)' | translate }}"
+            >
                 <os-icon-container icon="forward" noWrap="true">{{ user.vote_delegated_to() }}</os-icon-container>
             </div>
 
-            <div *ngIf="user.vote_delegated_from_users_id?.length" class="spacer-top-5" matTooltip="{{ 'Voting right received from (principals)' | translate }}">
+            <div
+                *ngIf="user.vote_delegated_from_users_id?.length"
+                class="spacer-top-5"
+                matTooltip="{{ 'Voting right received from (principals)' | translate }}"
+            >
                 <os-icon-container icon="work" noWrap="true">{{ user.voteDelegationsFrom }}</os-icon-container>
             </div>
         </div>
@@ -100,7 +108,7 @@
             </mat-icon>
 
             <!-- Has comment indicator -->
-            <mat-icon inline *ngIf="!!user.comment" matTooltip="{{ user.comment }}"> comment </mat-icon>
+            <mat-icon inline *ngIf="!!user.comment()" matTooltip="{{ user.comment() }}"> comment </mat-icon>
 
             <!--<os-icon-container *ngIf="user.isSamlUser" icon="device_hub"
                 ><span>{{ 'Is SAML user' | translate }}</span></os-icon-container
@@ -113,7 +121,7 @@
         <mat-checkbox
             class="checkbox-ripple-padding"
             (change)="setPresent(user)"
-            [checked]="user.is_present"
+            [checked]="isUserPresent(user)"
             [disabled]="isPresentToggleDisabled(user)"
         >
             <span>{{ 'Present' | translate }}</span>
@@ -280,7 +288,7 @@
     </h1>
     <div class="os-form-card-mobile" mat-dialog-content>
         <mat-form-field>
-            <mat-select placeholder="{{ 'Groups' | translate }}" [(ngModel)]="infoDialog.groups_id" multiple>
+            <mat-select placeholder="{{ 'Groups' | translate }}" [(ngModel)]="infoDialog.group_ids" multiple>
                 <mat-option *ngFor="let group of groups" [value]="group.id">
                     {{ group.getTitle() | translate }}
                 </mat-option>
@@ -332,7 +340,7 @@
             mat-button
             color="accent"
             [mat-dialog-close]="{
-                groups_id: infoDialog.groups_id,
+                group_ids: infoDialog.group_ids,
                 vote_delegations_from_ids: infoDialog.vote_delegations_from_ids,
                 vote_delegated_to_id: infoDialog.vote_delegated_to_id,
                 gender: infoDialog.gender,

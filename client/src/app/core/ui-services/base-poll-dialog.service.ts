@@ -9,6 +9,7 @@ import { mediumDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BasePollDialogComponent } from 'app/site/polls/components/base-poll-dialog.component';
 import { BaseViewPoll } from 'app/site/polls/models/base-view-poll';
 import { PollService } from 'app/site/polls/services/poll.service';
+import { MotionPollRepositoryService } from '../repositories/motions/motion-poll-repository.service';
 
 /**
  * Abstract class for showing a poll dialog. Has to be subclassed to provide the right `PollService`
@@ -27,14 +28,15 @@ export abstract class BasePollDialogService<V extends BaseViewPoll, S extends Po
      * @param data Passing the (existing or new) data for the poll
      */
     public async openDialog(viewPoll: Partial<V> & Collection): Promise<void> {
-        throw new Error('TODO!');
+        // throw new Error('TODO!');
         const dialogRef = this.dialog.open(this.dialogComponent, {
             data: viewPoll,
             ...mediumDialogSettings
         });
         const result = await dialogRef.afterClosed().toPromise();
         if (result) {
-            const repo = this.mapper.getRepository(viewPoll.collection);
+            const repo = this.mapper.getRepository(viewPoll.collection) as MotionPollRepositoryService;
+            console.log('repo', repo);
             if (!viewPoll.poll) {
                 // await repo.create(result);
             } else {

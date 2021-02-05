@@ -261,10 +261,8 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
     public patchFormValues(): void {
         const personalInfoPatch = {};
         Object.keys(this.personalInfoForm.controls).forEach(ctrl => {
-            if (ctrl === 'group_ids') {
-                personalInfoPatch[ctrl] = this.user.group_ids();
-            } else if (ctrl === 'vote_delegations_from_ids') {
-                personalInfoPatch[ctrl] = this.user.vote_delegations_from_ids();
+            if (typeof this.user[ctrl] === 'function') {
+                personalInfoPatch[ctrl] = this.user[ctrl]();
             } else {
                 personalInfoPatch[ctrl] = this.user[ctrl];
             }
@@ -382,7 +380,8 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
         const title = this.translate.instant('Are you sure you want to delete this participant?');
         const content = this.user.full_name;
         if (await this.promptService.open(title, content)) {
-            this.repo.deleteTemporary(this.user).then(() => this.router.navigate(['./users/']), this.raiseError);
+            await this.repo.delete(this.user);
+            this.router.navigate(['./users/']);
         }
     }
 
@@ -447,7 +446,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
     }
 
     private async updateTemporaryUser(): Promise<void> {
-        await this.repo.updateTemporary(this.personalInfoForm.value, this.user);
+        await this.repo.update(this.personalInfoForm.value, this.user);
         this.setEditMode(false);
     }
 

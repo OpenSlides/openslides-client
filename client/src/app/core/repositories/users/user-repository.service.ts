@@ -47,6 +47,8 @@ interface CreateTemporaryPayloadWithPresent extends UserAction.CreateTemporaryPa
  */
 export type UserStateField = 'is_active' | 'is_present_in_meetings' | 'is_physical_person';
 
+export type AuthType = 'default' | 'saml';
+
 /**
  * type for determining the user name from a string during import.
  * See {@link parseUserString} for implementations
@@ -60,12 +62,17 @@ export interface ShortNameInformation {
     last_name?: string;
 }
 interface LevelAndNumberInformation {
-    structure_level?: string;
-    number?: string;
+    structure_level: (meetingId?: Id) => string;
+    number: (meetingId?: Id) => string;
 }
 type FullNameInformation = ShortNameInformation & LevelAndNumberInformation;
 
-const SHORT_NAME_FIELDS: (keyof User)[] = ['title', 'username', 'first_name', 'last_name'];
+const SHORT_NAME_FIELDS: (keyof User | { templateField: keyof User })[] = [
+    'title',
+    'username',
+    'first_name',
+    'last_name'
+];
 
 /**
  * Repository service for users
@@ -84,6 +91,10 @@ export class UserRepositoryService
     protected sortProperty: UserSortProperty;
 
     private demoModeUserIds: number[] | null = null;
+
+    private get activeMeetingId(): Id {
+        return this.activeMeetingIdService.meetingId;
+    }
 
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
@@ -111,9 +122,12 @@ export class UserRepositoryService
             'is_physical_person',
             'is_present_in_meeting_ids',
             'last_email_send',
-            'number',
-            'structure_level',
-            'vote_weight',
+            { templateField: 'number_$' },
+            'default_number',
+            { templateField: 'comment_$' },
+            'default_structure_level',
+            { templateField: 'structure_level_$' },
+            'default_vote_weight',
             'meeting_id'
         ]);
         return {
@@ -132,7 +146,18 @@ export class UserRepositoryService
         return this.sendActionToBackend(UserAction.CREATE, payload);
     }
 
-    public update(update: Partial<UserAction.UpdatePayload>, viewUser: ViewUser): Promise<void> {
+    public async update(
+        update: Partial<UserAction.UpdatePayload> | Partial<UserAction.UpdateTemporaryPayload>,
+        user: ViewUser
+    ): Promise<void> {
+        if (user.isTemporary) {
+            return this.updateTemporary(update as UserAction.UpdateTemporaryPayload, user);
+        } else {
+            return this.updateNonTemporary(update as UserAction.UpdatePayload, user);
+        }
+    }
+
+    private updateNonTemporary(update: Partial<UserAction.UpdatePayload>, viewUser: ViewUser): Promise<void> {
         const payload: UserAction.UpdatePayload = {
             id: viewUser.id,
             ...this.getPartialUserPayload(update)
@@ -140,8 +165,17 @@ export class UserRepositoryService
         return this.sendActionToBackend(UserAction.UPDATE, payload);
     }
 
-    public delete(viewUser: ViewUser): Promise<void> {
-        return this.sendActionToBackend(UserAction.DELETE, { id: viewUser.id });
+    public async delete(user: ViewUser): Promise<void> {
+        if (user.isTemporary) {
+            return this.deleteTemporary(user);
+        } else {
+            return this.deleteNonTemporary(user);
+        }
+    }
+
+    private deleteNonTemporary(viewUser: ViewUser): Promise<void> {
+        const payload: UserAction.DeletePayload = { id: viewUser.id };
+        return this.sendActionToBackend(UserAction.DELETE, payload);
     }
 
     private getUsername(partialUser: Partial<UserAction.CreateTemporaryPayload>): string | null {
@@ -162,14 +196,14 @@ export class UserRepositoryService
             ...this.getPartialTemporaryUserPayload(partialUser),
 
             // overwrite some attribues from getPartialTemporaryUserPayload
-            meeting_id: this.activeMeetingIdService.meetingId,
-            is_present_in_meeting_ids: partialUser.is_present ? [this.activeMeetingIdService.meetingId] : [],
+            meeting_id: this.activeMeetingId,
+            is_present_in_meeting_ids: partialUser.is_present ? [this.activeMeetingId] : [],
             username
         };
         return this.sendActionToBackend(UserAction.CREATE_TEMPORARY, payload);
     }
 
-    public updateTemporary(update: Partial<UserAction.UpdateTemporaryPayload>, viewUser: ViewUser): Promise<void> {
+    private updateTemporary(update: Partial<UserAction.UpdateTemporaryPayload>, viewUser: ViewUser): Promise<void> {
         const payload: UserAction.UpdateTemporaryPayload = {
             id: viewUser.id,
             ...this.getPartialTemporaryUserPayload(update)
@@ -187,15 +221,10 @@ export class UserRepositoryService
             last_name: partialUser.last_name,
             is_active: partialUser.is_active,
             is_physical_person: partialUser.is_physical_person,
-            about_me: partialUser.about_me,
             gender: partialUser.gender,
-            comment: partialUser.comment,
-            number: partialUser.number,
-            structure_level: partialUser.structure_level,
             email: partialUser.email,
             vote_weight: toDecimal(partialUser.vote_weight as any),
-            is_present_in_meeting_ids: partialUser.is_present_in_meeting_ids,
-            group_ids: partialUser.group_ids
+            is_present_in_meeting_ids: partialUser.is_present_in_meeting_ids
         };
     }
 
@@ -208,28 +237,34 @@ export class UserRepositoryService
             // Optional:
             ...this.getPartialCommonUserPayload(partialUser),
             default_password: partialUser.default_password,
-            vote_delegations_from_ids: partialUser.vote_delegations_from_ids
+            vote_delegations_from_ids: partialUser.vote_delegations_from_ids,
+            comment: partialUser.comment,
+            about_me: partialUser.about_me,
+            structure_level: partialUser.structure_level,
+            number: partialUser.number
         };
     }
 
-    private getPartialUserPayload(partialUser: Partial<UserAction.UpdatePayload>): Partial<UserAction.UpdatePayload> {
-        if (Array.isArray(partialUser.vote_delegations_from_ids)) {
-            console.warn('Vote delegations have to be an object!');
-            delete partialUser.vote_delegations_from_ids;
-        }
+    private getPartialUserPayload(partialUser: any): Partial<UserAction.UpdatePayload> {
         return {
             username: partialUser.username,
             ...this.getPartialCommonUserPayload(partialUser),
+            group_$_ids: { [this.activeMeetingId]: partialUser.group_ids },
+            comment_$: { [this.activeMeetingId]: partialUser.comment as string },
+            number_$: { [this.activeMeetingId]: partialUser.number as string },
+            structure_level_$: { [this.activeMeetingId]: partialUser.structure_level as string },
+            about_me_$: { [this.activeMeetingId]: partialUser.about_me as string },
             role_id: partialUser.role_id,
             guest_meeting_ids: partialUser.guest_meeting_ids,
             committee_as_member_ids: partialUser.committee_as_member_ids,
             committee_as_manager_ids: partialUser.committee_as_manager_ids,
-            vote_delegations_from_ids: partialUser.vote_delegations_from_ids || {}
+            vote_delegations_$_from_ids: { [this.activeMeetingId]: partialUser.vote_delegations_from_ids }
         };
     }
 
-    public deleteTemporary(viewUser: ViewUser): Promise<void> {
-        return this.sendActionToBackend(UserAction.DELETE_TEMPORARY, { id: viewUser.id });
+    private deleteTemporary(viewUser: ViewUser): Promise<void> {
+        const payload: UserAction.DeleteTemporaryPayload = { id: viewUser.id };
+        return this.sendActionToBackend(UserAction.DELETE_TEMPORARY, payload);
     }
 
     public getTitle = (viewUser: ViewUser) => {
@@ -269,12 +304,12 @@ export class UserRepositoryService
         const additions: string[] = [];
 
         // addition: add number and structure level
-        const structure_level = user.structure_level ? user.structure_level.trim() : '';
+        const structure_level = user.structure_level() || '';
         if (structure_level) {
             additions.push(structure_level);
         }
 
-        const number = user.number ? user.number.trim() : '';
+        const number = user.number() || '';
         if (number) {
             additions.push(`${this.translate.instant('No.')} ${number}`);
         }
@@ -286,12 +321,12 @@ export class UserRepositoryService
     }
 
     public getLevelAndNumber(user: LevelAndNumberInformation): string {
-        if (user.structure_level && user.number) {
-            return `${user.structure_level} · ${this.translate.instant('No.')} ${user.number}`;
-        } else if (user.structure_level) {
-            return user.structure_level;
-        } else if (user.number) {
-            return `${this.translate.instant('No.')} ${user.number}`;
+        if (user.structure_level() && user.number()) {
+            return `${user.structure_level()} · ${this.translate.instant('No.')} ${user.number()}`;
+        } else if (user.structure_level()) {
+            return user.structure_level();
+        } else if (user.number()) {
+            return `${this.translate.instant('No.')} ${user.number()}`;
         } else {
             return '';
         }
@@ -346,6 +381,14 @@ export class UserRepositoryService
         return viewModel;
     }
 
+    public async setPassword(user: ViewUser, password: string, setAsDefault: boolean = true): Promise<void> {
+        if (user.isTemporary) {
+            return this.setPasswordTemporary(user, password, setAsDefault);
+        } else {
+            return this.setPasswordNonTemporary(user, password, setAsDefault);
+        }
+    }
+
     /**
      * Updates the password and sets the password without checking for the old one.
      * Also resets the 'default password' to the newly created one.
@@ -354,7 +397,7 @@ export class UserRepositoryService
      * @param password The password to set
      * @param setAsDefault Control, if the default password should be updated. Defaults to `true`.
      */
-    public async setPassword(user: ViewUser, password: string, setAsDefault: boolean = true): Promise<void> {
+    private async setPasswordNonTemporary(user: ViewUser, password: string, setAsDefault?: boolean): Promise<void> {
         const payload: UserAction.SetPasswordPayload = {
             id: user.id,
             password,
@@ -371,7 +414,7 @@ export class UserRepositoryService
      * @param password The password to set
      * @param setAsDefault Control, if the default password should be updated. Defaults to `true`.
      */
-    public async setPasswordTemporary(user: ViewUser, password: string, setAsDefault: boolean = true): Promise<void> {
+    private async setPasswordTemporary(user: ViewUser, password: string, setAsDefault?: boolean): Promise<void> {
         this.preventAlterationOnDemoUsers(user);
         const payload: UserAction.SetPasswordTemporaryPayload = {
             id: user.id,
@@ -382,13 +425,21 @@ export class UserRepositoryService
     }
 
     public async resetPasswordToDefault(user: ViewUser): Promise<void> {
+        if (user.isTemporary) {
+            return this.resetPasswordToDefaultTemporary(user);
+        } else {
+            return this.resetPasswordToDefaultNonTemporary(user);
+        }
+    }
+
+    private async resetPasswordToDefaultNonTemporary(user: ViewUser): Promise<void> {
         const payload: UserAction.ResetPasswordToDefaultPayload = {
             id: user.id
         };
         return this.sendActionToBackend(UserAction.RESET_PASSWORD_TO_DEFAULT, payload);
     }
 
-    public async resetPasswordToDefaultTemporary(user: ViewUser): Promise<void> {
+    private async resetPasswordToDefaultTemporary(user: ViewUser): Promise<void> {
         const payload: UserAction.ResetPasswordToDefaultTemporaryPayload = {
             id: user.id
         };
@@ -408,6 +459,37 @@ export class UserRepositoryService
             new_password: newPassword
         };
         return this.sendActionToBackend(UserAction.SET_PASSWORD_SELF, payload);
+    }
+
+    public async setPresent(user: ViewUser, present: boolean): Promise<void> {
+        if (user.isTemporary) {
+            return this.setPresentTemporary(user, present);
+        } else {
+            return this.setPresentNonTemporary(user, present);
+        }
+    }
+
+    private async setPresentNonTemporary(user: ViewUser, present: boolean): Promise<void> {
+        this.preventAlterationOnDemoUsers(user);
+        const currentMeetingIds = user.is_present_in_meeting_ids || [];
+        const payload: UserAction.UpdatePayload = {
+            id: user.id,
+            is_present_in_meeting_ids: present
+                ? [...currentMeetingIds, this.activeMeetingId]
+                : user.is_present_in_meeting_ids.filter(id => id !== this.activeMeetingId)
+        };
+        this.sendActionToBackend(UserAction.UPDATE, payload);
+    }
+
+    private async setPresentTemporary(user: ViewUser, present: boolean): Promise<void> {
+        this.preventAlterationOnDemoUsers(user);
+        const payload: UserAction.UpdateTemporaryPayload = {
+            id: user.id,
+            is_present_in_meeting_ids: present
+                ? [...user.is_present_in_meeting_ids, this.activeMeetingId]
+                : user.is_present_in_meeting_ids.filter(id => id !== this.activeMeetingId)
+        };
+        this.sendActionToBackend(UserAction.UPDATE_TEMPORARY, payload);
     }
 
     /**
@@ -615,7 +697,7 @@ export class UserRepositoryService
      */
     public getUsersByName(name: string): ViewUser[] {
         return this.getViewModelList().filter(user => {
-            return user.full_name === name || user.short_name === name || user.number === name;
+            return user.full_name === name || user.short_name === name || user.number() === name;
         });
     }
 
@@ -626,7 +708,7 @@ export class UserRepositoryService
      * @returns all users matching that number
      */
     public getUsersByNumber(number: string): ViewUser[] {
-        return this.getViewModelList().filter(user => user.number === number);
+        return this.getViewModelList().filter(user => user.number() === number);
     }
 
     /**
@@ -702,10 +784,18 @@ export class UserRepositoryService
     public setConfigSortFn(): void {
         this.setSortFunction((a: ViewUser, b: ViewUser) => {
             if (a[this.sortProperty] && b[this.sortProperty]) {
+                if (typeof a[this.sortProperty] === 'function') {
+                    const fnA = a[this.sortProperty] as () => string;
+                    const fnB = b[this.sortProperty] as () => string;
+                    return this.languageCollator.compare(fnA(), fnB());
+                }
                 if (a[this.sortProperty] === b[this.sortProperty]) {
                     return this.languageCollator.compare(a.short_name, b.short_name);
                 } else {
-                    return this.languageCollator.compare(a[this.sortProperty], b[this.sortProperty]);
+                    return this.languageCollator.compare(
+                        a[this.sortProperty] as string,
+                        b[this.sortProperty] as string
+                    );
                 }
             } else if (a[this.sortProperty] && !b[this.sortProperty]) {
                 return -1;

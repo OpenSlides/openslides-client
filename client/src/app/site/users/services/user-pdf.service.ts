@@ -42,7 +42,7 @@ export class UserPdfService {
         ];
         if (user.structure_level) {
             userHeadline.push({
-                text: user.structure_level,
+                text: user.structure_level(),
                 style: 'userDataHeading'
             });
         }

@@ -26,22 +26,22 @@ export namespace UserAction {
         last_name?: string;
         is_active?: boolean;
         is_physical_person?: boolean;
-        about_me?: UnsafeHtml;
         gender?: string;
-        comment?: UnsafeHtml;
-        number?: string;
-        structure_level?: string;
         email?: string;
         vote_weight?: Decimal;
 
         is_present_in_meeting_ids?: Id[]; // can only contain the given meeting_id
-        group_ids?: Id[]; // the structured field is only valid for the meeting_id
     }
 
     interface TemporaryUserPayload extends CommonUserPayload {
         // Optional
         default_password?: string;
         vote_delegations_from_ids?: Id[];
+        comment?: string;
+        number?: string;
+        structure_level?: string;
+        about_me?: UnsafeHtml;
+        group_ids?: Id[]; // the structured field is only valid for the meeting_id
     }
 
     interface UserPayload extends CommonUserPayload {
@@ -50,6 +50,24 @@ export namespace UserAction {
         committee_as_member_ids?: Id[];
         committee_as_manager_ids?: Id[];
         vote_delegations_from_ids?: {
+            [meeting_id: number]: Id[];
+        };
+        comment_$?: {
+            [meeting_id: number]: UnsafeHtml;
+        };
+        number_$?: {
+            [meeting_id: number]: string;
+        };
+        structure_level_$?: {
+            [meeting_id: number]: string;
+        };
+        about_me_$?: {
+            [meeting_id: number]: UnsafeHtml;
+        };
+        group_$_ids?: {
+            [meeting_id: number]: string[] | Id[];
+        };
+        vote_delegations_$_from_ids?: {
             [meeting_id: number]: Id[];
         };
     }
@@ -68,6 +86,9 @@ export namespace UserAction {
     export interface UpdatePayload extends Identifiable, UserPayload {
         username?: string;
     }
+    export interface DeletePayload extends Identifiable {}
+
+    export interface DeletePayload extends Identifiable {}
 
     export interface CreateTemporaryPayload extends HasMeetingId, TemporaryUserPayload {
         // Required:
@@ -77,6 +98,7 @@ export namespace UserAction {
         // Optional:
         username?: string;
     }
+    export interface DeleteTemporaryPayload extends Identifiable {}
     export interface SetPasswordSelfPayload {
         old_password: string;
         new_password: string;

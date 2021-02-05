@@ -301,15 +301,15 @@
         </div>
 
         <!-- Structure Level -->
-        <div *ngIf="user.structure_level">
+        <div *ngIf="user.structure_level()">
             <h4>{{ 'Structure level' | translate }}</h4>
-            <span>{{ user.structure_level }}</span>
+            <span>{{ user.structure_level() }}</span>
         </div>
 
         <!-- Participant number -->
-        <div *ngIf="user.number">
+        <div *ngIf="user.number()">
             <h4>{{ 'Participant number' | translate }}</h4>
-            <span>{{ user.number }}</span>
+            <span>{{ user.number() }}</span>
         </div>
 
         <!-- Groups -->
@@ -339,9 +339,9 @@
             </div>
 
             <!-- Vote weight -->
-            <div *ngIf="user.vote_weight && showVoteWeight">
+            <div *ngIf="user.vote_weight() && showVoteWeight">
                 <h4>{{ 'Vote weight' | translate }}</h4>
-                <span>{{ user.vote_weight }}</span>
+                <span>{{ user.vote_weight() }}</span>
             </div>
         </div>
 
@@ -361,17 +361,17 @@
 
         <div *ngIf="isAllowed('seeName')">
             <!-- About me -->
-            <div *ngIf="user.about_me">
+            <div *ngIf="user.about_me()">
                 <h4>{{ 'About me' | translate }}</h4>
-                <div [innerHTML]="user.about_me | trust: 'html'"></div>
+                <div [innerHTML]="user.about_me() | trust: 'html'"></div>
             </div>
         </div>
 
         <div *ngIf="isAllowed('seeExtra')">
             <!-- Comment -->
-            <div *ngIf="user.comment">
+            <div *ngIf="user.comment()">
                 <h4>{{ 'Comment' | translate }}</h4>
-                <span>{{ user.comment }}</span>
+                <span>{{ user.comment() }}</span>
             </div>
         </div>
 

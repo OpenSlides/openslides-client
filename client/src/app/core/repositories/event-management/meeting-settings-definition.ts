@@ -333,6 +333,12 @@ export const meetingSettings: SettingsGroup[] = [
                         helpText: '[Begin speech] starts the countdown, [End speech] stops the countdown.'
                     },
                     {
+                        key: 'list_of_speakers_enable_point_of_order_speakers',
+                        label: 'Enable point of order',
+                        default: false,
+                        type: 'boolean'
+                    },
+                    {
                         key: 'list_of_speakers_show_amount_of_speakers_on_slide',
                         label: 'Show the amount of speakers in subtitle of list of speakers slide',
                         default: true,

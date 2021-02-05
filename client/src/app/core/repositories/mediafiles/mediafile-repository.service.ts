@@ -17,12 +17,10 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 
 export const LOGO_FONT_VALUES: Follow[] = [
     {
-        idField: 'used_as_font_$_in_meeting_id',
-        onlyValues: true
+        idField: 'used_as_font_$_in_meeting_id'
     },
     {
-        idField: 'used_as_logo_$_in_meeting_id',
-        onlyValues: true
+        idField: 'used_as_logo_$_in_meeting_id'
     }
 ];
 

@@ -25,19 +25,16 @@ export class UserImportService extends BaseImportService<User> {
         'title',
         'first_name',
         'last_name',
-        'structure_level',
-        'number',
-        // TODO
-        // 'groups_id',
         'comment',
         'is_active',
-        // 'is_present',
         'is_physical_person',
         'default_password',
         'email',
         'username',
         'gender',
-        'vote_weight'
+        'default_number',
+        'default_structure_level',
+        'default_vote_weight'
     ];
 
     /**
@@ -120,7 +117,8 @@ export class UserImportService extends BaseImportService<User> {
                     }
                     break;
                 case 'number':
-                    user.number = line[idx];
+                    throw new Error('Todo');
+                    // user.number() = line[idx];
                     break;
                 case 'vote_weight':
                     if (!line[idx]) {

@@ -13,7 +13,6 @@ import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { Searchable } from 'app/site/base/searchable';
 import { ViewCommittee } from 'app/site/event-management/models/view-committee';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
-import { ViewRole } from 'app/site/event-management/models/view-role';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
 import { ViewMotionSubmitter } from 'app/site/motions/models/view-motion-submitter';
@@ -150,6 +149,26 @@ export class ViewUser extends BaseProjectableViewModel<User> implements Searchab
     public vote_delegations_from_ids(meetingId?: Id): Id[] {
         return this.user.vote_delegations_from_ids(meetingId || this.getEnsuredActiveMeetingId());
     }
+
+    public vote_weight(meetingId?: Id): number {
+        return this.user.vote_weight(meetingId || this.getEnsuredActiveMeetingId());
+    }
+
+    public number(meetingId?: Id): string {
+        return this.user.number(meetingId || this.getEnsuredActiveMeetingId());
+    }
+
+    public structure_level(meeting_id?: Id): string {
+        return this ? this.user.structure_level(meeting_id || this.getEnsuredActiveMeetingId()) : '';
+    }
+
+    public comment(meetingId?: Id): string {
+        return this.user.comment(meetingId || this.getEnsuredActiveMeetingId());
+    }
+
+    public about_me(meetingId?: Id): string {
+        return this.user.about_me(meetingId || this.getEnsuredActiveMeetingId());
+    }
     // ### block end.
 
     /**
@@ -162,8 +181,8 @@ export class ViewUser extends BaseProjectableViewModel<User> implements Searchab
             { key: 'Title', value: this.getTitle() },
             { key: 'First name', value: this.first_name },
             { key: 'Last name', value: this.last_name },
-            { key: 'Structure level', value: this.structure_level },
-            { key: 'Number', value: this.number },
+            { key: 'Structure level', value: this.structure_level() },
+            { key: 'Number', value: this.number() },
             { key: 'Delegation of vote', value: this.delegationName() }
         ];
         return { properties, searchValue: properties.map(property => property.value) };
@@ -193,7 +212,6 @@ export class ViewUser extends BaseProjectableViewModel<User> implements Searchab
 }
 type UserManyStructuredRelation<Result> = (arg?: Id) => Result[];
 interface IUserRelations {
-    role?: ViewRole;
     is_present_in_meetings: ViewMeeting[];
     meeting?: ViewMeeting;
     guest_meetings: ViewMeeting[];
