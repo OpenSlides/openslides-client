@@ -14,7 +14,6 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 import { MotionAction } from 'app/core/actions/motion-action';
-import { NotifyService } from 'app/core/core-services/notify.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Id } from 'app/core/definitions/key-types';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
@@ -23,7 +22,6 @@ import {
     MotionRepositoryService
 } from 'app/core/repositories/motions/motion-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { DiffLinesInParagraph, LineRange } from 'app/core/ui-services/diff.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
@@ -32,9 +30,7 @@ import { BaseModelContextComponent } from 'app/site/base/components/base-model-c
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
-import { ViewMotionState } from 'app/site/motions/models/view-motion-state';
-import { MotionEditNotification } from 'app/site/motions/motion-edit-notification';
-import { ChangeRecoMode, LineNumberingMode, MotionEditNotificationType } from 'app/site/motions/motions.constants';
+import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.constants';
 import { AmendmentFilterListService } from 'app/site/motions/services/amendment-filter-list.service';
 import { AmendmentSortListService } from 'app/site/motions/services/amendment-sort-list.service';
 import { MotionFilterListService } from 'app/site/motions/services/motion-filter-list.service';
@@ -194,6 +190,8 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
     public commentIds: Id[] = [];
 
     public temporaryMotion = {};
+
+    public canSave = false;
 
     /**
      * Hold the subscription to the navigation.

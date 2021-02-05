@@ -68,6 +68,9 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
     @Output()
     public changeForm = new EventEmitter<ViewMotion>();
 
+    @Output()
+    public isFormValid = new EventEmitter<boolean>();
+
     private finalEditMode = false;
 
     public get showPreamble(): boolean {
@@ -204,7 +207,12 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
         this.contentForm = this.createForm();
         this.patchForm();
         this.subscriptions.push(...this.subscribeToSettings(), ...this.subscribeToObservers());
-        this.subscriptions.push(this.contentForm.valueChanges.subscribe(value => this.changeForm.emit(value)));
+        this.subscriptions.push(
+            this.contentForm.valueChanges.subscribe(value => {
+                this.changeForm.emit(value);
+                this.isFormValid.emit(this.contentForm.valid);
+            })
+        );
     }
 
     private enterEditMode(): void {

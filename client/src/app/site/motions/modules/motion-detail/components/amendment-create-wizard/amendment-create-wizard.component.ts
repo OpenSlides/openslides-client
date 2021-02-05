@@ -3,12 +3,12 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AmendmentAction } from 'app/core/actions/amendment-action';
-import { AmendmentRepositoryService } from 'app/core/repositories/motions/amendment-repository.service';
 import {
     MotionLineNumberingService,
     ParagraphToChoose
 } from 'app/core/repositories/motions/motion-line-numbering.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
+import { AmendmentService } from 'app/core/ui-services/amendment.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
@@ -71,7 +71,7 @@ export class AmendmentCreateWizardComponent extends BaseComponent implements OnI
         componentServiceCollector: ComponentServiceCollector,
         private meetingSettingsService: MeetingSettingsService,
         private formBuilder: FormBuilder,
-        private repo: AmendmentRepositoryService,
+        private repo: AmendmentService,
         private motionRepo: MotionRepositoryService,
         private motionLineNumbering: MotionLineNumberingService,
         private route: ActivatedRoute,

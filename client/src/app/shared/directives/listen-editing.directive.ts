@@ -4,11 +4,64 @@ import { Subscription } from 'rxjs';
 
 import { NotifyService } from 'app/core/core-services/notify.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
+import { Fqid } from 'app/core/definitions/key-types';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { EditNotificationType } from 'app/site/base/constants/edit-notification-constants';
-import { EditNotification } from 'app/site/base/edit-notification';
 import { BaseModel } from '../models/base/base-model';
+
+/**
+ * Enum to define different types of notifications.
+ */
+enum EditNotificationType {
+    /**
+     * Type to declare editing a base-model.
+     */
+    TYPE_BEGIN_EDITING = 'typeBeginEditing',
+
+    /**
+     * Type if the edit-view is closing.
+     */
+    TYPE_CLOSING_EDITING = 'typeClosingEditing',
+
+    /**
+     * Type if changes are saved.
+     */
+    TYPE_SAVING_EDITING = 'typeSavingEditing',
+
+    /**
+     * Type to declare if another person is also editing the same base-model.
+     */
+    TYPE_ALSO_EDITING = 'typeAlsoEditing'
+}
+
+/**
+ * Class to specify the notifications for editing a motion.
+ */
+interface EditNotification {
+    /**
+     * The id of the motion the user wants to edit.
+     * Necessary to identify if users edit the same motion.
+     */
+    baseModelFqid: Fqid;
+
+    /**
+     * The id of the sender.
+     * Necessary if this differs from senderUserId.
+     */
+    senderId: number;
+
+    /**
+     * The name of the sender.
+     * To show the names of the other editors
+     */
+    senderName: string;
+
+    /**
+     * The type of the notification.
+     * Separates if the user is beginning the work or closing the edit-view.
+     */
+    type: EditNotificationType;
+}
 
 @Directive({
     selector: '[osListenEditing]'
