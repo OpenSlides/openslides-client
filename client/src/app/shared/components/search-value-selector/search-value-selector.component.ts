@@ -4,15 +4,13 @@ import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
-    EventEmitter,
     Input,
     Optional,
-    Output,
     Self,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { FormBuilder, FormControl, NgControl } from '@angular/forms';
+import { FormBuilder, NgControl } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 
@@ -20,7 +18,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { auditTime } from 'rxjs/operators';
 
-import { ParentErrorStateMatcher } from 'app/shared/parent-error-state-matcher';
 import { BaseSearchValueSelectorComponent } from '../base-search-value-selector';
 import { Selectable } from '../selectable';
 
@@ -67,7 +64,6 @@ export class SearchValueSelectorComponent extends BaseSearchValueSelectorCompone
             return;
         }
         if (Array.isArray(value)) {
-            console.log('search-value-selector', value);
             this.selectableItems = value;
         } else {
             this.subscriptions.push(
@@ -126,7 +122,7 @@ export class SearchValueSelectorComponent extends BaseSearchValueSelectorCompone
         if (!this.selectableItems) {
             return [];
         }
-        const searchValue: string = this.searchValue.value.toLowerCase();
+        const searchValue: string = this.searchValueForm.value.toLowerCase();
         const filteredItems = this.selectableItems.filter(item => {
             const idString = '' + item.id;
             const foundId = idString.trim().toLowerCase().indexOf(searchValue) !== -1;
@@ -162,14 +158,6 @@ export class SearchValueSelectorComponent extends BaseSearchValueSelectorCompone
         if (this.multiple && change.isUserInput) {
             const value = change.source.value;
             this.addRemoveId(value);
-        }
-    }
-
-    protected updateForm(value: Selectable[] | Selectable | null): void {
-        if (typeof value === 'function') {
-            console.warn('Trying to set a function as value:', value);
-        } else {
-            this.contentForm.setValue(value);
         }
     }
 }

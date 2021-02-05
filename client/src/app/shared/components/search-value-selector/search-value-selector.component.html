@@ -1,4 +1,5 @@
 <mat-select
+    #matSelect
     [formControl]="contentForm"
     [multiple]="multiple"
     [panelClass]="{ 'os-search-value-selector': multiple }"
@@ -15,7 +16,7 @@
     </mat-select-trigger>
 
     <mat-option>
-        <ngx-mat-select-search [formControl]="searchValue"></ngx-mat-select-search>
+        <ngx-mat-select-search [formControl]="searchValueForm"></ngx-mat-select-search>
     </mat-option>
     <ng-container>
         <div *ngIf="multiple && showChips" class="h-scroller">

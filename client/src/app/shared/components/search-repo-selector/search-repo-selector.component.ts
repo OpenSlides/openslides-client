@@ -1,26 +1,13 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import {
-    Component,
-    ElementRef,
-    EventEmitter,
-    Input,
-    OnInit,
-    Optional,
-    Output,
-    Self,
-    ViewChild,
-    ViewEncapsulation
-} from '@angular/core';
-import { FormBuilder, FormControl, NgControl } from '@angular/forms';
+import { Component, ElementRef, Input, OnInit, Optional, Self, ViewEncapsulation } from '@angular/core';
+import { FormBuilder, NgControl } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
-import { MatSelect } from '@angular/material/select';
 
 import { ModelSubscription } from 'app/core/core-services/autoupdate.service';
 import { BaseRepository } from 'app/core/repositories/base-repository';
 import { ModelRequestRepository } from 'app/core/repositories/model-request-repository';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { Settings } from 'app/shared/models/event-management/meeting';
-import { ParentErrorStateMatcher } from 'app/shared/parent-error-state-matcher';
 import { BaseSearchValueSelectorComponent } from '../base-search-value-selector';
 import { Selectable } from '../selectable';
 
@@ -44,8 +31,6 @@ export class SearchRepoSelectorComponent extends BaseSearchValueSelectorComponen
     public get controlType(): string {
         return 'search-repo-selector';
     }
-
-    public searchValueForm: FormControl;
 
     private items: Selectable[];
 

@@ -68,31 +68,6 @@ export const verboseChangeRecoMode = {
     modified_final_version: 'Final print template'
 };
 
-/**
- * Enum to define different types of notifications.
- */
-export enum MotionEditNotificationType {
-    /**
-     * Type to declare editing a motion.
-     */
-    TYPE_BEGIN_EDITING_MOTION = 'typeBeginEditingMotion',
-
-    /**
-     * Type if the edit-view is closing.
-     */
-    TYPE_CLOSING_EDITING_MOTION = 'typeClosingEditingMotion',
-
-    /**
-     * Type if changes are saved.
-     */
-    TYPE_SAVING_EDITING_MOTION = 'typeSavingEditingMotion',
-
-    /**
-     * Type to declare if another person is also editing the same motion.
-     */
-    TYPE_ALSO_EDITING_MOTION = 'typeAlsoEditingMotion'
-}
-
 // import-export order specific constants
 /**
  * Defines the column order for csv/xlsx export/import of motions.

@@ -22,7 +22,7 @@ import { MotionVote } from 'app/shared/models/motions/motion-vote';
 import { Motion } from '../../shared/models/motions/motion';
 import { MotionBlock } from '../../shared/models/motions/motion-block';
 import { MotionCategory } from '../../shared/models/motions/motion-category';
-import { MotionChangeRecommendation } from '../../shared/models/motions/motion-change-reco';
+import { MotionChangeRecommendation } from '../../shared/models/motions/motion-change-recommendation';
 import { MotionCommentSection } from '../../shared/models/motions/motion-comment-section';
 import { MotionStatuteParagraph } from '../../shared/models/motions/motion-statute-paragraph';
 import { MotionWorkflow } from '../../shared/models/motions/motion-workflow';

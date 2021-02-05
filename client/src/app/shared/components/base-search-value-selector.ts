@@ -48,7 +48,7 @@ export abstract class BaseSearchValueSelectorComponent<T> extends BaseFormContro
     @Output()
     public clickNotFound = new EventEmitter<string>();
 
-    public searchValue: FormControl;
+    public searchValueForm: FormControl;
 
     public get empty(): boolean {
         return Array.isArray(this.contentForm.value) ? !this.contentForm.value.length : !this.contentForm.value;
@@ -78,7 +78,7 @@ export abstract class BaseSearchValueSelectorComponent<T> extends BaseFormContro
         if (!this.selectableItems) {
             return [];
         }
-        const searchValue: string = this.searchValue.value.toLowerCase();
+        const searchValue: string = this.searchValueForm.value.toLowerCase();
         return this.selectableItems.filter(item => {
             const idString = '' + item;
             const foundId = idString.trim().toLowerCase().indexOf(searchValue) !== -1;
@@ -101,6 +101,10 @@ export abstract class BaseSearchValueSelectorComponent<T> extends BaseFormContro
     }
 
     public onContainerClick(event: MouseEvent): void {
+        if (!this.matSelect) {
+            console.warn('Warning: No #matSelect was defined.');
+            return;
+        }
         this.matSelect.open();
     }
 
@@ -108,16 +112,21 @@ export abstract class BaseSearchValueSelectorComponent<T> extends BaseFormContro
      * Emits the click on 'notFound' and resets the search-value.
      */
     public onNotFoundClick(): void {
-        this.clickNotFound.emit(this.searchValue.value);
-        this.searchValue.setValue('');
+        this.clickNotFound.emit(this.searchValueForm.value);
+        this.searchValueForm.setValue('');
     }
 
     protected initializeForm(): void {
         this.contentForm = this.fb.control([]);
-        this.searchValue = this.fb.control('');
+        this.searchValueForm = this.fb.control('');
     }
 
     protected updateForm(value: T[] | T | null): void {
-        this.contentForm.setValue(value);
+        if (typeof value === 'function') {
+            console.warn('Warning: Trying to set a function as value:', value);
+            console.warn('Warning: Value of function', value());
+        } else {
+            this.contentForm.setValue(value);
+        }
     }
 }

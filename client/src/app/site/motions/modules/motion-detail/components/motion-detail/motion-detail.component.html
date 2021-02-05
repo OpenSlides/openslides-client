@@ -4,6 +4,7 @@
     prevUrl="../.."
     [nav]="false"
     [editMode]="editMotion"
+    [isSaveButtonEnabled]="canSave"
     (mainEvent)="createAmendment()"
     (cancelEditEvent)="leaveEditMotion()"
     (saveEvent)="saveMotion()"
@@ -141,12 +142,7 @@
 
         <!-- Content -->
         <mat-card [ngClass]="editMotion ? 'os-form-card-mobile' : 'os-card'">
-            <os-motion-content
-                [motion]="motion"
-                [editMotion]="editMotion"
-                [newMotion]="newMotion"
-                (save)="saveMotion($event)"
-            ></os-motion-content>
+            <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
         </mat-card>
 
         <!-- Comments -->
@@ -176,14 +172,7 @@
                     *ngIf="!newMotion && !editMotion"
                     [motion]="motion"
                 ></os-motion-highlight-form>
-                <os-motion-content
-                    #content
-                    [motion]="motion"
-                    [editMotion]="editMotion"
-                    [newMotion]="newMotion"
-                    (save)="saveMotion($event)"
-                    (changeForm)="temporaryMotion = $event"
-                ></os-motion-content>
+                <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
             </mat-card>
         </div>
     </div>
@@ -193,4 +182,16 @@
     <div>
         <os-motion-meta-data [motion]="motion"></os-motion-meta-data>
     </div>
+</ng-template>
+
+<ng-template #contentTemplate>
+    <os-motion-content
+        #content
+        [motion]="motion"
+        [editMotion]="editMotion"
+        [newMotion]="newMotion"
+        (save)="saveMotion($event)"
+        (changeForm)="temporaryMotion = $event"
+        (isFormValid)="canSave = $event"
+    ></os-motion-content>
 </ng-template>

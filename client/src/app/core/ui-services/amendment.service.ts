@@ -1,33 +1,28 @@
 import { Injectable } from '@angular/core';
 
+import { ActionService } from '../core-services/action.service';
+import { ActiveMeetingIdService } from '../core-services/active-meeting-id.service';
 import { AmendmentAction } from 'app/core/actions/amendment-action';
 import { MotionAction } from 'app/core/actions/motion-action';
 import { Identifiable } from 'app/shared/models/base/identifiable';
-import { Motion } from 'app/shared/models/motions/motion';
 import { createAgendaItem } from 'app/shared/utils/create-agenda-item';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
-import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
-import { MotionRepositoryService } from './motion-repository.service';
-import { RepositoryServiceCollector } from '../repository-service-collector';
+import { MotionRepositoryService } from '../repositories/motions/motion-repository.service';
+import { RepositoryServiceCollector } from '../repositories/repository-service-collector';
 
 @Injectable({
     providedIn: 'root'
 })
-export class AmendmentRepositoryService extends BaseRepositoryWithActiveMeeting<ViewMotion, Motion> {
-    public constructor(repoServices: RepositoryServiceCollector, private motionRepo: MotionRepositoryService) {
-        super(repoServices, Motion);
+export class AmendmentService {
+    private get activeMeetingIdService(): ActiveMeetingIdService {
+        return this.repoServices.activeMeetingIdService;
     }
 
-    public getVerboseName = (plural?: boolean): string => {
-        return plural ? 'Amendments' : 'Amendment';
-    };
-    public getTitle = (viewModel: ViewMotion): string => {
-        if (viewModel.number) {
-            return `${viewModel.number}: ${viewModel.title}`;
-        } else {
-            return viewModel.title;
-        }
-    };
+    private get actions(): ActionService {
+        return this.repoServices.actionService;
+    }
+
+    public constructor(private repoServices: RepositoryServiceCollector, private motionRepo: MotionRepositoryService) {}
 
     public async createTextBased(
         partialMotion: Partial<AmendmentAction.CreateTextbasedPayload>
@@ -101,7 +96,7 @@ export class AmendmentRepositoryService extends BaseRepositoryWithActiveMeeting<
             supporter_ids: partialMotion.supporter_ids,
             ...createAgendaItem(partialMotion)
         };
-        return this.sendActionToBackend(AmendmentAction.CREATE_STATUTEBASED_AMENDMENT, payload);
+        return this.actions.sendRequest(AmendmentAction.CREATE_STATUTEBASED_AMENDMENT, payload);
     }
 
     public async update(): Promise<void> {}

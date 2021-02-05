@@ -6,7 +6,8 @@ import { map } from 'rxjs/operators';
 import { MotionChangeRecommendationAction } from 'app/core/actions/motion-change-recommendation-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Id } from 'app/core/definitions/key-types';
-import { MotionChangeRecommendation } from 'app/shared/models/motions/motion-change-reco';
+import { Identifiable } from 'app/shared/models/base/identifiable';
+import { MotionChangeRecommendation } from 'app/shared/models/motions/motion-change-recommendation';
 import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
 import { ChangeRecoMode } from 'app/site/motions/motions.constants';
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
@@ -15,18 +16,6 @@ import { LinenumberingService } from '../../ui-services/linenumbering.service';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 import { ViewMotion } from '../../../site/motions/models/view-motion';
 import { ViewUnifiedChange } from '../../../shared/models/motions/view-unified-change';
-
-export interface RawMotionChangeRecommendation {
-    id?: Id;
-    rejected?: boolean;
-    internal?: boolean;
-    type?: ModificationType;
-    other_description?: string;
-    line_from?: number;
-    line_to?: number;
-    text?: string;
-    motion_id?: Id;
-}
 
 /**
  * Repository Services for change recommendations
@@ -64,10 +53,10 @@ export class MotionChangeRecommendationRepositoryService extends BaseRepositoryW
     /**
      * return the Observable of all change recommendations belonging to the given motion
      */
-    public getChangeRecosOfMotionObservable(motion_id: Id): Observable<ViewMotionChangeRecommendation[]> {
+    public getChangeRecosOfMotionObservable(motionId: Id): Observable<ViewMotionChangeRecommendation[]> {
         return this.getViewModelListObservable().pipe(
             map((recos: ViewMotionChangeRecommendation[]) => {
-                return recos.filter(reco => reco.motion_id === motion_id);
+                return recos.filter(reco => reco.motion_id === motionId);
             })
         );
     }
@@ -159,10 +148,10 @@ export class MotionChangeRecommendationRepositoryService extends BaseRepositoryW
         motion: ViewMotion,
         lineRange: LineRange,
         lineLength: number
-    ): RawMotionChangeRecommendation {
+    ): Partial<MotionChangeRecommendationAction.CreatePayload> {
         const motionText = this.lineNumbering.insertLineNumbers(motion.text, lineLength);
 
-        const changeReco: RawMotionChangeRecommendation = {};
+        const changeReco: Partial<MotionChangeRecommendationAction.CreatePayload> = {};
         changeReco.line_from = lineRange.from;
         changeReco.line_to = lineRange.to;
         changeReco.type = ModificationType.TYPE_REPLACEMENT;
@@ -187,7 +176,7 @@ export class MotionChangeRecommendationRepositoryService extends BaseRepositoryW
         amendment: ViewMotion,
         lineNumberedParagraphs: string[],
         lineRange: LineRange
-    ): RawMotionChangeRecommendation {
+    ): Partial<MotionChangeRecommendationAction.CreatePayload> {
         const consolidatedText = lineNumberedParagraphs.join('\n');
 
         const extracted = this.diffService.extractRangeByLineNumbers(consolidatedText, lineRange.from, lineRange.to);
@@ -198,7 +187,7 @@ export class MotionChangeRecommendationRepositoryService extends BaseRepositoryW
             extracted.innerContextEnd +
             extracted.outerContextEnd;
 
-        const changeReco: RawMotionChangeRecommendation = {};
+        const changeReco: Partial<MotionChangeRecommendationAction.CreatePayload> = {};
         changeReco.line_from = lineRange.from;
         changeReco.line_to = lineRange.to;
         changeReco.type = ModificationType.TYPE_REPLACEMENT;
@@ -215,8 +204,10 @@ export class MotionChangeRecommendationRepositoryService extends BaseRepositoryW
      * @param {ViewMotion} motion
      * @param {number} lineLength
      */
-    public createTitleChangeRecommendationTemplate(motion: ViewMotion): RawMotionChangeRecommendation {
-        const changeReco: RawMotionChangeRecommendation = {};
+    public createTitleChangeRecommendationTemplate(
+        motion: ViewMotion
+    ): Partial<MotionChangeRecommendationAction.CreatePayload> {
+        const changeReco: Partial<MotionChangeRecommendationAction.CreatePayload> = {};
         changeReco.line_from = 0;
         changeReco.line_to = 0;
         changeReco.type = ModificationType.TYPE_REPLACEMENT;
@@ -227,7 +218,7 @@ export class MotionChangeRecommendationRepositoryService extends BaseRepositoryW
         return changeReco;
     }
 
-    public create(model: Partial<RawMotionChangeRecommendation>): Promise<Id> {
+    public create(model: Partial<Partial<MotionChangeRecommendationAction.CreatePayload>>): Promise<Identifiable> {
         const payload: MotionChangeRecommendationAction.CreatePayload = {
             internal: model.internal,
             line_from: model.line_from,
@@ -242,8 +233,8 @@ export class MotionChangeRecommendationRepositoryService extends BaseRepositoryW
     }
 
     public update(
-        update: Partial<RawMotionChangeRecommendation>,
-        viewModel: RawMotionChangeRecommendation
+        update: Partial<Partial<MotionChangeRecommendationAction.CreatePayload>>,
+        viewModel: MotionChangeRecommendation
     ): Promise<void> {
         const payload: MotionChangeRecommendationAction.UpdatePayload = {
             id: viewModel.id,
@@ -256,7 +247,7 @@ export class MotionChangeRecommendationRepositoryService extends BaseRepositoryW
         return this.sendActionToBackend(MotionChangeRecommendationAction.UPDATE, payload);
     }
 
-    public delete(viewModel: ViewMotion): Promise<void> {
+    public delete(viewModel: MotionChangeRecommendation): Promise<void> {
         return this.sendActionToBackend(MotionChangeRecommendationAction.DELETE, { id: viewModel.id });
     }
 

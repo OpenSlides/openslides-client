@@ -2,17 +2,16 @@ import { Inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import {
-    MotionChangeRecommendationRepositoryService,
-    RawMotionChangeRecommendation
-} from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
+import { MotionChangeRecommendationAction } from 'app/core/actions/motion-change-recommendation-action';
+import { MotionChangeRecommendationRepositoryService } from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { MotionChangeRecommendation } from 'app/shared/models/motions/motion-change-recommendation';
 import { BaseComponent } from 'app/site/base/components/base.component';
 
 export interface BaseChangeRecommendationData {
     editChangeRecommendation: boolean;
     newChangeRecommendation: boolean;
-    changeRecommendation: RawMotionChangeRecommendation;
+    changeRecommendation: Partial<MotionChangeRecommendationAction.CreatePayload> | MotionChangeRecommendation;
 }
 
 export abstract class BaseChangeRecommendationDialogComponent<
@@ -31,7 +30,7 @@ export abstract class BaseChangeRecommendationDialogComponent<
     /**
      * The change recommendation
      */
-    public changeReco: RawMotionChangeRecommendation;
+    public changeReco: Partial<MotionChangeRecommendationAction.CreatePayload> | MotionChangeRecommendation;
 
     /**
      * Change recommendation content.
@@ -82,7 +81,7 @@ export abstract class BaseChangeRecommendationDialogComponent<
     }
 
     private async updateChangeRecommmendation(): Promise<void> {
-        await this.repo.update(this.contentForm.value, this.changeReco);
+        await this.repo.update(this.contentForm.value, this.changeReco as MotionChangeRecommendation);
     }
 
     private handleRequest(request: Promise<any>): Promise<void> {
