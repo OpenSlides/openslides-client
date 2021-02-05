@@ -41,7 +41,7 @@ interface InfoDialog {
     /**
      * Define all the groups the user is in.
      */
-    groups_id: number[];
+    group_ids: number[];
 
     /**
      * The gender of the user.
@@ -133,7 +133,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
     }
 
     public get totalVoteWeight(): number {
-        const votes = this.dataSource?.filteredData?.reduce((previous, current) => previous + current.vote_weight, 0);
+        const votes = this.dataSource?.filteredData?.reduce((previous, current) => previous + current.vote_weight(), 0);
         return votes ?? 0;
     }
 
@@ -226,6 +226,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
             follow: [
                 {
                     idField: 'user_ids',
+                    fieldset: 'list',
                     follow: [
                         {
                             idField: {
@@ -253,6 +254,10 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         this.router.navigate(['./new'], { relativeTo: this.route });
     }
 
+    public isUserPresent(user: ViewUser): boolean {
+        return user.isPresentInMeeting();
+    }
+
     public isPresentToggleDisabled(user: ViewUser): boolean {
         if (this.isMultiSelect) {
             return true;
@@ -277,10 +282,10 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         ev.stopPropagation();
         this.infoDialog = {
             name: user.username,
-            groups_id: user.group_ids(this.activeMeetingIdService.meetingId),
+            group_ids: user.group_ids(this.activeMeetingIdService.meetingId),
             gender: user.gender,
-            structure_level: user.structure_level,
-            number: user.number,
+            structure_level: user.structure_level(),
+            number: user.number(),
             vote_delegations_from_ids: user.vote_delegations_from_ids(),
             vote_delegated_to_id: user.vote_delegated_to_id()
         };
@@ -295,7 +300,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.repo.updateTemporary(result, user);
+                this.repo.update(result, user);
             }
         });
     }
@@ -478,7 +483,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
             );
         }
         const rows = this.selectedRows.filter(row => row.user.id !== this.operator.operatorId);
-        this.repo.bulkGenerateNewPasswordsTemporary(rows).catch(this.raiseError);
+        this.repo.bulkGenerateNewPasswordsTemporary(rows);
     }
 
     /**
@@ -488,12 +493,11 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
      * @param event the mouse event (to prevent propagaton to row triggers)
      */
     public setPresent(viewUser: ViewUser): void {
-        throw new Error('TODO');
-        /*viewUser.user.is_present = !viewUser.user.is_present;
-        if (this.operator.hasPerms(Permission.usersCanManage)) {
-            this.repo.update(viewUser.user, viewUser).catch(this.raiseError);
-        } else if (this.allowSelfSetPresent && this.operator.operatorId === viewUser.id) {
-            this.operator.setPresence(viewUser.user.is_present).catch(this.raiseError);
-        }*/
+        const isAllowed =
+            this.operator.hasPerms(Permission.usersCanManage) ||
+            (this.allowSelfSetPresent && this.operator.operatorId === viewUser.id);
+        if (isAllowed) {
+            this.repo.setPresent(viewUser, !this.isUserPresent(viewUser));
+        }
     }
 }

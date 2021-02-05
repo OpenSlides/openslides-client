@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 
 import { AuthService } from 'app/core/core-services/auth.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
+import { AuthType, UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { LoginDataService } from 'app/core/ui-services/login-data.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
@@ -28,6 +28,12 @@ export class UserMenuComponent extends BaseModelContextComponent implements OnIn
     public samlChangePasswordUrl: string | null = null;
 
     public allowSelfSetPresent: boolean;
+
+    public authType: AuthType = 'default';
+
+    public get isPresent(): boolean {
+        return this.user.isPresentInMeeting();
+    }
 
     // private selfPresentConfStr = 'users_allow_self_set_present';
 
@@ -142,9 +148,7 @@ export class UserMenuComponent extends BaseModelContextComponent implements OnIn
     }
 
     public toggleUserIsPresent(): void {
-        // FIXME: move to user repo.
-        // const present = this.user.isPresentInMeeting();
-        // this.operator.setPresence(!present).catch(this.raiseError);
+        this.userRepo.setPresent(this.operator.user, !this.isPresent);
     }
 
     public onClickNavEntry(): void {

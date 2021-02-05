@@ -130,7 +130,7 @@ export class PasswordComponent extends BaseModelContextComponent implements OnIn
                     return;
                 }
                 const password = this.adminPasswordForm.value.newPassword;
-                await this.repo.setPasswordTemporary(this.user, password);
+                await this.repo.setPassword(this.user, password);
                 this.router.navigate([`./users/${this.user.id}`]);
             } else if (this.ownPage) {
                 if (!this.userPasswordForm.valid) {

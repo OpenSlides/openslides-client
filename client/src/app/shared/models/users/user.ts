@@ -24,21 +24,24 @@ export class User extends BaseDecimalModel<User> {
     public is_active: boolean;
     public is_physical_person: boolean;
     public default_password?: string;
-    public about_me: string;
     public gender?: string;
-    public comment?: string;
-    public number: string;
-    public structure_level: string;
+    public comment_$: string[];
+    public number_$: string[];
+    public about_me_$: string[];
+    public default_number: string;
+    public default_structure_level: string;
+    public structure_level_$: string[];
     public email?: string;
     public last_email_send?: string; // ISO datetime string
-    public vote_weight: number;
+    public vote_weight_$: number[];
+    public default_vote_weight: number;
     public is_demo_user: boolean;
 
     public role_id?: Id; // role/user_ids;
 
     // Meeting and committee
     public is_present_in_meeting_ids: Id[]; // (meeting/present_user_ids)[];
-    public meeting_id: Id; // meeting/temporary_user_ids;  // Temporary users
+    public meeting_id?: Id; // meeting/temporary_user_ids;  // Temporary users
     public guest_meeting_ids: Id[]; // (meeting/guest_ids)[];  // Guests in meetings
     public committee_as_member_ids: Id[]; // (committee/member_ids)[];
     public committee_as_manager_ids: Id[]; // (committee/manager_ids)[];
@@ -56,15 +59,25 @@ export class User extends BaseDecimalModel<User> {
     public assignment_option_$_ids: string[]; // (assignment_option/user_id)[];
     public assignment_vote_$_ids: string[]; // (assignment_vote/user_id)[];
     public assignment_delegated_vote_$_ids: string[]; // (assignment_vote/delegated_user_id)[];
+    public vote_delegated_$_vote_ids: string[];
     public vote_delegated_$_to_id: string[]; // user/vote_delegated_$<meeting_id>_from_ids;
     public vote_delegations_$_from_ids: string[]; // user/vote_delegated_$<meeting_id>_to_id;
 
+    public projection_$_ids: any[];
+    public current_projector_$_ids: any[];
+
+    public organisation_management_level: string;
+
     public get isVoteWeightOne(): boolean {
-        return this.vote_weight === 1;
+        return this.default_vote_weight === 1;
     }
 
     public get isVoteRightDelegated(): boolean {
         return !!this.vote_delegated_to_id;
+    }
+
+    public get isTemporary(): boolean {
+        return !!this.meeting_id;
     }
 
     public constructor(input?: Partial<User>) {
@@ -73,6 +86,26 @@ export class User extends BaseDecimalModel<User> {
 
     public hasVoteRightFromOthers(meetingId: Id): boolean {
         return this.vote_delegations_from_ids(meetingId)?.length > 0;
+    }
+
+    public vote_weight(meetingId: Id): number {
+        return this[`vote_weight_$${[meetingId]}`] || this.default_vote_weight;
+    }
+
+    public structure_level(meetingId: Id): string {
+        return this[`structure_level_$${meetingId}`] || this.default_structure_level;
+    }
+
+    public number(meetingId: Id): string {
+        return this[`number_$${meetingId}`] || this.default_number;
+    }
+
+    public about_me(meetingId: Id): string {
+        return this[`about_me_$${meetingId}`];
+    }
+
+    public comment(meetingId: Id): string {
+        return this[`comment_$${meetingId}`];
     }
 
     public group_ids(meetingId: Id): Id[] {

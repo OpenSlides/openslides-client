@@ -12,13 +12,13 @@
         <div *ngIf="user && isLoggedIn">
             <!-- present toggle -->
             <button
-                [ngClass]="{ active: user.is_present }"
+                [ngClass]="{ active: isPresent }"
                 mat-menu-item
                 (click)="toggleUserIsPresent()"
                 *ngIf="allowSelfSetPresent"
             >
-                <mat-icon [color]="user.is_present ? 'accent' : ''" class="menu-icon">
-                    {{ user.is_present ? 'check_box' : 'check_box_outline_blank' }}
+                <mat-icon [color]="isPresent ? 'accent' : ''" class="menu-icon">
+                    {{ isPresent ? 'check_box' : 'check_box_outline_blank' }}
                 </mat-icon>
                 <span class="menu-text">{{ 'Present' | translate }}</span>
             </button>

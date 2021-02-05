@@ -12,7 +12,6 @@ import { ViewCommittee } from 'app/site/event-management/models/view-committee';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewOrganisation } from 'app/site/event-management/models/view-organisation';
 import { ViewResource } from 'app/site/event-management/models/view-resource';
-import { ViewRole } from 'app/site/event-management/models/view-role';
 import { HasAttachment, ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { HasReferencedMotionsInRecommendationExtension, ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
@@ -126,18 +125,6 @@ export const RELATIONS: Relation[] = [
     }),
     ...makeM2O({
         OViewModel: ViewOrganisation,
-        MViewModel: ViewRole,
-        OField: 'roles',
-        MField: 'organisation'
-    }),
-    ...makeO2O({
-        AViewModel: ViewOrganisation,
-        BViewModel: ViewRole,
-        AField: 'superadmin_role',
-        BField: 'superadmin_role_for_organisation'
-    }),
-    ...makeM2O({
-        OViewModel: ViewOrganisation,
         MViewModel: ViewResource,
         OField: 'resources',
         MField: 'organisation'
@@ -227,6 +214,14 @@ export const RELATIONS: Relation[] = [
         structuredIdField: 'assignment_delegated_vote_$_ids',
         otherViewModelField: 'delegated_user'
     }),
+    {
+        ownViewModels: [ViewUser],
+        ownField: 'structure_level',
+        ownIdField: 'structure_level_$',
+        many: false,
+        generic: false,
+        structured: true
+    },
     // Vote delegations
     // vote_delegated_$_to_id -> vote_delegations_$_from_ids
     {
@@ -250,13 +245,6 @@ export const RELATIONS: Relation[] = [
         structured: true,
         ownIdFieldDefaultAttribute: 'active-meeting'
     },
-    // ########## Role
-    ...makeM2O({
-        OViewModel: ViewRole,
-        MViewModel: ViewUser,
-        OField: 'users',
-        MField: 'role'
-    }),
     // ########## Committees
     ...makeM2O({
         OViewModel: ViewCommittee,
