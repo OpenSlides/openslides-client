@@ -13,6 +13,7 @@ export namespace SpeakerAction {
         list_of_speakers_id: Id;
         user_id: Id;
         marked?: boolean;
+        point_of_order?: boolean;
     }
 
     export interface UpdatePayload extends Identifiable {
