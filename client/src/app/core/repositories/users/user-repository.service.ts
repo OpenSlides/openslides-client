@@ -241,7 +241,8 @@ export class UserRepositoryService
             comment: partialUser.comment,
             about_me: partialUser.about_me,
             structure_level: partialUser.structure_level,
-            number: partialUser.number
+            number: partialUser.number,
+            group_ids: partialUser.group_ids
         };
     }
 

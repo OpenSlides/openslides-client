@@ -44,7 +44,7 @@
         </ng-template>
     </os-sorting-list>
 
-    <form class="search-users" *ngIf="users && users.value.length > 0" [formGroup]="addSubmitterForm">
+    <form class="search-users" *ngIf="users" [formGroup]="addSubmitterForm">
         <mat-form-field>
             <os-search-value-selector
                 formControlName="userId"

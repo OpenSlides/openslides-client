@@ -38,7 +38,10 @@ export class ManageSubmittersComponent extends BaseComponent {
     /**
      * Keep all users to display them.
      */
-    public users: BehaviorSubject<ViewUser[]>;
+    public get users(): ViewUser[] {
+        const submitters = this.editSubmitterSubject.value.map(submitter => submitter.user_id);
+        return this._users.value.filter(user => !submitters.includes(user.id));
+    }
 
     /**
      * The form to add new submitters
@@ -60,6 +63,8 @@ export class ManageSubmittersComponent extends BaseComponent {
      * Saves, if the users edits the note.
      */
     public isEditMode = false;
+
+    private _users: BehaviorSubject<ViewUser[]>;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -89,7 +94,7 @@ export class ManageSubmittersComponent extends BaseComponent {
         this.addSubmitterForm.reset();
 
         // get all users for the submitter add form
-        this.users = this.userRepository.getViewModelListBehaviorSubject();
+        this._users = this.userRepository.getViewModelListBehaviorSubject();
     }
 
     /**
@@ -110,9 +115,8 @@ export class ManageSubmittersComponent extends BaseComponent {
      * @param user The user to add
      */
     public async addUserAsSubmitter(userId: Id): Promise<void> {
-        throw new Error('TODO: selector does not work + wait for user repo');
-        /* await this.motionSubmitterRepository.create(userId, this.motion);
-        this.addSubmitterForm.reset(); */
+        await this.motionSubmitterRepository.create(userId, this.motion);
+        this.addSubmitterForm.reset();
     }
 
     /**

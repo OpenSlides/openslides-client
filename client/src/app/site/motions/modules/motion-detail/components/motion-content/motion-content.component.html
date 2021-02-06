@@ -23,7 +23,7 @@
         <ng-container *ngIf="perms.isAllowed('change_metadata', motion)">
             <mat-form-field>
                 <os-search-repo-selector
-                    formControlName="submitters_id"
+                    formControlName="submitter_ids"
                     [multiple]="true"
                     placeholder="{{ 'Submitters' | translate }}"
                     [repo]="userRepo"
@@ -251,7 +251,7 @@
             <div *ngIf="perms.isAllowed('change_metadata', motion)">
                 <mat-form-field>
                     <os-search-repo-selector
-                        formControlName="supporters_id"
+                        formControlName="supporter_ids"
                         [multiple]="true"
                         placeholder="{{ 'Supporters' | translate }}"
                         [repo]="userRepo"

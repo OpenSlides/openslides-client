@@ -466,7 +466,10 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         newMotionValues: Partial<MotionAction.UpdatePayload>,
         motion: ViewMotion
     ): Promise<void> {
-        await this.repo.update(newMotionValues, motion);
+        await Promise.all([
+            this.repo.update(newMotionValues, motion),
+            this.repo.updateMetadata(newMotionValues, motion) // Save supporters, if changed
+        ]);
     }
 
     /**

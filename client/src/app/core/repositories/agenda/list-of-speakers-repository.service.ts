@@ -87,11 +87,6 @@ export class ListOfSpeakersRepositoryService extends BaseRepositoryWithActiveMee
         return !this.getViewModelList().some(list => list.hasSpeakerSpoken(speaker));
     }
 
-    public async setListOpenness(listOfSpeakers: ViewListOfSpeakers, open: boolean): Promise<void> {
-        // await this.update({ closed: !open }, listOfSpeakers);
-        throw new Error('TODO');
-    }
-
     /**
      * List every speaker only once, who has spoken
      *

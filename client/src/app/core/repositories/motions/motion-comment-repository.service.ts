@@ -25,7 +25,7 @@ export class MotionCommentRepositoryService extends BaseRepositoryWithActiveMeet
     };
 
     public getFieldsets(): Fieldsets<ViewMotionComment> {
-        const commentFields: (keyof ViewMotionComment)[] = ['comment'];
+        const commentFields: (keyof ViewMotionComment)[] = ['motion_id', 'section_id', 'comment'];
         return {
             [DEFAULT_FIELDSET]: commentFields
         };
