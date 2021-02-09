@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
@@ -16,7 +16,8 @@ import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-co
 @Component({
     selector: 'os-motion-comments',
     templateUrl: './motion-comments.component.html',
-    styleUrls: ['./motion-comments.component.scss']
+    styleUrls: ['./motion-comments.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MotionCommentsComponent extends BaseModelContextComponent implements OnInit {
     /**
@@ -45,7 +46,8 @@ export class MotionCommentsComponent extends BaseModelContextComponent implement
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private commentSectionRepo: MotionCommentSectionRepositoryService,
-        private operator: OperatorService
+        private operator: OperatorService,
+        private cd: ChangeDetectorRef
     ) {
         super(componentServiceCollector);
     }
@@ -58,6 +60,7 @@ export class MotionCommentsComponent extends BaseModelContextComponent implement
                 if (sections && sections.length) {
                     this.sections = sections;
                     this.filterSections();
+                    this.cd.detectChanges();
                 }
             })
         );
@@ -71,7 +74,7 @@ export class MotionCommentsComponent extends BaseModelContextComponent implement
                 {
                     idField: 'motion_comment_section_ids',
                     fieldset: 'comment',
-                    follow: [{ idField: 'comment_ids', fieldset: ['section_id', 'motion_id'] }]
+                    follow: [{ idField: 'comment_ids' }]
                 }
             ]
         };
@@ -87,6 +90,7 @@ export class MotionCommentsComponent extends BaseModelContextComponent implement
     private filterSections(): void {
         if (this.sections?.length) {
             this.sections = this.sections.filter(section => this.canReadSection(section));
+            this.cd.markForCheck();
         }
     }
 

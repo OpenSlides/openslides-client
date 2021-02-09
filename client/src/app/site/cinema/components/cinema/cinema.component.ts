@@ -115,6 +115,10 @@ export class CinemaComponent extends BaseComponent implements OnInit {
     }
 
     public async toggleListOfSpeakersOpen(): Promise<void> {
-        await this.listOfSpeakersRepo.setListOpenness(this.listOfSpeakers, this.isLosClosed).catch(this.raiseError);
+        if (this.isLosClosed) {
+            await this.listOfSpeakersRepo.reopenListOfSpeakers(this.listOfSpeakers);
+        } else {
+            await this.listOfSpeakersRepo.closeListOfSpeakers(this.listOfSpeakers);
+        }
     }
 }

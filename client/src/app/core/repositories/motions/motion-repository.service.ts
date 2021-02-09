@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
-import { Action } from 'rxjs/internal/scheduler/Action';
 import { map } from 'rxjs/operators';
 
 import { AgendaItemRepositoryService, AgendaListTitle } from '../agenda/agenda-item-repository.service';
@@ -16,44 +15,12 @@ import { Motion } from 'app/shared/models/motions/motion';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from 'app/shared/models/motions/view-unified-change';
 import { createAgendaItem } from 'app/shared/utils/create-agenda-item';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
-import {
-    ViewMotionAmendedParagraph,
-    ViewMotionAmendedParagraphs
-} from 'app/site/motions/models/view-motion-amended-paragraph';
-import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
-import { ViewMotionStatuteParagraph } from 'app/site/motions/models/view-motion-statute-paragraph';
 import { ChangeRecoMode } from 'app/site/motions/motions.constants';
 import { BaseIsAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-is-agenda-item-and-list-of-speakers-content-object-repository';
-import { LineNumberedString, LinenumberingService, LineNumberRange } from '../../ui-services/linenumbering.service';
 import { MotionLineNumberingService } from './motion-line-numbering.service';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 type SortProperty = 'sort_weight' | 'number';
-
-// /**
-//  * Describes the single paragraphs from the base motion.
-//  */
-// export interface ParagraphToChoose {
-//     /**
-//      * The paragraph number.
-//      */
-//     paragraphNo: number;
-
-//     /**
-//      * The raw HTML of this paragraph.
-//      */
-//     html: string;
-
-//     /**
-//      * The first line number
-//      */
-//     lineFrom: number;
-
-//     /**
-//      * The last line number
-//      */
-//     lineTo: number;
-// }
 
 export const GET_POSSIBLE_RECOMMENDATIONS: Follow = {
     idField: 'workflow_id',

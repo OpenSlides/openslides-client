@@ -94,8 +94,6 @@ export class SearchValueSelectorComponent extends BaseSearchValueSelectorCompone
         id: null
     };
 
-    public selectedIds: number[] = [];
-
     public constructor(
         protected translate: TranslateService,
         formBuilder: FormBuilder,

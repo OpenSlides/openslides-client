@@ -64,6 +64,8 @@ export abstract class BaseSearchValueSelectorComponent<T> extends BaseFormContro
         return this.chipPlaceholder ? `${this.chipPlaceholder.nativeElement.clientWidth - 16}px` : '100%';
     }
 
+    public selectedIds: any[] = [];
+
     /**
      * All items
      */
@@ -127,6 +129,7 @@ export abstract class BaseSearchValueSelectorComponent<T> extends BaseFormContro
             console.warn('Warning: Value of function', value());
         } else {
             this.contentForm.setValue(value);
+            this.selectedIds = value as [];
         }
     }
 }

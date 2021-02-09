@@ -188,11 +188,15 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
      * Removes the last finished speaker from the list an re-adds him on pole position
      */
     public readdLastSpeaker(): void {
-        this.listOfSpeakersRepo.readdLastSpeaker(this.viewListOfSpeakers).catch(this.raiseError);
+        this.listOfSpeakersRepo.readdLastSpeaker(this.viewListOfSpeakers);
     }
 
     public async setOpenness(open: boolean): Promise<void> {
-        await this.listOfSpeakersRepo.setListOpenness(this.viewListOfSpeakers, open).catch(this.raiseError);
+        if (open) {
+            await this.listOfSpeakersRepo.reopenListOfSpeakers(this.viewListOfSpeakers);
+        } else {
+            await this.listOfSpeakersRepo.closeListOfSpeakers(this.viewListOfSpeakers);
+        }
     }
 
     /**
