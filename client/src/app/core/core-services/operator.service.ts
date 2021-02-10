@@ -53,10 +53,6 @@ export class OperatorService {
     private permissions: Permission[] | null = null;
     private groupIds: Id[] | null = null;
 
-    public get user(): ViewUser {
-        return this.userSubject.value;
-    }
-
     public get isSuperAdmin(): boolean {
         if (this.defaultGroupId) {
             return this.isInGroupIdsNonAdminCheck(this.defaultGroupId);

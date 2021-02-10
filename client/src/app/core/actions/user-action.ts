@@ -65,7 +65,7 @@ export namespace UserAction {
             [meeting_id: number]: UnsafeHtml;
         };
         group_$_ids?: {
-            [meeting_id: number]: string[] | Id[];
+            [meeting_id: number]: Id[];
         };
         vote_delegations_$_from_ids?: {
             [meeting_id: number]: Id[];

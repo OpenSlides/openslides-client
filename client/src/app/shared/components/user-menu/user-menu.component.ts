@@ -35,8 +35,6 @@ export class UserMenuComponent extends BaseModelContextComponent implements OnIn
         return this.user.isPresentInMeeting();
     }
 
-    // private selfPresentConfStr = 'users_allow_self_set_present';
-
     @Output()
     private navEvent: EventEmitter<void> = new EventEmitter();
 
@@ -69,7 +67,7 @@ export class UserMenuComponent extends BaseModelContextComponent implements OnIn
             .get('users_allow_self_set_present')
             .subscribe(allowed => (this.allowSelfSetPresent = allowed));
 
-        this.onOperatorUpdate();
+        this.onOperatorUpdate(); // initially trigger the update manually to set initial values
     }
 
     private onOperatorUpdate(): void {
@@ -148,7 +146,7 @@ export class UserMenuComponent extends BaseModelContextComponent implements OnIn
     }
 
     public toggleUserIsPresent(): void {
-        this.userRepo.setPresent(this.operator.user, !this.isPresent);
+        this.userRepo.setPresent(this.user, !this.isPresent);
     }
 
     public onClickNavEntry(): void {

@@ -78,11 +78,13 @@ export class ActiveMeetingService {
             ids: [this.meetingId],
             follow: [
                 { idField: 'default_group_id' }, // needed by the operator!
-                { idField: 'admin_group_id' },
-                { idField: 'logo_$_id' }, // needed by the media manage service
-                { idField: 'font_$_id' }
+                { idField: 'admin_group_id' }
             ],
-            fieldset: 'settings'
+            fieldset: 'settings',
+            additionalFields: [
+                { templateField: 'logo_$_id' }, // needed by the media manage service
+                { templateField: 'font_$_id' }
+            ]
         };
     }
 }
