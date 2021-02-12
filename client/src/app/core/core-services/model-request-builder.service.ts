@@ -17,7 +17,6 @@ import { OnAfterAppsLoaded } from '../definitions/on-after-apps-loaded';
 import { RelationManagerService } from './relation-manager.service';
 import { Relation } from '../definitions/relations';
 
-// fieldsets can now support IAllStructuredFields!! (see example below)
 type Fieldset = string | (Field | IAllStructuredFields)[];
 type FollowList = (string | Follow)[];
 
@@ -26,13 +25,24 @@ export interface SimplifiedModelRequest extends BaseSimplifiedModelRequest {
     ids: Id[];
 }
 
+/**
+ * Follows a specific structured fields to the given template field.
+ * Must be used in the follow-section.
+ * Usage e.g. for the user model: [..., {
+ *     idField: {
+ *         templateIdField: 'group_$_ids',
+ *         templateValue: 5 // explicitly give 5 as the template replacement.
+ *     }
+ * }, ...]
+ */
 interface ISpecificStructuredField {
     templateIdField: string;
     templateValue: string;
 }
 
 /**
- * Usage: fieldset -> [..., 'default_structure_level', { templateField: 'structure_level_$' }, ...]
+ * Resolves all structured fields to the given template field.
+ * Usage e.g. in a fieldset: [..., 'default_structure_level', { templateField: 'structure_level_$' }, ...]
  */
 interface IAllStructuredFields {
     templateField: string;
@@ -53,10 +63,12 @@ export interface Follow extends BaseSimplifiedModelRequest {
     idField: string | ISpecificStructuredField;
 }
 
+export type AdditionalField = Field | ISpecificStructuredField | IAllStructuredFields;
+
 interface BaseSimplifiedModelRequest {
     follow?: FollowList;
     fieldset?: Fieldset;
-    additionalFields?: (Field | ISpecificStructuredField | IAllStructuredFields)[];
+    additionalFields?: AdditionalField[];
 }
 
 export interface Fieldsets<M extends BaseModel> {
@@ -104,9 +116,6 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
     private addFields(collection: Collection, fields: Fields, request: BaseSimplifiedModelRequest): void {
         // Add datafields
         this.addDataFields(fields, collection, request.fieldset, request.additionalFields);
-        /*for (const field of this.calculateDataFields(collection, request.fieldset, request.additionalFields)) {
-            fields[field] = null;
-        }*/
 
         // Add relations
         if (request.follow) {
@@ -119,12 +128,12 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
         fields: Fields,
         collection: Collection,
         fieldset?: Fieldset,
-        additionalFields?: (Field | ISpecificStructuredField | IAllStructuredFields)[]
+        additionalFields?: AdditionalField[]
     ): void {
         if (!fieldset) {
             fieldset = DEFAULT_FIELDSET;
         }
-        let fieldsetFields: (Field | ISpecificStructuredField | IAllStructuredFields)[];
+        let fieldsetFields: AdditionalField[];
         if (typeof fieldset === 'string') {
             const registeredFieldsets = this.fieldsets[collection];
             if (!registeredFieldsets || !registeredFieldsets[fieldset]) {
@@ -146,6 +155,7 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
             fieldsetFields = fieldsetFields.concat(additionalFields);
         }
 
+        // insert the fieldsetFields into fields
         for (const f of fieldsetFields) {
             if (typeof f === 'string') {
                 fields[f] = null;
@@ -259,16 +269,11 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
 
         // Add datafields
         for (const viewModel of possibleViewModels) {
-            /*let datafields: string[] = [];
             try {
-                datafields = this.calculateDataFields(viewModel.COLLECTION, request.fieldset, request.additionalFields);
+                this.addDataFields(fields, viewModel.COLLECTION, request.fieldset, request.additionalFields);
             } catch (e) {
                 console.warn(e);
             }
-            for (const field of datafields) {
-                fields[field] = null;
-            }*/
-            this.addDataFields(fields, viewModel.COLLECTION, request.fieldset, request.additionalFields);
         }
 
         // Add relations

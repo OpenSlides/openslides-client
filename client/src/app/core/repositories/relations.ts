@@ -214,14 +214,6 @@ export const RELATIONS: Relation[] = [
         structuredIdField: 'assignment_delegated_vote_$_ids',
         otherViewModelField: 'delegated_user'
     }),
-    {
-        ownViewModels: [ViewUser],
-        ownField: 'structure_level',
-        ownIdField: 'structure_level_$',
-        many: false,
-        generic: false,
-        structured: true
-    },
     // Vote delegations
     // vote_delegated_$_to_id -> vote_delegations_$_from_ids
     {

@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 
-import { saveAs } from 'file-saver';
-import * as JSZip from 'jszip';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { MediafileAction } from 'app/core/actions/mediafile-action';
 import { HttpService } from 'app/core/core-services/http.service';
-import { Follow } from 'app/core/core-services/model-request-builder.service';
+import { AdditionalField } from 'app/core/core-services/model-request-builder.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Mediafile } from 'app/shared/models/mediafiles/mediafile';
@@ -15,12 +13,12 @@ import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { BaseIsListOfSpeakersContentObjectRepository } from '../base-is-list-of-speakers-content-object-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
-export const LOGO_FONT_VALUES: Follow[] = [
+export const LOGO_FONT_VALUES: AdditionalField[] = [
     {
-        idField: 'used_as_font_$_in_meeting_id'
+        templateField: 'used_as_font_$_in_meeting_id'
     },
     {
-        idField: 'used_as_logo_$_in_meeting_id'
+        templateField: 'used_as_logo_$_in_meeting_id'
     }
 ];
 

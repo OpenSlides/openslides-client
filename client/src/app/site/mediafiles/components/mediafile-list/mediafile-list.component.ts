@@ -236,10 +236,11 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
             follow: [
                 {
                     idField: 'mediafile_ids',
-                    follow: ['access_group_ids', 'inherited_access_group_ids', ...LOGO_FONT_VALUES]
+                    follow: ['access_group_ids', 'inherited_access_group_ids']
                 },
                 'group_ids'
-            ]
+            ],
+            additionalFields: LOGO_FONT_VALUES
         };
     }
 
