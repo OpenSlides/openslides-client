@@ -100,7 +100,7 @@
         </button>
     </div>
     <div *osPerms="permission.projectorCanManage">
-        <os-projector-button menuItem="true" [object]="poll"></os-projector-button>
+        <os-projector-button [object]="poll" [menuItem]="true"></os-projector-button>
     </div>
     <div *osPerms="permission.assignmentsCanManage">
         <button mat-menu-item (click)="printBallot()">

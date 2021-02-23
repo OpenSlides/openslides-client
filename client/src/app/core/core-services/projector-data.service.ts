@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { auditTime } from 'rxjs/operators';
 
 import { Projector } from 'app/shared/models/projector/projector';
 
@@ -43,7 +44,7 @@ export class ProjectorDataService {
     /**
      * Counts the open projector instances per projector id.
      */
-    private openProjectorInstances: { [id: number]: number } = {};
+    private amountOpenProjectorInstances: { [id: number]: number } = {};
 
     /**
      * Holds the current projector data for each projector.
@@ -51,7 +52,7 @@ export class ProjectorDataService {
     private currentProjectorData: { [id: number]: BehaviorSubject<ProjectorData | null> } = {};
 
     /**
-     * When multiple projectory are requested, debounce these requests to just issue
+     * When multiple projectors are requested, debounce these requests to just issue
      * one request, with all the needed projectors.
      */
     private readonly updateProjectorDataDebounceSubject = new Subject<void>();
@@ -61,11 +62,6 @@ export class ProjectorDataService {
      */
     // private currentChangeId = 0;
 
-    /**
-     * Constructor.
-     *
-     * @param websocketService
-     */
     public constructor() {
         // Dispatch projector data.
         /*this.websocketService.getOberservable('projector').subscribe((update: ProjectorWebsocketMessage) => {
@@ -81,16 +77,18 @@ export class ProjectorDataService {
             this.currentChangeId = update.change_id;
         });
 
-    public constructor(private communicationManager: CommunicationManagerService) {
-        this.communicationManager.startCommunicationEvent.subscribe(() => this.updateProjectorDataSubscription());
+        this.communicationManager.startCommunicationEvent.subscribe(() => this.updateProjectorDataSubscription());*/
 
         // With a bit of debounce, update the needed projectors.
         this.updateProjectorDataDebounceSubject.pipe(auditTime(10)).subscribe(() => {
-            const allActiveProjectorIds = Object.keys(this.openProjectorInstances)
+            const allActiveProjectorIds = Object.keys(this.amountOpenProjectorInstances)
                 .map(id => parseInt(id, 10))
-                .filter(id => this.openProjectorInstances[id] > 0);
-            this.websocketService.send('listenToProjectors', { projector_ids: allActiveProjectorIds });
-        });*/
+                .filter(id => this.amountOpenProjectorInstances[id] > 0);
+
+            console.log('OPEN PROJECTORS:', allActiveProjectorIds);
+
+            //    this.websocketService.send('listenToProjectors', { projector_ids: allActiveProjectorIds });
+        });
         console.warn('TODO: Enable Projector service');
     }
 
@@ -102,17 +100,17 @@ export class ProjectorDataService {
      */
     public getProjectorObservable(projectorId: number): Observable<ProjectorData | null> {
         // Count projectors.
-        if (!this.openProjectorInstances[projectorId]) {
-            this.openProjectorInstances[projectorId] = 1;
+        if (!this.amountOpenProjectorInstances[projectorId]) {
+            this.amountOpenProjectorInstances[projectorId] = 1;
             if (!this.currentProjectorData[projectorId]) {
                 this.currentProjectorData[projectorId] = new BehaviorSubject<ProjectorData | null>(null);
             }
         } else {
-            this.openProjectorInstances[projectorId]++;
+            this.amountOpenProjectorInstances[projectorId]++;
         }
 
         // Projector opened the first time.
-        if (this.openProjectorInstances[projectorId] === 1) {
+        if (this.amountOpenProjectorInstances[projectorId] === 1) {
             this.updateProjectorDataSubscription();
         }
         return this.currentProjectorData[projectorId].asObservable();
@@ -124,10 +122,10 @@ export class ProjectorDataService {
      * @param projectorId the projector.
      */
     public projectorClosed(projectorId: number): void {
-        if (this.openProjectorInstances[projectorId]) {
-            this.openProjectorInstances[projectorId]--;
+        if (this.amountOpenProjectorInstances[projectorId]) {
+            this.amountOpenProjectorInstances[projectorId]--;
         }
-        if (this.openProjectorInstances[projectorId] === 0) {
+        if (this.amountOpenProjectorInstances[projectorId] === 0) {
             this.updateProjectorDataSubscription();
             this.currentProjectorData[projectorId].next(null);
         }

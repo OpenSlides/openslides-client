@@ -5,9 +5,8 @@ import {
     ProjectionDialogComponent,
     ProjectionDialogReturnType
 } from 'app/shared/components/projection-dialog/projection-dialog.component';
-import { isProjectable, Projectable, ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
-import { MeetingSettingsService } from './meeting-settings.service';
-import { ProjectorService } from '../core-services/projector.service';
+import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
+import { ProjectorRepositoryService } from '../repositories/projector/projector-repository.service';
 
 /**
  * Manages the projection dialog. Projects the result of the user's choice.
@@ -22,28 +21,16 @@ export class ProjectionDialogService {
      * @param dialog
      * @param projectorService
      */
-    public constructor(
-        private dialog: MatDialog,
-        private projectorService: ProjectorService,
-        private meetingSettingsService: MeetingSettingsService
-    ) {}
+    public constructor(private dialog: MatDialog, private projectorRepo: ProjectorRepositoryService) {}
 
     /**
      * Opens the projection dialog for the given projectable. After the user's choice,
      * the projectors will be updated.
-     *
-     * @param obj The projectable.
      */
-    public async openProjectDialogFor(obj: Projectable | ProjectorElementBuildDeskriptor): Promise<object> {
-        let descriptor: ProjectorElementBuildDeskriptor;
-        if (isProjectable(obj)) {
-            descriptor = obj.getSlide(this.meetingSettingsService);
-        } else {
-            descriptor = obj;
-        }
+    public async openProjectDialogFor(descriptor: ProjectionBuildDescriptor): Promise<void> {
         const dialogRef = this.dialog.open<
             ProjectionDialogComponent,
-            ProjectorElementBuildDeskriptor,
+            ProjectionBuildDescriptor,
             ProjectionDialogReturnType
         >(ProjectionDialogComponent, {
             maxHeight: '90vh',
@@ -52,15 +39,13 @@ export class ProjectionDialogService {
         });
         const response = await dialogRef.afterClosed().toPromise();
         if (response) {
-            const [action, projectors, projectorElement]: ProjectionDialogReturnType = response;
+            const [action, resultDescriptor, projectors, options]: ProjectionDialogReturnType = response;
             if (action === 'project') {
-                this.projectorService.projectOnMultiple(projectors, projectorElement);
-                return { fullscreen: projectorElement.fullscreen, displayType: projectorElement.displayType };
+                await this.projectorRepo.project(resultDescriptor, projectors, options);
             } else if (action === 'addToPreview') {
-                projectors.forEach(projector => {
-                    this.projectorService.addElementToPreview(projector, projectorElement);
-                });
-                return null;
+                await this.projectorRepo.addToPreview(resultDescriptor, projectors, options);
+            } else {
+                throw new Error('Unknown projector action ' + action);
             }
         }
     }

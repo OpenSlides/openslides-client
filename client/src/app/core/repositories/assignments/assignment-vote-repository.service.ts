@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 
+import { Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { AssignmentVote } from 'app/shared/models/assignments/assignment-vote';
 import { ViewAssignmentVote } from 'app/site/assignments/models/view-assignment-vote';
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
@@ -28,6 +29,10 @@ export class AssignmentVoteRepositoryService extends BaseRepositoryWithActiveMee
     public getVerboseName = (plural: boolean = false) => {
         return this.translate.instant(plural ? 'Votes' : 'Vote');
     };
+
+    public getFieldsets(): Fieldsets<AssignmentVote> {
+        return {}; // TODO
+    }
 
     public getVotesForUser(pollId: number, userId: number): ViewAssignmentVote[] {
         return this.getViewModelList().filter(vote => vote.option.poll_id === pollId && vote.user_id === userId);

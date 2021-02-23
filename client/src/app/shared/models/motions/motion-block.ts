@@ -3,7 +3,7 @@ import { BaseModel } from '../base/base-model';
 import { HasAgendaItemId } from '../base/has-agenda-item-id';
 import { HasListOfSpeakersId } from '../base/has-list-of-speakers-id';
 import { HasMeetingId } from '../base/has-meeting-id';
-import { HasProjectableIds } from '../base/has-projectable-ids';
+import { HasProjectionIds } from '../base/has-projectable-ids';
 
 /**
  * Representation of a motion block.
@@ -22,4 +22,4 @@ export class MotionBlock extends BaseModel<MotionBlock> {
         super(MotionBlock.COLLECTION, input);
     }
 }
-export interface MotionBlock extends HasMeetingId, HasAgendaItemId, HasListOfSpeakersId, HasProjectableIds {}
+export interface MotionBlock extends HasMeetingId, HasAgendaItemId, HasListOfSpeakersId, HasProjectionIds {}

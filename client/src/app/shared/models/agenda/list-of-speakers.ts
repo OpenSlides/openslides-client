@@ -1,7 +1,7 @@
 import { Fqid, Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
 import { HasMeetingId } from '../base/has-meeting-id';
-import { HasProjectableIds } from '../base/has-projectable-ids';
+import { HasProjectionIds } from '../base/has-projectable-ids';
 
 /**
  * Representations of agenda Item
@@ -20,4 +20,4 @@ export class ListOfSpeakers extends BaseModel<ListOfSpeakers> {
         super(ListOfSpeakers.COLLECTION, input);
     }
 }
-export interface ListOfSpeakers extends HasMeetingId, HasProjectableIds {}
+export interface ListOfSpeakers extends HasMeetingId, HasProjectionIds {}

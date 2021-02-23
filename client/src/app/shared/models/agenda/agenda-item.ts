@@ -1,7 +1,7 @@
 import { Fqid, Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
 import { HasMeetingId } from '../base/has-meeting-id';
-import { HasProjectableIds } from '../base/has-projectable-ids';
+import { HasProjectionIds } from '../base/has-projectable-ids';
 import { HasTagIds } from '../base/has-tag-ids';
 
 export enum AgendaItemType {
@@ -45,4 +45,4 @@ export class AgendaItem extends BaseModel<AgendaItem> {
         super(AgendaItem.COLLECTION, input);
     }
 }
-export interface AgendaItem extends HasMeetingId, HasProjectableIds, HasTagIds {}
+export interface AgendaItem extends HasMeetingId, HasProjectionIds, HasTagIds {}

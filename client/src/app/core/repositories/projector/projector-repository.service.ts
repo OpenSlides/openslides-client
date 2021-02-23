@@ -3,20 +3,17 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { ProjectorAction, ScrollScaleDirection } from 'app/core/actions/projector-action';
 import { HttpService } from 'app/core/core-services/http.service';
+import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
+import { Id } from 'app/core/definitions/key-types';
+import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Projector } from 'app/shared/models/projector/projector';
+import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
+import { ViewProjection } from 'app/site/projector/models/view-projection';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
-
-/**
- * Directions for scale and scroll requests.
- */
-export enum ScrollScaleDirection {
-    Up = 'up',
-    Down = 'down',
-    Reset = 'reset'
-}
 
 /**
  * Manages all projector instances.
@@ -37,6 +34,70 @@ export class ProjectorRepositoryService extends BaseRepositoryWithActiveMeeting<
         return this.translate.instant(plural ? 'Projectors' : 'Projector');
     };
 
+    public getFieldsets(): Fieldsets<Projector> {
+        const projectorFields: (keyof Projector)[] = [
+            'scale',
+            'scroll',
+            'width',
+            'aspect_ratio_numerator',
+            'aspect_ratio_denominator',
+            'color',
+            'background_color',
+            'header_background_color',
+            'header_font_color',
+            'header_h1_color',
+            'chyron_background_color',
+            'chyron_font_color',
+            'show_header_footer',
+            'show_title',
+            'show_logo',
+            'show_clock'
+        ];
+        return {
+            [DEFAULT_FIELDSET]: projectorFields.concat(['name', 'used_as_reference_projector_meeting_id'])
+        };
+    }
+
+    public async create(partialProjector: Partial<Projector> & { name: string }): Promise<Identifiable> {
+        const payload: ProjectorAction.CreatePayload = {
+            meeting_id: this.activeMeetingIdService.meetingId,
+            name: partialProjector.name,
+            ...this.getPartialPayload(partialProjector)
+        };
+        return await this.sendActionToBackend(ProjectorAction.CREATE, payload);
+    }
+
+    public async update(update: Partial<Projector>, viewModel: ViewProjector): Promise<void> {
+        const payload: ProjectorAction.UpdatePayload = {
+            id: viewModel.id,
+            ...this.getPartialPayload(update)
+        };
+        return await this.sendActionToBackend(ProjectorAction.UPDATE, payload);
+    }
+
+    private getPartialPayload(projector: Partial<Projector>): ProjectorAction.PartialPayload {
+        return {
+            width: projector.width,
+            aspect_ratio_numerator: projector.aspect_ratio_numerator,
+            aspect_ratio_denominator: projector.aspect_ratio_denominator,
+            color: projector.color,
+            background_color: projector.background_color,
+            header_background_color: projector.header_background_color,
+            header_font_color: projector.header_font_color,
+            header_h1_color: projector.header_h1_color,
+            chyron_background_color: projector.chyron_background_color,
+            chyron_font_color: projector.chyron_font_color,
+            show_header_footer: projector.show_header_footer,
+            show_title: projector.show_title,
+            show_logo: projector.show_logo,
+            show_clock: projector.show_clock
+        };
+    }
+
+    public delete(projector: ViewProjector): Promise<any> {
+        return this.sendActionToBackend(ProjectorAction.DELETE, { id: projector.id });
+    }
+
     /**
      * Scroll the given projector.
      *
@@ -45,7 +106,7 @@ export class ProjectorRepositoryService extends BaseRepositoryWithActiveMeeting<
      * @param step (default 1) The amount of scroll-steps
      */
     public async scroll(projector: ViewProjector, direction: ScrollScaleDirection, step: number = 1): Promise<void> {
-        await this.controlView(projector, direction, 'scroll', step);
+        return await this.controlView(projector, direction, 'scroll', step);
     }
 
     /**
@@ -56,7 +117,7 @@ export class ProjectorRepositoryService extends BaseRepositoryWithActiveMeeting<
      * @param step (default 1) The amount of scale-steps
      */
     public async scale(projector: ViewProjector, direction: ScrollScaleDirection, step: number = 1): Promise<void> {
-        await this.controlView(projector, direction, 'scale', step);
+        return await this.controlView(projector, direction, 'scale', step);
     }
 
     /**
@@ -64,28 +125,84 @@ export class ProjectorRepositoryService extends BaseRepositoryWithActiveMeeting<
      *
      * @param projector The projector to control.
      * @param direction The direction
-     * @param action The action. Can be scale or scroll.
+     * @param field The field. Can be scale or scroll.
      * @param step The amount of steps to make.
      */
     private async controlView(
         projector: ViewProjector,
         direction: ScrollScaleDirection,
-        action: 'scale' | 'scroll',
+        field: 'scale' | 'scroll',
         step: number
     ): Promise<void> {
-        await this.http.post<void>(`/rest/core/projector/${projector.id}/control_view/`, {
-            action: action,
+        const payload: ProjectorAction.ControlViewPayload = {
+            id: projector.id,
+            field: field,
             direction: direction,
             step: step
-        });
+        };
+        return await this.sendActionToBackend(ProjectorAction.CONTROL_VIEW, payload);
     }
 
-    /**
-     * Sets the given projector as the new reference projector for all projectors
-     * @param projector the new reference projector id
-     */
-    public async setReferenceProjector(projector_id: number): Promise<void> {
-        await this.http.post<void>(`/rest/core/projector/${projector_id}/set_reference_projector/`);
+    private createProjectPayload(
+        descriptor: ProjectionBuildDescriptor,
+        projectors: ViewProjector[],
+        options?: object
+    ): ProjectorAction.ProjectPayload {
+        const payload: ProjectorAction.ProjectPayload = {
+            ids: projectors.map(projector => projector.id),
+            content_object_id: descriptor.content_object_id
+        };
+        if (options) {
+            payload.options = options;
+        }
+        if (descriptor.stable) {
+            payload.stable = descriptor.stable;
+        }
+        if (descriptor.type) {
+            payload.type = descriptor.type;
+        }
+        return payload;
+    }
+
+    public async project(
+        descriptor: ProjectionBuildDescriptor,
+        projectors: ViewProjector[],
+        options?: object
+    ): Promise<void> {
+        const payload = this.createProjectPayload(descriptor, projectors, options);
+        return await this.sendActionToBackend(ProjectorAction.PROJECT, payload);
+    }
+
+    public async next(payload: ProjectorAction.NextPayload): Promise<void> {
+        return await this.sendActionToBackend(ProjectorAction.NEXT, payload);
+    }
+
+    public async previous(payload: ProjectorAction.PreviousPayload): Promise<void> {
+        return await this.sendActionToBackend(ProjectorAction.PREVIOUS, payload);
+    }
+
+    public async addToPreview(
+        descriptor: ProjectionBuildDescriptor,
+        projectors: ViewProjector[],
+        options?: object
+    ): Promise<void> {
+        const payload = this.createProjectPayload(descriptor, projectors, options);
+        return await this.sendActionToBackend(ProjectorAction.ADD_TO_PREVIEW, payload);
+    }
+
+    public async projectPreview(projection: ViewProjection): Promise<void> {
+        const payload: ProjectorAction.ProjectPreviewPayload = {
+            id: projection.id
+        };
+        return await this.sendActionToBackend(ProjectorAction.PROJECT_PREVIEW, payload);
+    }
+
+    public async sortPreview(projector: ViewProjector, projection_ids: Id[]): Promise<void> {
+        const payload: ProjectorAction.SortPreviewPayload = {
+            id: projector.id,
+            projection_ids
+        };
+        return await this.sendActionToBackend(ProjectorAction.SORT_PREVIEW, payload);
     }
 
     public getReferenceProjectorObservable(): Observable<ViewProjector> {
@@ -94,14 +211,5 @@ export class ProjectorRepositoryService extends BaseRepositoryWithActiveMeeting<
                 return projectors.find(projector => projector.isReferenceProjector);
             })
         );
-    }
-
-    /**
-     * return the id of the current reference projector
-     * prefer the observable whenever possible
-     */
-    public getReferenceProjectorId(): number {
-        // TODO: After logging in, this is null this.getViewModelList() is null
-        return this.getViewModelList().find(projector => projector.isReferenceProjector).id;
     }
 }

@@ -1,11 +1,16 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 
 import { ProjectorMessageRepositoryService } from 'app/core/repositories/projector/projector-message-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ProjectionDialogService } from 'app/core/ui-services/projection-dialog.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { Projector } from 'app/shared/models/projector/projector';
+import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { MessageDialogData } from '../message-dialog/message-dialog.component';
+import { MessageDialogComponent } from '../message-dialog/message-dialog.component';
+import { ViewProjector } from '../../models/view-projector';
 import { ViewProjectorMessage } from '../../models/view-projector-message';
 
 /**
@@ -25,16 +30,10 @@ export class MessageControlsComponent extends BaseComponent implements OnInit {
     public message: ViewProjectorMessage;
 
     /**
-     * Output event for the edit button
-     */
-    @Output()
-    public editEvent = new EventEmitter<ViewProjectorMessage>();
-
-    /**
      * Pre defined projection target (if any)
      */
     @Input()
-    public projector: Projector;
+    public projector: ViewProjector;
 
     /**
      * Constructor
@@ -49,7 +48,8 @@ export class MessageControlsComponent extends BaseComponent implements OnInit {
         componentServiceCollector: ComponentServiceCollector,
         private repo: ProjectorMessageRepositoryService,
         private promptService: PromptService,
-        private projectionDialogService: ProjectionDialogService
+        private projectionDialogService: ProjectionDialogService,
+        private dialog: MatDialog
     ) {
         super(componentServiceCollector);
     }
@@ -63,14 +63,31 @@ export class MessageControlsComponent extends BaseComponent implements OnInit {
      * Fires an edit event
      */
     public onEdit(): void {
-        this.editEvent.next(this.message);
+        const messageData: MessageDialogData = {
+            message: this.message.message
+        };
+
+        const dialogRef = this.dialog.open(MessageDialogComponent, {
+            data: messageData,
+            ...largeDialogSettings
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                const update = {
+                    message: result.message
+                };
+
+                this.repo.update(update, this.message);
+            }
+        });
     }
 
     /**
      * Brings the projection dialog
      */
     public onBringDialog(): void {
-        this.projectionDialogService.openProjectDialogFor(this.message);
+        this.projectionDialogService.openProjectDialogFor(this.message.getProjectionBuildDescriptor());
     }
 
     /**
@@ -80,8 +97,7 @@ export class MessageControlsComponent extends BaseComponent implements OnInit {
         const content =
             this.translate.instant('Delete message') + ` ${this.translate.instant(this.message.getTitle())}?`;
         if (await this.promptService.open('Are you sure?', content)) {
-            // this.repo.delete(this.message).then(() => {}, this.raiseError);
+            this.repo.delete(this.message);
         }
-        throw new Error('TODO!');
     }
 }

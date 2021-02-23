@@ -27,7 +27,6 @@ import { ViewMotionSubmitter } from 'app/site/motions/models/view-motion-submitt
 import { ViewMotionVote } from 'app/site/motions/models/view-motion-vote';
 import { ViewMotionWorkflow } from 'app/site/motions/models/view-motion-workflow';
 import { ViewProjection } from 'app/site/projector/models/view-projection';
-import { ViewProjectiondefault } from 'app/site/projector/models/view-projectiondefault';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { ViewProjectorCountdown } from 'app/site/projector/models/view-projector-countdown';
 import { ViewProjectorMessage } from 'app/site/projector/models/view-projector-message';
@@ -315,12 +314,6 @@ export const RELATIONS: Relation[] = [
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
-        MViewModel: ViewProjectiondefault,
-        OField: 'projectiondefaults',
-        MField: 'meeting'
-    }),
-    ...makeM2O({
-        OViewModel: ViewMeeting,
         MViewModel: ViewProjectorMessage,
         OField: 'projector_messages',
         MField: 'meeting'
@@ -515,6 +508,26 @@ export const RELATIONS: Relation[] = [
         AField: 'reference_projector',
         BField: 'used_as_reference_projector_in_meeting'
     }),
+    // Projector -> Meeting
+    {
+        ownViewModels: [ViewProjector],
+        foreignViewModel: ViewMeeting,
+        ownField: 'used_as_default_in_meeting',
+        ownIdField: 'used_as_default_$_in_meeting_id',
+        many: false,
+        generic: false,
+        structured: true
+    },
+    // Meeting -> Projector
+    {
+        ownViewModels: [ViewMeeting],
+        foreignViewModel: ViewProjector,
+        ownField: 'default_projector',
+        ownIdField: 'default_projector_$_id',
+        many: false,
+        generic: false,
+        structured: true
+    },
     ...makeO2O({
         AViewModel: ViewMeeting,
         BViewModel: ViewGroup,
@@ -860,31 +873,19 @@ export const RELATIONS: Relation[] = [
         MField: 'history_projector',
         OField: 'history_projections'
     }),
-    ...makeGenericM2M<ViewProjector, Projectable>({
-        viewModel: ViewProjector,
-        possibleViewModels: PROJECTABLE_VIEW_MODELS,
-        viewModelField: 'current_elements',
-        possibleViewModelsField: 'current_projectors'
-    }),
-    ...makeM2O({
-        MViewModel: ViewProjectiondefault,
-        OViewModel: ViewProjector,
-        MField: 'projector',
-        OField: 'projectiondefaults'
-    }),
     // ########## Projections
-    // This is a generic O2M: projection <M---1> element
-    // projection -> elements
+    // This is a generic O2M: projection <M---1> content_object
+    // projection -> content_objects
     {
         ownViewModels: [ViewProjection],
         foreignViewModelPossibilities: PROJECTABLE_VIEW_MODELS,
-        ownField: 'element',
-        ownIdField: 'element_id',
+        ownField: 'content_object',
+        ownIdField: 'content_object_id',
         many: false,
         generic: true,
         structured: false
     },
-    // elements -> projection
+    // content_objects -> projection
     {
         ownViewModels: PROJECTABLE_VIEW_MODELS,
         foreignViewModel: ViewProjection,

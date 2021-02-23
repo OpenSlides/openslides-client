@@ -9,6 +9,7 @@ import { ViewAssignmentOption } from 'app/site/assignments/models/view-assignmen
 import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
 import { ViewAssignmentVote } from 'app/site/assignments/models/view-assignment-vote';
 import { BaseViewModel } from 'app/site/base/base-view-model';
+import { HasProjectorTitle } from 'app/site/base/projectable';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
@@ -24,7 +25,6 @@ import { ViewMotionSubmitter } from 'app/site/motions/models/view-motion-submitt
 import { ViewMotionVote } from 'app/site/motions/models/view-motion-vote';
 import { ViewMotionWorkflow } from 'app/site/motions/models/view-motion-workflow';
 import { ViewProjection } from 'app/site/projector/models/view-projection';
-import { ViewProjectiondefault } from 'app/site/projector/models/view-projectiondefault';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { ViewProjectorCountdown } from 'app/site/projector/models/view-projector-countdown';
 import { ViewProjectorMessage } from 'app/site/projector/models/view-projector-message';
@@ -53,9 +53,9 @@ interface IMeetingRelations {
     motions_default_statute_amendment_workflow: ViewMotionWorkflow;
     motion_poll_default_groups: ViewGroup[];
     assignment_poll_default_groups: ViewGroup[];
+    poll_default_groups: ViewGroup[];
     projectors: ViewProjector[];
-    projections: ViewProjection[];
-    projectiondefaults: ViewProjectiondefault[];
+    all_projections: ViewProjection[];
     projector_messages: ViewProjectorMessage[];
     projector_countdowns: ViewProjectorCountdown[];
     tags: ViewTag[];
@@ -93,7 +93,9 @@ interface IMeetingRelations {
     guests: ViewUser[];
     users: ViewUser[];
     reference_projector: ViewProjector;
+    default_projector: StructuredRelation<string, ViewProjector | null>;
+    projections: ViewProjection[];
     default_group: ViewGroup;
     admin_group: ViewGroup;
 }
-export interface ViewMeeting extends Meeting, IMeetingRelations {}
+export interface ViewMeeting extends Meeting, IMeetingRelations, HasProjectorTitle {}

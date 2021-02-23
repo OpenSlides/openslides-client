@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { ProjectorService } from 'app/core/core-services/projector.service';
+import { ProjectorService } from 'app/core/ui-services/projector.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { SlideManager } from 'app/slides/services/slide-manager.service';

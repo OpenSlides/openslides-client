@@ -36,11 +36,6 @@ export const allSlidesDynamicConfiguration: (SlideDynamicConfiguration & Slide)[
         scrollable: true
     },
     {
-        slide: 'core/clock',
-        scaleable: false,
-        scrollable: false
-    },
-    {
         slide: 'core/countdown',
         scaleable: false,
         scrollable: false

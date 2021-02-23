@@ -230,12 +230,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         return viewModel;
     }
 
-    public getFieldsets(): Fieldsets<any> {
-        /**
-         * FIXME: Make abstract
-         */
-        return {};
-    }
+    public abstract getFieldsets(): Fieldsets<any>;
 
     /**
      * Clears the repository.

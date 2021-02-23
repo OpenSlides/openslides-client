@@ -1,8 +1,8 @@
 <h2 mat-dialog-title>
     <span>{{ 'Project selection?' | translate }}</span>
 </h2>
-<div class="element-name" *ngIf="projectorElementBuildDescriptor">
-    {{ projectorElementBuildDescriptor.getDialogTitle() }}
+<div class="element-name" *ngIf="descriptor">
+    {{ descriptor.getDialogTitle() }}
 </div>
 
 <mat-dialog-content>
@@ -15,9 +15,9 @@
             {{ projector.name | translate }}
         </mat-checkbox>
         <span *ngIf="isProjectedOn(projector)" class="right">
-            <mat-icon matTooltip="{{ 'Is already projected' | translate }}" matTooltipPosition="above"
-                >videocam</mat-icon
-            >
+            <mat-icon matTooltip="{{ 'Is already projected' | translate }}" matTooltipPosition="above">
+                videocam
+            </mat-icon>
         </span>
     </div>
 
@@ -44,6 +44,7 @@
         </div>
     </div>
 </mat-dialog-content>
+
 <mat-dialog-actions>
     <button mat-button osAutofocus (click)="onProject()" color="accent">{{ 'Project' | translate }}</button>
     <button mat-button (click)="onAddToPreview()">{{ 'Add to queue' | translate }}</button>

@@ -4,7 +4,6 @@ import { Subject, Subscription } from 'rxjs';
 
 import { OfflineBroadcastService } from 'app/core/core-services/offline-broadcast.service';
 import { ProjectorDataService, SlideData } from 'app/core/core-services/projector-data.service';
-import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MediaManageService } from 'app/core/ui-services/media-manage.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
@@ -113,24 +112,9 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
     public slides: SlideData<object>[] = [];
 
     /**
-     * The scroll for this projector. 0 is the default.
-     */
-    public scroll = 0;
-
-    /**
-     * The scale for this projector. 0 is the default.
-     */
-    public scale = 0;
-
-    /**
      * Info about if the user is offline.
      */
     public isOffline = false;
-
-    /**
-     * The subscription to the projector.
-     */
-    private projectorSubscription: Subscription;
 
     /**
      * Holds the subscription to the offline-service.
@@ -154,7 +138,6 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private projectorDataService: ProjectorDataService,
-        private projectorRepository: ProjectorRepositoryService,
         private meetingSettingsService: MeetingSettingsService,
         private offlineBroadcastService: OfflineBroadcastService,
         private elementRef: ElementRef,
@@ -286,26 +269,13 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
         if (this.dataSubscription) {
             this.dataSubscription.unsubscribe();
         }
-        if (this.projectorSubscription) {
-            this.projectorSubscription.unsubscribe();
+        if (from > 0) {
+            this.projectorDataService.projectorClosed(from);
         }
         if (to > 0) {
-            if (from > 0) {
-                this.projectorDataService.projectorClosed(from);
-            }
-
             this.dataSubscription = this.projectorDataService.getProjectorObservable(to).subscribe(data => {
                 this.slides = data || [];
             });
-            this.projectorSubscription = this.projectorRepository.getViewModelObservable(to).subscribe(projector => {
-                if (projector) {
-                    this.scroll = projector.scroll || 0;
-                    this.scale = projector.scale || 0;
-                }
-            });
-        } else if (!to && from > 0) {
-            // no new projector
-            this.projectorDataService.projectorClosed(from);
         }
     }
 

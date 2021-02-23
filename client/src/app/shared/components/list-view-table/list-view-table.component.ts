@@ -20,17 +20,18 @@ import { distinctUntilChanged, filter } from 'rxjs/operators';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
-import { ProjectorService } from 'app/core/core-services/projector.service';
 import { StorageService } from 'app/core/core-services/storage.service';
 import { HasViewModelListObservable } from 'app/core/definitions/has-view-model-list-observable';
 import { BaseFilterListService } from 'app/core/ui-services/base-filter-list.service';
 import { BaseSortListService } from 'app/core/ui-services/base-sort-list.service';
+import { ProjectorService } from 'app/core/ui-services/projector.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { hasListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { HasListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { isProjectable, Projectable } from 'app/site/base/projectable';
+import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
 
 export interface CssClassDefinition {
     [key: string]: boolean;
@@ -217,7 +218,7 @@ export class ListViewTableComponent<V extends BaseViewModel | BaseProjectableVie
     public fullScreen = true;
 
     @Input()
-    public getProjectorButtonObject: (viewModel: V) => Projectable | null = null;
+    public getProjectorButtonObject: (viewModel: V) => ProjectionBuildDescriptor | Projectable | null = null;
 
     @Input()
     public getSpeakerButtonObject: (viewModel: V) => (BaseViewModel & HasListOfSpeakers) | null = null;
@@ -589,7 +590,7 @@ export class ListViewTableComponent<V extends BaseViewModel | BaseProjectableVie
      * @param viewModel The model of the table
      * @returns a view model that can be projected
      */
-    public _getProjectorButtonObject(viewModel: V): Projectable | null {
+    public _getProjectorButtonObject(viewModel: V): ProjectionBuildDescriptor | Projectable | null {
         if (this.getProjectorButtonObject === null) {
             if (isProjectable(viewModel)) {
                 return viewModel;

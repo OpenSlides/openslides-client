@@ -37,58 +37,55 @@ export namespace MeetingAction {
     }
     export interface UpdatePayload extends OptionalUpdatePayload, Identifiable {}
     export interface OptionalUpdatePayload {
-        // Optional
         welcome_title?: string;
         welcome_text?: UnsafeHtml;
 
-        // General
         name?: string;
         description?: string;
         location?: string;
         start_time?: Date;
         end_time?: Date;
-        custom_translations?: JSON;
 
-        // System
+        jitsi_domain?: string;
+        jitsi_room_name?: string;
+        jitsi_room_password?: string;
         url_name?: string;
-        template_for_committee_id?: Id;
         enable_anonymous?: boolean;
 
-        // Jitsi/Livestream settings
         conference_show?: boolean;
         conference_auto_connect?: boolean;
         conference_los_restriction?: boolean;
         conference_stream_url?: string;
+        conference_stream_poster_url?: string;
+        conference_open_microphone?: boolean;
+        conference_open_video?: boolean;
+        conference_auto_connect_next_speakers?: number;
 
-        // Projector
         projector_default_countdown_time?: number;
         projector_countdown_warning_time?: number;
 
-        // Exports
         export_csv_encoding?: string;
         export_csv_separator?: string;
         export_pdf_pagenumber_alignment?: string;
         export_pdf_fontsize?: number;
         export_pdf_pagesize?: string;
 
-        // Agenda
         agenda_show_subtitles?: boolean;
         agenda_enable_numbering?: boolean;
         agenda_number_prefix?: string;
         agenda_numeral_system?: string;
         agenda_item_creation?: string;
-        agenda_new_items_default_visibility?: AgendaItemType;
+        agenda_new_items_default_visibility?: string;
         agenda_show_internal_items_on_projector?: boolean;
 
-        // List of speakers
         list_of_speakers_amount_last_on_projector?: number;
-        list_of_speakers_amount_next_on_projector?: boolean;
+        list_of_speakers_amount_next_on_projector?: number;
         list_of_speakers_couple_countdown?: boolean;
         list_of_speakers_show_amount_of_speakers_on_slide?: boolean;
         list_of_speakers_present_users_only?: boolean;
         list_of_speakers_show_first_contribution?: boolean;
+        list_of_speakers_enable_point_of_order_speakers?: boolean;
 
-        // Motions
         motions_default_workflow_id?: Id;
         motions_default_amendment_workflow_id?: Id;
         motions_default_statute_amendment_workflow_id?: Id;
@@ -106,9 +103,9 @@ export namespace MeetingAction {
         motions_statute_recommendations_by?: string;
         motions_recommendation_text_mode?: string;
         motions_default_sorting?: string;
-        motions_identifier_type?: string;
-        motions_identifier_min_digits?: number;
-        motions_identifier_with_blank?: boolean;
+        motions_number_type?: string;
+        motions_number_min_digits?: number;
+        motions_number_with_blank?: boolean;
         motions_statutes_enabled?: boolean;
         motions_amendments_enabled?: boolean;
         motions_amendments_in_main_list?: boolean;
@@ -129,7 +126,6 @@ export namespace MeetingAction {
         motion_poll_default_majority_method?: string;
         motion_poll_default_group_ids?: Id[];
 
-        // Users
         users_sort_by?: string;
         users_enable_presence_view?: boolean;
         users_enable_vote_weight?: boolean;
@@ -145,8 +141,7 @@ export namespace MeetingAction {
         users_email_subject?: string;
         users_email_body?: string;
 
-        // Assignments
-        assignemnts_export_title?: string;
+        assignments_export_title?: string;
         assignments_export_preamble?: string;
 
         assignment_poll_ballot_paper_selection?: string;
@@ -159,9 +154,19 @@ export namespace MeetingAction {
         assignment_poll_default_majority_method?: string;
         assignment_poll_default_group_ids?: Id[];
 
-        // Other relations
+        poll_ballot_paper_selection?: string;
+        poll_ballot_paper_number?: number;
+        poll_sort_poll_result_by_votes?: boolean;
+        poll_default_type?: string;
+        poll_default_method?: string;
+        poll_default_100_percent_base?: string;
+        poll_default_majority_method?: string;
+        poll_default_group_ids?: Id[];
+
+        present_user_ids?: Id[];
         guest_ids?: Id[];
-        default_meeting_for_committee_id?: Id;
+        reference_projector_id?: Id;
+        // default_projector_$_id: Id; // TODO
     }
 
     export interface DeleteAllSpeakersOfAllListsPayload extends Identifiable {}

@@ -4,6 +4,7 @@ import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.cons
 import { AssignmentPollMethod, AssignmentPollPercentBase } from '../assignments/assignment-poll';
 import { BaseModel } from '../base/base-model';
 import { MajorityMethod, PercentBase, PollType } from '../poll/base-poll';
+import { HasProjectionIds } from '../base/has-projectable-ids';
 
 export type UserSortProperty = 'first_name' | 'last_name' | 'number';
 export type ExportCsvEncoding = 'utf-8' | 'iso-8859-15';
@@ -151,8 +152,7 @@ export class Meeting extends BaseModel<Meeting> {
     public id: Id;
 
     public projector_ids: Id[]; // (projector/meeting_id)[];
-    public projection_ids: Id[]; // (projection/meeting_id)[];
-    public projectiondefault_ids: Id[]; // (projectiondefault/meeting_id)[];
+    public all_projection_ids: Id[]; // (projection/meeting_id)[];
     public projector_message_ids: Id[]; // (projector_message/meeting_id)[];
     public projector_countdown_ids: Id[]; // (projector_countdown/meeting_id)[];
     public tag_ids: Id[]; // (tag/meeting_id)[];
@@ -194,6 +194,7 @@ export class Meeting extends BaseModel<Meeting> {
     public guest_ids: Id[]; // (user/guest_meeting_ids)[];
     public user_ids: Id[]; // Calculated: All ids from temporary_user_ids, guest_ids and all users assigned to groups.
     public reference_projector_id: Id; // projector/used_as_reference_projector_meeting_id;
+    public default_projector_$_id: string[]; // projector/used_as_default_$_in_meeting_id;
 
     public default_group_id: Id; // group/default_group_for_meeting_id;
     public admin_group_id: Id; // group/admin_group_for_meeting_id;
@@ -203,11 +204,15 @@ export class Meeting extends BaseModel<Meeting> {
     }
 
     public logo_id(place: string): Id | null {
-        return this[`logo_$${place}_id`];
+        return this[`logo_$${place}_id`] || null;
     }
 
     public font_id(place: string): Id | null {
-        return this[`fomt_$${place}_id`];
+        return this[`font_$${place}_id`] || null;
+    }
+
+    public default_projector_id(place: string): Id | null {
+        return this[`default_projector_$${place}_id`] || null;
     }
 }
-export interface Meeting extends Settings {}
+export interface Meeting extends Settings, HasProjectionIds {}

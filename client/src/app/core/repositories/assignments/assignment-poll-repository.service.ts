@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { HttpService } from 'app/core/core-services/http.service';
+import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { BasePollRepository } from 'app/core/repositories/base-poll-repository';
 import { AssignmentPoll } from 'app/shared/models/assignments/assignment-poll';
 import { UserVote } from 'app/shared/models/poll/base-vote';
@@ -50,6 +51,12 @@ export class AssignmentPollRepositoryService extends BasePollRepository<ViewAssi
     public getVerboseName = (plural: boolean = false) => {
         return this.translate.instant(plural ? 'Polls' : 'Poll');
     };
+
+    public getFieldsets(): Fieldsets<AssignmentPoll> {
+        return {
+            [DEFAULT_FIELDSET]: [] // TODO
+        };
+    }
 
     public vote(data: VotingData, poll_id: number, userId?: number): Promise<void> {
         const requestData: UserVote = {

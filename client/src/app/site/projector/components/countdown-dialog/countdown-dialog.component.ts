@@ -10,7 +10,7 @@ import { BaseComponent } from 'app/site/base/components/base.component';
 /**
  * Countdown data for the form
  */
-export interface CountdownData {
+export interface CountdownDialogData {
     title: string;
     description: string;
     duration: string;
@@ -41,7 +41,7 @@ export class CountdownDialogComponent extends BaseComponent implements OnInit {
         meetingSettingsService: MeetingSettingsService,
         private formBuilder: FormBuilder,
         private durationService: DurationService,
-        @Inject(MAT_DIALOG_DATA) public data: CountdownData
+        @Inject(MAT_DIALOG_DATA) public data: CountdownDialogData
     ) {
         super(componentServiceCollector);
         this.defaultTime = meetingSettingsService.instant('projector_countdown_warning_time');

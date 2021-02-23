@@ -4,7 +4,7 @@
         class="projector-active"
         mat-mini-fab
         (click)="onClick($event)"
-        *ngIf="!text && !menuItem && checkIsProjected()"
+        *ngIf="!text && !menuItem && isProjected()"
     >
         <mat-icon>videocam</mat-icon>
     </button>
@@ -13,7 +13,7 @@
         class="projector-inactive"
         mat-mini-fab
         (click)="onClick($event)"
-        *ngIf="!text && !menuItem && !checkIsProjected()"
+        *ngIf="!text && !menuItem && !isProjected()"
     >
         <mat-icon>videocam</mat-icon>
         {{ text | translate }}
@@ -23,7 +23,7 @@
         *ngIf="menuItem"
         mat-menu-item
         (click)="onClick()"
-        [ngClass]="checkIsProjected() ? 'projector-active' : 'projector-inactive'"
+        [ngClass]="isProjected() ? 'projector-active' : 'projector-inactive'"
     >
         <mat-icon>videocam</mat-icon>
         {{ text || 'Project' | translate }}

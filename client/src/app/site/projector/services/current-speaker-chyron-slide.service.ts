@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 
-import { ProjectorService } from 'app/core/core-services/projector.service';
+import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
+import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
+import { ProjectorService } from 'app/core/ui-services/projector.service';
+import { Projectiondefault } from 'app/shared/models/projector/projector';
+import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
 import { ViewProjector } from '../models/view-projector';
 
 /**
@@ -9,45 +13,54 @@ import { ViewProjector } from '../models/view-projector';
     providedIn: 'root'
 })
 export class CurrentSpeakerChyronSlideService {
-    public constructor(private projectorService: ProjectorService) {}
+    public constructor(
+        private projectorService: ProjectorService,
+        private activeMeetingIdService: ActiveMeetingIdService,
+        private projectorRepo: ProjectorRepositoryService
+    ) {}
 
     /**
-     * Returns the basic projector element for the chyron slide
-     *
-     * @returns the identifiable chyron projector element.
+     * @returns the slide build descriptor for the overlay or slide
      */
-    /*private getCurrentSpeakerChyronProjectorElement(): IdentifiableProjectorElement {
+    public getProjectionBuildDescriptor(): ProjectionBuildDescriptor | null {
+        const meetingId = this.activeMeetingIdService.meetingId;
+        if (!meetingId) {
+            return null;
+        }
         return {
-            name: 'agenda/current-speaker-chyron',
-            stable: true,
-            getNumbers: () => ['name']
+            content_object_id: `meeting/${meetingId}`,
+            type: '',
+            projectionDefault: Projectiondefault.currentListOfSpeakers,
+            getDialogTitle: () => 'Current list of speakers'
         };
-    }*/
-
-    /**
-     * Queries, if the slide is projected on the given projector.
-     *
-     * @param projector The projector
-     * @returns if the slide is projected on the projector
-     */
-    public isProjectedOn(projector: ViewProjector): boolean {
-        // return this.projectorService.isProjectedOn(
-        // this.getCurrentSpeakerChyronProjectorElement(), projector.projector);
-        throw new Error('TODO');
     }
 
     /**
-     * Toggle the projection state of the slide on the given projector
+     * Queries, if the slide/overlay is projected on the given projector.
      *
      * @param projector The projector
+     * @param overlay True, if we query for an overlay instead of the slide
+     * @returns if the slide/overlay is projected on the projector
+     */
+    public isProjectedOn(projector: ViewProjector): boolean {
+        const descriptor = this.getProjectionBuildDescriptor();
+        if (!descriptor) {
+            return false;
+        }
+        return this.projectorService.isProjectedOn(descriptor, projector);
+    }
+
+    /**
+     * Toggle the projection state of the slide/overlay on the given projector
+     *
+     * @param projector The projector
+     * @param overlay Slide or overlay
      */
     public async toggleOn(projector: ViewProjector): Promise<void> {
-        /*const isClosProjected = this.isProjectedOn(projector);
-        if (isClosProjected) {
-            await this.projectorService.removeFrom(projector.projector, this.getCurrentSpeakerChyronProjectorElement());
-        } else {
-            await this.projectorService.projectOn(projector.projector, this.getCurrentSpeakerChyronProjectorElement());
-        }*/
-        throw new Error('TODO');
+        const descriptor = this.getProjectionBuildDescriptor();
+        if (!descriptor) {
+            return;
+        }
+        this.projectorRepo.project(descriptor, [projector]);
     }
 }

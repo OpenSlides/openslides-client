@@ -105,9 +105,9 @@
 <!-- More Menu -->
 <mat-menu #pollDetailMenu="matMenu">
     <os-projector-button
-        [menuItem]="true"
-        [object]="poll"
         *osPerms="permission.projectorCanManage"
+        [object]="poll"
+        [menuItem]="true"
     ></os-projector-button>
     <button *osPerms="permission.motionsCanManagePolls" mat-menu-item (click)="openDialog(poll)">
         <mat-icon>edit</mat-icon>

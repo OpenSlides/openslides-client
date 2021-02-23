@@ -1,25 +1,25 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import { Subscription } from 'rxjs';
 
 import { ServertimeService } from 'app/core/core-services/servertime.service';
-import { BaseSlideComponent } from 'app/slides/base-slide-component';
 
 @Component({
-    selector: 'os-clock-slide',
-    templateUrl: './clock-slide.component.html',
-    styleUrls: ['./clock-slide.component.scss']
+    selector: 'os-projector-clock',
+    templateUrl: './projector-clock.component.html',
+    styleUrls: ['./projector-clock.component.scss']
 })
-export class ClockSlideComponent extends BaseSlideComponent<{}> implements OnInit, OnDestroy {
+export class ProjectorClockComponent implements OnInit, OnDestroy {
     public time: string;
+
+    @Input()
+    public color: string;
 
     private servertimeSubscription: Subscription | null = null;
 
     private clockInterval: any;
 
-    public constructor(private servertimeService: ServertimeService) {
-        super();
-    }
+    public constructor(private servertimeService: ServertimeService) {}
 
     public ngOnInit(): void {
         // Update clock, when the server offset changes.

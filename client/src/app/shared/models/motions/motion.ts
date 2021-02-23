@@ -5,7 +5,7 @@ import { HasAttachmentIds } from '../base/has-attachment-ids';
 import { HasListOfSpeakersId } from '../base/has-list-of-speakers-id';
 import { HasMeetingId } from '../base/has-meeting-id';
 import { HasPersonalNoteIds } from '../base/has-personal-note-ids';
-import { HasProjectableIds } from '../base/has-projectable-ids';
+import { HasProjectionIds } from '../base/has-projectable-ids';
 import { HasTagIds } from '../base/has-tag-ids';
 
 export interface HasReferencedMotionInRecommendationExtensionIds {
@@ -78,5 +78,5 @@ export interface Motion
         HasTagIds,
         HasAttachmentIds,
         HasPersonalNoteIds,
-        HasProjectableIds,
+        HasProjectionIds,
         HasReferencedMotionInRecommendationExtensionIds {}

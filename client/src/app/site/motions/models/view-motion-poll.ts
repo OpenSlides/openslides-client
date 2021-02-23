@@ -1,7 +1,7 @@
 import { MotionPoll, MotionPollMethod } from 'app/shared/models/motions/motion-poll';
 import { PercentBase } from 'app/shared/models/poll/base-poll';
+import { Projectiondefault } from 'app/shared/models/projector/projector';
 import { BaseViewModel } from 'app/site/base/base-view-model';
-import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { ViewMotionOption } from 'app/site/motions/models/view-motion-option';
 import { BaseViewPoll, PollClassType } from 'app/site/polls/models/base-view-poll';
 import { ViewMotion } from './view-motion';
@@ -41,17 +41,8 @@ export class ViewMotionPoll extends BaseViewPoll<MotionPoll, ViewMotionOption, M
         return this.motion;
     }
 
-    public getSlide(): ProjectorElementBuildDeskriptor {
-        return {
-            getBasicProjectorElement: options => ({
-                name: MotionPoll.COLLECTION,
-                id: this.id,
-                getNumbers: () => ['name', 'id']
-            }),
-            slideOptions: [],
-            projectionDefaultName: 'motion_poll',
-            getDialogTitle: this.getTitle
-        };
+    public getProjectiondefault(): Projectiondefault {
+        return Projectiondefault.motionPoll;
     }
 
     public get pollmethodVerbose(): string {

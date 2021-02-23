@@ -78,12 +78,21 @@ export class ActiveMeetingService {
             ids: [this.meetingId],
             follow: [
                 { idField: 'default_group_id' }, // needed by the operator!
-                { idField: 'admin_group_id' }
+                { idField: 'admin_group_id' },
+                {
+                    idField: 'projector_ids',
+                    follow: [
+                        { idField: 'current_projection_ids', follow: [{ idField: 'content_object_id' }] },
+                        { idField: 'preview_projection_ids', follow: [{ idField: 'content_object_id' }] }
+                        // {idField: 'used_as_default_$_in_meeting_id'} // TODO
+                    ]
+                }
             ],
             fieldset: 'settings',
             additionalFields: [
                 { templateField: 'logo_$_id' }, // needed by the media manage service
-                { templateField: 'font_$_id' }
+                { templateField: 'font_$_id' },
+                'reference_projector_id'
             ]
         };
     }

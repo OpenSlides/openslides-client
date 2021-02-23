@@ -1,10 +1,12 @@
 import { AgendaListTitle } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { AgendaItem, ItemTypeChoices } from 'app/shared/models/agenda/agenda-item';
 import { HasAgendaItemId } from 'app/shared/models/base/has-agenda-item-id';
+import { Projection } from 'app/shared/models/projector/projection';
+import { Projectiondefault } from 'app/shared/models/projector/projector';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { DetailNavigable } from 'app/site/base/detail-navigable';
-import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
+import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { HasTags } from 'app/site/tags/models/view-tag';
 
@@ -50,13 +52,17 @@ export class ViewAgendaItem extends BaseProjectableViewModel<AgendaItem> {
         return type ? type.name : '';
     }
 
-    public getProjectorTitle = () => {
+    public getProjectorTitle = (projection: Projection) => {
         const subtitle = this.item.comment || null;
         return { title: this.getTitle(), subtitle };
     };
 
-    public getSlide(): ProjectorElementBuildDeskriptor {
+    public getProjectionBuildDescriptor(): ProjectionBuildDescriptor {
         throw new Error('TODO');
+    }
+
+    public getProjectiondefault(): Projectiondefault {
+        return null;
     }
 
     /**

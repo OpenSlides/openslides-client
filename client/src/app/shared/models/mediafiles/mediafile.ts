@@ -2,7 +2,7 @@ import { Fqid, Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
 import { HasListOfSpeakersId } from '../base/has-list-of-speakers-id';
 import { HasMeetingId } from '../base/has-meeting-id';
-import { HasProjectableIds } from '../base/has-projectable-ids';
+import { HasProjectionIds } from '../base/has-projectable-ids';
 
 interface PdfInformation {
     pages?: number;
@@ -56,4 +56,4 @@ export class Mediafile extends BaseModel<Mediafile> {
         return this.is_directory ? `/mediafiles/${this.id}` : `/system/media/get/${this.id}`;
     }
 }
-export interface Mediafile extends HasMeetingId, HasProjectableIds, HasListOfSpeakersId {}
+export interface Mediafile extends HasMeetingId, HasProjectionIds, HasListOfSpeakersId {}

@@ -1,3 +1,4 @@
+import { Fqid } from 'app/core/definitions/key-types';
 import { BaseModel } from 'app/shared/models/base/base-model';
 import { Collection } from 'app/shared/models/base/collection';
 import { Displayable } from './displayable';
@@ -12,6 +13,10 @@ export interface ViewModelConstructor<T extends BaseViewModel> {
  * Base class for view models.
  */
 export abstract class BaseViewModel<M extends BaseModel = any> {
+    public get fqid(): Fqid {
+        return this.getModel().fqid;
+    }
+
     /**
      * @param collection
      * @param model

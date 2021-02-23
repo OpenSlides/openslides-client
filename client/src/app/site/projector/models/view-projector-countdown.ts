@@ -1,8 +1,9 @@
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
+import { Projectiondefault } from 'app/shared/models/projector/projector';
 import { ProjectorCountdown } from 'app/shared/models/projector/projector-countdown';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
-import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
+import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 
 export class ViewProjectorCountdown extends BaseProjectableViewModel<ProjectorCountdown> {
@@ -13,14 +14,10 @@ export class ViewProjectorCountdown extends BaseProjectableViewModel<ProjectorCo
         return this._model;
     }
 
-    public getSlide(): ProjectorElementBuildDeskriptor {
+    public getProjectionBuildDescriptor(): ProjectionBuildDescriptor {
         return {
-            getBasicProjectorElement: options => ({
-                stable: true,
-                name: ProjectorCountdown.COLLECTION,
-                id: this.id,
-                getNumbers: () => ['name', 'id']
-            }),
+            content_object_id: this.fqid,
+            stable: true,
             slideOptions: [
                 {
                     key: 'fullscreen',
@@ -38,9 +35,13 @@ export class ViewProjectorCountdown extends BaseProjectableViewModel<ProjectorCo
                     default: 'onlyCountdown'
                 }
             ],
-            projectionDefaultName: 'countdowns',
-            getDialogTitle: () => this.getTitle()
+            projectionDefault: this.getProjectiondefault(),
+            getDialogTitle: this.getTitle
         };
+    }
+
+    public getProjectiondefault(): Projectiondefault {
+        return Projectiondefault.projectorCountdown;
     }
 }
 interface IProjectorCountdownRelations {

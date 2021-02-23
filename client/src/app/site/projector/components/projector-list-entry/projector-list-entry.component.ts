@@ -1,8 +1,10 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
+import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
+import { MeetingRepositoryService } from 'app/core/repositories/event-management/meeting-repository.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
@@ -60,7 +62,9 @@ export class ProjectorListEntryComponent extends BaseComponent implements OnInit
         private repo: ProjectorRepositoryService,
         private promptService: PromptService,
         private dialogService: MatDialog,
-        private operator: OperatorService
+        private operator: OperatorService,
+        private activeMeetingService: ActiveMeetingService,
+        private meetingRepo: MeetingRepositoryService
     ) {
         super(componentServiceCollector);
     }
@@ -78,10 +82,10 @@ export class ProjectorListEntryComponent extends BaseComponent implements OnInit
     }
 
     /**
-     * Handler to set the selected projector as CLOS reference
+     * Handler to set the selected projector as the meeting reference projector
      */
-    public onSetAsClosRef(): void {
-        this.repo.setReferenceProjector(this.projector.id);
+    public setProjectorAsReference(): void {
+        this.meetingRepo.update({ reference_projector_id: this.projector.id }, this.activeMeetingService.meeting);
     }
 
     /**
@@ -103,8 +107,7 @@ export class ProjectorListEntryComponent extends BaseComponent implements OnInit
     public async onDeleteButton(): Promise<void> {
         const title = this.translate.instant('Are you sure you want to delete this projector?');
         if (await this.promptService.open(title, this.projector.name)) {
-            // this.repo.delete(this.projector).catch(this.raiseError);
+            this.repo.delete(this.projector);
         }
-        throw new Error('TODO!');
     }
 }

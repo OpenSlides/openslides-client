@@ -15,7 +15,10 @@ import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { PdfDocumentService } from 'app/core/pdf-services/pdf-document.service';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
-import { MeetingRepositoryService } from 'app/core/repositories/event-management/meeting-repository.service';
+import {
+    MeetingProjectionType,
+    MeetingRepositoryService
+} from 'app/core/repositories/event-management/meeting-repository.service';
 import { TopicRepositoryService } from 'app/core/repositories/topics/topic-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DurationService } from 'app/core/ui-services/duration.service';
@@ -25,9 +28,11 @@ import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { ColumnRestriction } from 'app/shared/components/list-view-table/list-view-table.component';
 import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
 import { AgendaItemType } from 'app/shared/models/agenda/agenda-item';
+import { Projectiondefault } from 'app/shared/models/projector/projector';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
-import { isProjectable, ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
+import { isProjectable } from 'app/site/base/projectable';
+import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewTopic } from 'app/site/topics/models/view-topic';
 import { ViewAgendaItem } from '../../models/view-agenda-item';
@@ -61,21 +66,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
         return this.operator.hasPerms(Permission.agendaItemCanManage);
     }
 
-    public itemListSlide: ProjectorElementBuildDeskriptor = {
-        getBasicProjectorElement: options => ({
-            name: 'agenda/item-list',
-            getNumbers: () => ['name']
-        }),
-        slideOptions: [
-            {
-                key: 'only_main_items',
-                displayName: _('Only main agenda items'),
-                default: false
-            }
-        ],
-        projectionDefaultName: 'agenda_all_items',
-        getDialogTitle: () => this.translate.instant('Agenda')
-    };
+    public itemListSlide: ProjectionBuildDescriptor | null = null;
 
     /**
      * Define the columns to show
@@ -150,9 +141,31 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
     public ngOnInit(): void {
         super.ngOnInit();
         super.setTitle('Agenda');
-        this.meetingsSettingsService
-            .get('agenda_enable_numbering')
-            .subscribe(autoNumbering => (this.isNumberingAllowed = autoNumbering));
+
+        this.subscriptions.push(
+            this.meetingsSettingsService
+                .get('agenda_enable_numbering')
+                .subscribe(autoNumbering => (this.isNumberingAllowed = autoNumbering)),
+            this.activeMeetingIdService.meetingIdObservable.subscribe(id => {
+                if (id) {
+                    this.itemListSlide = {
+                        content_object_id: `meeting/${id}`,
+                        type: MeetingProjectionType.AgendaItemList,
+                        slideOptions: [
+                            {
+                                key: 'only_main_items',
+                                displayName: _('Only main agenda items'),
+                                default: false
+                            }
+                        ],
+                        projectionDefault: Projectiondefault.agendaAllItems,
+                        getDialogTitle: () => this.translate.instant('Agenda')
+                    };
+                } else {
+                    this.itemListSlide = null;
+                }
+            })
+        );
     }
 
     protected getModelRequest(): SimplifiedModelRequest {
@@ -221,7 +234,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
                 } else {
                     result.duration = 0;
                 }
-                this.repo.update(result, item).catch(this.raiseError);
+                this.repo.update(result, item);
             }
         });
     }
@@ -232,7 +245,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
     public async onAutoNumbering(): Promise<void> {
         const title = this.translate.instant('Are you sure you want to number all agenda items?');
         if (await this.promptService.open(title)) {
-            await this.repo.autoNumbering().catch(this.raiseError);
+            await this.repo.autoNumbering();
         }
     }
 
@@ -240,7 +253,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
      * Click handler for the done button in the dot-menu
      */
     public async onDoneSingleButton(item: ViewAgendaItem): Promise<void> {
-        await this.repo.update({ closed: !item.closed }, item).catch(this.raiseError);
+        await this.repo.update({ closed: !item.closed }, item);
     }
 
     /**

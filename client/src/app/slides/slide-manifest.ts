@@ -3,8 +3,8 @@ import { LoadChildrenCallback } from '@angular/router';
 
 import { TranslateService } from '@ngx-translate/core';
 
-import { ProjectorTitle } from 'app/core/core-services/projector.service';
 import { ViewModelStoreService } from 'app/core/core-services/view-model-store.service';
+import { ProjectorTitle } from 'app/site/base/projectable';
 
 type BooleanOrFunction = boolean | ((element: any) => boolean);
 

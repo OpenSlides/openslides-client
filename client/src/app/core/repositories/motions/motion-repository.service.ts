@@ -13,6 +13,7 @@ import { TreeIdNode } from 'app/core/ui-services/tree.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Motion } from 'app/shared/models/motions/motion';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from 'app/shared/models/motions/view-unified-change';
+import { Projection } from 'app/shared/models/projector/projection';
 import { createAgendaItem } from 'app/shared/utils/create-agenda-item';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ChangeRecoMode } from 'app/site/motions/motions.constants';
@@ -225,7 +226,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         const viewModel = super.createViewModel(model);
 
         viewModel.getNumberOrTitle = () => this.getNumberOrTitle(viewModel);
-        viewModel.getProjectorTitle = () => this.getProjectorTitle(viewModel);
+        viewModel.getProjectorTitle = (projection: Projection) => this.getProjectorTitle(viewModel);
         viewModel.getParagraphTitleByParagraph = (paragraph: DiffLinesInParagraph) =>
             this.motionLineNumbering.getAmendmentParagraphLinesTitle(paragraph);
 

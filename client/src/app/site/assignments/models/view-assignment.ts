@@ -1,15 +1,13 @@
 import { SearchRepresentation } from 'app/core/ui-services/search.service';
 import { Assignment, AssignmentPhase } from 'app/shared/models/assignments/assignment';
-import { HasAgendaItem, ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
-import { HasListOfSpeakers, ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
+import { Projectiondefault } from 'app/shared/models/projector/projector';
+import { HasAgendaItem } from 'app/site/agenda/models/view-agenda-item';
+import { HasListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
-import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
-import { HasMeeting, ViewMeeting } from 'app/site/event-management/models/view-meeting';
-import { HasAttachment, ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
+import { HasMeeting } from 'app/site/event-management/models/view-meeting';
+import { HasAttachment } from 'app/site/mediafiles/models/view-mediafile';
 import { HasViewPolls } from 'app/site/polls/models/has-view-polls';
-import { ViewProjection } from 'app/site/projector/models/view-projection';
-import { ViewProjector } from 'app/site/projector/models/view-projector';
-import { HasTags, ViewTag } from 'app/site/tags/models/view-tag';
+import { HasTags } from 'app/site/tags/models/view-tag';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { ViewAssignmentCandidate } from './view-assignment-candidate';
 import { ViewAssignmentPoll } from './view-assignment-poll';
@@ -86,17 +84,8 @@ export class ViewAssignment extends BaseProjectableViewModel<Assignment> {
         return `/assignments/${this.id}`;
     }
 
-    public getSlide(): ProjectorElementBuildDeskriptor {
-        return {
-            getBasicProjectorElement: options => ({
-                name: Assignment.COLLECTION,
-                id: this.id,
-                getNumbers: () => ['name', 'id']
-            }),
-            slideOptions: [],
-            projectionDefaultName: 'assignments',
-            getDialogTitle: () => this.getTitle()
-        };
+    public getProjectiondefault(): Projectiondefault {
+        return Projectiondefault.assignment;
     }
 }
 interface IAssignmentRelations extends HasViewPolls<ViewAssignmentPoll> {

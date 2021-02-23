@@ -1,45 +1,28 @@
-import { ProjectorTitle } from 'app/core/core-services/projector.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
-import { HasProjectableIds } from 'app/shared/models/base/has-projectable-ids';
+import { HasProjectionIds } from 'app/shared/models/base/has-projectable-ids';
+import { Projection } from 'app/shared/models/projector/projection';
 import { Displayable } from 'app/site/base/displayable';
-import { SlideOptions } from './slide-options';
+import { ProjectionBuildDescriptor } from './projection-build-descriptor';
 import { ViewProjection } from '../projector/models/view-projection';
-import { ViewProjector } from '../projector/models/view-projector';
 
-export function isProjectorElementBuildDeskriptor(obj: any): obj is ProjectorElementBuildDeskriptor {
-    const deskriptor = <ProjectorElementBuildDeskriptor>obj;
-    return (
-        !!deskriptor &&
-        deskriptor.slideOptions !== undefined &&
-        deskriptor.getBasicProjectorElement !== undefined &&
-        deskriptor.getDialogTitle !== undefined
-    );
+export interface ProjectorTitle {
+    title: string;
+    subtitle?: string;
 }
 
-export interface ProjectorElementBuildDeskriptor {
-    slideOptions: SlideOptions;
-    projectionDefaultName?: string;
-    // TODO
-    getBasicProjectorElement(options: any /*ProjectorElementOptions*/): any /*IdentifiableProjectorElement*/;
-
-    /**
-     * The title to show in the projection dialog
-     */
-    getDialogTitle(): string;
+export interface HasProjectorTitle {
+    getProjectorTitle: (projection: Projection) => ProjectorTitle;
 }
 
 export function isProjectable(obj: any): obj is Projectable {
-    return !!obj && obj.getSlide !== undefined && obj.getProjectorTitle !== undefined;
+    return !!obj && obj.getProjectionBuildDescriptor !== undefined && obj.getProjectorTitle !== undefined;
 }
 
 /**
  * Interface for every model, that should be projectable.
  */
-export interface Projectable extends Displayable, HasProjectableIds {
+export interface Projectable extends Displayable, HasProjectionIds, HasProjectorTitle {
     projections: ViewProjection[];
-    current_projectors: ViewProjector[];
 
-    getProjectorTitle: () => ProjectorTitle;
-
-    getSlide(meetingSettingsService?: MeetingSettingsService): ProjectorElementBuildDeskriptor;
+    getProjectionBuildDescriptor(meetingSettingsService?: MeetingSettingsService): ProjectionBuildDescriptor;
 }
