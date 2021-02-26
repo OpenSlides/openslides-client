@@ -5,32 +5,30 @@ import { ActivatedRoute } from '@angular/router';
 
 import { timer } from 'rxjs';
 
+import { ScrollScaleDirection } from 'app/core/actions/projector-action';
+import { ProjectorMessageAction } from 'app/core/actions/projector-message-action';
+import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
-import { ProjectorService } from 'app/core/core-services/projector.service';
+import { MeetingRepositoryService } from 'app/core/repositories/event-management/meeting-repository.service';
+import { ProjectionRepositoryService } from 'app/core/repositories/projector/projection-repository.service';
 import { ProjectorCountdownRepositoryService } from 'app/core/repositories/projector/projector-countdown-repository.service';
 import { ProjectorMessageRepositoryService } from 'app/core/repositories/projector/projector-message-repository.service';
-import {
-    ProjectorRepositoryService,
-    ScrollScaleDirection
-} from 'app/core/repositories/projector/projector-repository.service';
+import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DurationService } from 'app/core/ui-services/duration.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { SizeObject } from 'app/shared/components/tile/tile.component';
-import { ProjectorCountdown } from 'app/shared/models/projector/projector-countdown';
-import { ProjectorMessage } from 'app/shared/models/projector/projector-message';
 import { infoDialogSettings, largeDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { Projectable } from 'app/site/base/projectable';
 import { ViewProjectorCountdown } from 'app/site/projector/models/view-projector-countdown';
 import { ViewProjectorMessage } from 'app/site/projector/models/view-projector-message';
-import { SlideManager } from 'app/slides/services/slide-manager.service';
-import { CountdownData, CountdownDialogComponent } from '../countdown-dialog/countdown-dialog.component';
+import { CountdownDialogComponent, CountdownDialogData } from '../countdown-dialog/countdown-dialog.component';
 import { CurrentListOfSpeakersSlideService } from '../../services/current-list-of-speakers-slide.service';
 import { CurrentSpeakerChyronSlideService } from '../../services/current-speaker-chyron-slide.service';
-import { MessageData, MessageDialogComponent } from '../message-dialog/message-dialog.component';
+import { MessageDialogComponent, MessageDialogData } from '../message-dialog/message-dialog.component';
 import { ProjectorEditDialogComponent } from '../projector-edit-dialog/projector-edit-dialog.component';
+import { ViewProjection } from '../../models/view-projection';
 import { ViewProjector } from '../../models/view-projector';
 
 /**
@@ -75,16 +73,15 @@ export class ProjectorDetailComponent extends BaseComponent implements OnInit {
      * @param titleService
      * @param translate
      * @param matSnackBar
-     * @param repo
+     * @param projectorRepo
      * @param route
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private dialog: MatDialog,
-        private repo: ProjectorRepositoryService,
+        private projectorRepo: ProjectorRepositoryService,
+        private projectionRepo: ProjectionRepositoryService,
         private route: ActivatedRoute,
-        private projectorService: ProjectorService,
-        private slideManager: SlideManager,
         private countdownRepo: ProjectorCountdownRepositoryService,
         private messageRepo: ProjectorMessageRepositoryService,
         private currentListOfSpeakersSlideService: CurrentListOfSpeakersSlideService,
@@ -92,13 +89,17 @@ export class ProjectorDetailComponent extends BaseComponent implements OnInit {
         private durationService: DurationService,
         private cd: ChangeDetectorRef,
         private promptService: PromptService,
-        private opertator: OperatorService
+        private operator: OperatorService,
+        private activeMeetingService: ActiveMeetingService,
+        private meetingRepo: MeetingRepositoryService
     ) {
         super(componentServiceCollector);
 
         this.countdownRepo.getViewModelListObservable().subscribe(countdowns => (this.countdowns = countdowns));
         this.messageRepo.getViewModelListObservable().subscribe(messages => (this.messages = messages));
-        this.repo.getViewModelListObservable().subscribe(projectors => (this.projectorCount = projectors.length));
+        this.projectorRepo
+            .getViewModelListObservable()
+            .subscribe(projectors => (this.projectorCount = projectors.length));
     }
 
     /**
@@ -109,7 +110,7 @@ export class ProjectorDetailComponent extends BaseComponent implements OnInit {
             const projectorId = parseInt(params.id, 10) || 1;
 
             this.subscriptions.push(
-                this.repo.getViewModelObservable(projectorId).subscribe(projector => {
+                this.projectorRepo.getViewModelObservable(projectorId).subscribe(projector => {
                     if (projector) {
                         const title = projector.name;
                         super.setTitle(title);
@@ -136,11 +137,10 @@ export class ProjectorDetailComponent extends BaseComponent implements OnInit {
     }
 
     /**
-     * Handler to set the current reference projector
-     * TODO: same with projector list entry
+     * Handler to set the selected projector as the meeting reference projector
      */
-    public onSetAsClosRef(): void {
-        this.repo.setReferenceProjector(this.projector.id);
+    public setProjectorAsReference(): void {
+        this.meetingRepo.update({ reference_projector_id: this.projector.id }, this.activeMeetingService.meeting);
     }
 
     /**
@@ -150,16 +150,15 @@ export class ProjectorDetailComponent extends BaseComponent implements OnInit {
     public async onDeleteProjectorButton(): Promise<void> {
         const title = this.translate.instant('Are you sure you want to delete this projector?');
         if (await this.promptService.open(title, this.projector.name)) {
-            // this.repo.delete(this.projector).catch(this.raiseError);
+            this.projectorRepo.delete(this.projector);
         }
-        throw new Error('TODO!');
     }
 
     /**
      * @returns true if the operator can manage
      */
     public canManage(): boolean {
-        return this.opertator.hasPerms(Permission.projectorCanManage);
+        return this.operator.hasPerms(Permission.projectorCanManage);
     }
 
     /**
@@ -169,7 +168,7 @@ export class ProjectorDetailComponent extends BaseComponent implements OnInit {
      * @param step (optional) The amount of steps to make.
      */
     public scroll(direction: ScrollScaleDirection, step: number = 1): void {
-        this.repo.scroll(this.projector, direction, step).catch(this.raiseError);
+        this.projectorRepo.scroll(this.projector, direction, step);
     }
 
     /**
@@ -179,69 +178,41 @@ export class ProjectorDetailComponent extends BaseComponent implements OnInit {
      * @param step (optional) The amount of steps to make.
      */
     public scale(direction: ScrollScaleDirection, step: number = 1): void {
-        this.repo.scale(this.projector, direction, step).catch(this.raiseError);
+        this.projectorRepo.scale(this.projector, direction, step);
     }
 
-    public projectNextSlide(): void {
-        this.projectorService.projectNextSlide(this.projector.projector).catch(this.raiseError);
+    public async projectNextSlide(): Promise<void> {
+        await this.projectorRepo.next(this.projector);
     }
 
-    public projectPreviousSlide(): void {
-        this.projectorService.projectPreviousSlide(this.projector.projector).catch(this.raiseError);
+    public async projectPreviousSlide(): Promise<void> {
+        await this.projectorRepo.previous(this.projector);
     }
 
-    public onSortingChange(event: any /*CdkDragDrop<ProjectorElement>*/): void {
-        moveItemInArray(this.projector.preview_projections, event.previousIndex, event.currentIndex);
-        this.projectorService.savePreview(this.projector.projector).catch(this.raiseError);
+    public onSortingChange(event: CdkDragDrop<ViewProjection>): void {
+        const ids = this.projector.preview_projections.map(projection => projection.id);
+        moveItemInArray(ids, event.previousIndex, event.currentIndex);
+        this.projectorRepo.sortPreview(this.projector, ids);
     }
 
-    public removePreviewElement(elementIndex: number): void {
-        this.projector.preview_projections.splice(elementIndex, 1);
-        this.projectorService.savePreview(this.projector.projector).catch(this.raiseError);
+    public removeFromPreview(projection: ViewProjection): void {
+        this.projectionRepo.delete(projection);
     }
 
-    public projectNow(elementIndex: number): void {
-        this.projectorService.projectPreviewSlide(this.projector.projector, elementIndex).catch(this.raiseError);
+    public projectPreviewItem(projection: ViewProjection): void {
+        this.projectorRepo.projectPreview(projection);
     }
 
-    public getSlideTitle(element: any /*ProjectorElement*/): string {
-        throw new Error('TODO');
-        // return this.projectorService.getSlideTitle(element).title;
+    public unprojectCurrent(projection: ViewProjection): void {
+        this.projectionRepo.delete(projection);
     }
 
-    public getSlideSubtitle(element: any /*ProjectorElement*/): string | null {
-        throw new Error('TODO');
-        // return this.projectorService.getSlideTitle(element).subtitle;
+    public isClosProjected(overlay: boolean): boolean {
+        return this.currentListOfSpeakersSlideService.isProjectedOn(this.projector, overlay);
     }
 
-    public isProjected(obj: Projectable): boolean {
-        return this.projectorService.isProjectedOn(obj, this.projector.projector);
-    }
-
-    public async project(obj: Projectable): Promise<void> {
-        try {
-            if (this.isProjected(obj)) {
-                await this.projectorService.removeFrom(this.projector.projector, obj);
-            } else {
-                await this.projectorService.projectOn(this.projector.projector, obj);
-            }
-        } catch (e) {
-            this.raiseError(e);
-        }
-    }
-
-    public unprojectCurrent(element: any /*ProjectorElement*/): void {
-        /*const idElement = this.slideManager.getIdentifialbeProjectorElement(element);
-        this.projectorService.removeFrom(this.projector.projector, idElement).catch(this.raiseError);*/
-        throw new Error('TODO');
-    }
-
-    public isClosProjected(stable: boolean): boolean {
-        return this.currentListOfSpeakersSlideService.isProjectedOn(this.projector, stable);
-    }
-
-    public toggleClos(stable: boolean): void {
-        this.currentListOfSpeakersSlideService.toggleOn(this.projector, stable);
+    public toggleClos(overlay: boolean): void {
+        this.currentListOfSpeakersSlideService.toggleOn(this.projector, overlay);
     }
 
     public isChyronProjected(): boolean {
@@ -252,26 +223,13 @@ export class ProjectorDetailComponent extends BaseComponent implements OnInit {
         this.currentSpeakerChyronService.toggleOn(this.projector);
     }
 
-    /**
-     * Opens the countdown dialog*
-     *
-     * @param viewCountdown optional existing countdown to edit
-     */
-    public openCountdownDialog(viewCountdown?: ViewProjectorCountdown): void {
-        let countdownData: CountdownData = {
+    public createProjectorCountdown(): void {
+        const countdownData: CountdownDialogData = {
             title: '',
             description: '',
             duration: '',
             count: this.countdowns.length
         };
-
-        if (viewCountdown) {
-            countdownData = {
-                title: viewCountdown.title,
-                description: viewCountdown.description,
-                duration: this.durationService.durationToString(viewCountdown.default_time, 'm')
-            };
-        }
 
         const dialogRef = this.dialog.open(CountdownDialogComponent, {
             data: countdownData,
@@ -280,26 +238,23 @@ export class ProjectorDetailComponent extends BaseComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.submitCountdown(result, viewCountdown);
+                const defaultTime = this.durationService.stringToDuration(result.duration, 'm');
+                const countdown = {
+                    meeting_id: this.activeMeetingService.meetingId,
+                    title: result.title,
+                    description: result.description,
+                    default_time: defaultTime,
+                    countdown_time: defaultTime
+                };
+                this.countdownRepo.create(countdown);
             }
         });
     }
 
-    /**
-     * opens the "edit/create" dialog for messages
-     *
-     * @param viewMessage an optional ViewProjectorMessage to edit. If empty, a new one was created
-     */
-    public openMessagesDialog(viewMessage?: ViewProjectorMessage): void {
-        let messageData: MessageData = {
-            text: ''
+    public createProjectorMessage(): void {
+        const messageData: MessageDialogData = {
+            message: ''
         };
-
-        if (viewMessage) {
-            messageData = {
-                text: viewMessage.message
-            };
-        }
 
         const dialogRef = this.dialog.open(MessageDialogComponent, {
             data: messageData,
@@ -308,51 +263,12 @@ export class ProjectorDetailComponent extends BaseComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.submitMessage(result, viewMessage);
+                const message: ProjectorMessageAction.CreatePayload = {
+                    meeting_id: this.activeMeetingService.meetingId,
+                    message: result.message
+                };
+                this.messageRepo.create(message);
             }
         });
-    }
-
-    /**
-     * Function to send a countdown
-     *
-     * @param data the countdown data to send
-     * @param viewCountdown optional existing countdown to update
-     */
-    public submitCountdown(data: CountdownData, viewCountdown?: ViewProjectorCountdown): void {
-        const defaultTime = this.durationService.stringToDuration(data.duration, 'm');
-
-        const sendData = new ProjectorCountdown({
-            title: data.title,
-            description: data.description,
-            default_time: defaultTime,
-            countdown_time: viewCountdown && viewCountdown.running ? null : defaultTime
-        });
-
-        throw new Error('TODO!');
-        // if (viewCountdown) {
-        //     this.countdownRepo.update(sendData, viewCountdown).then(() => {}, this.raiseError);
-        // } else {
-        //     this.countdownRepo.create(sendData).then(() => {}, this.raiseError);
-        // }
-    }
-
-    /**
-     * Submit altered messages to the message repository
-     *
-     * @param data: The message to post
-     * @param viewMessage optional, set viewMessage to update an existing message
-     */
-    public submitMessage(data: MessageData, viewMessage?: ViewProjectorMessage): void {
-        const sendData = new ProjectorMessage({
-            message: data.text
-        });
-
-        throw new Error('TODO!');
-        // if (viewMessage) {
-        //     this.messageRepo.update(sendData, viewMessage).then(() => {}, this.raiseError);
-        // } else {
-        //     this.messageRepo.create(sendData).then(() => {}, this.raiseError);
-        // }
     }
 }

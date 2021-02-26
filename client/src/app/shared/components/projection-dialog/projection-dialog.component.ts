@@ -1,10 +1,10 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { DataStoreService } from 'app/core/core-services/data-store.service';
-import { ProjectorService } from 'app/core/core-services/projector.service';
-import { Projector } from 'app/shared/models/projector/projector';
-import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
+import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
+import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
+import { ProjectorService } from 'app/core/ui-services/projector.service';
+import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
 import {
     isSlideChoiceOption,
     isSlideDecisionOption,
@@ -13,63 +13,57 @@ import {
     SlideOption,
     SlideOptions
 } from 'app/site/base/slide-options';
+import { ViewProjector } from 'app/site/projector/models/view-projector';
 
 export type ProjectionDialogReturnType = [
     'project' | 'addToPreview',
-    Projector[],
-    any /*IdentifiableProjectorElement*/
+    ProjectionBuildDescriptor,
+    ViewProjector[],
+    object | null
 ];
 
-/**
- */
 @Component({
     selector: 'os-projection-dialog',
     templateUrl: './projection-dialog.component.html',
     styleUrls: ['./projection-dialog.component.scss']
 })
 export class ProjectionDialogComponent {
-    public projectors: Projector[];
-    private selectedProjectors: Projector[] = [];
+    public projectors: ViewProjector[];
+    private selectedProjectors: ViewProjector[] = [];
     public optionValues: object = {};
     public options: SlideOptions;
 
     public constructor(
         public dialogRef: MatDialogRef<ProjectionDialogComponent, ProjectionDialogReturnType>,
-        @Inject(MAT_DIALOG_DATA) public projectorElementBuildDescriptor: ProjectorElementBuildDeskriptor,
-        private DS: DataStoreService,
-        private projectorService: ProjectorService
+        @Inject(MAT_DIALOG_DATA) public descriptor: ProjectionBuildDescriptor,
+        private projectorService: ProjectorService,
+        private projectorRepo: ProjectorRepositoryService,
+        private activeMeetingService: ActiveMeetingService
     ) {
-        this.projectors = this.DS.getAll(Projector);
+        this.projectors = this.projectorRepo.getViewModelList();
         // TODO: Maybe watch. But this may not be necessary for the short living time of this dialog.
 
-        if (projectorElementBuildDescriptor) {
-            this.selectedProjectors = this.projectorService.getProjectorsWhichAreProjecting(
-                this.projectorElementBuildDescriptor
+        this.selectedProjectors = this.projectorService.getProjectorsWhichAreProjecting(this.descriptor);
+
+        // Add default projector, if the projectable is not projected on it.
+        if (this.descriptor.projectionDefault) {
+            const defaultProjector: ViewProjector = this.activeMeetingService.meeting.default_projector(
+                this.descriptor.projectionDefault
             );
-
-            // Add default projector, if the projectable is not projected on it.
-            if (this.projectorElementBuildDescriptor.projectionDefaultName) {
-                // TODO:
-                // - get the ViewProjectionDefault with the given name from the ProjectionDefaultRepositoryService
-                // - use projectionDefault.projector
-                const defaultProjector: Projector = null; /*this.projectorService.getProjectorForDefault(
-                    this.projectorElementBuildDescriptor.projectionDefaultName
-                );*/
-                if (defaultProjector && !this.selectedProjectors.includes(defaultProjector)) {
-                    this.selectedProjectors.push(defaultProjector);
-                }
+            if (defaultProjector && !this.selectedProjectors.includes(defaultProjector)) {
+                this.selectedProjectors.push(defaultProjector);
             }
-
-            // Set option defaults
-            this.projectorElementBuildDescriptor.slideOptions.forEach(option => {
-                this.optionValues[option.key] = option.default;
-            });
-
-            this.options = this.projectorElementBuildDescriptor.slideOptions;
         }
+
+        // Set option defaults
+        this.descriptor.slideOptions.forEach(option => {
+            this.optionValues[option.key] = option.default;
+        });
+
+        this.options = this.descriptor.slideOptions;
     }
 
-    public toggleProjector(projector: Projector): void {
+    public toggleProjector(projector: ViewProjector): void {
         const index = this.selectedProjectors.indexOf(projector);
         if (index < 0) {
             this.selectedProjectors.push(projector);
@@ -78,12 +72,12 @@ export class ProjectionDialogComponent {
         }
     }
 
-    public isProjectorSelected(projector: Projector): boolean {
+    public isProjectorSelected(projector: ViewProjector): boolean {
         return this.selectedProjectors.includes(projector);
     }
 
-    public isProjectedOn(projector: Projector): boolean {
-        return this.projectorService.isProjectedOn(this.projectorElementBuildDescriptor, projector);
+    public isProjectedOn(projector: ViewProjector): boolean {
+        return this.projectorService.isProjectedOn(this.descriptor, projector);
     }
 
     public isDecisionOption(option: SlideOption): option is SlideDecisionOption {
@@ -95,15 +89,11 @@ export class ProjectionDialogComponent {
     }
 
     public onProject(): void {
-        let element = this.projectorElementBuildDescriptor.getBasicProjectorElement(this.optionValues);
-        element = { ...element, ...this.optionValues };
-        this.dialogRef.close(['project', this.selectedProjectors, element]);
+        this.dialogRef.close(['project', this.descriptor, this.selectedProjectors, this.optionValues]);
     }
 
     public onAddToPreview(): void {
-        let element = this.projectorElementBuildDescriptor.getBasicProjectorElement(this.optionValues);
-        element = { ...element, ...this.optionValues };
-        this.dialogRef.close(['addToPreview', this.selectedProjectors, element]);
+        this.dialogRef.close(['addToPreview', this.descriptor, this.selectedProjectors, this.optionValues]);
     }
 
     public onCancel(): void {

@@ -86,7 +86,7 @@
                     </mat-checkbox>
                 </div>
                 <div>
-                    <mat-checkbox formControlName="clock">
+                    <mat-checkbox formControlName="show_clock">
                         <span>{{ 'Show clock' | translate }}</span>
                     </mat-checkbox>
                 </div>
@@ -94,7 +94,7 @@
 
             <!-- projection defaults -->
             <h3>{{ 'Projection defaults' | translate }}</h3>
-            <mat-select
+            <!--<mat-select
                 formControlName="projectiondefaults_id"
                 placeholder="{{ 'Projection defaults' | translate }}"
                 [multiple]="true"
@@ -103,6 +103,10 @@
                     {{ pd.getTitle() | translate }}
                 </mat-option>
             </mat-select>
+        
+            TODO: use PROJECTIONDEFAULTS
+        
+        -->
 
             <!-- colors -->
             <div class="spacer-top-10">

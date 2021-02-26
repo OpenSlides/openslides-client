@@ -3,13 +3,13 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { E2EImportsModule } from 'e2e-imports.module';
 
-import { CountdownData, CountdownDialogComponent } from './countdown-dialog.component';
+import { CountdownDialogComponent, CountdownDialogData } from './countdown-dialog.component';
 
 describe('CountdownDialogComponent', () => {
     let component: CountdownDialogComponent;
     let fixture: ComponentFixture<CountdownDialogComponent>;
 
-    const dialogData: CountdownData = {
+    const dialogData: CountdownDialogData = {
         title: '',
         description: '',
         duration: ''

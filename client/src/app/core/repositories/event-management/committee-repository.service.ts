@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 
+import { Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Committee } from 'app/shared/models/event-management/committee';
 import { ViewCommittee } from 'app/site/event-management/models/view-committee';
 import { BaseRepository } from '../base-repository';
@@ -20,4 +21,8 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
     public getVerboseName = (plural: boolean = false) => {
         return this.translate.instant(plural ? 'Committees' : 'Committee');
     };
+
+    public getFieldsets(): Fieldsets<Committee> {
+        return {}; // TODO
+    }
 }

@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
 
-import { ProjectorService } from 'app/core/core-services/projector.service';
-import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
+import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
+import { MeetingProjectionType } from 'app/core/repositories/event-management/meeting-repository.service';
+import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
+import { ProjectorService } from 'app/core/ui-services/projector.service';
+import { Projectiondefault } from 'app/shared/models/projector/projector';
+import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
 import { ViewProjector } from '../models/view-projector';
 
 /**
@@ -12,34 +16,27 @@ import { ViewProjector } from '../models/view-projector';
     providedIn: 'root'
 })
 export class CurrentListOfSpeakersSlideService {
-    public constructor(private projectorService: ProjectorService) {}
-
-    /**
-     * Returns the basic projector element for the CLOS slide. If overlay=True, the projector element
-     * will be the overlay instead of the slide.
-     *
-     * @param overlay Wether to have a slide or overlay
-     * @returns the identifiable CLOS projector element.
-     */
-    /*private getCurrentListOfSpeakersProjectorElement(overlay: boolean): IdentifiableProjectorElement {
-        return {
-            name: overlay ? 'agenda/current-list-of-speakers-overlay' : 'agenda/current-list-of-speakers',
-            stable: overlay,
-            getNumbers: () => ['name']
-        };
-    }*/
+    public constructor(
+        private projectorService: ProjectorService,
+        private activeMeetingIdService: ActiveMeetingIdService,
+        private projectorRepo: ProjectorRepositoryService
+    ) {}
 
     /**
      * @returns the slide build descriptor for the overlay or slide
      */
-    public getSlide(overlay: boolean): ProjectorElementBuildDeskriptor {
-        /*return {
-            getBasicProjectorElement: options => this.getCurrentListOfSpeakersProjectorElement(overlay),
-            slideOptions: [],
-            projectionDefaultName: 'agenda_current_list_of_speakers',
+    public getProjectionBuildDescriptor(overlay: boolean): ProjectionBuildDescriptor | null {
+        const meetingId = this.activeMeetingIdService.meetingId;
+        if (!meetingId) {
+            return null;
+        }
+        return {
+            content_object_id: `meeting/${meetingId}`,
+            type: MeetingProjectionType.CurrentListOfSpeakers,
+            stable: overlay,
+            projectionDefault: Projectiondefault.currentListOfSpeakers,
             getDialogTitle: () => 'Current list of speakers'
-        };*/
-        throw new Error('TODO');
+        };
     }
 
     /**
@@ -50,11 +47,11 @@ export class CurrentListOfSpeakersSlideService {
      * @returns if the slide/overlay is projected on the projector
      */
     public isProjectedOn(projector: ViewProjector, overlay: boolean): boolean {
-        /*return this.projectorService.isProjectedOn(
-            this.getCurrentListOfSpeakersProjectorElement(overlay),
-            projector.projector
-        );*/
-        throw new Error('TODO');
+        const descriptor = this.getProjectionBuildDescriptor(overlay);
+        if (!descriptor) {
+            return false;
+        }
+        return this.projectorService.isProjectedOn(descriptor, projector);
     }
 
     /**
@@ -64,18 +61,10 @@ export class CurrentListOfSpeakersSlideService {
      * @param overlay Slide or overlay
      */
     public async toggleOn(projector: ViewProjector, overlay: boolean): Promise<void> {
-        /*const isClosProjected = this.isProjectedOn(projector, overlay);
-        if (isClosProjected) {
-            await this.projectorService.removeFrom(
-                projector.projector,
-                this.getCurrentListOfSpeakersProjectorElement(overlay)
-            );
-        } else {
-            await this.projectorService.projectOn(
-                projector.projector,
-                this.getCurrentListOfSpeakersProjectorElement(overlay)
-            );
-        }*/
-        throw new Error('TODO');
+        const descriptor = this.getProjectionBuildDescriptor(overlay);
+        if (!descriptor) {
+            return;
+        }
+        this.projectorRepo.project(descriptor, [projector]);
     }
 }

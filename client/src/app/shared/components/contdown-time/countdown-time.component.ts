@@ -5,7 +5,7 @@ import { MediaManageService } from 'app/core/ui-services/media-manage.service';
 
 declare let FontFace: any;
 
-export interface CountdownData {
+interface CountdownData {
     running: boolean;
     countdown_time: number;
 }

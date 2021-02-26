@@ -4,25 +4,22 @@ import { Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
 import { Permission } from 'app/core/core-services/permission';
-import { ProjectorService } from 'app/core/core-services/projector.service';
 import { StorageService } from 'app/core/core-services/storage.service';
+import { ProjectionRepositoryService } from 'app/core/repositories/projector/projection-repository.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { ProjectionDialogService } from 'app/core/ui-services/projection-dialog.service';
-import { Projector } from 'app/shared/models/projector/projector';
-import {
-    isProjectable,
-    isProjectorElementBuildDeskriptor,
-    Projectable,
-    ProjectorElementBuildDeskriptor
-} from 'app/site/base/projectable';
+import { ProjectorService } from 'app/core/ui-services/projector.service';
+import { isProjectable, Projectable } from 'app/site/base/projectable';
+import { isProjectionBuildDescriptor, ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
+import { ViewProjector } from 'app/site/projector/models/view-projector';
 
 /**
  * The projector button to project something on the projector.
  *
- * Use the input [object] to specify the object to project. It can either be
- * a Projectable or a ProjectorElementBuildDeskriptor
+ * Use the input [object] to specify the object to project.
  *
- * For useage in menues set `menuItem=true`.
+ * For usage in menus set `menuItem=true`.
  */
 @Component({
     selector: 'os-projector-button',
@@ -34,15 +31,15 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
     /**
      * The object to project.
      */
-    private _object: Projectable | ProjectorElementBuildDeskriptor | null;
+    private _object: ProjectionBuildDescriptor | Projectable | null;
 
-    public get object(): Projectable | ProjectorElementBuildDeskriptor {
+    public get object(): ProjectionBuildDescriptor | Projectable {
         return this._object;
     }
 
     @Input()
-    public set object(obj: Projectable | ProjectorElementBuildDeskriptor) {
-        if (isProjectable(obj) || isProjectorElementBuildDeskriptor(obj)) {
+    public set object(obj: ProjectionBuildDescriptor | Projectable) {
+        if (isProjectable(obj) || isProjectionBuildDescriptor(obj)) {
             this._object = obj;
         } else {
             this._object = null;
@@ -62,7 +59,7 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
      * Pre-define projection target
      */
     @Input()
-    public projector: Projector | null;
+    public projector: ViewProjector | null;
 
     private projectorRepoSub: Subscription;
 
@@ -73,7 +70,7 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
         private projectorRepo: ProjectorRepositoryService,
         private projectionDialogService: ProjectionDialogService,
         private projectorService: ProjectorService,
-        private storage: StorageService
+        private projectionRepo: ProjectionRepositoryService
     ) {}
 
     /**
@@ -104,23 +101,25 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
         if (event) {
             event.stopPropagation();
         }
-        if (this.object) {
-            if (this.projector) {
-                // if the projection target was defines before
-                if (this.checkIsProjected()) {
-                    // remove the projected object
-                    this.projectorService.removeFrom(this.projector, this.object);
-                } else {
-                    const projectorElement = this.getProjectorElement(
-                        await this.storage.get<object>('projectorElementOptions')
-                    );
-                    // instantly project the object
-                    this.projectorService.projectOn(this.projector, projectorElement || this.object);
-                }
+        if (!this.object) {
+            return;
+        }
+        const descriptor = this.projectorService.ensureDescriptor(this.object);
+        if (this.projector) {
+            // if the projection target was defines before
+            const currentProjections = this.projectorService.getMatchingProjectionsFromProjector(
+                descriptor,
+                this.projector
+            );
+            if (currentProjections.length > 0) {
+                await this.projectionRepo.deleteMultiple(currentProjections);
             } else {
-                // open the projection dialog
-                this.projectionDialogService.openProjectDialogFor(this.object);
+                // instantly project the object
+                this.projectorRepo.project(descriptor, [this.projector]);
             }
+        } else {
+            // open the projection dialog
+            this.projectionDialogService.openProjectDialogFor(descriptor);
         }
     }
 
@@ -129,29 +128,13 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
      *
      * @returns true, if the object is projected on one projector.
      */
-    public checkIsProjected(): boolean {
-        return false;
-        /*
+    public isProjected(): boolean {
         if (!this.object) {
             return false;
         }
 
         return this.projector
             ? this.projectorService.isProjectedOn(this.object, this.projector)
-            : this.projectorService.isProjected(this.object);*/
-    }
-
-    /**
-     * @param options The previous configured options of a projector.
-     */
-    private getProjectorElement(options: object): /*IdentifiableProjectorElement |*/ null {
-        throw new Error('TODO');
-        /*let element = null;
-        if (isProjectable(this.object)) {
-            element = this.object.getSlide().getBasicProjectorElement(options);
-        } else if (isProjectorElementBuildDeskriptor(this.object)) {
-            element = this.object.getBasicProjectorElement(options);
-        }
-        return Object.assign(element, options);*/
+            : this.projectorService.isProjected(this.object);
     }
 }

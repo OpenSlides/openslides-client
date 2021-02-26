@@ -4,7 +4,7 @@ import { HasAgendaItemId } from '../base/has-agenda-item-id';
 import { HasAttachmentIds } from '../base/has-attachment-ids';
 import { HasListOfSpeakersId } from '../base/has-list-of-speakers-id';
 import { HasMeetingId } from '../base/has-meeting-id';
-import { HasProjectableIds } from '../base/has-projectable-ids';
+import { HasProjectionIds } from '../base/has-projectable-ids';
 import { HasTagIds } from '../base/has-tag-ids';
 
 export enum AssignmentPhase {
@@ -37,7 +37,7 @@ export class Assignment extends BaseModel<Assignment> {
 }
 export interface Assignment
     extends HasMeetingId,
-        HasProjectableIds,
+        HasProjectionIds,
         HasAttachmentIds,
         HasTagIds,
         HasAgendaItemId,

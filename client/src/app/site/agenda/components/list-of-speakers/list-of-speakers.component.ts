@@ -12,7 +12,7 @@ import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { ListOfSpeakersContentComponent } from 'app/shared/components/list-of-speakers-content/list-of-speakers-content.component';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
-import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
+import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { CurrentListOfSpeakersSlideService } from 'app/site/projector/services/current-list-of-speakers-slide.service';
 import { CurrentListOfSpeakersService } from 'app/site/projector/services/current-list-of-speakers.service';
@@ -120,8 +120,8 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
     /**
      * @returns the CLOS slide build descriptor
      */
-    public getClosSlide(): ProjectorElementBuildDeskriptor {
-        return this.currentListOfSpeakersSlideService.getSlide(false);
+    public getClosSlide(): ProjectionBuildDescriptor {
+        return this.currentListOfSpeakersSlideService.getProjectionBuildDescriptor(false);
     }
 
     /**

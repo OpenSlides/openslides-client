@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 
+import { Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Organisation } from 'app/shared/models/event-management/organisation';
 import { ViewOrganisation } from 'app/site/event-management/models/view-organisation';
 import { BaseRepository } from '../base-repository';
@@ -20,4 +21,8 @@ export class OrganisationRepositoryService extends BaseRepository<ViewOrganisati
     public getVerboseName = (plural: boolean = false) => {
         return this.translate.instant(plural ? 'Organisations' : 'Organisation');
     };
+
+    public getFieldsets(): Fieldsets<Organisation> {
+        return {}; // TODO
+    }
 }

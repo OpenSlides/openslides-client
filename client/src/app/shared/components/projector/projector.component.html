@@ -20,11 +20,13 @@
             </div>
         </div>
 
+        <os-projector-clock *ngIf="projector.show_clock" [color]="projector.header_font_color"></os-projector-clock>
+
         <div *ngFor="let slide of slides">
             <os-slide-container
                 [slideData]="slide"
-                [scroll]="scroll"
-                [scale]="scale"
+                [scroll]="projector.scroll"
+                [scale]="projector.scale"
                 [projector]="projector"
             ></os-slide-container>
         </div>

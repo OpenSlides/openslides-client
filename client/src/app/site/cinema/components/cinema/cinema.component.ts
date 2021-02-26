@@ -5,14 +5,18 @@ import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { ProjectorService } from 'app/core/core-services/projector.service';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { ProjectorService } from 'app/core/ui-services/projector.service';
+import { BaseModel } from 'app/shared/models/base/base-model';
 import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
+import { BaseViewModel } from 'app/site/base/base-view-model';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { DetailNavigable, isDetailNavigable } from 'app/site/base/detail-navigable';
+import { HasProjectorTitle } from 'app/site/base/projectable';
+import { ViewProjection } from 'app/site/projector/models/view-projection';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { CurrentListOfSpeakersService } from 'app/site/projector/services/current-list-of-speakers.service';
 
@@ -24,14 +28,14 @@ import { CurrentListOfSpeakersService } from 'app/site/projector/services/curren
 export class CinemaComponent extends BaseComponent implements OnInit {
     public listOfSpeakers: ViewListOfSpeakers;
     public projector: ViewProjector;
-    private currentProjectorElement: any /*ProjectorElement*/;
-    public projectedViewModel: BaseProjectableViewModel;
+    private currentProjection: ViewProjection | null = null;
+    public projectedViewModel: (BaseViewModel & HasProjectorTitle) | null = null;
 
     public get title(): string {
         if (this.projectedViewModel) {
             return this.projectedViewModel.getListTitle();
-        } else if (this.currentProjectorElement) {
-            return this.projectorService.getSlideTitle(this.currentProjectorElement)?.title;
+        } else if (this.currentProjection) {
+            return this.currentProjection.getTitle();
         } else {
             return '';
         }
@@ -95,23 +99,17 @@ export class CinemaComponent extends BaseComponent implements OnInit {
 
     public ngOnInit(): void {
         super.setTitle('Autopilot');
-        // TODO
-        /*this.subscriptions.push(
+        this.subscriptions.push(
             this.projectorRepo.getReferenceProjectorObservable().subscribe(refProjector => {
                 this.projector = refProjector;
-                this.currentProjectorElement = refProjector?.firstUnstableElement || null;
-                if (this.currentProjectorElement) {
-                    this.projectedViewModel = this.projectorService.getViewModelFromProjectorElement(
-                        this.currentProjectorElement
-                    );
-                } else {
-                    this.projectedViewModel = null;
-                }
+                const currentProjections = refProjector.nonStableCurrentProjections;
+                this.currentProjection = currentProjections.length > 0 ? currentProjections[0] : null;
+                this.projectedViewModel = this.currentProjection?.content_object || null;
             }),
             this.closService.currentListOfSpeakersObservable.subscribe(clos => {
                 this.listOfSpeakers = clos;
             })
-        );*/
+        );
     }
 
     public async toggleListOfSpeakersOpen(): Promise<void> {

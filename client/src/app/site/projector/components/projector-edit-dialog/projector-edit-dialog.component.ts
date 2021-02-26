@@ -12,14 +12,11 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { auditTime } from 'rxjs/operators';
 
-import { ProjectiondefaultRepositoryService } from 'app/core/repositories/projector/projection-default-repository.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ProjectorComponent } from 'app/shared/components/projector/projector.component';
 import { Projector } from 'app/shared/models/projector/projector';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { ClockSlideService } from '../../services/clock-slide.service';
-import { ViewProjectiondefault } from '../../models/view-projectiondefault';
 import { ViewProjector } from '../../models/view-projector';
 
 /**
@@ -51,11 +48,6 @@ export class ProjectorEditDialogComponent extends BaseComponent implements OnIni
      * form can be shown per time.
      */
     public updateForm: FormGroup;
-
-    /**
-     * All ProjectionDefaults to select from.
-     */
-    public projectionDefaults: ViewProjectiondefault[];
 
     /**
      * show a preview of the changes
@@ -93,8 +85,6 @@ export class ProjectorEditDialogComponent extends BaseComponent implements OnIni
         @Inject(MAT_DIALOG_DATA) public projector: ViewProjector,
         private dialogRef: MatDialogRef<ProjectorEditDialogComponent>,
         private repo: ProjectorRepositoryService,
-        private projectionDefaultRepo: ProjectiondefaultRepositoryService,
-        private clockSlideService: ClockSlideService,
         private cd: ChangeDetectorRef
     ) {
         super(componentServiceCollector);
@@ -111,8 +101,6 @@ export class ProjectorEditDialogComponent extends BaseComponent implements OnIni
             name: ['', Validators.required],
             aspectRatio: ['', [Validators.required, Validators.pattern(this.aspectRatioRe)]],
             width: [0, Validators.required],
-            projectiondefaults_id: [[]],
-            clock: [],
             color: ['', Validators.required],
             background_color: ['', Validators.required],
             header_background_color: ['', Validators.required],
@@ -122,7 +110,8 @@ export class ProjectorEditDialogComponent extends BaseComponent implements OnIni
             chyron_font_color: ['', Validators.required],
             show_header_footer: [],
             show_title: [],
-            show_logo: []
+            show_logo: [],
+            show_clock: []
         });
 
         // react to form changes
@@ -137,16 +126,10 @@ export class ProjectorEditDialogComponent extends BaseComponent implements OnIni
      * Watches all projection defaults
      */
     public ngOnInit(): void {
-        this.projectionDefaults = this.projectionDefaultRepo.getViewModelList();
-        this.subscriptions.push(
-            this.projectionDefaultRepo.getViewModelListObservable().subscribe(pds => (this.projectionDefaults = pds))
-        );
-
         if (this.projector) {
             this.updateForm.patchValue(this.projector.projector);
             this.updateForm.patchValue({
                 name: this.translate.instant(this.projector.name),
-                clock: this.clockSlideService.isProjectedOn(this.projector),
                 aspectRatio: this.projector.aspectRatio
             });
         }
@@ -164,15 +147,7 @@ export class ProjectorEditDialogComponent extends BaseComponent implements OnIni
      * Saves the current changes on the projector
      */
     public async applyChanges(): Promise<void> {
-        const updateProjector: Projector = new Projector();
-        Object.assign(updateProjector, this.updateForm.value);
-        throw new Error('TODO!');
-        // try {
-        //     await this.clockSlideService.setProjectedOn(this.projector, this.updateForm.value.clock);
-        //     await this.repo.update(updateProjector, this.projector);
-        // } catch (e) {
-        //     this.raiseError(e);
-        // }
+        await this.repo.update(this.updateForm.value, this.projector);
     }
 
     /**

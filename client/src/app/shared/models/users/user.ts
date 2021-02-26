@@ -2,7 +2,7 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 import { Id } from 'app/core/definitions/key-types';
 import { BaseDecimalModel } from '../base/base-decimal-model';
-import { HasProjectableIds } from '../base/has-projectable-ids';
+import { HasProjectionIds } from '../base/has-projectable-ids';
 
 /**
  * Iterable pre selection of genders (sexes)
@@ -172,4 +172,4 @@ export class User extends BaseDecimalModel<User> {
         return ['vote_weight'];
     }
 }
-export interface User extends HasProjectableIds {}
+export interface User extends HasProjectionIds {}

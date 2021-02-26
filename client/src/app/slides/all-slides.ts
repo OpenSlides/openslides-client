@@ -59,14 +59,6 @@ export const allSlides: SlideManifest[] = [
         canBeMappedToModel: true
     },
     {
-        slide: 'core/clock',
-        path: 'core/clock',
-        loadChildren: () => import('./core/clock/clock-slide.module').then(m => m.ClockSlideModule),
-        verboseName: 'Clock',
-        elementNumbers: ['name'],
-        canBeMappedToModel: false
-    },
-    {
         slide: 'core/countdown',
         path: 'core/countdown',
         loadChildren: () =>

@@ -1,7 +1,7 @@
 import { Id } from 'app/core/definitions/key-types';
-import { StructuredRelation } from 'app/core/definitions/relations';
 import { SearchRepresentation } from 'app/core/ui-services/search.service';
 import { MotionVote } from 'app/shared/models/motions/motion-vote';
+import { Projectiondefault } from 'app/shared/models/projector/projector';
 import { User } from 'app/shared/models/users/user';
 import { ViewSpeaker } from 'app/site/agenda/models/view-speaker';
 import { ViewAssignmentCandidate } from 'app/site/assignments/models/view-assignment-candidate';
@@ -9,7 +9,6 @@ import { ViewAssignmentOption } from 'app/site/assignments/models/view-assignmen
 import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
 import { ViewAssignmentVote } from 'app/site/assignments/models/view-assignment-vote';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
-import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { Searchable } from 'app/site/base/searchable';
 import { ViewCommittee } from 'app/site/event-management/models/view-committee';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
@@ -192,17 +191,8 @@ export class ViewUser extends BaseProjectableViewModel<User> implements Searchab
         return `/users/${this.id}`;
     }
 
-    public getSlide(): ProjectorElementBuildDeskriptor {
-        return {
-            getBasicProjectorElement: options => ({
-                name: User.COLLECTION,
-                id: this.id,
-                getNumbers: () => ['name', 'id']
-            }),
-            slideOptions: [],
-            projectionDefaultName: 'users',
-            getDialogTitle: () => this.getTitle()
-        };
+    public getProjectiondefault(): Projectiondefault {
+        return Projectiondefault.user;
     }
 
     public canVoteFor(user: ViewUser): boolean {

@@ -7,8 +7,8 @@ import {
     AssignmentPollMethod,
     AssignmentPollPercentBase
 } from 'app/shared/models/assignments/assignment-poll';
+import { Projectiondefault } from 'app/shared/models/projector/projector';
 import { BaseViewModel } from 'app/site/base/base-view-model';
-import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { BaseViewPoll, PollClassType } from 'app/site/polls/models/base-view-poll';
 import { ViewAssignment } from './view-assignment';
 import { ViewAssignmentOption } from './view-assignment-option';
@@ -57,17 +57,8 @@ export class ViewAssignmentPoll extends BaseViewPoll<
         return this.assignment;
     }
 
-    public getSlide(): ProjectorElementBuildDeskriptor {
-        return {
-            getBasicProjectorElement: options => ({
-                name: AssignmentPoll.COLLECTION,
-                id: this.id,
-                getNumbers: () => ['name', 'id']
-            }),
-            slideOptions: [],
-            projectionDefaultName: 'assignment_poll',
-            getDialogTitle: this.getTitle
-        };
+    public getProjectiondefault(): Projectiondefault {
+        return Projectiondefault.assignmentPoll;
     }
 
     protected getDecimalFields(): string[] {

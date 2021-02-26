@@ -8,8 +8,8 @@ import { BaseComponent } from 'app/site/base/components/base.component';
 /**
  * Determine what to send
  */
-export interface MessageData {
-    text: string;
+export interface MessageDialogData {
+    message: string;
 }
 
 /**
@@ -38,7 +38,7 @@ export class MessageDialogComponent extends BaseComponent implements OnInit {
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private formBuilder: FormBuilder,
-        @Inject(MAT_DIALOG_DATA) public data: MessageData
+        @Inject(MAT_DIALOG_DATA) public data: MessageDialogData
     ) {
         super(componentServiceCollector);
     }
@@ -48,7 +48,7 @@ export class MessageDialogComponent extends BaseComponent implements OnInit {
      */
     public ngOnInit(): void {
         this.messageForm = this.formBuilder.group({
-            text: [this.data.text, Validators.required]
+            message: [this.data.message, Validators.required]
         });
     }
 }

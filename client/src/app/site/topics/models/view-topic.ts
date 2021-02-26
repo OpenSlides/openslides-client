@@ -1,12 +1,12 @@
 import { SearchRepresentation } from 'app/core/ui-services/search.service';
+import { Projectiondefault } from 'app/shared/models/projector/projector';
 import { Topic } from 'app/shared/models/topics/topic';
 import { HasAgendaItem } from 'app/site/agenda/models/view-agenda-item';
-import { HasListOfSpeakers, ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
+import { HasListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
-import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
-import { HasMeeting, ViewMeeting } from 'app/site/event-management/models/view-meeting';
-import { HasAttachment, ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
-import { HasTags, ViewTag } from 'app/site/tags/models/view-tag';
+import { HasMeeting } from 'app/site/event-management/models/view-meeting';
+import { HasAttachment } from 'app/site/mediafiles/models/view-mediafile';
+import { HasTags } from 'app/site/tags/models/view-tag';
 
 /**
  * Provides "safe" access to topic with all it's components
@@ -46,17 +46,8 @@ export class ViewTopic extends BaseProjectableViewModel<Topic> {
         return this.text;
     }
 
-    public getSlide(): ProjectorElementBuildDeskriptor {
-        return {
-            getBasicProjectorElement: options => ({
-                name: Topic.COLLECTION,
-                id: this.id,
-                getNumbers: () => ['name', 'id']
-            }),
-            slideOptions: [],
-            projectionDefaultName: 'topics',
-            getDialogTitle: () => this.getTitle()
-        };
+    public getProjectiondefault(): Projectiondefault {
+        return Projectiondefault.topics;
     }
 
     public hasAttachments(): boolean {

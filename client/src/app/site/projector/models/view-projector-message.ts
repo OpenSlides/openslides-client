@@ -1,7 +1,8 @@
+import { Projectiondefault } from 'app/shared/models/projector/projector';
 import { ProjectorMessage } from 'app/shared/models/projector/projector-message';
 import { stripHtmlTags } from 'app/shared/utils/strip-html-tags';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
-import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
+import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 
 export class ViewProjectorMessage extends BaseProjectableViewModel<ProjectorMessage> {
@@ -12,18 +13,17 @@ export class ViewProjectorMessage extends BaseProjectableViewModel<ProjectorMess
         return this._model;
     }
 
-    public getSlide(): ProjectorElementBuildDeskriptor {
+    public getProjectionBuildDescriptor(): ProjectionBuildDescriptor {
         return {
-            getBasicProjectorElement: options => ({
-                stable: true,
-                name: ProjectorMessage.COLLECTION,
-                id: this.id,
-                getNumbers: () => ['name', 'id']
-            }),
-            slideOptions: [],
-            projectionDefaultName: 'messages',
+            content_object_id: this.fqid,
+            stable: true,
+            projectionDefault: this.getProjectiondefault(),
             getDialogTitle: () => this.getTitle()
         };
+    }
+
+    public getProjectiondefault(): Projectiondefault {
+        return Projectiondefault.projectorMessage;
     }
 
     public getPreview(maxLength: number = 100): string {

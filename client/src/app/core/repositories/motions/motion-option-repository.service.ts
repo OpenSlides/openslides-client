@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 
+import { Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { MotionOption } from 'app/shared/models/motions/motion-option';
 import { ViewMotionOption } from 'app/site/motions/models/view-motion-option';
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
@@ -25,4 +26,8 @@ export class MotionOptionRepositoryService extends BaseRepositoryWithActiveMeeti
     public getVerboseName = (plural: boolean = false) => {
         return this.translate.instant(plural ? 'Options' : 'Option');
     };
+
+    public getFieldsets(): Fieldsets<MotionOption> {
+        return {}; // TODO
+    }
 }

@@ -53,6 +53,7 @@ import { ResizedDirective } from './directives/resized.directive';
 import { MetaTextBlockComponent } from './components/meta-text-block/meta-text-block.component';
 import { OpenSlidesTranslateModule } from '../core/translate/openslides-translate-module';
 import { ProjectorComponent } from './components/projector/projector.component';
+import { ProjectorClockComponent } from './components/projector-clock/projector-clock.component';
 import { SlideContainerComponent } from './components/slide-container/slide-container.component';
 import { CountdownTimeComponent } from './components/contdown-time/countdown-time.component';
 import { MediaUploadContentComponent } from './components/media-upload-content/media-upload-content.component';
@@ -126,6 +127,7 @@ const declarations = [
     ResizedDirective,
     MetaTextBlockComponent,
     ProjectorComponent,
+    ProjectorClockComponent,
     SlideContainerComponent,
     CountdownTimeComponent,
     MediaUploadContentComponent,

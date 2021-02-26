@@ -3,7 +3,7 @@ import { BasePollData } from 'app/site/polls/services/poll.service';
 import { BaseDecimalModel } from '../base/base-decimal-model';
 import { BaseOption } from './base-option';
 import { HasMeetingId } from '../base/has-meeting-id';
-import { HasProjectableIds } from '../base/has-projectable-ids';
+import { HasProjectionIds } from '../base/has-projectable-ids';
 
 export enum PollColor {
     yes = '#4caf50',
@@ -132,5 +132,5 @@ export interface BasePoll<
     PM extends string = string,
     PB extends string = string
 > extends HasMeetingId,
-        HasProjectableIds,
+        HasProjectionIds,
         BasePollData<PM, PB> {}

@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
-import { ProjectorService } from 'app/core/core-services/projector.service';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
+import { ProjectorService } from 'app/core/ui-services/projector.service';
 import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { SlideManager } from 'app/slides/services/slide-manager.service';
 import { ViewProjector } from '../models/view-projector';
@@ -51,7 +51,7 @@ export class CurrentListOfSpeakersService {
         // Watch for changes and update the current list of speakers for every projector.
         this.projectorRepo.getGeneralViewModelObservable().subscribe(projector => {
             if (projector) {
-                this.setListOfSpeakersForProjector(projector);
+                // this.setListOfSpeakersForProjector(projector); TODO!!
             }
         });
 
@@ -67,7 +67,8 @@ export class CurrentListOfSpeakersService {
      * Use the subject to get it
      */
     private getCurrentListOfSpeakers(): ViewListOfSpeakers | null {
-        return this.getCurrentListOfSpeakersForProjector(this.closRefProjector);
+        // TODO!!
+        return null; // this.getCurrentListOfSpeakersForProjector(this.closRefProjector);
     }
 
     /**

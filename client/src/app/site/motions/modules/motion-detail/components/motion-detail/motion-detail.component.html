@@ -75,9 +75,9 @@
             ></mat-divider>
             <!-- Project -->
             <os-projector-button
+                *osPerms="permission.projectorCanManage"
                 [object]="motion"
                 [menuItem]="true"
-                *osPerms="permission.projectorCanManage"
             ></os-projector-button>
             <!-- Add/remove to/from agenda -->
             <div *osPerms="permission.agendaItemCanManage">

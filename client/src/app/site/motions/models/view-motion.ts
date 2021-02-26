@@ -6,13 +6,14 @@ import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.se
 import { SearchProperty, SearchRepresentation } from 'app/core/ui-services/search.service';
 import { AgendaItemType } from 'app/shared/models/agenda/agenda-item';
 import { HasReferencedMotionInRecommendationExtensionIds, Motion } from 'app/shared/models/motions/motion';
+import { Projectiondefault } from 'app/shared/models/projector/projector';
 import { HasAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { HasListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { BaseViewModel } from 'app/site/base/base-view-model';
-import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
+import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
 import { Searchable } from 'app/site/base/searchable';
-import { HasMeeting, ViewMeeting } from 'app/site/event-management/models/view-meeting';
+import { HasMeeting } from 'app/site/event-management/models/view-meeting';
 import { HasAttachment } from 'app/site/mediafiles/models/view-mediafile';
 import { HasTags } from 'app/site/tags/models/view-tag';
 import { HasPersonalNote, ViewPersonalNote } from 'app/site/users/models/view-personal-note';
@@ -27,7 +28,6 @@ import { ViewMotionPoll } from './view-motion-poll';
 import { ViewMotionState } from './view-motion-state';
 import { ViewMotionStatuteParagraph } from './view-motion-statute-paragraph';
 import { ViewMotionSubmitter } from './view-motion-submitter';
-import { ViewMotionWorkflow } from './view-motion-workflow';
 
 export interface HasReferencedMotionsInRecommendationExtension extends HasReferencedMotionInRecommendationExtensionIds {
     referenced_in_motion_recommendation_extension: ViewMotion[];
@@ -310,7 +310,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         return this.amendment_paragraph_$?.length > 0;
     }
 
-    public getSlide(meetingSettingsService: MeetingSettingsService): ProjectorElementBuildDeskriptor {
+    public getProjectionBuildDescriptor(meetingSettingsService: MeetingSettingsService): ProjectionBuildDescriptor {
         const slideOptions = [];
         if (
             (this.change_recommendations && this.change_recommendations.length) ||
@@ -329,23 +329,20 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
             });
         }
 
-        let projectionDefaultName: string;
-        if (this.isParagraphBasedAmendment()) {
-            projectionDefaultName = 'amendments';
-        } else {
-            projectionDefaultName = 'motions';
-        }
-
         return {
-            getBasicProjectorElement: options => ({
-                name: Motion.COLLECTION,
-                id: this.id,
-                getNumbers: () => ['name', 'id']
-            }),
+            content_object_id: this.fqid,
             slideOptions: slideOptions,
-            projectionDefaultName: projectionDefaultName,
+            projectionDefault: this.getProjectiondefault(),
             getDialogTitle: this.getAgendaSlideTitle
         };
+    }
+
+    public getProjectiondefault(): Projectiondefault {
+        if (this.isParagraphBasedAmendment()) {
+            return Projectiondefault.amendment;
+        } else {
+            return Projectiondefault.motion;
+        }
     }
 }
 

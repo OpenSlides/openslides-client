@@ -1,6 +1,24 @@
-import { Fqid, Id } from 'app/core/definitions/key-types';
+import { Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
 import { HasMeetingId } from '../base/has-meeting-id';
+
+export enum Projectiondefault {
+    agendaAllItems = 'agenda_all_items',
+    topics = 'topics',
+    listOfSpeakers = 'list_of_speakers',
+    currentListOfSpeakers = 'current_list_of_speakers',
+    motion = 'motion',
+    amendment = 'amendment',
+    motionBlock = 'motion_block',
+    assignment = 'assignment',
+    user = 'user',
+    mediafile = 'mediafile',
+    projectorMessage = 'projector_message',
+    projectorCountdown = 'projector_countdowns',
+    assignmentPoll = 'assignment_poll',
+    motionPoll = 'motion_poll',
+    poll = 'poll'
+}
 
 /**
  * Representation of a projector.
@@ -27,13 +45,13 @@ export class Projector extends BaseModel<Projector> {
     public show_header_footer: boolean;
     public show_title: boolean;
     public show_logo: boolean;
+    public show_clock: boolean;
 
     public current_projection_ids: Id[]; // (projection/current_projector_id)[];
-    public current_element_ids: Fqid[]; // (*/current_projector_ids)[];
     public preview_projection_ids: Id[]; // (projection/preview_projector_id)[];
     public history_projection_ids: Id[]; // (projection/history_projector_id)[];
     public used_as_reference_projector_meeting_id: Id; // meeting/reference_projector_id;
-    public projectiondefault_ids: Id; // projectiondefault[];
+    public used_as_default_$_in_meeting_id: Projectiondefault[]; // meeting/default_projector_$_id;
 
     /**
      * @returns Calculate the height of the projector
@@ -48,19 +66,6 @@ export class Projector extends BaseModel<Projector> {
      */
     public get aspectRatio(): string {
         return [this.aspect_ratio_numerator, this.aspect_ratio_denominator].join(':');
-    }
-
-    public get firstUnstableElement(): any /*ProjectorElement*/ {
-        throw new Error('TODO');
-        // let elementIndex = 0;
-        /**
-         * while we could use a filter function to remove all stable elements, I expect
-         * this approach to be the fastest
-         */
-        /*while (!!this.elements[elementIndex]?.stable) {
-            elementIndex++;
-        }
-        return this.elements[elementIndex] ?? null;*/
     }
 
     /**
@@ -78,6 +83,10 @@ export class Projector extends BaseModel<Projector> {
 
     public constructor(input?: any) {
         super(Projector.COLLECTION, input);
+    }
+
+    public used_as_default_in_meeting_id(projectiondefault: Projectiondefault): Id | null {
+        return this[`used_as_default_$${projectiondefault}_in_meeting_id`] || null;
     }
 
     /**

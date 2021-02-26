@@ -2,10 +2,10 @@ import { StructuredRelation } from 'app/core/definitions/relations';
 import { SearchRepresentation } from 'app/core/ui-services/search.service';
 import { HasAttachmentIds } from 'app/shared/models/base/has-attachment-ids';
 import { Mediafile } from 'app/shared/models/mediafiles/mediafile';
-import { HasListOfSpeakers, ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
+import { Projectiondefault } from 'app/shared/models/projector/projector';
+import { HasListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { BaseViewModel } from 'app/site/base/base-view-model';
-import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
 import { Searchable } from 'app/site/base/searchable';
 import { HasMeeting, ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewGroup } from 'app/site/users/models/view-group';
@@ -66,17 +66,8 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
         return this.url;
     }
 
-    public getSlide(): ProjectorElementBuildDeskriptor {
-        return {
-            getBasicProjectorElement: () => ({
-                name: Mediafile.COLLECTION,
-                id: this.id,
-                getNumbers: () => ['name', 'id']
-            }),
-            slideOptions: [],
-            projectionDefaultName: 'mediafiles',
-            getDialogTitle: () => this.getTitle()
-        };
+    public getProjectiondefault(): Projectiondefault {
+        return Projectiondefault.mediafile;
     }
 
     public getDirectoryChain(): ViewMediafile[] {

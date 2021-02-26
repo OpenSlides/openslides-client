@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { HttpService } from 'app/core/core-services/http.service';
+import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { BasePollRepository } from 'app/core/repositories/base-poll-repository';
 import { MotionPoll } from 'app/shared/models/motions/motion-poll';
 import { UserVote, VoteValue } from 'app/shared/models/poll/base-vote';
@@ -36,6 +37,12 @@ export class MotionPollRepositoryService extends BasePollRepository<ViewMotionPo
     public getVerboseName = (plural: boolean = false) => {
         return this.translate.instant(plural ? 'Polls' : 'Poll');
     };
+
+    public getFieldsets(): Fieldsets<MotionPoll> {
+        return {
+            [DEFAULT_FIELDSET]: [] // TODO
+        };
+    }
 
     public vote(vote: VoteValue, poll_id: number, userId?: number): Promise<void> {
         const requestData: UserVote = {

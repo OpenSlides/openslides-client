@@ -3,10 +3,8 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { BasePoll } from 'app/shared/models/poll/base-poll';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { BaseViewModel } from 'app/site/base/base-view-model';
-import { ProjectorElementBuildDeskriptor } from 'app/site/base/projectable';
-import { HasMeeting, ViewMeeting } from 'app/site/event-management/models/view-meeting';
-import { ViewProjection } from 'app/site/projector/models/view-projection';
-import { ViewProjector } from 'app/site/projector/models/view-projector';
+import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
+import { HasMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewGroup } from 'app/site/users/models/view-group';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { BaseViewOption } from './base-view-option';
@@ -126,8 +124,6 @@ export abstract class BaseViewPoll<
     public hasVotedId(userId: number): boolean {
         return this.user_has_voted_for_delegations?.includes(userId);
     }
-
-    public abstract getSlide(): ProjectorElementBuildDeskriptor;
 
     public abstract getContentObject(): BaseViewModel;
 }

@@ -5,7 +5,7 @@
     <ng-container class="meta-text-block-action-row" *osPerms="permission.projectorCanManage">
         <button
             mat-icon-button
-            (click)="onSetAsClosRef()"
+            (click)="setProjectorAsReference()"
             matTooltip="{{ 'Sets this projector as the reference for the current list of speakers' | translate }}"
         >
             <mat-icon *ngIf="projector.isReferenceProjector">star</mat-icon>

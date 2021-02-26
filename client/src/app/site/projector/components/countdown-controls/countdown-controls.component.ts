@@ -1,13 +1,20 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 
+import { ProjectorCountdownAction } from 'app/core/actions/projector-countdown-action';
+import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { StorageService } from 'app/core/core-services/storage.service';
 import { ProjectorCountdownRepositoryService } from 'app/core/repositories/projector/projector-countdown-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { DurationService } from 'app/core/ui-services/duration.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { ProjectionDialogService } from 'app/core/ui-services/projection-dialog.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
-import { Projector } from 'app/shared/models/projector/projector';
+import { ProjectorCountdown } from 'app/shared/models/projector/projector-countdown';
+import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { CountdownDialogComponent, CountdownDialogData } from '../countdown-dialog/countdown-dialog.component';
+import { ViewProjector } from '../../models/view-projector';
 import { ViewProjectorCountdown } from '../../models/view-projector-countdown';
 
 /**
@@ -26,26 +33,15 @@ export class CountdownControlsComponent extends BaseComponent {
     public countdown: ViewProjectorCountdown;
 
     /**
-     * Edit event
-     */
-    @Output()
-    public editEvent = new EventEmitter<ViewProjectorCountdown>();
-
-    /**
      * Pre defined projection target (if any)
      */
     @Input()
-    public projector: Projector;
+    public projector: ViewProjector;
 
     /**
      * The time in seconds to make the countdown orange, is the countdown is below this value.
      */
     public warningTime: number;
-
-    /**
-     * The key to storage.
-     */
-    private storageKey = 'projectorElementOptions';
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -53,7 +49,9 @@ export class CountdownControlsComponent extends BaseComponent {
         private meetingSettingsService: MeetingSettingsService,
         private promptService: PromptService,
         private projectionDialogService: ProjectionDialogService,
-        private storage: StorageService
+        private durationService: DurationService,
+        private dialog: MatDialog,
+        private activeMeetingIdService: ActiveMeetingIdService
     ) {
         super(componentServiceCollector);
 
@@ -67,7 +65,7 @@ export class CountdownControlsComponent extends BaseComponent {
      */
     public start(event: Event): void {
         event.stopPropagation();
-        this.repo.start(this.countdown).catch(this.raiseError);
+        this.repo.start(this.countdown);
     }
 
     /**
@@ -75,7 +73,7 @@ export class CountdownControlsComponent extends BaseComponent {
      */
     public pause(event: Event): void {
         event.stopPropagation();
-        this.repo.pause(this.countdown).catch(this.raiseError);
+        this.repo.pause(this.countdown);
     }
 
     /**
@@ -83,7 +81,7 @@ export class CountdownControlsComponent extends BaseComponent {
      */
     public stop(event: Event): void {
         event.stopPropagation();
-        this.repo.stop(this.countdown).catch(this.raiseError);
+        this.repo.stop(this.countdown);
     }
 
     /**
@@ -97,16 +95,41 @@ export class CountdownControlsComponent extends BaseComponent {
      * Fires an edit event
      */
     public onEdit(): void {
-        this.editEvent.next(this.countdown);
+        const countdownData: CountdownDialogData = {
+            title: this.countdown.title,
+            description: this.countdown.description,
+            duration: this.durationService.durationToString(this.countdown.default_time, 'm')
+        };
+
+        const dialogRef = this.dialog.open(CountdownDialogComponent, {
+            data: countdownData,
+            ...infoDialogSettings
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                const defaultTime = this.durationService.stringToDuration(result.duration, 'm');
+
+                const update: Partial<ProjectorCountdown> = {
+                    title: result.title,
+                    description: result.description,
+                    default_time: defaultTime
+                };
+
+                if (!this.countdown.running) {
+                    update.countdown_time = defaultTime;
+                }
+
+                this.repo.update(update, this.countdown);
+            }
+        });
     }
 
     /**
      * Brings the projection dialog
      */
     public onBringDialog(): void {
-        this.projectionDialogService
-            .openProjectDialogFor(this.countdown)
-            .then(options => this.storeSettings(options), null);
+        this.projectionDialogService.openProjectDialogFor(this.countdown.getProjectionBuildDescriptor());
     }
 
     /**
@@ -116,17 +139,7 @@ export class CountdownControlsComponent extends BaseComponent {
         const content =
             this.translate.instant('Delete countdown') + ` ${this.translate.instant(this.countdown.title)}?`;
         if (await this.promptService.open('Are you sure?', content)) {
-            // this.repo.delete(this.countdown).then(() => {}, this.raiseError);
+            this.repo.delete(this.countdown);
         }
-        throw new Error('TODO!');
-    }
-
-    /**
-     * Stores the options for a projector in the local-storage.
-     *
-     * @param element The configured options for projector
-     */
-    private storeSettings(element: object): void {
-        this.storage.set(this.storageKey, element);
     }
 }

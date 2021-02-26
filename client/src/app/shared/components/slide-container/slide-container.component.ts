@@ -92,6 +92,9 @@ export class SlideContainerComponent extends BaseComponent {
         return this._projector;
     }
 
+    // TODO: scale and scroll can be taken from the projector setter/getter
+    // TODO: Add a prev_scroll/prev_scale to only update on changes.
+
     /**
      * The current projector scroll.
      */

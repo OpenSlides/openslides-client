@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 
+import { Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { AssignmentOption } from 'app/shared/models/assignments/assignment-option';
 import { ViewAssignmentOption } from 'app/site/assignments/models/view-assignment-option';
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
@@ -28,4 +29,8 @@ export class AssignmentOptionRepositoryService extends BaseRepositoryWithActiveM
     public getVerboseName = (plural: boolean = false) => {
         return this.translate.instant(plural ? 'Options' : 'Option');
     };
+
+    public getFieldsets(): Fieldsets<AssignmentOption> {
+        return {}; // TODO
+    }
 }
