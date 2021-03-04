@@ -92,10 +92,6 @@ export class UserRepositoryService
 
     private demoModeUserIds: number[] | null = null;
 
-    private get activeMeetingId(): Id {
-        return this.activeMeetingIdService.meetingId;
-    }
-
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
         private meetingSettingsService: MeetingSettingsService
@@ -128,6 +124,7 @@ export class UserRepositoryService
             'default_structure_level',
             { templateField: 'structure_level_$' },
             'default_vote_weight',
+            { templateField: 'vote_weight_$' },
             'meeting_id'
         ]);
         return {

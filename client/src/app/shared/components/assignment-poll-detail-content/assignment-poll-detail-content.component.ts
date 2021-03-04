@@ -1,13 +1,11 @@
 import { Component, Input } from '@angular/core';
-import { Title } from '@angular/platform-browser';
-
-import { TranslateService } from '@ngx-translate/core';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { AssignmentPollMethod } from 'app/shared/models/assignments/assignment-poll';
-import { PollState } from 'app/shared/models/poll/base-poll';
-import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
+import { PollState } from 'app/shared/models/poll/poll-constants';
+import { PollMethod } from 'app/shared/models/poll/poll-constants';
+import { ViewPoll } from 'app/shared/models/poll/view-poll';
+import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { AssignmentPollService } from 'app/site/assignments/modules/assignment-poll/services/assignment-poll.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { PollData, PollTableData, VotingResult } from 'app/site/polls/services/poll.service';
@@ -19,7 +17,7 @@ import { PollData, PollTableData, VotingResult } from 'app/site/polls/services/p
 })
 export class AssignmentPollDetailContentComponent extends BaseComponent {
     @Input()
-    public poll: ViewAssignmentPoll | PollData;
+    public poll: ViewPoll<ViewAssignment>;
 
     private get method(): string {
         return this.poll.pollmethod;
@@ -38,19 +36,19 @@ export class AssignmentPollDetailContentComponent extends BaseComponent {
     }
 
     public get isMethodY(): boolean {
-        return this.method === AssignmentPollMethod.Y;
+        return this.method === PollMethod.Y;
     }
 
     public get isMethodN(): boolean {
-        return this.method === AssignmentPollMethod.N;
+        return this.method === PollMethod.N;
     }
 
     public get isMethodYN(): boolean {
-        return this.method === AssignmentPollMethod.YN;
+        return this.method === PollMethod.YN;
     }
 
     public get isMethodYNA(): boolean {
-        return this.method === AssignmentPollMethod.YNA;
+        return this.method === PollMethod.YNA;
     }
 
     public get isFinished(): boolean {

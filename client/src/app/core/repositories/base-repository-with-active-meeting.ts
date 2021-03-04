@@ -1,8 +1,8 @@
 import { ActiveMeetingIdService } from '../core-services/active-meeting-id.service';
 import { BaseModel, ModelConstructor } from '../../shared/models/base/base-model';
 import { BaseRepository } from './base-repository';
-import { BaseViewModel, ViewModelConstructor } from '../../site/base/base-view-model';
-import { Identifiable } from '../../shared/models/base/identifiable';
+import { BaseViewModel } from '../../site/base/base-view-model';
+import { Id } from '../definitions/key-types';
 import { RepositoryServiceCollector } from './repository-service-collector';
 
 /**
@@ -13,6 +13,10 @@ export abstract class BaseRepositoryWithActiveMeeting<
     V extends BaseViewModel,
     M extends BaseModel
 > extends BaseRepository<V, M> {
+    protected get activeMeetingId(): Id | null {
+        return this.activeMeetingIdService.meetingId;
+    }
+
     protected get activeMeetingIdService(): ActiveMeetingIdService {
         return this.fullRepositoryServiceCollector.activeMeetingIdService;
     }

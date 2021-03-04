@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 import { ChartOptions } from 'chart.js';
 import { Label } from 'ng2-charts';
@@ -36,8 +36,7 @@ export type ChartData = ChartDate[];
 @Component({
     selector: 'os-charts',
     templateUrl: './charts.component.html',
-    styleUrls: ['./charts.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: ['./charts.component.scss']
 })
 export class ChartsComponent extends BaseComponent {
     /**
@@ -137,11 +136,6 @@ export class ChartsComponent extends BaseComponent {
 
     /**
      * Constructor.
-     *
-     * @param title
-     * @param translate
-     * @param matSnackbar
-     * @param cd
      */
     public constructor(componentServiceCollector: ComponentServiceCollector) {
         super(componentServiceCollector);

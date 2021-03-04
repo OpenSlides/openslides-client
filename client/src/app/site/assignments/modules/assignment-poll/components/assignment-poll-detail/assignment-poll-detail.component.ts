@@ -4,16 +4,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PblColumnDefinition } from '@pebula/ngrid';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { AssignmentPollRepositoryService } from 'app/core/repositories/assignments/assignment-poll-repository.service';
-import { AssignmentVoteRepositoryService } from 'app/core/repositories/assignments/assignment-vote-repository.service';
+import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
+import { VoteRepositoryService } from 'app/core/repositories/polls/vote-repository.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ChartData } from 'app/shared/components/charts/charts.component';
-import { VoteValue } from 'app/shared/models/poll/base-vote';
-import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
-import { BasePollDetailComponent } from 'app/site/polls/components/base-poll-detail.component';
+import { VoteValue } from 'app/shared/models/poll/poll-constants';
+import { BasePollDetailComponent, BaseVoteData } from 'app/site/polls/components/base-poll-detail.component';
+import { ViewUser } from 'app/site/users/models/view-user';
 import { AssignmentPollDialogService } from '../../services/assignment-poll-dialog.service';
 import { AssignmentPollService } from '../../services/assignment-poll.service';
 
@@ -24,16 +24,27 @@ import { AssignmentPollService } from '../../services/assignment-poll.service';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class AssignmentPollDetailComponent extends BasePollDetailComponent<ViewAssignmentPoll, AssignmentPollService> {
-    public columnDefinitionSingleVotes: PblColumnDefinition[];
+export class AssignmentPollDetailComponent extends BasePollDetailComponent {
+    public columnDefinitionSingleVotes: PblColumnDefinition[] = [
+        {
+            prop: 'user',
+            label: 'Participant',
+            width: '40%',
+            minWidth: 300
+        },
+        {
+            prop: 'votes',
+            label: 'Votes',
+            width: '60%',
+            minWidth: 300
+        }
+    ];
 
     public filterProps = ['user.getFullName'];
 
     public isReady = false;
 
     public candidatesLabels: string[] = [];
-
-    public voteWeightEnabled: boolean;
 
     public get showResults(): boolean {
         return this.hasPerms() || this.poll.isPublished;
@@ -45,22 +56,23 @@ export class AssignmentPollDetailComponent extends BasePollDetailComponent<ViewA
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        repo: AssignmentPollRepositoryService,
+        repo: PollRepositoryService,
         route: ActivatedRoute,
         groupRepo: GroupRepositoryService,
         prompt: PromptService,
         pollDialog: AssignmentPollDialogService,
         pollService: AssignmentPollService,
-        votesRepo: AssignmentVoteRepositoryService,
+        votesRepo: VoteRepositoryService,
         operator: OperatorService,
         cd: ChangeDetectorRef,
         meetingSettingsService: MeetingSettingsService,
-        private router: Router
+        router: Router
     ) {
         super(
             componentServiceCollector,
             repo,
             route,
+            router,
             groupRepo,
             prompt,
             pollDialog,
@@ -70,76 +82,62 @@ export class AssignmentPollDetailComponent extends BasePollDetailComponent<ViewA
             cd,
             meetingSettingsService
         );
-        // TODO: Get this from the active meeting.
-        /*configService
-            .get<boolean>('users_activate_vote_weight')
-            .subscribe(active => (this.isVoteWeightActive = active));
-        */
-        console.warn('TODO: assignment-poll-detail.component');
     }
 
-    protected createVotesData(): void {
-        const definitions: PblColumnDefinition[] = [
-            {
-                prop: 'user',
-                label: 'Participant',
-                width: '40%',
-                minWidth: 300
-            },
-            {
-                prop: 'votes',
-                label: 'Votes',
-                width: '60%',
-                minWidth: 300
-            }
-        ];
+    protected onAfterSetup(): void {
+        this.candidatesLabels = (this.pollService as AssignmentPollService).getChartLabels(this.poll);
+        this.isReady = true;
+    }
 
-        const votes = {};
+    protected createVotesData(): BaseVoteData[] {
+        let votes = {};
         let isPseudoanonymized = true;
         for (const option of this.poll.options) {
             for (const vote of option.votes) {
                 const userId = vote.user_id;
-                if (userId) {
-                    isPseudoanonymized = false;
-                    if (!votes[userId]) {
-                        votes[userId] = {
-                            user: vote.user,
-                            votes: []
-                        };
-                    }
+                if (!userId) {
+                    continue;
+                }
+                isPseudoanonymized = false;
+                if (!votes[userId]) {
+                    votes[userId] = {
+                        user: vote.user,
+                        votes: []
+                    };
+                }
 
-                    if (vote.weight > 0) {
-                        if (this.poll.isMethodY) {
-                            if (vote.value === 'Y') {
-                                votes[userId].votes.push(option.user.getFullName());
-                            } else {
-                                votes[userId].votes.push(this.voteValueToLabel(vote.value));
-                            }
-                        } else {
-                            votes[userId].votes.push(
-                                `${option.user.getShortName()}: ${this.voteValueToLabel(vote.value)}`
-                            );
-                        }
+                if (vote.weight <= 0) {
+                    continue;
+                }
+                if (this.poll.isMethodY) {
+                    if (vote.value === 'Y') {
+                        votes[userId].votes.push(option.content_object.getFullName());
+                    } else {
+                        votes[userId].votes.push(this.voteValueToLabel(vote.value));
                     }
+                } else {
+                    votes[userId].votes.push(
+                        `${option.content_object.getShortName()}: ${this.voteValueToLabel(vote.value)}`
+                    );
                 }
             }
         }
         // if the poll was not pseudoanonymized, add all other users as empty votes
         if (!isPseudoanonymized) {
-            for (const user of this.poll.voted) {
-                if (!votes[user.id]) {
-                    votes[user.id] = {
-                        user: user,
-                        votes: [this.translate.instant('empty vote')]
-                    };
-                }
-            }
+            votes = { ...votes, ...this.getEmptyVotes(this.poll.voted.filter(user => !votes[user.id])) };
         }
+        return Object.values(votes);
+    }
 
-        this.setVotesData(Object.values(votes));
-        this.candidatesLabels = this.pollService.getChartLabels(this.poll);
-        this.columnDefinitionSingleVotes = definitions;
-        this.isReady = true;
+    private getEmptyVotes(usersWithEmptyVotes: ViewUser[]): { [user_id: number]: { user: ViewUser; votes: string[] } } {
+        const result = {};
+        for (const user of usersWithEmptyVotes) {
+            result[user.id] = {
+                user: user,
+                votes: [this.translate.instant('empty vote')]
+            };
+        }
+        return result;
     }
 
     private voteValueToLabel(vote: VoteValue): string {
@@ -156,9 +154,5 @@ export class AssignmentPollDetailComponent extends BasePollDetailComponent<ViewA
 
     protected hasPerms(): boolean {
         return this.operator.hasPerms(this.permission.assignmentsCanManage);
-    }
-
-    protected onDeleted(): void {
-        this.router.navigate(['assignments', this.poll.assignment_id]);
     }
 }

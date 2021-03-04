@@ -1,14 +1,16 @@
-import { MajorityMethod, PercentBase, PollState, PollType } from 'app/shared/models/poll/base-poll';
+import { MajorityMethod, PollPercentBase, PollState, PollType } from 'app/shared/models/poll/poll-constants';
+import { PollDataOption } from 'app/site/polls/services/poll.service';
 
 export interface BasePollSlideData {
     poll: {
         title: string;
         type: PollType;
         state: PollState;
-        onehundred_percent_base: PercentBase;
+        onehundred_percent_base: PollPercentBase;
         majority_method: MajorityMethod;
         pollmethod: string;
 
+        global_option: PollDataOption;
         options: {
             yes?: number;
             no?: number;

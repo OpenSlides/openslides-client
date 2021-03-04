@@ -1,9 +1,9 @@
 import { Component, Input } from '@angular/core';
 
-import { ViewAssignmentOption } from 'app/site/assignments/models/view-assignment-option';
-import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
+import { PollPropertyVerbose } from 'app/shared/models/poll/poll-constants';
+import { ViewOption } from 'app/shared/models/poll/view-option';
+import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { UnknownUserLabel } from 'app/site/assignments/modules/assignment-poll/services/assignment-poll.service';
-import { PollPropertyVerbose } from 'app/site/polls/models/base-view-poll';
 
 @Component({
     selector: 'os-assignment-poll-meta-info',
@@ -15,22 +15,22 @@ export class AssignmentPollMetaInfoComponent {
     private unknownUserLabel = UnknownUserLabel;
 
     @Input()
-    public poll: ViewAssignmentPoll;
+    public poll: ViewPoll;
 
     @Input()
     public showCandidates = true;
 
-    public get hasGlobalOption(): boolean {
-        return this.poll.hasGlobalOption;
+    public get hasGlobalOptionEnabled(): boolean {
+        return this.poll.hasGlobalOptionEnabled;
     }
 
     public constructor() {}
 
-    public userCanVoe(): boolean {
+    public userCanVote(): boolean {
         return this.poll.canBeVotedFor();
     }
 
-    public getOptionTitle(option: ViewAssignmentOption): string {
-        return option.user?.getShortName().trim() ?? this.unknownUserLabel;
+    public getOptionTitle(option: ViewOption): string {
+        return option.content_object?.getShortName().trim() ?? this.unknownUserLabel;
     }
 }

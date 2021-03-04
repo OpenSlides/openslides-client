@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
-import { CollectionMapperService } from 'app/core/core-services/collection-mapper.service';
+import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
 import { BasePollDialogService } from 'app/core/ui-services/base-poll-dialog.service';
 import { AssignmentPollDialogComponent } from '../components/assignment-poll-dialog/assignment-poll-dialog.component';
-import { AssignmentPollService } from './assignment-poll.service';
-import { ViewAssignmentPoll } from '../../../models/view-assignment-poll';
 
 /**
  * Subclassed to provide the right `PollService` and `DialogComponent`
@@ -13,10 +11,10 @@ import { ViewAssignmentPoll } from '../../../models/view-assignment-poll';
 @Injectable({
     providedIn: 'root'
 })
-export class AssignmentPollDialogService extends BasePollDialogService<ViewAssignmentPoll, AssignmentPollService> {
+export class AssignmentPollDialogService extends BasePollDialogService {
     protected dialogComponent = AssignmentPollDialogComponent;
 
-    public constructor(dialog: MatDialog, mapper: CollectionMapperService) {
-        super(dialog, mapper);
+    public constructor(dialog: MatDialog, repo: PollRepositoryService) {
+        super(dialog, repo);
     }
 }

@@ -3,15 +3,14 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } 
 import { map } from 'rxjs/operators';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
+import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { PollClassType } from 'app/shared/models/poll/poll-constants';
+import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
-import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
-import { ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
-import { BaseViewPoll, PollClassType } from 'app/site/polls/models/base-view-poll';
-import { PollListObservableService } from 'app/site/polls/services/poll-list-observable.service';
 
 @Component({
     selector: 'os-poll-collection',
@@ -20,9 +19,9 @@ import { PollListObservableService } from 'app/site/polls/services/poll-list-obs
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PollCollectionComponent extends BaseComponent implements OnInit {
-    public polls: BaseViewPoll[];
+    public polls: ViewPoll[];
 
-    public lastPublishedPoll: BaseViewPoll;
+    public lastPublishedPoll: ViewPoll;
 
     private _currentProjection: BaseViewModel<any>;
 
@@ -35,8 +34,8 @@ export class PollCollectionComponent extends BaseComponent implements OnInit {
      */
     public get hasProjectedModelOpenPolls(): boolean {
         if (this.currentProjection instanceof ViewMotion || this.currentProjection instanceof ViewAssignment) {
-            const currPolls: ViewMotionPoll[] | ViewAssignmentPoll[] = this.currentProjection.polls;
-            return currPolls.some((p: ViewMotionPoll | ViewAssignmentPoll) => p.isStarted);
+            const currPolls: ViewPoll[] = this.currentProjection.polls;
+            return currPolls.some((p: ViewPoll) => p.isStarted);
         }
         return false;
     }
@@ -61,7 +60,7 @@ export class PollCollectionComponent extends BaseComponent implements OnInit {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        private pollService: PollListObservableService,
+        private repo: PollRepositoryService,
         private cd: ChangeDetectorRef,
         private operator: OperatorService
     ) {
@@ -70,7 +69,7 @@ export class PollCollectionComponent extends BaseComponent implements OnInit {
 
     public ngOnInit(): void {
         this.subscriptions.push(
-            this.pollService
+            this.repo
                 .getViewModelListObservable()
                 .pipe(
                     map(polls => {
@@ -87,15 +86,15 @@ export class PollCollectionComponent extends BaseComponent implements OnInit {
         );
     }
 
-    public identifyPoll(index: number, poll: BaseViewPoll): number {
+    public identifyPoll(index: number, poll: ViewPoll): number {
         return poll.id;
     }
 
-    public getPollDetailLink(poll: BaseViewPoll): string {
-        return poll.parentLink;
+    public getPollDetailLink(poll: ViewPoll): string {
+        return poll.getDetailStateURL();
     }
 
-    public getPollVoteTitle(poll: BaseViewPoll): string {
+    public getPollVoteTitle(poll: ViewPoll): string {
         const contentObject = poll.getContentObject();
         const listTitle = contentObject.getListTitle();
         const model = contentObject.getVerboseName();
@@ -125,22 +124,20 @@ export class PollCollectionComponent extends BaseComponent implements OnInit {
      *
      * @param viewModel
      */
-    private getLastfinshedPoll(viewModel: BaseViewModel): BaseViewPoll {
+    private getLastfinshedPoll(viewModel: BaseViewModel): ViewPoll {
         if (viewModel instanceof ViewMotion || viewModel instanceof ViewAssignment) {
-            let currPolls: ViewMotionPoll[] | ViewAssignmentPoll[] = viewModel.polls;
+            let currPolls: ViewPoll[] = viewModel.polls;
             /**
              * Although it should, since the union type could use `.filter
              * without any problem, without an any cast it will not work
              */
-            currPolls = (currPolls as any[])
-                .filter((p: ViewMotionPoll | ViewAssignmentPoll) => p.stateHasVotes)
-                .reverse();
+            currPolls = (currPolls as any[]).filter((p: ViewPoll) => p.stateHasVotes).reverse();
             return currPolls[0];
         }
         return null;
     }
 
-    public canManage(poll: BaseViewPoll): boolean {
+    public canManage(poll: ViewPoll): boolean {
         if (poll.pollClassType === PollClassType.Motion) {
             return this.operator.hasPerms(this.permission.motionsCanManagePolls);
         } else if (poll.pollClassType === PollClassType.Assignment) {

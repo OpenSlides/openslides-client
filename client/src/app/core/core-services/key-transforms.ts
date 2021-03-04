@@ -30,3 +30,8 @@ export function collectionIdFieldFromFqfield(fqfield: Fqfield): [Collection, Id,
 export function collectionFromFqid(fqid: Fqid): Collection {
     return collectionIdFromFqid(fqid)[0];
 }
+
+// E.g. (group_$_ids, 4) -> group_$4_ids
+export function fillTemplateValueInTemplateField(field: Field, value: string): Field {
+    return field.replace('$', '$' + value);
+}

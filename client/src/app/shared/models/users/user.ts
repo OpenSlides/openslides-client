@@ -51,14 +51,11 @@ export class User extends BaseDecimalModel<User> {
     public personal_note_$_ids: string[]; // (personal_note/user_id)[];
     public supported_motion_$_ids: string[]; // (motion/supporter_ids)[];
     public submitted_motion_$_ids: string[]; // (motion_submitter/user_id)[];
-    public motion_poll_voted_$_ids: string[]; // (motion_poll/voted_ids)[];
-    public motion_vote_$_ids: string[]; // (motion_vote/user_id)[];
-    public motion_delegated_vote_$_ids: string[]; // (motion_vote/delegated_user_id)[];
+    public poll_voted_$_ids: string[]; // (poll/voted_ids)[];
+    public vote_$_ids: string[]; // (vote/user_id)[];
+    public delegated_vote_$_ids: string[]; // (vote/delegated_user_id)[];
+    public option_$_ids: string[];
     public assignment_candidate_$_ids: string[]; // (assignment_candidate/user_id)[];
-    public assignment_poll_voted_$_ids: string[]; // (assignment_poll/voted_ids)[];
-    public assignment_option_$_ids: string[]; // (assignment_option/user_id)[];
-    public assignment_vote_$_ids: string[]; // (assignment_vote/user_id)[];
-    public assignment_delegated_vote_$_ids: string[]; // (assignment_vote/delegated_user_id)[];
     public vote_delegated_$_vote_ids: string[];
     public vote_delegated_$_to_id: string[]; // user/vote_delegated_$<meeting_id>_from_ids;
     public vote_delegations_$_from_ids: string[]; // user/vote_delegated_$<meeting_id>_to_id;
@@ -73,7 +70,7 @@ export class User extends BaseDecimalModel<User> {
     }
 
     public get isVoteRightDelegated(): boolean {
-        return !!this.vote_delegated_to_id;
+        return !!this.vote_delegated_to_id(this.meeting_id);
     }
 
     public get isTemporary(): boolean {
@@ -168,8 +165,8 @@ export class User extends BaseDecimalModel<User> {
         return this[`vote_delegations_$${meetingId}_from_ids`] || [];
     }
 
-    protected getDecimalFields(): string[] {
-        return ['vote_weight'];
+    protected getDecimalFields(): (keyof User)[] {
+        return ['vote_weight_$', 'default_vote_weight'];
     }
 }
 export interface User extends HasProjectionIds {}

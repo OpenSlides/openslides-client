@@ -75,7 +75,7 @@ export class MotionPdfService {
         let crMode = exportInfo && exportInfo.crMode ? exportInfo.crMode : null;
         const infoToExport = exportInfo ? exportInfo.metaInfo : null;
         const contentToExport = exportInfo ? exportInfo.content : null;
-        const commentsToExport = exportInfo ? exportInfo.comments : null;
+        let commentsToExport = exportInfo ? exportInfo.comments : null;
 
         // get the line length from the config
         const lineLength = this.meetingSettingsService.instant('motions_line_length');
@@ -84,7 +84,7 @@ export class MotionPdfService {
             'motions_export_follow_recommendation'
         );
 
-        const motionPdfContent = [];
+        let motionPdfContent = [];
 
         // Enforces that statutes should always have Diff Mode and no line numbers
         if (motion.isStatuteAmendment()) {
@@ -103,9 +103,8 @@ export class MotionPdfService {
         }
 
         const title = this.createTitle(motion, crMode, lineLength);
-        throw new Error('TODO');
-        /*const sequential =
-            infoToExport?.includes('id') ?? this.configService.instant<boolean>('motions_show_sequential_numbers');
+        const sequential =
+            infoToExport?.includes('id') ?? this.meetingSettingsService.instant('motions_show_sequential_number');
         const subtitle = this.createSubtitle(motion, sequential);
 
         motionPdfContent = [title, subtitle];
@@ -142,7 +141,7 @@ export class MotionPdfService {
             motionPdfContent.push(this.createComments(motion, commentsToExport));
         }
 
-        return motionPdfContent;*/
+        return motionPdfContent;
     }
 
     /**
@@ -621,22 +620,21 @@ export class MotionPdfService {
      * @returns
      */
     private getUnifiedChanges(motion: ViewMotion, lineLength: number): ViewUnifiedChange[] {
-        throw new Error('Todo');
-        /*const motionChangeRecos = this.changeRecoRepo.getChangeRecoOfMotion(motion.id);
+        const motionChangeRecos = this.changeRecoRepo.getChangeRecoOfMotion(motion.id);
 
         const motionAmendments: any[] = this.motionRepo
-            .getAmendmentsInstantly(motion.id)
+            .getAmendmentsByMotionInstantly(motion.id)
             .flatMap((amendment: ViewMotion) => {
                 const changeRecos = this.changeRecoRepo
                     .getChangeRecoOfMotion(amendment.id)
                     .filter(reco => reco.showInFinalView());
-                return this.motionRepo.getAmendmentAmendedParagraphs(amendment, lineLength, changeRecos);
+                return this.motionLineNumbering.getAmendmentAmendedParagraphs(amendment, lineLength, changeRecos);
             });
 
         return motionChangeRecos
             .concat(motionAmendments)
             .filter(change => !!change)
-            .sort((a, b) => a.getLineFrom() - b.getLineFrom()) as ViewUnifiedChange[];*/
+            .sort((a, b) => a.getLineFrom() - b.getLineFrom()) as ViewUnifiedChange[];
     }
 
     /**
@@ -797,9 +795,8 @@ export class MotionPdfService {
             let name = '',
                 content = '';
             if (comment === PERSONAL_NOTE_ID) {
-                throw new Error('TODO');
-                /*name = this.translate.instant('Personal note');
-                content = motion && motion.personalNote && motion.personalNote.note;*/
+                name = this.translate.instant('Personal note');
+                content = motion && motion.getPersonalNote() && motion.getPersonalNote().note;
             } else {
                 const viewComment = this.commentRepo.getViewModel(comment);
                 const section = motion.getCommentForSection(viewComment);

@@ -12,29 +12,29 @@
 >
     <!-- Poll Title -->
     <div *pblNgridCellDef="'title'; row as poll; rowContext as context" class="cell-slot fill">
-        <a class="detail-link" [routerLink]="poll.parentLink" *ngIf="!isMultiSelect"></a>
+        <a class="detail-link" [routerLink]="poll.getDetailStateURL()" *ngIf="!isMultiSelect"></a>
         <span>{{ poll.title }}</span>
     </div>
 
     <!-- Motion Or Assigmnent Title Title -->
     <div *pblNgridCellDef="'classType'; row as poll" class="cell-slot fill">
-        <a class="detail-link" [routerLink]="poll.parentLink" *ngIf="!isMultiSelect"></a>
+        <a class="detail-link" [routerLink]="poll.getDetailStateURL()" *ngIf="!isMultiSelect"></a>
         <span>{{ poll.getContentObject().getListTitle() }}</span>
     </div>
 
     <!-- State -->
     <div *pblNgridCellDef="'state'; row as poll" class="cell-slot fill">
-        <a class="detail-link" [routerLink]="poll.parentLink" *ngIf="!isMultiSelect"></a>
+        <a class="detail-link" [routerLink]="poll.getDetailStateURL()" *ngIf="!isMultiSelect"></a>
         <span>{{ poll.stateVerbose | translate }}</span>
     </div>
 
     <!-- Voted Indicator -->
     <div *pblNgridCellDef="'votability'; row as poll" class="cell-slot fill">
-        <mat-icon *ngIf="poll.hasVote" color="accent" matTooltip="{{ 'You have already voted.' | translate }}">
+        <mat-icon *ngIf="poll.wasVoted" color="accent" matTooltip="{{ 'You have already voted.' | translate }}">
             check_circle
         </mat-icon>
         <mat-icon
-            *ngIf="!poll.hasVote && poll.hasVote !== null"
+            *ngIf="!poll.wasVoted && poll.wasVoted !== null"
             color="warn"
             matTooltip="{{ 'Voting is currently in progress.' | translate }}"
         >

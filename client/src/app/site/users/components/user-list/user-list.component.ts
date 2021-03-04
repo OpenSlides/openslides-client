@@ -133,7 +133,10 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
     }
 
     public get totalVoteWeight(): number {
-        const votes = this.dataSource?.filteredData?.reduce((previous, current) => previous + current.vote_weight(), 0);
+        const votes = this.dataSource?.filteredData?.reduce(
+            (previous, current) => previous + (current.vote_weight() || 0),
+            0
+        );
         return votes ?? 0;
     }
 

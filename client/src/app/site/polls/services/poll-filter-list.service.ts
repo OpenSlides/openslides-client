@@ -5,13 +5,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { HistoryService } from 'app/core/core-services/history.service';
 import { StorageService } from 'app/core/core-services/storage.service';
 import { BaseFilterListService, OsFilter } from 'app/core/ui-services/base-filter-list.service';
-import { PollState } from 'app/shared/models/poll/base-poll';
-import { BaseViewPoll } from '../models/base-view-poll';
+import { PollState } from 'app/shared/models/poll/poll-constants';
+import { ViewPoll } from 'app/shared/models/poll/view-poll';
 
 @Injectable({
     providedIn: 'root'
 })
-export class PollFilterListService extends BaseFilterListService<BaseViewPoll> {
+export class PollFilterListService extends BaseFilterListService<ViewPoll> {
     /**
      * set the storage key name
      */
@@ -25,7 +25,7 @@ export class PollFilterListService extends BaseFilterListService<BaseViewPoll> {
      * Filter out analog polls
      * @param viewPoll All polls
      */
-    protected preFilter(viewPoll: BaseViewPoll[]): BaseViewPoll[] | void {
+    protected preFilter(viewPoll: ViewPoll[]): ViewPoll[] | void {
         return viewPoll.filter(poll => !poll.isAnalog);
     }
 
@@ -45,7 +45,7 @@ export class PollFilterListService extends BaseFilterListService<BaseViewPoll> {
                 ]
             },
             {
-                property: 'hasVote',
+                property: 'wasVoted',
                 label: this.translate.instant('Votings'),
                 options: [
                     { condition: false, label: this.translate.instant('Voting is currently in progress.') },

@@ -46,7 +46,7 @@
     </div>
 
     <!-- Change state button -->
-    <div *osPerms="permission.motionsCanManagePolls; and: !hideChangeState">
+    <span *osPerms="permission.motionsCanManagePolls; and: !hideChangeState">
         <button
             mat-stroked-button
             [ngClass]="pollStateActions[poll.state].css"
@@ -63,7 +63,7 @@
                 </ng-container>
             </span>
         </button>
-    </div>
+    </span>
 
     <!-- Results -->
     <ng-container *ngIf="poll && !poll.stateHasVotes && poll.type !== 'analog'; else votingResult">
@@ -82,11 +82,9 @@
 </mat-card>
 
 <ng-template #votingResult>
-    <div class="poll-link-wrapper">
-        <ng-container
-            [ngTemplateOutlet]="poll.hasVotes && poll.stateHasVotes ? viewTemplate : emptyTemplate"
-        ></ng-container>
-    </div>
+    <span class="poll-link-wrapper">
+        <ng-container [ngTemplateOutlet]="canSeeVotes ? viewTemplate : emptyTemplate"></ng-container>
+    </span>
 </ng-template>
 
 <ng-template #viewTemplate>
@@ -94,9 +92,14 @@
 </ng-template>
 
 <ng-template #emptyTemplate>
-    <div *osPerms="permission.motionsCanManagePolls; and: poll.type === 'analog'">
-        {{ 'Edit to enter votes.' | translate }}
-    </div>
+    <span *osPerms="permission.motionsCanManagePolls; and: poll.type === 'analog'">
+        <button mat-stroked-button (click)="openDialog()" matTooltip="{{ 'Edit' | translate }}">
+            <mat-icon>edit</mat-icon>
+        </button>
+        <div>
+            {{ 'Edit to enter votes.' | translate }}
+        </div>
+    </span>
 </ng-template>
 
 <!-- More Menu -->
@@ -116,11 +119,6 @@
     </button>
     <div *osPerms="permission.motionsCanManagePolls">
         <mat-divider></mat-divider>
-        <!-- Refresh Button -->
-        <button mat-menu-item (click)="refreshPoll()">
-            <mat-icon>refresh</mat-icon>
-            <span>{{ 'Refresh' | translate }}</span>
-        </button>
 
         <!-- Reset Button -->
         <button mat-menu-item (click)="resetState()">

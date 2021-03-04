@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { environment } from 'environments/environment';
@@ -47,6 +47,11 @@ export class AuthService {
     public get authToken(): AuthToken | null {
         return this.authTokenSubject.getValue();
     }
+
+    /**
+     * "Pings" every time when a user logs out.
+     */
+    public readonly onLogout = new EventEmitter<void>();
 
     public constructor(
         private http: HttpService,
@@ -101,7 +106,7 @@ export class AuthService {
         if (response.success) {
             this.authTokenService.setRawAccessToken(null);
         }
-        this.router.navigate(['/']);
+        this.onLogout.emit();
         this.lifecycleService.bootup();
     }
 

@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 
 import { SlideData } from 'app/core/core-services/projector-data.service';
 import { ChartData } from 'app/shared/components/charts/charts.component';
-import { PollState } from 'app/shared/models/poll/base-poll';
+import { PollState } from 'app/shared/models/poll/poll-constants';
 import { PollService } from 'app/site/polls/services/poll.service';
 import { BasePollSlideData } from './base-poll-slide-data';
 import { BaseSlideComponent } from '../base-slide-component';

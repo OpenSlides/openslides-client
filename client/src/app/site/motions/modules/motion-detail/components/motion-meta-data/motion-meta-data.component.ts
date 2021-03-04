@@ -14,11 +14,8 @@ import { MotionBlock } from 'app/shared/models/motions/motion-block';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
-import { ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
 import { ViewMotionState } from 'app/site/motions/models/view-motion-state';
 import { ChangeRecoMode } from 'app/site/motions/motions.constants';
-import { MotionPollDialogService } from 'app/site/motions/services/motion-poll-dialog.service';
-import { MotionPollService } from 'app/site/motions/services/motion-poll.service';
 import { PermissionsService } from 'app/site/motions/services/permissions.service';
 import { MotionViewService } from '../../../services/motion-view.service';
 
@@ -114,8 +111,6 @@ export class MotionMetaDataComponent extends BaseComponent implements OnInit {
         private tagRepo: TagRepositoryService,
         private blockRepo: MotionBlockRepositoryService,
         public perms: PermissionsService,
-        private pollDialog: MotionPollDialogService,
-        private motionPollService: MotionPollService,
         private viewService: MotionViewService
     ) {
         super(componentServiceCollector);
@@ -267,17 +262,6 @@ export class MotionMetaDataComponent extends BaseComponent implements OnInit {
     public getPossibleRecommendations(): ViewMotionState[] {
         const allStates = this.motion.state.workflow.states;
         return allStates.filter(state => state.recommendation_label);
-    }
-
-    public openDialog(): void {
-        const dialogData = {
-            collection: ViewMotionPoll.COLLECTION,
-            motion_id: this.motion.id,
-            motion: this.motion,
-            ...this.motionPollService.getDefaultPollData(this.motion.id)
-        };
-
-        this.pollDialog.openDialog(dialogData);
     }
 
     private initObserver(): void {

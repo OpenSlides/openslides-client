@@ -1,22 +1,33 @@
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { BehaviorSubject } from 'rxjs';
 
-import { BasePollRepository } from 'app/core/repositories/base-poll-repository';
+import { Id } from 'app/core/definitions/key-types';
+import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
 import { BasePollDialogService } from 'app/core/ui-services/base-poll-dialog.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ChartData } from 'app/shared/components/charts/charts.component';
-import { PollState, PollType } from 'app/shared/models/poll/base-poll';
-import { BaseComponent } from 'app/site/base/components/base.component';
-import { BaseViewPoll } from '../models/base-view-poll';
-import { PollService } from '../services/poll.service';
+import { PollState, PollType } from 'app/shared/models/poll/poll-constants';
+import { ViewPoll } from 'app/shared/models/poll/view-poll';
+import { BaseViewModel } from 'app/site/base/base-view-model';
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 
-export abstract class BasePollComponent<V extends BaseViewPoll, S extends PollService> extends BaseComponent {
+@Component({
+    template: ''
+})
+export abstract class BasePollComponent<C extends BaseViewModel = any> extends BaseModelContextComponent {
     public stateChangePending = false;
     public chartDataSubject: BehaviorSubject<ChartData> = new BehaviorSubject([]);
 
-    protected _poll: V;
+    protected _id: Id;
+
+    public get poll(): ViewPoll<C> {
+        return this._poll;
+    }
+
+    protected _poll: ViewPoll<C>;
 
     public pollStateActions = {
         [PollState.Created]: {
@@ -41,8 +52,8 @@ export abstract class BasePollComponent<V extends BaseViewPoll, S extends PollSe
         componentServiceCollector: ComponentServiceCollector,
         protected dialog: MatDialog,
         protected promptService: PromptService,
-        protected repo: BasePollRepository,
-        protected pollDialog: BasePollDialogService<V, S>
+        protected repo: PollRepositoryService,
+        protected pollDialog: BasePollDialogService
     ) {
         super(componentServiceCollector);
     }
@@ -53,21 +64,13 @@ export abstract class BasePollComponent<V extends BaseViewPoll, S extends PollSe
             const content = this.translate.instant('All votes will be lost.');
             if (await this.promptService.open(title, content)) {
                 this.stateChangePending = true;
-                this.repo
-                    .resetPoll(this._poll)
-                    .catch(this.raiseError)
-                    .finally(() => {
-                        this.stateChangePending = false;
-                    });
+                await this.repo.resetPoll(this._poll);
+                this.stateChangePending = false;
             }
         } else {
             this.stateChangePending = true;
-            this.repo
-                .changePollState(this._poll)
-                .catch(this.raiseError)
-                .finally(() => {
-                    this.stateChangePending = false;
-                });
+            await this.doActionDependingOnState(key);
+            this.stateChangePending = false;
         }
     }
 
@@ -78,11 +81,11 @@ export abstract class BasePollComponent<V extends BaseViewPoll, S extends PollSe
     /**
      * Handler for the 'delete poll' button
      */
-    public async onDeletePoll(): Promise<void> {
+    public async deletePoll(): Promise<void> {
         const title = this.translate.instant('Are you sure you want to delete this vote?');
-        if (await this.promptService.open(title)) {
-            // await this.repo.delete(this._poll).catch(this.raiseError);
-            throw new Error('TODO!');
+        const content = this._poll.getTitle();
+        if (await this.promptService.open(title, content)) {
+            await this.repo.delete(this._poll);
         }
     }
 
@@ -93,14 +96,51 @@ export abstract class BasePollComponent<V extends BaseViewPoll, S extends PollSe
         this.pollDialog.openDialog(this._poll);
     }
 
-    /**
-     * Forces to initialize the poll.
-     */
-    protected initPoll(model: V): void {
-        this._poll = model;
+    protected doActionDependingOnState(nextState: PollState): Promise<void> {
+        switch (nextState) {
+            case PollState.Started:
+                return this.repo.startPoll(this._poll);
+            case PollState.Finished:
+                return this.repo.stopPoll(this._poll);
+            case PollState.Published:
+                return this.repo.publishPoll(this._poll);
+        }
     }
 
-    public refreshPoll(): void {
-        this.repo.refresh(this._poll);
+    protected initializePoll(id: Id): void {
+        this._id = id;
+        this.loadPoll(this._id);
+    }
+
+    /**
+     * Hook to listen to changes. A poll is already available.
+     */
+    protected onAfterUpdatePoll(_poll: ViewPoll<C>): void {}
+
+    protected loadPoll(id: Id): void {
+        this.requestModels({
+            viewModelCtor: ViewPoll,
+            ids: [id],
+            follow: [
+                {
+                    idField: 'option_ids',
+                    follow: [{ idField: 'vote_ids' }, { idField: 'content_object_id' }]
+                },
+                {
+                    idField: 'global_option_id',
+                    follow: [{ idField: 'vote_ids' }]
+                }
+            ]
+        });
+
+        this.subscriptions.push(
+            this.repo.getViewModelObservable(this._id).subscribe(poll => {
+                console.log('getViewModelObservable::', poll);
+                if (poll) {
+                    this._poll = poll;
+                    this.onAfterUpdatePoll(poll);
+                }
+            })
+        );
     }
 }

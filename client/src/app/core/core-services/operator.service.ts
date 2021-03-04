@@ -1,4 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -122,10 +123,12 @@ export class OperatorService {
         private autoupdateService: AutoupdateService,
         private activeMeetingService: ActiveMeetingService,
         private userRepo: UserRepositoryService,
-        private groupRepo: GroupRepositoryService
+        private groupRepo: GroupRepositoryService,
+        private router: Router
     ) {
         this._loaded = this.operatorUpdatedEvent.pipe(take(1)).toPromise();
 
+        this.authService.onLogout.subscribe(() => this.navigateOnLogout());
         this.authService.authTokenObservable.subscribe(token => {
             const id = token ? token.userId : null;
             if (id !== this._lastUserId) {
@@ -319,5 +322,18 @@ export class OperatorService {
             return groupIds.includes(this.defaultGroupId); // any anonymous is in the default group.
         }
         return groupIds.some(id => this.groupIds.includes(id));
+    }
+
+    /**
+     * Checks if guests are enabled. If they are not enabled, then a user has to be navigated
+     * to the login-page.
+     * This behaviour prevents a non-redirect on the startpage.
+     */
+    private navigateOnLogout(): void {
+        if (this.anonymousEnabled) {
+            this.router.navigate(['/']);
+        } else {
+            this.router.navigate(['/login']);
+        }
     }
 }

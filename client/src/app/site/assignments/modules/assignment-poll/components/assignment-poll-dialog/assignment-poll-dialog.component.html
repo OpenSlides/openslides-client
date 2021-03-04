@@ -13,12 +13,12 @@
         <div formGroupName="options">
             <div *ngFor="let option of options" class="votes-grid">
                 <div>
-                    <span *ngIf="option.user">{{ option.user.getFullName() }}</span>
-                    <i *ngIf="!option.user">{{ unknownUserLabel | translate }}</i>
+                    <span *ngIf="option.content_object">{{ option.content_object.getFullName() }}</span>
+                    <i *ngIf="!option.content_object">{{ unknownUserLabel | translate }}</i>
                 </div>
 
                 <div>
-                    <div *ngFor="let value of analogPollValues" [formGroupName]="option.user_id">
+                    <div *ngFor="let value of analogVoteFields" [formGroupName]="option.fqid">
                         <os-check-input
                             [placeholder]="voteValueVerbose[value] | translate"
                             [checkboxValue]="-1"
@@ -28,7 +28,20 @@
                         ></os-check-input>
                     </div>
                 </div>
+                <mat-divider></mat-divider>
             </div>
+        </div>
+
+        <!-- Global Values -->
+        <div *ngFor="let value of globalValues" class="votes-grid">
+            <div></div>
+            <os-check-input
+                [placeholder]="PollPropertyVerbose[value] | translate"
+                [checkboxValue]="-1"
+                inputType="number"
+                [checkboxLabel]="'majority' | translate"
+                [formControlName]="'amount_' + value"
+            ></os-check-input>
         </div>
 
         <!-- Sum Values -->
@@ -40,36 +53,6 @@
                 inputType="number"
                 [checkboxLabel]="'majority' | translate"
                 [formControlName]="value"
-            ></os-check-input>
-        </div>
-
-        <!-- Global Values -->
-        <div>
-            <os-check-input
-                *ngIf="globalYesEnabled"
-                placeholder="{{ PollPropertyVerbose.global_yes | translate }}"
-                [checkboxValue]="-1"
-                inputType="number"
-                [checkboxLabel]="'majority' | translate"
-                formControlName="amount_global_yes"
-            ></os-check-input>
-
-            <os-check-input
-                *ngIf="globalNoEnabled"
-                placeholder="{{ PollPropertyVerbose.global_no | translate }}"
-                [checkboxValue]="-1"
-                inputType="number"
-                [checkboxLabel]="'majority' | translate"
-                formControlName="amount_global_no"
-            ></os-check-input>
-
-            <os-check-input
-                *ngIf="globalAbstainEnabled"
-                placeholder="{{ PollPropertyVerbose.global_abstain | translate }}"
-                [checkboxValue]="-1"
-                inputType="number"
-                [checkboxLabel]="'majority' | translate"
-                formControlName="amount_global_abstain"
             ></os-check-input>
         </div>
     </form>

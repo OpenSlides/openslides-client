@@ -8,7 +8,6 @@ import { Permission } from 'app/core/core-services/permission';
 /**
  * Directive to check if the {@link OperatorService} has the correct permissions to access certain functions
  *
- * Successor of os-perms in OpenSlides 2.2
  * @example <div *osPerms="'perm'" ..> ... < /div>
  * @example <div *osPerms="['perm1', 'perm2']" ..> ... < /div>
  */

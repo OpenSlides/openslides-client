@@ -245,16 +245,4 @@
 </div>
 
 <!-- motion polls -->
-<div class="spacer-top-20 spacer-bottom-20">
-    <os-motion-poll *ngFor="let poll of motion.polls; trackBy: trackByIndex" [poll]="poll"></os-motion-poll>
-    <button
-        class="create-poll-button"
-        create-poll-button
-        mat-stroked-button
-        (click)="openDialog()"
-        *osPerms="permission.motionsCanManagePolls"
-    >
-        <mat-icon class="main-nav-color">add</mat-icon>
-        <span>{{ 'New vote' | translate }}</span>
-    </button>
-</div>
+<os-motion-manage-polls [motion]="motion"></os-motion-manage-polls>

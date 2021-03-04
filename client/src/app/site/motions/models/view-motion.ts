@@ -6,6 +6,7 @@ import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.se
 import { SearchProperty, SearchRepresentation } from 'app/core/ui-services/search.service';
 import { AgendaItemType } from 'app/shared/models/agenda/agenda-item';
 import { HasReferencedMotionInRecommendationExtensionIds, Motion } from 'app/shared/models/motions/motion';
+import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { Projectiondefault } from 'app/shared/models/projector/projector';
 import { HasAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { HasListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
@@ -24,7 +25,6 @@ import { ViewMotionCategory } from './view-motion-category';
 import { ViewMotionChangeRecommendation } from './view-motion-change-recommendation';
 import { ViewMotionComment } from './view-motion-comment';
 import { ViewMotionCommentSection } from './view-motion-comment-section';
-import { ViewMotionPoll } from './view-motion-poll';
 import { ViewMotionState } from './view-motion-state';
 import { ViewMotionStatuteParagraph } from './view-motion-statute-paragraph';
 import { ViewMotionSubmitter } from './view-motion-submitter';
@@ -279,8 +279,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     }
 
     public hasSupporters(): boolean {
-        return true;
-        // return !!(this.supporters && this.supporters.length > 0);
+        return !!(this.supporters && this.supporters.length > 0);
     }
 
     public hasAttachments(): boolean {
@@ -361,7 +360,7 @@ interface IMotionRelations {
     block?: ViewMotionBlock;
     submitters: ViewMotionSubmitter[];
     supporters: ViewUser[];
-    polls: ViewMotionPoll[];
+    polls: ViewPoll[];
     change_recommendations: ViewMotionChangeRecommendation[];
     statute_paragraph?: ViewMotionStatuteParagraph;
     comments: ViewMotionComment[];

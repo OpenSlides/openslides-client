@@ -12,6 +12,7 @@ import {
 } from './autoupdate.service';
 import { CollectionMapperService } from './collection-mapper.service';
 import { Deferred } from '../promises/deferred';
+import { fillTemplateValueInTemplateField } from './key-transforms';
 import { Collection, Field, Id } from '../definitions/key-types';
 import { OnAfterAppsLoaded } from '../definitions/on-after-apps-loaded';
 import { RelationManagerService } from './relation-manager.service';
@@ -166,14 +167,9 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
                 };
             } else {
                 // Specific structured field
-                fields[this.fillTemplateValueInTempalteField(f.templateIdField, f.templateValue)] = null;
+                fields[fillTemplateValueInTemplateField(f.templateIdField, f.templateValue)] = null;
             }
         }
-    }
-
-    // E.g. (group_$_ids, 4) -> group_$4_ids
-    private fillTemplateValueInTempalteField(field: Field, value: string): Field {
-        return field.replace('$', '$' + value);
     }
 
     private addFollowedRelations(collection: Collection, followList: FollowList, fields: Fields): void {
@@ -199,7 +195,7 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
             effectiveIdField = queryIdField = follow.idField;
         } else {
             queryIdField = follow.idField.templateIdField;
-            effectiveIdField = this.fillTemplateValueInTempalteField(queryIdField, follow.idField.templateValue);
+            effectiveIdField = fillTemplateValueInTemplateField(queryIdField, follow.idField.templateValue);
         }
         const isSpecificStructuredField = queryIdField !== effectiveIdField;
 

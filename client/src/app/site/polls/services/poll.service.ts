@@ -5,26 +5,27 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { ChartData, ChartDate } from 'app/shared/components/charts/charts.component';
-import { AssignmentPollMethod } from 'app/shared/models/assignments/assignment-poll';
+import { Poll } from 'app/shared/models/poll/poll';
 import {
-    BasePoll,
+    AssignmentPollMethodVerbose,
     MajorityMethod,
-    PercentBase,
+    PollClassType,
     PollColor,
+    PollMethod,
+    PollPercentBase,
     PollState,
     PollType,
     VOTE_UNDOCUMENTED
-} from 'app/shared/models/poll/base-poll';
-import { ParsePollNumberPipe } from 'app/shared/pipes/parse-poll-number.pipe';
-import { PollKeyVerbosePipe } from 'app/shared/pipes/poll-key-verbose.pipe';
-import { AssignmentPollMethodVerbose } from 'app/site/assignments/models/view-assignment-poll';
+} from 'app/shared/models/poll/poll-constants';
 import {
-    BaseViewPoll,
     MajorityMethodVerbose,
-    PercentBaseVerbose,
+    PollPercentBaseVerbose,
     PollPropertyVerbose,
     PollTypeVerbose
-} from 'app/site/polls/models/base-view-poll';
+} from 'app/shared/models/poll/poll-constants';
+import { ViewPoll } from 'app/shared/models/poll/view-poll';
+import { ParsePollNumberPipe } from 'app/shared/pipes/parse-poll-number.pipe';
+import { PollKeyVerbosePipe } from 'app/shared/pipes/poll-key-verbose.pipe';
 
 const PERCENT_DECIMAL_PLACES = 3;
 /**
@@ -117,10 +118,11 @@ export interface PollData extends BasePollData<string, string> {
     amount_global_no?: number;
     amount_global_abstain?: number;
     options: PollDataOption[];
+    global_option: PollDataOption;
 }
 
 export interface PollDataOption {
-    user?: {
+    content_object?: {
         short_name?: string;
     };
     yes?: number;
@@ -173,7 +175,7 @@ export abstract class PollService {
     /**
      * The default percentage base
      */
-    public abstract defaultPercentBase: string;
+    public defaultPercentBase: PollPercentBase;
 
     /**
      * The default majority method
@@ -203,16 +205,15 @@ export abstract class PollService {
     public pollValues: CalculablePollKey[] = ['yes', 'no', 'abstain', 'votesvalid', 'votesinvalid', 'votescast'];
 
     public constructor(
-        // TODO: remove public. it is only here, so the linter doesn't complain about this unused variable
-        public organisationSettingsService: OrganisationSettingsService,
+        _organisationSettingsService: OrganisationSettingsService,
         protected translate: TranslateService,
         protected pollKeyVerbose: PollKeyVerbosePipe,
         protected parsePollNumber: ParsePollNumberPipe
     ) {
-        /*organisationSettingsService
-            .get<OpenSlidesSettings>('Settings')
-            .subscribe(settings => (this.isElectronicVotingEnabled = settings.ENABLE_ELECTRONIC_VOTING));*/
-        this.isElectronicVotingEnabled = false;
+        // organisationSettingsService
+        //     .get<OpenSlidesSettings>('Settings')
+        //     .subscribe(settings => (this.isElectronicVotingEnabled = settings.ENABLE_ELECTRONIC_VOTING));
+        this.isElectronicVotingEnabled = true;
     }
 
     /**
@@ -236,7 +237,7 @@ export abstract class PollService {
      * Assigns the default poll data to the object. To be extended in subclasses
      * @param poll the poll/object to fill
      */
-    public getDefaultPollData(): Partial<BasePoll> {
+    public getDefaultPollData(): Partial<Poll> {
         return {
             onehundred_percent_base: this.defaultPercentBase,
             majority_method: this.defaultMajorityMethod,
@@ -250,7 +251,7 @@ export abstract class PollService {
             case 'majority_method':
                 return MajorityMethodVerbose[value];
             case 'onehundred_percent_base':
-                return PercentBaseVerbose[value];
+                return PollPercentBaseVerbose[value];
             case 'pollmethod':
                 return AssignmentPollMethodVerbose[value];
             case 'type':
@@ -262,7 +263,7 @@ export abstract class PollService {
         return PollPropertyVerbose[key];
     }
 
-    public getVoteTableKeys(poll: PollData | BaseViewPoll): VotingResult[] {
+    public getVoteTableKeys(poll: ViewPoll): VotingResult[] {
         return [
             {
                 vote: 'yes',
@@ -282,22 +283,26 @@ export abstract class PollService {
         ];
     }
 
-    private showAbstainPercent(poll: PollData | BaseViewPoll): boolean {
+    private showAbstainPercent(poll: ViewPoll): boolean {
         return (
-            poll.onehundred_percent_base === PercentBase.YNA ||
-            poll.onehundred_percent_base === PercentBase.Valid ||
-            poll.onehundred_percent_base === PercentBase.Cast
+            poll.onehundred_percent_base === PollPercentBase.YNA ||
+            poll.onehundred_percent_base === PollPercentBase.Valid ||
+            poll.onehundred_percent_base === PollPercentBase.Cast
         );
     }
 
-    public showPercentOfValidOrCast(poll: PollData | BaseViewPoll): boolean {
-        return poll.onehundred_percent_base === PercentBase.Valid || poll.onehundred_percent_base === PercentBase.Cast;
+    public showPercentOfValidOrCast(poll: ViewPoll): boolean {
+        return (
+            poll.onehundred_percent_base === PollPercentBase.Valid ||
+            poll.onehundred_percent_base === PollPercentBase.Cast
+        );
     }
 
-    public getSumTableKeys(poll: PollData | BaseViewPoll): VotingResult[] {
+    public getSumTableKeys(poll: ViewPoll): VotingResult[] {
         return [
             {
                 vote: 'votesvalid',
+                icon: 'done',
                 hide: poll.votesvalid === VOTE_UNDOCUMENTED,
                 showPercent: this.showPercentOfValidOrCast(poll)
             },
@@ -305,17 +310,18 @@ export abstract class PollService {
                 vote: 'votesinvalid',
                 icon: 'not_interested',
                 hide: poll.votesinvalid === VOTE_UNDOCUMENTED || poll.type !== PollType.Analog,
-                showPercent: poll.onehundred_percent_base === PercentBase.Cast
+                showPercent: poll.onehundred_percent_base === PollPercentBase.Cast
             },
             {
                 vote: 'votescast',
+                icon: 'label',
                 hide: poll.votescast === VOTE_UNDOCUMENTED || poll.type !== PollType.Analog,
-                showPercent: poll.onehundred_percent_base === PercentBase.Cast
+                showPercent: poll.onehundred_percent_base === PollPercentBase.Cast
             }
         ];
     }
 
-    public generateChartData(poll: PollData | BaseViewPoll): ChartData {
+    public generateChartData(poll: PollData | ViewPoll): ChartData {
         const fields = this.getPollDataFields(poll);
 
         const data: ChartData = fields
@@ -336,20 +342,25 @@ export abstract class PollService {
         return data;
     }
 
-    protected getPollDataFields(poll: PollData | BaseViewPoll): CalculablePollKey[] {
-        const isAssignment: boolean = (poll as BaseViewPoll).pollClassType === 'assignment';
+    protected getPollDataFields(poll: PollData | ViewPoll): CalculablePollKey[] {
+        const isAssignment: boolean = (poll as ViewPoll).pollClassType === PollClassType.Assignment;
         return isAssignment ? this.getPollDataFieldsByMethod(poll) : this.getPollDataFieldsByPercentBase(poll);
     }
 
-    private getPollDataFieldsByMethod(poll: PollData | BaseViewPoll): CalculablePollKey[] {
+    /**
+     * Extracts yes-no-abstain such as valid, invalids and totals from Poll and PollData-Objects
+     */
+    protected abstract getResultFromPoll(poll: PollData, key: CalculablePollKey): number[];
+
+    private getPollDataFieldsByMethod(poll: PollData | ViewPoll): CalculablePollKey[] {
         switch (poll.pollmethod) {
-            case AssignmentPollMethod.YNA: {
+            case PollMethod.YNA: {
                 return ['yes', 'no', 'abstain'];
             }
-            case AssignmentPollMethod.YN: {
+            case PollMethod.YN: {
                 return ['yes', 'no'];
             }
-            case AssignmentPollMethod.N: {
+            case PollMethod.N: {
                 return ['no'];
             }
             default: {
@@ -358,31 +369,18 @@ export abstract class PollService {
         }
     }
 
-    private getPollDataFieldsByPercentBase(poll: PollData | BaseViewPoll): CalculablePollKey[] {
+    private getPollDataFieldsByPercentBase(poll: PollData | ViewPoll): CalculablePollKey[] {
         switch (poll.onehundred_percent_base) {
-            case PercentBase.YN: {
+            case PollPercentBase.YN: {
                 return ['yes', 'no'];
             }
-            case PercentBase.Cast: {
+            case PollPercentBase.Cast: {
                 return ['yes', 'no', 'abstain', 'votesinvalid'];
             }
             default: {
                 return ['yes', 'no', 'abstain'];
             }
         }
-    }
-
-    /**
-     * Extracts yes-no-abstain such as valid, invalids and totals from Poll and PollData-Objects
-     */
-    private getResultFromPoll(poll: PollData, key: CalculablePollKey): number[] {
-        let result: number[];
-        if (poll[key]) {
-            result = [poll[key]];
-        } else {
-            result = poll.options.map(option => option[key]);
-        }
-        return result;
     }
 
     public isVoteDocumented(vote: number): boolean {

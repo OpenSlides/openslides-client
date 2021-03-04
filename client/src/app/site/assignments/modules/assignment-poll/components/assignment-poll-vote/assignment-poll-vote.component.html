@@ -49,13 +49,13 @@
                     }"
                 >
                     <div class="vote-candidate-name">
-                        <span *ngIf="option.user">
-                            <span>{{ option.user.short_name }}</span>
-                            <div class="user-subtitle" *ngIf="option.user.getLevelAndNumber()">
-                                {{ option.user.getLevelAndNumber() }}
+                        <span *ngIf="option.content_object">
+                            <span>{{ option.content_object.short_name }}</span>
+                            <div class="user-subtitle" *ngIf="option.content_object.getLevelAndNumber()">
+                                {{ option.content_object.getLevelAndNumber() }}
                             </div>
                         </span>
-                        <i *ngIf="!option.user">{{ unknownUserLabel | translate }}</i>
+                        <i *ngIf="!option.content_object">{{ unknownUserLabel | translate }}</i>
                     </div>
 
                     <div *ngFor="let action of voteActions">
@@ -77,10 +77,8 @@
             </div>
         </div>
 
-        <!-- global no/abstain -->
-        <ng-container
-            *ngIf="(poll.isMethodY || poll.isMethodN) && (poll.global_yes || poll.global_no || poll.global_abstain)"
-        >
+        <!-- global yes/no/abstain -->
+        <ng-container *ngIf="(poll.isMethodY || poll.isMethodN) && poll.hasGlobalOptionEnabled">
             <mat-divider></mat-divider>
             <div class="global-option-grid">
                 <div *ngIf="poll.global_yes">

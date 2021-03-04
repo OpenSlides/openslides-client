@@ -153,14 +153,14 @@ export function makeGenericO2O<V extends BaseViewModel, I>(args: {
     ];
 }
 
-export function makeGenericO2M<V extends BaseViewModel, I>(args: {
+export function makeGenericO2M<V extends BaseViewModel>(args: {
     OViewModel: ViewModelConstructor<V>;
-    MPossibleViewModels: ViewModelConstructor<BaseViewModel & I>[];
+    MPossibleViewModels: ViewModelConstructor<BaseViewModel>[];
     OViewModelField: keyof V & string;
-    MPossibleViewModelsField: keyof I & string;
+    MPossibleViewModelsField: string;
     OViewModelIdField?: keyof V & string;
-    MPossibleViewModelsIdField?: keyof I & string;
-    OViewModelOrder?: keyof I & string;
+    MPossibleViewModelsIdField?: string;
+    OViewModelOrder?: string;
 }): Relation[] {
     return [
         // viewModel -> possible view models

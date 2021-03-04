@@ -3,26 +3,32 @@ import { Injectable } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 
-import { AssignmentPollRepositoryService } from 'app/core/repositories/assignments/assignment-poll-repository.service';
+import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { Assignment } from 'app/shared/models/assignments/assignment';
+import { Poll } from 'app/shared/models/poll/poll';
 import {
-    AssignmentPoll,
-    AssignmentPollMethod,
-    AssignmentPollPercentBase
-} from 'app/shared/models/assignments/assignment-poll';
-import { MajorityMethod, PollType, VOTE_UNDOCUMENTED } from 'app/shared/models/poll/base-poll';
+    MajorityMethod,
+    PollMethod,
+    PollPercentBase,
+    PollType,
+    VOTE_UNDOCUMENTED
+} from 'app/shared/models/poll/poll-constants';
+import { ViewOption } from 'app/shared/models/poll/view-option';
+import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { ParsePollNumberPipe } from 'app/shared/pipes/parse-poll-number.pipe';
 import { PollKeyVerbosePipe } from 'app/shared/pipes/poll-key-verbose.pipe';
-import { ViewAssignmentOption } from 'app/site/assignments/models/view-assignment-option';
-import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
+import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import {
+    CalculablePollKey,
     PollData,
     PollDataOption,
     PollService,
     PollTableData,
     VotingResult
 } from 'app/site/polls/services/poll.service';
+import { ViewUser } from 'app/site/users/models/view-user';
 
 export const UnknownUserLabel = _('Deleted user');
 @Injectable({
@@ -32,7 +38,7 @@ export class AssignmentPollService extends PollService {
     /**
      * The default percentage base
      */
-    public defaultPercentBase: AssignmentPollPercentBase;
+    public defaultPercentBase: PollPercentBase;
 
     /**
      * The default majority method
@@ -41,7 +47,7 @@ export class AssignmentPollService extends PollService {
 
     public defaultGroupIds: number[];
 
-    public defaultPollMethod: AssignmentPollMethod;
+    public defaultPollMethod: PollMethod;
 
     public defaultPollType: PollType;
 
@@ -52,7 +58,7 @@ export class AssignmentPollService extends PollService {
         pollKeyVerbose: PollKeyVerbosePipe,
         parsePollNumber: ParsePollNumberPipe,
         protected translate: TranslateService,
-        private pollRepo: AssignmentPollRepositoryService,
+        private pollRepo: PollRepositoryService,
         private meetingSettingsService: MeetingSettingsService
     ) {
         super(organisationSettingsService, translate, pollKeyVerbose, parsePollNumber);
@@ -76,16 +82,14 @@ export class AssignmentPollService extends PollService {
             .subscribe(sort => (this.sortByVote = sort));
     }
 
-    public getDefaultPollData(contextId?: number): AssignmentPoll {
-        const poll = new AssignmentPoll({
-            ...super.getDefaultPollData()
-        });
+    public getDefaultPollData(contentObject?: Assignment): Partial<Poll> {
+        const poll = super.getDefaultPollData();
 
         poll.title = this.translate.instant('Ballot');
         poll.pollmethod = this.defaultPollMethod;
 
-        if (contextId) {
-            const length = this.pollRepo.getViewModelList().filter(item => item.assignment_id === contextId).length;
+        if (contentObject) {
+            const length = this.pollRepo.getViewModelListByContentObject(contentObject.fqid).length;
             if (length) {
                 poll.title += ` (${length + 1})`;
             }
@@ -94,35 +98,12 @@ export class AssignmentPollService extends PollService {
         return poll;
     }
 
-    private getGlobalVoteKeys(poll: ViewAssignmentPoll | PollData): VotingResult[] {
-        return [
-            {
-                vote: 'amount_global_yes',
-                showPercent: this.showPercentOfValidOrCast(poll),
-                hide:
-                    poll.amount_global_yes === VOTE_UNDOCUMENTED ||
-                    !poll.amount_global_yes ||
-                    poll.pollmethod === AssignmentPollMethod.N
-            },
-            {
-                vote: 'amount_global_no',
-                showPercent: this.showPercentOfValidOrCast(poll),
-                hide: poll.amount_global_no === VOTE_UNDOCUMENTED || !poll.amount_global_no
-            },
-            {
-                vote: 'amount_global_abstain',
-                showPercent: this.showPercentOfValidOrCast(poll),
-                hide: poll.amount_global_abstain === VOTE_UNDOCUMENTED || !poll.amount_global_abstain
-            }
-        ];
-    }
-
-    public generateTableData(poll: ViewAssignmentPoll | PollData): PollTableData[] {
+    public generateTableData(poll: ViewPoll<ViewAssignment>): PollTableData[] {
         const tableData: PollTableData[] = poll.options
             .sort((a, b) => {
                 if (this.sortByVote) {
                     let compareValue;
-                    if (poll.pollmethod === AssignmentPollMethod.N) {
+                    if (poll.pollmethod === PollMethod.N) {
                         // least no on top:
                         compareValue = a.no - b.no;
                     } else {
@@ -147,7 +128,7 @@ export class AssignmentPollService extends PollService {
                     return 0;
                 }
             })
-            .map((candidate: ViewAssignmentOption) => {
+            .map((candidate: ViewOption<ViewUser>) => {
                 const pollTableEntry: PollTableData = {
                     class: 'user',
                     value: super.getVoteTableKeys(poll).map(
@@ -163,11 +144,11 @@ export class AssignmentPollService extends PollService {
                 };
 
                 // Since pollData does not have any subtitle option
-                if (candidate instanceof ViewAssignmentOption && candidate.user) {
-                    pollTableEntry.votingOption = candidate.user.short_name;
-                    pollTableEntry.votingOptionSubtitle = candidate.user.getLevelAndNumber();
-                } else if (candidate.user) {
-                    pollTableEntry.votingOption = (candidate as PollDataOption).user.short_name;
+                if (candidate instanceof ViewOption && candidate.content_object) {
+                    pollTableEntry.votingOption = candidate.content_object.short_name;
+                    pollTableEntry.votingOptionSubtitle = candidate.content_object.getLevelAndNumber();
+                } else if (candidate.content_object) {
+                    pollTableEntry.votingOption = (candidate as PollDataOption).content_object.short_name;
                 } else {
                     pollTableEntry.votingOption = UnknownUserLabel;
                 }
@@ -178,6 +159,81 @@ export class AssignmentPollService extends PollService {
         tableData.push(...this.formatVotingResultToTableData(super.getSumTableKeys(poll), poll));
 
         return tableData;
+    }
+    public getPercentBase(poll: PollData): number {
+        const base: PollPercentBase = poll.onehundred_percent_base as PollPercentBase;
+        let totalByBase: number;
+        switch (base) {
+            case PollPercentBase.YN:
+                totalByBase = this.sumOptionsYN(poll);
+                break;
+            case PollPercentBase.YNA:
+                totalByBase = this.sumOptionsYNA(poll);
+                break;
+            case PollPercentBase.Y:
+                totalByBase = this.sumOptionsYNA(poll);
+                break;
+            case PollPercentBase.Valid:
+                totalByBase = poll.votesvalid;
+                break;
+            case PollPercentBase.Cast:
+                totalByBase = poll.votescast;
+                break;
+            default:
+                break;
+        }
+        return totalByBase;
+    }
+
+    public getChartLabels(poll: PollData): string[] {
+        const fields = this.getPollDataFields(poll);
+        return poll.options.map(option => {
+            const votingResults = fields.map(field => {
+                const voteValue = option[field];
+                const votingKey = this.translate.instant(this.pollKeyVerbose.transform(field));
+                const resultValue = this.parsePollNumber.transform(voteValue);
+                const resultInPercent = this.getVoteValueInPercent(voteValue, poll);
+                let resultLabel = `${votingKey}: ${resultValue}`;
+
+                // 0 is a valid number in this case
+                if (resultInPercent !== null) {
+                    resultLabel += ` (${resultInPercent})`;
+                }
+                return resultLabel;
+            });
+            const optionName = option.content_object?.short_name ?? UnknownUserLabel;
+            return `${optionName} · ${votingResults.join(' · ')}`;
+        });
+    }
+
+    protected getResultFromPoll(poll: PollData, key: CalculablePollKey): number[] {
+        return poll.options
+            .concat(poll.global_option)
+            .filter(option => !!option)
+            .map(option => option[key]);
+    }
+
+    private getGlobalVoteKeys(poll: ViewPoll<ViewAssignment>): VotingResult[] {
+        return [
+            {
+                vote: 'amount_global_yes',
+                showPercent: this.showPercentOfValidOrCast(poll),
+                hide:
+                    poll.amount_global_yes === VOTE_UNDOCUMENTED ||
+                    !poll.amount_global_yes ||
+                    poll.pollmethod === PollMethod.N
+            },
+            {
+                vote: 'amount_global_no',
+                showPercent: this.showPercentOfValidOrCast(poll),
+                hide: poll.amount_global_no === VOTE_UNDOCUMENTED || !poll.amount_global_no
+            },
+            {
+                vote: 'amount_global_abstain',
+                showPercent: this.showPercentOfValidOrCast(poll),
+                hide: poll.amount_global_abstain === VOTE_UNDOCUMENTED || !poll.amount_global_abstain
+            }
+        ];
     }
 
     private formatVotingResultToTableData(resultList: VotingResult[], poll: PollData): PollTableData[] {
@@ -211,51 +267,5 @@ export class AssignmentPollService extends PollService {
             o += n.abstain > 0 ? n.abstain : 0;
             return o;
         }, this.sumOptionsYN(poll));
-    }
-
-    public getPercentBase(poll: PollData): number {
-        const base: AssignmentPollPercentBase = poll.onehundred_percent_base as AssignmentPollPercentBase;
-        let totalByBase: number;
-        switch (base) {
-            case AssignmentPollPercentBase.YN:
-                totalByBase = this.sumOptionsYN(poll);
-                break;
-            case AssignmentPollPercentBase.YNA:
-                totalByBase = this.sumOptionsYNA(poll);
-                break;
-            case AssignmentPollPercentBase.Y:
-                totalByBase = this.sumOptionsYNA(poll);
-                break;
-            case AssignmentPollPercentBase.Valid:
-                totalByBase = poll.votesvalid;
-                break;
-            case AssignmentPollPercentBase.Cast:
-                totalByBase = poll.votescast;
-                break;
-            default:
-                break;
-        }
-        return totalByBase;
-    }
-
-    public getChartLabels(poll: PollData): string[] {
-        const fields = this.getPollDataFields(poll);
-        return poll.options.map(option => {
-            const votingResults = fields.map(field => {
-                const voteValue = option[field];
-                const votingKey = this.translate.instant(this.pollKeyVerbose.transform(field));
-                const resultValue = this.parsePollNumber.transform(voteValue);
-                const resultInPercent = this.getVoteValueInPercent(voteValue, poll);
-                let resultLabel = `${votingKey}: ${resultValue}`;
-
-                // 0 is a valid number in this case
-                if (resultInPercent !== null) {
-                    resultLabel += ` (${resultInPercent})`;
-                }
-                return resultLabel;
-            });
-            const optionName = option.user?.short_name ?? UnknownUserLabel;
-            return `${optionName} · ${votingResults.join(' · ')}`;
-        });
     }
 }

@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
 import { Permission } from 'app/core/core-services/permission';
+import { Id } from 'app/core/definitions/key-types';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 
@@ -203,6 +204,13 @@ export abstract class BaseComponent implements OnDestroy {
      */
     public trackByIndex(index: number): number {
         return index;
+    }
+
+    /**
+     * Helper for *ngFor => tracked items by their corresponding id.
+     */
+    public trackById(_index: number, item: Id): Id {
+        return item;
     }
 
     /**

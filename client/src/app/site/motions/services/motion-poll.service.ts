@@ -2,16 +2,25 @@ import { Injectable } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
 
-import { MotionPollRepositoryService } from 'app/core/repositories/motions/motion-poll-repository.service';
+import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
-import { MotionPoll, MotionPollMethod } from 'app/shared/models/motions/motion-poll';
-import { MajorityMethod, PercentBase, PollType } from 'app/shared/models/poll/base-poll';
+import { Motion } from 'app/shared/models/motions/motion';
+import { Poll } from 'app/shared/models/poll/poll';
+import { MajorityMethod, PollMethod, PollPercentBase, PollType } from 'app/shared/models/poll/poll-constants';
+import { ViewOption } from 'app/shared/models/poll/view-option';
+import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { ParsePollNumberPipe } from 'app/shared/pipes/parse-poll-number.pipe';
 import { PollKeyVerbosePipe } from 'app/shared/pipes/poll-key-verbose.pipe';
-import { BasePollData, PollData, PollService, PollTableData, VotingResult } from 'app/site/polls/services/poll.service';
-import { ViewMotionOption } from '../models/view-motion-option';
-import { ViewMotionPoll } from '../models/view-motion-poll';
+import {
+    BasePollData,
+    CalculablePollKey,
+    PollData,
+    PollService,
+    PollTableData,
+    VotingResult
+} from 'app/site/polls/services/poll.service';
+import { ViewMotion } from '../models/view-motion';
 
 interface PollResultData {
     yes?: number;
@@ -29,7 +38,7 @@ export class MotionPollService extends PollService {
     /**
      * The default percentage base
      */
-    public defaultPercentBase: PercentBase;
+    public defaultPercentBase: PollPercentBase;
 
     /**
      * The default majority method
@@ -45,7 +54,7 @@ export class MotionPollService extends PollService {
         pollKeyVerbose: PollKeyVerbosePipe,
         parsePollNumber: ParsePollNumberPipe,
         protected translate: TranslateService,
-        private pollRepo: MotionPollRepositoryService,
+        private repo: PollRepositoryService,
         private meetingSettingsService: MeetingSettingsService
     ) {
         super(organisationSettingsService, translate, pollKeyVerbose, parsePollNumber);
@@ -59,14 +68,14 @@ export class MotionPollService extends PollService {
         this.meetingSettingsService.get('motion_poll_default_group_ids').subscribe(ids => (this.defaultGroupIds = ids));
     }
 
-    public getDefaultPollData(contextId?: number): MotionPoll {
-        const poll = new MotionPoll(super.getDefaultPollData());
+    public getDefaultPollData(contentObject?: Motion): Partial<Poll> {
+        const poll = super.getDefaultPollData();
 
         poll.title = this.translate.instant('Vote');
-        poll.pollmethod = MotionPollMethod.YNA;
+        poll.pollmethod = PollMethod.YNA;
 
-        if (contextId) {
-            const length = this.pollRepo.getViewModelList().filter(item => item.motion_id === contextId).length;
+        if (contentObject) {
+            const length = this.repo.getViewModelListByContentObject(contentObject.fqid).length;
             if (length) {
                 poll.title += ` (${length + 1})`;
             }
@@ -75,8 +84,8 @@ export class MotionPollService extends PollService {
         return poll;
     }
 
-    public generateTableData(poll: PollData | ViewMotionPoll): PollTableData[] {
-        if (poll instanceof ViewMotionPoll) {
+    public generateTableData(poll: ViewPoll<ViewMotion> | PollData): PollTableData[] {
+        if (poll instanceof ViewPoll) {
             let tableData: PollTableData[] = poll.options.flatMap(vote =>
                 super.getVoteTableKeys(poll).map(key => this.createTableDataEntry(poll, key, vote))
             );
@@ -89,11 +98,49 @@ export class MotionPollService extends PollService {
         }
     }
 
-    private createTableDataEntry(
-        poll: BasePollData<any, any>,
-        result: VotingResult,
-        vote?: ViewMotionOption
-    ): PollTableData {
+    public showChart(poll: PollData): boolean {
+        return poll && poll.options && poll.options.some(option => option.yes >= 0 && option.no >= 0);
+    }
+
+    public getPercentBase(poll: PollData): number {
+        const base: PollPercentBase = poll.onehundred_percent_base as PollPercentBase;
+
+        let totalByBase: number;
+        const result = poll.options[0];
+        switch (base) {
+            case PollPercentBase.YN:
+                if (result.yes >= 0 && result.no >= 0) {
+                    totalByBase = this.sumYN(result);
+                }
+                break;
+            case PollPercentBase.YNA:
+                if (result.yes >= 0 && result.no >= 0 && result.abstain >= 0) {
+                    totalByBase = this.sumYNA(result);
+                }
+                break;
+            case PollPercentBase.Valid:
+                // auslagern
+                if (result.yes >= 0 && result.no >= 0 && result.abstain >= 0) {
+                    totalByBase = poll.votesvalid;
+                }
+                break;
+            case PollPercentBase.Cast:
+                totalByBase = poll.votescast;
+                break;
+            case PollPercentBase.Disabled:
+                break;
+            default:
+                throw new Error('The given poll has no percent base: ' + poll);
+        }
+
+        return totalByBase;
+    }
+
+    protected getResultFromPoll(poll: PollData, key: CalculablePollKey): number[] {
+        return poll.options.map(option => option[key]);
+    }
+
+    private createTableDataEntry(poll: BasePollData<any, any>, result: VotingResult, vote?: ViewOption): PollTableData {
         return {
             votingOption: result.vote,
             value: [
@@ -105,44 +152,6 @@ export class MotionPollService extends PollService {
                 }
             ]
         };
-    }
-
-    public showChart(poll: PollData): boolean {
-        return poll && poll.options && poll.options.some(option => option.yes >= 0 && option.no >= 0);
-    }
-
-    public getPercentBase(poll: PollData): number {
-        const base: PercentBase = poll.onehundred_percent_base as PercentBase;
-
-        let totalByBase: number;
-        const result = poll.options[0];
-        switch (base) {
-            case PercentBase.YN:
-                if (result.yes >= 0 && result.no >= 0) {
-                    totalByBase = this.sumYN(result);
-                }
-                break;
-            case PercentBase.YNA:
-                if (result.yes >= 0 && result.no >= 0 && result.abstain >= 0) {
-                    totalByBase = this.sumYNA(result);
-                }
-                break;
-            case PercentBase.Valid:
-                // auslagern
-                if (result.yes >= 0 && result.no >= 0 && result.abstain >= 0) {
-                    totalByBase = poll.votesvalid;
-                }
-                break;
-            case PercentBase.Cast:
-                totalByBase = poll.votescast;
-                break;
-            case PercentBase.Disabled:
-                break;
-            default:
-                throw new Error('The given poll has no percent base: ' + this);
-        }
-
-        return totalByBase;
     }
 
     private sumYN(result: PollResultData): number {

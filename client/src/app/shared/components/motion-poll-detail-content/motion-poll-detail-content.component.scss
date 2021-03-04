@@ -1,6 +1,11 @@
 @import '~assets/styles/poll-styles-common.scss';
 
+:host {
+    outline: none;
+}
+
 .result-wrapper {
+    cursor: pointer;
     display: grid;
     grid-gap: 2em;
     margin: 2em;
