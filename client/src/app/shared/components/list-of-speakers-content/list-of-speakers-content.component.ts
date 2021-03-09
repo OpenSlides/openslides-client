@@ -222,29 +222,23 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
         const title = speaker
             ? this.translate.instant('Are you sure you want to remove this speaker from the list of speakers?')
             : this.translate.instant('Are you sure you want to remove yourself from this list of speakers?');
+        const speakerToDelete = speaker || this.findOperatorSpeaker();
         if (await this.promptService.open(title)) {
-            try {
-                await this.speakerRepo.delete(speaker);
-                this.filterUsers();
-            } catch (e) {
-                this.raiseError(e);
-            }
+            await this.speakerRepo.delete(speakerToDelete.id);
+            this.filterUsers();
         }
     }
 
     public async addPointOfOrder(): Promise<void> {
         const title = this.translate.instant('Are you sure you want to submit a point of order?');
         if (await this.promptService.open(title)) {
-            try {
-                await this.speakerRepo.create(this.listOfSpeakers, undefined, true);
-            } catch (e) {
-                this.raiseError(e);
-            }
+            await this.speakerRepo.create(this.listOfSpeakers, this.operator.operatorId, true);
         }
     }
 
-    public removePointOfOrder(): void {
-        // TODO:
+    public async removePointOfOrder(): Promise<void> {
+        const speakerToDelete = this.findOperatorSpeaker(true);
+        await this.speakerRepo.delete(speakerToDelete.id);
     }
 
     public isOpInWaitlist(pointOfOrder: boolean = false): boolean {
@@ -414,5 +408,11 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
      */
     public startTimeToString(speaker: ViewSpeaker): string {
         return speaker.getBeginTimeAsDate().toLocaleString(this.translate.currentLang);
+    }
+
+    private findOperatorSpeaker(pointOfOrder: boolean = false): ViewSpeaker {
+        return this.waitingSpeakers.find(
+            speaker => speaker.user_id === this.operator.operatorId && speaker.point_of_order === pointOfOrder
+        );
     }
 }

@@ -50,8 +50,9 @@ export class SpeakerRepositoryService extends BaseRepositoryWithActiveMeeting<Vi
         return this.sendActionToBackend(SpeakerAction.UPDATE, payload);
     }
 
-    public delete(speaker: ViewSpeaker): Promise<void> {
-        return this.sendActionToBackend(SpeakerAction.DELETE, { id: speaker.id });
+    public delete(id: Id): Promise<void> {
+        const payload: SpeakerAction.DeletePayload = { id };
+        return this.sendActionToBackend(SpeakerAction.DELETE, payload);
     }
 
     public sortSpeakers(listOfSpeakers: ListOfSpeakers, speakerIds: Id[]): Promise<void> {

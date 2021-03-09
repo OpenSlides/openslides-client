@@ -20,7 +20,9 @@
                 <div class="finished-speaker-grid">
                     <div class="number">{{ number + 1 }}.</div>
                     <div class="name">{{ speaker.getTitle() }}</div>
-                    <div class="point-of-order" *ngIf="speaker.point_of_order"><mat-icon color="warn">warning</mat-icon></div>
+                    <div class="point-of-order" *ngIf="speaker.point_of_order">
+                        <mat-icon color="warn">warning</mat-icon>
+                    </div>
                     <div class="time">
                         {{ durationString(speaker) }} ({{ 'Start time' | translate }}: {{ startTimeToString(speaker) }})
                     </div>
@@ -52,7 +54,6 @@
         <span class="name">{{ activeSpeaker.getListTitle() }}</span>
 
         <span class="suffix">
-
             <!-- point of order visible for everyone -->
             <button
                 mat-icon-button
@@ -180,7 +181,7 @@
             *osPerms="'agenda.can_be_speaker'; and: !isOpInWaitlist()"
             mat-stroked-button
             [disabled]="closed || !canAddSelf"
-            (click)="addUserAsNewSpeaker()"
+            (click)="addMyself()"
         >
             <mat-icon>add</mat-icon>
             <span>{{ 'Add me' | translate }}</span>
@@ -197,11 +198,21 @@
         </button>
 
         <!-- Point Of order -->
-        <button mat-stroked-button color="warn" (click)="addPointOfOrder()" *ngIf="showPointOfOrders && !isOpInWaitlist(true)">
+        <button
+            mat-stroked-button
+            color="warn"
+            (click)="addPointOfOrder()"
+            *ngIf="showPointOfOrders && !isOpInWaitlist(true)"
+        >
             <mat-icon>warning</mat-icon>&nbsp;
             <span>{{ 'Point of order' | translate }}</span>
         </button>
-        <button mat-stroked-button color="warn" (click)="removePointOfOrder()" *ngIf="showPointOfOrders && isOpInWaitlist(true)">
+        <button
+            mat-stroked-button
+            color="warn"
+            (click)="removePointOfOrder()"
+            *ngIf="showPointOfOrders && isOpInWaitlist(true)"
+        >
             <mat-icon>remove</mat-icon>
             <span>{{ 'Withdraw point of order' | translate }}</span>
         </button>

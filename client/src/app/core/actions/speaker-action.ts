@@ -20,6 +20,8 @@ export namespace SpeakerAction {
         marked?: boolean;
     }
 
+    export interface DeletePayload extends Identifiable {}
+
     export interface SpeakPayload extends Identifiable {}
     export interface EndSpeachPayload extends Identifiable {}
     export interface SortPayload {
