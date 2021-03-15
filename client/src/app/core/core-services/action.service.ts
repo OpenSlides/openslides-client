@@ -37,7 +37,7 @@ export class ActionService {
     private constructor(private http: HttpService) {}
 
     public async sendRequest<T>(action: string, data: any): Promise<T | null> {
-        const results = await this._sendRequest<T>({ action, data: [data] });
+        const results = await this.sendRequests<T>([{ action, data: [data] }]);
         if (!results) {
             return null;
         }
@@ -48,16 +48,16 @@ export class ActionService {
     }
 
     public async sendBulkRequest<T>(action: string, data: any[]): Promise<T[] | null> {
-        const results = await this._sendRequest<T>({ action, data });
+        const results = await this.sendRequests<T>([{ action, data }]);
         if (results && results.length !== data.length) {
             throw new Error(`Inner resultlength is not ${data.length} from the action service`);
         }
         return results;
     }
 
-    private async _sendRequest<T>(request: ActionRequest): Promise<T[] | null> {
-        console.log('send request:', request);
-        const response = await this.http.post<T>(this.ACTION_URL, [request]);
+    public async sendRequests<T>(requests: ActionRequest[]): Promise<T[] | null> {
+        console.log('send requests:', requests);
+        const response = await this.http.post<T>(this.ACTION_URL, requests);
         if (isActionError(response)) {
             throw response.message;
         } else if (isActionResponse<T>(response)) {

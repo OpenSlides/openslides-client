@@ -46,7 +46,6 @@ export class MotionBlockRepositoryService extends BaseIsAgendaItemAndListOfSpeak
         const payload: MotionBlockAction.UpdatePayload = {
             id: viewModel.id,
             title: update.title,
-            motion_ids: update.motion_ids,
             internal: update.internal
         };
         return this.sendActionToBackend(MotionBlockAction.UPDATE, payload);

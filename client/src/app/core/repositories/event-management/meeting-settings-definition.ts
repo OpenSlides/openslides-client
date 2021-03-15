@@ -135,6 +135,24 @@ export const meetingSettings: SettingsGroup[] = [
                 ]
             },
             {
+                label: 'Projector',
+                settings: [
+                    {
+                        key: 'projector_countdown_warning_time',
+                        label: 'Show orange countdown in the last x seconds of speaking time',
+                        type: 'integer',
+                        helpText: 'Enter duration in seconds. Choose 0 to disable warning color.',
+                        validators: [Validators.min(0)]
+                    },
+                    {
+                        key: 'projector_default_countdown_time',
+                        label: 'Predefined seconds of new countdowns',
+                        default: 60,
+                        type: 'integer'
+                    }
+                ]
+            },
+            {
                 label: 'System',
                 settings: [
                     {
@@ -313,19 +331,6 @@ export const meetingSettings: SettingsGroup[] = [
                         validators: [Validators.min(-1)]
                     },
                     {
-                        key: 'projector_countdown_warning_time',
-                        label: 'Show orange countdown in the last x seconds of speaking time',
-                        type: 'integer',
-                        helpText: 'Enter duration in seconds. Choose 0 to disable warning color.',
-                        validators: [Validators.min(0)]
-                    },
-                    {
-                        key: 'projector_default_countdown_time',
-                        label: 'Predefined seconds of new countdowns',
-                        default: 60,
-                        type: 'integer'
-                    },
-                    {
                         key: 'list_of_speakers_couple_countdown',
                         label: 'Couple countdown with the list of speakers',
                         default: true,
@@ -347,12 +352,20 @@ export const meetingSettings: SettingsGroup[] = [
                     {
                         key: 'list_of_speakers_present_users_only',
                         label: 'Only present participants can be added to the list of speakers',
-                        type: 'boolean'
+                        type: 'boolean',
+                        default: false
                     },
                     {
                         key: 'list_of_speakers_show_first_contribution',
                         label: 'Show hint »first speech« in the list of speakers management view',
-                        type: 'boolean'
+                        type: 'boolean',
+                        default: false
+                    },
+                    {
+                        key: 'list_of_speakers_initially_closed',
+                        label: 'List of speakers is initially closed',
+                        type: 'boolean',
+                        default: false
                     }
                 ]
             }

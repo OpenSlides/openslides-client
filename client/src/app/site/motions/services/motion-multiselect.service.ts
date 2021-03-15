@@ -245,7 +245,7 @@ export class MotionMultiselectService {
             this.translate.instant('Clear tags')
         );
         if (selectedChoice) {
-            let requestData: MotionAction.UpdateMetadataPayload[] = null;
+            let requestData: MotionAction.UpdatePayload[] = null;
             if (selectedChoice.action === ADD) {
                 requestData = motions.map(motion => {
                     const tagIds = [...motion.tag_ids, ...(selectedChoice.items as number[])];
@@ -273,7 +273,7 @@ export class MotionMultiselectService {
 
             const message = `${motions.length} ` + this.translate.instant(this.messageForSpinner);
             this.overlayService.showSpinner(message, true);
-            return this.sendBulkActionToBackend(MotionAction.UPDATE_METADATA, requestData);
+            return this.sendBulkActionToBackend(MotionAction.UPDATE, requestData);
         }
     }
 
@@ -397,10 +397,10 @@ export class MotionMultiselectService {
      * @param motionblockId the number that indicates the motion block
      */
     private async setMultiMotionBlock(viewMotions: ViewMotion[], motionblockId: number): Promise<void> {
-        const payload: MotionAction.UpdateMetadataPayload[] = viewMotions.map(motion => {
+        const payload: MotionAction.UpdatePayload[] = viewMotions.map(motion => {
             return { id: motion.id, block_id: motionblockId };
         });
-        await this.sendBulkActionToBackend(MotionAction.UPDATE_METADATA, payload);
+        await this.sendBulkActionToBackend(MotionAction.UPDATE, payload);
     }
 
     /**
@@ -410,14 +410,10 @@ export class MotionMultiselectService {
      * @param categoryId the number that indicates the category
      */
     private async setMultiCategory(viewMotions: ViewMotion[], categoryId: number): Promise<void> {
-        const payload: MotionAction.UpdateMetadataPayload[] = viewMotions.map(motion => {
+        const payload: MotionAction.UpdatePayload[] = viewMotions.map(motion => {
             return { id: motion.id, category_id: categoryId };
         });
-        await this.sendBulkActionToBackend(MotionAction.UPDATE_METADATA, payload);
-    }
-
-    private isMotionInWorkflow(motion: ViewMotion, workflowId: Id): boolean {
-        return motion.state && motion.state.workflow_id === workflowId;
+        await this.sendBulkActionToBackend(MotionAction.UPDATE, payload);
     }
 
     private sendBulkActionToBackend(action: string, payload: any[]): Promise<any> {

@@ -2,7 +2,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { auditTime } from 'rxjs/operators';
 
-import { ActionService } from '../core-services/action.service';
+import { ActionRequest, ActionService } from '../core-services/action.service';
 import { Collection } from 'app/shared/models/base/collection';
 import { BaseModel, ModelConstructor } from '../../shared/models/base/base-model';
 import { BaseViewModel, ViewModelConstructor } from '../../site/base/base-view-model';
@@ -348,6 +348,15 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     protected async sendBulkActionToBackend(action: string, payload: any[]): Promise<any> {
         try {
             return await this.actions.sendBulkRequest(action, payload);
+        } catch (e) {
+            this.raiseError(e);
+            throw e;
+        }
+    }
+
+    protected async sendActionsToBackend(actions: ActionRequest[]): Promise<any> {
+        try {
+            return await this.actions.sendRequests(actions);
         } catch (e) {
             this.raiseError(e);
             throw e;
