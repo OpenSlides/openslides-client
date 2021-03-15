@@ -325,6 +325,9 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
                     fieldset: 'title'
                 },
                 {
+                    idField: 'motion_category_ids'
+                },
+                {
                     idField: 'motion_workflow_ids'
                 },
                 {
@@ -466,10 +469,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         newMotionValues: Partial<MotionAction.UpdatePayload>,
         motion: ViewMotion
     ): Promise<void> {
-        await Promise.all([
-            this.repo.update(newMotionValues, motion),
-            this.repo.updateMetadata(newMotionValues, motion) // Save supporters, if changed
-        ]);
+        return await this.repo.update(newMotionValues, motion);
     }
 
     /**

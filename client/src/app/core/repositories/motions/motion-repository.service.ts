@@ -7,6 +7,7 @@ import { AgendaItemRepositoryService, AgendaListTitle } from '../agenda/agenda-i
 import { MotionAction } from 'app/core/actions/motion-action';
 import { DEFAULT_FIELDSET, Fieldsets, Follow } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
+import { Id } from 'app/core/definitions/key-types';
 import { DiffLinesInParagraph, DiffService } from 'app/core/ui-services/diff.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { TreeIdNode } from 'app/core/ui-services/tree.service';
@@ -100,34 +101,55 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         return this.sendActionToBackend(MotionAction.CREATE, payload);
     }
 
-    public update(update: Partial<MotionAction.UpdatePayload>, viewModel: ViewMotion): Promise<void> {
-        const payload: MotionAction.UpdatePayload = {
-            id: viewModel.id,
-            number: update.number,
-            modified_final_version: update.modified_final_version,
-            reason: update.reason,
-            text: update.text,
-            title: update.title
-        };
-        return this.sendActionToBackend(MotionAction.UPDATE, payload);
-    }
-
-    public updateMetadata(update: Partial<MotionAction.UpdateMetadataPayload>, viewMotion: ViewMotion): Promise<void> {
-        const payload: MotionAction.UpdateMetadataPayload = {
+    private getUpdatePayload(
+        update: Partial<MotionAction.UpdatePayload>,
+        viewMotion: ViewMotion
+    ): MotionAction.UpdatePayload {
+        return {
             id: viewMotion.id,
-            attachment_ids: update.attachment_ids,
+            title: update.title,
+            number: update.number,
+            text: update.text,
+            reason: update.reason,
+            modified_final_version: update.modified_final_version,
+            state_extension: update.state_extension,
+            recommendation_extension: update.recommendation_extension,
             category_id: update.category_id,
             block_id: update.block_id,
-            recommendation_extension: update.recommendation_extension,
-            state_extension: update.state_extension,
             supporter_ids: update.supporter_ids,
-            tag_ids: update.tag_ids
+            tag_ids: update.tag_ids,
+            attachment_ids: update.attachment_ids,
+            workflow_id: update.workflow_id
         };
-        return this.sendActionToBackend(MotionAction.UPDATE_METADATA, payload);
     }
 
-    public delete(viewModel: ViewMotion): Promise<void> {
-        return this.sendActionToBackend(MotionAction.DELETE, { id: viewModel.id });
+    public update(update: Partial<MotionAction.UpdatePayload>, viewMotion: ViewMotion): Promise<void> {
+        return this.sendActionToBackend(MotionAction.UPDATE, this.getUpdatePayload(update, viewMotion));
+    }
+
+    public updateWithStateAndRecommendation(
+        update: any,
+        stateId: Id,
+        recommendationId: Id,
+        viewMotion: ViewMotion
+    ): Promise<void> {
+        return this.sendActionsToBackend([
+            { action: MotionAction.UPDATE, data: [this.getUpdatePayload(update, viewMotion)] },
+            {
+                action: MotionAction.SET_RECOMMENDATION,
+                data: [
+                    {
+                        id: viewMotion.id,
+                        recommendation_id: recommendationId
+                    }
+                ]
+            },
+            { action: MotionAction.SET_STATE, data: [{ id: viewMotion.id, state_id: stateId }] }
+        ]);
+    }
+
+    public delete(viewMotion: ViewMotion): Promise<void> {
+        return this.sendActionToBackend(MotionAction.DELETE, { id: viewMotion.id });
     }
 
     public getFieldsets(): Fieldsets<Motion> {
@@ -290,7 +312,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param categoryId the number that indicates the category
      */
     public async setCategory(viewMotion: ViewMotion, categoryId: number): Promise<void> {
-        return this.updateMetadata({ category_id: categoryId }, viewMotion);
+        return this.update({ category_id: categoryId }, viewMotion);
     }
 
     /**
@@ -300,7 +322,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param blockId the ID of the motion block
      */
     public async setBlock(viewMotion: ViewMotion, blockId: number): Promise<void> {
-        return this.updateMetadata({ block_id: blockId }, viewMotion);
+        return this.update({ block_id: blockId }, viewMotion);
     }
 
     /**
@@ -320,7 +342,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
             // remove tag from motion
             tag_ids.splice(tagIndex, 1);
         }
-        return this.updateMetadata({ tag_ids: tag_ids }, viewMotion);
+        return this.update({ tag_ids: tag_ids }, viewMotion);
     }
 
     /**
@@ -343,7 +365,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      */
     public async support(viewMotion: ViewMotion): Promise<void> {
         const nextSupporterIds = [...viewMotion.supporter_ids, this.operator.operatorId];
-        return this.updateMetadata({ supporter_ids: nextSupporterIds }, viewMotion);
+        return this.update({ supporter_ids: nextSupporterIds }, viewMotion);
     }
 
     /**
@@ -358,7 +380,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         const nextSupporterIds = viewMotion.supporter_ids.filter(
             supporterId => supporterId !== this.operator.operatorId
         );
-        return this.updateMetadata({ supporter_ids: nextSupporterIds }, viewMotion);
+        return this.update({ supporter_ids: nextSupporterIds }, viewMotion);
     }
 
     /**
@@ -451,7 +473,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      */
     public async setStateExtension(viewMotion: ViewMotion, value: string): Promise<void> {
         if (viewMotion.state.show_state_extension_field) {
-            return this.updateMetadata({ state_extension: value }, viewMotion);
+            return this.update({ state_extension: value }, viewMotion);
         }
     }
 
@@ -463,7 +485,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      */
     public async setRecommendationExtension(viewMotion: ViewMotion, value: string): Promise<void> {
         if (viewMotion.recommendation.show_recommendation_extension_field) {
-            return this.updateMetadata({ recommendation_extension: value }, viewMotion);
+            return this.update({ recommendation_extension: value }, viewMotion);
         }
     }
 

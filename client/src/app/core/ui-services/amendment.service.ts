@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { ActionService } from '../core-services/action.service';
 import { ActiveMeetingIdService } from '../core-services/active-meeting-id.service';
 import { AmendmentAction } from 'app/core/actions/amendment-action';
-import { MotionAction } from 'app/core/actions/motion-action';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { createAgendaItem } from 'app/shared/utils/create-agenda-item';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
@@ -99,13 +98,8 @@ export class AmendmentService {
         return this.actions.sendRequest(AmendmentAction.CREATE_STATUTEBASED_AMENDMENT, payload);
     }
 
-    public async update(): Promise<void> {}
-
-    public async updateMetadata(
-        update: Partial<MotionAction.UpdateMetadataPayload>,
-        viewModel: ViewMotion
-    ): Promise<void> {
-        return this.motionRepo.updateMetadata(update, viewModel);
+    public async update(update: Partial<AmendmentAction.UpdatePayload>, viewModel: ViewMotion): Promise<void> {
+        return this.motionRepo.update(update, viewModel);
     }
 
     public async delete(viewModel: ViewMotion): Promise<void> {

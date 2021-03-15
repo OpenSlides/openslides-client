@@ -9,7 +9,7 @@ export namespace AmendmentAction {
     export const UPDATE = 'motion.update';
     export const DELETE = 'motion.delete';
 
-    interface PartialAmendmentPayload extends MotionAction.PartialMotionPayload {
+    interface PartialAmendmentPayload extends MotionAction.PartialMotionCreatePayload {
         lead_motion_id: Id;
     }
 
@@ -25,14 +25,12 @@ export namespace AmendmentAction {
         text: UnsafeHtml;
     }
 
-    export interface CreateStatutebasedPayload extends MotionAction.PartialMotionPayload {
+    export interface CreateStatutebasedPayload extends MotionAction.PartialMotionCreatePayload {
         statute_paragraph_id: Id;
         text: UnsafeHtml;
     }
 
-    export interface UpdatePayload {}
-
-    export interface UpdateMetadataPayload extends MotionAction.UpdateMetadataPayload {}
+    export interface UpdatePayload extends MotionAction.UpdatePayload {}
 
     export interface DeletePayload extends Identifiable {}
 }

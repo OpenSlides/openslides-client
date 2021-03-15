@@ -73,6 +73,7 @@ export interface Settings {
     list_of_speakers_present_users_only: boolean;
     list_of_speakers_show_first_contribution: boolean;
     list_of_speakers_enable_point_of_order_speakers: boolean;
+    list_of_speakers_initially_closed: boolean;
 
     // Motions
     motions_default_workflow_id: Id; // workflow/default_workflow_meeting_id;

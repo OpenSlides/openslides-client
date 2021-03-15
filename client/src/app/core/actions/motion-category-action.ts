@@ -19,7 +19,6 @@ export namespace MotionCategoryAction {
     export interface UpdatePayload extends Identifiable {
         name?: string;
         prefix?: string;
-        motion_ids?: Id[];
     }
     export interface SortPayload extends HasMeetingId, BaseSortPayload {}
     export interface SortMotionsInCategoryPayload extends Identifiable {
