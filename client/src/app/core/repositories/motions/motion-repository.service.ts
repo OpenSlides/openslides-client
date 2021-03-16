@@ -177,7 +177,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
             'state_extension',
             'recommendation_extension',
             'agenda_item_id', // for add/remove from agenda,
-            'amendment_paragraph_$'
+            'amendment_paragraph_$',
+            'poll_ids'
         ]);
         const amendmentFields: (keyof Motion)[] = listFields.concat(['lead_motion_id', 'amendment_ids']);
         const callListFields: (keyof Motion)[] = titleFields.concat(['sort_weight', 'sort_parent_id']);

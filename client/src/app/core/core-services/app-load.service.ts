@@ -12,6 +12,7 @@ import { HistoryAppConfig } from 'app/site/history/history.config';
 import { MediafileAppConfig } from 'app/site/mediafiles/mediafile.config';
 import { SettingsAppConfig } from 'app/site/meeting-settings/meeting-settings.config';
 import { MotionsAppConfig } from 'app/site/motions/motions.config';
+import { PollsAppConfig } from 'app/site/polls/polls.config';
 import { ProjectorAppConfig } from 'app/site/projector/projector.config';
 import { TagAppConfig } from 'app/site/tags/tag.config';
 import { TopicsAppConfig } from 'app/site/topics/topics.config';
@@ -32,6 +33,7 @@ const appConfigs: AppConfig[] = [
     AgendaAppConfig,
     AssignmentsAppConfig,
     MotionsAppConfig,
+    PollsAppConfig,
     MediafileAppConfig,
     TagAppConfig,
     UsersAppConfig,

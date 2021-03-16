@@ -3,8 +3,10 @@
     #siteContainer
     class="main-container"
     (backdropClick)="toggleSideNav()"
-    (touchstart)="swipe($event, 'start')"
-    (touchend)="swipe($event, 'end')"
+    osSwipe
+    [swipeConstraints]="'left'"
+    (swipeRight)="sideNav.open()"
+    (swipeLeft)="mobileAutoCloseNav()"
 >
     <mat-sidenav
         #sideNav
@@ -89,7 +91,7 @@
                 <mat-icon>arrow_forward_ios</mat-icon>
             </button>
         </div>
-        <div (touchstart)="swipe($event, 'start')" (touchend)="swipe($event, 'end')" class="content">
+        <div class="content">
             <main>
                 <router-outlet #o="outlet"></router-outlet>
             </main>

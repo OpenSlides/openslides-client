@@ -7,7 +7,7 @@
                 <li *ngFor="let option of poll.options">{{ getOptionTitle(option) | translate }}</li>
             </ol>
         </div>
-        <div *ngIf="hasGlobalOption">
+        <div *ngIf="hasGlobalOptionEnabled">
             {{ 'Options' | translate }}:
             <ul>
                 <li *ngIf="poll.global_yes">{{ pollPropertyVerbose.global_yes | translate }}</li>

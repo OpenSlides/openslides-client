@@ -129,7 +129,7 @@ export abstract class BaseSearchValueSelectorComponent<T> extends BaseFormContro
             console.warn('Warning: Value of function', value());
         } else {
             this.contentForm.setValue(value);
-            this.selectedIds = value as [];
+            this.selectedIds = value ? (value as []) : [];
         }
     }
 }

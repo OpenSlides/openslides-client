@@ -1,74 +1,40 @@
-import { Id } from 'app/core/definitions/key-types';
-import { BasePollData } from 'app/site/polls/services/poll.service';
+import { Fqid, Id } from 'app/core/definitions/key-types';
+import { CalculablePollKey } from 'app/site/polls/services/poll.service';
 import { BaseDecimalModel } from '../base/base-decimal-model';
-import { BaseOption } from './base-option';
 import { HasMeetingId } from '../base/has-meeting-id';
 import { HasProjectionIds } from '../base/has-projectable-ids';
+import { MajorityMethod, PollMethod, PollPercentBase, PollState, PollType } from './poll-constants';
 
-export enum PollColor {
-    yes = '#4caf50',
-    no = '#cc6c5b',
-    abstain = '#a6a6a6',
-    votesvalid = '#e2e2e2',
-    votesinvalid = '#e2e2e2',
-    votescast = '#e2e2e2'
-}
+export class Poll extends BaseDecimalModel<Poll> {
+    public static readonly COLLECTION = 'poll';
+    public static readonly DECIMAL_FIELDS: (keyof Poll)[] = ['votesvalid', 'votesinvalid', 'votescast'];
 
-export enum PollState {
-    Created = 'created',
-    Started = 'started',
-    Finished = 'finished',
-    Published = 'published'
-}
-
-export enum PollType {
-    Analog = 'analog',
-    Named = 'named',
-    Pseudoanonymous = 'pseudoanonymous'
-}
-
-export enum MajorityMethod {
-    Simple = 'simple',
-    TwoThirds = 'two_thirds',
-    ThreeQuarters = 'three_quarters',
-    Disabled = 'disabled'
-}
-
-export enum PercentBase {
-    YN = 'YN',
-    YNA = 'YNA',
-    Valid = 'valid',
-    Cast = 'cast',
-    Disabled = 'disabled'
-}
-
-export const VOTE_MAJORITY = -1;
-export const VOTE_UNDOCUMENTED = -2;
-export const LOWEST_VOTE_VALUE = VOTE_UNDOCUMENTED;
-
-export abstract class BasePoll<
-    T = any,
-    O extends BaseOption<any> = any,
-    PM extends string = string,
-    PB extends string = string
-> extends BaseDecimalModel<T> {
     public id: Id;
+    public content_object_id: Fqid;
     public state: PollState;
     public type: PollType;
     public title: string;
     public votesvalid: number;
     public votesinvalid: number;
     public votescast: number;
-    public onehundred_percent_base: PB;
+    public onehundred_percent_base: PollPercentBase;
     public majority_method: MajorityMethod;
     public voted_id: number[];
     public user_has_voted: boolean;
     public user_has_voted_for_delegations: Id[];
-    public pollmethod: PM;
+    public pollmethod: PollMethod;
 
-    public voted_ids: Id[]; // (user/(assignment|motion)_poll_voted_$<meeting_id>_ids)[];
+    public voted_ids: Id[]; // (user/poll_voted_$<meeting_id>_ids)[];
     public entitled_group_ids: Id[]; // (group/(assignment|motion)_poll_ids)[];
     public option_ids: Id[]; // ((assignment|motion)_option/poll_id)[];
+    public global_option_id: Id; // (motion_option/poll_id)
+
+    public description: string;
+    public min_votes_amount: number;
+    public max_votes_amount: number;
+    public global_yes: boolean;
+    public global_no: boolean;
+    public global_abstain: boolean;
 
     public get isCreated(): boolean {
         return this.state === PollState.Created;
@@ -87,7 +53,7 @@ export abstract class BasePoll<
     }
 
     public get isPercentBaseCast(): boolean {
-        return this.onehundred_percent_base === PercentBase.Cast;
+        return this.onehundred_percent_base === PollPercentBase.Cast;
     }
 
     public get isAnalog(): boolean {
@@ -125,12 +91,44 @@ export abstract class BasePoll<
                 return PollState.Created;
         }
     }
+
+    public constructor(input?: any) {
+        super(Poll.COLLECTION, input);
+    }
+
+    public get isMethodY(): boolean {
+        return this.pollmethod === PollMethod.Y;
+    }
+
+    public get isMethodN(): boolean {
+        return this.pollmethod === PollMethod.N;
+    }
+
+    public get isMethodYN(): boolean {
+        return this.pollmethod === PollMethod.YN;
+    }
+
+    public get isMethodYNA(): boolean {
+        return this.pollmethod === PollMethod.YNA;
+    }
+
+    public get hasGlobalOptionEnabled(): boolean {
+        return this.global_yes || this.global_no || this.global_abstain;
+    }
+
+    public get pollmethodFields(): CalculablePollKey[] {
+        if (this.pollmethod === PollMethod.YN) {
+            return ['yes', 'no'];
+        } else if (this.pollmethod === PollMethod.YNA) {
+            return ['yes', 'no', 'abstain'];
+        } else if (this.pollmethod === PollMethod.Y) {
+            return ['yes'];
+        }
+    }
+
+    protected getDecimalFields(): (keyof Poll)[] {
+        return Poll.DECIMAL_FIELDS;
+    }
 }
-export interface BasePoll<
-    T = any,
-    O extends BaseOption<any> = any,
-    PM extends string = string,
-    PB extends string = string
-> extends HasMeetingId,
-        HasProjectionIds,
-        BasePollData<PM, PB> {}
+
+export interface Poll extends HasMeetingId, HasProjectionIds {}

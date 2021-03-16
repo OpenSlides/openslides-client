@@ -9,8 +9,8 @@ import { AssignmentRepositoryService } from 'app/core/repositories/assignments/a
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { MediaManageService } from 'app/core/ui-services/media-manage.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
-import { AssignmentPollMethod } from 'app/shared/models/assignments/assignment-poll';
-import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
+import { PollMethod } from 'app/shared/models/poll/poll-constants';
+import { ViewPoll } from 'app/shared/models/poll/view-poll';
 
 /**
  * Creates a pdf for a motion poll. Takes as input any motionPoll
@@ -53,8 +53,8 @@ export class AssignmentPollPdfService extends PollPdfService {
      * @param title (optional) a different title
      * @param subtitle (optional) a different subtitle
      */
-    public printBallots(poll: ViewAssignmentPoll, title?: string, subtitle?: string): void {
-        const assignment = this.assignmentRepo.getViewModel(poll.assignment_id);
+    public printBallots(poll: ViewPoll, title?: string, subtitle?: string): void {
+        const assignment = this.assignmentRepo.getViewModel(poll.content_object?.id);
         const fileName = `${this.translate.instant('Election')} - ${assignment.getTitle()} - ${this.translate.instant(
             'ballot-paper' // TODO proper title (second election?)
         )}`;
@@ -71,7 +71,7 @@ export class AssignmentPollPdfService extends PollPdfService {
             subtitle = subtitle.substring(0, 90) + '...';
         }
         let rowsPerPage = 1;
-        if (poll.pollmethod === AssignmentPollMethod.Y) {
+        if (poll.pollmethod === PollMethod.Y) {
             if (poll.options.length <= 2) {
                 rowsPerPage = 4;
             } else if (poll.options.length <= 5) {
@@ -131,14 +131,14 @@ export class AssignmentPollPdfService extends PollPdfService {
         };
     }
 
-    private createCandidateFields(poll: ViewAssignmentPoll): object {
+    private createCandidateFields(poll: ViewPoll): object {
         const candidates = poll.options.sort((a, b) => {
             return a.weight - b.weight;
         });
         const resultObject = candidates.map(cand => {
-            const candidateName = cand.user?.full_name;
+            const candidateName = cand.content_object?.full_name;
             if (candidateName) {
-                return poll.pollmethod === AssignmentPollMethod.Y
+                return poll.pollmethod === PollMethod.Y
                     ? this.createBallotOption(candidateName)
                     : this.createYNBallotEntry(candidateName, poll.pollmethod);
             } else {
@@ -146,7 +146,7 @@ export class AssignmentPollPdfService extends PollPdfService {
             }
         });
 
-        if (poll.pollmethod === AssignmentPollMethod.Y) {
+        if (poll.pollmethod === PollMethod.Y) {
             if (poll.global_yes) {
                 const yesEntry = this.createBallotOption(this.translate.instant('Yes'));
                 yesEntry.margin[1] = 25;
@@ -168,7 +168,7 @@ export class AssignmentPollPdfService extends PollPdfService {
         return resultObject;
     }
 
-    private createYNBallotEntry(option: string, method: AssignmentPollMethod): object {
+    private createYNBallotEntry(option: string, method: PollMethod): object {
         const choices = method === 'YNA' ? ['Yes', 'No', 'Abstain'] : ['Yes', 'No'];
         const columnstack = choices.map(choice => {
             return {
@@ -194,9 +194,9 @@ export class AssignmentPollPdfService extends PollPdfService {
      * @param poll
      * @returns pdfMake definitions
      */
-    private createPollHint(poll: ViewAssignmentPoll): object {
+    private createPollHint(poll: ViewPoll): object {
         return {
-            text: poll.assignment.default_poll_description || '',
+            text: poll.content_object?.default_poll_description || '',
             style: 'description'
         };
     }

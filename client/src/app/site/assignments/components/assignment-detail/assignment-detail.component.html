@@ -66,9 +66,9 @@
         <ng-container [ngTemplateOutlet]="metaInfoTemplate"></ng-container>
 
         <!-- polls -->
-        <ng-container *ngIf="assignment && assignment.polls.length">
-            <ng-container *ngFor="let poll of assignment.polls | reverse; trackBy: trackByIndex">
-                <os-assignment-poll [poll]="poll"> </os-assignment-poll>
+        <ng-container *ngIf="assignment && assignment.poll_ids">
+            <ng-container *ngFor="let poll of assignment.poll_ids | reverse; trackBy: trackById">
+                <os-assignment-poll [pollId]="poll"> </os-assignment-poll>
             </ng-container>
         </ng-container>
 

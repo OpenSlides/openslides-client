@@ -3,12 +3,16 @@ import { ValidatorFn, Validators } from '@angular/forms';
 import dedent from 'ts-dedent';
 
 import { AgendaItemType } from 'app/shared/models/agenda/agenda-item';
-import { AssignmentPollMethod } from 'app/shared/models/assignments/assignment-poll';
 import { Settings } from 'app/shared/models/event-management/meeting';
 import { MotionWorkflow } from 'app/shared/models/motions/motion-workflow';
-import { PercentBase } from 'app/shared/models/poll/base-poll';
-import { AssignmentPollMethodVerbose } from 'app/site/assignments/models/view-assignment-poll';
-import { MajorityMethodVerbose, PercentBaseVerbose, PollTypeVerbose } from 'app/site/polls/models/base-view-poll';
+import { PollPercentBase } from 'app/shared/models/poll/poll-constants';
+import {
+    AssignmentPollMethodVerbose,
+    MajorityMethodVerbose,
+    PollMethod,
+    PollPercentBaseVerbose,
+    PollTypeVerbose
+} from 'app/shared/models/poll/poll-constants';
 
 export type SettingsType =
     | 'string'
@@ -615,9 +619,9 @@ export const meetingSettings: SettingsGroup[] = [
                     {
                         key: 'motion_poll_default_100_percent_base',
                         label: 'Default 100 % base of a voting result',
-                        default: PercentBase.YNA,
+                        default: PollPercentBase.YNA,
                         type: 'choice',
-                        choices: switchKeyValue(PercentBaseVerbose)
+                        choices: switchKeyValue(PollPercentBaseVerbose)
                     },
                     {
                         key: 'motion_poll_default_majority_method',
@@ -688,7 +692,7 @@ export const meetingSettings: SettingsGroup[] = [
                     {
                         key: 'assignment_poll_default_method',
                         label: 'Default election method',
-                        default: AssignmentPollMethod.Y,
+                        default: PollMethod.Y,
                         type: 'choice',
                         choices: switchKeyValue(AssignmentPollMethodVerbose)
                     },
@@ -701,9 +705,9 @@ export const meetingSettings: SettingsGroup[] = [
                     {
                         key: 'assignment_poll_default_100_percent_base',
                         label: 'Default 100 % base of an election result',
-                        default: PercentBase.Valid,
+                        default: PollPercentBase.Valid,
                         type: 'choice',
-                        choices: switchKeyValue(PercentBaseVerbose)
+                        choices: switchKeyValue(PollPercentBaseVerbose)
                     },
                     {
                         key: 'assignment_poll_default_majority_method',

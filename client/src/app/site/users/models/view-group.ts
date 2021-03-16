@@ -1,10 +1,9 @@
 import { Permission } from 'app/core/core-services/permission';
+import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { Group } from 'app/shared/models/users/group';
-import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
 import { HasMeeting, ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-comment-section';
-import { ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
 import { BaseViewModel } from '../../base/base-view-model';
 import { ViewUser } from './view-user';
 
@@ -27,8 +26,7 @@ interface IGroupRelations {
     mediafile_inherited_access_groups: ViewMediafile[];
     read_comment_sections: ViewMotionCommentSection[];
     write_comment_sections: ViewMotionCommentSection[];
-    motion_polls: ViewMotionPoll[];
-    assignment_polls: ViewAssignmentPoll[];
+    polls: ViewPoll[];
     used_as_motion_poll_default?: ViewMeeting;
     used_as_assignment_poll_default?: ViewMeeting;
 }

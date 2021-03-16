@@ -1,10 +1,9 @@
 import { AgendaItemType } from '../agenda/agenda-item';
 import { Id } from 'app/core/definitions/key-types';
 import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.constants';
-import { AssignmentPollMethod, AssignmentPollPercentBase } from '../assignments/assignment-poll';
 import { BaseModel } from '../base/base-model';
-import { MajorityMethod, PercentBase, PollType } from '../poll/base-poll';
 import { HasProjectionIds } from '../base/has-projectable-ids';
+import { MajorityMethod, PollMethod, PollPercentBase, PollType } from '../poll/poll-constants';
 
 export type UserSortProperty = 'first_name' | 'last_name' | 'number';
 export type ExportCsvEncoding = 'utf-8' | 'iso-8859-15';
@@ -112,7 +111,7 @@ export interface Settings {
     motion_poll_ballot_paper_selection: BallotPaperSelection;
     motion_poll_ballot_paper_number: number;
     motion_poll_default_type: PollType;
-    motion_poll_default_100_percent_base: PercentBase;
+    motion_poll_default_100_percent_base: PollPercentBase;
     motion_poll_default_majority_method: MajorityMethod;
     motion_poll_default_group_ids: Id[]; // (group/used_as_motion_poll_default_id)[];
 
@@ -141,8 +140,8 @@ export interface Settings {
     assignment_poll_add_candidates_to_list_of_speakers: boolean;
     assignment_poll_sort_poll_result_by_votes: boolean;
     assignment_poll_default_type: PollType;
-    assignment_poll_default_method: AssignmentPollMethod;
-    assignment_poll_default_100_percent_base: AssignmentPollPercentBase;
+    assignment_poll_default_method: PollMethod;
+    assignment_poll_default_100_percent_base: PollPercentBase;
     assignment_poll_default_majority_method: MajorityMethod;
     assignment_poll_default_group_ids: Id[]; // (group/used_as_assignment_poll_default_id)[];
 }
@@ -174,14 +173,11 @@ export class Meeting extends BaseModel<Meeting> {
     public motion_workflow_ids: Id[]; // (motion_workflow/meeting_id)[];
     public motion_state_ids: Id[]; // (motion_state/meeting_id)[];
     public motion_statute_paragraph_ids: Id[]; // (motion_statute_paragraph/meeting_id)[];
-    public motion_poll_ids: Id[]; // (motion_poll/meeting_id)[];
-    public motion_option_ids: Id[]; // (motion_option/meeting_id)[];
-    public motion_vote_ids: Id[]; // (motion_vote/meeting_id)[];
+    public poll_ids: Id[]; // (poll/meeting_id)[];
+    public option_ids: Id[]; // (option/meeting_id)[];
+    public vote_ids: Id[]; // (vote/meeting_id)[];
     public assignment_ids: Id[]; // (assignment/meeting_id)[];
     public assignment_candidate_ids: Id[]; // (assignment_candidate/meeting_id)[];
-    public assignment_poll_ids: Id[]; // (assignment_poll/meeting_id)[];
-    public assignment_option_ids: Id[]; // (assignment_option/meeting_id)[];
-    public assignment_vote_ids: Id[]; // (assignment_vote/meeting_id)[];
 
     // Logos and Fonts
     public logo_$_id: string[]; // mediafile/used_as_logo_$<place>_in_meeting_id;

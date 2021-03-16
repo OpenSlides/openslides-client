@@ -24,7 +24,7 @@
             <tr *ngFor="let row of tableData" [class]="row.class">
                 <td class="voting-option">
                     <div>
-                        <span>
+                        <span class="candidate-name">
                             {{ row.votingOption | pollKeyVerbose | translate }}
                         </span>
                         <span class="user-subtitle" *ngIf="row.votingOptionSubtitle">

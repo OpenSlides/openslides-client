@@ -9,7 +9,7 @@ import { MotionRepositoryService } from 'app/core/repositories/motions/motion-re
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { MediaManageService } from 'app/core/ui-services/media-manage.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
-import { MotionPoll } from 'app/shared/models/motions/motion-poll';
+import { ViewPoll } from 'app/shared/models/poll/view-poll';
 
 /**
  * Creates a pdf for a motion poll. Takes as input any motionPoll
@@ -53,12 +53,12 @@ export class MotionPollPdfService extends PollPdfService {
      *   the ballot. Defaults to the beginning of the motion's title
      * - the options 'yes', 'no', 'abstain' translated to the client's language.
      *
-     * @param motionPoll: The poll this ballot refers to
+     * @param viewPoll: The poll this ballot refers to
      * @param title (optional) a different title
      * @param subtitle (optional) a different subtitle
      */
-    public printBallots(motionPoll: MotionPoll, title?: string, subtitle?: string): void {
-        const motion = this.motionRepo.getViewModel(motionPoll.motion_id);
+    public printBallots(viewPoll: ViewPoll, title?: string, subtitle?: string): void {
+        const motion = this.motionRepo.getViewModel(viewPoll.content_object?.id);
         const fileName = `${this.translate.instant('Motion')} - ${motion.number} - ${this.translate.instant(
             'ballot-paper'
         )}`;

@@ -5,7 +5,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
 
 import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
-import { ModelRequest, ModelSubscription } from 'app/core/core-services/autoupdate.service';
+import { ModelSubscription } from 'app/core/core-services/autoupdate.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
@@ -14,12 +14,15 @@ import { AssignmentRepositoryService } from 'app/core/repositories/assignments/a
 import { MediafileRepositoryService } from 'app/core/repositories/mediafiles/mediafile-repository.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { AllUsersInMeetingRequest, UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
+import { PollDialogData } from 'app/core/ui-services/base-poll-dialog.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
 import { Assignment, AssignmentPhase } from 'app/shared/models/assignments/assignment';
+import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { PermissionsService } from 'app/site/motions/services/permissions.service';
 import { ViewTag } from 'app/site/tags/models/view-tag';
@@ -29,7 +32,6 @@ import { AssignmentPollDialogService } from '../../modules/assignment-poll/servi
 import { AssignmentPollService } from '../../modules/assignment-poll/services/assignment-poll.service';
 import { AssignmentPhases, ViewAssignment } from '../../models/view-assignment';
 import { ViewAssignmentCandidate } from '../../models/view-assignment-candidate';
-import { ViewAssignmentPoll } from '../../models/view-assignment-poll';
 
 /**
  * Component for the assignment detail view
@@ -224,7 +226,6 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
         this.candidatesForm = formBuilder.group({
             userId: null
         });
-        this.getAssignmentByUrl();
     }
 
     /**
@@ -279,7 +280,6 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
         } else {
             this.subscriptions.push(
                 this.route.params.subscribe(params => {
-                    console.log(params);
                     this.loadAssignmentById(+params.id);
                 })
             );
@@ -287,6 +287,12 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
     }
 
     private loadAssignmentById(assignmentId: number): void {
+        this.requestModels({
+            // Get all available groups in an active meeting.
+            viewModelCtor: ViewMeeting,
+            ids: [this.activeMeetingService.meetingId],
+            follow: [{ idField: 'group_ids' }]
+        });
         this.requestModels({
             viewModelCtor: ViewAssignment,
             ids: [assignmentId],
@@ -300,16 +306,6 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
                         }
                     ]
                 },
-                // // requires more adjustment and integration of the poll repo
-                // {
-                //     idField: 'poll_ids',
-                //     follow: [
-                //         {
-                //             idField: 'id',
-                //             fieldset: 'title'
-                //         }
-                //     ]
-                // },
                 SPEAKER_BUTTON_FOLLOW
             ]
         });
@@ -325,11 +321,12 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
                     }
                 }
             }),
-            this.candidatesForm.valueChanges.subscribe(formResult => {
+            this.candidatesForm.valueChanges.subscribe(async formResult => {
                 // resetting a form triggers a form.next(null) - check if data is present
                 if (formResult && formResult.userId) {
-                    this.addCandidate(formResult.userId);
+                    await this.addCandidate(formResult.userId);
                     this.candidatesForm.setValue({ userId: null });
+                    this.candidatesForm.reset();
                 }
             })
         );
@@ -440,11 +437,11 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
      * Creates a new Poll
      */
     public openDialog(): void {
-        const dialogData = {
-            collection: ViewAssignmentPoll.COLLECTION,
-            assignment_id: this.assignment.id,
-            assignment: this.assignment,
-            ...this.assignmentPollService.getDefaultPollData(this.assignment.id)
+        const dialogData: Partial<PollDialogData> = {
+            collection: ViewPoll.COLLECTION,
+            content_object_id: this.assignment.fqid,
+            content_object: this.assignment,
+            ...this.assignmentPollService.getDefaultPollData(this.assignment)
         };
 
         this.pollDialog.openDialog(dialogData).catch(this.raiseError);

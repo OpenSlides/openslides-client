@@ -1,7 +1,7 @@
 import { ActiveMeetingIdService } from '../core-services/active-meeting-id.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { BallotPaperSelection } from 'app/shared/models/event-management/meeting';
-import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
+import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { MediaManageService } from '../ui-services/media-manage.service';
 import { MeetingSettingsService } from '../ui-services/meeting-settings.service';
 
@@ -14,7 +14,7 @@ export interface AbstractPollData {
     title: string;
     subtitle?: string;
     sheetend: number; // should reflect the vertical size of one ballot on the paper
-    poll?: ViewAssignmentPoll; // TODO ugly workaround because assignment poll needs the poll on ballot level
+    poll?: ViewPoll;
 }
 
 export abstract class PollPdfService {

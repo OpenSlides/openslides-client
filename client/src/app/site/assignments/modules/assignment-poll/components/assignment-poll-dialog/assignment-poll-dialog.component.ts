@@ -4,22 +4,27 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
+import { PollAction } from 'app/core/actions/poll-action';
+import { PollDialogData, PollDialogResult } from 'app/core/ui-services/base-poll-dialog.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { AssignmentPollMethod } from 'app/shared/models/assignments/assignment-poll';
-import { LOWEST_VOTE_VALUE, PollType } from 'app/shared/models/poll/base-poll';
-import { GeneralValueVerbose, VoteValue, VoteValueVerbose } from 'app/shared/models/poll/base-vote';
+import { BaseModel } from 'app/shared/models/base/base-model';
+import {
+    GeneralValueVerbose,
+    LOWEST_VOTE_VALUE,
+    PollType,
+    VoteValue,
+    VoteValueVerbose
+} from 'app/shared/models/poll/poll-constants';
+import { PollPropertyVerbose } from 'app/shared/models/poll/poll-constants';
 import {
     AssignmentPollMethodVerbose,
     AssignmentPollPercentBaseVerbose,
-    ViewAssignmentPoll
-} from 'app/site/assignments/models/view-assignment-poll';
+    PollMethod
+} from 'app/shared/models/poll/poll-constants';
+import { ViewPoll } from 'app/shared/models/poll/view-poll';
+import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { BasePollDialogComponent } from 'app/site/polls/components/base-poll-dialog.component';
-import { PollFormComponent } from 'app/site/polls/components/poll-form/poll-form.component';
-import { PollPropertyVerbose } from 'app/site/polls/models/base-view-poll';
-import { ViewUser } from 'app/site/users/models/view-user';
 import { AssignmentPollService, UnknownUserLabel } from '../../services/assignment-poll.service';
-
-type OptionsObject = { user_id: number; user: ViewUser }[];
 
 /**
  * A dialog for updating the values of an assignment-related poll.
@@ -29,16 +34,8 @@ type OptionsObject = { user_id: number; user: ViewUser }[];
     templateUrl: './assignment-poll-dialog.component.html',
     styleUrls: ['./assignment-poll-dialog.component.scss']
 })
-export class AssignmentPollDialogComponent
-    extends BasePollDialogComponent<ViewAssignmentPoll, AssignmentPollService>
-    implements OnInit {
+export class AssignmentPollDialogComponent extends BasePollDialogComponent {
     public unknownUserLabel = UnknownUserLabel;
-    /**
-     * The summary values that will have fields in the dialog
-     */
-    public get sumValues(): string[] {
-        return ['votesvalid', 'votesinvalid', 'votescast'];
-    }
 
     /**
      * List of accepted special non-numerical values.
@@ -46,35 +43,13 @@ export class AssignmentPollDialogComponent
      */
     public specialValues: [number, string][];
 
-    @ViewChild('pollForm', { static: true })
-    protected pollForm: PollFormComponent<ViewAssignmentPoll, AssignmentPollService>;
-
-    /**
-     * vote entries for each option in this component. Is empty if method
-     * requires one vote per candidate
-     */
-    public analogPollValues: VoteValue[];
-
-    public voteValueVerbose = VoteValueVerbose;
     public generalValueVerbose = GeneralValueVerbose;
     public PollPropertyVerbose = PollPropertyVerbose;
 
     public AssignmentPollMethodVerbose = AssignmentPollMethodVerbose;
     public AssignmentPollPercentBaseVerbose = AssignmentPollPercentBaseVerbose;
 
-    public options: OptionsObject;
-
-    public globalYesEnabled: boolean;
-    public globalNoEnabled: boolean;
-    public globalAbstainEnabled: boolean;
-
-    public get isAnalogPoll(): boolean {
-        return (
-            this.pollForm &&
-            this.pollForm.contentForm &&
-            this.pollForm.contentForm.get('type').value === PollType.Analog
-        );
-    }
+    public readonly globalValues = ['global_yes', 'global_no', 'global_abstain'];
 
     /**
      * Constructor. Retrieves necessary metadata from the pollService,
@@ -82,123 +57,49 @@ export class AssignmentPollDialogComponent
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        private formBuilder: FormBuilder,
-        public dialogRef: MatDialogRef<BasePollDialogComponent<ViewAssignmentPoll, AssignmentPollService>>,
+        formBuilder: FormBuilder,
+        public dialogRef: MatDialogRef<BasePollDialogComponent>,
         public assignmentPollService: AssignmentPollService,
-        @Inject(MAT_DIALOG_DATA) public pollData: Partial<ViewAssignmentPoll>
+        @Inject(MAT_DIALOG_DATA) public pollData: PollDialogData | ViewPoll
     ) {
-        super(componentServiceCollector, dialogRef);
+        super(componentServiceCollector, dialogRef, pollData, formBuilder);
     }
 
-    public ngOnInit(): void {
-        // TODO: not solid.
-        // on new poll creation, poll.options does not exist, so we have to build a substitute
-        // from the assignment candidates
-        if (this.pollData) {
-            if (this.pollData.options) {
-                this.options = this.pollData.options;
-            } else if (
-                this.pollData.assignment &&
-                this.pollData.assignment.candidatesAsUsers &&
-                this.pollData.assignment.candidatesAsUsers.length
-            ) {
-                this.options = this.pollData.assignment.candidatesAsUsers.map(
-                    user => ({
-                        user_id: user.id,
-                        user: user
-                    }),
-                    {}
-                );
-            }
-        }
-
+    public onBeforeInit(): void {
+        console.log('pollData', this.pollData);
         this.subscriptions.push(
             this.pollForm.contentForm.valueChanges.pipe(debounceTime(150), distinctUntilChanged()).subscribe(() => {
-                this.createDialog();
+                this.triggerUpdate();
             })
         );
     }
 
-    private setAnalogPollValues(): void {
+    protected getContentObjectsForOptions(): BaseModel[] {
+        if (!this.pollData) {
+            return [];
+        }
+        const contentObject = this.pollData.content_object as ViewAssignment;
+        return contentObject.candidatesAsUsers;
+    }
+
+    protected getAnalogVoteFields(): VoteValue[] {
         const pollmethod = this.pollForm.contentForm.get('pollmethod').value;
-        this.globalYesEnabled = this.pollForm.contentForm.get('global_yes').value;
-        this.globalNoEnabled = this.pollForm.contentForm.get('global_no').value;
-        this.globalAbstainEnabled = this.pollForm.contentForm.get('global_abstain').value;
 
         const analogPollValues: VoteValue[] = [];
 
-        if (pollmethod === AssignmentPollMethod.N) {
+        if (pollmethod === PollMethod.N) {
             analogPollValues.push('N');
         } else {
             analogPollValues.push('Y');
 
-            if (pollmethod !== AssignmentPollMethod.Y) {
+            if (pollmethod !== PollMethod.Y) {
                 analogPollValues.push('N');
             }
-            if (pollmethod === AssignmentPollMethod.YNA) {
+            if (pollmethod === PollMethod.YNA) {
                 analogPollValues.push('A');
             }
         }
 
-        this.analogPollValues = analogPollValues;
-    }
-
-    private updateDialogVoteForm(data: Partial<ViewAssignmentPoll>): void {
-        const update = {
-            options: {},
-            votesvalid: data.votesvalid,
-            votesinvalid: data.votesinvalid,
-            votescast: data.votescast,
-            amount_global_yes: data.amount_global_yes,
-            amount_global_no: data.amount_global_no,
-            amount_global_abstain: data.amount_global_abstain
-        };
-        for (const option of data.options) {
-            const votes: any = {};
-            votes.Y = option.yes;
-            if (data.pollmethod !== AssignmentPollMethod.Y) {
-                votes.N = option.no;
-            }
-            if (data.pollmethod === AssignmentPollMethod.YNA) {
-                votes.A = option.abstain;
-            }
-            update.options[option.user_id] = votes;
-        }
-
-        if (this.dialogVoteForm) {
-            const result = this.undoReplaceEmptyValues(update);
-            this.dialogVoteForm.patchValue(result);
-        }
-    }
-
-    /**
-     * Pre-executed method to initialize the dialog-form depending on the poll-method.
-     */
-    private createDialog(): void {
-        this.setAnalogPollValues();
-
-        this.dialogVoteForm = this.formBuilder.group({
-            options: this.formBuilder.group(
-                // create a form group for each option with the user id as key
-                this.options.mapToObject(option => ({
-                    [option.user_id]: this.formBuilder.group(
-                        // for each user, create a form group with a control for each valid input (Y, N, A)
-                        this.analogPollValues.mapToObject(value => ({
-                            [value]: ['', [Validators.min(LOWEST_VOTE_VALUE)]]
-                        }))
-                    )
-                }))
-            ),
-            amount_global_yes: ['', [Validators.min(LOWEST_VOTE_VALUE)]],
-            amount_global_no: ['', [Validators.min(LOWEST_VOTE_VALUE)]],
-            amount_global_abstain: ['', [Validators.min(LOWEST_VOTE_VALUE)]],
-            // insert all used global fields
-            ...this.sumValues.mapToObject(sumValue => ({
-                [sumValue]: ['', [Validators.min(LOWEST_VOTE_VALUE)]]
-            }))
-        });
-        if (this.isAnalogPoll && this.pollData.poll) {
-            this.updateDialogVoteForm(this.pollData);
-        }
+        return analogPollValues;
     }
 }

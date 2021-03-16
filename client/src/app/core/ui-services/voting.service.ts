@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
-import { PollState, PollType } from 'app/shared/models/poll/base-poll';
-import { BaseViewPoll } from 'app/site/polls/models/base-view-poll';
+import { PollState, PollType } from 'app/shared/models/poll/poll-constants';
+import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { OperatorService } from '../core-services/operator.service';
 
@@ -38,7 +38,7 @@ export class VotingService {
     /**
      * checks whether the operator can vote on the given poll
      */
-    public canVote(poll: BaseViewPoll, user?: ViewUser): boolean {
+    public canVote(poll: ViewPoll, user?: ViewUser): boolean {
         const error = this.getVotePermissionError(poll, user);
         return !error;
     }
@@ -48,7 +48,7 @@ export class VotingService {
      * @returns null if no errors exist (= user can vote) or else a VotingError
      */
     public getVotePermissionError(
-        poll: BaseViewPoll,
+        poll: ViewPoll,
         user: ViewUser = null /*this.operator.viewUser*/
     ): VotingError | void {
         if (this.operator.isAnonymous) {
@@ -75,7 +75,7 @@ export class VotingService {
     }
 
     public getVotePermissionErrorVerbose(
-        poll: BaseViewPoll,
+        poll: ViewPoll,
         user: ViewUser = null /*this.operator.viewUser*/
     ): string | void {
         const error = this.getVotePermissionError(poll, user);

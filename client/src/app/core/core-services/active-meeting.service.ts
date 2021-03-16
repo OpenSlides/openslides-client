@@ -86,6 +86,12 @@ export class ActiveMeetingService {
                         { idField: 'preview_projection_ids', follow: [{ idField: 'content_object_id' }] }
                         // {idField: 'used_as_default_$_in_meeting_id'} // TODO
                     ]
+                },
+                {
+                    // needed for the voting-banner
+                    idField: 'poll_ids',
+                    fieldset: 'list',
+                    follow: [{ idField: 'content_object_id' }]
                 }
             ],
             fieldset: 'settings',

@@ -4,14 +4,14 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { HtmlToPdfService } from 'app/core/pdf-services/html-to-pdf.service';
 import { AssignmentPhase } from 'app/shared/models/assignments/assignment';
-import { AssignmentPollMethod } from 'app/shared/models/assignments/assignment-poll';
+import { PollMethod } from 'app/shared/models/poll/poll-constants';
+import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { ParsePollNumberPipe } from 'app/shared/pipes/parse-poll-number.pipe';
 import { PollKeyVerbosePipe } from 'app/shared/pipes/poll-key-verbose.pipe';
 import { PollPercentBasePipe } from 'app/shared/pipes/poll-percent-base.pipe';
 import { PollTableData, VotingResult } from 'app/site/polls/services/poll.service';
 import { AssignmentPollService } from '../modules/assignment-poll/services/assignment-poll.service';
 import { ViewAssignment } from '../models/view-assignment';
-import { ViewAssignmentPoll } from '../models/view-assignment-poll';
 
 /**
  * Creates a PDF document from a single assignment
@@ -217,12 +217,12 @@ export class AssignmentPdfService {
     /**
      * Converts pollData to a printable string representation
      */
-    private getPollResult(votingResult: PollTableData, poll: ViewAssignmentPoll): string {
+    private getPollResult(votingResult: PollTableData, poll: ViewPoll): string {
         const resultList = votingResult.value
             .filter((singleResult: VotingResult) => {
-                if (poll.pollmethod === AssignmentPollMethod.Y) {
+                if (poll.pollmethod === PollMethod.Y) {
                     return singleResult.vote !== 'no' && singleResult.vote !== 'abstain';
-                } else if (poll.pollmethod === AssignmentPollMethod.YN) {
+                } else if (poll.pollmethod === PollMethod.YN) {
                     return singleResult.vote !== 'abstain';
                 } else {
                     return true;

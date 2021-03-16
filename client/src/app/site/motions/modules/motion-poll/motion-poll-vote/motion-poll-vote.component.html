@@ -23,17 +23,19 @@
 
     <div *ngIf="canVote(delegation)" class="vote-button-grid">
         <!-- Voting -->
-        <div class="vote-button" *ngFor="let option of voteOptions">
-            <button
-                mat-raised-button
-                (click)="saveVote(option.vote, delegation)"
-                [ngClass]="getActionButtonClass(option, delegation)"
-                [disabled]="isDeliveringVote(delegation)"
-            >
-                <mat-icon> {{ option.icon }}</mat-icon>
-            </button>
-            <span class="vote-label"> {{ option.label | translate }} </span>
-        </div>
+        <ng-container *ngFor="let id of poll.option_ids">
+            <div class="vote-button" *ngFor="let option of voteOptions">
+                <button
+                    mat-raised-button
+                    (click)="saveVote(option.vote, id, delegation)"
+                    [ngClass]="getActionButtonClass(option, delegation)"
+                    [disabled]="isDeliveringVote(delegation)"
+                >
+                    <mat-icon> {{ option.icon }}</mat-icon>
+                </button>
+                <span class="vote-label"> {{ option.label | translate }} </span>
+            </div>
+        </ng-container>
     </div>
 
     <ng-container

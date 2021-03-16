@@ -1,5 +1,6 @@
 import { SearchRepresentation } from 'app/core/ui-services/search.service';
 import { Assignment, AssignmentPhase } from 'app/shared/models/assignments/assignment';
+import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { Projectiondefault } from 'app/shared/models/projector/projector';
 import { HasAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { HasListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
@@ -10,7 +11,6 @@ import { HasViewPolls } from 'app/site/polls/models/has-view-polls';
 import { HasTags } from 'app/site/tags/models/view-tag';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { ViewAssignmentCandidate } from './view-assignment-candidate';
-import { ViewAssignmentPoll } from './view-assignment-poll';
 
 /**
  * A constant containing all possible assignment phases and their different
@@ -88,9 +88,9 @@ export class ViewAssignment extends BaseProjectableViewModel<Assignment> {
         return Projectiondefault.assignment;
     }
 }
-interface IAssignmentRelations extends HasViewPolls<ViewAssignmentPoll> {
+interface IAssignmentRelations extends HasViewPolls<ViewPoll> {
     candidates: ViewAssignmentCandidate[];
-    polls: ViewAssignmentPoll[];
+    polls: ViewPoll[];
 }
 export interface ViewAssignment
     extends Assignment,

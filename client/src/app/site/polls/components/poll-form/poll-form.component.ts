@@ -8,21 +8,20 @@ import { GroupRepositoryService } from 'app/core/repositories/users/group-reposi
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { VotingPrivacyWarningComponent } from 'app/shared/components/voting-privacy-warning/voting-privacy-warning.component';
-import { AssignmentPollMethod, AssignmentPollPercentBase } from 'app/shared/models/assignments/assignment-poll';
-import { PercentBase } from 'app/shared/models/poll/base-poll';
-import { PollType } from 'app/shared/models/poll/base-poll';
-import { ParentErrorStateMatcher } from 'app/shared/parent-error-state-matcher';
-import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
-import { isNumberRange } from 'app/shared/validators/custom-validators';
-import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
-import { BaseComponent } from 'app/site/base/components/base.component';
+import { PollType } from 'app/shared/models/poll/poll-constants';
+import { PollMethod, PollPercentBase } from 'app/shared/models/poll/poll-constants';
 import {
-    BaseViewPoll,
     MajorityMethodVerbose,
     PollClassType,
     PollPropertyVerbose,
     PollTypeVerbose
-} from 'app/site/polls/models/base-view-poll';
+} from 'app/shared/models/poll/poll-constants';
+import { ViewPoll } from 'app/shared/models/poll/view-poll';
+import { ParentErrorStateMatcher } from 'app/shared/parent-error-state-matcher';
+import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
+import { isNumberRange } from 'app/shared/validators/custom-validators';
+import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewGroup } from 'app/site/users/models/view-group';
 import { PollService } from '../../services/poll.service';
 
@@ -32,7 +31,7 @@ import { PollService } from '../../services/poll.service';
     styleUrls: ['./poll-form.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class PollFormComponent<T extends BaseViewPoll, S extends PollService> extends BaseComponent implements OnInit {
+export class PollFormComponent extends BaseComponent implements OnInit {
     /**
      * The form-group for the meta-info.
      */
@@ -55,10 +54,10 @@ export class PollFormComponent<T extends BaseViewPoll, S extends PollService> ex
     public percentBases: { [key: string]: string };
 
     @Input()
-    public data: Partial<T>;
+    public data: Partial<ViewPoll>;
 
     @Input()
-    private pollService: S;
+    private pollService: PollService;
 
     /**
      * The different types the poll can accept.
@@ -133,9 +132,10 @@ export class PollFormComponent<T extends BaseViewPoll, S extends PollService> ex
                 this.disablePollType();
             }
 
-            if (this.data instanceof ViewAssignmentPoll) {
-                if (this.data.assignment && !this.data.max_votes_amount) {
-                    this.data.max_votes_amount = this.data.assignment.open_posts;
+            if (this.data.isAssignmentPoll) {
+                if (!!this.data.getContentObject() && !this.data.max_votes_amount) {
+                    const assignment = this.data.getContentObject() as ViewAssignment;
+                    this.data.max_votes_amount = assignment.open_posts;
                 }
                 if (!this.data.pollmethod) {
                     this.data.pollmethod = this.meetingSettingsService.instant('assignment_poll_default_method');
@@ -202,15 +202,15 @@ export class PollFormComponent<T extends BaseViewPoll, S extends PollService> ex
      * updates the available percent bases according to the pollmethod
      * @param method the currently chosen pollmethod
      */
-    private updatePercentBases(method: AssignmentPollMethod): void {
+    private updatePercentBases(method: PollMethod): void {
         if (method) {
             let forbiddenBases = [];
-            if (method === AssignmentPollMethod.YN) {
-                forbiddenBases = [PercentBase.YNA, AssignmentPollPercentBase.Y];
-            } else if (method === AssignmentPollMethod.YNA) {
-                forbiddenBases = [AssignmentPollPercentBase.Y];
-            } else if (method === AssignmentPollMethod.Y || AssignmentPollMethod.N) {
-                forbiddenBases = [PercentBase.YN, PercentBase.YNA];
+            if (method === PollMethod.YN) {
+                forbiddenBases = [PollPercentBase.YNA, PollPercentBase.Y];
+            } else if (method === PollMethod.YNA) {
+                forbiddenBases = [PollPercentBase.Y];
+            } else if (method === PollMethod.Y || PollMethod.N) {
+                forbiddenBases = [PollPercentBase.YN, PollPercentBase.YNA];
             }
 
             const bases = {};
@@ -227,22 +227,13 @@ export class PollFormComponent<T extends BaseViewPoll, S extends PollService> ex
         }
     }
 
-    private getNormedPercentBase(
-        base: AssignmentPollPercentBase,
-        method: AssignmentPollMethod
-    ): AssignmentPollPercentBase {
-        if (
-            method === AssignmentPollMethod.YN &&
-            (base === AssignmentPollPercentBase.YNA || base === AssignmentPollPercentBase.Y)
-        ) {
-            return AssignmentPollPercentBase.YN;
-        } else if (method === AssignmentPollMethod.YNA && base === AssignmentPollPercentBase.Y) {
-            return AssignmentPollPercentBase.YNA;
-        } else if (
-            method === AssignmentPollMethod.Y &&
-            (base === AssignmentPollPercentBase.YN || base === AssignmentPollPercentBase.YNA)
-        ) {
-            return AssignmentPollPercentBase.Y;
+    private getNormedPercentBase(base: PollPercentBase, method: PollMethod): PollPercentBase {
+        if (method === PollMethod.YN && (base === PollPercentBase.YNA || base === PollPercentBase.Y)) {
+            return PollPercentBase.YN;
+        } else if (method === PollMethod.YNA && base === PollPercentBase.Y) {
+            return PollPercentBase.YNA;
+        } else if (method === PollMethod.Y && (base === PollPercentBase.YN || base === PollPercentBase.YNA)) {
+            return PollPercentBase.Y;
         }
         return base;
     }
@@ -259,11 +250,11 @@ export class PollFormComponent<T extends BaseViewPoll, S extends PollService> ex
         }
     }
 
-    public getValues(): Partial<T> {
+    public getValues(): Partial<ViewPoll> {
         return { ...this.data, ...this.serializeForm(this.contentForm) };
     }
 
-    private serializeForm(formGroup: FormGroup): Partial<T> {
+    private serializeForm(formGroup: FormGroup): Partial<ViewPoll> {
         const formData = { ...formGroup.value, ...formGroup.value.votes_amount };
         delete formData.votes_amount;
         return formData;
@@ -292,8 +283,8 @@ export class PollFormComponent<T extends BaseViewPoll, S extends PollService> ex
             if (data.type !== 'analog') {
                 this.pollValues.push([
                     this.pollService.getVerboseNameForKey('groups'),
-                    data && data.groups_id && data.groups_id.length
-                        ? this.groupRepo.getNameForIds(...data.groups_id)
+                    data && data.entitled_group_ids && data.entitled_group_ids.length
+                        ? this.groupRepo.getNameForIds(...data.entitled_group_ids)
                         : '---'
                 ]);
             }
@@ -329,7 +320,7 @@ export class PollFormComponent<T extends BaseViewPoll, S extends PollService> ex
                 },
                 { validator: isNumberRange('min_votes_amount', 'max_votes_amount') }
             ),
-            groups_id: [],
+            entitled_group_ids: [],
             global_yes: [false],
             global_no: [false],
             global_abstain: [false]

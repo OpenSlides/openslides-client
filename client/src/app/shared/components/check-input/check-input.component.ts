@@ -60,9 +60,7 @@ export class CheckInputComponent extends BaseComponent implements OnInit, Contro
     public ngOnInit(): void {
         this.subscriptions.push(
             this.contentForm.valueChanges.subscribe(value => {
-                if (value) {
-                    this.sendValue(value);
-                }
+                this.sendValue(value);
             })
         );
     }

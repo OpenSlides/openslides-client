@@ -3,13 +3,16 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { AssignmentPollRepositoryService } from 'app/core/repositories/assignments/assignment-poll-repository.service';
+import { Id } from 'app/core/definitions/key-types';
+import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { VotingService } from 'app/core/ui-services/voting.service';
 import { VotingPrivacyWarningComponent } from 'app/shared/components/voting-privacy-warning/voting-privacy-warning.component';
+import { PollState } from 'app/shared/models/poll/poll-constants';
+import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
-import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
+import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { BasePollComponent } from 'app/site/polls/components/base-poll.component';
 import { AssignmentPollDialogService } from '../../services/assignment-poll-dialog.service';
 import { AssignmentPollPdfService } from '../../services/assignment-poll-pdf.service';
@@ -23,21 +26,11 @@ import { AssignmentPollService } from '../../services/assignment-poll.service';
     templateUrl: './assignment-poll.component.html',
     styleUrls: ['./assignment-poll.component.scss']
 })
-export class AssignmentPollComponent
-    extends BasePollComponent<ViewAssignmentPoll, AssignmentPollService>
-    implements OnInit {
+export class AssignmentPollComponent extends BasePollComponent<ViewAssignment> implements OnInit {
     @Input()
-    public set poll(value: ViewAssignmentPoll) {
-        this.initPoll(value);
-        this.candidatesLabels = this.pollService.getChartLabels(value);
-        const chartData = this.pollService.generateChartData(value);
-        this.chartDataSubject.next(chartData);
+    public set pollId(id: Id) {
+        this.initializePoll(id);
     }
-
-    public get poll(): ViewAssignmentPoll {
-        return this._poll;
-    }
-
     public candidatesLabels: string[] = [];
 
     /**
@@ -77,7 +70,7 @@ export class AssignmentPollComponent
         componentServiceCollector: ComponentServiceCollector,
         dialog: MatDialog,
         promptService: PromptService,
-        repo: AssignmentPollRepositoryService,
+        repo: PollRepositoryService,
         pollDialog: AssignmentPollDialogService,
         private pollService: AssignmentPollService,
         private formBuilder: FormBuilder,
@@ -108,5 +101,14 @@ export class AssignmentPollComponent
 
     public openVotingWarning(): void {
         this.dialog.open(VotingPrivacyWarningComponent, infoDialogSettings);
+    }
+
+    protected onAfterUpdatePoll(poll: ViewPoll): void {
+        if (poll.state !== PollState.Finished && poll.state !== PollState.Published) {
+            return;
+        }
+        this.candidatesLabels = this.pollService.getChartLabels(poll);
+        const chartData = this.pollService.generateChartData(poll);
+        this.chartDataSubject.next(chartData);
     }
 }

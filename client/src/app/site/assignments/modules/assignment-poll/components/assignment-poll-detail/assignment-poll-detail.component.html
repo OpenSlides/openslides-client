@@ -73,7 +73,7 @@
 
                                 <!-- Vote weight -->
                                 <div *ngIf="voteWeightEnabled">
-                                    {{ 'Vote weight' | translate }}: {{ vote.user.vote_weight }}
+                                    {{ 'Vote weight' | translate }}: {{ vote.user.vote_weight() }}
                                 </div>
 
                                 <!-- Delegation -->
@@ -102,7 +102,10 @@
     </div>
 
     <!-- Meta Infos -->
-    <os-assignment-poll-meta-info [poll]="poll" [showCandidates]="showCandidatesInMetaInfo"></os-assignment-poll-meta-info>
+    <os-assignment-poll-meta-info
+        [poll]="poll"
+        [showCandidates]="showCandidatesInMetaInfo"
+    ></os-assignment-poll-meta-info>
 </ng-template>
 
 <!-- More Menu -->

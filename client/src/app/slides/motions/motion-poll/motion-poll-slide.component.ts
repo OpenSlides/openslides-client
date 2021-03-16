@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
-import { MotionPoll } from 'app/shared/models/motions/motion-poll';
-import { PollState } from 'app/shared/models/poll/base-poll';
+import { Poll } from 'app/shared/models/poll/poll';
+import { PollState } from 'app/shared/models/poll/poll-constants';
 import { MotionPollService } from 'app/site/motions/services/motion-poll.service';
 import { PollData, PollTableData } from 'app/site/polls/services/poll.service';
 import { BasePollSlideComponent } from 'app/slides/polls/base-poll-slide.component';
@@ -34,7 +34,7 @@ export class MotionPollSlideComponent extends BasePollSlideComponent<MotionPollS
     }
 
     protected getDecimalFields(): string[] {
-        return MotionPoll.DECIMAL_FIELDS;
+        return Poll.DECIMAL_FIELDS;
     }
 
     public showChart(): boolean {

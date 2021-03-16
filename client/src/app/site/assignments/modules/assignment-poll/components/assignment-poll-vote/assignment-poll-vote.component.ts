@@ -1,18 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
-import {
-    AssignmentPollRepositoryService,
-    GlobalVote
-} from 'app/core/repositories/assignments/assignment-poll-repository.service';
+import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { VotingService } from 'app/core/ui-services/voting.service';
-import { AssignmentPollMethod } from 'app/shared/models/assignments/assignment-poll';
-import { PollType } from 'app/shared/models/poll/base-poll';
-import { VoteValue } from 'app/shared/models/poll/base-vote';
-import { ViewAssignmentOption } from 'app/site/assignments/models/view-assignment-option';
-import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
+import { GlobalVote, PollMethod, PollType, VoteValue } from 'app/shared/models/poll/poll-constants';
+import { ViewOption } from 'app/shared/models/poll/view-option';
+import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { BasePollVoteComponent, VoteOption } from 'app/site/polls/components/base-poll-vote.component';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { UnknownUserLabel } from '../../services/assignment-poll.service';
@@ -44,14 +39,14 @@ const voteOptions = {
     styleUrls: ['./assignment-poll-vote.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssignmentPoll> implements OnInit {
+export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssignment> implements OnInit {
     public unknownUserLabel = UnknownUserLabel;
-    public AssignmentPollMethod = AssignmentPollMethod;
+    public AssignmentPollMethod = PollMethod;
     public PollType = PollType;
     public voteActions: VoteOption[] = [];
 
     public get pollHint(): string {
-        return this.poll.assignment.default_poll_description;
+        return this.poll.content_object.default_poll_description;
     }
 
     public get minVotes(): number {
@@ -62,7 +57,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
         componentServiceCollector: ComponentServiceCollector,
         operator: OperatorService,
         votingService: VotingService,
-        private pollRepo: AssignmentPollRepositoryService,
+        private pollRepo: PollRepositoryService,
         private promptService: PromptService,
         private cd: ChangeDetectorRef
     ) {
@@ -82,10 +77,10 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
         this.cd.markForCheck();
     }
 
-    public getActionButtonClass(actions: VoteOption, option: ViewAssignmentOption, user: ViewUser = this.user): string {
+    public getActionButtonClass(actions: VoteOption, option: ViewOption, user: ViewUser = this.user): string {
         if (
-            this.voteRequestData[user.id]?.votes[option.id] === actions.vote ||
-            this.voteRequestData[user.id]?.votes[option.id] === 1
+            this.voteRequestData[user.id]?.value[option.id] === actions.vote ||
+            this.voteRequestData[user.id]?.value[option.id] === 1
         ) {
             return actions.css;
         }
@@ -93,21 +88,21 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
     }
 
     public getGlobalYesClass(user: ViewUser = this.user): string {
-        if (this.voteRequestData[user.id]?.global === 'Y') {
+        if (this.voteRequestData[user.id]?.value === 'Y') {
             return 'voted-yes';
         }
         return '';
     }
 
     public getGlobalAbstainClass(user: ViewUser = this.user): string {
-        if (this.voteRequestData[user.id]?.global === 'A') {
+        if (this.voteRequestData[user.id]?.value === 'A') {
             return 'voted-abstain';
         }
         return '';
     }
 
     public getGlobalNoClass(user: ViewUser = this.user): string {
-        if (this.voteRequestData[user.id]?.global === 'N') {
+        if (this.voteRequestData[user.id]?.value === 'N') {
             return 'voted-no';
         }
         return '';
@@ -133,8 +128,8 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
 
     public getVotesCount(user: ViewUser = this.user): number {
         if (this.voteRequestData[user.id]) {
-            return Object.keys(this.voteRequestData[user.id].votes).filter(
-                key => this.voteRequestData[user.id].votes[key]
+            return Object.keys(this.voteRequestData[user.id].value).filter(
+                key => this.voteRequestData[user.id].value[key]
             ).length;
         }
     }
@@ -144,7 +139,8 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
     }
 
     private isGlobalOptionSelected(user: ViewUser = this.user): boolean {
-        return !!this.voteRequestData[user.id]?.global;
+        const value = this.voteRequestData[user.id]?.value;
+        return value === 'Y' || value === 'N' || value === 'A';
     }
 
     public async submitVote(user: ViewUser = this.user): Promise<void> {
@@ -155,7 +151,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
             this.deliveringVote[user.id] = true;
             this.cd.markForCheck();
             this.pollRepo
-                .vote(this.voteRequestData[user.id], this.poll.id, user.id)
+                .vote(this.poll, user, { value: this.voteRequestData[user.id].value })
                 .then(() => {
                     this.alreadyVoted[user.id] = true;
                 })
@@ -172,7 +168,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
         }
 
         if (this.isGlobalOptionSelected(user)) {
-            delete this.voteRequestData[user.id].global;
+            delete this.voteRequestData[user.id].value;
         }
 
         if (this.poll.isMethodY || this.poll.isMethodN) {
@@ -182,10 +178,10 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
                 .reduce((o, n) => {
                     o[n] = 0;
                     if (maxVotesAmount === 1) {
-                        if (n === optionId && this.voteRequestData[user.id].votes[n] !== 1) {
+                        if (n === optionId && this.voteRequestData[user.id].value[n] !== 1) {
                             o[n] = 1;
                         }
-                    } else if ((n === optionId) !== (this.voteRequestData[user.id].votes[n] === 1)) {
+                    } else if ((n === optionId) !== (this.voteRequestData[user.id].value[n] === 1)) {
                         o[n] = 1;
                     }
 
@@ -195,7 +191,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
             // check if you can still vote
             const countedVotes = Object.keys(tmpVoteRequest).filter(key => tmpVoteRequest[key]).length;
             if (countedVotes <= maxVotesAmount) {
-                this.voteRequestData[user.id].votes = tmpVoteRequest;
+                this.voteRequestData[user.id].value = tmpVoteRequest;
 
                 // if you have no options anymore, try to send
                 if (this.getVotesCount(user) === maxVotesAmount) {
@@ -209,27 +205,27 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
         } else {
             // YN/YNA
             if (
-                this.voteRequestData[user.id].votes[optionId] &&
-                this.voteRequestData[user.id].votes[optionId] === vote
+                this.voteRequestData[user.id].value[optionId] &&
+                this.voteRequestData[user.id].value[optionId] === vote
             ) {
-                delete this.voteRequestData[user.id].votes[optionId];
+                delete (this.voteRequestData[user.id] as any).value[optionId];
             } else {
-                this.voteRequestData[user.id].votes[optionId] = vote;
+                (this.voteRequestData[user.id] as any).value[optionId] = vote;
             }
 
-            // if you filled out every option, try to send
-            if (Object.keys(this.voteRequestData[user.id].votes).length === this.poll.options.length) {
+            // if a user filled out every option, try to send
+            if (Object.keys(this.voteRequestData[user.id].value).length === this.poll.options.length) {
                 this.submitVote(user);
             }
         }
     }
 
     public saveGlobalVote(globalVote: GlobalVote, user: ViewUser = this.user): void {
-        this.voteRequestData[user.id].votes = {};
-        if (this.voteRequestData[user.id].global && this.voteRequestData[user.id].global === globalVote) {
-            delete this.voteRequestData[user.id].global;
+        this.voteRequestData[user.id].value = {};
+        if (this.voteRequestData[user.id].value && this.voteRequestData[user.id].value === globalVote) {
+            delete this.voteRequestData[user.id].value;
         } else {
-            this.voteRequestData[user.id].global = globalVote;
+            this.voteRequestData[user.id].value = globalVote;
             this.submitVote(user);
         }
     }

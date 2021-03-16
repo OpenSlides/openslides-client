@@ -3,12 +3,12 @@ import { Injectable } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 
-import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
-import { ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
-import { BaseViewPoll } from 'app/site/polls/models/base-view-poll';
-import { PollListObservableService } from 'app/site/polls/services/poll-list-observable.service';
+import { ViewPoll } from 'app/shared/models/poll/view-poll';
+import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
+import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { BannerDefinition, BannerService } from './banner.service';
 import { HistoryService } from '../core-services/history.service';
+import { PollRepositoryService } from '../repositories/polls/poll-repository.service';
 import { VotingService } from './voting.service';
 
 @Injectable({
@@ -20,20 +20,20 @@ export class VotingBannerService {
     private subText = _('Click here to vote!');
 
     public constructor(
-        pollListObservableService: PollListObservableService,
+        pollRepo: PollRepositoryService,
         private banner: BannerService,
         private translate: TranslateService,
         private historyService: HistoryService,
         private votingService: VotingService
     ) {
-        pollListObservableService.getViewModelListObservable().subscribe(polls => this.checkForVotablePolls(polls));
+        pollRepo.getViewModelListObservable().subscribe(polls => this.checkForVotablePolls(polls));
     }
 
     /**
      * checks all polls for votable ones and displays a banner for them
      * @param polls the updated poll list
      */
-    private checkForVotablePolls(polls: BaseViewPoll[]): void {
+    private checkForVotablePolls(polls: ViewPoll[]): void {
         // display no banner if in history mode or there are no polls to vote
         const pollsToVote = polls.filter(poll => this.votingService.canVote(poll) && !poll.user_has_voted);
         if ((this.historyService.isInHistoryMode && this.currentBanner) || !pollsToVote.length) {
@@ -43,7 +43,7 @@ export class VotingBannerService {
 
         const banner =
             pollsToVote.length === 1
-                ? this.createBanner(this.getTextForPoll(pollsToVote[0]), pollsToVote[0].parentLink)
+                ? this.createBanner(this.getTextForPoll(pollsToVote[0]), pollsToVote[0].getDetailStateURL())
                 : this.createBanner(`${pollsToVote.length} ${this.translate.instant('open votes')}`, '/polls/');
         this.sliceBanner(banner);
     }
@@ -73,13 +73,16 @@ export class VotingBannerService {
      *
      * @returns The title.
      */
-    private getTextForPoll(poll: BaseViewPoll): string {
-        if (poll instanceof ViewMotionPoll) {
-            return `${this.translate.instant('Motion')} ${poll.motion.getNumberOrTitle()}: ${this.translate.instant(
-                'Voting opened'
-            )}`;
-        } else if (poll instanceof ViewAssignmentPoll) {
-            return `${poll.assignment.getTitle()}: ${this.translate.instant('Ballot opened')}`;
+    private getTextForPoll(poll: ViewPoll): string {
+        const contentObject = poll.getContentObject();
+        if (contentObject instanceof ViewMotion) {
+            const motionTranslation = this.translate.instant('Motion');
+            const votingOpenedTranslation = this.translate.instant('Voting opened');
+            return `${motionTranslation} ${contentObject.getNumberOrTitle()}: ${votingOpenedTranslation}`;
+        } else if (contentObject instanceof ViewAssignment) {
+            return `${contentObject.getTitle()}: ${this.translate.instant('Ballot opened')}`;
+        } else {
+            return this.translate.instant('Voting opened');
         }
     }
 

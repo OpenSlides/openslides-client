@@ -1,19 +1,17 @@
 import { Id } from 'app/core/definitions/key-types';
 import { SearchRepresentation } from 'app/core/ui-services/search.service';
-import { MotionVote } from 'app/shared/models/motions/motion-vote';
+import { ViewOption } from 'app/shared/models/poll/view-option';
+import { ViewPoll } from 'app/shared/models/poll/view-poll';
+import { ViewVote } from 'app/shared/models/poll/view-vote';
 import { Projectiondefault } from 'app/shared/models/projector/projector';
 import { User } from 'app/shared/models/users/user';
 import { ViewSpeaker } from 'app/site/agenda/models/view-speaker';
 import { ViewAssignmentCandidate } from 'app/site/assignments/models/view-assignment-candidate';
-import { ViewAssignmentOption } from 'app/site/assignments/models/view-assignment-option';
-import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
-import { ViewAssignmentVote } from 'app/site/assignments/models/view-assignment-vote';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { Searchable } from 'app/site/base/searchable';
 import { ViewCommittee } from 'app/site/event-management/models/view-committee';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
-import { ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
 import { ViewMotionSubmitter } from 'app/site/motions/models/view-motion-submitter';
 import { ViewGroup } from './view-group';
 import { ViewPersonalNote } from './view-personal-note';
@@ -196,8 +194,7 @@ export class ViewUser extends BaseProjectableViewModel<User> implements Searchab
     }
 
     public canVoteFor(user: ViewUser): boolean {
-        throw new Error('TODO');
-        // return this.vote_delegations_from_users_id.includes(user.id);
+        return this.vote_delegations_from_ids().includes(user.id);
     }
 }
 type UserManyStructuredRelation<Result> = (arg?: Id) => Result[];
@@ -212,12 +209,10 @@ interface IUserRelations {
     personal_notes: UserManyStructuredRelation<ViewPersonalNote>;
     supported_motions: UserManyStructuredRelation<ViewMotion>;
     submitted_motions: UserManyStructuredRelation<ViewMotionSubmitter>;
-    motion_poll_voted: UserManyStructuredRelation<ViewMotionPoll>;
-    motion_votes: UserManyStructuredRelation<MotionVote>;
     assignment_candidates: UserManyStructuredRelation<ViewAssignmentCandidate>;
-    assignment_poll_voted: UserManyStructuredRelation<ViewAssignmentPoll>;
-    assignment_options: UserManyStructuredRelation<ViewAssignmentOption>;
-    assignment_votes: UserManyStructuredRelation<ViewAssignmentVote>;
+    poll_voted: UserManyStructuredRelation<ViewPoll>;
+    options: UserManyStructuredRelation<ViewOption>;
+    votes: UserManyStructuredRelation<ViewVote>;
     vote_delegated_to: (arg?: Id) => ViewUser;
     vote_delegations_from: UserManyStructuredRelation<ViewUser>;
 }

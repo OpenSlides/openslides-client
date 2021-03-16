@@ -1,11 +1,11 @@
+import { ViewOption } from 'app/shared/models/poll/view-option';
+import { ViewPoll } from 'app/shared/models/poll/view-poll';
+import { ViewVote } from 'app/shared/models/poll/view-vote';
 import { HasAgendaItem, ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { HasListOfSpeakers, ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { ViewSpeaker } from 'app/site/agenda/models/view-speaker';
 import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { ViewAssignmentCandidate } from 'app/site/assignments/models/view-assignment-candidate';
-import { ViewAssignmentOption } from 'app/site/assignments/models/view-assignment-option';
-import { ViewAssignmentPoll } from 'app/site/assignments/models/view-assignment-poll';
-import { ViewAssignmentVote } from 'app/site/assignments/models/view-assignment-vote';
 import { BaseViewModel, ViewModelConstructor } from 'app/site/base/base-view-model';
 import { Projectable } from 'app/site/base/projectable';
 import { ViewCommittee } from 'app/site/event-management/models/view-committee';
@@ -19,12 +19,9 @@ import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category
 import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
 import { ViewMotionComment } from 'app/site/motions/models/view-motion-comment';
 import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-comment-section';
-import { ViewMotionOption } from 'app/site/motions/models/view-motion-option';
-import { ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
 import { ViewMotionState } from 'app/site/motions/models/view-motion-state';
 import { ViewMotionStatuteParagraph } from 'app/site/motions/models/view-motion-statute-paragraph';
 import { ViewMotionSubmitter } from 'app/site/motions/models/view-motion-submitter';
-import { ViewMotionVote } from 'app/site/motions/models/view-motion-vote';
 import { ViewMotionWorkflow } from 'app/site/motions/models/view-motion-workflow';
 import { ViewProjection } from 'app/site/projector/models/view-projection';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
@@ -33,7 +30,7 @@ import { ViewProjectorMessage } from 'app/site/projector/models/view-projector-m
 import { HasTags, ViewTag } from 'app/site/tags/models/view-tag';
 import { ViewTopic } from 'app/site/topics/models/view-topic';
 import { ViewGroup } from 'app/site/users/models/view-group';
-import { HasPersonalNote, ViewPersonalNote } from 'app/site/users/models/view-personal-note';
+import { ViewPersonalNote } from 'app/site/users/models/view-personal-note';
 import { ViewUser } from 'app/site/users/models/view-user';
 import {
     makeGenericM2M,
@@ -53,8 +50,7 @@ const PROJECTABLE_VIEW_MODELS: ViewModelConstructor<BaseViewModel & Projectable>
     ViewAssignment,
     ViewAgendaItem,
     ViewUser,
-    ViewAssignmentPoll,
-    ViewMotionPoll,
+    ViewPoll,
     ViewProjectorMessage,
     ViewProjectorCountdown
 ];
@@ -160,21 +156,21 @@ export const RELATIONS: Relation[] = [
         otherViewModelField: 'user'
     }),
     ...makeManyStructuredUsers2MRelation({
-        otherViewModel: ViewMotionPoll,
-        structuredField: 'motion_poll_voted',
-        structuredIdField: 'motion_poll_voted_$_ids',
+        otherViewModel: ViewPoll,
+        structuredField: 'poll_voted',
+        structuredIdField: 'poll_voted_$_ids',
         otherViewModelField: 'voted'
     }),
     ...makeOneStructuredUser2MRelation({
-        otherViewModel: ViewMotionVote,
-        structuredField: 'motion_votes',
-        structuredIdField: 'motion_vote_$_ids',
+        otherViewModel: ViewVote,
+        structuredField: 'votes',
+        structuredIdField: 'vote_$_ids',
         otherViewModelField: 'user'
     }),
     ...makeOneStructuredUser2MRelation({
-        otherViewModel: ViewMotionVote,
-        structuredField: 'motion_votes',
-        structuredIdField: 'motion_delegated_vote_$_ids',
+        otherViewModel: ViewVote,
+        structuredField: 'votes',
+        structuredIdField: 'delegated_vote_$_ids',
         otherViewModelField: 'delegated_user'
     }),
     ...makeOneStructuredUser2MRelation({
@@ -183,36 +179,12 @@ export const RELATIONS: Relation[] = [
         structuredIdField: 'assignment_candidate_$_ids',
         otherViewModelField: 'user'
     }),
-    ...makeManyStructuredUsers2MRelation({
-        otherViewModel: ViewAssignmentPoll,
-        structuredField: 'assignment_poll_voted',
-        structuredIdField: 'assignment_poll_voted_$_ids',
-        otherViewModelField: 'voted'
-    }),
-    ...makeOneStructuredUser2MRelation({
-        otherViewModel: ViewAssignmentOption,
-        structuredField: 'assignment_options',
-        structuredIdField: 'assignment_option_$_ids',
-        otherViewModelField: 'user'
-    }),
-    ...makeOneStructuredUser2MRelation({
-        otherViewModel: ViewAssignmentVote,
-        structuredField: 'assignment_votes',
-        structuredIdField: 'assignment_vote_$_ids',
-        otherViewModelField: 'user'
-    }),
-    ...makeOneStructuredUser2MRelation({
-        otherViewModel: ViewAssignmentVote,
-        structuredField: 'assignment_votes',
-        structuredIdField: 'assignment_delegated_vote_$_ids',
-        otherViewModelField: 'delegated_user'
-    }),
-    ...makeOneStructuredUser2MRelation({
-        otherViewModel: ViewAssignmentVote,
-        structuredField: 'assignment_votes',
-        structuredIdField: 'assignment_delegated_vote_$_ids',
-        otherViewModelField: 'delegated_user'
-    }),
+    // ...makeOneStructuredGenericUser2MRelation({
+    //     otherViewModel: ViewOption,
+    //     structuredField: 'options',
+    //     structuredIdField: 'option_$_ids',
+    //     otherViewModelField: 'content_object'
+    // }),
     // Vote delegations
     // vote_delegated_$_to_id -> vote_delegations_$_from_ids
     {
@@ -438,20 +410,20 @@ export const RELATIONS: Relation[] = [
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
-        MViewModel: ViewMotionPoll,
-        OField: 'motion_polls',
+        MViewModel: ViewPoll,
+        OField: 'polls',
         MField: 'meeting'
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
-        MViewModel: ViewMotionOption,
-        OField: 'motion_options',
+        MViewModel: ViewOption,
+        OField: 'options',
         MField: 'meeting'
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
-        MViewModel: ViewMotionVote,
-        OField: 'motion_votes',
+        MViewModel: ViewVote,
+        OField: 'votes',
         MField: 'meeting'
     }),
     ...makeM2O({
@@ -464,24 +436,6 @@ export const RELATIONS: Relation[] = [
         OViewModel: ViewMeeting,
         MViewModel: ViewAssignmentCandidate,
         OField: 'assignment_candidates',
-        MField: 'meeting'
-    }),
-    ...makeM2O({
-        OViewModel: ViewMeeting,
-        MViewModel: ViewAssignmentPoll,
-        OField: 'assignment_polls',
-        MField: 'meeting'
-    }),
-    ...makeM2O({
-        OViewModel: ViewMeeting,
-        MViewModel: ViewAssignmentOption,
-        OField: 'assignment_options',
-        MField: 'meeting'
-    }),
-    ...makeM2O({
-        OViewModel: ViewMeeting,
-        MViewModel: ViewAssignmentVote,
-        OField: 'assignment_votes',
         MField: 'meeting'
     }),
     ...makeM2O({
@@ -591,7 +545,7 @@ export const RELATIONS: Relation[] = [
         structured: false
     },
     // ########## Personal notes
-    ...makeGenericO2M<ViewPersonalNote, HasPersonalNote>({
+    ...makeGenericO2M<ViewPersonalNote>({
         OViewModel: ViewPersonalNote,
         MPossibleViewModels: [ViewMotion],
         OViewModelField: 'content_object',
@@ -701,12 +655,6 @@ export const RELATIONS: Relation[] = [
         order: 'weight'
     }),
     ...makeM2O({
-        MViewModel: ViewMotionPoll,
-        OViewModel: ViewMotion,
-        MField: 'motion',
-        OField: 'polls'
-    }),
-    ...makeM2O({
         MViewModel: ViewMotionChangeRecommendation,
         OViewModel: ViewMotion,
         MField: 'motion',
@@ -772,24 +720,40 @@ export const RELATIONS: Relation[] = [
         AField: 'first_state',
         BField: 'first_state_of_workflow'
     }),
-    // ########## Motion polls
+    // ########## Polls
+    ...makeGenericO2M({
+        OViewModel: ViewPoll,
+        MPossibleViewModels: [ViewMotion, ViewAssignment],
+        OViewModelField: 'content_object',
+        MPossibleViewModelsField: 'polls'
+    }),
     ...makeM2M({
-        AViewModel: ViewMotionPoll,
+        AViewModel: ViewPoll,
         BViewModel: ViewGroup,
         AField: 'entitled_groups',
-        BField: 'motion_polls'
+        BField: 'polls'
     }),
-    // ########## Motion options
     ...makeM2O({
-        MViewModel: ViewMotionOption,
-        OViewModel: ViewMotionPoll,
+        MViewModel: ViewOption,
+        OViewModel: ViewPoll,
         MField: 'poll',
         OField: 'options'
     }),
-    // ########## Motion votes
+    ...makeO2O({
+        AViewModel: ViewOption,
+        BViewModel: ViewPoll,
+        AField: 'poll',
+        BField: 'global_option'
+    }),
+    ...makeGenericO2M({
+        OViewModel: ViewOption,
+        MPossibleViewModels: [ViewUser],
+        OViewModelField: 'content_object',
+        MPossibleViewModelsField: 'options'
+    }),
     ...makeM2O({
-        MViewModel: ViewMotionVote,
-        OViewModel: ViewMotionOption,
+        MViewModel: ViewVote,
+        OViewModel: ViewOption,
         MField: 'option',
         OField: 'votes'
     }),
@@ -800,33 +764,6 @@ export const RELATIONS: Relation[] = [
         MField: 'assignment',
         OField: 'candidates',
         order: 'weight'
-    }),
-    ...makeM2O({
-        MViewModel: ViewAssignmentPoll,
-        OViewModel: ViewAssignment,
-        MField: 'assignment',
-        OField: 'polls'
-    }),
-    // ########## Assignment polls
-    ...makeM2M({
-        AViewModel: ViewAssignmentPoll,
-        BViewModel: ViewGroup,
-        AField: 'entitled_groups',
-        BField: 'assignment_polls'
-    }),
-    // ########## Assignment options
-    ...makeM2O({
-        MViewModel: ViewAssignmentOption,
-        OViewModel: ViewAssignmentPoll,
-        MField: 'poll',
-        OField: 'options'
-    }),
-    // ########## Assignment votes
-    ...makeM2O({
-        MViewModel: ViewAssignmentVote,
-        OViewModel: ViewAssignmentOption,
-        MField: 'option',
-        OField: 'votes'
     }),
     // ########## Mediafile
     ...makeM2M({

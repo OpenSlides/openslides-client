@@ -6,8 +6,8 @@ import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { BaseViewPoll, PollClassType } from '../../models/base-view-poll';
 
 @Component({
     selector: 'os-poll-progress',
@@ -16,7 +16,8 @@ import { BaseViewPoll, PollClassType } from '../../models/base-view-poll';
 })
 export class PollProgressComponent extends BaseComponent implements OnInit {
     @Input()
-    public poll: BaseViewPoll;
+    public poll: ViewPoll;
+
     public max: number;
 
     public get votescast(): number {
@@ -25,9 +26,9 @@ export class PollProgressComponent extends BaseComponent implements OnInit {
 
     public get canSeeProgressBar(): boolean {
         let canManage = false;
-        if (this.poll?.pollClassType === PollClassType.Motion) {
+        if (this.poll?.isMotionPoll) {
             canManage = this.operator.hasPerms(this.permission.motionsCanManagePolls);
-        } else if (this.poll?.pollClassType === PollClassType.Assignment) {
+        } else if (this.poll?.isAssignmentPoll) {
             canManage = this.operator.hasPerms(this.permission.assignmentsCanManage);
         }
         return canManage && this.operator.hasPerms(this.permission.usersCanSee);

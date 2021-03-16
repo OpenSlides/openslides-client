@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 
-import { Fieldsets } from 'app/core/core-services/model-request-builder.service';
-import { MotionVote } from 'app/shared/models/motions/motion-vote';
-import { ViewMotionVote } from 'app/site/motions/models/view-motion-vote';
+import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
+import { ViewVote } from 'app/shared/models/poll/view-vote';
+import { Vote } from 'app/shared/models/poll/vote';
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
@@ -14,12 +14,12 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class MotionVoteRepositoryService extends BaseRepositoryWithActiveMeeting<ViewMotionVote, MotionVote> {
+export class VoteRepositoryService extends BaseRepositoryWithActiveMeeting<ViewVote, Vote> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
-        super(repositoryServiceCollector, MotionVote);
+        super(repositoryServiceCollector, Vote);
     }
 
-    public getTitle = (viewMotionVote: object) => {
+    public getTitle = (viewVote: object) => {
         return 'Vote';
     };
 
@@ -27,7 +27,10 @@ export class MotionVoteRepositoryService extends BaseRepositoryWithActiveMeeting
         return this.translate.instant(plural ? 'Votes' : 'Vote');
     };
 
-    public getFieldsets(): Fieldsets<MotionVote> {
-        return {}; // TODO
+    public getFieldsets(): Fieldsets<Vote> {
+        const detail: (keyof Vote)[] = ['delegated_user_id', 'option_id', 'user_id', 'value', 'weight'];
+        return {
+            [DEFAULT_FIELDSET]: detail
+        };
     }
 }

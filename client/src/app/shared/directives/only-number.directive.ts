@@ -14,7 +14,23 @@ export class OnlyNumberDirective {
      */
     private regExp = new RegExp('^([1-9][0-9]*|0)?$');
 
-    private allowedCharacters = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    private allowedCharacters = [
+        '0',
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+        '6',
+        '7',
+        '8',
+        '9',
+        'Backspace',
+        'ArrowLeft',
+        'ArrowRight',
+        'ArrowUp',
+        'ArrowDown'
+    ];
 
     @HostListener('keydown', ['$event'])
     public onKeyDown(event: KeyboardEvent): void {

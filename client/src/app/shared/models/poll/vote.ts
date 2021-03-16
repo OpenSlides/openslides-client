@@ -1,5 +1,5 @@
 import { Id } from 'app/core/definitions/key-types';
-import { BaseDecimalModel } from '../base/base-decimal-model';
+import { BaseModel } from '../base/base-model';
 import { HasMeetingId } from '../base/has-meeting-id';
 
 export type VoteValue = 'Y' | 'N' | 'A';
@@ -25,7 +25,9 @@ export interface UserVote {
     user_id?: number;
 }
 
-export abstract class BaseVote<T = any> extends BaseDecimalModel<T> {
+export class Vote extends BaseModel<Vote> {
+    public static COLLECTION = 'vote';
+
     public id: Id;
     public weight: number;
     public value: VoteValue;
@@ -38,8 +40,13 @@ export abstract class BaseVote<T = any> extends BaseDecimalModel<T> {
         return VoteValueVerbose[this.value];
     }
 
+    public constructor(input?: Partial<Vote>) {
+        super(Vote.COLLECTION, input);
+    }
+
     protected getDecimalFields(): string[] {
         return ['weight'];
     }
 }
-export interface BaseVote<T> extends HasMeetingId {}
+
+export interface Vote extends HasMeetingId {}

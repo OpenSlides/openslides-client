@@ -1,13 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
-import { Title } from '@angular/platform-browser';
-
-import { TranslateService } from '@ngx-translate/core';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { PollState } from 'app/shared/models/poll/base-poll';
+import { PollState } from 'app/shared/models/poll/poll-constants';
+import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { ViewMotionPoll } from 'app/site/motions/models/view-motion-poll';
 import { MotionPollService } from 'app/site/motions/services/motion-poll.service';
 import { PollData, PollTableData } from 'app/site/polls/services/poll.service';
 import { ChartData } from '../charts/charts.component';
@@ -19,20 +16,20 @@ import { ChartData } from '../charts/charts.component';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MotionPollDetailContentComponent extends BaseComponent {
-    private _poll: ViewMotionPoll | PollData;
+    private _poll: ViewPoll | PollData;
 
     public chartData: ChartData;
     public tableData: PollTableData[];
 
     @Input()
-    public set poll(pollData: ViewMotionPoll | PollData) {
+    public set poll(pollData: ViewPoll | PollData) {
         this._poll = pollData;
         this.setTableData();
         this.setChartData();
         this.cd.markForCheck();
     }
 
-    public get poll(): ViewMotionPoll | PollData {
+    public get poll(): ViewPoll | PollData {
         return this._poll;
     }
 

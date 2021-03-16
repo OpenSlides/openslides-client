@@ -1,5 +1,6 @@
-import { AssignmentPollMethod } from 'app/shared/models/assignments/assignment-poll';
-import { MajorityMethod, PercentBase, PollState, PollType } from 'app/shared/models/poll/base-poll';
+import { MajorityMethod, PollPercentBase, PollState, PollType } from 'app/shared/models/poll/poll-constants';
+import { PollMethod } from 'app/shared/models/poll/poll-constants';
+import { PollDataOption } from 'app/site/polls/services/poll.service';
 import { BasePollSlideData } from 'app/slides/polls/base-poll-slide-data';
 
 export interface AssignmentPollSlideData extends BasePollSlideData {
@@ -9,14 +10,15 @@ export interface AssignmentPollSlideData extends BasePollSlideData {
     poll: {
         title: string;
         type: PollType;
-        pollmethod: AssignmentPollMethod;
+        pollmethod: PollMethod;
         max_votes_amount: number;
         min_votes_amount: number;
         description: string;
         state: PollState;
-        onehundred_percent_base: PercentBase;
+        onehundred_percent_base: PollPercentBase;
         majority_method: MajorityMethod;
 
+        global_option: PollDataOption;
         options: {
             user: {
                 short_name: string;
