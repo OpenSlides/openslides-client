@@ -2,7 +2,7 @@ import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { HTTPMethod } from '../definitions/http-methods';
-import { HttpStreamEndpointService } from './http-stream-endpoint.service';
+import { EndpointConfiguration, HttpStreamEndpointService } from './http-stream-endpoint.service';
 import { StreamContainer } from './http-stream.service';
 import { LifecycleService } from './lifecycle.service';
 import { OfflineBroadcastService } from './offline-broadcast.service';
@@ -56,22 +56,41 @@ export class CommunicationManagerService {
 
     public async connect<T>(
         endpointName: string,
-        messageHandler: (message: T) => void,
-        body?: HttpBodyGetter,
-        params?: HttpParamsGetter
+        messageHandler: (message: T, streamId: number) => void,
+        body: HttpBodyGetter,
+        params: HttpParamsGetter,
+        description: string
     ): Promise<() => void> {
         if (!params) {
             params = () => null;
         }
 
         const endpoint = this.httpEndpointService.getEndpoint(endpointName);
-        const streamContainer = new StreamContainerWithCloseFn(endpoint, messageHandler, params, body);
-        this.requestedStreams[streamContainer.id] = streamContainer;
+        const container = this.getStreamContainer(endpoint, messageHandler, body, params, description);
+        this.requestedStreams[container.id] = container;
 
         if (this.isRunning) {
-            await this._connect(streamContainer);
+            await this._connect(container);
         }
-        return () => this.close(streamContainer);
+
+        console.log('Opened', container.description, container.id, container);
+        this.printActiveStreams();
+
+        return () => this.close(container);
+    }
+
+    private getStreamContainer<T>(
+        endpoint: EndpointConfiguration,
+        messageHandler: (message: T, streamId: number) => void,
+        body: HttpBodyGetter,
+        params?: HttpParamsGetter,
+        description?: string
+    ): StreamContainerWithCloseFn {
+        let container;
+        do {
+            container = new StreamContainerWithCloseFn(endpoint, messageHandler, params, body, description);
+        } while (this.requestedStreams[container.id]);
+        return container;
     }
 
     private async _connect(container: StreamContainerWithCloseFn): Promise<void> {
@@ -108,5 +127,19 @@ export class CommunicationManagerService {
             container.closeFn();
         }
         delete this.requestedStreams[container.id];
+
+        console.log('Closed', container.description, container.id, container);
+        this.printActiveStreams();
+    }
+
+    private printActiveStreams(): void {
+        const ids = Object.keys(this.requestedStreams)
+            .map(id => +id)
+            .sort();
+        console.log(ids.length, 'open streams:');
+        for (const id of ids) {
+            const container = this.requestedStreams[id];
+            console.log('\t', id, container.description, container.body?.(), container);
+        }
     }
 }

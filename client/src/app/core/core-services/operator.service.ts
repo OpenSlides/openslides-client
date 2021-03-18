@@ -14,6 +14,7 @@ import { AutoupdateService, ModelSubscription } from './autoupdate.service';
 import { DataStoreService } from './data-store.service';
 import { GroupRepositoryService } from '../repositories/users/group-repository.service';
 import { Id } from '../definitions/key-types';
+import { LifecycleService } from './lifecycle.service';
 import { SimplifiedModelRequest, SpecificStructuredField } from './model-request-builder.service';
 import { Permission } from './permission';
 import { UserRepositoryService } from '../repositories/users/user-repository.service';
@@ -124,7 +125,8 @@ export class OperatorService {
         private activeMeetingService: ActiveMeetingService,
         private userRepo: UserRepositoryService,
         private groupRepo: GroupRepositoryService,
-        private router: Router
+        private router: Router,
+        private lifecycle: LifecycleService
     ) {
         this._loaded = this.operatorUpdatedEvent.pipe(take(1)).toPromise();
 
@@ -132,6 +134,7 @@ export class OperatorService {
         this.authService.authTokenObservable.subscribe(token => {
             const id = token ? token.userId : null;
             if (id !== this._lastUserId) {
+                console.debug('operator: user changed from ', this._lastUserId, 'to', id);
                 this._lastUserId = id;
                 this.refreshOperatorDataSubscription();
             }
@@ -142,6 +145,7 @@ export class OperatorService {
                 (meeting &&
                     (meeting.id !== this._lastActiveMeetingId || meeting.default_group_id !== this._lastDefaultGroupId))
             ) {
+                console.debug('operator: active meeting changed from ', this._lastActiveMeetingId, 'to', meeting?.id);
                 this._lastActiveMeetingId = meeting ? meeting.id : null;
                 this._lastDefaultGroupId = meeting ? meeting.default_group_id : null;
 
@@ -191,6 +195,10 @@ export class OperatorService {
             this.currentOperatorDataSubscription = null;
         }
 
+        if (!this.lifecycle.isBooted) {
+            return;
+        }
+
         let operatorRequest: SimplifiedModelRequest = null;
         if (this.activeMeetingId) {
             if (this.isAuthenticated) {
@@ -236,7 +244,11 @@ export class OperatorService {
         if (operatorRequest) {
             // Do not wait for the subscription to be done...
             (async () => {
-                this.currentOperatorDataSubscription = await this.autoupdateService.simpleRequest(operatorRequest);
+                console.log('operator: Do operator model request', operatorRequest);
+                this.currentOperatorDataSubscription = await this.autoupdateService.simpleRequest(
+                    operatorRequest,
+                    'OperatorService'
+                );
             })();
         }
     }

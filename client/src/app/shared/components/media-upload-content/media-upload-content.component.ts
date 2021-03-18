@@ -141,7 +141,7 @@ export class MediaUploadContentComponent implements OnInit, OnDestroy {
             follow: [{ idField: 'mediafile_ids', fieldset: 'fileCreation' }],
             fieldset: []
         };
-        this.modelSubscription = await this.modelRequestService.requestModels(modelRequest);
+        this.modelSubscription = await this.modelRequestService.requestModels(modelRequest, this.constructor.name);
     }
 
     public ngOnDestroy(): void {

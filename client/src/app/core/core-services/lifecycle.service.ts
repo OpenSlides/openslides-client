@@ -35,7 +35,8 @@ export class LifecycleService {
     public constructor() {}
 
     public bootup(): void {
-        this._isBooted = false;
+        this._isBooted = true;
+        console.debug('Lifecycle: booted.');
         this.openslidesBooted.next();
     }
 
@@ -44,6 +45,7 @@ export class LifecycleService {
      */
     public shutdown(): void {
         this._isBooted = false;
+        console.debug('Lifecycle: shutdown.');
         this.openslidesShutdowned.next();
     }
 

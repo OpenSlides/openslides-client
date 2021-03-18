@@ -21,14 +21,18 @@ export class StreamContainer {
     public hasErroredAmount = 0;
     public errorHandler: (error: any) => void = null;
 
+    public messageHandler: (message: any) => void;
     public stream?: Stream<any>;
 
     public constructor(
         public endpoint: EndpointConfiguration,
-        public messageHandler: (message: any) => void,
+        messageHandler: (message: any, streamId: number) => void,
         public params: () => Params,
-        public body: () => any
-    ) {}
+        public body: () => any,
+        public description: string
+    ) {
+        this.messageHandler = (message: any) => messageHandler(message, this.id);
+    }
 }
 
 @Injectable({

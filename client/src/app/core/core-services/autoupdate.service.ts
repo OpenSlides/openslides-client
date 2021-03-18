@@ -80,24 +80,33 @@ export class AutoupdateService {
         );
     }
 
-    public async simpleRequest(simpleRequest: SimplifiedModelRequest): Promise<ModelSubscription> {
+    /**
+     * Requests a new autoupdate. This is a rather heavy task. It needs to be closed when it is not needed anymore.
+     *
+     * @param simpleRequest The simple request to send
+     * @param description A simple description for developing. It helps tracking streams:
+     * Which component opens which stream?
+     */
+    public async simpleRequest(simpleRequest: SimplifiedModelRequest, description: string): Promise<ModelSubscription> {
         const request = await this.modelRequestBuilder.build(simpleRequest);
         console.log('request send:', simpleRequest, request);
-        return await this.request(request);
+        return await this.request(request, description);
     }
 
-    public async request(request: ModelRequest): Promise<ModelSubscription> {
+    public async request(request: ModelRequest, description: string): Promise<ModelSubscription> {
         const closeFn = await this.communicationManager.connect<AutoupdateModelData>(
             'autoupdate',
-            message => this.handleAutoupdateWithStupidFormat(message),
-            () => [request]
+            (message, id) => this.handleAutoupdateWithStupidFormat(message, id),
+            () => [request],
+            null,
+            description
         );
         return { close: closeFn };
     }
 
-    private async handleAutoupdateWithStupidFormat(autoupdateData: AutoupdateModelData): Promise<void> {
+    private async handleAutoupdateWithStupidFormat(autoupdateData: AutoupdateModelData, id: number): Promise<void> {
         const modelData = autoupdateFormatToModelData(autoupdateData);
-        console.log('handle autoupdate', modelData, 'raw data:', autoupdateData);
+        console.log('handle autoupdate from stream ' + id, modelData, 'raw data:', autoupdateData);
         await this.handleAutoupdate(modelData);
     }
 

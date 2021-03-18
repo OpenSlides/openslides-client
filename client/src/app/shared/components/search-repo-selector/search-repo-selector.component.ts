@@ -4,9 +4,11 @@ import { FormBuilder, NgControl } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
 
 import { ModelSubscription } from 'app/core/core-services/autoupdate.service';
+import { ModelRequestService } from 'app/core/core-services/model-request.service';
 import { BaseRepository } from 'app/core/repositories/base-repository';
 import { ModelRequestRepository } from 'app/core/repositories/model-request-repository';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { Settings } from 'app/shared/models/event-management/meeting';
 import { BaseSearchValueSelectorComponent } from '../base-search-value-selector';
 import { Selectable } from '../selectable';
@@ -41,7 +43,8 @@ export class SearchRepoSelectorComponent extends BaseSearchValueSelectorComponen
         @Optional() @Self() public ngControl: NgControl,
         focusMonitor: FocusMonitor,
         element: ElementRef<HTMLElement>,
-        private componentServiceCollector: ComponentServiceCollector
+        private modelRequestService: ModelRequestService,
+        private meetingSettingService: MeetingSettingsService
     ) {
         super(formBuilder, focusMonitor, element, ngControl);
     }
@@ -81,7 +84,7 @@ export class SearchRepoSelectorComponent extends BaseSearchValueSelectorComponen
         }
         if (this.defaultDataConfigKey) {
             this.subscriptions.push(
-                this.componentServiceCollector.meetingSettingService.get(this.defaultDataConfigKey).subscribe(value => {
+                this.meetingSettingService.get(this.defaultDataConfigKey).subscribe(value => {
                     if (!this.value) {
                         this.value = value as any;
                     }
@@ -92,8 +95,9 @@ export class SearchRepoSelectorComponent extends BaseSearchValueSelectorComponen
 
     private async doModelRequest(): Promise<void> {
         this.cleanModelSubscription();
-        this.modelSubscription = await this.componentServiceCollector.modelRequestService.requestModels(
-            this.repo.getRequestToGetAllModels()
+        this.modelSubscription = await this.modelRequestService.requestModels(
+            this.repo.getRequestToGetAllModels(),
+            this.constructor.name
         );
     }
 
