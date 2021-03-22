@@ -5,6 +5,7 @@ import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
+import { ModelRequestService } from 'app/core/core-services/model-request.service';
 import { Permission } from 'app/core/core-services/permission';
 import { Id } from 'app/core/definitions/key-types';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -98,6 +99,10 @@ export abstract class BaseComponent implements OnDestroy {
 
     protected get meetingSettingService(): MeetingSettingsService {
         return this.componentServiceCollector.meetingSettingService;
+    }
+
+    protected get modelRequestService(): ModelRequestService {
+        return this.componentServiceCollector.modelRequestService;
     }
 
     public constructor(protected componentServiceCollector: ComponentServiceCollector) {

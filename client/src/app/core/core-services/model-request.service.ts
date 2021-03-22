@@ -14,7 +14,10 @@ import { SimplifiedModelRequest } from './model-request-builder.service';
 export class ModelRequestService {
     public constructor(private autoupdateService: AutoupdateService) {}
 
-    public async requestModels(simplifiedModelRequest: SimplifiedModelRequest): Promise<ModelSubscription> {
-        return this.autoupdateService.simpleRequest(simplifiedModelRequest);
+    public async requestModels(
+        simplifiedModelRequest: SimplifiedModelRequest,
+        description: string
+    ): Promise<ModelSubscription> {
+        return this.autoupdateService.simpleRequest(simplifiedModelRequest, description);
     }
 }

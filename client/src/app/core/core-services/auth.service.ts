@@ -120,12 +120,16 @@ export class AuthService {
      * @returns true, if the request was successful (=online)
      */
     public async doWhoAmIRequest(): Promise<boolean> {
+        console.log('auth: Do WhoAmI');
+        let online;
         try {
             await this.http.post<LoginResponse>(`${environment.authUrlPrefix}/who-am-i/`);
-            return true;
+            online = true;
         } catch (e) {
-            return false;
+            online = false;
         }
+        console.log('auth: WhoAmI done, online:', online);
+        return online;
     }
 
     private resumeTokenSubscription(): void {

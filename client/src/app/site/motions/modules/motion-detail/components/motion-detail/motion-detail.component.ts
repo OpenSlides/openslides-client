@@ -193,13 +193,6 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
 
     public canSave = false;
 
-    /**
-     * Hold the subscription to the navigation.
-     * This cannot go into the subscription-list, since it should
-     * only get destroyed using ngOnDestroy routine and not on route changes.
-     */
-    private navigationSubscription: Subscription;
-
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         public vp: ViewportService,
@@ -209,7 +202,6 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         private route: ActivatedRoute,
         public repo: MotionRepositoryService,
         private promptService: PromptService,
-        private pdfExport: MotionPdfExportService,
         private itemRepo: AgendaItemRepositoryService,
         private motionSortService: MotionSortListService,
         private amendmentSortService: AmendmentSortListService,
@@ -228,7 +220,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
     public ngOnInit(): void {
         super.ngOnInit();
 
-        this.requestUpdates();
+        this.requestAdditionalModels();
         this.registerSubjects();
         this.observeRoute();
         this.getMotionByUrl();
@@ -279,29 +271,18 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
     }
 
     /**
-     * Called during view destruction.
-     * Sends a notification to user editors of the motion was edited
-     */
-    public ngOnDestroy(): void {
-        super.ngOnDestroy();
-
-        if (this.navigationSubscription) {
-            this.navigationSubscription.unsubscribe();
-        }
-        this.cd.detach();
-    }
-
-    /**
      * Observes the route for events. Calls to clean all subs if the route changes.
      * Calls the motion details from the new route
      */
     private observeRoute(): void {
-        this.navigationSubscription = this.router.events.subscribe(navEvent => {
-            if (navEvent instanceof NavigationEnd) {
-                this.cleanSubjects();
-                this.getMotionByUrl();
-            }
-        });
+        this.subscriptions.push(
+            this.router.events.subscribe(navEvent => {
+                if (navEvent instanceof NavigationEnd) {
+                    this.cleanSubjects();
+                    this.getMotionByUrl();
+                }
+            })
+        );
     }
 
     private registerSubjects(): void {
@@ -311,37 +292,40 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         this.subscriptions.push(this.motionObserver.subscribe(() => this.cd.markForCheck()));
     }
 
-    private requestUpdates(): void {
-        this.requestModels({
-            viewModelCtor: ViewMeeting,
-            ids: [1], // TODO
-            follow: [
-                {
-                    idField: 'user_ids',
-                    fieldset: 'shortName'
-                },
-                {
-                    idField: 'motion_block_ids',
-                    fieldset: 'title'
-                },
-                {
-                    idField: 'motion_category_ids'
-                },
-                {
-                    idField: 'motion_workflow_ids'
-                },
-                {
-                    idField: 'mediafile_ids',
-                    fieldset: 'fileSelection'
-                },
-                {
-                    idField: 'tag_ids'
-                },
-                {
-                    idField: 'personal_note_ids'
-                }
-            ]
-        });
+    private requestAdditionalModels(): void {
+        this.requestModels(
+            {
+                viewModelCtor: ViewMeeting,
+                ids: [1], // TODO
+                follow: [
+                    {
+                        idField: 'user_ids',
+                        fieldset: 'shortName'
+                    },
+                    {
+                        idField: 'motion_block_ids',
+                        fieldset: 'title'
+                    },
+                    {
+                        idField: 'motion_category_ids'
+                    },
+                    {
+                        idField: 'motion_workflow_ids'
+                    },
+                    {
+                        idField: 'mediafile_ids',
+                        fieldset: 'fileSelection'
+                    },
+                    {
+                        idField: 'tag_ids'
+                    },
+                    {
+                        idField: 'personal_note_ids'
+                    }
+                ]
+            },
+            'additional models'
+        );
     }
 
     /**
@@ -444,7 +428,8 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
      *
      * @param event has the key code
      */
-    @HostListener('document:keydown', ['$event']) public onKeyNavigation(event: KeyboardEvent): void {
+    @HostListener('document:keydown', ['$event'])
+    public onKeyNavigation(event: KeyboardEvent): void {
         if (event.key === 'ArrowLeft' && event.altKey && event.shiftKey) {
             this.navigateToMotion(this.previousMotion);
         }
@@ -604,9 +589,11 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
     }
 
     /**
-     * Helper function so UI elements can call to detect changes
+     * Called during view destruction.
+     * Sends a notification to user editors of the motion was edited
      */
-    public detectChanges(): void {
-        this.cd.markForCheck();
+    public ngOnDestroy(): void {
+        super.ngOnDestroy();
+        this.cd.detach();
     }
 }

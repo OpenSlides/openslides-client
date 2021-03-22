@@ -59,7 +59,10 @@ export class ActiveMeetingService {
         }
 
         if (id) {
-            this.modelAutoupdateSubscription = await this.autoupdateService.simpleRequest(this.getModelRequest());
+            this.modelAutoupdateSubscription = await this.autoupdateService.simpleRequest(
+                this.getModelRequest(),
+                'ActiveMeetingService'
+            );
 
             if (this.meetingSubcription) {
                 this.meetingSubcription.unsubscribe();

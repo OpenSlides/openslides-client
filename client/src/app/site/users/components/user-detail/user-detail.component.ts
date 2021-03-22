@@ -84,8 +84,6 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
         return this.pollService.isElectronicVotingEnabled && this.voteWeightEnabled;
     }
 
-    private editModelsSubscription: ModelSubscription;
-
     private isTemporaryUser = true;
 
     /**
@@ -123,7 +121,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
         this.getUserByUrl();
 
         this.operatorService.operatorUpdatedEvent.subscribe(() => {
-            this.updateFormControlsAccesibility();
+            this.updateFormControlsAccessibility();
         });
 
         this.meetingSettingsService
@@ -132,13 +130,6 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
 
         this.groupRepo.getViewModelListObservableWithoutDefaultGroup().subscribe(this.groups);
         this.users = this.repo.getViewModelListBehaviorSubject();
-    }
-
-    public ngOnDestroy(): void {
-        super.ngOnDestroy();
-        if (this.editModelsSubscription) {
-            this.editModelsSubscription.close();
-        }
     }
 
     private getUserByUrl(): void {
@@ -273,7 +264,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
     /**
      * Makes the form editable
      */
-    public updateFormControlsAccesibility(): void {
+    public updateFormControlsAccessibility(): void {
         const formControlNames = Object.keys(this.personalInfoForm.controls);
 
         // Enable all controls.
@@ -352,16 +343,19 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
             this.isTemporaryUser = false;
         }
 
-        if (!this.editModelsSubscription) {
-            this.editModelsSubscription = await this.componentServiceCollector.modelRequestService.requestModels({
-                viewModelCtor: ViewMeeting,
-                ids: [this.activeMeetingIdService.meetingId],
-                follow: ['group_ids', { idField: 'user_ids', fieldset: 'shortName' }]
-            });
+        if (!this.hasSubscription('edit subscription')) {
+            await this.requestModels(
+                {
+                    viewModelCtor: ViewMeeting,
+                    ids: [this.activeMeetingIdService.meetingId],
+                    follow: ['group_ids', { idField: 'user_ids', fieldset: 'shortName' }]
+                },
+                'edit subscription'
+            );
         }
 
         this.editUser = edit;
-        this.updateFormControlsAccesibility();
+        this.updateFormControlsAccessibility();
 
         if (!this.newUser && edit) {
             this.patchFormValues();

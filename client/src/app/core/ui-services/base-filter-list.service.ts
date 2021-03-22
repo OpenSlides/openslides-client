@@ -461,7 +461,6 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
      * @returns true if the item is to be displayed according to the filter
      */
     private checkIncluded(item: V, filter: OsFilter): boolean {
-        console.log('checkIncluded', item, filter);
         const nullFilter = filter.options.find(
             option => typeof option !== 'string' && option.isActive && option.condition === null
         );
@@ -486,10 +485,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
                 passesNullFilter = false;
             }
         }
-        if (nullFilter && passesNullFilter) {
-            return true;
-        }
-        return false;
+        return nullFilter && passesNullFilter;
     }
 
     /**

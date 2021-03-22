@@ -42,7 +42,7 @@ export class ActionService {
             return null;
         }
         if (results.length !== 1) {
-            throw new Error('Inner resultlength is not 1 from the action service');
+            throw new Error('The action service did not respond with exactly one response for one request.');
         }
         return results[0];
     }
@@ -65,8 +65,8 @@ export class ActionService {
             if (!results) {
                 return null;
             }
-            if (results.length !== 1) {
-                throw new Error('Resultlength is not 1 from the action service');
+            if (results.length !== requests.length) {
+                throw new Error('The action service did not return responses for each request.');
             }
             return results[0];
         }

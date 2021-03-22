@@ -30,14 +30,6 @@ export interface NewUser {
     name: string;
 }
 
-export function AllUsersInMeetingRequest(meetingId: Id): SimplifiedModelRequest {
-    return {
-        viewModelCtor: ViewMeeting,
-        ids: [meetingId],
-        follow: [{ idField: 'user_ids', fieldset: 'shortName' }]
-    };
-}
-
 interface CreateTemporaryPayloadWithPresent extends UserAction.CreateTemporaryPayload {
     is_present: boolean;
 }
@@ -270,7 +262,11 @@ export class UserRepositoryService
     };
 
     public getRequestToGetAllModels(): SimplifiedModelRequest {
-        return AllUsersInMeetingRequest(this.activeMeetingIdService.meetingId);
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [this.activeMeetingIdService.meetingId],
+            follow: [{ idField: 'user_ids', fieldset: 'shortName' }]
+        };
     }
 
     /**

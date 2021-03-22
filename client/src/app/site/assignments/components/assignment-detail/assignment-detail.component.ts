@@ -4,16 +4,16 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
 import { BehaviorSubject, Subscription } from 'rxjs';
 
-import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
-import { ModelSubscription } from 'app/core/core-services/autoupdate.service';
+import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
+import { Id } from 'app/core/definitions/key-types';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { AssignmentCandidateRepositoryService } from 'app/core/repositories/assignments/assignment-candidate-repository.service';
 import { AssignmentRepositoryService } from 'app/core/repositories/assignments/assignment-repository.service';
 import { MediafileRepositoryService } from 'app/core/repositories/mediafiles/mediafile-repository.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
-import { AllUsersInMeetingRequest, UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
+import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { PollDialogData } from 'app/core/ui-services/base-poll-dialog.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
@@ -119,6 +119,11 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
     private _assignment: ViewAssignment;
 
     /**
+     * Used to detect changes in the URL
+     */
+    private _assignmentId: null | Id = null;
+
+    /**
      * Check if the operator is a candidate
      *
      * @returns true if they are in the list of candidates
@@ -150,8 +155,6 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
         return this.agendaObserver.getValue().length > 0;
     }
 
-    private possibleCandidatesRequest: ModelSubscription | null = null;
-
     /**
      * Hold the subscription to the navigation.
      * This cannot go into the subscription-list, since it should
@@ -180,7 +183,6 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private operator: OperatorService,
-        private activeMeetingService: ActiveMeetingService,
         public perms: PermissionsService,
         private router: Router,
         private route: ActivatedRoute,
@@ -194,20 +196,14 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
         private pdfService: AssignmentPdfExportService,
         private mediafileRepo: MediafileRepositoryService,
         private pollDialog: AssignmentPollDialogService,
-        private assignmentPollService: AssignmentPollService
+        private assignmentPollService: AssignmentPollService,
+        private activeMeetingIdService: ActiveMeetingIdService
     ) {
         super(componentServiceCollector);
         this.subscriptions.push(
             this.userRepo.getViewModelListObservable().subscribe(users => {
                 this.allUsers.next(users);
                 this.filterCandidates();
-            }),
-            this.operator.operatorUpdatedEvent.subscribe(async () => {
-                if (!this.possibleCandidatesRequest && this.hasPerms('addOthers')) {
-                    const request = AllUsersInMeetingRequest(this.activeMeetingService.meetingId);
-                    const requestService = this.componentServiceCollector.modelRequestService;
-                    this.possibleCandidatesRequest = await requestService.requestModels(request);
-                }
             })
         );
         this.assignmentForm = formBuilder.group({
@@ -238,6 +234,17 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
         this.agendaObserver = this.itemRepo.getViewModelListBehaviorSubject();
         this.tagsObserver = this.tagRepo.getViewModelListBehaviorSubject();
         this.mediafilesObserver = this.mediafileRepo.getViewModelListBehaviorSubject();
+
+        // TODO: why are groups needed here??
+        this.requestModels(
+            {
+                // Get all available groups in an active meeting.
+                viewModelCtor: ViewMeeting,
+                ids: [this.activeMeetingIdService.meetingId],
+                follow: [{ idField: 'group_ids' }]
+            },
+            'groups'
+        );
     }
 
     /**
@@ -287,12 +294,10 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
     }
 
     private loadAssignmentById(assignmentId: number): void {
-        this.requestModels({
-            // Get all available groups in an active meeting.
-            viewModelCtor: ViewMeeting,
-            ids: [this.activeMeetingService.meetingId],
-            follow: [{ idField: 'group_ids' }]
-        });
+        if (assignmentId === this._assignmentId) {
+            return;
+        }
+        this._assignmentId = assignmentId;
         this.requestModels({
             viewModelCtor: ViewAssignment,
             ids: [assignmentId],
@@ -559,9 +564,6 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
 
     public ngOnDestroy(): void {
         super.ngOnDestroy();
-        if (this.possibleCandidatesRequest) {
-            this.possibleCandidatesRequest.close();
-        }
         if (this.navigationSubscription) {
             this.navigationSubscription.unsubscribe();
         }
