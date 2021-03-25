@@ -6,13 +6,17 @@ import { Router } from '@angular/router';
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 import { BehaviorSubject } from 'rxjs';
 
+import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
+import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { ModelSubscription } from 'app/core/core-services/autoupdate.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { ModelRequestService } from 'app/core/core-services/model-request.service';
 import { MediafileRepositoryService } from 'app/core/repositories/mediafiles/mediafile-repository.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { toBase64 } from 'app/core/to-base64';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { CreateMediafile } from 'app/shared/models/mediafiles/create-mediafile';
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { ViewGroup } from 'app/site/users/models/view-group';
@@ -31,7 +35,7 @@ interface FileData {
     templateUrl: './media-upload-content.component.html',
     styleUrls: ['./media-upload-content.component.scss']
 })
-export class MediaUploadContentComponent implements OnInit, OnDestroy {
+export class MediaUploadContentComponent extends BaseModelContextComponent implements OnInit, OnDestroy {
     /**
      * Columns to display in the upload-table
      */
@@ -99,12 +103,14 @@ export class MediaUploadContentComponent implements OnInit, OnDestroy {
      * @param op the operator, to check who was the uploader
      */
     public constructor(
+        componentServiceCollector: ComponentServiceCollector,
         private repo: MediafileRepositoryService,
         private formBuilder: FormBuilder,
         private groupRepo: GroupRepositoryService,
-        private modelRequestService: ModelRequestService,
-        private router: Router
+        private router: Router,
+        private activeMeetingIdService: ActiveMeetingIdService
     ) {
+        super(componentServiceCollector);
         this.directoryBehaviorSubject = this.repo.getDirectoryBehaviorSubject();
         this.groupsBehaviorSubject = this.groupRepo.getViewModelListBehaviorSubject();
     }
@@ -135,19 +141,12 @@ export class MediaUploadContentComponent implements OnInit, OnDestroy {
             }
         });
 
-        const modelRequest: SimplifiedModelRequest = {
+        this.requestModels({
             viewModelCtor: ViewMeeting,
-            ids: [1], // TODO
+            ids: [this.activeMeetingIdService.meetingId],
             follow: [{ idField: 'mediafile_ids', fieldset: 'fileCreation' }],
             fieldset: []
-        };
-        this.modelSubscription = await this.modelRequestService.requestModels(modelRequest, this.constructor.name);
-    }
-
-    public ngOnDestroy(): void {
-        if (this.modelSubscription) {
-            this.modelSubscription.close();
-        }
+        });
     }
 
     public getDirectoryTitle(): string {

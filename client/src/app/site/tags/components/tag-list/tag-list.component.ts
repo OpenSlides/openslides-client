@@ -4,6 +4,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 import { PblColumnDefinition } from '@pebula/ngrid';
 
+import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -61,7 +62,8 @@ export class TagListComponent extends BaseListViewComponent<ViewTag> implements 
         private dialog: MatDialog,
         private formBuilder: FormBuilder,
         private promptService: PromptService,
-        private cd: ChangeDetectorRef
+        private cd: ChangeDetectorRef,
+        private activeMeetingIdService: ActiveMeetingIdService
     ) {
         super(componentServiceCollector);
     }
@@ -78,7 +80,7 @@ export class TagListComponent extends BaseListViewComponent<ViewTag> implements 
     protected getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [1], // TODO
+            ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
                     idField: 'tag_ids'

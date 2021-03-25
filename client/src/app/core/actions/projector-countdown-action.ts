@@ -2,9 +2,9 @@ import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Id } from '../definitions/key-types';
 
 export namespace ProjectorCountdownAction {
-    export const CREATE = 'projector.create';
-    export const UPDATE = 'projector.update';
-    export const DELETE = 'projector.delete';
+    export const CREATE = 'projector_countdown.create';
+    export const UPDATE = 'projector_countdown.update';
+    export const DELETE = 'projector_countdown.delete';
 
     export interface CreatePayload {
         meeting_id: Id;
