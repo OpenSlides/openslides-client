@@ -56,7 +56,7 @@ export class ProjectionDialogComponent {
         }
 
         // Set option defaults
-        this.descriptor.slideOptions.forEach(option => {
+        this.descriptor.slideOptions?.forEach(option => {
             this.optionValues[option.key] = option.default;
         });
 

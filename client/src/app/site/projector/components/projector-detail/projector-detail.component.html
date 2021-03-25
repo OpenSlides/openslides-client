@@ -183,7 +183,7 @@
                                     </os-icon-container>
                                 </span>
 
-                                <button type="button" mat-icon-button (click)="unprojectCurrent(element)">
+                                <button type="button" mat-icon-button (click)="deleteProjection(projection)">
                                     <mat-icon>close</mat-icon>
                                 </button>
                             </div>
@@ -232,7 +232,7 @@
                                 </div>
                                 <div class="button-right" *ngIf="editQueue">
                                     <div>
-                                        <button type="button" mat-icon-button (click)="removeFromPreview(projection)">
+                                        <button type="button" mat-icon-button (click)="deleteProjection(projection)">
                                             <mat-icon>delete</mat-icon>
                                         </button>
                                     </div>
@@ -346,6 +346,7 @@
                         </mat-list>
                     </mat-expansion-panel>
 
+                    <!-- History -->
                     <mat-expansion-panel *ngIf="projector.history_projections.length">
                         <mat-expansion-panel-header>
                             <span>{{ 'Previous slides' | translate }}</span>

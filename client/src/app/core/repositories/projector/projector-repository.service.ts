@@ -173,12 +173,12 @@ export class ProjectorRepositoryService extends BaseRepositoryWithActiveMeeting<
         return await this.sendActionToBackend(ProjectorAction.PROJECT, payload);
     }
 
-    public async next(payload: ProjectorAction.NextPayload): Promise<void> {
-        return await this.sendActionToBackend(ProjectorAction.NEXT, payload);
+    public async next(viewProjector: ViewProjector): Promise<void> {
+        return await this.sendActionToBackend(ProjectorAction.NEXT, { id: viewProjector.id });
     }
 
-    public async previous(payload: ProjectorAction.PreviousPayload): Promise<void> {
-        return await this.sendActionToBackend(ProjectorAction.PREVIOUS, payload);
+    public async previous(viewProjector: ViewProjector): Promise<void> {
+        return await this.sendActionToBackend(ProjectorAction.PREVIOUS, { id: viewProjector.id });
     }
 
     public async addToPreview(

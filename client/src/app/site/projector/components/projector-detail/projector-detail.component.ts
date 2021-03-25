@@ -20,7 +20,9 @@ import { DurationService } from 'app/core/ui-services/duration.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { SizeObject } from 'app/shared/components/tile/tile.component';
 import { infoDialogSettings, largeDialogSettings } from 'app/shared/utils/dialog-settings';
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewProjectorCountdown } from 'app/site/projector/models/view-projector-countdown';
 import { ViewProjectorMessage } from 'app/site/projector/models/view-projector-message';
 import { CountdownDialogComponent, CountdownDialogData } from '../countdown-dialog/countdown-dialog.component';
@@ -40,7 +42,7 @@ import { ViewProjector } from '../../models/view-projector';
     styleUrls: ['./projector-detail.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProjectorDetailComponent extends BaseComponent implements OnInit {
+export class ProjectorDetailComponent extends BaseModelContextComponent implements OnInit {
     /**
      * The projector to show.
      */
@@ -100,6 +102,17 @@ export class ProjectorDetailComponent extends BaseComponent implements OnInit {
         this.projectorRepo
             .getViewModelListObservable()
             .subscribe(projectors => (this.projectorCount = projectors.length));
+        // TODO: remove.
+        // This is just for testing the new autoupdate/projector service mechanism
+        this.projectorRepo.getViewModelListObservable().subscribe(p => {
+            p.forEach(x => {
+                console.log(
+                    x,
+                    x.current_projections,
+                    x.current_projections.map((y: any) => y.content)
+                );
+            });
+        });
     }
 
     /**
@@ -108,6 +121,22 @@ export class ProjectorDetailComponent extends BaseComponent implements OnInit {
     public ngOnInit(): void {
         this.route.params.subscribe(params => {
             const projectorId = parseInt(params.id, 10) || 1;
+
+            this.requestModels({
+                viewModelCtor: ViewProjector,
+                ids: [projectorId],
+                follow: [
+                    {
+                        idField: 'history_projection_ids',
+                        follow: [{ idField: 'content_object_id' }]
+                    },
+                    {
+                        idField: 'current_projection_ids',
+                        follow: [{ idField: 'content_object_id' }]
+                        // additionalFields: ["content"]
+                    }
+                ]
+            });
 
             this.subscriptions.push(
                 this.projectorRepo.getViewModelObservable(projectorId).subscribe(projector => {
@@ -119,6 +148,15 @@ export class ProjectorDetailComponent extends BaseComponent implements OnInit {
                 })
             );
         });
+
+        this.requestModels(
+            {
+                viewModelCtor: ViewMeeting,
+                ids: [this.activeMeetingService.meetingId],
+                follow: ['projector_countdown_ids', 'projector_message_ids']
+            },
+            'messages and countdowns'
+        );
 
         this.subscriptions.push(timer(0, 500).subscribe(() => this.cd.detectChanges()));
     }
@@ -195,7 +233,7 @@ export class ProjectorDetailComponent extends BaseComponent implements OnInit {
         this.projectorRepo.sortPreview(this.projector, ids);
     }
 
-    public removeFromPreview(projection: ViewProjection): void {
+    public deleteProjection(projection: ViewProjection): void {
         this.projectionRepo.delete(projection);
     }
 
@@ -204,7 +242,7 @@ export class ProjectorDetailComponent extends BaseComponent implements OnInit {
     }
 
     public unprojectCurrent(projection: ViewProjection): void {
-        this.projectionRepo.delete(projection);
+        throw new Error('TODO: unproject current');
     }
 
     public isClosProjected(overlay: boolean): boolean {
@@ -243,8 +281,7 @@ export class ProjectorDetailComponent extends BaseComponent implements OnInit {
                     meeting_id: this.activeMeetingService.meetingId,
                     title: result.title,
                     description: result.description,
-                    default_time: defaultTime,
-                    countdown_time: defaultTime
+                    default_time: defaultTime
                 };
                 this.countdownRepo.create(countdown);
             }

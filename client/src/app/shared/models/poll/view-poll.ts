@@ -123,7 +123,6 @@ export class ViewPoll<C extends BaseViewModel = any> extends BaseProjectableView
         }
         return {
             content_object_id: this.content_object_id,
-            slideOptions: [],
             projectionDefault,
             getDialogTitle: this.getTitle
         };

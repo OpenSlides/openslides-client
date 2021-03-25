@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { PblColumnDefinition } from '@pebula/ngrid';
 
+import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
@@ -86,7 +87,8 @@ export class AssignmentListComponent extends BaseListViewComponent<ViewAssignmen
         protected route: ActivatedRoute,
         private router: Router,
         private operator: OperatorService,
-        public vp: ViewportService
+        public vp: ViewportService,
+        private activeMeetingIdService: ActiveMeetingIdService
     ) {
         super(componentServiceCollector);
         this.canMultiSelect = true;
@@ -104,7 +106,7 @@ export class AssignmentListComponent extends BaseListViewComponent<ViewAssignmen
     protected getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [1], // TODO
+            ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
                     idField: 'assignment_ids',
