@@ -171,9 +171,7 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
             await this.authService.login(this.loginForm.value.username, this.loginForm.value.password);
         } catch (e) {
             // this.overlayService.hideSpinner();
-            this.loginForm.setErrors({
-                notFound: true
-            });
+            this.loginForm.get('password').setErrors({ notFound: true });
             this.loginErrorMsg = e;
         }
         // throw new Error('TODO'); // Ingore SAML for now...
