@@ -96,7 +96,7 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
     }
 
     public ngOnInit(): void {
-        const id = parseInt(this.route.snapshot.url[this.route.snapshot.url.length - 1].path, 10);
+        const id = parseInt(this.route.snapshot.url[this.route.snapshot.url.length - 1]?.path, 10);
         this.setListOfSpeakersById(id);
         // Check, if we are on the current list of speakers.
         this.isCurrentListOfSpeakers =

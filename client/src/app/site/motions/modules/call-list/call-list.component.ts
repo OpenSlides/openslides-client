@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { BehaviorSubject, Observable } from 'rxjs';
 
+import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
@@ -93,7 +94,8 @@ export class CallListComponent extends BaseSortTreeComponent<ViewMotion> impleme
         private motionCsvExport: MotionCsvExportService,
         private motionPdfExport: MotionPdfExportService,
         private tagRepo: TagRepositoryService,
-        private categoryRepo: MotionCategoryRepositoryService
+        private categoryRepo: MotionCategoryRepositoryService,
+        private activeMeetingIdService: ActiveMeetingIdService
     ) {
         super(componentServiceCollector, promptService);
 
@@ -177,7 +179,7 @@ export class CallListComponent extends BaseSortTreeComponent<ViewMotion> impleme
     public getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [1], // TODO
+            ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
                     idField: 'motion_ids',

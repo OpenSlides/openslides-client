@@ -35,16 +35,16 @@ export class PersonalNoteComponent extends BaseComponent {
     public isEditMode = false;
 
     public get personalNoteText(): string {
-        const pn = this.motion.getPersonalNote();
+        const pn = this.motion?.getPersonalNote();
         return pn ? pn.note : '';
     }
 
     public get hasPersonalNote(): boolean {
-        return !!this.motion.getPersonalNote();
+        return !!this.motion?.getPersonalNote();
     }
 
     public get personalNote(): PersonalNote | null {
-        return this.motion.getPersonalNote();
+        return this.motion?.getPersonalNote();
     }
 
     /**

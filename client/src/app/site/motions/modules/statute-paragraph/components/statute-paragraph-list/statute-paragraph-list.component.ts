@@ -2,6 +2,7 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
+import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { MotionStatuteParagraphRepositoryService } from 'app/core/repositories/motions/motion-statute-paragraph-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -56,7 +57,8 @@ export class StatuteParagraphListComponent extends BaseModelContextComponent imp
         private formBuilder: FormBuilder,
         private promptService: PromptService,
         private dialog: MatDialog,
-        private csvExportService: StatuteCsvExportService
+        private csvExportService: StatuteCsvExportService,
+        private activeMeetingIdService: ActiveMeetingIdService
     ) {
         super(componentServiceCollector);
 
@@ -83,7 +85,7 @@ export class StatuteParagraphListComponent extends BaseModelContextComponent imp
     protected getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [1], // TODO
+            ids: [this.activeMeetingIdService.meetingId], // TODO
             follow: ['motion_statute_paragraph_ids'],
             fieldset: []
         };

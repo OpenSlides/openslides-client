@@ -43,6 +43,22 @@ export class ViewMeeting extends BaseViewModel<Meeting> {
     public get meeting(): Meeting {
         return this._model;
     }
+
+    public get startDate(): Date {
+        return new Date(this.start_time * 1000);
+    }
+
+    public get endDate(): Date {
+        return new Date(this.end_time * 1000);
+    }
+
+    public get userAmount(): number {
+        return this.user_ids?.length || 0;
+    }
+
+    public getUrl(): string {
+        return `/${this.id}/`;
+    }
 }
 interface IMeetingRelations {
     motions_default_workflow: ViewMotionWorkflow;

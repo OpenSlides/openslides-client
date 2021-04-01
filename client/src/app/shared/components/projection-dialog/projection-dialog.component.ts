@@ -46,7 +46,7 @@ export class ProjectionDialogComponent {
         this.selectedProjectors = this.projectorService.getProjectorsWhichAreProjecting(this.descriptor);
 
         // Add default projector, if the projectable is not projected on it.
-        if (this.descriptor.projectionDefault) {
+        if (this.descriptor?.projectionDefault) {
             const defaultProjector: ViewProjector = this.activeMeetingService.meeting.default_projector(
                 this.descriptor.projectionDefault
             );
@@ -56,11 +56,11 @@ export class ProjectionDialogComponent {
         }
 
         // Set option defaults
-        this.descriptor.slideOptions?.forEach(option => {
+        this.descriptor?.slideOptions?.forEach(option => {
             this.optionValues[option.key] = option.default;
         });
 
-        this.options = this.descriptor.slideOptions;
+        this.options = this.descriptor?.slideOptions;
     }
 
     public toggleProjector(projector: ViewProjector): void {

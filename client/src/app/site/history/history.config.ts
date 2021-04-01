@@ -9,7 +9,7 @@ export const HistoryAppConfig: AppConfig = {
     name: 'history',
     mainMenuEntries: [
         {
-            route: '/history',
+            route: 'history',
             displayName: 'History',
             icon: 'history',
             weight: 1200,

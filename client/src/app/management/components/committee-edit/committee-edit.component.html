@@ -1,0 +1,42 @@
+<os-head-bar
+    [customMenu]="true"
+    [nav]="false"
+    [editMode]="true"
+    [isSaveButtonEnabled]="committeeForm.valid"
+    (cancelEditEvent)="onCancel()"
+    (saveEvent)="onSubmit()"
+>
+    <!-- Title -->
+    <div class="title-slot">
+        <h2 *ngIf="isCreateView">{{ addCommitteeLabel | translate }}</h2>
+        <h2 *ngIf="!isCreateView">{{ editCommitteeLabel | translate }}</h2>
+    </div>
+
+    <ng-container class="custom-menu-slot">
+        <os-management-navigation></os-management-navigation>
+    </ng-container>
+</os-head-bar>
+
+<mat-card class="os-card">
+    <form class="committee-form" [formGroup]="committeeForm" (ngSubmit)="onSubmit()" *ngIf="committeeForm">
+        <mat-form-field>
+            <mat-label>{{ 'Title' | translate }}</mat-label>
+            <input matInput formControlName="name" />
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label> {{ 'Committee manager' | translate }}</mat-label>
+            <os-search-value-selector
+                formControlName="manager_ids"
+                [multiple]="true"
+                placeholder="{{ 'Committee manager' | translate }}"
+                [inputListValues]="members"
+            ></os-search-value-selector>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>{{ 'Description' | translate }}</mat-label>
+            <input matInput formControlName="description" />
+        </mat-form-field>
+    </form>
+</mat-card>

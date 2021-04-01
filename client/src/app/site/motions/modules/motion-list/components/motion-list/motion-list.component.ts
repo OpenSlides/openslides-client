@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { PblColumnDefinition } from '@pebula/ngrid';
 
+import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { ModelRequest } from 'app/core/core-services/autoupdate.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
@@ -226,7 +227,8 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
         private motionExport: MotionExportService,
         private overlayService: OverlayService,
         public vp: ViewportService,
-        public operator: OperatorService
+        public operator: OperatorService,
+        private activeMeetingIdService: ActiveMeetingIdService
     ) {
         super(componentServiceCollector);
         this.canMultiSelect = true;
@@ -288,7 +290,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
     protected getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [1], // TODO
+            ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
                     idField: 'motion_ids',

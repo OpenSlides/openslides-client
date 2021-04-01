@@ -1,5 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { E2EImportsModule } from 'e2e-imports.module';
+
 import { DownloadComponent } from './download.component';
 
 describe('DownloadComponent', () => {
@@ -8,6 +10,7 @@ describe('DownloadComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
+            imports: [E2EImportsModule],
             declarations: [DownloadComponent]
         }).compileComponents();
     }));

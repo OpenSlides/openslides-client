@@ -1,5 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { E2EImportsModule } from 'e2e-imports.module';
+
 import { SearchRepoSelectorComponent } from './search-repo-selector.component';
 
 describe('SearchRepoSelectorComponent', () => {
@@ -8,6 +10,7 @@ describe('SearchRepoSelectorComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
+            imports: [E2EImportsModule],
             declarations: [SearchRepoSelectorComponent]
         }).compileComponents();
     }));

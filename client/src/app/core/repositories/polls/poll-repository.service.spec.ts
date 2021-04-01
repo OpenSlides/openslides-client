@@ -1,12 +1,16 @@
 import { TestBed } from '@angular/core/testing';
 
+import { E2EImportsModule } from 'e2e-imports.module';
+
 import { PollRepositoryService } from './poll-repository.service';
 
-describe('PollService', () => {
+describe('PollRepositoryService', () => {
     let service: PollRepositoryService;
 
     beforeEach(() => {
-        TestBed.configureTestingModule({});
+        TestBed.configureTestingModule({
+            imports: [E2EImportsModule]
+        });
         service = TestBed.inject(PollRepositoryService);
     });
 

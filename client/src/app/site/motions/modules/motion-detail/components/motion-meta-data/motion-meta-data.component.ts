@@ -282,8 +282,8 @@ export class MotionMetaDataComponent extends BaseComponent implements OnInit {
     private subscribeToMetaData(): Subscription[] {
         return [
             this.repo
-                .getRecommendationReferencingMotions(this.motion.id)
-                .subscribe(motions => (this.recommendationReferencingMotions = motions))
+                .getRecommendationReferencingMotions(this.motion?.id)
+                ?.subscribe(motions => (this.recommendationReferencingMotions = motions))
         ];
     }
 

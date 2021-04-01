@@ -13,20 +13,11 @@
 </os-head-bar>
 
 <mat-card class="spacer-bottom-60" [ngClass]="isEditing ? 'os-form-card' : 'os-card'">
-<mat-card [ngClass]="isEditing ? 'os-form-card' : 'os-card'">
     <ng-container *ngIf="!isEditing">
         <div class="app-content">
             <h1>{{ startContent.welcome_title | translate }}</h1>
-
             <div [innerHTML]="startContent.welcome_text | trust: 'html'"></div>
         </div>
-        <button mat-button (click)="doAuthenticate()">Authenticate</button>
-        <button mat-button (click)="testCreateTopic()">Test: create topic</button>
-        <button mat-button (click)="testCreateTopicWithExpiredToken()">Test: create topic with expired token</button>
-        <button mat-button (click)="apiAuthRequestWithTokenCookie()">API Hello World</button>
-        <button mat-button (click)="apiAuthRequestWithCookie()">API Request Only Cookie</button>
-        <button mat-button (click)="apiAuthRequestWithExpiredToken()">API Request with expired Token</button>
-        <button mat-button (click)="apiAuthRequestWithInvalidToken()">API Request with invalid Token</button>
     </ng-container>
 
     <ng-container *ngIf="isEditing">

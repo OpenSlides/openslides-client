@@ -5,7 +5,7 @@ export const CommonAppConfig: AppConfig = {
     name: 'common',
     mainMenuEntries: [
         {
-            route: '/',
+            route: '.',
             displayName: 'Home',
             icon: 'home',
             weight: 100,

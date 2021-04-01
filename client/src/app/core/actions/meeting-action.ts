@@ -26,8 +26,8 @@ export namespace MeetingAction {
         welcome_text?: UnsafeHtml;
         description?: string;
         location?: string;
-        start_time?: Date;
-        end_time?: Date;
+        start_time?: number;
+        end_time?: number;
         url_name?: string;
         enable_anonymous?: boolean;
         guest_ids?: Id[];
@@ -43,8 +43,8 @@ export namespace MeetingAction {
         name?: string;
         description?: string;
         location?: string;
-        start_time?: Date;
-        end_time?: Date;
+        start_time?: number;
+        end_time?: number;
 
         jitsi_domain?: string;
         jitsi_room_name?: string;

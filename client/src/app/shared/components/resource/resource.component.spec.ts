@@ -1,5 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { E2EImportsModule } from 'e2e-imports.module';
+
 import { ResourceComponent } from './resource.component';
 
 describe('ResourceComponent', () => {
@@ -8,6 +10,7 @@ describe('ResourceComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
+            imports: [E2EImportsModule],
             declarations: [ResourceComponent]
         }).compileComponents();
     }));

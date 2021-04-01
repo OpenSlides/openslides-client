@@ -226,31 +226,33 @@ export abstract class BasePollDialogComponent extends BaseComponent implements O
      * Pre-executed method to initialize the dialog-form depending on the poll-method.
      */
     private createDialog(): void {
-        this.dialogVoteForm = this.formBuilder.group({
-            options: this.formBuilder.group(
-                // create a form group for each option with the user id as key
-                this.options.mapToObject(option => ({
-                    [option.fqid]: this.formBuilder.group(
-                        // for each user, create a form group with a control for each valid input (Y, N, A)
-                        this.analogVoteFields.mapToObject(value => ({
-                            [value]: ['', [Validators.min(LOWEST_VOTE_VALUE)]]
-                        }))
-                    )
+        if (this.options) {
+            this.dialogVoteForm = this.formBuilder.group({
+                options: this.formBuilder.group(
+                    // create a form group for each option with the user id as key
+                    this.options?.mapToObject(option => ({
+                        [option.fqid]: this.formBuilder.group(
+                            // for each user, create a form group with a control for each valid input (Y, N, A)
+                            this.analogVoteFields?.mapToObject(value => ({
+                                [value]: ['', [Validators.min(LOWEST_VOTE_VALUE)]]
+                            }))
+                        )
+                    }))
+                ),
+                amount_global_yes: ['', [Validators.min(LOWEST_VOTE_VALUE)]],
+                amount_global_no: ['', [Validators.min(LOWEST_VOTE_VALUE)]],
+                amount_global_abstain: ['', [Validators.min(LOWEST_VOTE_VALUE)]],
+                // insert all used global fields
+                ...this.sumValues?.mapToObject(sumValue => ({
+                    [sumValue]: ['', [Validators.min(LOWEST_VOTE_VALUE)]]
                 }))
-            ),
-            amount_global_yes: ['', [Validators.min(LOWEST_VOTE_VALUE)]],
-            amount_global_no: ['', [Validators.min(LOWEST_VOTE_VALUE)]],
-            amount_global_abstain: ['', [Validators.min(LOWEST_VOTE_VALUE)]],
-            // insert all used global fields
-            ...this.sumValues.mapToObject(sumValue => ({
-                [sumValue]: ['', [Validators.min(LOWEST_VOTE_VALUE)]]
-            }))
-        });
-        setTimeout(() => {
-            if (this.isAnalogPoll && this.pollData instanceof ViewPoll) {
-                this.updateDialogVoteForm(this.pollData);
-            }
-        });
+            });
+            setTimeout(() => {
+                if (this.isAnalogPoll && this.pollData instanceof ViewPoll) {
+                    this.updateDialogVoteForm(this.pollData);
+                }
+            });
+        }
     }
 
     private updateDialogVoteForm(data: Partial<ViewPoll>): void {

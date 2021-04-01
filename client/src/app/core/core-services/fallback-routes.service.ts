@@ -6,7 +6,7 @@ import { Permission } from './permission';
 export interface AuthGuardFallbackEntry {
     route: string;
     weight: number;
-    permission: Permission;
+    permission?: Permission;
 }
 
 /**

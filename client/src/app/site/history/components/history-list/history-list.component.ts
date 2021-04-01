@@ -133,8 +133,11 @@ export class HistoryListComponent extends BaseComponent implements OnInit {
         };
 
         // If an element id is given, validate it and update the view.
-        const params = this.activatedRoute.snapshot.queryParams;
-        throw new Error('TODO: No element ids anymore');
+        /**
+         * 'TODO: No element ids anymore'
+         */
+        // const params = this.activatedRoute.snapshot.queryParams;
+        // throw new Error('TODO: No element ids anymore');
         /*if (this.collectionMapper.isElementIdValid(params.element)) {
             this.queryByElementId(params.element);
             this.modelSelectForm.patchValue(

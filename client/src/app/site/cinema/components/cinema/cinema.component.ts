@@ -102,8 +102,8 @@ export class CinemaComponent extends BaseComponent implements OnInit {
         this.subscriptions.push(
             this.projectorRepo.getReferenceProjectorObservable().subscribe(refProjector => {
                 this.projector = refProjector;
-                const currentProjections = refProjector.nonStableCurrentProjections;
-                this.currentProjection = currentProjections.length > 0 ? currentProjections[0] : null;
+                const currentProjections = refProjector?.nonStableCurrentProjections;
+                this.currentProjection = currentProjections?.length > 0 ? currentProjections[0] : null;
                 this.projectedViewModel = this.currentProjection?.content_object || null;
             }),
             this.closService.currentListOfSpeakersObservable.subscribe(clos => {

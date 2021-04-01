@@ -27,7 +27,7 @@ export const AgendaAppConfig: AppConfig = {
     ],
     mainMenuEntries: [
         {
-            route: '/agenda',
+            route: 'agenda',
             displayName: 'Agenda',
             icon: 'today', // 'calendar_today' aligns wrong!
             weight: 200,

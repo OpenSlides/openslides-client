@@ -24,7 +24,7 @@ export const AssignmentsAppConfig: AppConfig = {
     ],
     mainMenuEntries: [
         {
-            route: '/assignments',
+            route: 'assignments',
             displayName: 'Elections',
             icon: 'how_to_vote',
             weight: 400,

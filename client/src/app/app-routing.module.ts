@@ -37,7 +37,12 @@ const routes: Route[] = [
         path: 'download',
         loadChildren: () => import('./fullscreen/download/download.module').then(m => m.DownloadModule)
     },
-    { path: '', loadChildren: () => import('./site/site.module').then(m => m.SiteModule) },
+    {
+        path: '',
+        loadChildren: () => import('./management/management.module').then(m => m.ManagementModule)
+    },
+    { path: ':meetingId', loadChildren: () => import('./site/site.module').then(m => m.SiteModule) },
+    // { path: '', redirectTo: 'manage', pathMatch: 'full' },
     { path: '**', redirectTo: '' }
 ];
 

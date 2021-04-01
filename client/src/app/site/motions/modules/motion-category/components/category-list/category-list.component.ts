@@ -4,6 +4,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 import { PblColumnDefinition } from '@pebula/ngrid';
 
+import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
@@ -77,7 +78,8 @@ export class CategoryListComponent extends BaseListViewComponent<ViewMotionCateg
         public repo: MotionCategoryRepositoryService,
         private formBuilder: FormBuilder,
         private dialog: MatDialog,
-        private operator: OperatorService
+        private operator: OperatorService,
+        private activeMeetingIdService: ActiveMeetingIdService
     ) {
         super(componentServiceCollector);
 
@@ -99,7 +101,7 @@ export class CategoryListComponent extends BaseListViewComponent<ViewMotionCateg
     protected getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [1], // TODO
+            ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
                     idField: 'motion_category_ids',

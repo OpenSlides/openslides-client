@@ -80,10 +80,10 @@ export class ParagraphBasedAmendmentComponent implements OnInit {
      * @returns {DiffLinesInParagraph[]}
      */
     public getAmendmentParagraphs(): DiffLinesInParagraph[] {
-        return this.motion.diffLines;
+        return this.motion?.diffLines;
     }
 
     public getAmendmentParagraphLinesTitle(paragraph: DiffLinesInParagraph): string {
-        return this.motion.getParagraphTitleByParagraph(paragraph);
+        return this.motion?.getParagraphTitleByParagraph(paragraph);
     }
 }

@@ -12,6 +12,7 @@ export interface MainMenuEntry {
      * The route for the router to navigate to on click.
      */
     route: string;
+
     /**
      * The display string to be shown.
      */
@@ -30,7 +31,7 @@ export interface MainMenuEntry {
     /**
      * The permission to see the entry.
      */
-    permission: Permission;
+    permission?: Permission;
 }
 
 /**

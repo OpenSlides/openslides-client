@@ -65,7 +65,7 @@
     </span>
 
     <!-- Regular motions or traditional amendments -->
-    <ng-container *ngIf="!editMotion && !motion.isStatuteAmendment() && !motion.isParagraphBasedAmendment()">
+    <ng-container *ngIf="!editMotion && !motion?.isStatuteAmendment() && !motion?.isParagraphBasedAmendment()">
         <div
             *ngIf="changeRecoMode !== ChangeRecoMode.Diff && !isFinalEdit"
             class="motion-text"
@@ -119,7 +119,7 @@
     <!-- formatted statute amendment -->
     <div
         class="motion-text line-numbers-none"
-        *ngIf="!editMotion && motion.isStatuteAmendment()"
+        *ngIf="!editMotion && motion?.isStatuteAmendment()"
         [innerHTML]="getFormattedStatuteAmendment() | trust: 'html'"
     ></div>
 
@@ -162,7 +162,7 @@
     </ng-container>
 
     <!-- Paragraph-based amendments -->
-    <ng-container *ngIf="!editMotion && motion.isParagraphBasedAmendment()">
+    <ng-container *ngIf="!editMotion && motion?.isParagraphBasedAmendment()">
         <os-paragraph-based-amendment
             [motion]="motion"
             [lnMode]="lnMode"
@@ -178,7 +178,7 @@
     </ng-container>
 
     <!-- Reason -->
-    <div *ngIf="motion.reason || editMotion">
+    <div *ngIf="motion?.reason || editMotion">
         <h3
             [ngClass]="
                 reasonRequired &&
@@ -191,7 +191,7 @@
             <span>{{ 'Reason' | translate }}</span
             >&nbsp;<span *ngIf="reasonRequired && editMotion">*</span>
         </h3>
-        <div class="motion-text" *ngIf="!editMotion" [innerHtml]="motion.reason | trust: 'html'"></div>
+        <div class="motion-text" *ngIf="!editMotion" [innerHtml]="motion?.reason | trust: 'html'"></div>
 
         <!-- The HTML Editor -->
         <editor
@@ -229,7 +229,7 @@
             <div *ngIf="!editMotion">
                 <h3>{{ 'Attachments' | translate }}<mat-icon>attach_file</mat-icon></h3>
                 <mat-list dense>
-                    <mat-list-item *ngFor="let file of motion.attachments">
+                    <mat-list-item *ngFor="let file of motion?.attachments">
                         <a [routerLink]="" (click)="onClickAttachment(file)">{{ file.title }}</a>
                     </mat-list-item>
                 </mat-list>

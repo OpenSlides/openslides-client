@@ -1,13 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { environment } from 'environments/environment';
-
-import { AuthTokenService } from 'app/core/core-services/auth-token.service';
-import { HttpService } from 'app/core/core-services/http.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
-import { TopicRepositoryService } from 'app/core/repositories/topics/topic-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
@@ -51,10 +46,7 @@ export class StartComponent extends BaseComponent implements OnInit {
         componentServiceCollector: ComponentServiceCollector,
         private meetingSettingsService: MeetingSettingsService,
         private formBuilder: FormBuilder,
-        private operator: OperatorService,
-        private http: HttpService,
-        private authTokenService: AuthTokenService,
-        private topicRepo: TopicRepositoryService
+        private operator: OperatorService
     ) {
         super(componentServiceCollector);
         this.startForm = this.formBuilder.group({
@@ -72,14 +64,17 @@ export class StartComponent extends BaseComponent implements OnInit {
         super.setTitle('Home');
 
         // set the welcome title
-        this.meetingSettingsService
-            .get('welcome_title')
-            .subscribe(welcomeTitle => (this.startContent.welcome_title = welcomeTitle));
+        this.subscriptions.push(
+            this.meetingSettingsService.get('welcome_title').subscribe(welcomeTitle => {
+                console.log('welcome title: ', welcomeTitle);
+                this.startContent.welcome_title = welcomeTitle;
+            }),
 
-        // set the welcome text
-        this.meetingSettingsService.get('welcome_text').subscribe(welcomeText => {
-            this.startContent.welcome_text = this.translate.instant(welcomeText);
-        });
+            // set the welcome text
+            this.meetingSettingsService.get('welcome_text').subscribe(welcomeText => {
+                this.startContent.welcome_text = this.translate.instant(welcomeText);
+            })
+        );
     }
 
     /**
@@ -113,58 +108,4 @@ export class StartComponent extends BaseComponent implements OnInit {
     public canManage(): boolean {
         return this.operator.hasPerms(Permission.meetingCanManageSettings);
     }
-
-    /**
-     * Only testing purposes
-     */
-    private async createTopic(): Promise<any> {
-        return await this.topicRepo.create({ text: 'Ich mag Kuchen', title: 'Hallo Kekse' });
-    }
-
-    public async testCreateTopic(): Promise<any> {
-        return await this.createTopic();
-    }
-
-    public async testCreateTopicWithExpiredToken(): Promise<any> {
-        this.authTokenService.resetAccessTokenToExpired();
-        return await this.createTopic();
-    }
-
-    public apiAuthRequestWithTokenCookie(): void {
-        this.http.get(`${environment.authUrlPrefix}/api/hello`).then(response => console.log('response', response));
-    }
-
-    public apiAuthRequestWithCookie(): void {
-        this.authTokenService.resetAccessTokenToNull();
-        this.apiAuthRequestWithTokenCookie();
-    }
-
-    public apiAuthRequestWithInvalidToken(): void {
-        this.authTokenService.resetAccessTokenToInvalid();
-        this.apiAuthRequestWithTokenCookie();
-    }
-
-    public apiAuthRequestWithExpiredToken(): void {
-        this.authTokenService.resetAccessTokenToExpired();
-        this.apiAuthRequestWithTokenCookie();
-    }
-
-    public async doAuthenticate(): Promise<void> {
-        // try {
-        //     await this.http.post(`https://auth:9004/internal/auth/api/authenticate`);
-        // } catch (e) {
-        //     console.log('Error while authenticating', e);
-        // }
-        const payload = [
-            {
-                presenter: 'server_time'
-            }
-        ];
-        const servertimeResponse = await this.http.post<any[]>('/system/presenter/handle_request', payload);
-        console.log('servertimeResponse', servertimeResponse);
-    }
-
-    /**
-     * End of testing purposes
-     */
 }

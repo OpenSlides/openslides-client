@@ -1,14 +1,23 @@
 <mat-toolbar color="primary" [ngClass]="multiSelectMode ? 'multi-select' : ''" class="sticky-toolbar">
     <div class="toolbar-left">
-        <!-- Nav menu -->
-        <button mat-icon-button *ngIf="vp.isMobile && !showBackButton && !editMode" (click)="clickHamburgerMenu()">
-            <mat-icon>menu</mat-icon>
-        </button>
+        <ng-container *ngIf="!editMode">
+            <ng-container *ngIf="!showBackButton">
+                <!-- Toggle main nav -->
+                <button mat-icon-button *ngIf="vp.isMobile && !customMenu" (click)="clickHamburgerMenu()">
+                    <mat-icon>menu</mat-icon>
+                </button>
 
-        <!-- Exit / Back button -->
-        <button mat-icon-button *ngIf="showBackButton && !editMode" (click)="onBackButton()">
-            <mat-icon>arrow_back</mat-icon>
-        </button>
+                <!-- Custom menu -->
+                <button mat-icon-button *ngIf="customMenu" [matMenuTriggerFor]="customNavMenu">
+                    <mat-icon>menu</mat-icon>
+                </button>
+            </ng-container>
+
+            <!-- Exit / Back button -->
+            <button mat-icon-button *ngIf="showBackButton" (click)="onBackButton()">
+                <mat-icon>arrow_back</mat-icon>
+            </button>
+        </ng-container>
 
         <!-- Cancel edit button -->
         <button mat-icon-button *ngIf="editMode" (click)="isCancelEditUsed ? sendCancelEditEvent() : sendMainEvent()">
@@ -68,10 +77,12 @@
     (click)="sendMainEvent()"
     matTooltip="{{ mainActionTooltip | translate }}"
 >
-    <mat-icon *ngIf="mainButtonIcon === 'add_circle'">
-        add
-    </mat-icon>
+    <mat-icon *ngIf="mainButtonIcon === 'add_circle'"> add </mat-icon>
     <mat-icon *ngIf="mainButtonIcon !== 'add_circle'">
         {{ mainButtonIcon }}
     </mat-icon>
 </button>
+
+<mat-menu #customNavMenu="matMenu">
+    <ng-content select=".custom-menu-slot"></ng-content>
+</mat-menu>

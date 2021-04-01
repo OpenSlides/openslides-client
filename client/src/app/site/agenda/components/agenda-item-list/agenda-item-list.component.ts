@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { PblColumnDefinition } from '@pebula/ngrid';
@@ -116,6 +116,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
         componentServiceCollector: ComponentServiceCollector,
         private operator: OperatorService,
         private router: Router,
+        private route: ActivatedRoute,
         public repo: AgendaItemRepositoryService,
         private promptService: PromptService,
         private dialog: MatDialog,
@@ -261,7 +262,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
      * Comes from the HeadBar Component
      */
     public onPlusButton(): void {
-        this.router.navigate(['/topics/new']);
+        this.router.navigate(['../topics/new'], { relativeTo: this.route.parent });
     }
 
     /**

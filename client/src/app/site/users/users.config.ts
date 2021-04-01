@@ -28,7 +28,7 @@ export const UsersAppConfig: AppConfig = {
     ],
     mainMenuEntries: [
         {
-            route: '/users',
+            route: 'users',
             displayName: 'Participants',
             icon: 'people',
             weight: 500,

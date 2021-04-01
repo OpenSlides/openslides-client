@@ -91,7 +91,7 @@ export const MotionsAppConfig: AppConfig = {
     ],
     mainMenuEntries: [
         {
-            route: '/motions',
+            route: 'motions',
             displayName: 'Motions',
             icon: 'assignment',
             weight: 300,

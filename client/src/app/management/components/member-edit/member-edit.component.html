@@ -1,0 +1,18 @@
+<os-head-bar
+    [customMenu]="true"
+    [nav]="false"
+    [editMode]="false"
+    (cancelEditEvent)="onCancel()"
+    (saveEvent)="onSubmit()"
+>
+    <!-- Title -->
+    <div class="title-slot">
+        <h2>{{ 'Edit/Create Member' | translate }}</h2>
+    </div>
+
+    <ng-container class="custom-menu-slot">
+        <os-management-navigation></os-management-navigation>
+    </ng-container>
+</os-head-bar>
+
+<p>member-edit works!</p>

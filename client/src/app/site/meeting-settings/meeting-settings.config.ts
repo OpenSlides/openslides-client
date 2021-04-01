@@ -5,7 +5,7 @@ export const SettingsAppConfig: AppConfig = {
     name: 'settings',
     mainMenuEntries: [
         {
-            route: '/settings',
+            route: 'settings',
             displayName: 'Settings',
             icon: 'settings',
             weight: 1300,

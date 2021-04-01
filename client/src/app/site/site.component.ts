@@ -109,8 +109,6 @@ export class SiteComponent extends BaseComponent implements OnInit {
      * Initialize the site component
      */
     public ngOnInit(): void {
-        this.vp.checkForChange();
-
         // observe the mainMenuService to receive toggle-requests
         this.mainMenuService.toggleMenuSubject.subscribe((value: void) => this.toggleSideNav());
 
@@ -188,6 +186,10 @@ export class SiteComponent extends BaseComponent implements OnInit {
         if (this.vp.isMobile) {
             this.sideNav.close();
         }
+    }
+
+    public isStartPage(route: string): boolean {
+        return route === '.';
     }
 
     /**

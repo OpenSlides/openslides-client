@@ -35,7 +35,7 @@ export class ViewTopic extends BaseProjectableViewModel<Topic> {
     }
 
     public getDetailStateURL(): string {
-        return `/topics/${this.id}`;
+        return `topics/${this.id}`;
     }
 
     /**

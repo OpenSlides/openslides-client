@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
+import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -31,7 +32,8 @@ export class MotionCommentSectionSortComponent extends BaseModelContextComponent
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        private repo: MotionCommentSectionRepositoryService
+        private repo: MotionCommentSectionRepositoryService,
+        private activeMeetingIdService: ActiveMeetingIdService
     ) {
         super(componentServiceCollector);
         super.setTitle('Sort comments');
@@ -48,7 +50,7 @@ export class MotionCommentSectionSortComponent extends BaseModelContextComponent
     public getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [1], // TODO
+            ids: [this.activeMeetingIdService.meetingId],
             follow: ['motion_comment_section_ids']
         };
     }

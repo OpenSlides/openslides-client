@@ -47,7 +47,9 @@ export class ViewportService {
      *
      * @param breakpointObserver
      */
-    public constructor(private breakpointObserver: BreakpointObserver) {}
+    public constructor(private breakpointObserver: BreakpointObserver) {
+        this.checkForChange();
+    }
 
     /**
      * Needs to be called (exactly) once.
@@ -56,6 +58,8 @@ export class ViewportService {
     public checkForChange(): void {
         this.breakpointObserver
             .observe([Breakpoints.Handset, '(min-width: 600px) and (max-width: 899.99px)'])
-            .subscribe((state: BreakpointState) => this._isMobileSubject.next(state.matches));
+            .subscribe((state: BreakpointState) => {
+                this._isMobileSubject.next(state.matches);
+            });
     }
 }
