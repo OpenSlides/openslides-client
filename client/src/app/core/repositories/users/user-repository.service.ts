@@ -290,7 +290,7 @@ export class UserRepositoryService
             shortName = `${title} ${shortName}`;
         }
 
-        return shortName;
+        return shortName.trim();
     }
 
     public getFullName(user: FullNameInformation): string {

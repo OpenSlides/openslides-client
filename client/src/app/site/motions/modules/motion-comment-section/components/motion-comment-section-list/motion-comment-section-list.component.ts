@@ -4,6 +4,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 import { BehaviorSubject } from 'rxjs';
 
+import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
@@ -61,7 +62,8 @@ export class MotionCommentSectionListComponent extends BaseModelContextComponent
         private formBuilder: FormBuilder,
         private promptService: PromptService,
         private dialog: MatDialog,
-        private groupRepo: GroupRepositoryService
+        private groupRepo: GroupRepositoryService,
+        private activeMeetingIdService: ActiveMeetingIdService
     ) {
         super(componentServiceCollector);
 
@@ -92,7 +94,7 @@ export class MotionCommentSectionListComponent extends BaseModelContextComponent
     public getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [1], // TODO
+            ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
                     idField: 'motion_comment_section_ids',

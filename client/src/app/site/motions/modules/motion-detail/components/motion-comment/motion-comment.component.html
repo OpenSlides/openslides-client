@@ -1,6 +1,6 @@
 <os-meta-text-block [showActionRow]="canBeEdited" [disableExpandControl]="isCommentEdited" icon="comment">
     <ng-container class="meta-text-block-title">
-        <span>{{ section.getTitle() }}</span>
+        <span>{{ section?.getTitle() }}</span>
     </ng-container>
 
     <ng-container class="meta-text-block-content">

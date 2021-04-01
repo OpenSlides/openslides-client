@@ -8,6 +8,7 @@ import { switchMap } from 'rxjs/operators';
 
 import { AmendmentFilterListService } from '../../services/amendment-filter-list.service';
 import { AmendmentSortListService } from '../../services/amendment-sort-list.service';
+import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -89,7 +90,8 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
         private motionExport: MotionExportService,
         private linenumberingService: LinenumberingService,
         private pdfExport: MotionPdfExportService,
-        private overlayService: OverlayService
+        private overlayService: OverlayService,
+        private activeMeetingIdService: ActiveMeetingIdService
     ) {
         super(componentServiceCollector);
         super.setTitle('Amendments');
@@ -122,7 +124,7 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
     protected getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [1], // TODO
+            ids: [this.activeMeetingIdService.meetingId], // TODO
             follow: [
                 {
                     idField: 'motion_ids',

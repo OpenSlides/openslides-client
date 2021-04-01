@@ -76,9 +76,9 @@ export class UserImportListComponent extends BaseImportListComponent<User> {
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         formBuilder: FormBuilder,
-        public translate: TranslateService,
-        private exporter: CsvExportService,
-        protected importer: UserImportService
+        protected translate: TranslateService,
+        protected importer: UserImportService,
+        private exporter: CsvExportService
     ) {
         super(componentServiceCollector, importer);
         this.textAreaForm = formBuilder.group({ inputtext: [''] });

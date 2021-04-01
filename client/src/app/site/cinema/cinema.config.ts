@@ -6,7 +6,7 @@ export const CinemaAppConfig: AppConfig = {
     models: [],
     mainMenuEntries: [
         {
-            route: '/autopilot',
+            route: 'autopilot',
             displayName: 'Autopilot',
             icon: 'sync',
             weight: 150,

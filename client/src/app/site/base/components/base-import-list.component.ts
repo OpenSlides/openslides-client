@@ -111,9 +111,6 @@ export abstract class BaseImportListComponent<M extends BaseModel> extends BaseC
      * Constructor. Initializes the table and subscribes to import errors
      *
      * @param importer The import service, depending on the implementation
-     * @param titleService A title service
-     * @param translate TranslationService for translating strings
-     * @param matSnackBar MatSnackBar for displaying errors
      */
 
     public constructor(componentServiceCollector: ComponentServiceCollector, protected importer: BaseImportService<M>) {

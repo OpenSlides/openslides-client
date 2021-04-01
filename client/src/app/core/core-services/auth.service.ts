@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { environment } from 'environments/environment';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
+import { ActiveMeetingIdService } from './active-meeting-id.service';
 import { AuthToken, AuthTokenService } from './auth-token.service';
 import { HttpService } from './http.service';
 import { LifecycleService } from './lifecycle.service';
@@ -57,7 +58,8 @@ export class AuthService {
         private http: HttpService,
         private lifecycleService: LifecycleService,
         private router: Router,
-        private authTokenService: AuthTokenService
+        private authTokenService: AuthTokenService,
+        private activeMeetingIdService: ActiveMeetingIdService
     ) {
         this.resumeTokenSubscription();
     }
@@ -95,7 +97,8 @@ export class AuthService {
         if (excludedUrls.some(url => redirect.includes(url))) {
             redirect = '/';
         }
-        this.router.navigate([redirect]);
+
+        this.router.navigate([`${redirect}`]);
     }
 
     public async logout(): Promise<void> {

@@ -60,6 +60,8 @@
         "no-var-keyword": true,
         "object-literal-key-quotes": [true, "as-needed"],
         "object-literal-sort-keys": false,
+        "no-unused-imports": true,
+        "no-unused-declaration": true,
         "ordered-imports": [
             true,
             {

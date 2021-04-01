@@ -135,6 +135,13 @@ export class HeadBarComponent implements OnInit {
     public mainActionTooltip: string;
 
     /**
+     * Provide a custom menu and ignores the menu service trigger
+     * Used for OS4 management views
+     */
+    @Input()
+    public customMenu = false;
+
+    /**
      * Emit a signal to the parent component if the main button was clicked
      */
     @Output()

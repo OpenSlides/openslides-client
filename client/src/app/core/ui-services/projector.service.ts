@@ -64,8 +64,11 @@ export class ProjectorService {
 
     public getProjectorsWhichAreProjecting(obj: ProjectionBuildDescriptor | Projectable): ViewProjector[] {
         const descriptor = this.ensureDescriptor(obj);
-        return this.activeMeetingService.meeting.projectors.filter(projector => {
-            return this.isProjectedOn(descriptor, projector);
+        return this.activeMeetingService.meeting?.projectors.filter(projector => {
+            if (projector) {
+                return this.isProjectedOn(descriptor, projector);
+            }
+            return null;
         });
     }
 }

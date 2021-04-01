@@ -34,6 +34,9 @@ export class MotionHighlightFormComponent extends BaseComponent implements OnIni
     }
 
     public get hasChangeRecommendations(): boolean {
+        if (!this.motion) {
+            return false;
+        }
         return this.changeRecoRepo.hasMotionChangeRecommendations(this.motion.id);
     }
 
@@ -89,8 +92,8 @@ export class MotionHighlightFormComponent extends BaseComponent implements OnIni
     // }
 
     public get showCreateFinalVersionButton(): boolean {
-        const isModifiedFinalVersion = this.isExisting && this.motion.modified_final_version;
-        const isFinalState = this.isExisting && this.motion.state && this.motion.state.isFinalState;
+        const isModifiedFinalVersion = this.isExisting && this.motion?.modified_final_version;
+        const isFinalState = this.isExisting && this.motion?.state && this.motion?.state.isFinalState;
         if (this.isParagraphBasedAmendment || !isFinalState || isModifiedFinalVersion) {
             return false;
         }
@@ -98,15 +101,18 @@ export class MotionHighlightFormComponent extends BaseComponent implements OnIni
     }
 
     public get isStatuteAmendment(): boolean {
-        return !!this.isExisting && this.motion.isStatuteAmendment();
+        return (!!this.isExisting && this.motion?.isStatuteAmendment()) || false;
     }
 
     public get isParagraphBasedAmendment(): boolean {
-        return this.isExisting && this.motion.isParagraphBasedAmendment();
+        return (this.isExisting && this.motion?.isParagraphBasedAmendment()) || false;
     }
 
     public get isExisting(): boolean {
-        return !!Object.keys(this.motion).length;
+        if (!this.motion) {
+            return false;
+        }
+        return !!Object.keys(this.motion)?.length ?? false;
     }
 
     private lineLength = 0;

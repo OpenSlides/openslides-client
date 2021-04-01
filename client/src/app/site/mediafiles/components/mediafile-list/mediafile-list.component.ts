@@ -219,8 +219,10 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
         super.setTitle('Files');
         this.createDataSource();
 
-        const directoryId = this.route.snapshot.url.length > 0 ? +this.route.snapshot.url[0].path : null;
-        this.changeDirectory(directoryId);
+        // const directoryId = this.route.snapshot.url.length > 0 ? +this.route.snapshot.url[0].path : null;
+        // console.log('this.route.snapshot: ', this.route.snapshot);
+        // const directoryId =
+        // this.changeDirectory(directoryId);
     }
 
     public ngOnDestroy(): void {
@@ -291,29 +293,25 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
             this.directorySubscription = this.repo.getViewModelObservable(directoryId).subscribe(newDirectory => {
                 this.directory = newDirectory;
                 if (newDirectory) {
+                    console.log('has newDirectory: ');
                     this.directoryChain = newDirectory.getDirectoryChain();
                     // Update the URL.
-                    this.router.navigate(['/mediafiles/' + newDirectory.id], {
-                        replaceUrl: true
-                    });
+                    this.router.navigate(['mediafiles/' + newDirectory.id]);
                 } else {
+                    console.log('directoryId No newDirectory');
                     this.directoryChain = [];
-                    this.router.navigate(['/mediafiles'], {
-                        replaceUrl: true
-                    });
+                    this.router.navigate(['mediafiles']);
                 }
             });
         } else {
             this.directory = null;
             this.directoryChain = [];
-            this.router.navigate(['/mediafiles'], {
-                replaceUrl: true
-            });
+            this.router.navigate(['mediafiles'], { relativeTo: this.route.parent });
         }
     }
 
     public onMainEvent(): void {
-        const path = '/mediafiles/upload/' + (this.directory ? this.directory.id : '');
+        const path = 'mediafiles/upload/' + (this.directory ? this.directory.id : '');
         this.router.navigate([path]);
     }
 

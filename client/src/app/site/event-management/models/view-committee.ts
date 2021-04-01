@@ -11,6 +11,14 @@ export class ViewCommittee extends BaseViewModel<Committee> {
     public get committee(): Committee {
         return this._model;
     }
+
+    public get meetingAmount(): number {
+        return this.meeting_ids?.length || 0;
+    }
+
+    public get memberAmount(): number {
+        return this.member_ids?.length || 0;
+    }
 }
 interface ICommitteeRelations {
     meetings: ViewMeeting[];

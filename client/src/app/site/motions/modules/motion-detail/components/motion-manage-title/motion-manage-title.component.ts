@@ -116,8 +116,8 @@ export class MotionManageTitleComponent extends BaseComponent implements OnInit 
     private getMotionSubscriptions(): Subscription[] {
         return [
             this.changeRecoRepo
-                .getTitleChangeRecoOfMotionObservable(this.motion.id)
-                .subscribe(changeReco => (this.titleChangeRecommendation = changeReco))
+                .getTitleChangeRecoOfMotionObservable(this.motion?.id)
+                ?.subscribe(changeReco => (this.titleChangeRecommendation = changeReco))
         ];
     }
 

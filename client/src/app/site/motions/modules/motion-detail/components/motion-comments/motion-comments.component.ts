@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 
+import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
@@ -47,7 +48,8 @@ export class MotionCommentsComponent extends BaseModelContextComponent implement
         componentServiceCollector: ComponentServiceCollector,
         private commentSectionRepo: MotionCommentSectionRepositoryService,
         private operator: OperatorService,
-        private cd: ChangeDetectorRef
+        private cd: ChangeDetectorRef,
+        private activeMeetingIdService: ActiveMeetingIdService
     ) {
         super(componentServiceCollector);
     }
@@ -69,7 +71,7 @@ export class MotionCommentsComponent extends BaseModelContextComponent implement
     public getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [1], // TODO
+            ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
                     idField: 'motion_comment_section_ids',

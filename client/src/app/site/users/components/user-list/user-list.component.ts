@@ -225,7 +225,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
     protected getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [1], // TODO
+            ids: [this.activeMeetingIdService.meetingId], // TODO
             follow: [
                 {
                     idField: 'user_ids',
@@ -234,13 +234,13 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
                         {
                             idField: {
                                 templateIdField: 'group_$_ids',
-                                templateValue: this.activeMeetingIdService.meetingId.toString()
+                                templateValue: this.activeMeetingIdService.meetingId?.toString()
                             }
                         },
                         {
                             idField: {
                                 templateIdField: 'vote_delegated_$_to_id',
-                                templateValue: this.activeMeetingIdService.meetingId.toString()
+                                templateValue: this.activeMeetingIdService.meetingId?.toString()
                             }
                         }
                     ]

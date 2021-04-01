@@ -1,0 +1,30 @@
+<os-head-bar [customMenu]="true" [hasMainButton]="false" (mainEvent)="createNewMember()">
+    <!-- Title -->
+    <div class="title-slot">
+        <h2>{{ 'Members' | translate }}</h2>
+    </div>
+
+    <ng-container class="custom-menu-slot">
+        <os-management-navigation></os-management-navigation>
+    </ng-container>
+</os-head-bar>
+
+<os-list-view-table
+    [listObservableProvider]="repo"
+    [columns]="tableColumnDefinition"
+    [showListOfSpeakers]="false"
+    [showListOfSpeakers]="false"
+    [(selectedRows)]="selectedRows"
+    [allowProjector]="false"
+    (dataSourceChange)="onDataSourceChange($event)"
+>
+    <!-- Name column -->
+    <div *pblNgridCellDef="'short_name'; row as user; rowContext as rowContext" class="cell-slot fill">
+        <!-- <a class="detail-link" [routerLink]="user.id" *ngIf="!isMultiSelect"></a> -->
+        <div class="nameCell">
+            <div>
+                <div>{{ user.short_name }}</div>
+            </div>
+        </div>
+    </div>
+</os-list-view-table>

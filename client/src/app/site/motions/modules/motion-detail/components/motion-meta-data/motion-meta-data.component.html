@@ -1,5 +1,5 @@
 <!-- Submitters -->
-<div *ngIf="motion.submitters">
+<div *ngIf="motion?.submitters">
     <div><os-manage-submitters [motion]="motion"></os-manage-submitters></div>
 </div>
 
@@ -42,7 +42,7 @@
 </div>
 
 <!-- Set State -->
-<div>
+<div *ngIf="motion?.state">
     <os-extension-field
         title="{{ 'State' | translate }}"
         [canBeEdited]="perms.isAllowed('change_state', motion)"
@@ -74,7 +74,7 @@
 <!-- Recommendation -->
 <div
     *ngIf="
-        (perms.isAllowed('change_metadata') || motion.recommendation) &&
+        (perms.isAllowed('change_metadata') || motion?.recommendation) &&
         recommender &&
         getPossibleRecommendations().length
     "
@@ -113,7 +113,7 @@
 </div>
 
 <!-- recommendation referencing motions -->
-<div *ngIf="recommendationReferencingMotions.length > 0 && showReferringMotions">
+<div *ngIf="motion && recommendationReferencingMotions.length > 0 && showReferringMotions">
     <h4>{{ 'Referring motions' | translate }}</h4>
     <span *ngFor="let motion of recommendationReferencingMotions; let last = last">
         <a routerLink="motion.getDetailStateURL()" class="nowrap">{{ motion.numberOrTitle }}</a>
@@ -224,7 +224,7 @@
 </div>
 
 <!-- Origin - display only -->
-<div *ngIf="motion.origin">
+<div *ngIf="motion?.origin">
     <h4>{{ 'Origin' | translate }}</h4>
     {{ motion.origin }}
 </div>

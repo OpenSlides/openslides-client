@@ -35,7 +35,7 @@
                     (click)="mobileAutoCloseNav()"
                     [routerLink]="entry.route"
                     routerLinkActive="active"
-                    [routerLinkActiveOptions]="{ exact: entry.route === '/' }"
+                    [routerLinkActiveOptions]="{ exact: isStartPage(entry.route) }"
                 >
                     <mat-icon>{{ entry.icon }}</mat-icon>
                     <span>{{ entry.displayName | translate }}</span>
@@ -45,7 +45,7 @@
             <a
                 [@navItemAnim]
                 mat-list-item
-                routerLink="/legalnotice"
+                routerLink="legalnotice"
                 routerLinkActive="active"
                 (click)="mobileAutoCloseNav()"
             >
@@ -55,7 +55,7 @@
             <a
                 [@navItemAnim]
                 mat-list-item
-                routerLink="/privacypolicy"
+                routerLink="privacypolicy"
                 routerLinkActive="active"
                 (click)="mobileAutoCloseNav()"
             >

@@ -74,7 +74,7 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
     private finalEditMode = false;
 
     public get showPreamble(): boolean {
-        return this.motion.showPreamble;
+        return this.motion?.showPreamble;
     }
 
     /**
@@ -91,7 +91,7 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
     }
 
     public get hasAttachments(): boolean {
-        return this.isExisting && this.motion.hasAttachments();
+        return this.isExisting && this.motion?.hasAttachments();
     }
 
     public get isExisting(): boolean {
@@ -231,18 +231,20 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
         if (!this.contentForm) {
             this.contentForm = this.createForm();
         }
-        let contentPatch: { [key: string]: any } = {};
-        Object.keys(this.contentForm.controls).forEach(ctrl => {
-            contentPatch[ctrl] = this.motion[ctrl];
-        });
+        if (this.motion) {
+            let contentPatch: { [key: string]: any } = {};
+            Object.keys(this.contentForm.controls).forEach(ctrl => {
+                contentPatch[ctrl] = this.motion[ctrl];
+            });
 
-        if (this.isExisting && this.motion.isParagraphBasedAmendment()) {
-            contentPatch = { ...contentPatch, ...this.initParagraphBasedAmendment() };
+            if (this.isExisting && this.motion.isParagraphBasedAmendment()) {
+                contentPatch = { ...contentPatch, ...this.initParagraphBasedAmendment() };
+            }
+
+            const statuteAmendmentFieldName = 'statute_amendment';
+            contentPatch[statuteAmendmentFieldName] = this.isExisting && this.motion.isStatuteAmendment();
+            this.contentForm.patchValue(contentPatch);
         }
-
-        const statuteAmendmentFieldName = 'statute_amendment';
-        contentPatch[statuteAmendmentFieldName] = this.isExisting && this.motion.isStatuteAmendment();
-        this.contentForm.patchValue(contentPatch);
     }
 
     /**
@@ -482,22 +484,27 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
     private subscribeToObservers(): Subscription[] {
         // since updates are usually not commig at the same time, every change to
         // any subject has to mark the view for checking
-        return [
-            this.statuteRepo.getViewModelListObservable().subscribe(values => (this.statuteParagraphs = values)),
-            this.userRepo.getViewModelListObservable().subscribe(() => this.cd.markForCheck()),
-            this.changeRecoRepo.getChangeRecosOfMotionObservable(this.motion.id).subscribe(changeRecos => {
-                if (changeRecos) {
-                    this.changeRecommendations = changeRecos;
-                    this.sortedChangingObjects = null;
-                }
-            }),
-            this.repo.getAmendmentsByMotionAsObservable(this.motion.id).subscribe((amendments: ViewMotion[]): void => {
-                if (amendments) {
-                    this.amendments = amendments;
-                    this.sortedChangingObjects = null;
-                }
-            })
-        ];
+        if (this.motion) {
+            return [
+                this.statuteRepo.getViewModelListObservable().subscribe(values => (this.statuteParagraphs = values)),
+                this.userRepo.getViewModelListObservable().subscribe(() => this.cd.markForCheck()),
+                this.changeRecoRepo.getChangeRecosOfMotionObservable(this.motion.id).subscribe(changeRecos => {
+                    if (changeRecos) {
+                        this.changeRecommendations = changeRecos;
+                        this.sortedChangingObjects = null;
+                    }
+                }),
+                this.repo
+                    .getAmendmentsByMotionAsObservable(this.motion.id)
+                    .subscribe((amendments: ViewMotion[]): void => {
+                        if (amendments) {
+                            this.amendments = amendments;
+                            this.sortedChangingObjects = null;
+                        }
+                    })
+            ];
+        }
+        return [];
     }
 
     private getAllTextChangingObjects(): ViewUnifiedChange[] {

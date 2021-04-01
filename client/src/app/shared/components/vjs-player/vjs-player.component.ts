@@ -61,7 +61,7 @@ export class VjsPlayerComponent implements OnInit, OnDestroy {
     }
 
     public constructor(/*config: ConfigService*/) {
-        throw new Error('TODO');
+        // throw new Error('TODO');
         /*config.get<string>('general_system_stream_poster').subscribe(posterUrl => {
             this.posterUrl = posterUrl?.trim();
         });*/

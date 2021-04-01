@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { BehaviorSubject, Observable } from 'rxjs';
 
+import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -51,7 +52,8 @@ export class AgendaSortComponent extends BaseSortTreeComponent<ViewAgendaItem> i
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         promptService: PromptService,
-        private agendaRepo: AgendaItemRepositoryService
+        private agendaRepo: AgendaItemRepositoryService,
+        private activeMeetingIdService: ActiveMeetingIdService
     ) {
         super(componentServiceCollector, promptService);
         this.itemsObservable = this.agendaRepo.getViewModelListObservable();
@@ -60,7 +62,7 @@ export class AgendaSortComponent extends BaseSortTreeComponent<ViewAgendaItem> i
     public getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [1], // TODO
+            ids: [this.activeMeetingIdService.meetingId], // TODO
             follow: [
                 {
                     idField: 'agenda_item_ids',

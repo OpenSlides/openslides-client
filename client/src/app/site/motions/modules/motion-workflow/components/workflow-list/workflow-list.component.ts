@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { PblColumnDefinition } from '@pebula/ngrid';
 
+import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/motion-workflow-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -59,7 +60,8 @@ export class WorkflowListComponent extends BaseListViewComponent<ViewMotionWorkf
         componentServiceCollector: ComponentServiceCollector,
         private dialog: MatDialog,
         public workflowRepo: MotionWorkflowRepositoryService,
-        private promptService: PromptService
+        private promptService: PromptService,
+        private activeMeetingIdService: ActiveMeetingIdService
     ) {
         super(componentServiceCollector);
     }
@@ -75,7 +77,7 @@ export class WorkflowListComponent extends BaseListViewComponent<ViewMotionWorkf
     protected getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [1], // TODO
+            ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
                     idField: 'motion_workflow_ids'

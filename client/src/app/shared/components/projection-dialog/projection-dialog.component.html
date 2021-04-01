@@ -5,7 +5,7 @@
     {{ descriptor.getDialogTitle() }}
 </div>
 
-<mat-dialog-content>
+<mat-dialog-content *ngIf="projectors && projectors.length">
     <div
         class="projectors"
         *ngFor="let projector of projectors"

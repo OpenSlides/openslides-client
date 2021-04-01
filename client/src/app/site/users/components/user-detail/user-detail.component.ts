@@ -145,15 +145,21 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
     }
 
     private loadUserById(userId: number): void {
-        this.requestModels({
-            viewModelCtor: ViewUser,
-            ids: [userId],
-            follow: [
-                {
-                    idField: SpecificStructuredField('group_$_ids', this.activeMeetingIdService.meetingId.toString())
-                }
-            ]
-        });
+        const meetingId = this.activeMeetingIdService.meetingId;
+        if (meetingId) {
+            this.requestModels({
+                viewModelCtor: ViewUser,
+                ids: [userId],
+                follow: [
+                    {
+                        idField: SpecificStructuredField(
+                            'group_$_ids',
+                            this.activeMeetingIdService?.meetingId.toString()
+                        )
+                    }
+                ]
+            });
+        }
 
         this.subscriptions.push(
             this.repo.getViewModelObservable(userId).subscribe(user => {

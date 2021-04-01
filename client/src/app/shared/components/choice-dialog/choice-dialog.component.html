@@ -3,7 +3,7 @@
 
 <form [formGroup]="selectForm" *ngIf="data">
     <!-- Content -->
-    <div mat-dialog-content *ngIf="data.choices">
+    <div mat-dialog-content *ngIf="data?.choices">
         <os-search-value-selector
             ngDefaultControl
             [multiple]="data.multiSelect"
@@ -28,9 +28,9 @@
         </div>
 
         <!-- Normal okay button -->
-        <div *ngIf="!data.actionButtons">
+        <div *ngIf="!data?.actionButtons">
             <button
-                *ngIf="!data.multiSelect || data.choices"
+                *ngIf="!data.multiSelect || data?.choices"
                 mat-button
                 (click)="closeDialog(true)"
                 [disabled]="!hasSelection"

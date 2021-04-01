@@ -1,5 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { E2EImportsModule } from 'e2e-imports.module';
+
 import { MotionManageTitleComponent } from './motion-manage-title.component';
 
 describe('MotionManageTitleComponent', () => {
@@ -8,6 +10,7 @@ describe('MotionManageTitleComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
+            imports: [E2EImportsModule],
             declarations: [MotionManageTitleComponent]
         }).compileComponents();
     }));

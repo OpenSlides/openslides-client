@@ -113,12 +113,12 @@ export class ChoiceDialogComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit(): void {
-        if (this.data.choices instanceof Observable) {
+        if (this.data?.choices instanceof Observable) {
             this.choicesSubscription = this.data.choices.subscribe(
                 displayableChoices => (this.displayableChoices = displayableChoices)
             );
         } else {
-            this.displayableChoices = this.data.choices;
+            this.displayableChoices = this.data?.choices || null;
         }
     }
 

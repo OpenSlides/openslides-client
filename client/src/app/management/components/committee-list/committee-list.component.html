@@ -1,0 +1,91 @@
+<os-head-bar [customMenu]="true" [hasMainButton]="true" (mainEvent)="createNewCommittee()">
+    <!-- Title -->
+    <div class="title-slot">
+        <h2>{{ 'Committees' | translate }}</h2>
+    </div>
+
+    <ng-container class="custom-menu-slot">
+        <os-management-navigation></os-management-navigation>
+    </ng-container>
+</os-head-bar>
+
+<os-list-view-table
+    [listObservableProvider]="repo"
+    [columns]="tableColumnDefinition"
+    [allowProjector]="false"
+    [alwaysShowMenu]="true"
+    [showListOfSpeakers]="false"
+    [(selectedRows)]="selectedRows"
+    (dataSourceChange)="onDataSourceChange($event)"
+    [filterProps]="['name']"
+>
+    <div *pblNgridCellDef="'name'; value as name; row as committee" class="cell-slot fill">
+        <a class="detail-link" [routerLink]="committee.id" *ngIf="!isMultiSelect"></a>
+        <div>
+            {{ name }}
+            <div class="subtitle" *ngIf="committee.description?.trim()">
+                {{ committee.description }}
+            </div>
+        </div>
+    </div>
+
+    <div *pblNgridCellDef="'meetings'; row as committee" class="cell-slot fill">
+        <a class="detail-link" [routerLink]="committee.id" *ngIf="!isMultiSelect"></a>
+        <div *ngIf="committee.meetingAmount">
+            <os-icon-container iconTooltip="{{ 'Meetings' | translate }}" icon="calendar_today">
+                {{ committee.meetingAmount }}
+            </os-icon-container>
+        </div>
+    </div>
+
+    <div *pblNgridCellDef="'participants'; row as committee" class="cell-slot fill">
+        <a class="detail-link" [routerLink]="committee.id" *ngIf="!isMultiSelect"></a>
+        <div *ngIf="committee.memberAmount">
+            <os-icon-container iconTooltip="{{ 'Members' | translate }}" icon="group">
+                {{ committee.memberAmount }}
+            </os-icon-container>
+        </div>
+    </div>
+
+    <div *pblNgridCellDef="'managers'; row as committee" class="cell-slot fill">
+        <a class="detail-link" [routerLink]="committee.id" *ngIf="!isMultiSelect"></a>
+        <os-icon-container iconTooltip="{{ 'Managers' | translate }}" icon="build">
+            <div>
+                <span *ngFor="let manager of committee.managers; let last = last">
+                    <span>{{ manager?.short_name }}</span>
+                    <span *ngIf="!last">,&nbsp;</span>
+                </span>
+            </div>
+        </os-icon-container>
+    </div>
+
+    <div *pblNgridCellDef="'menu'; row as committee" class="cell-slot fill">
+        <button
+            mat-icon-button
+            [disabled]="isMultiSelect"
+            [matMenuTriggerFor]="singleCommitteeMenu"
+            [matMenuTriggerData]="{ committee: committee }"
+            (click)="$event.stopPropagation()"
+        >
+            <mat-icon>more_vert</mat-icon>
+        </button>
+    </div>
+</os-list-view-table>
+
+<mat-menu #singleCommitteeMenu="matMenu">
+    <ng-template matMenuContent let-committee="committee">
+        <button mat-menu-item type="button" (click)="editSingle(committee)">
+            <mat-icon>edit</mat-icon>
+            <span>
+                {{ 'Edit' | translate }}
+            </span>
+        </button>
+
+        <button mat-menu-item type="button" class="red-warning-text" (click)="deleteSingle(committee)">
+            <mat-icon>delete</mat-icon>
+            <span>
+                {{ 'Delete' | translate }}
+            </span>
+        </button>
+    </ng-template>
+</mat-menu>

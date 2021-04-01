@@ -1,0 +1,76 @@
+<os-head-bar
+    [customMenu]="true"
+    [nav]="false"
+    [editMode]="true"
+    [isSaveButtonEnabled]="meetingForm?.valid"
+    (cancelEditEvent)="onCancel()"
+    (saveEvent)="onSubmit()"
+>
+    <!-- Title -->
+    <div class="title-slot">
+        <h2 *ngIf="isCreateView">{{ addMeetingLabel | translate }}</h2>
+        <h2 *ngIf="!isCreateView">{{ editMeetingLabel | translate }}</h2>
+    </div>
+
+    <ng-container class="custom-menu-slot">
+        <os-management-navigation></os-management-navigation>
+    </ng-container>
+</os-head-bar>
+
+<mat-card class="os-card">
+    <form class="meeting-form" [formGroup]="meetingForm" (ngSubmit)="onSubmit()">
+        <mat-form-field>
+            <mat-label>{{ 'Title' | translate }}</mat-label>
+            <input matInput formControlName="name" required />
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>{{ 'Welcome title' | translate }}</mat-label>
+            <input matInput formControlName="welcome_title" required />
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>{{ 'Description' | translate }}</mat-label>
+            <input matInput formControlName="description" />
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>{{ 'Location' | translate }}</mat-label>
+            <input matInput formControlName="location" />
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>{{ 'Start date' | translate }}</mat-label>
+            <input matInput [matDatepicker]="startDatePicker" formControlName="start_time" />
+            <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #startDatePicker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>{{ 'End date' | translate }}</mat-label>
+            <input matInput [matDatepicker]="endDatePicker" formControlName="end_time" />
+            <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #endDatePicker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>{{ 'URL name' | translate }}</mat-label>
+            <input matInput formControlName="url_name" />
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label> {{ 'Guests' | translate }}</mat-label>
+            <os-search-value-selector
+                formControlName="guest_ids"
+                [multiple]="true"
+                placeholder="{{ 'Guests' | translate }}"
+                [inputListValues]="members"
+            ></os-search-value-selector>
+        </mat-form-field>
+
+        <!-- server bug -->
+        <!-- <mat-checkbox disabled formControlName="set_as_template">Set as template</mat-checkbox> -->
+
+        <mat-checkbox formControlName="enable_anonymous">Enable anonymous</mat-checkbox>
+    </form>
+</mat-card>
