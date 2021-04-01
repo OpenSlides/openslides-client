@@ -75,11 +75,6 @@ export class PollFormComponent extends BaseComponent implements OnInit {
     public validPercentBases: { [key: string]: string };
 
     /**
-     * Reference to the observable of the groups. Used by the `search-value-component`.
-     */
-    public groupObservable: Observable<ViewGroup[]> = null;
-
-    /**
      * An twodimensional array to handle constant values for this poll.
      */
     public pollValues: [string, unknown][] = [];
@@ -111,7 +106,7 @@ export class PollFormComponent extends BaseComponent implements OnInit {
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private fb: FormBuilder,
-        private groupRepo: GroupRepositoryService,
+        public groupRepo: GroupRepositoryService,
         private dialog: MatDialog,
         private meetingSettingsService: MeetingSettingsService
     ) {
@@ -124,9 +119,6 @@ export class PollFormComponent extends BaseComponent implements OnInit {
      * Sets the observable for groups.
      */
     public ngOnInit(): void {
-        // without default group since default cant ever vote
-        this.groupObservable = this.groupRepo.getViewModelListObservableWithoutDefaultGroup();
-
         if (this.data) {
             if (this.data.state) {
                 this.disablePollType();

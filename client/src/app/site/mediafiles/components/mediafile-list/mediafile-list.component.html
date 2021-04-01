@@ -115,7 +115,8 @@
         <a
             class="detail-link"
             target="_blank"
-            [routerLink]="getMediaUrl(mediafile)"
+            routerLink="/download"
+            [queryParams]="{ id: mediafile.id, name: mediafile.title }"
             *ngIf="!mediafile.is_directory && !isMultiSelect"
         >
         </a>

@@ -96,7 +96,7 @@ import { JitsiComponent } from './components/jitsi/jitsi.component';
 import { VjsPlayerComponent } from './components/vjs-player/vjs-player.component';
 import { LiveStreamComponent } from './components/live-stream/live-stream.component';
 import { ListOfSpeakersContentComponent } from './components/list-of-speakers-content/list-of-speakers-content.component';
-import { ResourceComponent } from './components/resource/resource.component';
+import { ImageComponent } from './components/image/image.component';
 import { OnlyNumberDirective } from './directives/only-number.directive';
 import { SearchRepoSelectorComponent } from './components/search-repo-selector/search-repo-selector.component';
 import { MaterialDesignModule } from './libraries/material-design.module';
@@ -167,7 +167,7 @@ const declarations = [
     VjsPlayerComponent,
     LiveStreamComponent,
     ListOfSpeakersContentComponent,
-    ResourceComponent,
+    ImageComponent,
     OnlyNumberDirective,
     SearchRepoSelectorComponent,
     SwipeDirective,

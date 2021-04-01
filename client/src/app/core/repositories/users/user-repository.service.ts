@@ -264,7 +264,7 @@ export class UserRepositoryService
     public getRequestToGetAllModels(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [this.activeMeetingIdService.meetingId],
+            ids: [this.activeMeetingId],
             follow: [{ idField: 'user_ids', fieldset: 'shortName' }]
         };
     }

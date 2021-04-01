@@ -235,7 +235,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
         this.tagsObserver = this.tagRepo.getViewModelListBehaviorSubject();
         this.mediafilesObserver = this.mediafileRepo.getViewModelListBehaviorSubject();
 
-        // TODO: why are groups needed here??
+        // Groups are needed, to select entitled groups.
         this.requestModels(
             {
                 // Get all available groups in an active meeting.

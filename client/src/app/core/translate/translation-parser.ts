@@ -2,14 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { TranslateDefaultParser, TranslateStore } from '@ngx-translate/core';
 
-import { OrganisationSettingsService } from '../ui-services/organisation-settings.service';
-
-export interface CustomTranslation {
-    original: string;
-    translation: string;
-}
-
-export type CustomTranslations = CustomTranslation[];
+import { CustomTranslations, CustomTranslationService } from './custom-translation.service';
 
 /**
  * Custom translate parser. Intercepts and use custom translations from the organisation settings service.
@@ -24,18 +17,14 @@ export class OpenSlidesTranslateParser extends TranslateDefaultParser {
     /**
      * Subscribes to the custom translations and watches for updated custom translations.
      */
-    public constructor(
-        organisationSettingsService: OrganisationSettingsService,
-        private translateStore: TranslateStore
-    ) {
+    public constructor(ctService: CustomTranslationService, private translateStore: TranslateStore) {
         super();
 
-        organisationSettingsService.get<CustomTranslations>('translations').subscribe(ct => {
+        ctService.customTranslationSubject.subscribe(ct => {
             if (!ct) {
                 ct = [];
             }
             this.customTranslations = ct;
-
             // trigger reload of all languages. This does not hurt performance,
             // in fact the directives and pipes just listen to the selected language.
             this.translateStore.langs.forEach(lang => {

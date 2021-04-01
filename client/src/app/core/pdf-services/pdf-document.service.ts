@@ -453,7 +453,7 @@ export class PdfDocumentService {
                 // if the worker returns an object, it's always the document
                 if (typeof data === 'object') {
                     this.matSnackBar.dismiss();
-                    saveAs(data, filename, { autoBOM: true });
+                    saveAs(data, filename, { autoBom: true });
                     this.pdfWorker = null;
                 }
             };

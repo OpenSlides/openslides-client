@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { DataStoreService } from '../core-services/data-store.service';
+import { OrganisationSetting } from 'app/shared/models/event-management/organisation';
+import { CustomTranslationService } from '../translate/custom-translation.service';
+import { OrganisationService } from '../core-services/organisation.service';
 
 /**
  * Handler for setting variables for organsations.
@@ -31,13 +33,15 @@ export class OrganisationSettingsService {
     /**
      * Listen for changes of setting variables.
      */
-    public constructor(private DS: DataStoreService) {
-        /*this.DS.getChangeObservable(Config).subscribe(data => {
-            // on changes notify the observers for specific keys.
-            if (this.settingSubjects[data.key]) {
-                this.settingSubjects[data.key].next(data.value);
+    public constructor(private organisation: OrganisationService, private ctService: CustomTranslationService) {
+        organisation.organisationObservable.subscribe(activeOrganisation => {
+            if (activeOrganisation) {
+                for (const key of Object.keys(this.settingSubjects)) {
+                    this.settingSubjects[key].next(activeOrganisation[key]);
+                }
             }
-        });*/
+        });
+        this.get('custom_translations').subscribe((ct: any) => this.ctService.customTranslationSubject.next(ct));
     }
 
     /**
@@ -48,16 +52,9 @@ export class OrganisationSettingsService {
      *
      * @param key The setting value to get from.
      */
-    public instant<T>(key: string): T {
-        /*const values = this.DS.filter(Config, value => value.key === key);
-        if (values.length > 1) {
-            throw new Error('More keys found then expected');
-        } else if (values.length === 1) {
-            return values[0].value as T;
-        } else {
-            return;
-        }*/
-        return;
+    public instant<T extends keyof OrganisationSetting>(key: T): OrganisationSetting[T] | null {
+        const organisation = this.organisation.organisation;
+        return organisation ? organisation[key] : null;
     }
 
     /**
@@ -65,10 +62,10 @@ export class OrganisationSettingsService {
      *
      * @param key The setting value to get from.
      */
-    public get<T>(key: string): Observable<T> {
+    public get<T extends keyof OrganisationSetting>(key: T): Observable<OrganisationSetting[T]> {
         if (!this.settingSubjects[key]) {
             this.settingSubjects[key] = new BehaviorSubject<any>(this.instant(key));
         }
-        return this.settingSubjects[key].asObservable() as Observable<T>;
+        return this.settingSubjects[key].asObservable();
     }
 }

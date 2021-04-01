@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { LoginDataService } from 'app/core/ui-services/login-data.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
 
 /**
@@ -21,10 +20,7 @@ export class LoginWrapperComponent extends BaseComponent implements OnInit {
      * @param titleService  to set the title
      * @param translate just needed because super.setTitle depends in the `translator.instant` function
      */
-    public constructor(
-        componentServiceCollector: ComponentServiceCollector,
-        private loginDataService: LoginDataService
-    ) {
+    public constructor(componentServiceCollector: ComponentServiceCollector) {
         super(componentServiceCollector);
     }
 
@@ -33,6 +29,5 @@ export class LoginWrapperComponent extends BaseComponent implements OnInit {
      */
     public ngOnInit(): void {
         super.setTitle('Login');
-        this.loginDataService.refresh();
     }
 }

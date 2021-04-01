@@ -5,7 +5,7 @@ import { DownloadComponent } from './modules/download/download.component';
 
 const routes: Routes = [
     {
-        path: ':id',
+        path: '',
         component: DownloadComponent
     }
 ];

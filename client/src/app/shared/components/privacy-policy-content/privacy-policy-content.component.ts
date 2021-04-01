@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { LoginDataService } from 'app/core/ui-services/login-data.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
 
 /**
@@ -69,12 +69,12 @@ export class PrivacyPolicyContentComponent extends BaseComponent implements OnIn
      * @param title
      * @param translate
      * @param matSnackbar
-     * @param loginDataService
+     * @param orgaSettings
      * @param fb
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        private loginDataService: LoginDataService,
+        private orgaSettings: OrganisationSettingsService,
         fb: FormBuilder
     ) {
         super(componentServiceCollector);
@@ -87,7 +87,7 @@ export class PrivacyPolicyContentComponent extends BaseComponent implements OnIn
      * Subscribes for the privacy policy text
      */
     public ngOnInit(): void {
-        this.loginDataService.privacyPolicy.subscribe(privacyPolicy => {
+        this.orgaSettings.get('privacy_policy').subscribe(privacyPolicy => {
             this.privacyPolicy = privacyPolicy;
         });
         if (this.canBeEdited) {

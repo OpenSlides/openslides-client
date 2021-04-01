@@ -3,11 +3,13 @@ import { Component, ElementRef, Input, OnInit, Optional, Self, ViewEncapsulation
 import { FormBuilder, NgControl } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
 
+import { OperatorFunction } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { ModelSubscription } from 'app/core/core-services/autoupdate.service';
 import { ModelRequestService } from 'app/core/core-services/model-request.service';
 import { BaseRepository } from 'app/core/repositories/base-repository';
 import { ModelRequestRepository } from 'app/core/repositories/model-request-repository';
-import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { Settings } from 'app/shared/models/event-management/meeting';
 import { BaseSearchValueSelectorComponent } from '../base-search-value-selector';
@@ -23,6 +25,12 @@ import { Selectable } from '../selectable';
 export class SearchRepoSelectorComponent extends BaseSearchValueSelectorComponent<Selectable> implements OnInit {
     @Input()
     public repo: BaseRepository<any, any> & ModelRequestRepository;
+
+    /**
+     * Function to pipe view-models received from the observable of a view-model list.
+     */
+    @Input()
+    public pipeFn: OperatorFunction<any, any> = map(items => items);
 
     @Input()
     public lazyLoading = true;
@@ -104,7 +112,7 @@ export class SearchRepoSelectorComponent extends BaseSearchValueSelectorComponen
     private initItems(): void {
         const observer = this.repo.getViewModelListObservable();
         this.subscriptions.push(
-            observer.subscribe(items => {
+            observer.pipe(this.pipeFn).subscribe(items => {
                 this.items = items || [];
             })
         );

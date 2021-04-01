@@ -3,11 +3,11 @@ import { Component, Input } from '@angular/core';
 import { HttpService } from 'app/core/core-services/http.service';
 
 @Component({
-    selector: 'os-resource',
-    templateUrl: './resource.component.html',
-    styleUrls: ['./resource.component.scss']
+    selector: 'os-image',
+    templateUrl: './image.component.html',
+    styleUrls: ['./image.component.scss']
 })
-export class ResourceComponent {
+export class ImageComponent {
     @Input()
     public set source(src: string) {
         this._source = src;
@@ -56,14 +56,11 @@ export class ResourceComponent {
         this.totalBytesToLoad = data.size;
         this.resourceType = data.type.split('/')[0];
         switch (this.resourceType) {
-            case 'text':
-                fileReader.readAsText(data);
-                break;
             case 'image':
                 fileReader.readAsDataURL(data);
                 break;
             default:
-                throw new Error('MimeType of data is not specified');
+                throw new Error('Only images are supported!');
         }
     }
 
@@ -74,7 +71,8 @@ export class ResourceComponent {
             if (typeof result === 'string') {
                 this.resource = result;
             } else {
-                console.warn('fileReader.result is an arraybuffer:', result);
+                const buffer = new Uint8Array(result);
+                this.resource = new TextDecoder().decode(buffer);
             }
             this.finishLoading();
         }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { LoginDataService } from './login-data.service';
+import { OrganisationSettingsService } from './organisation-settings.service';
 
 /**
  * Service to set the theme for OpenSlides.
@@ -31,10 +31,10 @@ export class ThemeService {
      * the login data, so get it from there and not from the config. This service will
      * also cache the theme and provide the right theme on login.
      *
-     * @param loginDataService must be injected to get the theme.
+     * @param orgaSettings must be injected to get the theme.
      */
-    public constructor(loginDataService: LoginDataService) {
-        loginDataService.theme.subscribe(newTheme => {
+    public constructor(orgaSettings: OrganisationSettingsService) {
+        orgaSettings.get('theme').subscribe(newTheme => {
             if (!newTheme) {
                 return;
             }

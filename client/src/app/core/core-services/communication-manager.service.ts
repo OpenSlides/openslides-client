@@ -136,10 +136,11 @@ export class CommunicationManagerService {
         const ids = Object.keys(this.requestedStreams)
             .map(id => +id)
             .sort();
-        console.log(ids.length, 'open streams:');
+        const containerMap = {};
         for (const id of ids) {
             const container = this.requestedStreams[id];
-            console.log('\t', id, container.description, container.body?.(), container);
+            containerMap[id] = { id, description: container.description, body: container.body?.(), container };
         }
+        console.log(ids.length, 'open streams:', containerMap);
     }
 }

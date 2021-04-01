@@ -1,6 +1,16 @@
 import { Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
 
+export interface OrganisationSetting {
+    legal_notice: string;
+    privacy_policy: string;
+    login_text: string;
+    theme: string;
+    custom_translations: JSON[];
+    reset_password_verbose_errors: boolean;
+    enable_electronic_voting: boolean;
+}
+
 export class Organisation extends BaseModel<Organisation> {
     public static COLLECTION = 'organisation';
 
@@ -13,7 +23,7 @@ export class Organisation extends BaseModel<Organisation> {
     public privacy_policy: string;
     public login_text: string;
     public theme: string;
-    public custom_translations: JSON;
+    public custom_translations: JSON[];
     public reset_password_verbose_errors: boolean;
     public enable_electronic_voting: boolean;
 
@@ -26,3 +36,5 @@ export class Organisation extends BaseModel<Organisation> {
         super(Organisation.COLLECTION, input);
     }
 }
+
+export interface Organisation extends OrganisationSetting {}
