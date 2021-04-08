@@ -23,8 +23,8 @@ export class FileExportService {
             options.type = mimeType;
         }
         const blob = new Blob([file], options);
-        saveAs(blob, filename, { autoBOM: true });
-        // autoBOM = automatic byte-order-mark
+        saveAs(blob, filename, { autoBom: true });
+        // autoBom = automatic byte-order-mark
     }
 
     /**

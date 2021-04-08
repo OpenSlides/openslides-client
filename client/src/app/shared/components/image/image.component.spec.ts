@@ -2,21 +2,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { E2EImportsModule } from 'e2e-imports.module';
 
-import { ResourceComponent } from './resource.component';
+import { ImageComponent } from './image.component';
 
 describe('ResourceComponent', () => {
-    let component: ResourceComponent;
-    let fixture: ComponentFixture<ResourceComponent>;
+    let component: ImageComponent;
+    let fixture: ComponentFixture<ImageComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [E2EImportsModule],
-            declarations: [ResourceComponent]
+            declarations: [ImageComponent]
         }).compileComponents();
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(ResourceComponent);
+        fixture = TestBed.createComponent(ImageComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

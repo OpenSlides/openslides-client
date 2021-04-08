@@ -131,10 +131,6 @@ export interface PollDataOption {
     weight?: number;
 }
 
-interface OpenSlidesSettings {
-    ENABLE_ELECTRONIC_VOTING: boolean;
-}
-
 /**
  * Interface describes the possible data for the result-table.
  */
@@ -205,15 +201,14 @@ export abstract class PollService {
     public pollValues: CalculablePollKey[] = ['yes', 'no', 'abstain', 'votesvalid', 'votesinvalid', 'votescast'];
 
     public constructor(
-        _organisationSettingsService: OrganisationSettingsService,
+        organisationSettingsService: OrganisationSettingsService,
         protected translate: TranslateService,
         protected pollKeyVerbose: PollKeyVerbosePipe,
         protected parsePollNumber: ParsePollNumberPipe
     ) {
-        // organisationSettingsService
-        //     .get<OpenSlidesSettings>('Settings')
-        //     .subscribe(settings => (this.isElectronicVotingEnabled = settings.ENABLE_ELECTRONIC_VOTING));
-        this.isElectronicVotingEnabled = true;
+        organisationSettingsService
+            .get('enable_electronic_voting')
+            .subscribe(isEnabled => (this.isElectronicVotingEnabled = isEnabled));
     }
 
     /**

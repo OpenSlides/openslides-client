@@ -5,7 +5,7 @@ import { environment } from 'environments/environment';
 
 import { HttpService } from 'app/core/core-services/http.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { LoginDataService } from 'app/core/ui-services/login-data.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
 
 /**
@@ -122,14 +122,14 @@ export class LegalNoticeContentComponent extends BaseComponent implements OnInit
     public versionInfo: VersionResponse;
 
     /**
-     * Imports the LoginDataService, the translations and and HTTP Service
-     * @param loginDataService
+     * Imports the OrgaSettingsService, the translations and the HTTP Service
+     * @param orgaSettings
      * @param translate
      * @param http
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        private loginDataService: LoginDataService,
+        private orgaSettings: OrganisationSettingsService,
         private http: HttpService,
         fb: FormBuilder
     ) {
@@ -143,7 +143,7 @@ export class LegalNoticeContentComponent extends BaseComponent implements OnInit
      * Subscribes for the legal notice text.
      */
     public ngOnInit(): void {
-        this.loginDataService.legalNotice.subscribe(legalNotice => {
+        this.orgaSettings.get('legal_notice').subscribe(legalNotice => {
             this.legalNotice = legalNotice;
         });
 

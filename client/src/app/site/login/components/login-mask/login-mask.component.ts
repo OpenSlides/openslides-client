@@ -8,7 +8,7 @@ import { filter } from 'rxjs/operators';
 import { AuthService } from 'app/core/core-services/auth.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { LoginDataService } from 'app/core/ui-services/login-data.service';
+import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { ParentErrorStateMatcher } from 'app/shared/parent-error-state-matcher';
 import { BaseComponent } from 'app/site/base/components/base.component';
@@ -70,7 +70,7 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
      * @param formBuilder To build the form and validate
      * @param httpService used to get information before the login
      * @param OpenSlides The Service for OpenSlides
-     * @param loginDataService provide information about the legal notice and privacy policy
+     * @param orgaSettings provide information about the legal notice and privacy policy
      * @param overlayService Service to show the spinner when the user is signing in
      */
     public constructor(
@@ -80,7 +80,7 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
         private router: Router,
         private route: ActivatedRoute,
         private formBuilder: FormBuilder,
-        private loginDataService: LoginDataService,
+        private orgaSettings: OrganisationSettingsService,
         private overlayService: OverlayService,
         private browserSupport: BrowserSupportService
     ) {
@@ -97,14 +97,15 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
      */
     public ngOnInit(): void {
         this.subscriptions.push(
-            this.loginDataService.loginInfoText.subscribe(notice => (this.installationNotice = notice))
+            this.orgaSettings.get('login_text').subscribe(notice => (this.installationNotice = notice))
         );
 
-        this.subscriptions.push(
-            this.loginDataService.samlSettings.subscribe(
-                samlSettings => (this.samlLoginButtonText = samlSettings ? samlSettings.loginButtonText : null)
-            )
-        );
+        this.subscriptions
+            .push // TODO: SAML
+            // this.orgaSettings.get('saml').subscribe(
+            //     samlSettings => (this.samlLoginButtonText = samlSettings ? samlSettings.loginButtonText : null)
+            // )
+            ();
 
         // Maybe the operator changes and the user is logged in. If so, redirect him and boot OpenSlides.
         this.operatorSubscription = this.operator.operatorUpdatedEvent.subscribe(user => {

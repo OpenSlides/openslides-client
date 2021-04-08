@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
+import { saveAs } from 'file-saver';
+
+import { HttpService } from 'app/core/core-services/http.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 
 @Component({
@@ -9,30 +12,29 @@ import { OperatorService } from 'app/core/core-services/operator.service';
     styleUrls: ['./download.component.scss']
 })
 export class DownloadComponent implements OnInit {
-    public get resourceUrl(): string {
-        return this._resourceUrl;
-    }
-
-    public get hasLoaded(): boolean {
-        return this.loaded;
-    }
-
-    private loaded = false;
-
-    private _resourceUrl: string;
-
-    public constructor(private activeRoute: ActivatedRoute, private operator: OperatorService) {}
+    public constructor(
+        private activeRoute: ActivatedRoute,
+        private operator: OperatorService,
+        private http: HttpService
+    ) {}
 
     public async ngOnInit(): Promise<void> {
         await this.operator.loaded;
-        this.loaded = true;
         this.loadResourceById();
     }
 
     private loadResourceById(): void {
-        const params = this.activeRoute.snapshot.params;
-        if (params.id) {
-            this._resourceUrl = `/system/media/get/${params.id}`;
+        const { queryParams }: { queryParams: any } = this.activeRoute.snapshot;
+        if (queryParams.id) {
+            const resourceUrl = `/system/media/get/${queryParams.id}`;
+            this.http.get<Blob>(resourceUrl, null, null, null, 'blob').then(response => {
+                this.readBlobData(response, queryParams.name);
+            });
         }
+    }
+
+    private readBlobData(data: Blob, fileName: string): void {
+        saveAs(data, fileName);
+        setTimeout(() => window.close(), 100); // file-saver works not synchronously. So, wait some ms.
     }
 }

@@ -1,17 +1,28 @@
 import { Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs';
+import { Observable, OperatorFunction } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { GroupAction } from 'app/core/actions/group-action';
 import { HttpService } from 'app/core/core-services/http.service';
-import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
+import {
+    DEFAULT_FIELDSET,
+    Fieldsets,
+    SimplifiedModelRequest
+} from 'app/core/core-services/model-request-builder.service';
 import { Permission } from 'app/core/core-services/permission';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Group } from 'app/shared/models/users/group';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewGroup } from 'app/site/users/models/view-group';
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
+import { ModelRequestRepository } from '../model-request-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
+
+/**
+ * Since groups are sorted by id, default is always the first entry.
+ */
+export const DEFAULT_GROUP_INDEX = 1;
 
 /**
  * Repository service for Groups
@@ -21,7 +32,9 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 @Injectable({
     providedIn: 'root'
 })
-export class GroupRepositoryService extends BaseRepositoryWithActiveMeeting<ViewGroup, Group> {
+export class GroupRepositoryService
+    extends BaseRepositoryWithActiveMeeting<ViewGroup, Group>
+    implements ModelRequestRepository {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector, private http: HttpService) {
         super(repositoryServiceCollector, Group);
     }
@@ -90,11 +103,22 @@ export class GroupRepositoryService extends BaseRepositoryWithActiveMeeting<View
         return this.sendActionToBackend(GroupAction.SET_PERMISSION, payload);
     }
 
+    public getFilterDefaultGroupFn(): OperatorFunction<any, any> {
+        return map(groups => groups.slice(DEFAULT_GROUP_INDEX));
+    }
+
     /**
      * Returns an Observable for all groups except the default group.
      */
     public getViewModelListObservableWithoutDefaultGroup(): Observable<ViewGroup[]> {
-        // since groups are sorted by id, default is always the first entry
-        return this.getViewModelListObservable().pipe(map(groups => groups.slice(1)));
+        return this.getViewModelListObservable().pipe(this.getFilterDefaultGroupFn());
+    }
+
+    public getRequestToGetAllModels(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [this.activeMeetingId],
+            follow: [{ idField: 'group_ids', fieldset: 'title' }]
+        };
     }
 }
