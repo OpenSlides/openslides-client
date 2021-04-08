@@ -122,7 +122,7 @@ export class HttpService {
         let error = this.translate.instant('Error') + ': ';
         // If the error is a string already, return it.
         if (typeof e === 'string') {
-            return error + e;
+            return error + this.translate.instant(e);
         }
 
         // If the error is no HttpErrorResponse, it's not clear what is wrong.
@@ -146,7 +146,7 @@ export class HttpService {
                 error = errorList.join(', ');
             }
         } else if (typeof e.error === 'string') {
-            error += e.error;
+            error += this.translate.instant(e.error);
         } else if (e.status === 500) {
             error += this.translate.instant('A server error occured. Please contact your system administrator.');
         } else if (e.status > 500) {
