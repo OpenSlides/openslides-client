@@ -1,3 +1,4 @@
+import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Id } from '../definitions/key-types';
 
 export namespace MotionSubmitterAction {
@@ -12,6 +13,8 @@ export namespace MotionSubmitterAction {
     export interface DeletePayload {
         id: Id;
     }
+    export interface DeletePayload extends Identifiable {}
+
     export interface SortPayload {
         motion_id: Id;
         motion_submitter_ids: Id[];

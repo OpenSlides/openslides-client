@@ -12,4 +12,6 @@ export namespace TagAction {
     export interface UpdatePayload extends Identifiable {
         name?: string;
     }
+
+    export interface DeletePayload extends Identifiable {}
 }

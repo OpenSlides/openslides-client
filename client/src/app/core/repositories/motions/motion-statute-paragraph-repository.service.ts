@@ -34,13 +34,17 @@ export class MotionStatuteParagraphRepositoryService extends BaseRepositoryWithA
     }
 
     public create(partialStatuteParagraph: Partial<MotionStatuteParagraph>): Promise<Identifiable> {
-        const payload: MotionStatuteParagraphAction.CreatePayload = {
-            meeting_id: this.activeMeetingIdService.meetingId,
-            text: partialStatuteParagraph.text,
-            title: partialStatuteParagraph.title
-        };
+        const payload: MotionStatuteParagraphAction.CreatePayload = this.getCreatePayload(partialStatuteParagraph);
         return this.sendActionToBackend(MotionStatuteParagraphAction.CREATE, payload);
     }
+
+    public bulkCreate(partialEntries: Partial<MotionStatuteParagraph>[]): Promise<Identifiable[]> {
+        const payload: MotionStatuteParagraphAction.CreatePayload[] = partialEntries.map(paragraph =>
+            this.getCreatePayload(paragraph)
+        );
+        return this.sendBulkActionToBackend(MotionStatuteParagraphAction.CREATE, payload);
+    }
+
     public update(update: Partial<MotionStatuteParagraph>, viewModel: ViewMotionStatuteParagraph): Promise<void> {
         const payload: MotionStatuteParagraphAction.UpdatePayload = {
             id: viewModel.id,
@@ -69,4 +73,14 @@ export class MotionStatuteParagraphRepositoryService extends BaseRepositoryWithA
     public getVerboseName = (plural: boolean = false) => {
         return this.translate.instant(plural ? 'Statute paragraphs' : 'Statute paragraph');
     };
+
+    private getCreatePayload(
+        partialStatuteParagraph: Partial<MotionStatuteParagraph>
+    ): MotionStatuteParagraphAction.CreatePayload {
+        return {
+            meeting_id: this.activeMeetingIdService.meetingId,
+            text: partialStatuteParagraph.text,
+            title: partialStatuteParagraph.title
+        };
+    }
 }

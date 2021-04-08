@@ -6,6 +6,9 @@ import { Papa, ParseConfig } from 'ngx-papaparse';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { BaseModel } from 'app/shared/models/base/base-model';
+import { Identifiable } from 'app/shared/models/base/identifiable';
+import { ImportHelper } from 'app/site/common/import/import-helper';
+import { Id } from '../definitions/key-types';
 
 /**
  * Interface for value- Label combinations.
@@ -42,10 +45,30 @@ export interface ImportCSVPreview {
 }
 
 /**
+ * Interface for correlating between strings representing BaseModels and existing
+ * BaseModels.
+ */
+export interface CsvMapping {
+    name: string;
+    id?: Id;
+    multiId?: Id[];
+}
+
+/**
  * The permitted states of a new entry. Only a 'new' entry should be imported
  * and then be set to 'done'.
  */
-type CsvImportStatus = 'new' | 'error' | 'done';
+export type CsvImportStatus = 'new' | 'error' | 'done';
+
+export interface CsvJsonMapping {
+    [key: string]: string;
+}
+
+export interface ImportConfig<M extends BaseModel = any> {
+    modelHeadersAndVerboseNames: { [key: string]: string };
+    hasDuplicatesFn: (entry: Partial<M>) => boolean;
+    bulkCreateFn: (entries: any[]) => Promise<Identifiable[]>;
+}
 
 /**
  * Abstract service for imports
@@ -68,11 +91,6 @@ export abstract class BaseImportService<M extends BaseModel> {
      * The minimimal number of header entries needed to successfully create an entry
      */
     public abstract requiredHeaderLength: number;
-
-    /**
-     * The last parsed file object (may be reparsed with new encoding, thus kept in memory)
-     */
-    private _rawFile: File;
 
     /**
      * The used column separator. If left on an empty string (default),
@@ -120,16 +138,6 @@ export abstract class BaseImportService<M extends BaseModel> {
     ];
 
     /**
-     * FileReader object for file import
-     */
-    private reader = new FileReader();
-
-    /**
-     * the list of parsed models that have been extracted from the opened file
-     */
-    private _entries: NewEntry<M>[] = [];
-
-    /**
      * BehaviorSubject for displaying a preview for the currently selected entries
      */
     public newEntries = new BehaviorSubject<NewEntry<M>[]>([]);
@@ -138,12 +146,6 @@ export abstract class BaseImportService<M extends BaseModel> {
      * Emits an error string to display if a file import cannot be done
      */
     public errorEvent = new EventEmitter<string>();
-
-    /**
-     * storing the summary preview for the import, to avoid recalculating it
-     * at each display change.
-     */
-    protected _preview: ImportCSVPreview;
 
     /**
      * Returns a summary on actions that will be taken/not taken.
@@ -156,12 +158,41 @@ export abstract class BaseImportService<M extends BaseModel> {
     }
 
     /**
+     * storing the summary preview for the import, to avoid recalculating it
+     * at each display change.
+     */
+    protected _preview: ImportCSVPreview;
+
+    protected importHelperMap: { [key: string]: ImportHelper<M> } = {};
+
+    protected modelHeadersAndVerboseNames: { [key: string]: string };
+
+    protected bulkCreateFn: (entries: any[]) => Promise<Identifiable[]>;
+
+    protected hasDuplicatesFn: (entry: Partial<M>) => boolean;
+
+    /**
      * Returns the current entries. For internal use in extending classes, as it
      * might not be filled with data at all times (see {@link newEntries} for a BehaviorSubject)
      */
     protected get entries(): NewEntry<M>[] {
         return this._entries;
     }
+
+    /**
+     * The last parsed file object (may be reparsed with new encoding, thus kept in memory)
+     */
+    private _rawFile: File;
+
+    /**
+     * FileReader object for file import
+     */
+    private reader = new FileReader();
+
+    /**
+     * the list of parsed models that have been extracted from the opened file
+     */
+    private _entries: NewEntry<M>[] = [];
 
     /**
      * Constructor. Creates a fileReader to subscribe to it for incoming parsed
@@ -175,12 +206,8 @@ export abstract class BaseImportService<M extends BaseModel> {
         this.reader.onload = (event: FileReaderProgressEvent) => {
             this.parseInput(event.target.result as string);
         };
+        this.init();
     }
-
-    /**
-     * Clears all stored secondary data
-     */
-    public abstract clearData(): void;
 
     /**
      * Parses the data input. Expects a string as returned by via a
@@ -189,9 +216,10 @@ export abstract class BaseImportService<M extends BaseModel> {
      * @param file
      */
     public parseInput(file: string): void {
+        this.init();
         this.clearPreview();
         const papaConfig: ParseConfig = {
-            header: false,
+            header: true,
             skipEmptyLines: true,
             quoteChar: this.textSeparator
         };
@@ -199,7 +227,8 @@ export abstract class BaseImportService<M extends BaseModel> {
             papaConfig.delimiter = this.columnSeparator;
         }
         const entryLines = this.papa.parse(file, papaConfig).data;
-        const valid = this.checkHeader(entryLines.shift());
+        const header = Object.keys(entryLines[0]);
+        const valid = this.checkHeader(header);
         if (!valid) {
             return;
         }
@@ -207,13 +236,6 @@ export abstract class BaseImportService<M extends BaseModel> {
         this.newEntries.next(this._entries);
         this.updatePreview();
     }
-
-    /**
-     * Parsing an string representing an entry, extracting secondary data,
-     * returning a new entry object
-     * @param line a line extracted by the CSV (not including the header)
-     */
-    public abstract mapData(line: string): NewEntry<M>;
 
     /**
      * parses pre-prepared entries (e.g. from a textarea) instead of a csv structure
@@ -229,11 +251,6 @@ export abstract class BaseImportService<M extends BaseModel> {
         this.newEntries.next(this._entries);
         this.updatePreview();
     }
-
-    /**
-     * Trigger for executing the import.
-     */
-    public abstract async doImport(): Promise<void>;
 
     /**
      * counts the amount of duplicates that have no decision on the action to
@@ -282,7 +299,6 @@ export abstract class BaseImportService<M extends BaseModel> {
      * @param event type is Event, but has target.files, which typescript doesn't seem to recognize
      */
     public onSelectFile(event: any): void {
-        // TODO: error message for wrong file type (test Firefox on Windows!)
         if (event.target.files && event.target.files.length === 1) {
             this._rawFile = event.target.files[0];
             this.readFile();
@@ -297,6 +313,158 @@ export abstract class BaseImportService<M extends BaseModel> {
         if (this._rawFile) {
             this.readFile();
         }
+    }
+
+    /**
+     * Resets the data and preview (triggered upon selecting an invalid file)
+     */
+    public clearPreview(): void {
+        this._entries = [];
+        this.newEntries.next([]);
+        this._preview = null;
+    }
+
+    /**
+     * set a list of short names for error, indicating which column failed
+     */
+    public setError(entry: NewEntry<Partial<M>>, error: string): void {
+        if (this.errorList[error]) {
+            if (!entry.errors) {
+                entry.errors = [error];
+            } else if (!entry.errors.includes(error)) {
+                entry.errors.push(error);
+                entry.status = 'error';
+            }
+        }
+    }
+
+    /**
+     * Get an extended error description.
+     *
+     * @param error
+     * @returns the extended error desription for that error
+     */
+    public verbose(error: string): string {
+        return this.errorList[error];
+    }
+
+    /**
+     * Queries if a given error is present in the given entry
+     *
+     * @param entry the entry to check for the error.
+     * @param error The error to check for
+     * @returns true if the error is present
+     */
+    public hasError(entry: NewEntry<M>, error: string): boolean {
+        return entry.errors.includes(error);
+    }
+
+    /**
+     * Executing the import. Creates all secondary data, maps the newly created
+     * secondary data to the new entries, then creates all entries without errors
+     * by submitting them to the server. The entries will receive the status
+     * 'done' on success.
+     */
+    public async doImport(): Promise<void> {
+        const promises: Promise<any>[] = Object.values(this.importHelperMap).map(helper =>
+            helper.createUnresolvedEntries()
+        );
+        await Promise.all(promises);
+
+        const entriesToCreate: any[] = [];
+        for (const entry of this.entries) {
+            if (entry.status !== 'new') {
+                continue;
+            }
+            entry.newEntry = this.resolveEntry(entry);
+            entriesToCreate.push(entry.newEntry);
+        }
+
+        await this.bulkCreateFn(entriesToCreate);
+        for (const entry of this.entries.filter(e => e.status === 'new')) {
+            entry.status = 'done';
+        }
+        this.updatePreview();
+    }
+
+    protected abstract getConfig(): ImportConfig<M>;
+
+    /**
+     * A helper function to specify import-helpers for `M`.
+     * Should be overriden to specify the import-helpers.
+     *
+     * @returns A map containing import-helpers for specific attributes of `M`.
+     */
+    protected getImportHelpers(): { [key: string]: ImportHelper<M> } {
+        return {};
+    }
+
+    protected pipeParseValue(_value: string, _header: keyof M): any {}
+
+    /**
+     * Parses a string representing an entry, extracting secondary data, appending
+     * the array of secondary imports as needed
+     *
+     * @param line
+     * @returns a new entry representing an User
+     */
+    private mapData(line: CsvJsonMapping): NewEntry<Partial<M>> {
+        const newEntry: Partial<M> = {};
+        let hasError = false;
+        for (const expectedHeader of this.expectedHeader) {
+            const header = this.translate.instant(this.modelHeadersAndVerboseNames[expectedHeader]);
+            const helper = this.importHelperMap[expectedHeader];
+            try {
+                newEntry[expectedHeader] = this.parseValue(line[header], expectedHeader as keyof M, helper);
+            } catch (e) {
+                console.log(`Error while parsing ${header}`, e);
+                hasError = true;
+                continue;
+            }
+        }
+        const hasDuplicates = this.hasDuplicatesFn(newEntry);
+        const entry: NewEntry<Partial<M>> = {
+            newEntry,
+            hasDuplicates,
+            status: hasDuplicates ? 'error' : 'new',
+            errors: hasDuplicates ? ['Duplicates'] : []
+        };
+        if (hasError) {
+            this.setError(entry, 'ParsingErrors');
+        }
+        return entry;
+    }
+
+    private init(): void {
+        const config = this.getConfig();
+        this.expectedHeader = Object.keys(config.modelHeadersAndVerboseNames);
+        this.modelHeadersAndVerboseNames = config.modelHeadersAndVerboseNames;
+        this.hasDuplicatesFn = config.hasDuplicatesFn;
+        this.bulkCreateFn = config.bulkCreateFn;
+        this.importHelperMap = this.getImportHelpers();
+    }
+
+    private resolveEntry(entry: NewEntry<M>): M {
+        let temporaryModel = { ...entry.newEntry } as M;
+        for (const key of Object.keys(this.importHelperMap)) {
+            const helper = this.importHelperMap[key];
+            const result = helper.linkToItem(temporaryModel, key);
+            temporaryModel = result.model;
+            if (result.unresolvedModels) {
+                this.setError(entry, result.verboseName);
+                this.updatePreview();
+                break;
+            }
+        }
+        return temporaryModel;
+    }
+
+    private parseValue(value: string, header: keyof M, helper?: ImportHelper<M>): any {
+        if (helper) {
+            return helper.findByName(value);
+        }
+        value = this.pipeParseValue(value, header) || value;
+        return value;
     }
 
     /**
@@ -335,50 +503,5 @@ export abstract class BaseImportService<M extends BaseModel> {
             );
         }
         return true;
-    }
-
-    /**
-     * Resets the data and preview (triggered upon selecting an invalid file)
-     */
-    public clearPreview(): void {
-        this.clearData();
-        this._entries = [];
-        this.newEntries.next([]);
-        this._preview = null;
-    }
-
-    /**
-     * set a list of short names for error, indicating which column failed
-     */
-    public setError(entry: NewEntry<M>, error: string): void {
-        if (this.errorList[error]) {
-            if (!entry.errors) {
-                entry.errors = [error];
-            } else if (!entry.errors.includes(error)) {
-                entry.errors.push(error);
-                entry.status = 'error';
-            }
-        }
-    }
-
-    /**
-     * Get an extended error description.
-     *
-     * @param error
-     * @returns the extended error desription for that error
-     */
-    public verbose(error: string): string {
-        return this.errorList[error];
-    }
-
-    /**
-     * Queries if a given error is present in the given entry
-     *
-     * @param entry the entry to check for the error.
-     * @param error The error to check for
-     * @returns true if the error is present
-     */
-    public hasError(entry: NewEntry<M>, error: string): boolean {
-        return entry.errors.includes(error);
     }
 }

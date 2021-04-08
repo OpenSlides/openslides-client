@@ -12,17 +12,20 @@ import { BaseRepository } from 'app/core/repositories/base-repository';
 import { ModelRequestRepository } from 'app/core/repositories/model-request-repository';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { Settings } from 'app/shared/models/event-management/meeting';
-import { BaseSearchValueSelectorComponent } from '../base-search-value-selector';
-import { Selectable } from '../selectable';
+import { BaseSearchValueSelectorComponent } from '../base-search-value-selector/base-search-value-selector.component';
+import { Selectable } from '../../selectable';
 
 @Component({
     selector: 'os-search-repo-selector',
-    templateUrl: './search-repo-selector.component.html',
-    styleUrls: ['./search-repo-selector.component.scss'],
+    templateUrl: '../base-search-value-selector/base-search-value-selector.component.html',
+    styleUrls: [
+        '../base-search-value-selector/base-search-value-selector.component.scss',
+        './search-repo-selector.component.scss'
+    ],
     providers: [{ provide: MatFormFieldControl, useExisting: SearchRepoSelectorComponent }],
     encapsulation: ViewEncapsulation.None
 })
-export class SearchRepoSelectorComponent extends BaseSearchValueSelectorComponent<Selectable> implements OnInit {
+export class SearchRepoSelectorComponent extends BaseSearchValueSelectorComponent implements OnInit {
     @Input()
     public repo: BaseRepository<any, any> & ModelRequestRepository;
 
@@ -42,8 +45,6 @@ export class SearchRepoSelectorComponent extends BaseSearchValueSelectorComponen
         return 'search-repo-selector';
     }
 
-    private items: Selectable[];
-
     private modelSubscription: ModelSubscription;
 
     public constructor(
@@ -62,27 +63,10 @@ export class SearchRepoSelectorComponent extends BaseSearchValueSelectorComponen
     }
 
     public onContainerClick(event: MouseEvent): void {
-        if (!this.items) {
+        if (!this.selectableItems) {
             this.doModelRequest().then(() => this.initItems());
         }
         super.onContainerClick(event);
-    }
-
-    public getFilteredItemsBySearchValue(): Selectable[] {
-        if (!this.items) {
-            return [];
-        }
-        const searchValue: string = this.searchValueForm.value.trim().toLowerCase();
-        return this.items.filter(item => {
-            const idString = '' + item.id;
-            const foundId = idString.trim().toLowerCase().indexOf(searchValue) !== -1;
-
-            if (foundId) {
-                return true;
-            }
-
-            return item.toString().toLowerCase().indexOf(searchValue) > -1;
-        });
     }
 
     private async init(): Promise<void> {
@@ -113,7 +97,7 @@ export class SearchRepoSelectorComponent extends BaseSearchValueSelectorComponen
         const observer = this.repo.getViewModelListObservable();
         this.subscriptions.push(
             observer.pipe(this.pipeFn).subscribe(items => {
-                this.items = items || [];
+                this.selectableItems = items || [];
             })
         );
     }

@@ -25,4 +25,6 @@ export namespace MotionChangeRecommendationAction {
         // Optional
         text?: UnsafeHtml;
     }
+
+    export interface DeletePayload extends Identifiable {}
 }

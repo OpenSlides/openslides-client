@@ -9,10 +9,20 @@ import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/m
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
-import { BaseImportService, NewEntry } from 'app/core/ui-services/base-import.service';
+import { BaseImportService, ImportConfig } from 'app/core/ui-services/base-import.service';
 import { Motion } from 'app/shared/models/motions/motion';
-import { CsvMapping } from '../models/import-create-motion';
-import { motionExportOnly, motionImportExportHeaderOrder } from '../motions.constants';
+import { CategoryImportHelper } from '../import/category-import-helper';
+import { ImportHelper } from '../../common/import/import-helper';
+import { MotionBlockImportHelper } from '../import/motion-block-import-helper';
+import { getMotionExportHeadersAndVerboseNames, motionExpectedHeaders } from '../motions.constants';
+import { TagImportHelper } from '../import/tag-import-helper';
+import { UserImportHelper } from '../import/user-import-helper';
+
+const CATEGORY_PROPERTY = 'category';
+const MOTION_BLOCK_PROPERTY = 'motion_block';
+const TAG_PROPERTY = 'tags';
+const SUBMITTER_PROPERTY = 'submitters';
+const SUPPORTER_PROPERTY = 'supporters';
 
 /**
  * Service for motion imports
@@ -40,26 +50,6 @@ export class MotionImportService extends BaseImportService<Motion> {
     public requiredHeaderLength = 3;
 
     /**
-     * submitters that need to be created prior to importing
-     */
-    public newSubmitters: CsvMapping[] = [];
-
-    /**
-     * Categories that need to be created prior to importing
-     */
-    public newCategories: CsvMapping[] = [];
-
-    /**
-     * MotionBlocks that need to be created prior to importing
-     */
-    public newMotionBlocks: CsvMapping[] = [];
-
-    /**
-     * Mapping of the new tags for the imported motion.
-     */
-    public newTags: CsvMapping[] = [];
-
-    /**
      * Constructor. Defines the headers expected and calls the abstract class
      * @param repo: The repository for motions.
      * @param categoryRepo Repository to fetch pre-existing categories
@@ -80,313 +70,24 @@ export class MotionImportService extends BaseImportService<Motion> {
         matSnackbar: MatSnackBar
     ) {
         super(translate, papa, matSnackbar);
-        this.expectedHeader = motionImportExportHeaderOrder.filter(head => !motionExportOnly.includes(head));
     }
 
-    /**
-     * Clears all temporary data specific to this importer.
-     */
-    public clearData(): void {
-        this.newSubmitters = [];
-        this.newCategories = [];
-        this.newMotionBlocks = [];
-        this.newTags = [];
-    }
-
-    /**
-     * Parses a string representing an entry, extracting secondary data, appending
-     * the array of secondary imports as needed
-     *
-     * @param line
-     * @returns a new Entry representing a Motion
-     */
-    public mapData(line: string): NewEntry<Motion> {
-        const newEntry: any = {};
-        const headerLength = Math.min(this.expectedHeader.length, line.length);
-        for (let idx = 0; idx < headerLength; idx++) {
-            switch (this.expectedHeader[idx]) {
-                case 'submitters':
-                    newEntry.csvSubmitters = this.getExistingUsers(line[idx]);
-                    break;
-                case 'category':
-                    newEntry.csvCategory = this.getCategory(line[idx]);
-                    break;
-                case 'block':
-                    newEntry.csvMotionblock = this.getMotionBlock(line[idx]);
-                    break;
-                case 'tags':
-                    newEntry.csvTags = this.getTags(line[idx]);
-                    break;
-                default:
-                    newEntry[this.expectedHeader[idx]] = line[idx];
-            }
-        }
-        const hasDuplicates = this.repo.getViewModelList().some(motion => motion.number === newEntry.number);
-        const entry: NewEntry<Motion> = {
-            newEntry: newEntry,
-            hasDuplicates: hasDuplicates,
-            status: hasDuplicates ? 'error' : 'new',
-            errors: hasDuplicates ? ['Duplicates'] : []
+    protected getConfig(): ImportConfig {
+        return {
+            modelHeadersAndVerboseNames: getMotionExportHeadersAndVerboseNames(),
+            hasDuplicatesFn: (entry: Partial<Motion>) =>
+                this.repo.getViewModelList().some(motion => motion.number === entry.number),
+            bulkCreateFn: (entries: Motion[]) => this.repo.bulkCreate(entries)
         };
-        if (!entry.newEntry.title) {
-            this.setError(entry, 'Title');
-        }
-        if (!entry.newEntry.text) {
-            this.setError(entry, 'Title');
-        }
-        return entry;
     }
 
-    /**
-     * Executes the import. Creates all secondary data, maps the newly created
-     * secondary data to the new entries, then creates all entries without errors
-     * by submitting them to the server. The entries will receive the status
-     * 'done' on success.
-     */
-    public async doImport(): Promise<void> {
-        throw new Error('TODO');
-        this.newMotionBlocks = await this.createNewMotionBlocks();
-        this.newCategories = await this.createNewCategories();
-        this.newSubmitters = await this.createNewSubmitters();
-        this.newTags = await this.createNewTags();
-
-        /*for (const entry of this.entries) {
-            if (entry.status !== 'new') {
-                continue;
-            }
-            const openBlocks = (entry.newEntry as ImportCreateMotion).solveMotionBlocks(this.newMotionBlocks);
-            if (openBlocks) {
-                this.setError(entry, 'MotionBlock');
-                this.updatePreview();
-                continue;
-            }
-            const openCategories = (entry.newEntry as ImportCreateMotion).solveCategory(this.newCategories);
-            if (openCategories) {
-                this.setError(entry, 'Category');
-                this.updatePreview();
-                continue;
-            }
-            const openUsers = (entry.newEntry as ImportCreateMotion).solveSubmitters(this.newSubmitters);
-            if (openUsers) {
-                this.setError(entry, 'Submitters');
-                this.updatePreview();
-                continue;
-            }
-            const openTags = (entry.newEntry as ImportCreateMotion).solveTags(this.newTags);
-            if (openTags) {
-                this.setError(entry, 'Tags');
-                this.updatePreview();
-                continue;
-            }
-            await this.repo.create(entry.newEntry as ImportCreateMotion);
-            entry.status = 'done';
-        }*/
-        this.updatePreview();
-    }
-
-    /**
-     * Checks the provided submitter(s) and returns an object with mapping of
-     * existing users and of users that need to be created
-     *
-     * @param userList
-     * @returns a list of submitters mapped with (if already existing) their id
-     */
-    public getExistingUsers(userList: string): CsvMapping[] {
-        const result: CsvMapping[] = [];
-        if (!userList) {
-            return result;
-        }
-        const submitterArray = userList.split(','); // TODO fails with 'full name'
-        for (const submitter of submitterArray) {
-            const existingSubmitters = this.userRepo.getUsersByName(submitter.trim());
-            if (!existingSubmitters.length) {
-                if (!this.newSubmitters.find(listedSubmitter => listedSubmitter.name === submitter)) {
-                    this.newSubmitters.push({ name: submitter });
-                }
-                result.push({ name: submitter });
-            }
-            if (existingSubmitters.length === 1) {
-                result.push({
-                    name: existingSubmitters[0].short_name,
-                    id: existingSubmitters[0].id
-                });
-            }
-            if (existingSubmitters.length > 1) {
-                result.push({
-                    name: submitter,
-                    multiId: existingSubmitters.map(ex => ex.id)
-                });
-                this.matSnackbar.open('TODO: multiple possible users found for this string', 'ok');
-                // TODO How to handle several submitters ? Is this possible?
-                // should have some kind of choice dialog there
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Checks the provided category/ies and returns a mapping, expands
-     * newCategories if needed.
-     *
-     * The assumption is that there may or not be a prefix wit up to 5
-     * characters at the beginning, separated by ' - ' from the name.
-     * It will also accept a registered translation between the current user's
-     * language and english
-     *
-     * @param categoryString
-     * @returns categories mapped to existing categories
-     */
-    public getCategory(categoryString: string): CsvMapping | null {
-        if (!categoryString) {
-            return null;
-        }
-        const category = this.splitCategoryString(categoryString);
-        const existingCategory = this.categoryRepo.getViewModelList().find(cat => {
-            if (category.prefix && cat.prefix !== category.prefix) {
-                return false;
-            }
-            if (cat.name === category.name) {
-                return true;
-            }
-            if (this.translate.instant(cat.name) === category.name) {
-                return true;
-            }
-            return false;
-        });
-        if (existingCategory) {
-            return {
-                name: existingCategory.prefixedName,
-                id: existingCategory.id
-            };
-        } else {
-            if (!this.newCategories.find(newCat => newCat.name === categoryString)) {
-                this.newCategories.push({ name: categoryString });
-            }
-            return { name: categoryString };
-        }
-    }
-
-    /**
-     * Checks the motionBlock provided in the string for existance, expands newMotionBlocks
-     * if needed. Note that it will also check for translation between the current
-     * user's language and english
-     *
-     * @param blockString
-     * @returns a CSVMap with the MotionBlock and an id (if the motionBlock is already in the dataStore)
-     */
-    public getMotionBlock(blockString: string): CsvMapping | null {
-        if (!blockString) {
-            return null;
-        }
-        blockString = blockString.trim();
-        let existingBlock = this.motionBlockRepo.getMotionBlocksByTitle(blockString);
-        if (!existingBlock.length) {
-            existingBlock = this.motionBlockRepo.getMotionBlocksByTitle(this.translate.instant(blockString));
-        }
-        if (existingBlock.length) {
-            return { id: existingBlock[0].id, name: existingBlock[0].title };
-        } else {
-            if (!this.newMotionBlocks.find(newBlock => newBlock.name === blockString)) {
-                this.newMotionBlocks.push({ name: blockString });
-            }
-            return { name: blockString };
-        }
-    }
-
-    /**
-     * Iterates over the given string separated by ','
-     * Creates for every found string a tag.
-     *
-     * @param tagList The list of tags as string.
-     *
-     * @returns {CsvMapping[]} The list of tags as csv-mapping.
-     */
-    public getTags(tagList: string): CsvMapping[] {
-        const result: CsvMapping[] = [];
-        if (!tagList) {
-            return result;
-        }
-
-        const tagArray = tagList.split(',');
-        for (let tag of tagArray) {
-            tag = tag.trim();
-            const existingTag = this.tagRepo.getViewModelList().find(tagInRepo => tagInRepo.name === tag);
-            if (existingTag) {
-                result.push({ id: existingTag.id, name: existingTag.name });
-            } else {
-                if (!this.newTags.find(entry => entry.name === tag)) {
-                    this.newTags.push({ name: tag });
-                }
-                result.push({ name: tag });
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Creates all new Users needed for the import.
-     *
-     * @returns a promise with list of new Submitters, updated with newly created ids
-     */
-    private async createNewSubmitters(): Promise<CsvMapping[]> {
-        // const promises: Promise<CsvMapping>[] = [];
-        // for (const user of this.newSubmitters) {
-        //     promises.push(this.userRepo.createFromString(user.name));
-        // }
-        // return await Promise.all(promises);
-        throw new Error('Todo');
-    }
-
-    /**
-     * Creates all new Motion Blocks needed for the import.
-     *
-     * @returns a promise with list of new MotionBlocks, updated with newly created ids
-     */
-    private async createNewMotionBlocks(): Promise<CsvMapping[]> {
-        const blockIds = await this.motionBlockRepo.bulkCreate(this.newMotionBlocks);
-        return blockIds.map((blockId, index) => ({ id: blockId.id, name: this.newMotionBlocks[index].name }));
-    }
-
-    /**
-     * Creates all new Categories needed for the import.
-     *
-     * @returns a promise with list of new Categories, updated with newly created ids
-     */
-    private async createNewCategories(): Promise<CsvMapping[]> {
-        const categoryIds = await this.categoryRepo.bulkCreate(this.newCategories);
-        return categoryIds.map((categoryId, index) => ({ id: categoryId.id, name: this.newCategories[index].name }));
-    }
-
-    /**
-     * Combines all tags which are new created to one promise.
-     *
-     * @returns {Promise} One promise containing all promises to create a new tag.
-     */
-    private async createNewTags(): Promise<CsvMapping[]> {
-        const tagIds = await this.tagRepo.bulkCreate(this.newTags);
-        return tagIds.map((tagId, index) => ({ id: tagId.id, name: this.newTags[index].name }));
-    }
-
-    /**
-     * Helper to separate a category string from its' prefix. Assumes that a prefix is no longer
-     * than 5 chars and separated by a ' - '
-     *
-     * @param categoryString the string to parse
-     * @returns an object with .prefix and .name strings
-     */
-    private splitCategoryString(categoryString: string): { prefix: string; name: string } {
-        let prefixSeparator = ' - ';
-        if (categoryString.startsWith(prefixSeparator)) {
-            prefixSeparator = prefixSeparator.substring(1);
-        }
-        categoryString = categoryString.trim();
-        let prefix = '';
-        const separatorIndex = categoryString.indexOf(prefixSeparator);
-
-        if (separatorIndex >= 0 && separatorIndex < 6) {
-            prefix = categoryString.substring(0, separatorIndex);
-            categoryString = categoryString.substring(separatorIndex + prefixSeparator.length);
-        }
-        return { prefix: prefix, name: categoryString };
+    protected getImportHelpers(): { [key: string]: ImportHelper<Motion> } {
+        return {
+            [MOTION_BLOCK_PROPERTY]: new MotionBlockImportHelper(this.motionBlockRepo, this.translate),
+            [CATEGORY_PROPERTY]: new CategoryImportHelper(this.categoryRepo, this.translate),
+            [TAG_PROPERTY]: new TagImportHelper(this.tagRepo),
+            [SUBMITTER_PROPERTY]: new UserImportHelper(this.userRepo, 'Submitters'),
+            [SUPPORTER_PROPERTY]: new UserImportHelper(this.userRepo, 'Supporters')
+        };
     }
 }

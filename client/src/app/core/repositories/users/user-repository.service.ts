@@ -178,7 +178,7 @@ export class UserRepositoryService
     public createTemporary(partialUser: Partial<CreateTemporaryPayloadWithPresent>): Promise<Identifiable> {
         const username = this.getUsername(partialUser);
         if (!username) {
-            this.raiseError('first name or last name must not be empty.');
+            this.raiseError(new Error('first name or last name must not be empty.'));
             return;
         }
         const payload: UserAction.CreateTemporaryPayload = {
@@ -534,14 +534,13 @@ export class UserRepositoryService
      * @param newEntries
      */
     public async bulkCreateTemporary(
-        newEntries: NewEntry<UserAction.CreateTemporaryPayload>[]
-    ): Promise<MassImportResult> {
+        newEntries: Partial<UserAction.CreateTemporaryPayload>[]
+    ): Promise<Identifiable[]> {
         const data: UserAction.CreateTemporaryPayload[] = newEntries.map(entry => {
             return {
                 meeting_id: this.activeMeetingIdService.meetingId,
-                username: entry.newEntry.username,
-                importTrackId: entry.importTrackId,
-                ...this.getPartialTemporaryUserPayload(entry.newEntry)
+                username: entry.username,
+                ...this.getPartialTemporaryUserPayload(entry)
             };
         });
         return this.sendBulkActionToBackend(UserAction.CREATE_TEMPORARY, data);
@@ -712,7 +711,7 @@ export class UserRepositoryService
      * @returns Promise with a created user id and the raw name used as input
      */
     public async createFromString(user: string): Promise<NewUser> {
-        const newUser = this.parseUserString(user) as any;
+        const newUser = this.parseStringIntoUser(user) as any;
         const createdUser = await this.createTemporary(newUser);
         return { id: createdUser.id, name: user } as NewUser;
     }
@@ -731,7 +730,7 @@ export class UserRepositoryService
      * @param schema optional hint on how to handle the strings.
      * @returns A User object (note: is only a local object, not uploaded to the server)
      */
-    public parseUserString(inputUser: string, schema: StringNamingSchema = 'firstSpaceLast'): User {
+    public parseStringIntoUser(inputUser: string, schema: StringNamingSchema = 'firstSpaceLast'): Partial<User> {
         const newUser: Partial<User> = {};
         if (schema === 'lastCommaFirst') {
             const commaSeparated = inputUser.split(',');
@@ -760,7 +759,7 @@ export class UserRepositoryService
                     newUser.first_name = inputUser;
             }
         }
-        return new User(newUser);
+        return newUser;
     }
 
     /**

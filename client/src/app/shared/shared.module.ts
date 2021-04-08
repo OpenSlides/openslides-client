@@ -36,7 +36,7 @@ import { ChartsModule } from 'ng2-charts';
 import { HeadBarComponent } from './components/head-bar/head-bar.component';
 import { LegalNoticeContentComponent } from './components/legal-notice-content/legal-notice-content.component';
 import { PrivacyPolicyContentComponent } from './components/privacy-policy-content/privacy-policy-content.component';
-import { SearchValueSelectorComponent } from './components/search-value-selector/search-value-selector.component';
+import { SearchValueSelectorComponent } from './components/search-selector/search-value-selector/search-value-selector.component';
 import { OpenSlidesDateAdapter } from './date-adapter';
 import { PromptDialogComponent } from './components/prompt-dialog/prompt-dialog.component';
 import { SortingListComponent } from './components/sorting-list/sorting-list.component';
@@ -98,7 +98,7 @@ import { LiveStreamComponent } from './components/live-stream/live-stream.compon
 import { ListOfSpeakersContentComponent } from './components/list-of-speakers-content/list-of-speakers-content.component';
 import { ImageComponent } from './components/image/image.component';
 import { OnlyNumberDirective } from './directives/only-number.directive';
-import { SearchRepoSelectorComponent } from './components/search-repo-selector/search-repo-selector.component';
+import { SearchRepoSelectorComponent } from './components/search-selector/search-repo-selector/search-repo-selector.component';
 import { MaterialDesignModule } from './libraries/material-design.module';
 import { SwipeDirective } from './directives/swipe.directive';
 import { ListenEditingDirective } from './directives/listen-editing.directive';

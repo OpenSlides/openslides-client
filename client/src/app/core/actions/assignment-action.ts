@@ -33,4 +33,6 @@ export namespace AssignmentAction {
         tag_ids?: Id[];
         attachment_ids?: Id[];
     }
+
+    export interface DeletePayload extends Identifiable {}
 }

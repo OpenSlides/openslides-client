@@ -171,6 +171,8 @@ export namespace MeetingAction {
         // default_projector_$_id: Id; // TODO
     }
 
+    export interface DeletePayload extends Identifiable {}
+
     export interface DeleteAllSpeakersOfAllListsPayload extends Identifiable {}
 
     export interface SetLogoPayload extends Identifiable {

@@ -207,9 +207,17 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
         };
     }
 
-    public async addMyself(): Promise<void> {
-        await this.addUserAsNewSpeaker();
-        this.addSpeakerForm.reset();
+    /**
+     * Create a speaker out of an id
+     *
+     * @param userId the user id to add to the list. No parameter adds the operators user as speaker.
+     */
+    public addNewSpeaker(userId: number): void {
+        this.speakerRepo.create(this._listOfSpeakers, userId).then(() => this.addSpeakerForm.reset());
+    }
+
+    public addMyself(): void {
+        this.addNewSpeaker(this.currentUser.id);
     }
 
     /**
@@ -282,7 +290,7 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
      * @param speaker The speaker clicked on.
      */
     public async onMarkButton(speaker: ViewSpeaker): Promise<void> {
-        await this.speakerRepo.changeMarkingOfSpeaker(speaker, !speaker.marked).catch(this.raiseError);
+        await this.speakerRepo.changeMarkingOfSpeaker(speaker, !speaker.marked);
     }
 
     /**

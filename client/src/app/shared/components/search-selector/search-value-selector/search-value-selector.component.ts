@@ -18,8 +18,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { auditTime } from 'rxjs/operators';
 
-import { BaseSearchValueSelectorComponent } from '../base-search-value-selector';
-import { Selectable } from '../selectable';
+import { BaseSearchValueSelectorComponent } from '../base-search-value-selector/base-search-value-selector.component';
+import { Selectable } from '../../selectable';
 
 /**
  * Searchable Value Selector
@@ -44,13 +44,16 @@ import { Selectable } from '../selectable';
 
 @Component({
     selector: 'os-search-value-selector',
-    templateUrl: './search-value-selector.component.html',
-    styleUrls: ['./search-value-selector.component.scss'],
+    templateUrl: '../base-search-value-selector/base-search-value-selector.component.html',
+    styleUrls: [
+        '../base-search-value-selector/base-search-value-selector.component.scss',
+        './search-value-selector.component.scss'
+    ],
     providers: [{ provide: MatFormFieldControl, useExisting: SearchValueSelectorComponent }],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SearchValueSelectorComponent extends BaseSearchValueSelectorComponent<Selectable> {
+export class SearchValueSelectorComponent extends BaseSearchValueSelectorComponent {
     @ViewChild(CdkVirtualScrollViewport, { static: true })
     public cdkVirtualScrollViewPort: CdkVirtualScrollViewport;
 
@@ -77,22 +80,7 @@ export class SearchValueSelectorComponent extends BaseSearchValueSelectorCompone
         }
     }
 
-    public get selectedItems(): Selectable[] {
-        if (this.multiple && this.selectableItems?.length && this.contentForm.value) {
-            return this.selectableItems.filter(item => {
-                return this.contentForm.value.includes(item.id);
-            });
-        }
-        return [];
-    }
-
     public controlType = 'search-value-selector';
-
-    private noneItem: Selectable = {
-        getListTitle: () => this.noneTitle,
-        getTitle: () => this.noneTitle,
-        id: null
-    };
 
     public constructor(
         protected translate: TranslateService,
@@ -108,33 +96,6 @@ export class SearchValueSelectorComponent extends BaseSearchValueSelectorCompone
         if (event) {
             this.cdkVirtualScrollViewPort.scrollToIndex(0);
             this.cdkVirtualScrollViewPort.checkViewportSize();
-        }
-    }
-
-    /**
-     * Function to get a list filtered by the entered search value.
-     *
-     * @returns The filtered list of items.
-     */
-    public getFilteredItems(): Selectable[] {
-        if (!this.selectableItems) {
-            return [];
-        }
-        const searchValue: string = this.searchValueForm.value.toLowerCase();
-        const filteredItems = this.selectableItems.filter(item => {
-            const idString = '' + item.id;
-            const foundId = idString.trim().toLowerCase().indexOf(searchValue) !== -1;
-
-            if (foundId) {
-                return true;
-            }
-
-            return item.toString().toLowerCase().indexOf(searchValue) > -1;
-        });
-        if (!this.multiple && this.includeNone) {
-            return [this.noneItem].concat(filteredItems);
-        } else {
-            return filteredItems;
         }
     }
 

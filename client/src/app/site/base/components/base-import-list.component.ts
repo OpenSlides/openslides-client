@@ -9,10 +9,10 @@ import { BaseImportService, NewEntry, ValueLabelCombination } from 'app/core/ui-
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseModel } from 'app/shared/models/base/base-model';
 import { getLongPreview, getShortPreview } from 'app/shared/utils/previewStrings';
-import { BaseComponent } from 'app/site/base/components/base.component';
+import { BaseModelContextComponent } from './base-model-context.component';
 
 @Directive()
-export abstract class BaseImportListComponent<M extends BaseModel> extends BaseComponent implements OnInit {
+export abstract class BaseImportListComponent<M extends BaseModel> extends BaseModelContextComponent implements OnInit {
     /**
      * The data source for a table. Requires to be initialised with a BaseViewModel
      */
@@ -298,5 +298,13 @@ export abstract class BaseImportListComponent<M extends BaseModel> extends BaseC
      */
     public hasError(row: NewEntry<M>, error: string): boolean {
         return this.importer.hasError(row, error);
+    }
+
+    public isArray(data: any): boolean {
+        return Array.isArray(data);
+    }
+
+    public isObject(data: any): boolean {
+        return typeof data === 'object';
     }
 }

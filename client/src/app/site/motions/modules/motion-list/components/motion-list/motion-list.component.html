@@ -96,9 +96,7 @@
                     </span>
 
                     <span *ngIf="showSequential">
-                        <span *ngIf="motion.submitters.length">
-                            &middot;
-                        </span>
+                        <span *ngIf="motion.submitters.length"> &middot; </span>
                         <span>{{ 'Sequential number' | translate }}</span>
                         {{ motion.sequential_number }}
                     </span>
@@ -262,8 +260,10 @@
         </div>
 
         <mat-divider
-            *ngIf="(categories.length || motionBlocks.length || hasAmendments() || perms.isAllowed('manage'))
-            && (perms.isAllowed('manage') || selectedView === 'list' || perms.isAllowed('can_manage_config'))"
+            *ngIf="
+                (categories.length || motionBlocks.length || hasAmendments() || perms.isAllowed('manage')) &&
+                (perms.isAllowed('manage') || selectedView === 'list' || perms.isAllowed('can_manage_config'))
+            "
         ></mat-divider>
 
         <div *ngIf="perms.isAllowed('manage')">
@@ -351,6 +351,15 @@
                 >
                     <mat-icon>format_indent_increase</mat-icon>
                     <span>{{ 'Move in call list' | translate }}</span>
+                </button>
+                <button
+                    mat-menu-item
+                    class="red-warning-text"
+                    [disabled]="!selectedRows.length"
+                    (click)="multiselectWrapper(multiselectService.delete(selectedRows))"
+                >
+                    <mat-icon>delete</mat-icon>
+                    <span>{{ 'Delete' | translate }}</span>
                 </button>
             </os-motion-multiselect-actions>
         </ng-container>

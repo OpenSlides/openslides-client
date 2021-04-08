@@ -14,4 +14,6 @@ export namespace MotionCommentAction {
     export interface UpdatePayload extends Identifiable {
         comment?: UnsafeHtml;
     }
+
+    export interface DeletePayload extends Identifiable {}
 }

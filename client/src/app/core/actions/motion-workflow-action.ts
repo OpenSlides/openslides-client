@@ -15,4 +15,6 @@ export namespace MotionWorkflowAction {
         name?: string;
         first_state_id?: Id;
     }
+
+    export interface DeletePayload extends Identifiable {}
 }

@@ -1,7 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
-import { TranslateService } from '@ngx-translate/core';
 import { columnFactory, PblColumnDefinition } from '@pebula/ngrid';
 
 import { NewEntry } from 'app/core/ui-services/base-import.service';
@@ -10,6 +9,7 @@ import { CsvExportService } from 'app/core/ui-services/csv-export.service';
 import { User } from 'app/shared/models/users/user';
 import { BaseImportListComponent } from 'app/site/base/components/base-import-list.component';
 import { UserImportService } from '../../services/user-import.service';
+import { headerMap, userHeadersAndVerboseNames } from '../../users.constants';
 
 /**
  * Component for the user import list view.
@@ -23,23 +23,7 @@ import { UserImportService } from '../../services/user-import.service';
 export class UserImportListComponent extends BaseImportListComponent<User> {
     public textAreaForm: FormGroup;
 
-    public headerRowDefinition = [
-        'Title',
-        'Given name',
-        'Surname',
-        'Structure level',
-        'Participant number',
-        'Groups',
-        'Comment',
-        'Is active',
-        'Is present',
-        'Is a committee',
-        'Initial password',
-        'Email',
-        'Username',
-        'Gender',
-        'Vote weight'
-    ];
+    public headerRowDefinition = Object.values(userHeadersAndVerboseNames);
 
     private statusImportColumn: PblColumnDefinition = {
         label: this.translate.instant('Status'),
@@ -47,9 +31,9 @@ export class UserImportListComponent extends BaseImportListComponent<User> {
     };
 
     private get generateImportColumns(): PblColumnDefinition[] {
-        return this.importer.headerMap.map((property, index: number) => {
+        return headerMap.map((property, index: number) => {
             const singleColumnDef: PblColumnDefinition = {
-                label: this.translate.instant(this.headerRowDefinition[index]),
+                label: this.translate.instant(userHeadersAndVerboseNames[property]),
                 prop: `newEntry.${property}`,
                 type: this.guessType(property as keyof User)
             };
@@ -76,9 +60,8 @@ export class UserImportListComponent extends BaseImportListComponent<User> {
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         formBuilder: FormBuilder,
-        protected translate: TranslateService,
-        protected importer: UserImportService,
-        private exporter: CsvExportService
+        private exporter: CsvExportService,
+        protected importer: UserImportService
     ) {
         super(componentServiceCollector, importer);
         this.textAreaForm = formBuilder.group({ inputtext: [''] });
@@ -143,7 +126,7 @@ export class UserImportListComponent extends BaseImportListComponent<User> {
             [null, null, 'Executive Board', null, null, null, null, null, null, 1, null, null, 'executive', null, 2.5]
         ];
         this.exporter.dummyCSVExport(
-            this.headerRowDefinition,
+            Object.values(userHeadersAndVerboseNames),
             rows,
             `${this.translate.instant('participants-example')}.csv`
         );
@@ -156,8 +139,7 @@ export class UserImportListComponent extends BaseImportListComponent<User> {
      */
     private guessType(userProperty: keyof User): 'string' | 'number' | 'boolean' {
         const numberProperties: (keyof User)[] = ['id', 'vote_weight'];
-        console.error('TODO');
-        const booleanProperties: (keyof User)[] = [/*'is_present', */ 'is_physical_person', 'is_active'];
+        const booleanProperties: (keyof User)[] = ['is_present_in_meeting_ids', 'is_physical_person', 'is_active'];
         if (numberProperties.includes(userProperty)) {
             return 'number';
         } else if (booleanProperties.includes(userProperty)) {

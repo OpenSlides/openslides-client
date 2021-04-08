@@ -20,6 +20,8 @@ export namespace MotionCommentSectionAction {
     export interface UpdatePayload extends Identifiable, PartialPayload {
         name?: string;
     }
+    export interface DeletePayload extends Identifiable {}
+
     export interface SortPayload extends HasMeetingId {
         motion_comment_section_ids: Id[];
     }

@@ -5,8 +5,8 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { CsvExportService } from 'app/core/ui-services/csv-export.service';
 import { DurationService } from 'app/core/ui-services/duration.service';
 import { AgendaItemType, ItemTypeChoices } from 'app/shared/models/agenda/agenda-item';
+import { Topic } from 'app/shared/models/topics/topic';
 import { BaseImportListComponent } from 'app/site/base/components/base-import-list.component';
-import { CreateTopic } from 'app/site/topics/models/create-topic';
 import { TopicImportService } from '../../../topics/services/topic-import.service';
 
 /**
@@ -16,7 +16,7 @@ import { TopicImportService } from '../../../topics/services/topic-import.servic
     selector: 'os-topic-import-list',
     templateUrl: './topic-import-list.component.html'
 })
-export class TopicImportListComponent extends BaseImportListComponent<CreateTopic> {
+export class TopicImportListComponent extends BaseImportListComponent<Topic> {
     /**
      * A form for text input
      */

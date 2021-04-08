@@ -4,11 +4,12 @@ import { MatSelect } from '@angular/material/select';
 
 import { BaseFormControlComponent } from 'app/shared/components/base-form-control';
 import { ParentErrorStateMatcher } from 'app/shared/parent-error-state-matcher';
+import { Selectable } from '../../selectable';
 
 @Component({
     template: ''
 })
-export abstract class BaseSearchValueSelectorComponent<T> extends BaseFormControlComponent<T> {
+export abstract class BaseSearchValueSelectorComponent extends BaseFormControlComponent<Selectable> {
     @ViewChild('matSelect')
     public matSelect: MatSelect;
 
@@ -54,10 +55,13 @@ export abstract class BaseSearchValueSelectorComponent<T> extends BaseFormContro
         return Array.isArray(this.contentForm.value) ? !this.contentForm.value.length : !this.contentForm.value;
     }
 
-    public get selectedItems(): T[] {
-        return this.selectableItems && this.contentForm.value
-            ? this.selectableItems.filter(item => this.contentForm.value.includes(item))
-            : [];
+    public get selectedItems(): Selectable[] {
+        if (this.multiple && this.selectableItems?.length && this.contentForm.value) {
+            return this.selectableItems.filter(item => {
+                return this.contentForm.value.includes(item.id);
+            });
+        }
+        return [];
     }
 
     public get width(): string {
@@ -69,20 +73,26 @@ export abstract class BaseSearchValueSelectorComponent<T> extends BaseFormContro
     /**
      * All items
      */
-    protected selectableItems: T[];
+    protected selectableItems: Selectable[];
+
+    protected noneItem: Selectable = {
+        getListTitle: () => this.noneTitle,
+        getTitle: () => this.noneTitle,
+        id: null
+    };
 
     /**
      * Function to get a list filtered by the entered search value.
      *
      * @returns The filtered list of items.
      */
-    public getFilteredItems(): T[] {
+    public getFilteredItemsBySearchValue(): Selectable[] {
         if (!this.selectableItems) {
             return [];
         }
-        const searchValue: string = this.searchValueForm.value.toLowerCase();
-        return this.selectableItems.filter(item => {
-            const idString = '' + item;
+        const searchValue: string = this.searchValueForm.value.trim().toLowerCase();
+        const filteredItems = this.selectableItems.filter(item => {
+            const idString = '' + item.id;
             const foundId = idString.trim().toLowerCase().indexOf(searchValue) !== -1;
 
             if (foundId) {
@@ -91,6 +101,11 @@ export abstract class BaseSearchValueSelectorComponent<T> extends BaseFormContro
 
             return item.toString().toLowerCase().indexOf(searchValue) > -1;
         });
+        if (!this.multiple && this.includeNone) {
+            return [this.noneItem].concat(filteredItems);
+        } else {
+            return filteredItems;
+        }
     }
 
     public removeItem(itemId: number): void {
@@ -123,13 +138,11 @@ export abstract class BaseSearchValueSelectorComponent<T> extends BaseFormContro
         this.searchValueForm = this.fb.control('');
     }
 
-    protected updateForm(value: T[] | T | null): void {
+    protected updateForm(value: Selectable[] | Selectable | null): void {
         if (typeof value === 'function') {
-            console.warn('Warning: Trying to set a function as value:', value);
-            console.warn('Warning: Value of function', value());
-        } else {
-            this.contentForm.setValue(value);
-            this.selectedIds = value ? (value as []) : [];
+            throw new Error(`Warning: Trying to set a function as value: ${value}`);
         }
+        this.contentForm.setValue(value);
+        this.selectedIds = value ? (value as []) : [];
     }
 }

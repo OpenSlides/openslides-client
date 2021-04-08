@@ -26,6 +26,8 @@ export namespace MediafileAction {
         title?: string;
         access_group_ids?: Id[];
     }
+    export interface DeletePayload extends Identifiable {}
+
     export interface MovePayload extends HasMeetingId, HaveParent {
         ids: Id[];
     }

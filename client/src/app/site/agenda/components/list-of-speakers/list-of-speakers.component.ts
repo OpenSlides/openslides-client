@@ -1,4 +1,3 @@
-import { SummaryResolver } from '@angular/compiler';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
@@ -209,6 +208,13 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
         );
         if (await this.promptService.open(title)) {
             this.listOfSpeakersRepo.deleteAllSpeakers(this.viewListOfSpeakers);
+        }
+    }
+
+    public ngOnDestroy(): void {
+        super.ngOnDestroy();
+        if (this.losSubscription) {
+            this.losSubscription.unsubscribe();
         }
     }
 }
