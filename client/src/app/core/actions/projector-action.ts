@@ -58,6 +58,7 @@ export namespace ProjectorAction {
 
     export interface ProjectPayload {
         ids: Id[];
+        meeting_id: Id;
         content_object_id: Fqid;
         options?: object;
         stable?: boolean;

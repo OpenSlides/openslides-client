@@ -1,8 +1,7 @@
 import { Compiler, ComponentFactory, Inject, Injectable, Injector, NgModuleFactory, Type } from '@angular/core';
 
-import { allSlidesDynamicConfiguration } from '../all-slide-configurations';
 import { BaseSlideComponent } from '../base-slide-component';
-import { Slide, SlideDynamicConfiguration, SlideManifest } from '../slide-manifest';
+import { SlideConfiguration, SlideManifest } from '../slide-manifest';
 import { SLIDE_MANIFESTS } from '../slide-manifest';
 import { SlideToken } from '../slide-token';
 
@@ -12,7 +11,6 @@ import { SlideToken } from '../slide-token';
 @Injectable()
 export class SlideManager {
     private loadedSlides: { [name: string]: SlideManifest } = {};
-    private loadedSlideConfigurations: { [name: string]: SlideDynamicConfiguration & Slide } = {};
 
     public constructor(
         @Inject(SLIDE_MANIFESTS) private manifests: SlideManifest[],
@@ -20,10 +18,7 @@ export class SlideManager {
         private injector: Injector
     ) {
         this.manifests.forEach(slideManifest => {
-            this.loadedSlides[slideManifest.slide] = slideManifest;
-        });
-        allSlidesDynamicConfiguration.forEach(config => {
-            this.loadedSlideConfigurations[config.slide] = config;
+            this.loadedSlides[slideManifest.path] = slideManifest;
         });
     }
 
@@ -46,19 +41,12 @@ export class SlideManager {
      * @param slideName The slide
      * @returns SlideOptions for the requested slide.
      */
-    public getSlideConfiguration(slideName: string): SlideDynamicConfiguration {
-        if (!this.loadedSlideConfigurations[slideName]) {
+    public getSlideConfiguration(slideName: string): SlideConfiguration {
+        if (!this.loadedSlides[slideName]) {
             throw new Error(`Could not find slide for "${slideName}"`);
         }
-        return this.loadedSlideConfigurations[slideName];
+        return this.loadedSlides[slideName];
     }
-
-    /*public getIdentifiableProjectorElement<P extends ProjectorElement>(element: P): IdentifiableProjectorElement & P {
-        const identifiableElement: IdentifiableProjectorElement & P = element as IdentifiableProjectorElement & P;
-        const identifiers = this.getManifest(element.name).elementNumbers.map(x => x); // map to copy.
-        identifiableElement.getNumbers = () => identifiers;
-        return identifiableElement;
-    }*/
 
     /**
      * Get slide verbose name for a given slide.
@@ -68,10 +56,6 @@ export class SlideManager {
      */
     public getSlideVerboseName(slideName: string): string {
         return this.getManifest(slideName).verboseName;
-    }
-
-    public canSlideBeMappedToModel(slideName: string): boolean {
-        return this.getManifest(slideName).canBeMappedToModel;
     }
 
     /**

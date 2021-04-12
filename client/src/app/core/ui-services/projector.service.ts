@@ -5,7 +5,17 @@ import { isProjectable, Projectable } from 'app/site/base/projectable';
 import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
 import { ViewProjection } from 'app/site/projector/models/view-projection';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
+import { Collection } from '../definitions/key-types';
 import { MeetingSettingsService } from './meeting-settings.service';
+
+export interface SlideData<T = { error?: string }> {
+    collection: Collection;
+    data: T;
+    stable: boolean;
+    type: string;
+    options: object;
+    error?: string;
+}
 
 /**
  * This service cares about Projectables being projected and manage all projection-related

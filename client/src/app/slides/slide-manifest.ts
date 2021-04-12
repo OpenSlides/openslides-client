@@ -1,48 +1,25 @@
 import { InjectionToken } from '@angular/core';
 import { LoadChildrenCallback } from '@angular/router';
 
-import { TranslateService } from '@ngx-translate/core';
-
-import { ViewModelStoreService } from 'app/core/core-services/view-model-store.service';
-import { ProjectorTitle } from 'app/site/base/projectable';
-
-type BooleanOrFunction = boolean | ((element: any) => boolean);
-
-export interface Slide {
-    slide: string;
-}
-
-/**
- * Slides can have these options.
- */
-export interface SlideDynamicConfiguration {
+export interface SlideConfiguration {
     /**
      * Should this slide be scrollable?
      */
-    scrollable: BooleanOrFunction;
+    scrollable: boolean;
 
     /**
      * Should this slide be scaleable?
      */
-    scaleable: BooleanOrFunction;
-
-    getSlideTitle?: (
-        element: any /*ProjectorElement*/,
-        translate: TranslateService,
-        viewModelStore: ViewModelStoreService
-    ) => ProjectorTitle;
+    scaleable: boolean;
 }
 
 /**
- * Is similar to router entries, so we can trick the router. Keep slideName and
- * path in sync.
+ * It is similar to router entries, so we can trick the router.
  */
-export interface SlideManifest extends Slide {
+export interface SlideManifest extends SlideConfiguration {
     path: string;
     loadChildren: LoadChildrenCallback;
     verboseName: string;
-    elementNumbers: string /*keyof IdentifiableProjectorElement*/[];
-    canBeMappedToModel: boolean;
 }
 
 export const SLIDE_MANIFESTS = new InjectionToken<SlideManifest[]>('SLIDE_MANIFEST');

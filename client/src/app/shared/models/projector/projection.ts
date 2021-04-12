@@ -11,6 +11,9 @@ export class Projection extends BaseModel<Projection> {
     public options: object;
     public weight: number;
 
+    // Calculated field
+    public content: any;
+
     public content_object_id: Fqid; // */projection_ids
     public current_projector_id: Id; // projector/current_projection_ids;
     public preview_projector_id: Id; // projector/preview_projection_ids;

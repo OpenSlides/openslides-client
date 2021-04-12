@@ -34,8 +34,10 @@ export class ProjectionRepositoryService extends BaseRepositoryWithActiveMeeting
     }
 
     public getFieldsets(): Fieldsets<Projection> {
+        const defaultKeys: (keyof Projection)[] = ['stable', 'type', 'options', 'weight'];
         return {
-            [DEFAULT_FIELDSET]: ['stable', 'type', 'options', 'weight']
+            [DEFAULT_FIELDSET]: defaultKeys,
+            content: defaultKeys.concat(['content'])
         };
     }
 
