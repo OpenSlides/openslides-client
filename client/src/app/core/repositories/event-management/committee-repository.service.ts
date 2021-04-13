@@ -1,17 +1,25 @@
 import { Injectable } from '@angular/core';
 
 import { CommitteeAction } from 'app/core/actions/committee-action';
-import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
+import {
+    DEFAULT_FIELDSET,
+    Fieldsets,
+    SimplifiedModelRequest
+} from 'app/core/core-services/model-request-builder.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Committee } from 'app/shared/models/event-management/committee';
 import { ViewCommittee } from 'app/site/event-management/models/view-committee';
+import { ViewOrganisation } from 'app/site/event-management/models/view-organisation';
 import { BaseRepository } from '../base-repository';
+import { ModelRequestRepository } from '../model-request-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 @Injectable({
     providedIn: 'root'
 })
-export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Committee> {
+export class CommitteeRepositoryService
+    extends BaseRepository<ViewCommittee, Committee>
+    implements ModelRequestRepository {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, Committee);
     }
@@ -26,8 +34,12 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
 
     public getFieldsets(): Fieldsets<Committee> {
         const titleFields: (keyof Committee)[] = ['name', 'description'];
-        const listFields: (keyof Committee)[] = titleFields.concat(['meeting_ids', 'member_ids']);
-        const editFields: (keyof Committee)[] = titleFields.concat(['manager_ids']);
+        const listFields: (keyof Committee)[] = titleFields.concat(['meeting_ids', 'member_ids', 'default_meeting_id']);
+        const editFields: (keyof Committee)[] = titleFields.concat([
+            'manager_ids',
+            'forward_to_committee_ids',
+            'template_meeting_id'
+        ]);
         return {
             [DEFAULT_FIELDSET]: titleFields,
             list: listFields,
@@ -37,8 +49,11 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
 
     public create(committee: Partial<Committee>): Promise<Identifiable> {
         const payload: CommitteeAction.CreatePayload = {
-            ...(committee as CommitteeAction.CreatePayload),
-            organisation_id: 1
+            name: committee.name,
+            organisation_id: 1,
+            description: committee.description,
+            member_ids: committee.member_ids,
+            manager_ids: committee.manager_ids
         };
         return this.sendActionToBackend(CommitteeAction.CREATE, payload);
     }
@@ -53,5 +68,18 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
 
     public delete(committee: ViewCommittee): Promise<void> {
         return this.sendActionToBackend(CommitteeAction.DELETE, { id: committee.id });
+    }
+
+    public getRequestToGetAllModels(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewOrganisation,
+            ids: [1],
+            follow: [
+                {
+                    idField: 'committee_ids'
+                }
+            ],
+            fieldset: []
+        };
     }
 }

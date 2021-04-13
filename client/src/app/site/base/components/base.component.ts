@@ -105,6 +105,10 @@ export abstract class BaseComponent implements OnDestroy {
         return this.componentServiceCollector.modelRequestService;
     }
 
+    protected get activeMeetingId(): Id {
+        return this.componentServiceCollector.activeMeetingId.meetingId;
+    }
+
     public constructor(protected componentServiceCollector: ComponentServiceCollector) {
         this.tinyMceSettings.language_url = '/assets/tinymce/langs/' + this.translate.currentLang + '.js';
         this.tinyMceSettings.language = this.translate.currentLang;

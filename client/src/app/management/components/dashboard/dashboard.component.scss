@@ -7,3 +7,77 @@
     max-width: 400px;
     margin: 1em auto;
 }
+
+.meeting-list-container {
+    display: flex;
+    width: 1000px;
+    margin: 20px auto;
+}
+
+.meeting-icon-wrapper {
+    width: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    mat-icon {
+        $size: 40px;
+        width: $size;
+        height: $size;
+        font-size: $size;
+    }
+}
+
+.meeting-list {
+    width: 100%;
+    box-shadow: 0 8px 10px 1px rgb(0 0 0 / 14%), 0 3px 14px 2px rgb(0 0 0 / 12%), 0 5px 5px -3px rgb(0 0 0 / 40%);
+    height: 250px;
+    display: block;
+    background: white;
+    overflow: hidden;
+
+    &.no-meeting {
+        height: fit-content;
+    }
+
+    cdk-virtual-scroll-viewport {
+        height: 100%;
+    }
+
+    div.alternate {
+        background: rgba(192, 192, 192, 0.1);
+    }
+}
+
+.meeting-box {
+    outline: none;
+    cursor: pointer;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    height: 60px;
+
+    &--mid {
+        font-size: 18px;
+        flex: 3;
+    }
+
+    &--left,
+    &--right {
+        flex: 1;
+    }
+}
+
+#previous-meetings {
+    .meeting-box {
+        color: rgba(0, 0, 0, 0.4);
+    }
+
+    .meeting-icon-wrapper {
+        color: rgba(0, 0, 0, 0.4);
+    }
+}

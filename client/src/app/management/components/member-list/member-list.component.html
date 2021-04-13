@@ -1,4 +1,4 @@
-<os-head-bar [customMenu]="true" [hasMainButton]="false" (mainEvent)="createNewMember()">
+<os-head-bar [customMenu]="true" [hasMainButton]="true" (mainEvent)="createNewMember()">
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Members' | translate }}</h2>
@@ -10,7 +10,7 @@
 </os-head-bar>
 
 <os-list-view-table
-    [listObservableProvider]="repo"
+    [listObservable]="repo.getViewModelListObservable()"
     [columns]="tableColumnDefinition"
     [showListOfSpeakers]="false"
     [showListOfSpeakers]="false"
@@ -20,11 +20,35 @@
 >
     <!-- Name column -->
     <div *pblNgridCellDef="'short_name'; row as user; rowContext as rowContext" class="cell-slot fill">
-        <!-- <a class="detail-link" [routerLink]="user.id" *ngIf="!isMultiSelect"></a> -->
+        <a class="detail-link" [routerLink]="user.id" *ngIf="!isMultiSelect"></a>
         <div class="nameCell">
             <div>
-                <div>{{ user.short_name }}</div>
+                <os-icon-container
+                    icon="error_outline"
+                    [swap]="true"
+                    [showIcon]="user.isTemporary"
+                    iconTooltip="{{ 'This user is temporary' | translate }}"
+                >
+                    {{ user.short_name }}
+                </os-icon-container>
             </div>
+        </div>
+    </div>
+    <!-- Info column -->
+    <div *pblNgridCellDef="'info'; row as user">
+        <div class="flex-center">
+            <mat-icon
+                *ngIf="!user.isTemporary && user.committee_as_member_ids?.length"
+                matTooltip="{{ 'Member in committees' | translate }}"
+            >
+                account_balance
+            </mat-icon>
+            <ng-container *ngFor="let committee of user.committees_as_member; last as last">
+                <os-icon-container [showIcon]="false" [noWrap]="true" [inline]="true">
+                    {{ committee.name | translate }}
+                    <span *ngIf="!last">,</span>
+                </os-icon-container>
+            </ng-container>
         </div>
     </div>
 </os-list-view-table>

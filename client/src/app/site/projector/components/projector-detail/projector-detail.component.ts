@@ -97,22 +97,24 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
     ) {
         super(componentServiceCollector);
 
-        this.countdownRepo.getViewModelListObservable().subscribe(countdowns => (this.countdowns = countdowns));
-        this.messageRepo.getViewModelListObservable().subscribe(messages => (this.messages = messages));
-        this.projectorRepo
-            .getViewModelListObservable()
-            .subscribe(projectors => (this.projectorCount = projectors.length));
-        // TODO: remove.
-        // This is just for testing the new autoupdate/projector service mechanism
-        this.projectorRepo.getViewModelListObservable().subscribe(p => {
-            p.forEach(x => {
-                console.log(
-                    x,
-                    x.current_projections,
-                    x.current_projections.map((y: any) => y.content)
-                );
-            });
-        });
+        this.subscriptions.push(
+            this.countdownRepo.getViewModelListObservable().subscribe(countdowns => (this.countdowns = countdowns)),
+            this.messageRepo.getViewModelListObservable().subscribe(messages => (this.messages = messages)),
+            this.projectorRepo
+                .getViewModelListObservable()
+                .subscribe(projectors => (this.projectorCount = projectors.length)),
+            // TODO: remove.
+            // This is just for testing the new autoupdate/projector service mechanism
+            this.projectorRepo.getViewModelListObservable().subscribe(p => {
+                p.forEach(x => {
+                    console.log(
+                        x,
+                        x.current_projections,
+                        x.current_projections.map((y: any) => y.content)
+                    );
+                });
+            })
+        );
     }
 
     /**
@@ -152,7 +154,7 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
         this.requestModels(
             {
                 viewModelCtor: ViewMeeting,
-                ids: [this.activeMeetingService.meetingId],
+                ids: [this.activeMeetingId],
                 follow: ['projector_countdown_ids', 'projector_message_ids']
             },
             'messages and countdowns'
@@ -278,7 +280,7 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
             if (result) {
                 const defaultTime = this.durationService.stringToDuration(result.duration, 'm');
                 const countdown = {
-                    meeting_id: this.activeMeetingService.meetingId,
+                    meeting_id: this.activeMeetingId,
                     title: result.title,
                     description: result.description,
                     default_time: defaultTime
@@ -301,7 +303,7 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 const message: ProjectorMessageAction.CreatePayload = {
-                    meeting_id: this.activeMeetingService.meetingId,
+                    meeting_id: this.activeMeetingId,
                     message: result.message
                 };
                 this.messageRepo.create(message);

@@ -12,6 +12,7 @@ import { UserRepositoryService } from 'app/core/repositories/users/user-reposito
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
+import { ViewOrganisation } from 'app/site/event-management/models/view-organisation';
 import { ViewUser } from 'app/site/users/models/view-user';
 
 const AddMeetingLabel = _('Create Meeting');
@@ -75,7 +76,9 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
                 this.committeeId = Number(params.committeeId);
                 this.meetingId = Number(params.meetingId);
 
-                this.loadMeeting(this.meetingId);
+                if (this.meetingId) {
+                    this.loadMeeting(this.meetingId);
+                }
             })
         );
     }
@@ -124,19 +127,25 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
     }
 
     private requestUpdates(): void {
+        /**
+         * TODO: Requires orga members
+         */
         this.requestModels({
-            // viewModelCtor: ViewOrganization,
-            viewModelCtor: ViewMeeting,
-            /**
-             * TODO: Requires orga users
-             */
+            viewModelCtor: ViewOrganisation,
             ids: [1],
             follow: [
                 {
-                    // idField: 'member_ids',
-                    idField: 'user_ids'
+                    idField: 'committee_ids',
+                    fieldset: 'list',
+                    follow: [
+                        {
+                            idField: 'meeting_ids',
+                            follow: [{ idField: 'user_ids', fieldset: 'list' }]
+                        }
+                    ]
                 }
-            ]
+            ],
+            fieldset: []
         });
     }
 

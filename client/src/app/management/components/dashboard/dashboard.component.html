@@ -1,4 +1,4 @@
-<os-head-bar [customMenu]="true">
+<os-head-bar [customMenu]="true" [isSearchEnabled]="false">
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Dashboard' | translate }}</h2>
@@ -16,41 +16,74 @@
 </mat-card>
 
 <ng-container *ngIf="!noMeetingsToShow">
-    <mat-card class="os-card">
-        <!-- active meetings -->
-        <div>
-            <h2>{{ 'Active meetings' | translate }}</h2>
-            <p *ngFor="let meeting of currentMeetings">
-                <ng-container [ngTemplateOutlet]="meetingTemplate" [ngTemplateOutletContext]="{ meeting: meeting }">
-                </ng-container>
-            </p>
+    <!-- active meetings -->
+    <div id="active-meetings" class="meeting-list-container">
+        <div class="meeting-icon-wrapper">
+            <mat-icon color="warn">access_alarm</mat-icon>
+            <span>{{ 'active' | translate }}</span>
         </div>
+        <div class="meeting-list">
+            <mat-card *ngIf="!currentMeetings.length">{{ 'Currently, no meeting available' | translate }}</mat-card>
+            <ng-container *ngFor="let meeting of currentMeetings; let last = last">
+                <ng-container
+                    [ngTemplateOutlet]="meetingTemplate"
+                    [ngTemplateOutletContext]="{ meeting: meeting }"
+                ></ng-container>
+                <mat-divider *ngIf="!last"></mat-divider>
+            </ng-container>
+        </div>
+    </div>
 
-        <!-- future meetings -->
-        <div>
-            <h2>{{ 'Future meetings' | translate }}</h2>
-            <p *ngFor="let meeting of futureMeetings">
-                <ng-container [ngTemplateOutlet]="meetingTemplate" [ngTemplateOutletContext]="{ meeting: meeting }">
-                </ng-container>
-            </p>
+    <!-- future meetings -->
+    <div id="future-meetings" class="meeting-list-container">
+        <div class="meeting-icon-wrapper">
+            <mat-icon color="primary">update</mat-icon>
+            <span>{{ 'future' | translate }}</span>
         </div>
+        <ng-container
+            [ngTemplateOutlet]="meetingListTemplate"
+            [ngTemplateOutletContext]="{ meetingList: futureMeetings }"
+        ></ng-container>
+    </div>
 
-        <!-- prev meetings -->
-        <div>
-            <h2>{{ 'Previous meetings' | translate }}</h2>
-            <p *ngFor="let meeting of previousMeetings">
-                <ng-container [ngTemplateOutlet]="meetingTemplate" [ngTemplateOutletContext]="{ meeting: meeting }">
-                </ng-container>
-            </p>
+    <!-- previous meetings -->
+    <div id="previous-meetings" class="meeting-list-container">
+        <div class="meeting-icon-wrapper">
+            <mat-icon aria-hidden="true">history</mat-icon>
+            <span>{{ 'ended' | translate }}</span>
         </div>
-    </mat-card>
+        <ng-container
+            [ngTemplateOutlet]="meetingListTemplate"
+            [ngTemplateOutletContext]="{ meetingList: previousMeetings }"
+        ></ng-container>
+    </div>
 </ng-container>
 
+<ng-template let-meetingList="meetingList" #meetingListTemplate>
+    <div class="meeting-list" [ngClass]="{ 'no-meeting': !meetingList.length }">
+        <mat-card *ngIf="!meetingList.length">{{ 'Currently, no meeting available' | translate }}</mat-card>
+        <cdk-virtual-scroll-viewport [itemSize]="60" *ngIf="!!meetingList.length">
+            <ng-container *cdkVirtualFor="let meeting of meetingList; let odd = odd; let last = last">
+                <div [ngClass]="{ alternate: odd }">
+                    <ng-container
+                        [ngTemplateOutlet]="meetingTemplate"
+                        [ngTemplateOutletContext]="{ meeting: meeting }"
+                    ></ng-container>
+                </div>
+                <mat-divider *ngIf="last"></mat-divider>
+            </ng-container>
+        </cdk-virtual-scroll-viewport>
+    </div>
+</ng-template>
+
 <ng-template let-meeting="meeting" #meetingTemplate>
-    <a [routerLink]="[meeting.id]">
-        <span>{{ meeting.start_time | localizedDate: 'll' }}</span>
-        <span> - </span>
-        <span>{{ meeting.end_time | localizedDate: 'll' }}</span>
-        <span>&nbsp;{{ meeting.name }}</span>
-    </a>
+    <div matRipple class="meeting-box" [routerLink]="meeting.id">
+        <div class="meeting-box--left">
+            <span>{{ meeting.start_time | localizedDate: 'll' }}</span>
+            <span *ngIf="meeting.start_time && meeting.end_time"> - </span>
+            <span>{{ meeting.end_time | localizedDate: 'll' }}</span>
+        </div>
+        <div class="meeting-box--mid">{{ meeting.name }}</div>
+        <div class="meeting-box--right">{{ meeting.location }}</div>
+    </div>
 </ng-template>

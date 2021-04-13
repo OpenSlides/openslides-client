@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { ActionService } from '../core-services/action.service';
+import { AuthService } from '../core-services/auth.service';
 import { CollectionMapperService } from '../core-services/collection-mapper.service';
 import { DataStoreService } from '../core-services/data-store.service';
 import { ErrorService } from '../ui-services/error.service';
@@ -20,6 +21,7 @@ export class RepositoryServiceCollectorWithoutActiveMeetingService {
         public viewModelStoreService: ViewModelStoreService,
         public translate: TranslateService,
         public relationManager: RelationManagerService,
-        public errorService: ErrorService
+        public errorService: ErrorService,
+        public authService: AuthService
     ) {}
 }

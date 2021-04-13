@@ -97,6 +97,7 @@ interface IMeetingRelations {
     logo: StructuredRelation<string, ViewMediafile | null>;
     font: StructuredRelation<string, ViewMediafile | null>;
     committee: ViewCommittee;
+    template_meeting_for_committee?: ViewCommittee;
     default_meeting_for_committee?: ViewCommittee;
     present_users: ViewUser[];
     temporary_users: ViewUser[];

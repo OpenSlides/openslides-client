@@ -8,6 +8,7 @@
 >
 <span class="content-node" [ngClass]="noWrap ? 'single-line' : 'break-lines'">
     <ng-content></ng-content>
+    <ng-content select="[afterContent]"></ng-content>
 </span>
 <mat-icon
     *ngIf="swap && showIcon"

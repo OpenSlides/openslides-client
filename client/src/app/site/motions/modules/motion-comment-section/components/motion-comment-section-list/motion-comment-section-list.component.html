@@ -1,4 +1,4 @@
-<os-head-bar prevUrl="../.." [nav]="false" [hasMainButton]="true" (mainEvent)="openDialog()">
+<os-head-bar [nav]="false" [hasMainButton]="true" (mainEvent)="openDialog()">
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Comment fields' | translate }}</h2>
@@ -24,17 +24,13 @@
                     <div class="read">
                         <os-icon-container icon="visibility">
                             {{ section.read_groups }}
-                            <ng-container *ngIf="section.read_groups.length === 0">
-                                &ndash;
-                            </ng-container>
+                            <ng-container *ngIf="section.read_groups.length === 0"> &ndash; </ng-container>
                         </os-icon-container>
                     </div>
                     <div class="write">
                         <os-icon-container icon="edit">
                             {{ section.write_groups }}
-                            <ng-container *ngIf="section.write_groups.length === 0">
-                                &ndash;
-                            </ng-container>
+                            <ng-container *ngIf="section.write_groups.length === 0"> &ndash; </ng-container>
                         </os-icon-container>
                     </div>
                 </div>

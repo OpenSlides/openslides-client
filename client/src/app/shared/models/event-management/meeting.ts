@@ -185,6 +185,7 @@ export class Meeting extends BaseModel<Meeting> {
 
     // Other relations
     public committee_id: Id; // committee/meeting_ids;
+    public template_meeting_for_committee_id: Id; // committee/template_meeting_id;
     public default_meeting_for_committee_id: Id; // committee/default_meeting_id;
     public present_user_ids: Id[]; // (user/is_present_in_meeting_ids)[];
     public temporary_user_ids: Id[]; // (user/meeting_id)[];

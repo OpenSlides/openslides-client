@@ -17,6 +17,7 @@ import { OperatorService } from './core/core-services/operator.service';
 import { OrganisationService } from './core/core-services/organisation.service';
 import { OverlayService } from './core/ui-services/overlay.service';
 import { overloadJsFunctions } from './shared/overload-js-functions';
+import { RouteGuard } from './core/core-services/route.guard';
 import { RoutingStateService } from './core/ui-services/routing-state.service';
 import { ServertimeService } from './core/core-services/servertime.service';
 import { ThemeService } from './core/ui-services/theme.service';
@@ -47,7 +48,7 @@ export class AppComponent implements OnInit {
         private activeMeetingIdService: ActiveMeetingIdService,
         private activeMeetingService: ActiveMeetingService,
         private lifecycleService: LifecycleService,
-        organisationService: OrganisationService,
+        routeGuard: RouteGuard,
         router: Router,
         offlineService: OfflineService,
         servertimeService: ServertimeService,

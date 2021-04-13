@@ -7,7 +7,7 @@ import { RepositoryServiceCollector } from './repository-service-collector';
 
 /**
  * Extension of the base repository for all meeting specific models. Provides access
- * to the active meeting service and automatically inserts the id on creates.
+ * to the active meeting service and automatically inserts the id on viewmodel creates.
  */
 export abstract class BaseRepositoryWithActiveMeeting<
     V extends BaseViewModel,
@@ -26,5 +26,12 @@ export abstract class BaseRepositoryWithActiveMeeting<
         protected baseModelCtor: ModelConstructor<M>
     ) {
         super(fullRepositoryServiceCollector, baseModelCtor);
+        this.activeMeetingIdService.meetingHasChangedObservable.subscribe(() => this.clear());
+    }
+
+    protected createViewModel(model: M): V {
+        const viewModel = super.createViewModel(model);
+        viewModel.getActiveMeetingId = () => this.fullRepositoryServiceCollector.activeMeetingIdService.meetingId;
+        return viewModel;
     }
 }

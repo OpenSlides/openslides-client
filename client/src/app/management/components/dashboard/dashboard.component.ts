@@ -46,15 +46,15 @@ export class DashboardComponent extends BaseModelContextComponent implements OnI
         this.meetingRepo.getViewModelListObservable().subscribe(meetings => {
             const currentDate = new Date();
             currentDate.setHours(0, 0, 0, 0);
-            this.previousMeetings = meetings.filter(meeting => {
-                return meeting.endDate < currentDate;
-            });
-            this.futureMeetings = meetings.filter(meeting => {
-                return meeting.startDate > currentDate;
-            });
-            this.currentMeetings = meetings.filter(meeting => {
-                return meeting.endDate >= currentDate && meeting.startDate <= currentDate;
-            });
+            this.previousMeetings = meetings
+                .filter(meeting => meeting.endDate < currentDate)
+                .sort((a, b) => b.end_time - a.end_time);
+            this.futureMeetings = meetings
+                .filter(meeting => meeting.startDate > currentDate)
+                .sort((a, b) => a.end_time - b.end_time);
+            this.currentMeetings = meetings.filter(
+                meeting => meeting.endDate >= currentDate && meeting.startDate <= currentDate
+            );
         });
     }
 }

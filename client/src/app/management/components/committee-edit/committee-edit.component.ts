@@ -4,15 +4,18 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { Observable } from 'rxjs';
+import { Observable, OperatorFunction } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { CommitteeRepositoryService } from 'app/core/repositories/event-management/committee-repository.service';
+import { MeetingRepositoryService } from 'app/core/repositories/event-management/meeting-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { Committee } from 'app/shared/models/event-management/committee';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewCommittee } from 'app/site/event-management/models/view-committee';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
+import { ViewOrganisation } from 'app/site/event-management/models/view-organisation';
 import { ViewUser } from 'app/site/users/models/view-user';
 
 const AddCommitteeLabel = _('Create Committee');
@@ -30,6 +33,7 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
     public isCreateView: boolean;
     public committeeForm: FormGroup;
     public members: Observable<ViewUser[]>;
+    public meetingsObservable: Observable<ViewMeeting[]>;
 
     private editCommittee: ViewCommittee;
 
@@ -37,7 +41,8 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
         componentServiceCollector: ComponentServiceCollector,
         private formBuilder: FormBuilder,
         private userRepo: UserRepositoryService,
-        private committeeRepo: CommitteeRepositoryService,
+        public committeeRepo: CommitteeRepositoryService,
+        private meetingRepo: MeetingRepositoryService,
         private router: Router,
         private route: ActivatedRoute,
         private location: Location
@@ -51,11 +56,42 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
         } else {
             super.setTitle(EditCommitteeLabel);
         }
-        this.members = this.userRepo.getViewModelListObservable();
+        this.members = this.userRepo.getMemberListObservable();
+        this.meetingsObservable = this.meetingRepo.getViewModelListObservable();
     }
 
     public ngOnInit(): void {
         this.requestUpdates();
+    }
+
+    public getPipeFilterFn(): OperatorFunction<ViewCommittee[], ViewCommittee[]> {
+        return map((committees: ViewCommittee[]) =>
+            committees.filter(committee => committee.id !== this.editCommittee.id)
+        );
+    }
+
+    public onSubmit(): void {
+        const value = this.committeeForm.value as Committee;
+
+        if (this.isCreateView) {
+            this.committeeRepo
+                .create(value)
+                .then(() => {
+                    this.location.back();
+                })
+                .catch(this.raiseError);
+        } else {
+            this.committeeRepo
+                .update(value, this.editCommittee)
+                .then(() => {
+                    this.location.back();
+                })
+                .catch(this.raiseError);
+        }
+    }
+
+    public onCancel(): void {
+        this.location.back();
     }
 
     private getCommitteeByUrl(): void {
@@ -73,11 +109,15 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
     }
 
     private loadCommittee(id?: number): void {
-        this.requestModels({
-            viewModelCtor: ViewCommittee,
-            ids: [id],
-            fieldset: 'edit'
-        });
+        this.requestModels(
+            {
+                viewModelCtor: ViewCommittee,
+                ids: [id],
+                fieldset: 'edit',
+                follow: [{ idField: 'forward_to_committee_ids' }]
+            },
+            'loadCommittee'
+        );
         this.subscriptions.push(
             this.committeeRepo.getViewModelObservable(id).subscribe(newCommittee => {
                 if (newCommittee) {
@@ -89,11 +129,22 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
     }
 
     private createForm(): void {
-        this.committeeForm = this.formBuilder.group({
+        let partialForm: any = {
             name: ['', Validators.required],
-            manager_ids: [null, Validators.required],
-            description: ['']
-        });
+            description: [''],
+            manager_ids: [[]],
+            member_ids: [[]]
+        };
+        if (!this.isCreateView) {
+            partialForm = {
+                ...partialForm,
+                template_meeting_id: [null],
+                default_meeting_id: [null],
+                forward_to_committee_ids: [[]]
+                // organisation_tag_ids: [[]] // TODO: Wait for backend
+            };
+        }
+        this.committeeForm = this.formBuilder.group(partialForm);
     }
 
     private updateForm(committee: ViewCommittee): void {
@@ -101,44 +152,19 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
     }
 
     private requestUpdates(): void {
-        this.requestModels({
-            // viewModelCtor: ViewOrganization,
-            viewModelCtor: ViewMeeting,
-            /**
-             * TODO: Requires orga users
-             */
-            ids: [1],
-            follow: [
-                {
-                    // idField: 'member_ids',
-                    idField: 'user_ids'
-                }
-            ]
-        });
-    }
-
-    public onSubmit(): void {
-        const value = this.committeeForm.value as Committee;
-
-        if (this.isCreateView) {
-            this.committeeRepo
-                .create(value)
-                .then(() => {
-                    this.location.back();
-                    // this.router.navigate([result.id], { relativeTo: this.route.parent });
-                })
-                .catch(this.raiseError);
-        } else {
-            this.committeeRepo
-                .update(value, this.editCommittee)
-                .then(() => {
-                    this.location.back();
-                })
-                .catch(this.raiseError);
-        }
-    }
-
-    public onCancel(): void {
-        this.location.back();
+        this.requestModels(
+            {
+                viewModelCtor: ViewOrganisation,
+                ids: [1],
+                follow: [
+                    {
+                        idField: 'committee_ids',
+                        fieldset: 'list'
+                    }
+                ],
+                fieldset: []
+            },
+            'loadOrganization'
+        );
     }
 }

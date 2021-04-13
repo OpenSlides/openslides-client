@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { NavigationEnd, Router, RouterEvent } from '@angular/router';
 
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { LifecycleService } from './lifecycle.service';
@@ -12,25 +12,36 @@ export class NoActiveMeeting extends Error {}
     providedIn: 'root'
 })
 export class ActiveMeetingIdService {
-    // undefined is for detecting, that this service wasn't loaded yet
-    private meetingIdSubject = new BehaviorSubject<number | null>(undefined);
-
     public get meetingIdObservable(): Observable<number | null> {
         return this.meetingIdSubject.asObservable();
     }
 
-    private currentMeetingId: number;
+    public get meetingHasChangedObservable(): Observable<void> {
+        return this.meetingHasChangedSubject.asObservable();
+    }
 
     public get meetingId(): number | null {
         return this.meetingIdSubject.getValue();
     }
 
     private set _meetingId(newMeetingId: number | null) {
-        if (newMeetingId && newMeetingId !== this.currentMeetingId) {
+        if (Number.isNaN(newMeetingId)) {
+            this.currentMeetingId = null;
+            this.meetingIdSubject.next(null);
+        } else if (newMeetingId && newMeetingId !== this.currentMeetingId) {
             this.currentMeetingId = newMeetingId;
             this.meetingIdSubject.next(newMeetingId);
         }
+        if (Number.isNaN || (newMeetingId && newMeetingId !== this.currentMeetingId)) {
+            this.meetingHasChangedSubject.next();
+        }
     }
+
+    // undefined is for detecting, that this service wasn't loaded yet
+    private meetingIdSubject = new BehaviorSubject<number | null>(undefined);
+    private meetingHasChangedSubject = new Subject<void>();
+
+    private currentMeetingId: number;
 
     private routerSub: Subscription;
 

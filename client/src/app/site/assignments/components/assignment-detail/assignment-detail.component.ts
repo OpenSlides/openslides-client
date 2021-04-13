@@ -4,7 +4,6 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
 import { BehaviorSubject, Subscription } from 'rxjs';
 
-import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { Id } from 'app/core/definitions/key-types';
@@ -196,8 +195,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
         private pdfService: AssignmentPdfExportService,
         private mediafileRepo: MediafileRepositoryService,
         private pollDialog: AssignmentPollDialogService,
-        private assignmentPollService: AssignmentPollService,
-        private activeMeetingIdService: ActiveMeetingIdService
+        private assignmentPollService: AssignmentPollService
     ) {
         super(componentServiceCollector);
         this.subscriptions.push(
@@ -240,7 +238,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
             {
                 // Get all available groups in an active meeting.
                 viewModelCtor: ViewMeeting,
-                ids: [this.activeMeetingIdService.meetingId],
+                ids: [this.activeMeetingId],
                 follow: [{ idField: 'group_ids' }]
             },
             'groups'
