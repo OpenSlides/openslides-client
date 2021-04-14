@@ -33,16 +33,24 @@
 
 <ng-template #editView>
     <form [formGroup]="personalInfoForm">
-        <div *ngIf="isAllowed('seeName')">
-            <!-- Title -->
-            <mat-form-field class="form16 distance force-min-with">
+        <div *ngIf="isAllowed('seePersonal')">
+            <!-- username -->
+            <mat-form-field>
                 <input
                     type="text"
                     matInput
                     osAutofocus
-                    placeholder="{{ 'Title' | translate }}"
-                    formControlName="title"
+                    placeholder="{{ 'Username' | translate }}"
+                    formControlName="username"
+                    required
                 />
+            </mat-form-field>
+        </div>
+
+        <div *ngIf="isAllowed('seeName')">
+            <!-- Title -->
+            <mat-form-field class="form16 distance force-min-with">
+                <input type="text" matInput placeholder="{{ 'Title' | translate }}" formControlName="title" />
             </mat-form-field>
             <!-- First name -->
             <mat-form-field class="form37 distance force-min-with">
@@ -156,13 +164,6 @@
                 >
                     <mat-icon>sync_problem</mat-icon>
                 </button>
-            </mat-form-field>
-        </div>
-
-        <div *ngIf="isAllowed('seePersonal')">
-            <!-- username -->
-            <mat-form-field>
-                <input type="text" matInput placeholder="{{ 'Username' | translate }}" formControlName="username" />
             </mat-form-field>
         </div>
 

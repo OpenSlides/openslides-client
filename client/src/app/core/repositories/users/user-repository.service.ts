@@ -61,6 +61,8 @@ interface LevelAndNumberInformation {
 }
 type FullNameInformation = ShortNameInformation & LevelAndNumberInformation;
 
+type PartialUpdatePayload = Partial<UserAction.UpdatePayload | UserAction.UpdateTemporaryPayload>;
+
 const SHORT_NAME_FIELDS: (keyof User | { templateField: keyof User })[] = [
     'title',
     'username',
@@ -163,6 +165,54 @@ export class UserRepositoryService
         } else {
             return this.deleteNonTemporary(user);
         }
+    }
+
+    /**
+     * A function to update multiple users at once. To update these users, an object can be passed as payload
+     * or a function can be passed to generate a payload depending on a specific user.
+     *
+     * @param patch An update-payload object or a function to generate a payload. The function gets a user as argument.
+     * @param users A list of users, who will be updated.
+     *
+     * @returns A promise.
+     */
+    public async bulkUpdate(
+        patch: PartialUpdatePayload | ((user: ViewUser) => PartialUpdatePayload),
+        users: ViewUser[]
+    ): Promise<void> {
+        const temporaryUpdatePayload = [];
+        const realUpdatePayload = [];
+        for (const user of users) {
+            const update = typeof patch === 'function' ? patch(user) : patch;
+            if (user.isTemporary) {
+                temporaryUpdatePayload.push({
+                    id: user.id,
+                    ...this.getPartialTemporaryUserPayload(update as Partial<UserAction.UpdateTemporaryPayload>)
+                });
+            } else {
+                realUpdatePayload.push({
+                    id: user.id,
+                    ...this.getPartialUserPayload(update)
+                });
+            }
+        }
+        return this.sendActionsToBackend([
+            { action: UserAction.UPDATE_TEMPORARY, data: temporaryUpdatePayload },
+            { action: UserAction.UPDATE, data: realUpdatePayload }
+        ]);
+    }
+
+    public async bulkDelete(users: ViewUser[]): Promise<void> {
+        const temporaryPayload: UserAction.DeleteTemporaryPayload[] = users
+            .filter(user => user.isTemporary)
+            .map(user => ({ id: user.id }));
+        const realPayload: UserAction.DeletePayload[] = users
+            .filter(user => !user.isTemporary)
+            .map(user => ({ id: user.id }));
+        return this.sendActionsToBackend([
+            { action: UserAction.DELETE_TEMPORARY, data: temporaryPayload },
+            { action: UserAction.DELETE, data: realPayload }
+        ]);
     }
 
     public getMemberListObservable(): Observable<ViewUser[]> {
@@ -587,44 +637,46 @@ export class UserRepositoryService
 
     public bulkAddGroupsToUsers(users: ViewUser[], groupIds: Id[]): Promise<void> {
         this.preventAlterationOnDemoUsers(users);
-        const payload: UserAction.UpdatePayload[] = users.map(user => {
+        const patchFn = (user: ViewUser) => {
             groupIds = groupIds.concat(user.group_ids());
             return {
                 id: user.id,
                 group_ids: groupIds.filter((groupId, index, self) => self.indexOf(groupId) === index)
             };
-        });
-        return this.sendBulkActionToBackend(UserAction.UPDATE, payload);
+        };
+        return this.bulkUpdate(patchFn, users);
     }
 
     public bulkRemoveGroupsFromUsers(users: ViewUser[], groupIds: Id[]): Promise<void> {
         this.preventAlterationOnDemoUsers(users);
-        const payload: UserAction.UpdatePayload[] = users.map(user => ({
+        const patchFn = (user: ViewUser) => ({
             id: user.id,
             group_ids: user.group_ids().filter(groupId => !groupIds.includes(groupId))
-        }));
-        return this.sendBulkActionToBackend(UserAction.UPDATE, payload);
+        });
+        return this.bulkUpdate(patchFn, users);
     }
 
-    public bulkAddGroupsToTemporaryUsers(users: ViewUser[], groupIds: Id[]): Promise<void> {
-        this.preventAlterationOnDemoUsers(users);
-        const payload: UserAction.UpdateTemporaryPayload[] = users.map(user => {
-            groupIds = groupIds.concat(user.group_ids());
+    public bulkAssignUsersToCommitteesAsMembers(users: ViewUser[], committeeIds: Id[]): Promise<void> {
+        const patchFn = (user: ViewUser) => {
+            committeeIds = committeeIds.concat(user.committee_as_member_ids || []);
             return {
                 id: user.id,
-                group_ids: groupIds.filter((groupId, index, self) => self.indexOf(groupId) === index)
+                committee_as_member_ids: committeeIds.filter(
+                    (committeeId, index, self) => self.indexOf(committeeId) === index
+                )
             };
-        });
-        return this.sendBulkActionToBackend(UserAction.UPDATE_TEMPORARY, payload);
+        };
+        return this.bulkUpdate(patchFn, users);
     }
 
-    public bulkRemoveGroupsFromTemporaryUsers(users: ViewUser[], groupIds: Id[]): Promise<void> {
-        this.preventAlterationOnDemoUsers(users);
-        const payload: UserAction.UpdateTemporaryPayload[] = users.map(user => ({
+    public bulkUnassignUsersFromCommitteesAsMembers(users: ViewUser[], committeeIds: Id[]): Promise<void> {
+        const patchFn = (user: ViewUser) => ({
             id: user.id,
-            group_ids: user.group_ids().filter(groupId => !groupIds.includes(groupId))
-        }));
-        return this.sendBulkActionToBackend(UserAction.UPDATE_TEMPORARY, payload);
+            committee_as_member_ids: (user.committee_as_member_ids || []).filter(
+                committeeId => !committeeIds.includes(committeeId)
+            )
+        });
+        return this.bulkUpdate(patchFn, users);
     }
 
     /**

@@ -8,7 +8,7 @@
                 </button>
 
                 <!-- Custom menu -->
-                <button mat-icon-button *ngIf="customMenu" [matMenuTriggerFor]="customNavMenu">
+                <button mat-icon-button *ngIf="customMenu && !multiSelectMode" [matMenuTriggerFor]="customNavMenu">
                     <mat-icon>menu</mat-icon>
                 </button>
             </ng-container>
