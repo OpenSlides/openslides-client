@@ -137,7 +137,7 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
         const payload: MediafileAction.CreateDirectoryPayload = {
             meeting_id: this.activeMeetingIdService.meetingId,
             title: partialMediafile.title,
-            access_group_ids: partialMediafile.access_group_ids,
+            access_group_ids: partialMediafile.access_group_ids || [],
             parent_id: partialMediafile.parent_id
         };
         return this.sendActionToBackend(MediafileAction.CREATE_DIRECTORY, payload);

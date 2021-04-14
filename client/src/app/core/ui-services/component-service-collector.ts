@@ -4,6 +4,7 @@ import { Title } from '@angular/platform-browser';
 
 import { TranslateService } from '@ngx-translate/core';
 
+import { ActiveMeetingIdService } from '../core-services/active-meeting-id.service';
 import { MeetingSettingsService } from './meeting-settings.service';
 import { ModelRequestService } from '../core-services/model-request.service';
 import { StorageService } from '../core-services/storage.service';
@@ -18,6 +19,7 @@ export class ComponentServiceCollector {
         public matSnackBar: MatSnackBar,
         public storage: StorageService,
         public modelRequestService: ModelRequestService,
-        public meetingSettingService: MeetingSettingsService
+        public meetingSettingService: MeetingSettingsService,
+        public activeMeetingId: ActiveMeetingIdService
     ) {}
 }

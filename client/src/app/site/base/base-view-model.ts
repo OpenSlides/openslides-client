@@ -1,4 +1,4 @@
-import { Fqid } from 'app/core/definitions/key-types';
+import { Fqid, Id } from 'app/core/definitions/key-types';
 import { BaseModel } from 'app/shared/models/base/base-model';
 import { Collection } from 'app/shared/models/base/collection';
 import { Displayable } from './displayable';
@@ -50,4 +50,5 @@ export interface BaseViewModel<M extends BaseModel = any> extends Displayable, I
      * @returns the verbose name of the model
      */
     getVerboseName: (plural?: boolean) => string;
+    getActiveMeetingId: () => Id;
 }

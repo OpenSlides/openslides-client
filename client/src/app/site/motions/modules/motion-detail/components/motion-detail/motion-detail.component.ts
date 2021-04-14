@@ -14,7 +14,6 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 import { MotionAction } from 'app/core/actions/motion-action';
-import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Id } from 'app/core/definitions/key-types';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
@@ -209,8 +208,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         private motionFilterService: MotionFilterListService,
         private amendmentFilterService: AmendmentFilterListService,
         private cd: ChangeDetectorRef,
-        private meetingSettingsService: MeetingSettingsService,
-        private activeMeetingIdService: ActiveMeetingIdService
+        private meetingSettingsService: MeetingSettingsService
     ) {
         super(componentServiceCollector);
     }
@@ -298,7 +296,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         this.requestModels(
             {
                 viewModelCtor: ViewMeeting,
-                ids: [this.activeMeetingIdService.meetingId],
+                ids: [this.activeMeetingId],
                 follow: [
                     {
                         idField: 'user_ids',

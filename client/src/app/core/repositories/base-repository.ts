@@ -1,9 +1,10 @@
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { auditTime } from 'rxjs/operators';
+import { auditTime, filter } from 'rxjs/operators';
 
 import { ActionRequest, ActionService } from '../core-services/action.service';
 import { Collection } from 'app/shared/models/base/collection';
+import { AuthService } from '../core-services/auth.service';
 import { BaseModel, ModelConstructor } from '../../shared/models/base/base-model';
 import { BaseViewModel, ViewModelConstructor } from '../../site/base/base-view-model';
 import { CollectionMapperService } from '../core-services/collection-mapper.service';
@@ -118,6 +119,10 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         return this.repositoryServiceCollector.relationManager;
     }
 
+    protected get authService(): AuthService {
+        return this.repositoryServiceCollector.authService;
+    }
+
     public constructor(
         private repositoryServiceCollector: RepositoryServiceCollectorWithoutActiveMeetingService,
         protected baseModelCtor: ModelConstructor<M>
@@ -127,6 +132,8 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         this.relationManager.getRelationsForCollection(this.collection).forEach(relation => {
             this.relationsByKey[relation.ownField] = relation;
         });
+
+        this.authService.onLogout.subscribe(() => this.DS.clear());
 
         // All data is piped through an auditTime of 1ms. This is to prevent massive
         // updates, if e.g. an autoupdate with a lot motions come in. The result is just one
@@ -284,7 +291,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         if (!this.viewModelSubjects[id]) {
             this.viewModelSubjects[id] = new BehaviorSubject<V>(this.viewModelStore[id]);
         }
-        return this.viewModelSubjects[id].asObservable();
+        return this.viewModelSubjects[id].pipe(filter(value => !!value));
     }
 
     /**

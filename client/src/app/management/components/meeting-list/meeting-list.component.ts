@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PblColumnDefinition } from '@pebula/ngrid';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { CommitteeRepositoryService } from 'app/core/repositories/event-management/committee-repository.service';
@@ -27,6 +27,8 @@ export class MeetingListComponent extends BaseListViewComponent<ViewOrganisation
 
     public currentCommitteeObservable: Observable<ViewCommittee>;
 
+    public currentCommittee: ViewCommittee;
+
     public tableColumnDefinition: PblColumnDefinition[] = [
         {
             prop: 'name',
@@ -37,6 +39,12 @@ export class MeetingListComponent extends BaseListViewComponent<ViewOrganisation
             width: '70px'
         }
     ];
+
+    public get meetingsObservable(): Observable<ViewMeeting[]> {
+        return this.meetingsSubject.asObservable();
+    }
+
+    private readonly meetingsSubject = new BehaviorSubject<ViewMeeting[]>([]);
 
     public constructor(
         public meetingRepo: MeetingRepositoryService,
@@ -64,7 +72,7 @@ export class MeetingListComponent extends BaseListViewComponent<ViewOrganisation
     }
 
     public editSingle(meeting: ViewMeeting): void {
-        this.router.navigate(['edit-meeting/', meeting.id], { relativeTo: this.route });
+        this.router.navigate(['edit-meeting', meeting.id], { relativeTo: this.route });
     }
 
     public async deleteSingle(meeting: ViewMeeting): Promise<void> {
@@ -89,12 +97,13 @@ export class MeetingListComponent extends BaseListViewComponent<ViewOrganisation
     }
 
     private async loadCommittee(id: number): Promise<void> {
-        await this.requestModels({
-            viewModelCtor: ViewCommittee,
-            ids: [id],
-            fieldset: 'list'
-        });
         this.currentCommitteeObservable = this.committeeRepo.getViewModelObservable(id);
+        this.subscriptions.push(
+            this.currentCommitteeObservable.subscribe(committee => {
+                this.currentCommittee = committee;
+                this.meetingsSubject.next(committee.meetings || []);
+            })
+        );
     }
 
     protected getModelRequest(): SimplifiedModelRequest {
@@ -107,7 +116,7 @@ export class MeetingListComponent extends BaseListViewComponent<ViewOrganisation
                     fieldset: 'list'
                 }
             ],
-            fieldset: []
+            fieldset: 'list'
         };
     }
 }

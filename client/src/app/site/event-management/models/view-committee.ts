@@ -28,5 +28,6 @@ interface ICommitteeRelations {
     forward_to_committees: ViewCommittee[];
     receive_forwardings_from_committees: ViewCommittee[];
     organisation: ViewOrganisation;
+    template_meeting: ViewMeeting;
 }
 export interface ViewCommittee extends Committee, ICommitteeRelations {}

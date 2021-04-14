@@ -1,7 +1,7 @@
 @mixin icon-container($iconSize, $contentSize, $fontWeight) {
     line-height: $iconSize;
 
-    & > mat-icon {
+    & mat-icon {
         font-size: $iconSize;
         width: $iconSize;
         height: $iconSize;
@@ -38,7 +38,13 @@ os-icon-container {
         @include icon-container(34px, 22px, 400);
     }
 
+    &.inline {
+        display: inline-flex;
+        margin-top: 0;
+    }
+
     .content-node {
+        display: inline-flex;
         margin: auto 5px;
         text-overflow: ellipsis;
         overflow: hidden;

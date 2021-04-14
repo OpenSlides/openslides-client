@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSidenav } from '@angular/material/sidenav';
 import { ActivationEnd, NavigationEnd, Router } from '@angular/router';
 
+import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { navItemAnim } from '../shared/animations';
@@ -91,24 +92,13 @@ export class SiteComponent extends BaseComponent implements OnInit {
         overlayService.showSpinner(this.translate.instant('Loading data. Please wait...'));
 
         this.searchform = new FormGroup({ query: new FormControl([]) });
-
-        // detect routing data such as base perm and noInterruption
-        this.router.events
-            .pipe(filter(event => event instanceof ActivationEnd && event.snapshot.children.length === 0))
-            .subscribe((event: ActivationEnd) => {
-                this.routingData = event.snapshot.data as RoutingData;
-
-                // if the current route has no "noInterruption" flag and an update is available, show the update
-                if (this.delayedUpdateAvailable && !this.routingData.noInterruption) {
-                    this.showUpdateNotification();
-                }
-            });
     }
 
     /**
      * Initialize the site component
      */
     public ngOnInit(): void {
+        this.subscriptions.push(...this.getRouterSubscriptions());
         // observe the mainMenuService to receive toggle-requests
         this.mainMenuService.toggleMenuSubject.subscribe((value: void) => this.toggleSideNav());
 
@@ -133,16 +123,6 @@ export class SiteComponent extends BaseComponent implements OnInit {
                 });
             }
         }
-
-        this.router.events.subscribe(event => {
-            // Scroll to top if accessing a page, not via browser history stack
-            if (event instanceof NavigationEnd) {
-                const contentContainer = document.querySelector('.mat-sidenav-content');
-                if (contentContainer) {
-                    contentContainer.scrollTo(0, 0);
-                }
-            }
-        });
 
         // check for updates
         this.updateService.updateObservable.subscribe(() => {
@@ -203,5 +183,30 @@ export class SiteComponent extends BaseComponent implements OnInit {
             event.stopPropagation();
             this.overlayService.showSearch();
         }
+    }
+
+    private getRouterSubscriptions(): Subscription[] {
+        return [
+            // detect routing data such as base perm and noInterruption
+            this.router.events
+                .pipe(filter(event => event instanceof ActivationEnd && event.snapshot.children.length === 0))
+                .subscribe((event: ActivationEnd) => {
+                    this.routingData = event.snapshot.data as RoutingData;
+
+                    // if the current route has no "noInterruption" flag and an update is available, show the update
+                    if (this.delayedUpdateAvailable && !this.routingData.noInterruption) {
+                        this.showUpdateNotification();
+                    }
+                }),
+            this.router.events.subscribe(event => {
+                // Scroll to top if accessing a page, not via browser history stack
+                if (event instanceof NavigationEnd) {
+                    const contentContainer = document.querySelector('.mat-sidenav-content');
+                    if (contentContainer) {
+                        contentContainer.scrollTo(0, 0);
+                    }
+                }
+            })
+        ];
     }
 }

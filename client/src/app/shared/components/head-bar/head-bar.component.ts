@@ -126,7 +126,7 @@ export class HeadBarComponent implements OnInit {
      * Has only an effect if goBack is set to false
      */
     @Input()
-    public prevUrl = '../';
+    public prevUrl = '..';
 
     /**
      * Optional tooltip for the main action
@@ -232,7 +232,8 @@ export class HeadBarComponent implements OnInit {
         } else if (this.routingState.customOrigin && this.routingState.customOrigin !== this.router.url) {
             this.router.navigate([this.routingState.customOrigin], { relativeTo: this.route });
         } else {
-            this.router.navigate([this.prevUrl], { relativeTo: this.route });
+            const relativeToRoute = !!this.route.snapshot.url.length ? this.route : this.route.parent;
+            this.router.navigate([this.prevUrl], { relativeTo: relativeToRoute });
         }
     }
 }

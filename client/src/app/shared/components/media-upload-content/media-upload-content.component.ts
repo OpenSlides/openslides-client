@@ -6,11 +6,7 @@ import { Router } from '@angular/router';
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 import { BehaviorSubject } from 'rxjs';
 
-import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
-import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { ModelSubscription } from 'app/core/core-services/autoupdate.service';
-import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
-import { ModelRequestService } from 'app/core/core-services/model-request.service';
 import { MediafileRepositoryService } from 'app/core/repositories/mediafiles/mediafile-repository.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { toBase64 } from 'app/core/to-base64';
@@ -107,8 +103,7 @@ export class MediaUploadContentComponent extends BaseModelContextComponent imple
         private repo: MediafileRepositoryService,
         private formBuilder: FormBuilder,
         private groupRepo: GroupRepositoryService,
-        private router: Router,
-        private activeMeetingIdService: ActiveMeetingIdService
+        private router: Router
     ) {
         super(componentServiceCollector);
         this.directoryBehaviorSubject = this.repo.getDirectoryBehaviorSubject();
@@ -143,7 +138,7 @@ export class MediaUploadContentComponent extends BaseModelContextComponent imple
 
         this.requestModels({
             viewModelCtor: ViewMeeting,
-            ids: [this.activeMeetingIdService.meetingId],
+            ids: [this.activeMeetingId],
             follow: [{ idField: 'mediafile_ids', fieldset: 'fileCreation' }],
             fieldset: []
         });

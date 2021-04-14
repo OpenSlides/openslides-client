@@ -35,8 +35,49 @@
         </mat-form-field>
 
         <mat-form-field>
+            <mat-label> {{ 'Committee members' | translate }}</mat-label>
+            <os-search-value-selector
+                formControlName="member_ids"
+                [multiple]="true"
+                placeholder="{{ 'Committee members' | translate }}"
+                [inputListValues]="members"
+            ></os-search-value-selector>
+        </mat-form-field>
+
+        <mat-form-field>
             <mat-label>{{ 'Description' | translate }}</mat-label>
             <input matInput formControlName="description" />
         </mat-form-field>
+
+        <ng-container *ngIf="!isCreateView">
+            <mat-form-field>
+                <mat-label>{{ 'Meeting as template' | translate }}</mat-label>
+                <os-search-value-selector
+                    formControlName="template_meeting_id"
+                    [multiple]="false"
+                    [inputListValues]="meetingsObservable"
+                ></os-search-value-selector>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>{{ 'Default meeting' | translate }}</mat-label>
+                <os-search-value-selector
+                    formControlName="default_meeting_id"
+                    [multiple]="false"
+                    [inputListValues]="meetingsObservable"
+                ></os-search-value-selector>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>{{ 'Forward to committees' | translate }}</mat-label>
+                <os-search-repo-selector
+                    formControlName="forward_to_committee_ids"
+                    [multiple]="true"
+                    [repo]="committeeRepo"
+                    [pipeFn]="getPipeFilterFn()"
+                    [showChips]="false"
+                ></os-search-repo-selector>
+            </mat-form-field>
+        </ng-container>
     </form>
 </mat-card>

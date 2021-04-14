@@ -36,7 +36,6 @@ import {
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
-import { CreateMediafile } from 'app/shared/models/mediafiles/create-mediafile';
 import { Mediafile } from 'app/shared/models/mediafiles/mediafile';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
@@ -219,10 +218,8 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
         super.setTitle('Files');
         this.createDataSource();
 
-        // const directoryId = this.route.snapshot.url.length > 0 ? +this.route.snapshot.url[0].path : null;
-        // console.log('this.route.snapshot: ', this.route.snapshot);
-        // const directoryId =
-        // this.changeDirectory(directoryId);
+        const directoryId = this.route.snapshot.url.length > 0 ? +this.route.snapshot.url[0].path : null;
+        this.changeDirectory(directoryId);
     }
 
     public ngOnDestroy(): void {
@@ -296,7 +293,7 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
                     console.log('has newDirectory: ');
                     this.directoryChain = newDirectory.getDirectoryChain();
                     // Update the URL.
-                    this.router.navigate(['mediafiles/' + newDirectory.id]);
+                    this.router.navigate([this.activeMeetingId, 'mediafiles', newDirectory.id]);
                 } else {
                     console.log('directoryId No newDirectory');
                     this.directoryChain = [];
@@ -312,7 +309,7 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
 
     public onMainEvent(): void {
         const path = 'mediafiles/upload/' + (this.directory ? this.directory.id : '');
-        this.router.navigate([path]);
+        this.router.navigate([this.activeMeetingId, 'mediafiles', 'upload', this.directory ? this.directory.id : '']);
     }
 
     /**
@@ -402,11 +399,11 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                const mediafile = new CreateMediafile({
+                const mediafile = {
                     ...this.newDirectoryForm.value,
                     parent_id: this.directory ? this.directory.id : null,
                     is_directory: true
-                });
+                };
                 this.repo.createDirectory(mediafile).catch(this.raiseError);
             }
         });

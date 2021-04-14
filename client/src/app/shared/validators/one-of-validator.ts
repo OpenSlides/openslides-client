@@ -17,9 +17,7 @@ export class OneOfValidator {
         return (control: AbstractControl): ValidationErrors | null => {
             const formControls = keys.map(key => control.get(key));
 
-            const noOneSet = formControls.every(
-                formControl => (formControl && formControl.value === '') || !formControl
-            );
+            const noOneSet = formControls.every(formControl => (formControl && !formControl.value) || !formControl);
 
             return noOneSet ? { noOneSet: true } : null;
         };

@@ -369,7 +369,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
 
         // case: abort creation of a new user
         if (this.newUser && !edit) {
-            this.router.navigate(['./users/']);
+            this.goToAllUsers();
         }
     }
 
@@ -381,7 +381,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
         const content = this.user.full_name;
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(this.user);
-            this.router.navigate(['./users/']);
+            this.goToAllUsers();
         }
     }
 
@@ -389,7 +389,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
      * navigate to the change Password site
      */
     public changePassword(): void {
-        this.router.navigate([`./users/password/${this.user.id}`]);
+        this.router.navigate([this.activeMeetingId, 'users', 'password', this.user.id]);
     }
 
     /**
@@ -428,7 +428,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
             ...this.createVoteDelegationObject(this.personalInfoForm.value)
         };
         await this.repo.create(payload);
-        this.router.navigate(['./users/']);
+        this.goToAllUsers();
     }
 
     private async updateRealUser(): Promise<void> {
@@ -442,7 +442,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
 
     private async createTemporaryUser(): Promise<void> {
         await this.repo.createTemporary(this.personalInfoForm.value);
-        this.router.navigate([`./users/`]);
+        this.goToAllUsers();
     }
 
     private async updateTemporaryUser(): Promise<void> {
@@ -470,5 +470,9 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
                 [this.activeMeetingIdService.meetingId]: payload.vote_delegations_from_ids
             }
         };
+    }
+
+    private goToAllUsers(): void {
+        this.router.navigate([this.activeMeetingId, 'users']);
     }
 }

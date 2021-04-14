@@ -221,6 +221,12 @@ export const RELATIONS: Relation[] = [
         AField: 'default_meeting',
         BField: 'default_meeting_for_committee'
     }),
+    ...makeO2O({
+        AViewModel: ViewCommittee,
+        BViewModel: ViewMeeting,
+        AField: 'template_meeting_id',
+        BField: 'template_meeting_for_committee_id'
+    }),
     ...makeM2M({
         AViewModel: ViewCommittee,
         BViewModel: ViewUser,

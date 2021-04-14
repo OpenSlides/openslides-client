@@ -11,7 +11,7 @@ export class IconContainerComponent {
      */
     @HostBinding('class')
     public get classes(): string {
-        return `${this.size}-container`;
+        return `${this.size}-container ${this.inline ? 'inline' : ''}`;
     }
 
     /**
@@ -25,6 +25,9 @@ export class IconContainerComponent {
      */
     @Input()
     public size: 'small' | 'medium' | 'large' | 'gigantic' = 'medium';
+
+    @Input()
+    public inline = false;
 
     /**
      * Reverse text and icon.

@@ -1,5 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { Component, ElementRef, Input, OnInit, Optional, Self, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, Optional, Self, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, NgControl } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
 
@@ -25,7 +25,7 @@ import { Selectable } from '../../selectable';
     providers: [{ provide: MatFormFieldControl, useExisting: SearchRepoSelectorComponent }],
     encapsulation: ViewEncapsulation.None
 })
-export class SearchRepoSelectorComponent extends BaseSearchValueSelectorComponent implements OnInit {
+export class SearchRepoSelectorComponent extends BaseSearchValueSelectorComponent implements OnInit, OnDestroy {
     @Input()
     public repo: BaseRepository<any, any> & ModelRequestRepository;
 
@@ -60,6 +60,11 @@ export class SearchRepoSelectorComponent extends BaseSearchValueSelectorComponen
 
     public ngOnInit(): void {
         this.init();
+    }
+
+    public ngOnDestroy(): void {
+        super.ngOnDestroy();
+        this.cleanModelSubscription();
     }
 
     public onContainerClick(event: MouseEvent): void {

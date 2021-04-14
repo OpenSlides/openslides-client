@@ -1,7 +1,12 @@
 <os-head-bar
     [customMenu]="true"
+    [hasMainButton]="true"
+    mainButtonIcon="edit"
+    (mainEvent)="setEditMode(!isEditingUser)"
+    [goBack]="true"
     [nav]="false"
-    [editMode]="false"
+    [editMode]="isEditingUser"
+    [isSaveButtonEnabled]="personalInfoForm?.valid"
     (cancelEditEvent)="onCancel()"
     (saveEvent)="onSubmit()"
 >
@@ -15,4 +20,205 @@
     </ng-container>
 </os-head-bar>
 
-<p>member-edit works!</p>
+<div class="member-container">
+    <mat-card
+        class="spacer-bottom-60"
+        (keydown)="onKeyDown($event)"
+        [ngClass]="isEditingUser ? 'os-form-card' : 'os-card'"
+        *ngIf="isAllowed('seeName')"
+    >
+        <ng-container *ngIf="isEditingUser; then editView; else showView"></ng-container>
+    </mat-card>
+</div>
+
+<ng-template #editView>
+    <form [formGroup]="personalInfoForm">
+        <div *ngIf="isAllowed('seeName')">
+            <!-- Title -->
+            <mat-form-field class="form16 distance force-min-with">
+                <input
+                    type="text"
+                    matInput
+                    osAutofocus
+                    placeholder="{{ 'Title' | translate }}"
+                    formControlName="title"
+                />
+            </mat-form-field>
+            <!-- First name -->
+            <mat-form-field class="form37 distance force-min-with">
+                <input type="text" matInput placeholder="{{ 'Given name' | translate }}" formControlName="first_name" />
+            </mat-form-field>
+
+            <!-- Last name -->
+            <mat-form-field class="form37 force-min-with">
+                <input type="text" matInput placeholder="{{ 'Surname' | translate }}" formControlName="last_name" />
+            </mat-form-field>
+        </div>
+
+        <div *ngIf="isAllowed('seePersonal')">
+            <!-- E-Mail -->
+            <mat-form-field class="form70 distance">
+                <input
+                    type="email"
+                    matInput
+                    autocomplete="off"
+                    placeholder="{{ 'Email' | translate }}"
+                    name="email"
+                    formControlName="email"
+                />
+                <mat-error *ngIf="personalInfoForm.get('email').hasError('email')">
+                    {{ 'Please enter a valid email address' | translate }}
+                </mat-error>
+            </mat-form-field>
+
+            <!-- Gender -->
+            <mat-form-field class="form25 force-min-with">
+                <mat-select placeholder="{{ 'Gender' | translate }}" formControlName="gender">
+                    <mat-option value="">-</mat-option>
+                    <mat-option *ngFor="let gender of genders" [value]="gender">{{ gender | translate }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <ng-container *ngIf="!user || (user && !user.isTemporary)">
+            <div>
+                <!-- Strucuture Level -->
+                <mat-form-field
+                    class="distance"
+                    [ngClass]="{
+                        form37: true
+                    }"
+                >
+                    <input
+                        type="text"
+                        matInput
+                        placeholder="{{ 'Default structure level' | translate }}"
+                        formControlName="default_structure_level"
+                    />
+                </mat-form-field>
+
+                <!-- Participant Number -->
+                <mat-form-field
+                    [ngClass]="{
+                        distance: true,
+                        form37: true
+                    }"
+                >
+                    <input
+                        type="text"
+                        matInput
+                        placeholder="{{ 'Default number' | translate }}"
+                        formControlName="default_number"
+                    />
+                </mat-form-field>
+
+                <!-- Vote weight -->
+                <mat-form-field class="form16 force-min-with">
+                    <!-- TODO Input type should be number with limited decimal spaces -->
+                    <input
+                        type="number"
+                        matInput
+                        placeholder="{{ 'Default vote weight' | translate }}"
+                        formControlName="default_vote_weight"
+                    />
+                </mat-form-field>
+            </div>
+
+            <div>
+                <mat-form-field>
+                    <os-search-repo-selector
+                        formControlName="committee_as_member_ids"
+                        [multiple]="true"
+                        placeholder="{{ 'Member in committees' | translate }}"
+                        [repo]="committeeRepo"
+                    ></os-search-repo-selector>
+                </mat-form-field>
+            </div>
+        </ng-container>
+
+        <div *ngIf="isAllowed('manage')">
+            <!-- Initial Password -->
+            <mat-form-field>
+                <input
+                    matInput
+                    autocomplete="off"
+                    placeholder="{{ 'Initial password' | translate }}"
+                    formControlName="default_password"
+                />
+                <mat-hint align="end">Generate</mat-hint>
+                <button
+                    type="button"
+                    mat-button
+                    matSuffix
+                    mat-icon-button
+                    [disabled]="!isNewUser"
+                    (click)="setRandomPassword()"
+                >
+                    <mat-icon>sync_problem</mat-icon>
+                </button>
+            </mat-form-field>
+        </div>
+
+        <div *ngIf="isAllowed('seePersonal')">
+            <!-- username -->
+            <mat-form-field>
+                <input type="text" matInput placeholder="{{ 'Username' | translate }}" formControlName="username" />
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-checkbox formControlName="is_active">{{ 'Is active' | translate }}</mat-checkbox>
+            <mat-checkbox formControlName="is_physical_person">{{ 'Is a physical person' | translate }}</mat-checkbox>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #showView>
+    <ng-container *ngIf="user">
+        <!-- User name -->
+        <div *ngIf="isAllowed('seeName')">
+            <h4>{{ 'Name' | translate }}</h4>
+            <span class="state-icons">
+                <span>{{ user.short_name }}</span>
+                <mat-icon *ngIf="!user.is_active && isAllowed('seeExtra')" matTooltip="{{ 'Inactive' | translate }}">
+                    block
+                </mat-icon>
+            </span>
+        </div>
+
+        <!-- Mail -->
+        <div *ngIf="isAllowed('seePersonal')">
+            <div *ngIf="user.email">
+                <h4>{{ 'Email' | translate }}</h4>
+                <span>{{ user.email }}</span>
+            </div>
+        </div>
+
+        <!-- Gender -->
+        <div *ngIf="user.gender">
+            <h4>{{ 'Gender' | translate }}</h4>
+            <span>{{ user.gender | translate }}</span>
+        </div>
+
+        <div *ngIf="isAllowed('manage')">
+            <!-- Username -->
+            <div *ngIf="user.username">
+                <h4>{{ 'Username' | translate }}</h4>
+                <span>{{ user.username }}</span>
+            </div>
+
+            <!-- Initial Password -->
+            <div *ngIf="user.default_password">
+                <h4>{{ 'Initial password' | translate }}</h4>
+                <span>{{ user.default_password }}</span>
+            </div>
+        </div>
+
+        <div *ngIf="isAllowed('seePersonal') && user.isLastEmailSend">
+            <div>
+                <h4>{{ 'Last email sent' | translate }}</h4>
+                <span>{{ getEmailSentTime() }}</span>
+            </div>
+        </div>
+    </ng-container>
+</ng-template>

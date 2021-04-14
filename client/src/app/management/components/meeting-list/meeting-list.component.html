@@ -28,7 +28,7 @@
 </os-head-bar>
 
 <os-list-view-table
-    [listObservableProvider]="meetingRepo"
+    [listObservable]="meetingsObservable"
     [columns]="tableColumnDefinition"
     [alwaysShowMenu]="true"
     [allowProjector]="false"

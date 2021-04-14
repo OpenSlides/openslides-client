@@ -225,7 +225,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
     protected getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [this.activeMeetingIdService.meetingId], // TODO
+            ids: [this.activeMeetingId],
             follow: [
                 {
                     idField: 'user_ids',

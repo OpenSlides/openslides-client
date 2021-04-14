@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { UserAction } from 'app/core/actions/user-action';
 import {
     DEFAULT_FIELDSET,
@@ -8,7 +11,6 @@ import {
 } from 'app/core/core-services/model-request-builder.service';
 import { PreventedInDemo } from 'app/core/definitions/custom-errors';
 import { Id } from 'app/core/definitions/key-types';
-import { NewEntry } from 'app/core/ui-services/base-import.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { UserSortProperty } from 'app/shared/models/event-management/meeting';
@@ -122,7 +124,8 @@ export class UserRepositoryService
         return {
             shortName: SHORT_NAME_FIELDS,
             list: listFields,
-            [DEFAULT_FIELDSET]: listFields.concat(['about_me', 'comment', 'default_password'])
+            [DEFAULT_FIELDSET]: listFields.concat(['about_me', 'comment', 'default_password']),
+            orga: listFields.concat(['committee_as_manager_ids', 'committee_as_member_ids'])
         };
     }
 
@@ -160,6 +163,10 @@ export class UserRepositoryService
         } else {
             return this.deleteNonTemporary(user);
         }
+    }
+
+    public getMemberListObservable(): Observable<ViewUser[]> {
+        return this.getViewModelListObservable().pipe(map(users => users.filter(user => !user.isTemporary)));
     }
 
     private deleteNonTemporary(viewUser: ViewUser): Promise<void> {
@@ -236,20 +243,26 @@ export class UserRepositoryService
     }
 
     private getPartialUserPayload(partialUser: any): Partial<UserAction.UpdatePayload> {
-        return {
+        let partialPayload: Partial<UserAction.UpdatePayload> = {
             username: partialUser.username,
             ...this.getPartialCommonUserPayload(partialUser),
-            group_$_ids: { [this.activeMeetingId]: partialUser.group_ids },
-            comment_$: { [this.activeMeetingId]: partialUser.comment as string },
-            number_$: { [this.activeMeetingId]: partialUser.number as string },
-            structure_level_$: { [this.activeMeetingId]: partialUser.structure_level as string },
-            about_me_$: { [this.activeMeetingId]: partialUser.about_me as string },
             role_id: partialUser.role_id,
             guest_meeting_ids: partialUser.guest_meeting_ids,
             committee_as_member_ids: partialUser.committee_as_member_ids,
-            committee_as_manager_ids: partialUser.committee_as_manager_ids,
-            vote_delegations_$_from_ids: { [this.activeMeetingId]: partialUser.vote_delegations_from_ids }
+            committee_as_manager_ids: partialUser.committee_as_manager_ids
         };
+        if (this.activeMeetingId) {
+            partialPayload = {
+                ...partialPayload,
+                group_$_ids: { [this.activeMeetingId]: partialUser.group_ids },
+                comment_$: { [this.activeMeetingId]: partialUser.comment as string },
+                number_$: { [this.activeMeetingId]: partialUser.number as string },
+                structure_level_$: { [this.activeMeetingId]: partialUser.structure_level as string },
+                about_me_$: { [this.activeMeetingId]: partialUser.about_me as string },
+                vote_delegations_$_from_ids: { [this.activeMeetingId]: partialUser.vote_delegations_from_ids }
+            };
+        }
+        return partialPayload;
     }
 
     private deleteTemporary(viewUser: ViewUser): Promise<void> {
@@ -368,7 +381,7 @@ export class UserRepositoryService
         viewModel.getEnsuredActiveMeetingId = () => {
             const meetingId = this.activeMeetingIdService.meetingId;
             if (!meetingId) {
-                throw new Error('No active meeting selected!');
+                // throw new Error('No active meeting selected!'); // TODO: What is with "real" users?
             }
             return meetingId;
         };
