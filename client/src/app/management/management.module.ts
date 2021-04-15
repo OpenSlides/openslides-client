@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
+import { AccountDialogComponent } from './components/account-dialog/account-dialog.component';
 import { SharedModule } from 'app/shared/shared.module';
 import { CommitteeEditComponent } from './components/committee-edit/committee-edit.component';
 import { CommitteeListComponent } from './components/committee-list/committee-list.component';
@@ -26,7 +27,8 @@ import { OrgaSettingsComponent } from './components/orga-settings/orga-settings.
         CommitteeEditComponent,
         MemberEditComponent,
         ManagementNavigationComponent,
-        OrgaSettingsComponent
+        OrgaSettingsComponent,
+        AccountDialogComponent
     ]
 })
 export class ManagementModule {}

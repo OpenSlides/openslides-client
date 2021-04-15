@@ -102,6 +102,7 @@ import { SearchRepoSelectorComponent } from './components/search-selector/search
 import { MaterialDesignModule } from './libraries/material-design.module';
 import { SwipeDirective } from './directives/swipe.directive';
 import { ListenEditingDirective } from './directives/listen-editing.directive';
+import { ChangePasswordComponent } from './components/change-password/change-password.component';
 
 const declarations = [
     PermsDirective,
@@ -171,7 +172,8 @@ const declarations = [
     OnlyNumberDirective,
     SearchRepoSelectorComponent,
     SwipeDirective,
-    ListenEditingDirective
+    ListenEditingDirective,
+    ChangePasswordComponent
 ];
 
 const sharedModules = [

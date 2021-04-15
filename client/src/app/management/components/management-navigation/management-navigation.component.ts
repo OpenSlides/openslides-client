@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 
+import { AccountDialogComponent } from '../account-dialog/account-dialog.component';
 import { AuthService } from 'app/core/core-services/auth.service';
 import { MainMenuEntry } from 'app/core/core-services/main-menu.service';
 import { OverlayService } from 'app/core/ui-services/overlay.service';
+import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
 
 @Component({
     selector: 'os-management-navigation',
@@ -41,7 +44,17 @@ export class ManagementNavigationComponent {
         }
     ];
 
-    public constructor(private authService: AuthService, private overlayService: OverlayService) {}
+    public constructor(
+        private authService: AuthService,
+        private overlayService: OverlayService,
+        private dialog: MatDialog
+    ) {}
+
+    public openAccountDialog(): void {
+        this.dialog.open(AccountDialogComponent, {
+            ...largeDialogSettings
+        });
+    }
 
     public logout(): void {
         this.authService.logout();

@@ -6,8 +6,8 @@ import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { PasswordForm } from 'app/shared/components/change-password/change-password.component';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
-import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewUser } from '../../models/view-user';
 
 /**
@@ -19,6 +19,10 @@ import { ViewUser } from '../../models/view-user';
     styleUrls: ['./password.component.scss']
 })
 export class PasswordComponent extends BaseModelContextComponent implements OnInit {
+    public get isValid(): boolean {
+        return this.canManage && !this.ownPage ? this.adminPasswordForm.valid : this.isUserPasswordValid;
+    }
+
     /**
      * the user that is currently worked own
      */
@@ -40,9 +44,14 @@ export class PasswordComponent extends BaseModelContextComponent implements OnIn
     public adminPasswordForm: FormGroup;
 
     /**
-     * formGroup for the normal user
+     * Value of the formGroup for a user.
      */
-    public userPasswordForm: FormGroup;
+    public userPasswordForm: PasswordForm;
+
+    /**
+     * If the value of a new password for a user is valid.
+     */
+    public isUserPasswordValid = false;
 
     /**
      * if all password inputs is hidden
@@ -95,12 +104,6 @@ export class PasswordComponent extends BaseModelContextComponent implements OnIn
         this.adminPasswordForm = this.formBuilder.group({
             newPassword: ['', Validators.required]
         });
-
-        this.userPasswordForm = this.formBuilder.group({
-            newPassword1: ['', Validators.required],
-            newPassword2: ['', Validators.required],
-            oldPassword: ['', Validators.required]
-        });
     }
 
     private updateUser(): void {
@@ -131,21 +134,15 @@ export class PasswordComponent extends BaseModelContextComponent implements OnIn
                 }
                 const password = this.adminPasswordForm.value.newPassword;
                 await this.repo.setPassword(this.user, password);
-                this.router.navigate([`./users/${this.user.id}`]);
+                this.router.navigate([this.activeMeetingId, `/users/${this.user.id}`]);
             } else if (this.ownPage) {
-                if (!this.userPasswordForm.valid) {
+                if (!this.isUserPasswordValid) {
                     return;
                 }
-                const oldPassword = this.userPasswordForm.value.oldPassword;
-                const newPassword = this.userPasswordForm.value.newPassword1;
-                const newPasswordConfirmation = this.userPasswordForm.value.newPassword2;
 
-                if (newPassword !== newPasswordConfirmation) {
-                    this.raiseError(this.translate.instant('Error: The new passwords do not match.'));
-                } else {
-                    await this.repo.setPasswordSelf(this.user, oldPassword, newPassword);
-                    this.router.navigate(['./']);
-                }
+                const { oldPassword, newPassword }: PasswordForm = this.userPasswordForm;
+                await this.repo.setPasswordSelf(this.user, oldPassword, newPassword);
+                this.router.navigate(['./']);
             }
         } catch (e) {
             this.raiseError(e);
@@ -171,10 +168,6 @@ export class PasswordComponent extends BaseModelContextComponent implements OnIn
         const randomPassword = this.repo.getRandomPassword();
         this.adminPasswordForm.patchValue({
             newPassword: randomPassword
-        });
-        this.userPasswordForm.patchValue({
-            newPassword1: randomPassword,
-            newPassword2: randomPassword
         });
         this.hidePassword = false;
     }
