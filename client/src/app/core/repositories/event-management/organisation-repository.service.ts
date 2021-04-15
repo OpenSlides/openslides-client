@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 
+import { OrganizationAction } from 'app/core/actions/organization-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Organisation, OrganisationSetting } from 'app/shared/models/event-management/organisation';
 import { ViewOrganisation } from 'app/site/event-management/models/view-organisation';
@@ -24,13 +25,14 @@ export class OrganisationRepositoryService extends BaseRepository<ViewOrganisati
 
     public getFieldsets(): Fieldsets<Organisation> {
         const settingsFieldset: (keyof OrganisationSetting)[] = [
-            'custom_translations',
-            'enable_electronic_voting',
+            'name',
+            'description',
             'legal_notice',
-            'login_text',
             'privacy_policy',
-            'reset_password_verbose_errors',
-            'theme'
+            'login_text',
+            'theme',
+            'custom_translations',
+            'reset_password_verbose_errors'
         ];
         const detailFieldset: (keyof Organisation)[] = [
             'committee_ids',
@@ -43,5 +45,13 @@ export class OrganisationRepositoryService extends BaseRepository<ViewOrganisati
             [DEFAULT_FIELDSET]: detailFieldset,
             settings: settingsFieldset
         };
+    }
+
+    public update(update: OrganizationAction.UpdatePayload): Promise<void> {
+        /**
+         * I suppose the orga id is always 1
+         */
+        update.id = 1;
+        return this.sendActionToBackend(OrganizationAction.UPDATE, update);
     }
 }

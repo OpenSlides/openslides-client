@@ -10,6 +10,7 @@ import { MeetingEditComponent } from './components/meeting-edit/meeting-edit.com
 import { MeetingListComponent } from './components/meeting-list/meeting-list.component';
 import { MemberEditComponent } from './components/member-edit/member-edit.component';
 import { MemberListComponent } from './components/member-list/member-list.component';
+import { OrgaSettingsComponent } from './components/orga-settings/orga-settings.component';
 // import { OrganisationListComponent } from './components/organisation-list/organisation-list.component';
 
 const routes: Route[] = [
@@ -68,6 +69,10 @@ const routes: Route[] = [
                         ]
                     }
                 ]
+            },
+            {
+                path: 'settings',
+                component: OrgaSettingsComponent
             }
         ],
         canActivateChild: [AuthGuard]

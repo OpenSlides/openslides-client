@@ -2,6 +2,8 @@ import { Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
 
 export interface OrganisationSetting {
+    name: string;
+    description: string;
     legal_notice: string;
     privacy_policy: string;
     login_text: string;

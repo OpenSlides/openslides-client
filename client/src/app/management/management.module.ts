@@ -12,6 +12,7 @@ import { MeetingEditComponent } from './components/meeting-edit/meeting-edit.com
 import { MeetingListComponent } from './components/meeting-list/meeting-list.component';
 import { MemberEditComponent } from './components/member-edit/member-edit.component';
 import { MemberListComponent } from './components/member-list/member-list.component';
+import { OrgaSettingsComponent } from './components/orga-settings/orga-settings.component';
 
 @NgModule({
     imports: [CommonModule, SharedModule, ManagementRoutingModule],
@@ -24,7 +25,8 @@ import { MemberListComponent } from './components/member-list/member-list.compon
         MeetingEditComponent,
         CommitteeEditComponent,
         MemberEditComponent,
-        ManagementNavigationComponent
+        ManagementNavigationComponent,
+        OrgaSettingsComponent
     ]
 })
 export class ManagementModule {}

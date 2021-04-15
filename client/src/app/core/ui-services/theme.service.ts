@@ -1,6 +1,44 @@
 import { Injectable } from '@angular/core';
 
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+
 import { OrganisationSettingsService } from './organisation-settings.service';
+
+interface ThemeDefinition {
+    name: string;
+    class: string;
+}
+
+export const Themes: ThemeDefinition[] = [
+    {
+        name: _('OpenSlides Default'),
+        class: 'openslides-default-light-theme'
+    },
+    {
+        name: _('OpenSlides Dark'),
+        class: 'openslides-default-dark-theme'
+    },
+    {
+        name: _('OpenSlides Red'),
+        class: 'openslides-red-light-theme'
+    },
+    {
+        name: _('OpenSlides Red Dark'),
+        class: 'openslides-red-dark-theme'
+    },
+    {
+        name: _('OpenSlides Green'),
+        class: 'openslides-green-light-theme'
+    },
+    {
+        name: _('OpenSlides Green Dark'),
+        class: 'openslides-green-dark-theme'
+    },
+    {
+        name: _('OpenSlides Solarized'),
+        class: 'openslides-solarized-dark-theme'
+    }
+];
 
 /**
  * Service to set the theme for OpenSlides.
@@ -12,7 +50,7 @@ export class ThemeService {
     /**
      * Constant, that describes the default theme class.
      */
-    public static DEFAULT_THEME = 'openslides-default-light-theme';
+    public static DEFAULT_THEME = Themes[0].class;
 
     /**
      * Holds the current theme as member.

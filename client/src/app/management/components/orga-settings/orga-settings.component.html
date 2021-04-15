@@ -1,0 +1,51 @@
+<os-head-bar
+    [customMenu]="true"
+    [isSearchEnabled]="false"
+    [editMode]="hasEdits"
+    [isSaveButtonEnabled]="orgaSettingsForm?.valid"
+    (cancelEditEvent)="revertChanges()"
+    (saveEvent)="onSubmit()"
+>
+    <!-- Title -->
+    <div class="title-slot">
+        <h2>{{ pageTitle | translate }}</h2>
+    </div>
+
+    <ng-container class="custom-menu-slot">
+        <os-management-navigation></os-management-navigation>
+    </ng-container>
+</os-head-bar>
+
+<mat-card class="os-card spacer-bottom-60" *ngIf="orgaSettingsForm">
+    <form class="orga-settings-form" [formGroup]="orgaSettingsForm" (ngSubmit)="onSubmit()">
+        <mat-form-field>
+            <mat-label>{{ 'Name' | translate }}</mat-label>
+            <input matInput formControlName="name" />
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>{{ 'Description' | translate }}</mat-label>
+            <input matInput formControlName="description" />
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>{{ 'Login Text' | translate }}</mat-label>
+            <input matInput formControlName="login_text" />
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>{{ 'Theme' | translate }}</mat-label>
+            <mat-select formControlName="theme">
+                <mat-option *ngFor="let theme of themes" [value]="theme.class">
+                    {{ theme.name | translate }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-label>{{ 'Legal Notice' | translate }}</mat-label>
+        <editor formControlName="legal_notice" [init]="tinyMceSettings"></editor>
+
+        <mat-label>{{ 'Privacy Policy' | translate }}</mat-label>
+        <editor formControlName="privacy_policy" [init]="tinyMceSettings"></editor>
+    </form>
+</mat-card>
