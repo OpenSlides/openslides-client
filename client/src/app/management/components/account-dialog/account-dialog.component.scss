@@ -1,0 +1,21 @@
+.account-dialog-container {
+    min-height: 400px;
+    display: flex;
+    flex-direction: row;
+
+    .account-dialog-menu-items {
+        flex: 1;
+
+        mat-list-item {
+            cursor: pointer;
+        }
+    }
+
+    .account-dialog-content {
+        flex: 3;
+
+        .content-wrapper {
+            padding: 24px;
+        }
+    }
+}
