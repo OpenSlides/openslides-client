@@ -21,6 +21,7 @@ export type SettingsType =
     | 'integer'
     | 'boolean'
     | 'choice'
+    | 'date'
     | 'datetime'
     | 'translations'
     | 'groups';
@@ -97,14 +98,6 @@ export const meetingSettings: SettingsGroup[] = [
                         validators: [Validators.maxLength(100)]
                     },
                     {
-                        key: 'start_time',
-                        label: 'Event start date'
-                    },
-                    {
-                        key: 'end_time',
-                        label: 'Event end date'
-                    },
-                    {
                         key: 'location',
                         label: 'Event location'
                     }
@@ -159,15 +152,6 @@ export const meetingSettings: SettingsGroup[] = [
             {
                 label: 'System',
                 settings: [
-                    {
-                        key: 'url_name',
-                        label: 'URL name'
-                    },
-                    {
-                        key: 'is_template',
-                        label: 'Use this as a template for other meetings',
-                        type: 'boolean'
-                    },
                     {
                         key: 'enable_anonymous',
                         label: 'Allow access for anonymous guest users',
@@ -240,14 +224,14 @@ export const meetingSettings: SettingsGroup[] = [
                     {
                         key: 'start_time',
                         label: 'Begin of event',
-                        type: 'datetime',
-                        helpText: 'Input format: DD.MM.YYYY HH:MM'
+                        type: 'date',
+                        helpText: 'Input format: DD.MM.YYYY'
                     },
                     {
                         key: 'end_time', // not in code anymore
                         label: 'End of event',
-                        type: 'datetime',
-                        helpText: 'Input format: DD.MM.YYYY HH:MM'
+                        type: 'date',
+                        helpText: 'Input format: DD.MM.YYYY'
                     },
                     {
                         key: 'agenda_show_subtitles',

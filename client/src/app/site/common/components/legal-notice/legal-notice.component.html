@@ -1,58 +1,10 @@
-<os-head-bar
-    [nav]="false"
-    [goBack]="true"
-    [editMode]="isEditing"
-    [hasMainButton]="canManage()"
-    [mainButtonIcon]="'edit'"
-    [mainActionTooltip]="'Edit' | translate"
-    (cancelEditEvent)="isEditing = !isEditing"
-    (mainEvent)="isEditing = !isEditing"
-    (saveEvent)="saveChanges()"
->
+<os-head-bar [nav]="false" [goBack]="true">
     <div class="title-slot">
         <h2>{{ 'Legal notice' | translate }}</h2>
     </div>
 </os-head-bar>
 
-<os-legal-notice-content
-    [canBeEdited]="true"
-    [isEditing]="isEditing"
-    (update)="legalNotice = $event"
-></os-legal-notice-content>
-
-<mat-card class="os-card">
-    <div>
-        <button type="button" mat-button (click)="resetCache()">
-            <span>{{ 'Reset cache' | translate }}</span>
-        </button>
-    </div>
-
-    <div>
-        <button type="button" mat-button (click)="checkForUpdate()">
-            <span>{{ 'Check for updates' | translate }}</span>
-        </button>
-    </div>
-
-    <div>
-        <button type="button" mat-button (click)="showDevTools = !showDevTools">
-            <span>{{ 'Show devtools' | translate }}</span>
-        </button>
-    </div>
-
-    <mat-card class="os-card" *ngIf="showDevTools">
-        <div>
-            <button type="button" mat-button (click)="printDS()">
-                <span>Print DS</span>
-            </button>
-        </div>
-
-        <div>
-            <button type="button" mat-button (click)="getThisComponent()">
-                <span>Get this component</span>
-            </button>
-        </div>
-    </mat-card>
-</mat-card>
+<os-legal-notice-content></os-legal-notice-content>
 
 <mat-card class="os-card" *osPerms="permission.usersCanManage">
     <h2>{{ 'Statistics' | translate }}</h2>
@@ -64,14 +16,4 @@
         <h3>{{ 'Requests to speak' | translate }}</h3>
         <os-user-statistics></os-user-statistics>
     </div>
-</mat-card>
-
-<mat-card class="os-card spacer-bottom-60">
-    <button mat-button (click)="doAuthenticate()">Authenticate</button>
-    <button mat-button (click)="testCreateTopic()">Test: create topic</button>
-    <button mat-button (click)="testCreateTopicWithExpiredToken()">Test: create topic with expired token</button>
-    <button mat-button (click)="apiAuthRequestWithTokenCookie()">API Hello World</button>
-    <button mat-button (click)="apiAuthRequestWithCookie()">API Request Only Cookie</button>
-    <button mat-button (click)="apiAuthRequestWithExpiredToken()">API Request with expired Token</button>
-    <button mat-button (click)="apiAuthRequestWithInvalidToken()">API Request with invalid Token</button>
 </mat-card>
