@@ -44,12 +44,12 @@ export class ViewMeeting extends BaseViewModel<Meeting> {
         return this._model;
     }
 
-    public get startDate(): Date {
-        return new Date(this.start_time * 1000);
+    public get startDate(): Date | undefined {
+        return this.start_time ? new Date(this.start_time * 1000) : undefined;
     }
 
-    public get endDate(): Date {
-        return new Date(this.end_time * 1000);
+    public get endDate(): Date | undefined {
+        return this.end_time ? new Date(this.end_time * 1000) : undefined;
     }
 
     public get userAmount(): number {
