@@ -42,7 +42,18 @@
         <div>
             {{ name }}
             <div class="subtitle">
-                {{ meeting.start_time | localizedDate: 'll' }} - {{ meeting.end_time | localizedDate: 'll' }}
+                <ng-container *ngIf="meeting.start_time === meeting.end_time">
+                    <span>{{ meeting.start_time | localizedDate: 'll' }}</span>
+                </ng-container>
+                <ng-container *ngIf="meeting.start_time !== meeting.end_time">
+                    <span *ngIf="meeting.start_time">
+                        {{ meeting.start_time | localizedDate: 'll' }}
+                    </span>
+                    <span *ngIf="meeting.start_time && meeting.end_time"> &nbsp; - &nbsp; </span>
+                    <span *ngIf="meeting.end_time">
+                        {{ meeting.end_time | localizedDate: 'll' }}
+                    </span>
+                </ng-container>
             </div>
         </div>
     </div>
