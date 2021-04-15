@@ -390,7 +390,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
             this.editAssignment = true;
         }
         if (!newMode && this.newAssignment) {
-            this.router.navigate(['./assignments/']);
+            this.router.navigate([this.activeMeetingId, 'assignments']);
         }
         if (!newMode) {
             this.editAssignment = false;
@@ -512,7 +512,9 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
     public async onDeleteAssignmentButton(): Promise<void> {
         const title = this.translate.instant('Are you sure you want to delete this election?');
         if (await this.promptService.open(title, this.assignment.getTitle())) {
-            this.assignmentRepo.delete(this.assignment).then(() => this.router.navigate(['../']));
+            this.assignmentRepo
+                .delete(this.assignment)
+                .then(() => this.router.navigate([this.activeMeetingId, 'assignments']));
         }
     }
 
@@ -537,7 +539,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
     public async createAssignment(): Promise<void> {
         try {
             const response = await this.assignmentRepo.create(this.assignmentForm.value);
-            this.router.navigate([`./assignments/${response.id}`]);
+            this.router.navigate([this.activeMeetingId, 'assignments', response.id]);
         } catch (e) {
             this.raiseError(e);
         }
