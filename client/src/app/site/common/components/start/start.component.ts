@@ -1,19 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+import { MeetingAction } from 'app/core/actions/meeting-action';
+import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
+import { MeetingRepositoryService } from 'app/core/repositories/event-management/meeting-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { BaseComponent } from 'app/site/base/components/base.component';
-
-/**
- * Interface describes the keys for the fields at start-component.
- */
-interface IStartContent {
-    welcome_title: string;
-    welcome_text: string;
-}
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 
 /**
  * The start component. Greeting page for OpenSlides
@@ -23,7 +20,7 @@ interface IStartContent {
     templateUrl: './start.component.html',
     styleUrls: ['./start.component.scss']
 })
-export class StartComponent extends BaseComponent implements OnInit {
+export class StartComponent extends BaseModelContextComponent implements OnInit {
     /**
      * Whether the user is editing the content.
      */
@@ -34,10 +31,12 @@ export class StartComponent extends BaseComponent implements OnInit {
      */
     public startForm: FormGroup;
 
+    private meeting: ViewMeeting;
+
     /**
      * Holding the values for the content.
      */
-    public startContent: IStartContent = {
+    public startContent: Partial<MeetingAction.OptionalUpdatePayload> = {
         welcome_title: '',
         welcome_text: ''
     };
@@ -45,6 +44,8 @@ export class StartComponent extends BaseComponent implements OnInit {
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private meetingSettingsService: MeetingSettingsService,
+        private activeMeetingService: ActiveMeetingService,
+        private meetingRepositoryService: MeetingRepositoryService,
         private formBuilder: FormBuilder,
         private operator: OperatorService
     ) {
@@ -53,6 +54,19 @@ export class StartComponent extends BaseComponent implements OnInit {
             welcome_title: ['', Validators.required],
             welcome_text: ''
         });
+
+        // set the welcome title
+        this.subscriptions.push(
+            this.meetingSettingsService.get('welcome_title').subscribe(welcomeTitle => {
+                this.startContent.welcome_title = welcomeTitle;
+            }),
+            this.meetingSettingsService.get('welcome_text').subscribe(welcomeText => {
+                this.startContent.welcome_text = this.translate.instant(welcomeText);
+            }),
+            this.activeMeetingService.meetingObservable.subscribe(meeting => {
+                this.meeting = meeting;
+            })
+        );
     }
 
     /**
@@ -62,19 +76,15 @@ export class StartComponent extends BaseComponent implements OnInit {
      */
     public ngOnInit(): void {
         super.setTitle('Home');
+        this.requestUpdates();
+    }
 
-        // set the welcome title
-        this.subscriptions.push(
-            this.meetingSettingsService.get('welcome_title').subscribe(welcomeTitle => {
-                console.log('welcome title: ', welcomeTitle);
-                this.startContent.welcome_title = welcomeTitle;
-            }),
-
-            // set the welcome text
-            this.meetingSettingsService.get('welcome_text').subscribe(welcomeText => {
-                this.startContent.welcome_text = this.translate.instant(welcomeText);
-            })
-        );
+    private requestUpdates(): void {
+        this.requestModels({
+            viewModelCtor: ViewMeeting,
+            ids: [this.activeMeetingService.meetingId],
+            fieldset: 'startPage'
+        });
     }
 
     /**
@@ -91,15 +101,12 @@ export class StartComponent extends BaseComponent implements OnInit {
      * Saves changes and updates the content.
      */
     public saveChanges(): void {
-        /*this.configRepo
-            .bulkUpdate(
-                Object.keys(this.startForm.controls).map(control => ({
-                    key: control,
-                    value: this.startForm.value[control]
-                }))
-            )
-            .then(() => (this.isEditing = !this.isEditing), this.raiseError);*/
-        throw new Error('TODO');
+        this.meetingRepositoryService
+            .update(this.startForm.value as MeetingAction.OptionalUpdatePayload, this.meeting)
+            .then(() => {
+                this.isEditing = false;
+            })
+            .catch(this.raiseError);
     }
 
     /**

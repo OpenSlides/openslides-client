@@ -44,13 +44,15 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             'is_template'
         ]);
         const dashboardFields: (keyof Meeting)[] = listFields.concat('location');
+        const startPageFields: (keyof Meeting)[] = ['welcome_title', 'welcome_text'];
 
         return {
             [DEFAULT_FIELDSET]: nameFields,
             list: listFields,
             edit: editFields,
             dashboard: dashboardFields,
-            settings: this.meetingSettingsDefinitionProvider.getSettingsKeys()
+            settings: this.meetingSettingsDefinitionProvider.getSettingsKeys(),
+            startPage: startPageFields
         };
     }
 

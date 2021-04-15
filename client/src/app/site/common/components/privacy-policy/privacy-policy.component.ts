@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 
-import { OperatorService } from 'app/core/core-services/operator.service';
-import { Permission } from 'app/core/core-services/permission';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';
 
@@ -11,45 +9,11 @@ import { BaseComponent } from 'app/site/base/components/base.component';
     styleUrls: ['./privacy-policy.component.scss']
 })
 export class PrivacyPolicyComponent extends BaseComponent implements OnInit {
-    /**
-     * Whether the component is in editing-mode.
-     */
-    public isEditing = false;
-
-    /**
-     * Holds the current privacy-policy.
-     */
-    public privacyProlicy = '';
-
-    /**
-     * Constructor.
-     *
-     * @param titleService
-     * @param translate
-     * @param configRepo
-     */
-    public constructor(componentServiceCollector: ComponentServiceCollector, private operator: OperatorService) {
+    public constructor(componentServiceCollector: ComponentServiceCollector) {
         super(componentServiceCollector);
     }
 
     public ngOnInit(): void {
-        super.setTitle(this.translate.instant('Privacy policy'));
-    }
-
-    /**
-     * Saves changes.
-     */
-    public saveChanges(): void {
-        /*this.configRepo
-            .bulkUpdate([{ key: 'general_event_privacy_policy', value: this.privacyProlicy }])
-            .then(() => (this.isEditing = !this.isEditing), this.raiseError);*/
-        throw new Error('TODO');
-    }
-
-    /**
-     * Returns, if the current user has the necessary permissions.
-     */
-    public canManage(): boolean {
-        return this.operator.hasPerms(Permission.meetingCanManageSettings);
+        super.setTitle('Privacy policy');
     }
 }

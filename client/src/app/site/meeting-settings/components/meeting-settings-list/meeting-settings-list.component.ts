@@ -66,17 +66,20 @@ export class MeetingSettingsListComponent
     public ngOnInit(): void {
         super.ngOnInit();
         const settings = this.translate.instant('Settings');
-        this.route.params.subscribe(params => {
-            if (params.group) {
-                this.settingsGroup = this.meetingSettingsDefinitionProvider.getSettingsGroup(params.group);
-                const groupName = this.translate.instant(this.settingsGroup.label);
-                super.setTitle(`${settings} - ${groupName}`);
-                this.cd.markForCheck();
-            }
-        });
-        this.activeMeetingService.meetingObservable.subscribe(meeting => {
-            this.meeting = meeting;
-        });
+
+        this.subscriptions.push(
+            this.route.params.subscribe(params => {
+                if (params.group) {
+                    this.settingsGroup = this.meetingSettingsDefinitionProvider.getSettingsGroup(params.group);
+                    const groupName = this.translate.instant(this.settingsGroup.label);
+                    super.setTitle(`${settings} - ${groupName}`);
+                    this.cd.markForCheck();
+                }
+            }),
+            this.activeMeetingService.meetingObservable.subscribe(meeting => {
+                this.meeting = meeting;
+            })
+        );
     }
 
     /**

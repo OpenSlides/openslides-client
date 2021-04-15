@@ -27,7 +27,10 @@
                 <ng-template #select ngProjectAs="mat-select">
                     <mat-select formControlName="value" [errorStateMatcher]="matcher">
                         <ng-container *ngIf="setting.choices">
-                            <mat-option *ngFor="let choice of setting.choices | keyvalue: keepEntryOrder" [value]="choice.value">
+                            <mat-option
+                                *ngFor="let choice of setting.choices | keyvalue: keepEntryOrder"
+                                [value]="choice.value"
+                            >
                                 {{ choice.key | translate }}
                             </mat-option>
                         </ng-container>
@@ -83,8 +86,8 @@
                     </mat-form-field>
                 </div>
 
-                <!-- datetime -->
-                <div *ngIf="setting.type === 'datetime'">
+                <!-- date / datetime -->
+                <div *ngIf="setting.type === 'datetime' || setting.type === 'date'">
                     <div class="datetimepicker-container">
                         <mat-form-field>
                             <mat-label>{{ setting.label | translate }}</mat-label>
@@ -105,7 +108,7 @@
                             <mat-error *ngIf="error"> {{ error }} </mat-error>
                             <mat-datepicker #datepicker></mat-datepicker>
                         </mat-form-field>
-                        <mat-form-field>
+                        <mat-form-field *ngIf="setting.type === 'datetime'">
                             <input matInput [format]="24" formControlName="time" [ngxTimepicker]="timepicker" />
                             <div class="suffix-wrapper" matSuffix>
                                 <mat-icon class="red-warning-text" *ngIf="updateSuccessIcon">error</mat-icon>

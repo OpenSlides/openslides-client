@@ -17,7 +17,6 @@ import { Observable } from 'rxjs';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
 
 import { CollectionMapperService } from 'app/core/core-services/collection-mapper.service';
-import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/motion-workflow-repository.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MeetingSettingsDefinitionProvider } from 'app/core/ui-services/meeting-settings-definition-provider.service';
@@ -153,7 +152,7 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
                 this.translatedValue = this.translate.instant(this.value);
             }
         }
-        if (this.setting.type === 'datetime' && this.value) {
+        if ((this.setting.type === 'datetime' || this.setting.type === 'date') && this.value) {
             const datetimeObj = this.unixToDateAndTime(this.value as number);
             this.form.patchValue(datetimeObj);
         }
@@ -220,6 +219,7 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
             case 'markupText':
                 // tinyMCE markuptext does not autoupdate on change, only when entering or leaving
                 return;
+            case 'date':
             case 'datetime':
                 // datetime has to be converted
                 const date = this.form.get('date').value;
@@ -285,7 +285,7 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
      * @returns wheather it should be excluded or not
      */
     public isExcludedType(type: string): boolean {
-        const excluded = ['boolean', 'markupText', 'text', 'translations', 'datetime'];
+        const excluded = ['boolean', 'markupText', 'text', 'translations', 'datetime', 'date'];
         return excluded.includes(type);
     }
 
