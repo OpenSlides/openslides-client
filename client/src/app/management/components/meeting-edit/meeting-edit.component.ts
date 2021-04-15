@@ -113,7 +113,6 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
             location: [''],
             start_time: [currentDate],
             end_time: [currentDate],
-            url_name: [''],
             enable_anonymous: [false],
             guest_ids: [[]]
         });
@@ -121,8 +120,8 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
 
     private updateForm(meeting: ViewMeeting): void {
         const patchMeeting: any = meeting.meeting;
-        patchMeeting.start_time = new Date(meeting.start_time * 1000 || null);
-        patchMeeting.end_time = new Date(meeting.end_time * 1000 || null);
+        patchMeeting.start_time = meeting.start_time ? new Date(meeting.start_time * 1000) : undefined;
+        patchMeeting.end_time = meeting.end_time ? new Date(meeting.end_time * 1000) : undefined;
         this.meetingForm.patchValue(patchMeeting);
     }
 
