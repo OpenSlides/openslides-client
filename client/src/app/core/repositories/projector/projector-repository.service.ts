@@ -35,26 +35,27 @@ export class ProjectorRepositoryService extends BaseRepositoryWithActiveMeeting<
     };
 
     public getFieldsets(): Fieldsets<Projector> {
-        const projectorFields: (keyof Projector)[] = [
-            'scale',
-            'scroll',
-            'width',
-            'aspect_ratio_numerator',
-            'aspect_ratio_denominator',
-            'color',
-            'background_color',
-            'header_background_color',
-            'header_font_color',
-            'header_h1_color',
-            'chyron_background_color',
-            'chyron_font_color',
-            'show_header_footer',
-            'show_title',
-            'show_logo',
-            'show_clock'
-        ];
         return {
-            [DEFAULT_FIELDSET]: projectorFields.concat(['name', 'used_as_reference_projector_meeting_id'])
+            [DEFAULT_FIELDSET]: [
+                'name',
+                'scale',
+                'scroll',
+                'width',
+                'aspect_ratio_numerator',
+                'aspect_ratio_denominator',
+                'color',
+                'background_color',
+                'header_background_color',
+                'header_font_color',
+                'header_h1_color',
+                'chyron_background_color',
+                'chyron_font_color',
+                'show_header_footer',
+                'show_title',
+                'show_logo',
+                'show_clock',
+                'used_as_reference_projector_meeting_id'
+            ]
         };
     }
 
@@ -150,7 +151,8 @@ export class ProjectorRepositoryService extends BaseRepositoryWithActiveMeeting<
     ): ProjectorAction.ProjectPayload {
         const payload: ProjectorAction.ProjectPayload = {
             ids: projectors.map(projector => projector.id),
-            content_object_id: descriptor.content_object_id
+            content_object_id: descriptor.content_object_id,
+            meeting_id: this.activeMeetingId
         };
         if (options) {
             payload.options = options;

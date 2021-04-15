@@ -18,6 +18,7 @@ import { ProjectorRepositoryService } from 'app/core/repositories/projector/proj
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DurationService } from 'app/core/ui-services/duration.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
+import { PROJECTOR_CONTENT_FOLLOW } from 'app/shared/components/projector/projector.component';
 import { SizeObject } from 'app/shared/components/tile/tile.component';
 import { infoDialogSettings, largeDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
@@ -102,18 +103,7 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
             this.messageRepo.getViewModelListObservable().subscribe(messages => (this.messages = messages)),
             this.projectorRepo
                 .getViewModelListObservable()
-                .subscribe(projectors => (this.projectorCount = projectors.length)),
-            // TODO: remove.
-            // This is just for testing the new autoupdate/projector service mechanism
-            this.projectorRepo.getViewModelListObservable().subscribe(p => {
-                p.forEach(x => {
-                    console.log(
-                        x,
-                        x.current_projections,
-                        x.current_projections.map((y: any) => y.content)
-                    );
-                });
-            })
+                .subscribe(projectors => (this.projectorCount = projectors.length))
         );
     }
 
@@ -132,11 +122,7 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
                         idField: 'history_projection_ids',
                         follow: [{ idField: 'content_object_id' }]
                     },
-                    {
-                        idField: 'current_projection_ids',
-                        follow: [{ idField: 'content_object_id' }]
-                        // additionalFields: ["content"]
-                    }
+                    PROJECTOR_CONTENT_FOLLOW
                 ]
             });
 

@@ -13,11 +13,16 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { BehaviorSubject, timer } from 'rxjs';
 
+import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { PROJECTOR_CONTENT_FOLLOW } from 'app/shared/components/projector/projector.component';
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewProjector } from '../../models/view-projector';
 
 /**
@@ -30,7 +35,7 @@ import { ViewProjector } from '../../models/view-projector';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class ProjectorListComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ProjectorListComponent extends BaseModelContextComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * The create form.
      */
@@ -73,7 +78,8 @@ export class ProjectorListComponent extends BaseComponent implements OnInit, Aft
         private formBuilder: FormBuilder,
         private operator: OperatorService,
         private dialogService: MatDialog,
-        private cd: ChangeDetectorRef
+        private cd: ChangeDetectorRef,
+        private activeMeetingIdService: ActiveMeetingIdService
     ) {
         super(componentServiceCollector);
 
@@ -95,8 +101,23 @@ export class ProjectorListComponent extends BaseComponent implements OnInit, Aft
      * Watches all projectors.
      */
     public ngOnInit(): void {
+        super.ngOnInit();
         super.setTitle('Projectors');
         this.projectors = this.repo.getViewModelListBehaviorSubject();
+    }
+
+    protected getModelRequest(): SimplifiedModelRequest | null {
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [this.activeMeetingIdService.meetingId],
+            follow: [
+                {
+                    idField: 'projector_ids',
+                    follow: [PROJECTOR_CONTENT_FOLLOW]
+                }
+            ],
+            fieldset: ''
+        };
     }
 
     /**

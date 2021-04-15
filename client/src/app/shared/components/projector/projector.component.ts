@@ -2,15 +2,22 @@ import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/cor
 
 import { Subject, Subscription } from 'rxjs';
 
+import { collectionFromFqid } from 'app/core/core-services/key-transforms';
+import { Follow } from 'app/core/core-services/model-request-builder.service';
 import { OfflineBroadcastService } from 'app/core/core-services/offline-broadcast.service';
-import { ProjectorDataService, SlideData } from 'app/core/core-services/projector-data.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MediaManageService } from 'app/core/ui-services/media-manage.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
-import { Projector } from 'app/shared/models/projector/projector';
+import { SlideData } from 'app/core/ui-services/projector.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { Size } from 'app/site/projector/size';
+
+export const PROJECTOR_CONTENT_FOLLOW: Follow = {
+    idField: 'current_projection_ids',
+    follow: [{ idField: 'content_object_id' }],
+    fieldset: 'content'
+};
 
 /**
  * THE projector. Cares about scaling and the right size and resolution.
@@ -22,15 +29,9 @@ import { Size } from 'app/site/projector/size';
     styleUrls: ['./projector.component.scss']
 })
 export class ProjectorComponent extends BaseComponent implements OnDestroy {
-    /**
-     * The current projector id.
-     */
-    private projectorId: number | null = null;
-
     @Input()
     public set projector(projector: ViewProjector) {
-        this._projector = projector;
-        this.setProjector(projector.projector);
+        this.setProjector(projector);
     }
 
     private _projector: ViewProjector;
@@ -44,11 +45,6 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
      * if the size actually has changed.
      */
     private currentProjectorSize: Size = { width: 0, height: 0 };
-
-    /**
-     * Ths subscription to the projectordata.
-     */
-    private dataSubscription: Subscription;
 
     /**
      * The container element. THis is neede to get the size of the element,
@@ -137,7 +133,6 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        private projectorDataService: ProjectorDataService,
         private meetingSettingsService: MeetingSettingsService,
         private offlineBroadcastService: OfflineBroadcastService,
         private elementRef: ElementRef,
@@ -178,37 +173,39 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
         );
     }
 
-    /**
-     * Regular routine to set a projector
-     *
-     * @param projector
-     */
-    public setProjector(projector: Projector): void {
-        // check, if ID changed:
-        const newId = projector ? projector.id : null;
-        if (this.projectorId !== newId) {
-            this.projectorIdChanged(this.projectorId, newId);
-            this.projectorId = newId;
+    private setProjector(projector: ViewProjector): void {
+        this._projector = projector;
+
+        if (!projector) {
+            return;
         }
 
-        // Update scaling, if projector is set.
-        if (projector) {
-            const oldSize: Size = { ...this.currentProjectorSize };
-            this.currentProjectorSize.height = projector.height;
-            this.currentProjectorSize.width = projector.width;
-            if (
-                oldSize.height !== this.currentProjectorSize.height ||
-                oldSize.width !== this.currentProjectorSize.width
-            ) {
-                this.updateScaling();
+        this.slides = projector.current_projections.map(projection => {
+            const slideData: SlideData<any> = {
+                collection: collectionFromFqid(projection.content_object_id),
+                data: projection.content,
+                stable: !!projection.stable,
+                type: projection.type || '',
+                options: projection.options || {}
+            };
+            if (projection.content?.error) {
+                slideData.error = projection.content.error;
             }
-            this.css.projector.color = projector.color;
-            this.css.projector.backgroundColor = projector.background_color;
-            this.css.projector.H1Color = projector.header_h1_color;
-            this.css.headerFooter.color = projector.header_font_color;
-            this.css.headerFooter.backgroundColor = projector.header_background_color;
-            this.updateCSS();
+            return slideData;
+        });
+
+        const oldSize: Size = { ...this.currentProjectorSize };
+        this.currentProjectorSize.height = projector.height;
+        this.currentProjectorSize.width = projector.width;
+        if (oldSize.height !== this.currentProjectorSize.height || oldSize.width !== this.currentProjectorSize.width) {
+            this.updateScaling();
         }
+        this.css.projector.color = projector.color;
+        this.css.projector.backgroundColor = projector.background_color;
+        this.css.projector.H1Color = projector.header_h1_color;
+        this.css.headerFooter.color = projector.header_font_color;
+        this.css.headerFooter.backgroundColor = projector.header_background_color;
+        this.updateCSS();
     }
 
     /**
@@ -261,32 +258,8 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
             }`;
     }
 
-    /**
-     * Called, if the projector id changes.
-     */
-    private projectorIdChanged(from: number, to: number): void {
-        // Unsubscribe form data and projector subscriptions.
-        if (this.dataSubscription) {
-            this.dataSubscription.unsubscribe();
-        }
-        if (from > 0) {
-            this.projectorDataService.projectorClosed(from);
-        }
-        if (to > 0) {
-            this.dataSubscription = this.projectorDataService.getProjectorObservable(to).subscribe(data => {
-                this.slides = data || [];
-            });
-        }
-    }
-
-    /**
-     * Deregister the projector from the projectordataservice.
-     */
     public ngOnDestroy(): void {
         super.ngOnDestroy();
-        if (this.projectorId > 0) {
-            this.projectorDataService.projectorClosed(this.projectorId);
-        }
         document.head.removeChild(this.styleElement);
         this.styleElement = null;
         if (this.offlineSubscription) {

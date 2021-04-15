@@ -1,6 +1,6 @@
 import { Directive, Input } from '@angular/core';
 
-import { SlideData } from 'app/core/core-services/projector-data.service';
+import { SlideData } from 'app/core/ui-services/projector.service';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 
 /**
@@ -13,7 +13,9 @@ export abstract class BaseSlideComponent<T extends object> {
      * Each slide must take slide data.
      */
     @Input()
-    public set data(value: SlideData<T>) {}
+    public set data(value: SlideData<T>) {
+        this._data = value;
+    }
 
     public get data(): SlideData<T> {
         return this._data;
