@@ -33,7 +33,7 @@ export class ManagementNavigationComponent {
             weight: 300
         },
         {
-            route: '/',
+            route: '/settings',
             displayName: 'Settings',
             icon: 'settings',
             // permission: Permission.coreCanSeeFrontpage,
