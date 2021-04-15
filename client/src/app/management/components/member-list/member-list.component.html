@@ -1,4 +1,9 @@
-<os-head-bar [customMenu]="true" [hasMainButton]="true" (mainEvent)="createNewMember()">
+<os-head-bar
+    [customMenu]="true"
+    [hasMainButton]="true"
+    (mainEvent)="createNewMember()"
+    [multiSelectMode]="isMultiSelect"
+>
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Members' | translate }}</h2>
@@ -7,6 +12,17 @@
     <ng-container class="custom-menu-slot">
         <os-management-navigation></os-management-navigation>
     </ng-container>
+
+    <!-- Menu -->
+    <div class="menu-slot">
+        <button type="button" mat-icon-button [matMenuTriggerFor]="memberMenu"><mat-icon>more_vert</mat-icon></button>
+    </div>
+
+    <!-- Multiselect info -->
+    <div class="central-info-slot">
+        <button mat-icon-button (click)="toggleMultiSelect()"><mat-icon>arrow_back</mat-icon></button>
+        <span>{{ selectedRows.length }}&nbsp;</span><span>{{ 'selected' | translate }}</span>
+    </div>
 </os-head-bar>
 
 <os-list-view-table
@@ -16,19 +32,21 @@
     [showListOfSpeakers]="false"
     [(selectedRows)]="selectedRows"
     [allowProjector]="false"
+    [multiSelect]="isMultiSelect"
+    listStorageKey="member"
     (dataSourceChange)="onDataSourceChange($event)"
 >
     <!-- Name column -->
     <div *pblNgridCellDef="'short_name'; row as user; rowContext as rowContext" class="cell-slot fill">
-        <a class="detail-link" [routerLink]="user.id" *ngIf="!isMultiSelect"></a>
+        <a
+            class="detail-link"
+            [routerLink]="user.id"
+            *ngIf="!isMultiSelect"
+            matTooltip="{{ user.isTemporary ? ('This user is temporary' | translate) : '' }}"
+        ></a>
         <div class="nameCell">
             <div>
-                <os-icon-container
-                    icon="error_outline"
-                    [swap]="true"
-                    [showIcon]="user.isTemporary"
-                    iconTooltip="{{ 'This user is temporary' | translate }}"
-                >
+                <os-icon-container icon="error_outline" [showIcon]="user.isTemporary">
                     {{ user.short_name }}
                 </os-icon-container>
             </div>
@@ -37,18 +55,55 @@
     <!-- Info column -->
     <div *pblNgridCellDef="'info'; row as user">
         <div class="flex-center">
-            <mat-icon
-                *ngIf="!user.isTemporary && user.committee_as_member_ids?.length"
-                matTooltip="{{ 'Member in committees' | translate }}"
+            <os-icon-container
+                *ngIf="user.isTemporary"
+                icon="calendar_today"
+                iconTooltip="{{ 'Present in meeting' | translate }}"
             >
-                account_balance
-            </mat-icon>
-            <ng-container *ngFor="let committee of user.committees_as_member; last as last">
-                <os-icon-container [showIcon]="false" [noWrap]="true" [inline]="true">
-                    {{ committee.name | translate }}
-                    <span *ngIf="!last">,</span>
-                </os-icon-container>
-            </ng-container>
+                <span *ngFor="let meeting of user.is_present_in_meetings; last as last">
+                    {{ meeting.name }}<span *ngIf="!last">,&nbsp;</span>
+                </span>
+            </os-icon-container>
+            <os-icon-container
+                *ngIf="!user.isTemporary"
+                icon="account_balance"
+                iconTooltip="{{ 'Committees' | translate }}"
+                [showIcon]="!!user.committee_as_member_ids?.length"
+            >
+                <span *ngFor="let committee of user.committees_as_member; last as last">
+                    {{ committee.name | translate }}<span *ngIf="!last">,&nbsp;</span>
+                </span>
+            </os-icon-container>
         </div>
     </div>
 </os-list-view-table>
+
+<mat-menu #memberMenu="matMenu">
+    <div *ngIf="!isMultiSelect">
+        <button mat-menu-item (click)="toggleMultiSelect()">
+            <mat-icon>library_add</mat-icon>
+            <span>{{ 'Multiselect' | translate }}</span>
+        </button>
+    </div>
+    <div *ngIf="isMultiSelect">
+        <button mat-menu-item (click)="selectAll()">
+            <mat-icon>done_all</mat-icon>
+            <span>{{ 'Select all' | translate }}</span>
+        </button>
+
+        <button mat-menu-item [disabled]="!selectedRows.length" (click)="deselectAll()">
+            <mat-icon>clear</mat-icon>
+            <span>{{ 'Deselect all' | translate }}</span>
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item [disabled]="!selectedRows.length" (click)="assignCommitteesToUsers()">
+            <mat-icon>account_balance</mat-icon>
+            <span>{{ 'Assign/Unassign committees' | translate }}</span>
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item class="red-warning-text" [disabled]="!selectedRows.length" (click)="deleteSelected()">
+            <mat-icon>delete</mat-icon>
+            <span>{{ 'Delete' | translate }}</span>
+        </button>
+    </div>
+</mat-menu>

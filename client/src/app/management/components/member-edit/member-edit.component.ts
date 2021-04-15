@@ -181,27 +181,22 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
         if (this.personalInfoForm) {
             return;
         }
-        this.personalInfoForm = this.fb.group(
-            {
-                username: [undefined],
-                title: [undefined],
-                first_name: [undefined],
-                last_name: [undefined],
-                gender: [undefined],
-                email: [undefined, Validators.email],
-                committee_as_member_ids: [[]],
-                last_email_send: [undefined],
-                default_password: [undefined],
-                default_structure_level: [undefined],
-                default_number: [undefined],
-                default_vote_weight: [undefined],
-                is_active: [true],
-                is_physical_person: [true]
-            },
-            {
-                validators: OneOfValidator.validation('username', 'first_name', 'last_name')
-            }
-        );
+        this.personalInfoForm = this.fb.group({
+            username: ['', Validators.required],
+            title: [undefined],
+            first_name: [undefined],
+            last_name: [undefined],
+            gender: [undefined],
+            email: [undefined, Validators.email],
+            committee_as_member_ids: [[]],
+            last_email_send: [undefined],
+            default_password: [undefined],
+            default_structure_level: [undefined],
+            default_number: [undefined],
+            default_vote_weight: [undefined],
+            is_active: [true],
+            is_physical_person: [true]
+        });
     }
 
     private getUserByUrl(): void {

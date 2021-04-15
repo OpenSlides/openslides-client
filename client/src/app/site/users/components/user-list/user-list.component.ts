@@ -383,9 +383,9 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         const selectedChoice = await this.choiceService.open(content, this.groupRepo.getViewModelList(), true, choices);
         if (selectedChoice) {
             if (selectedChoice.action === ADD) {
-                this.repo.bulkAddGroupsToTemporaryUsers(this.selectedRows, selectedChoice.items as number[]);
+                this.repo.bulkAddGroupsToUsers(this.selectedRows, selectedChoice.items as number[]);
             } else {
-                this.repo.bulkRemoveGroupsFromTemporaryUsers(this.selectedRows, selectedChoice.items as number[]);
+                this.repo.bulkRemoveGroupsFromUsers(this.selectedRows, selectedChoice.items as number[]);
             }
         }
     }

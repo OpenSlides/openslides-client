@@ -1,15 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { PblColumnDefinition } from '@pebula/ngrid';
 
 import { HttpService } from 'app/core/core-services/http.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { Id } from 'app/core/definitions/key-types';
+import { CommitteeRepositoryService } from 'app/core/repositories/event-management/committee-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
+import { ChoiceService } from 'app/core/ui-services/choice.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { PromptService } from 'app/core/ui-services/prompt.service';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
-import { ViewCommittee } from 'app/site/event-management/models/view-committee';
 import { ViewUser } from 'app/site/users/models/view-user';
 
 interface GetUsersRequest {
@@ -35,13 +38,17 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
 
     public constructor(
         public repo: UserRepositoryService,
+        private committeeRepo: CommitteeRepositoryService,
         protected componentServiceCollector: ComponentServiceCollector,
         private http: HttpService,
         private router: Router,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private promptService: PromptService,
+        private choiceService: ChoiceService
     ) {
         super(componentServiceCollector);
         super.setTitle('Members');
+        this.canMultiSelect = true;
     }
 
     public ngOnInit(): void {
@@ -53,8 +60,39 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
         this.router.navigate(['create'], { relativeTo: this.route });
     }
 
-    public isCommitteeManager(user: ViewUser, committee: ViewCommittee): boolean {
-        return user.committees_as_manager.includes(committee);
+    public async deleteSelected(): Promise<void> {
+        const title = this.translate.instant('Are you sure you want to delete all selected participants?');
+        if (await this.promptService.open(title)) {
+            this.repo.bulkDelete(this.selectedRows).catch(this.raiseError);
+        }
+    }
+
+    public async assignCommitteesToUsers(): Promise<void> {
+        const content = this.translate.instant(
+            'This will add or remove the following groups for all selected participants:'
+        );
+        const ADD = _('add committee(s)');
+        const REMOVE = _('remove committee(s)');
+        const choices = [ADD, REMOVE];
+        const selectedChoice = await this.choiceService.open(
+            content,
+            this.committeeRepo.getViewModelList(),
+            true,
+            choices
+        );
+        if (selectedChoice) {
+            if (selectedChoice.action === ADD) {
+                this.repo.bulkAssignUsersToCommitteesAsMembers(
+                    this.selectedRows.filter(user => !user.isTemporary),
+                    selectedChoice.items as Id[]
+                );
+            } else {
+                this.repo.bulkUnassignUsersFromCommitteesAsMembers(
+                    this.selectedRows.filter(user => !user.isTemporary),
+                    selectedChoice.items as Id[]
+                );
+            }
+        }
     }
 
     private async loadUsers(start_index: number = 0, entries: number = 10000): Promise<void> {
@@ -74,7 +112,11 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
                 viewModelCtor: ViewUser,
                 ids: response[0].users,
                 fieldset: 'orga',
-                follow: [{ idField: 'committee_as_manager_ids' }, { idField: 'committee_as_member_ids' }]
+                follow: [
+                    { idField: 'committee_as_manager_ids' },
+                    { idField: 'committee_as_member_ids' },
+                    { idField: 'is_present_in_meeting_ids' }
+                ]
             };
             this.requestModels(request, 'load_users');
         } catch (e) {

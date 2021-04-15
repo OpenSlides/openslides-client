@@ -444,11 +444,11 @@ export const RELATIONS: Relation[] = [
         OField: 'assignment_candidates',
         MField: 'meeting'
     }),
-    ...makeM2O({
-        OViewModel: ViewMeeting,
-        MViewModel: ViewUser,
-        OField: 'present_users',
-        MField: 'is_present_in_meetings'
+    ...makeM2M({
+        AViewModel: ViewMeeting,
+        BViewModel: ViewUser,
+        AField: 'present_users',
+        BField: 'is_present_in_meetings'
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
