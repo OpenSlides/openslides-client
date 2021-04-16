@@ -63,13 +63,6 @@ type FullNameInformation = ShortNameInformation & LevelAndNumberInformation;
 
 type PartialUpdatePayload = Partial<UserAction.UpdatePayload | UserAction.UpdateTemporaryPayload>;
 
-const SHORT_NAME_FIELDS: (keyof User | { templateField: keyof User })[] = [
-    'title',
-    'username',
-    'first_name',
-    'last_name'
-];
-
 /**
  * Repository service for users
  *
@@ -107,7 +100,11 @@ export class UserRepositoryService
     }
 
     public getFieldsets(): Fieldsets<User> {
-        const listFields = SHORT_NAME_FIELDS.concat([
+        const shortNameFields: (keyof User | { templateField: keyof User })[] = ['title', 'first_name', 'last_name'];
+        /**
+         * TODO: Some of thouse are not needed in the lists
+         */
+        const listFields = shortNameFields.concat([
             'email',
             'gender',
             'is_active',
@@ -123,11 +120,16 @@ export class UserRepositoryService
             { templateField: 'vote_weight_$' },
             'meeting_id'
         ]);
+        const detailFields = listFields.concat(['username', 'about_me', 'comment', 'default_password']);
+        const orgaListFields = listFields.concat(['committee_as_manager_ids', 'committee_as_member_ids']);
+        const orgaEditFields = orgaListFields.concat(['default_password', 'username']);
+
         return {
-            shortName: SHORT_NAME_FIELDS,
+            [DEFAULT_FIELDSET]: detailFields,
+            shortName: shortNameFields,
             list: listFields,
-            [DEFAULT_FIELDSET]: listFields.concat(['about_me', 'comment', 'default_password']),
-            orga: listFields.concat(['committee_as_manager_ids', 'committee_as_member_ids'])
+            orgaList: orgaListFields,
+            orgaEdit: orgaEditFields
         };
     }
 
@@ -152,6 +154,13 @@ export class UserRepositoryService
     }
 
     private updateNonTemporary(update: Partial<UserAction.UpdatePayload>, viewUser: ViewUser): Promise<void> {
+        /**
+         * TODO: backend needs to support changing the default pw
+         * Remove this line when it works
+         */
+        if (update.default_password) {
+            delete update.default_password;
+        }
         const payload: UserAction.UpdatePayload = {
             id: viewUser.id,
             ...this.getPartialUserPayload(update)
@@ -295,8 +304,17 @@ export class UserRepositoryService
             role_id: partialUser.role_id,
             guest_meeting_ids: partialUser.guest_meeting_ids,
             committee_as_member_ids: partialUser.committee_as_member_ids,
-            committee_as_manager_ids: partialUser.committee_as_manager_ids
+            committee_as_manager_ids: partialUser.committee_as_manager_ids,
+            default_password: partialUser.default_password,
+            default_structure_level: partialUser.default_structure_level,
+            default_number: partialUser.default_number,
+            // TODO: Server bugs:
+            // data.default_vote_weight must be string or null
+            // data.default_vote_weight must match pattern ^-?(\d|[1-9]\d+)\.\d{6}$
+            // default_vote_weight: partialUser.default_vote_weight
+            default_vote_weight: null
         };
+
         if (this.activeMeetingId) {
             partialPayload = {
                 ...partialPayload,

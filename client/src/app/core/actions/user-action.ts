@@ -70,6 +70,10 @@ export namespace UserAction {
         vote_delegations_$_from_ids?: {
             [meeting_id: number]: Id[];
         };
+        default_password?: string;
+        default_structure_level?: string;
+        default_number?: string;
+        default_vote_weight?: string;
     }
 
     interface PartialSetPasswordPayload {
