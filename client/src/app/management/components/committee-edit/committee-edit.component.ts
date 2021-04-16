@@ -7,6 +7,7 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { Observable, OperatorFunction } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { MemberService } from 'app/core/core-services/member.service';
 import { CommitteeRepositoryService } from 'app/core/repositories/event-management/committee-repository.service';
 import { MeetingRepositoryService } from 'app/core/repositories/event-management/meeting-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
@@ -40,6 +41,7 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private formBuilder: FormBuilder,
+        private memberService: MemberService,
         private userRepo: UserRepositoryService,
         public committeeRepo: CommitteeRepositoryService,
         private meetingRepo: MeetingRepositoryService,
@@ -56,12 +58,13 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
         } else {
             super.setTitle(EditCommitteeLabel);
         }
-        this.members = this.userRepo.getMemberListObservable();
+        this.members = this.memberService.getMemberListObservable();
         this.meetingsObservable = this.meetingRepo.getViewModelListObservable();
     }
 
-    public ngOnInit(): void {
+    public async ngOnInit(): Promise<void> {
         this.requestUpdates();
+        await this.fetchUsers();
     }
 
     public getPipeFilterFn(): OperatorFunction<ViewCommittee[], ViewCommittee[]> {
@@ -165,6 +168,18 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
                 fieldset: []
             },
             'loadOrganization'
+        );
+    }
+
+    private async fetchUsers(): Promise<void> {
+        const userIds = await this.memberService.fetchAllOrgaUsers();
+        this.requestModels(
+            {
+                viewModelCtor: ViewUser,
+                ids: userIds,
+                fieldset: 'list'
+            },
+            'loadUsers'
         );
     }
 }

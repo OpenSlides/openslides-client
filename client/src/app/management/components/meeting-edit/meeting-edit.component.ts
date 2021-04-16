@@ -1,18 +1,20 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { MeetingAction } from 'app/core/actions/meeting-action';
+import { OperatorService } from 'app/core/core-services/operator.service';
 import { MeetingRepositoryService } from 'app/core/repositories/event-management/meeting-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
+import { ViewCommittee } from 'app/site/event-management/models/view-committee';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
-import { ViewOrganisation } from 'app/site/event-management/models/view-organisation';
 import { ViewUser } from 'app/site/users/models/view-user';
 
 const AddMeetingLabel = _('Create Meeting');
@@ -35,7 +37,7 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
     private editMeeting: ViewMeeting;
     private committeeId: number;
 
-    public members: Observable<ViewUser[]>;
+    public allUsers: Observable<ViewUser[]>;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -43,13 +45,14 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
         private location: Location,
         private formBuilder: FormBuilder,
         private meetingRepo: MeetingRepositoryService,
-        userRepo: UserRepositoryService
+        private userRepo: UserRepositoryService,
+        private operator: OperatorService
     ) {
         super(componentServiceCollector);
         this.createForm();
         this.createOrEdit();
         this.getRouteParams();
-        this.members = userRepo.getViewModelListObservable();
+        this.setAllUsers();
 
         if (this.isCreateView) {
             super.setTitle(AddMeetingLabel);
@@ -125,27 +128,23 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
         this.meetingForm.patchValue(patchMeeting);
     }
 
-    private requestUpdates(): void {
+    private async requestUpdates(): Promise<void> {
         /**
-         * TODO: Requires orga members
+         * Requires orga members
          */
         this.requestModels({
-            viewModelCtor: ViewOrganisation,
-            ids: [1],
-            follow: [
-                {
-                    idField: 'committee_ids',
-                    fieldset: 'list',
-                    follow: [
-                        {
-                            idField: 'meeting_ids',
-                            follow: [{ idField: 'user_ids', fieldset: 'list' }]
-                        }
-                    ]
-                }
-            ],
-            fieldset: []
+            viewModelCtor: ViewCommittee,
+            ids: [this.committeeId],
+            follow: [{ idField: 'member_ids', fieldset: 'shortName' }],
+            fieldset: 'list'
         });
+    }
+
+    private setAllUsers(): void {
+        const alreadyPresentUsers = this.editMeeting?.meeting?.user_ids || [this.operator.operatorId];
+        this.allUsers = this.userRepo
+            .getViewModelListObservable()
+            .pipe(map(users => users.filter(user => !alreadyPresentUsers.includes(user.id))));
     }
 
     public onSubmit(): void {

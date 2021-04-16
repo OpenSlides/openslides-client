@@ -215,10 +215,6 @@ export class UserRepositoryService
         ]);
     }
 
-    public getMemberListObservable(): Observable<ViewUser[]> {
-        return this.getViewModelListObservable().pipe(map(users => users.filter(user => !user.isTemporary)));
-    }
-
     private deleteNonTemporary(viewUser: ViewUser): Promise<void> {
         const payload: UserAction.DeletePayload = { id: viewUser.id };
         return this.sendActionToBackend(UserAction.DELETE, payload);

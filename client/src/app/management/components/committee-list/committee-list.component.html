@@ -68,7 +68,11 @@
 
     <div *pblNgridCellDef="'managers'; row as committee" class="cell-slot fill">
         <a class="detail-link" [routerLink]="committee.id" *ngIf="!isMultiSelect"></a>
-        <os-icon-container iconTooltip="{{ 'Managers' | translate }}" icon="build">
+        <os-icon-container
+            iconTooltip="{{ 'Managers' | translate }}"
+            icon="build"
+            [showIcon]="!!committee.managers?.length"
+        >
             <div>
                 <span *ngFor="let manager of committee.managers; let last = last">
                     <span>{{ manager?.short_name }}</span>
