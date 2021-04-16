@@ -10,6 +10,7 @@
 </os-head-bar>
 
 <os-logo class="dashboard-logo" [default]="true"></os-logo>
+<h1 class="no-content">{{ orgaName }}</h1>
 
 <mat-card *ngIf="noMeetingsToShow" class="no-content os-card">
     <i> {{ 'No meetings to show' | translate }}</i>
@@ -57,6 +58,18 @@
             [ngTemplateOutletContext]="{ meetingList: previousMeetings }"
         ></ng-container>
     </div>
+
+    <!-- meetings with no date -->
+    <div id="no-date-meetings" class="meeting-list-container">
+        <div class="meeting-icon-wrapper">
+            <mat-icon aria-hidden="true">watch_later</mat-icon>
+            <span>{{ 'No date' | translate }}</span>
+        </div>
+        <ng-container
+            [ngTemplateOutlet]="meetingListTemplate"
+            [ngTemplateOutletContext]="{ meetingList: noDateMeetings }"
+        ></ng-container>
+    </div>
 </ng-container>
 
 <ng-template let-meetingList="meetingList" #meetingListTemplate>
@@ -70,7 +83,7 @@
                         [ngTemplateOutletContext]="{ meeting: meeting }"
                     ></ng-container>
                 </div>
-                <mat-divider *ngIf="last"></mat-divider>
+                <mat-divider *ngIf="last && !odd"></mat-divider>
             </ng-container>
         </cdk-virtual-scroll-viewport>
     </div>
@@ -79,9 +92,14 @@
 <ng-template let-meeting="meeting" #meetingTemplate>
     <div matRipple class="meeting-box" [routerLink]="meeting.id">
         <div class="meeting-box--left">
-            <span>{{ meeting.start_time | localizedDate: 'll' }}</span>
-            <span *ngIf="meeting.start_time && meeting.end_time"> - </span>
-            <span>{{ meeting.end_time | localizedDate: 'll' }}</span>
+            <ng-container *ngIf="meeting.start_time === meeting.end_time">
+                <span>{{ meeting.start_time | localizedDate: 'll' }}</span>
+            </ng-container>
+            <ng-container *ngIf="meeting.start_time !== meeting.end_time">
+                <span *ngIf="meeting.start_time">{{ meeting.start_time | localizedDate: 'll' }}</span>
+                <span *ngIf="meeting.start_time && meeting.end_time"> - </span>
+                <span *ngIf="meeting.end_time">{{ meeting.end_time | localizedDate: 'll' }}</span>
+            </ng-container>
         </div>
         <div class="meeting-box--mid">{{ meeting.name }}</div>
         <div class="meeting-box--right">{{ meeting.location }}</div>
