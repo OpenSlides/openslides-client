@@ -64,9 +64,7 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
     }
 
     public async forwardToCommittees(): Promise<void> {
-        const content = this.translate.instant(
-            'This will add or remove the following groups for all selected participants:'
-        );
+        const content = this.translate.instant('Set or remove forwarding from the selected committees:');
         const ADD = _('Forward to committee(s)');
         const REMOVE = _('Unforward to committee(s)');
         const choices = [ADD, REMOVE];
