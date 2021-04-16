@@ -81,7 +81,7 @@ export class AccountDialogComponent extends BaseModelContextComponent implements
         return {
             viewModelCtor: ViewUser,
             ids: [this.operator.operatorId],
-            fieldset: 'orga'
+            fieldset: 'orgaEdit'
         };
     }
 }

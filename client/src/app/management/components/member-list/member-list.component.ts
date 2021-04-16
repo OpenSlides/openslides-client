@@ -97,7 +97,7 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
             const request: SimplifiedModelRequest = {
                 viewModelCtor: ViewUser,
                 ids: userIds,
-                fieldset: 'orga',
+                fieldset: 'orgaList',
                 follow: [
                     { idField: 'committee_as_manager_ids' },
                     { idField: 'committee_as_member_ids' },

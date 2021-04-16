@@ -217,7 +217,7 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
                 viewModelCtor: ViewUser,
                 ids: [userId],
                 follow: [],
-                fieldset: 'orga'
+                fieldset: 'orgaEdit'
             });
 
             this.subscriptions.push(
