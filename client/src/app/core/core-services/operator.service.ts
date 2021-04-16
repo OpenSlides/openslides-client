@@ -114,6 +114,8 @@ export class OperatorService {
         return activeMeeting ? activeMeeting.admin_group_id : null;
     }
 
+    private hasOperatorDataSubscriptionInitiated = false;
+
     private _lastActiveMeetingId;
     private _lastDefaultGroupId;
     private _lastUserId = UNKOWN_USER_ID;
@@ -193,11 +195,11 @@ export class OperatorService {
         if (this.currentOperatorDataSubscription) {
             this.currentOperatorDataSubscription.close();
             this.currentOperatorDataSubscription = null;
+            this.hasOperatorDataSubscriptionInitiated = false;
         }
 
-        if (!this.lifecycle.isBooted) {
-            return;
-        }
+        await this.lifecycle.booted;
+        console.log('Operator: lifecycle booted. Resume operatorsubscription.');
 
         let operatorRequest: SimplifiedModelRequest = null;
         if (this.activeMeetingId) {
@@ -225,11 +227,8 @@ export class OperatorService {
                     ],
                     fieldset: []
                 };
-            } else {
-                // not logged in and no anonymous. We are done with loading, so we have
-                // to emit the operator update event
-                this.operatorUpdatedEvent.emit();
             }
+            // No else-case: A non-authed no meeting is not possible (or: there are no usefull information).
         } else {
             if (this.isAuthenticated) {
                 operatorRequest = {
@@ -237,11 +236,15 @@ export class OperatorService {
                     viewModelCtor: ViewUser,
                     fieldset: 'shortName'
                 };
+            } else {
+                // not logged in and no anonymous. We are done with loading, so we have
+                // to emit the operator update event
+                this.operatorUpdatedEvent.emit();
             }
-            // No else-case: A non-authed no meeting is not possible (or: there are no usefull information).
         }
 
-        if (operatorRequest) {
+        if (operatorRequest && !this.hasOperatorDataSubscriptionInitiated) {
+            this.hasOperatorDataSubscriptionInitiated = true;
             // Do not wait for the subscription to be done...
             (async () => {
                 console.log('operator: Do operator model request', operatorRequest);

@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, UrlTree } from '@angular/router';
 
-import { Observable } from 'rxjs';
-
 import { ActiveMeetingService } from './active-meeting.service';
 import { AuthService } from './auth.service';
 import { FallbackRoutesService } from './fallback-routes.service';
@@ -46,7 +44,8 @@ export class AuthGuard implements CanActivate, CanActivateChild {
         if ((this.operator.isAnonymous && this.activeMeeting.guestsEnabled) || this.operator.isAuthenticated) {
             return this.hasPerms(basePerm);
         } else {
-            return this.router.createUrlTree(['login']);
+            this.router.navigate(['login']);
+            return false;
         }
     }
 

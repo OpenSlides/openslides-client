@@ -1,5 +1,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
 
+import { Deferred } from '../promises/deferred';
+
 /**
  * Provides fundamental hooks into the openslides lifecycle.
  */
@@ -32,10 +34,20 @@ export class LifecycleService {
         return this._isBooted;
     }
 
+    /**
+     * Returns a promise to wait until the lifecycle booted up.
+     */
+    public get booted(): Promise<void> {
+        return this._booted;
+    }
+
+    private _booted = new Deferred();
+
     public constructor() {}
 
     public bootup(): void {
         this._isBooted = true;
+        this._booted.resolve();
         console.debug('Lifecycle: booted.');
         this.openslidesBooted.next();
     }
@@ -45,6 +57,7 @@ export class LifecycleService {
      */
     public shutdown(): void {
         this._isBooted = false;
+        this._booted = new Deferred();
         console.debug('Lifecycle: shutdown.');
         this.openslidesShutdowned.next();
     }

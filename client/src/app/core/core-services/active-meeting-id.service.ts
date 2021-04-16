@@ -51,7 +51,6 @@ export class ActiveMeetingIdService {
     }
 
     public start(): void {
-        this._meetingId = 1;
         this.routerSub = this.router.events
             .pipe(
                 filter((event: RouterEvent): boolean => {
