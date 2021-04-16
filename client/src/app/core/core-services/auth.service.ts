@@ -65,10 +65,7 @@ export class AuthService {
     }
 
     public async login(username: string, password: string): Promise<void> {
-        const user = {
-            username: username,
-            password: password
-        };
+        const user = { username, password };
         this.holdBackTokenSubscription();
         try {
             const response = await this.http.post<LoginResponse>(`${environment.authUrlPrefix}/login/`, user);

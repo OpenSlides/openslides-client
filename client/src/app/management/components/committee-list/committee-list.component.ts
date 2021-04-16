@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { PblColumnDefinition } from '@pebula/ngrid';
 
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { CommitteeRepositoryService } from 'app/core/repositories/event-management/committee-repository.service';
+import { ChoiceService } from 'app/core/ui-services/choice.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
@@ -41,10 +43,12 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
         public repo: CommitteeRepositoryService,
         private router: Router,
         private route: ActivatedRoute,
-        private promptService: PromptService
+        private promptService: PromptService,
+        private choiceService: ChoiceService
     ) {
         super(componentServiceCollector);
         super.setTitle('Committees');
+        this.canMultiSelect = true;
     }
 
     public ngOnInit(): void {
@@ -59,6 +63,23 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
         this.router.navigate(['create'], { relativeTo: this.route });
     }
 
+    public async forwardToCommittees(): Promise<void> {
+        const content = this.translate.instant(
+            'This will add or remove the following groups for all selected participants:'
+        );
+        const ADD = _('Forward to committee(s)');
+        const REMOVE = _('Unforward to committee(s)');
+        const choices = [ADD, REMOVE];
+        const selectedChoice = await this.choiceService.open(content, this.repo.getViewModelList(), true, choices);
+        if (selectedChoice) {
+            if (selectedChoice.action === ADD) {
+                this.repo.bulkForwardToCommittees(this.selectedRows, selectedChoice.items as number[]);
+            } else {
+                this.repo.bulkUnforwardToCommittees(this.selectedRows, selectedChoice.items as number[]);
+            }
+        }
+    }
+
     public async deleteSingle(committee: ViewCommittee): Promise<void> {
         const title = `${this.translate.instant('Delete committee')} "${committee.name}"`;
         const content = this.translate.instant('Are you sure you want to delete this committee?');
@@ -66,6 +87,15 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
         const confirmed = await this.promptService.open(title, content);
         if (confirmed) {
             await this.repo.delete(committee);
+        }
+    }
+
+    public async deleteMultiple(): Promise<void> {
+        const title = this.translate.instant('Are you sure, you want to delete all selected committees?');
+
+        const confirmed = await this.promptService.open(title);
+        if (confirmed) {
+            await this.repo.bulkDelete(this.selectedRows);
         }
     }
 

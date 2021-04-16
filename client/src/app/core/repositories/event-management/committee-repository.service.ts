@@ -6,6 +6,7 @@ import {
     Fieldsets,
     SimplifiedModelRequest
 } from 'app/core/core-services/model-request-builder.service';
+import { Id } from 'app/core/definitions/key-types';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Committee } from 'app/shared/models/event-management/committee';
 import { ViewCommittee } from 'app/site/event-management/models/view-committee';
@@ -68,6 +69,36 @@ export class CommitteeRepositoryService
 
     public delete(committee: ViewCommittee): Promise<void> {
         return this.sendActionToBackend(CommitteeAction.DELETE, { id: committee.id });
+    }
+
+    /**
+     * TODO: Currently, this doesn't work. It depends on the backend.
+     *
+     * @param committees
+     * @returns
+     */
+    public bulkDelete(committees: ViewCommittee[]): Promise<void> {
+        const payload: CommitteeAction.DeletePayload[] = committees.map(committee => ({ id: committee.id }));
+        return this.sendBulkActionToBackend(CommitteeAction.DELETE, payload);
+    }
+
+    public bulkForwardToCommittees(committees: ViewCommittee[], committeeIds: Id[]): Promise<void> {
+        const payload: CommitteeAction.UpdatePayload[] = committees.map(committee => {
+            committeeIds = committeeIds.concat(committee.forward_to_committee_ids || []);
+            return {
+                id: committee.id,
+                forward_to_committee_ids: committeeIds
+            };
+        });
+        return this.sendBulkActionToBackend(CommitteeAction.UPDATE, payload);
+    }
+
+    public bulkUnforwardToCommittees(committees: ViewCommittee[], committeeIds: Id[]): Promise<void> {
+        const payload: CommitteeAction.UpdatePayload[] = committees.map(committee => ({
+            id: committee.id,
+            forward_to_committee_ids: (committee.forward_to_committee_ids || []).filter(id => committeeIds.includes(id))
+        }));
+        return this.sendBulkActionToBackend(CommitteeAction.UPDATE, payload);
     }
 
     public getRequestToGetAllModels(): SimplifiedModelRequest {

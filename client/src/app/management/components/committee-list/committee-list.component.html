@@ -1,7 +1,25 @@
-<os-head-bar [customMenu]="true" [hasMainButton]="true" (mainEvent)="createNewCommittee()">
+<os-head-bar
+    [customMenu]="true"
+    [hasMainButton]="true"
+    [multiSelectMode]="isMultiSelect"
+    (mainEvent)="createNewCommittee()"
+>
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Committees' | translate }}</h2>
+    </div>
+
+    <!-- Menu -->
+    <div class="menu-slot">
+        <button type="button" mat-icon-button [matMenuTriggerFor]="committeeMenu">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+    </div>
+
+    <!-- Multiselect info -->
+    <div class="central-info-slot">
+        <button mat-icon-button (click)="toggleMultiSelect()"><mat-icon>arrow_back</mat-icon></button>
+        <span>{{ selectedRows.length }}&nbsp;</span><span>{{ 'selected' | translate }}</span>
     </div>
 
     <ng-container class="custom-menu-slot">
@@ -14,6 +32,7 @@
     [columns]="tableColumnDefinition"
     [allowProjector]="false"
     [alwaysShowMenu]="true"
+    [multiSelect]="isMultiSelect"
     [showListOfSpeakers]="false"
     [(selectedRows)]="selectedRows"
     (dataSourceChange)="onDataSourceChange($event)"
@@ -88,4 +107,39 @@
             </span>
         </button>
     </ng-template>
+</mat-menu>
+
+<mat-menu #committeeMenu="matMenu">
+    <div *ngIf="!isMultiSelect">
+        <button mat-menu-item (click)="toggleMultiSelect()">
+            <mat-icon>library_add</mat-icon>
+            <span>{{ 'Multiselect' | translate }}</span>
+        </button>
+    </div>
+    <div *ngIf="isMultiSelect">
+        <button mat-menu-item (click)="selectAll()">
+            <mat-icon>done_all</mat-icon>
+            <span>{{ 'Select all' | translate }}</span>
+        </button>
+        <button mat-menu-item [disabled]="!selectedRows.length" (click)="deselectAll()">
+            <mat-icon>clear</mat-icon>
+            <span>{{ 'Deselect all' | translate }}</span>
+        </button>
+
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="forwardToCommittees()">
+            <mat-icon>swap_horiz</mat-icon>
+            <span>{{ 'Unforward/forward to committees' | translate }}</span>
+        </button>
+        <button mat-menu-item [disabled]="true">
+            <mat-icon>local_offer</mat-icon>
+            <span>{{ 'Tags' | translate }}</span>
+        </button>
+        <mat-divider></mat-divider>
+
+        <button mat-menu-item [disabled]="true" class="red-warning-text" (click)="deleteMultiple()">
+            <mat-icon>delete</mat-icon>
+            <span>{{ 'Delete' | translate }}</span>
+        </button>
+    </div>
 </mat-menu>
