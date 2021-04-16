@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { PblColumnDefinition } from '@pebula/ngrid';
 
-import { HttpService } from 'app/core/core-services/http.service';
+import { MemberService } from 'app/core/core-services/member.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { Id } from 'app/core/definitions/key-types';
 import { CommitteeRepositoryService } from 'app/core/repositories/event-management/committee-repository.service';
@@ -14,10 +14,6 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
 import { ViewUser } from 'app/site/users/models/view-user';
-
-interface GetUsersRequest {
-    users: Id[];
-}
 
 @Component({
     selector: 'os-members',
@@ -40,7 +36,7 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
         public repo: UserRepositoryService,
         private committeeRepo: CommitteeRepositoryService,
         protected componentServiceCollector: ComponentServiceCollector,
-        private http: HttpService,
+        private memberService: MemberService,
         private router: Router,
         private route: ActivatedRoute,
         private promptService: PromptService,
@@ -96,21 +92,11 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
     }
 
     private async loadUsers(start_index: number = 0, entries: number = 10000): Promise<void> {
-        const payload = [
-            {
-                presenter: 'get_users',
-                data: {
-                    start_index,
-                    entries,
-                    include_temporary: true
-                }
-            }
-        ];
         try {
-            const response = await this.http.post<GetUsersRequest[]>('/system/presenter/handle_request', payload);
+            const userIds = await this.memberService.fetchAllOrgaUsers(start_index, entries);
             const request: SimplifiedModelRequest = {
                 viewModelCtor: ViewUser,
-                ids: response[0].users,
+                ids: userIds,
                 fieldset: 'orga',
                 follow: [
                     { idField: 'committee_as_manager_ids' },

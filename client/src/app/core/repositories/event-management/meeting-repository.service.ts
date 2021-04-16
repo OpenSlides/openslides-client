@@ -34,7 +34,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
     public getFieldsets(): Fieldsets<Meeting> {
         const nameFields: (keyof Meeting)[] = ['name', 'start_time', 'end_time'];
         const listFields: (keyof Meeting)[] = nameFields.concat('user_ids');
-        const editFields: (keyof Meeting)[] = nameFields.concat([
+        const editFields: (keyof Meeting)[] = listFields.concat([
             'welcome_title',
             'description',
             'location',
