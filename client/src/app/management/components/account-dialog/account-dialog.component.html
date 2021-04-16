@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>{{ 'My account' | translate }}: self?.shortName</h2>
+<h2 mat-dialog-title>{{ 'Account of' | translate }}: {{ self?.short_name }}</h2>
 <mat-divider></mat-divider>
 <div mat-dialog-content class="account-dialog-container">
     <div class="account-dialog-menu-items">
@@ -20,6 +20,10 @@
         <div class="content-wrapper">
             <ng-container [ngSwitch]="activeMenuItem">
                 <ng-container
+                    *ngSwitchCase="menuItemsRef.SHOW_PROFILE"
+                    [ngTemplateOutlet]="showProfileView"
+                ></ng-container>
+                <ng-container
                     *ngSwitchCase="menuItemsRef.CHANGE_PASSWORD"
                     [ngTemplateOutlet]="changePasswordView"
                 ></ng-container>
@@ -32,6 +36,26 @@
     <button mat-button [mat-dialog-close]="null">{{ 'Close' | translate }}</button>
 </div>
 
+<ng-template #showProfileView>
+    <div class="flex-container">
+        <h2 class="left-align">{{ 'My profile' | translate }}</h2>
+        <button mat-icon-button (click)="editSelf = !editSelf">
+            <mat-icon>{{ editSelf ? 'close' : 'edit' }}</mat-icon>
+        </button>
+    </div>
+    <os-user-detail-view
+        [user]="self"
+        [isEditing]="editSelf"
+        (validEvent)="isUserFormValid = $event"
+        (changeEvent)="userPersonalForm = $event"
+    ></os-user-detail-view>
+    <div *ngIf="editSelf">
+        <button mat-button [disabled]="!isUserFormValid" (click)="saveUserChanges()">
+            {{ 'Save' | translate }}
+        </button>
+    </div>
+</ng-template>
+
 <ng-template #changePasswordView>
     <h2>{{ 'Change password' | translate }}</h2>
     <os-change-password
@@ -40,7 +64,7 @@
     ></os-change-password>
     <div>
         <button mat-button [disabled]="!isUserPasswordValid" (click)="changePassword()">
-            {{ 'Confirm' | translate }}
+            {{ 'Save' | translate }}
         </button>
     </div>
 </ng-template>

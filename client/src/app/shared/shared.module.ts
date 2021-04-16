@@ -103,6 +103,7 @@ import { MaterialDesignModule } from './libraries/material-design.module';
 import { SwipeDirective } from './directives/swipe.directive';
 import { ListenEditingDirective } from './directives/listen-editing.directive';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
+import { UserDetailViewComponent } from './components/user-detail-view/user-detail-view.component';
 
 const declarations = [
     PermsDirective,
@@ -173,7 +174,8 @@ const declarations = [
     SearchRepoSelectorComponent,
     SwipeDirective,
     ListenEditingDirective,
-    ChangePasswordComponent
+    ChangePasswordComponent,
+    UserDetailViewComponent
 ];
 
 const sharedModules = [
