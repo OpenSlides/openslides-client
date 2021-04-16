@@ -50,14 +50,15 @@
         </mat-form-field>
 
         <ng-container *ngIf="!isCreateView">
-            <mat-form-field>
+            <!-- TODO: Not yet -->
+            <!-- <mat-form-field>
                 <mat-label>{{ 'Meeting as template' | translate }}</mat-label>
                 <os-search-value-selector
                     formControlName="template_meeting_id"
                     [multiple]="false"
                     [inputListValues]="meetingsObservable"
                 ></os-search-value-selector>
-            </mat-form-field>
+            </mat-form-field> -->
 
             <mat-form-field>
                 <mat-label>{{ 'Default meeting' | translate }}</mat-label>

@@ -138,7 +138,7 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
         if (!this.isCreateView) {
             partialForm = {
                 ...partialForm,
-                template_meeting_id: [null],
+                // template_meeting_id: [null], // TODO: Not yet
                 default_meeting_id: [null],
                 forward_to_committee_ids: [[]]
                 // organisation_tag_ids: [[]] // TODO: Wait for backend
