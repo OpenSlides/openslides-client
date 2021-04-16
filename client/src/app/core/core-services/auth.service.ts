@@ -132,6 +132,7 @@ export class AuthService {
             online = false;
         }
         console.log('auth: WhoAmI done, online:', online);
+        console.log('auth: WhoAmI done, authenticated:', !!this.authTokenService.accessToken);
         return online;
     }
 
