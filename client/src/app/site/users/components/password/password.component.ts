@@ -116,9 +116,9 @@ export class PasswordComponent extends BaseModelContextComponent implements OnIn
      */
     public goBack(): void {
         if (!this.ownPage) {
-            this.router.navigate([`./users/${this.user.id}`]);
+            this.router.navigate([this.activeMeetingId, 'users', this.user.id]);
         } else {
-            this.router.navigate(['./']);
+            this.router.navigate(['..'], { relativeTo: this.route });
         }
     }
 
@@ -134,7 +134,7 @@ export class PasswordComponent extends BaseModelContextComponent implements OnIn
                 }
                 const password = this.adminPasswordForm.value.newPassword;
                 await this.repo.setPassword(this.user, password);
-                this.router.navigate([this.activeMeetingId, `/users/${this.user.id}`]);
+                this.router.navigate([this.activeMeetingId, 'users', this.user.id]);
             } else if (this.ownPage) {
                 if (!this.isUserPasswordValid) {
                     return;
@@ -142,7 +142,7 @@ export class PasswordComponent extends BaseModelContextComponent implements OnIn
 
                 const { oldPassword, newPassword }: PasswordForm = this.userPasswordForm;
                 await this.repo.setPasswordSelf(this.user, oldPassword, newPassword);
-                this.router.navigate(['./']);
+                this.router.navigate(['..'], { relativeTo: this.route });
             }
         } catch (e) {
             this.raiseError(e);

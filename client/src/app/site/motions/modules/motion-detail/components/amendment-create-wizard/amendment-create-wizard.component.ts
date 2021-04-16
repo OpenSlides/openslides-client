@@ -257,6 +257,6 @@ export class AmendmentCreateWizardComponent extends BaseComponent implements OnI
         };
 
         const response = await this.repo.createParagraphBased(motionCreate);
-        this.router.navigate(['./motions/' + response.id]);
+        this.router.navigate([this.activeMeetingId, 'motions' + response.id]);
     }
 }

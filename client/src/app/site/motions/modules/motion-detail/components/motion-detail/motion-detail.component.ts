@@ -299,6 +299,10 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
                 ids: [this.activeMeetingId],
                 follow: [
                     {
+                        idField: 'motion_ids',
+                        fieldset: 'title'
+                    },
+                    {
                         idField: 'user_ids',
                         fieldset: 'shortName'
                     },
@@ -444,7 +448,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
     public async createMotion(newMotionValues: Partial<MotionAction.CreatePayload>): Promise<void> {
         try {
             const response = await this.repo.create(newMotionValues);
-            this.router.navigate(['motions', response.id]);
+            this.router.navigate([this.activeMeetingId, 'motions', response.id]);
         } catch (e) {
             this.raiseError(e);
         }
@@ -478,7 +482,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         const content = this.motion.getTitle();
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(this.motion);
-            this.router.navigate(['../motions/']);
+            this.router.navigate([this.activeMeetingId, 'motions']);
         }
     }
 
@@ -503,7 +507,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
 
     public leaveEditMotion(): void {
         if (this.newMotion) {
-            this.router.navigate(['./motions/']);
+            this.router.navigate([this.activeMeetingId, 'motions']);
         } else {
             this.editMotion = false;
         }
@@ -529,9 +533,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
      * respectively
      */
     public setSurroundingMotions(): void {
-        const indexOfCurrent = this.sortedMotions.findIndex(motion => {
-            return motion === this.motion;
-        });
+        const indexOfCurrent = this.sortedMotions.findIndex(motion => motion === this.motion);
         if (indexOfCurrent > 0) {
             this.previousMotion = this.sortedMotions[indexOfCurrent - 1];
         } else {

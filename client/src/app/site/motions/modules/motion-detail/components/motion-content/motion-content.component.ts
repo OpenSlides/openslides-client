@@ -265,7 +265,7 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
         const newMotionValues: Partial<MotionAction.CreatePayload> = { ...this.contentForm.value };
         try {
             const response = await this.repo.create(newMotionValues);
-            this.router.navigate(['./motions/' + response.id]);
+            this.router.navigate([this.activeMeetingId, 'motions' + response.id]);
         } catch (e) {
             this.raiseError(e);
         }
