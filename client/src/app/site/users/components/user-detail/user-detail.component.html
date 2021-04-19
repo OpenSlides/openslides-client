@@ -176,23 +176,23 @@
 
             <!-- Delegate Vote -->
             <mat-form-field>
-                <os-search-value-selector
+                <os-search-repo-selector
                     formControlName="vote_delegations_from_ids"
+                    [repo]="repo"
                     [multiple]="true"
                     placeholder="{{ 'Voting right received from (principals)' | translate }}"
-                    [inputListValues]="users"
-                ></os-search-value-selector>
+                ></os-search-repo-selector>
             </mat-form-field>
 
             <!-- Delegate Vote -->
             <mat-form-field>
-                <os-search-value-selector
+                <os-search-repo-selector
                     formControlName="vote_delegated_to_id"
+                    [repo]="repo"
                     [multiple]="false"
                     [includeNone]="true"
                     placeholder="{{ 'Voting right delegated to (proxy)' | translate }}"
-                    [inputListValues]="users"
-                ></os-search-value-selector>
+                ></os-search-repo-selector>
             </mat-form-field>
 
             <!-- Initial Password -->
