@@ -38,7 +38,7 @@
                             [(ngModel)]="option.state"
                             (change)="onFilterChange(option.id)"
                         >
-                            <mat-icon matTooltip="{{ option.label | translate }}">{{ getIcon(option.label) }}</mat-icon>
+                            <mat-icon matTooltip="{{ option.label | translate }}">{{ getIcon(option.id) }}</mat-icon>
                             {{ option.label | translate }}
                         </mat-checkbox>
                     </div>
@@ -65,7 +65,7 @@
         <ng-template #innerNode class="sorting-tree-node" let-item="item">
             <span class="sort-node-title">{{ item.getTitle() }}</span>
             <span class="sort-node-icon">
-                {{ item.verboseType | translate }} <mat-icon>{{ getIcon(item.verboseType) }}</mat-icon>
+                {{ item.verboseType | translate }} <mat-icon>{{ getIcon(item.type) }}</mat-icon>
             </span>
         </ng-template>
     </os-sorting-tree>

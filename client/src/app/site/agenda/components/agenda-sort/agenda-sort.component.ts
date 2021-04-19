@@ -9,7 +9,11 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ItemTypeChoices } from 'app/shared/models/agenda/agenda-item';
 import { AgendaItemType } from 'app/shared/models/agenda/agenda-item';
-import { BaseSortTreeComponent, SortTreeFilterOption } from 'app/site/base/components/base-sort-tree.component';
+import {
+    BaseSortTreeComponent,
+    SortTreeFilterId,
+    SortTreeFilterOption
+} from 'app/site/base/components/base-sort-tree.component';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewAgendaItem } from '../../models/view-agenda-item';
 
@@ -33,13 +37,13 @@ export class AgendaSortComponent extends BaseSortTreeComponent<ViewAgendaItem> i
      * When reset the filters, the option `state` will be set to `false`.
      */
     public filterOptions: SortTreeFilterOption[] = ItemTypeChoices.map(item => {
-        return { label: item.name, id: this.getNumericValueForAgendaItemType(item.key), state: false };
+        return { label: item.name, id: item.key, state: false };
     });
 
     /**
      * BehaviourSubject to get informed every time the filters change.
      */
-    protected activeFilters: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
+    protected activeFilters = new BehaviorSubject<SortTreeFilterId[]>([]);
 
     /**
      * Updates the incoming/changing agenda items.
@@ -86,7 +90,7 @@ export class AgendaSortComponent extends BaseSortTreeComponent<ViewAgendaItem> i
      *
      * @param filter Is the filter that was activated by the user.
      */
-    public onFilterChange(filter: number): void {
+    public onFilterChange(filter: SortTreeFilterId): void {
         const value = this.activeFilters.value;
         if (!value.includes(filter)) {
             value.push(filter);
@@ -104,10 +108,10 @@ export class AgendaSortComponent extends BaseSortTreeComponent<ViewAgendaItem> i
         /**
          * Passes the active filters as an array to the subject.
          */
-        const filter = this.activeFilters.subscribe((value: number[]) => {
+        const filter = this.activeFilters.subscribe((value: SortTreeFilterId[]) => {
             this.hasActiveFilter = value.length === 0 ? false : true;
             this.changeFilter.emit((item: ViewAgendaItem): boolean => {
-                return !(value.includes(this.getNumericValueForAgendaItemType(item.type)) || value.length === 0);
+                return !(value.includes(item.type) || value.length === 0);
             });
         });
         this.subscriptions.push(filter);
@@ -148,24 +152,13 @@ export class AgendaSortComponent extends BaseSortTreeComponent<ViewAgendaItem> i
      * @returns The icon it should be.
      */
     public getIcon(type: string): string {
-        switch (type.toLowerCase()) {
-            case 'public item':
-                return 'public';
-            case 'internal item':
-                return 'visibility';
-            case 'hidden item':
-                return 'visibility_off';
-        }
-    }
-
-    private getNumericValueForAgendaItemType(type: AgendaItemType): number {
         switch (type) {
             case AgendaItemType.common:
-                return 1;
-            case AgendaItemType.hidden:
-                return 3;
+                return 'public';
             case AgendaItemType.internal:
-                return 2;
+                return 'visibility';
+            case AgendaItemType.hidden:
+                return 'visibility_off';
         }
     }
 }
