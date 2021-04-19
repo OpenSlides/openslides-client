@@ -100,7 +100,12 @@ export class UserRepositoryService
     }
 
     public getFieldsets(): Fieldsets<User> {
-        const shortNameFields: (keyof User | { templateField: keyof User })[] = ['title', 'first_name', 'last_name'];
+        const shortNameFields: (keyof User | { templateField: keyof User })[] = [
+            'title',
+            'first_name',
+            'last_name',
+            'username' /* Required! To getShortName */
+        ];
         /**
          * TODO: Some of thouse are not needed in the lists
          */
@@ -122,7 +127,7 @@ export class UserRepositoryService
         ]);
         const detailFields = listFields.concat(['username', 'about_me', 'comment', 'default_password']);
         const orgaListFields = listFields.concat(['committee_as_manager_ids', 'committee_as_member_ids']);
-        const orgaEditFields = orgaListFields.concat(['default_password', 'username']);
+        const orgaEditFields = orgaListFields.concat(['default_password']);
 
         return {
             [DEFAULT_FIELDSET]: detailFields,
@@ -356,7 +361,7 @@ export class UserRepositoryService
         const firstName = user.first_name ? user.first_name.trim() : '';
         const lastName = user.last_name ? user.last_name.trim() : '';
 
-        let shortName;
+        let shortName = '';
         if (firstName || lastName) {
             shortName = `${firstName} ${lastName}`;
         } else {
