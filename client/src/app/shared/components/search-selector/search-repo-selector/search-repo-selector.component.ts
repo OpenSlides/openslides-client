@@ -13,7 +13,6 @@ import { ModelRequestRepository } from 'app/core/repositories/model-request-repo
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { Settings } from 'app/shared/models/event-management/meeting';
 import { BaseSearchValueSelectorComponent } from '../base-search-value-selector/base-search-value-selector.component';
-import { Selectable } from '../../selectable';
 
 @Component({
     selector: 'os-search-repo-selector',
@@ -74,6 +73,13 @@ export class SearchRepoSelectorComponent extends BaseSearchValueSelectorComponen
         super.onContainerClick(event);
     }
 
+    protected async onAfterFirstUpdate(): Promise<void> {
+        if (this.repo && !this.empty && !this.modelSubscription) {
+            await this.doModelRequest();
+            this.initItems();
+        }
+    }
+
     private async init(): Promise<void> {
         if (this.repo && (!this.lazyLoading || this.defaultDataConfigKey || !this.empty)) {
             await this.doModelRequest();
@@ -94,7 +100,7 @@ export class SearchRepoSelectorComponent extends BaseSearchValueSelectorComponen
         this.cleanModelSubscription();
         this.modelSubscription = await this.modelRequestService.requestModels(
             this.repo.getRequestToGetAllModels(),
-            this.constructor.name
+            `${this.constructor.name}: ${this.repo.constructor.name}`
         );
     }
 

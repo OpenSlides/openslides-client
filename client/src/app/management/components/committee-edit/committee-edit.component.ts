@@ -117,7 +117,7 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
                 viewModelCtor: ViewCommittee,
                 ids: [id],
                 fieldset: 'edit',
-                follow: [{ idField: 'forward_to_committee_ids' }]
+                follow: [{ idField: 'forward_to_committee_ids' }, { idField: 'meeting_ids' }]
             },
             'loadCommittee'
         );

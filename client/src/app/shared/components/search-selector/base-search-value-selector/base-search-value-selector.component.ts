@@ -81,6 +81,8 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormControlCo
         id: null
     };
 
+    private isFirstUpdate = true;
+
     /**
      * Function to get a list filtered by the entered search value.
      *
@@ -144,5 +146,22 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormControlCo
         }
         this.contentForm.setValue(value);
         this.selectedIds = value ? (value as []) : [];
+        this.triggerUpdate();
+    }
+
+    /**
+     * Can be overriden to perform actions after the first update triggered.
+     * This method is only called, if this form is not empty.
+     */
+    protected onAfterFirstUpdate(): void | Promise<void> {}
+
+    private triggerUpdate(): void {
+        if (this.empty) {
+            return;
+        }
+        if (this.isFirstUpdate) {
+            this.isFirstUpdate = false;
+            this.onAfterFirstUpdate();
+        }
     }
 }
