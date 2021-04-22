@@ -4,14 +4,15 @@ import { SortDefinition } from 'app/core/ui-services/base-sort.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { SortingTreeComponent } from 'app/shared/components/sorting-tree/sorting-tree.component';
-import { Identifiable } from 'app/shared/models/base/identifiable';
 import { CanComponentDeactivate } from 'app/shared/utils/watch-for-changes.guard';
 import { BaseModelContextComponent } from './base-model-context.component';
 import { BaseViewModel } from '../base-view-model';
 
-export interface SortTreeFilterOption extends Identifiable {
+export type SortTreeFilterId = string | number;
+
+export interface SortTreeFilterOption {
     label: string;
-    id: number;
+    id: SortTreeFilterId;
     state: boolean;
 }
 
