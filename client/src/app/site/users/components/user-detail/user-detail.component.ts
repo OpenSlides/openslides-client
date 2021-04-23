@@ -9,6 +9,7 @@ import { ModelSubscription } from 'app/core/core-services/autoupdate.service';
 import { SpecificStructuredField } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
+import { Id } from 'app/core/definitions/key-types';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -86,6 +87,8 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
 
     private isTemporaryUser = true;
 
+    private userId: Id = 0;
+
     /**
      * Constructor for user
      *
@@ -107,7 +110,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
-        private repo: UserRepositoryService,
+        public repo: UserRepositoryService,
         private operator: OperatorService,
         private promptService: PromptService,
         private pdfService: UserPdfExportService,
@@ -138,18 +141,22 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
             this.newUser = true;
             this.setEditMode(true);
         } else {
-            this.route.params.subscribe(params => {
-                this.loadUserById(Number(params.id));
-            });
+            this.subscriptions.push(
+                this.route.params.subscribe(params => {
+                    this.userId = +params.id;
+                    this.loadUserById();
+                }),
+                this.activeMeetingIdService.meetingIdObservable.subscribe(() => this.loadUserById())
+            );
         }
     }
 
-    private loadUserById(userId: number): void {
+    private loadUserById(): void {
         const meetingId = this.activeMeetingIdService.meetingId;
         if (meetingId) {
             this.requestModels({
                 viewModelCtor: ViewUser,
-                ids: [userId],
+                ids: [this.userId],
                 follow: [
                     {
                         idField: SpecificStructuredField(
@@ -162,7 +169,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
         }
 
         this.subscriptions.push(
-            this.repo.getViewModelObservable(userId).subscribe(user => {
+            this.repo.getViewModelObservable(this.userId).subscribe(user => {
                 if (user) {
                     const title = user.getTitle();
                     super.setTitle(title);
@@ -170,7 +177,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
                 }
             }),
             this.operator.operatorUpdatedEvent.subscribe(() => {
-                this.ownPage = this.operator.operatorId === userId;
+                this.ownPage = this.operator.operatorId === this.userId;
             })
         );
     }
@@ -418,20 +425,12 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
     }
 
     private async createRealUser(): Promise<void> {
-        const payload = {
-            ...this.personalInfoForm.value,
-            ...this.createVoteDelegationObject(this.personalInfoForm.value)
-        };
-        await this.repo.create(payload);
+        await this.repo.create(this.personalInfoForm.value);
         this.goToAllUsers();
     }
 
     private async updateRealUser(): Promise<void> {
-        const payload = {
-            ...this.personalInfoForm.value,
-            ...this.createVoteDelegationObject(this.personalInfoForm.value)
-        };
-        await this.repo.update(payload, this.user);
+        await this.repo.update(this.personalInfoForm.value, this.user);
         this.setEditMode(false);
     }
 
@@ -457,14 +456,6 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
             }
         }
         this.raiseError(this.translate.instant(hint));
-    }
-
-    private createVoteDelegationObject(payload: any): any {
-        return {
-            vote_delegations_from_ids: {
-                [this.activeMeetingIdService.meetingId]: payload.vote_delegations_from_ids
-            }
-        };
     }
 
     private goToAllUsers(): void {

@@ -313,11 +313,7 @@ export class UserRepositoryService
             default_password: partialUser.default_password,
             default_structure_level: partialUser.default_structure_level,
             default_number: partialUser.default_number,
-            // TODO: Server bugs:
-            // data.default_vote_weight must be string or null
-            // data.default_vote_weight must match pattern ^-?(\d|[1-9]\d+)\.\d{6}$
-            // default_vote_weight: partialUser.default_vote_weight
-            default_vote_weight: null
+            default_vote_weight: toDecimal(partialUser.default_vote_weight)
         };
 
         if (this.activeMeetingId) {
