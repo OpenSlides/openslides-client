@@ -35,12 +35,13 @@ export class CommitteeRepositoryService
 
     public getFieldsets(): Fieldsets<Committee> {
         const titleFields: (keyof Committee)[] = ['name', 'description'];
-        const listFields: (keyof Committee)[] = titleFields.concat(['meeting_ids', 'member_ids', 'default_meeting_id']);
-        const editFields: (keyof Committee)[] = titleFields.concat([
+        const listFields: (keyof Committee)[] = titleFields.concat([
+            'meeting_ids',
+            'member_ids',
             'manager_ids',
-            'forward_to_committee_ids',
-            'template_meeting_id'
+            'forward_to_committee_ids'
         ]);
+        const editFields: (keyof Committee)[] = titleFields.concat(['default_meeting_id', 'template_meeting_id']);
         return {
             [DEFAULT_FIELDSET]: titleFields,
             list: listFields,
