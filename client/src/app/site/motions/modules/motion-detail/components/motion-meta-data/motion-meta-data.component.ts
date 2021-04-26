@@ -5,6 +5,7 @@ import { Observable, Subscription } from 'rxjs';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
+import { MotionService } from 'app/core/repositories/motions/motion.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
@@ -66,14 +67,14 @@ export class MotionMetaDataComponent extends BaseComponent implements OnInit {
      * @returns the current recommendation label (with extension)
      */
     public get recommendationLabel(): string {
-        return this.repo.getExtendedRecommendationLabel(this.motion);
+        return this.motionService.getExtendedRecommendationLabel(this.motion);
     }
 
     /**
      * @returns the current state label (with extension)
      */
     public get stateLabel(): string {
-        return this.repo.getExtendedStateLabel(this.motion);
+        return this.motionService.getExtendedStateLabel(this.motion);
     }
 
     public get isDifferedChangeRecoMode(): boolean {
@@ -107,6 +108,7 @@ export class MotionMetaDataComponent extends BaseComponent implements OnInit {
         componentServiceCollector: ComponentServiceCollector,
         private meetingSettingsService: MeetingSettingsService,
         private repo: MotionRepositoryService,
+        private motionService: MotionService,
         private categoryRepo: MotionCategoryRepositoryService,
         private tagRepo: TagRepositoryService,
         private blockRepo: MotionBlockRepositoryService,
@@ -281,7 +283,7 @@ export class MotionMetaDataComponent extends BaseComponent implements OnInit {
 
     private subscribeToMetaData(): Subscription[] {
         return [
-            this.repo
+            this.motionService
                 .getRecommendationReferencingMotions(this.motion?.id)
                 ?.subscribe(motions => (this.recommendationReferencingMotions = motions))
         ];

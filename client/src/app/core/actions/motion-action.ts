@@ -8,6 +8,7 @@ export namespace MotionAction {
     export const CREATE = 'motion.create';
     export const UPDATE = 'motion.update';
     export const DELETE = 'motion.delete';
+    export const CREATE_FORWARDED = 'motion.create_forwarded';
     export const SORT = 'motion.sort';
     export const SET_STATE = 'motion.set_state';
     export const RESET_STATE = 'motion.reset_state';
@@ -59,6 +60,13 @@ export namespace MotionAction {
     }
 
     export interface DeletePayload extends Identifiable {}
+
+    export interface CreateForwardedPayload extends HasMeetingId {
+        title: string;
+        text: UnsafeHtml;
+        origin_id: Id;
+        reason?: UnsafeHtml;
+    }
 
     export interface SetRecommendationPayload extends Identifiable {
         recommendation_id: Id;

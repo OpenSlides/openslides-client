@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Workbook } from 'exceljs/dist/exceljs.min.js';
 
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
-import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
+import { MotionService } from 'app/core/repositories/motions/motion.service';
 import { CellFillingDefinition, XlsxExportServiceService } from 'app/core/ui-services/xlsx-export-service.service';
 import { reconvertChars } from 'app/shared/utils/reconvert-chars';
 import { stripHtmlTags } from 'app/shared/utils/strip-html-tags';
@@ -67,7 +67,7 @@ export class MotionXlsxExportService {
     public constructor(
         private xlsx: XlsxExportServiceService,
         private translate: TranslateService,
-        private motionRepo: MotionRepositoryService,
+        private motionService: MotionService,
         private commentRepo: MotionCommentSectionRepositoryService
     ) {}
 
@@ -157,9 +157,9 @@ export class MotionXlsxExportService {
                     }
                     switch (property) {
                         case 'state':
-                            return this.motionRepo.getExtendedStateLabel(motion);
+                            return this.motionService.getExtendedStateLabel(motion);
                         case 'recommendation':
-                            return this.motionRepo.getExtendedRecommendationLabel(motion);
+                            return this.motionService.getExtendedRecommendationLabel(motion);
                         default:
                             return this.translate.instant(motionProp.toString());
                     }

@@ -5,7 +5,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PblColumnDefinition } from '@pebula/ngrid';
 
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
-import { ModelRequest } from 'app/core/core-services/autoupdate.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
@@ -15,6 +14,7 @@ import {
     MotionRepositoryService
 } from 'app/core/repositories/motions/motion-repository.service';
 import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/motion-workflow-repository.service';
+import { MotionService } from 'app/core/repositories/motions/motion.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { OsFilterOptionCondition } from 'app/core/ui-services/base-filter-list.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -221,6 +221,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
         private categoryRepo: MotionCategoryRepositoryService,
         private workflowRepo: MotionWorkflowRepositoryService,
         public motionRepo: MotionRepositoryService,
+        public motionService: MotionService,
         private dialog: MatDialog,
         public multiselectService: MotionMultiselectService,
         public perms: PermissionsService,
@@ -287,6 +288,10 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
         this.amendmentsEnabled = true;
     }
 
+    public async forwardMotionsToMeetings(motions: ViewMotion[]): Promise<void> {
+        await this.motionService.forwardMotionsToMeetings(...motions);
+    }
+
     protected getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
@@ -317,7 +322,8 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
                         },
                         SPEAKER_BUTTON_FOLLOW
                     ],
-                    fieldset: 'list'
+                    fieldset: 'list',
+                    additionalFields: ['text']
                 }
             ],
             fieldset: []

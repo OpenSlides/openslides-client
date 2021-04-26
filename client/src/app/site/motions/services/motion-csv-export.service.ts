@@ -6,6 +6,7 @@ import { MotionChangeRecommendationRepositoryService } from 'app/core/repositori
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
 import { MotionLineNumberingService } from 'app/core/repositories/motions/motion-line-numbering.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
+import { MotionService } from 'app/core/repositories/motions/motion.service';
 import {
     CsvColumnDefinitionMap,
     CsvColumnDefinitionProperty,
@@ -33,6 +34,7 @@ export class MotionCsvExportService {
         private linenumberingService: LinenumberingService,
         private changeRecoRepo: MotionChangeRecommendationRepositoryService,
         private motionRepo: MotionRepositoryService,
+        private motionService: MotionService,
         private motionLineNumbering: MotionLineNumberingService,
         private commentRepo: MotionCommentSectionRepositoryService
     ) {}
@@ -104,12 +106,12 @@ export class MotionCsvExportService {
             if (option === 'recommendation') {
                 return {
                     label: 'recommendation',
-                    map: motion => this.motionRepo.getExtendedRecommendationLabel(motion)
+                    map: motion => this.motionService.getExtendedRecommendationLabel(motion)
                 };
             } else if (option === 'state') {
                 return {
                     label: 'state',
-                    map: motion => this.motionRepo.getExtendedStateLabel(motion)
+                    map: motion => this.motionService.getExtendedStateLabel(motion)
                 };
             } else if (option === 'text') {
                 return {
@@ -155,7 +157,8 @@ export class MotionCsvExportService {
                 { property: 'title' },
                 {
                     label: 'recommendation',
-                    map: motion => (motion.recommendation ? this.motionRepo.getExtendedRecommendationLabel(motion) : '')
+                    map: motion =>
+                        motion.recommendation ? this.motionService.getExtendedRecommendationLabel(motion) : ''
                 },
                 { property: 'block', label: 'Motion block' }
             ],

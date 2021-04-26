@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { HtmlToPdfService } from 'app/core/pdf-services/html-to-pdf.service';
-import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
+import { MotionService } from 'app/core/repositories/motions/motion.service';
 import { ViewMotion } from '../models/view-motion';
 
 /**
@@ -14,7 +14,7 @@ import { ViewMotion } from '../models/view-motion';
 })
 export class AmendmentListPdfService {
     public constructor(
-        private motionRepo: MotionRepositoryService,
+        private motionService: MotionService,
         private translate: TranslateService,
         private htmlToPdfService: HtmlToPdfService
     ) {}
@@ -40,7 +40,7 @@ export class AmendmentListPdfService {
         let recommendationText = '';
         if (amendment.recommendation) {
             if (amendment.recommendation.show_recommendation_extension_field && amendment.recommendationExtension) {
-                recommendationText += ` ${this.motionRepo.getExtendedRecommendationLabel(amendment)}`;
+                recommendationText += ` ${this.motionService.getExtendedRecommendationLabel(amendment)}`;
             } else {
                 recommendationText += this.translate.instant(amendment.recommendation.recommendation_label);
             }

@@ -1,0 +1,12 @@
+<div mat-dialog-title>{{ 'Forward motions' | translate }}</div>
+<div mat-dialog-content>
+    <os-selection-tree
+        parentKey="parent_id"
+        [data]="availableMeetingsObservable"
+        (selectionChanged)="currentSelectedMeetings = $event"
+    ></os-selection-tree>
+</div>
+<div mat-dialog-actions>
+    <button mat-button color="primary" (click)="onSaveClicked()">{{ 'Save' | translate }}</button>
+    <button mat-button [mat-dialog-close]="null">{{ 'Cancel' | translate }}</button>
+</div>

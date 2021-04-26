@@ -9,6 +9,7 @@ import { MotionCommentSectionRepositoryService } from 'app/core/repositories/mot
 import { MotionLineNumberingService } from 'app/core/repositories/motions/motion-line-numbering.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { MotionStatuteParagraphRepositoryService } from 'app/core/repositories/motions/motion-statute-paragraph-repository.service';
+import { MotionService } from 'app/core/repositories/motions/motion.service';
 import { LinenumberingService } from 'app/core/ui-services/linenumbering.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from 'app/shared/models/motions/view-unified-change';
@@ -45,6 +46,7 @@ export class MotionPdfService {
     public constructor(
         private translate: TranslateService,
         private motionRepo: MotionRepositoryService,
+        private motionService: MotionService,
         private motionLineNumbering: MotionLineNumberingService,
         private statuteRepo: MotionStatuteParagraphRepositoryService,
         private changeRecoRepo: MotionChangeRecommendationRepositoryService,
@@ -263,7 +265,7 @@ export class MotionPdfService {
                     style: 'boldText'
                 },
                 {
-                    text: this.motionRepo.getExtendedStateLabel(motion)
+                    text: this.motionService.getExtendedStateLabel(motion)
                 }
             ]);
         }
@@ -284,7 +286,7 @@ export class MotionPdfService {
                     style: 'boldText'
                 },
                 {
-                    text: this.motionRepo.getExtendedRecommendationLabel(motion)
+                    text: this.motionService.getExtendedRecommendationLabel(motion)
                 }
             ]);
         }
@@ -759,7 +761,7 @@ export class MotionPdfService {
             { text: motion.submitters.length ? motion.submittersAsUsers.map(s => s.short_name).join(', ') : '' },
             { text: motion.title },
             {
-                text: motion.recommendation ? this.motionRepo.getExtendedRecommendationLabel(motion) : ''
+                text: motion.recommendation ? this.motionService.getExtendedRecommendationLabel(motion) : ''
             },
             { text: '' }
         ];

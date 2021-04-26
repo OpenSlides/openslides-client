@@ -153,7 +153,7 @@ export class MotionDetailDiffComponent extends BaseComponent implements AfterVie
      * @param {ViewUnifiedChange[]} changes
      */
     public hasCollissions(change: ViewUnifiedChange, changes: ViewUnifiedChange[]): boolean {
-        return this.motionRepo.changeHasCollissions(change, changes);
+        return this.motionLineNumbering.changeHasCollissions(change, changes);
     }
 
     /**

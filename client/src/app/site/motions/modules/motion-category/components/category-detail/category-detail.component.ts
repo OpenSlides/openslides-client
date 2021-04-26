@@ -9,7 +9,7 @@ import { SimplifiedModelRequest } from 'app/core/core-services/model-request-bui
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
-import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
+import { MotionService } from 'app/core/repositories/motions/motion.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
@@ -81,7 +81,7 @@ export class CategoryDetailComponent extends BaseModelContextComponent implement
         private operator: OperatorService,
         private router: Router,
         private repo: MotionCategoryRepositoryService,
-        private motionRepo: MotionRepositoryService,
+        private motionService: MotionService,
         private promptService: PromptService,
         private formBuilder: FormBuilder,
         private dialog: MatDialog
@@ -219,7 +219,7 @@ export class CategoryDetailComponent extends BaseModelContextComponent implement
      * @returns the current recommendation label (with extension)
      */
     public getRecommendationLabel(motion: ViewMotion): string {
-        return this.motionRepo.getExtendedRecommendationLabel(motion);
+        return this.motionService.getExtendedRecommendationLabel(motion);
     }
 
     /**
@@ -229,7 +229,7 @@ export class CategoryDetailComponent extends BaseModelContextComponent implement
      * @returns the current state label (with extension)
      */
     public getStateLabel(motion: ViewMotion): string {
-        return this.motionRepo.getExtendedStateLabel(motion);
+        return this.motionService.getExtendedStateLabel(motion);
     }
 
     public getLevelDashes(category: ViewMotionCategory): string {
