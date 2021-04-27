@@ -64,7 +64,7 @@
             </div>
 
             <!-- Enter Votes Hint -->
-            <div *osPerms="permission.assignmentsCanManage; and: poll.type === 'analog' && !poll.stateHasVotes">
+            <div *osPerms="permission.assignmentsCanManage; and: poll.isAnalog && !poll.stateHasVotes">
                 {{ 'Edit to enter votes.' | translate }}
             </div>
         </div>

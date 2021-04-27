@@ -9,7 +9,7 @@
                 ></span>
                 <span
                     class="change-title"
-                    *osPerms="'motions.can_manage'; and: !titleChangeRecommendation"
+                    *osPerms="permission.motionsCanManage; and: !titleChangeRecommendation"
                     (click)="createTitleChangeRecommendation()"
                 ></span>
             </span>

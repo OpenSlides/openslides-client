@@ -234,7 +234,7 @@
                     </mat-list-item>
                 </mat-list>
             </div>
-            <div *osPerms="'motions.can_manage'; and: editMotion">
+            <div *osPerms="permission.motionsCanManage; and: editMotion">
                 <os-attachment-control
                     formControlName="attachment_ids"
                     (errorHandler)="showUploadError($event)"
