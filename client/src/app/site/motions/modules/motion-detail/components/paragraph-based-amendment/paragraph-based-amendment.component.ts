@@ -1,7 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DiffLinesInParagraph, LineRange } from 'app/core/ui-services/diff.service';
 import { ViewUnifiedChange } from 'app/shared/models/motions/view-unified-change';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.constants';
 
@@ -10,7 +12,7 @@ import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.cons
     templateUrl: './paragraph-based-amendment.component.html',
     styleUrls: ['./paragraph-based-amendment.component.scss']
 })
-export class ParagraphBasedAmendmentComponent implements OnInit {
+export class ParagraphBasedAmendmentComponent extends BaseComponent {
     public readonly LineNumberingMode = LineNumberingMode;
     public readonly ChangeRecoMode = ChangeRecoMode;
 
@@ -48,7 +50,9 @@ export class ParagraphBasedAmendmentComponent implements OnInit {
 
     public showAllAmendments = false;
 
-    public ngOnInit(): void {}
+    public constructor(protected componentServiceCollector: ComponentServiceCollector) {
+        super(componentServiceCollector);
+    }
 
     /**
      * This returns the plain HTML of a changed area in an amendment, including its context,
@@ -80,10 +84,10 @@ export class ParagraphBasedAmendmentComponent implements OnInit {
      * @returns {DiffLinesInParagraph[]}
      */
     public getAmendmentParagraphs(): DiffLinesInParagraph[] {
-        return this.motion?.diffLines;
+        return this.motion?.diffLines || [];
     }
 
     public getAmendmentParagraphLinesTitle(paragraph: DiffLinesInParagraph): string {
-        return this.motion?.getParagraphTitleByParagraph(paragraph);
+        return this.motion?.getParagraphTitleByParagraph(paragraph) || '';
     }
 }

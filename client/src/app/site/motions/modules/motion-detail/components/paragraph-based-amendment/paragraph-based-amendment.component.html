@@ -7,7 +7,7 @@
         </div>
         <ng-container *ngIf="motion.lead_motion && crMode !== ChangeRecoMode.Diff && !isFinalEdit">
             <div
-                *ngFor="let paragraph of getAmendmentParagraphs()"
+                *ngFor="let paragraph of getAmendmentParagraphs(); trackBy: trackByIndex"
                 class="motion-text motion-text-diff amendment-view"
                 [class.line-numbers-none]="lnMode === LineNumberingMode.None"
                 [class.line-numbers-inline]="lnMode === LineNumberingMode.Inside"
