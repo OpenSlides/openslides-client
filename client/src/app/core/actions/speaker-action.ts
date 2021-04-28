@@ -1,5 +1,6 @@
+import { SpeechState } from 'app/shared/models/agenda/speaker';
 import { Identifiable } from 'app/shared/models/base/identifiable';
-import { Id } from '../definitions/key-types';
+import { Id, UnsafeHtml } from '../definitions/key-types';
 
 export namespace SpeakerAction {
     export const CREATE = 'speaker.create';
@@ -9,16 +10,19 @@ export namespace SpeakerAction {
     export const END_SPEAK = 'speaker.end_speech';
     export const SORT_SPEAKERS = 'speaker.sort';
 
-    export interface CreatePayload {
-        list_of_speakers_id: Id;
-        user_id: Id;
-        marked?: boolean;
-        point_of_order?: boolean;
+    interface BasePayload {
+        speech_state: SpeechState;
     }
 
-    export interface UpdatePayload extends Identifiable {
-        marked?: boolean;
+    export interface CreatePayload extends Partial<BasePayload> {
+        list_of_speakers_id: Id;
+        user_id: Id;
+
+        point_of_order?: boolean;
+        note?: UnsafeHtml;
     }
+
+    export interface UpdatePayload extends Identifiable, BasePayload {}
 
     export interface DeletePayload extends Identifiable {}
 

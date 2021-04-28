@@ -148,15 +148,19 @@
                     >
                         <!-- implicit item references into the component using ng-template slot -->
                         <ng-template let-item>
-                            <span *ngIf="hasPerms('manage')">
-                                <button
-                                    mat-icon-button
-                                    matTooltip="{{ 'Remove candidate' | translate }}"
-                                    (click)="removeCandidate(item)"
-                                >
-                                    <mat-icon>clear</mat-icon>
-                                </button>
-                            </span>
+                            <div class="single-candidate-line">
+                                <span>{{ item.getTitle() }}</span>
+                                <span>
+                                    <button
+                                        *ngIf="hasPerms('manage')"
+                                        mat-icon-button
+                                        matTooltip="{{ 'Remove candidate' | translate }}"
+                                        (click)="removeCandidate(item)"
+                                    >
+                                        <mat-icon>clear</mat-icon>
+                                    </button>
+                                </span>
+                            </div>
                         </ng-template>
                     </os-sorting-list>
                 </div>
