@@ -110,7 +110,7 @@
                         mat-icon-button
                         matTooltip="{{ 'Begin speech' | translate }}"
                         (click)="onStartButton(speaker)"
-                        *osPerms="'agenda.can_manage_list_of_speakers'"
+                        *osPerms="permission.listOfSpeakersCanManage"
                     >
                         <mat-icon>play_arrow</mat-icon>
                     </button>
@@ -120,7 +120,7 @@
                         mat-icon-button
                         matTooltip="{{ 'Mark speaker' | translate }}"
                         (click)="onMarkButton(speaker)"
-                        *osPerms="'agenda.can_manage_list_of_speakers'; and: !speaker.point_of_order"
+                        *osPerms="permission.listOfSpeakersCanManage; and: !speaker.point_of_order"
                     >
                         <mat-icon>{{ speaker.marked ? 'star' : 'star_border' }}</mat-icon>
                     </button>
@@ -139,7 +139,7 @@
                         mat-icon-button
                         matTooltip="{{ 'Remove' | translate }}"
                         (click)="removeSpeaker(speaker)"
-                        *osPerms="'agenda.can_manage_list_of_speakers'"
+                        *osPerms="permission.listOfSpeakersCanManage"
                     >
                         <mat-icon>close</mat-icon>
                     </button>

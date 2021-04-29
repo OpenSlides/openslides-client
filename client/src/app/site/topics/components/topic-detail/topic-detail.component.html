@@ -18,7 +18,7 @@
     </div>
 
     <!-- Menu -->
-    <div class="menu-slot" *osPerms="permission.agendaItemCanManage; or: permission.listOfSpeakersCanSee">
+    <div class="menu-slot" *osPerms="[permission.agendaItemCanManage, permission.listOfSpeakersCanSee]">
         <button type="button" mat-icon-button [matMenuTriggerFor]="topicExtraMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
