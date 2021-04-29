@@ -57,6 +57,8 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
      */
     public isNumberingAllowed: boolean;
 
+    public showSubtitle: boolean;
+
     /**
      * Helper to check main button permissions
      *
@@ -147,6 +149,9 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
             this.meetingsSettingsService
                 .get('agenda_enable_numbering')
                 .subscribe(autoNumbering => (this.isNumberingAllowed = autoNumbering)),
+            this.meetingsSettingsService
+                .get('agenda_show_subtitles')
+                .subscribe(showSubtitle => (this.showSubtitle = showSubtitle)),
             this.activeMeetingIdService.meetingIdObservable.subscribe(id => {
                 if (id) {
                     this.itemListSlide = {

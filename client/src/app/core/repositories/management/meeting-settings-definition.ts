@@ -251,7 +251,7 @@ export const meetingSettings: SettingsGroup[] = [
                     },
                     {
                         key: 'agenda_show_subtitles',
-                        label: 'Show subtitles in the agenda',
+                        label: 'Show motion submitters in the agenda',
                         type: 'boolean'
                     }
                 ]
@@ -261,7 +261,7 @@ export const meetingSettings: SettingsGroup[] = [
                 settings: [
                     {
                         key: 'agenda_enable_numbering',
-                        label: 'Show subtitles in the agenda',
+                        label: 'Enable numbering for agenda items',
                         default: true,
                         type: 'boolean'
                     },
