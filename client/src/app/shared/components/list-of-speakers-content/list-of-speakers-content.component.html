@@ -174,25 +174,20 @@
         </form>
     </div>
 
-    <div class="add-self-buttons">
+    <div class="add-self-buttons" *osPerms="permission.listOfSpeakersCanBeSpeaker">
         <!-- Add me and remove me if OP has correct permission -->
 
         <button
-            *osPerms="'agenda.can_be_speaker'; and: !isOpInWaitlist()"
+            *ngIf="!isOpInWaitlist()"
             mat-stroked-button
-            [disabled]="closed || !canAddSelf"
+            [disabled]="closed || !canAddDueToPresence"
             (click)="addMyself()"
         >
             <mat-icon>add</mat-icon>
             <span>{{ 'Add me' | translate }}</span>
         </button>
 
-        <button
-            *osPerms="'agenda.can_be_speaker'; and: isOpInWaitlist()"
-            mat-stroked-button
-            [disabled]="closed"
-            (click)="removeSpeaker()"
-        >
+        <button *ngIf="isOpInWaitlist()" mat-stroked-button [disabled]="closed" (click)="removeSpeaker()">
             <mat-icon>remove</mat-icon>
             <span>{{ 'Remove me' | translate }}</span>
         </button>

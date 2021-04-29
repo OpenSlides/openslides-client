@@ -62,7 +62,11 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
 
     public showFistContributionHint: boolean;
 
-    public showPointOfOrders: boolean;
+    public get showPointOfOrders(): boolean {
+        return this.pointOfOrderEnabled && this.canAddDueToPresence;
+    }
+
+    private pointOfOrderEnabled: boolean;
 
     public get title(): string {
         return this._listOfSpeakers?.getTitle();
@@ -80,7 +84,7 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
         return this.operator.hasPerms(this.permission.listOfSpeakersCanManage);
     }
 
-    public get canAddSelf(): boolean {
+    public get canAddDueToPresence(): boolean {
         return !this.onlyPresentUsers || this.currentUser.isPresentInMeeting();
     }
 
@@ -173,7 +177,7 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
             }),
             // observe point of order settings
             this.meetingSettingsService.get('list_of_speakers_enable_point_of_order_speakers').subscribe(show => {
-                this.showPointOfOrders = show;
+                this.pointOfOrderEnabled = show;
             })
         );
     }
