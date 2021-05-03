@@ -49,7 +49,7 @@ export class DashboardComponent extends BaseModelContextComponent implements OnI
     public ngOnInit(): void {
         this.subscriptions.push(
             this.organizationRepo.getViewModelObservable(1).subscribe(organization => {
-                this._orgaName = organization.name;
+                this._orgaName = organization?.name;
             })
         );
     }

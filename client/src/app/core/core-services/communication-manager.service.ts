@@ -15,6 +15,8 @@ class StreamContainerWithCloseFn extends StreamContainer {
     public closeFn: () => void;
 }
 
+const LOG = true;
+
 /**
  * Main class for communication in streams with the server. You have to register an
  * endpoint to communicate with `registerEndpoint` and connect to it with `connect`.
@@ -73,8 +75,10 @@ export class CommunicationManagerService {
             await this._connect(container);
         }
 
-        console.log('Opened', container.description, container.id, container);
-        this.printActiveStreams();
+        if (LOG) {
+            console.log('Opened', container.description, container.id, container);
+            this.printActiveStreams();
+        }
 
         return () => this.close(container);
     }
@@ -128,8 +132,10 @@ export class CommunicationManagerService {
         }
         delete this.requestedStreams[container.id];
 
-        console.log('Closed', container.description, container.id, container);
-        this.printActiveStreams();
+        if (LOG) {
+            console.log('Closed', container.description, container.id, container);
+            this.printActiveStreams();
+        }
     }
 
     private printActiveStreams(): void {

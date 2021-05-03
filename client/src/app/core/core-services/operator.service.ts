@@ -2,7 +2,6 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { BehaviorSubject, Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
 
 import { NoActiveMeeting } from './active-meeting-id.service';
 import { ActiveMeetingService } from './active-meeting.service';
@@ -12,6 +11,7 @@ import { ViewUser } from 'app/site/users/models/view-user';
 import { AuthService } from './auth.service';
 import { AutoupdateService, ModelSubscription } from './autoupdate.service';
 import { DataStoreService } from './data-store.service';
+import { Deferred } from '../promises/deferred';
 import { GroupRepositoryService } from '../repositories/users/group-repository.service';
 import { Id } from '../definitions/key-types';
 import { LifecycleService } from './lifecycle.service';
@@ -20,6 +20,19 @@ import { Permission } from './permission';
 import { UserRepositoryService } from '../repositories/users/user-repository.service';
 
 const UNKOWN_USER_ID = -1; // this is an invalid id **and** not equal to 0, null, undefined.
+
+function getUserCML(user: ViewUser): { [id: number]: string } | null {
+    if (!(user as any).committee_$_management_level) {
+        return null;
+    }
+
+    const CML = {};
+    const templateField = (user as any).committee_$_management_level;
+    for (const replacement of templateField) {
+        CML[+replacement] = (user as any)[`committee_$${replacement}_management_level`];
+    }
+    return CML;
+}
 
 /**
  * The operator represents the user who is using OpenSlides.
@@ -49,11 +62,12 @@ export class OperatorService {
     private _shortName: string;
 
     // permissions and groupIds are bound to the active meeting.
-    // If there is no active meeting, both will be null.
-    // If groupIds is null or [], the default group must be used.
-
-    private permissions: Permission[] | null = null;
-    private groupIds: Id[] | null = null;
+    // If there is no active meeting, both will be undefined.
+    // If groupIds is undefined or [], the default group must be used (given, there is an active meeting).
+    private permissions: Permission[] | undefined = undefined;
+    private groupIds: Id[] | undefined = undefined;
+    private OML: string | undefined = undefined; //  null is valid, so use undefined here
+    private CML: { [id: number]: string } | undefined = undefined;
 
     public get isSuperAdmin(): boolean {
         if (this.defaultGroupId) {
@@ -89,9 +103,12 @@ export class OperatorService {
         return this.userSubject.asObservable();
     }
 
-    private _loaded: Promise<void>;
-    public get loaded(): Promise<void> {
-        return this._loaded;
+    // State management
+    private _ready = false;
+
+    private _readyDeferred: Deferred<void>;
+    public get ready(): Deferred<void> {
+        return this._readyDeferred;
     }
 
     private currentOperatorDataSubscription: ModelSubscription | null = null;
@@ -114,10 +131,8 @@ export class OperatorService {
         return activeMeeting ? activeMeeting.admin_group_id : null;
     }
 
-    private hasOperatorDataSubscriptionInitiated = false;
-
-    private _lastActiveMeetingId;
-    private _lastDefaultGroupId;
+    private _hasOperatorDataSubscriptionInitiated = false;
+    private _lastActiveMeetingId = undefined;
     private _lastUserId = UNKOWN_USER_ID;
 
     public constructor(
@@ -130,31 +145,51 @@ export class OperatorService {
         private router: Router,
         private lifecycle: LifecycleService
     ) {
-        this._loaded = this.operatorUpdatedEvent.pipe(take(1)).toPromise();
+        this.setNotReady();
 
         this.authService.onLogout.subscribe(() => this.navigateOnLogout());
+
+        // General environment in which the operator moves
         this.authService.authTokenObservable.subscribe(token => {
+            if (token === undefined) {
+                return;
+            }
             const id = token ? token.userId : null;
             if (id !== this._lastUserId) {
                 console.debug('operator: user changed from ', this._lastUserId, 'to', id);
                 this._lastUserId = id;
-                this.refreshOperatorDataSubscription();
+
+                this.operatorStateChange();
+            }
+        });
+        // The meeting observable (below) is too slow since it waits for updates from the
+        // repos after the meeting id changes -> if the meeting id changes, set the operator
+        // to not being ready. Do not call operatorStateChange since the meeting is not there yet.
+        // The meeting observable below will trigger a bit later.
+        this.activeMeetingService.meetingIdObservable.subscribe(meetingId => {
+            if (meetingId === undefined) {
+                return;
+            }
+            if (this._lastActiveMeetingId !== meetingId) {
+                console.debug('operator: active meeting id changed from ', this._lastActiveMeetingId, 'to', meetingId);
+
+                this.setNotReady();
             }
         });
         this.activeMeetingService.meetingObservable.subscribe(meeting => {
-            if (
-                (!meeting && this._lastActiveMeetingId) ||
-                (meeting &&
-                    (meeting.id !== this._lastActiveMeetingId || meeting.default_group_id !== this._lastDefaultGroupId))
-            ) {
-                console.debug('operator: active meeting changed from ', this._lastActiveMeetingId, 'to', meeting?.id);
-                this._lastActiveMeetingId = meeting ? meeting.id : null;
-                this._lastDefaultGroupId = meeting ? meeting.default_group_id : null;
+            if (meeting === undefined) {
+                return;
+            }
+            const newMeetingId = meeting?.id || null;
+            if (this._lastActiveMeetingId !== newMeetingId) {
+                console.debug('operator: active meeting changed from ', this._lastActiveMeetingId, 'to', newMeetingId);
+                this._lastActiveMeetingId = newMeetingId;
 
-                this.refreshOperatorDataSubscription();
+                this.operatorStateChange();
             }
         });
 
+        // Specific operator data: The user itself and the groups for permissions.
         this.userRepo.getGeneralViewModelObservable().subscribe(user => {
             if (user !== undefined && this.operatorId === user.id) {
                 this._shortName = this.userRepo.getShortName(user);
@@ -164,7 +199,9 @@ export class OperatorService {
                     this.permissions = this.calcPermissions();
                 }
 
-                // TODO: get users role
+                this.OML = user.organisation_management_level || null;
+                this.CML = getUserCML(user);
+                this.CML = {}; // TODO: this is just a dummy
 
                 this.operatorShortNameSubject.next(this._shortName);
                 this.userSubject.next(user);
@@ -189,17 +226,72 @@ export class OperatorService {
                 }
             }
         });
+
+        this.operatorUpdatedEvent.subscribe(() => {
+            if (this._ready) {
+                return;
+            }
+
+            // Not ready: Check, if we are ready:
+            // - groups and permissions are needed, if there is a active meeting
+            // - OML and CML are needed, if the user is authenticated.
+
+            let isReady = true;
+            if (this.activeMeetingId) {
+                isReady = isReady && this.groupIds !== undefined && this.permissions !== undefined;
+            }
+            if (this.isAuthenticated) {
+                isReady = isReady && this.OML !== undefined && this.CML !== undefined;
+            }
+
+            if (isReady) {
+                this._ready = true;
+                this._readyDeferred.resolve();
+            }
+        });
     }
 
-    private async refreshOperatorDataSubscription(): Promise<void> {
+    private setNotReady(): void {
+        this._ready = false;
+
+        this.groupIds = undefined;
+        this.permissions = undefined;
+        this.OML = undefined;
+        this.CML = undefined;
+
+        if (!this._readyDeferred || this._readyDeferred.wasResolved) {
+            console.log('operator: not ready');
+            this._readyDeferred = new Deferred();
+        }
+    }
+
+    // The surrounding environment changes:
+    // - changed meeting
+    // - changed user
+    // Results in the operator not being ready until all necessary data is there.
+    private async operatorStateChange(): Promise<void> {
+        this.setNotReady();
+
         if (this.currentOperatorDataSubscription) {
             this.currentOperatorDataSubscription.close();
             this.currentOperatorDataSubscription = null;
-            this.hasOperatorDataSubscriptionInitiated = false;
+        }
+
+        if (this._hasOperatorDataSubscriptionInitiated) {
+            this._hasOperatorDataSubscriptionInitiated = false;
         }
 
         await this.lifecycle.booted;
-        console.log('Operator: lifecycle booted. Resume operatorsubscription.');
+
+        // Prevent races:
+        // There are multiple reasons of calling this function on startup.
+        // We wait for the booted deferred above. The first executer should win,
+        // so this lines block another promises for waiting. This results in the code
+        // below the guard to be executed onces.
+        if (this._hasOperatorDataSubscriptionInitiated) {
+            return;
+        }
+        this._hasOperatorDataSubscriptionInitiated = true;
 
         let operatorRequest: SimplifiedModelRequest = null;
         if (this.activeMeetingId) {
@@ -208,6 +300,7 @@ export class OperatorService {
                     ids: [this.operatorId],
                     viewModelCtor: ViewUser,
                     fieldset: 'shortName',
+                    additionalFields: ['organisation_management_level', 'committee_$_management_level'],
                     follow: [
                         {
                             idField: SpecificStructuredField('group_$_ids', this.activeMeetingId),
@@ -234,7 +327,8 @@ export class OperatorService {
                 operatorRequest = {
                     ids: [this.operatorId],
                     viewModelCtor: ViewUser,
-                    fieldset: 'shortName'
+                    fieldset: 'shortName',
+                    additionalFields: ['organisation_management_level', 'committee_$_management_level']
                 };
             } else {
                 // not logged in and no anonymous. We are done with loading, so we have
@@ -243,11 +337,18 @@ export class OperatorService {
             }
         }
 
-        if (operatorRequest && !this.hasOperatorDataSubscriptionInitiated) {
-            this.hasOperatorDataSubscriptionInitiated = true;
+        if (operatorRequest) {
             // Do not wait for the subscription to be done...
             (async () => {
                 console.log('operator: Do operator model request', operatorRequest);
+                console.log(
+                    'operator: configuration: meeting',
+                    this.activeMeetingId,
+                    'authenticated',
+                    this.isAuthenticated,
+                    'anonymous enabled',
+                    this.anonymousEnabled
+                );
                 this.currentOperatorDataSubscription = await this.autoupdateService.simpleRequest(
                     operatorRequest,
                     'OperatorService'
@@ -262,7 +363,7 @@ export class OperatorService {
      */
     private calcPermissions(): Permission[] {
         let permissions;
-        if (this.groupIds === null) {
+        if (!this.groupIds) {
             permissions = [];
         } else if (this.isAnonymous || this.groupIds.length === 0) {
             // Anonymous or users in the default group.
@@ -282,20 +383,33 @@ export class OperatorService {
 
     /**
      * Checks, if the operator has at least one of the given permissions.
+     * Only works in the current meeting.
      * @param checkPerms The permissions to check, if at least one matches.
-     *
-     * TODO: what if no active meeting??
      */
     public hasPerms(...checkPerms: Permission[]): boolean {
-        if (this.groupIds === null) {
+        if (!this._ready) {
+            console.warn('has perms: Operator is not ready!');
             return false;
         }
-        if (this.isAuthenticated && this.groupIds.includes(this.adminGroupId)) {
-            return true;
+        if (!this.activeMeetingId) {
+            console.warn('has perms: Usage outside of meeting!');
+            return false;
         }
-        return checkPerms.some(permission => {
-            return this.permissions.includes(permission);
-        });
+
+        let result;
+        if (!this.groupIds) {
+            result = false;
+        } else if (this.isAuthenticated && this.groupIds.includes(this.adminGroupId)) {
+            result = true;
+        } else {
+            result = checkPerms.some(permission => {
+                return this.permissions.includes(permission);
+            });
+        }
+        if (!this._ready) {
+            console.log('has perms', checkPerms, result, this.groupIds, this.isAuthenticated, this.permissions);
+        }
+        return result;
     }
 
     /**
@@ -315,7 +429,7 @@ export class OperatorService {
      * TODO: what if no active meeting??
      */
     public isInGroupIds(...groupIds: number[]): boolean {
-        if (this.groupIds === null) {
+        if (!this.groupIds) {
             return false;
         }
         if (!this.isInGroupIdsNonAdminCheck(...groupIds)) {
@@ -330,7 +444,7 @@ export class OperatorService {
      * @param groups The group ids to check
      */
     public isInGroupIdsNonAdminCheck(...groupIds: number[]): boolean {
-        if (this.groupIds === null) {
+        if (!this.groupIds) {
             return false;
         }
         if (this.isAnonymous) {

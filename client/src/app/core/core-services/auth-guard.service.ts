@@ -40,7 +40,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
      */
     public async canActivate(route: ActivatedRouteSnapshot): Promise<boolean | UrlTree> {
         const basePerm: Permission | Permission[] = route.data.basePerm;
-        await this.operator.loaded;
+        await this.operator.ready;
         if ((this.operator.isAnonymous && this.activeMeeting.guestsEnabled) || this.operator.isAuthenticated) {
             return this.hasPerms(basePerm);
         } else {
@@ -55,7 +55,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
      * @param route the route the user wants to navigate to
      */
     public async canActivateChild(route: ActivatedRouteSnapshot): Promise<boolean> {
-        await this.operator.loaded;
+        await this.operator.ready;
 
         if (this.canActivate(route)) {
             return true;

@@ -21,7 +21,6 @@ export class RepositoryServiceCollectorWithoutActiveMeetingService {
         public viewModelStoreService: ViewModelStoreService,
         public translate: TranslateService,
         public relationManager: RelationManagerService,
-        public errorService: ErrorService,
-        public authService: AuthService
+        public errorService: ErrorService
     ) {}
 }

@@ -101,7 +101,7 @@ export class MeetingListComponent extends BaseListViewComponent<ViewOrganisation
         this.subscriptions.push(
             this.currentCommitteeObservable.subscribe(committee => {
                 this.currentCommittee = committee;
-                this.meetingsSubject.next(committee.meetings || []);
+                this.meetingsSubject.next(committee?.meetings || []);
             })
         );
     }

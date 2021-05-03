@@ -119,10 +119,6 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         return this.repositoryServiceCollector.relationManager;
     }
 
-    protected get authService(): AuthService {
-        return this.repositoryServiceCollector.authService;
-    }
-
     public constructor(
         private repositoryServiceCollector: RepositoryServiceCollectorWithoutActiveMeetingService,
         protected baseModelCtor: ModelConstructor<M>
@@ -132,8 +128,6 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         this.relationManager.getRelationsForCollection(this.collection).forEach(relation => {
             this.relationsByKey[relation.ownField] = relation;
         });
-
-        this.authService.onLogout.subscribe(() => this.DS.clear());
 
         // All data is piped through an auditTime of 1ms. This is to prevent massive
         // updates, if e.g. an autoupdate with a lot motions come in. The result is just one
@@ -291,7 +285,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         if (!this.viewModelSubjects[id]) {
             this.viewModelSubjects[id] = new BehaviorSubject<V>(this.viewModelStore[id]);
         }
-        return this.viewModelSubjects[id].pipe(filter(value => !!value));
+        return this.viewModelSubjects[id].asObservable();
     }
 
     /**
