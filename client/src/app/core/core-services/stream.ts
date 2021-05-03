@@ -3,6 +3,13 @@ import { HttpDownloadProgressEvent, HttpEvent, HttpHeaderResponse } from '@angul
 import { Observable, Subscription } from 'rxjs';
 
 import { Deferred } from '../promises/deferred';
+import {
+    CommunicationError,
+    ErrorHandler,
+    ErrorType,
+    isCommunicationError,
+    isCommunicationErrorWrapper
+} from './stream-utils';
 
 const HEADER_EVENT_TYPE = 2;
 const PROGRESS_EVENT_TYPE = 3;
@@ -12,14 +19,15 @@ export class Stream<T> {
     private subscription: Subscription = null;
 
     private hasError = false;
+    private reportedError = false;
 
     private _statuscode: number;
     public get statuscode(): number {
         return this._statuscode;
     }
 
-    private _errorContent: any;
-    public get errorContent(): any {
+    private _errorContent: CommunicationError;
+    public get errorContent(): CommunicationError {
         return this._errorContent;
     }
 
@@ -45,31 +53,39 @@ export class Stream<T> {
     public constructor(
         observable: Observable<HttpEvent<string>>,
         private messageHandler: (message: T) => void,
-        private errorHandler: (error: any) => void
+        private errorHandler: ErrorHandler
     ) {
-        this.subscription = observable.subscribe((event: HttpEvent<string>) => {
-            if (this.closed) {
-                console.log('got message, but closed');
-                return;
-            }
-            if (event.type === HEADER_EVENT_TYPE) {
-                const headerResponse = event as HttpHeaderResponse;
-                this._statuscode = headerResponse.status;
-                if (headerResponse.status >= 400) {
-                    this.hasError = true;
+        this.subscription = observable.subscribe(
+            (event: HttpEvent<string>) => {
+                if (this.closed) {
+                    console.log('got message, but closed');
+                    return;
                 }
-            } else if ((event as HttpEvent<string>).type === PROGRESS_EVENT_TYPE) {
-                this.handleMessage(event as HttpDownloadProgressEvent);
-            } else if ((event as HttpEvent<string>).type === FINISH_EVENT_TYPE) {
-                this.errorHandler('The stream was closed');
+                if (event.type === HEADER_EVENT_TYPE) {
+                    const headerResponse = event as HttpHeaderResponse;
+                    this._statuscode = headerResponse.status;
+                    if (headerResponse.status >= 400) {
+                        this.hasError = true;
+                    }
+                } else if ((event as HttpEvent<string>).type === PROGRESS_EVENT_TYPE) {
+                    this.handleMessage(event as HttpDownloadProgressEvent);
+                } else if ((event as HttpEvent<string>).type === FINISH_EVENT_TYPE) {
+                    this.errorHandler(ErrorType.Server, null, 'The stream was closed');
+                }
+            },
+            error => {
+                this.errorHandler(ErrorType.Server, error, 'Network error');
+            },
+            () => {
+                console.log('The stream was completed.');
             }
-        });
+        );
     }
 
     private handleMessage(event: HttpDownloadProgressEvent): void {
         if (this.hasError) {
             if (!this.gotFirstResponse.wasResolved) {
-                this._errorContent = event.partialText;
+                this._errorContent = this.tryParseError(event.partialText);
                 this.gotFirstResponse.resolve(this.hasError);
             }
             return;
@@ -88,22 +104,23 @@ export class Stream<T> {
                 this.checkedUntilIndex = LF_index + 1;
                 this.contentStartIndex = LF_index + 1;
 
-                let parsedContent;
-                try {
-                    parsedContent = JSON.parse(content) as T;
-                } catch (e) {
-                    parsedContent = { error: content };
-                }
+                const parsedContent = this.tryParseJson(content);
 
-                if (parsedContent.error) {
+                if (isCommunicationError(parsedContent)) {
+                    if (this.hasError && this.reportedError) {
+                        return;
+                    }
                     this.hasError = true;
-                    this._errorContent = parsedContent.error;
+                    this._errorContent = parsedContent;
                     // Do not trigger the error handler, if the connection-retry-routine is still handling this issue
-                    if (this.gotFirstResponse.wasResolved) {
-                        console.error(parsedContent.error);
-                        this.errorHandler(parsedContent.error);
-                    } else {
-                        this.gotFirstResponse.resolve(this.hasError);
+                    if (!this.reportedError) {
+                        this.reportedError = true;
+                        console.error(this._errorContent);
+                        this.errorHandler(
+                            this.getErrorTypeFromStatusCode(),
+                            this._errorContent,
+                            'Reported error by server'
+                        );
                     }
                     return;
                 } else {
@@ -115,6 +132,52 @@ export class Stream<T> {
                 this.checkedUntilIndex = event.loaded;
             }
         }
+    }
+
+    private getErrorTypeFromStatusCode(): ErrorType {
+        if (!this.statuscode) {
+            return ErrorType.Unknown;
+        }
+        if (this.statuscode >= 400 && this.statuscode < 500) {
+            return ErrorType.Client;
+        }
+        if (this.statuscode >= 500) {
+            return ErrorType.Server;
+        }
+        return ErrorType.Unknown;
+    }
+
+    private tryParseJson(json: string): T | CommunicationError {
+        try {
+            return JSON.parse(json) as T;
+        } catch (e) {
+            return this.tryParseError(json);
+        }
+    }
+
+    /**
+     * This one is a bit tricky. Error can be:
+     * - string with HTML, e.g. provided by proxies if the service is unreachable
+     * - string with json of form {"error": {"type": ..., "msg": ...}}
+     */
+    private tryParseError(error: any): CommunicationError {
+        if (typeof error === 'string') {
+            try {
+                error = JSON.parse(error);
+            } catch (e) {
+                return { type: 'Unknown Error', msg: error };
+            }
+        }
+
+        if (isCommunicationErrorWrapper(error)) {
+            return error.error;
+        } else if (isCommunicationError(error)) {
+            return error;
+        }
+
+        // we have something else.... ??
+        console.error('Unknown error', error);
+        throw new Error('Unknown error: ' + error.toString());
     }
 
     public close(): void {

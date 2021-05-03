@@ -11,7 +11,7 @@ import { StreamingCommunicationService } from './streaming-communication.service
 type HttpParamsGetter = () => HttpParams | { [param: string]: string | string[] };
 type HttpBodyGetter = () => any;
 
-class StreamContainerWithCloseFn extends StreamContainer {
+class StreamContainerWithCloseFn<T> extends StreamContainer<T> {
     public closeFn: () => void;
 }
 
@@ -38,7 +38,7 @@ const LOG = true;
 export class CommunicationManagerService {
     private isRunning = false;
 
-    private requestedStreams: { [id: number]: StreamContainerWithCloseFn } = {};
+    private requestedStreams: { [id: number]: StreamContainerWithCloseFn<any> } = {};
 
     public constructor(
         private streamingCommunicationService: StreamingCommunicationService,
@@ -89,7 +89,7 @@ export class CommunicationManagerService {
         body: HttpBodyGetter,
         params?: HttpParamsGetter,
         description?: string
-    ): StreamContainerWithCloseFn {
+    ): StreamContainerWithCloseFn<T> {
         let container;
         do {
             container = new StreamContainerWithCloseFn(endpoint, messageHandler, params, body, description);
@@ -97,7 +97,7 @@ export class CommunicationManagerService {
         return container;
     }
 
-    private async _connect(container: StreamContainerWithCloseFn): Promise<void> {
+    private async _connect<T>(container: StreamContainerWithCloseFn<T>): Promise<void> {
         container.closeFn = await this.streamingCommunicationService.connect(container);
     }
 
@@ -126,7 +126,7 @@ export class CommunicationManagerService {
         }
     }
 
-    private close(container: StreamContainerWithCloseFn): void {
+    private close<T>(container: StreamContainerWithCloseFn<T>): void {
         if (container.closeFn) {
             container.closeFn();
         }
