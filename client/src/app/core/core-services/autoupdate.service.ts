@@ -89,7 +89,7 @@ export class AutoupdateService {
      */
     public async simpleRequest(simpleRequest: SimplifiedModelRequest, description: string): Promise<ModelSubscription> {
         const request = await this.modelRequestBuilder.build(simpleRequest);
-        console.log('request send:', simpleRequest, request);
+        console.log('autoupdate: new request:', description, simpleRequest, request);
         return await this.request(request, description);
     }
 
@@ -106,7 +106,7 @@ export class AutoupdateService {
 
     private async handleAutoupdateWithStupidFormat(autoupdateData: AutoupdateModelData, id: number): Promise<void> {
         const modelData = autoupdateFormatToModelData(autoupdateData);
-        console.log('handle autoupdate from stream ' + id, modelData, 'raw data:', autoupdateData);
+        console.log('autoupdate: from stream', id, modelData, 'raw data:', autoupdateData);
         await this.handleAutoupdate(modelData);
     }
 

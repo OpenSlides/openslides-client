@@ -251,14 +251,7 @@ export class DataStoreUpdateManagerService {
     providedIn: 'root'
 })
 export class DataStoreService {
-    // private static cachePrefix = 'DS:';
-
-    /** We will store the data twice: One as instances of the actual models in the _store
-     * and one serialized version in the _serializedStore for the cache. Both should be updated in
-     * all cases equal!
-     */
     private modelStore: ModelStorage = {};
-    // private jsonStore: JsonStorage = {};
 
     /**
      * Subjects for changed elements (notified, even if there is a current update slot) for
@@ -295,18 +288,6 @@ export class DataStoreService {
     }
 
     /**
-     * The maximal change id from this DataStore.
-     */
-    // private _maxChangeId = 0;
-
-    /**
-     * returns the maxChangeId of the DataStore.
-     */
-    /*public get maxChangeId(): number {
-        return this._maxChangeId;
-    }*/
-
-    /**
      * @param storageService use StorageService to preserve the DataStore.
      * @param modelMapper
      * @param DSUpdateManager
@@ -335,12 +316,22 @@ export class DataStoreService {
      */
     public async clear(): Promise<void> {
         this.modelStore = {};
-        /*this.jsonStore = {};
-        this._maxChangeId = 0;
-        await this.storageService.remove(DataStoreService.cachePrefix + 'DS');
-        await this.storageService.remove(DataStoreService.cachePrefix + 'maxChangeId');
-        */
         this.clearEvent.next();
+    }
+
+    /**
+     * Deletes all models that belong to a meeting.
+     */
+    public async clearMeetingModels(): Promise<void> {
+        for (const collection of Object.keys(this.modelStore)) {
+            if (this.modelMapper.isMeetingSpecificCollection(collection)) {
+                this.remove(
+                    collection,
+                    Object.keys(this.modelStore[collection]).map(id => +id)
+                );
+                delete this.modelStore[collection];
+            }
+        }
     }
 
     /**
@@ -504,17 +495,11 @@ export class DataStoreService {
             if (this.modelStore[collection]) {
                 delete this.modelStore[collection][id];
             }
-            /*if (this.jsonStore[collection]) {
-                delete this.jsonStore[collection][id];
-            }*/
             this.publishDeletedInformation({
                 collection,
                 id: id
             });
         });
-        /*if (changeId) {
-            await this.flushToStorage(changeId);
-        }*/
     }
 
     /**
@@ -526,7 +511,6 @@ export class DataStoreService {
     public async set(models?: BaseModel[] /*, newMaxChangeId?: number*/): Promise<void> {
         const modelStoreReference = this.modelStore;
         this.modelStore = {};
-        // this.jsonStore = {};
         // Inform about the deletion
         Object.keys(modelStoreReference).forEach(collection => {
             Object.keys(modelStoreReference[collection]).forEach(id => {
@@ -581,16 +565,6 @@ export class DataStoreService {
     public triggerModifiedObservable(): void {
         this.modifiedSubject.next();
     }
-
-    /**
-     * Updates the cache by inserting the serialized DataStore. Also changes the chageId, if it's larger
-     * @param changeId The changeId from the update. If it's the highest change id seen, it will be set into the cache.
-     */
-    /*public async flushToStorage(changeId: number): Promise<void> {
-        this._maxChangeId = changeId;
-        await this.storageService.set(DataStoreService.cachePrefix + 'DS', this.jsonStore);
-        await this.storageService.set(DataStoreService.cachePrefix + 'maxChangeId', changeId);
-    }*/
 
     public print(): void {
         console.log(this.modelStore);

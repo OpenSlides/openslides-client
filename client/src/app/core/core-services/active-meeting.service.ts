@@ -14,7 +14,7 @@ export class NoActiveMeeting extends Error {}
     providedIn: 'root'
 })
 export class ActiveMeetingService {
-    private meetingSubject = new BehaviorSubject<ViewMeeting | null>(null);
+    private meetingSubject = new BehaviorSubject<ViewMeeting | null>(undefined);
     private meetingSubcription: Subscription = null;
 
     protected modelAutoupdateSubscription: ModelSubscription | null = null;
@@ -58,17 +58,20 @@ export class ActiveMeetingService {
             this.modelAutoupdateSubscription = null;
         }
 
+        if (this.meetingSubcription) {
+            this.meetingSubcription.unsubscribe();
+        }
+
         if (id) {
             this.modelAutoupdateSubscription = await this.autoupdateService.simpleRequest(
                 this.getModelRequest(),
                 'ActiveMeetingService'
             );
 
-            if (this.meetingSubcription) {
-                this.meetingSubcription.unsubscribe();
-            }
             this.meetingSubcription = this.repo.getViewModelObservable(id).subscribe(meeting => {
-                this.meetingSubject.next(meeting);
+                if (meeting !== undefined) {
+                    this.meetingSubject.next(meeting);
+                }
             });
         } else {
             this.meetingSubject.next(null);

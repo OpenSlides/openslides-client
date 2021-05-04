@@ -24,7 +24,6 @@ export class RepositoryServiceCollector extends RepositoryServiceCollectorWithou
         translate: TranslateService,
         relationManager: RelationManagerService,
         errorService: ErrorService,
-        authService: AuthService,
         public activeMeetingIdService: ActiveMeetingIdService
     ) {
         super(
@@ -34,8 +33,7 @@ export class RepositoryServiceCollector extends RepositoryServiceCollectorWithou
             viewModelStoreService,
             translate,
             relationManager,
-            errorService,
-            authService
+            errorService
         );
     }
 }

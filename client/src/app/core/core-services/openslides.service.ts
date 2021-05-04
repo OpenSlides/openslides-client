@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { AuthService } from './auth.service';
-import { DataStoreService } from './data-store.service';
 import { LifecycleService } from './lifecycle.service';
 import { OfflineBroadcastService, OfflineReasonValue } from './offline-broadcast.service';
 
@@ -13,7 +12,6 @@ import { OfflineBroadcastService, OfflineReasonValue } from './offline-broadcast
 })
 export class OpenSlidesService {
     public constructor(
-        private DS: DataStoreService,
         private offlineBroadcastService: OfflineBroadcastService,
         private lifecycleService: LifecycleService,
         private authService: AuthService
@@ -34,6 +32,7 @@ export class OpenSlidesService {
             return;
         }
 
+        // TODO
         /*if (!this.operator.isAuthenticated) {
             if (!location.pathname.includes('error')) {
                 this.authService.redirectUrl = location.pathname;
@@ -43,7 +42,6 @@ export class OpenSlidesService {
             this.afterAuthenticatedBootup();
         }*/
 
-        this.DS.clear();
         this.lifecycleService.bootup();
     }
 }
