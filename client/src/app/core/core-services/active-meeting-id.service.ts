@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Router, RouterEvent, RoutesRecognized } from '@angular/router';
+import { NavigationEnd, Router, RouterEvent } from '@angular/router';
 
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import { DataStoreService } from './data-store.service';
+import { LifecycleService } from './lifecycle.service';
 
 export class NoActiveMeeting extends Error {}
 
@@ -16,38 +16,55 @@ export class ActiveMeetingIdService {
         return this.meetingIdSubject.asObservable();
     }
 
+    public get meetingHasChangedObservable(): Observable<void> {
+        return this.meetingHasChangedSubject.asObservable();
+    }
+
     public get meetingId(): number | null {
         return this.meetingIdSubject.getValue();
     }
 
+    private set _meetingId(newMeetingId: number | null) {
+        if (Number.isNaN(newMeetingId)) {
+            this.currentMeetingId = null;
+            this.meetingIdSubject.next(null);
+        } else if (newMeetingId && newMeetingId !== this.currentMeetingId) {
+            this.currentMeetingId = newMeetingId;
+            this.meetingIdSubject.next(newMeetingId);
+        }
+        if (Number.isNaN || (newMeetingId && newMeetingId !== this.currentMeetingId)) {
+            this.meetingHasChangedSubject.next();
+        }
+    }
+
     // undefined is for detecting, that this service wasn't loaded yet
     private meetingIdSubject = new BehaviorSubject<number | null>(undefined);
+    private meetingHasChangedSubject = new Subject<void>();
 
-    public constructor(private router: Router, private DS: DataStoreService) {
-        this.router.events
+    private currentMeetingId: number;
+
+    private routerSub: Subscription;
+
+    public constructor(private lifecycleService: LifecycleService, private router: Router) {
+        this.lifecycleService.openslidesBooted.subscribe(() => this.start());
+        this.lifecycleService.openslidesShutdowned.subscribe(() => this.shutDown());
+    }
+
+    public start(): void {
+        this.routerSub = this.router.events
             .pipe(
                 filter((event: RouterEvent): boolean => {
-                    return event instanceof RoutesRecognized;
+                    return event instanceof NavigationEnd;
                 })
             )
-            .subscribe((event: RoutesRecognized) => {
-                const parts = event.url.split('/');
-                let meetingId = null;
-                if (parts.length >= 2) {
-                    meetingId = parts[1];
-                }
-                this.setMeetingId(meetingId);
+            .subscribe(() => {
+                const params = this.router.routerState.snapshot.root.firstChild.params;
+                this._meetingId = Number(params.meetingId);
             });
     }
 
-    private setMeetingId(newMeetingId: any): void {
-        newMeetingId = Number(newMeetingId) || null;
-
-        if (newMeetingId === this.meetingId) {
-            return;
-        }
-        console.log('active meeting id: changed from', this.meetingId, 'to', newMeetingId);
-        this.DS.clearMeetingModels();
-        this.meetingIdSubject.next(newMeetingId);
+    private shutDown(): void {
+        this.meetingIdSubject.next(undefined);
+        this.routerSub?.unsubscribe();
     }
 }

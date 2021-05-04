@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { BaseRepository } from 'app/core/repositories/base-repository';
 import { BaseViewModel, ViewModelConstructor } from 'app/site/base/base-view-model';
 import { BaseModel, ModelConstructor } from '../../shared/models/base/base-model';
-import { BaseRepositoryWithActiveMeeting } from '../repositories/base-repository-with-active-meeting';
 
 /**
  * Unifies the ModelConstructor and ViewModelConstructor.
@@ -16,7 +15,7 @@ interface UnifiedConstructors {
 /**
  * Every types supported: (View)ModelConstructors, repos and collections.
  */
-type CollectionType = UnifiedConstructors | BaseRepository<any, any> | string;
+type TypeNumber = UnifiedConstructors | BaseRepository<any, any> | string;
 
 type CollectionMappedTypes = [
     ModelConstructor<BaseModel>,
@@ -59,7 +58,7 @@ export class CollectionMapperService {
      * @param obj The object to get the collection string from.
      * @returns the collection
      */
-    public getCollection(obj: CollectionType): string {
+    public getCollection(obj: TypeNumber): string {
         if (typeof obj === 'string') {
             return obj;
         } else {
@@ -78,7 +77,7 @@ export class CollectionMapperService {
      * @param obj The object to get the model constructor from.
      * @returns the model constructor
      */
-    public getModelConstructor<M extends BaseModel>(obj: CollectionType): ModelConstructor<M> | null {
+    public getModelConstructor<M extends BaseModel>(obj: TypeNumber): ModelConstructor<M> | null {
         if (this.isCollectionRegistered(this.getCollection(obj))) {
             return this.collectionMapping[this.getCollection(obj)][0] as ModelConstructor<M>;
         }
@@ -88,7 +87,7 @@ export class CollectionMapperService {
      * @param obj The object to get the view model constructor from.
      * @returns the view model constructor
      */
-    public getViewModelConstructor<M extends BaseViewModel>(obj: CollectionType): ViewModelConstructor<M> | null {
+    public getViewModelConstructor<M extends BaseViewModel>(obj: TypeNumber): ViewModelConstructor<M> | null {
         if (this.isCollectionRegistered(this.getCollection(obj))) {
             return this.collectionMapping[this.getCollection(obj)][1] as ViewModelConstructor<M>;
         }
@@ -98,9 +97,7 @@ export class CollectionMapperService {
      * @param obj The object to get the repository from.
      * @returns the repository
      */
-    public getRepository<V extends BaseViewModel, M extends BaseModel>(
-        obj: CollectionType
-    ): BaseRepository<V, M> | null {
+    public getRepository<V extends BaseViewModel, M extends BaseModel>(obj: TypeNumber): BaseRepository<V, M> | null {
         if (this.isCollectionRegistered(this.getCollection(obj))) {
             return this.collectionMapping[this.getCollection(obj)][2] as BaseRepository<V, M>;
         }
@@ -111,13 +108,5 @@ export class CollectionMapperService {
      */
     public getAllRepositories(): BaseRepository<any, any>[] {
         return Object.values(this.collectionMapping).map((types: CollectionMappedTypes) => types[2]);
-    }
-
-    public isMeetingSpecificCollection(obj: CollectionType): boolean {
-        const repo = this.getRepository(obj);
-        if (!repo) {
-            return false;
-        }
-        return repo instanceof BaseRepositoryWithActiveMeeting;
     }
 }

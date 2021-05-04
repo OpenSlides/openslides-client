@@ -6,7 +6,6 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 import { ActiveMeetingIdService } from './active-meeting-id.service';
 import { AuthToken, AuthTokenService } from './auth-token.service';
-import { DataStoreService } from './data-store.service';
 import { HttpService } from './http.service';
 import { LifecycleService } from './lifecycle.service';
 
@@ -38,9 +37,8 @@ export class AuthService {
     public redirectUrl: string;
 
     // This is a wrapper around authTokenService.accessTokenObservable
-    // We need to control the point, when specific token changes should be propagated.
-    // undefined is used to indicate, that there is no valid token yet
-    private authTokenSubject = new BehaviorSubject<AuthToken | null>(undefined);
+    // We need to control the point, when specific token changes should be propagated
+    private authTokenSubject = new BehaviorSubject<AuthToken | null>(null);
     private authTokenSubscription: Subscription | null = null;
 
     public get authTokenObservable(): Observable<AuthToken | null> {
@@ -61,7 +59,7 @@ export class AuthService {
         private lifecycleService: LifecycleService,
         private router: Router,
         private authTokenService: AuthTokenService,
-        private DS: DataStoreService
+        private activeMeetingIdService: ActiveMeetingIdService
     ) {
         this.resumeTokenSubscription();
     }
@@ -109,7 +107,6 @@ export class AuthService {
             this.authTokenService.setRawAccessToken(null);
         }
         this.onLogout.emit();
-        await this.DS.clear();
         this.lifecycleService.bootup();
     }
 
@@ -131,7 +128,8 @@ export class AuthService {
         } catch (e) {
             online = false;
         }
-        console.log('auth: WhoAmI done, online:', online, 'authenticated:', !!this.authTokenService.accessToken);
+        console.log('auth: WhoAmI done, online:', online);
+        console.log('auth: WhoAmI done, authenticated:', !!this.authTokenService.accessToken);
         return online;
     }
 

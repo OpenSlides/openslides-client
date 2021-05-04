@@ -19,7 +19,7 @@ export class DownloadComponent implements OnInit {
     ) {}
 
     public async ngOnInit(): Promise<void> {
-        await this.operator.ready;
+        await this.operator.loaded;
         this.loadResourceById();
     }
 

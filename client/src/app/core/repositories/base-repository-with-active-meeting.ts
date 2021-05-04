@@ -26,6 +26,7 @@ export abstract class BaseRepositoryWithActiveMeeting<
         protected baseModelCtor: ModelConstructor<M>
     ) {
         super(fullRepositoryServiceCollector, baseModelCtor);
+        this.activeMeetingIdService.meetingHasChangedObservable.subscribe(() => this.clear());
     }
 
     protected createViewModel(model: M): V {

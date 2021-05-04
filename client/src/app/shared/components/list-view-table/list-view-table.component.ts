@@ -352,7 +352,7 @@ export class ListViewTableComponent<V extends BaseViewModel | BaseProjectableVie
         }
 
         // hide the speakers in mobile
-        if (this.isMobile || !this.showListOfSpeakers || !this.operator.hasPerms(Permission.listOfSpeakersCanSee)) {
+        if (this.isMobile || !this.operator.hasPerms(Permission.listOfSpeakersCanSee) || !this.showListOfSpeakers) {
             hidden.push('speaker');
         }
 

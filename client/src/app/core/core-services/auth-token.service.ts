@@ -22,8 +22,7 @@ export class AuthTokenService {
         return this._rawAccessToken;
     }
 
-    // Use undefined as the state of not being initialized
-    private accessTokenSubject = new BehaviorSubject<AuthToken | null>(undefined);
+    private accessTokenSubject = new BehaviorSubject<AuthToken | null>(null);
 
     public get accessTokenObservable(): Observable<AuthToken | null> {
         return this.accessTokenSubject.asObservable();
