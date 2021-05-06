@@ -89,6 +89,19 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         return this.sendBulkActionToBackend(MotionAction.CREATE, payload);
     }
 
+    public createForwarded(meetingIds: Id[], ...motions: Partial<Motion>[]): Promise<void> {
+        const payload: MotionAction.CreateForwardedPayload[] = meetingIds.flatMap(id => {
+            return motions.map(motion => ({
+                meeting_id: id,
+                title: motion.title,
+                text: motion.text,
+                origin_id: motion.id,
+                reason: motion.reason
+            }));
+        });
+        return this.sendBulkActionToBackend(MotionAction.CREATE_FORWARDED, payload);
+    }
+
     private getCreatePayload(partialMotion: Partial<MotionAction.CreatePayload>): MotionAction.CreatePayload {
         return {
             meeting_id: this.activeMeetingIdService.meetingId,
@@ -408,34 +421,6 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
             })
         );
     }
-
-    /**
-     * Returns an observable for all motions, that referencing the given motion (via id)
-     * in the recommendation.
-     */
-    public getRecommendationReferencingMotions(motionId: number): Observable<ViewMotion[]> {
-        return this.getViewModelListObservable().pipe(
-            map((motions: ViewMotion[]): ViewMotion[] => {
-                return motions.filter((motion: ViewMotion): boolean => {
-                    if (!motion.recommendationExtension) {
-                        return false;
-                    }
-
-                    // Check, if this motion has the motionId in it's recommendation
-                    const placeholderRegex = /\[motion:(\d+)\]/g;
-                    let match;
-                    while ((match = placeholderRegex.exec(motion.recommendationExtension))) {
-                        if (parseInt(match[1], 10) === motionId) {
-                            return true;
-                        }
-                    }
-
-                    return false;
-                });
-            })
-        );
-    }
-
     /**
      * @returns all amendments
      */
@@ -500,60 +485,6 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
     }
 
     /**
-     * Get the label for the motion's current state with the extension
-     * attached (if available). For cross-referencing other motions, `[motion:id]`
-     * will replaced by the referenced motion's number (see {@link solveExtensionPlaceHolder})
-     *
-     * @param motion
-     * @returns the translated state with the extension attached
-     */
-    public getExtendedStateLabel(motion: ViewMotion): string {
-        if (!motion.state) {
-            return null;
-        }
-        let state = this.translate.instant(motion.state.name);
-        if (motion.stateExtension && motion.state.show_state_extension_field) {
-            state += ' ' + this.parseMotionPlaceholders(motion.stateExtension);
-        }
-        return state;
-    }
-
-    /**
-     * Get the label for the motion's current recommendation with the extension
-     * attached (if available)
-     *
-     * @param motion
-     * @returns the translated extension with the extension attached
-     */
-    public getExtendedRecommendationLabel(motion: ViewMotion): string {
-        if (motion.recommendation) {
-            let rec = this.translate.instant(motion.recommendation.recommendation_label);
-            if (motion.recommendationExtension && motion.recommendation.show_recommendation_extension_field) {
-                rec += ' ' + this.parseMotionPlaceholders(motion.recommendationExtension);
-            }
-            return rec;
-        }
-        return '';
-    }
-
-    /**
-     * Replaces any motion placeholder (`[motion:id]`) with the motion's title(s)
-     *
-     * @param value
-     * @returns the string with the motion titles replacing the placeholders
-     */
-    public parseMotionPlaceholders(value: string): string {
-        return value.replace(/\[motion:(\d+)\]/g, (match, id) => {
-            const motion = this.getViewModel(id);
-            if (motion) {
-                return motion.getNumberOrTitle();
-            } else {
-                return this.translate.instant('<unknown motion>');
-            }
-        });
-    }
-
-    /**
      * Triggers an update for the sort function responsible for the default sorting of data items
      */
     public setConfigSortFn(): void {
@@ -577,21 +508,5 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
                 return this.languageCollator.compare(a.title, b.title);
             }
         });
-    }
-
-    public changeHasCollissions(change: ViewUnifiedChange, changes: ViewUnifiedChange[]): boolean {
-        return (
-            changes.filter((otherChange: ViewUnifiedChange) => {
-                return (
-                    otherChange.getChangeId() !== change.getChangeId() &&
-                    ((otherChange.getLineFrom() >= change.getLineFrom() &&
-                        otherChange.getLineFrom() < change.getLineTo()) ||
-                        (otherChange.getLineTo() > change.getLineFrom() &&
-                            otherChange.getLineTo() <= change.getLineTo()) ||
-                        (otherChange.getLineFrom() < change.getLineFrom() &&
-                            otherChange.getLineTo() > change.getLineTo()))
-                );
-            }).length > 0
-        );
     }
 }

@@ -21,8 +21,8 @@ import {
     GET_POSSIBLE_RECOMMENDATIONS,
     MotionRepositoryService
 } from 'app/core/repositories/motions/motion-repository.service';
+import { MotionService } from 'app/core/repositories/motions/motion.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
@@ -34,7 +34,6 @@ import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.cons
 import { AmendmentFilterListService } from 'app/site/motions/services/amendment-filter-list.service';
 import { AmendmentSortListService } from 'app/site/motions/services/amendment-sort-list.service';
 import { MotionFilterListService } from 'app/site/motions/services/motion-filter-list.service';
-import { MotionPdfExportService } from 'app/site/motions/services/motion-pdf-export.service';
 import { MotionSortListService } from 'app/site/motions/services/motion-sort-list.service';
 import { PermissionsService } from 'app/site/motions/services/permissions.service';
 import { MotionContentComponent } from '../motion-content/motion-content.component';
@@ -201,14 +200,14 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         private router: Router,
         private route: ActivatedRoute,
         public repo: MotionRepositoryService,
+        private motionService: MotionService,
         private promptService: PromptService,
         private itemRepo: AgendaItemRepositoryService,
         private motionSortService: MotionSortListService,
         private amendmentSortService: AmendmentSortListService,
         private motionFilterService: MotionFilterListService,
         private amendmentFilterService: AmendmentFilterListService,
-        private cd: ChangeDetectorRef,
-        private meetingSettingsService: MeetingSettingsService
+        private cd: ChangeDetectorRef
     ) {
         super(componentServiceCollector);
     }
@@ -226,17 +225,17 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         this.getMotionByUrl();
 
         // load config variables
-        this.meetingSettingsService
+        this.meetingSettingService
             .get('motions_statutes_enabled')
             .subscribe(enabled => (this.statutesEnabled = enabled));
-        this.meetingSettingsService.get('motions_preamble').subscribe(preamble => (this.preamble = preamble));
-        this.meetingSettingsService
+        this.meetingSettingService.get('motions_preamble').subscribe(preamble => (this.preamble = preamble));
+        this.meetingSettingService
             .get('motions_amendments_enabled')
             .subscribe(enabled => (this.amendmentsEnabled = enabled));
 
         // use the filter and the search service to get the current sorting
         // TODO: the `instant` can fail, if the page reloads.
-        if (this.meetingSettingsService.instant('motions_amendments_in_main_list')) {
+        if (this.meetingSettingService.instant('motions_amendments_in_main_list')) {
             this.motionFilterService.initFilters(this.motionObserver);
             this.motionSortService.initSorting(this.motionFilterService.outputObservable);
             this.sortedMotionsObservable = this.motionSortService.outputObservable;
@@ -363,7 +362,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
             defaultMotion.category_id = parentMotion.category_id;
             defaultMotion.tag_ids = parentMotion.tag_ids;
             defaultMotion.block_id = parentMotion.block_id;
-            const amendmentTextMode = this.meetingSettingsService.instant('motions_amendments_text_mode');
+            const amendmentTextMode = this.meetingSettingService.instant('motions_amendments_text_mode');
             if (amendmentTextMode === 'fulltext') {
                 defaultMotion.text = parentMotion.text;
             }
@@ -454,6 +453,10 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         }
     }
 
+    public async forwardMotionToMeetings(): Promise<void> {
+        await this.motionService.forwardMotionsToMeetings(this.motion);
+    }
+
     private async updateMotion(
         newMotionValues: Partial<MotionAction.UpdatePayload>,
         motion: ViewMotion
@@ -490,7 +493,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
      * Goes to the amendment creation wizard. Executed via click.
      */
     public createAmendment(): void {
-        const amendmentTextMode = this.meetingSettingsService.instant('motions_amendments_text_mode');
+        const amendmentTextMode = this.meetingSettingService.instant('motions_amendments_text_mode');
         if (amendmentTextMode === 'paragraph') {
             this.router.navigate(['create-amendment'], { relativeTo: this.route });
         } else {

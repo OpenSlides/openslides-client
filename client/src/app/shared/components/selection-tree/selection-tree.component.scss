@@ -1,0 +1,10 @@
+.selection-tree-node {
+    display: flex;
+    align-items: center;
+
+    .selection-tree-node-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+}

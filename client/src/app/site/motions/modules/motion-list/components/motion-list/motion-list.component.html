@@ -106,7 +106,7 @@
                 <!-- Workflow state -->
                 <div class="ellipsis-overflow white">
                     <mat-basic-chip *ngIf="motion.state" [ngClass]="motion.stateCssColor" [disabled]="true">
-                        {{ this.motionRepo.getExtendedStateLabel(motion) }}
+                        {{ motionService.getExtendedStateLabel(motion) }}
                     </mat-basic-chip>
                 </div>
 
@@ -116,7 +116,7 @@
                     class="ellipsis-overflow white spacer-top-3"
                 >
                     <mat-basic-chip class="bluegrey" [disabled]="true">
-                        {{ motionRepo.getExtendedRecommendationLabel(motion) }}
+                        {{ motionService.getExtendedRecommendationLabel(motion) }}
                     </mat-basic-chip>
                 </div>
             </div>
@@ -335,6 +335,10 @@
         </button>
         <ng-container *ngIf="perms.isAllowed('change_metadata')">
             <mat-divider></mat-divider>
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="forwardMotionsToMeetings(selectedRows)">
+                <mat-icon>forward</mat-icon>
+                <span>{{ 'Forward selected motions' | translate }}</span>
+            </button>
             <os-motion-multiselect-actions [selectedMotions]="selectedRows" (action)="multiselectWrapper($event)">
                 <button
                     mat-menu-item
@@ -351,15 +355,6 @@
                 >
                     <mat-icon>format_indent_increase</mat-icon>
                     <span>{{ 'Move in call list' | translate }}</span>
-                </button>
-                <button
-                    mat-menu-item
-                    class="red-warning-text"
-                    [disabled]="!selectedRows.length"
-                    (click)="multiselectWrapper(multiselectService.delete(selectedRows))"
-                >
-                    <mat-icon>delete</mat-icon>
-                    <span>{{ 'Delete' | translate }}</span>
                 </button>
             </os-motion-multiselect-actions>
         </ng-container>

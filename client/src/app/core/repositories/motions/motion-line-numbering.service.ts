@@ -517,4 +517,20 @@ export class MotionLineNumberingService {
             throw new Error('getDiffedParagraphToChoose: given amendment has no parent');
         }
     }
+
+    public changeHasCollissions(change: ViewUnifiedChange, changes: ViewUnifiedChange[]): boolean {
+        return (
+            changes.filter((otherChange: ViewUnifiedChange) => {
+                return (
+                    otherChange.getChangeId() !== change.getChangeId() &&
+                    ((otherChange.getLineFrom() >= change.getLineFrom() &&
+                        otherChange.getLineFrom() < change.getLineTo()) ||
+                        (otherChange.getLineTo() > change.getLineFrom() &&
+                            otherChange.getLineTo() <= change.getLineTo()) ||
+                        (otherChange.getLineFrom() < change.getLineFrom() &&
+                            otherChange.getLineTo() > change.getLineTo()))
+                );
+            }).length > 0
+        );
+    }
 }

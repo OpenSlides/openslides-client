@@ -10,6 +10,7 @@ import { Permission } from 'app/core/core-services/permission';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
+import { MotionService } from 'app/core/repositories/motions/motion.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
@@ -117,6 +118,7 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
         private router: Router,
         protected repo: MotionBlockRepositoryService,
         public motionRepo: MotionRepositoryService,
+        private motionService: MotionService,
         private promptService: PromptService,
         private formBuilder: FormBuilder,
         private dialog: MatDialog,
@@ -286,7 +288,7 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
      * @returns the current recommendation label (with extension)
      */
     public getRecommendationLabel(motion: ViewMotion): string {
-        return this.motionRepo.getExtendedRecommendationLabel(motion);
+        return this.motionService.getExtendedRecommendationLabel(motion);
     }
 
     /**
@@ -296,7 +298,7 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
      * @returns the current state label (with extension)
      */
     public getStateLabel(motion: ViewMotion): string {
-        return this.motionRepo.getExtendedStateLabel(motion);
+        return this.motionService.getExtendedStateLabel(motion);
     }
 
     public addToAgenda(): void {

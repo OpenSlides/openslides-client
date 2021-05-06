@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 
 import { BorderType, PdfDocumentService, PdfError, StyleType } from 'app/core/pdf-services/pdf-document.service';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
-import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
+import { MotionService } from 'app/core/repositories/motions/motion.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { MotionExportInfo } from './motion-export.service';
 import { MotionPdfService } from './motion-pdf.service';
@@ -30,7 +30,7 @@ export class MotionPdfCatalogService {
         private translate: TranslateService,
         private motionPdfService: MotionPdfService,
         private pdfService: PdfDocumentService,
-        private motionRepo: MotionRepositoryService,
+        private motionService: MotionService,
         private categoryRepo: MotionCategoryRepositoryService,
         private meetingSettingsService: MeetingSettingsService
     ) {
@@ -239,9 +239,9 @@ export class MotionPdfCatalogService {
         let submitterList = '';
         let state = '';
         if (motion.state.isFinalState) {
-            state = this.motionRepo.getExtendedStateLabel(motion);
+            state = this.motionService.getExtendedStateLabel(motion);
         } else {
-            state = this.motionRepo.getExtendedRecommendationLabel(motion);
+            state = this.motionService.getExtendedRecommendationLabel(motion);
         }
         for (let i = 0; i < motion.submitters.length; ++i) {
             submitterList +=
