@@ -51,7 +51,7 @@
     <div *pblNgridCellDef="'forwarding'; row as committee" class="cell-slot fill">
         <a class="detail-link" [routerLink]="committee.id" *ngIf="!isMultiSelect"></a>
         <div *ngIf="committee.forward_to_committees?.length">
-            <os-icon-container iconTooltip="{{ 'Can forward motions to committees' | translate }}" icon="forward">
+            <os-icon-container iconTooltip="{{ 'Can forward motions to committee' | translate }}" icon="forward">
                 <span *ngFor="let forwardingCommittee of committee.forward_to_committees; let last = last">
                     {{ forwardingCommittee.name }}<span *ngIf="!last">,&nbsp;</span>
                 </span>
