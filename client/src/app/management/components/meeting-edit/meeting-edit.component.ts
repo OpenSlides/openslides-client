@@ -17,8 +17,8 @@ import { ViewCommittee } from 'app/site/event-management/models/view-committee';
 import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewUser } from 'app/site/users/models/view-user';
 
-const AddMeetingLabel = _('Create Meeting');
-const EditMeetingLabel = _('Edit Meeting');
+const AddMeetingLabel = _('New meeting');
+const EditMeetingLabel = _('Edit meeting');
 
 @Component({
     selector: 'os-meeting-edit',

@@ -16,7 +16,7 @@ import { ViewOrganisation } from 'app/site/event-management/models/view-organisa
     styleUrls: ['./orga-settings.component.scss']
 })
 export class OrgaSettingsComponent extends BaseModelContextComponent implements OnInit {
-    public pageTitle = _('Organization settings');
+    public pageTitle = _('Settings');
     private currentOrgaSettings: ViewOrganisation;
 
     public orgaSettingsForm: FormGroup;

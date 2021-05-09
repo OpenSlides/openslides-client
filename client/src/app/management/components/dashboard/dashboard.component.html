@@ -24,7 +24,7 @@
             <span>{{ 'active' | translate }}</span>
         </div>
         <div class="meeting-list">
-            <mat-card *ngIf="!currentMeetings.length">{{ 'Currently, no meeting available' | translate }}</mat-card>
+            <mat-card *ngIf="!currentMeetings.length">{{ 'No meetings available' | translate }}</mat-card>
             <ng-container *ngFor="let meeting of currentMeetings; let last = last">
                 <ng-container
                     [ngTemplateOutlet]="meetingTemplate"
@@ -63,7 +63,7 @@
     <div id="no-date-meetings" class="meeting-list-container">
         <div class="meeting-icon-wrapper">
             <mat-icon aria-hidden="true">watch_later</mat-icon>
-            <span>{{ 'No date' | translate }}</span>
+            <span>{{ 'dateless' | translate }}</span>
         </div>
         <ng-container
             [ngTemplateOutlet]="meetingListTemplate"
@@ -74,7 +74,7 @@
 
 <ng-template let-meetingList="meetingList" #meetingListTemplate>
     <div class="meeting-list" [ngClass]="{ 'no-meeting': !meetingList.length }">
-        <mat-card *ngIf="!meetingList.length">{{ 'Currently, no meeting available' | translate }}</mat-card>
+        <mat-card *ngIf="!meetingList.length">{{ 'No meetings available' | translate }}</mat-card>
         <cdk-virtual-scroll-viewport [itemSize]="60" *ngIf="!!meetingList.length">
             <ng-container *cdkVirtualFor="let meeting of meetingList; let odd = odd; let last = last">
                 <div [ngClass]="{ alternate: odd }">
