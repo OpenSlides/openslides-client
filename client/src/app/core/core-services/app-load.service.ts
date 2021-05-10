@@ -2,12 +2,12 @@ import { Injectable, Injector } from '@angular/core';
 
 import { AppConfig, ModelEntry, SearchableModelEntry } from '../definitions/app-config';
 import { BaseRepository } from 'app/core/repositories/base-repository';
+import { ManagementAppConfig } from 'app/management/management.config';
 import { AgendaAppConfig } from 'app/site/agenda/agenda.config';
 import { AssignmentsAppConfig } from 'app/site/assignments/assignments.config';
 import { isSearchable } from 'app/site/base/searchable';
 import { CinemaAppConfig } from 'app/site/cinema/cinema.config';
 import { CommonAppConfig } from 'app/site/common/common.config';
-import { EventManagementAppConfig } from 'app/site/event-management/event-management.config';
 import { HistoryAppConfig } from 'app/site/history/history.config';
 import { MediafileAppConfig } from 'app/site/mediafiles/mediafile.config';
 import { SettingsAppConfig } from 'app/site/meeting-settings/meeting-settings.config';
@@ -29,7 +29,7 @@ import { SearchService } from '../ui-services/search.service';
  */
 const appConfigs: AppConfig[] = [
     CommonAppConfig,
-    EventManagementAppConfig,
+    ManagementAppConfig,
     AgendaAppConfig,
     AssignmentsAppConfig,
     MotionsAppConfig,

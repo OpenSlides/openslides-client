@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { Motion } from 'app/shared/models/motions/motion';
 import { BaseImportListComponent } from 'app/site/base/components/base-import-list.component';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { MotionCsvExportService } from 'app/site/motions/services/motion-csv-export.service';
 import { MotionImportService } from 'app/site/motions/services/motion-import.service';
 import { getMotionExportHeadersAndVerboseNames, getVerboseNameOfMotionProperty } from '../../motions.constants';

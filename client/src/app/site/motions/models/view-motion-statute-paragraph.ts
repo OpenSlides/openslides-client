@@ -1,7 +1,7 @@
 import { SearchRepresentation } from 'app/core/ui-services/search.service';
+import { HasMeeting, ViewMeeting } from 'app/management/models/view-meeting';
 import { MotionStatuteParagraph } from 'app/shared/models/motions/motion-statute-paragraph';
 import { Searchable } from 'app/site/base/searchable';
-import { HasMeeting, ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { BaseViewModel } from '../../base/base-view-model';
 import { ViewMotion } from './view-motion';
 

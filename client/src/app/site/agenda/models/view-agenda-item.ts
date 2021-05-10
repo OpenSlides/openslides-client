@@ -1,4 +1,5 @@
 import { AgendaListTitle } from 'app/core/repositories/agenda/agenda-item-repository.service';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { AgendaItem, ItemTypeChoices } from 'app/shared/models/agenda/agenda-item';
 import { HasAgendaItemId } from 'app/shared/models/base/has-agenda-item-id';
 import { Projection } from 'app/shared/models/projector/projection';
@@ -7,7 +8,6 @@ import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-mo
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { DetailNavigable } from 'app/site/base/detail-navigable';
 import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { HasTags } from 'app/site/tags/models/view-tag';
 
 export interface HasAgendaItem extends DetailNavigable, HasAgendaItemId {

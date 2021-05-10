@@ -1,11 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Settings } from 'app/shared/models/event-management/meeting';
-import {
-    meetingSettings,
-    SettingsGroup,
-    SettingsItem
-} from '../repositories/event-management/meeting-settings-definition';
+import { meetingSettings, SettingsGroup, SettingsItem } from '../repositories/management/meeting-settings-definition';
 
 @Injectable({
     providedIn: 'root'

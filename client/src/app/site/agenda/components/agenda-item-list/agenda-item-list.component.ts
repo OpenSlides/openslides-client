@@ -18,13 +18,14 @@ import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda
 import {
     MeetingProjectionType,
     MeetingRepositoryService
-} from 'app/core/repositories/event-management/meeting-repository.service';
+} from 'app/core/repositories/management/meeting-repository.service';
 import { TopicRepositoryService } from 'app/core/repositories/topics/topic-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DurationService } from 'app/core/ui-services/duration.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { ColumnRestriction } from 'app/shared/components/list-view-table/list-view-table.component';
 import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
 import { AgendaItemType } from 'app/shared/models/agenda/agenda-item';
@@ -33,7 +34,6 @@ import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
 import { isProjectable } from 'app/site/base/projectable';
 import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewTopic } from 'app/site/topics/models/view-topic';
 import { ViewAgendaItem } from '../../models/view-agenda-item';
 import { hasListOfSpeakers } from '../../models/view-list-of-speakers';

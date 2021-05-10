@@ -19,10 +19,10 @@ import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { PROJECTOR_CONTENT_FOLLOW } from 'app/shared/components/projector/projector.component';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewProjector } from '../../models/view-projector';
 
 /**

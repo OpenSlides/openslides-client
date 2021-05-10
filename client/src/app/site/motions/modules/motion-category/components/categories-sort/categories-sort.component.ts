@@ -7,10 +7,10 @@ import { SimplifiedModelRequest } from 'app/core/core-services/model-request-bui
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { SortingTreeComponent } from 'app/shared/components/sorting-tree/sorting-tree.component';
 import { CanComponentDeactivate } from 'app/shared/utils/watch-for-changes.guard';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
 
 /**

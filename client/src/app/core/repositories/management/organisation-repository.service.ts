@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 
 import { OrganizationAction } from 'app/core/actions/organization-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
+import { ViewOrganisation } from 'app/management/models/view-organisation';
 import { Organisation, OrganisationSetting } from 'app/shared/models/event-management/organisation';
-import { ViewOrganisation } from 'app/site/event-management/models/view-organisation';
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 

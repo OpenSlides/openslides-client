@@ -1,5 +1,5 @@
+import { HasMeeting } from 'app/management/models/view-meeting';
 import { BaseViewModel } from 'app/site/base/base-view-model';
-import { HasMeeting } from 'app/site/event-management/models/view-meeting';
 import { Option } from './option';
 import { ViewPoll } from './view-poll';
 import { ViewVote } from './view-vote';

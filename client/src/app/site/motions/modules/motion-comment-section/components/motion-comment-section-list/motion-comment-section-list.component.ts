@@ -10,11 +10,11 @@ import { MotionCommentSectionRepositoryService } from 'app/core/repositories/mot
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { MotionCommentSection } from 'app/shared/models/motions/motion-comment-section';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-comment-section';
 import { ViewGroup } from 'app/site/users/models/view-group';
 

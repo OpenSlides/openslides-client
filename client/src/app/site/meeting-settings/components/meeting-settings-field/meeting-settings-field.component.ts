@@ -23,7 +23,7 @@ import { MeetingSettingsDefinitionProvider } from 'app/core/ui-services/meeting-
 import { ParentErrorStateMatcher } from 'app/shared/parent-error-state-matcher';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewGroup } from 'app/site/users/models/view-group';
-import { SettingsItem } from '../../../../core/repositories/event-management/meeting-settings-definition';
+import { SettingsItem } from '../../../../core/repositories/management/meeting-settings-definition';
 
 export interface SettingsFieldUpdate {
     key: string;

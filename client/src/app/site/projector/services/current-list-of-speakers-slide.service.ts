@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
-import { MeetingProjectionType } from 'app/core/repositories/event-management/meeting-repository.service';
+import { MeetingProjectionType } from 'app/core/repositories/management/meeting-repository.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { ProjectorService } from 'app/core/ui-services/projector.service';
 import { Projectiondefault } from 'app/shared/models/projector/projector';

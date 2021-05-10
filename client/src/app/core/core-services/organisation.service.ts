@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
-import { ViewOrganisation } from 'app/site/event-management/models/view-organisation';
+import { ViewOrganisation } from 'app/management/models/view-organisation';
 import { AutoupdateService, ModelSubscription } from './autoupdate.service';
 import { SimplifiedModelRequest } from './model-request-builder.service';
-import { OrganisationRepositoryService } from '../repositories/event-management/organisation-repository.service';
+import { OrganisationRepositoryService } from '../repositories/management/organisation-repository.service';
 
 /**
  * Token to get a resource dedicated to the `logo_web_header` of an organisation.

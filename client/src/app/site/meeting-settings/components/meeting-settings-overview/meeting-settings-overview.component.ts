@@ -4,7 +4,7 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { MeetingSettingsDefinitionProvider } from 'app/core/ui-services/meeting-settings-definition-provider.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { SettingsGroup } from '../../../../core/repositories/event-management/meeting-settings-definition';
+import { SettingsGroup } from '../../../../core/repositories/management/meeting-settings-definition';
 
 /**
  * List view for the global settings

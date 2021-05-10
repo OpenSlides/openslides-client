@@ -17,10 +17,10 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { CsvExportService } from 'app/core/ui-services/csv-export.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { genders } from 'app/shared/models/users/user';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { PollService } from 'app/site/polls/services/poll.service';
 import { UserFilterListService } from '../../services/user-filter-list.service';
 import { UserPdfExportService } from '../../services/user-pdf-export.service';

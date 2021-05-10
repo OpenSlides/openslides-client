@@ -7,7 +7,7 @@ import { PblColumnDefinition } from '@pebula/ngrid';
 import { MemberService } from 'app/core/core-services/member.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { Id } from 'app/core/definitions/key-types';
-import { CommitteeRepositoryService } from 'app/core/repositories/event-management/committee-repository.service';
+import { CommitteeRepositoryService } from 'app/core/repositories/management/committee-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ChoiceService } from 'app/core/ui-services/choice.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';

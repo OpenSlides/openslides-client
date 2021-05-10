@@ -21,10 +21,10 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
 import { infoDialogSettings, largeDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
 import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';

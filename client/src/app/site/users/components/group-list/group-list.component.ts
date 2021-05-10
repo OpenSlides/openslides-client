@@ -9,9 +9,9 @@ import { AppPermission, DisplayPermission, Permission, PERMISSIONS } from 'app/c
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewGroup } from '../../models/view-group';
 
 /**

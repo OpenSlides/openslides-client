@@ -8,15 +8,15 @@ import { Observable, OperatorFunction } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { MemberService } from 'app/core/core-services/member.service';
-import { CommitteeRepositoryService } from 'app/core/repositories/event-management/committee-repository.service';
-import { MeetingRepositoryService } from 'app/core/repositories/event-management/meeting-repository.service';
+import { CommitteeRepositoryService } from 'app/core/repositories/management/committee-repository.service';
+import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { ViewCommittee } from 'app/management/models/view-committee';
+import { ViewMeeting } from 'app/management/models/view-meeting';
+import { ViewOrganisation } from 'app/management/models/view-organisation';
 import { Committee } from 'app/shared/models/event-management/committee';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
-import { ViewCommittee } from 'app/site/event-management/models/view-committee';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
-import { ViewOrganisation } from 'app/site/event-management/models/view-organisation';
 import { ViewUser } from 'app/site/users/models/view-user';
 
 const AddCommitteeLabel = _('New committee');

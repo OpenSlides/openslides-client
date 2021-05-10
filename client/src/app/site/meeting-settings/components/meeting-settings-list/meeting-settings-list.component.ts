@@ -11,14 +11,14 @@ import { ActivatedRoute } from '@angular/router';
 
 import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
-import { MeetingRepositoryService } from 'app/core/repositories/event-management/meeting-repository.service';
+import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MeetingSettingsDefinitionProvider } from 'app/core/ui-services/meeting-settings-definition-provider.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { CanComponentDeactivate } from 'app/shared/utils/watch-for-changes.guard';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
-import { SettingsGroup } from '../../../../core/repositories/event-management/meeting-settings-definition';
+import { SettingsGroup } from '../../../../core/repositories/management/meeting-settings-definition';
 import {
     MeetingSettingsFieldComponent,
     SettingsFieldUpdate

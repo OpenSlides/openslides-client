@@ -9,10 +9,10 @@ import { SimplifiedModelRequest } from 'app/core/core-services/model-request-bui
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { Tag } from 'app/shared/models/core/tag';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewTag } from '../../models/view-tag';
 
 /**

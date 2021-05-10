@@ -4,11 +4,11 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 import { OrganizationAction } from 'app/core/actions/organization-action';
-import { OrganisationRepositoryService } from 'app/core/repositories/event-management/organisation-repository.service';
+import { OrganisationRepositoryService } from 'app/core/repositories/management/organisation-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { Themes } from 'app/core/ui-services/theme.service';
+import { ViewOrganisation } from 'app/management/models/view-organisation';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
-import { ViewOrganisation } from 'app/site/event-management/models/view-organisation';
 
 @Component({
     selector: 'os-orga-settings',

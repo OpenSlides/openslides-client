@@ -4,13 +4,15 @@ import * as moment from 'moment';
 import { Moment } from 'moment';
 
 import { MeetingAction } from 'app/core/actions/meeting-action';
+import { UserAction } from 'app/core/actions/user-action';
+import { ActionRequest } from 'app/core/core-services/action.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Id } from 'app/core/definitions/key-types';
 import { MeetingSettingsDefinitionProvider } from 'app/core/ui-services/meeting-settings-definition-provider.service';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Meeting } from 'app/shared/models/event-management/meeting';
 import { Projection } from 'app/shared/models/projector/projection';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollectorWithoutActiveMeetingService } from '../repository-service-collector-without-active-meeting-service';
 
@@ -32,7 +34,12 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
     }
 
     public getFieldsets(): Fieldsets<Meeting> {
-        const nameFields: (keyof Meeting)[] = ['name', 'start_time', 'end_time'];
+        // This field is used to determine, if a user can access a meeting: It is restricted for non-authorized users
+        // but always present, if the user is allowed to access the meeting. We have to always query this fields to
+        // decide about the accessibility.
+        const accessField: (keyof Meeting)[] = [ViewMeeting.ACCESSIBILITY_FIELD];
+
+        const nameFields: (keyof Meeting)[] = accessField.concat(['name', 'start_time', 'end_time']);
         const listFields: (keyof Meeting)[] = nameFields.concat('user_ids');
         const editFields: (keyof Meeting)[] = listFields.concat([
             'welcome_title',
@@ -41,10 +48,11 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             'url_name',
             'guest_ids',
             'enable_anonymous',
-            'is_template'
+            'is_template',
+            'default_group_id' // needed for adding users
         ]);
         const dashboardFields: (keyof Meeting)[] = listFields.concat('location');
-        const startPageFields: (keyof Meeting)[] = ['welcome_title', 'welcome_text'];
+        const startPageFields: (keyof Meeting)[] = accessField.concat(['welcome_title', 'welcome_text']);
 
         return {
             [DEFAULT_FIELDSET]: nameFields,
@@ -92,9 +100,10 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         return viewModel;
     }
 
-    public create(meetingPayload: Partial<MeetingAction.CreatePayload>): Promise<Identifiable> {
+    public create(meetingPayload: Partial<MeetingAction.CreatePayload>, addedUserIds?: Id[]): Promise<Identifiable> {
         meetingPayload.start_time = this.anyDateToUnix(meetingPayload.start_time);
         meetingPayload.end_time = this.anyDateToUnix(meetingPayload.end_time);
+        console.log('TODO: added users, see https://github.com/OpenSlides/openslides-backend/issues/710', addedUserIds);
         return this.sendActionToBackend(MeetingAction.CREATE, meetingPayload);
     }
 
@@ -119,14 +128,42 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         }
     }
 
-    public update(update: MeetingAction.OptionalUpdatePayload, meeting: ViewMeeting): Promise<void> {
+    public update(
+        update: MeetingAction.OptionalUpdatePayload,
+        meeting: ViewMeeting,
+        addedUserIds?: Id[],
+        removedUserIds?: Id[]
+    ): Promise<void> {
         update.start_time = this.anyDateToUnix(update.start_time);
         update.end_time = this.anyDateToUnix(update.end_time);
-        const payload: MeetingAction.UpdatePayload = {
-            ...update,
-            id: meeting.id
-        };
-        return this.sendActionToBackend(MeetingAction.UPDATE, payload);
+        const actions: ActionRequest[] = [
+            {
+                action: MeetingAction.UPDATE,
+                data: [
+                    {
+                        ...update,
+                        id: meeting.id
+                    }
+                ]
+            }
+        ];
+
+        if (addedUserIds?.length || removedUserIds?.length) {
+            if (!meeting.default_group_id) {
+                throw new Error('The default group is needed!');
+            }
+
+            const addData = (addedUserIds || []).map(id => ({
+                id,
+                group_$_ids: { [meeting.id]: [meeting.default_group_id] }
+            }));
+            const removeData = (removedUserIds || []).map(id => ({ id, group_$_ids: { [meeting.id]: [] } }));
+            actions.push({
+                action: UserAction.UPDATE,
+                data: addData.concat(removeData)
+            });
+        }
+        return this.sendActionsToBackend(actions);
     }
 
     public delete(committee: ViewMeeting): Promise<void> {

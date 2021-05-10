@@ -5,8 +5,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 import { NoActiveMeeting } from './active-meeting-id.service';
 import { ActiveMeetingService } from './active-meeting.service';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { Group } from 'app/shared/models/users/group';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { AuthService } from './auth.service';
 import { AutoupdateService, ModelSubscription } from './autoupdate.service';

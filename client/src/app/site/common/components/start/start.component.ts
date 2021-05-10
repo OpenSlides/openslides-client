@@ -5,12 +5,12 @@ import { MeetingAction } from 'app/core/actions/meeting-action';
 import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
-import { MeetingRepositoryService } from 'app/core/repositories/event-management/meeting-repository.service';
+import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 
 /**
  * The start component. Greeting page for OpenSlides

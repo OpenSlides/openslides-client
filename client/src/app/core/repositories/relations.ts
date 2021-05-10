@@ -1,3 +1,7 @@
+import { ViewCommittee } from 'app/management/models/view-committee';
+import { ViewMeeting } from 'app/management/models/view-meeting';
+import { ViewOrganisation } from 'app/management/models/view-organisation';
+import { ViewResource } from 'app/management/models/view-resource';
 import { ViewOption } from 'app/shared/models/poll/view-option';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { ViewVote } from 'app/shared/models/poll/view-vote';
@@ -8,10 +12,6 @@ import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { ViewAssignmentCandidate } from 'app/site/assignments/models/view-assignment-candidate';
 import { BaseViewModel, ViewModelConstructor } from 'app/site/base/base-view-model';
 import { Projectable } from 'app/site/base/projectable';
-import { ViewCommittee } from 'app/site/event-management/models/view-committee';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
-import { ViewOrganisation } from 'app/site/event-management/models/view-organisation';
-import { ViewResource } from 'app/site/event-management/models/view-resource';
 import { HasAttachment, ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { HasReferencedMotionsInRecommendationExtension, ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';

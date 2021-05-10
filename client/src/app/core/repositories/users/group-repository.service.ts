@@ -11,9 +11,9 @@ import {
     SimplifiedModelRequest
 } from 'app/core/core-services/model-request-builder.service';
 import { Permission } from 'app/core/core-services/permission';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Group } from 'app/shared/models/users/group';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewGroup } from 'app/site/users/models/view-group';
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { ModelRequestRepository } from '../model-request-repository';

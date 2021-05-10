@@ -38,6 +38,9 @@ export abstract class BaseViewModel<M extends BaseModel = any> {
     public getUpdatedModelData(update: Partial<M>): object {
         return this.getModel().getUpdatedData(update);
     }
+    public canAccess(): boolean {
+        return true;
+    }
 }
 export interface BaseViewModel<M extends BaseModel = any> extends Displayable, Identifiable, Collection {
     getTitle: () => string;
