@@ -320,8 +320,11 @@ export class OperatorService {
                     ],
                     fieldset: []
                 };
+            } else {
+                // has active meeting without the anonymous enabled *and* not authorized. This is
+                // forbidden and can happen, if someone enters a URL of the meeting.
+                this.router.navigate(['/login']);
             }
-            // No else-case: A non-authed no meeting is not possible (or: there are no usefull information).
         } else {
             if (this.isAuthenticated) {
                 operatorRequest = {
