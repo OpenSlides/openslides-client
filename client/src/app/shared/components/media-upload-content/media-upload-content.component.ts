@@ -11,9 +11,9 @@ import { MediafileRepositoryService } from 'app/core/repositories/mediafiles/med
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { toBase64 } from 'app/core/to-base64';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { CreateMediafile } from 'app/shared/models/mediafiles/create-mediafile';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { ViewGroup } from 'app/site/users/models/view-group';
 

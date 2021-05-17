@@ -11,7 +11,7 @@
             <span>
                 {{ 'Meetings' | translate }}
             </span>
-            <span *ngIf="currentCommitteeObservable | async as committee"> ({{ committee.name }}) </span>
+            <span *ngIf="currentCommittee"> ({{ currentCommittee.name }}) </span>
         </h2>
     </div>
 

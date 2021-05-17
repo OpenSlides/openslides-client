@@ -7,9 +7,9 @@ import {
     SimplifiedModelRequest
 } from 'app/core/core-services/model-request-builder.service';
 import { Id } from 'app/core/definitions/key-types';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { MotionWorkflow } from 'app/shared/models/motions/motion-workflow';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionState } from 'app/site/motions/models/view-motion-state';
 import { ViewMotionWorkflow } from 'app/site/motions/models/view-motion-workflow';

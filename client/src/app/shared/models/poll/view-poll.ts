@@ -1,8 +1,8 @@
+import { HasMeeting } from 'app/management/models/view-meeting';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { DetailNavigable } from 'app/site/base/detail-navigable';
 import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
-import { HasMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewGroup } from 'app/site/users/models/view-group';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { Poll } from './poll';

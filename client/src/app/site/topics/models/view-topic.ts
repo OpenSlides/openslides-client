@@ -1,10 +1,10 @@
 import { SearchRepresentation } from 'app/core/ui-services/search.service';
+import { HasMeeting } from 'app/management/models/view-meeting';
 import { Projectiondefault } from 'app/shared/models/projector/projector';
 import { Topic } from 'app/shared/models/topics/topic';
 import { HasAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { HasListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
-import { HasMeeting } from 'app/site/event-management/models/view-meeting';
 import { HasAttachment } from 'app/site/mediafiles/models/view-mediafile';
 import { HasTags } from 'app/site/tags/models/view-tag';
 

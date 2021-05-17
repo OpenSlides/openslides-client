@@ -8,13 +8,15 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { MeetingAction } from 'app/core/actions/meeting-action';
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { MeetingRepositoryService } from 'app/core/repositories/event-management/meeting-repository.service';
+import { CommitteeRepositoryService } from 'app/core/repositories/management/committee-repository.service';
+import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { ViewCommittee } from 'app/management/models/view-committee';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
-import { ViewCommittee } from 'app/site/event-management/models/view-committee';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewUser } from 'app/site/users/models/view-user';
 
 const AddMeetingLabel = _('New meeting');
@@ -37,7 +39,7 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
     private editMeeting: ViewMeeting;
     private committeeId: number;
 
-    public allUsers: Observable<ViewUser[]>;
+    public committee: ViewCommittee;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -45,24 +47,18 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
         private location: Location,
         private formBuilder: FormBuilder,
         private meetingRepo: MeetingRepositoryService,
-        private userRepo: UserRepositoryService,
-        private operator: OperatorService
+        private committeeRepo: CommitteeRepositoryService
     ) {
         super(componentServiceCollector);
         this.createForm();
         this.createOrEdit();
         this.getRouteParams();
-        this.setAllUsers();
 
         if (this.isCreateView) {
             super.setTitle(AddMeetingLabel);
         } else {
             super.setTitle(EditMeetingLabel);
         }
-    }
-
-    public ngOnInit(): void {
-        this.requestUpdates();
     }
 
     private createOrEdit(): void {
@@ -80,23 +76,48 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
                 this.meetingId = Number(params.meetingId);
 
                 if (this.meetingId) {
-                    this.loadMeeting(this.meetingId);
+                    this.loadMeeting();
+                }
+                if (this.committeeId) {
+                    this.loadCommittee();
                 }
             })
         );
     }
 
-    private loadMeeting(id: number): void {
-        this.requestModels({
-            viewModelCtor: ViewMeeting,
-            ids: [id],
-            fieldset: 'edit'
-        });
+    private loadMeeting(): void {
+        this.requestModels(
+            {
+                viewModelCtor: ViewMeeting,
+                ids: [this.meetingId],
+                fieldset: 'edit'
+            },
+            'meeting'
+        );
         this.subscriptions.push(
-            this.meetingRepo.getViewModelObservable(id).subscribe(newMeeting => {
-                if (newMeeting) {
-                    this.editMeeting = newMeeting;
+            this.meetingRepo.getViewModelObservable(this.meetingId).subscribe(meeting => {
+                if (meeting) {
+                    this.editMeeting = meeting;
                     this.updateForm(this.editMeeting);
+                }
+            })
+        );
+    }
+
+    private loadCommittee(): void {
+        this.requestModels(
+            {
+                viewModelCtor: ViewCommittee,
+                ids: [this.committeeId],
+                follow: [{ idField: 'member_ids', fieldset: 'shortName' }],
+                fieldset: 'list'
+            },
+            'committee'
+        );
+        this.subscriptions.push(
+            this.committeeRepo.getViewModelObservable(this.committeeId).subscribe(committee => {
+                if (committee) {
+                    this.committee = committee;
                 }
             })
         );
@@ -117,53 +138,51 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
             start_time: [currentDate],
             end_time: [currentDate],
             enable_anonymous: [false],
-            guest_ids: [[]]
+            userIds: [[]]
         });
     }
 
     private updateForm(meeting: ViewMeeting): void {
-        const patchMeeting: any = meeting.meeting;
-        patchMeeting.start_time = meeting.start_time ? new Date(meeting.start_time * 1000) : undefined;
-        patchMeeting.end_time = meeting.end_time ? new Date(meeting.end_time * 1000) : undefined;
+        const patchMeeting: any = meeting.getUpdatedModelData({
+            start_time: meeting.start_time ? new Date(meeting.start_time * 1000) : undefined,
+            end_time: meeting.end_time ? new Date(meeting.end_time * 1000) : undefined,
+            userIds: meeting.user_ids
+        } as any);
         this.meetingForm.patchValue(patchMeeting);
-    }
-
-    private async requestUpdates(): Promise<void> {
-        /**
-         * Requires orga members
-         */
-        this.requestModels({
-            viewModelCtor: ViewCommittee,
-            ids: [this.committeeId],
-            follow: [{ idField: 'member_ids', fieldset: 'shortName' }],
-            fieldset: 'list'
-        });
-    }
-
-    private setAllUsers(): void {
-        const alreadyPresentUsers = this.editMeeting?.meeting?.user_ids || [this.operator.operatorId];
-        this.allUsers = this.userRepo
-            .getViewModelListObservable()
-            .pipe(map(users => users.filter(user => !alreadyPresentUsers.includes(user.id))));
+        console.log('update', meeting, patchMeeting, this.meetingForm.value);
     }
 
     public onSubmit(): void {
         if (this.isCreateView) {
+            const userIds = this.meetingForm.value.userIds;
             const payload: MeetingAction.CreatePayload = {
                 committee_id: this.committeeId,
                 ...this.meetingForm.value
             };
+            delete (payload as any).userIds; // do not send them to the server.
 
             this.meetingRepo
-                .create(payload)
+                .create(payload, userIds)
                 .then(() => {
                     this.location.back();
                 })
                 .catch(this.raiseError);
         } else {
+            const userIds = this.meetingForm.value.userIds;
+            // this might be faster when using sets:
+            // addedUsers = userIds setminus editMeeting.user_ids
+            // removedUsers = (editMeeting.user_ids intersection committee.user_ids) setminus userIds
+            // removedUsers must not contain guests or so. We do not want to remove users, that do not belong
+            // to the committee.
+            const addedUsers = userIds.filter(id => !this.editMeeting.user_ids.includes(id));
+            const removedUsers = this.editMeeting.user_ids.filter(
+                id => this.committee.member_ids.includes(id) && !userIds.includes(id)
+            );
+
             const payload: MeetingAction.UpdatePayload = this.meetingForm.value;
+            delete (payload as any).userIds; // do not send them to the server.
             this.meetingRepo
-                .update(payload, this.editMeeting)
+                .update(payload, this.editMeeting, addedUsers, removedUsers)
                 .then(() => {
                     this.location.back();
                 })

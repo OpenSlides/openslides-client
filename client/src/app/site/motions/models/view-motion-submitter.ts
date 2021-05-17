@@ -1,6 +1,6 @@
+import { HasMeeting } from 'app/management/models/view-meeting';
 import { MotionSubmitter } from 'app/shared/models/motions/motion-submitter';
 import { BaseViewModel } from 'app/site/base/base-view-model';
-import { HasMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { ViewMotion } from './view-motion';
 

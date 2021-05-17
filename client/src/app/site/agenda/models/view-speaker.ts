@@ -1,6 +1,6 @@
+import { HasMeeting } from 'app/management/models/view-meeting';
 import { Speaker, SpeakerState } from 'app/shared/models/agenda/speaker';
 import { BaseViewModel } from 'app/site/base/base-view-model';
-import { HasMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { ViewListOfSpeakers } from './view-list-of-speakers';
 

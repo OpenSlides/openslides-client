@@ -1,4 +1,5 @@
 import { Id } from 'app/core/definitions/key-types';
+import { HasMeeting } from 'app/management/models/view-meeting';
 import { ListOfSpeakers } from 'app/shared/models/agenda/list-of-speakers';
 import { SpeakerState } from 'app/shared/models/agenda/speaker';
 import { HasListOfSpeakersId } from 'app/shared/models/base/has-list-of-speakers-id';
@@ -7,7 +8,6 @@ import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-mo
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { DetailNavigable } from 'app/site/base/detail-navigable';
 import { ProjectorTitle } from 'app/site/base/projectable';
-import { HasMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewSpeaker } from './view-speaker';
 
 export function hasListOfSpeakers(obj: any): obj is HasListOfSpeakers {

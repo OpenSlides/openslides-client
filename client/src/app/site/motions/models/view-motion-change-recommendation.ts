@@ -1,6 +1,6 @@
 import { ModificationType } from 'app/core/ui-services/diff.service';
+import { HasMeeting } from 'app/management/models/view-meeting';
 import { MotionChangeRecommendation } from 'app/shared/models/motions/motion-change-recommendation';
-import { HasMeeting } from 'app/site/event-management/models/view-meeting';
 import { BaseViewModel } from '../../base/base-view-model';
 import { ViewMotion } from './view-motion';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from '../../../shared/models/motions/view-unified-change';

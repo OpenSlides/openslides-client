@@ -7,9 +7,9 @@ import {
     SimplifiedModelRequest
 } from 'app/core/core-services/model-request-builder.service';
 import { TreeIdNode } from 'app/core/ui-services/tree.service';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { MotionCategory } from 'app/shared/models/motions/motion-category';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { ModelRequestRepository } from '../model-request-repository';

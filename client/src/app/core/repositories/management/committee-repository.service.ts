@@ -7,10 +7,10 @@ import {
     SimplifiedModelRequest
 } from 'app/core/core-services/model-request-builder.service';
 import { Id } from 'app/core/definitions/key-types';
+import { ViewCommittee } from 'app/management/models/view-committee';
+import { ViewOrganisation } from 'app/management/models/view-organisation';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Committee } from 'app/shared/models/event-management/committee';
-import { ViewCommittee } from 'app/site/event-management/models/view-committee';
-import { ViewOrganisation } from 'app/site/event-management/models/view-organisation';
 import { BaseRepository } from '../base-repository';
 import { ModelRequestRepository } from '../model-request-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';

@@ -1,5 +1,7 @@
 import { Id } from 'app/core/definitions/key-types';
 import { SearchRepresentation } from 'app/core/ui-services/search.service';
+import { ViewCommittee } from 'app/management/models/view-committee';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { ViewOption } from 'app/shared/models/poll/view-option';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { ViewVote } from 'app/shared/models/poll/view-vote';
@@ -9,8 +11,6 @@ import { ViewSpeaker } from 'app/site/agenda/models/view-speaker';
 import { ViewAssignmentCandidate } from 'app/site/assignments/models/view-assignment-candidate';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { Searchable } from 'app/site/base/searchable';
-import { ViewCommittee } from 'app/site/event-management/models/view-committee';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionSubmitter } from 'app/site/motions/models/view-motion-submitter';
 import { ViewGroup } from './view-group';

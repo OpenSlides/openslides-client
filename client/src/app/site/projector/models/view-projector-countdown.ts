@@ -1,10 +1,10 @@
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { Projectiondefault } from 'app/shared/models/projector/projector';
 import { ProjectorCountdown } from 'app/shared/models/projector/projector-countdown';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 
 export class ViewProjectorCountdown extends BaseProjectableViewModel<ProjectorCountdown> {
     public static COLLECTION = ProjectorCountdown.COLLECTION;

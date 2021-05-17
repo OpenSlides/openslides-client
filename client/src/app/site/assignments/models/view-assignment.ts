@@ -1,11 +1,11 @@
 import { SearchRepresentation } from 'app/core/ui-services/search.service';
+import { HasMeeting } from 'app/management/models/view-meeting';
 import { Assignment, AssignmentPhase } from 'app/shared/models/assignments/assignment';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { Projectiondefault } from 'app/shared/models/projector/projector';
 import { HasAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { HasListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
-import { HasMeeting } from 'app/site/event-management/models/view-meeting';
 import { HasAttachment } from 'app/site/mediafiles/models/view-mediafile';
 import { HasViewPolls } from 'app/site/polls/models/has-view-polls';
 import { HasTags } from 'app/site/tags/models/view-tag';

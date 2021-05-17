@@ -10,7 +10,7 @@ import { ProjectorMessageAction } from 'app/core/actions/projector-message-actio
 import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
-import { MeetingRepositoryService } from 'app/core/repositories/event-management/meeting-repository.service';
+import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
 import { ProjectionRepositoryService } from 'app/core/repositories/projector/projection-repository.service';
 import { ProjectorCountdownRepositoryService } from 'app/core/repositories/projector/projector-countdown-repository.service';
 import { ProjectorMessageRepositoryService } from 'app/core/repositories/projector/projector-message-repository.service';
@@ -18,12 +18,12 @@ import { ProjectorRepositoryService } from 'app/core/repositories/projector/proj
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DurationService } from 'app/core/ui-services/duration.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { PROJECTOR_CONTENT_FOLLOW } from 'app/shared/components/projector/projector.component';
 import { SizeObject } from 'app/shared/components/tile/tile.component';
 import { infoDialogSettings, largeDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewProjectorCountdown } from 'app/site/projector/models/view-projector-countdown';
 import { ViewProjectorMessage } from 'app/site/projector/models/view-projector-message';
 import { CountdownDialogComponent, CountdownDialogData } from '../countdown-dialog/countdown-dialog.component';

@@ -1,9 +1,9 @@
 import { Id } from 'app/core/definitions/key-types';
 import { SearchRepresentation } from 'app/core/ui-services/search.service';
+import { HasMeeting, ViewMeeting } from 'app/management/models/view-meeting';
 import { HasTagIds } from 'app/shared/models/base/has-tag-ids';
 import { Tag } from 'app/shared/models/core/tag';
 import { Searchable } from 'app/site/base/searchable';
-import { HasMeeting, ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { BaseViewModel } from '../../base/base-view-model';
 
 export interface HasTags extends HasTagIds {

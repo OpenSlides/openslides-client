@@ -1,5 +1,6 @@
 import { StructuredRelation } from 'app/core/definitions/relations';
 import { SearchRepresentation } from 'app/core/ui-services/search.service';
+import { HasMeeting, ViewMeeting } from 'app/management/models/view-meeting';
 import { HasAttachmentIds } from 'app/shared/models/base/has-attachment-ids';
 import { Mediafile } from 'app/shared/models/mediafiles/mediafile';
 import { Projectiondefault } from 'app/shared/models/projector/projector';
@@ -7,7 +8,6 @@ import { HasListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers'
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { Searchable } from 'app/site/base/searchable';
-import { HasMeeting, ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewGroup } from 'app/site/users/models/view-group';
 
 export const IMAGE_MIMETYPES = ['image/png', 'image/jpeg', 'image/gif'];

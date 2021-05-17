@@ -1,9 +1,9 @@
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { Projectiondefault } from 'app/shared/models/projector/projector';
 import { ProjectorMessage } from 'app/shared/models/projector/projector-message';
 import { stripHtmlTags } from 'app/shared/utils/strip-html-tags';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
 
 export class ViewProjectorMessage extends BaseProjectableViewModel<ProjectorMessage> {
     public static COLLECTION = ProjectorMessage.COLLECTION;

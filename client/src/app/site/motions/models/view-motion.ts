@@ -4,6 +4,7 @@ import { Id } from 'app/core/definitions/key-types';
 import { DiffLinesInParagraph } from 'app/core/ui-services/diff.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { SearchProperty, SearchRepresentation } from 'app/core/ui-services/search.service';
+import { HasMeeting } from 'app/management/models/view-meeting';
 import { AgendaItemType } from 'app/shared/models/agenda/agenda-item';
 import { HasReferencedMotionInRecommendationExtensionIds, Motion } from 'app/shared/models/motions/motion';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
@@ -14,7 +15,6 @@ import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-mo
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
 import { Searchable } from 'app/site/base/searchable';
-import { HasMeeting } from 'app/site/event-management/models/view-meeting';
 import { HasAttachment } from 'app/site/mediafiles/models/view-mediafile';
 import { HasTags } from 'app/site/tags/models/view-tag';
 import { HasPersonalNote, ViewPersonalNote } from 'app/site/users/models/view-personal-note';

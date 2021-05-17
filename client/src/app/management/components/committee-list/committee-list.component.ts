@@ -5,13 +5,13 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { PblColumnDefinition } from '@pebula/ngrid';
 
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
-import { CommitteeRepositoryService } from 'app/core/repositories/event-management/committee-repository.service';
+import { CommitteeRepositoryService } from 'app/core/repositories/management/committee-repository.service';
 import { ChoiceService } from 'app/core/ui-services/choice.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
+import { ViewCommittee } from 'app/management/models/view-committee';
+import { ViewOrganisation } from 'app/management/models/view-organisation';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
-import { ViewCommittee } from 'app/site/event-management/models/view-committee';
-import { ViewOrganisation } from 'app/site/event-management/models/view-organisation';
 
 @Component({
     selector: 'os-committees',

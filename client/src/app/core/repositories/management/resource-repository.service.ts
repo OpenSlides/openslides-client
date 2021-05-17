@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
+import { ViewResource } from 'app/management/models/view-resource';
 import { Resource } from 'app/shared/models/event-management/resource';
-import { ViewResource } from 'app/site/event-management/models/view-resource';
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 

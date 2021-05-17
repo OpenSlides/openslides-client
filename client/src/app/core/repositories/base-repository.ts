@@ -31,15 +31,15 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     protected viewModelSubjects: { [modelId: number]: BehaviorSubject<V> } = {};
 
     /**
-     * Observable subject for the whole list. These entries are unsorted and not piped through
-     * auditTime. Just use this internally.
+     * Observable subject for the whole list. These entries are unsorted, not piped through
+     * auditTime and can contain unaccessible models. Just use this internally.
      *
      * It's used to debounce messages on the sortedViewModelListSubject
      */
     protected readonly unsafeViewModelListSubject: BehaviorSubject<V[]> = new BehaviorSubject<V[]>(null);
 
     /**
-     * Observable subject for the sorted view model list.
+     * Observable subject for the sorted view model list. Only accessible models are in the list.
      *
      * All data is piped through an auditTime of 1ms. This is to prevent massive
      * updates, if e.g. an autoupdate with a lot motions come in. The result is just one
@@ -48,7 +48,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     protected readonly viewModelListSubject: BehaviorSubject<V[]> = new BehaviorSubject<V[]>([]);
 
     /**
-     * Observable subject for any changes of view models.
+     * Observable subject for any changes of view models. Unaccessible view models are included.
      */
     protected readonly generalViewModelSubject: Subject<V> = new Subject<V>();
 
@@ -134,7 +134,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         // update of the new list instead of many unnecessary updates.
         this.unsafeViewModelListSubject.pipe(auditTime(1)).subscribe(models => {
             if (models) {
-                this.viewModelListSubject.next(models.sort(this.viewModelSortFn));
+                this.updateViewModelListSubject(models);
             }
         });
 
@@ -147,9 +147,13 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         this.translate.onLangChange.subscribe(change => {
             this.languageCollator = new Intl.Collator(change.lang);
             if (this.unsafeViewModelListSubject.value) {
-                this.viewModelListSubject.next(this.unsafeViewModelListSubject.value.sort(this.viewModelSortFn));
+                this.updateViewModelListSubject(this.unsafeViewModelListSubject.value);
             }
         });
+    }
+
+    public updateViewModelListSubject(viewModels: V[]): void {
+        this.viewModelListSubject.next(viewModels.filter(m => m.canAccess()).sort(this.viewModelSortFn));
     }
 
     public getListTitle: (viewModel: V) => string = (viewModel: V) => {
@@ -255,16 +259,33 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     }
 
     /**
-     * helper function to return one viewModel
+     * Helper function to return one viewModel. It will be null, if the model is unaccessible.
+     * To retrieve all view models use getViewModelUnsafe().
      */
-    public getViewModel(id: Id): V {
+    public getViewModel(id: Id): V | null {
+        const model = this.viewModelStore[id];
+        return model?.canAccess() ? model : null;
+    }
+
+    /**
+     * Returns one view model, if it exists in the repository. It returns the model if it is known,
+     * so it also includes inaccessible view models.
+     */
+    public getViewModelUnsafe(id: Id): V {
         return this.viewModelStore[id];
     }
 
     /**
-     * @returns all view models stored in this repository. Sorting is not guaranteed
+     * @returns all accessible view models stored in this repository. Sorting is not guaranteed.
      */
     public getViewModelList(): V[] {
+        return Object.values(this.viewModelStore).filter(m => m.canAccess());
+    }
+
+    /**
+     * @returns all view models stored in this repository, even unaccessible. Sorting is not guaranteed.
+     */
+    public getViewModelListUnsafe(): V[] {
         return Object.values(this.viewModelStore);
     }
 
@@ -283,7 +304,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      */
     public getViewModelObservable(id: Id): Observable<V> {
         if (!this.viewModelSubjects[id]) {
-            this.viewModelSubjects[id] = new BehaviorSubject<V>(this.viewModelStore[id]);
+            this.viewModelSubjects[id] = new BehaviorSubject<V>(this.getViewModel(id));
         }
         return this.viewModelSubjects[id].asObservable();
     }
@@ -317,16 +338,16 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      */
     protected updateViewModelObservable(id: Id): void {
         if (this.viewModelSubjects[id]) {
-            this.viewModelSubjects[id].next(this.viewModelStore[id]);
+            this.viewModelSubjects[id].next(this.getViewModel(id));
         }
-        this.generalViewModelSubject.next(this.viewModelStore[id]);
+        this.generalViewModelSubject.next(this.getViewModelUnsafe(id));
     }
 
     /**
      * update the observable of the list. Also updates the sorting of the view model list.
      */
     public commitUpdate(modelIds: Id[]): void {
-        this.unsafeViewModelListSubject.next(this.getViewModelList());
+        this.unsafeViewModelListSubject.next(this.getViewModelListUnsafe());
         modelIds.forEach(id => {
             this.updateViewModelObservable(id);
         });

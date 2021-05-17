@@ -56,10 +56,10 @@
         <mat-form-field>
             <mat-label> {{ 'Participants' | translate }}</mat-label>
             <os-search-value-selector
-                formControlName="guest_ids"
+                formControlName="userIds"
                 [multiple]="true"
                 placeholder="{{ 'Participants' | translate }}"
-                [inputListValues]="allUsers"
+                [inputListValues]="committee?.members"
             ></os-search-value-selector>
         </mat-form-field>
 

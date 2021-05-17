@@ -1,7 +1,7 @@
 import { Permission } from 'app/core/core-services/permission';
+import { HasMeeting, ViewMeeting } from 'app/management/models/view-meeting';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { Group } from 'app/shared/models/users/group';
-import { HasMeeting, ViewMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-comment-section';
 import { BaseViewModel } from '../../base/base-view-model';

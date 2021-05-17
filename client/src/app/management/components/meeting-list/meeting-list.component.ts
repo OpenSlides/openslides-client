@@ -5,14 +5,14 @@ import { PblColumnDefinition } from '@pebula/ngrid';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
-import { CommitteeRepositoryService } from 'app/core/repositories/event-management/committee-repository.service';
-import { MeetingRepositoryService } from 'app/core/repositories/event-management/meeting-repository.service';
+import { CommitteeRepositoryService } from 'app/core/repositories/management/committee-repository.service';
+import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
+import { ViewCommittee } from 'app/management/models/view-committee';
+import { ViewMeeting } from 'app/management/models/view-meeting';
+import { ViewOrganisation } from 'app/management/models/view-organisation';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
-import { ViewCommittee } from 'app/site/event-management/models/view-committee';
-import { ViewMeeting } from 'app/site/event-management/models/view-meeting';
-import { ViewOrganisation } from 'app/site/event-management/models/view-organisation';
 
 /**
  * Meeting list "as known as" Committee detail
@@ -22,10 +22,8 @@ import { ViewOrganisation } from 'app/site/event-management/models/view-organisa
     templateUrl: './meeting-list.component.html',
     styleUrls: ['./meeting-list.component.scss']
 })
-export class MeetingListComponent extends BaseListViewComponent<ViewOrganisation> implements OnInit {
+export class MeetingListComponent extends BaseListViewComponent<ViewOrganisation> {
     private committeeId: number;
-
-    public currentCommitteeObservable: Observable<ViewCommittee>;
 
     public currentCommittee: ViewCommittee;
 
@@ -57,10 +55,13 @@ export class MeetingListComponent extends BaseListViewComponent<ViewOrganisation
         super(componentServiceCollector);
         super.setTitle('Meetings');
         this.getCommitteeByUrl();
-    }
 
-    public ngOnInit(): void {
-        super.ngOnInit();
+        this.meetingRepo.getGeneralViewModelObservable().subscribe(() => {
+            console.log('meeting update', this.currentCommittee, this.currentCommittee?.meetings);
+            if (this.currentCommittee) {
+                this.meetingsSubject.next(this.currentCommittee.meetings);
+            }
+        });
     }
 
     public onCreateMeeting(): void {
@@ -97,10 +98,10 @@ export class MeetingListComponent extends BaseListViewComponent<ViewOrganisation
     }
 
     private async loadCommittee(id: number): Promise<void> {
-        this.currentCommitteeObservable = this.committeeRepo.getViewModelObservable(id);
         this.subscriptions.push(
-            this.currentCommitteeObservable.subscribe(committee => {
+            this.committeeRepo.getViewModelObservable(id).subscribe(committee => {
                 this.currentCommittee = committee;
+                console.log('committee update', committee, committee?.meetings);
                 this.meetingsSubject.next(committee?.meetings || []);
             })
         );

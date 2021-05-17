@@ -37,9 +37,6 @@ export interface HasMeeting {
 }
 
 export class ViewMeeting extends BaseViewModel<Meeting> {
-    public static COLLECTION = Meeting.COLLECTION;
-    protected _collection = Meeting.COLLECTION;
-
     public get meeting(): Meeting {
         return this._model;
     }
@@ -55,9 +52,17 @@ export class ViewMeeting extends BaseViewModel<Meeting> {
     public get userAmount(): number {
         return this.user_ids?.length || 0;
     }
+    public static COLLECTION = Meeting.COLLECTION;
+
+    public static ACCESSIBILITY_FIELD: keyof Meeting = 'description';
+    protected _collection = Meeting.COLLECTION;
 
     public getUrl(): string {
         return `/${this.id}/`;
+    }
+
+    public canAccess(): boolean {
+        return this[ViewMeeting.ACCESSIBILITY_FIELD] !== undefined && this[ViewMeeting.ACCESSIBILITY_FIELD] !== null;
     }
 }
 interface IMeetingRelations {

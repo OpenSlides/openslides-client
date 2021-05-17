@@ -1,6 +1,6 @@
+import { HasMeeting } from 'app/management/models/view-meeting';
 import { AssignmentCandidate } from 'app/shared/models/assignments/assignment-candidate';
 import { BaseViewModel } from 'app/site/base/base-view-model';
-import { HasMeeting } from 'app/site/event-management/models/view-meeting';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { ViewAssignment } from './view-assignment';
 
