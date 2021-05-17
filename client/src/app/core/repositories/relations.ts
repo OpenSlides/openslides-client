@@ -463,18 +463,6 @@ export const RELATIONS: Relation[] = [
         AField: 'present_users',
         BField: 'is_present_in_meetings'
     }),
-    ...makeM2O({
-        OViewModel: ViewMeeting,
-        MViewModel: ViewUser,
-        OField: 'temporary_users',
-        MField: 'meeting'
-    }),
-    ...makeM2O({
-        OViewModel: ViewMeeting,
-        MViewModel: ViewUser,
-        OField: 'guests',
-        MField: 'guest_meetings'
-    }),
     ...makeM2M({
         AViewModel: ViewMeeting,
         BViewModel: ViewOrganisationTag,

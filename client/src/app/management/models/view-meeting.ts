@@ -106,8 +106,6 @@ interface IMeetingRelations {
     template_meeting_for_committee?: ViewCommittee;
     default_meeting_for_committee?: ViewCommittee;
     present_users: ViewUser[];
-    temporary_users: ViewUser[];
-    guests: ViewUser[];
     users: ViewUser[];
     reference_projector: ViewProjector;
     default_projector: StructuredRelation<string, ViewProjector | null>;

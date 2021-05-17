@@ -81,7 +81,7 @@ export class UserImportService extends BaseImportService<User> {
             modelHeadersAndVerboseNames: userHeadersAndVerboseNames,
             hasDuplicatesFn: (entry: Partial<User>) =>
                 this.repo.getViewModelList().some(user => user.username === entry.username),
-            bulkCreateFn: (entries: any[]) => this.repo.bulkCreateTemporary(entries)
+            bulkCreateFn: (entries: any[]) => this.repo.bulkCreate(entries)
         };
     }
 

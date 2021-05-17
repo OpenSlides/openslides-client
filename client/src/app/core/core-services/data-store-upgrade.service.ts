@@ -47,7 +47,7 @@ export class DataStoreUpgradeService {
             .get<SchemaVersion>(SCHEMA_VERSION)
             .subscribe(serverVersion => this.checkForUpgrade(serverVersion));
         */
-        // temporary: get the spinner working:
+        // TODO temporary: get the spinner working:
         this.upgradeChecked.next(true);
     }
 

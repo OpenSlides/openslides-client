@@ -188,9 +188,7 @@ export class Meeting extends BaseModel<Meeting> {
     public template_meeting_for_committee_id: Id; // committee/template_meeting_id;
     public default_meeting_for_committee_id: Id; // committee/default_meeting_id;
     public present_user_ids: Id[]; // (user/is_present_in_meeting_ids)[];
-    public temporary_user_ids: Id[]; // (user/meeting_id)[];
-    public guest_ids: Id[]; // (user/guest_meeting_ids)[];
-    public user_ids: Id[]; // Calculated: All ids from temporary_user_ids, guest_ids and all users assigned to groups.
+    public user_ids: Id[]; // Calculated: All ids all users assigned to groups.
     public reference_projector_id: Id; // projector/used_as_reference_projector_meeting_id;
     public default_projector_$_id: string[]; // projector/used_as_default_$_in_meeting_id;
 

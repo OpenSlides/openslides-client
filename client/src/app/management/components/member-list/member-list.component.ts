@@ -78,15 +78,9 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
         );
         if (selectedChoice) {
             if (selectedChoice.action === ADD) {
-                this.repo.bulkAssignUsersToCommitteesAsMembers(
-                    this.selectedRows.filter(user => !user.isTemporary),
-                    selectedChoice.items as Id[]
-                );
+                this.repo.bulkAssignUsersToCommitteesAsMembers(this.selectedRows, selectedChoice.items as Id[]);
             } else {
-                this.repo.bulkUnassignUsersFromCommitteesAsMembers(
-                    this.selectedRows.filter(user => !user.isTemporary),
-                    selectedChoice.items as Id[]
-                );
+                this.repo.bulkUnassignUsersFromCommitteesAsMembers(this.selectedRows, selectedChoice.items as Id[]);
             }
         }
     }

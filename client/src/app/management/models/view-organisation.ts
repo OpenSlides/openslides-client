@@ -1,6 +1,5 @@
 import { Organisation } from 'app/shared/models/event-management/organisation';
 import { BaseViewModel } from 'app/site/base/base-view-model';
-import { ViewUser } from 'app/site/users/models/view-user';
 import { ViewCommittee } from './view-committee';
 import { ViewOrganisationTag } from './view-organisation-tag';
 import { ViewResource } from './view-resource';
@@ -15,8 +14,6 @@ export class ViewOrganisation extends BaseViewModel<Organisation> {
 }
 interface IOrganisationRelations {
     committees: ViewCommittee[];
-    roles: ViewUser[];
-    superadmin_role: ViewUser;
     resources: ViewResource[];
     organisation_tags: ViewOrganisationTag;
 }

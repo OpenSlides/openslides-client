@@ -445,18 +445,18 @@ export abstract class BaseImportService<M extends BaseModel> {
     }
 
     private resolveEntry(entry: NewEntry<M>): M {
-        let temporaryModel = { ...entry.newEntry } as M;
+        let model = { ...entry.newEntry } as M;
         for (const key of Object.keys(this.importHelperMap)) {
             const helper = this.importHelperMap[key];
-            const result = helper.linkToItem(temporaryModel, key);
-            temporaryModel = result.model;
+            const result = helper.linkToItem(model, key);
+            model = result.model;
             if (result.unresolvedModels) {
                 this.setError(entry, result.verboseName);
                 this.updatePreview();
                 break;
             }
         }
-        return temporaryModel;
+        return model;
     }
 
     private parseValue(value: string, header: keyof M, helper?: ImportHelper<M>): any {

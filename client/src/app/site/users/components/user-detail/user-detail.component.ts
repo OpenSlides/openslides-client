@@ -85,8 +85,6 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
         return this.pollService.isElectronicVotingEnabled && this.voteWeightEnabled;
     }
 
-    private isTemporaryUser = true;
-
     private userId: Id = 0;
 
     /**
@@ -327,18 +325,10 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
     }
 
     private async createOrUpdateUser(): Promise<void> {
-        if (this.isTemporaryUser) {
-            if (this.newUser) {
-                await this.createTemporaryUser();
-            } else {
-                await this.updateTemporaryUser();
-            }
+        if (this.newUser) {
+            await this.createUser();
         } else {
-            if (this.newUser) {
-                await this.createRealUser();
-            } else {
-                await this.updateRealUser();
-            }
+            await this.updateUser();
         }
     }
 
@@ -347,10 +337,6 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
      * @param edit
      */
     public async setEditMode(edit: boolean): Promise<void> {
-        if (this.user && edit && !this.user.meeting_id) {
-            this.isTemporaryUser = false;
-        }
-
         if (!this.hasSubscription('edit subscription')) {
             await this.requestModels(
                 {
@@ -424,22 +410,12 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
         return this.repo.lastSentEmailTimeString(this.user);
     }
 
-    private async createRealUser(): Promise<void> {
+    private async createUser(): Promise<void> {
         await this.repo.create(this.personalInfoForm.value);
         this.goToAllUsers();
     }
 
-    private async updateRealUser(): Promise<void> {
-        await this.repo.update(this.personalInfoForm.value, this.user);
-        this.setEditMode(false);
-    }
-
-    private async createTemporaryUser(): Promise<void> {
-        await this.repo.createTemporary(this.personalInfoForm.value);
-        this.goToAllUsers();
-    }
-
-    private async updateTemporaryUser(): Promise<void> {
+    private async updateUser(): Promise<void> {
         await this.repo.update(this.personalInfoForm.value, this.user);
         this.setEditMode(false);
     }

@@ -30,8 +30,6 @@ export class Organisation extends BaseModel<Organisation> {
     public enable_electronic_voting: boolean;
 
     public committee_ids: Id[]; // (committee/organisation_id)[];
-    public role_ids: Id[]; // (role/organisation_id)[];
-    public superadmin_role_id: Id; // role/superadmin_role_for_organisation_id;
     public resource_ids: Id[]; // (resource/organisation_id)[];
     public organisation_tag_ids: Id[]; // (organisation_tag/organisation_id)[]
 

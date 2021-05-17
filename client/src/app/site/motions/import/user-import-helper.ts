@@ -35,7 +35,7 @@ export class UserImportHelper implements ImportHelper<Motion> {
         if (!this.newUsers.length) {
             return;
         }
-        const userIds = await this.repo.bulkCreateTemporary(this.newUsers.map(newUser => ({ username: newUser.name })));
+        const userIds = await this.repo.bulkCreate(this.newUsers.map(newUser => ({ username: newUser.name })));
         this.newUsers = this.newUsers.map((user, index) => ({
             name: user.name,
             id: userIds[index].id

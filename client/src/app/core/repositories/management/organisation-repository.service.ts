@@ -33,12 +33,11 @@ export class OrganisationRepositoryService extends BaseRepository<ViewOrganisati
             'custom_translations',
             'reset_password_verbose_errors'
         );
-        const listFieldset: (keyof Organisation)[] = coreFieldset.concat('committee_ids', 'organisation_tag_ids');
-        const detailFieldset: (keyof Organisation)[] = listFieldset.concat('role_ids', 'superadmin_role_id');
+        const detailFieldset: (keyof Organisation)[] = coreFieldset.concat('committee_ids', 'organisation_tag_ids');
         return {
             [DEFAULT_FIELDSET]: detailFieldset,
             title: coreFieldset,
-            list: listFieldset,
+            list: detailFieldset,
             settings: settingsFieldset
         };
     }
