@@ -322,6 +322,13 @@ export class MotionLineNumberingService {
         return baseParagraphs.map((paragraph: string, paraNo: number) => {
             let paragraphHasChanges = false;
 
+            if (baseParagraphs[paraNo] === undefined) {
+                const msg =
+                    'Inconsistent data. An amendment is probably referring to a non-existant line number. ' +
+                    'You can back up its content when editing it and delete it afterwards.';
+                return '<em style="color: red; font-weight: bold;">' + msg + '</em>';
+            }
+
             if (amendment.amendment_paragraph(paraNo)) {
                 // Add line numbers to newText, relative to the baseParagraph, by creating a diff
                 // to the line numbered base version any applying it right away
@@ -387,7 +394,11 @@ export class MotionLineNumberingService {
         return amendmentParagraphs
             .map(
                 (newText: string, paraNo: number): DiffLinesInParagraph => {
-                    if (newText !== null) {
+                    if (baseParagraphs[paraNo] === undefined) {
+                        throw new Error(
+                            'Inconsistent data. An amendment is probably referring to a non-existant line number.'
+                        );
+                    } else if (newText !== null) {
                         return this.diffService.getAmendmentParagraphsLines(
                             paraNo,
                             baseParagraphs[paraNo],
@@ -462,6 +473,13 @@ export class MotionLineNumberingService {
                         return null;
                     }
 
+                    if (baseParagraphs[paragraphNumber] === undefined) {
+                        console.error(
+                            'Inconsistent data. An amendment is probably referring to a non-existant line number.'
+                        );
+                        return null;
+                    }
+
                     const origText = baseParagraphs[paragraphNumber],
                         diff = this.diffService.diff(origText, newText),
                         affectedLines = this.diffService.detectAffectedLineRange(diff);
@@ -506,6 +524,10 @@ export class MotionLineNumberingService {
 
         return baseParagraphs.map((origText: string, paraNo: number): string => {
             const newText = amendment.amendment_paragraph(paraNo);
+            /**
+             * TODO CHECK please check if this commit was coverd justly
+             * https://github.com/OpenSlides/OpenSlides/commit/ac50d6f8dccc5b502c7b7a3a106ef5935184494f#diff-f5bbc561818c722671cf3105c1c578d9e6b9767bb0f4f9ea32030678eb803499R1016-R1018
+             */
             if (!newText) {
                 return origText;
             }

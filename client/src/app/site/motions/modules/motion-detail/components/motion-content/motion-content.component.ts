@@ -243,16 +243,21 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
             changeRecommendation: null
         };
         if (this.motion.isParagraphBasedAmendment()) {
-            const lineNumberedParagraphs = this.motionLineNumbering.getAllAmendmentParagraphsWithOriginalLineNumbers(
-                this.motion,
-                this.lineLength,
-                false
-            );
-            data.changeRecommendation = this.changeRecoRepo.createAmendmentChangeRecommendationTemplate(
-                this.motion,
-                lineNumberedParagraphs,
-                lineRange
-            );
+            try {
+                const lineNumberedParagraphs = this.motionLineNumbering.getAllAmendmentParagraphsWithOriginalLineNumbers(
+                    this.motion,
+                    this.lineLength,
+                    false
+                );
+                data.changeRecommendation = this.changeRecoRepo.createAmendmentChangeRecommendationTemplate(
+                    this.motion,
+                    lineNumberedParagraphs,
+                    lineRange
+                );
+            } catch (e) {
+                console.error(e);
+                return;
+            }
         } else {
             data.changeRecommendation = this.changeRecoRepo.createMotionChangeRecommendationTemplate(
                 this.motion,
@@ -401,6 +406,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
             tag_ids: [[]],
             origin: [''],
             selected_paragraphs: [],
+            broken_paragraphs: [],
             statute_amendment: [''], // Internal value for the checkbox, not saved to the model
             statute_paragraph_id: [],
             block_id: [],

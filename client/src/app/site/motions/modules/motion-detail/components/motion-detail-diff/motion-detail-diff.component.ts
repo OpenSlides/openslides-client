@@ -138,9 +138,14 @@ export class MotionDetailDiffComponent extends BaseComponent implements AfterVie
 
         let baseText: LineNumberedString;
         if (this.motion.isParagraphBasedAmendment()) {
-            baseText = this.motionLineNumbering
-                .getAllAmendmentParagraphsWithOriginalLineNumbers(this.motion, this.lineLength, true)
-                .join('\n');
+            try {
+                baseText = this.motionLineNumbering
+                    .getAllAmendmentParagraphsWithOriginalLineNumbers(this.motion, this.lineLength, true)
+                    .join('\n');
+            } catch (e) {
+                console.error(e);
+                return '';
+            }
         } else {
             baseText = this.lineNumbering.insertLineNumbers(this.motion.text, this.lineLength);
         }
@@ -182,9 +187,14 @@ export class MotionDetailDiffComponent extends BaseComponent implements AfterVie
         }
         let baseText: LineNumberedString;
         if (this.motion.isParagraphBasedAmendment()) {
-            baseText = this.motionLineNumbering
-                .getAllAmendmentParagraphsWithOriginalLineNumbers(this.motion, this.lineLength, true)
-                .join('\n');
+            try {
+                baseText = this.motionLineNumbering
+                    .getAllAmendmentParagraphsWithOriginalLineNumbers(this.motion, this.lineLength, true)
+                    .join('\n');
+            } catch (e) {
+                console.error(e);
+                return '';
+            }
         } else {
             baseText = this.lineNumbering.insertLineNumbers(this.motion.text, this.lineLength);
         }
