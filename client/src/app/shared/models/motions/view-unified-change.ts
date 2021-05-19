@@ -25,6 +25,11 @@ export interface ViewUnifiedChange {
     getChangeId(): string;
 
     /**
+     * Returns an identifier from an underlying model.
+     */
+    getIdentifier(): string;
+
+    /**
      * First line number of the change
      */
     getLineFrom(): number;

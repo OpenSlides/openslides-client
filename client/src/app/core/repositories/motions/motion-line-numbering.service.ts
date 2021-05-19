@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 
 import { DiffLinesInParagraph, DiffService } from 'app/core/ui-services/diff.service';
 import { LineNumberedString, LinenumberingService, LineNumberRange } from 'app/core/ui-services/linenumbering.service';
@@ -10,6 +11,7 @@ import { ViewMotionAmendedParagraph } from 'app/site/motions/models/view-motion-
 import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
 import { ViewMotionStatuteParagraph } from 'app/site/motions/models/view-motion-statute-paragraph';
 import { ChangeRecoMode } from 'app/site/motions/motions.constants';
+import { MotionChangeRecommendationRepositoryService } from './motion-change-recommendation-repository.service';
 
 /**
  * Describes the single paragraphs from the base motion.
@@ -46,7 +48,11 @@ interface DifferedViewArguments {
     providedIn: 'root'
 })
 export class MotionLineNumberingService {
+    private amendmentChangeRecoMap: { [amendmentId: string]: ViewMotionChangeRecommendation[] } = {};
+    private amendmentChangeRecoSubscriptionMap: { [amendmentId: string]: Subscription } = {};
+
     public constructor(
+        private changeRecoRepo: MotionChangeRecommendationRepositoryService,
         private lineNumberingService: LinenumberingService,
         private diffService: DiffService,
         private translate: TranslateService
@@ -64,13 +70,11 @@ export class MotionLineNumberingService {
         changeRecommendations: ViewMotionChangeRecommendation[] = [],
         amendments: ViewMotion[] = []
     ): ViewUnifiedChange[] {
-        const amendmentChangeRecoMap: { [amendmentId: string]: ViewMotionChangeRecommendation[] } = {};
-
         const sortedChangingObjects: ViewUnifiedChange[] = [...changeRecommendations];
         const paragraphBasedAmendments = amendments.filter(amendment => amendment.isParagraphBasedAmendment());
 
         for (const amendment of paragraphBasedAmendments) {
-            const toApplyChanges = (amendmentChangeRecoMap[amendment.id] || []).filter(
+            const toApplyChanges = (this.amendmentChangeRecoMap[amendment.id] || []).filter(
                 // The rejected change recommendations for amendments should not be considered
                 change => change.showInFinalView()
             );
@@ -78,6 +82,23 @@ export class MotionLineNumberingService {
         }
         sortedChangingObjects.sort((a: ViewUnifiedChange, b: ViewUnifiedChange) => a.getLineFrom() - b.getLineFrom());
         return sortedChangingObjects;
+    }
+
+    public resetAmendmentChangeRecoListeners(amendments: ViewMotion[]): void {
+        for (const subscription of Object.values(this.amendmentChangeRecoSubscriptionMap)) {
+            subscription.unsubscribe();
+        }
+        this.amendmentChangeRecoMap = {};
+        this.amendmentChangeRecoSubscriptionMap = {};
+        for (const amendment of amendments) {
+            if (!this.amendmentChangeRecoSubscriptionMap[amendment.id]) {
+                this.amendmentChangeRecoSubscriptionMap[
+                    amendment.id
+                ] = this.changeRecoRepo.getChangeRecosOfMotionObservable(amendment.id).subscribe(changeRecos => {
+                    this.amendmentChangeRecoMap[amendment.id] = changeRecos;
+                });
+            }
+        }
     }
 
     /**
@@ -250,7 +271,7 @@ export class MotionLineNumberingService {
     public getParagraphsToChoose(motion: ViewMotion, lineLength: number): ParagraphToChoose[] {
         const parent = motion.hasLeadMotion ? motion.lead_motion : motion;
         return this.getTextParagraphs(parent, true, lineLength).map((paragraph: string, index: number) => {
-            let localParagraph;
+            let localParagraph: string;
             if (motion.hasLeadMotion) {
                 localParagraph = motion.amendment_paragraph(index) ? motion.amendment_paragraph(index) : paragraph;
             } else {
@@ -354,7 +375,7 @@ export class MotionLineNumberingService {
         const motion = amendment.lead_motion;
         const baseParagraphs = this.getTextParagraphs(motion, true, lineLength);
 
-        let amendmentParagraphs;
+        let amendmentParagraphs: string[] = [];
         if (crMode === ChangeRecoMode.Changed) {
             amendmentParagraphs = this.applyChangesToAmendment(amendment, lineLength, changeRecommendations, true);
         } else {
@@ -364,7 +385,7 @@ export class MotionLineNumberingService {
         }
 
         return amendmentParagraphs
-            ?.map(
+            .map(
                 (newText: string, paraNo: number): DiffLinesInParagraph => {
                     if (newText !== null) {
                         return this.diffService.getAmendmentParagraphsLines(

@@ -54,7 +54,17 @@
                         [checked]="isParagraphSelected(paragraph)"
                     >
                     </mat-radio-button>
-                    <div class="paragraph-text motion-text" [innerHTML]="getParagraphPreview(i) | trust: 'html'"></div>
+                    <div class="paragraph-text motion-text">
+                        <div>
+                            <i *ngIf="paragraph.lineFrom >= paragraph.lineTo - 1" class="line-number">
+                                {{ 'Line' | translate }} {{ paragraph.lineFrom }}:</i
+                            >
+                            <i *ngIf="paragraph.lineFrom < paragraph.lineTo - 1" class="line-number">
+                                {{ 'Line' | translate }} {{ paragraph.lineFrom }} - {{ paragraph.lineTo - 1 }}:</i
+                            >
+                        </div>
+                        <div [innerHTML]="getParagraphPreview(i) | trust: 'html'"></div>
+                    </div>
                 </section>
             </div>
         </mat-step>

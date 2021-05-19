@@ -2,7 +2,10 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { Subscription } from 'rxjs';
+
 import { AmendmentAction } from 'app/core/actions/amendment-action';
+import { Id } from 'app/core/definitions/key-types';
 import {
     MotionLineNumberingService,
     ParagraphToChoose
@@ -13,7 +16,7 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { AmendmentParagraphs } from 'app/shared/models/motions/motion';
-import { BaseComponent } from 'app/site/base/components/base.component';
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 
 /**
@@ -25,7 +28,7 @@ import { ViewMotion } from 'app/site/motions/models/view-motion';
     styleUrls: ['./amendment-create-wizard.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class AmendmentCreateWizardComponent extends BaseComponent implements OnInit {
+export class AmendmentCreateWizardComponent extends BaseModelContextComponent implements OnInit {
     /**
      * The motion to be amended
      */
@@ -55,7 +58,7 @@ export class AmendmentCreateWizardComponent extends BaseComponent implements OnI
     /**
      * Indicates the maximum line length as defined in the configuration.
      */
-    public lineLength: number;
+    private lineLength: number;
 
     /**
      * Determine, from the config service, if a reason is required
@@ -83,44 +86,7 @@ export class AmendmentCreateWizardComponent extends BaseComponent implements OnI
     }
 
     public ngOnInit(): void {
-        this.meetingSettingsService.get('motions_line_length').subscribe(lineLength => {
-            this.lineLength = lineLength;
-            this.getMotionByUrl();
-        });
-
-        this.meetingSettingsService.get('motions_reason_required').subscribe(required => {
-            this.reasonRequired = required;
-        });
-
-        this.meetingSettingsService.get('motions_amendments_multiple_paragraphs').subscribe(allowed => {
-            this.multipleParagraphsAllowed = allowed;
-        });
-    }
-
-    /**
-     * determine the motion to display using the URL
-     */
-    public getMotionByUrl(): void {
-        // load existing motion
-        this.route.params.subscribe(params => {
-            this.motionRepo.getViewModelObservable(params.id).subscribe(newViewMotion => {
-                if (newViewMotion) {
-                    this.paragraphs = this.motionLineNumbering.getParagraphsToChoose(newViewMotion, this.lineLength);
-
-                    if (newViewMotion.hasLeadMotion) {
-                        this.isAmendmentOfAmendment = true;
-                        this.motion = newViewMotion.lead_motion;
-                        this.diffedParagraphs = this.motionLineNumbering.getDiffedParagraphToChoose(
-                            newViewMotion,
-                            this.lineLength
-                        );
-                    } else {
-                        this.isAmendmentOfAmendment = false;
-                        this.motion = newViewMotion;
-                    }
-                }
-            });
-        });
+        this.subscriptions.push(...this.getSubscriptionsToSettings());
     }
 
     /**
@@ -146,16 +112,6 @@ export class AmendmentCreateWizardComponent extends BaseComponent implements OnI
         }
     }
 
-    /**
-     * Creates the forms for the Motion and the MotionVersion
-     */
-    public createForm(): void {
-        this.contentForm = this.formBuilder.group({
-            selectedParagraphs: [[], Validators.required],
-            reason: ['', Validators.required]
-        });
-    }
-
     public isParagraphSelected(paragraph: ParagraphToChoose): boolean {
         return !!this.contentForm.value.selectedParagraphs.find(para => para.paragraphNo === paragraph.paragraphNo);
     }
@@ -168,57 +124,6 @@ export class AmendmentCreateWizardComponent extends BaseComponent implements OnI
      */
     public checkboxClicked(event: MouseEvent): void {
         event.preventDefault();
-    }
-
-    /**
-     * Called by the template when a paragraph is clicked in single paragraph mode.
-     * Behaves like a radio-button
-     *
-     * @param {ParagraphToChoose} paragraph
-     */
-    public setParagraph(paragraph: ParagraphToChoose): void {
-        this.contentForm.value.selectedParagraphs.forEach(para => {
-            this.contentForm.removeControl('text_' + para.paragraphNo);
-        });
-        this.contentForm.addControl(
-            'text_' + paragraph.paragraphNo,
-            new FormControl(paragraph.html, Validators.required)
-        );
-        this.contentForm.patchValue({
-            selectedParagraphs: [paragraph]
-        });
-    }
-
-    /**
-     * Called by the template when a paragraph is clicked in multiple paragraph mode.
-     * Behaves like a checkbox
-     *
-     * @param {ParagraphToChoose} paragraph
-     */
-    public toggleParagraph(paragraph: ParagraphToChoose): void {
-        let newParagraphs: ParagraphToChoose[];
-        const oldSelected: ParagraphToChoose[] = this.contentForm.value.selectedParagraphs;
-        if (this.isParagraphSelected(paragraph)) {
-            newParagraphs = oldSelected.filter(para => para.paragraphNo !== paragraph.paragraphNo);
-            this.contentForm.patchValue({
-                selectedParagraphs: newParagraphs
-            });
-            this.contentForm.removeControl('text_' + paragraph.paragraphNo);
-        } else {
-            newParagraphs = Object.assign([], oldSelected);
-            newParagraphs.push(paragraph);
-            newParagraphs.sort((para1: ParagraphToChoose, para2: ParagraphToChoose): number => {
-                return para1.paragraphNo - para2.paragraphNo;
-            });
-
-            this.contentForm.addControl(
-                'text_' + paragraph.paragraphNo,
-                new FormControl(paragraph.html, Validators.required)
-            );
-            this.contentForm.patchValue({
-                selectedParagraphs: newParagraphs
-            });
-        }
     }
 
     /**
@@ -252,11 +157,132 @@ export class AmendmentCreateWizardComponent extends BaseComponent implements OnI
             tag_ids: this.motion.tag_ids,
             motion_block_id: this.motion.block_id,
             lead_motion_id: this.motion.id,
-            amendment_paragraphs: amendmentParagraphs,
+            amendment_paragraph_$: amendmentParagraphs,
             workflow_id: this.meetingSettingsService.instant('motions_default_workflow_id')
         };
 
         const response = await this.repo.createParagraphBased(motionCreate);
-        this.router.navigate([this.activeMeetingId, 'motions' + response.id]);
+        this.router.navigate([this.activeMeetingId, 'motions', response.id]);
+    }
+
+    private requestUpdatesForMotion(id: Id): void {
+        this.requestModels(
+            {
+                ids: [id],
+                viewModelCtor: ViewMotion,
+                fieldset: 'amendment'
+            },
+            'amendment:parent_motion'
+        );
+    }
+
+    /**
+     * determine the motion to display using the URL
+     */
+    private loadMotionByUrl(): void {
+        // load existing motion
+        this.subscriptions.push(
+            this.route.params.subscribe(params => {
+                this.requestUpdatesForMotion(parseInt(params.id, 10));
+                this.subscriptions.push(
+                    this.motionRepo.getViewModelObservable(params.id).subscribe(newViewMotion => {
+                        this.initialize(newViewMotion);
+                    })
+                );
+            })
+        );
+    }
+
+    private initialize(motion: ViewMotion | undefined): void {
+        if (!motion) {
+            return;
+        }
+        this.paragraphs = this.motionLineNumbering.getParagraphsToChoose(motion, this.lineLength);
+
+        if (motion.hasLeadMotion) {
+            this.isAmendmentOfAmendment = true;
+            this.motion = motion.lead_motion;
+            this.diffedParagraphs = this.motionLineNumbering.getDiffedParagraphToChoose(motion, this.lineLength);
+        } else {
+            this.isAmendmentOfAmendment = false;
+            this.motion = motion;
+        }
+    }
+
+    /**
+     * Creates the forms for the Motion and the MotionVersion
+     */
+    private createForm(): void {
+        this.contentForm = this.formBuilder.group({
+            selectedParagraphs: [[], Validators.required],
+            reason: ['', Validators.required]
+        });
+    }
+
+    /**
+     * Called by the template when a paragraph is clicked in single paragraph mode.
+     * Behaves like a radio-button
+     *
+     * @param {ParagraphToChoose} paragraph
+     */
+    private setParagraph(paragraph: ParagraphToChoose): void {
+        this.contentForm.value.selectedParagraphs.forEach(para => {
+            this.contentForm.removeControl('text_' + para.paragraphNo);
+        });
+        this.contentForm.addControl(
+            'text_' + paragraph.paragraphNo,
+            new FormControl(paragraph.html, Validators.required)
+        );
+        this.contentForm.patchValue({
+            selectedParagraphs: [paragraph]
+        });
+    }
+
+    /**
+     * Called by the template when a paragraph is clicked in multiple paragraph mode.
+     * Behaves like a checkbox
+     *
+     * @param {ParagraphToChoose} paragraph
+     */
+    private toggleParagraph(paragraph: ParagraphToChoose): void {
+        let newParagraphs: ParagraphToChoose[];
+        const oldSelected: ParagraphToChoose[] = this.contentForm.value.selectedParagraphs;
+        if (this.isParagraphSelected(paragraph)) {
+            newParagraphs = oldSelected.filter(para => para.paragraphNo !== paragraph.paragraphNo);
+            this.contentForm.patchValue({
+                selectedParagraphs: newParagraphs
+            });
+            this.contentForm.removeControl('text_' + paragraph.paragraphNo);
+        } else {
+            newParagraphs = Object.assign([], oldSelected);
+            newParagraphs.push(paragraph);
+            newParagraphs.sort((para1: ParagraphToChoose, para2: ParagraphToChoose): number => {
+                return para1.paragraphNo - para2.paragraphNo;
+            });
+
+            this.contentForm.addControl(
+                'text_' + paragraph.paragraphNo,
+                new FormControl(paragraph.html, Validators.required)
+            );
+            this.contentForm.patchValue({
+                selectedParagraphs: newParagraphs
+            });
+        }
+    }
+
+    private getSubscriptionsToSettings(): Subscription[] {
+        return [
+            this.meetingSettingsService.get('motions_line_length').subscribe(lineLength => {
+                this.lineLength = lineLength;
+                this.loadMotionByUrl();
+            }),
+
+            this.meetingSettingsService.get('motions_reason_required').subscribe(required => {
+                this.reasonRequired = required;
+            }),
+            this.meetingSettingsService.get('motions_amendments_multiple_paragraphs').subscribe(allowed => {
+                this.multipleParagraphsAllowed = allowed;
+            })
+        ];
     }
 }

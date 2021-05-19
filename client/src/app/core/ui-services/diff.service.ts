@@ -2115,13 +2115,6 @@ export class DiffService {
 
         // Changes need to be applied from the bottom up, to prevent conflicts with changing line numbers.
         changes.sort((change1: ViewUnifiedChange, change2: ViewUnifiedChange) => {
-            // if (change1.getLineFrom() < change2.getLineFrom()) {
-            //     return 1;
-            // } else if (change1.getLineFrom() > change2.getLineFrom()) {
-            //     return -1;
-            // } else {
-            //     return 0;
-            // }
             return change1.getLineFrom() - change2.getLineFrom();
         });
 

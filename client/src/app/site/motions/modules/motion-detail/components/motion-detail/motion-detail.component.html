@@ -195,7 +195,7 @@
         [editMotion]="editMotion"
         [newMotion]="newMotion"
         (save)="saveMotion($event)"
-        (changeForm)="temporaryMotion = $event"
-        (isFormValid)="canSave = $event"
+        (formChanged)="temporaryMotion = $event"
+        (validStateChanged)="canSave = $event"
     ></os-motion-content>
 </ng-template>

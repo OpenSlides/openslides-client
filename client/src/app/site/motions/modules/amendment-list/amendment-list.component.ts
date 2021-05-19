@@ -11,6 +11,7 @@ import { AmendmentSortListService } from '../../services/amendment-sort-list.ser
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
+import { MotionService } from 'app/core/repositories/motions/motion.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { LinenumberingService } from 'app/core/ui-services/linenumbering.service';
 import { OverlayService } from 'app/core/ui-services/overlay.service';
@@ -82,6 +83,7 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
         componentServiceCollector: ComponentServiceCollector,
         private route: ActivatedRoute,
         public motionRepo: MotionRepositoryService,
+        public motionService: MotionService,
         public motionSortService: MotionSortListService,
         public motionMultiSelectService: MotionMultiselectService,
         public amendmentSortService: AmendmentSortListService,

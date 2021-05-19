@@ -18,7 +18,7 @@ export namespace AmendmentAction {
     }
 
     export interface CreateParagraphbasedPayload extends PartialAmendmentPayload {
-        amendment_paragraphs: ParagraphChange;
+        amendment_paragraph_$: ParagraphChange;
     }
 
     export interface CreateTextbasedPayload extends PartialAmendmentPayload {

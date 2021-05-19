@@ -9,6 +9,7 @@ import { DiffService, LineRange } from 'app/core/ui-services/diff.service';
 import { LineNumberedString, LinenumberingService } from 'app/core/ui-services/linenumbering.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
+import { HEAD_BAR_HEIGHT } from 'app/shared/components/head-bar/head-bar.component';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from 'app/shared/models/motions/view-unified-change';
 import { mediumDialogSettings } from 'app/shared/utils/dialog-settings';
 import { getRecommendationTypeName } from 'app/shared/utils/recommendation-type-names';
@@ -368,8 +369,12 @@ export class MotionDetailDiffComponent extends BaseComponent implements AfterVie
      */
     private scrollToChangeElement(change: ViewUnifiedChange): void {
         const element = <HTMLElement>this.el.nativeElement;
-        const target = element.querySelector('[data-change-id="' + change.getChangeId() + '"]');
-        target.scrollIntoView({ behavior: 'smooth' });
+        const target = element.querySelector(`.diff-box-${change.getChangeId()}`);
+        const containerElement = document.querySelector('mat-sidenav-content');
+        containerElement.scrollTo({
+            top: target.getBoundingClientRect().top - HEAD_BAR_HEIGHT,
+            behavior: 'smooth'
+        });
     }
 
     public scrollToChangeClicked(change: ViewUnifiedChange, $event: MouseEvent): void {

@@ -1,3 +1,41 @@
+<!-- Regular motions or traditional amendments -->
+<ng-container *ngIf="!editMotion && !motion?.isStatuteAmendment() && !motion?.isParagraphBasedAmendment()">
+    <!-- Text (hide preamble, if diff mode. The preample is included in the motion-detail-diff component) -->
+    <span *ngIf="showPreamble && changeRecoMode !== ChangeRecoMode.Diff" class="text-prefix-label">
+        {{ preamble | translate }}
+    </span>
+    <div
+        *ngIf="changeRecoMode !== ChangeRecoMode.Diff && !isFinalEdit"
+        class="motion-text"
+        [class.line-numbers-none]="lineNumberingMode === LineNumberingMode.None"
+        [class.line-numbers-inline]="lineNumberingMode === LineNumberingMode.Inside"
+        [class.line-numbers-outside]="lineNumberingMode === LineNumberingMode.Outside"
+    >
+        <os-motion-detail-original-change-recommendations
+            *ngIf="lineNumberingMode === LineNumberingMode.Outside && changeRecoMode === ChangeRecoMode.Original"
+            [html]="getFormattedTextPlain()"
+            [changeRecommendations]="changeRecommendations"
+            (createChangeRecommendation)="createChangeRecommendation($event)"
+            (gotoChangeRecommendation)="gotoChangeRecommendation($event)"
+        ></os-motion-detail-original-change-recommendations>
+        <os-motion-final-version
+            *ngIf="lineNumberingMode !== LineNumberingMode.Outside || changeRecoMode !== ChangeRecoMode.Original"
+            [formattedText]="getFormattedTextPlain()"
+            [motion]="motion"
+        ></os-motion-final-version>
+    </div>
+    <os-motion-detail-diff
+        *ngIf="changeRecoMode === ChangeRecoMode.Diff"
+        [motion]="motion"
+        [changes]="getChangesForDiffMode()"
+        [scrollToChange]="scrollToChange"
+        [highlightedLine]="highlightedLine"
+        [showAllAmendments]="showAllAmendments"
+        [lineNumberingMode]="lineNumberingMode"
+        (createChangeRecommendation)="createChangeRecommendation($event)"
+    ></os-motion-detail-diff>
+</ng-container>
+
 <form class="motion-content" [formGroup]="contentForm" (keydown)="onKeyDown($event)">
     <!-- Selecting statute paragraphs for amendment -->
     <div class="statute-amendment-selector" *ngIf="newMotion && statuteParagraphs.length && statutesEnabled">
@@ -59,63 +97,6 @@
         </div>
     </div>
 
-    <!-- Text (hide preamble, if diff mode. The preample is included in the motion-detail-diff component) -->
-    <span *ngIf="showPreamble && changeRecoMode !== ChangeRecoMode.Diff" class="text-prefix-label">
-        {{ preamble | translate }}
-    </span>
-
-    <!-- Regular motions or traditional amendments -->
-    <ng-container *ngIf="!editMotion && !motion?.isStatuteAmendment() && !motion?.isParagraphBasedAmendment()">
-        <div
-            *ngIf="changeRecoMode !== ChangeRecoMode.Diff && !isFinalEdit"
-            class="motion-text"
-            [class.line-numbers-none]="lnMode === LineNumberingMode.None"
-            [class.line-numbers-inline]="lnMode === LineNumberingMode.Inside"
-            [class.line-numbers-outside]="lnMode === LineNumberingMode.Outside"
-        >
-            <os-motion-detail-original-change-recommendations
-                *ngIf="lnMode === LineNumberingMode.Outside && changeRecoMode === ChangeRecoMode.Original"
-                [html]="getFormattedTextPlain()"
-                [changeRecommendations]="changeRecommendations"
-                (createChangeRecommendation)="createChangeRecommendation($event)"
-                (gotoChangeRecommendation)="gotoChangeRecommendation($event)"
-            ></os-motion-detail-original-change-recommendations>
-            <div
-                *ngIf="lnMode !== LineNumberingMode.Outside || changeRecoMode !== ChangeRecoMode.Original"
-                [innerHTML]="getFormattedTextPlain() | trust: 'html'"
-            ></div>
-        </div>
-        <os-motion-detail-diff
-            *ngIf="changeRecoMode === ChangeRecoMode.Diff"
-            [motion]="motion"
-            [changes]="getChangesForDiffMode()"
-            [scrollToChange]="scrollToChange"
-            [highlightedLine]="highlightedLine"
-            [showAllAmendments]="showAllAmendments"
-            [lineNumberingMode]="lnMode"
-            (createChangeRecommendation)="createChangeRecommendation($event)"
-        ></os-motion-detail-diff>
-
-        <div *ngIf="isFinalEdit">
-            <editor
-                [hidden]="!isFinalEdit"
-                formControlName="modified_final_version"
-                [init]="tinyMceSettings"
-                required
-            ></editor>
-            <div
-                *ngIf="
-                    contentForm.get('modified_final_version').invalid &&
-                    (contentForm.get('modified_final_version').dirty ||
-                        contentForm.get('modified_final_version').touched)
-                "
-                class="red-warning-text"
-            >
-                {{ 'This field is required.' | translate }}
-            </div>
-        </div>
-    </ng-container>
-
     <!-- formatted statute amendment -->
     <div
         class="motion-text line-numbers-none"
@@ -125,7 +106,7 @@
 
     <!-- The HTML Editor for motions and traditional amendments -->
     <ng-container *ngIf="editMotion && !isParagraphBasedAmendment">
-        <editor formControlName="text" [init]="tinyMceSettings" required></editor>
+        <editor formControlName="text" [init]="tinyMceSettings" [required]="!isParagraphBasedAmendment"></editor>
         <div
             *ngIf="
                 contentForm.get('text').invalid && (contentForm.get('text').dirty || contentForm.get('text').touched)
@@ -136,44 +117,17 @@
         </div>
     </ng-container>
 
-    <!-- The HTML Editor for paragraph-based amendments -->
-    <ng-container *ngIf="editMotion && isParagraphBasedAmendment">
-        <section *ngFor="let paragraph of contentForm.value.selected_paragraphs">
-            <h3>
-                <span *ngIf="paragraph.lineFrom >= paragraph.lineTo - 1" class="line-number">
-                    {{ 'Line' | translate }} {{ paragraph.lineFrom }}
-                </span>
-                <span *ngIf="paragraph.lineFrom < paragraph.lineTo - 1" class="line-number">
-                    {{ 'Line' | translate }} {{ paragraph.lineFrom }} - {{ paragraph.lineTo - 1 }}
-                </span>
-            </h3>
-            <editor [formControlName]="'text_' + paragraph.paragraphNo" [init]="tinyMceSettings"></editor>
-            <div
-                *ngIf="
-                    contentForm.get('text_' + paragraph.paragraphNo).invalid &&
-                    (contentForm.get('text_' + paragraph.paragraphNo).dirty ||
-                        contentForm.get('text_' + paragraph.paragraphNo).touched)
-                "
-                class="red-warning-text"
-            >
-                {{ 'This field is required.' | translate }}
-            </div>
-        </section>
-    </ng-container>
-
     <!-- Paragraph-based amendments -->
-    <ng-container *ngIf="!editMotion && motion?.isParagraphBasedAmendment()">
+    <ng-container *ngIf="isParagraphBasedAmendment">
         <os-paragraph-based-amendment
             [motion]="motion"
-            [lnMode]="lnMode"
-            [crMode]="changeRecoMode"
             [changesForDiffMode]="getChangesForDiffMode()"
-            [scrollToChange]="scrollToChange"
-            [changeRecommendations]="changeRecommendations"
             [highlightedLine]="highlightedLine"
             [isFinalEdit]="isFinalEdit"
+            [editMotion]="editMotion"
             (createChangeRecommendation)="createChangeRecommendation($event)"
-            (gotoChangeRecommendation)="gotoChangeRecommendation($event)"
+            (formChanged)="paragraphBasedAmendmentContent = $event"
+            (validStateChanged)="canSaveParagraphBasedAmendment = $event"
         ></os-paragraph-based-amendment>
     </ng-container>
 

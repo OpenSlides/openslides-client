@@ -28,6 +28,10 @@ export class MotionSlideObjAmendmentParagraph implements ViewUnifiedChange {
         return 'amendment-' + this.id.toString(10) + '-' + this.paragraphNo.toString(10);
     }
 
+    public getIdentifier(): string {
+        return this.getChangeId();
+    }
+
     public getChangeType(): ViewUnifiedChangeType {
         return ViewUnifiedChangeType.TYPE_AMENDMENT;
     }

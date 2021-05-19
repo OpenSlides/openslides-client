@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -7,69 +7,41 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { MotionAction } from 'app/core/actions/motion-action';
-import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
-import { MotionChangeRecommendationRepositoryService } from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
-import {
-    MotionLineNumberingService,
-    ParagraphToChoose
-} from 'app/core/repositories/motions/motion-line-numbering.service';
-import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
-import { MotionStatuteParagraphRepositoryService } from 'app/core/repositories/motions/motion-statute-paragraph-repository.service';
-import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/motion-workflow-repository.service';
-import { NewUser, UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
+import { UnsafeHtml } from 'app/core/definitions/key-types';
+import { NewUser } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { LineRange } from 'app/core/ui-services/diff.service';
 import { Settings } from 'app/shared/models/event-management/meeting';
 import { Mediafile } from 'app/shared/models/mediafiles/mediafile';
 import { ViewUnifiedChange } from 'app/shared/models/motions/view-unified-change';
 import { mediumDialogSettings } from 'app/shared/utils/dialog-settings';
-import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
-import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
 import { ViewMotionStatuteParagraph } from 'app/site/motions/models/view-motion-statute-paragraph';
 import { ViewMotionWorkflow } from 'app/site/motions/models/view-motion-workflow';
 import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.constants';
 import { PermissionsService } from 'app/site/motions/services/permissions.service';
+import { BaseMotionDetailChildComponent } from '../base/base-motion-detail-child.component';
 import {
     MotionChangeRecommendationDialogComponent,
     MotionChangeRecommendationDialogComponentData
 } from '../motion-change-recommendation-dialog/motion-change-recommendation-dialog.component';
-import { MotionViewService } from '../../../services/motion-view.service';
+import { MotionServiceCollectorService } from '../../../services/motion-service-collector.service';
 
 @Component({
     selector: 'os-motion-content',
     templateUrl: './motion-content.component.html',
     styleUrls: ['./motion-content.component.scss']
 })
-export class MotionContentComponent extends BaseComponent implements OnInit, OnDestroy {
-    @Input()
-    public motion: ViewMotion;
-
-    @Input()
-    public newMotion = false;
-
-    @Input()
-    public set editMotion(isEditing: boolean) {
-        if (isEditing) {
-            this.enterEditMode();
-        } else {
-            this.leaveEditMode();
-        }
-    }
-
-    public get editMotion(): boolean {
-        return this._isEditing;
-    }
-
+export class MotionContentComponent extends BaseMotionDetailChildComponent {
     @Output()
     public save = new EventEmitter<ViewMotion>();
 
     @Output()
-    public changeForm = new EventEmitter<ViewMotion>();
+    public formChanged = new EventEmitter<ViewMotion>();
 
     @Output()
-    public isFormValid = new EventEmitter<boolean>();
+    public validStateChanged = new EventEmitter<boolean>();
 
     private finalEditMode = false;
 
@@ -102,14 +74,6 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
         return this.contentForm.value;
     }
 
-    public get lnMode(): LineNumberingMode {
-        return this.viewService.currentLineNumberingMode;
-    }
-
-    public get changeRecoMode(): ChangeRecoMode {
-        return this.viewService.currentChangeRecommendationMode;
-    }
-
     /**
      * Constant to identify the notification-message.
      */
@@ -126,125 +90,44 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
     public categories: ViewMotionCategory[] = [];
 
     /**
-     * Value for os-motion-detail-diff: when this is set, that component scrolls to the given change
-     */
-    public scrollToChange: ViewUnifiedChange = null;
-
-    /**
-     * All change recommendations to this motion
-     */
-    public changeRecommendations: ViewMotionChangeRecommendation[];
-    private amendments: ViewMotion[] = [];
-
-    /**
      * statute paragraphs, necessary for amendments
      */
     public statuteParagraphs: ViewMotionStatuteParagraph[] = [];
-
-    /**
-     * Value of the config variable `motions_reason_required`
-     */
-    public reasonRequired = false;
-
-    /**
-     * Value of the config variable `motions_statutes_enabled` - are statutes enabled?
-     */
-    public statutesEnabled: boolean;
-
-    /**
-     * Value of the config variable `motions_preamble`
-     */
-    public preamble: string;
-
-    /**
-     * Value of the config variable `motions_supporters_min_amount`
-     */
-    public minSupporters = 0;
-
-    private _isEditing = false;
-
-    /**
-     * All change recommendations AND amendments, sorted by line number.
-     */
-    private sortedChangingObjects: ViewUnifiedChange[] = null;
-
-    /**
-     * Indicates the maximum line length as defined in the configuration.
-     */
-    private lineLength: number;
-
-    /**
-     * Show all amendments in the text, not only the ones with the apropriate state
-     */
-    public showAllAmendments = false;
 
     /**
      * Indicates the currently highlighted line, if any.
      */
     public highlightedLine: number;
 
+    public set canSaveParagraphBasedAmendment(can: boolean) {
+        this._canSaveParagraphBasedAmendment = can;
+        this.propagateChanges();
+    }
+
+    public set paragraphBasedAmendmentContent(content: {
+        amendment_paragraph_$: { [paragraph_number: number]: UnsafeHtml };
+    }) {
+        this._paragraphBasedAmendmentContent = content;
+        this.propagateChanges();
+    }
+
+    private _canSaveParagraphBasedAmendment = true;
+    private _paragraphBasedAmendmentContent: any = {};
+    private _motionContent = {};
+
+    private editSubscription: Subscription | null = null;
+
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        private formBuilder: FormBuilder,
-        private repo: MotionRepositoryService,
-        private changeRecoRepo: MotionChangeRecommendationRepositoryService,
+        motionServiceCollector: MotionServiceCollectorService,
+        private fb: FormBuilder,
         private dialogService: MatDialog,
-        private motionLineNumbering: MotionLineNumberingService,
         private router: Router,
         private route: ActivatedRoute,
-        public userRepo: UserRepositoryService,
-        public workflowRepo: MotionWorkflowRepositoryService,
-        public categoryRepo: MotionCategoryRepositoryService,
-        private statuteRepo: MotionStatuteParagraphRepositoryService,
-        private viewService: MotionViewService,
         private cd: ChangeDetectorRef,
         public perms: PermissionsService
     ) {
-        super(componentServiceCollector);
-    }
-
-    public ngOnInit(): void {
-        this.contentForm = this.createForm();
-        this.patchForm();
-        this.subscriptions.push(...this.subscribeToSettings(), ...this.subscribeToObservers());
-        this.subscriptions.push(
-            this.contentForm.valueChanges.subscribe(value => {
-                this.changeForm.emit(value);
-                this.isFormValid.emit(this.contentForm.valid);
-            })
-        );
-    }
-
-    private enterEditMode(): void {
-        this._isEditing = true;
-        this.patchForm();
-    }
-
-    private leaveEditMode(): void {
-        this._isEditing = false;
-    }
-
-    /**
-     * Async load the values of the motion in the Form.
-     */
-    public patchForm(): void {
-        if (!this.contentForm) {
-            this.contentForm = this.createForm();
-        }
-        if (this.motion) {
-            let contentPatch: { [key: string]: any } = {};
-            Object.keys(this.contentForm.controls).forEach(ctrl => {
-                contentPatch[ctrl] = this.motion[ctrl];
-            });
-
-            if (this.isExisting && this.motion.isParagraphBasedAmendment()) {
-                contentPatch = { ...contentPatch, ...this.initParagraphBasedAmendment() };
-            }
-
-            const statuteAmendmentFieldName = 'statute_amendment';
-            contentPatch[statuteAmendmentFieldName] = this.isExisting && this.motion.isStatuteAmendment();
-            this.contentForm.patchValue(contentPatch);
-        }
+        super(componentServiceCollector, motionServiceCollector);
     }
 
     /**
@@ -383,15 +266,6 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
         });
     }
 
-    /**
-     * In the original version, a change-recommendation-annotation has been clicked
-     * -> Go to the diff view and scroll to the change recommendation
-     */
-    public gotoChangeRecommendation(changeRecommendation: ViewMotionChangeRecommendation): void {
-        this.scrollToChange = changeRecommendation;
-        this.viewService.nextChangeRecoMode(ChangeRecoMode.Diff);
-    }
-
     public getChangesForDiffMode(): ViewUnifiedChange[] {
         return this.getAllChangingObjectsSorted().filter(change => {
             if (this.showAllAmendments) {
@@ -412,39 +286,76 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
         this.addNewUserToFormCtrl(newUserObj, 'supporters_id');
     }
 
-    private initParagraphBasedAmendment(): object {
-        const contentPatch: { [key: string]: any } = {};
-        contentPatch.selected_paragraphs = [];
-        const leadMotion = this.motion.lead_motion;
-        // Hint: lineLength is sometimes not loaded yet when this form is initialized;
-        // This doesn't hurt as long as patchForm is called when editing mode is started, i.e., later.
-        if (leadMotion && this.lineLength) {
-            const paragraphsToChoose = this.motionLineNumbering.getParagraphsToChoose(leadMotion, this.lineLength);
-
-            paragraphsToChoose.forEach((paragraph: ParagraphToChoose, paragraphNo: number): void => {
-                const amendmentParagraph = this.motion.amendment_paragraph(paragraphNo);
-                if (amendmentParagraph) {
-                    this.contentForm.addControl('text_' + paragraphNo, new FormControl(''));
-                    contentPatch.selected_paragraphs.push(paragraph);
-                    contentPatch['text_' + paragraphNo] = amendmentParagraph;
-                }
-            });
+    public getDefaultWorkflowKeyOfSettingsByParagraph(paragraph?: number): keyof Settings {
+        let configKey: keyof Settings = 'motions_default_workflow_id';
+        if (!!this.contentForm && !!this.contentForm.get('statute_amendment').value && !!paragraph) {
+            configKey = 'motions_default_statute_amendment_workflow_id';
+        } else if (!!this.route.snapshot.queryParams.parent) {
+            configKey = 'motions_default_amendment_workflow_id';
         }
-        return contentPatch;
+        return configKey;
+    }
+
+    protected onEnterEditMode(): void {
+        this.patchForm();
+        this.initContentFormSubscription();
+        this.propagateChanges();
     }
 
     /**
-     * Retrieves
+     * Async load the values of the motion in the Form.
      */
-    private getAllChangingObjectsSorted(): ViewUnifiedChange[] {
-        if (!this.sortedChangingObjects) {
-            this.sortedChangingObjects = this.motionLineNumbering.recalcUnifiedChanges(
-                this.lineLength,
-                this.changeRecommendations,
-                this.amendments
-            );
+    protected patchForm(): void {
+        if (!this.contentForm) {
+            this.contentForm = this.createForm();
         }
-        return this.sortedChangingObjects;
+        if (this.motion) {
+            const contentPatch: { [key: string]: any } = {};
+            Object.keys(this.contentForm.controls).forEach(ctrl => {
+                contentPatch[ctrl] = this.motion[ctrl];
+            });
+
+            if (this.isParagraphBasedAmendment) {
+                this.contentForm.get('text').clearValidators(); // manually adjust validators
+            }
+
+            const statuteAmendmentFieldName = 'statute_amendment';
+            contentPatch[statuteAmendmentFieldName] = this.isExisting && this.motion.isStatuteAmendment();
+            this.contentForm.patchValue(contentPatch);
+        }
+    }
+
+    protected onInitTextBasedAmendment(): void {
+        this.patchForm();
+        this.propagateChanges();
+    }
+
+    protected getSubscriptions(): Subscription[] {
+        // since updates are usually not commig at the same time, every change to
+        // any subject has to mark the view for checking
+        if (this.motion) {
+            return [
+                this.statuteRepo.getViewModelListObservable().subscribe(values => (this.statuteParagraphs = values)),
+                this.userRepo.getViewModelListObservable().subscribe(() => this.cd.markForCheck())
+            ];
+        }
+        return [];
+    }
+
+    private initContentFormSubscription(): void {
+        if (this.editSubscription) {
+            this.editSubscription.unsubscribe();
+            this.editSubscription = null;
+        }
+        this.editSubscription = this.contentForm.valueChanges.subscribe(value => {
+            this._motionContent = value;
+            this.propagateChanges();
+        });
+    }
+
+    private propagateChanges(): void {
+        this.formChanged.emit({ ...this._motionContent, ...this._paragraphBasedAmendmentContent });
+        this.validStateChanged.emit(this.contentForm.valid && this._canSaveParagraphBasedAmendment);
     }
 
     private addNewUserToFormCtrl(newUserObj: NewUser, controlName: string): void {
@@ -462,51 +373,6 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
         return this.userRepo.createFromString(username);
     }
 
-    private subscribeToSettings(): Subscription[] {
-        return [
-            this.meetingSettingService.get('motions_line_length').subscribe(lineLength => {
-                this.lineLength = lineLength;
-                this.sortedChangingObjects = null;
-            }),
-            this.meetingSettingService
-                .get('motions_reason_required')
-                .subscribe(required => (this.reasonRequired = required)),
-            this.meetingSettingService
-                .get('motions_supporters_min_amount')
-                .subscribe(value => (this.minSupporters = value)),
-            this.meetingSettingService.get('motions_preamble').subscribe(value => (this.preamble = value)),
-            this.meetingSettingService
-                .get('motions_statutes_enabled')
-                .subscribe(value => (this.statutesEnabled = value))
-        ];
-    }
-
-    private subscribeToObservers(): Subscription[] {
-        // since updates are usually not commig at the same time, every change to
-        // any subject has to mark the view for checking
-        if (this.motion) {
-            return [
-                this.statuteRepo.getViewModelListObservable().subscribe(values => (this.statuteParagraphs = values)),
-                this.userRepo.getViewModelListObservable().subscribe(() => this.cd.markForCheck()),
-                this.changeRecoRepo.getChangeRecosOfMotionObservable(this.motion.id).subscribe(changeRecos => {
-                    if (changeRecos) {
-                        this.changeRecommendations = changeRecos;
-                        this.sortedChangingObjects = null;
-                    }
-                }),
-                this.repo
-                    .getAmendmentsByMotionAsObservable(this.motion.id)
-                    .subscribe((amendments: ViewMotion[]): void => {
-                        if (amendments) {
-                            this.amendments = amendments;
-                            this.sortedChangingObjects = null;
-                        }
-                    })
-            ];
-        }
-        return [];
-    }
-
     private getAllTextChangingObjects(): ViewUnifiedChange[] {
         return this.getAllChangingObjectsSorted().filter((obj: ViewUnifiedChange) => !obj.isTitleChange());
     }
@@ -519,10 +385,10 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
         if (this.reasonRequired) {
             reason.push(Validators.required);
         }
-        return this.formBuilder.group({
+        return this.fb.group({
             number: [''],
             title: ['', Validators.required],
-            text: ['', Validators.required],
+            text: ['', this.isParagraphBasedAmendment ? null : Validators.required],
             reason: reason,
             category_id: [],
             attachment_ids: [[]],
@@ -541,16 +407,6 @@ export class MotionContentComponent extends BaseComponent implements OnInit, OnD
             parent_id: [],
             modified_final_version: ['']
         });
-    }
-
-    public getDefaultWorkflowKeyOfSettingsByParagraph(paragraph?: number): keyof Settings {
-        let configKey: keyof Settings = 'motions_default_workflow_id';
-        if (!!this.contentForm && !!this.contentForm.get('statute_amendment').value && !!paragraph) {
-            configKey = 'motions_default_statute_amendment_workflow_id';
-        } else if (!!this.route.snapshot.queryParams.parent) {
-            configKey = 'motions_default_amendment_workflow_id';
-        }
-        return configKey;
     }
 
     private getWorkflowIdForCreateFormByParagraph(paragraph?: number): number {

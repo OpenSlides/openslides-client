@@ -180,9 +180,9 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     }
 
     /**
-     * This is injected. Do NOT use: Use `get diffLines()` instead.
+     * This is injected. Use it wisely.
      */
-    public getAmendmentParagraphLines: () => DiffLinesInParagraph[] | null;
+    public getAmendmentParagraphLines: (includeUnchanged?: boolean) => DiffLinesInParagraph[] | null;
     public getParagraphTitleByParagraph: (paragraph: DiffLinesInParagraph) => string | null;
     // This is set by the repository
     public getNumberOrTitle: () => string;

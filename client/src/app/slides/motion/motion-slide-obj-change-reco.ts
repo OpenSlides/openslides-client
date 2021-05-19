@@ -25,6 +25,10 @@ export class MotionSlideObjChangeReco implements MotionSlideDataChangeReco, View
         return 'recommendation-' + this.id.toString(10);
     }
 
+    public getIdentifier(): string {
+        return this.id.toString(10);
+    }
+
     public getChangeNewText(): string {
         return this.text;
     }

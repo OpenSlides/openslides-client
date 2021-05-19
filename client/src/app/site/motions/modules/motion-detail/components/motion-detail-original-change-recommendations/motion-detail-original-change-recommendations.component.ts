@@ -1,6 +1,8 @@
 import {
+    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    DoCheck,
     ElementRef,
     EventEmitter,
     Input,
@@ -48,12 +50,10 @@ import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-mot
 @Component({
     selector: 'os-motion-detail-original-change-recommendations',
     templateUrl: './motion-detail-original-change-recommendations.component.html',
-    styleUrls: ['./motion-detail-original-change-recommendations.component.scss']
+    styleUrls: ['./motion-detail-original-change-recommendations.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MotionDetailOriginalChangeRecommendationsComponent implements OnInit, OnChanges {
-    private element: Element;
-    private selectedFrom: number = null;
-
+export class MotionDetailOriginalChangeRecommendationsComponent implements OnInit, OnChanges, DoCheck {
     @Output()
     public createChangeRecommendation: EventEmitter<LineRange> = new EventEmitter<LineRange>();
 
@@ -66,11 +66,27 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
     public html: string;
 
     @Input()
-    public changeRecommendations: ViewMotionChangeRecommendation[] = [];
+    public set changeRecommendations(recos: ViewMotionChangeRecommendation[]) {
+        this._changeRecommendations = recos;
+        this.setTextChangeRecommendations(recos);
+    }
+    public get changeRecommendations(): ViewMotionChangeRecommendation[] {
+        return this._changeRecommendations;
+    }
 
-    public showChangeRecommendations = false;
+    public get textChangeRecommmendations(): ViewMotionChangeRecommendation[] {
+        return this._textChangeRecommendations;
+    }
+
+    public showChangeRecommendations = true;
 
     public can_manage = true; // change
+
+    private element: Element;
+    private selectedFrom: number = null;
+
+    private _changeRecommendations: ViewMotionChangeRecommendation[] = [];
+    private _textChangeRecommendations: ViewMotionChangeRecommendation[] = [];
 
     // Calculated from the embedded line numbers after the text has been set.
     // Hint: this numbering refers to the actual lines, not the line number markers;
@@ -86,6 +102,13 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
         private operator: OperatorService
     ) {
         this.operator.operatorUpdatedEvent.subscribe(() => this.checkPermissions());
+    }
+
+    public ngDoCheck(): void {
+        if (!this.minLineNo || !this.maxLineNo) {
+            this.setLineNumberCache();
+            this.cd.markForCheck();
+        }
     }
 
     /**
@@ -115,10 +138,9 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
         // The positioning of the change recommendations depends on the rendered HTML
         // If we show it right away, there will be nasty Angular warnings about changed values, as the position
         // is changing while the DOM updates
-        window.setTimeout(() => {
+        setTimeout(() => {
             this.setLineNumberCache();
-            this.showChangeRecommendations = true;
-            this.cd.detectChanges();
+            this.setTextChangeRecommendations(this._changeRecommendations);
         }, 1);
     }
 
@@ -127,6 +149,75 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
      */
     public ngOnChanges(changes: SimpleChanges): void {
         this.update();
+    }
+
+    /**
+     * Style for the change recommendation list
+     * @param reco
+     */
+    public calcRecoTop(reco: ViewMotionChangeRecommendation): string {
+        const from = <HTMLElement>(
+            this.element.querySelector('.os-line-number.line-number-' + reco.line_from.toString(10))
+        );
+        return from.offsetTop.toString() + 'px';
+    }
+
+    /**
+     * Style for the change recommendation list
+     * @param reco
+     */
+    public calcRecoHeight(reco: ViewMotionChangeRecommendation): string {
+        const from = <HTMLElement>(
+            this.element.querySelector('.os-line-number.line-number-' + reco.line_from.toString(10))
+        );
+        const to = <HTMLElement>this.element.querySelector('.os-line-number.line-number-' + reco.line_to.toString(10));
+        if (to) {
+            return (to.offsetTop - from.offsetTop).toString() + 'px';
+        } else {
+            // Last line - lets assume a realistic value
+            return '20px';
+        }
+    }
+
+    /**
+     * Whether a change-recommendation is from type `insertion`. Necessary to apply a css-class to a dom-element.
+     *
+     * @param reco The change-recommendation to check.
+     *
+     * @returns A boolean that indicates if the given change-recommendation is from type `insertion`.
+     */
+    public isInsertionChangeRecommendation(reco: ViewMotionChangeRecommendation): boolean {
+        return reco.type === ModificationType.TYPE_INSERTION;
+    }
+
+    /**
+     * Whether a change-recommendation is from type `deletion`. Necessary to apply a css-class to a dom-element.
+     *
+     * @param reco The change-recommendation to check.
+     *
+     * @returns A boolean that indicates if the given change-recommendation is from type `deletion`.
+     */
+    public isDeletionChangeRecommendation(reco: ViewMotionChangeRecommendation): boolean {
+        return reco.type === ModificationType.TYPE_DELETION;
+    }
+
+    /**
+     * Whether a change-recommendation is from type `replacement`. Necessary to apply a css-class to a dom-element.
+     *
+     * @param reco The change-recommendation to check.
+     *
+     * @returns A boolean that indicates if the given change-recommendation is from type `replacement`.
+     */
+    public isReplacementChangeRecommendation(reco: ViewMotionChangeRecommendation): boolean {
+        return reco.type === ModificationType.TYPE_REPLACEMENT;
+    }
+
+    /**
+     * Trigger the `gotoChangeRecommendation`-event
+     * @param reco
+     */
+    public gotoReco(reco: ViewMotionChangeRecommendation): void {
+        this.gotoChangeRecommendation.emit(reco);
     }
 
     /**
@@ -161,12 +252,6 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
                 });
             }
         }
-    }
-
-    public getTextChangeRecommendations(): ViewMotionChangeRecommendation[] {
-        return this.changeRecommendations
-            .filter(reco => !reco.isTitleChange())
-            .filter(reco => reco.line_from >= this.minLineNo && reco.line_from <= this.maxLineNo);
     }
 
     private setLineNumberCache(): void {
@@ -265,63 +350,10 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
         });
     }
 
-    /**
-     * Style for the change recommendation list
-     * @param reco
-     */
-    public calcRecoTop(reco: ViewMotionChangeRecommendation): string {
-        const from = <HTMLElement>(
-            this.element.querySelector('.os-line-number.line-number-' + reco.line_from.toString(10))
-        );
-        return from.offsetTop.toString() + 'px';
-    }
-
-    /**
-     * Style for the change recommendation list
-     * @param reco
-     */
-    public calcRecoHeight(reco: ViewMotionChangeRecommendation): string {
-        const from = <HTMLElement>(
-            this.element.querySelector('.os-line-number.line-number-' + reco.line_from.toString(10))
-        );
-        const to = <HTMLElement>this.element.querySelector('.os-line-number.line-number-' + reco.line_to.toString(10));
-        if (to) {
-            return (to.offsetTop - from.offsetTop).toString() + 'px';
-        } else {
-            // Last line - lets assume a realistic value
-            return '20px';
-        }
-    }
-
-    /**
-     * CSS-Class for the change recommendation list
-     * @param reco
-     */
-    public recoIsInsertion(reco: ViewMotionChangeRecommendation): boolean {
-        return reco.type === ModificationType.TYPE_INSERTION;
-    }
-
-    /**
-     * CSS-Class for the change recommendation list
-     * @param reco
-     */
-    public recoIsDeletion(reco: ViewMotionChangeRecommendation): boolean {
-        return reco.type === ModificationType.TYPE_DELETION;
-    }
-
-    /**
-     * CSS-Class for the change recommendation list
-     * @param reco
-     */
-    public recoIsReplacement(reco: ViewMotionChangeRecommendation): boolean {
-        return reco.type === ModificationType.TYPE_REPLACEMENT;
-    }
-
-    /**
-     * Trigger the `gotoChangeRecommendation`-event
-     * @param reco
-     */
-    public gotoReco(reco: ViewMotionChangeRecommendation): void {
-        this.gotoChangeRecommendation.emit(reco);
+    private setTextChangeRecommendations(changeRecommendations: ViewMotionChangeRecommendation[]): void {
+        this._textChangeRecommendations = changeRecommendations
+            .filter(changeReco => !changeReco.isTitleChange())
+            .filter(changeReco => changeReco.line_from >= this.minLineNo && changeReco.line_from <= this.maxLineNo);
+        this.cd.markForCheck();
     }
 }

@@ -33,6 +33,10 @@ export class ViewMotionChangeRecommendation
         return 'recommendation-' + this.id.toString(10);
     }
 
+    public getIdentifier(): string {
+        return this.id.toString(10);
+    }
+
     public getChangeType(): ViewUnifiedChangeType {
         return ViewUnifiedChangeType.TYPE_CHANGE_RECOMMENDATION;
     }
