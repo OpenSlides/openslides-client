@@ -17,9 +17,9 @@ import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollectorWithoutActiveMeetingService } from '../repository-service-collector-without-active-meeting-service';
 
 export enum MeetingProjectionType {
-    CurrentListOfSpeakers = 'current-list-of-speakers',
-    CurrentSpeakerChyron = 'current-speaker-chyron',
-    AgendaItemList = 'agenda-item-list'
+    CurrentListOfSpeakers = 'current_list_of_speakers',
+    CurrentSpeakerChyron = 'current_speaker_chyron',
+    AgendaItemList = 'agenda_item_list'
 }
 
 @Injectable({

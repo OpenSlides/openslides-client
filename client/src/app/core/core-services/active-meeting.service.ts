@@ -90,7 +90,6 @@ export class ActiveMeetingService {
                     follow: [
                         { idField: 'current_projection_ids', follow: [{ idField: 'content_object_id' }] },
                         { idField: 'preview_projection_ids', follow: [{ idField: 'content_object_id' }] }
-                        // {idField: 'used_as_default_$_in_meeting_id'} // TODO
                     ]
                 },
                 {
@@ -98,7 +97,8 @@ export class ActiveMeetingService {
                     idField: 'poll_ids',
                     fieldset: 'list',
                     follow: [{ idField: 'content_object_id' }]
-                }
+                },
+                { idField: 'default_projector_$_id' }
             ],
             fieldset: 'settings',
             additionalFields: [
