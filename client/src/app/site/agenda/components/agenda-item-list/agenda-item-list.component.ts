@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { PblColumnDefinition } from '@pebula/ngrid';
+import { Observable } from 'rxjs';
 
 import { AgendaCsvExportService } from '../../services/agenda-csv-export.service';
 import { AgendaFilterListService } from '../../services/agenda-filter-list.service';
@@ -19,6 +20,7 @@ import {
     MeetingProjectionType,
     MeetingRepositoryService
 } from 'app/core/repositories/management/meeting-repository.service';
+import { SUBMITTER_FOLLOW } from 'app/core/repositories/motions/motion-repository.service';
 import { TopicRepositoryService } from 'app/core/repositories/topics/topic-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DurationService } from 'app/core/ui-services/duration.service';
@@ -57,7 +59,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
      */
     public isNumberingAllowed: boolean;
 
-    public showSubtitle: boolean;
+    public showSubtitles: Observable<boolean> = this.meetingsSettingsService.get('agenda_show_subtitles');
 
     /**
      * Helper to check main button permissions
@@ -149,9 +151,6 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
             this.meetingsSettingsService
                 .get('agenda_enable_numbering')
                 .subscribe(autoNumbering => (this.isNumberingAllowed = autoNumbering)),
-            this.meetingsSettingsService
-                .get('agenda_show_subtitles')
-                .subscribe(showSubtitle => (this.showSubtitle = showSubtitle)),
             this.activeMeetingIdService.meetingIdObservable.subscribe(id => {
                 if (id) {
                     this.itemListSlide = {
@@ -184,7 +183,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
                     follow: [
                         {
                             idField: 'content_object_id',
-                            follow: [SPEAKER_BUTTON_FOLLOW],
+                            follow: [SPEAKER_BUTTON_FOLLOW, SUBMITTER_FOLLOW],
                             fieldset: 'title',
 
                             // To enable the reverse relation from content_object->agenda_item.

@@ -20,7 +20,8 @@ import { Deferred } from 'app/core/promises/deferred';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import {
     GET_POSSIBLE_RECOMMENDATIONS,
-    MotionRepositoryService
+    MotionRepositoryService,
+    SUBMITTER_FOLLOW
 } from 'app/core/repositories/motions/motion-repository.service';
 import { MotionService } from 'app/core/repositories/motions/motion.service';
 import { AmendmentService } from 'app/core/ui-services/amendment.service';
@@ -416,15 +417,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
                             }
                         ]
                     },
-                    {
-                        idField: 'submitter_ids',
-                        follow: [
-                            {
-                                idField: 'user_id',
-                                fieldset: 'shortName'
-                            }
-                        ]
-                    },
+                    SUBMITTER_FOLLOW,
                     {
                         idField: 'supporter_ids',
                         fieldset: 'shortName'

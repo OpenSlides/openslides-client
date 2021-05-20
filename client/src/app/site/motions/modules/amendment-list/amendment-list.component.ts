@@ -12,7 +12,8 @@ import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import {
     GET_POSSIBLE_RECOMMENDATIONS,
-    MotionRepositoryService
+    MotionRepositoryService,
+    SUBMITTER_FOLLOW
 } from 'app/core/repositories/motions/motion-repository.service';
 import { MotionService } from 'app/core/repositories/motions/motion.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -145,16 +146,8 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
                             idField: 'recommendation_id',
                             fieldset: 'list'
                         },
-                        {
-                            idField: 'submitter_ids',
-                            follow: [
-                                {
-                                    idField: 'user_id',
-                                    fieldset: 'shortName'
-                                }
-                            ]
-                        },
-                        SPEAKER_BUTTON_FOLLOW
+                        SPEAKER_BUTTON_FOLLOW,
+                        SUBMITTER_FOLLOW
                     ],
                     fieldset: 'amendment'
                 }

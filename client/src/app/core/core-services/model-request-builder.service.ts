@@ -92,6 +92,9 @@ export interface Fieldsets<M extends BaseModel> {
     [name: string]: (keyof M | IAllStructuredFields)[];
 }
 
+class UnknownRelationError extends Error {}
+class UnknownFieldsetError extends Error {}
+
 export const DEFAULT_FIELDSET = 'detail';
 
 class ModelRequestObject {
@@ -176,7 +179,9 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
         if (typeof fieldset === 'string') {
             const registeredFieldsets = this.fieldsets[modelRequestObject.collection];
             if (!registeredFieldsets || !registeredFieldsets[fieldset]) {
-                throw new Error(`Unregistered fieldset ${fieldset} for collection ${modelRequestObject.collection}`);
+                throw new UnknownFieldsetError(
+                    `Unregistered fieldset ${fieldset} for collection ${modelRequestObject.collection}`
+                );
             }
             fieldsetFields = registeredFieldsets[fieldset] as (
                 | Field
@@ -242,7 +247,7 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
             queryIdField
         );
         if (!relation) {
-            throw new Error(
+            throw new UnknownRelationError(
                 `Relation with ownIdField ${queryIdField} (effective ${effectiveIdField}) in collection ${modelRequestObject.collection} unknown!`
             );
         }
@@ -342,7 +347,13 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
                     const modelRequestObject = new ModelRequestObject(viewModel.COLLECTION, request, fields);
                     this.addFollowedRelations(modelRequestObject);
                 } catch (e) {
-                    console.warn(e);
+                    if (e instanceof UnknownRelationError) {
+                        // Explicitly allow following relations for only a subset of foreign models
+                        // of this relation. If a specific relation cannot be found, just do not request it.
+                        // This will succeed for the subset of models, that do have the requested relation.
+                        continue;
+                    }
+                    throw e;
                 }
             }
         }
