@@ -42,7 +42,7 @@ interface ISpecificStructuredField {
 }
 
 /**
- * Resolves all structured fields to the given template field.
+ * Resolves all structured fields to the given template field, but does not follow relations.
  * Usage e.g. in a fieldset: [..., 'default_structure_level', { templateField: 'structure_level_$' }, ...]
  */
 interface IAllStructuredFields {
