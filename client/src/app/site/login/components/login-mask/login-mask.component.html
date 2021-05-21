@@ -1,4 +1,11 @@
 <div class="form-wrapper">
+    <div class="header-name" *ngIf="meeting || organization" [@fadeIn]>
+        <!-- Meeting's name -->
+        <h1 *ngIf="meeting">{{ meeting.name | translate }}</h1>
+        <!-- Organization's name -->
+        <h1 *ngIf="organization && !meeting">{{ organization.name | translate }}</h1>
+    </div>
+
     <!-- Install notice -->
     <div class="login-container" *ngIf="installationNotice">
         <mat-card [innerHTML]="installationNotice | translate"></mat-card>
@@ -42,6 +49,9 @@
         <!-- TODO: Next to each other...-->
         <button mat-raised-button color="primary" class="login-button" type="submit" [disabled]="loginForm.invalid">
             {{ 'Login' | translate }}
+        </button>
+        <button mat-stroked-button *ngIf="guestsEnabled" class="login-button" type="button" (click)="guestLogin()">
+            {{ 'Login as guest' | translate }}
         </button>
     </form>
 </div>

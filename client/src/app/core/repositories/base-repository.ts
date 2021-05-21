@@ -242,6 +242,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      */
     protected clear(): void {
         this.viewModelStore = {};
+        this.viewModelSubjects = {};
     }
     /**
      * The function used for sorting the data of this repository. The default sorts by ID.

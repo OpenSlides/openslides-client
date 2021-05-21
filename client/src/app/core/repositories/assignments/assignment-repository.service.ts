@@ -62,8 +62,9 @@ export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeake
         return this.sendActionToBackend(AssignmentAction.UPDATE, payload);
     }
 
-    public delete(viewModel: ViewAssignment): Promise<any> {
-        return this.sendActionToBackend(AssignmentAction.DELETE, { id: viewModel.id });
+    public delete(...viewModels: ViewAssignment[]): Promise<void> {
+        const payload: AssignmentAction.DeletePayload[] = viewModels.map(model => ({ id: model.id }));
+        return this.sendBulkActionToBackend(AssignmentAction.DELETE, payload);
     }
 
     public getTitle = (viewAssignment: ViewAssignment) => {

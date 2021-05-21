@@ -368,7 +368,7 @@ export class UserRepositoryService
             shortName = `${title} ${shortName}`;
         }
 
-        return shortName.trim();
+        return shortName?.trim(); // Prevent errors if username is not already loaded
     }
 
     public getFullName(user: FullNameInformation): string {

@@ -5,6 +5,8 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { ActiveMeetingIdService } from './active-meeting-id.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { AutoupdateService, ModelSubscription } from './autoupdate.service';
+import { Deferred } from '../promises/deferred';
+import { LifecycleService } from './lifecycle.service';
 import { MeetingRepositoryService } from '../repositories/management/meeting-repository.service';
 import { SimplifiedModelRequest } from './model-request-builder.service';
 
@@ -40,16 +42,43 @@ export class ActiveMeetingService {
         return this.meetingSubject.getValue();
     }
 
+    /**
+     * Indicating whether this service is initialized or not.
+     */
+    private isOnStartup = true;
+
     public constructor(
         private activeMeetingIdService: ActiveMeetingIdService,
         private repo: MeetingRepositoryService,
-        private autoupdateService: AutoupdateService
+        private autoupdateService: AutoupdateService,
+        private lifecycle: LifecycleService
     ) {
         this.activeMeetingIdService.meetingIdObservable.subscribe(id => {
             if (id !== undefined) {
                 this.setupModelSubscription(id);
             }
         });
+        this.lifecycle.openslidesBooted.subscribe(() => {
+            // Workaround to not fire if this service is initialized.
+            if (!this.isOnStartup) {
+                this.setupModelSubscription(this.meetingId);
+            } else {
+                this.isOnStartup = false;
+            }
+        });
+    }
+
+    public async ensureActiveMeetingIsAvailable(): Promise<void> {
+        if (!!this.meetingId) {
+            const deferred = new Deferred();
+            const subscription = this.meetingObservable.subscribe(meeting => {
+                if (meeting && !deferred.wasResolved) {
+                    deferred.resolve();
+                }
+            });
+            deferred.finally(() => subscription.unsubscribe());
+            return deferred;
+        }
     }
 
     private async setupModelSubscription(id: number | null): Promise<void> {
@@ -67,9 +96,8 @@ export class ActiveMeetingService {
                 this.getModelRequest(),
                 'ActiveMeetingService'
             );
-
-            this.meetingSubcription = this.repo.getViewModelObservable(id).subscribe(meeting => {
-                if (meeting !== undefined) {
+            this.meetingSubcription = this.repo.getGeneralViewModelObservable().subscribe(meeting => {
+                if (meeting !== undefined && meeting.id === this.meetingId) {
                     this.meetingSubject.next(meeting);
                 }
             });

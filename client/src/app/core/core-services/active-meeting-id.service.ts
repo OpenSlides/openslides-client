@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Router, RouterEvent, RoutesRecognized } from '@angular/router';
 
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -46,7 +46,6 @@ export class ActiveMeetingIdService {
         if (newMeetingId === this.meetingId) {
             return;
         }
-        console.log('active meeting id: changed from', this.meetingId, 'to', newMeetingId);
         this.DS.clearMeetingModels();
         this.meetingIdSubject.next(newMeetingId);
     }
