@@ -25,13 +25,10 @@
     </div>
 </os-head-bar>
 
-<os-list-view-table
+<os-basic-list-view-table
     [listObservable]="repo.getViewModelListObservable()"
     [columns]="tableColumnDefinition"
-    [showListOfSpeakers]="false"
-    [showListOfSpeakers]="false"
     [(selectedRows)]="selectedRows"
-    [allowProjector]="false"
     [multiSelect]="isMultiSelect"
     listStorageKey="member"
     (dataSourceChange)="onDataSourceChange($event)"
@@ -58,7 +55,7 @@
             </os-icon-container>
         </div>
     </div>
-</os-list-view-table>
+</os-basic-list-view-table>
 
 <mat-menu #memberMenu="matMenu">
     <div *ngIf="!isMultiSelect">
