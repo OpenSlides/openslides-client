@@ -18,14 +18,13 @@ export class ViewCommittee extends BaseViewModel<Committee> {
     }
 
     public get memberAmount(): number {
-        return this.member_ids?.length || 0;
+        return this.user_ids?.length || 0;
     }
 }
 interface ICommitteeRelations {
     meetings: ViewMeeting[];
     default_meeting: ViewMeeting;
-    members: ViewUser[];
-    managers: ViewUser[];
+    users: ViewUser[];
     forward_to_committees: ViewCommittee[];
     receive_forwardings_from_committees: ViewCommittee[];
     organization: ViewOrganization;

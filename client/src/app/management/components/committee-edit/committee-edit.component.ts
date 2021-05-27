@@ -8,6 +8,7 @@ import { Observable, OperatorFunction } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { MemberService } from 'app/core/core-services/member.service';
+import { OML } from 'app/core/core-services/organization-permission';
 import { Id } from 'app/core/definitions/key-types';
 import { CommitteeRepositoryService } from 'app/core/repositories/management/committee-repository.service';
 import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
@@ -32,12 +33,14 @@ const EditCommitteeLabel = _('Edit committee');
     styleUrls: ['./committee-edit.component.scss']
 })
 export class CommitteeEditComponent extends BaseModelContextComponent implements OnInit {
+    public readonly OML = OML;
+
     public addCommitteeLabel = AddCommitteeLabel;
     public editCommitteeLabel = EditCommitteeLabel;
 
     public isCreateView: boolean;
     public committeeForm: FormGroup;
-    public members: Observable<ViewUser[]>;
+    public organizationMembers: Observable<ViewUser[]>;
     public meetingsObservable: Observable<ViewMeeting[]>;
 
     private editCommittee: ViewCommittee;
@@ -64,7 +67,7 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
         } else {
             super.setTitle(EditCommitteeLabel);
         }
-        this.members = this.memberService.getMemberListObservable();
+        this.organizationMembers = this.memberService.getMemberListObservable();
         this.meetingsObservable = this.meetingRepo.getViewModelListObservable();
     }
 
@@ -150,16 +153,16 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
         let partialForm: any = {
             name: ['', Validators.required],
             description: [''],
-            manager_ids: [[]],
-            member_ids: [[]],
-            organization_tag_ids: [[]]
+            organization_tag_ids: [[]],
+            user_ids: [[]]
         };
         if (!this.isCreateView) {
             partialForm = {
                 ...partialForm,
                 // template_meeting_id: [null], // TODO: Not yet
                 default_meeting_id: [null],
-                forward_to_committee_ids: [[]]
+                forward_to_committee_ids: [[]],
+                receive_from_committee_ids: [[]]
             };
         }
         this.committeeForm = this.formBuilder.group(partialForm);

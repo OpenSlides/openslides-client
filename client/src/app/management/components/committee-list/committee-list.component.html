@@ -1,6 +1,6 @@
 <os-head-bar
     [customMenu]="true"
-    [hasMainButton]="true"
+    [hasMainButton]="operator.hasOrganizationPermissions(OML.can_manage_organisation)"
     [multiSelectMode]="isMultiSelect"
     (mainEvent)="createNewCommittee()"
 >
@@ -39,7 +39,7 @@
     [filterProps]="['name']"
 >
     <div *pblNgridCellDef="'name'; value as name; row as committee" class="cell-slot fill">
-        <a class="detail-link" [routerLink]="committee.id" *ngIf="!isMultiSelect"></a>
+        <a class="detail-link" [routerLink]="committee.id" *ngIf="!isMultiSelect && committee.canAccess()"></a>
         <div>
             {{ name }}
             <div class="subtitle" *ngIf="committee.description?.trim()">
@@ -103,6 +103,7 @@
 
     <div *pblNgridCellDef="'menu'; row as committee" class="cell-slot fill">
         <button
+            *osCmlPerms="CML.can_manage; committeeId: committee.id"
             mat-icon-button
             [disabled]="isMultiSelect"
             [matMenuTriggerFor]="singleCommitteeMenu"
@@ -149,20 +150,22 @@
             <span>{{ 'Deselect all' | translate }}</span>
         </button>
 
-        <mat-divider></mat-divider>
-        <button mat-menu-item (click)="forwardToCommittees()">
-            <mat-icon>swap_horiz</mat-icon>
-            <span>{{ 'Unforward/forward to committees' | translate }}</span>
-        </button>
-        <button mat-menu-item [disabled]="true">
-            <mat-icon>local_offer</mat-icon>
-            <span>{{ 'Tags' | translate }}</span>
-        </button>
-        <mat-divider></mat-divider>
+        <ng-container *osOmlPerms="OML.can_manage_organisation">
+            <mat-divider></mat-divider>
+            <button mat-menu-item (click)="forwardToCommittees()">
+                <mat-icon>swap_horiz</mat-icon>
+                <span>{{ 'Unforward/forward to committees' | translate }}</span>
+            </button>
+            <button mat-menu-item [disabled]="true">
+                <mat-icon>local_offer</mat-icon>
+                <span>{{ 'Tags' | translate }}</span>
+            </button>
+            <mat-divider></mat-divider>
 
-        <button mat-menu-item [disabled]="true" class="red-warning-text" (click)="deleteMultiple()">
-            <mat-icon>delete</mat-icon>
-            <span>{{ 'Delete' | translate }}</span>
-        </button>
+            <button mat-menu-item [disabled]="true" class="red-warning-text" (click)="deleteMultiple()">
+                <mat-icon>delete</mat-icon>
+                <span>{{ 'Delete' | translate }}</span>
+            </button>
+        </ng-container>
     </div>
 </mat-menu>

@@ -188,7 +188,7 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
             last_name: [undefined],
             gender: [undefined],
             email: [undefined, Validators.email],
-            committee_as_member_ids: [[]],
+            committee_ids: [[]],
             last_email_send: [undefined],
             default_password: [undefined],
             default_structure_level: [undefined],

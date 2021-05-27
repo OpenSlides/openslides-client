@@ -6,6 +6,8 @@ import {
     Fieldsets,
     SimplifiedModelRequest
 } from 'app/core/core-services/model-request-builder.service';
+import { OperatorService } from 'app/core/core-services/operator.service';
+import { CML, OML } from 'app/core/core-services/organization-permission';
 import { Id } from 'app/core/definitions/key-types';
 import { ViewCommittee } from 'app/management/models/view-committee';
 import { ViewOrganization } from 'app/management/models/view-organization';
@@ -21,7 +23,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 export class CommitteeRepositoryService
     extends BaseRepository<ViewCommittee, Committee>
     implements ModelRequestRepository {
-    public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
+    public constructor(repositoryServiceCollector: RepositoryServiceCollector, private operator: OperatorService) {
         super(repositoryServiceCollector, Committee);
     }
 
@@ -37,10 +39,9 @@ export class CommitteeRepositoryService
         const titleFields: (keyof Committee)[] = ['name', 'description'];
         const listFields: (keyof Committee)[] = titleFields.concat([
             'meeting_ids',
-            'member_ids',
-            'manager_ids',
             'forward_to_committee_ids',
-            'organization_tag_ids'
+            'organization_tag_ids',
+            'user_ids'
         ]);
         const editFields: (keyof Committee)[] = titleFields.concat(['default_meeting_id', 'template_meeting_id']);
         return {
@@ -55,8 +56,8 @@ export class CommitteeRepositoryService
             name: committee.name,
             organization_id: 1,
             description: committee.description,
-            member_ids: committee.member_ids,
-            manager_ids: committee.manager_ids
+            organisation_tag_ids: committee.organization_tag_ids,
+            user_ids: committee.user_ids
         };
         return this.sendActionToBackend(CommitteeAction.CREATE, payload);
     }
@@ -114,5 +115,17 @@ export class CommitteeRepositoryService
             ],
             fieldset: []
         };
+    }
+
+    protected createViewModel(model: Committee): ViewCommittee {
+        const viewModel = super.createViewModel(model);
+        viewModel.canAccess = () => {
+            return (
+                this.operator.hasCommitteePermissions(model.id, CML.can_manage) ||
+                this.operator.hasOrganizationPermissions(OML.can_manage_users) ||
+                this.operator.isInCommittees(model)
+            );
+        };
+        return viewModel;
     }
 }

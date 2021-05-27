@@ -2,7 +2,7 @@
     [customMenu]="true"
     prevUrl="/committees"
     [nav]="false"
-    [hasMainButton]="true"
+    [hasMainButton]="operator.hasCommitteePermissions(currentCommittee?.id, CML.can_manage)"
     (mainEvent)="onCreateMeeting()"
 >
     <!-- Title -->
@@ -16,7 +16,7 @@
     </div>
 
     <!-- Edit button -->
-    <div class="extra-controls-slot">
+    <div class="extra-controls-slot" *osCmlPerms="CML.can_manage; committeeId: currentCommittee?.id">
         <button mat-icon-button (click)="onEditCommittee()">
             <mat-icon>edit</mat-icon>
         </button>
@@ -67,7 +67,6 @@
     </div>
 
     <div *pblNgridCellDef="'users'; row as meeting" class="cell-slot fill">
-        <a class="detail-link" [routerLink]="meeting.getUrl()" *ngIf="!isMultiSelect"></a>
         <div>
             <os-icon-container iconTooltip="{{ 'Participants' | translate }}" icon="group">
                 {{ meeting.userAmount }}
@@ -97,7 +96,13 @@
             </span>
         </button>
 
-        <button mat-menu-item type="button" class="red-warning-text" (click)="deleteSingle(meeting)">
+        <button
+            mat-menu-item
+            type="button"
+            class="red-warning-text"
+            (click)="deleteSingle(meeting)"
+            *osCmlPerms="CML.can_manage"
+        >
             <mat-icon>delete</mat-icon>
             <span>
                 {{ 'Delete' | translate }}

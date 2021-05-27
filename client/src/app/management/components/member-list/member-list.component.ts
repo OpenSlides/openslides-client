@@ -92,11 +92,7 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
                 viewModelCtor: ViewUser,
                 ids: userIds,
                 fieldset: 'orgaList',
-                follow: [
-                    { idField: 'committee_as_manager_ids' },
-                    { idField: 'committee_as_member_ids' },
-                    { idField: 'is_present_in_meeting_ids' }
-                ]
+                follow: [{ idField: 'committee_ids' }, { idField: 'is_present_in_meeting_ids' }]
             };
             this.requestModels(request, 'load_users');
         } catch (e) {

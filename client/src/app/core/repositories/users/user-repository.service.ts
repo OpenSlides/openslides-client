@@ -116,7 +116,7 @@ export class UserRepositoryService
             { templateField: 'vote_weight_$' }
         ]);
         const detailFields = listFields.concat(['username', 'about_me', 'comment', 'default_password']);
-        const orgaListFields = listFields.concat(['committee_as_manager_ids', 'committee_as_member_ids']);
+        const orgaListFields = listFields.concat(['committee_ids']);
         const orgaEditFields = orgaListFields.concat(['default_password']);
 
         return {
@@ -462,12 +462,10 @@ export class UserRepositoryService
 
     public bulkAssignUsersToCommitteesAsMembers(users: ViewUser[], committeeIds: Id[]): Promise<void> {
         const patchFn = (user: ViewUser) => {
-            committeeIds = committeeIds.concat(user.committee_as_member_ids || []);
+            committeeIds = committeeIds.concat(user.committee_ids || []);
             return {
                 id: user.id,
-                committee_as_member_ids: committeeIds.filter(
-                    (committeeId, index, self) => self.indexOf(committeeId) === index
-                )
+                committee_ids: committeeIds.filter((committeeId, index, self) => self.indexOf(committeeId) === index)
             };
         };
         return this.bulkUpdate(patchFn, users);
@@ -476,9 +474,7 @@ export class UserRepositoryService
     public bulkUnassignUsersFromCommitteesAsMembers(users: ViewUser[], committeeIds: Id[]): Promise<void> {
         const patchFn = (user: ViewUser) => ({
             id: user.id,
-            committee_as_member_ids: (user.committee_as_member_ids || []).filter(
-                committeeId => !committeeIds.includes(committeeId)
-            )
+            committee_ids: (user.committee_ids || []).filter(committeeId => !committeeIds.includes(committeeId))
         });
         return this.bulkUpdate(patchFn, users);
     }
