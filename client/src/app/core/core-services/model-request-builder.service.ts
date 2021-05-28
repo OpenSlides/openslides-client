@@ -67,8 +67,17 @@ export interface Follow extends BaseSimplifiedModelRequest {
 export type AdditionalField = Field | ISpecificStructuredField | IAllStructuredFields;
 
 interface BaseSimplifiedModelRequest {
+    /**
+     * Sub-fields can be specified, which fieldset will be loaded, too.
+     */
     follow?: FollowList;
+    /**
+     * The fieldset, which should be loaded.
+     */
     fieldset?: Fieldset;
+    /**
+     * Additional fields to be loaded. They will never be followed.
+     */
     additionalFields?: AdditionalField[];
 }
 
