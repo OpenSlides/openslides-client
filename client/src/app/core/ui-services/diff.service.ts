@@ -21,9 +21,9 @@ const DOCUMENT_FRAGMENT_NODE = 11;
  * This enumeration is used when _automatically_ detecting the change type of an amendment / change recommendation.
  */
 export enum ModificationType {
-    TYPE_REPLACEMENT,
-    TYPE_INSERTION,
-    TYPE_DELETION
+    TYPE_REPLACEMENT = 'replacement',
+    TYPE_INSERTION = 'insertion',
+    TYPE_DELETION = 'deletion'
 }
 
 /**
@@ -2191,9 +2191,9 @@ export class DiffService {
         let html = motionHtml;
 
         // Changes need to be applied from the bottom up, to prevent conflicts with changing line numbers.
-        changes.sort((change1: ViewUnifiedChange, change2: ViewUnifiedChange) => {
-            return change1.getLineFrom() - change2.getLineFrom();
-        });
+        changes.sort(
+            (change1: ViewUnifiedChange, change2: ViewUnifiedChange) => change2.getLineFrom() - change1.getLineFrom()
+        );
 
         changes.forEach((change: ViewUnifiedChange) => {
             if (!change.isTitleChange()) {

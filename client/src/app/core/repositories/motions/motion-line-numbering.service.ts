@@ -396,7 +396,7 @@ export class MotionLineNumberingService {
                 (newText: string, paraNo: number): DiffLinesInParagraph => {
                     if (baseParagraphs[paraNo] === undefined) {
                         throw new Error(
-                            'Inconsistent data. An amendment is probably referring to a non-existant line number.'
+                            'Inconsistent data. An amendment is probably referring to a non-existent line number.'
                         );
                     } else if (newText !== null) {
                         return this.diffService.getAmendmentParagraphsLines(
@@ -475,7 +475,7 @@ export class MotionLineNumberingService {
 
                     if (baseParagraphs[paragraphNumber] === undefined) {
                         console.error(
-                            'Inconsistent data. An amendment is probably referring to a non-existant line number.'
+                            'Inconsistent data. An amendment is probably referring to a non-existent line number.'
                         );
                         return null;
                     }
@@ -523,11 +523,11 @@ export class MotionLineNumberingService {
         const baseParagraphs = this.getTextParagraphs(motion, true, lineLength);
 
         return baseParagraphs.map((origText: string, paraNo: number): string => {
+            if (origText === undefined) {
+                throw new Error('Inconsistent data. An amendment is probably referring to a non-existent line number.');
+            }
+
             const newText = amendment.amendment_paragraph(paraNo);
-            /**
-             * TODO CHECK please check if this commit was coverd justly
-             * https://github.com/OpenSlides/OpenSlides/commit/ac50d6f8dccc5b502c7b7a3a106ef5935184494f#diff-f5bbc561818c722671cf3105c1c578d9e6b9767bb0f4f9ea32030678eb803499R1016-R1018
-             */
             if (!newText) {
                 return origText;
             }

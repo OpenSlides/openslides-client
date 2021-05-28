@@ -244,11 +244,8 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         };
         if (this.motion.isParagraphBasedAmendment()) {
             try {
-                const lineNumberedParagraphs = this.motionLineNumbering.getAllAmendmentParagraphsWithOriginalLineNumbers(
-                    this.motion,
-                    this.lineLength,
-                    false
-                );
+                const lineNumberedParagraphs = this.motionLineNumbering //
+                    .getAllAmendmentParagraphsWithOriginalLineNumbers(this.motion, this.lineLength, false);
                 data.changeRecommendation = this.changeRecoRepo.createAmendmentChangeRecommendationTemplate(
                     this.motion,
                     lineNumberedParagraphs,

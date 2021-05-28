@@ -6,6 +6,9 @@
                 <i *ngIf="motion.lead_motion">{{ 'No changes at the text.' | translate }}</i>
                 <i *ngIf="!motion.lead_motion">{{ 'The parent motion was deleted.' | translate }}</i>
             </div>
+            <div class="alert alert-info alert-inconsistency" *ngIf="amendmentErrorMessage">
+                <i [innerHTML]="amendmentErrorMessage"></i>
+            </div>
             <ng-container *ngIf="motion.lead_motion && changeRecoMode !== ChangeRecoMode.Diff && !isFinalEdit">
                 <div
                     *ngFor="let paragraph of getAmendmentParagraphs(); trackBy: trackByIndex"
@@ -86,6 +89,12 @@
             <div *ngIf="isControlInvalid(paragraph.paragraphNo)" class="red-warning-text">
                 {{ 'This field is required.' | translate }}
             </div>
+        </section>
+        <section *ngFor="let paragraph of broken_paragraphs">
+            <em class="red-warning-text">{{
+                'This paragraph does not exist in the main motion anymore:' | translate
+            }}</em>
+            <div class="motion-text" [innerHTML]="paragraph | trust: 'html'"></div>
         </section>
     </form>
 </ng-container>
