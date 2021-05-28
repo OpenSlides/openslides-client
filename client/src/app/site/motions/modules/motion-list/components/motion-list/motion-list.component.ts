@@ -324,6 +324,11 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
                     ],
                     fieldset: 'list',
                     additionalFields: ['text']
+                },
+                {
+                    idField: 'motion_category_ids',
+                    fieldset: 'list',
+                    additionalFields: ['parent_id', 'child_ids']
                 }
             ],
             fieldset: []
