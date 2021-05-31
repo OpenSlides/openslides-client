@@ -33,6 +33,15 @@ export class ViewProjection extends BaseViewModel<Projection> {
     public getSubtitle(): string {
         return this.getProjectorTitle().subtitle || '';
     }
+
+    public getProjectionBuildDescriptor(): ProjectionBuildDescriptor {
+        return {
+            content_object_id: this.content_object_id,
+            stable: this.stable,
+            type: this.type,
+            getDialogTitle: this.getTitle
+        };
+    }
 }
 interface IProjectionRelations {
     current_projector?: ViewProjector;

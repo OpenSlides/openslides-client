@@ -106,17 +106,7 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
         }
         const descriptor = this.projectorService.ensureDescriptor(this.object);
         if (this.projector) {
-            // if the projection target was defines before
-            const currentProjections = this.projectorService.getMatchingProjectionsFromProjector(
-                descriptor,
-                this.projector
-            );
-            if (currentProjections.length > 0) {
-                await this.projectionRepo.deleteMultiple(currentProjections);
-            } else {
-                // instantly project the object
-                this.projectorRepo.project(descriptor, [this.projector]);
-            }
+            this.projectorRepo.toggle(descriptor, [this.projector]);
         } else {
             // open the projection dialog
             this.projectionDialogService.openProjectDialogFor(descriptor);

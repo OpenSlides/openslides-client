@@ -802,19 +802,22 @@ export const RELATIONS: Relation[] = [
         MViewModel: ViewProjection,
         OViewModel: ViewProjector,
         MField: 'current_projector',
-        OField: 'current_projections'
+        OField: 'current_projections',
+        order: 'weight'
     }),
     ...makeM2O({
         MViewModel: ViewProjection,
         OViewModel: ViewProjector,
         MField: 'preview_projector',
-        OField: 'preview_projections'
+        OField: 'preview_projections',
+        order: 'weight'
     }),
     ...makeM2O({
         MViewModel: ViewProjection,
         OViewModel: ViewProjector,
         MField: 'history_projector',
-        OField: 'history_projections'
+        OField: 'history_projections',
+        order: 'weight'
     }),
     // ########## Projections
     // This is a generic O2M: projection <M---1> content_object
