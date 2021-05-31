@@ -24,25 +24,21 @@ export class OrganisationRepositoryService extends BaseRepository<ViewOrganisati
     };
 
     public getFieldsets(): Fieldsets<Organisation> {
-        const settingsFieldset: (keyof OrganisationSetting)[] = [
-            'name',
-            'description',
+        const coreFieldset: (keyof Organisation)[] = ['name', 'description'];
+        const settingsFieldset: (keyof (OrganisationSetting & Organisation))[] = coreFieldset.concat(
             'legal_notice',
             'privacy_policy',
             'login_text',
             'theme',
             'custom_translations',
             'reset_password_verbose_errors'
-        ];
-        const detailFieldset: (keyof Organisation)[] = [
-            'committee_ids',
-            'description',
-            'name',
-            'role_ids',
-            'superadmin_role_id'
-        ];
+        );
+        const listFieldset: (keyof Organisation)[] = coreFieldset.concat('committee_ids', 'organisation_tag_ids');
+        const detailFieldset: (keyof Organisation)[] = listFieldset.concat('role_ids', 'superadmin_role_id');
         return {
             [DEFAULT_FIELDSET]: detailFieldset,
+            title: coreFieldset,
+            list: listFieldset,
             settings: settingsFieldset
         };
     }

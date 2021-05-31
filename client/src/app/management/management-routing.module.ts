@@ -11,7 +11,7 @@ import { MeetingListComponent } from './components/meeting-list/meeting-list.com
 import { MemberEditComponent } from './components/member-edit/member-edit.component';
 import { MemberListComponent } from './components/member-list/member-list.component';
 import { OrgaSettingsComponent } from './components/orga-settings/orga-settings.component';
-// import { OrganisationListComponent } from './components/organisation-list/organisation-list.component';
+import { OrganisationTagListComponent } from './components/organisation-tag-list/organisation-tag-list.component';
 
 const routes: Route[] = [
     {
@@ -69,6 +69,10 @@ const routes: Route[] = [
                         ]
                     }
                 ]
+            },
+            {
+                path: 'organization-tags',
+                component: OrganisationTagListComponent
             },
             {
                 path: 'settings',

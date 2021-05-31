@@ -15,7 +15,7 @@ export const WEB_HEADER_TOKEN = 'web_header';
 /**
  * The organisation_id is always the 1.
  */
-const ORGANISATION_ID = 1;
+export const ORGANISATION_ID = 1;
 
 @Injectable({
     providedIn: 'root'

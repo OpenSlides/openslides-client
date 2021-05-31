@@ -45,6 +45,18 @@
         </mat-form-field>
 
         <mat-form-field>
+            <mat-label>{{ 'Organization tags' | translate }}</mat-label>
+            <os-search-repo-selector
+                formControlName="organisation_tag_ids"
+                [repo]="orgaTagRepo"
+                [multiple]="true"
+                [showNotFoundButton]="true"
+                (clickNotFound)="onOrgaTagNotFound($event)"
+                placeholder="{{ 'Organization tags' | translate }}"
+            ></os-search-repo-selector>
+        </mat-form-field>
+
+        <mat-form-field>
             <mat-label>{{ 'Description' | translate }}</mat-label>
             <input matInput formControlName="description" />
         </mat-form-field>

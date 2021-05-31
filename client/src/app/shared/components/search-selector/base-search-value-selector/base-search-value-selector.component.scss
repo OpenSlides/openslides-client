@@ -2,6 +2,12 @@
     max-height: 312px !important ;
 }
 
+.os-search-selector--no-options {
+    mat-pseudo-checkbox {
+        display: none;
+    }
+}
+
 .os-search-selector--chip-container {
     margin: 5px;
     width: max-content;

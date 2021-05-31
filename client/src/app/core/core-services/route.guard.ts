@@ -12,7 +12,15 @@ export class RouteGuard {
         return this.activeMeetingIdService.meetingId;
     }
 
-    private readonly excludedRoutes = ['login', 'download', 'projector', 'committees', 'members'];
+    private readonly excludedRoutes = [
+        'login',
+        'download',
+        'projector',
+        'committees',
+        'members',
+        'organization-tags',
+        'settings'
+    ];
 
     public constructor(private router: Router, private activeMeetingIdService: ActiveMeetingIdService) {
         this.listenToNavigation();

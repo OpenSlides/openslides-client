@@ -1,0 +1,37 @@
+/**
+ * For further information, see https://css-tricks.com/switch-font-color-for-different-backgrounds-with-css/
+ */
+:host {
+    --os-chip-red: 0;
+    --os-chip-green: 0;
+    --os-chip-blue: 0;
+
+    /**
+     * The threshold at which colors are considered "light".
+     * Range: decimals from 0 to 1,
+     * recommended 0.5 - 0.6
+     */
+    --os-chip-threshold: 0.5;
+}
+
+.os-chip {
+    background: rgb(var(--os-chip-red), var(--os-chip-green), var(--os-chip-blue));
+
+    /**
+     * Calc using the
+     * W3C luma method
+     * lightness = (red * 0.299 + green * 0.587 + blue * 0.114) / 255
+     */
+    --red: calc(var(--os-chip-red) * 0.299);
+    --green: calc(var(--os-chip-green) * 0.587);
+    --blue: calc(var(--os-chip-blue) * 0.114);
+    --sum: calc(var(--red) + var(--green) + var(--blue));
+
+    --perceived-lightness: calc(var(--sum) / 255);
+
+    /**
+     * 1) Any lightness value above the threshold will be considered "light", therefore apply a black text color. Any bellow will be considered dark, and use white color.
+     * This results from appying either a sub-zero (negative) or a higher-than-100 lightness value, which are capped to 0 and 100 respectively, to a HSL declaration
+     */
+    color: hsl(0, 0%, calc((var(--perceived-lightness) - var(--os-chip-threshold)) * -10000000%));
+}

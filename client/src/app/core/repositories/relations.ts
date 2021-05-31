@@ -1,6 +1,7 @@
 import { ViewCommittee } from 'app/management/models/view-committee';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { ViewOrganisation } from 'app/management/models/view-organisation';
+import { ViewOrganisationTag } from 'app/management/models/view-organisation-tag';
 import { ViewResource } from 'app/management/models/view-resource';
 import { ViewOption } from 'app/shared/models/poll/view-option';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
@@ -122,6 +123,12 @@ export const RELATIONS: Relation[] = [
         OViewModel: ViewOrganisation,
         MViewModel: ViewResource,
         OField: 'resources',
+        MField: 'organisation'
+    }),
+    ...makeM2O({
+        OViewModel: ViewOrganisation,
+        MViewModel: ViewOrganisationTag,
+        OField: 'organisation_tags',
         MField: 'organisation'
     }),
     // ########## User
@@ -246,6 +253,12 @@ export const RELATIONS: Relation[] = [
         BViewModel: ViewCommittee,
         AField: 'forward_to_committees',
         BField: 'receive_forwardings_from_committees'
+    }),
+    ...makeM2M({
+        AViewModel: ViewCommittee,
+        BViewModel: ViewOrganisationTag,
+        AField: 'organisation_tags',
+        BField: 'committees'
     }),
     // ########## Meetings
     ...makeO2O({
@@ -461,6 +474,12 @@ export const RELATIONS: Relation[] = [
         MViewModel: ViewUser,
         OField: 'guests',
         MField: 'guest_meetings'
+    }),
+    ...makeM2M({
+        AViewModel: ViewMeeting,
+        BViewModel: ViewOrganisationTag,
+        AField: 'organisation_tags',
+        BField: 'meetings'
     }),
     ...makeO2O({
         AViewModel: ViewMeeting,

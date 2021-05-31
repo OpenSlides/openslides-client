@@ -1,0 +1,100 @@
+<os-head-bar
+    [customMenu]="true"
+    [hasMainButton]="true"
+    (mainEvent)="createOrganizationTag()"
+    [multiSelectMode]="isMultiSelect"
+>
+    <!-- Title -->
+    <div class="title-slot">
+        <h2>{{ 'Organization tags' | translate }}</h2>
+    </div>
+
+    <ng-container class="custom-menu-slot">
+        <os-management-navigation></os-management-navigation>
+    </ng-container>
+
+    <!-- Menu -->
+    <div class="menu-slot">
+        <button type="button" mat-icon-button [matMenuTriggerFor]="orgaTagMenu"><mat-icon>more_vert</mat-icon></button>
+    </div>
+
+    <!-- Multiselect info -->
+    <div class="central-info-slot">
+        <button mat-icon-button (click)="toggleMultiSelect()"><mat-icon>arrow_back</mat-icon></button>
+        <span>{{ selectedRows.length }}&nbsp;</span><span>{{ 'selected' | translate }}</span>
+    </div>
+</os-head-bar>
+
+<os-list-view-table
+    [listObservable]="repo.getViewModelListObservable()"
+    [columns]="tableColumnDefinition"
+    [showListOfSpeakers]="false"
+    [(selectedRows)]="selectedRows"
+    [allowProjector]="false"
+    [multiSelect]="isMultiSelect"
+    listStorageKey="orgaTags"
+    (dataSourceChange)="onDataSourceChange($event)"
+>
+    <div *pblNgridCellDef="'name'; row as orgaTag" class="cell-slot fill">
+        <div>
+            <os-chip [color]="orgaTag.color">{{ orgaTag.name }}</os-chip>
+        </div>
+    </div>
+    <div *pblNgridCellDef="'info'; row as orgaTag" class="cell-slot fill">
+        <div>
+            <div *ngIf="orgaTag.committees?.length">
+                <os-icon-container
+                    icon="account_balance"
+                    iconTooltip="{{ 'Related committees' | translate }}"
+                    [noWrap]="true"
+                >
+                    <span *ngFor="let committee of orgaTag.committees; last as last">
+                        {{ committee.name }}<span *ngIf="!last">,&nbsp;</span>
+                    </span>
+                </os-icon-container>
+            </div>
+            <div *ngIf="orgaTag.meetings?.length">
+                <os-icon-container
+                    icon="calendar_today"
+                    iconTooltip="{{ 'Related meetings' | translate }}"
+                    [noWrap]="true"
+                >
+                    <span *ngFor="let meeting of orgaTag.meetings; last as last">
+                        {{ meeting.name }}<span *ngIf="!last">,&nbsp;</span>
+                    </span>
+                </os-icon-container>
+            </div>
+        </div>
+    </div>
+    <div *pblNgridCellDef="'actions'; row as orgaTag" class="cell-slot fill">
+        <div class="button-group">
+            <button mat-stroked-button (click)="editOrganizationTag(orgaTag)">{{ 'Edit' | translate }}</button>
+            <button mat-stroked-button (click)="deleteOrganizationTags(orgaTag)">{{ 'Delete' | translate }}</button>
+        </div>
+    </div>
+</os-list-view-table>
+
+<mat-menu #orgaTagMenu="matMenu">
+    <div *ngIf="!isMultiSelect">
+        <button mat-menu-item (click)="toggleMultiSelect()">
+            <mat-icon>library_add</mat-icon>
+            <span>{{ 'Multiselect' | translate }}</span>
+        </button>
+    </div>
+    <div *ngIf="isMultiSelect">
+        <button mat-menu-item (click)="selectAll()">
+            <mat-icon>done_all</mat-icon>
+            <span>{{ 'Select all' | translate }}</span>
+        </button>
+
+        <button mat-menu-item [disabled]="!selectedRows.length" (click)="deselectAll()">
+            <mat-icon>clear</mat-icon>
+            <span>{{ 'Deselect all' | translate }}</span>
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item class="red-warning-text" [disabled]="!selectedRows.length" (click)="deleteSelectedTags()">
+            <mat-icon>delete</mat-icon>
+            <span>{{ 'Delete' | translate }}</span>
+        </button>
+    </div>
+</mat-menu>

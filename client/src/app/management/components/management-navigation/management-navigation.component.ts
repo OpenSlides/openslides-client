@@ -29,6 +29,13 @@ export class ManagementNavigationComponent {
             weight: 200
         },
         {
+            route: '/organization-tags',
+            displayName: 'Organization tags',
+            icon: 'label',
+            // permission: Permission.coreCanSeeFrontpage,
+            weight: 250
+        },
+        {
             route: '/members',
             displayName: 'Members',
             icon: 'group',

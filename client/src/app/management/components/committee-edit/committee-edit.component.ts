@@ -8,13 +8,17 @@ import { Observable, OperatorFunction } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { MemberService } from 'app/core/core-services/member.service';
+import { Id } from 'app/core/definitions/key-types';
 import { CommitteeRepositoryService } from 'app/core/repositories/management/committee-repository.service';
 import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
+import { OrganisationTagRepositoryService } from 'app/core/repositories/management/organisation-tag-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
+import { ColorService } from 'app/core/ui-services/color.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ViewCommittee } from 'app/management/models/view-committee';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { ViewOrganisation } from 'app/management/models/view-organisation';
+import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Committee } from 'app/shared/models/event-management/committee';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
@@ -44,6 +48,8 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
         private memberService: MemberService,
         private userRepo: UserRepositoryService,
         public committeeRepo: CommitteeRepositoryService,
+        public orgaTagRepo: OrganisationTagRepositoryService,
+        private colorService: ColorService,
         private meetingRepo: MeetingRepositoryService,
         private router: Router,
         private route: ActivatedRoute,
@@ -97,6 +103,15 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
         this.location.back();
     }
 
+    public async onOrgaTagNotFound(orgaTagName: string): Promise<void> {
+        const { id }: Identifiable = await this.orgaTagRepo.create({
+            name: orgaTagName,
+            color: this.colorService.getRandomHtmlColor()
+        });
+        const currentValue: Id[] = this.committeeForm.get('organisation_tag_ids').value || [];
+        this.committeeForm.patchValue({ organisation_tag_ids: currentValue.concat(id) });
+    }
+
     private getCommitteeByUrl(): void {
         if (this.route.snapshot.url[0] && this.route.snapshot.url[0].path === 'create') {
             this.isCreateView = true;
@@ -136,7 +151,8 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
             name: ['', Validators.required],
             description: [''],
             manager_ids: [[]],
-            member_ids: [[]]
+            member_ids: [[]],
+            organisation_tag_ids: [[]]
         };
         if (!this.isCreateView) {
             partialForm = {
@@ -144,7 +160,6 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
                 // template_meeting_id: [null], // TODO: Not yet
                 default_meeting_id: [null],
                 forward_to_committee_ids: [[]]
-                // organisation_tag_ids: [[]] // TODO: Wait for backend
             };
         }
         this.committeeForm = this.formBuilder.group(partialForm);

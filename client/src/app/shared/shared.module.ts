@@ -105,6 +105,8 @@ import { ListenEditingDirective } from './directives/listen-editing.directive';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
 import { UserDetailViewComponent } from './components/user-detail-view/user-detail-view.component';
 import { SelectionTreeComponent } from './components/selection-tree/selection-tree.component';
+import { ChipComponent } from './components/chip/chip.component';
+import { ChipListComponent } from './components/chip-list/chip-list.component';
 
 const declarations = [
     PermsDirective,
@@ -177,7 +179,9 @@ const declarations = [
     ListenEditingDirective,
     ChangePasswordComponent,
     UserDetailViewComponent,
-    SelectionTreeComponent
+    SelectionTreeComponent,
+    ChipComponent,
+    ChipListComponent
 ];
 
 const sharedModules = [

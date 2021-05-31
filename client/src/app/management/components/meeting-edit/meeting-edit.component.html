@@ -54,6 +54,21 @@
         </mat-form-field>
 
         <mat-form-field>
+            <mat-label>{{ 'Organization tags' | translate }}</mat-label>
+            <os-search-repo-selector
+                [repo]="orgaTagRepo"
+                [multiple]="true"
+                formControlName="organisation_tag_ids"
+                [showNotFoundButton]="true"
+                (clickNotFound)="onOrgaTagNotFound($event)"
+            >
+                <ng-container notFoundDescription>
+                    {{ 'Add new organization tag' | translate }}
+                </ng-container>
+            </os-search-repo-selector>
+        </mat-form-field>
+
+        <mat-form-field>
             <mat-label> {{ 'Participants' | translate }}</mat-label>
             <os-search-value-selector
                 formControlName="userIds"

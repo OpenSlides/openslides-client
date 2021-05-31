@@ -33,6 +33,10 @@ export class MeetingListComponent extends BaseListViewComponent<ViewOrganisation
             width: 'auto'
         },
         {
+            prop: 'organisation_tags',
+            width: 'auto'
+        },
+        {
             prop: 'users',
             width: '70px'
         }
@@ -114,7 +118,12 @@ export class MeetingListComponent extends BaseListViewComponent<ViewOrganisation
             follow: [
                 {
                     idField: 'meeting_ids',
-                    fieldset: 'list'
+                    fieldset: 'list',
+                    follow: [
+                        {
+                            idField: 'organisation_tag_ids'
+                        }
+                    ]
                 }
             ],
             fieldset: 'list'
