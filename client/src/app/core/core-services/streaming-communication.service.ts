@@ -6,6 +6,7 @@ import { HttpStreamService, StreamContainer } from './http-stream.service';
 import { HttpService } from './http.service';
 import { OfflineBroadcastService, OfflineReasonValue } from './offline-broadcast.service';
 import { SleepPromise } from '../promises/sleep';
+import { CommunicationError, ErrorType, verboseErrorType } from './stream-utils';
 
 const MAX_CONNECTION_RETRIES = 3;
 const MAX_STREAM_FAILURE_RETRIES = 1;
@@ -14,7 +15,7 @@ const MAX_STREAM_FAILURE_RETRIES = 1;
     providedIn: 'root'
 })
 export class StreamingCommunicationService {
-    private streams: { [id: number]: StreamContainer } = {};
+    private streams: { [id: number]: StreamContainer<any> } = {};
 
     public constructor(
         private httpStreamService: HttpStreamService,
@@ -23,13 +24,14 @@ export class StreamingCommunicationService {
         private authService: AuthService
     ) {}
 
-    public async connect(streamContainer: StreamContainer): Promise<() => void> {
+    public async connect<T>(streamContainer: StreamContainer<T>): Promise<() => void> {
         streamContainer.retries = 0;
-        streamContainer.errorHandler = (error: any) => this.handleError(streamContainer, error);
+        streamContainer.errorHandler = (type: ErrorType, error: CommunicationError, message: string) =>
+            this.handleError(streamContainer, type, error, message);
         return await this._connect(streamContainer);
     }
 
-    public async _connect(streamContainer: StreamContainer): Promise<() => void> {
+    public async _connect<T>(streamContainer: StreamContainer<T>): Promise<() => void> {
         this.streams[streamContainer.id] = streamContainer;
         try {
             await this.httpStreamService.connect(streamContainer);
@@ -41,7 +43,7 @@ export class StreamingCommunicationService {
         return () => this.close(streamContainer);
     }
 
-    private async handleConnectionError(streamContainer: StreamContainer): Promise<void> {
+    private async handleConnectionError<T>(streamContainer: StreamContainer<T>): Promise<void> {
         streamContainer.retries++;
         if (streamContainer.stream) {
             streamContainer.stream.close();
@@ -50,7 +52,7 @@ export class StreamingCommunicationService {
 
         let goOffline = false;
         if (streamContainer.retries < MAX_CONNECTION_RETRIES) {
-            goOffline = !(await this.delayAndCheckReconnection());
+            goOffline = !(await this.delayAndCheckReconnection(streamContainer));
         } else {
             goOffline = true;
         }
@@ -65,8 +67,13 @@ export class StreamingCommunicationService {
         }
     }
 
-    private async handleError(streamContainer: StreamContainer, error: any): Promise<void> {
-        console.log('handle Error', streamContainer, streamContainer.stream, error);
+    private async handleError<T>(
+        streamContainer: StreamContainer<T>,
+        type: ErrorType,
+        error: CommunicationError,
+        message: string
+    ): Promise<void> {
+        console.log('handle Error', streamContainer, streamContainer.stream, verboseErrorType(type), error, message);
         streamContainer.stream.close();
         streamContainer.stream = null;
 
@@ -76,7 +83,7 @@ export class StreamingCommunicationService {
             this.goOffline(streamContainer.endpoint);
         } else {
             // retry it after some time:
-            if (await this.delayAndCheckReconnection()) {
+            if (await this.delayAndCheckReconnection(streamContainer)) {
                 await this.connect(streamContainer);
             }
         }
@@ -85,10 +92,13 @@ export class StreamingCommunicationService {
     /**
      * Returns true, if a reconnect attempt should be done.
      */
-    private async delayAndCheckReconnection(): Promise<boolean> {
-        const delay = Math.floor(Math.random() * 3000 + 2000);
-        console.log(`retry again in ${delay} ms`);
-
+    private async delayAndCheckReconnection<T>(streamContainer: StreamContainer<T>): Promise<boolean> {
+        let delay: number;
+        if (streamContainer.hasErroredAmount === 1) {
+            delay = 500; // the first error has a small delay since these error can happen normally.
+        } else {
+            delay = Math.floor(Math.random() * 3000 + 2000);
+        }
         await SleepPromise(delay);
 
         // do not continue, if we are offline!
@@ -124,14 +134,14 @@ export class StreamingCommunicationService {
         });
     }
 
-    private close(streamContainer: StreamContainer): void {
+    private close<T>(streamContainer: StreamContainer<T>): void {
         if (this.isStreamOpen(streamContainer)) {
             this.streams[streamContainer.id].stream.close();
             delete this.streams[streamContainer.id];
         }
     }
 
-    private isStreamOpen(streamContainer: StreamContainer): boolean {
+    private isStreamOpen<T>(streamContainer: StreamContainer<T>): boolean {
         return !!this.streams[streamContainer.id];
     }
 

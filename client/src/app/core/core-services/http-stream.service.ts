@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { HttpOptions } from '../definitions/http-options';
 import { EndpointConfiguration } from './http-stream-endpoint.service';
 import { Stream } from './stream';
+import { CommunicationError, ErrorType } from './stream-utils';
 
 export type Params = HttpParams | { [param: string]: string | string[] };
 
@@ -14,24 +15,30 @@ export class StreamConnectionError extends Error {
     }
 }
 
-export class StreamContainer {
+export class StreamContainer<T> {
     public readonly id = Math.floor(Math.random() * (900000 - 1) + 100000); // [100000, 999999]
 
     public retries = 0;
     public hasErroredAmount = 0;
-    public errorHandler: (error: any) => void = null;
+    public errorHandler: (type: ErrorType, error: CommunicationError, message: string) => void = null;
 
-    public messageHandler: (message: any) => void;
-    public stream?: Stream<any>;
+    public messageHandler: (message: T) => void;
+    public stream?: Stream<T>;
 
     public constructor(
         public endpoint: EndpointConfiguration,
-        messageHandler: (message: any, streamId: number) => void,
+        messageHandler: (message: T, streamId: number) => void,
         public params: () => Params,
         public body: () => any,
         public description: string
     ) {
-        this.messageHandler = (message: any) => messageHandler(message, this.id);
+        this.messageHandler = (message: T) => {
+            if (this.hasErroredAmount > 0) {
+                console.log(`resetting error amount for ${this.endpoint} since there was a connect message`);
+                this.hasErroredAmount = 0;
+            }
+            messageHandler(message, this.id);
+        };
     }
 }
 
@@ -48,7 +55,7 @@ export class HttpStreamService {
      * This method returnes after the first response (First part of the response body) is
      * received. This implies, that it might be long time idle, if an service choose not to send anything.
      */
-    public async connect<T>(streamContainer: StreamContainer): Promise<void> {
+    public async connect<T>(streamContainer: StreamContainer<T>): Promise<void> {
         if (streamContainer.stream) {
             console.error('Illegal state!');
             return;
@@ -61,11 +68,11 @@ export class HttpStreamService {
 
         const hasError = await stream.gotFirstResponse;
         if (hasError) {
-            throw new StreamConnectionError(stream.statuscode, stream.errorContent);
+            throw new StreamConnectionError(stream.statuscode, stream.errorContent.toString());
         }
     }
 
-    private getOptions(streamContainer: StreamContainer): HttpOptions {
+    private getOptions<T>(streamContainer: StreamContainer<T>): HttpOptions {
         const options: HttpOptions = {
             headers: { 'Content-Type': 'application/json' },
             responseType: 'text',
