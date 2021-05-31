@@ -155,9 +155,15 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         recommendationId: Id,
         viewMotion: ViewMotion
     ): Promise<void> {
-        return this.sendActionsToBackend([
-            { action: MotionAction.UPDATE, data: [this.getUpdatePayload(update, viewMotion)] },
-            {
+        const actions = [];
+        if (update) {
+            actions.push({ action: MotionAction.UPDATE, data: [this.getUpdatePayload(update, viewMotion)] });
+        }
+        if (stateId && stateId !== viewMotion.state_id) {
+            actions.push({ action: MotionAction.SET_STATE, data: [{ id: viewMotion.id, state_id: stateId }] });
+        }
+        if (recommendationId) {
+            actions.push({
                 action: MotionAction.SET_RECOMMENDATION,
                 data: [
                     {
@@ -165,9 +171,9 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
                         recommendation_id: recommendationId
                     }
                 ]
-            },
-            { action: MotionAction.SET_STATE, data: [{ id: viewMotion.id, state_id: stateId }] }
-        ]);
+            });
+        }
+        return this.sendActionsToBackend(actions);
     }
 
     public delete(viewMotion: ViewMotion): Promise<void> {
