@@ -31,6 +31,7 @@ import { ViewGroup } from 'app/site/users/models/view-group';
 import { ViewPersonalNote } from 'app/site/users/models/view-personal-note';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { ViewCommittee } from './view-committee';
+import { ViewOrganisationTag } from './view-organisation-tag';
 
 export interface HasMeeting {
     meeting: ViewMeeting;
@@ -113,5 +114,6 @@ interface IMeetingRelations {
     projections: ViewProjection[];
     default_group: ViewGroup;
     admin_group: ViewGroup;
+    organisation_tags: ViewOrganisationTag[];
 }
 export interface ViewMeeting extends Meeting, IMeetingRelations, HasProjectorTitle {}

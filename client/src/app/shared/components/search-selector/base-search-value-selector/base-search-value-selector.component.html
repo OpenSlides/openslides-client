@@ -6,7 +6,7 @@
     [errorStateMatcher]="errorStateMatcher"
 >
     <mat-option>
-        <ngx-mat-select-search [formControl]="searchValueForm"></ngx-mat-select-search>
+        <ngx-mat-select-search [formControl]="searchValueForm" noEntriesFoundLabel=""></ngx-mat-select-search>
     </mat-option>
     <ng-container *ngIf="multiple && showChips">
         <div #chipPlaceholder>
@@ -32,6 +32,9 @@
         </button>
     </ng-container>
     <cdk-virtual-scroll-viewport class="vscroll-viewport" minBufferPx="400" maxBufferPx="600" [itemSize]="50">
+        <mat-option *ngIf="!getFilteredItemsBySearchValue().length" class="os-search-selector--no-options" disabled>
+            {{ noOptionsFoundLabel | translate }}
+        </mat-option>
         <mat-option *cdkVirtualFor="let selectedItem of getFilteredItemsBySearchValue()" [value]="selectedItem.id">
             {{ selectedItem.getTitle() | translate }}
         </mat-option>

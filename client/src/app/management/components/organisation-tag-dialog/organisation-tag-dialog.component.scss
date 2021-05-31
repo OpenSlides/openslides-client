@@ -1,0 +1,9 @@
+.organization-tag-content {
+    form {
+        & > * {
+            &:not(:first-child) {
+                padding-left: 16px;
+            }
+        }
+    }
+}

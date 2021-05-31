@@ -58,6 +58,14 @@
         </div>
     </div>
 
+    <div *pblNgridCellDef="'organisation_tags'; row as meeting" class="cell-slot fill">
+        <os-chip-list *ngIf="meeting.organisation_tags?.length" [model]="meeting.organisation_tags">
+            <ng-template let-tag>
+                {{ tag.name }}
+            </ng-template>
+        </os-chip-list>
+    </div>
+
     <div *pblNgridCellDef="'users'; row as meeting" class="cell-slot fill">
         <a class="detail-link" [routerLink]="meeting.getUrl()" *ngIf="!isMultiSelect"></a>
         <div>

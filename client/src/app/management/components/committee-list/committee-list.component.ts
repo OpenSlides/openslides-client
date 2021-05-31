@@ -25,6 +25,10 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
             width: 'auto'
         },
         {
+            prop: 'organization_tags',
+            width: '250px'
+        },
+        {
             prop: 'forwarding',
             width: '250px'
         },
@@ -113,6 +117,9 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
                         {
                             idField: 'manager_ids',
                             fieldset: 'shortName'
+                        },
+                        {
+                            idField: 'organisation_tag_ids'
                         }
                     ]
                 }

@@ -44,6 +44,12 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormControlCo
     public showNotFoundButton = false;
 
     /**
+     * Label showing, if there are no options for a specific search.
+     */
+    @Input()
+    public noOptionsFoundLabel = 'No options found';
+
+    /**
      * Emits the currently searched string.
      */
     @Output()

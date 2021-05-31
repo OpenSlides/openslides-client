@@ -10,3 +10,7 @@ export type UnsafeHtml = string;
  */
 export type Decimal = string;
 export type Base64Encoded = string;
+/**
+ * A string with six hexadecimal-digits leaded by an `#`.
+ */
+export type HtmlColor = string;

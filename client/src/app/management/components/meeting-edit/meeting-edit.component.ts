@@ -10,12 +10,16 @@ import { map } from 'rxjs/operators';
 import { MeetingAction } from 'app/core/actions/meeting-action';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
+import { Id } from 'app/core/definitions/key-types';
 import { CommitteeRepositoryService } from 'app/core/repositories/management/committee-repository.service';
 import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
+import { OrganisationTagRepositoryService } from 'app/core/repositories/management/organisation-tag-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
+import { ColorService } from 'app/core/ui-services/color.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ViewCommittee } from 'app/management/models/view-committee';
 import { ViewMeeting } from 'app/management/models/view-meeting';
+import { Identifiable } from 'app/shared/models/base/identifiable';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
 
@@ -47,7 +51,11 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
         private location: Location,
         private formBuilder: FormBuilder,
         private meetingRepo: MeetingRepositoryService,
-        private committeeRepo: CommitteeRepositoryService
+        private committeeRepo: CommitteeRepositoryService,
+        private userRepo: UserRepositoryService,
+        private operator: OperatorService,
+        public orgaTagRepo: OrganisationTagRepositoryService,
+        private colorService: ColorService
     ) {
         super(componentServiceCollector);
         this.createForm();
@@ -59,6 +67,57 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
         } else {
             super.setTitle(EditMeetingLabel);
         }
+    }
+
+    public onSubmit(): void {
+        if (this.isCreateView) {
+            const userIds = this.meetingForm.value.userIds;
+            const payload: MeetingAction.CreatePayload = {
+                committee_id: this.committeeId,
+                ...this.meetingForm.value
+            };
+            delete (payload as any).userIds; // do not send them to the server.
+
+            this.meetingRepo
+                .create(payload, userIds)
+                .then(() => {
+                    this.location.back();
+                })
+                .catch(this.raiseError);
+        } else {
+            const userIds = this.meetingForm.value.userIds;
+            // this might be faster when using sets:
+            // addedUsers = userIds setminus editMeeting.user_ids
+            // removedUsers = (editMeeting.user_ids intersection committee.user_ids) setminus userIds
+            // removedUsers must not contain guests or so. We do not want to remove users, that do not belong
+            // to the committee.
+            const addedUsers = userIds.filter(id => !this.editMeeting.user_ids.includes(id));
+            const removedUsers = this.editMeeting.user_ids.filter(
+                id => this.committee.member_ids.includes(id) && !userIds.includes(id)
+            );
+
+            const payload: MeetingAction.UpdatePayload = this.meetingForm.value;
+            delete (payload as any).userIds; // do not send them to the server.
+            this.meetingRepo
+                .update(payload, this.editMeeting, addedUsers, removedUsers)
+                .then(() => {
+                    this.location.back();
+                })
+                .catch(this.raiseError);
+        }
+    }
+
+    public onCancel(): void {
+        this.location.back();
+    }
+
+    public async onOrgaTagNotFound(orgaTagName: string): Promise<void> {
+        const { id }: Identifiable = await this.orgaTagRepo.create({
+            name: orgaTagName,
+            color: this.colorService.getRandomHtmlColor()
+        });
+        const currentValue: Id[] = this.meetingForm.get('organisation_tag_ids').value || [];
+        this.meetingForm.patchValue({ organisation_tag_ids: currentValue.concat(id) });
     }
 
     private createOrEdit(): void {
@@ -138,7 +197,9 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
             start_time: [currentDate],
             end_time: [currentDate],
             enable_anonymous: [false],
-            userIds: [[]]
+            userIds: [[]],
+            guest_ids: [[]],
+            organisation_tag_ids: [[]]
         });
     }
 
@@ -150,47 +211,5 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
         } as any);
         this.meetingForm.patchValue(patchMeeting);
         console.log('update', meeting, patchMeeting, this.meetingForm.value);
-    }
-
-    public onSubmit(): void {
-        if (this.isCreateView) {
-            const userIds = this.meetingForm.value.userIds;
-            const payload: MeetingAction.CreatePayload = {
-                committee_id: this.committeeId,
-                ...this.meetingForm.value
-            };
-            delete (payload as any).userIds; // do not send them to the server.
-
-            this.meetingRepo
-                .create(payload, userIds)
-                .then(() => {
-                    this.location.back();
-                })
-                .catch(this.raiseError);
-        } else {
-            const userIds = this.meetingForm.value.userIds;
-            // this might be faster when using sets:
-            // addedUsers = userIds setminus editMeeting.user_ids
-            // removedUsers = (editMeeting.user_ids intersection committee.user_ids) setminus userIds
-            // removedUsers must not contain guests or so. We do not want to remove users, that do not belong
-            // to the committee.
-            const addedUsers = userIds.filter(id => !this.editMeeting.user_ids.includes(id));
-            const removedUsers = this.editMeeting.user_ids.filter(
-                id => this.committee.member_ids.includes(id) && !userIds.includes(id)
-            );
-
-            const payload: MeetingAction.UpdatePayload = this.meetingForm.value;
-            delete (payload as any).userIds; // do not send them to the server.
-            this.meetingRepo
-                .update(payload, this.editMeeting, addedUsers, removedUsers)
-                .then(() => {
-                    this.location.back();
-                })
-                .catch(this.raiseError);
-        }
-    }
-
-    public onCancel(): void {
-        this.location.back();
     }
 }

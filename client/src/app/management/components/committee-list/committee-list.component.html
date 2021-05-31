@@ -48,6 +48,14 @@
         </div>
     </div>
 
+    <div *pblNgridCellDef="'organization_tags'; row as committee" class="cell-slot fill">
+        <os-chip-list *ngIf="committee.organisation_tags?.length" [model]="committee.organisation_tags">
+            <ng-template let-tag>
+                {{ tag.name }}
+            </ng-template>
+        </os-chip-list>
+    </div>
+
     <div *pblNgridCellDef="'forwarding'; row as committee" class="cell-slot fill">
         <a class="detail-link" [routerLink]="committee.id" *ngIf="!isMultiSelect"></a>
         <div *ngIf="committee.forward_to_committees?.length">

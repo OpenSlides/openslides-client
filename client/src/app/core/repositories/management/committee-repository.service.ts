@@ -39,7 +39,8 @@ export class CommitteeRepositoryService
             'meeting_ids',
             'member_ids',
             'manager_ids',
-            'forward_to_committee_ids'
+            'forward_to_committee_ids',
+            'organisation_tag_ids'
         ]);
         const editFields: (keyof Committee)[] = titleFields.concat(['default_meeting_id', 'template_meeting_id']);
         return {
