@@ -58,8 +58,8 @@
         </div>
     </div>
 
-    <div *pblNgridCellDef="'organisation_tags'; row as meeting" class="cell-slot fill">
-        <os-chip-list *ngIf="meeting.organisation_tags?.length" [model]="meeting.organisation_tags">
+    <div *pblNgridCellDef="'organization_tags'; row as meeting" class="cell-slot fill">
+        <os-chip-list *ngIf="meeting.organization_tags?.length" [model]="meeting.organization_tags">
             <ng-template let-tag>
                 {{ tag.name }}
             </ng-template>

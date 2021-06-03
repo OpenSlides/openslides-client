@@ -11,7 +11,7 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewCommittee } from 'app/management/models/view-committee';
 import { ViewMeeting } from 'app/management/models/view-meeting';
-import { ViewOrganisation } from 'app/management/models/view-organisation';
+import { ViewOrganization } from 'app/management/models/view-organization';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
 
 /**
@@ -22,7 +22,7 @@ import { BaseListViewComponent } from 'app/site/base/components/base-list-view.c
     templateUrl: './meeting-list.component.html',
     styleUrls: ['./meeting-list.component.scss']
 })
-export class MeetingListComponent extends BaseListViewComponent<ViewOrganisation> {
+export class MeetingListComponent extends BaseListViewComponent<ViewOrganization> {
     private committeeId: number;
 
     public currentCommittee: ViewCommittee;
@@ -33,7 +33,7 @@ export class MeetingListComponent extends BaseListViewComponent<ViewOrganisation
             width: 'auto'
         },
         {
-            prop: 'organisation_tags',
+            prop: 'organization_tags',
             width: 'auto'
         },
         {
@@ -121,7 +121,7 @@ export class MeetingListComponent extends BaseListViewComponent<ViewOrganisation
                     fieldset: 'list',
                     follow: [
                         {
-                            idField: 'organisation_tag_ids'
+                            idField: 'organization_tag_ids'
                         }
                     ]
                 }

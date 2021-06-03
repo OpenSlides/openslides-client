@@ -4,10 +4,10 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 import { OrganizationAction } from 'app/core/actions/organization-action';
-import { OrganisationRepositoryService } from 'app/core/repositories/management/organisation-repository.service';
+import { OrganizationRepositoryService } from 'app/core/repositories/management/organization-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { Themes } from 'app/core/ui-services/theme.service';
-import { ViewOrganisation } from 'app/management/models/view-organisation';
+import { ViewOrganization } from 'app/management/models/view-organization';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 
 @Component({
@@ -17,7 +17,7 @@ import { BaseModelContextComponent } from 'app/site/base/components/base-model-c
 })
 export class OrgaSettingsComponent extends BaseModelContextComponent implements OnInit {
     public pageTitle = _('Settings');
-    private currentOrgaSettings: ViewOrganisation;
+    private currentOrgaSettings: ViewOrganization;
 
     public orgaSettingsForm: FormGroup;
     public themes = Themes;
@@ -28,7 +28,7 @@ export class OrgaSettingsComponent extends BaseModelContextComponent implements 
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        private orgaRepo: OrganisationRepositoryService,
+        private orgaRepo: OrganizationRepositoryService,
         private formBuilder: FormBuilder
     ) {
         super(componentServiceCollector);
@@ -36,7 +36,7 @@ export class OrgaSettingsComponent extends BaseModelContextComponent implements 
         this.createForm();
 
         this.requestModels({
-            viewModelCtor: ViewOrganisation,
+            viewModelCtor: ViewOrganization,
             ids: [1],
             fieldset: 'settings'
         });
@@ -66,7 +66,7 @@ export class OrgaSettingsComponent extends BaseModelContextComponent implements 
                 theme: [this.currentOrgaSettings.theme]
             });
         } else {
-            console.warn('no Organisation loaded');
+            console.warn('no Organization loaded');
         }
     }
 
@@ -84,9 +84,9 @@ export class OrgaSettingsComponent extends BaseModelContextComponent implements 
         }
     }
 
-    private updateForm(viewOrga: ViewOrganisation): void {
+    private updateForm(viewOrga: ViewOrganization): void {
         if (this.orgaSettingsForm) {
-            const patchMeeting: any = viewOrga.organisation;
+            const patchMeeting: any = viewOrga.organization;
             this.orgaSettingsForm.patchValue(patchMeeting);
         }
     }

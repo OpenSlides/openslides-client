@@ -32,7 +32,7 @@ Actions are sent to the backend instead of any http-requests.
     -   meeting.delete (id)
 
 -   [x] commitee:
-    -   commitee.create (organisation_id, name)
+    -   commitee.create (organization_id, name)
 
 ### Actions to implement
 

@@ -1,6 +1,6 @@
 <h2 mat-dialog-title>{{ (isCreateView ? 'Create an organization tag' : 'Edit an organization tag') | translate }}</h2>
 <div mat-dialog-content class="organization-tag-content">
-    <form [formGroup]="organisationTagForm">
+    <form [formGroup]="organizationTagForm">
         <mat-form-field appearance="fill">
             <mat-label>{{ 'Name' | translate }}</mat-label>
             <input #name matInput formControlName="name" required />
@@ -25,7 +25,7 @@
             >
                 <mat-icon> sync </mat-icon>
             </button>
-            <mat-error *ngIf="organisationTagForm.get('color').errors?.pattern">
+            <mat-error *ngIf="organizationTagForm.get('color').errors?.pattern">
                 {{ 'You have to enter six hexadecimal digits' | translate }}
             </mat-error>
         </mat-form-field>

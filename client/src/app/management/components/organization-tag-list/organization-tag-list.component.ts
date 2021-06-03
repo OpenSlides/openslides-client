@@ -4,22 +4,22 @@ import { MatDialog } from '@angular/material/dialog';
 import { PblColumnDefinition } from '@pebula/ngrid';
 
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
-import { OrganisationTagRepositoryService } from 'app/core/repositories/management/organisation-tag-repository.service';
+import { OrganizationTagRepositoryService } from 'app/core/repositories/management/organization-tag-repository.service';
 import { ColorService } from 'app/core/ui-services/color.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
-import { ViewOrganisation } from 'app/management/models/view-organisation';
-import { ViewOrganisationTag } from 'app/management/models/view-organisation-tag';
+import { ViewOrganization } from 'app/management/models/view-organization';
+import { ViewOrganizationTag } from 'app/management/models/view-organization-tag';
 import { mediumDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
-import { OrganisationTagDialogComponent } from '../organisation-tag-dialog/organisation-tag-dialog.component';
+import { OrganizationTagDialogComponent } from '../organization-tag-dialog/organization-tag-dialog.component';
 
 @Component({
-    selector: 'os-organisation-tag-list',
-    templateUrl: './organisation-tag-list.component.html',
-    styleUrls: ['./organisation-tag-list.component.scss']
+    selector: 'os-organization-tag-list',
+    templateUrl: './organization-tag-list.component.html',
+    styleUrls: ['./organization-tag-list.component.scss']
 })
-export class OrganisationTagListComponent extends BaseListViewComponent<ViewOrganisationTag> implements OnInit {
+export class OrganizationTagListComponent extends BaseListViewComponent<ViewOrganizationTag> implements OnInit {
     public tableColumnDefinition: PblColumnDefinition[] = [
         {
             prop: 'name',
@@ -37,7 +37,7 @@ export class OrganisationTagListComponent extends BaseListViewComponent<ViewOrga
 
     public constructor(
         serviceCollector: ComponentServiceCollector,
-        public repo: OrganisationTagRepositoryService,
+        public repo: OrganizationTagRepositoryService,
         private dialog: MatDialog,
         private promptService: PromptService,
         private colorService: ColorService
@@ -55,11 +55,11 @@ export class OrganisationTagListComponent extends BaseListViewComponent<ViewOrga
         return this.editOrganizationTag();
     }
 
-    public async editOrganizationTag(orgaTag?: ViewOrganisationTag): Promise<void> {
-        const dialogRef = this.dialog.open(OrganisationTagDialogComponent, {
+    public async editOrganizationTag(orgaTag?: ViewOrganizationTag): Promise<void> {
+        const dialogRef = this.dialog.open(OrganizationTagDialogComponent, {
             ...mediumDialogSettings,
             data: {
-                organisationTag: orgaTag,
+                organizationTag: orgaTag,
                 getRandomColor: () => this.colorService.getRandomHtmlColor()
             }
         });
@@ -74,7 +74,7 @@ export class OrganisationTagListComponent extends BaseListViewComponent<ViewOrga
         }
     }
 
-    public async deleteOrganizationTags(...orgaTags: ViewOrganisationTag[]): Promise<void> {
+    public async deleteOrganizationTags(...orgaTags: ViewOrganizationTag[]): Promise<void> {
         const dialogTitle =
             orgaTags.length === 1
                 ? this.translate.instant('Are you sure you want to delete this organization tag?')
@@ -91,12 +91,12 @@ export class OrganisationTagListComponent extends BaseListViewComponent<ViewOrga
 
     protected getModelRequest(): SimplifiedModelRequest {
         return {
-            viewModelCtor: ViewOrganisation,
+            viewModelCtor: ViewOrganization,
             ids: [1],
             fieldset: 'list',
             follow: [
                 {
-                    idField: 'organisation_tag_ids',
+                    idField: 'organization_tag_ids',
                     follow: [
                         {
                             idField: 'committee_ids'

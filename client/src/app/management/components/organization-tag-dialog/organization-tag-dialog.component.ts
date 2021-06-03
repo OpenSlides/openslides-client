@@ -4,20 +4,20 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { HtmlColor } from 'app/core/definitions/key-types';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { ViewOrganisationTag } from 'app/management/models/view-organisation-tag';
+import { ViewOrganizationTag } from 'app/management/models/view-organization-tag';
 import { BaseComponent } from 'app/site/base/components/base.component';
 
-interface OrganisationTagDialogData {
-    organisationTag?: ViewOrganisationTag;
+interface OrganizationTagDialogData {
+    organizationTag?: ViewOrganizationTag;
     getRandomColor: () => HtmlColor;
 }
 
 @Component({
-    selector: 'os-organisation-tag-dialog',
-    templateUrl: './organisation-tag-dialog.component.html',
-    styleUrls: ['./organisation-tag-dialog.component.scss']
+    selector: 'os-organization-tag-dialog',
+    templateUrl: './organization-tag-dialog.component.html',
+    styleUrls: ['./organization-tag-dialog.component.scss']
 })
-export class OrganisationTagDialogComponent extends BaseComponent implements OnInit {
+export class OrganizationTagDialogComponent extends BaseComponent implements OnInit {
     public get isCreateView(): boolean {
         return this._isCreateView;
     }
@@ -26,15 +26,15 @@ export class OrganisationTagDialogComponent extends BaseComponent implements OnI
         return this._lastValidColor;
     }
 
-    public organisationTagForm: FormGroup;
+    public organizationTagForm: FormGroup;
 
     private _isCreateView = false;
     private _lastValidColor: string;
 
     public constructor(
         serviceCollector: ComponentServiceCollector,
-        @Inject(MAT_DIALOG_DATA) public data: OrganisationTagDialogData,
-        private dialogRef: MatDialogRef<OrganisationTagDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: OrganizationTagDialogData,
+        private dialogRef: MatDialogRef<OrganizationTagDialogComponent>,
         private fb: FormBuilder
     ) {
         super(serviceCollector);
@@ -42,7 +42,7 @@ export class OrganisationTagDialogComponent extends BaseComponent implements OnI
 
     public ngOnInit(): void {
         this.createForm();
-        if (!this.data.organisationTag) {
+        if (!this.data.organizationTag) {
             this._isCreateView = true;
         } else {
             this.updateForm();
@@ -50,12 +50,12 @@ export class OrganisationTagDialogComponent extends BaseComponent implements OnI
     }
 
     public onSaveClicked(): void {
-        const { name, color }: { name: string; color: string } = this.organisationTagForm.value;
+        const { name, color }: { name: string; color: string } = this.organizationTagForm.value;
         this.dialogRef.close({ name, color: `#${color}` });
     }
 
     public generateColor(): void {
-        this.organisationTagForm.patchValue({ color: this.getRandomColor() });
+        this.organizationTagForm.patchValue({ color: this.getRandomColor() });
     }
 
     private getRandomColor(): string {
@@ -65,12 +65,12 @@ export class OrganisationTagDialogComponent extends BaseComponent implements OnI
 
     private createForm(): void {
         this._lastValidColor = this.getRandomColor();
-        this.organisationTagForm = this.fb.group({
+        this.organizationTagForm = this.fb.group({
             name: ['', Validators.required],
             color: [this._lastValidColor, Validators.pattern(/^[0-9a-fA-F]{6}$/)]
         });
         this.subscriptions.push(
-            this.organisationTagForm.get('color').valueChanges.subscribe((currentColor: string) => {
+            this.organizationTagForm.get('color').valueChanges.subscribe((currentColor: string) => {
                 if (currentColor.length === 6) {
                     this._lastValidColor = currentColor;
                 }
@@ -79,11 +79,11 @@ export class OrganisationTagDialogComponent extends BaseComponent implements OnI
     }
 
     private updateForm(): void {
-        const color = this.data.organisationTag.color;
+        const color = this.data.organizationTag.color;
         const update = {
-            name: this.data.organisationTag.name,
+            name: this.data.organizationTag.name,
             color: color.startsWith('#') ? color.slice(1) : color
         };
-        this.organisationTagForm.patchValue(update);
+        this.organizationTagForm.patchValue(update);
     }
 }

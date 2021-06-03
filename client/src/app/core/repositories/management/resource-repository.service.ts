@@ -35,7 +35,7 @@ export class ResourceRepositoryService extends BaseRepository<ViewResource, Reso
     };
 
     public getFieldsets(): Fieldsets<Resource> {
-        const detailFieldset: (keyof Resource)[] = ['id', 'mimetype', 'token', 'organisation_id'];
+        const detailFieldset: (keyof Resource)[] = ['id', 'mimetype', 'token', 'organization_id'];
         return {
             [DEFAULT_FIELDSET]: detailFieldset
         };

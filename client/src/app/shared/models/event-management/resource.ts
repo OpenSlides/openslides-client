@@ -9,7 +9,7 @@ export class Resource extends BaseModel<Resource> {
     public filesize: number;
     public mimetype: string;
 
-    public organisation_id: Id; // organisation/resource_ids;
+    public organization_id: Id; // organization/resource_ids;
 
     public constructor(input?: any) {
         super(Resource.COLLECTION, input);

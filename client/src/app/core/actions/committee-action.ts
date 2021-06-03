@@ -14,7 +14,7 @@ export namespace CommitteeAction {
 
     export interface CreatePayload extends PartialPayload {
         name: string;
-        organisation_id: Id;
+        organization_id: Id;
     }
     export interface UpdatePayload extends Identifiable, PartialPayload {
         // Optional

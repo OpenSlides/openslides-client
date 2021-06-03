@@ -40,7 +40,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         const accessField: (keyof Meeting)[] = [ViewMeeting.ACCESSIBILITY_FIELD];
 
         const nameFields: (keyof Meeting)[] = accessField.concat(['name', 'start_time', 'end_time']);
-        const listFields: (keyof Meeting)[] = nameFields.concat('user_ids', 'organisation_tag_ids');
+        const listFields: (keyof Meeting)[] = nameFields.concat('user_ids', 'organization_tag_ids');
         const editFields: (keyof Meeting)[] = listFields.concat([
             'welcome_title',
             'description',

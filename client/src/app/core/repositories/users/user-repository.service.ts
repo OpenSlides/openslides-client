@@ -182,7 +182,7 @@ export class UserRepositoryService
             default_vote_weight: toDecimal(partialUser.default_vote_weight),
             committee_ids: partialUser.committee_ids,
             // committee_$_management_level: partialUser.committee_$_management_level,
-            organisation_management_level: partialUser.organisation_management_level
+            organization_management_level: partialUser.organization_management_level
         };
 
         if (this.activeMeetingId) {

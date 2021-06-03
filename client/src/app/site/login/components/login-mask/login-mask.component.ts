@@ -8,12 +8,12 @@ import { filter } from 'rxjs/operators';
 import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { AuthService } from 'app/core/core-services/auth.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { OrganisationService } from 'app/core/core-services/organisation.service';
+import { OrganizationService } from 'app/core/core-services/organization.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { OrganizationSettingsService } from 'app/core/ui-services/organization-settings.service';
 import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
-import { ViewOrganisation } from 'app/management/models/view-organisation';
+import { ViewOrganization } from 'app/management/models/view-organization';
 import { fadeInAnim } from 'app/shared/animations';
 import { ParentErrorStateMatcher } from 'app/shared/parent-error-state-matcher';
 import { BaseComponent } from 'app/site/base/components/base.component';
@@ -35,7 +35,7 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
         return this._meeting;
     }
 
-    public get organization(): ViewOrganisation | null {
+    public get organization(): ViewOrganization | null {
         return this._organization;
     }
 
@@ -81,7 +81,7 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
 
     private _meeting: ViewMeeting | null = null;
 
-    private _organization: ViewOrganisation | null = null;
+    private _organization: ViewOrganization | null = null;
 
     /**
      * Constructor for the login component
@@ -102,8 +102,8 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
         private router: Router,
         private route: ActivatedRoute,
         private formBuilder: FormBuilder,
-        private orgaService: OrganisationService,
-        private orgaSettings: OrganisationSettingsService,
+        private orgaService: OrganizationService,
+        private orgaSettings: OrganizationSettingsService,
         private overlayService: OverlayService,
         private browserSupport: BrowserSupportService,
         private activeMeeting: ActiveMeetingService
@@ -123,7 +123,7 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
         this.subscriptions.push(
             this.orgaSettings.get('login_text').subscribe(notice => (this.installationNotice = notice)),
             this.activeMeeting.meetingObservable.subscribe(meeting => (this._meeting = meeting)),
-            this.orgaService.organisationObservable.subscribe(organization => (this._organization = organization))
+            this.orgaService.organizationObservable.subscribe(organization => (this._organization = organization))
         );
 
         this.subscriptions

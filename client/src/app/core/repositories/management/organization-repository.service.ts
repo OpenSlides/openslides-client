@@ -2,30 +2,30 @@ import { Injectable } from '@angular/core';
 
 import { OrganizationAction } from 'app/core/actions/organization-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
-import { ViewOrganisation } from 'app/management/models/view-organisation';
-import { Organisation, OrganisationSetting } from 'app/shared/models/event-management/organisation';
+import { ViewOrganization } from 'app/management/models/view-organization';
+import { Organization, OrganizationSetting } from 'app/shared/models/event-management/organization';
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 @Injectable({
     providedIn: 'root'
 })
-export class OrganisationRepositoryService extends BaseRepository<ViewOrganisation, Organisation> {
+export class OrganizationRepositoryService extends BaseRepository<ViewOrganization, Organization> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
-        super(repositoryServiceCollector, Organisation);
+        super(repositoryServiceCollector, Organization);
     }
 
-    public getTitle = (viewOrganisation: ViewOrganisation) => {
-        return viewOrganisation.name;
+    public getTitle = (viewOrganization: ViewOrganization) => {
+        return viewOrganization.name;
     };
 
     public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Organisations' : 'Organisation');
+        return this.translate.instant(plural ? 'Organizations' : 'Organization');
     };
 
-    public getFieldsets(): Fieldsets<Organisation> {
-        const coreFieldset: (keyof Organisation)[] = ['name', 'description'];
-        const settingsFieldset: (keyof (OrganisationSetting & Organisation))[] = coreFieldset.concat(
+    public getFieldsets(): Fieldsets<Organization> {
+        const coreFieldset: (keyof Organization)[] = ['name', 'description'];
+        const settingsFieldset: (keyof (OrganizationSetting & Organization))[] = coreFieldset.concat(
             'legal_notice',
             'privacy_policy',
             'login_text',
@@ -33,7 +33,7 @@ export class OrganisationRepositoryService extends BaseRepository<ViewOrganisati
             'custom_translations',
             'reset_password_verbose_errors'
         );
-        const detailFieldset: (keyof Organisation)[] = coreFieldset.concat('committee_ids', 'organisation_tag_ids');
+        const detailFieldset: (keyof Organization)[] = coreFieldset.concat('committee_ids', 'organization_tag_ids');
         return {
             [DEFAULT_FIELDSET]: detailFieldset,
             title: coreFieldset,

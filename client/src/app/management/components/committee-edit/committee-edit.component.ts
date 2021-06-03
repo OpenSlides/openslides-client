@@ -11,13 +11,13 @@ import { MemberService } from 'app/core/core-services/member.service';
 import { Id } from 'app/core/definitions/key-types';
 import { CommitteeRepositoryService } from 'app/core/repositories/management/committee-repository.service';
 import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
-import { OrganisationTagRepositoryService } from 'app/core/repositories/management/organisation-tag-repository.service';
+import { OrganizationTagRepositoryService } from 'app/core/repositories/management/organization-tag-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ColorService } from 'app/core/ui-services/color.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ViewCommittee } from 'app/management/models/view-committee';
 import { ViewMeeting } from 'app/management/models/view-meeting';
-import { ViewOrganisation } from 'app/management/models/view-organisation';
+import { ViewOrganization } from 'app/management/models/view-organization';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Committee } from 'app/shared/models/event-management/committee';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
@@ -48,7 +48,7 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
         private memberService: MemberService,
         private userRepo: UserRepositoryService,
         public committeeRepo: CommitteeRepositoryService,
-        public orgaTagRepo: OrganisationTagRepositoryService,
+        public orgaTagRepo: OrganizationTagRepositoryService,
         private colorService: ColorService,
         private meetingRepo: MeetingRepositoryService,
         private router: Router,
@@ -108,8 +108,8 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
             name: orgaTagName,
             color: this.colorService.getRandomHtmlColor()
         });
-        const currentValue: Id[] = this.committeeForm.get('organisation_tag_ids').value || [];
-        this.committeeForm.patchValue({ organisation_tag_ids: currentValue.concat(id) });
+        const currentValue: Id[] = this.committeeForm.get('organization_tag_ids').value || [];
+        this.committeeForm.patchValue({ organization_tag_ids: currentValue.concat(id) });
     }
 
     private getCommitteeByUrl(): void {
@@ -152,7 +152,7 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
             description: [''],
             manager_ids: [[]],
             member_ids: [[]],
-            organisation_tag_ids: [[]]
+            organization_tag_ids: [[]]
         };
         if (!this.isCreateView) {
             partialForm = {
@@ -172,7 +172,7 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
     private requestUpdates(): void {
         this.requestModels(
             {
-                viewModelCtor: ViewOrganisation,
+                viewModelCtor: ViewOrganization,
                 ids: [1],
                 follow: [
                     {

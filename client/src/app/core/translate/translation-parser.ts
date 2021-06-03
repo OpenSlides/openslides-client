@@ -5,7 +5,7 @@ import { TranslateDefaultParser, TranslateStore } from '@ngx-translate/core';
 import { CustomTranslations, CustomTranslationService } from './custom-translation.service';
 
 /**
- * Custom translate parser. Intercepts and use custom translations from the organisation settings service.
+ * Custom translate parser. Intercepts and use custom translations from the organization settings service.
  */
 @Injectable()
 export class OpenSlidesTranslateParser extends TranslateDefaultParser {

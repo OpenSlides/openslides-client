@@ -14,8 +14,8 @@ import { MeetingListComponent } from './components/meeting-list/meeting-list.com
 import { MemberEditComponent } from './components/member-edit/member-edit.component';
 import { MemberListComponent } from './components/member-list/member-list.component';
 import { OrgaSettingsComponent } from './components/orga-settings/orga-settings.component';
-import { OrganisationTagDialogComponent } from './components/organisation-tag-dialog/organisation-tag-dialog.component';
-import { OrganisationTagListComponent } from './components/organisation-tag-list/organisation-tag-list.component';
+import { OrganizationTagDialogComponent } from './components/organization-tag-dialog/organization-tag-dialog.component';
+import { OrganizationTagListComponent } from './components/organization-tag-list/organization-tag-list.component';
 
 @NgModule({
     imports: [CommonModule, SharedModule, ManagementRoutingModule],
@@ -31,8 +31,8 @@ import { OrganisationTagListComponent } from './components/organisation-tag-list
         ManagementNavigationComponent,
         OrgaSettingsComponent,
         AccountDialogComponent,
-        OrganisationTagListComponent,
-        OrganisationTagDialogComponent
+        OrganizationTagListComponent,
+        OrganizationTagDialogComponent
     ]
 })
 export class ManagementModule {}

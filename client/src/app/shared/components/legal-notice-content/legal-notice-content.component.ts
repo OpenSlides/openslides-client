@@ -5,7 +5,7 @@ import { environment } from 'environments/environment';
 
 import { HttpService } from 'app/core/core-services/http.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { OrganizationSettingsService } from 'app/core/ui-services/organization-settings.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
 
 /**
@@ -129,7 +129,7 @@ export class LegalNoticeContentComponent extends BaseComponent implements OnInit
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        private orgaSettings: OrganisationSettingsService,
+        private orgaSettings: OrganizationSettingsService,
         private http: HttpService,
         fb: FormBuilder
     ) {

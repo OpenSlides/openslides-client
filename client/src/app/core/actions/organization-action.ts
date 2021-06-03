@@ -1,8 +1,8 @@
 import { Identifiable } from 'app/shared/models/base/identifiable';
-import { OrganisationSetting } from 'app/shared/models/event-management/organisation';
+import { OrganizationSetting } from 'app/shared/models/event-management/organization';
 
 export namespace OrganizationAction {
-    export const UPDATE = 'organisation.update';
+    export const UPDATE = 'organization.update';
 
-    export interface UpdatePayload extends Identifiable, OrganisationSetting {}
+    export interface UpdatePayload extends Identifiable, OrganizationSetting {}
 }

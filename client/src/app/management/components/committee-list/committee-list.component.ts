@@ -10,7 +10,7 @@ import { ChoiceService } from 'app/core/ui-services/choice.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewCommittee } from 'app/management/models/view-committee';
-import { ViewOrganisation } from 'app/management/models/view-organisation';
+import { ViewOrganization } from 'app/management/models/view-organization';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
 
 @Component({
@@ -107,7 +107,7 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
 
     protected getModelRequest(): SimplifiedModelRequest {
         return {
-            viewModelCtor: ViewOrganisation,
+            viewModelCtor: ViewOrganization,
             ids: [1],
             follow: [
                 {
@@ -119,7 +119,7 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
                             fieldset: 'shortName'
                         },
                         {
-                            idField: 'organisation_tag_ids'
+                            idField: 'organization_tag_ids'
                         }
                     ]
                 }

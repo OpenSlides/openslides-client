@@ -13,7 +13,7 @@ import { OperatorService } from 'app/core/core-services/operator.service';
 import { Id } from 'app/core/definitions/key-types';
 import { CommitteeRepositoryService } from 'app/core/repositories/management/committee-repository.service';
 import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
-import { OrganisationTagRepositoryService } from 'app/core/repositories/management/organisation-tag-repository.service';
+import { OrganizationTagRepositoryService } from 'app/core/repositories/management/organization-tag-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ColorService } from 'app/core/ui-services/color.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -54,7 +54,7 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
         private committeeRepo: CommitteeRepositoryService,
         private userRepo: UserRepositoryService,
         private operator: OperatorService,
-        public orgaTagRepo: OrganisationTagRepositoryService,
+        public orgaTagRepo: OrganizationTagRepositoryService,
         private colorService: ColorService
     ) {
         super(componentServiceCollector);
@@ -116,8 +116,8 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
             name: orgaTagName,
             color: this.colorService.getRandomHtmlColor()
         });
-        const currentValue: Id[] = this.meetingForm.get('organisation_tag_ids').value || [];
-        this.meetingForm.patchValue({ organisation_tag_ids: currentValue.concat(id) });
+        const currentValue: Id[] = this.meetingForm.get('organization_tag_ids').value || [];
+        this.meetingForm.patchValue({ organization_tag_ids: currentValue.concat(id) });
     }
 
     private createOrEdit(): void {
@@ -199,7 +199,7 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
             enable_anonymous: [false],
             userIds: [[]],
             guest_ids: [[]],
-            organisation_tag_ids: [[]]
+            organization_tag_ids: [[]]
         });
     }
 

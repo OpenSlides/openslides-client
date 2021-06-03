@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
-import { OrganisationSettingsService } from './organisation-settings.service';
+import { OrganizationSettingsService } from './organization-settings.service';
 
 interface ThemeDefinition {
     name: string;
@@ -71,7 +71,7 @@ export class ThemeService {
      *
      * @param orgaSettings must be injected to get the theme.
      */
-    public constructor(orgaSettings: OrganisationSettingsService) {
+    public constructor(orgaSettings: OrganizationSettingsService) {
         orgaSettings.get('theme').subscribe(newTheme => {
             if (!newTheme) {
                 return;

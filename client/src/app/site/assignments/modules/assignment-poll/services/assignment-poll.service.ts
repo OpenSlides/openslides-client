@@ -5,7 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { OrganizationSettingsService } from 'app/core/ui-services/organization-settings.service';
 import { Assignment } from 'app/shared/models/assignments/assignment';
 import { Poll } from 'app/shared/models/poll/poll';
 import {
@@ -54,14 +54,14 @@ export class AssignmentPollService extends PollService {
     private sortByVote: boolean;
 
     public constructor(
-        organisationSettingsService: OrganisationSettingsService,
+        organizationSettingsService: OrganizationSettingsService,
         pollKeyVerbose: PollKeyVerbosePipe,
         parsePollNumber: ParsePollNumberPipe,
         protected translate: TranslateService,
         private pollRepo: PollRepositoryService,
         private meetingSettingsService: MeetingSettingsService
     ) {
-        super(organisationSettingsService, translate, pollKeyVerbose, parsePollNumber);
+        super(organizationSettingsService, translate, pollKeyVerbose, parsePollNumber);
         this.meetingSettingsService
             .get('assignment_poll_default_100_percent_base')
             .subscribe(base => (this.defaultPercentBase = base));

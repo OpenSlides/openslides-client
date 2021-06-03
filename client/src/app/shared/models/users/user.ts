@@ -59,7 +59,7 @@ export class User extends BaseDecimalModel<User> {
     public projection_$_ids: any[];
     public current_projector_$_ids: any[];
 
-    public organisation_management_level: string;
+    public organization_management_level: string;
 
     public get isVoteWeightOne(): boolean {
         throw new Error('TODO');
