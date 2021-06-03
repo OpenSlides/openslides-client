@@ -24,7 +24,7 @@
             <input matInput formControlName="name" />
         </mat-form-field>
 
-        <mat-form-field *osOmlPerms="OML.can_manage_organisation">
+        <mat-form-field *osOmlPerms="OML.can_manage_organization">
             <mat-label> {{ 'Committee users' | translate }}</mat-label>
             <os-search-value-selector
                 formControlName="user_ids"

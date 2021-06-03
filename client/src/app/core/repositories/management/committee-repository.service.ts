@@ -56,7 +56,7 @@ export class CommitteeRepositoryService
             name: committee.name,
             organization_id: 1,
             description: committee.description,
-            organisation_tag_ids: committee.organization_tag_ids,
+            organization_tag_ids: committee.organization_tag_ids,
             user_ids: committee.user_ids
         };
         return this.sendActionToBackend(CommitteeAction.CREATE, payload);

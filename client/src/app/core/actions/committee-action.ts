@@ -8,14 +8,14 @@ export namespace CommitteeAction {
 
     interface PartialPayload {
         description?: UnsafeHtml;
-        // For UPDATE: Required permission: OML.can_manage_organisation
+        // For UPDATE: Required permission: OML.can_manage_organization
         user_ids?: Id[];
-        // For UPDATE: Required permission: CML.can_manage || OML.can_manage_organisation
-        organisation_tag_ids?: Id[];
+        // For UPDATE: Required permission: CML.can_manage || OML.can_manage_organization
+        organization_tag_ids?: Id[];
     }
 
     /**
-     * Required permission: `OML.can_manage_organisation`
+     * Required permission: `OML.can_manage_organization`
      */
     export interface CreatePayload extends PartialPayload {
         name: string;
@@ -23,7 +23,7 @@ export namespace CommitteeAction {
     }
 
     /**
-     * Required permission: `CML.can_manage` || `OML.can_manage_organisation`
+     * Required permission: `CML.can_manage` || `OML.can_manage_organization`
      */
     export interface UpdatePayload extends Identifiable, PartialPayload {
         // Optional
@@ -31,7 +31,7 @@ export namespace CommitteeAction {
         name?: string;
         template_meeting_id?: Id;
         default_meeting_id?: Id;
-        // Required permission: OML.can_manage_organisation
+        // Required permission: OML.can_manage_organization
         forward_to_committee_ids?: Id[];
         receive_forwardings_from_committee_ids?: Id[];
     }

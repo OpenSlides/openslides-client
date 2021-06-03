@@ -1,6 +1,6 @@
 <os-head-bar
     [customMenu]="true"
-    [hasMainButton]="operator.hasOrganizationPermissions(OML.can_manage_organisation)"
+    [hasMainButton]="operator.hasOrganizationPermissions(OML.can_manage_organization)"
     [multiSelectMode]="isMultiSelect"
     (mainEvent)="createNewCommittee()"
 >
@@ -150,7 +150,7 @@
             <span>{{ 'Deselect all' | translate }}</span>
         </button>
 
-        <ng-container *osOmlPerms="OML.can_manage_organisation">
+        <ng-container *osOmlPerms="OML.can_manage_organization">
             <mat-divider></mat-divider>
             <button mat-menu-item (click)="forwardToCommittees()">
                 <mat-icon>swap_horiz</mat-icon>

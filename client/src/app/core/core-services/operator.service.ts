@@ -410,7 +410,7 @@ export class OperatorService {
 
     /**
      * Checks, if the own CML is equals or higher than at least one of the given permissions.
-     * If an operator has the permission `OML.can_manage_organisation` or higher, then it will always return `true`.
+     * If an operator has the permission `OML.can_manage_organization` or higher, then it will always return `true`.
      *
      * @param committeeId The committee's id to know for which committee the CML is checked.
      * @param permissionsToCheck The required permissions to check.
@@ -418,11 +418,11 @@ export class OperatorService {
      * @returns A boolean whether an operator's CML is high enough.
      */
     public hasCommitteePermissions(committeeId: Id | undefined, ...permissionsToCheck: CML[]): boolean {
-        // If a user can manage an entire organisation, they can also manage every committee.
+        // If a user can manage an entire organization, they can also manage every committee.
         if (!this.CML || !committeeId) {
             return false;
         }
-        if (this.hasOrganizationPermissions(OML.superadmin, OML.can_manage_organisation)) {
+        if (this.hasOrganizationPermissions(OML.superadmin, OML.can_manage_organization)) {
             return true;
         }
         // A user can have a CML for any committee but they could be not present in some of them.
@@ -499,7 +499,7 @@ export class OperatorService {
                 ids: [this.operatorId],
                 viewModelCtor: ViewUser,
                 fieldset: 'shortName',
-                additionalFields: ['organisation_management_level', 'committee_$_management_level', 'committee_ids'],
+                additionalFields: ['organization_management_level', 'committee_$_management_level', 'committee_ids'],
                 follow: [
                     {
                         idField: SpecificStructuredField('group_$_ids', this.activeMeetingId),
@@ -539,7 +539,7 @@ export class OperatorService {
                 ids: [this.operatorId],
                 viewModelCtor: ViewUser,
                 fieldset: 'shortName',
-                additionalFields: ['organisation_management_level', 'committee_$_management_level', 'committee_ids']
+                additionalFields: ['organization_management_level', 'committee_$_management_level', 'committee_ids']
             };
         } else {
             // not logged in and no anonymous. We are done with loading, so we have

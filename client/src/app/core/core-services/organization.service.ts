@@ -16,7 +16,7 @@ export const WEB_HEADER_TOKEN = 'web_header';
 /**
  * The organization_id is always the 1.
  */
-export const ORGANISATION_ID = 1;
+export const ORGANIZATION_ID = 1;
 
 @Injectable({
     providedIn: 'root'
@@ -56,14 +56,14 @@ export class OrganizationService {
             'OrganizationService'
         );
         this.repo
-            .getViewModelObservable(ORGANISATION_ID)
+            .getViewModelObservable(ORGANIZATION_ID)
             .subscribe(organization => this.organizationSubject.next(organization));
     }
 
     private getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewOrganization,
-            ids: [ORGANISATION_ID],
+            ids: [ORGANIZATION_ID],
             follow: [{ idField: 'resource_ids' }],
             fieldset: 'settings'
         };

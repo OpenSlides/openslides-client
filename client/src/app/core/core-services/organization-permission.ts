@@ -5,14 +5,14 @@ export enum CML {
 
 export enum OML {
     superadmin = 'superadmin',
-    can_manage_organisation = 'can_manage_organisation',
+    can_manage_organization = 'can_manage_organization',
     can_manage_users = 'can_manage_users',
     default = 'default'
 }
 
 export const omlNameMapping = {
     superadmin: 3,
-    can_manage_organisation: 2,
+    can_manage_organization: 2,
     can_manage_users: 1,
     default: 0
 };
