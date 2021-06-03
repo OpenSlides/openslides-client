@@ -67,11 +67,7 @@
     </mat-nav-list>
 </mat-expansion-panel>
 <mat-nav-list *ngIf="!isLoggedIn">
-    <a routerLink="/" mat-list-item>
-        <mat-icon class="menu-icon">dashboard</mat-icon>
-        <span>{{ 'Dashboard' | translate }}</span>
-    </a>
-    <a routerLink="/login" mat-list-item>
+    <a (click)="goToLogin()" mat-list-item>
         <mat-icon class="menu-icon">exit_to_app</mat-icon>
         <span class="menu-text">{{ 'Login' | translate }}</span>
     </a>

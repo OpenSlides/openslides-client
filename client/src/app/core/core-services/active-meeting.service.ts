@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { first } from 'rxjs/operators';
 
 import { ActiveMeetingIdService } from './active-meeting-id.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { AutoupdateService, ModelSubscription } from './autoupdate.service';
+import { LifecycleService } from './lifecycle.service';
 import { MeetingRepositoryService } from '../repositories/management/meeting-repository.service';
 import { SimplifiedModelRequest } from './model-request-builder.service';
 
@@ -43,13 +45,21 @@ export class ActiveMeetingService {
     public constructor(
         private activeMeetingIdService: ActiveMeetingIdService,
         private repo: MeetingRepositoryService,
-        private autoupdateService: AutoupdateService
+        private autoupdateService: AutoupdateService,
+        private lifecycle: LifecycleService
     ) {
         this.activeMeetingIdService.meetingIdObservable.subscribe(id => {
             if (id !== undefined) {
                 this.setupModelSubscription(id);
             }
         });
+        this.lifecycle.openslidesBooted.subscribe(() => this.setupModelSubscription(this.meetingId));
+    }
+
+    public async ensureActiveMeetingIsAvailable(): Promise<ViewMeeting> {
+        if (!!this.meetingId) {
+            return this.meetingObservable.pipe(first()).toPromise();
+        }
     }
 
     private async setupModelSubscription(id: number | null): Promise<void> {
@@ -67,9 +77,9 @@ export class ActiveMeetingService {
                 this.getModelRequest(),
                 'ActiveMeetingService'
             );
-
-            this.meetingSubcription = this.repo.getViewModelObservable(id).subscribe(meeting => {
-                if (meeting !== undefined) {
+            // Even inaccessible meetings will be observed so that one is on the login-mask available.
+            this.meetingSubcription = this.repo.getGeneralViewModelObservable().subscribe(meeting => {
+                if (meeting !== undefined && meeting.id === this.meetingId) {
                     this.meetingSubject.next(meeting);
                 }
             });

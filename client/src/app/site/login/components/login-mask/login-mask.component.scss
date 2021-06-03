@@ -32,4 +32,13 @@ mat-form-field {
     padding-top: 50px;
     margin: 0 auto;
     max-width: 400px;
+
+    mat-icon {
+        cursor: pointer;
+    }
+}
+
+.header-name {
+    padding-top: 50px;
+    text-align: center;
 }

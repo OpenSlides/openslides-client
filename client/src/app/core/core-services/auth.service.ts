@@ -66,7 +66,16 @@ export class AuthService {
         this.resumeTokenSubscription();
     }
 
-    public async login(username: string, password: string): Promise<void> {
+    /**
+     * Signs in to OpenSlides. Username and password are not necessary, if a current meeting allows guests.
+     * Then, a meeting-id is required.
+     *
+     * @param username
+     * @param password
+     * @param meetingId Optional. A meeting-id can be given to signs in to a specific meeting.
+     * Required, if anyone signs in as guest.
+     */
+    public async login(username: string, password: string, meetingId?: number): Promise<void> {
         const user = { username, password };
         this.holdBackTokenSubscription();
         try {
@@ -77,7 +86,7 @@ export class AuthService {
                 this.lifecycleService.shutdown();
                 this.lifecycleService.bootup();
                 this.resumeTokenSubscription();
-                this.redirectUser();
+                this.redirectUser(meetingId);
             }
         } catch (e) {
             throw e;
@@ -89,12 +98,13 @@ export class AuthService {
         }
     }
 
-    public redirectUser(): void {
-        let redirect = this.redirectUrl ? this.redirectUrl : '/';
+    public redirectUser(meetingId?: number): void {
+        const baseRoute = meetingId ? `${meetingId}/` : '/';
+        let redirect = this.redirectUrl ? this.redirectUrl : baseRoute;
 
         const excludedUrls = ['login'];
         if (excludedUrls.some(url => redirect.includes(url))) {
-            redirect = '/';
+            redirect = baseRoute;
         }
 
         this.router.navigate([`${redirect}`]);

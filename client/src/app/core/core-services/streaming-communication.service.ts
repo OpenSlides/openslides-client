@@ -24,15 +24,17 @@ export class StreamingCommunicationService {
         private authService: AuthService
     ) {}
 
-    public async connect<T>(streamContainer: StreamContainer<T>): Promise<() => void> {
+    public connect<T>(streamContainer: StreamContainer<T>): () => void {
         streamContainer.retries = 0;
         streamContainer.errorHandler = (type: ErrorType, error: CommunicationError, message: string) =>
             this.handleError(streamContainer, type, error, message);
-        return await this._connect(streamContainer);
+
+        this.streams[streamContainer.id] = streamContainer;
+        (async () => this._connect(streamContainer))();
+        return () => this.close(streamContainer);
     }
 
-    public async _connect<T>(streamContainer: StreamContainer<T>): Promise<() => void> {
-        this.streams[streamContainer.id] = streamContainer;
+    public async _connect<T>(streamContainer: StreamContainer<T>): Promise<void> {
         try {
             await this.httpStreamService.connect(streamContainer);
         } catch (e) {
@@ -40,7 +42,6 @@ export class StreamingCommunicationService {
                 this.handleConnectionError(streamContainer);
             }, 0);
         }
-        return () => this.close(streamContainer);
     }
 
     private async handleConnectionError<T>(streamContainer: StreamContainer<T>): Promise<void> {

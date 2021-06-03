@@ -7,7 +7,6 @@ import { AuthService } from 'app/core/core-services/auth.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { AuthType, UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
 import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
@@ -49,8 +48,7 @@ export class UserMenuComponent extends BaseModelContextComponent implements OnIn
         private overlayService: OverlayService,
         private orgaSettings: OrganisationSettingsService,
         private router: Router,
-        private userRepo: UserRepositoryService,
-        private meetingsSettingsService: MeetingSettingsService
+        private userRepo: UserRepositoryService
     ) {
         super(componentServiceCollector);
     }
@@ -64,11 +62,15 @@ export class UserMenuComponent extends BaseModelContextComponent implements OnIn
         //     samlSettings => (this.samlChangePasswordUrl = samlSettings ? samlSettings.changePasswordUrl : null)
         // );
 
-        this.meetingsSettingsService
+        this.meetingSettingService
             .get('users_allow_self_set_present')
             .subscribe(allowed => (this.allowSelfSetPresent = allowed));
 
         this.onOperatorUpdate(); // initially trigger the update manually to set initial values
+    }
+
+    public goToLogin(): void {
+        this.router.navigate([this.activeMeetingId, 'login']);
     }
 
     private onOperatorUpdate(): void {

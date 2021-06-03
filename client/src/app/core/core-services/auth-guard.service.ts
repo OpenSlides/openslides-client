@@ -44,7 +44,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
         if ((this.operator.isAnonymous && this.activeMeeting.guestsEnabled) || this.operator.isAuthenticated) {
             return this.hasPerms(basePerm);
         } else {
-            this.router.navigate(['login']);
+            this.router.navigate([route.params?.meetingId || '', 'login']);
             return false;
         }
     }

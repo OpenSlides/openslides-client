@@ -30,7 +30,7 @@ export class RouteGuard {
         this.router.events.subscribe(event => {
             if (event instanceof NavigationStart) {
                 const paths = event.url.split('/').filter(path => !!path);
-                if (!!paths[0] && !Number(paths[0]) && !this.excludedRoutes.includes(paths[0])) {
+                if (!!paths[0] && !Number(paths[0]) && !this.excludedRoutes.filter(path => paths[0].startsWith(path))) {
                     console.warn(`Route "${event.url}" is misleading. Please change.`);
                     this.router.navigate([this.activeMeetingId, ...paths]);
                 }

@@ -135,6 +135,11 @@ export class OperatorService {
     private _lastActiveMeetingId = undefined;
     private _lastUserId = UNKOWN_USER_ID;
 
+    /**
+     * Helper to identify if there is already one request fired if an active-meeting is present.
+     */
+    private _lockActiveMeeting = false;
+
     public constructor(
         private authService: AuthService,
         private DS: DataStoreService,
@@ -214,6 +219,7 @@ export class OperatorService {
             }
 
             if (this.isAnonymous && group.id === this.defaultGroupId) {
+                this.groupIds = this.groupIds || [];
                 this.permissions = this.calcPermissions();
                 this.operatorUpdatedEvent.emit();
             } else if (!this.isAnonymous) {
@@ -252,6 +258,7 @@ export class OperatorService {
     }
 
     private setNotReady(): void {
+        this._lockActiveMeeting = false;
         this._ready = false;
 
         this.groupIds = undefined;
@@ -293,51 +300,21 @@ export class OperatorService {
         }
         this._hasOperatorDataSubscriptionInitiated = true;
 
-        let operatorRequest: SimplifiedModelRequest = null;
+        let operatorRequest: SimplifiedModelRequest | null = null;
         if (this.activeMeetingId) {
-            if (this.isAuthenticated) {
-                operatorRequest = {
-                    ids: [this.operatorId],
-                    viewModelCtor: ViewUser,
-                    fieldset: 'shortName',
-                    additionalFields: ['organisation_management_level', 'committee_$_management_level'],
-                    follow: [
-                        {
-                            idField: SpecificStructuredField('group_$_ids', this.activeMeetingId),
-                            fieldset: ['permissions']
-                        }
-                    ]
-                };
-            } else if (this.anonymousEnabled) {
-                operatorRequest = {
-                    ids: [this.activeMeetingId],
-                    viewModelCtor: ViewMeeting,
-                    follow: [
-                        {
-                            idField: 'default_group_id',
-                            fieldset: ['permissions']
-                        }
-                    ],
-                    fieldset: []
-                };
-            } else {
-                // has active meeting without the anonymous enabled *and* not authorized. This is
-                // forbidden and can happen, if someone enters a URL of the meeting.
-                this.router.navigate(['/login']);
+            // Prevent races, too:
+            // Since this will execute multiple times at startup, but we have to wait for
+            // the active meeting, because the operator starts before an active meeting is
+            // present. Therefore, it is necessary to insert a second "lock" to prevent multiple
+            // operator-requests will fire.
+            await this.activeMeetingService.ensureActiveMeetingIsAvailable();
+            if (this._lockActiveMeeting) {
+                return;
             }
+            this._lockActiveMeeting = true;
+            operatorRequest = this.getOperatorRequestWithActiveMeeting();
         } else {
-            if (this.isAuthenticated) {
-                operatorRequest = {
-                    ids: [this.operatorId],
-                    viewModelCtor: ViewUser,
-                    fieldset: 'shortName',
-                    additionalFields: ['organisation_management_level', 'committee_$_management_level']
-                };
-            } else {
-                // not logged in and no anonymous. We are done with loading, so we have
-                // to emit the operator update event
-                this.operatorUpdatedEvent.emit();
-            }
+            operatorRequest = this.getOperatorRequestWithoutActiveMeeting();
         }
 
         if (operatorRequest) {
@@ -455,6 +432,70 @@ export class OperatorService {
         }
         return groupIds.some(id => this.groupIds.includes(id));
     }
+    /**
+     * Function to build an operator-request, if an active-meeting is present.
+     * Requested fields depend on the active-meeting.
+     *
+     * @returns Either a `SimplifiedModelRequest` if staying at the startpage is allowed
+     * (e.g. when signed in or anonymous) or `null` if staying at the startpage is not allowed.
+     * Then a user will be redirected to `/login`.
+     */
+    private getOperatorRequestWithActiveMeeting(): SimplifiedModelRequest | null {
+        let operatorRequest: SimplifiedModelRequest | null = null;
+        if (this.isAuthenticated) {
+            operatorRequest = {
+                ids: [this.operatorId],
+                viewModelCtor: ViewUser,
+                fieldset: 'shortName',
+                additionalFields: ['organisation_management_level', 'committee_$_management_level'],
+                follow: [
+                    {
+                        idField: SpecificStructuredField('group_$_ids', this.activeMeetingId),
+                        fieldset: ['permissions']
+                    }
+                ]
+            };
+        } else if (this.anonymousEnabled) {
+            operatorRequest = {
+                ids: [this.activeMeetingId],
+                viewModelCtor: ViewMeeting,
+                follow: [
+                    {
+                        idField: 'default_group_id',
+                        fieldset: ['permissions']
+                    }
+                ],
+                fieldset: []
+            };
+        } else {
+            // has active meeting without the anonymous enabled *and* not authenticated. This is
+            // forbidden and can happen, if someone enters a URL of the meeting.
+            this.router.navigate([this.activeMeetingId, 'login']);
+        }
+        return operatorRequest;
+    }
+
+    /**
+     * Function to build an operator-request if no active-meeting is present.
+     *
+     * @returns Either a `SimplifiedModelRequest` if a user is signed in
+     * or `null` if a user is not signed in. Then they will be redirected to `/login`.
+     */
+    private getOperatorRequestWithoutActiveMeeting(): SimplifiedModelRequest | null {
+        if (this.isAuthenticated) {
+            return {
+                ids: [this.operatorId],
+                viewModelCtor: ViewUser,
+                fieldset: 'shortName',
+                additionalFields: ['organisation_management_level', 'committee_$_management_level']
+            };
+        } else {
+            // not logged in and no anonymous. We are done with loading, so we have
+            // to emit the operator update event
+            this.operatorUpdatedEvent.emit();
+        }
+        return null;
+    }
 
     /**
      * Checks if guests are enabled. If they are not enabled, then a user has to be navigated
@@ -462,10 +503,15 @@ export class OperatorService {
      * This behaviour prevents a non-redirect on the startpage.
      */
     private navigateOnLogout(): void {
+        // First, check if a user is at any orga-specific route
+        if (!this.router.routerState.snapshot.root.firstChild?.url?.length) {
+            this.router.navigate(['login']);
+            return;
+        }
         if (this.anonymousEnabled) {
-            this.router.navigate(['/']);
+            this.router.navigate([`${this.activeMeetingId || this._lastActiveMeetingId}/`]);
         } else {
-            this.router.navigate(['/login']);
+            this.router.navigate([this.activeMeetingId || this._lastActiveMeetingId, 'login']);
         }
     }
 }

@@ -23,11 +23,8 @@ const LOG = true;
  *
  * Note about some behaviours:
  * - The returned function must be called to close the stream.
- * - The connection attempt can block - internally we are waiting for the first message.
- *   If there is no first message, we'll wait...
- * TODO: not good. we want to cancel connection attempts
  * - The fact that `connect` returns does not mean, that we are connected. Maybe we are offline
- *   since offile-handling is managed by this service
+ *   since offline-handling is managed by this service
  * - When going offline every connection is closed and attempted to reconnect when going
  *   online. This implies that for one connect, multiple requests can be done.
  *   -> Make sure that the streams are build in a way, that it handles reconnects.
@@ -72,7 +69,7 @@ export class CommunicationManagerService {
         this.requestedStreams[container.id] = container;
 
         if (this.isRunning) {
-            await this._connect(container);
+            this._connect(container);
         }
 
         if (LOG) {
@@ -97,8 +94,8 @@ export class CommunicationManagerService {
         return container;
     }
 
-    private async _connect<T>(container: StreamContainerWithCloseFn<T>): Promise<void> {
-        container.closeFn = await this.streamingCommunicationService.connect(container);
+    private _connect<T>(container: StreamContainerWithCloseFn<T>): void {
+        container.closeFn = this.streamingCommunicationService.connect(container);
     }
 
     public startCommunication(): void {
