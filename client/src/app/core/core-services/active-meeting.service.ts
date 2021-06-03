@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { first } from 'rxjs/operators';
 
 import { ActiveMeetingIdService } from './active-meeting-id.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { AutoupdateService, ModelSubscription } from './autoupdate.service';
-import { Deferred } from '../promises/deferred';
 import { LifecycleService } from './lifecycle.service';
 import { MeetingRepositoryService } from '../repositories/management/meeting-repository.service';
 import { SimplifiedModelRequest } from './model-request-builder.service';
@@ -56,16 +56,9 @@ export class ActiveMeetingService {
         this.lifecycle.openslidesBooted.subscribe(() => this.setupModelSubscription(this.meetingId));
     }
 
-    public async ensureActiveMeetingIsAvailable(): Promise<void> {
+    public async ensureActiveMeetingIsAvailable(): Promise<ViewMeeting> {
         if (!!this.meetingId) {
-            const deferred = new Deferred();
-            const subscription = this.meetingObservable.subscribe(meeting => {
-                if (meeting && !deferred.wasResolved) {
-                    deferred.resolve();
-                }
-            });
-            deferred.finally(() => subscription.unsubscribe());
-            return deferred;
+            return this.meetingObservable.pipe(first()).toPromise();
         }
     }
 
@@ -84,6 +77,7 @@ export class ActiveMeetingService {
                 this.getModelRequest(),
                 'ActiveMeetingService'
             );
+            // Even inaccessible meetings will be observed so that one is on the login-mask available.
             this.meetingSubcription = this.repo.getGeneralViewModelObservable().subscribe(meeting => {
                 if (meeting !== undefined && meeting.id === this.meetingId) {
                     this.meetingSubject.next(meeting);
