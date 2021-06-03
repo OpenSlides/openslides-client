@@ -42,11 +42,6 @@ export class ActiveMeetingService {
         return this.meetingSubject.getValue();
     }
 
-    /**
-     * Indicating whether this service is initialized or not.
-     */
-    private isOnStartup = true;
-
     public constructor(
         private activeMeetingIdService: ActiveMeetingIdService,
         private repo: MeetingRepositoryService,
@@ -58,14 +53,7 @@ export class ActiveMeetingService {
                 this.setupModelSubscription(id);
             }
         });
-        this.lifecycle.openslidesBooted.subscribe(() => {
-            // Workaround to not fire if this service is initialized.
-            if (!this.isOnStartup) {
-                this.setupModelSubscription(this.meetingId);
-            } else {
-                this.isOnStartup = false;
-            }
-        });
+        this.lifecycle.openslidesBooted.subscribe(() => this.setupModelSubscription(this.meetingId));
     }
 
     public async ensureActiveMeetingIsAvailable(): Promise<void> {

@@ -134,7 +134,7 @@ export class AuthService {
      */
     public async doWhoAmIRequest(): Promise<boolean> {
         console.log('auth: Do WhoAmI');
-        let online = false;
+        let online;
         try {
             await this.http.post<LoginResponse>(`${environment.authUrlPrefix}/who-am-i/`);
             online = true;
