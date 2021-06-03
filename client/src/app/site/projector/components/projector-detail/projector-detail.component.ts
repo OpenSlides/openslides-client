@@ -225,12 +225,12 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
         this.projectionRepo.delete(projection);
     }
 
-    public projectPreviewItem(projection: ViewProjection): void {
+    public projectPreview(projection: ViewProjection): void {
         this.projectorRepo.projectPreview(projection);
     }
 
     public unprojectCurrent(projection: ViewProjection): void {
-        throw new Error('TODO: unproject current');
+        this.projectorRepo.toggle(projection.getProjectionBuildDescriptor(), [this.projector]);
     }
 
     public isClosProjected(overlay: boolean): boolean {

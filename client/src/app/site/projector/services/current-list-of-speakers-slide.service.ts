@@ -9,7 +9,7 @@ import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descri
 import { ViewProjector } from '../models/view-projector';
 
 /**
- * Handles the curent list of speakers slide. Manages the projection and provides
+ * Handles the current list of speakers slide. Manages the projection and provides
  * function to check, if it is projected. Handles the overlay and slide.
  */
 @Injectable({
@@ -65,6 +65,6 @@ export class CurrentListOfSpeakersSlideService {
         if (!descriptor) {
             return;
         }
-        this.projectorRepo.project(descriptor, [projector]);
+        this.projectorRepo.toggle(descriptor, [projector]);
     }
 }

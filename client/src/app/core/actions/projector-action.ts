@@ -16,6 +16,7 @@ export namespace ProjectorAction {
     export const DELETE = 'projector.delete';
     export const CONTROL_VIEW = 'projector.control_view';
     export const PROJECT = 'projector.project';
+    export const TOGGLE = 'projector.toggle';
     export const NEXT = 'projector.next';
     export const PREVIOUS = 'projector.previous';
     export const ADD_TO_PREVIEW = 'projector.add_to_preview';

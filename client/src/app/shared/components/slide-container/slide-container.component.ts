@@ -56,7 +56,7 @@ export class SlideContainerComponent extends BaseComponent {
             }
 
             if (error) {
-                console.error(error);
+                console.error('slide error', error);
             }
             return;
         }

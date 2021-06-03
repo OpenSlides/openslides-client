@@ -67,7 +67,7 @@ export const allSlides: SlideManifest[] = [
         scrollable: true
     },
     {
-        path: 'motions/motion-block',
+        path: 'motion_block',
         loadChildren: () => import('./motion-block/motion-block-slide.module').then(m => m.MotionBlockSlideModule),
         verboseName: 'Motion block',
         scaleable: true,
