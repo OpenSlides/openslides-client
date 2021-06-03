@@ -14,7 +14,7 @@ import { LoadFontService } from './core/ui-services/load-font.service';
 import { OfflineService } from './core/core-services/offline.service';
 import { OpenSlidesService } from './core/core-services/openslides.service';
 import { OperatorService } from './core/core-services/operator.service';
-import { OrganisationService } from './core/core-services/organisation.service';
+import { OrganizationService } from './core/core-services/organization.service';
 import { OverlayService } from './core/ui-services/overlay.service';
 import { overloadJsFunctions } from './shared/overload-js-functions';
 import { RouteGuard } from './core/core-services/route.guard';

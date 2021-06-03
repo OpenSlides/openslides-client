@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { OrganizationSettingsService } from 'app/core/ui-services/organization-settings.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
 
 /**
@@ -74,7 +74,7 @@ export class PrivacyPolicyContentComponent extends BaseComponent implements OnIn
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        private orgaSettings: OrganisationSettingsService,
+        private orgaSettings: OrganizationSettingsService,
         fb: FormBuilder
     ) {
         super(componentServiceCollector);

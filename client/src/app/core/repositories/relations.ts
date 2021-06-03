@@ -1,7 +1,7 @@
 import { ViewCommittee } from 'app/management/models/view-committee';
 import { ViewMeeting } from 'app/management/models/view-meeting';
-import { ViewOrganisation } from 'app/management/models/view-organisation';
-import { ViewOrganisationTag } from 'app/management/models/view-organisation-tag';
+import { ViewOrganization } from 'app/management/models/view-organization';
+import { ViewOrganizationTag } from 'app/management/models/view-organization-tag';
 import { ViewResource } from 'app/management/models/view-resource';
 import { ViewOption } from 'app/shared/models/poll/view-option';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
@@ -112,24 +112,24 @@ function makeManyStructuredUsers2MRelation<V extends BaseViewModel>(
 //     - The motion<->category relation in in the motion block
 
 export const RELATIONS: Relation[] = [
-    // ########## Organisation
+    // ########## Organization
     ...makeM2O({
-        OViewModel: ViewOrganisation,
+        OViewModel: ViewOrganization,
         MViewModel: ViewCommittee,
         OField: 'committees',
-        MField: 'organisation'
+        MField: 'organization'
     }),
     ...makeM2O({
-        OViewModel: ViewOrganisation,
+        OViewModel: ViewOrganization,
         MViewModel: ViewResource,
         OField: 'resources',
-        MField: 'organisation'
+        MField: 'organization'
     }),
     ...makeM2O({
-        OViewModel: ViewOrganisation,
-        MViewModel: ViewOrganisationTag,
-        OField: 'organisation_tags',
-        MField: 'organisation'
+        OViewModel: ViewOrganization,
+        MViewModel: ViewOrganizationTag,
+        OField: 'organization_tags',
+        MField: 'organization'
     }),
     // ########## User
     ...makeManyStructuredUsers2MRelation({
@@ -256,8 +256,8 @@ export const RELATIONS: Relation[] = [
     }),
     ...makeM2M({
         AViewModel: ViewCommittee,
-        BViewModel: ViewOrganisationTag,
-        AField: 'organisation_tags',
+        BViewModel: ViewOrganizationTag,
+        AField: 'organization_tags',
         BField: 'committees'
     }),
     // ########## Meetings
@@ -465,8 +465,8 @@ export const RELATIONS: Relation[] = [
     }),
     ...makeM2M({
         AViewModel: ViewMeeting,
-        BViewModel: ViewOrganisationTag,
-        AField: 'organisation_tags',
+        BViewModel: ViewOrganizationTag,
+        AField: 'organization_tags',
         BField: 'meetings'
     }),
     ...makeO2O({

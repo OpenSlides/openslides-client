@@ -204,7 +204,7 @@ export class OperatorService {
                     this.permissions = this.calcPermissions();
                 }
 
-                this.OML = user.organisation_management_level || null;
+                this.OML = user.organization_management_level || null;
                 this.CML = getUserCML(user);
                 this.CML = {}; // TODO: this is just a dummy
 
@@ -447,7 +447,7 @@ export class OperatorService {
                 ids: [this.operatorId],
                 viewModelCtor: ViewUser,
                 fieldset: 'shortName',
-                additionalFields: ['organisation_management_level', 'committee_$_management_level'],
+                additionalFields: ['organization_management_level', 'committee_$_management_level'],
                 follow: [
                     {
                         idField: SpecificStructuredField('group_$_ids', this.activeMeetingId),
@@ -487,7 +487,7 @@ export class OperatorService {
                 ids: [this.operatorId],
                 viewModelCtor: ViewUser,
                 fieldset: 'shortName',
-                additionalFields: ['organisation_management_level', 'committee_$_management_level']
+                additionalFields: ['organization_management_level', 'committee_$_management_level']
             };
         } else {
             // not logged in and no anonymous. We are done with loading, so we have

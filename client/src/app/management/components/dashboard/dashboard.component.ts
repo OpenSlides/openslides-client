@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
-import { OrganisationRepositoryService } from 'app/core/repositories/management/organisation-repository.service';
+import { OrganizationRepositoryService } from 'app/core/repositories/management/organization-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ViewMeeting } from 'app/management/models/view-meeting';
-import { ViewOrganisation } from 'app/management/models/view-organisation';
+import { ViewOrganization } from 'app/management/models/view-organization';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
 
@@ -37,7 +37,7 @@ export class DashboardComponent extends BaseModelContextComponent implements OnI
 
     public constructor(
         protected componentServiceCollector: ComponentServiceCollector,
-        private organizationRepo: OrganisationRepositoryService,
+        private organizationRepo: OrganizationRepositoryService,
         private meetingRepo: MeetingRepositoryService,
         private operator: OperatorService
     ) {
@@ -57,7 +57,7 @@ export class DashboardComponent extends BaseModelContextComponent implements OnI
     private loadMeetings(): void {
         this.requestModels(
             {
-                viewModelCtor: ViewOrganisation,
+                viewModelCtor: ViewOrganization,
                 ids: [1],
                 follow: [
                     {

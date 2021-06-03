@@ -57,7 +57,7 @@ export namespace UserAction {
 
         committee_ids: Id[];
         committee_$_management_level: string;
-        organisation_management_level: string;
+        organization_management_level: string;
     }
 
     export interface CreatePayload extends Partial<BaseUserPayload> {

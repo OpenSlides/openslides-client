@@ -8,7 +8,7 @@ import {
 } from 'app/core/core-services/model-request-builder.service';
 import { Id } from 'app/core/definitions/key-types';
 import { ViewCommittee } from 'app/management/models/view-committee';
-import { ViewOrganisation } from 'app/management/models/view-organisation';
+import { ViewOrganization } from 'app/management/models/view-organization';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Committee } from 'app/shared/models/event-management/committee';
 import { BaseRepository } from '../base-repository';
@@ -40,7 +40,7 @@ export class CommitteeRepositoryService
             'member_ids',
             'manager_ids',
             'forward_to_committee_ids',
-            'organisation_tag_ids'
+            'organization_tag_ids'
         ]);
         const editFields: (keyof Committee)[] = titleFields.concat(['default_meeting_id', 'template_meeting_id']);
         return {
@@ -53,7 +53,7 @@ export class CommitteeRepositoryService
     public create(committee: Partial<Committee>): Promise<Identifiable> {
         const payload: CommitteeAction.CreatePayload = {
             name: committee.name,
-            organisation_id: 1,
+            organization_id: 1,
             description: committee.description,
             member_ids: committee.member_ids,
             manager_ids: committee.manager_ids
@@ -105,7 +105,7 @@ export class CommitteeRepositoryService
 
     public getRequestToGetAllModels(): SimplifiedModelRequest {
         return {
-            viewModelCtor: ViewOrganisation,
+            viewModelCtor: ViewOrganization,
             ids: [1],
             follow: [
                 {

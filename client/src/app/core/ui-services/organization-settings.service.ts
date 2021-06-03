@@ -2,29 +2,29 @@ import { Injectable } from '@angular/core';
 
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { OrganisationSetting } from 'app/shared/models/event-management/organisation';
+import { OrganizationSetting } from 'app/shared/models/event-management/organization';
 import { CustomTranslationService } from '../translate/custom-translation.service';
-import { OrganisationService } from '../core-services/organisation.service';
+import { OrganizationService } from '../core-services/organization.service';
 
 /**
  * Handler for setting variables for organsations.
  *
  * @example
  * ```ts
- * this.organisationSettingsService.get('general_event_name').subscribe(value => {
+ * this.organizationSettingsService.get('general_event_name').subscribe(value => {
  *     console.log(value);
  * });
  * ```
  *
  * @example
  * ```ts
- * const value = this.organisationSettingsService.instant('general_event_name');
+ * const value = this.organizationSettingsService.instant('general_event_name');
  * ```
  */
 @Injectable({
     providedIn: 'root'
 })
-export class OrganisationSettingsService {
+export class OrganizationSettingsService {
     /**
      * Stores a subject per key. Values are published, if the DataStore gets an update.
      */
@@ -33,11 +33,11 @@ export class OrganisationSettingsService {
     /**
      * Listen for changes of setting variables.
      */
-    public constructor(private organisation: OrganisationService, private ctService: CustomTranslationService) {
-        organisation.organisationObservable.subscribe(activeOrganisation => {
-            if (activeOrganisation) {
+    public constructor(private organization: OrganizationService, private ctService: CustomTranslationService) {
+        organization.organizationObservable.subscribe(activeOrganization => {
+            if (activeOrganization) {
                 for (const key of Object.keys(this.settingSubjects)) {
-                    this.settingSubjects[key].next(activeOrganisation[key]);
+                    this.settingSubjects[key].next(activeOrganization[key]);
                 }
             }
         });
@@ -52,9 +52,9 @@ export class OrganisationSettingsService {
      *
      * @param key The setting value to get from.
      */
-    public instant<T extends keyof OrganisationSetting>(key: T): OrganisationSetting[T] | null {
-        const organisation = this.organisation.organisation;
-        return organisation ? organisation[key] : null;
+    public instant<T extends keyof OrganizationSetting>(key: T): OrganizationSetting[T] | null {
+        const organization = this.organization.organization;
+        return organization ? organization[key] : null;
     }
 
     /**
@@ -62,7 +62,7 @@ export class OrganisationSettingsService {
      *
      * @param key The setting value to get from.
      */
-    public get<T extends keyof OrganisationSetting>(key: T): Observable<OrganisationSetting[T]> {
+    public get<T extends keyof OrganizationSetting>(key: T): Observable<OrganizationSetting[T]> {
         if (!this.settingSubjects[key]) {
             this.settingSubjects[key] = new BehaviorSubject<any>(this.instant(key));
         }

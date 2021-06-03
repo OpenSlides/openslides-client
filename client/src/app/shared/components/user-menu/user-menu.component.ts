@@ -7,7 +7,7 @@ import { AuthService } from 'app/core/core-services/auth.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { AuthType, UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { OrganisationSettingsService } from 'app/core/ui-services/organisation-settings.service';
+import { OrganizationSettingsService } from 'app/core/ui-services/organization-settings.service';
 import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
@@ -46,7 +46,7 @@ export class UserMenuComponent extends BaseModelContextComponent implements OnIn
         private operator: OperatorService,
         private authService: AuthService,
         private overlayService: OverlayService,
-        private orgaSettings: OrganisationSettingsService,
+        private orgaSettings: OrganizationSettingsService,
         private router: Router,
         private userRepo: UserRepositoryService
     ) {
