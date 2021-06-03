@@ -38,17 +38,9 @@
 >
     <!-- Name column -->
     <div *pblNgridCellDef="'short_name'; row as user; rowContext as rowContext" class="cell-slot fill">
-        <a
-            class="detail-link"
-            [routerLink]="user.id"
-            *ngIf="!isMultiSelect"
-            matTooltip="{{ user.isTemporary ? ('This user is temporary' | translate) : '' }}"
-        ></a>
         <div class="nameCell">
             <div>
-                <os-icon-container icon="error_outline" [showIcon]="user.isTemporary">
-                    {{ user.short_name }}
-                </os-icon-container>
+                {{ user.short_name }}
             </div>
         </div>
     </div>
@@ -56,16 +48,6 @@
     <div *pblNgridCellDef="'info'; row as user">
         <div class="flex-center">
             <os-icon-container
-                *ngIf="user.isTemporary"
-                icon="calendar_today"
-                iconTooltip="{{ 'Present in meeting' | translate }}"
-            >
-                <span *ngFor="let meeting of user.is_present_in_meetings; last as last">
-                    {{ meeting.name }}<span *ngIf="!last">,&nbsp;</span>
-                </span>
-            </os-icon-container>
-            <os-icon-container
-                *ngIf="!user.isTemporary"
                 icon="account_balance"
                 iconTooltip="{{ 'Committees' | translate }}"
                 [showIcon]="!!user.committee_as_member_ids?.length"

@@ -1,8 +1,5 @@
 import { Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-
 import { UserAction } from 'app/core/actions/user-action';
 import {
     DEFAULT_FIELDSET,
@@ -32,10 +29,6 @@ export interface NewUser {
     name: string;
 }
 
-interface CreateTemporaryPayloadWithPresent extends UserAction.CreateTemporaryPayload {
-    is_present: boolean;
-}
-
 /**
  * Unified type name for state fields like `is_active`, `is_physical_person` and `is_present_in_meetings`.
  */
@@ -60,8 +53,6 @@ interface LevelAndNumberInformation {
     number: (meetingId?: Id) => string;
 }
 type FullNameInformation = ShortNameInformation & LevelAndNumberInformation;
-
-type PartialUpdatePayload = Partial<UserAction.UpdatePayload | UserAction.UpdateTemporaryPayload>;
 
 /**
  * Repository service for users
@@ -122,8 +113,7 @@ export class UserRepositoryService
             'default_structure_level',
             { templateField: 'structure_level_$' },
             'default_vote_weight',
-            { templateField: 'vote_weight_$' },
-            'meeting_id'
+            { templateField: 'vote_weight_$' }
         ]);
         const detailFields = listFields.concat(['username', 'about_me', 'comment', 'default_password']);
         const orgaListFields = listFields.concat(['committee_as_manager_ids', 'committee_as_member_ids']);
@@ -139,46 +129,19 @@ export class UserRepositoryService
     }
 
     public create(partialUser: Partial<UserAction.CreatePayload>): Promise<Identifiable> {
-        const username = partialUser.username || partialUser.first_name + partialUser.last_name;
         const payload: UserAction.CreatePayload = {
-            username,
-            ...this.getPartialUserPayload(partialUser)
+            ...this.getBaseUserPayload(partialUser),
+            is_present_in_meeting_ids: partialUser.is_present_in_meeting_ids
         };
         return this.sendActionToBackend(UserAction.CREATE, payload);
     }
 
-    public async update(
-        update: Partial<UserAction.UpdatePayload> | Partial<UserAction.UpdateTemporaryPayload>,
-        user: ViewUser
-    ): Promise<void> {
-        if (user.isTemporary) {
-            return this.updateTemporary(update as UserAction.UpdateTemporaryPayload, user);
-        } else {
-            return this.updateNonTemporary(update as UserAction.UpdatePayload, user);
-        }
-    }
-
-    private updateNonTemporary(update: Partial<UserAction.UpdatePayload>, viewUser: ViewUser): Promise<void> {
-        /**
-         * TODO: backend needs to support changing the default pw
-         * Remove this line when it works
-         */
-        if (update.default_password) {
-            delete update.default_password;
-        }
+    public update(update: Partial<UserAction.UpdatePayload>, viewUser: ViewUser): Promise<void> {
         const payload: UserAction.UpdatePayload = {
             id: viewUser.id,
-            ...this.getPartialUserPayload(update)
+            ...this.getBaseUserPayload(update)
         };
         return this.sendActionToBackend(UserAction.UPDATE, payload);
-    }
-
-    public async delete(user: ViewUser): Promise<void> {
-        if (user.isTemporary) {
-            return this.deleteTemporary(user);
-        } else {
-            return this.deleteNonTemporary(user);
-        }
     }
 
     /**
@@ -187,152 +150,55 @@ export class UserRepositoryService
      *
      * @param patch An update-payload object or a function to generate a payload. The function gets a user as argument.
      * @param users A list of users, who will be updated.
-     *
-     * @returns A promise.
      */
     public async bulkUpdate(
-        patch: PartialUpdatePayload | ((user: ViewUser) => PartialUpdatePayload),
+        patch: UserAction.UpdatePayload | ((user: ViewUser) => UserAction.UpdatePayload),
         users: ViewUser[]
     ): Promise<void> {
-        const temporaryUpdatePayload = [];
-        const realUpdatePayload = [];
-        for (const user of users) {
+        const updatePayload = users.map(user => {
             const update = typeof patch === 'function' ? patch(user) : patch;
-            if (user.isTemporary) {
-                temporaryUpdatePayload.push({
-                    id: user.id,
-                    ...this.getPartialTemporaryUserPayload(update as Partial<UserAction.UpdateTemporaryPayload>)
-                });
-            } else {
-                realUpdatePayload.push({
-                    id: user.id,
-                    ...this.getPartialUserPayload(update)
-                });
-            }
-        }
-        return this.sendActionsToBackend([
-            { action: UserAction.UPDATE_TEMPORARY, data: temporaryUpdatePayload },
-            { action: UserAction.UPDATE, data: realUpdatePayload }
-        ]);
+            return {
+                id: user.id,
+                ...this.getBaseUserPayload(update)
+            };
+        });
+        return this.sendActionsToBackend([{ action: UserAction.UPDATE, data: updatePayload }]);
     }
 
-    public async bulkDelete(users: ViewUser[]): Promise<void> {
-        const temporaryPayload: UserAction.DeleteTemporaryPayload[] = users
-            .filter(user => user.isTemporary)
-            .map(user => ({ id: user.id }));
-        const realPayload: UserAction.DeletePayload[] = users
-            .filter(user => !user.isTemporary)
-            .map(user => ({ id: user.id }));
-        return this.sendActionsToBackend([
-            { action: UserAction.DELETE_TEMPORARY, data: temporaryPayload },
-            { action: UserAction.DELETE, data: realPayload }
-        ]);
-    }
-
-    private deleteNonTemporary(viewUser: ViewUser): Promise<void> {
-        const payload: UserAction.DeletePayload = { id: viewUser.id };
-        return this.sendActionToBackend(UserAction.DELETE, payload);
-    }
-
-    private getUsername(partialUser: Partial<UserAction.CreateTemporaryPayload>): string | null {
-        if (partialUser.username) {
-            return partialUser.username.trim();
-        }
-        const parts = [partialUser.first_name, partialUser.last_name].filter(x => !!x);
-        return parts.join(' ').trim() || null;
-    }
-
-    public createTemporary(partialUser: Partial<CreateTemporaryPayloadWithPresent>): Promise<Identifiable> {
-        const username = this.getUsername(partialUser);
-        if (!username) {
-            this.raiseError(new Error('first name or last name must not be empty.'));
-            return;
-        }
-        const payload: UserAction.CreateTemporaryPayload = {
-            ...this.getPartialTemporaryUserPayload(partialUser),
-
-            // overwrite some attribues from getPartialTemporaryUserPayload
-            meeting_id: this.activeMeetingId,
-            is_present_in_meeting_ids: partialUser.is_present ? [this.activeMeetingId] : [],
-            username
-        };
-        return this.sendActionToBackend(UserAction.CREATE_TEMPORARY, payload);
-    }
-
-    private updateTemporary(update: Partial<UserAction.UpdateTemporaryPayload>, viewUser: ViewUser): Promise<void> {
-        const payload: UserAction.UpdateTemporaryPayload = {
-            id: viewUser.id,
-            ...this.getPartialTemporaryUserPayload(update)
-        };
-        return this.sendActionToBackend(UserAction.UPDATE_TEMPORARY, payload);
-    }
-
-    private getPartialCommonUserPayload(
-        partialUser: Partial<UserAction.CommonUserPayload>
-    ): Partial<UserAction.CommonUserPayload> {
-        return {
-            // Optional:
+    private getBaseUserPayload(partialUser: any): Partial<UserAction.BaseUserPayload> {
+        console.log('TODO: committee management level');
+        let partialPayload: Partial<UserAction.BaseUserPayload> = {
             title: partialUser.title,
             first_name: partialUser.first_name,
             last_name: partialUser.last_name,
+            username: partialUser.username,
             is_active: partialUser.is_active,
             is_physical_person: partialUser.is_physical_person,
+            default_password: partialUser.default_password,
             gender: partialUser.gender,
             email: partialUser.email,
-            vote_weight: toDecimal(partialUser.vote_weight as any),
-            is_present_in_meeting_ids: partialUser.is_present_in_meeting_ids
-        };
-    }
-
-    private getPartialTemporaryUserPayload(
-        partialUser: Partial<UserAction.UpdateTemporaryPayload>
-    ): Partial<UserAction.UpdateTemporaryPayload> {
-        return {
-            // Required:
-            username: partialUser.username,
-            // Optional:
-            ...this.getPartialCommonUserPayload(partialUser),
-            default_password: partialUser.default_password,
-            vote_delegations_from_ids: partialUser.vote_delegations_from_ids,
-            comment: partialUser.comment,
-            about_me: partialUser.about_me,
-            structure_level: partialUser.structure_level,
-            number: partialUser.number,
-            group_ids: partialUser.group_ids
-        };
-    }
-
-    private getPartialUserPayload(partialUser: any): Partial<UserAction.UpdatePayload> {
-        let partialPayload: Partial<UserAction.UpdatePayload> = {
-            username: partialUser.username,
-            ...this.getPartialCommonUserPayload(partialUser),
-            role_id: partialUser.role_id,
-            guest_meeting_ids: partialUser.guest_meeting_ids,
-            committee_as_member_ids: partialUser.committee_as_member_ids,
-            committee_as_manager_ids: partialUser.committee_as_manager_ids,
-            default_password: partialUser.default_password,
             default_structure_level: partialUser.default_structure_level,
             default_number: partialUser.default_number,
-            default_vote_weight: toDecimal(partialUser.default_vote_weight)
+            default_vote_weight: toDecimal(partialUser.default_vote_weight),
+            committee_ids: partialUser.committee_ids,
+            // committee_$_management_level: partialUser.committee_$_management_level,
+            organisation_management_level: partialUser.organisation_management_level
         };
 
         if (this.activeMeetingId) {
             partialPayload = {
                 ...partialPayload,
-                group_$_ids: { [this.activeMeetingId]: partialUser.group_ids },
-                comment_$: { [this.activeMeetingId]: partialUser.comment as string },
                 number_$: { [this.activeMeetingId]: partialUser.number as string },
                 structure_level_$: { [this.activeMeetingId]: partialUser.structure_level as string },
+                vote_weight_$: { [this.activeMeetingId]: toDecimal(partialUser.vote_weight) },
                 about_me_$: { [this.activeMeetingId]: partialUser.about_me as string },
-                vote_delegations_$_from_ids: { [this.activeMeetingId]: partialUser.vote_delegations_from_ids }
+                comment_$: { [this.activeMeetingId]: partialUser.comment as string },
+                vote_delegated_$_to_id: { [this.activeMeetingId]: partialUser.vote_delegated_to_id },
+                vote_delegations_$_from_ids: { [this.activeMeetingId]: partialUser.vote_delegations_from_ids },
+                group_$_ids: { [this.activeMeetingId]: partialUser.group_ids }
             };
         }
         return partialPayload;
-    }
-
-    private deleteTemporary(viewUser: ViewUser): Promise<void> {
-        const payload: UserAction.DeleteTemporaryPayload = { id: viewUser.id };
-        return this.sendActionToBackend(UserAction.DELETE_TEMPORARY, payload);
     }
 
     public getTitle = (viewUser: ViewUser) => {
@@ -453,14 +319,6 @@ export class UserRepositoryService
         return viewModel;
     }
 
-    public async setPassword(user: ViewUser, password: string, setAsDefault: boolean = true): Promise<void> {
-        if (user.isTemporary) {
-            return this.setPasswordTemporary(user, password, setAsDefault);
-        } else {
-            return this.setPasswordNonTemporary(user, password, setAsDefault);
-        }
-    }
-
     /**
      * Updates the password and sets the password without checking for the old one.
      * Also resets the 'default password' to the newly created one.
@@ -469,7 +327,7 @@ export class UserRepositoryService
      * @param password The password to set
      * @param setAsDefault Control, if the default password should be updated. Defaults to `true`.
      */
-    private async setPasswordNonTemporary(user: ViewUser, password: string, setAsDefault?: boolean): Promise<void> {
+    public async setPassword(user: ViewUser, password: string, setAsDefault?: boolean): Promise<void> {
         const payload: UserAction.SetPasswordPayload = {
             id: user.id,
             password,
@@ -478,44 +336,11 @@ export class UserRepositoryService
         return this.sendActionToBackend(UserAction.SET_PASSWORD, payload);
     }
 
-    /**
-     * Updates the password and sets the password without checking for the old one.
-     * Also resets the 'default password' to the newly created one.
-     *
-     * @param user The user to update
-     * @param password The password to set
-     * @param setAsDefault Control, if the default password should be updated. Defaults to `true`.
-     */
-    private async setPasswordTemporary(user: ViewUser, password: string, setAsDefault?: boolean): Promise<void> {
-        this.preventAlterationOnDemoUsers(user);
-        const payload: UserAction.SetPasswordTemporaryPayload = {
-            id: user.id,
-            password,
-            set_as_default: setAsDefault
-        };
-        return this.sendActionToBackend(UserAction.SET_PASSWORD_TEMPORARY, payload);
-    }
-
     public async resetPasswordToDefault(user: ViewUser): Promise<void> {
-        if (user.isTemporary) {
-            return this.resetPasswordToDefaultTemporary(user);
-        } else {
-            return this.resetPasswordToDefaultNonTemporary(user);
-        }
-    }
-
-    private async resetPasswordToDefaultNonTemporary(user: ViewUser): Promise<void> {
         const payload: UserAction.ResetPasswordToDefaultPayload = {
             id: user.id
         };
         return this.sendActionToBackend(UserAction.RESET_PASSWORD_TO_DEFAULT, payload);
-    }
-
-    private async resetPasswordToDefaultTemporary(user: ViewUser): Promise<void> {
-        const payload: UserAction.ResetPasswordToDefaultTemporaryPayload = {
-            id: user.id
-        };
-        return this.sendActionToBackend(UserAction.RESET_PASSWORD_TO_DEFAULT_TEMPORARY, payload);
     }
 
     /**
@@ -534,15 +359,9 @@ export class UserRepositoryService
     }
 
     public async setPresent(user: ViewUser, present: boolean): Promise<void> {
-        if (user.isTemporary) {
-            return this.setPresentTemporary(user, present);
-        } else {
-            return this.setPresentNonTemporary(user, present);
-        }
-    }
-
-    private async setPresentNonTemporary(user: ViewUser, present: boolean): Promise<void> {
-        this.preventAlterationOnDemoUsers(user);
+        throw new Error('TODO');
+        // TODO: there must be a dedicated action for this.
+        /*this.preventAlterationOnDemoUsers(user);
         const currentMeetingIds = user.is_present_in_meeting_ids || [];
         const payload: UserAction.UpdatePayload = {
             id: user.id,
@@ -550,18 +369,7 @@ export class UserRepositoryService
                 ? [...currentMeetingIds, this.activeMeetingId]
                 : user.is_present_in_meeting_ids.filter(id => id !== this.activeMeetingId)
         };
-        this.sendActionToBackend(UserAction.UPDATE, payload);
-    }
-
-    private async setPresentTemporary(user: ViewUser, present: boolean): Promise<void> {
-        this.preventAlterationOnDemoUsers(user);
-        const payload: UserAction.UpdateTemporaryPayload = {
-            id: user.id,
-            is_present_in_meeting_ids: present
-                ? [...user.is_present_in_meeting_ids, this.activeMeetingId]
-                : user.is_present_in_meeting_ids.filter(id => id !== this.activeMeetingId)
-        };
-        this.sendActionToBackend(UserAction.UPDATE_TEMPORARY, payload);
+        this.sendActionToBackend(UserAction.UPDATE, payload);*/
     }
 
     /**
@@ -577,18 +385,6 @@ export class UserRepositoryService
     }
 
     /**
-     * Resets the passwords of all given users to their default ones. The operator will
-     * not be changed (if provided in `users`).
-     *
-     * @param users The users to reset the passwords from
-     */
-    public async bulkResetPasswordsToDefaultTemporary(users: ViewUser[]): Promise<void> {
-        this.preventInDemo();
-        const payload: UserAction.ResetPasswordToDefaultTemporaryPayload[] = users.map(user => ({ id: user.id }));
-        return this.sendBulkActionToBackend(UserAction.RESET_PASSWORD_TO_DEFAULT_TEMPORARY, payload);
-    }
-
-    /**
      * Generates new random passwords for many users. The default password will be set to these. The
      * operator will not be changed (if provided in `users`).
      *
@@ -596,14 +392,8 @@ export class UserRepositoryService
      */
     public async bulkGenerateNewPasswords(users: ViewUser[]): Promise<void> {
         this.preventInDemo();
-        const payload: UserAction.GenerateNewPassword[] = users.map(user => ({ id: user.id }));
+        const payload: UserAction.GenerateNewPasswordPayload[] = users.map(user => ({ id: user.id }));
         return this.sendBulkActionToBackend(UserAction.GENERATE_NEW_PASSWORD, payload);
-    }
-
-    public async bulkGenerateNewPasswordsTemporary(users: ViewUser[]): Promise<void> {
-        this.preventInDemo();
-        const payload: UserAction.GenerateNewPasswordTemporary[] = users.map(user => ({ id: user.id }));
-        return this.sendBulkActionToBackend(UserAction.GENERATE_NEW_PASSWORD_TEMPORARY, payload);
     }
 
     /**
@@ -611,28 +401,27 @@ export class UserRepositoryService
      *
      * @param newEntries
      */
-    public async bulkCreateTemporary(
-        newEntries: Partial<UserAction.CreateTemporaryPayload>[]
-    ): Promise<Identifiable[]> {
-        const data: UserAction.CreateTemporaryPayload[] = newEntries.map(entry => {
-            return {
-                meeting_id: this.activeMeetingIdService.meetingId,
-                username: entry.username,
-                ...this.getPartialTemporaryUserPayload(entry)
-            };
+    public async bulkCreate(newEntries: Partial<UserAction.CreatePayload>[]): Promise<Identifiable[]> {
+        const data: UserAction.CreatePayload[] = newEntries.map(entry => {
+            return this.getBaseUserPayload(entry);
         });
-        return this.sendBulkActionToBackend(UserAction.CREATE_TEMPORARY, data);
+        return this.sendBulkActionToBackend(UserAction.CREATE, data);
+    }
+
+    public delete(viewUser: ViewUser): Promise<void> {
+        const payload: UserAction.DeletePayload = { id: viewUser.id };
+        return this.sendActionToBackend(UserAction.DELETE, payload);
     }
 
     /**
-     * Deletes many users. The operator will not be deleted (if included in `uisers`)
+     * Deletes many users. The operator will not be deleted (if included in `users`)
      *
      * @param users The users to delete
      */
-    public async bulkDeleteTemporary(users: ViewUser[]): Promise<void> {
+    public async bulkDelete(users: ViewUser[]): Promise<void> {
         this.preventInDemo();
         return this.sendBulkActionToBackend(
-            UserAction.DELETE_TEMPORARY,
+            UserAction.DELETE,
             users.map(user => ({ id: user.id }))
         );
     }
@@ -644,10 +433,10 @@ export class UserRepositoryService
      * @param field The boolean field to set
      * @param value The value to set this field to.
      */
-    public async bulkSetStateTemporary(users: ViewUser[], field: UserStateField, value: boolean): Promise<void> {
+    public async bulkSetState(users: ViewUser[], field: UserStateField, value: boolean): Promise<void> {
         this.preventAlterationOnDemoUsers(users);
-        const payload: UserAction.UpdateTemporaryPayload[] = users.map(user => ({ id: user.id, [field]: value }));
-        return this.sendBulkActionToBackend(UserAction.UPDATE_TEMPORARY, payload);
+        const payload: UserAction.UpdatePayload[] = users.map(user => ({ id: user.id, [field]: value }));
+        return this.sendBulkActionToBackend(UserAction.UPDATE, payload);
     }
 
     public bulkAddGroupsToUsers(users: ViewUser[], groupIds: Id[]): Promise<void> {
@@ -792,7 +581,7 @@ export class UserRepositoryService
      */
     public async createFromString(user: string): Promise<NewUser> {
         const newUser = this.parseStringIntoUser(user) as any;
-        const createdUser = await this.createTemporary(newUser);
+        const createdUser = await this.create(newUser);
         return { id: createdUser.id, name: user } as NewUser;
     }
 

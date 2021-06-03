@@ -365,7 +365,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
     public async deleteSelected(): Promise<void> {
         const title = this.translate.instant('Are you sure you want to delete all selected participants?');
         if (await this.promptService.open(title)) {
-            this.repo.bulkDeleteTemporary(this.selectedRows).catch(this.raiseError);
+            this.repo.bulkDelete(this.selectedRows).catch(this.raiseError);
         }
     }
 
@@ -416,7 +416,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         const selectedChoice = await this.choiceService.open(content, null, false, options);
         if (selectedChoice) {
             const value = selectedChoice.action === options[0];
-            this.repo.bulkSetStateTemporary(this.selectedRows, field, value).catch(this.raiseError);
+            this.repo.bulkSetState(this.selectedRows, field, value).catch(this.raiseError);
         }
     }
 
@@ -461,7 +461,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
                 )
             );
         }
-        this.repo.bulkResetPasswordsToDefaultTemporary(this.selectedRows).catch(this.raiseError);
+        this.repo.bulkResetPasswordsToDefault(this.selectedRows).catch(this.raiseError);
     }
 
     /**
@@ -486,7 +486,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
             );
         }
         const rows = this.selectedRows.filter(row => row.user.id !== this.operator.operatorId);
-        this.repo.bulkGenerateNewPasswordsTemporary(rows);
+        this.repo.bulkGenerateNewPasswords(rows);
     }
 
     /**

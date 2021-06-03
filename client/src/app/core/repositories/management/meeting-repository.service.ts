@@ -46,7 +46,6 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             'description',
             'location',
             'url_name',
-            'guest_ids',
             'enable_anonymous',
             'is_template',
             'default_group_id' // needed for adding users

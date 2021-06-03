@@ -30,7 +30,6 @@ export namespace MeetingAction {
         end_time?: number;
         url_name?: string;
         enable_anonymous?: boolean;
-        guest_ids?: Id[];
     }
     export interface CreateFromTemplatePayload {
         committee_id: Id;
@@ -166,7 +165,6 @@ export namespace MeetingAction {
         poll_default_group_ids?: Id[];
 
         present_user_ids?: Id[];
-        guest_ids?: Id[];
         reference_projector_id?: Id;
         // default_projector_$_id: Id; // TODO
     }

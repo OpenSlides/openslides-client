@@ -37,12 +37,8 @@ export class User extends BaseDecimalModel<User> {
     public default_vote_weight: number;
     public is_demo_user: boolean;
 
-    public role_id?: Id; // role/user_ids;
-
     // Meeting and committee
     public is_present_in_meeting_ids: Id[]; // (meeting/present_user_ids)[];
-    public meeting_id?: Id; // meeting/temporary_user_ids;  // Temporary users
-    public guest_meeting_ids: Id[]; // (meeting/guest_ids)[];  // Guests in meetings
     public committee_as_member_ids: Id[]; // (committee/member_ids)[];
     public committee_as_manager_ids: Id[]; // (committee/manager_ids)[];
 
@@ -66,15 +62,15 @@ export class User extends BaseDecimalModel<User> {
     public organisation_management_level: string;
 
     public get isVoteWeightOne(): boolean {
-        return this.default_vote_weight === 1;
+        throw new Error('TODO');
+        // TODO: this is meeting dependend (check for vote_weight_$!) -> must be answered in the view-user
+        // return this.default_vote_weight === 1;
     }
 
     public get isVoteRightDelegated(): boolean {
-        return !!this.vote_delegated_to_id(this.meeting_id);
-    }
-
-    public get isTemporary(): boolean {
-        return !!this.meeting_id;
+        throw new Error('TODO');
+        // TODO: this is meeting dependend -> must be answered in the view-user
+        // return !!this.vote_delegated_to_id(this.meeting_id);
     }
 
     public constructor(input?: Partial<User>) {
