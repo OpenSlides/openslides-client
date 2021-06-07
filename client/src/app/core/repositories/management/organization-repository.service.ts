@@ -31,6 +31,7 @@ export class OrganizationRepositoryService extends BaseRepository<ViewOrganizati
             'login_text',
             'theme',
             'custom_translations',
+            'enable_electronic_voting',
             'reset_password_verbose_errors'
         );
         const detailFieldset: (keyof Organization)[] = coreFieldset.concat('committee_ids', 'organization_tag_ids');
