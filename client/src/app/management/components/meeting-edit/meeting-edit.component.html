@@ -25,11 +25,6 @@
         </mat-form-field>
 
         <mat-form-field>
-            <mat-label>{{ 'Front page title' | translate }}</mat-label>
-            <input matInput formControlName="welcome_title" required />
-        </mat-form-field>
-
-        <mat-form-field>
             <mat-label>{{ 'Description' | translate }}</mat-label>
             <input matInput formControlName="description" />
         </mat-form-field>
@@ -82,26 +77,5 @@
                 </ng-container>
             </os-search-repo-selector>
         </mat-form-field>
-
-        <!-- Permission: OML.superadmin -->
-        <ng-container *osOmlPerms="OML.superadmin">
-            <!-- Jitsi domain -->
-            <mat-form-field>
-                <mat-label>{{ 'Jitsi domain' | translate }}</mat-label>
-                <input matInput formControlName="jitsi_domain" />
-            </mat-form-field>
-            <!-- Jitsi room-name -->
-            <mat-form-field>
-                <mat-label>{{ 'Jitsi room name' | translate }}</mat-label>
-                <input matInput formControlName="jitsi_room_name" />
-            </mat-form-field>
-            <!-- Jitsi room-password -->
-            <mat-form-field>
-                <mat-label>{{ 'Jitsi room password' | translate }}</mat-label>
-                <input matInput formControlName="jitsi_room_password" />
-            </mat-form-field>
-        </ng-container>
-
-        <mat-checkbox formControlName="enable_anonymous">Enable anonymous</mat-checkbox>
     </form>
 </mat-card>
