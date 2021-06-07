@@ -188,20 +188,14 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
 
         this.meetingForm = this.formBuilder.group({
             name: ['', Validators.required],
-            welcome_title: ['', Validators.required],
             // server bug
             // set_as_template: [false],
-            welcome_text: [''],
             description: [''],
             location: [''],
             start_time: [currentDate],
             end_time: [currentDate],
-            enable_anonymous: [false],
             userIds: [[]],
-            organization_tag_ids: [[]],
-            jitsi_domain: [''],
-            jitsi_room_name: [''],
-            jitsi_room_password: ['']
+            organization_tag_ids: [[]]
         });
     }
 
