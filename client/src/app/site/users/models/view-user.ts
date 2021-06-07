@@ -202,8 +202,7 @@ interface IUserRelations {
     is_present_in_meetings: ViewMeeting[];
     meeting?: ViewMeeting;
     guest_meetings: ViewMeeting[];
-    committees_as_member: ViewCommittee[];
-    committees_as_manager: ViewCommittee[];
+    committees: ViewCommittee[];
     groups: UserManyStructuredRelation<ViewGroup>;
     speakers: UserManyStructuredRelation<ViewSpeaker>;
     personal_notes: UserManyStructuredRelation<ViewPersonalNote>;

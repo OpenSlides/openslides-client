@@ -1,5 +1,6 @@
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
+import { CML } from 'app/core/core-services/organization-permission';
 import { Id } from 'app/core/definitions/key-types';
 import { BaseDecimalModel } from '../base/base-decimal-model';
 import { HasProjectionIds } from '../base/has-projectable-ids';
@@ -39,8 +40,7 @@ export class User extends BaseDecimalModel<User> {
 
     // Meeting and committee
     public is_present_in_meeting_ids: Id[]; // (meeting/present_user_ids)[];
-    public committee_as_member_ids: Id[]; // (committee/member_ids)[];
-    public committee_as_manager_ids: Id[]; // (committee/manager_ids)[];
+    public committee_ids: Id[]; // (committee/user_ids)[];
 
     public group_$_ids: string[]; // (group/user_ids)[];
     public speaker_$_ids: string[]; // (speaker/user_id)[];
@@ -60,6 +60,7 @@ export class User extends BaseDecimalModel<User> {
     public current_projector_$_ids: any[];
 
     public organization_management_level: string;
+    public committee_$_management_level: Id[];
 
     public get isVoteWeightOne(): boolean {
         throw new Error('TODO');
@@ -159,6 +160,10 @@ export class User extends BaseDecimalModel<User> {
 
     public vote_delegations_from_ids(meetingId: Id): Id[] {
         return this[`vote_delegations_$${meetingId}_from_ids`] || [];
+    }
+
+    public committee_management_level(committeeId: Id): CML {
+        return this[`committee_$${committeeId}_management_level`];
     }
 
     protected getDecimalFields(): (keyof User)[] {

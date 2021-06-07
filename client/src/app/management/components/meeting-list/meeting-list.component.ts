@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PblColumnDefinition } from '@pebula/ngrid';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
+import { OperatorService } from 'app/core/core-services/operator.service';
+import { CML } from 'app/core/core-services/organization-permission';
 import { CommitteeRepositoryService } from 'app/core/repositories/management/committee-repository.service';
 import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -23,7 +25,7 @@ import { BaseListViewComponent } from 'app/site/base/components/base-list-view.c
     styleUrls: ['./meeting-list.component.scss']
 })
 export class MeetingListComponent extends BaseListViewComponent<ViewOrganization> {
-    private committeeId: number;
+    public readonly CML = CML;
 
     public currentCommittee: ViewCommittee;
 
@@ -46,10 +48,13 @@ export class MeetingListComponent extends BaseListViewComponent<ViewOrganization
         return this.meetingsSubject.asObservable();
     }
 
+    private committeeId: number;
+
     private readonly meetingsSubject = new BehaviorSubject<ViewMeeting[]>([]);
 
     public constructor(
         public meetingRepo: MeetingRepositoryService,
+        public operator: OperatorService,
         private committeeRepo: CommitteeRepositoryService,
         protected componentServiceCollector: ComponentServiceCollector,
         private router: Router,

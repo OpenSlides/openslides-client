@@ -107,6 +107,8 @@ import { UserDetailViewComponent } from './components/user-detail-view/user-deta
 import { SelectionTreeComponent } from './components/selection-tree/selection-tree.component';
 import { ChipComponent } from './components/chip/chip.component';
 import { ChipListComponent } from './components/chip-list/chip-list.component';
+import { OmlPermsDirective } from './directives/oml-perms.directive';
+import { CmlPermsDirective } from './directives/cml-perms.directive';
 
 const declarations = [
     PermsDirective,
@@ -181,7 +183,9 @@ const declarations = [
     UserDetailViewComponent,
     SelectionTreeComponent,
     ChipComponent,
-    ChipListComponent
+    ChipListComponent,
+    CmlPermsDirective,
+    OmlPermsDirective
 ];
 
 const sharedModules = [

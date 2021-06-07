@@ -50,9 +50,9 @@
             <os-icon-container
                 icon="account_balance"
                 iconTooltip="{{ 'Committees' | translate }}"
-                [showIcon]="!!user.committee_as_member_ids?.length"
+                [showIcon]="!!user.committee_ids?.length"
             >
-                <span *ngFor="let committee of user.committees_as_member; last as last">
+                <span *ngFor="let committee of user.committees; last as last">
                     {{ committee.name | translate }}<span *ngIf="!last">,&nbsp;</span>
                 </span>
             </os-icon-container>

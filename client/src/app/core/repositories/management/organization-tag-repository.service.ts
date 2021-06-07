@@ -6,7 +6,7 @@ import {
     Fieldsets,
     SimplifiedModelRequest
 } from 'app/core/core-services/model-request-builder.service';
-import { ORGANISATION_ID } from 'app/core/core-services/organization.service';
+import { ORGANIZATION_ID } from 'app/core/core-services/organization.service';
 import { ViewOrganization } from 'app/management/models/view-organization';
 import { ViewOrganizationTag } from 'app/management/models/view-organization-tag';
 import { Identifiable } from 'app/shared/models/base/identifiable';
@@ -42,7 +42,7 @@ export class OrganizationTagRepositoryService
         const payload: OrganizationTagAction.CreatePayload = {
             name: tag.name,
             color: tag.color,
-            organization_id: ORGANISATION_ID
+            organization_id: ORGANIZATION_ID
         };
         return this.sendActionToBackend(OrganizationTagAction.CREATE, payload);
     }

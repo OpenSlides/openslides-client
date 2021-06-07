@@ -6,6 +6,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { NoActiveMeeting } from './active-meeting-id.service';
 import { ActiveMeetingService } from './active-meeting.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
+import { Committee } from 'app/shared/models/event-management/committee';
 import { Group } from 'app/shared/models/users/group';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { AuthService } from './auth.service';
@@ -16,22 +17,22 @@ import { GroupRepositoryService } from '../repositories/users/group-repository.s
 import { Id } from '../definitions/key-types';
 import { LifecycleService } from './lifecycle.service';
 import { SimplifiedModelRequest, SpecificStructuredField } from './model-request-builder.service';
+import { CML, cmlNameMapping, OML, omlNameMapping } from './organization-permission';
 import { Permission } from './permission';
 import { UserRepositoryService } from '../repositories/users/user-repository.service';
 
 const UNKOWN_USER_ID = -1; // this is an invalid id **and** not equal to 0, null, undefined.
 
 function getUserCML(user: ViewUser): { [id: number]: string } | null {
-    if (!(user as any).committee_$_management_level) {
+    if (!user.committee_$_management_level) {
         return null;
     }
 
-    const CML = {};
-    const templateField = (user as any).committee_$_management_level;
-    for (const replacement of templateField) {
-        CML[+replacement] = (user as any)[`committee_$${replacement}_management_level`];
+    const committeeManagementLevel = {};
+    for (const replacement of user.committee_$_management_level) {
+        committeeManagementLevel[+replacement] = user.committee_management_level(replacement);
     }
-    return CML;
+    return committeeManagementLevel;
 }
 
 /**
@@ -129,6 +130,10 @@ export class OperatorService {
     private get adminGroupId(): number | null {
         const activeMeeting = this.activeMeetingService.meeting;
         return activeMeeting ? activeMeeting.admin_group_id : null;
+    }
+
+    private get currentCommitteeIds(): Id[] {
+        return this.userSubject?.value?.committee_ids || [];
     }
 
     private _hasOperatorDataSubscriptionInitiated = false;
@@ -376,7 +381,7 @@ export class OperatorService {
             return false;
         }
 
-        let result;
+        let result: boolean;
         if (!this.groupIds) {
             result = false;
         } else if (this.isAuthenticated && this.groupIds.includes(this.adminGroupId)) {
@@ -390,6 +395,53 @@ export class OperatorService {
             console.log('has perms', checkPerms, result, this.groupIds, this.isAuthenticated, this.permissions);
         }
         return result;
+    }
+
+    /**
+     * Checks, if the own OML is equals or higher than at least one of the given permissions.
+     *
+     * @param permissionsToCheck The required permissions to check.
+     *
+     * @returns A boolean whether an operator's OML is high enough.
+     */
+    public hasOrganizationPermissions(...permissionsToCheck: OML[]): boolean {
+        return permissionsToCheck.some(permission => (omlNameMapping[this.OML] || 0) >= omlNameMapping[permission]);
+    }
+
+    /**
+     * Checks, if the own CML is equals or higher than at least one of the given permissions.
+     * If an operator has the permission `OML.can_manage_organization` or higher, then it will always return `true`.
+     *
+     * @param committeeId The committee's id to know for which committee the CML is checked.
+     * @param permissionsToCheck The required permissions to check.
+     *
+     * @returns A boolean whether an operator's CML is high enough.
+     */
+    public hasCommitteePermissions(committeeId: Id | undefined, ...permissionsToCheck: CML[]): boolean {
+        // If a user can manage an entire organization, they can also manage every committee.
+        if (!this.CML || !committeeId) {
+            return false;
+        }
+        if (this.hasOrganizationPermissions(OML.superadmin, OML.can_manage_organization)) {
+            return true;
+        }
+        // A user can have a CML for any committee but they could be not present in some of them.
+        if (!this.currentCommitteeIds.includes(committeeId)) {
+            return false;
+        }
+        const currentCommitteePermission = cmlNameMapping[this.CML[committeeId]] || 0;
+        return permissionsToCheck.some(permission => currentCommitteePermission >= cmlNameMapping[permission]);
+    }
+
+    /**
+     * Determines whether the current operator is included in at least one of the committees, which are passed.
+     *
+     * @param committees Several committees to check if the current operator is included in them.
+     *
+     * @returns `true`, if the current operator is included in at least one of the given committees.
+     */
+    public isInCommittees(...committees: Committee[]): boolean {
+        return committees.some(committee => this.currentCommitteeIds.includes(committee.id));
     }
 
     /**
@@ -447,7 +499,7 @@ export class OperatorService {
                 ids: [this.operatorId],
                 viewModelCtor: ViewUser,
                 fieldset: 'shortName',
-                additionalFields: ['organization_management_level', 'committee_$_management_level'],
+                additionalFields: ['organization_management_level', 'committee_$_management_level', 'committee_ids'],
                 follow: [
                     {
                         idField: SpecificStructuredField('group_$_ids', this.activeMeetingId),
@@ -487,7 +539,7 @@ export class OperatorService {
                 ids: [this.operatorId],
                 viewModelCtor: ViewUser,
                 fieldset: 'shortName',
-                additionalFields: ['organization_management_level', 'committee_$_management_level']
+                additionalFields: ['organization_management_level', 'committee_$_management_level', 'committee_ids']
             };
         } else {
             // not logged in and no anonymous. We are done with loading, so we have

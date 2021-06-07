@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 import { OrganizationAction } from 'app/core/actions/organization-action';
+import { OML } from 'app/core/core-services/organization-permission';
 import { OrganizationRepositoryService } from 'app/core/repositories/management/organization-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { Themes } from 'app/core/ui-services/theme.service';
@@ -16,6 +17,8 @@ import { BaseModelContextComponent } from 'app/site/base/components/base-model-c
     styleUrls: ['./orga-settings.component.scss']
 })
 export class OrgaSettingsComponent extends BaseModelContextComponent implements OnInit {
+    public readonly OML = OML;
+
     public pageTitle = _('Settings');
     private currentOrgaSettings: ViewOrganization;
 
@@ -63,7 +66,10 @@ export class OrgaSettingsComponent extends BaseModelContextComponent implements 
                 legal_notice: [this.currentOrgaSettings.legal_notice],
                 privacy_policy: [this.currentOrgaSettings.privacy_policy],
                 login_text: [this.currentOrgaSettings.login_text],
-                theme: [this.currentOrgaSettings.theme]
+                theme: [this.currentOrgaSettings.theme],
+                custom_translations: [this.currentOrgaSettings.custom_translations],
+                enable_electronic_voting: [this.currentOrgaSettings.enable_electronic_voting],
+                reset_password_verbose_errors: [this.currentOrgaSettings.reset_password_verbose_errors]
             });
         } else {
             console.warn('no Organization loaded');

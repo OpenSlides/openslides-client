@@ -237,16 +237,9 @@ export const RELATIONS: Relation[] = [
     ...makeM2M({
         AViewModel: ViewCommittee,
         BViewModel: ViewUser,
-        AField: 'members',
-        BField: 'committees_as_member',
-        BIdField: 'committee_as_member_ids'
-    }),
-    ...makeM2M({
-        AViewModel: ViewCommittee,
-        BViewModel: ViewUser,
-        AField: 'managers',
-        BField: 'committees_as_manager',
-        BIdField: 'committee_as_manager_ids'
+        AField: 'users',
+        BField: 'committees',
+        BIdField: 'committee_ids'
     }),
     ...makeM2M({
         AViewModel: ViewCommittee,

@@ -54,6 +54,21 @@
         </mat-form-field>
 
         <mat-form-field>
+            <mat-label> {{ 'Participants' | translate }}</mat-label>
+            <os-search-value-selector
+                formControlName="userIds"
+                [multiple]="true"
+                placeholder="{{ 'Participants' | translate }}"
+                [inputListValues]="committee?.users"
+            ></os-search-value-selector>
+        </mat-form-field>
+
+        <!-- server bug -->
+        <!-- <mat-checkbox disabled formControlName="set_as_template">Set as template</mat-checkbox> -->
+
+        <!-- Permission: CML.can_manage (implicit or OML.can_manage_organization or higher) -->
+        <!-- Only check for CML.can_manage -> this includes check for OML.can_manage_organization or higher -->
+        <mat-form-field *osCmlPerms="CML.can_manage; committeeId: committee?.id">
             <mat-label>{{ 'Organization tags' | translate }}</mat-label>
             <os-search-repo-selector
                 [repo]="orgaTagRepo"
@@ -68,18 +83,24 @@
             </os-search-repo-selector>
         </mat-form-field>
 
-        <mat-form-field>
-            <mat-label> {{ 'Participants' | translate }}</mat-label>
-            <os-search-value-selector
-                formControlName="userIds"
-                [multiple]="true"
-                placeholder="{{ 'Participants' | translate }}"
-                [inputListValues]="committee?.members"
-            ></os-search-value-selector>
-        </mat-form-field>
-
-        <!-- server bug -->
-        <!-- <mat-checkbox disabled formControlName="set_as_template">Set as template</mat-checkbox> -->
+        <!-- Permission: OML.superadmin -->
+        <ng-container *osOmlPerms="OML.superadmin">
+            <!-- Jitsi domain -->
+            <mat-form-field>
+                <mat-label>{{ 'Jitsi domain' | translate }}</mat-label>
+                <input matInput formControlName="jitsi_domain" />
+            </mat-form-field>
+            <!-- Jitsi room-name -->
+            <mat-form-field>
+                <mat-label>{{ 'Jitsi room name' | translate }}</mat-label>
+                <input matInput formControlName="jitsi_room_name" />
+            </mat-form-field>
+            <!-- Jitsi room-password -->
+            <mat-form-field>
+                <mat-label>{{ 'Jitsi room password' | translate }}</mat-label>
+                <input matInput formControlName="jitsi_room_password" />
+            </mat-form-field>
+        </ng-container>
 
         <mat-checkbox formControlName="enable_anonymous">Enable anonymous</mat-checkbox>
     </form>

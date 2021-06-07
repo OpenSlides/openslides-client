@@ -24,23 +24,13 @@
             <input matInput formControlName="name" />
         </mat-form-field>
 
-        <mat-form-field>
-            <mat-label> {{ 'Committee manager' | translate }}</mat-label>
+        <mat-form-field *osOmlPerms="OML.can_manage_organization">
+            <mat-label> {{ 'Committee users' | translate }}</mat-label>
             <os-search-value-selector
-                formControlName="manager_ids"
+                formControlName="user_ids"
                 [multiple]="true"
-                placeholder="{{ 'Committee manager' | translate }}"
-                [inputListValues]="members"
-            ></os-search-value-selector>
-        </mat-form-field>
-
-        <mat-form-field>
-            <mat-label> {{ 'Committee members' | translate }}</mat-label>
-            <os-search-value-selector
-                formControlName="member_ids"
-                [multiple]="true"
-                placeholder="{{ 'Committee members' | translate }}"
-                [inputListValues]="members"
+                placeholder="{{ 'Committee users' | translate }}"
+                [inputListValues]="organizationMembers"
             ></os-search-value-selector>
         </mat-form-field>
 
@@ -81,16 +71,29 @@
                 ></os-search-value-selector>
             </mat-form-field>
 
-            <mat-form-field>
-                <mat-label>{{ 'Can forward motions to committee' | translate }}</mat-label>
-                <os-search-repo-selector
-                    formControlName="forward_to_committee_ids"
-                    [multiple]="true"
-                    [repo]="committeeRepo"
-                    [pipeFn]="getPipeFilterFn()"
-                    [showChips]="false"
-                ></os-search-repo-selector>
-            </mat-form-field>
+            <ng-container *osOmlPerms="OML.can_manage_users">
+                <mat-form-field>
+                    <mat-label>{{ 'Can forward motions to committee' | translate }}</mat-label>
+                    <os-search-repo-selector
+                        formControlName="forward_to_committee_ids"
+                        [multiple]="true"
+                        [repo]="committeeRepo"
+                        [pipeFn]="getPipeFilterFn()"
+                        [showChips]="false"
+                    ></os-search-repo-selector>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>{{ 'Can receive forwarding from committees' | translate }}</mat-label>
+                    <os-search-repo-selector
+                        formControlName="receive_from_committee_ids"
+                        [multiple]="true"
+                        [repo]="committeeRepo"
+                        [pipeFn]="getPipeFilterFn()"
+                        [showChips]="false"
+                    ></os-search-repo-selector>
+                </mat-form-field>
+            </ng-container>
         </ng-container>
     </form>
 </mat-card>

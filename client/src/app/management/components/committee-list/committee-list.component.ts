@@ -3,8 +3,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { PblColumnDefinition } from '@pebula/ngrid';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
+import { OperatorService } from 'app/core/core-services/operator.service';
+import { CML, OML } from 'app/core/core-services/organization-permission';
 import { CommitteeRepositoryService } from 'app/core/repositories/management/committee-repository.service';
 import { ChoiceService } from 'app/core/ui-services/choice.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -19,7 +23,10 @@ import { BaseListViewComponent } from 'app/site/base/components/base-list-view.c
     styleUrls: ['./committee-list.component.scss']
 })
 export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee> implements OnInit {
-    public tableColumnDefinition: PblColumnDefinition[] = [
+    public readonly CML = CML;
+    public readonly OML = OML;
+
+    public readonly tableColumnDefinition: PblColumnDefinition[] = [
         {
             prop: 'name',
             width: 'auto'
@@ -49,6 +56,7 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         public repo: CommitteeRepositoryService,
+        public operator: OperatorService,
         private router: Router,
         private route: ActivatedRoute,
         private promptService: PromptService,
@@ -115,7 +123,7 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
                     fieldset: 'list',
                     follow: [
                         {
-                            idField: 'manager_ids',
+                            idField: 'user_ids',
                             fieldset: 'shortName'
                         },
                         {

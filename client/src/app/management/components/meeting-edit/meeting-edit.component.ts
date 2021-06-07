@@ -4,12 +4,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 import { MeetingAction } from 'app/core/actions/meeting-action';
-import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
+import { CML, OML } from 'app/core/core-services/organization-permission';
 import { Id } from 'app/core/definitions/key-types';
 import { CommitteeRepositoryService } from 'app/core/repositories/management/committee-repository.service';
 import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
@@ -21,7 +19,6 @@ import { ViewCommittee } from 'app/management/models/view-committee';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
-import { ViewUser } from 'app/site/users/models/view-user';
 
 const AddMeetingLabel = _('New meeting');
 const EditMeetingLabel = _('Edit meeting');
@@ -32,6 +29,9 @@ const EditMeetingLabel = _('Edit meeting');
     styleUrls: ['./meeting-edit.component.scss']
 })
 export class MeetingEditComponent extends BaseModelContextComponent implements OnInit {
+    public readonly CML = CML;
+    public readonly OML = OML;
+
     public addMeetingLabel = AddMeetingLabel;
     public editMeetingLabel = EditMeetingLabel;
 
@@ -93,7 +93,7 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
             // to the committee.
             const addedUsers = userIds.filter(id => !this.editMeeting.user_ids.includes(id));
             const removedUsers = this.editMeeting.user_ids.filter(
-                id => this.committee.member_ids.includes(id) && !userIds.includes(id)
+                id => this.committee.user_ids.includes(id) && !userIds.includes(id)
             );
 
             const payload: MeetingAction.UpdatePayload = this.meetingForm.value;
@@ -168,7 +168,7 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
             {
                 viewModelCtor: ViewCommittee,
                 ids: [this.committeeId],
-                follow: [{ idField: 'member_ids', fieldset: 'shortName' }],
+                follow: [{ idField: 'user_ids', fieldset: 'shortName' }],
                 fieldset: 'list'
             },
             'committee'
@@ -198,8 +198,10 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
             end_time: [currentDate],
             enable_anonymous: [false],
             userIds: [[]],
-            guest_ids: [[]],
-            organization_tag_ids: [[]]
+            organization_tag_ids: [[]],
+            jitsi_domain: [''],
+            jitsi_room_name: [''],
+            jitsi_room_password: ['']
         });
     }
 
