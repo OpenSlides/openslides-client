@@ -32,7 +32,8 @@ export class AgendaCsvExportService {
                 { label: 'Title', map: viewItem => viewItem.getTitle() },
                 {
                     label: 'Text',
-                    map: viewItem => (viewItem.content_object ? viewItem.content_object.getCSVExportText() : '')
+                    map: viewItem =>
+                        viewItem.content_object?.getCSVExportText ? viewItem.content_object.getCSVExportText() : ''
                 },
                 { label: 'Duration', property: 'duration' },
                 { label: 'Comment', property: 'comment' },

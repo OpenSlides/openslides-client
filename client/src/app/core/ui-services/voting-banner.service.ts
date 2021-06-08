@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 
+import { ActiveMeetingService } from '../core-services/active-meeting.service';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
@@ -24,7 +25,8 @@ export class VotingBannerService {
         private banner: BannerService,
         private translate: TranslateService,
         private historyService: HistoryService,
-        private votingService: VotingService
+        private votingService: VotingService,
+        private activeMeeting: ActiveMeetingService
     ) {
         pollRepo.getViewModelListObservable().subscribe(polls => this.checkForVotablePolls(polls));
     }
@@ -44,7 +46,10 @@ export class VotingBannerService {
         const banner =
             pollsToVote.length === 1
                 ? this.createBanner(this.getTextForPoll(pollsToVote[0]), pollsToVote[0].getDetailStateURL())
-                : this.createBanner(`${pollsToVote.length} ${this.translate.instant('open votes')}`, '/polls/');
+                : this.createBanner(
+                      `${pollsToVote.length} ${this.translate.instant('open votes')}`,
+                      `/${this.activeMeeting.meetingId}/polls/`
+                  );
         this.sliceBanner(banner);
     }
 

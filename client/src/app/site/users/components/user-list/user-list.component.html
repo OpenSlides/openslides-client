@@ -202,7 +202,7 @@
             <mat-divider></mat-divider>
 
             <!-- Settings -->
-            <button mat-menu-item routerLink="/settings/participants">
+            <button mat-menu-item [routerLink]="['/', activeMeetingId, 'settings', 'participants']">
                 <mat-icon>settings</mat-icon>
                 <span>{{ 'Settings' | translate }}</span>
             </button>

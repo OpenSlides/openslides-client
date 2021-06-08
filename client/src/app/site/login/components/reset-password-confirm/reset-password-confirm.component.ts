@@ -66,7 +66,7 @@ export class ResetPasswordConfirmComponent extends BaseComponent implements OnIn
                                 duration: 0
                             }
                         );
-                        this.router.navigate(['/login']);
+                        this.router.navigate(['..']);
                     });
                 } else {
                     this.user_id = params.user_id;
@@ -98,7 +98,7 @@ export class ResetPasswordConfirmComponent extends BaseComponent implements OnIn
                     duration: 0
                 }
             );
-            this.router.navigate(['/login']);
+            this.router.navigate(['..']);
         } catch (e) {
             console.log('error', e);
         }

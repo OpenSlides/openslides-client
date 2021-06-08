@@ -92,7 +92,7 @@
             <button
                 mat-menu-item
                 *osPerms="permission.meetingCanSeeHistory"
-                [routerLink]="['/history']"
+                [routerLink]="['/', activeMeetingId, 'history']"
                 [queryParams]="{ element: motion.fqid }"
             >
                 <mat-icon>history</mat-icon>

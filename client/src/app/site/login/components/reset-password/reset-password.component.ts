@@ -64,7 +64,7 @@ export class ResetPasswordComponent extends BaseComponent implements OnInit {
                     duration: 0
                 }
             );
-            this.router.navigate(['/login']);
+            this.router.navigate(['..']);
         } catch (e) {
             this.raiseError(e);
         }

@@ -193,6 +193,10 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
         };
     }
 
+    public createUrl(path: string): string {
+        return `/${this.activeMeetingId}/agenda/${path}`;
+    }
+
     /**
      * Links to the content object.
      *

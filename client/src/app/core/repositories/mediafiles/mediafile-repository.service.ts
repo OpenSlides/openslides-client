@@ -122,13 +122,14 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
     }
 
     public async uploadFile(partialMediafile: Partial<MediafileAction.CreateFilePayload>): Promise<Identifiable> {
+        console.log('uploadFile', partialMediafile);
         const payload: MediafileAction.CreateFilePayload = {
             meeting_id: this.activeMeetingIdService.meetingId,
             file: partialMediafile.file,
             filename: partialMediafile.filename,
             title: partialMediafile.title,
             access_group_ids: partialMediafile.access_group_ids,
-            parent_id: partialMediafile.parent_id
+            parent_id: partialMediafile.parent_id || null
         };
         return this.sendActionToBackend(MediafileAction.CREATE_FILE, payload);
     }

@@ -31,6 +31,11 @@ export class AssignmentPollComponent extends BasePollComponent<ViewAssignment> i
     public set pollId(id: Id) {
         this.initializePoll(id);
     }
+
+    public get pollLink(): string {
+        return `/${this.activeMeetingId}/assignments/polls/${this.poll.id}`;
+    }
+
     public candidatesLabels: string[] = [];
 
     /**

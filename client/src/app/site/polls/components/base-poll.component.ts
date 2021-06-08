@@ -21,13 +21,11 @@ export abstract class BasePollComponent<C extends BaseViewModel = any> extends B
     public stateChangePending = false;
     public chartDataSubject: BehaviorSubject<ChartData> = new BehaviorSubject([]);
 
-    protected _id: Id;
-
     public get poll(): ViewPoll<C> {
         return this._poll;
     }
 
-    protected _poll: ViewPoll<C>;
+    public abstract get pollLink(): string | string[];
 
     public pollStateActions = {
         [PollState.Created]: {
@@ -47,6 +45,9 @@ export abstract class BasePollComponent<C extends BaseViewModel = any> extends B
     public get hideChangeState(): boolean {
         return this._poll.isPublished || (this._poll.isCreated && this._poll.type === PollType.Analog);
     }
+
+    protected _id: Id;
+    protected _poll: ViewPoll<C>;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,

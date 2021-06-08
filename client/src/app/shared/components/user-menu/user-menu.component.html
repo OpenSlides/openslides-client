@@ -25,7 +25,7 @@
             <!-- Show profile -->
             <a
                 [ngClass]="{ active: isOnProfilePage() }"
-                [routerLink]="user ? ['/users/', user.id] : []"
+                [routerLink]="getProfilePageUrl()"
                 (click)="onClickNavEntry()"
                 mat-list-item
             >
@@ -37,7 +37,7 @@
                 <a
                     [ngClass]="{ active: isOnChangePasswordPage() }"
                     *osPerms="permission.usersCanChangeOwnPassword"
-                    routerLink="/users/password"
+                    [routerLink]="getChangePasswordPageUrl()"
                     (click)="onClickNavEntry()"
                     mat-list-item
                 >

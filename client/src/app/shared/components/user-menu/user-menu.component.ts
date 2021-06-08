@@ -105,17 +105,23 @@ export class UserMenuComponent extends BaseModelContextComponent implements OnIn
         });
     }
 
+    public getProfilePageUrl(): string {
+        return `/${this.activeMeetingId}/users/${this.user.id}`;
+    }
+
     public isOnProfilePage(): boolean {
         if (!this.user) {
             return false;
         }
-        const ownProfilePageUrl = `/users/${this.user.id}`;
-        return ownProfilePageUrl === this.router.url;
+        return this.getProfilePageUrl() === this.router.url;
+    }
+
+    public getChangePasswordPageUrl(): string {
+        return `/${this.activeMeetingId}/users/password`;
     }
 
     public isOnChangePasswordPage(): boolean {
-        const changePasswordPageUrl = '/users/password';
-        return changePasswordPageUrl === this.router.url;
+        return this.getChangePasswordPageUrl() === this.router.url;
     }
 
     /**

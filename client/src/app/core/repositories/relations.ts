@@ -788,7 +788,7 @@ export const RELATIONS: Relation[] = [
         viewModel: ViewMediafile,
         possibleViewModels: [ViewTopic, ViewMotion, ViewAssignment],
         viewModelField: 'attachment_ids',
-        possibleViewModelsField: 'attachment_ids'
+        possibleViewModelsField: 'attachments'
     }),
     ...makeM2O({
         MViewModel: ViewMediafile,

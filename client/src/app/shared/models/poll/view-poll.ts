@@ -94,7 +94,7 @@ export class ViewPoll<C extends BaseViewModel = any> extends BaseProjectableView
     public getDetailStateURL(): string {
         if (this.content_object_id) {
             const routeFragments = this.content_object_id.split('/');
-            return `/${routeFragments[0]}s/${routeFragments[1]}`;
+            return `/${this.getActiveMeetingId()}/${routeFragments[0]}s/${routeFragments[1]}`;
         } else {
             return '';
         }

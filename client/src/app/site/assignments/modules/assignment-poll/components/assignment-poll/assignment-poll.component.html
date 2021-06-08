@@ -3,7 +3,7 @@
         <div>
             <!-- Title -->
             <mat-card-title>
-                <a routerLink="/assignments/polls/{{ poll.id }}">
+                <a [routerLink]="pollLink">
                     {{ poll.title }}
                 </a>
             </mat-card-title>
@@ -71,7 +71,7 @@
 
         <!-- Chart / Table -->
         <div *ngIf="poll.stateHasVotes" class="poll-result-wrapper">
-            <os-assignment-poll-detail-content routerLink="/assignments/polls/{{ poll.id }}" [poll]="poll">
+            <os-assignment-poll-detail-content [routerLink]="pollLink" [poll]="poll">
             </os-assignment-poll-detail-content>
         </div>
 

@@ -54,7 +54,7 @@ export class ViewListOfSpeakers extends BaseProjectableViewModel<ListOfSpeakers>
     }
 
     public get listOfSpeakersUrl(): string {
-        return `/agenda/speakers/${this.id}`;
+        return `/${this.getActiveMeetingId()}/agenda/speakers/${this.id}`;
     }
 
     public getProjectiondefault(): Projectiondefault {

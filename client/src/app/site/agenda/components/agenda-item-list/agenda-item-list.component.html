@@ -129,13 +129,13 @@
         <os-projector-button [object]="itemListSlide" [menuItem]="true"></os-projector-button>
 
         <!-- Current list of speakers -->
-        <button mat-menu-item *osPerms="permission.listOfSpeakersCanSee" routerLink="speakers">
+        <button mat-menu-item *osPerms="permission.listOfSpeakersCanSee" [routerLink]="createUrl('speakers')">
             <mat-icon>mic</mat-icon>
             <span>{{ 'Current list of speakers' | translate }}</span>
         </button>
 
         <!-- Tags -->
-        <button mat-menu-item routerLink="/tags" *osPerms="permission.tagsCanManage">
+        <button mat-menu-item [routerLink]="['/', activeMeetingId, 'tags']" *osPerms="permission.tagsCanManage">
             <mat-icon>local_offer</mat-icon>
             <span>{{ 'Tags' | translate }}</span>
         </button>
@@ -153,7 +153,7 @@
             <span>{{ 'Export as PDF' | translate }}</span>
         </button>
         <!-- Import -->
-        <button mat-menu-item *osPerms="permission.agendaItemCanManage" routerLink="import">
+        <button mat-menu-item *osPerms="permission.agendaItemCanManage" [routerLink]="createUrl('import')">
             <mat-icon>cloud_upload</mat-icon>
             <span>{{ 'Import' | translate }}</span>
         </button>
@@ -167,7 +167,7 @@
         <div *osPerms="permission.meetingCanManageSettings">
             <mat-divider></mat-divider>
             <!-- Settings -->
-            <button mat-menu-item routerLink="/settings/agenda">
+            <button mat-menu-item [routerLink]="['/', activeMeetingId, 'settings', 'agenda']">
                 <mat-icon>settings</mat-icon>
                 <span>{{ 'Settings' | translate }}</span>
             </button>

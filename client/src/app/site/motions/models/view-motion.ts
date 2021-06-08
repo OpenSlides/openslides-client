@@ -266,7 +266,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     }
 
     public getDetailStateURL(): string {
-        return `/motions/${this.id}`;
+        return `/${this.getActiveMeetingId()}/motions/${this.id}`;
     }
 
     /**
