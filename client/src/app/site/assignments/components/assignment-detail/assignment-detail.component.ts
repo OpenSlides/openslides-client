@@ -491,10 +491,6 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
      * Triggers an update of the sorting.
      */
     public async onSortingChange(candidates: ViewAssignmentCandidate[]): Promise<void> {
-        console.log(
-            candidates,
-            candidates.map(x => [x.id, x.collection])
-        );
         await this.assignmentCandidateRepo.sort(this.assignment, candidates);
     }
 
