@@ -409,6 +409,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
                         GET_POSSIBLE_RECOMMENDATIONS
                     ]
                 },
+                'attachment_ids',
                 SPEAKER_BUTTON_FOLLOW
             ]
         });

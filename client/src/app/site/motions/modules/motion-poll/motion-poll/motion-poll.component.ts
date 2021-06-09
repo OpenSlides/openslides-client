@@ -29,7 +29,7 @@ export class MotionPollComponent extends BasePollComponent {
     }
 
     public get pollLink(): string {
-        return `/motions/polls/${this.poll.id}`;
+        return `/${this.activeMeetingId}/motions/polls/${this.poll.id}`;
     }
 
     public get showPoll(): boolean {

@@ -162,7 +162,7 @@ export class TopicDetailComponent extends BaseModelContextComponent {
         } else {
             // load existing topic
             this.route.params.subscribe(params => {
-                this.loadTopic(Number(params.id));
+                this.loadTopicById(Number(params.id));
             });
         }
     }
@@ -172,11 +172,11 @@ export class TopicDetailComponent extends BaseModelContextComponent {
      *
      * @param id the id of the required topic
      */
-    public loadTopic(id: number): void {
+    public loadTopicById(id: number): void {
         this.requestModels({
             viewModelCtor: ViewTopic,
             ids: [id],
-            follow: [SPEAKER_BUTTON_FOLLOW]
+            follow: [SPEAKER_BUTTON_FOLLOW, { idField: 'attachment_ids' }, 'tag_ids']
         });
 
         this.repo.getViewModelObservable(id).subscribe(newViewTopic => {

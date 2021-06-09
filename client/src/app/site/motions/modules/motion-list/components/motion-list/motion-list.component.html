@@ -292,7 +292,7 @@
             </button>
 
             <!-- Tags -->
-            <button mat-menu-item routerLink="/tags" *osPerms="permission.tagsCanManage">
+            <button mat-menu-item [routerLink]="['/', activeMeetingId, 'tags']" *osPerms="permission.tagsCanManage">
                 <mat-icon>local_offer</mat-icon>
                 <span>{{ 'Tags' | translate }}</span>
             </button>
@@ -318,7 +318,7 @@
             <mat-divider></mat-divider>
 
             <!-- Settings -->
-            <button mat-menu-item routerLink="/settings/motions">
+            <button mat-menu-item [routerLink]="['/', activeMeetingId, 'settings', 'motions']">
                 <mat-icon>settings</mat-icon>
                 <span>{{ 'Settings' | translate }}</span>
             </button>

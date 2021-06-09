@@ -30,7 +30,7 @@ export class ViewTag extends BaseViewModel<Tag> implements Searchable {
     }
 
     public getDetailStateURL(): string {
-        return `/tags`;
+        return `${this.getActiveMeetingId()}/tags`;
     }
 }
 interface ITagRelations {

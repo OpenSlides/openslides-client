@@ -290,14 +290,12 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
             this.directorySubscription = this.repo.getViewModelObservable(directoryId).subscribe(newDirectory => {
                 this.directory = newDirectory;
                 if (newDirectory) {
-                    console.log('has newDirectory: ');
                     this.directoryChain = newDirectory.getDirectoryChain();
                     // Update the URL.
                     this.router.navigate([this.activeMeetingId, 'mediafiles', newDirectory.id]);
                 } else {
-                    console.log('directoryId No newDirectory');
                     this.directoryChain = [];
-                    this.router.navigate(['mediafiles']);
+                    this.router.navigate([this.activeMeetingId, 'mediafiles']);
                 }
             });
         } else {
@@ -308,8 +306,7 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
     }
 
     public onMainEvent(): void {
-        const path = 'mediafiles/upload/' + (this.directory ? this.directory.id : '');
-        this.router.navigate([this.activeMeetingId, 'mediafiles', 'upload', this.directory ? this.directory.id : '']);
+        this.router.navigate(['/', this.activeMeetingId, 'mediafiles', 'upload', this.directory?.id || '']);
     }
 
     /**
@@ -348,6 +345,9 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
         const content = file.getTitle();
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(file);
+            if (file.is_directory) {
+                this.changeDirectory(file.parent_id);
+            }
         }
     }
 

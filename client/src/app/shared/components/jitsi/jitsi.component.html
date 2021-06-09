@@ -61,9 +61,7 @@
                     matTooltip="{{ 'Exit live conference and continue livestream' | translate }}"
                     *ngIf="videoStreamUrl && canSeeLiveStream && !isJitsiDialogOpen"
                 >
-                    <mat-icon color="warn">
-                        meeting_room
-                    </mat-icon>
+                    <mat-icon color="warn"> meeting_room </mat-icon>
                 </button>
 
                 <!-- mute/unmute button -->
@@ -90,7 +88,11 @@
                     (click)="enterConversation()"
                     matTooltip="{{ 'Enter live conference' | translate }}"
                 >
-                    <mat-icon color="primary" [@fadeInOut]="isEnterMeetingRoomVisible" (@fadeInOut.done)="triggerMeetingRoomButtonAnimation()">
+                    <mat-icon
+                        color="primary"
+                        [@fadeInOut]="isEnterMeetingRoomVisible"
+                        (@fadeInOut.done)="triggerMeetingRoomButtonAnimation()"
+                    >
                         meeting_room
                     </mat-icon>
                 </button>
@@ -101,11 +103,9 @@
                     mat-icon-button
                     matTooltip="{{ 'Add yourself to the current list of speakers to join the conference' | translate }}"
                     *ngIf="enableJitsi && !isAccessPermitted"
-                    [routerLink]="['/agenda/speakers']"
+                    [routerLink]="['/', activeMeetingId, 'agenda', 'speakers']"
                 >
-                    <mat-icon>
-                        no_meeting_room
-                    </mat-icon>
+                    <mat-icon> no_meeting_room </mat-icon>
                 </a>
             </ng-container>
         </span>

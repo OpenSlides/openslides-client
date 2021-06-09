@@ -230,7 +230,7 @@
                 <h3>{{ 'Attachments' | translate }}<mat-icon>attach_file</mat-icon></h3>
                 <mat-list dense>
                     <mat-list-item *ngFor="let file of motion?.attachments">
-                        <a [routerLink]="" (click)="onClickAttachment(file)">{{ file.title }}</a>
+                        <a [routerLink]="file.url" target="_blank">{{ file.title }}</a>
                     </mat-list-item>
                 </mat-list>
             </div>

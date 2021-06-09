@@ -126,7 +126,7 @@ export class MediaUploadContentComponent extends BaseModelContextComponent imple
             // undefined == none selection.
             if (formResult.directoryId || formResult.directoryId === undefined) {
                 this.directoryId = formResult.directoryId || null;
-                let url = '/mediafiles/upload';
+                let url = `/${this.activeMeetingId}/mediafiles/upload`;
                 if (this.directoryId) {
                     url += `/${this.directoryId}`;
                 }

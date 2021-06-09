@@ -85,6 +85,10 @@ export abstract class BaseComponent implements OnDestroy {
         }
     };
 
+    public get activeMeetingId(): Id {
+        return this.componentServiceCollector.activeMeetingId.meetingId;
+    }
+
     protected get titleService(): Title {
         return this.componentServiceCollector.titleService;
     }
@@ -103,10 +107,6 @@ export abstract class BaseComponent implements OnDestroy {
 
     protected get modelRequestService(): ModelRequestService {
         return this.componentServiceCollector.modelRequestService;
-    }
-
-    protected get activeMeetingId(): Id {
-        return this.componentServiceCollector.activeMeetingId.meetingId;
     }
 
     public constructor(protected componentServiceCollector: ComponentServiceCollector) {

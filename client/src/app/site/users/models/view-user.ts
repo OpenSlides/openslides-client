@@ -166,6 +166,14 @@ export class ViewUser extends BaseProjectableViewModel<User> implements Searchab
     public about_me(meetingId?: Id): string {
         return this.user.about_me(meetingId || this.getEnsuredActiveMeetingId());
     }
+
+    public get isVoteWeightOne(): boolean {
+        return this.default_vote_weight === 1;
+    }
+
+    public get isVoteRightDelegated(): boolean {
+        return !!this.vote_delegated_to_id(this.getEnsuredActiveMeetingId());
+    }
     // ### block end.
 
     /**
@@ -186,7 +194,7 @@ export class ViewUser extends BaseProjectableViewModel<User> implements Searchab
     }
 
     public getDetailStateURL(): string {
-        return `/users/${this.id}`;
+        return `/${this.getActiveMeetingId()}/users/${this.id}`;
     }
 
     public getProjectiondefault(): Projectiondefault {

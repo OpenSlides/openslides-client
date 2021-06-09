@@ -59,7 +59,7 @@ export class TopicRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCon
     public getFieldsets(): Fieldsets<Topic> {
         const titleFields: (keyof Topic)[] = ['title'];
         return {
-            [DEFAULT_FIELDSET]: titleFields.concat(['text']),
+            [DEFAULT_FIELDSET]: titleFields.concat(['text', 'attachment_ids', 'tag_ids']),
             list: titleFields,
             title: titleFields
         };

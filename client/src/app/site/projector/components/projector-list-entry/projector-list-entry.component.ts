@@ -95,7 +95,7 @@ export class ProjectorListEntryComponent extends BaseComponent implements OnInit
      */
     public getDetailLink(): string {
         if (this.operator.hasPerms(Permission.projectorCanManage)) {
-            return `/projectors/detail/${this.projector.id}`;
+            return `/${this.activeMeetingId}/projectors/detail/${this.projector.id}`;
         } else {
             return `/projector/${this.projector.id}`;
         }

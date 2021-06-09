@@ -90,10 +90,6 @@ export class PollCollectionComponent extends BaseComponent implements OnInit {
         return poll.id;
     }
 
-    public getPollDetailLink(poll: ViewPoll): string {
-        return poll.getDetailStateURL();
-    }
-
     public getPollVoteTitle(poll: ViewPoll): string {
         const contentObject = poll.getContentObject();
         const listTitle = contentObject.getListTitle();

@@ -97,7 +97,7 @@
         <div *osPerms="permission.meetingCanManageSettings">
             <mat-divider></mat-divider>
             <!-- Settings -->
-            <button mat-menu-item routerLink="/settings/elections">
+            <button mat-menu-item [routerLink]="['/', activeMeetingId, 'settings', 'elections']">
                 <mat-icon>settings</mat-icon>
                 <span>{{ 'Settings' | translate }}</span>
             </button>
@@ -114,11 +114,7 @@
             <span>{{ 'Deselect all' | translate }}</span>
         </button>
         <mat-divider></mat-divider>
-        <button
-            mat-menu-item
-            [disabled]="!selectedRows.length"
-            (click)="downloadAssignmentButton(selectedRows)"
-        >
+        <button mat-menu-item [disabled]="!selectedRows.length" (click)="downloadAssignmentButton(selectedRows)">
             <mat-icon>archive</mat-icon>
             <span>{{ 'Export selected elections' | translate }}</span>
         </button>

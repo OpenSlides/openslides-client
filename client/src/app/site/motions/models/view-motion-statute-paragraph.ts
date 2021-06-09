@@ -25,7 +25,7 @@ export class ViewMotionStatuteParagraph extends BaseViewModel<MotionStatuteParag
     }
 
     public getDetailStateURL(): string {
-        return '/motions/statute-paragraphs';
+        return `/${this.getActiveMeetingId()}/motions/statute-paragraphs`;
     }
 }
 interface IMotionStatuteParagraphRelations {
