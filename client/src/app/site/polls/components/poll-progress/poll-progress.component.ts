@@ -34,6 +34,9 @@ export class PollProgressComponent extends BaseComponent implements OnInit {
         return this.operator.hasPerms(this.permission.listOfSpeakersCanManage);
     }
 
+    /**
+     * TODO: some non abstract poll function service is required.
+     */
     private get canManagePoll(): boolean {
         if (this.poll.pollClassType === PollClassType.Motion) {
             return this.operator.hasPerms(this.permission.motionsCanManagePolls);
