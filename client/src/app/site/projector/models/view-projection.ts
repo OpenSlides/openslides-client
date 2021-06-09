@@ -15,6 +15,9 @@ export class ViewProjection extends BaseViewModel<Projection> {
     }
 
     public isEqualToDescriptor(descriptor: ProjectionBuildDescriptor): boolean {
+        if (!this || !descriptor) {
+            return false;
+        }
         return (
             this.content_object_id === descriptor.content_object_id &&
             !!this.stable === !!descriptor.stable &&
