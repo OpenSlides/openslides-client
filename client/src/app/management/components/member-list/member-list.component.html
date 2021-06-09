@@ -38,6 +38,7 @@
 >
     <!-- Name column -->
     <div *pblNgridCellDef="'short_name'; row as user; rowContext as rowContext" class="cell-slot fill">
+        <a class="detail-link" [routerLink]="user.id" *ngIf="!isMultiSelect"></a>
         <div class="nameCell">
             <div>
                 {{ user.short_name }}

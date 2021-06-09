@@ -66,11 +66,15 @@
             </div>
         </div>
     </div>
-    <div *pblNgridCellDef="'actions'; row as orgaTag" class="cell-slot fill">
-        <div class="button-group">
-            <button mat-stroked-button (click)="editOrganizationTag(orgaTag)">{{ 'Edit' | translate }}</button>
-            <button mat-stroked-button (click)="deleteOrganizationTags(orgaTag)">{{ 'Delete' | translate }}</button>
-        </div>
+    <div *pblNgridCellDef="'edit'; row as orgaTag" class="cell-slot fill">
+        <button mat-icon-button (click)="editOrganizationTag(orgaTag)">
+            <mat-icon>edit</mat-icon>
+        </button>
+    </div>
+    <div *pblNgridCellDef="'delete'; row as orgaTag" class="cell-slot fill">
+        <button mat-icon-button color="warn" (click)="deleteOrganizationTags(orgaTag)">
+            <mat-icon>delete</mat-icon>
+        </button>
     </div>
 </os-list-view-table>
 

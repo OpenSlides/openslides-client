@@ -59,6 +59,7 @@
 <ng-template #changePasswordView>
     <h2>{{ 'Change password' | translate }}</h2>
     <os-change-password
+        #changePasswordComponent
         (validEvent)="isUserPasswordValid = $event"
         (changeEvent)="userPasswordForm = $event"
     ></os-change-password>
