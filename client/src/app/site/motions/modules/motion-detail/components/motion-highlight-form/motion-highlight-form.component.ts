@@ -1,27 +1,25 @@
-import { Component, ElementRef, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 
 import { Subscription } from 'rxjs';
 
-import { MotionChangeRecommendationRepositoryService } from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
-import { MotionLineNumberingService } from 'app/core/repositories/motions/motion-line-numbering.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { BaseComponent } from 'app/site/base/components/base.component';
-import { ViewMotion } from 'app/site/motions/models/view-motion';
+import { LinenumberingService } from 'app/core/ui-services/linenumbering.service';
+import { PromptService } from 'app/core/ui-services/prompt.service';
+import { ViewUnifiedChange } from 'app/shared/models/motions/view-unified-change';
 import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
 import { ChangeRecoMode, LineNumberingMode, verboseChangeRecoMode } from 'app/site/motions/motions.constants';
-import { MotionViewService } from '../../../services/motion-view.service';
+import { BaseMotionDetailChildComponent } from '../base/base-motion-detail-child.component';
+import { MotionServiceCollectorService } from '../../../services/motion-service-collector.service';
+import { ModifiedFinalVersionAction } from '../../../services/motion-view.service';
 
 @Component({
     selector: 'os-motion-highlight-form',
     templateUrl: './motion-highlight-form.component.html',
     styleUrls: ['./motion-highlight-form.component.scss']
 })
-export class MotionHighlightFormComponent extends BaseComponent implements OnInit {
-    @Input()
-    public motion: ViewMotion;
-
+export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent implements OnInit {
     public readonly LineNumberingMode = LineNumberingMode;
     public readonly ChangeRecoMode = ChangeRecoMode;
 
@@ -67,29 +65,7 @@ export class MotionHighlightFormComponent extends BaseComponent implements OnIni
 
     public verboseChangeRecoMode = verboseChangeRecoMode;
 
-    // private finalEditMode = false;
-
-    // /**
-    //  * check if the 'final version edit mode' is active
-    //  *
-    //  * @returns true if active
-    //  */
-    // public get isFinalEdit(): boolean {
-    //     return this.finalEditMode;
-    // }
-
-    // /**
-    //  * Helper to check the current state of the final version edit
-    //  *
-    //  * @returns true if the local edit of the modified_final_version differs
-    //  * from the submitted version
-    //  */
-    // public get finalVersionEdited(): boolean {
-    //     return (
-    //         this.crMode === ChangeRecoMode.ModifiedFinal
-    //         // && this.contentForm.get('modified_final_version').value !== this.motion.modified_final_version
-    //     );
-    // }
+    public isEditingFinalVersion = false;
 
     public get showCreateFinalVersionButton(): boolean {
         const isModifiedFinalVersion = this.isExisting && this.motion?.modified_final_version;
@@ -115,20 +91,17 @@ export class MotionHighlightFormComponent extends BaseComponent implements OnIni
         return !!Object.keys(this.motion)?.length ?? false;
     }
 
-    private lineLength = 0;
-
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        motionServiceCollector: MotionServiceCollectorService,
         private el: ElementRef,
-        private motionLineNumbering: MotionLineNumberingService,
-        private changeRecoRepo: MotionChangeRecommendationRepositoryService,
-        private viewService: MotionViewService
+        private linenumberingService: LinenumberingService,
+        private promptService: PromptService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, motionServiceCollector);
     }
 
     public ngOnInit(): void {
-        this.subscriptions.push(...this.subscribeToSettings());
         const self = this;
         this.highlightedLineMatcher = new (class implements ErrorStateMatcher {
             public isErrorState(control: FormControl): boolean {
@@ -174,87 +147,73 @@ export class MotionHighlightFormComponent extends BaseComponent implements OnIni
         }, 1);
     }
 
-    // /**
-    //  * Activates the 'edit final version' mode
-    //  */
-    // public editModifiedFinal(): void {
-    //     this.finalEditMode = true;
-    // }
+    /**
+     * Sets the modified final version to the final version.
+     */
+    public async createModifiedFinalVersion(): Promise<void> {
+        if (this.motion.isParagraphBasedAmendment()) {
+            throw new Error('Cannot create a final version of an amendment.');
+        }
+        // Get the final version and remove line numbers
+        const changes: ViewUnifiedChange[] = this.getAllChangingObjectsSorted().filter(changingObject =>
+            changingObject.showInFinalView()
+        );
+        let finalVersion = this.motionLineNumbering.formatMotion(
+            this.motion,
+            ChangeRecoMode.Final,
+            changes,
+            this.lineLength,
+            this.highlightedLine
+        );
+        finalVersion = this.linenumberingService.stripLineNumbers(finalVersion);
 
-    // /**
-    //  * Sets the modified final version to the final version.
-    //  */
-    // public async createModifiedFinalVersion(): Promise<void> {
-    //     if (this.motion.isParagraphBasedAmendment()) {
-    //         throw new Error('Cannot create a final version of an amendment.');
-    //     }
-    //     // Get the final version and remove line numbers
-    //     const changes: ViewUnifiedChange[] = Object.assign([], this.getChangesForFinalMode());
-    //     // let finalVersion = this.repo.formatMotion(
-    //     //     this.motion.id,
-    //     //     ChangeRecoMode.Final,
-    //     //     changes,
-    //     //     this.lineLength,
-    //     //     this.highlightedLine
-    //     // );
-    //     throw new Error('Todo');
-    //     // finalVersion = this.linenumberingService.stripLineNumbers(finalVersion);
+        // Update the motion
+        try {
+            // Just confirm this, if there is one modified final version the user would override.
+            await this.repo.update({ modified_final_version: finalVersion }, this.motion);
+        } catch (e) {
+            this.raiseError(e);
+        }
+    }
 
-    //     // Update the motion
-    //     try {
-    //         // Just confirm this, if there is one modified final version the user would override.
-    //         // await this.updateMotion({ modified_final_version: finalVersion }, this.motion);
-    //     } catch (e) {
-    //         this.raiseError(e);
-    //     }
-    // }
+    /**
+     * Deletes the modified final version
+     */
+    public async deleteModifiedFinalVersion(): Promise<void> {
+        const title = this.translate.instant('Are you sure you want to delete the print template?');
+        if (await this.promptService.open(title)) {
+            try {
+                await this.repo.update({ modified_final_version: '' }, this.motion);
+                this.setChangeRecoMode(this.determineCrMode(ChangeRecoMode.Diff));
+            } catch (e) {
+                this.raiseError(e);
+            }
+        }
+    }
 
-    // /**
-    //  * Deletes the modified final version
-    //  */
-    // public async deleteModifiedFinalVersion(): Promise<void> {
-    //     const title = this.translate.instant('Are you sure you want to delete the print template?');
-    //     if (await this.promptService.open(title)) {
-    //         // this.finalEditMode = false;
-    //         // this.updateMotion({ modified_final_version: '' }, this.motion).then(
-    //         //     () => this.setChangeRecoMode(ChangeRecoMode.Final),
-    //         //     this.raiseError
-    //         // );
-    //     }
-    // }
+    /**
+     * Submits the modified final version of the motion
+     */
+    public saveModifiedFinalVersion(): void {
+        this.viewService.modifiedFinalVersionActionSubject.next(ModifiedFinalVersionAction.SAVE);
+        this.isEditingFinalVersion = false;
+    }
 
-    // public getChangesForFinalMode(): ViewUnifiedChange[] {
-    //     // return this.getAllChangingObjectsSorted().filter(change => {
-    //     //     return change.showInFinalView();
-    //     // });
-    //     throw new Error('Todo');
-    // }
+    public editModifiedFinalVersion(): void {
+        this.viewService.modifiedFinalVersionActionSubject.next(ModifiedFinalVersionAction.EDIT);
+        this.isEditingFinalVersion = true;
+    }
 
-    // /**
-    //  * Submits the modified final version of the motion
-    //  */
-    // public onSubmitFinalVersion(): void {
-    //     throw new Error('Todo');
-    //     // const val = this.contentForm.get('modified_final_version').value;
-    //     // this.updateMotion({ modified_final_version: val }, this.motion).then(() => {
-    //     //     this.finalEditMode = false;
-    //     //     this.contentForm.get('modified_final_version').markAsPristine();
-    //     // }, this.raiseError);
-    // }
-
-    // /**
-    //  * Cancels the final version edit and resets the form value
-    //  *
-    //  * TODO: the tinyMCE editor content should reset, too
-    //  */
-    // public cancelFinalVersionEdit(): void {
-    //     // this.finalEditMode = false;
-    //     throw new Error('Todo');
-    //     // this.contentForm.patchValue({ modified_final_version: this.motion.modified_final_version });
-    // }
+    /**
+     * Cancels the final version edit and resets the form value
+     */
+    public cancelEditingModifiedFinalVersion(): void {
+        this.viewService.modifiedFinalVersionActionSubject.next(ModifiedFinalVersionAction.CANCEL);
+        this.isEditingFinalVersion = false;
+    }
 
     public setChangeRecoMode(mode: ChangeRecoMode): void {
-        this.viewService.nextChangeRecoMode(mode);
+        this.viewService.changeRecommendationModeSubject.next(mode);
     }
 
     public isRecoMode(mode: ChangeRecoMode): boolean {
@@ -267,7 +226,7 @@ export class MotionHighlightFormComponent extends BaseComponent implements OnIni
      * @param mode Needs to got the enum defined in ViewMotion
      */
     public setLineNumberingMode(mode: LineNumberingMode): void {
-        this.viewService.nextLineNumberingMode(mode);
+        this.viewService.lineNumberingModeSubject.next(mode);
     }
 
     /**
@@ -304,11 +263,8 @@ export class MotionHighlightFormComponent extends BaseComponent implements OnIni
         return mode;
     }
 
-    private subscribeToSettings(): Subscription[] {
+    protected getSubscriptions(): Subscription[] {
         return [
-            this.meetingSettingService.get('motions_line_length').subscribe(lineLength => {
-                this.lineLength = lineLength;
-            }),
             this.meetingSettingService
                 .get('motions_default_line_numbering')
                 .subscribe(mode => this.setLineNumberingMode(mode)),

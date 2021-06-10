@@ -29,6 +29,10 @@ export class ViewMotionAmendedParagraph implements ViewUnifiedChange {
         return 'amendment-' + this.amendment.id.toString(10) + '-' + this.paragraphNo.toString(10);
     }
 
+    public getIdentifier(): string {
+        return this.amendment.number;
+    }
+
     public getChangeType(): ViewUnifiedChangeType {
         return ViewUnifiedChangeType.TYPE_AMENDMENT;
     }

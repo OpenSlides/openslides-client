@@ -11,32 +11,34 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { MotionAction } from 'app/core/actions/motion-action';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Id } from 'app/core/definitions/key-types';
+import { Deferred } from 'app/core/promises/deferred';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import {
     GET_POSSIBLE_RECOMMENDATIONS,
     MotionRepositoryService
 } from 'app/core/repositories/motions/motion-repository.service';
 import { MotionService } from 'app/core/repositories/motions/motion.service';
+import { AmendmentService } from 'app/core/ui-services/amendment.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
+import { Identifiable } from 'app/shared/models/base/identifiable';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
-import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
-import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.constants';
 import { AmendmentFilterListService } from 'app/site/motions/services/amendment-filter-list.service';
 import { AmendmentSortListService } from 'app/site/motions/services/amendment-sort-list.service';
 import { MotionFilterListService } from 'app/site/motions/services/motion-filter-list.service';
 import { MotionSortListService } from 'app/site/motions/services/motion-sort-list.service';
 import { PermissionsService } from 'app/site/motions/services/permissions.service';
 import { MotionContentComponent } from '../motion-content/motion-content.component';
+import { MotionViewService } from '../../../services/motion-view.service';
 
 /**
  * Component for the motion detail view
@@ -68,71 +70,14 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
     public newMotion = false;
 
     /**
-     * Toggle to expand/hide the motion log.
-     */
-    public motionLogExpanded = false;
-
-    /**
      * Sets the motions, e.g. via an autoupdate. Reload important things here:
      * - Reload the recommendation. Not changed with autoupdates, but if the motion is loaded this needs to run.
      */
-    public set motion(value: ViewMotion) {
-        this._motion = value;
-    }
+    public motion: ViewMotion;
 
-    /**
-     * Returns the target motion. Might be the new one or old.
-     */
-    public get motion(): ViewMotion {
-        return this._motion;
-    }
+    public temporaryMotion = {};
 
-    public get showPreamble(): boolean {
-        return this.motion.showPreamble;
-    }
-
-    /**
-     * Saves the target motion. Accessed via the getter and setter.
-     */
-    private _motion: ViewMotion;
-
-    /**
-     * Value of the config variable `motions_statutes_enabled` - are statutes enabled?
-     * @TODO replace by direct access to config variable, once it's available from the templates
-     */
-    public statutesEnabled: boolean;
-
-    /**
-     * Value of the config variable `motions_preamble`
-     */
-    public preamble: string;
-
-    /**
-     * Value of the configuration variable `motions_amendments_enabled` - are amendments enabled?
-     * @TODO replace by direct access to config variable, once it's available from the templates
-     */
-    public amendmentsEnabled: boolean;
-
-    /**
-     * All change recommendations to this motion
-     */
-    public changeRecommendations: ViewMotionChangeRecommendation[];
-
-    /**
-     * All amendments to this motion
-     */
-    public amendments: ViewMotion[];
-
-    /**
-     * The change recommendations to amendments to this motion
-     */
-    public amendmentChangeRecos: { [amendmentId: string]: ViewMotionChangeRecommendation[] } = {};
-
-    /**
-     * The observables for the `amendmentChangeRecos` field above.
-     * Necessary to track which amendments' change recommendations we have already subscribed to.
-     */
-    public amendmentChangeRecoSubscriptions: { [amendmentId: string]: Subscription } = {};
+    public canSave = false;
 
     /**
      * preload the next motion for direct navigation
@@ -147,7 +92,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
     /**
      * Subject for (other) motions
      */
-    public motionObserver: BehaviorSubject<ViewMotion[]>;
+    private motionObserver: Observable<ViewMotion[]>;
 
     /**
      * List of presorted motions. Filles by sort service
@@ -161,36 +106,9 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
      */
     private sortedMotionsObservable: Observable<ViewMotion[]>;
 
-    /**
-     * Determine if the name of supporters are visible
-     */
-    public showSupporters = false;
+    private parentId: Id;
 
-    /**
-     * If this is a paragraph-based amendment, this indicates if the non-affected paragraphs should be shown as well
-     */
-    public showAmendmentContext = false;
-
-    /**
-     * Show all amendments in the text, not only the ones with the apropriate state
-     */
-    public showAllAmendments = false;
-
-    /**
-     * For using the enum constants from the template
-     */
-    public ChangeRecoMode = ChangeRecoMode;
-
-    /**
-     * For using the enum constants from the template
-     */
-    public LineNumberingMode = LineNumberingMode;
-
-    public commentIds: Id[] = [];
-
-    public temporaryMotion = {};
-
-    public canSave = false;
+    private hasModelSubscriptionInitiated = false;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -201,11 +119,13 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         private route: ActivatedRoute,
         public repo: MotionRepositoryService,
         private motionService: MotionService,
+        private viewService: MotionViewService,
         private promptService: PromptService,
         private itemRepo: AgendaItemRepositoryService,
         private motionSortService: MotionSortListService,
-        private amendmentSortService: AmendmentSortListService,
         private motionFilterService: MotionFilterListService,
+        private amendmentService: AmendmentService,
+        private amendmentSortService: AmendmentSortListService,
         private amendmentFilterService: AmendmentFilterListService,
         private cd: ChangeDetectorRef
     ) {
@@ -218,264 +138,30 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
      */
     public ngOnInit(): void {
         super.ngOnInit();
-
         this.requestAdditionalModels();
-        this.registerSubjects();
-        this.observeRoute();
-        this.getMotionByUrl();
-
-        // load config variables
-        this.meetingSettingService
-            .get('motions_statutes_enabled')
-            .subscribe(enabled => (this.statutesEnabled = enabled));
-        this.meetingSettingService.get('motions_preamble').subscribe(preamble => (this.preamble = preamble));
-        this.meetingSettingService
-            .get('motions_amendments_enabled')
-            .subscribe(enabled => (this.amendmentsEnabled = enabled));
-
-        // use the filter and the search service to get the current sorting
-        // TODO: the `instant` can fail, if the page reloads.
-        if (this.meetingSettingService.instant('motions_amendments_in_main_list')) {
-            this.motionFilterService.initFilters(this.motionObserver);
-            this.motionSortService.initSorting(this.motionFilterService.outputObservable);
-            this.sortedMotionsObservable = this.motionSortService.outputObservable;
-        } else if (this.motion && this.motion.lead_motion_id) {
-            // only use the amendments for this motion
-            this.amendmentFilterService.initFilters(
-                this.repo.getAmendmentsByMotionAsObservable(this.motion.lead_motion_id)
-            );
-            this.amendmentSortService.initSorting(this.amendmentFilterService.outputObservable);
-            this.sortedMotionsObservable = this.amendmentSortService.outputObservable;
-        } else {
-            this.sortedMotions = [];
-        }
-
-        if (this.sortedMotionsObservable) {
-            this.subscriptions.push(
-                this.sortedMotionsObservable.subscribe(motions => {
-                    if (motions) {
-                        this.sortedMotions = motions;
-                        this.setSurroundingMotions();
-                    }
-                })
-            );
-        }
-
-        /**
-         * Check for changes of the viewport subject changes
-         */
-        this.vp.isMobileSubject.subscribe(() => {
-            this.cd.markForCheck();
-        });
+        this.init();
     }
 
     /**
-     * Observes the route for events. Calls to clean all subs if the route changes.
-     * Calls the motion details from the new route
+     * Called during view destruction.
+     * Sends a notification to user editors of the motion was edited
      */
-    private observeRoute(): void {
-        this.subscriptions.push(
-            this.router.events.subscribe(navEvent => {
-                if (navEvent instanceof NavigationEnd) {
-                    this.cleanSubjects();
-                    this.getMotionByUrl();
-                }
-            })
-        );
-    }
-
-    private registerSubjects(): void {
-        this.motionObserver = this.repo.getViewModelListBehaviorSubject();
-        // since updates are usually not commig at the same time, every change to
-        // any subject has to mark the view for chekcing
-        this.subscriptions.push(this.motionObserver.subscribe(() => this.cd.markForCheck()));
-    }
-
-    private requestAdditionalModels(): void {
-        this.requestModels(
-            {
-                viewModelCtor: ViewMeeting,
-                ids: [this.activeMeetingId],
-                follow: [
-                    {
-                        idField: 'motion_ids',
-                        fieldset: 'title'
-                    },
-                    {
-                        idField: 'user_ids',
-                        fieldset: 'shortName'
-                    },
-                    {
-                        idField: 'motion_block_ids',
-                        fieldset: 'title'
-                    },
-                    {
-                        idField: 'motion_category_ids'
-                    },
-                    {
-                        idField: 'motion_workflow_ids'
-                    },
-                    {
-                        idField: 'mediafile_ids',
-                        fieldset: 'fileSelection'
-                    },
-                    {
-                        idField: 'tag_ids'
-                    },
-                    {
-                        idField: 'personal_note_ids'
-                    }
-                ]
-            },
-            'additional models'
-        );
-    }
-
-    /**
-     * determine the motion to display using the URL
-     */
-    public getMotionByUrl(): void {
-        if (this.route.snapshot.params?.id) {
-            this.subscriptions.push(
-                this.route.params.subscribe(routeParams => {
-                    this.loadMotionById(Number(routeParams.id));
-                })
-            );
-        } else {
-            this.initNewMotion();
-        }
-    }
-
-    private initNewMotion(): void {
-        // new motion
-        super.setTitle('New motion');
-        this.newMotion = true;
-        this.editMotion = true;
-        const defaultMotion: any = {};
-        if (this.route.snapshot.queryParams.parent) {
-            const parentId = +this.route.snapshot.queryParams.parent;
-            this.amendmentEdit = true;
-            const parentMotion = this.repo.getViewModel(parentId);
-            const defaultTitle = `${this.translate.instant('Amendment to')} ${parentMotion.numberOrTitle}`;
-            defaultMotion.title = defaultTitle;
-            defaultMotion.lead_motion_id = parentMotion.id;
-            defaultMotion.category_id = parentMotion.category_id;
-            defaultMotion.tag_ids = parentMotion.tag_ids;
-            defaultMotion.block_id = parentMotion.block_id;
-            const amendmentTextMode = this.meetingSettingService.instant('motions_amendments_text_mode');
-            if (amendmentTextMode === 'fulltext') {
-                defaultMotion.text = parentMotion.text;
-            }
-        }
-        this.motion = defaultMotion;
-    }
-
-    private loadMotionById(motionId: number): void {
-        this.requestModels({
-            viewModelCtor: ViewMotion,
-            ids: [motionId],
-            follow: [
-                {
-                    idField: 'change_recommendation_ids'
-                },
-                {
-                    idField: 'amendment_ids',
-                    follow: [
-                        {
-                            idField: 'lead_motion_id',
-                            fieldset: 'amendment'
-                        }
-                    ]
-                },
-                {
-                    idField: 'submitter_ids',
-                    follow: [
-                        {
-                            idField: 'user_id',
-                            fieldset: 'shortName'
-                        }
-                    ]
-                },
-                {
-                    idField: 'supporter_ids',
-                    fieldset: 'shortName'
-                },
-                {
-                    idField: 'state_id',
-                    follow: [
-                        {
-                            idField: 'next_state_ids'
-                        },
-                        GET_POSSIBLE_RECOMMENDATIONS
-                    ]
-                },
-                'attachment_ids',
-                SPEAKER_BUTTON_FOLLOW
-            ]
-        });
-
-        this.subscriptions.push(
-            this.repo.getViewModelObservable(motionId).subscribe(motion => {
-                if (motion) {
-                    const title = motion.getTitle();
-                    super.setTitle(title);
-                    this.motion = motion;
-                    this.commentIds = motion.comment_ids;
-                    this.cd.markForCheck();
-                }
-            })
-        );
-    }
-
-    /**
-     * Using Shift, Alt + the arrow keys will navigate between the motions
-     *
-     * @param event has the key code
-     */
-    @HostListener('document:keydown', ['$event'])
-    public onKeyNavigation(event: KeyboardEvent): void {
-        if (event.key === 'ArrowLeft' && event.altKey && event.shiftKey) {
-            this.navigateToMotion(this.previousMotion);
-        }
-        if (event.key === 'ArrowRight' && event.altKey && event.shiftKey) {
-            this.navigateToMotion(this.nextMotion);
-        }
-    }
-
-    /**
-     * Creates a motion. Calls the "patchValues" function in the MotionObject
-     */
-    public async createMotion(newMotionValues: Partial<MotionAction.CreatePayload>): Promise<void> {
-        try {
-            const response = await this.repo.create(newMotionValues);
-            this.router.navigate([this.activeMeetingId, 'motions', response.id]);
-        } catch (e) {
-            this.raiseError(e);
-        }
-    }
-
-    public async forwardMotionToMeetings(): Promise<void> {
-        await this.motionService.forwardMotionsToMeetings(this.motion);
-    }
-
-    private async updateMotion(
-        newMotionValues: Partial<MotionAction.UpdatePayload>,
-        motion: ViewMotion
-    ): Promise<void> {
-        return await this.repo.update(newMotionValues, motion);
+    public ngOnDestroy(): void {
+        super.ngOnDestroy();
+        this.destroy();
     }
 
     /**
      * In the ui are no distinct buttons for update or create. This is decided here.
      */
-    public saveMotion(event?: Partial<MotionAction.CreatePayload>): void {
+    public async saveMotion(event?: Partial<MotionAction.CreatePayload>): Promise<void> {
         const update = event || this.temporaryMotion;
         if (this.newMotion) {
-            this.createMotion(update);
+            await this.createMotion(update);
         } else {
-            this.updateMotion(update, this.motion);
+            await this.updateMotion(update, this.motion);
+            this.leaveEditMotion();
         }
-        this.leaveEditMotion();
     }
 
     /**
@@ -498,7 +184,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         if (amendmentTextMode === 'paragraph') {
             this.router.navigate(['create-amendment'], { relativeTo: this.route });
         } else {
-            this.router.navigate(['motions', 'new-amendment'], {
+            this.router.navigate([this.activeMeetingId, 'motions', 'new-amendment'], {
                 relativeTo: this.route.snapshot.params.relativeTo,
                 queryParams: { parent: this.motion.id || null }
             });
@@ -595,11 +281,308 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
     }
 
     /**
-     * Called during view destruction.
-     * Sends a notification to user editors of the motion was edited
+     * determine the motion to display using the URL
      */
-    public ngOnDestroy(): void {
-        super.ngOnDestroy();
+    private getMotionByUrl(): void {
+        if (this.route.snapshot.params?.id) {
+            this.subscriptions.push(
+                this.route.params.subscribe(routeParams => {
+                    this.loadMotionById(Number(routeParams.id));
+                })
+            );
+        } else {
+            this.initNewMotion();
+        }
+    }
+
+    /**
+     * Observes the route for events. Calls to clean all subs if the route changes.
+     * Calls the motion details from the new route
+     */
+    private observeRoute(): void {
+        this.subscriptions.push(
+            this.router.events.subscribe(navEvent => {
+                if (navEvent instanceof NavigationEnd) {
+                    this.onRouteHasChanged();
+                }
+            })
+        );
+    }
+
+    private registerSubjects(): void {
+        this.motionObserver = this.repo.getViewModelListObservable();
+        // since updates are usually not commig at the same time, every change to
+        // any subject has to mark the view for chekcing
+        this.subscriptions.push(
+            this.motionObserver.subscribe(() => {
+                this.cd.markForCheck();
+            })
+        );
+    }
+
+    private requestAdditionalModels(): void {
+        this.requestModels(
+            {
+                viewModelCtor: ViewMeeting,
+                ids: [this.activeMeetingId],
+                follow: [
+                    {
+                        idField: 'motion_ids',
+                        fieldset: 'title'
+                    },
+                    {
+                        idField: 'user_ids',
+                        fieldset: 'shortName'
+                    },
+                    {
+                        idField: 'motion_block_ids',
+                        fieldset: 'title'
+                    },
+                    {
+                        idField: 'motion_category_ids'
+                    },
+                    {
+                        idField: 'motion_workflow_ids'
+                    },
+                    {
+                        idField: 'mediafile_ids',
+                        fieldset: 'fileSelection'
+                    },
+                    {
+                        idField: 'tag_ids'
+                    },
+                    {
+                        idField: 'personal_note_ids'
+                    }
+                ]
+            },
+            'motion:additional_models'
+        );
+    }
+
+    private initNewMotion(): void {
+        // new motion
+        super.setTitle('New motion');
+        this.newMotion = true;
+        this.editMotion = true;
+        this.motion = {} as any;
+        if (this.route.snapshot.queryParams.parent) {
+            this.initializeAmendment();
+        }
+    }
+
+    private loadMotionById(motionId: number): void {
+        if (this.hasModelSubscriptionInitiated) {
+            return; // already fired!
+        }
+        this.hasModelSubscriptionInitiated = true;
+        this.requestDetailedMotion(motionId);
+
+        this.subscriptions.push(
+            this.repo.getViewModelObservable(motionId).subscribe(motion => {
+                if (motion) {
+                    const title = motion.getTitle();
+                    super.setTitle(title);
+                    this.motion = motion;
+                    this.cd.markForCheck();
+                }
+            })
+        );
+    }
+
+    private requestDetailedMotion(motionId: Id): void {
+        this.requestModels(
+            {
+                viewModelCtor: ViewMotion,
+                ids: [motionId],
+                follow: [
+                    {
+                        idField: 'change_recommendation_ids'
+                    },
+                    {
+                        idField: 'lead_motion_id'
+                    },
+                    {
+                        idField: 'amendment_ids',
+                        follow: [
+                            {
+                                idField: 'lead_motion_id',
+                                fieldset: 'amendment'
+                            },
+                            {
+                                idField: 'state_id',
+                                fieldset: 'list'
+                            }
+                        ]
+                    },
+                    {
+                        idField: 'submitter_ids',
+                        follow: [
+                            {
+                                idField: 'user_id',
+                                fieldset: 'shortName'
+                            }
+                        ]
+                    },
+                    {
+                        idField: 'supporter_ids',
+                        fieldset: 'shortName'
+                    },
+                    {
+                        idField: 'state_id',
+                        follow: [
+                            {
+                                idField: 'next_state_ids'
+                            },
+                            GET_POSSIBLE_RECOMMENDATIONS
+                        ]
+                    },
+                    'attachment_ids',
+                    SPEAKER_BUTTON_FOLLOW
+                ]
+            },
+            'motion:detail'
+        );
+    }
+
+    /**
+     * Using Shift, Alt + the arrow keys will navigate between the motions
+     *
+     * @param event has the key code
+     */
+    @HostListener('document:keydown', ['$event'])
+    public onKeyNavigation(event: KeyboardEvent): void {
+        if (event.key === 'ArrowLeft' && event.altKey && event.shiftKey) {
+            this.navigateToMotion(this.previousMotion);
+        }
+        if (event.key === 'ArrowRight' && event.altKey && event.shiftKey) {
+            this.navigateToMotion(this.nextMotion);
+        }
+    }
+
+    /**
+     * Creates a motion. Calls the "patchValues" function in the MotionObject
+     */
+    public async createMotion(newMotionValues: Partial<MotionAction.CreatePayload>): Promise<void> {
+        try {
+            let response: Identifiable;
+            if (this.parentId) {
+                response = await this.amendmentService.createTextBased({
+                    ...newMotionValues,
+                    lead_motion_id: this.parentId
+                });
+            } else {
+                response = await this.repo.create(newMotionValues);
+            }
+            this.router.navigate([this.activeMeetingId, 'motions', response.id]);
+        } catch (e) {
+            this.raiseError(e);
+        }
+    }
+
+    public async forwardMotionToMeetings(): Promise<void> {
+        await this.motionService.forwardMotionsToMeetings(this.motion);
+    }
+
+    private async updateMotion(
+        newMotionValues: Partial<MotionAction.UpdatePayload>,
+        motion: ViewMotion
+    ): Promise<void> {
+        return await this.repo.update(newMotionValues, motion);
+    }
+
+    private ensureParentIsAvailable(parentId: Id): Promise<void> {
+        if (!this.repo.getViewModel(parentId)) {
+            const loaded = new Deferred();
+            this.requestDetailedMotion(parentId);
+            this.subscriptions.push(
+                this.repo.getViewModelObservable(parentId).subscribe(parent => {
+                    if (parent && !loaded.wasResolved) {
+                        loaded.resolve();
+                    }
+                })
+            );
+            return loaded;
+        }
+    }
+
+    private async initializeAmendment(): Promise<void> {
+        const motion: any = {};
+        this.parentId = +this.route.snapshot.queryParams.parent;
+        this.amendmentEdit = true;
+        await this.ensureParentIsAvailable(this.parentId);
+        const parentMotion = this.repo.getViewModel(this.parentId);
+        motion.lead_motion_id = this.parentId;
+        const defaultTitle = `${this.translate.instant('Amendment to')} ${parentMotion.numberOrTitle}`;
+        motion.title = defaultTitle;
+        motion.category_id = parentMotion.category_id;
+        motion.tag_ids = parentMotion.tag_ids;
+        motion.block_id = parentMotion.block_id;
+        const amendmentTextMode = this.meetingSettingService.instant('motions_amendments_text_mode');
+        if (amendmentTextMode === 'fulltext') {
+            motion.text = parentMotion.text;
+        }
+        this.motion = motion;
+    }
+
+    /**
+     * Lifecycle routine for motions to initialize.
+     */
+    private init(): void {
+        this.cd.reattach();
+
+        this.registerSubjects();
+        this.observeRoute();
+        this.getMotionByUrl();
+
+        // use the filter and the search service to get the current sorting
+        // TODO: the `instant` can fail, if the page reloads.
+        if (this.meetingSettingService.instant('motions_amendments_in_main_list')) {
+            this.motionFilterService.initFilters(this.motionObserver);
+            this.motionSortService.initSorting(this.motionFilterService.outputObservable);
+            this.sortedMotionsObservable = this.motionSortService.outputObservable;
+        } else if (this.motion && this.motion.lead_motion_id) {
+            // only use the amendments for this motion
+            this.amendmentFilterService.initFilters(
+                this.repo.getAmendmentsByMotionAsObservable(this.motion.lead_motion_id)
+            );
+            this.amendmentSortService.initSorting(this.amendmentFilterService.outputObservable);
+            this.sortedMotionsObservable = this.amendmentSortService.outputObservable;
+        } else {
+            this.sortedMotions = [];
+        }
+
+        if (this.sortedMotionsObservable) {
+            this.subscriptions.push(
+                this.sortedMotionsObservable.subscribe(motions => {
+                    if (motions) {
+                        this.sortedMotions = motions;
+                        this.setSurroundingMotions();
+                    }
+                })
+            );
+        }
+
+        /**
+         * Check for changes of the viewport subject changes
+         */
+        this.vp.isMobileSubject.subscribe(() => {
+            this.cd.markForCheck();
+        });
+    }
+
+    /**
+     * Lifecycle routine for motions to get destroyed.
+     */
+    private destroy(): void {
+        this.hasModelSubscriptionInitiated = false;
+        this.cleanSubjects();
+        this.viewService.reset();
         this.cd.detach();
+    }
+
+    private onRouteHasChanged(): void {
+        this.destroy();
+        this.init();
     }
 }

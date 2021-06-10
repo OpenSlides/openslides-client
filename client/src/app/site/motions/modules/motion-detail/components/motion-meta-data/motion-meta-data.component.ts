@@ -1,34 +1,25 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { Observable, Subscription } from 'rxjs';
 
-import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
-import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
-import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
-import { MotionService } from 'app/core/repositories/motions/motion.service';
-import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { Tag } from 'app/shared/models/core/tag';
 import { Settings } from 'app/shared/models/event-management/meeting';
 import { MotionBlock } from 'app/shared/models/motions/motion-block';
-import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
 import { ViewMotionState } from 'app/site/motions/models/view-motion-state';
 import { ChangeRecoMode } from 'app/site/motions/motions.constants';
 import { PermissionsService } from 'app/site/motions/services/permissions.service';
-import { MotionViewService } from '../../../services/motion-view.service';
+import { BaseMotionDetailChildComponent } from '../base/base-motion-detail-child.component';
+import { MotionServiceCollectorService } from '../../../services/motion-service-collector.service';
 
 @Component({
     selector: 'os-motion-meta-data',
     templateUrl: './motion-meta-data.component.html',
     styleUrls: ['./motion-meta-data.component.scss']
 })
-export class MotionMetaDataComponent extends BaseComponent implements OnInit {
-    @Input()
-    public motion: ViewMotion;
-
+export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
     public motionBlocks: MotionBlock[] = [];
 
     public categories: ViewMotionCategory[] = [];
@@ -36,17 +27,6 @@ export class MotionMetaDataComponent extends BaseComponent implements OnInit {
     public tags: Tag[] = [];
 
     public recommendationReferencingMotions: ViewMotion[] = [];
-
-    public showReferringMotions = false;
-
-    /**
-     * Value of the config variable `motions_min_supporters`
-     */
-    // public minSupporters: number;
-    /**
-     * TODO service does not exist
-     */
-    public minSupporters = 1;
 
     /**
      * Determine if the name of supporters are visible
@@ -93,11 +73,9 @@ export class MotionMetaDataComponent extends BaseComponent implements OnInit {
      */
     public amendments: ViewMotion[];
 
-    public showAllAmendments = false;
-
-    private tagObserver: Observable<Tag[]>;
-    private blockObserver: Observable<MotionBlock[]>;
-    private categoryObserver: Observable<ViewMotionCategory[]>;
+    public set showAllAmendments(is: boolean) {
+        this.viewService.showAllAmendmentsStateSubject.next(is);
+    }
 
     /**
      * The subscription to the recommender config variable.
@@ -106,25 +84,10 @@ export class MotionMetaDataComponent extends BaseComponent implements OnInit {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        private meetingSettingsService: MeetingSettingsService,
-        private repo: MotionRepositoryService,
-        private motionService: MotionService,
-        private categoryRepo: MotionCategoryRepositoryService,
-        private tagRepo: TagRepositoryService,
-        private blockRepo: MotionBlockRepositoryService,
-        public perms: PermissionsService,
-        private viewService: MotionViewService
+        motionServiceCollector: MotionServiceCollectorService,
+        public perms: PermissionsService
     ) {
-        super(componentServiceCollector);
-    }
-
-    public ngOnInit(): void {
-        this.initObserver();
-        this.subscriptions.push(
-            ...this.subscribeToViewModelLists(),
-            ...this.subscribeToMetaData(),
-            ...this.subscribeToConfigVariables()
-        );
+        super(componentServiceCollector, motionServiceCollector);
     }
 
     /**
@@ -237,7 +200,7 @@ export class MotionMetaDataComponent extends BaseComponent implements OnInit {
             if (this.recommenderSubscription) {
                 this.recommenderSubscription.unsubscribe();
             }
-            this.recommenderSubscription = this.meetingSettingsService.get(configKey).subscribe(recommender => {
+            this.recommenderSubscription = this.meetingSettingService.get(configKey).subscribe(recommender => {
                 this.recommender = recommender;
             });
         }
@@ -266,37 +229,19 @@ export class MotionMetaDataComponent extends BaseComponent implements OnInit {
         return allStates.filter(state => state.recommendation_label);
     }
 
-    private initObserver(): void {
-        this.motionObserver = this.repo.getViewModelListObservable();
-        this.tagObserver = this.tagRepo.getViewModelListObservable();
-        this.categoryObserver = this.categoryRepo.getViewModelListObservable();
-        this.blockObserver = this.blockRepo.getViewModelListObservable();
-    }
-
-    private subscribeToViewModelLists(): Subscription[] {
+    protected getSubscriptions(): Subscription[] {
         return [
-            this.tagObserver.subscribe(value => (this.tags = value)),
-            this.blockObserver.subscribe(value => (this.motionBlocks = value)),
-            this.categoryObserver.subscribe(value => (this.categories = value))
-        ];
-    }
-
-    private subscribeToMetaData(): Subscription[] {
-        return [
+            this.repo.getAmendmentsByMotionAsObservable(this.motion.id).subscribe(value => (this.amendments = value)),
+            this.tagRepo.getViewModelListObservable().subscribe(value => (this.tags = value)),
+            this.categoryRepo.getViewModelListObservable().subscribe(value => (this.categories = value)),
+            this.blockRepo.getViewModelListObservable().subscribe(value => (this.motionBlocks = value)),
             this.motionService
                 .getRecommendationReferencingMotions(this.motion?.id)
                 ?.subscribe(motions => (this.recommendationReferencingMotions = motions))
         ];
     }
 
-    private subscribeToConfigVariables(): Subscription[] {
-        return [
-            this.meetingSettingsService
-                .get('motions_supporters_min_amount')
-                .subscribe(supporters => (this.minSupporters = supporters)),
-            this.meetingSettingsService
-                .get('motions_show_referring_motions')
-                .subscribe(show => (this.showReferringMotions = show))
-        ];
+    protected onAfterInit(): void {
+        this.motionObserver = this.repo.getViewModelListObservable();
     }
 }

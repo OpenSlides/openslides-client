@@ -64,7 +64,7 @@ export class AmendmentService {
             number: partialMotion.number,
             block_id: partialMotion.block_id,
             state_extension: partialMotion.state_extension,
-            amendment_paragraphs: partialMotion.amendment_paragraphs,
+            amendment_paragraph_$: partialMotion.amendment_paragraph_$,
             sort_parent_id: partialMotion.sort_parent_id,
             tag_ids: partialMotion.tag_ids,
             supporter_ids: partialMotion.supporter_ids,

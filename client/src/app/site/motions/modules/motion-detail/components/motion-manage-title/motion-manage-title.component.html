@@ -28,11 +28,11 @@
 
     <!-- Sequential number -->
     <span class="main-nav-color title-font">
-        <span *ngIf="showSequential">
+        <span *ngIf="showSequentialNumber">
             <span>{{ 'Sequential number' | translate }}</span
             >&nbsp;{{ motion.sequential_number }}
         </span>
-        <span *ngIf="showSequential && motion.lead_motion">&#xb7;&nbsp;</span>
+        <span *ngIf="showSequentialNumber && motion.lead_motion">&#xb7;&nbsp;</span>
         <span *ngIf="motion.lead_motion">
             <span>
                 <span>{{ 'Amendment to' | translate }}</span

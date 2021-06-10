@@ -12,6 +12,7 @@ import { MotionDetailDiffComponent } from './components/motion-detail-diff/motio
 import { MotionDetailOriginalChangeRecommendationsComponent } from './components/motion-detail-original-change-recommendations/motion-detail-original-change-recommendations.component';
 import { MotionDetailRoutingModule } from './motion-detail-routing.module';
 import { MotionDetailComponent } from './components/motion-detail/motion-detail.component';
+import { MotionFinalVersionComponent } from './components/motion-final-version/motion-final-version.component';
 import { MotionForwardDialogComponent } from './components/motion-forward-dialog/motion-forward-dialog.component';
 import { MotionHighlightFormComponent } from './components/motion-highlight-form/motion-highlight-form.component';
 import { MotionManagePollsComponent } from './components/motion-manage-polls/motion-manage-polls.component';
@@ -41,6 +42,7 @@ import { PersonalNoteComponent } from './components/personal-note/personal-note.
         ParagraphBasedAmendmentComponent,
         MotionManageTitleComponent,
         MotionManagePollsComponent,
+        MotionFinalVersionComponent,
         MotionForwardDialogComponent
     ]
 })

@@ -136,7 +136,6 @@ export abstract class BasePollComponent<C extends BaseViewModel = any> extends B
 
         this.subscriptions.push(
             this.repo.getViewModelObservable(this._id).subscribe(poll => {
-                console.log('getViewModelObservable::', poll);
                 if (poll) {
                     this._poll = poll;
                     this.onAfterUpdatePoll(poll);

@@ -5,7 +5,12 @@ import { map } from 'rxjs/operators';
 
 import { AgendaItemRepositoryService, AgendaListTitle } from '../agenda/agenda-item-repository.service';
 import { MotionAction } from 'app/core/actions/motion-action';
-import { DEFAULT_FIELDSET, Fieldsets, Follow } from 'app/core/core-services/model-request-builder.service';
+import {
+    DEFAULT_FIELDSET,
+    Fieldsets,
+    Follow,
+    TypedFieldset
+} from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Id } from 'app/core/definitions/key-types';
 import { DiffLinesInParagraph, DiffService } from 'app/core/ui-services/diff.service';
@@ -141,7 +146,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
             supporter_ids: update.supporter_ids,
             tag_ids: update.tag_ids,
             attachment_ids: update.attachment_ids,
-            workflow_id: update.workflow_id
+            workflow_id: update.workflow_id,
+            amendment_paragraph_$: update.amendment_paragraph_$
         };
     }
 
@@ -181,16 +187,16 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
     }
 
     public getFieldsets(): Fieldsets<Motion> {
-        const titleFields: (keyof Motion)[] = ['title', 'number'];
-        const listFields: (keyof Motion)[] = titleFields.concat([
+        const titleFields: TypedFieldset<Motion> = ['title', 'number'];
+        const listFields: TypedFieldset<Motion> = titleFields.concat([
             'sequential_number',
             'sort_weight',
             'category_weight',
             'lead_motion_id', // needed for filtering
             'amendment_ids'
         ]);
-        const blockListFields: (keyof Motion)[] = titleFields.concat(['block_id']);
-        const detailFields: (keyof Motion)[] = titleFields.concat([
+        const blockListFields: TypedFieldset<Motion> = titleFields.concat(['block_id']);
+        const detailFields: TypedFieldset<Motion> = titleFields.concat([
             'sequential_number',
             'text',
             'reason',
@@ -205,11 +211,11 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
             'state_extension',
             'recommendation_extension',
             'agenda_item_id', // for add/remove from agenda,
-            'amendment_paragraph_$',
+            { templateField: 'amendment_paragraph_$' },
             'poll_ids'
         ]);
-        const amendmentFields: (keyof Motion)[] = listFields.concat(['lead_motion_id', 'amendment_ids']);
-        const callListFields: (keyof Motion)[] = titleFields.concat(['sort_weight', 'sort_parent_id']);
+        const amendmentFields: TypedFieldset<Motion> = listFields.concat(['text']);
+        const callListFields: TypedFieldset<Motion> = titleFields.concat(['sort_weight', 'sort_parent_id']);
         return {
             [DEFAULT_FIELDSET]: detailFields,
             list: listFields,
@@ -281,7 +287,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         viewModel.getParagraphTitleByParagraph = (paragraph: DiffLinesInParagraph) =>
             this.motionLineNumbering.getAmendmentParagraphLinesTitle(paragraph);
 
-        viewModel.getAmendmentParagraphLines = () => {
+        viewModel.getAmendmentParagraphLines = (includeUnchanged: boolean = false) => {
             if (viewModel.lead_motion && viewModel.isParagraphBasedAmendment()) {
                 const changeRecos = viewModel.change_recommendations.filter(changeReco => changeReco.showInFinalView());
                 return this.motionLineNumbering.getAmendmentParagraphLines(
@@ -289,7 +295,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
                     this.motionLineLength,
                     ChangeRecoMode.Changed,
                     changeRecos,
-                    false
+                    includeUnchanged
                 );
             } else {
                 return [];

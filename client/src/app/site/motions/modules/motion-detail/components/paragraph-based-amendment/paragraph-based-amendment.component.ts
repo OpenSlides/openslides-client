@@ -1,38 +1,31 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+import { UnsafeHtml } from 'app/core/definitions/key-types';
+import { ParagraphToChoose } from 'app/core/repositories/motions/motion-line-numbering.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DiffLinesInParagraph, LineRange } from 'app/core/ui-services/diff.service';
 import { ViewUnifiedChange } from 'app/shared/models/motions/view-unified-change';
-import { BaseComponent } from 'app/site/base/components/base.component';
-import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.constants';
+import { BaseMotionDetailChildComponent } from '../base/base-motion-detail-child.component';
+import { MotionServiceCollectorService } from '../../../services/motion-service-collector.service';
+
+interface ParagraphBasedAmendmentContent {
+    amendment_paragraph_$: { [paragraph_number: number]: any };
+    selected_paragraphs: ParagraphToChoose[];
+}
 
 @Component({
     selector: 'os-paragraph-based-amendment',
     templateUrl: './paragraph-based-amendment.component.html',
     styleUrls: ['./paragraph-based-amendment.component.scss']
 })
-export class ParagraphBasedAmendmentComponent extends BaseComponent {
+export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildComponent {
     public readonly LineNumberingMode = LineNumberingMode;
     public readonly ChangeRecoMode = ChangeRecoMode;
 
     @Input()
-    public motion: ViewMotion;
-
-    @Input()
-    public lnMode = LineNumberingMode.None;
-
-    @Input()
-    public crMode = ChangeRecoMode.Original;
-
-    @Input()
     public changesForDiffMode: ViewUnifiedChange[] = [];
-
-    @Input()
-    public scrollToChange: ViewUnifiedChange;
-
-    @Input()
-    public changeRecommendations: ViewUnifiedChange[] = [];
 
     @Input()
     public highlightedLine: number;
@@ -44,14 +37,24 @@ export class ParagraphBasedAmendmentComponent extends BaseComponent {
     public createChangeRecommendation = new EventEmitter<LineRange>();
 
     @Output()
-    public gotoChangeRecommendation = new EventEmitter<ViewUnifiedChange>();
+    public formChanged = new EventEmitter<any>();
+
+    @Output()
+    public validStateChanged = new EventEmitter<boolean>();
 
     public showAmendmentContext = false;
 
-    public showAllAmendments = false;
+    public selectedParagraphs = [];
 
-    public constructor(protected componentServiceCollector: ComponentServiceCollector) {
-        super(componentServiceCollector);
+    public contentForm: FormGroup;
+
+    public constructor(
+        componentServiceCollector: ComponentServiceCollector,
+        motionServiceCollector: MotionServiceCollectorService,
+        private fb: FormBuilder,
+        private cd: ChangeDetectorRef
+    ) {
+        super(componentServiceCollector, motionServiceCollector);
     }
 
     /**
@@ -64,17 +67,11 @@ export class ParagraphBasedAmendmentComponent extends BaseComponent {
      *
      * TODO: Seems to be directly duplicated in the slide
      */
-    public getAmendmentDiffTextWithContext(paragraph: DiffLinesInParagraph): string {
+    public getAmendmentDiffTextWithContext(paragraph: DiffLinesInParagraph): UnsafeHtml {
         return (
-            '<div class="paragraphcontext">' +
-            paragraph.textPre +
-            '</div>' +
-            '<div>' +
-            paragraph.text +
-            '</div>' +
-            '<div class="paragraphcontext">' +
-            paragraph.textPost +
-            '</div>'
+            `<div class="paragraphcontext">${paragraph.textPre}</div>` +
+            `<div>${paragraph.text}</div>` +
+            `<div class="paragraphcontext">${paragraph.textPost}</div>`
         );
     }
 
@@ -84,10 +81,63 @@ export class ParagraphBasedAmendmentComponent extends BaseComponent {
      * @returns {DiffLinesInParagraph[]}
      */
     public getAmendmentParagraphs(): DiffLinesInParagraph[] {
-        return this.motion?.diffLines || [];
+        return this.motion?.getAmendmentParagraphLines(this.showAmendmentContext) || [];
     }
 
     public getAmendmentParagraphLinesTitle(paragraph: DiffLinesInParagraph): string {
         return this.motion?.getParagraphTitleByParagraph(paragraph) || '';
+    }
+
+    public isControlInvalid(paragraphNumber: number): boolean {
+        const control = this.contentForm.get(paragraphNumber.toString());
+        return control.invalid && (control.dirty || control.touched);
+    }
+
+    protected onEnterEditMode(): void {
+        if (this.contentForm) {
+            this.contentForm = null;
+        }
+        const contentPatch = this.createForm();
+        this.contentForm = this.fb.group(contentPatch.amendment_paragraph_$);
+        this.selectedParagraphs = contentPatch.selected_paragraphs;
+        this.propagateChanges();
+    }
+
+    protected onLeaveEditMode(): void {
+        this.cleanSubjects();
+    }
+
+    private createForm(): ParagraphBasedAmendmentContent {
+        const contentPatch: ParagraphBasedAmendmentContent = {
+            selected_paragraphs: [],
+            amendment_paragraph_$: {}
+        };
+        const leadMotion = this.motion.lead_motion;
+        // Hint: lineLength is sometimes not loaded yet when this form is initialized;
+        // This doesn't hurt as long as patchForm is called when editing mode is started, i.e., later.
+        if (leadMotion && this.lineLength) {
+            const paragraphsToChoose = this.motionLineNumbering.getParagraphsToChoose(leadMotion, this.lineLength);
+
+            paragraphsToChoose.forEach((paragraph: ParagraphToChoose, paragraphNo: number): void => {
+                const amendmentParagraph = this.motion.amendment_paragraph(paragraphNo);
+                if (amendmentParagraph) {
+                    contentPatch.selected_paragraphs.push(paragraph);
+                    contentPatch.amendment_paragraph_$[paragraphNo] = [amendmentParagraph, Validators.required];
+                }
+            });
+        }
+        return contentPatch;
+    }
+
+    private propagateChanges(): void {
+        this.subscriptions.push(
+            this.contentForm.valueChanges.subscribe(value => {
+                if (value) {
+                    this.formChanged.emit({ amendment_paragraph_$: value });
+                    this.validStateChanged.emit(this.contentForm.valid);
+                    this.cd.markForCheck();
+                }
+            })
+        );
     }
 }

@@ -14,6 +14,12 @@
         cursor: pointer;
         padding: 0;
         margin: 0;
+        transition: all 0.2s ease;
+
+        &:hover {
+            width: 12px;
+            left: -4px;
+        }
 
         &.insert {
             background-color: #00aa00;

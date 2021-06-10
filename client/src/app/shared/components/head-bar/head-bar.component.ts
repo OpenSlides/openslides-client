@@ -6,6 +6,8 @@ import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { RoutingStateService } from 'app/core/ui-services/routing-state.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 
+export const HEAD_BAR_HEIGHT = 64; // height of the head-bar in px.
+
 /**
  * Reusable head bar component for Apps.
  *

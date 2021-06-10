@@ -16,7 +16,9 @@
                     </span>
                     <span *ngIf="change.isTitleChange()">{{ 'Title' | translate }}</span>
                     <span *ngIf="isChangeRecommendation(change)"> ({{ 'Change recommendation' | translate }})</span>
-                    <span *ngIf="isAmendment(change)"> ({{ 'Amendment' | translate }} {{ change.getChangeId() }})</span>
+                    <span *ngIf="isAmendment(change)">
+                        ({{ 'Amendment' | translate }} {{ change.getIdentifier() }})</span
+                    >
                     <span class="operation" *ngIf="isChangeRecommendation(change)">
                         – {{ getRecommendationTypeName(change) | translate }}
                         <!--
@@ -28,11 +30,11 @@
                     </span>
                     <span class="status">
                         <ng-container *ngIf="change.isRejected() && !isAmendment(change)">
-                            – <span>{{ 'Rejected' | translate }}</span></ng-container
-                        >
-                        <ng-container *ngIf="(change.isAccepted() || isAmendment(change)) && change">
-                            – {{ change | translate }}</ng-container
-                        >
+                            – <span>{{ 'Rejected' | translate }}</span>
+                        </ng-container>
+                        <ng-container *ngIf="(change.isAccepted() || isAmendment(change)) && change.stateName">
+                            – {{ change.stateName | translate }}
+                        </ng-container>
                     </span>
                 </a>
             </li>

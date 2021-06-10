@@ -55,7 +55,7 @@ export namespace MotionAction {
         title?: string;
         text?: string;
         reason?: string;
-        amendment_paragraphs?: { [paragraphNumber: number]: string };
+        amendment_paragraph_$?: { [paragraph_number: number]: UnsafeHtml };
         modified_final_version?: string;
     }
 

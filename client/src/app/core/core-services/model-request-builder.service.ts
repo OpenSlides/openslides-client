@@ -18,6 +18,8 @@ import { OnAfterAppsLoaded } from '../definitions/on-after-apps-loaded';
 import { RelationManagerService } from './relation-manager.service';
 import { Relation } from '../definitions/relations';
 
+export type TypedFieldset<M> = (keyof M | { templateField: keyof M })[];
+
 type Fieldset = string | (Field | IAllStructuredFields)[];
 type FollowList = (string | Follow)[];
 

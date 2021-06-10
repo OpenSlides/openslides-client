@@ -78,8 +78,7 @@ export class MotionBlockRepositoryService extends BaseIsAgendaItemAndListOfSpeak
      * @param viewMotion The motion to alter
      */
     public removeMotionFromBlock(viewMotion: ViewMotion): void {
-        const updateMotion = viewMotion.motion;
-        updateMotion.block_id = null;
+        const updateMotion = { block_id: null };
         this.motionRepo.update(updateMotion, viewMotion);
     }
 
