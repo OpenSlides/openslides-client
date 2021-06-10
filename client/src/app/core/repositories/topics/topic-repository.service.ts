@@ -57,7 +57,7 @@ export class TopicRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCon
     }
 
     public getFieldsets(): Fieldsets<Topic> {
-        const titleFields: (keyof Topic)[] = ['title'];
+        const titleFields: (keyof Topic)[] = ['title', 'text'];
         return {
             [DEFAULT_FIELDSET]: titleFields.concat(['text', 'attachment_ids', 'tag_ids']),
             list: titleFields,
@@ -106,7 +106,9 @@ export class TopicRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCon
             ...viewTopic.topic,
             agenda_type: topicAgendaItem.type,
             agenda_parent_id: topicAgendaItem.parent_id,
-            agenda_weight: topicAgendaItem.weight
+            agenda_weight: topicAgendaItem.weight,
+            agenda_comment: topicAgendaItem.comment,
+            agenda_duration: topicAgendaItem.duration
         };
     }
 
