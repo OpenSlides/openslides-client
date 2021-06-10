@@ -15,6 +15,7 @@ import { MotionRepositoryService } from 'app/core/repositories/motions/motion-re
 import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/motion-workflow-repository.service';
 import { RepositoryServiceCollector } from 'app/core/repositories/repository-service-collector';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
+import { PersonalNoteRepositoryService } from 'app/core/repositories/users/personal-note-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ChoiceService } from 'app/core/ui-services/choice.service';
 import { OverlayService } from 'app/core/ui-services/overlay.service';
@@ -22,7 +23,6 @@ import { PromptService } from 'app/core/ui-services/prompt.service';
 import { TreeService } from 'app/core/ui-services/tree.service';
 import { Displayable } from 'app/site/base/displayable';
 import { ViewMotion } from '../models/view-motion';
-import { ViewMotionState } from '../models/view-motion-state';
 
 /**
  * Contains all multiselect actions for the motion list view.
@@ -67,6 +67,7 @@ export class MotionMultiselectService {
         private workflowRepo: MotionWorkflowRepositoryService,
         private categoryRepo: MotionCategoryRepositoryService,
         private tagRepo: TagRepositoryService,
+        private personalNoteRepo: PersonalNoteRepositoryService,
         private agendaRepo: AgendaItemRepositoryService,
         private motionBlockRepo: MotionBlockRepositoryService,
         private treeService: TreeService,
@@ -82,7 +83,7 @@ export class MotionMultiselectService {
     public async delete(motions: ViewMotion[]): Promise<void> {
         const title = this.translate.instant('Are you sure you want to delete all selected motions?');
         if (await this.promptService.open(title)) {
-            await this.bulkDelete(motions);
+            await this.repo.delete(...motions);
             this.overlayService.hideSpinner();
         }
     }
@@ -110,19 +111,18 @@ export class MotionMultiselectService {
      * @param motions The motions to change
      */
     public async setStateOfMultiple(motions: ViewMotion[]): Promise<void> {
-        throw new Error('Todo');
-        /*if (motions.every(motion => motion.state.workflow_id === motions[0].state.workflow_id)) {
+        if (motions.every(motion => motion.state.workflow_id === motions[0].state.workflow_id)) {
             const title = this.translate.instant('This will set the following state for all selected motions:');
             const choices = this.workflowRepo.getWorkflowStatesForMotions(motions);
             const selectedChoice = await this.choiceService.open(title, choices);
             if (selectedChoice) {
                 const message = `${motions.length} ` + this.translate.instant(this.messageForSpinner);
                 this.overlayService.showSpinner(message, true);
-                await this.repo.setMultiState(motions, selectedChoice.items as number);
+                await this.repo.setState(selectedChoice.items as number, ...motions);
             }
         } else {
             throw new Error(this.translate.instant('You cannot change the state of motions in different workflows!'));
-        }*/
+        }
     }
 
     /**
@@ -149,16 +149,13 @@ export class MotionMultiselectService {
             const clearChoice = this.translate.instant('Delete recommendation');
             const selectedChoice = await this.choiceService.open(title, choices, false, null, clearChoice);
             if (selectedChoice) {
-                const requestData = motions.map(motion => ({
-                    id: motion.id,
-                    recommendation: selectedChoice.action ? 0 : (selectedChoice.items as number)
-                }));
                 const message = `${motions.length} ` + this.translate.instant(this.messageForSpinner);
                 this.overlayService.showSpinner(message, true);
-                // await this.httpService.post('/rest/motions/motion/manage_multiple_recommendation/', {
-                //     motions: requestData
-                // });
-                throw new Error('TODO');
+                if (selectedChoice.action) {
+                    await this.repo.resetRecommendation(...motions);
+                } else {
+                    await this.repo.setRecommendation(selectedChoice.items as number, ...motions);
+                }
             }
         } else {
             throw new Error(
@@ -185,7 +182,8 @@ export class MotionMultiselectService {
         if (selectedChoice) {
             const message = this.translate.instant(this.messageForSpinner);
             this.overlayService.showSpinner(message, true);
-            await this.setMultiCategory(motions, selectedChoice.items as number);
+            const categoryId = selectedChoice.action ? null : (selectedChoice.items as number);
+            await this.repo.setCategory(categoryId, ...motions);
         }
     }
 
@@ -215,9 +213,10 @@ export class MotionMultiselectService {
                 );
                 promise = this.sendBulkActionToBackend(MotionSubmitterAction.CREATE, payload);
             } else if (selectedChoice.action === REMOVE) {
-                const payload: MotionSubmitterAction.DeletePayload[] = (selectedChoice.items as number[]).map(
-                    submitterId => ({ id: submitterId })
-                );
+                const payload: MotionSubmitterAction.DeletePayload[] = this.getSubmitterIds(
+                    selectedChoice.items as number[],
+                    motions
+                ).map(submitterId => ({ id: submitterId }));
                 promise = this.sendBulkActionToBackend(MotionSubmitterAction.DELETE, payload);
             }
 
@@ -248,18 +247,18 @@ export class MotionMultiselectService {
             let requestData: MotionAction.UpdatePayload[] = null;
             if (selectedChoice.action === ADD) {
                 requestData = motions.map(motion => {
-                    const tagIds = [...motion.tag_ids, ...(selectedChoice.items as number[])];
+                    const tagIds = new Set((motion.tag_ids || []).concat(selectedChoice.items));
                     return {
                         id: motion.id,
-                        tag_ids: tagIds.filter((id, index, self) => self.indexOf(id) === index) // Remove duplicates
+                        tag_ids: Array.from(tagIds)
                     };
                 });
             } else if (selectedChoice.action === REMOVE) {
                 requestData = motions.map(motion => {
-                    const tagIdsToRemove = selectedChoice.items as number[];
+                    const tagIdsToRemove = new Set(selectedChoice.items as number[]);
                     return {
                         id: motion.id,
-                        tag_ids: motion.tag_ids.filter(id => !tagIdsToRemove.includes(id))
+                        tag_ids: (motion.tag_ids || []).filter(id => !tagIdsToRemove.has(id))
                     };
                 });
             } else {
@@ -296,7 +295,7 @@ export class MotionMultiselectService {
             const message = this.translate.instant(this.messageForSpinner);
             this.overlayService.showSpinner(message, true);
             const blockId = selectedChoice.action ? null : (selectedChoice.items as number);
-            await this.setMultiMotionBlock(motions, blockId);
+            await this.repo.setBlock(blockId, ...motions);
         }
     }
 
@@ -310,7 +309,9 @@ export class MotionMultiselectService {
         const title = this.translate.instant(
             'This will move all selected motions under or after the following motion in the call list:'
         );
-        const options = [this.translate.instant('Set as parent'), this.translate.instant('Insert after')];
+        const TO_PARENT = this.translate.instant('Set as parent');
+        const INSERT_AFTER = this.translate.instant('Insert after');
+        const options = [TO_PARENT, INSERT_AFTER];
         const allMotions = this.repo.getViewModelList();
         const tree = this.treeService.makeTree(allMotions, 'sort_weight', 'sort_parent_id');
         const itemsToMove = this.treeService.getBranchesFromTree(tree, motions);
@@ -320,27 +321,24 @@ export class MotionMultiselectService {
             throw new Error(this.translate.instant('There are no items left to chose from'));
         } else {
             const selectedChoice = await this.choiceService.open(title, availableMotions, false, options);
-            if (selectedChoice) {
-                if (!selectedChoice.items) {
-                    throw this.translate.instant('No items selected');
-                }
-                if (selectedChoice.action === options[0]) {
-                    const sortedChildTree = this.treeService.insertBranchesIntoTree(
-                        partialTree,
-                        itemsToMove,
-                        selectedChoice.items as number
-                    );
-                    await this.repo.sortMotions(this.treeService.stripTree(sortedChildTree));
-                } else if (selectedChoice.action === options[1]) {
-                    const sortedSiblingTree = this.treeService.insertBranchesIntoTree(
-                        partialTree,
-                        itemsToMove,
-                        this.repo.getViewModel(selectedChoice.items as number).lead_motion_id,
-                        selectedChoice.items as number
-                    );
-                    await this.repo.sortMotions(this.treeService.stripTree(sortedSiblingTree));
-                }
+            if (!selectedChoice) {
+                return;
             }
+            if (!selectedChoice.items) {
+                throw new Error(this.translate.instant('No items selected'));
+            }
+            const parentId =
+                selectedChoice.action === TO_PARENT
+                    ? (selectedChoice.items as number)
+                    : this.repo.getViewModel(selectedChoice.items as number).lead_motion_id;
+            const olderSibling = selectedChoice.action === INSERT_AFTER ? (selectedChoice.items as number) : undefined;
+            const sortedTree = this.treeService.insertBranchesIntoTree(
+                partialTree,
+                itemsToMove,
+                parentId,
+                olderSibling
+            );
+            await this.repo.sortMotions(this.treeService.stripTree(sortedTree));
         }
     }
 
@@ -355,65 +353,23 @@ export class MotionMultiselectService {
         const selectedChoice = await this.choiceService.open(title, null, false, options);
         if (selectedChoice && motions.length) {
             // `bulkSetStar` does imply that "true" sets favorites while "false" unsets favorites
-            const setOrUnset = selectedChoice.action === options[0];
+            const isFavorite = selectedChoice.action === options[0];
             const message = this.translate.instant(`I have ${motions.length} favorite motions. Please wait ...`);
             this.overlayService.showSpinner(message, true);
-            // await this.personalNoteService.bulkSetStar(motions, setOrUnset);
-            throw new Error('TODO: Is there already a personal note for every motion?');
+            await this.personalNoteRepo.setPersonalNote({ star: isFavorite }, ...motions);
         }
     }
 
-    private bulkDelete(motions: ViewMotion[]): Promise<void> {
-        return this.sendBulkActionToBackend(
-            MotionAction.DELETE,
-            motions.map(motion => ({ id: motion.id }))
-        );
-    }
-
-    /**
-     * Set the state of motions in bulk
-     *
-     * @param viewMotions target motions
-     * @param stateId the number that indicates the state
-     */
-    private async setMultiState(viewMotions: ViewMotion[], stateId: Id): Promise<void> {
-        const payload: MotionAction.SetStatePayload[] = viewMotions.map(motion => {
-            return { id: motion.id, state_id: stateId };
-        });
-        await this.sendBulkActionToBackend(MotionAction.SET_STATE, payload);
-    }
-
-    private async setMultiRecommendation(viewMotions: ViewMotion[], recommendationId: Id): Promise<void> {
-        const payload: MotionAction.SetRecommendationPayload[] = viewMotions.map(motion => {
-            return { id: motion.id, recommendation_id: recommendationId };
-        });
-        return this.sendBulkActionToBackend(MotionAction.SET_RECOMMENDATION, payload);
-    }
-
-    /**
-     * Set the motion blocks of motions in bulk
-     *
-     * @param viewMotions target motions
-     * @param motionblockId the number that indicates the motion block
-     */
-    private async setMultiMotionBlock(viewMotions: ViewMotion[], motionblockId: number): Promise<void> {
-        const payload: MotionAction.UpdatePayload[] = viewMotions.map(motion => {
-            return { id: motion.id, block_id: motionblockId };
-        });
-        await this.sendBulkActionToBackend(MotionAction.UPDATE, payload);
-    }
-
-    /**
-     * Set the category of motions in bulk
-     *
-     * @param viewMotions target motions
-     * @param categoryId the number that indicates the category
-     */
-    private async setMultiCategory(viewMotions: ViewMotion[], categoryId: number): Promise<void> {
-        const payload: MotionAction.UpdatePayload[] = viewMotions.map(motion => {
-            return { id: motion.id, category_id: categoryId };
-        });
-        await this.sendBulkActionToBackend(MotionAction.UPDATE, payload);
+    private getSubmitterIds(userIds: Id[], motions: ViewMotion[]): Id[] {
+        const submitterIds: Id[] = [];
+        for (const motion of motions) {
+            submitterIds.push(
+                ...motion.submitters
+                    .filter(submitter => userIds.includes(submitter.user_id))
+                    .map(submitter => submitter.id)
+            );
+        }
+        return submitterIds;
     }
 
     private sendBulkActionToBackend(action: string, payload: any[]): Promise<any> {

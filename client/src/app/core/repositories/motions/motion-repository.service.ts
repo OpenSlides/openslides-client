@@ -151,8 +151,9 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         };
     }
 
-    public update(update: Partial<MotionAction.UpdatePayload>, viewMotion: ViewMotion): Promise<void> {
-        return this.sendActionToBackend(MotionAction.UPDATE, this.getUpdatePayload(update, viewMotion));
+    public update(update: Partial<MotionAction.UpdatePayload>, ...viewMotions: ViewMotion[]): Promise<void> {
+        const payload: MotionAction.UpdatePayload[] = viewMotions.map(motion => this.getUpdatePayload(update, motion));
+        return this.sendBulkActionToBackend(MotionAction.UPDATE, payload);
     }
 
     public updateWithStateAndRecommendation(
@@ -182,8 +183,9 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         return this.sendActionsToBackend(actions);
     }
 
-    public delete(viewMotion: ViewMotion): Promise<void> {
-        return this.sendActionToBackend(MotionAction.DELETE, { id: viewMotion.id });
+    public delete(...viewMotions: ViewMotion[]): Promise<void> {
+        const payload: MotionAction.DeletePayload[] = viewMotions.map(motion => ({ id: motion.id }));
+        return this.sendBulkActionToBackend(MotionAction.DELETE, payload);
     }
 
     public getFieldsets(): Fieldsets<Motion> {
@@ -311,33 +313,38 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param viewMotion target motion
      * @param stateId the number that indicates the state
      */
-    public async setState(viewMotion: ViewMotion, stateId: number): Promise<void> {
-        const payload: MotionAction.SetStatePayload = { id: viewMotion.id, state_id: stateId };
-        await this.sendActionToBackend(MotionAction.SET_STATE, payload);
+    public async setState(stateId: number, ...viewMotions: ViewMotion[]): Promise<void> {
+        const payload: MotionAction.SetStatePayload[] = viewMotions.map(viewMotion => ({
+            id: viewMotion.id,
+            state_id: stateId
+        }));
+        await this.sendBulkActionToBackend(MotionAction.SET_STATE, payload);
     }
 
-    public async resetState(viewMotion: ViewMotion): Promise<void> {
-        const payload: MotionAction.ResetStatePayload = { id: viewMotion.id };
-        return this.sendActionToBackend(MotionAction.RESET_STATE, payload);
+    public async resetState(...viewMotions: ViewMotion[]): Promise<void> {
+        const payload: MotionAction.ResetStatePayload[] = viewMotions.map(viewMotion => ({ id: viewMotion.id }));
+        return this.sendBulkActionToBackend(MotionAction.RESET_STATE, payload);
     }
 
     /**
      * Set the recommenders state of a motion
      *
-     * @param viewMotion target motion
+     * @param viewMotions target motion
      * @param recommendationId the number that indicates the recommendation
      */
-    public async setRecommendation(viewMotion: ViewMotion, recommendationId: number): Promise<void> {
-        const payload: MotionAction.SetRecommendationPayload = {
+    public async setRecommendation(recommendationId: number, ...viewMotions: ViewMotion[]): Promise<void> {
+        const payload: MotionAction.SetRecommendationPayload[] = viewMotions.map(viewMotion => ({
             id: viewMotion.id,
             recommendation_id: recommendationId
-        };
-        await this.sendActionToBackend(MotionAction.SET_RECOMMENDATION, payload);
+        }));
+        await this.sendBulkActionToBackend(MotionAction.SET_RECOMMENDATION, payload);
     }
 
-    public async resetRecommendation(viewMotion: ViewMotion): Promise<void> {
-        const payload: MotionAction.ResetRecommendationPayload = { id: viewMotion.id };
-        return this.sendActionToBackend(MotionAction.RESET_RECOMMENDATION, payload);
+    public async resetRecommendation(...viewMotions: ViewMotion[]): Promise<void> {
+        const payload: MotionAction.ResetRecommendationPayload[] = viewMotions.map(viewMotion => ({
+            id: viewMotion.id
+        }));
+        return this.sendBulkActionToBackend(MotionAction.RESET_RECOMMENDATION, payload);
     }
 
     /**
@@ -346,8 +353,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param viewMotion target motion
      * @param categoryId the number that indicates the category
      */
-    public async setCategory(viewMotion: ViewMotion, categoryId: number): Promise<void> {
-        return this.update({ category_id: categoryId }, viewMotion);
+    public async setCategory(categoryId: number, ...viewMotions: ViewMotion[]): Promise<void> {
+        return this.update({ category_id: categoryId }, ...viewMotions);
     }
 
     /**
@@ -356,8 +363,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param viewMotion the motion to add
      * @param blockId the ID of the motion block
      */
-    public async setBlock(viewMotion: ViewMotion, blockId: number): Promise<void> {
-        return this.update({ block_id: blockId }, viewMotion);
+    public async setBlock(blockId: number, ...viewMotions: ViewMotion[]): Promise<void> {
+        return this.update({ block_id: blockId }, ...viewMotions);
     }
 
     /**
@@ -388,7 +395,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
     public async sortMotions(data: TreeIdNode[]): Promise<void> {
         const payload: MotionAction.SortPayload = {
             meeting_id: this.activeMeetingIdService.meetingId,
-            tree: data
+            tree: this.createSortTree(data)
         };
         return await this.sendActionToBackend(MotionAction.SORT, payload);
     }
@@ -520,5 +527,17 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
                 return this.languageCollator.compare(a.title, b.title);
             }
         });
+    }
+
+    /**
+     * Helper-function to avoid transmitting more than `id` and `children` to the backend.
+     *
+     * @returns Either an array of `TreeIdNode` or `undefined`
+     */
+    private createSortTree(data: TreeIdNode[]): TreeIdNode[] | undefined {
+        if (!data) {
+            return;
+        }
+        return data.map(node => ({ id: node.id, children: this.createSortTree(node.children) }));
     }
 }

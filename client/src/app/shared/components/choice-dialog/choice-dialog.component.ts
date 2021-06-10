@@ -44,7 +44,6 @@ interface ChoiceDialogData {
 interface ChoiceDialogResult {
     action?: string;
     items: number | number[];
-    itemModels: Displayable | Displayable[];
 }
 
 /**
@@ -64,7 +63,7 @@ export type ChoiceAnswer = undefined | ChoiceDialogResult;
     styleUrls: ['./choice-dialog.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class ChoiceDialogComponent implements OnInit, OnDestroy {
+export class ChoiceDialogComponent {
     /**
      * One number selected, if this is a single select choice
      * User over template
@@ -98,10 +97,6 @@ export class ChoiceDialogComponent implements OnInit, OnDestroy {
      */
     public selectedMultiChoices: number[] = [];
 
-    private displayableChoices: Choice[] = [];
-
-    private choicesSubscription: Subscription = null;
-
     public constructor(
         public dialogRef: MatDialogRef<ChoiceDialogComponent, ChoiceAnswer>,
         private formBuilder: FormBuilder,
@@ -110,23 +105,6 @@ export class ChoiceDialogComponent implements OnInit, OnDestroy {
         this.selectForm = this.formBuilder.group({
             select: []
         });
-    }
-
-    public ngOnInit(): void {
-        if (this.data?.choices instanceof Observable) {
-            this.choicesSubscription = this.data.choices.subscribe(
-                displayableChoices => (this.displayableChoices = displayableChoices)
-            );
-        } else {
-            this.displayableChoices = this.data?.choices || null;
-        }
-    }
-
-    public ngOnDestroy(): void {
-        if (this.choicesSubscription) {
-            this.choicesSubscription.unsubscribe();
-            this.choicesSubscription = null;
-        }
     }
 
     /**
@@ -140,19 +118,10 @@ export class ChoiceDialogComponent implements OnInit, OnDestroy {
             const resultValue = this.selectForm.get('select').value;
             this.dialogRef.close({
                 action: action ? action : null,
-                items: resultValue,
-                itemModels: this.filterResultChoices(resultValue)
+                items: resultValue
             });
         } else {
             this.dialogRef.close();
-        }
-    }
-
-    private filterResultChoices(resultValue: number | number[]): Choice | Choice[] {
-        if (Array.isArray(resultValue)) {
-            return this.displayableChoices.filter(choice => resultValue.includes(choice.id));
-        } else {
-            return this.displayableChoices.find(choice => choice.id === resultValue);
         }
     }
 }

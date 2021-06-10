@@ -69,7 +69,7 @@
             <div class="column-title innerTable">
                 <div class="title-line ellipsis-overflow">
                     <!-- Is Favorite -->
-                    <span *ngIf="motion.star" class="favorite-star">
+                    <span *ngIf="motion.getPersonalNote()?.star" class="favorite-star">
                         <mat-icon inline>star</mat-icon>
                     </span>
 
@@ -112,7 +112,7 @@
 
                 <!-- Recommendation -->
                 <div
-                    *ngIf="motion.recommendation && motion.state.next_state_ids.length"
+                    *ngIf="motion.recommendation && motion.state?.next_state_ids?.length"
                     class="ellipsis-overflow white spacer-top-3"
                 >
                     <mat-basic-chip class="bluegrey" [disabled]="true">

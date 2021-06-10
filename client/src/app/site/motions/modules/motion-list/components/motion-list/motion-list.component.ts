@@ -297,11 +297,14 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
             viewModelCtor: ViewMeeting,
             ids: [this.activeMeetingIdService.meetingId],
             follow: [
+                { idField: 'agenda_item_ids', follow: ['content_object_id'] },
                 {
                     idField: 'motion_ids',
                     follow: [
                         'category_id',
                         'block_id',
+                        'tag_ids',
+                        'personal_note_ids',
                         {
                             idField: 'state_id',
                             follow: ['next_state_ids', GET_POSSIBLE_RECOMMENDATIONS],
@@ -329,6 +332,10 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
                     idField: 'motion_category_ids',
                     fieldset: 'list',
                     additionalFields: ['parent_id', 'child_ids']
+                },
+                {
+                    idField: 'user_ids',
+                    fieldset: 'shortName'
                 }
             ],
             fieldset: []

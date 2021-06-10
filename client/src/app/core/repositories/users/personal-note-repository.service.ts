@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 
 import { PersonalNoteAction } from 'app/core/actions/personal-note-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
-import { Identifiable } from 'app/shared/models/base/identifiable';
+import { Fqid } from 'app/core/definitions/key-types';
 import { PersonalNote } from 'app/shared/models/users/personal-note';
-import { ViewPersonalNote } from 'app/site/users/models/view-personal-note';
+import { BaseViewModel } from 'app/site/base/base-view-model';
+import { HasPersonalNote, ViewPersonalNote } from 'app/site/users/models/view-personal-note';
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
@@ -37,35 +38,27 @@ export class PersonalNoteRepositoryService extends BaseRepositoryWithActiveMeeti
         };
     }
 
-    /**
-     * Overwrite the default procedure
-     *
-     * @ignore
-     */
-    public async create(data: PersonalNoteAction.CreatePayload): Promise<Identifiable> {
-        if (!data.star && !data.note) {
-            throw new Error('At least one of note or star has to be given!');
+    public async setPersonalNote(
+        partialNote: PersonalNoteAction.BasePayload,
+        ...contentObjects: (BaseViewModel & HasPersonalNote)[]
+    ): Promise<void> {
+        const createPayload: PersonalNoteAction.CreatePayload[] = [];
+        const updatePayload: PersonalNoteAction.UpdatePayload[] = [];
+        for (const object of contentObjects) {
+            if (object.getPersonalNote()) {
+                updatePayload.push(this.getUpdatePayload(partialNote, object.getPersonalNote()));
+            } else {
+                createPayload.push(this.getCreatePayload(partialNote, object.fqid));
+            }
         }
-        const payload: PersonalNoteAction.CreatePayload = {
-            content_object_id: data.content_object_id,
-            star: data.star,
-            note: data.note
-        };
-        return this.actions.sendRequest(PersonalNoteAction.CREATE, payload);
-    }
-
-    /**
-     * Overwrite the default procedure
-     *
-     * @ignore
-     */
-    public async update(data: Partial<PersonalNoteAction.UpdatePayload>, model: PersonalNote): Promise<void> {
-        const payload: PersonalNoteAction.UpdatePayload = {
-            id: model.id,
-            star: data.star,
-            note: data.note
-        };
-        return this.actions.sendRequest(PersonalNoteAction.UPDATE, payload);
+        const actions = [];
+        if (createPayload.length) {
+            actions.push({ action: PersonalNoteAction.CREATE, data: createPayload });
+        }
+        if (updatePayload.length) {
+            actions.push({ action: PersonalNoteAction.UPDATE, data: updatePayload });
+        }
+        await this.sendActionsToBackend(actions);
     }
 
     /**
@@ -78,5 +71,30 @@ export class PersonalNoteRepositoryService extends BaseRepositoryWithActiveMeeti
             id: model.id
         };
         return this.actions.sendRequest(PersonalNoteAction.DELETE, payload);
+    }
+
+    private getCreatePayload(
+        data: PersonalNoteAction.BasePayload,
+        content_object_id: Fqid
+    ): PersonalNoteAction.CreatePayload {
+        if (data.star === undefined && data.note === undefined) {
+            throw new Error('At least one of note or starhas to be given!');
+        }
+        return {
+            content_object_id,
+            star: data.star,
+            note: data.note
+        };
+    }
+
+    private getUpdatePayload(
+        data: PersonalNoteAction.BasePayload,
+        model: PersonalNote
+    ): PersonalNoteAction.UpdatePayload {
+        return {
+            id: model.id,
+            star: data.star,
+            note: data.note
+        };
     }
 }

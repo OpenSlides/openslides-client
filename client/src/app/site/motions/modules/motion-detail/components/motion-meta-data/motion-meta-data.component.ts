@@ -50,6 +50,14 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
         return this.motionService.getExtendedRecommendationLabel(this.motion);
     }
 
+    public get isRecommendationEnabled(): boolean {
+        return (
+            (this.perms.isAllowed('change_metadata') || this.motion.recommendation) &&
+            this.recommender &&
+            !!this.getPossibleRecommendations().length
+        );
+    }
+
     /**
      * @returns the current state label (with extension)
      */
@@ -96,7 +104,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
      * @param id Motion state id
      */
     public setState(id: number): void {
-        this.repo.setState(this.motion, id);
+        this.repo.setState(id, this.motion);
     }
 
     public resetState(): void {
@@ -117,7 +125,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
      * @param id Motion recommendation id
      */
     public setRecommendation(id: number): void {
-        this.repo.setRecommendation(this.motion, id);
+        this.repo.setRecommendation(id, this.motion);
     }
 
     public resetRecommendation(): void {
@@ -141,7 +149,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
         if (id === this.motion.category_id) {
             id = null;
         }
-        this.repo.setCategory(this.motion, id);
+        this.repo.setCategory(id, this.motion);
     }
 
     /**
@@ -164,7 +172,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
         if (id === this.motion.block_id) {
             id = null;
         }
-        this.repo.setBlock(this.motion, id);
+        this.repo.setBlock(id, this.motion);
     }
 
     /**
@@ -190,23 +198,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
     }
 
     /**
-     * Observes the repository for changes in the motion recommender
-     */
-    public setupRecommender(): void {
-        if (this.motion) {
-            const configKey: keyof Settings = this.motion.isStatuteAmendment()
-                ? 'motions_statute_recommendations_by'
-                : 'motions_recommendations_by';
-            if (this.recommenderSubscription) {
-                this.recommenderSubscription.unsubscribe();
-            }
-            this.recommenderSubscription = this.meetingSettingService.get(configKey).subscribe(recommender => {
-                this.recommender = recommender;
-            });
-        }
-    }
-
-    /**
      * Check if a recommendation can be followed. Checks for permissions and additionally if a recommentadion is present
      */
     public canFollowRecommendation(): boolean {
@@ -225,7 +216,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
     }
 
     public getPossibleRecommendations(): ViewMotionState[] {
-        const allStates = this.motion.state.workflow.states;
+        const allStates = this.motion.state?.workflow?.states || [];
         return allStates.filter(state => state.recommendation_label);
     }
 
@@ -243,5 +234,23 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
 
     protected onAfterInit(): void {
         this.motionObserver = this.repo.getViewModelListObservable();
+        this.setupRecommender();
+    }
+
+    /**
+     * Observes the repository for changes in the motion recommender
+     */
+    private setupRecommender(): void {
+        if (this.motion) {
+            const configKey: keyof Settings = this.motion.isStatuteAmendment()
+                ? 'motions_statute_recommendations_by'
+                : 'motions_recommendations_by';
+            if (this.recommenderSubscription) {
+                this.recommenderSubscription.unsubscribe();
+            }
+            this.recommenderSubscription = this.meetingSettingService.get(configKey).subscribe(recommender => {
+                this.recommender = recommender;
+            });
+        }
     }
 }

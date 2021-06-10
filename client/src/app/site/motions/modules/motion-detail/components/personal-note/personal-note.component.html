@@ -40,7 +40,7 @@
     <ng-container class="meta-text-block-content">
         <ng-container *ngIf="!isEditMode">
             <div *ngIf="personalNoteText" [innerHTML]="personalNoteText | trust: 'html'"></div>
-            <div class="no-content" *ngIf="!hasPersonalNote">
+            <div class="no-content" *ngIf="!hasPersonalNote || !personalNoteText">
                 {{ 'No personal note' | translate }}
             </div>
         </ng-container>
