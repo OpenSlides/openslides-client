@@ -71,12 +71,11 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
 
     public onSubmit(): void {
         if (this.isCreateView) {
-            const userIds = this.meetingForm.value.userIds;
+            const userIds = this.meetingForm.value.user_ids;
             const payload: MeetingAction.CreatePayload = {
                 committee_id: this.committeeId,
                 ...this.meetingForm.value
             };
-            delete (payload as any).userIds; // do not send them to the server.
 
             this.meetingRepo
                 .create(payload, userIds)
@@ -85,7 +84,7 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
                 })
                 .catch(this.raiseError);
         } else {
-            const userIds = this.meetingForm.value.userIds;
+            const userIds = this.meetingForm.value.user_ids;
             // this might be faster when using sets:
             // addedUsers = userIds setminus editMeeting.user_ids
             // removedUsers = (editMeeting.user_ids intersection committee.user_ids) setminus userIds
@@ -97,7 +96,7 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
             );
 
             const payload: MeetingAction.UpdatePayload = this.meetingForm.value;
-            delete (payload as any).userIds; // do not send them to the server.
+            delete (payload as any).user_ids; // do not send them to the server.
             this.meetingRepo
                 .update(payload, this.editMeeting, addedUsers, removedUsers)
                 .then(() => {
@@ -194,7 +193,7 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
             location: [''],
             start_time: [currentDate],
             end_time: [currentDate],
-            userIds: [[]],
+            user_ids: [[]],
             organization_tag_ids: [[]]
         });
     }

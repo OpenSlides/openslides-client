@@ -48,4 +48,8 @@ export class ChangePasswordComponent extends BaseComponent implements OnInit {
             })
         );
     }
+
+    public reset(): void {
+        this.changePasswordForm.reset();
+    }
 }

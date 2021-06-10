@@ -30,8 +30,12 @@ export class OrganizationTagListComponent extends BaseListViewComponent<ViewOrga
             width: '65%'
         },
         {
-            prop: 'actions',
-            width: 'auto'
+            prop: 'edit',
+            width: this.singleButtonWidth
+        },
+        {
+            prop: 'delete',
+            width: this.singleButtonWidth
         }
     ];
 

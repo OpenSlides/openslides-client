@@ -21,7 +21,8 @@
     <form class="committee-form" [formGroup]="committeeForm" (ngSubmit)="onSubmit()" *ngIf="committeeForm">
         <mat-form-field>
             <mat-label>{{ 'Title' | translate }}</mat-label>
-            <input matInput formControlName="name" />
+            <input matInput formControlName="name" required />
+            <mat-error>{{ 'The title is required' | translate }}</mat-error>
         </mat-form-field>
 
         <mat-form-field *osOmlPerms="OML.can_manage_organization">
