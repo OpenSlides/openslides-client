@@ -1,17 +1,11 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
-
-import { TranslateService } from '@ngx-translate/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ProjectorService } from 'app/core/ui-services/projector.service';
-import { BaseModel } from 'app/shared/models/base/base-model';
 import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
-import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { DetailNavigable, isDetailNavigable } from 'app/site/base/detail-navigable';
@@ -30,6 +24,11 @@ export class CinemaComponent extends BaseComponent implements OnInit {
     public projector: ViewProjector;
     private currentProjection: ViewProjection | null = null;
     public projectedViewModel: (BaseViewModel & HasProjectorTitle) | null = null;
+
+    /**
+     * filled by child component
+     */
+    public canReaddLastSpeaker: boolean;
 
     public get title(): string {
         if (this.projectedViewModel) {
@@ -88,28 +87,27 @@ export class CinemaComponent extends BaseComponent implements OnInit {
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private operator: OperatorService,
-        private projectorService: ProjectorService,
-        private projectorRepo: ProjectorRepositoryService,
-        private closService: CurrentListOfSpeakersService,
-        private listOfSpeakersRepo: ListOfSpeakersRepositoryService,
-        private cd: ChangeDetectorRef
+        projectorRepo: ProjectorRepositoryService,
+        closService: CurrentListOfSpeakersService,
+        private listOfSpeakersRepo: ListOfSpeakersRepositoryService
     ) {
         super(componentServiceCollector);
-    }
 
-    public ngOnInit(): void {
-        super.setTitle('Autopilot');
         this.subscriptions.push(
-            this.projectorRepo.getReferenceProjectorObservable().subscribe(refProjector => {
+            projectorRepo.getReferenceProjectorObservable().subscribe(refProjector => {
                 this.projector = refProjector;
                 const currentProjections = refProjector?.nonStableCurrentProjections;
                 this.currentProjection = currentProjections?.length > 0 ? currentProjections[0] : null;
                 this.projectedViewModel = this.currentProjection?.content_object || null;
             }),
-            this.closService.currentListOfSpeakersObservable.subscribe(clos => {
+            closService.currentListOfSpeakersObservable.subscribe(clos => {
                 this.listOfSpeakers = clos;
             })
         );
+    }
+
+    public ngOnInit(): void {
+        super.setTitle('Autopilot');
     }
 
     public async toggleListOfSpeakersOpen(): Promise<void> {
@@ -118,5 +116,9 @@ export class CinemaComponent extends BaseComponent implements OnInit {
         } else {
             await this.listOfSpeakersRepo.closeListOfSpeakers(this.listOfSpeakers);
         }
+    }
+
+    public async readdLastSpeaker(): Promise<void> {
+        await this.listOfSpeakersRepo.readdLastSpeaker(this.listOfSpeakers).catch(this.raiseError);
     }
 }
