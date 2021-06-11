@@ -158,7 +158,7 @@ export const meetingSettings: SettingsGroup[] = [
                         validators: [Validators.min(0)]
                     },
                     {
-                        key: 'projector_default_countdown_time',
+                        key: 'projector_countdown_default_time',
                         label: 'Predefined seconds of new countdowns',
                         default: 60,
                         type: 'integer'
@@ -923,22 +923,6 @@ export const meetingSettings: SettingsGroup[] = [
                         type: 'text',
                         helpText:
                             'Use these placeholders: {name}, {event_name}, {url}, {username}, {password}. The url referrs to the system url.'
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        label: 'Custom translations',
-        icon: 'language',
-        subgroups: [
-            {
-                label: 'Custom translations',
-                settings: [
-                    {
-                        key: 'custom_translations',
-                        label: 'Custom translations',
-                        type: 'translations'
                     }
                 ]
             }

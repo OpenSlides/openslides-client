@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 
+import { MeetingAction } from 'app/core/actions/meeting-action';
+import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
+import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MeetingSettingsDefinitionProvider } from 'app/core/ui-services/meeting-settings-definition-provider.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
@@ -20,7 +23,9 @@ export class MeetingSettingsOverviewComponent extends BaseComponent {
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private promptDialog: PromptService,
-        private meetingSettingsDefinitionProvider: MeetingSettingsDefinitionProvider
+        private meetingSettingsDefinitionProvider: MeetingSettingsDefinitionProvider,
+        private meetingRepo: MeetingRepositoryService,
+        private activeMeeting: ActiveMeetingService
     ) {
         super(componentServiceCollector);
 
@@ -31,12 +36,20 @@ export class MeetingSettingsOverviewComponent extends BaseComponent {
      * Resets every config for all registered group.
      */
     public async resetAll(): Promise<void> {
-        /*const title = this.translate.instant(
-            'Are you sure you want to reset all options to factory defaults?
-            Changes of all settings group will be lost!'
+        const title = this.translate.instant(
+            'Are you sure you want to reset all options to factory defaults?',
+            'Changes of all settings group will be lost!'
         );
         if (await this.promptDialog.open(title)) {
-            await this.repo.resetGroups(this.groups);
-        }*/
+            await this.meetingRepo.update(this.getDefaultValues(), this.activeMeeting.meeting);
+        }
+    }
+
+    private getDefaultValues(): Partial<MeetingAction.UpdatePayload> {
+        const payload: Partial<MeetingAction.UpdatePayload> = {};
+        for (const setting of this.meetingSettingsDefinitionProvider.getSettingsKeys()) {
+            payload[setting] = this.meetingSettingsDefinitionProvider.getDefaultValue(setting);
+        }
+        return payload;
     }
 }

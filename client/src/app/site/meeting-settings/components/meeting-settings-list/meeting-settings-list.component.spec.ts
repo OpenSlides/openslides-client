@@ -1,6 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CustomTranslationComponent } from '../custom-translation/custom-translation.component';
 import { E2EImportsModule } from '../../../../../e2e-imports.module';
 import { MeetingSettingsFieldComponent } from '../meeting-settings-field/meeting-settings-field.component';
 import { MeetingSettingsListComponent } from './meeting-settings-list.component';
@@ -12,7 +11,7 @@ describe('SettingsListComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [E2EImportsModule],
-            declarations: [MeetingSettingsListComponent, MeetingSettingsFieldComponent, CustomTranslationComponent]
+            declarations: [MeetingSettingsListComponent, MeetingSettingsFieldComponent]
         }).compileComponents();
     }));
 
