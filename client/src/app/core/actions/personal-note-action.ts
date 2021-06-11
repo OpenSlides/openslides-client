@@ -6,7 +6,7 @@ export namespace PersonalNoteAction {
     export const UPDATE = 'personal_note.update';
     export const DELETE = 'personal_note.delete';
 
-    interface BasePayload {
+    export interface BasePayload {
         star?: boolean;
         note?: UnsafeHtml;
     }

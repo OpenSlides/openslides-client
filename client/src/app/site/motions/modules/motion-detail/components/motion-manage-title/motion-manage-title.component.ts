@@ -3,7 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { Subscription } from 'rxjs';
 
-import { PersonalNoteAction } from 'app/core/actions/personal-note-action';
 import { PersonalNoteRepositoryService } from 'app/core/repositories/users/personal-note-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PersonalNote } from 'app/shared/models/users/personal-note';
@@ -72,11 +71,7 @@ export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
      * Toggles the favorite status
      */
     public toggleFavorite(): void {
-        if (this.personalNote) {
-            this.updateFavorite();
-        } else {
-            this.createFavorite();
-        }
+        this.personalNoteRepo.setPersonalNote({ star: !this.isFavorite() }, this.motion);
     }
 
     public isFavorite(): boolean {
@@ -89,17 +84,5 @@ export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
                 .getTitleChangeRecoOfMotionObservable(this.motion?.id)
                 ?.subscribe(changeReco => (this.titleChangeRecommendation = changeReco))
         ];
-    }
-
-    private async createFavorite(): Promise<void> {
-        const payload: PersonalNoteAction.CreatePayload = {
-            content_object_id: this.motion.fqid,
-            star: true
-        };
-        await this.personalNoteRepo.create(payload);
-    }
-
-    private async updateFavorite(): Promise<void> {
-        await this.personalNoteRepo.update({ star: !this.isFavorite() }, this.personalNote);
     }
 }

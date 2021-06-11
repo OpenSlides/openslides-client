@@ -361,7 +361,7 @@ export class MotionDetailDiffComponent extends BaseComponent implements AfterVie
     }
 
     public setAmendmentState(change: ViewUnifiedChange, state: number): void {
-        this.motionRepo.setState((change as ViewMotionAmendedParagraph).amendment, state).catch(this.raiseError);
+        this.motionRepo.setState(state, (change as ViewMotionAmendedParagraph).amendment).catch(this.raiseError);
     }
 
     /**
