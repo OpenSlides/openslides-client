@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { MotionChangeRecommendationRepositoryService } from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
@@ -76,20 +76,17 @@ export class MotionChangeRecommendationDialogComponent extends BaseChangeRecomme
         dialogRef: MatDialogRef<MotionChangeRecommendationDialogComponent>
     ) {
         super(componentServiceCollector, data, formBuilder, repo, dialogRef);
-        console.log('dialog data', data);
     }
 
     /**
      * Creates the forms for the Motion and the MotionVersion
      */
     protected createForm(): void {
-        console.log('changeReco', this.changeReco, this.changeReco.text);
         this.contentForm = this.formBuilder.group({
             text: [this.changeReco.text, Validators.required],
-            diffType: [this.changeReco.type, Validators.required],
+            type: [this.changeReco.type, Validators.required],
             public: [!this.changeReco.internal]
         });
-        console.log('this.contentForm', this.contentForm);
     }
 
     protected initializeDialogData(): void {

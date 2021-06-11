@@ -2,6 +2,7 @@ import { ValidatorFn, Validators } from '@angular/forms';
 
 import dedent from 'ts-dedent';
 
+import { OrganizationSettingsService } from 'app/core/ui-services/organization-settings.service';
 import { AgendaItemType } from 'app/shared/models/agenda/agenda-item';
 import { Settings } from 'app/shared/models/event-management/meeting';
 import { MotionWorkflow } from 'app/shared/models/motions/motion-workflow';
@@ -59,6 +60,14 @@ export interface SettingsItem {
     // groups/translations: []
     helpText?: string; // default: ""
     validators?: ValidatorFn[]; // default: []
+    /**
+     * A function to restrict some values of a settings-item depending on used organization's settings
+     *
+     * @param orgaSettings: The `OrganizationSettingsService` has to be passed, because it is not injected in the
+     * settings definitions
+     * @param value: The value used...
+     */
+    restrictionFn?: <T>(orgaSettings: OrganizationSettingsService, value: T) => T;
 }
 
 export interface SettingsGroup {
@@ -70,6 +79,13 @@ export interface SettingsGroup {
     }[];
 }
 
+/**
+ * Switches the keys and values from one object.
+ *
+ * @param object An original object to transform
+ *
+ * @returns An object, which keys are the values of the original object
+ */
 function switchKeyValue(object: { [key: string]: string }): { [key: string]: string } {
     return Object.entries(object).reduce((res, [key, value]) => {
         res[value] = key;
@@ -617,7 +633,14 @@ export const meetingSettings: SettingsGroup[] = [
                         key: 'motion_poll_default_type',
                         label: 'Default voting type',
                         type: 'choice',
-                        choices: switchKeyValue(PollTypeVerbose)
+                        choices: switchKeyValue(PollTypeVerbose),
+                        restrictionFn: (orgaSettings, value: any) => {
+                            const isElectronicVotingEnabled = orgaSettings.instant('enable_electronic_voting');
+                            if (!isElectronicVotingEnabled && typeof value !== 'string') {
+                                return { analog: 'analog' };
+                            }
+                            return value;
+                        }
                     },
                     {
                         key: 'motion_poll_default_100_percent_base',
@@ -703,7 +726,14 @@ export const meetingSettings: SettingsGroup[] = [
                         key: 'assignment_poll_default_type',
                         label: 'Default voting type',
                         type: 'choice',
-                        choices: switchKeyValue(PollTypeVerbose)
+                        choices: switchKeyValue(PollTypeVerbose),
+                        restrictionFn: (orgaSettings, value: any) => {
+                            const isElectronicVotingEnabled = orgaSettings.instant('enable_electronic_voting');
+                            if (!isElectronicVotingEnabled && typeof value !== 'string') {
+                                return { analog: 'analog' };
+                            }
+                            return value;
+                        }
                     },
                     {
                         key: 'assignment_poll_default_100_percent_base',

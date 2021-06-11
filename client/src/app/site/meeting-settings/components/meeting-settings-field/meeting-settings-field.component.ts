@@ -9,17 +9,18 @@ import {
     Output,
     ViewEncapsulation
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 import * as moment from 'moment';
 import { Moment } from 'moment';
 import { Observable } from 'rxjs';
-import { distinctUntilChanged, filter } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 
 import { CollectionMapperService } from 'app/core/core-services/collection-mapper.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MeetingSettingsDefinitionProvider } from 'app/core/ui-services/meeting-settings-definition-provider.service';
+import { OrganizationSettingsService } from 'app/core/ui-services/organization-settings.service';
 import { ParentErrorStateMatcher } from 'app/shared/parent-error-state-matcher';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewGroup } from 'app/site/users/models/view-group';
@@ -110,7 +111,8 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
         private cd: ChangeDetectorRef,
         private groupRepo: GroupRepositoryService,
         public meetingSettingsDefinitionProvider: MeetingSettingsDefinitionProvider,
-        private mapper: CollectionMapperService
+        private mapper: CollectionMapperService,
+        private orgaSettings: OrganizationSettingsService
     ) {
         super(componentServiceCollector);
     }
@@ -121,9 +123,10 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
     public ngOnInit(): void {
         // filter out empty results in group observable. We never have no groups and it messes up
         // the settings change detection
-        this.groupObservable = this.groupRepo
-            .getViewModelListObservableWithoutDefaultGroup()
-            .pipe(filter(groups => !!groups.length));
+        this.groupObservable = this.groupRepo.getViewModelListObservableWithoutDefaultGroup().pipe(
+            filter(groups => !!groups.length),
+            map(groups => this.getRestrictedValue(groups))
+        );
 
         if (this.setting.choicesFunc) {
             const def = this.setting.choicesFunc;
@@ -153,11 +156,11 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
             }
         }
         if ((this.setting.type === 'datetime' || this.setting.type === 'date') && this.value) {
-            const datetimeObj = this.unixToDateAndTime(this.value as number);
+            const datetimeObj = this.getRestrictedValue(this.unixToDateAndTime(this.value as number));
             this.form.patchValue(datetimeObj);
         }
         this.form.patchValue({
-            value: this.translatedValue
+            value: this.getRestrictedValue(this.translatedValue)
         });
         this.form.valueChanges
             // The editor fires changes whenever content was changed. Even by AutoUpdate.
@@ -174,6 +177,13 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
     public ngOnDestroy(): void {
         super.ngOnDestroy();
         this.cd.detach();
+    }
+
+    public getRestrictedValue<T>(value: T): T {
+        if (this.setting.restrictionFn) {
+            return this.setting.restrictionFn(this.orgaSettings, value);
+        }
+        return value;
     }
 
     /**

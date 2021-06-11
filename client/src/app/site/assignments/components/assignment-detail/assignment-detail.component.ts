@@ -239,7 +239,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
                 // Get all available groups in an active meeting.
                 viewModelCtor: ViewMeeting,
                 ids: [this.activeMeetingId],
-                follow: [{ idField: 'group_ids' }]
+                follow: [{ idField: 'group_ids' }, { idField: 'user_ids', fieldset: 'shortName' }]
             },
             'groups'
         );
