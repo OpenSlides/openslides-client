@@ -193,6 +193,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
 
     public enterEditMotion(): void {
         this.editMotion = true;
+        this.showMotionEditConflictWarningIfNecessary();
     }
 
     public leaveEditMotion(): void {
@@ -563,12 +564,23 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
             );
         }
 
-        /**
-         * Check for changes of the viewport subject changes
-         */
-        this.vp.isMobileSubject.subscribe(() => {
-            this.cd.markForCheck();
-        });
+        this.subscriptions.push(
+            /**
+             * Check for changes of the viewport subject changes
+             */
+            this.vp.isMobileSubject.subscribe(() => {
+                this.cd.markForCheck();
+            })
+        );
+    }
+
+    private showMotionEditConflictWarningIfNecessary(): void {
+        if (this.motion.amendments?.filter(amend => amend.isParagraphBasedAmendment()).length > 0) {
+            const msg = this.translate.instant(
+                'Warning: Amendments exist for this motion. Editing this text will likely impact them negatively. Particularily, amendments might become unusable if the paragraph they affect is deleted.'
+            );
+            this.raiseWarning(msg);
+        }
     }
 
     /**
