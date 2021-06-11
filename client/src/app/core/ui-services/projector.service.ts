@@ -44,7 +44,7 @@ export class ProjectorService {
      */
     public isProjected(obj: ProjectionBuildDescriptor | Projectable): boolean {
         const descriptor = this.ensureDescriptor(obj);
-        const projectors = this.activeMeetingService.meeting.projectors;
+        const projectors = this.activeMeetingService.meeting?.projectors || [];
         return projectors.some(projector => {
             return this.isProjectedOn(descriptor, projector);
         });

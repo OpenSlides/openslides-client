@@ -1,6 +1,10 @@
-<ng-container *ngIf="isEditing; then editView; else showView"></ng-container>
+<div class="content-container">
+    <mat-card [ngClass]="isEditing ? 'os-form-card' : 'os-card'" class="spacer-bottom-60" (keydown)="onKeyDown($event)">
+        <ng-container *ngIf="isEditing; then editTemplate; else showTemplate"></ng-container>
+    </mat-card>
+</div>
 
-<ng-template #editView>
+<ng-template #editTemplate>
     <form [formGroup]="personalInfoForm">
         <div *ngIf="isAllowed('seeName')">
             <!-- Title -->
@@ -49,7 +53,7 @@
             </mat-form-field>
         </div>
 
-        <ng-content select="[editView]"></ng-content>
+        <ng-template *ngTemplateOutlet="editView; context: { form: personalInfoForm }"></ng-template>
 
         <div *ngIf="isAllowed('manage')">
             <!-- Initial Password -->
@@ -84,11 +88,12 @@
         <div>
             <mat-checkbox formControlName="is_active">{{ 'Is active' | translate }}</mat-checkbox>
             <mat-checkbox formControlName="is_physical_person">{{ 'Is a physical person' | translate }}</mat-checkbox>
+            <ng-container *ngTemplateOutlet="moreChecks; context: { form: personalInfoForm }"></ng-container>
         </div>
     </form>
 </ng-template>
 
-<ng-template #showView>
+<ng-template #showTemplate>
     <ng-container *ngIf="user">
         <!-- User name -->
         <div *ngIf="isAllowed('seeName')">
@@ -98,6 +103,7 @@
                 <mat-icon *ngIf="!user.is_active && isAllowed('seeExtra')" matTooltip="{{ 'Inactive' | translate }}">
                     block
                 </mat-icon>
+                <ng-container *ngTemplateOutlet="moreIcons; context: { user: user }"></ng-container>
             </span>
         </div>
 
@@ -114,8 +120,6 @@
             <h4>{{ 'Gender' | translate }}</h4>
             <span>{{ user.gender | translate }}</span>
         </div>
-
-        <ng-content select="[showView]"></ng-content>
 
         <div *ngIf="isAllowed('manage')">
             <!-- Username -->
@@ -137,5 +141,7 @@
                 <span>{{ getEmailSentTime() }}</span>
             </div>
         </div>
+
+        <ng-container *ngTemplateOutlet="showView; context: { user: user }"></ng-container>
     </ng-container>
 </ng-template>

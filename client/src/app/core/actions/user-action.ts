@@ -10,6 +10,7 @@ export namespace UserAction {
     export const SEND_INVITATION_EMAIL = 'user.send_invitation_email';
     export const SET_PASSWORD = 'user.set_password';
     export const SET_PASSWORD_SELF = 'user.set_password_self';
+    export const SET_PRESENT = 'user.set_present';
     export const UPDATE = 'user.update';
     export const UPDATE_SELF = 'user.update_self';
 
@@ -45,7 +46,7 @@ export namespace UserAction {
         };
 
         vote_delegated_$_to_id: {
-            [meeting_id: number]: Id[];
+            [meeting_id: number]: Id;
         };
         vote_delegations_$_from_ids: {
             [meeting_id: number]: Id[];
@@ -80,6 +81,13 @@ export namespace UserAction {
         old_password: string;
         new_password: string;
     }
+
+    export interface SetPresentPayload {
+        id: Id;
+        meeting_id: Id;
+        present: boolean;
+    }
+
     export interface UpdateSelfPayload {
         username: string;
         about_me_$: {

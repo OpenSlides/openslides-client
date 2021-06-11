@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { OperatorService } from 'app/core/core-services/operator.service';
+import { OML } from 'app/core/core-services/organization-permission';
 import { CommitteeRepositoryService } from 'app/core/repositories/management/committee-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
-import { genders } from 'app/shared/models/users/user';
 import { OneOfValidator } from 'app/shared/validators/one-of-validator';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
@@ -17,9 +17,32 @@ import { ViewUser } from 'app/site/users/models/view-user';
     styleUrls: ['./member-edit.component.scss']
 })
 export class MemberEditComponent extends BaseModelContextComponent implements OnInit {
-    public personalInfoForm: FormGroup;
+    public readonly OML = OML;
 
-    public genders = genders;
+    public get organizationManagementLevels(): string[] {
+        return Object.values(OML).filter(level => this.operator.hasOrganizationPermissions(level));
+    }
+
+    public get randomPasswordFn(): () => string {
+        return () => this.getRandomPassword();
+    }
+
+    public readonly additionalFormControls = {
+        committee_ids: [[]],
+        default_structure_level: [''],
+        default_number: [''],
+        default_vote_weight: [''],
+        organization_management_level: []
+    };
+
+    public readonly additionalValidators = OneOfValidator.validation(
+        ['committee_ids', 'organization_management_level'],
+        'management_level'
+    );
+
+    public isFormValid = false;
+    public personalInfoFormValue = {};
+    public formErrors: { [name: string]: boolean } | null = null;
 
     public isEditingUser = false;
     public user: ViewUser;
@@ -28,11 +51,11 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         public committeeRepo: CommitteeRepositoryService,
-        private fb: FormBuilder,
         private repo: UserRepositoryService,
         private route: ActivatedRoute,
         private router: Router,
-        private promptService: PromptService
+        private promptService: PromptService,
+        private operator: OperatorService
     ) {
         super(componentServiceCollector);
     }
@@ -42,7 +65,7 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
     }
 
     public async onSubmit(): Promise<void> {
-        if (this.personalInfoForm.invalid) {
+        if (!this.isFormValid) {
             this.checkFormForErrors();
             return;
         }
@@ -55,50 +78,18 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
     }
 
     public onCancel(): void {
-        this.router.navigate(['..'], { relativeTo: this.route });
-    }
-
-    /**
-     * Should determine if the user (Operator) has the
-     * correct permission to perform the given action.
-     *
-     * actions might be:
-     * - delete         (deleting the user) (users.can_manage and not ownPage)
-     * - seeName        (title, first, last, gender, about) (user.can_see_name or ownPage)
-     * - seeOtherUsers  (title, first, last, gender, about) (user.can_see_name)
-     * - seeExtra       (email, comment, is_active, last_email_send) (user.can_see_extra_data)
-     * - seePersonal    (mail, username, structure level) (user.can_see_extra_data or ownPage)
-     * - manage         (everything) (user.can_manage)
-     * - changePersonal (mail, username, about) (user.can_manage or ownPage)
-     * - changePassword (user.can_change_password)
-     *
-     * @param action the action the user tries to perform
-     */
-    public isAllowed(action: string): boolean {
-        switch (action) {
-            default:
-                return true;
+        if (this.isNewUser) {
+            this.router.navigate(['..'], { relativeTo: this.route });
+        } else {
+            this.isEditingUser = false;
         }
     }
 
     /**
      * Handler for the generate Password button.
      */
-    public setRandomPassword(): void {
-        this.personalInfoForm.patchValue({
-            default_password: this.repo.getRandomPassword()
-        });
-    }
-
-    /**
-     * clicking Shift and Enter will save automatically
-     *
-     * @param event has the code
-     */
-    public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === 'Enter' && event.shiftKey) {
-            this.onSubmit();
-        }
+    public getRandomPassword(): string {
+        return this.repo.getRandomPassword();
     }
 
     /**
@@ -113,97 +104,11 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
         }
     }
 
-    /**
-     * sets editUser variable and editable form
-     * @param edit
-     */
-    public async setEditMode(edit: boolean): Promise<void> {
-        this.isEditingUser = edit;
-
-        if (edit) {
-            this.enterEditMode();
-        }
-
-        // case: abort creation of a new user
-        if (this.isNewUser && !edit) {
-            this.router.navigate(['./members/']);
-        }
-    }
-
-    private enterEditMode(): void {
-        this.createForm();
-        this.updateFormControlsAccessibility();
-        if (this.user) {
-            this.patchFormValues();
-        }
-    }
-
-    /**
-     * Updates the formcontrols of the `personalInfoForm` with the values from a given user.
-     */
-    private patchFormValues(): void {
-        const personalInfoPatch = {};
-        Object.keys(this.personalInfoForm.controls).forEach(ctrl => {
-            if (typeof this.user[ctrl] === 'function') {
-                personalInfoPatch[ctrl] = this.user[ctrl]();
-            } else {
-                personalInfoPatch[ctrl] = this.user[ctrl];
-            }
-        });
-        this.personalInfoForm.patchValue(personalInfoPatch);
-    }
-
-    /**
-     * Makes the form editable
-     */
-    private updateFormControlsAccessibility(): void {
-        const formControlNames = Object.keys(this.personalInfoForm.controls);
-
-        // Enable all controls.
-        formControlNames.forEach(formControlName => {
-            this.personalInfoForm.get(formControlName).enable();
-        });
-
-        // Disable not permitted controls
-        if (!this.isAllowed('manage')) {
-            formControlNames.forEach(formControlName => {
-                if (!['username', 'email', 'about_me'].includes(formControlName)) {
-                    this.personalInfoForm.get(formControlName).disable();
-                }
-            });
-        }
-    }
-
-    /**
-     * initialize the form with default values
-     */
-    private createForm(): void {
-        if (this.personalInfoForm) {
-            return;
-        }
-        this.personalInfoForm = this.fb.group({
-            username: ['', Validators.required],
-            title: [undefined],
-            first_name: [undefined],
-            last_name: [undefined],
-            gender: [undefined],
-            email: [undefined, Validators.email],
-            committee_ids: [[]],
-            last_email_send: [undefined],
-            default_password: [undefined],
-            default_structure_level: [undefined],
-            default_number: [undefined],
-            default_vote_weight: [undefined],
-            is_active: [true],
-            is_physical_person: [true]
-        });
-    }
-
     private getUserByUrl(): void {
         if (this.route.snapshot.url[0] && this.route.snapshot.url[0].path === 'create') {
             super.setTitle('New member');
             this.isNewUser = true;
-            this.setEditMode(true);
+            this.isEditingUser = true;
         } else {
             this.route.params.subscribe(params => {
                 this.loadUserById(Number(params.id));
@@ -216,7 +121,7 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
             this.requestModels({
                 viewModelCtor: ViewUser,
                 ids: [userId],
-                follow: [],
+                follow: ['committee_ids'],
                 fieldset: 'orgaEdit'
             });
 
@@ -234,40 +139,48 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
 
     private async createOrUpdateUser(): Promise<void> {
         if (this.isNewUser) {
-            await this.createRealUser();
+            await this.createUser();
         } else {
-            await this.updateRealUser();
+            await this.updateUser();
         }
     }
 
-    private async createRealUser(): Promise<void> {
+    private async createUser(): Promise<void> {
         const payload = {
-            ...this.personalInfoForm.value
+            ...this.personalInfoFormValue
         };
         const identifiable = await this.repo.create(payload);
         this.router.navigate(['..', identifiable.id], { relativeTo: this.route });
     }
 
-    private async updateRealUser(): Promise<void> {
+    private async updateUser(): Promise<void> {
         const payload = {
-            ...this.personalInfoForm.value
+            ...this.personalInfoFormValue
         };
         await this.repo.update(payload, this.user);
-        this.setEditMode(false);
+        this.isEditingUser = false;
     }
 
     private checkFormForErrors(): void {
         let hint = '';
-        const personalInfoForm = this.personalInfoForm;
-        if (personalInfoForm.errors) {
-            hint = 'At least one of username, first name or last name has to be set.';
-        } else {
-            for (const formControl in personalInfoForm.controls) {
-                if (personalInfoForm.get(formControl).errors) {
-                    hint = formControl + ' is incorrect.';
-                }
-            }
+        if (Object.keys(this.formErrors).length) {
+            hint = Object.keys(this.formErrors)
+                .map(error => this.getErrorHint(error))
+                .join('\n');
         }
-        this.raiseError(this.translate.instant(hint));
+        this.raiseError(hint);
+    }
+
+    private getErrorHint(error: string): string {
+        let hint = '';
+        switch (error) {
+            case 'name':
+                hint = 'At least one of username, first name or last name has to be set.';
+                break;
+            case 'management_level':
+                hint = 'At least one committee or an organization management-level has to be set.';
+                break;
+        }
+        return this.translate.instant(hint);
     }
 }
