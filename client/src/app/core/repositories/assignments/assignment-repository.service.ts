@@ -38,7 +38,8 @@ export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeake
             [DEFAULT_FIELDSET]: listFields.concat([
                 'description',
                 'default_poll_description',
-                'number_poll_candidates'
+                'number_poll_candidates',
+                'agenda_item_id'
             ]),
             list: listFields,
             title: titleFields

@@ -4,11 +4,9 @@
     </div>
 </os-head-bar>
 
-<os-list-view-table
+<os-basic-list-view-table
     [listObservableProvider]="repo"
     [columns]="tableColumnDefinition"
-    [allowProjector]="false"
-    [showListOfSpeakers]="false"
     [hiddenInMobile]="['menu']"
     [(selectedRows)]="selectedRows"
     (dataSourceChange)="onDataSourceChange($event)"
@@ -32,7 +30,7 @@
             <mat-icon>delete</mat-icon>
         </button>
     </div>
-</os-list-view-table>
+</os-basic-list-view-table>
 
 <!-- Template for dialog for quick editing -->
 <ng-template #tagDialog>

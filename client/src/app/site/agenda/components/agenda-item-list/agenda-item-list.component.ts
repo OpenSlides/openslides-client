@@ -302,7 +302,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
         const content = this.translate.instant("All topics will be deleted and won't be accessible afterwards.");
         if (await this.promptService.open(title, content)) {
             try {
-                await this.repo.bulkRemoveItemsFromAgenda(this.selectedRows);
+                await this.repo.removeFromAgenda(...this.selectedRows);
             } catch (e) {
                 this.raiseError(e);
             }

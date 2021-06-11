@@ -25,12 +25,10 @@
     </div>
 </os-head-bar>
 
-<os-list-view-table
+<os-basic-list-view-table
     [listObservable]="repo.getViewModelListObservable()"
     [columns]="tableColumnDefinition"
-    [showListOfSpeakers]="false"
     [(selectedRows)]="selectedRows"
-    [allowProjector]="false"
     [multiSelect]="isMultiSelect"
     listStorageKey="orgaTags"
     (dataSourceChange)="onDataSourceChange($event)"
@@ -76,7 +74,7 @@
             <mat-icon>delete</mat-icon>
         </button>
     </div>
-</os-list-view-table>
+</os-basic-list-view-table>
 
 <mat-menu #orgaTagMenu="matMenu">
     <div *ngIf="!isMultiSelect">

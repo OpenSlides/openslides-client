@@ -555,7 +555,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
     }
 
     public removeFromAgenda(): void {
-        this.itemRepo.removeFromAgenda(this.assignment.agenda_item);
+        this.itemRepo.removeFromAgenda(this.assignment.agenda_item_id);
     }
 
     public ngOnDestroy(): void {
