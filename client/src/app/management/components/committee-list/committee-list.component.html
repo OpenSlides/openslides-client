@@ -27,13 +27,11 @@
     </ng-container>
 </os-head-bar>
 
-<os-list-view-table
+<os-basic-list-view-table
     [listObservableProvider]="repo"
     [columns]="tableColumnDefinition"
-    [allowProjector]="false"
     [alwaysShowMenu]="true"
     [multiSelect]="isMultiSelect"
-    [showListOfSpeakers]="false"
     [(selectedRows)]="selectedRows"
     (dataSourceChange)="onDataSourceChange($event)"
     [filterProps]="['name']"
@@ -113,7 +111,7 @@
             <mat-icon>more_vert</mat-icon>
         </button>
     </div>
-</os-list-view-table>
+</os-basic-list-view-table>
 
 <mat-menu #singleCommitteeMenu="matMenu">
     <ng-template matMenuContent let-committee="committee">

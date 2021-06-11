@@ -27,12 +27,10 @@
     </ng-container>
 </os-head-bar>
 
-<os-list-view-table
+<os-basic-list-view-table
     [listObservable]="meetingsObservable"
     [columns]="tableColumnDefinition"
     [alwaysShowMenu]="true"
-    [allowProjector]="false"
-    [showListOfSpeakers]="false"
     [(selectedRows)]="selectedRows"
     (dataSourceChange)="onDataSourceChange($event)"
     [filterProps]="['name']"
@@ -85,7 +83,7 @@
             <mat-icon>more_vert</mat-icon>
         </button>
     </div>
-</os-list-view-table>
+</os-basic-list-view-table>
 
 <mat-menu #singleMeetingMenu="matMenu">
     <ng-template matMenuContent let-meeting="meeting">

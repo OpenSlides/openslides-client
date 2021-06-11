@@ -109,6 +109,7 @@ import { ChipComponent } from './components/chip/chip.component';
 import { ChipListComponent } from './components/chip-list/chip-list.component';
 import { OmlPermsDirective } from './directives/oml-perms.directive';
 import { CmlPermsDirective } from './directives/cml-perms.directive';
+import { BasicListViewTableComponent } from './components/basic-list-view-table/basic-list-view-table.component';
 
 const declarations = [
     PermsDirective,
@@ -185,7 +186,8 @@ const declarations = [
     ChipComponent,
     ChipListComponent,
     CmlPermsDirective,
-    OmlPermsDirective
+    OmlPermsDirective,
+    BasicListViewTableComponent
 ];
 
 const sharedModules = [

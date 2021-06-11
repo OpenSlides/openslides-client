@@ -1,75 +1,51 @@
-<mat-drawer-container class="list-view-frame" *ngIf="columns && columnSet">
-    <div class="list-view-table-wrapper" (keydown)="onKeyDown($event)" (keyup)="onKeyUp($event)">
-        <os-sort-filter-bar
-            class="sort-filter-bar"
-            *ngIf="showFilterBar"
-            [totalCount]="totalCount"
-            [filterCount]="countFilter"
-            [filterService]="filterService"
-            [sortService]="sortService"
-            [searchFieldInput]="inputValue"
-            (searchFieldChange)="searchFilter($event)"
-        >
-            <div class="extra-info-slot">
-                <ng-content select=".filter-bar-info-slot"></ng-content>
+<os-basic-list-view-table
+    [listObservableProvider]="listObservableProvider"
+    [listObservable]="listObservable"
+    [startColumnDefinitions]="startColumnDefinitions"
+    [endColumnDefinitions]="endColumnDefinitions"
+    [sortService]="sortService"
+    [filterService]="filterService"
+    [multiSelect]="multiSelect"
+    [hiddenInMobile]="hiddenInMobile"
+    [restricted]="restricted"
+    [selectedRows]="selectedRows"
+    [columns]="columns"
+    [filterProps]="filterProps"
+    [listStorageKey]="listStorageKey"
+    [showFilterBar]="showFilterBar"
+    [alwaysShowMenu]="alwaysShowMenu"
+    [showMenu]="showMenu"
+    [vScrollFixed]="vScrollFixed"
+>
+    <ng-template #startColumnView>
+        <!-- Projector column -->
+        <div *pblNgridCellDef="'projector'; row as viewModel" class="fill ngrid-lg">
+            <os-projector-button
+                *osPerms="permission.projectorCanManage"
+                class="projector-button"
+                [object]="_getProjectorButtonObject(viewModel)"
+                (changeEvent)="viewUpdateEvent()"
+            ></os-projector-button>
+            <!-- Projector indicator -->
+            <div class="projector-button" *osPerms="permission.projectorCanManage; complement: true">
+                <mat-icon
+                    color="accent"
+                    *ngIf="projectorService.isProjected(_getProjectorButtonObject(viewModel))"
+                    matTooltip="{{ 'Currently projected' | translate }}"
+                >
+                    videocam
+                </mat-icon>
             </div>
-        </os-sort-filter-bar>
+        </div>
+    </ng-template>
 
-        <pbl-ngrid
-            class="vscroll-list-view"
-            [attr.vScrollFixed]="vScrollFixed !== -1 ? vScrollFixed : false"
-            [attr.vScrollAuto]="vScrollFixed === -1"
-            [showHeader]="!showFilterBar || !fullScreen"
-            [showHeader]="false"
-            matCheckboxSelection="selection"
-            [dataSource]="dataSource"
-            [columns]="columnSet"
-            [hideColumns]="hiddenColumns"
-            (rowClick)="onSelectRow($event)"
-            [rowClassUpdate]="isElementProjected"
-            rowClassUpdateFreq="ngDoCheck"
-        >
-            <!-- "row" has the view model -->
-            <!-- "value" has the property, that was defined in the columnDefinition -->
-            <!-- "col" has a column reference -->
-
-            <!-- Projector column -->
-            <div *pblNgridCellDef="'projector'; row as viewModel" class="fill ngrid-lg">
-                <os-projector-button
-                    *osPerms="permission.projectorCanManage"
-                    class="projector-button"
-                    [object]="_getProjectorButtonObject(viewModel)"
-                    (changeEvent)="viewUpdateEvent()"
-                ></os-projector-button>
-                <!-- Projector indicator -->
-                <div class="projector-button" *osPerms="permission.projectorCanManage; complement: true">
-                    <mat-icon
-                        color="accent"
-                        *ngIf="projectorService.isProjected(_getProjectorButtonObject(viewModel))"
-                        matTooltip="{{ 'Currently projected' | translate }}"
-                    >
-                        videocam
-                    </mat-icon>
-                </div>
-            </div>
-
-            <!-- No Results -->
-            <div *pblNgridNoDataRef class="pbl-ngrid-no-data">
-                <span>{{ 'No data' | translate }}</span>
-            </div>
-
-            <!-- Slot transclusion for the individual cells -->
-            <div #contentWrapper>
-                <ng-content class="ngrid-lg" select=".cell-slot"></ng-content>
-            </div>
-
-            <!-- Speaker -->
-            <div *pblNgridCellDef="'speaker'; row as viewModel; rowContext as rowContext" class="fill">
-                <os-speaker-button
-                    [object]="_getSpeakerButtonObject(viewModel)"
-                    [disabled]="multiSelect"
-                ></os-speaker-button>
-            </div>
-        </pbl-ngrid>
-    </div>
-</mat-drawer-container>
+    <ng-template #endColumnView>
+        <!-- Speaker -->
+        <div *pblNgridCellDef="'speaker'; row as viewModel; rowContext as rowContext" class="fill">
+            <os-speaker-button
+                [object]="_getSpeakerButtonObject(viewModel)"
+                [disabled]="multiSelect"
+            ></os-speaker-button>
+        </div>
+    </ng-template>
+</os-basic-list-view-table>
