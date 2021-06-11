@@ -111,6 +111,7 @@ import { OmlPermsDirective } from './directives/oml-perms.directive';
 import { CmlPermsDirective } from './directives/cml-perms.directive';
 import { BasicListViewTableComponent } from './components/basic-list-view-table/basic-list-view-table.component';
 import { PointOfOrderDialogComponent } from './components/point-of-order-dialog/point-of-order-dialog.component';
+import { CustomTranslationComponent } from './components/custom-translation/custom-translation.component';
 
 const declarations = [
     PermsDirective,
@@ -189,7 +190,8 @@ const declarations = [
     CmlPermsDirective,
     OmlPermsDirective,
     BasicListViewTableComponent,
-    PointOfOrderDialogComponent
+    PointOfOrderDialogComponent,
+    CustomTranslationComponent
 ];
 
 const sharedModules = [

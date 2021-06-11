@@ -45,7 +45,7 @@ export interface Settings {
     conference_stream_url: string;
 
     // Projector
-    projector_default_countdown_time: number;
+    projector_countdown_default_time: number;
     projector_countdown_warning_time: number;
 
     // Exports

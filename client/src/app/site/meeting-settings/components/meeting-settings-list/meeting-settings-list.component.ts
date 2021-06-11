@@ -118,6 +118,7 @@ export class MeetingSettingsListComponent
             for (const settingsField of this.settingsFields) {
                 settingsField.onResetButton();
             }
+            await this.saveAll();
         }
     }
 
