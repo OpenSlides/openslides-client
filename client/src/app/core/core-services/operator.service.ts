@@ -219,7 +219,7 @@ export class OperatorService {
             }
         });
         this.groupRepo.getGeneralViewModelObservable().subscribe(group => {
-            if (!this.activeMeetingId) {
+            if (!this.activeMeetingId || !group) {
                 return;
             }
 

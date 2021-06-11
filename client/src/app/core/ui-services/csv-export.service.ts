@@ -129,6 +129,9 @@ export class CsvExportService {
                             value = '1';
                         } else if (property === false) {
                             value = '0';
+                        } else if (typeof property === 'function') {
+                            const bindedFn = property.bind(model); // bind model to access 'this'
+                            value = bindedFn()?.toString();
                         } else {
                             value = property.toString();
                         }

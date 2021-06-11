@@ -1,6 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, ContentChild, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
+import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 
+import { Subscription } from 'rxjs';
+
+import { OperatorService } from 'app/core/core-services/operator.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { genders } from 'app/shared/models/users/user';
 import { OneOfValidator } from 'app/shared/validators/one-of-validator';
@@ -12,7 +15,31 @@ import { ViewUser } from 'app/site/users/models/view-user';
     templateUrl: './user-detail-view.component.html',
     styleUrls: ['./user-detail-view.component.scss']
 })
-export class UserDetailViewComponent extends BaseComponent implements OnInit {
+export class UserDetailViewComponent extends BaseComponent {
+    /**
+     * Reference to the edit template content.
+     */
+    @ContentChild('editView', { read: TemplateRef, static: true })
+    public editView: TemplateRef<any>;
+
+    /**
+     * Reference to the show template content.
+     */
+    @ContentChild('showView', { read: TemplateRef, static: true })
+    public showView: TemplateRef<any>;
+
+    /**
+     * Reference to the edit template for checks.
+     */
+    @ContentChild('moreChecks', { read: TemplateRef, static: true })
+    public moreChecks: TemplateRef<any>;
+
+    /**
+     * Reference to the show template for icons.
+     */
+    @ContentChild('moreIcons', { read: TemplateRef, static: true })
+    public moreIcons: TemplateRef<any>;
+
     @Input()
     public user: ViewUser;
 
@@ -32,6 +59,21 @@ export class UserDetailViewComponent extends BaseComponent implements OnInit {
     }
 
     @Input()
+    public set additionalFormControls(controls: any) {
+        this._additionalFormControls = controls;
+        this.prepareForm();
+    }
+
+    @Input()
+    public set additionalValidators(validators: ValidatorFn | ValidatorFn[]) {
+        if (!Array.isArray(validators)) {
+            validators = [validators];
+        }
+        this._additionalValidators = validators;
+        this.prepareForm();
+    }
+
+    @Input()
     public isAllowedFn: (permission: string) => boolean;
 
     @Input()
@@ -43,20 +85,29 @@ export class UserDetailViewComponent extends BaseComponent implements OnInit {
     @Output()
     public validEvent = new EventEmitter<boolean>();
 
+    @Output()
+    public errorEvent = new EventEmitter<{ [name: string]: boolean } | null>();
+
+    @Output()
+    public submitEvent = new EventEmitter<void>();
+
     public personalInfoForm: FormGroup;
 
     public genders = genders;
 
     private _isEditing = false;
 
-    public constructor(serviceCollector: ComponentServiceCollector, private fb: FormBuilder) {
-        super(serviceCollector);
-        this.createForm();
-    }
+    private _additionalValidators: ValidatorFn[] = [];
+    private _additionalFormControls: any = {};
+    private _formValueChangeSubscription: Subscription | null = null;
 
-    public ngOnInit(): void {
-        this.subscriptions.push(this.personalInfoForm.valueChanges.subscribe(() => this.propagateValues()));
-        this.propagateValues();
+    public constructor(
+        serviceCollector: ComponentServiceCollector,
+        operator: OperatorService,
+        private fb: FormBuilder
+    ) {
+        super(serviceCollector);
+        this.subscriptions.push(operator.operatorUpdatedEvent.subscribe(() => this.updateFormControlsAccessibility()));
     }
 
     public isAllowed(permission: string): boolean {
@@ -71,18 +122,42 @@ export class UserDetailViewComponent extends BaseComponent implements OnInit {
         }
     }
 
+    public onKeyDown(event: KeyboardEvent): void {
+        if (event.key === 'Enter' && event.shiftKey) {
+            this.submitEvent.emit();
+        }
+    }
+
     private enterEditMode(): void {
-        this.createForm();
+        this.prepareForm();
         this.updateFormControlsAccessibility();
         if (this.user) {
             this.patchFormValues();
         }
     }
 
+    private prepareForm(): void {
+        this.createForm();
+        this.patchFormValues();
+        this.preparePropagation();
+    }
+
+    private preparePropagation(): void {
+        if (this._formValueChangeSubscription) {
+            this._formValueChangeSubscription.unsubscribe();
+            this._formValueChangeSubscription = null;
+        }
+        this._formValueChangeSubscription = this.personalInfoForm.valueChanges.subscribe(() => this.propagateValues());
+        this.propagateValues();
+    }
+
     /**
      * Updates the formcontrols of the `personalInfoForm` with the values from a given user.
      */
     private patchFormValues(): void {
+        if (!this.user) {
+            return;
+        }
         const personalInfoPatch = {};
         Object.keys(this.personalInfoForm.controls).forEach(ctrl => {
             if (typeof this.user[ctrl] === 'function') {
@@ -119,30 +194,35 @@ export class UserDetailViewComponent extends BaseComponent implements OnInit {
      * initialize the form with default values
      */
     private createForm(): void {
-        if (this.personalInfoForm) {
-            return;
-        }
         this.personalInfoForm = this.fb.group(
             {
-                username: [undefined],
-                title: [undefined],
-                first_name: [undefined],
-                last_name: [undefined],
-                gender: [undefined],
-                email: [undefined, Validators.email],
-                last_email_send: [undefined],
-                default_password: [undefined],
+                username: [''],
+                title: [''],
+                first_name: [''],
+                last_name: [''],
+                gender: [''],
+                email: [''],
+                last_email_send: [''],
+                default_password: [''],
                 is_active: [true],
-                is_physical_person: [true]
+                is_physical_person: [true],
+                ...this._additionalFormControls
             },
             {
-                validators: OneOfValidator.validation('username', 'first_name', 'last_name')
+                validators: [
+                    OneOfValidator.validation(['username', 'first_name', 'last_name'], 'name'),
+                    ...this._additionalValidators
+                ]
             }
         );
     }
 
     private propagateValues(): void {
-        this.changeEvent.emit(this.personalInfoForm.value);
-        this.validEvent.emit(this.personalInfoForm.valid);
+        setTimeout(() => {
+            // setTimeout prevents 'ExpressionChangedAfterItHasBeenChecked'-error
+            this.changeEvent.emit(this.personalInfoForm.value);
+            this.validEvent.emit(this.personalInfoForm.valid);
+            this.errorEvent.emit(this.personalInfoForm.errors);
+        });
     }
 }

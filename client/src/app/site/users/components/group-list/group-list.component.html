@@ -28,7 +28,11 @@
 
                     <div *ngFor="let group of groups; trackBy: trackByIndex">
                         <ng-container [matColumnDef]="group.name">
-                            <mat-header-cell class="group-head-table-cell" *matHeaderCellDef (click)="selectGroup(group)">
+                            <mat-header-cell
+                                class="group-head-table-cell"
+                                *matHeaderCellDef
+                                (click)="selectGroup(group)"
+                            >
                                 <div class="inner-table">
                                     {{ group.name | translate }}
                                 </div>
@@ -36,11 +40,15 @@
                             <mat-cell *matCellDef="let perm">
                                 <div class="inner-table">
                                     <mat-checkbox
-                                        *ngIf="!group.isSuperadminGroup"
+                                        *ngIf="!group.isAdminGroup"
                                         [checked]="group.hasPermission(perm.value)"
                                         (change)="togglePermission(group, perm.value)"
                                     ></mat-checkbox>
-                                    <mat-checkbox *ngIf="group.isSuperadminGroup" [checked]="true" [disabled]="true"></mat-checkbox>
+                                    <mat-checkbox
+                                        *ngIf="group.isAdminGroup"
+                                        [checked]="true"
+                                        [disabled]="true"
+                                    ></mat-checkbox>
                                 </div>
                             </mat-cell>
                         </ng-container>
@@ -88,7 +96,7 @@
         </button>
         <button
             *ngIf="selectedGroup"
-            [disabled]="!isProtected(selectedGroup)"
+            [disabled]="isProtected(selectedGroup)"
             type="button"
             mat-button
             color="warn"

@@ -13,13 +13,26 @@ export class OneOfValidator {
      *
      * @returns An error if all of these form controls have no valid values or null if at least one is filled.
      */
-    public static validation(...keys: string[]): (control: AbstractControl) => ValidationErrors | null {
+    public static validation(
+        keys: string[],
+        errorName: string = 'noOneSet'
+    ): (control: AbstractControl) => ValidationErrors | null {
         return (control: AbstractControl): ValidationErrors | null => {
             const formControls = keys.map(key => control.get(key));
 
-            const noOneSet = formControls.every(formControl => (formControl && !formControl.value) || !formControl);
+            const noOneSet = formControls.every(formControl => !this.isValidControl(formControl));
 
-            return noOneSet ? { noOneSet: true } : null;
+            return noOneSet ? { [errorName]: true } : null;
         };
+    }
+
+    private static isValidControl(control: AbstractControl): boolean {
+        if (!control?.value) {
+            return false;
+        }
+        if (Array.isArray(control.value) && !control.value.length) {
+            return false;
+        }
+        return true;
     }
 }

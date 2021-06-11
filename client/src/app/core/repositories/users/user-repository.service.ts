@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { UserAction } from 'app/core/actions/user-action';
+import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import {
     DEFAULT_FIELDSET,
     Fieldsets,
@@ -74,7 +75,8 @@ export class UserRepositoryService
 
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
-        private meetingSettingsService: MeetingSettingsService
+        private meetingSettingsService: MeetingSettingsService,
+        private activeMeeting: ActiveMeetingService
     ) {
         super(repositoryServiceCollector, User);
         this.sortProperty = this.meetingSettingsService.instant('users_sort_by');
@@ -166,7 +168,6 @@ export class UserRepositoryService
     }
 
     private getBaseUserPayload(partialUser: any): Partial<UserAction.BaseUserPayload> {
-        console.log('TODO: committee management level');
         let partialPayload: Partial<UserAction.BaseUserPayload> = {
             title: partialUser.title,
             first_name: partialUser.first_name,
@@ -181,11 +182,12 @@ export class UserRepositoryService
             default_number: partialUser.default_number,
             default_vote_weight: toDecimal(partialUser.default_vote_weight),
             committee_ids: partialUser.committee_ids,
-            // committee_$_management_level: partialUser.committee_$_management_level,
+            committee_$_management_level: partialUser.committee_$_management_level,
             organization_management_level: partialUser.organization_management_level
         };
 
         if (this.activeMeetingId) {
+            const defaultGroupId = this.activeMeeting.meeting.default_group_id;
             partialPayload = {
                 ...partialPayload,
                 number_$: { [this.activeMeetingId]: partialUser.number as string },
@@ -195,7 +197,9 @@ export class UserRepositoryService
                 comment_$: { [this.activeMeetingId]: partialUser.comment as string },
                 vote_delegated_$_to_id: { [this.activeMeetingId]: partialUser.vote_delegated_to_id },
                 vote_delegations_$_from_ids: { [this.activeMeetingId]: partialUser.vote_delegations_from_ids },
-                group_$_ids: { [this.activeMeetingId]: partialUser.group_ids }
+                group_$_ids: {
+                    [this.activeMeetingId]: partialUser.group_ids?.length ? partialUser.group_ids : [defaultGroupId]
+                }
             };
         }
         return partialPayload;
@@ -359,17 +363,13 @@ export class UserRepositoryService
     }
 
     public async setPresent(user: ViewUser, present: boolean): Promise<void> {
-        throw new Error('TODO');
-        // TODO: there must be a dedicated action for this.
-        /*this.preventAlterationOnDemoUsers(user);
-        const currentMeetingIds = user.is_present_in_meeting_ids || [];
-        const payload: UserAction.UpdatePayload = {
+        this.preventAlterationOnDemoUsers(user);
+        const payload: UserAction.SetPresentPayload = {
             id: user.id,
-            is_present_in_meeting_ids: present
-                ? [...currentMeetingIds, this.activeMeetingId]
-                : user.is_present_in_meeting_ids.filter(id => id !== this.activeMeetingId)
+            meeting_id: this.activeMeetingId,
+            present
         };
-        this.sendActionToBackend(UserAction.UPDATE, payload);*/
+        this.sendActionToBackend(UserAction.SET_PRESENT, payload);
     }
 
     /**

@@ -44,8 +44,8 @@ export class RelationManagerService {
 
     /**
      * id(s) field rules:
-     * for many=true:  idField: `<field>` -> `<field>_id`
-     * for many=false: idField: `<field>s` -> `<field>_ids`
+     * for many=false:  idField: `<field>` -> `<field>_id`
+     * for many=true: idField: `<field>s` -> `<field>_ids`
      */
     private ensureIdField(field: string, idField: string | null, many: boolean): string {
         if (idField) {

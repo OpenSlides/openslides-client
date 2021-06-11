@@ -128,7 +128,7 @@ export abstract class BasePollDialogComponent extends BaseComponent implements O
      */
     public publishStateChanged(checked: boolean): void {
         if (checked) {
-            this.dialogVoteForm.setValidators(OneOfValidator.validation(...Object.keys(this.dialogVoteForm.controls)));
+            this.dialogVoteForm.setValidators(OneOfValidator.validation(Object.keys(this.dialogVoteForm.controls)));
         } else {
             this.dialogVoteForm.setValidators(null);
         }

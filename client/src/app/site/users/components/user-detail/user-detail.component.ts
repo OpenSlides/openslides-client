@@ -1,11 +1,9 @@
 import { Component, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { BehaviorSubject } from 'rxjs';
 
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
-import { ModelSubscription } from 'app/core/core-services/autoupdate.service';
 import { SpecificStructuredField } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
@@ -16,8 +14,6 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
-import { genders } from 'app/shared/models/users/user';
-import { OneOfValidator } from 'app/shared/validators/one-of-validator';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { PollService } from 'app/site/polls/services/poll.service';
 import { UserPdfExportService } from '../../services/user-pdf-export.service';
@@ -33,10 +29,29 @@ import { ViewUser } from '../../models/view-user';
     styleUrls: ['./user-detail.component.scss']
 })
 export class UserDetailComponent extends BaseModelContextComponent implements OnDestroy {
-    /**
-     * Info form object
-     */
-    public personalInfoForm: FormGroup;
+    public readonly additionalFormControls = {
+        structure_level: [''],
+        number: [''],
+        vote_weight: [],
+        about_me: [''],
+        comment: [''],
+        group_ids: [[]],
+        vote_delegations_from_ids: [[]],
+        vote_delegated_to_id: [''],
+        is_present: [true]
+    };
+
+    public get randomPasswordFn(): () => string {
+        return () => this.getRandomPassword();
+    }
+
+    public get isAllowedFn(): (permission: string) => boolean {
+        return permission => this.isAllowed(permission);
+    }
+
+    public isFormValid = false;
+    public personalInfoFormValue: any = {};
+    public formErrors: { [name: string]: boolean } | null = null;
 
     /**
      * if this is the own page
@@ -74,11 +89,6 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
 
     public readonly users: BehaviorSubject<ViewUser[]> = new BehaviorSubject<ViewUser[]>([]);
 
-    /**
-     * Hold the list of genders (sexes) publicly to dynamically iterate in the view
-     */
-    public genderList = genders;
-
     private voteWeightEnabled: boolean;
 
     public get showVoteWeight(): boolean {
@@ -89,23 +99,9 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
 
     /**
      * Constructor for user
-     *
-     * @param title Title
-     * @param translate TranslateService
-     * @param matSnackBar MatSnackBar
-     * @param formBuilder FormBuilder
-     * @param route ActivatedRoute
-     * @param router Router
-     * @param repo UserRepositoryService
-     * @param operator OperatorService
-     * @param promptService PromptService
-     * @param pdfService UserPdfExportService used for export to pdf
-     * @param groupRepo
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        private operatorService: OperatorService,
-        private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
         public repo: UserRepositoryService,
@@ -118,12 +114,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
         private activeMeetingIdService: ActiveMeetingIdService
     ) {
         super(componentServiceCollector);
-        this.createForm();
         this.getUserByUrl();
-
-        this.operatorService.operatorUpdatedEvent.subscribe(() => {
-            this.updateFormControlsAccessibility();
-        });
 
         this.meetingSettingsService
             .get('users_enable_vote_weight')
@@ -181,33 +172,6 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
     }
 
     /**
-     * initialize the form with default values
-     */
-    public createForm(): void {
-        this.personalInfoForm = this.formBuilder.group({
-            username: ['', Validators.required],
-            title: [''],
-            first_name: [''],
-            last_name: [''],
-            gender: [''],
-            structure_level: [''],
-            number: [''],
-            vote_weight: [],
-            about_me: [''],
-            group_ids: [[]],
-            vote_delegations_from_ids: [[]],
-            vote_delegated_to_id: [''],
-            is_present: [true],
-            is_physical_person: [true],
-            email: ['', Validators.email],
-            last_email_send: [''],
-            comment: [''],
-            is_active: [true],
-            default_password: ['']
-        });
-    }
-
-    /**
      * Should determine if the user (Operator) has the
      * correct permission to perform the given action.
      *
@@ -251,50 +215,8 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
         }
     }
 
-    /**
-     * Loads values that require external references
-     * And allows async reading
-     */
-    public patchFormValues(): void {
-        const personalInfoPatch = {};
-        Object.keys(this.personalInfoForm.controls).forEach(ctrl => {
-            if (typeof this.user[ctrl] === 'function') {
-                personalInfoPatch[ctrl] = this.user[ctrl]();
-            } else {
-                personalInfoPatch[ctrl] = this.user[ctrl];
-            }
-        });
-        this.personalInfoForm.patchValue(personalInfoPatch);
-    }
-
-    /**
-     * Makes the form editable
-     */
-    public updateFormControlsAccessibility(): void {
-        const formControlNames = Object.keys(this.personalInfoForm.controls);
-
-        // Enable all controls.
-        formControlNames.forEach(formControlName => {
-            this.personalInfoForm.get(formControlName).enable();
-        });
-
-        // Disable not permitted controls
-        if (!this.isAllowed('manage')) {
-            formControlNames.forEach(formControlName => {
-                if (!['username', 'email', 'about_me'].includes(formControlName)) {
-                    this.personalInfoForm.get(formControlName).disable();
-                }
-            });
-        }
-    }
-
-    /**
-     * Handler for the generate Password button.
-     */
-    public generatePassword(): void {
-        this.personalInfoForm.patchValue({
-            default_password: this.repo.getRandomPassword()
-        });
+    public getRandomPassword(): string {
+        return this.repo.getRandomPassword();
     }
 
     /**
@@ -312,7 +234,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
      * Save / Submit a user
      */
     public async saveUser(): Promise<void> {
-        if (this.personalInfoForm.invalid) {
+        if (!this.isFormValid) {
             this.checkFormForErrors();
             return;
         }
@@ -349,11 +271,6 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
         }
 
         this.editUser = edit;
-        this.updateFormControlsAccessibility();
-
-        if (!this.newUser && edit) {
-            this.patchFormValues();
-        }
 
         // case: abort creation of a new user
         if (this.newUser && !edit) {
@@ -411,25 +328,23 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
     }
 
     private async createUser(): Promise<void> {
-        await this.repo.create(this.personalInfoForm.value);
+        const partialUser = { ...this.personalInfoFormValue };
+        if (partialUser.is_present) {
+            partialUser.is_present_in_meeting_ids = [this.activeMeetingId];
+        }
+        await this.repo.create(partialUser);
         this.goToAllUsers();
     }
 
     private async updateUser(): Promise<void> {
-        await this.repo.update(this.personalInfoForm.value, this.user);
+        await this.repo.update(this.personalInfoFormValue, this.user);
         this.setEditMode(false);
     }
 
     private checkFormForErrors(): void {
         let hint = '';
-        if (this.personalInfoForm.errors) {
+        if (this.formErrors) {
             hint = 'At least one of username, first name or last name has to be set.';
-        } else {
-            for (const formControl in this.personalInfoForm.controls) {
-                if (this.personalInfoForm.get(formControl).errors) {
-                    hint = formControl + ' is incorrect.';
-                }
-            }
         }
         this.raiseError(this.translate.instant(hint));
     }
