@@ -138,7 +138,7 @@
         <ng-container>
             <h3>{{ 'Candidates' | translate }}</h3>
             <div>
-                <div class="candidates-list" *ngIf="assignment.candidates && assignment.candidates.length">
+                <div class="candidates-list" *ngIf="assignment?.candidates?.length">
                     <os-sorting-list
                         [input]="assignment.candidates"
                         [live]="true"
@@ -150,9 +150,8 @@
                         <ng-template let-item>
                             <div class="single-candidate-line">
                                 <span>{{ item.getTitle() }}</span>
-                                <span>
+                                <span *ngIf="hasPerms('manage')">
                                     <button
-                                        *ngIf="hasPerms('manage')"
                                         mat-icon-button
                                         matTooltip="{{ 'Remove candidate' | translate }}"
                                         (click)="removeCandidate(item)"

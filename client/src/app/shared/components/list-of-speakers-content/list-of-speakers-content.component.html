@@ -106,7 +106,8 @@
                         </div>
                         <!-- Extra line -->
                         <ng-container
-                            *ngTemplateOutlet="speakerSubtitle; context: { speaker: speaker, showcolor: true }"
+                            [ngTemplateOutlet]="speakerSubtitle"
+                            [ngTemplateOutletContext]="{ speaker: speaker, showcolor: true }"
                         ></ng-container>
                     </div>
                     <div class="speaker-controls one-line">
@@ -136,7 +137,7 @@
                                 <button
                                     mat-icon-button
                                     (click)="onProContraButtons(speaker, true)"
-                                    matTooltip="{{ 'Pro speech' | translate }}"
+                                    matTooltip="{{ 'Forspeech' | translate }}"
                                     *ngIf="enableProContraSpeech && !speaker.point_of_order"
                                 >
                                     <mat-icon class="user-subtitle" *ngIf="speaker.pro_speech !== true">
@@ -151,7 +152,7 @@
                                 <button
                                     mat-icon-button
                                     (click)="onProContraButtons(speaker, false)"
-                                    matTooltip="{{ 'Contra speech' | translate }}"
+                                    matTooltip="{{ 'Counter speech' | translate }}"
                                     *ngIf="enableProContraSpeech && !speaker.point_of_order"
                                 >
                                     <mat-icon class="user-subtitle" *ngIf="speaker.pro_speech !== false">
