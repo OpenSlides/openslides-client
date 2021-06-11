@@ -6,9 +6,11 @@ import {
     Input,
     OnInit,
     Output,
-    ViewChild
+    ViewChild,
+    ViewEncapsulation
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 
 import { BehaviorSubject } from 'rxjs';
 
@@ -21,15 +23,16 @@ import { SpeakerRepositoryService } from 'app/core/repositories/agenda/speaker-r
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DurationService } from 'app/core/ui-services/duration.service';
-import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
-import { SpeakerState } from 'app/shared/models/agenda/speaker';
+import { SpeakerState, SpeechState } from 'app/shared/models/agenda/speaker';
+import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { ViewSpeaker } from 'app/site/agenda/models/view-speaker';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { PointOfOrderDialogComponent } from '../point-of-order-dialog/point-of-order-dialog.component';
 import { Selectable } from '../selectable';
 import { SortingListComponent } from '../sorting-list/sorting-list.component';
 
@@ -37,9 +40,12 @@ import { SortingListComponent } from '../sorting-list/sorting-list.component';
     selector: 'os-list-of-speakers-content',
     templateUrl: './list-of-speakers-content.component.html',
     styleUrls: ['./list-of-speakers-content.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class ListOfSpeakersContentComponent extends BaseModelContextComponent implements OnInit {
+    public readonly SpeechState = SpeechState;
+
     @ViewChild(SortingListComponent)
     public listElement: SortingListComponent;
 
@@ -66,7 +72,10 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
         return this.pointOfOrderEnabled && this.canAddDueToPresence;
     }
 
+    public enableProContraSpeech: boolean;
     private pointOfOrderEnabled: boolean;
+    private canSetMarkSelf: boolean;
+    private noteForAll: boolean;
 
     public get title(): string {
         return this._listOfSpeakers?.getTitle();
@@ -127,14 +136,14 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
         componentServiceCollector: ComponentServiceCollector,
         private listOfSpeakersRepo: ListOfSpeakersRepositoryService,
         private activeMeetingService: ActiveMeetingService,
-        private meetingSettingsService: MeetingSettingsService,
         private speakerRepo: SpeakerRepositoryService,
         private operator: OperatorService,
         private promptService: PromptService,
         private durationService: DurationService,
         private userRepository: UserRepositoryService,
         private viewport: ViewportService,
-        private cd: ChangeDetectorRef
+        private cd: ChangeDetectorRef,
+        private dialog: MatDialog
     ) {
         super(componentServiceCollector);
         this.addSpeakerForm = new FormGroup({ user_id: new FormControl() });
@@ -142,6 +151,7 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
 
     public ngOnInit(): void {
         super.ngOnInit();
+        this.subscribeToSettings();
         this.subscriptions.push(
             // Observe the user list
             this.userRepository.getViewModelListObservable().subscribe(users => {
@@ -166,19 +176,7 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
                 this.updateSpeakers();
                 this.cd.markForCheck();
             }),
-            this.operator.userObservable.subscribe(user => (this.currentUser = user)),
-            // observe changes the agenda_present_speakers_only setting
-            this.meetingSettingsService.get('list_of_speakers_present_users_only').subscribe(() => {
-                this.filterUsers();
-            }),
-            // observe changes to the agenda_show_first_contribution setting
-            this.meetingSettingsService.get('list_of_speakers_show_first_contribution').subscribe(show => {
-                this.showFistContributionHint = show;
-            }),
-            // observe point of order settings
-            this.meetingSettingsService.get('list_of_speakers_enable_point_of_order_speakers').subscribe(show => {
-                this.pointOfOrderEnabled = show;
-            })
+            this.operator.userObservable.subscribe(user => (this.currentUser = user))
         );
     }
 
@@ -242,9 +240,21 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
     }
 
     public async addPointOfOrder(): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to submit a point of order?');
-        if (await this.promptService.open(title)) {
-            await this.speakerRepo.create(this.listOfSpeakers, this.operator.operatorId, true);
+        const dialogRef = this.dialog.open(PointOfOrderDialogComponent, {
+            data: this.listOfSpeakers,
+            ...infoDialogSettings,
+            disableClose: false
+        });
+        try {
+            const result = await dialogRef.afterClosed().toPromise();
+            if (result) {
+                await this.speakerRepo.create(this.listOfSpeakers, this.currentUser.id, {
+                    pointOfOrder: true,
+                    note: result.note
+                });
+            }
+        } catch (e) {
+            this.raiseError(e);
         }
     }
 
@@ -253,19 +263,17 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
         await this.speakerRepo.delete(speakerToDelete.id);
     }
 
-    public isOpInWaitlist(pointOfOrder: boolean = false): boolean {
+    public isOpInWaitlist(pointOfOrder?: boolean): boolean {
         if (!this.waitingSpeakers) {
             return false;
         }
-        return this.waitingSpeakers.some(
-            speaker => speaker.user_id === this.operator.operatorId && speaker.point_of_order === pointOfOrder
-        );
+        return !!this.findOperatorSpeaker(pointOfOrder);
     }
 
     /**
      * Click on the mic button to mark a speaker as speaking
      *
-     * @param speaker the speaker marked in the list
+     * @param speaker the speaker selected in one list of speakers
      */
     public async onStartButton(speaker: ViewSpeaker): Promise<void> {
         try {
@@ -288,13 +296,29 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
         }
     }
 
+    public isSpeakerOperator(speaker: ViewSpeaker): boolean {
+        return this.operator.operatorId === speaker.user_id;
+    }
+
+    public canSpeakerMark(speaker: ViewSpeaker): boolean {
+        return this.opCanManage || (this.canSetMarkSelf && this.isSpeakerOperator(speaker));
+    }
+
     /**
      * Click on the star button. Toggles the marked attribute.
      *
      * @param speaker The speaker clicked on.
      */
     public async onMarkButton(speaker: ViewSpeaker): Promise<void> {
-        await this.speakerRepo.changeMarkingOfSpeaker(speaker, !speaker.marked);
+        await this.speakerRepo.setContribution(speaker);
+    }
+
+    public async onProContraButtons(speaker: ViewSpeaker, isProSpeech: boolean): Promise<void> {
+        if (isProSpeech) {
+            await this.speakerRepo.setProSpeech(speaker);
+        } else {
+            await this.speakerRepo.setContraSpeech(speaker);
+        }
     }
 
     /**
@@ -422,7 +446,33 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
         return speaker.getBeginTimeAsDate().toLocaleString(this.translate.currentLang);
     }
 
-    private findOperatorSpeaker(pointOfOrder: boolean = false): ViewSpeaker {
+    private subscribeToSettings(): void {
+        this.subscriptions.push(
+            // observe changes the agenda_present_speakers_only setting
+            this.meetingSettingService.get('list_of_speakers_present_users_only').subscribe(() => {
+                this.filterUsers();
+            }),
+            // observe changes to the agenda_show_first_contribution setting
+            this.meetingSettingService.get('list_of_speakers_show_first_contribution').subscribe(show => {
+                this.showFistContributionHint = show;
+            }),
+            // observe point of order settings
+            this.meetingSettingService.get('list_of_speakers_enable_point_of_order_speakers').subscribe(show => {
+                this.pointOfOrderEnabled = show;
+            }),
+            this.meetingSettingService.get('list_of_speakers_enable_pro_contra_speech').subscribe(enabled => {
+                this.enableProContraSpeech = enabled;
+            }),
+            this.meetingSettingService.get('list_of_speakers_can_set_contribution_self').subscribe(canSet => {
+                this.canSetMarkSelf = canSet;
+            }),
+            this.meetingSettingService.get('list_of_speakers_speaker_note_for_everyone').subscribe(enabled => {
+                this.noteForAll = enabled;
+            })
+        );
+    }
+
+    private findOperatorSpeaker(pointOfOrder?: boolean): ViewSpeaker {
         return this.waitingSpeakers.find(
             speaker => speaker.user_id === this.operator.operatorId && speaker.point_of_order === pointOfOrder
         );

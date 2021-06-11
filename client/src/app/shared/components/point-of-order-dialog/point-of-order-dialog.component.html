@@ -1,0 +1,19 @@
+<h2 mat-dialog-title>
+    <span>{{ 'Are you sure you want to submit a point of order?' | translate }}</span>
+</h2>
+
+<form class="edit-form" [formGroup]="editForm" (ngSubmit)="onOk()">
+    <mat-dialog-content>
+        {{ 'Request' | translate }}
+        <mat-form-field>
+            <input matInput osAutofocus [maxLength]="MAX_LENGTH" formControlName="note" />
+        </mat-form-field>
+        {{ editForm.value.note.length }} / {{ MAX_LENGTH }}
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button mat-button osAutofocus type="submit" color="accent" [disabled]="!this.editForm.valid">
+            {{ 'OK' | translate }}
+        </button>
+        <button mat-button (click)="onCancel()">{{ 'Cancel' | translate }}</button>
+    </mat-dialog-actions>
+</form>

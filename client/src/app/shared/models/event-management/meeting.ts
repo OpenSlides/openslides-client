@@ -73,6 +73,9 @@ export interface Settings {
     list_of_speakers_show_first_contribution: boolean;
     list_of_speakers_enable_point_of_order_speakers: boolean;
     list_of_speakers_initially_closed: boolean;
+    list_of_speakers_enable_pro_contra_speech: boolean;
+    list_of_speakers_can_set_contribution_self: boolean;
+    list_of_speakers_speaker_note_for_everyone: boolean;
 
     // Motions
     motions_default_workflow_id: Id; // workflow/default_workflow_meeting_id;

@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 
 import { SpeakerAction } from 'app/core/actions/speaker-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
-import { Id } from 'app/core/definitions/key-types';
+import { Id, UnsafeHtml } from 'app/core/definitions/key-types';
 import { ListOfSpeakers } from 'app/shared/models/agenda/list-of-speakers';
-import { Speaker } from 'app/shared/models/agenda/speaker';
+import { Speaker, SpeechState } from 'app/shared/models/agenda/speaker';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { ViewSpeaker } from 'app/site/agenda/models/view-speaker';
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
@@ -21,7 +21,7 @@ export class SpeakerRepositoryService extends BaseRepositoryWithActiveMeeting<Vi
     }
 
     public getFieldsets(): Fieldsets<Speaker> {
-        return { [DEFAULT_FIELDSET]: ['begin_time', 'end_time', 'weight', 'marked', 'point_of_order'] };
+        return { [DEFAULT_FIELDSET]: ['begin_time', 'end_time', 'weight', 'note', 'speech_state', 'point_of_order'] };
     }
 
     public getVerboseName = (plural: boolean = false) => {
@@ -32,20 +32,25 @@ export class SpeakerRepositoryService extends BaseRepositoryWithActiveMeeting<Vi
         return viewSpeaker.user ? viewSpeaker.user.getShortName() : '';
     };
 
-    public create(listOfSpeakers: ListOfSpeakers, userId: Id, pointOfOrder: boolean = false): Promise<Identifiable> {
+    public create(
+        listOfSpeakers: ListOfSpeakers,
+        userId: Id,
+        optionalInformation: { pointOfOrder?: boolean; note?: UnsafeHtml; speechState?: SpeechState } = {}
+    ): Promise<Identifiable> {
         const payload: SpeakerAction.CreatePayload = {
             list_of_speakers_id: listOfSpeakers.id,
             user_id: userId,
-            marked: false,
-            point_of_order: pointOfOrder
+            speech_state: optionalInformation.speechState,
+            point_of_order: optionalInformation.pointOfOrder,
+            note: optionalInformation.note
         };
         return this.sendActionToBackend(SpeakerAction.CREATE, payload);
     }
 
-    public update(update: Partial<Speaker>, viewModel: ViewSpeaker): Promise<void> {
+    public update(speech_state: SpeechState, viewModel: ViewSpeaker): Promise<void> {
         const payload: SpeakerAction.UpdatePayload = {
             id: viewModel.id,
-            marked: update.marked
+            speech_state
         };
         return this.sendActionToBackend(SpeakerAction.UPDATE, payload);
     }
@@ -77,11 +82,18 @@ export class SpeakerRepositoryService extends BaseRepositoryWithActiveMeeting<Vi
         return this.sendActionToBackend(SpeakerAction.END_SPEAK, payload);
     }
 
-    public changeMarkingOfSpeaker(speaker: ViewSpeaker, marked: boolean): Promise<void> {
-        const payload: SpeakerAction.UpdatePayload = {
-            id: speaker.id,
-            marked
-        };
-        return this.sendActionToBackend(SpeakerAction.UPDATE, payload);
+    public setContribution(speaker: ViewSpeaker): Promise<void> {
+        const speechState = speaker.speech_state === SpeechState.CONTRIBUTION ? null : SpeechState.CONTRIBUTION;
+        return this.update(speechState, speaker);
+    }
+
+    public setProSpeech(speaker: ViewSpeaker): Promise<void> {
+        const speechState = speaker.speech_state === SpeechState.PRO ? null : SpeechState.PRO;
+        return this.update(speechState, speaker);
+    }
+
+    public setContraSpeech(speaker: ViewSpeaker): Promise<void> {
+        const speechState = speaker.speech_state === SpeechState.CONTRA ? null : SpeechState.CONTRA;
+        return this.update(speechState, speaker);
     }
 }

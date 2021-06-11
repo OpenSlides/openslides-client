@@ -332,6 +332,13 @@ export const meetingSettings: SettingsGroup[] = [
                         type: 'boolean'
                     },
                     {
+                        key: 'list_of_speakers_speaker_note_for_everyone',
+                        label:
+                            'Everyone can see the request of a point of order (instead of managers for list of speakers only)',
+                        type: 'boolean',
+                        default: false
+                    },
+                    {
                         key: 'list_of_speakers_show_amount_of_speakers_on_slide',
                         label: 'Show the amount of speakers in subtitle of list of speakers slide',
                         default: true,
@@ -352,6 +359,18 @@ export const meetingSettings: SettingsGroup[] = [
                     {
                         key: 'list_of_speakers_initially_closed',
                         label: 'List of speakers is initially closed',
+                        type: 'boolean',
+                        default: false
+                    },
+                    {
+                        key: 'list_of_speakers_enable_pro_contra_speech',
+                        label: 'Enable forspeech / counter speech',
+                        type: 'boolean',
+                        default: true
+                    },
+                    {
+                        key: 'list_of_speakers_can_set_contribution_self',
+                        label: 'Enable star icon to mark speaker (e.g. for contribution)',
                         type: 'boolean',
                         default: false
                     }
