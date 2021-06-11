@@ -8,6 +8,7 @@
                 placeholder="{{ 'Go to line' | translate }}"
                 osAutofocus
                 osOnlyNumber
+                (keydown)="onKeyDown($event)"
                 [(ngModel)]="highlightedLineTyping"
             />
             <mat-error *ngIf="highlightedLineTyping > 10">{{ 'Invalid line number' | translate }}</mat-error>

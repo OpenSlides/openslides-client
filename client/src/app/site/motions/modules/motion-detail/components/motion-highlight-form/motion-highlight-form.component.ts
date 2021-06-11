@@ -56,7 +56,7 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
     /**
      * Holds the model for the typed line number
      */
-    public highlightedLineTyping: number;
+    public highlightedLineTyping: number | string;
 
     /**
      * The change recommendations to amendments to this motion
@@ -125,7 +125,7 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
         this.highlightedLine = line;
         // setTimeout necessary for DOM-operations to work
         window.setTimeout(() => {
-            const element = <HTMLElement>this.el.nativeElement;
+            const element = document.querySelector('mat-sidenav-content');
 
             // We only scroll if it's not in the screen already
             const bounding = element
@@ -227,6 +227,13 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
      */
     public setLineNumberingMode(mode: LineNumberingMode): void {
         this.viewService.lineNumberingModeSubject.next(mode);
+    }
+
+    public onKeyDown(event: KeyboardEvent): void {
+        if (event.key === 'Enter') {
+            this.gotoHighlightedLine(parseInt(this.highlightedLineTyping as string, 10));
+            this.highlightedLineTyping = '';
+        }
     }
 
     /**

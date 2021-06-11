@@ -67,7 +67,7 @@ export class OrgaSettingsComponent extends BaseModelContextComponent implements 
                 privacy_policy: [this.currentOrgaSettings.privacy_policy],
                 login_text: [this.currentOrgaSettings.login_text],
                 theme: [this.currentOrgaSettings.theme],
-                custom_translations: [this.currentOrgaSettings.custom_translations],
+                // custom_translations: [this.currentOrgaSettings.custom_translations],
                 enable_electronic_voting: [this.currentOrgaSettings.enable_electronic_voting],
                 reset_password_verbose_errors: [this.currentOrgaSettings.reset_password_verbose_errors]
             });

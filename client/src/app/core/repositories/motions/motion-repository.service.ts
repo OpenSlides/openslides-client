@@ -399,7 +399,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param viewMotion target motion
      */
     public async support(viewMotion: ViewMotion): Promise<void> {
-        const nextSupporterIds = [...viewMotion.supporter_ids, this.operator.operatorId];
+        const nextSupporterIds = [...(viewMotion.supporter_ids || []), this.operator.operatorId];
         return this.update({ supporter_ids: nextSupporterIds }, viewMotion);
     }
 
