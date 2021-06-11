@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { AgendaItemAction } from 'app/core/actions/agenda-item-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
+import { Id } from 'app/core/definitions/key-types';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { TreeIdNode } from 'app/core/ui-services/tree.service';
 import { AgendaItem, AgendaItemType } from 'app/shared/models/agenda/agenda-item';
@@ -131,8 +132,14 @@ export class AgendaItemRepositoryService extends BaseRepositoryWithActiveMeeting
         return await this.actions.sendRequest(AgendaItemAction.CREATE, payload);
     }
 
-    public async removeFromAgenda(item: ViewAgendaItem): Promise<void> {
-        return await this.actions.sendRequest(AgendaItemAction.DELETE, { id: item.id });
+    public async removeFromAgenda(...items: (ViewAgendaItem | Id)[]): Promise<void> {
+        let payload: AgendaItemAction.DeletePayload[];
+        if (items[0] instanceof ViewAgendaItem) {
+            payload = items.map(item => ({ id: (item as ViewAgendaItem).id }));
+        } else {
+            payload = items.map(item => ({ id: item as Id }));
+        }
+        await this.actions.sendBulkRequest(AgendaItemAction.DELETE, payload);
     }
 
     /**
@@ -192,10 +199,5 @@ export class AgendaItemRepositoryService extends BaseRepositoryWithActiveMeeting
     public bulkSetAgendaType(items: ViewAgendaItem[], agendaType: AgendaItemType): Promise<void> {
         const payload: AgendaItemAction.UpdatePayload[] = items.map(item => ({ id: item.id, type: agendaType }));
         return this.sendBulkActionToBackend(AgendaItemAction.UPDATE, payload);
-    }
-
-    public bulkRemoveItemsFromAgenda(items: ViewAgendaItem[]): Promise<void> {
-        const payload: AgendaItemAction.DeletePayload[] = items.map(item => ({ id: item.id }));
-        return this.sendBulkActionToBackend(AgendaItemAction.DELETE, payload);
     }
 }

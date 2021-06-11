@@ -16,6 +16,8 @@
     [alwaysShowMenu]="alwaysShowMenu"
     [showMenu]="showMenu"
     [vScrollFixed]="vScrollFixed"
+    (dataSourceChange)="dataSourceChange.emit($event)"
+    (selectedRowsChange)="selectedRowsChange.emit($event)"
 >
     <ng-template #startColumnView>
         <!-- Projector column -->

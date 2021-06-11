@@ -21,8 +21,9 @@ import { ProjectorRepositoryService } from 'app/core/repositories/projector/proj
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { PROJECTOR_CONTENT_FOLLOW } from 'app/shared/components/projector/projector.component';
+import { Projector } from 'app/shared/models/projector/projector';
+import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
-import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewProjector } from '../../models/view-projector';
 
 /**
@@ -124,20 +125,19 @@ export class ProjectorListComponent extends BaseModelContextComponent implements
      * @param dialog
      */
     public createNewProjector(dialog: TemplateRef<string>): void {
-        throw new Error('TODO!');
-        // this.createForm.reset();
-        // const dialogRef = this.dialogService.open(dialog, { ...infoDialogSettings, disableClose: true });
-        // dialogRef.afterClosed().subscribe(result => {
-        //     if (result) {
-        //         const projectorToCreate: Partial<Projector> = {
-        //             name: this.createForm.value.name
-        //         };
+        this.createForm.reset();
+        const dialogRef = this.dialogService.open(dialog, { ...infoDialogSettings, disableClose: true });
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                const projectorToCreate: Partial<Projector> = {
+                    name: this.createForm.value.name
+                };
 
-        //         this.repo.create(projectorToCreate as Projector).then(() => {
-        //             this.cd.detectChanges();
-        //         }, this.raiseError);
-        //     }
-        // });
+                this.repo.create(projectorToCreate as Projector).then(() => {
+                    this.cd.detectChanges();
+                }, this.raiseError);
+            }
+        });
     }
 
     /**

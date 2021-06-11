@@ -35,11 +35,11 @@
 
         <!-- Add/remove to/from agenda -->
         <div *osPerms="permission.agendaItemCanManage">
-            <button mat-menu-item (click)="addToAgenda()" *ngIf="assignment && !assignment.agenda_item">
+            <button mat-menu-item (click)="addToAgenda()" *ngIf="assignment && !assignment.agenda_item_id">
                 <mat-icon>add</mat-icon>
                 <span>{{ 'Add to agenda' | translate }}</span>
             </button>
-            <button mat-menu-item (click)="removeFromAgenda()" *ngIf="assignment && assignment.agenda_item">
+            <button mat-menu-item (click)="removeFromAgenda()" *ngIf="assignment && assignment.agenda_item_id">
                 <mat-icon>remove</mat-icon>
                 <span>{{ 'Remove from agenda' | translate }}</span>
             </button>
