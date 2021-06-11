@@ -102,7 +102,7 @@
                 >&nbsp;<span *ngIf="reasonRequired">*</span>
             </h3>
 
-            <editor formControlName="reason" [init]="tinyMceSettings" required></editor>
+            <editor formControlName="reason" [init]="tinyMceSettings" [required]="reasonRequired"></editor>
             <div
                 *ngIf="
                     reasonRequired &&

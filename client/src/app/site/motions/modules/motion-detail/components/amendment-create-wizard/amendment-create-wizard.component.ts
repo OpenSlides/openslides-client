@@ -215,7 +215,7 @@ export class AmendmentCreateWizardComponent extends BaseModelContextComponent im
     private createForm(): void {
         this.contentForm = this.formBuilder.group({
             selectedParagraphs: [[], Validators.required],
-            reason: ['', Validators.required]
+            reason: ['', this.reasonRequired ? Validators.required : []]
         });
     }
 
