@@ -111,7 +111,9 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
         this.loaded.resolve();
     }
 
-    public async build(simplifiedModelRequest: SimplifiedModelRequest): Promise<ModelRequest> {
+    public async build(
+        simplifiedModelRequest: SimplifiedModelRequest
+    ): Promise<{ request: ModelRequest; collectionsToUpdate: Collection[] }> {
         await this.loaded;
         const collection = simplifiedModelRequest.viewModelCtor.COLLECTION;
         const request: ModelRequest = {
@@ -121,8 +123,9 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
         };
 
         this.addFields(collection, request.fields, simplifiedModelRequest);
+        const collectionsToUpdate = [];
 
-        return request;
+        return { request, collectionsToUpdate };
     }
 
     private addFields(collection: Collection, fields: Fields, request: BaseSimplifiedModelRequest): void {
@@ -234,7 +237,8 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
         const descriptor: RelationFieldDescriptor = {
             type: relation.many ? 'relation-list' : 'relation',
             collection: foreignCollection,
-            fields: {}
+            fields: {},
+            isFullList: relation.isFullList
         };
         this.addFields(foreignCollection, descriptor.fields, follow);
         return descriptor;
@@ -243,7 +247,8 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
     private getGenericRelationFieldDescriptor(relation: Relation, follow: Follow): GenericRelationFieldDecriptor {
         const descriptor: GenericRelationFieldDecriptor = {
             type: relation.many ? 'generic-relation-list' : 'generic-relation',
-            fields: {}
+            fields: {},
+            isFullList: relation.isFullList
         };
         this.addGenericRelation(relation.foreignViewModelPossibilities, descriptor.fields, follow);
         return descriptor;
@@ -251,7 +256,8 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
 
     private getStructuredFieldDescriptor(relation: Relation, follow: Follow): StructuredFieldDecriptor {
         const descriptor: StructuredFieldDecriptor = {
-            type: 'template'
+            type: 'template',
+            isFullList: relation.isFullList
         };
 
         if (relation.generic) {

@@ -6,6 +6,7 @@ import { CollectionMapperService } from './collection-mapper.service';
 import { CommunicationManagerService } from './communication-manager.service';
 import { DataStoreService, DataStoreUpdateManagerService } from './data-store.service';
 import { HTTPMethod } from '../definitions/http-methods';
+import { Collection } from '../definitions/key-types';
 import { ModelRequestBuilderService, SimplifiedModelRequest } from './model-request-builder.service';
 import { Mutex } from '../promises/mutex';
 
@@ -19,21 +20,28 @@ export interface HasFields {
     fields: Fields;
 }
 
+/**
+ * Whether a relation requests a list of view-models that updates the whole view-model-store of one repo.
+ */
+export interface CanBeFullListUpdate {
+    isFullList?: boolean;
+}
+
 export interface ModelRequest extends HasFields {
     ids: number[];
     collection: string;
 }
 
-export interface GenericRelationFieldDecriptor extends HasFields {
+export interface GenericRelationFieldDecriptor extends HasFields, CanBeFullListUpdate {
     type: 'generic-relation-list' | 'generic-relation';
 }
 
-export interface RelationFieldDescriptor extends HasFields {
+export interface RelationFieldDescriptor extends HasFields, CanBeFullListUpdate {
     type: 'relation-list' | 'relation';
     collection: string;
 }
 
-export interface StructuredFieldDecriptor {
+export interface StructuredFieldDecriptor extends CanBeFullListUpdate {
     type: 'template';
     values?: RelationFieldDescriptor | GenericRelationFieldDecriptor;
 }
@@ -48,6 +56,7 @@ interface DeletedModels {
 interface ChangedModels {
     [collection: string]: BaseModel[];
 }
+
 /**
  * Handles the initial update and automatic updates
  * Incoming objects, usually BaseModels, will be saved in the dataStore (`this.DS`)
@@ -88,15 +97,25 @@ export class AutoupdateService {
      * Which component opens which stream?
      */
     public async simpleRequest(simpleRequest: SimplifiedModelRequest, description: string): Promise<ModelSubscription> {
-        const request = await this.modelRequestBuilder.build(simpleRequest);
+        const {
+            request,
+            collectionsToUpdate
+        }: { request: ModelRequest; collectionsToUpdate: Collection[] } = await this.modelRequestBuilder.build(
+            simpleRequest
+        );
         console.log('autoupdate: new request:', description, simpleRequest, request);
-        return await this.request(request, description);
+        return await this.request(request, description, collectionsToUpdate);
     }
 
-    public async request(request: ModelRequest, description: string): Promise<ModelSubscription> {
+    private async request(
+        request: ModelRequest,
+        description: string,
+        collectionsToUpdate: Collection[]
+    ): Promise<ModelSubscription> {
         const closeFn = await this.communicationManager.connect<AutoupdateModelData>(
             'autoupdate',
-            (message, id) => this.handleAutoupdateWithStupidFormat(message, id),
+            (message, id, isFirstResponse) =>
+                this.handleAutoupdateWithStupidFormat(message, id, { collectionsToUpdate, isFirstResponse }),
             () => [request],
             null,
             description
@@ -104,17 +123,26 @@ export class AutoupdateService {
         return { close: closeFn };
     }
 
-    private async handleAutoupdateWithStupidFormat(autoupdateData: AutoupdateModelData, id: number): Promise<void> {
+    private async handleAutoupdateWithStupidFormat(
+        autoupdateData: AutoupdateModelData,
+        id: number,
+        args: { collectionsToUpdate: Collection[]; isFirstResponse: boolean }
+    ): Promise<void> {
         const modelData = autoupdateFormatToModelData(autoupdateData);
         console.log('autoupdate: from stream', id, modelData, 'raw data:', autoupdateData);
-        await this.handleAutoupdate(modelData);
+        await this.handleAutoupdate(modelData, args.collectionsToUpdate, args.isFirstResponse);
     }
 
-    private async handleAutoupdate(modelData: ModelData): Promise<void> {
+    private async handleAutoupdate(
+        modelData: ModelData,
+        collectionsToUpdate: Collection[],
+        isFirstResponse: boolean
+    ): Promise<void> {
         const unlock = await this.mutex.lock();
 
         const deletedModels: DeletedModels = {};
         const changedModels: ChangedModels = {};
+        const fullListUpdate: Collection[] = isFirstResponse ? collectionsToUpdate : [];
 
         for (const collection of Object.keys(modelData)) {
             for (const id of Object.keys(modelData[collection])) {
@@ -138,16 +166,23 @@ export class AutoupdateService {
                 }
             }
         }
-        await this.handleChangedAndDeletedModels(changedModels, deletedModels);
+        await this.handleChangedAndDeletedModels(changedModels, deletedModels, fullListUpdate);
 
         unlock();
     }
 
     private async handleChangedAndDeletedModels(
         changedModels: ChangedModels,
-        deletedModels: DeletedModels
+        deletedModels: DeletedModels,
+        fullListUpdateForCollection: Collection[] = []
     ): Promise<void> {
         const updateSlot = await this.DSUpdateManager.getNewUpdateSlot(this.DS);
+
+        for (const collection of fullListUpdateForCollection) {
+            const models = this.DS.getAll(collection);
+            const ids = models.map(model => model.id).difference(changedModels[collection].map(model => model.id));
+            deletedModels[collection] = (deletedModels[collection] || []).concat(ids);
+        }
 
         // Delete the removed objects from the DataStore
         for (const collection of Object.keys(deletedModels)) {

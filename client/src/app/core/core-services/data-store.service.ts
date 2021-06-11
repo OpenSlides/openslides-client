@@ -276,14 +276,14 @@ export class DataStoreService {
     /**
      * Observable subject for changed or deleted models in the datastore.
      */
-    private readonly clearEvent: EventEmitter<void> = new EventEmitter<void>();
+    private readonly clearEvent: EventEmitter<string[]> = new EventEmitter<string[]>();
 
     /**
      * Observe the datastore for changes and deletions.
      *
      * @return an observable for changed and deleted objects.
      */
-    public get clearObservable(): Observable<void> {
+    public get clearObservable(): Observable<string[]> {
         return this.clearEvent.asObservable();
     }
 
@@ -323,15 +323,15 @@ export class DataStoreService {
      * Deletes all models that belong to a meeting.
      */
     public async clearMeetingModels(): Promise<void> {
+        const removedCollections = [];
         for (const collection of Object.keys(this.modelStore)) {
             if (this.modelMapper.isMeetingSpecificCollection(collection)) {
-                this.remove(
-                    collection,
-                    Object.keys(this.modelStore[collection]).map(id => +id)
-                );
                 delete this.modelStore[collection];
+                removedCollections.push(collection);
+                this.triggerModifiedObservable();
             }
         }
+        this.clearEvent.emit(removedCollections);
     }
 
     /**
