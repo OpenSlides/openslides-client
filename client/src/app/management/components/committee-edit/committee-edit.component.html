@@ -87,7 +87,7 @@
                 <mat-form-field>
                     <mat-label>{{ 'Can receive forwarding from committees' | translate }}</mat-label>
                     <os-search-repo-selector
-                        formControlName="receive_from_committee_ids"
+                        formControlName="receive_forwardings_from_committee_ids"
                         [multiple]="true"
                         [repo]="committeeRepo"
                         [pipeFn]="getPipeFilterFn()"

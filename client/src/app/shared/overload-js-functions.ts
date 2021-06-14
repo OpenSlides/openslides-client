@@ -5,7 +5,21 @@ declare global {
      */
     interface Array<T> {
         flatMap<U>(callbackFn: (currentValue: T, index: number, array: T[]) => U, thisArg?: any): U;
-        intersect(a: T[]): T[];
+        /**
+         * Compares each element of two arrays, which element is included in both. It returns a new array containing all
+         * elements, that are included in the arrays.
+         *
+         * @param other Another array, which elements are compared to the original ones.
+         */
+        intersect(other: T[]): T[];
+        /**
+         * Compares each element of two arrays to check, which elements are included in one array but not in the other.
+         * It returns a new array, containing all elements, that are included only one of them.
+         *
+         * @param other Another array, which elements are compared to the original ones.
+         * @param symmetric If all elements from both arrays, that are included only in one of them, should be returned.
+         */
+        difference(other: T[], symmetric?: boolean): T[];
         mapToObject(f: (item: T) => { [key: string]: any }): { [key: string]: any };
     }
 
@@ -63,11 +77,26 @@ function overloadArrayFunctions(): void {
         value: function <T>(other: T[]): T[] {
             let a = this;
             let b = other;
-            // indexOf to loop over shorter
-            if (b.length > a.length) {
+            if (b.length < a.length) {
                 [a, b] = [b, a];
             }
-            return a.filter(e => b.indexOf(e) > -1);
+            const intersect = new Set<T>(b);
+            return a.filter((element: T) => intersect.has(element));
+        },
+        enumerable: false
+    });
+
+    Object.defineProperty(Array.prototype, 'difference', {
+        value: function <T>(other: T[], symmetric: boolean = false): T[] {
+            const difference = new Set<T>(this);
+            for (const entry of other) {
+                if (difference.has(entry)) {
+                    difference.delete(entry);
+                } else if (symmetric) {
+                    difference.add(entry);
+                }
+            }
+            return Array.from(difference);
         },
         enumerable: false
     });

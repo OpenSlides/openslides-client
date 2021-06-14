@@ -109,7 +109,7 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
 
         const confirmed = await this.promptService.open(title);
         if (confirmed) {
-            await this.repo.bulkDelete(this.selectedRows);
+            await this.repo.delete(...this.selectedRows);
         }
     }
 

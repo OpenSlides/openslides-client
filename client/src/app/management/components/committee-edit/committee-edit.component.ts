@@ -162,7 +162,7 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
                 // template_meeting_id: [null], // TODO: Not yet
                 default_meeting_id: [null],
                 forward_to_committee_ids: [[]],
-                receive_from_committee_ids: [[]]
+                receive_forwardings_from_committee_ids: [[]]
             };
         }
         this.committeeForm = this.formBuilder.group(partialForm);

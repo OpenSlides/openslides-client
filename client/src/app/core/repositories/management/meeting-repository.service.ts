@@ -99,10 +99,9 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         return viewModel;
     }
 
-    public create(meetingPayload: Partial<MeetingAction.CreatePayload>, addedUserIds?: Id[]): Promise<Identifiable> {
+    public create(meetingPayload: Partial<MeetingAction.CreatePayload>): Promise<Identifiable> {
         meetingPayload.start_time = this.anyDateToUnix(meetingPayload.start_time);
         meetingPayload.end_time = this.anyDateToUnix(meetingPayload.end_time);
-        console.log('TODO: added users, see https://github.com/OpenSlides/openslides-backend/issues/710', addedUserIds);
         return this.sendActionToBackend(MeetingAction.CREATE, meetingPayload);
     }
 

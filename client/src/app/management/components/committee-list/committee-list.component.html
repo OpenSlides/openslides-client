@@ -35,6 +35,7 @@
     [(selectedRows)]="selectedRows"
     (dataSourceChange)="onDataSourceChange($event)"
     [filterProps]="['name']"
+    [hiddenInMobile]="['forwarding', 'managers']"
 >
     <div *pblNgridCellDef="'name'; value as name; row as committee" class="cell-slot fill">
         <a class="detail-link" [routerLink]="committee.id" *ngIf="!isMultiSelect && committee.canAccess()"></a>

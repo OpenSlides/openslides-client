@@ -48,7 +48,7 @@
             <mat-datepicker #endDatePicker></mat-datepicker>
         </mat-form-field>
 
-        <mat-form-field *ngIf="isCreateView">
+        <mat-form-field>
             <mat-label> {{ 'Participants' | translate }}</mat-label>
             <os-search-value-selector
                 formControlName="user_ids"
