@@ -9,21 +9,22 @@
         (click)="onItemClick($event, i)"
         (cdkDragStarted)="dragStarted(i)"
     >
+        <!-- drag handle -->
         <div class="drag-indicator" cdkDragHandle *ngIf="enable">
             <mat-icon>drag_indicator</mat-icon>
         </div>
 
-        <div class="count">
-            <!-- {number}. -->
-            <span *ngIf="count">{{ i + 1 }}.</span>
+        <!-- Count number -->
+        <div *ngIf="count" class="count">
+            <span>{{ i + 1 }}.</span>
         </div>
 
+        <!-- Content -->
         <div class="content">
-            <!-- Extra controls slot using implicit template references -->
             <ng-template [ngTemplateOutlet]="templateRef" [ngTemplateOutletContext]="{ $implicit: item }"></ng-template>
         </div>
 
-        <!-- Drag preview -->
+        <!-- Drag prev -->
         <div class="line" *cdkDragPreview>
             <div class="spacer.left-10" *ngIf="multiSelectedIndex.length > 0">
                 {{ multiSelectedIndex.length }}&nbsp;<span>{{ 'items selected' | translate }}</span>
