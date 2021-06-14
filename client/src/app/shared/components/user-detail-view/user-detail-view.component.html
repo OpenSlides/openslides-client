@@ -82,6 +82,7 @@
         <div *ngIf="isAllowed('seePersonal')">
             <mat-form-field class="full-width">
                 <input type="text" matInput placeholder="{{ 'Username' | translate }}" formControlName="username" />
+                <mat-error>{{ 'You have to enter at least one character' | translate }}</mat-error>
             </mat-form-field>
         </div>
 

@@ -343,7 +343,7 @@
                 <button
                     mat-menu-item
                     [disabled]="!selectedRows.length"
-                    (click)="multiselectWrapper(multiselectService.moveToItem(selectedRows))"
+                    (click)="multiselectWrapper(multiselectService.moveInAgenda(selectedRows))"
                 >
                     <mat-icon>sort</mat-icon>
                     <span>{{ 'Move to agenda item' | translate }}</span>
@@ -351,7 +351,7 @@
                 <button
                     mat-menu-item
                     [disabled]="!selectedRows.length"
-                    (click)="multiselectWrapper(multiselectService.bulkMoveItems(selectedRows))"
+                    (click)="multiselectWrapper(multiselectService.moveInCallList(selectedRows))"
                 >
                     <mat-icon>format_indent_increase</mat-icon>
                     <span>{{ 'Move in call list' | translate }}</span>

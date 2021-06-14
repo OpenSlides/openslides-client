@@ -226,7 +226,7 @@
 <!-- Amendments -->
 <div *ngIf="amendments && amendments.length > 0">
     <h4>{{ 'Amendments' | translate }}</h4>
-    <a [routerLink]="['/', activeMeetingId, '/motions/amendments', motion.id]" [state]="{ back: 'true' }">
+    <a [routerLink]="['/', activeMeetingId, 'motions', 'amendments', motion.id]" [state]="{ back: 'true' }">
         {{ amendments.length }}
         <span *ngIf="amendments.length === 1">{{ 'Amendment' | translate }}</span>
         <span *ngIf="amendments.length > 1">{{ 'Amendments' | translate }}</span>

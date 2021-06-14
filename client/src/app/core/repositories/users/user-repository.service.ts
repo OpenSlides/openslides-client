@@ -135,6 +135,7 @@ export class UserRepositoryService
             ...this.getBaseUserPayload(partialUser),
             is_present_in_meeting_ids: partialUser.is_present_in_meeting_ids
         };
+        this.sanitizePayload(payload);
         return this.sendActionToBackend(UserAction.CREATE, payload);
     }
 
@@ -677,6 +678,22 @@ export class UserRepositoryService
             return '';
         }
         return new Date(user.user.last_email_send).toLocaleString(this.translate.currentLang);
+    }
+
+    private sanitizePayload(payload: any): void {
+        const temp = { ...payload };
+        for (const key of Object.keys(temp)) {
+            if (temp[key] === undefined || (typeof temp[key] === 'string' && !temp[key].trim().length)) {
+                delete payload[key];
+            } else if (Array.isArray(temp[key])) {
+                continue;
+            } else if (typeof temp[key] === 'object' && !!temp[key]) {
+                this.sanitizePayload(payload[key]);
+                if (!Object.keys(payload[key]).length) {
+                    delete payload[key];
+                }
+            }
+        }
     }
 
     private preventAlterationOnDemoUsers(users: ViewUser | ViewUser[]): void {

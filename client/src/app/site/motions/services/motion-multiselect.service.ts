@@ -5,7 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { AgendaItemAction } from 'app/core/actions/agenda-item-action';
 import { MotionAction } from 'app/core/actions/motion-action';
 import { MotionSubmitterAction } from 'app/core/actions/motion-submitter-action';
-import { ActionService } from 'app/core/core-services/action.service';
+import { ActionRequest, ActionService } from 'app/core/core-services/action.service';
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { Id } from 'app/core/definitions/key-types';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
@@ -21,6 +21,7 @@ import { ChoiceService } from 'app/core/ui-services/choice.service';
 import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { TreeService } from 'app/core/ui-services/tree.service';
+import { AgendaItemType } from 'app/shared/models/agenda/agenda-item';
 import { Displayable } from 'app/site/base/displayable';
 import { ViewMotion } from '../models/view-motion';
 
@@ -85,23 +86,6 @@ export class MotionMultiselectService {
         if (await this.promptService.open(title)) {
             await this.repo.delete(...motions);
             this.overlayService.hideSpinner();
-        }
-    }
-
-    /**
-     * Moves the related agenda items from the motions as childs under a selected (parent) agenda item.
-     */
-    public async moveToItem(motions: ViewMotion[]): Promise<void> {
-        const title = this.translate.instant('This will move all selected motions as childs to:');
-        const choices = this.agendaRepo.getViewModelListObservable();
-        const selectedChoice = await this.choiceService.open(title, choices);
-        if (selectedChoice) {
-            const requestData: AgendaItemAction.AssignPayload = {
-                ids: motions.map(motion => motion.agenda_item_id),
-                parent_id: selectedChoice.items as number,
-                meeting_id: this.activeMeetingId.meetingId
-            };
-            return this.actionService.sendRequest(AgendaItemAction.ASSIGN, requestData);
         }
     }
 
@@ -300,12 +284,49 @@ export class MotionMultiselectService {
     }
 
     /**
+     * Moves the related agenda items from the motions as childs under a selected (parent) agenda item.
+     */
+    public async moveInAgenda(motions: ViewMotion[]): Promise<void> {
+        const title = this.translate.instant('This will move all selected motions as childs to:');
+        const choices = this.agendaRepo.getViewModelListObservable();
+        const selectedChoice = await this.choiceService.open(title, choices);
+        if (selectedChoice) {
+            const requests: ActionRequest[] = [];
+            const motionsNotInAgenda = motions.filter(motion => !motion.agenda_item_id);
+            if (motionsNotInAgenda.length) {
+                const createAgendaItemPayload: AgendaItemAction.CreatePayload[] = motionsNotInAgenda.map(motion => ({
+                    content_object_id: motion.fqid,
+                    parent_id: selectedChoice.items as number,
+                    type: AgendaItemType.hidden
+                }));
+                requests.push({
+                    action: AgendaItemAction.CREATE,
+                    data: createAgendaItemPayload
+                });
+            }
+            if (motions.length > motionsNotInAgenda.length) {
+                const requestData: AgendaItemAction.AssignPayload = {
+                    ids: motions.map(motion => motion.agenda_item_id).filter(id => !!id),
+                    parent_id: selectedChoice.items as number,
+                    meeting_id: this.activeMeetingId.meetingId
+                };
+                requests.push({
+                    action: AgendaItemAction.ASSIGN,
+                    data: [requestData]
+                });
+            }
+
+            await this.actionService.sendRequests(requests);
+        }
+    }
+
+    /**
      * Triggers the selected motions to be moved in the call-list (sort_parent, weight)
      * as children or as following after a selected motion.
      *
      * @param motions The motions to move
      */
-    public async bulkMoveItems(motions: ViewMotion[]): Promise<void> {
+    public async moveInCallList(motions: ViewMotion[]): Promise<void> {
         const title = this.translate.instant(
             'This will move all selected motions under or after the following motion in the call list:'
         );

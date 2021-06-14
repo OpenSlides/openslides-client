@@ -152,6 +152,12 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
                             'group_$_ids',
                             this.activeMeetingIdService?.meetingId.toString()
                         )
+                    },
+                    {
+                        idField: {
+                            templateIdField: 'vote_delegated_$_to_id',
+                            templateValue: this.activeMeetingId?.toString()
+                        }
                     }
                 ]
             });

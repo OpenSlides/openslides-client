@@ -56,7 +56,6 @@ export class ActionService {
     }
 
     public async sendRequests<T>(requests: ActionRequest[]): Promise<T[] | null> {
-        requests = this.trimRequestPayload(requests);
         console.log('send requests:', requests);
         const response = await this.http.post<T>(this.ACTION_URL, requests);
         if (isActionError(response)) {
@@ -72,53 +71,5 @@ export class ActionService {
             return results[0];
         }
         throw new Error('Unknown return type from action service');
-    }
-
-    /**
-     * `Warning`: This makes use of references passed to this function to delete fields.
-     *
-     * @returns The trimmed request
-     */
-    private trimRequestPayload(requests: ActionRequest[]): ActionRequest[] {
-        for (const request of requests) {
-            this.trimArray(request.data);
-        }
-        return requests;
-    }
-
-    /**
-     * `Warning`: This makes use of references passed to this function to delete fields.
-     *
-     * @param array An array of any type. Every entry in the array will be checked to trim.
-     */
-    private trimArray(array: any[]): void {
-        for (const entry of array) {
-            this.trimSingleObject(entry);
-        }
-    }
-
-    /**
-     * `Warning`: This makes use of references passed to this function to delete fields.
-     *
-     * @param date Any value which will be checked. If it's an object, it will iterate over all keys
-     * and check `date[key]`. If `date[key]` is a string and its (trimmed) value is empty, then the
-     * field will be deleted from `date`.
-     */
-    private trimSingleObject(date: any): void {
-        const temp = { ...date };
-        for (const key of Object.keys(temp)) {
-            if (temp[key] === undefined || (typeof temp[key] === 'string' && temp[key].trim().length === 0)) {
-                delete date[key];
-            }
-            if (Array.isArray(temp[key])) {
-                this.trimArray(date[key]);
-            }
-            if (typeof temp[key] === 'object' && !!temp[key]) {
-                this.trimSingleObject(date[key]);
-                if (!Object.keys(date[key]).length) {
-                    delete date[key];
-                }
-            }
-        }
     }
 }

@@ -2,12 +2,10 @@ import { Injectable } from '@angular/core';
 
 import { AgendaItemRepositoryService } from '../agenda/agenda-item-repository.service';
 import { AssignmentAction } from 'app/core/actions/assignment-action';
-import { AssignmentCandidateAction } from 'app/core/actions/assignment-candidate-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
-import { OperatorService } from 'app/core/core-services/operator.service';
-import { Id } from 'app/core/definitions/key-types';
 import { Assignment } from 'app/shared/models/assignments/assignment';
 import { Identifiable } from 'app/shared/models/base/identifiable';
+import { createAgendaItem } from 'app/shared/utils/create-agenda-item';
 import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { BaseIsAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-is-agenda-item-and-list-of-speakers-content-object-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
@@ -50,7 +48,8 @@ export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeake
         partialAssignment.phase = undefined;
         const payload: AssignmentAction.CreatePayload = {
             meeting_id: this.activeMeetingIdService.meetingId,
-            ...this.getPartialPayload(partialAssignment)
+            ...this.getPartialPayload(partialAssignment),
+            ...createAgendaItem(partialAssignment)
         };
         return this.sendActionToBackend(AssignmentAction.CREATE, payload);
     }

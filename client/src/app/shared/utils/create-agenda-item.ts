@@ -7,7 +7,7 @@ import { AgendaItemCreationPayload } from 'app/core/actions/common/agenda-item-c
  *
  * @returns Given information of the creation of an agenda-item for the given model.
  */
-export function createAgendaItem(model: Partial<AgendaItemCreationPayload>): AgendaItemCreationPayload {
+export function createAgendaItem(model: any): AgendaItemCreationPayload {
     return {
         agenda_comment: model.agenda_comment,
         agenda_create: model.agenda_create,
