@@ -11,7 +11,7 @@ import { Searchable } from 'app/site/base/searchable';
 import { ViewGroup } from 'app/site/users/models/view-group';
 
 export const IMAGE_MIMETYPES = ['image/png', 'image/jpeg', 'image/gif'];
-export const FONT_MIMETYPES = ['font/ttf', 'font/woff', 'application/font-woff', 'application/font-sfnt'];
+export const FONT_MIMETYPES = ['font/ttf', 'font/woff', 'font/woff2'];
 export const PDF_MIMETYPES = ['application/pdf'];
 export const VIDEO_MIMETYPES = [
     'video/quicktime',
