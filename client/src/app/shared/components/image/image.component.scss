@@ -1,5 +1,11 @@
-img {
-    max-width: 100%;
-    height: auto;
-    margin: 0 auto;
+div {
+    display: flex;
+    height: 100%;
+    justify-content: center;
+
+    img {
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
 }

@@ -10,12 +10,18 @@ import { HttpService } from 'app/core/core-services/http.service';
 export class ImageComponent {
     @Input()
     public set source(src: string) {
-        this._source = src;
-        this.startLoading();
+        if (this._source !== src) {
+            this._source = src;
+            this.onChange();
+        }
+    }
+
+    public get source(): string {
+        return this._source;
     }
 
     public get progress(): number {
-        return this.totalBytesToLoad === 0 ? 0 : this.bytesLoaded / this.totalBytesToLoad;
+        return this.totalBytesToLoad === 0 ? 0 : Math.round((this.bytesLoaded * 100) / this.totalBytesToLoad);
     }
 
     public resource: any;
@@ -28,9 +34,14 @@ export class ImageComponent {
 
     private totalBytesToLoad = 0;
 
-    private _source: string;
+    private _source: string | null = null;
 
     public constructor(private http: HttpService) {}
+
+    private onChange(): void {
+        this.loaded = false;
+        this.startLoading();
+    }
 
     private addListenersToReader(fileReader: FileReader): void {
         fileReader.onprogress = event => this.handleReaderEvent(event, fileReader);

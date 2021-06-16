@@ -235,11 +235,11 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
             follow: [
                 {
                     idField: 'mediafile_ids',
-                    follow: ['access_group_ids', 'inherited_access_group_ids']
+                    follow: ['access_group_ids', 'inherited_access_group_ids'],
+                    additionalFields: LOGO_FONT_VALUES
                 },
                 'group_ids'
-            ],
-            additionalFields: LOGO_FONT_VALUES
+            ]
         };
     }
 
@@ -255,6 +255,17 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
             (file.isImage() && this.operator.hasPerms(Permission.meetingCanManageLogosAndFonts)) ||
             this.canEdit
         );
+    }
+
+    public isMediafileUsed(file: ViewMediafile, place: string): boolean {
+        const mediafile = this.repo.getViewModel(file.id);
+        if (mediafile.isFont()) {
+            return mediafile.used_as_font_in_meeting_id(place) === this.activeMeetingId;
+        }
+        if (mediafile.isImage()) {
+            return mediafile.used_as_logo_in_meeting_id(place) === this.activeMeetingId;
+        }
+        return false;
     }
 
     public getDateFromTimestamp(timestamp: string): string {
@@ -371,24 +382,22 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
         return optionNames.join('\n');
     }
 
-    public async toggleLogoUsage(event: any, file: ViewMediafile, place: LogoPlace): Promise<void> {
-        // prohibits automatic closing
-        event.stopPropagation();
-        if (file.used_as_logo_in_meeting(place)) {
-            await this.mediaManage.unsetLogo(place);
+    public getDisplayNameForPlace(place: FontPlace | LogoPlace): string {
+        if (this.logoDisplayNames[place]) {
+            return this.logoDisplayNames[place];
         } else {
-            await this.mediaManage.setLogo(place, file);
+            return this.fontDisplayNames[place];
         }
-        this.cd.markForCheck();
     }
 
-    public async toggleFontUsage(event: any, file: ViewMediafile, place: FontPlace): Promise<void> {
+    public async toggleMediafileUsage(event: Event, file: ViewMediafile, place: FontPlace | LogoPlace): Promise<void> {
         // prohibits automatic closing
         event.stopPropagation();
-        if (file.used_as_font_in_meeting(place)) {
-            await this.mediaManage.unsetFont(place);
-        } else {
-            await this.mediaManage.setFont(place, file);
+        if (file.isFont()) {
+            await this.toggleFontUsage(file, place as FontPlace);
+        }
+        if (file.isImage()) {
+            await this.toggleLogoUsage(file, place as LogoPlace);
         }
         this.cd.markForCheck();
     }
@@ -456,6 +465,22 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
             } else {
                 this.dataSource.selection.select(clickedModel);
             }
+        }
+    }
+
+    private async toggleLogoUsage(file: ViewMediafile, place: LogoPlace): Promise<void> {
+        if (this.isMediafileUsed(file, place)) {
+            await this.mediaManage.unsetLogo(place);
+        } else {
+            await this.mediaManage.setLogo(place, file);
+        }
+    }
+
+    private async toggleFontUsage(file: ViewMediafile, place: FontPlace): Promise<void> {
+        if (this.isMediafileUsed(file, place)) {
+            await this.mediaManage.unsetFont(place);
+        } else {
+            await this.mediaManage.setFont(place, file);
         }
     }
 
