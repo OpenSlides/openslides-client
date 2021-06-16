@@ -190,11 +190,13 @@ export class ListViewTableComponent<
         }
     }
 
-    protected defaultToRestrictFn = (restriction: ColumnRestriction) => {
+    @Input()
+    public toRestrictFn = (restriction: ColumnRestriction) => {
         return !this.operator.hasPerms(restriction.permission);
     };
 
-    protected defaultToHideFn = () => {
+    @Input()
+    public toHideFn = () => {
         const columnsToHide = [];
 
         // hide the projector columns

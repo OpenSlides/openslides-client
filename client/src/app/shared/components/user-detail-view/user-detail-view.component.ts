@@ -196,7 +196,7 @@ export class UserDetailViewComponent extends BaseComponent {
     private createForm(): void {
         this.personalInfoForm = this.fb.group(
             {
-                username: [''],
+                username: ['', this.isNewUser ? [] : [Validators.required]],
                 title: [''],
                 first_name: [''],
                 last_name: [''],
