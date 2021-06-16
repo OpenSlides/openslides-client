@@ -8,6 +8,7 @@ import {
 } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { CML, OML } from 'app/core/core-services/organization-permission';
+import { ORGANIZATION_ID } from 'app/core/core-services/organization.service';
 import { Id } from 'app/core/definitions/key-types';
 import { ViewCommittee } from 'app/management/models/view-committee';
 import { ViewOrganization } from 'app/management/models/view-organization';
@@ -40,6 +41,7 @@ export class CommitteeRepositoryService
         const listFields: (keyof Committee)[] = titleFields.concat([
             'meeting_ids',
             'forward_to_committee_ids',
+            'receive_forwardings_from_committee_ids',
             'organization_tag_ids',
             'user_ids'
         ]);
@@ -54,10 +56,8 @@ export class CommitteeRepositoryService
     public create(committee: Partial<Committee>): Promise<Identifiable> {
         const payload: CommitteeAction.CreatePayload = {
             name: committee.name,
-            organization_id: 1,
-            description: committee.description,
-            organization_tag_ids: committee.organization_tag_ids,
-            user_ids: committee.user_ids
+            organization_id: ORGANIZATION_ID,
+            ...this.getPartialCommitteePayload(committee)
         };
         return this.sendActionToBackend(CommitteeAction.CREATE, payload);
     }
@@ -65,22 +65,14 @@ export class CommitteeRepositoryService
     public update(update: Partial<Committee>, committee: ViewCommittee): Promise<void> {
         const payload: CommitteeAction.UpdatePayload = {
             id: committee.id,
-            ...(update as CommitteeAction.UpdatePayload)
+            forward_to_committee_ids: update.forward_to_committee_ids,
+            receive_forwardings_from_committee_ids: update.receive_forwardings_from_committee_ids,
+            ...this.getPartialCommitteePayload(update)
         };
         return this.sendActionToBackend(CommitteeAction.UPDATE, payload);
     }
 
-    public delete(committee: ViewCommittee): Promise<void> {
-        return this.sendActionToBackend(CommitteeAction.DELETE, { id: committee.id });
-    }
-
-    /**
-     * TODO: Currently, this doesn't work. It depends on the backend.
-     *
-     * @param committees
-     * @returns
-     */
-    public bulkDelete(committees: ViewCommittee[]): Promise<void> {
+    public delete(...committees: ViewCommittee[]): Promise<void> {
         const payload: CommitteeAction.DeletePayload[] = committees.map(committee => ({ id: committee.id }));
         return this.sendBulkActionToBackend(CommitteeAction.DELETE, payload);
     }
@@ -127,5 +119,15 @@ export class CommitteeRepositoryService
             );
         };
         return viewModel;
+    }
+
+    private getPartialCommitteePayload(
+        committee: Partial<CommitteeAction.PartialPayload>
+    ): CommitteeAction.PartialPayload {
+        return {
+            description: committee.description,
+            organization_tag_ids: committee.organization_tag_ids,
+            user_ids: committee.user_ids
+        };
     }
 }

@@ -71,29 +71,23 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
 
     public onSubmit(): void {
         if (this.isCreateView) {
-            const userIds = this.meetingForm.value.user_ids;
             const payload: MeetingAction.CreatePayload = {
                 committee_id: this.committeeId,
                 ...this.meetingForm.value
             };
 
             this.meetingRepo
-                .create(payload, userIds)
+                .create(payload)
                 .then(() => {
                     this.location.back();
                 })
                 .catch(this.raiseError);
         } else {
-            const userIds = this.meetingForm.value.user_ids;
-            // this might be faster when using sets:
-            // addedUsers = userIds setminus editMeeting.user_ids
-            // removedUsers = (editMeeting.user_ids intersection committee.user_ids) setminus userIds
+            const userIds = this.meetingForm.value.user_ids as Id[];
+            const addedUsers = userIds.difference(this.editMeeting.user_ids);
             // removedUsers must not contain guests or so. We do not want to remove users, that do not belong
             // to the committee.
-            const addedUsers = userIds.filter(id => !this.editMeeting.user_ids.includes(id));
-            const removedUsers = this.editMeeting.user_ids.filter(
-                id => this.committee.user_ids.includes(id) && !userIds.includes(id)
-            );
+            const removedUsers = this.editMeeting.user_ids.difference(userIds).intersect(this.committee.user_ids);
 
             const payload: MeetingAction.UpdatePayload = this.meetingForm.value;
             delete (payload as any).user_ids; // do not send them to the server.
