@@ -352,4 +352,21 @@ export class PollRepositoryService extends BaseRepositoryWithActiveMeeting<ViewP
         };
         return this.sendActionToBackend(PollAction.VOTE, payload);
     }
+
+    public async changePollState(poll: Poll, targetState: PollState): Promise<void> {
+        switch (targetState) {
+            case PollState.Created:
+                await this.resetPoll(poll);
+                break;
+            case PollState.Started:
+                await this.startPoll(poll);
+                break;
+            case PollState.Finished:
+                await this.stopPoll(poll);
+                break;
+            case PollState.Published:
+                return this.publishPoll(poll);
+                break;
+        }
+    }
 }

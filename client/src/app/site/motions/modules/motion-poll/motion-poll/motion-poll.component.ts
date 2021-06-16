@@ -5,6 +5,7 @@ import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { Id } from 'app/core/definitions/key-types';
 import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
+import { ChoiceService } from 'app/core/ui-services/choice.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { VotingPrivacyWarningComponent } from 'app/shared/components/voting-privacy-warning/voting-privacy-warning.component';
@@ -65,6 +66,7 @@ export class MotionPollComponent extends BasePollComponent {
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         promptService: PromptService,
+        choiceService: ChoiceService,
         pollDialog: MotionPollDialogService,
         dialog: MatDialog,
         pollRepo: PollRepositoryService,
@@ -72,7 +74,7 @@ export class MotionPollComponent extends BasePollComponent {
         private pdfService: MotionPollPdfService,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector, dialog, promptService, pollRepo, pollDialog);
+        super(componentServiceCollector, dialog, promptService, choiceService, pollRepo, pollDialog);
     }
 
     public openVotingWarning(): void {
