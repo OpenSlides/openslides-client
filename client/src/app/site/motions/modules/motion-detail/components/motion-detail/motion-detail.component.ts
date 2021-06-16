@@ -278,7 +278,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
     }
 
     public removeFromAgenda(): void {
-        this.itemRepo.removeFromAgenda(this.motion.agenda_item).catch(this.raiseError);
+        this.itemRepo.removeFromAgenda(this.motion.agenda_item_id).catch(this.raiseError);
     }
 
     /**
