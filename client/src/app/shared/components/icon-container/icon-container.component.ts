@@ -30,6 +30,12 @@ export class IconContainerComponent {
     public inline = false;
 
     /**
+     * Whether an icon should be mirrored by 180°.
+     */
+    @Input()
+    public mirrored = false;
+
+    /**
      * Reverse text and icon.
      * Show the icon behind the text
      */
