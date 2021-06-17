@@ -20,28 +20,21 @@ export interface HasFields {
     fields: Fields;
 }
 
-/**
- * Whether a relation requests a list of view-models that updates the whole view-model-store of one repo.
- */
-export interface CanBeFullListUpdate {
-    isFullList?: boolean;
-}
-
 export interface ModelRequest extends HasFields {
     ids: number[];
     collection: string;
 }
 
-export interface GenericRelationFieldDecriptor extends HasFields, CanBeFullListUpdate {
+export interface GenericRelationFieldDecriptor extends HasFields {
     type: 'generic-relation-list' | 'generic-relation';
 }
 
-export interface RelationFieldDescriptor extends HasFields, CanBeFullListUpdate {
+export interface RelationFieldDescriptor extends HasFields {
     type: 'relation-list' | 'relation';
     collection: string;
 }
 
-export interface StructuredFieldDecriptor extends CanBeFullListUpdate {
+export interface StructuredFieldDecriptor {
     type: 'template';
     values?: RelationFieldDescriptor | GenericRelationFieldDecriptor;
 }
@@ -115,7 +108,7 @@ export class AutoupdateService {
         const closeFn = await this.communicationManager.connect<AutoupdateModelData>(
             'autoupdate',
             (message, id, isFirstResponse) =>
-                this.handleAutoupdateWithStupidFormat(message, id, { collectionsToUpdate, isFirstResponse }),
+                this.handleAutoupdateWithStupidFormat(message, id, collectionsToUpdate, isFirstResponse),
             () => [request],
             null,
             description
@@ -126,11 +119,12 @@ export class AutoupdateService {
     private async handleAutoupdateWithStupidFormat(
         autoupdateData: AutoupdateModelData,
         id: number,
-        args: { collectionsToUpdate: Collection[]; isFirstResponse: boolean }
+        collectionsToUpdate: Collection[],
+        isFirstResponse: boolean
     ): Promise<void> {
         const modelData = autoupdateFormatToModelData(autoupdateData);
         console.log('autoupdate: from stream', id, modelData, 'raw data:', autoupdateData);
-        await this.handleAutoupdate(modelData, args.collectionsToUpdate, args.isFirstResponse);
+        await this.handleAutoupdate(modelData, collectionsToUpdate, isFirstResponse);
     }
 
     private async handleAutoupdate(
@@ -142,7 +136,7 @@ export class AutoupdateService {
 
         const deletedModels: DeletedModels = {};
         const changedModels: ChangedModels = {};
-        const fullListUpdate: Collection[] = isFirstResponse ? collectionsToUpdate : [];
+        const fullListUpdateCollections: Collection[] = isFirstResponse ? collectionsToUpdate : [];
 
         for (const collection of Object.keys(modelData)) {
             for (const id of Object.keys(modelData[collection])) {
@@ -166,7 +160,7 @@ export class AutoupdateService {
                 }
             }
         }
-        await this.handleChangedAndDeletedModels(changedModels, deletedModels, fullListUpdate);
+        await this.handleChangedAndDeletedModels(changedModels, deletedModels, fullListUpdateCollections);
 
         unlock();
     }
@@ -174,13 +168,15 @@ export class AutoupdateService {
     private async handleChangedAndDeletedModels(
         changedModels: ChangedModels,
         deletedModels: DeletedModels,
-        fullListUpdateForCollection: Collection[] = []
+        fullListUpdateCollections: Collection[]
     ): Promise<void> {
         const updateSlot = await this.DSUpdateManager.getNewUpdateSlot(this.DS);
 
-        for (const collection of fullListUpdateForCollection) {
+        for (const collection of fullListUpdateCollections) {
             const models = this.DS.getAll(collection);
-            const ids = models.map(model => model.id).difference(changedModels[collection].map(model => model.id));
+            const ids = models
+                .map(model => model.id)
+                .difference((changedModels[collection] || []).map(model => model.id));
             deletedModels[collection] = (deletedModels[collection] || []).concat(ids);
         }
 

@@ -360,15 +360,6 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         });
     }
 
-    /**
-     * Maps the id from every view-model in this repo into a list.
-     *
-     * @returns A list with ids from all view-models stored in this repo.
-     */
-    protected getViewModelIdList(): Id[] {
-        return this.getViewModelList().map(model => model.id);
-    }
-
     protected raiseError = (error: string | Error) => {
         this.repositoryServiceCollector.errorService.showError(error);
         throw error;
