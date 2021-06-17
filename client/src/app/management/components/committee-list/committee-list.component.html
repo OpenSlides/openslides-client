@@ -35,52 +35,56 @@
     [(selectedRows)]="selectedRows"
     (dataSourceChange)="onDataSourceChange($event)"
     [filterProps]="['name']"
-    [hiddenInMobile]="['forwarding', 'managers']"
+    [hiddenInMobile]="['forwarding', 'managers', 'meta']"
 >
     <div *pblNgridCellDef="'name'; value as name; row as committee" class="cell-slot fill">
         <a class="detail-link" [routerLink]="committee.id" *ngIf="!isMultiSelect && committee.canAccess()"></a>
         <div>
-            {{ name }}
-            <div class="subtitle" *ngIf="committee.description?.trim()">
-                {{ committee.description }}
+            <div class="ellipsis-overflow">
+                {{ name }}
+                <div class="subtitle" *ngIf="committee.description?.trim()">
+                    {{ committee.description }}
+                </div>
+            </div>
+            <div class="ellipsis-overflow">
+                <os-chip-list *ngIf="committee.organization_tags?.length" [model]="committee.organization_tags">
+                    <ng-template let-tag>
+                        {{ tag.name }}
+                    </ng-template>
+                </os-chip-list>
             </div>
         </div>
     </div>
 
-    <div *pblNgridCellDef="'organization_tags'; row as committee" class="cell-slot fill">
-        <os-chip-list *ngIf="committee.organization_tags?.length" [model]="committee.organization_tags">
-            <ng-template let-tag>
-                {{ tag.name }}
-            </ng-template>
-        </os-chip-list>
-    </div>
-
     <div *pblNgridCellDef="'forwarding'; row as committee" class="cell-slot fill">
         <a class="detail-link" [routerLink]="committee.id" *ngIf="!isMultiSelect"></a>
-        <div *ngIf="committee.forward_to_committees?.length">
-            <os-icon-container iconTooltip="{{ 'Can forward motions to committee' | translate }}" icon="forward">
-                <span *ngFor="let forwardingCommittee of committee.forward_to_committees; let last = last">
-                    {{ forwardingCommittee.name }}<span *ngIf="!last">,&nbsp;</span>
-                </span>
-            </os-icon-container>
-        </div>
-    </div>
-
-    <div *pblNgridCellDef="'meetings'; row as committee" class="cell-slot fill">
-        <a class="detail-link" [routerLink]="committee.id" *ngIf="!isMultiSelect"></a>
-        <div *ngIf="committee.meetingAmount">
-            <os-icon-container iconTooltip="{{ 'Meetings' | translate }}" icon="calendar_today">
-                {{ committee.meetingAmount }}
-            </os-icon-container>
-        </div>
-    </div>
-
-    <div *pblNgridCellDef="'participants'; row as committee" class="cell-slot fill">
-        <a class="detail-link" [routerLink]="committee.id" *ngIf="!isMultiSelect"></a>
-        <div *ngIf="committee.memberAmount">
-            <os-icon-container iconTooltip="{{ 'Members' | translate }}" icon="group">
-                {{ committee.memberAmount }}
-            </os-icon-container>
+        <div>
+            <div *ngIf="committee.forward_to_committees?.length">
+                <os-icon-container
+                    iconTooltip="{{ 'Can forward motions to committee' | translate }}"
+                    icon="arrow_right_alt"
+                >
+                    <span *ngFor="let forwardingCommittee of committee.forward_to_committees; let last = last">
+                        {{ forwardingCommittee.name }}<span *ngIf="!last">,&nbsp;</span>
+                    </span>
+                </os-icon-container>
+            </div>
+            <div *ngIf="committee.receive_forwardings_from_committees?.length">
+                <os-icon-container
+                    iconTooltip="{{ 'Can receive forwardings from committees' | translate }}"
+                    icon="arrow_right_alt"
+                    [mirrored]="true"
+                >
+                    <span
+                        *ngFor="
+                            let receivingCommittee of committee.receive_forwardings_from_committees;
+                            let last = last
+                        "
+                    >
+                        {{ receivingCommittee.name }}<span *ngIf="!last">,&nbsp;</span>
+                    </span>
+                </os-icon-container>
+            </div>
         </div>
     </div>
 
@@ -98,6 +102,22 @@
                 </span>
             </div>
         </os-icon-container>
+    </div>
+
+    <div *pblNgridCellDef="'meta'; row as committee" class="cell-slot fill">
+        <a class="detail-link" [routerLink]="committee.id" *ngIf="!isMultiSelect"></a>
+        <div>
+            <div *ngIf="committee.meetingAmount">
+                <os-icon-container iconTooltip="{{ 'Meetings' | translate }}" icon="calendar_today">
+                    {{ committee.meetingAmount }}
+                </os-icon-container>
+            </div>
+            <div *ngIf="committee.memberAmount">
+                <os-icon-container iconTooltip="{{ 'Members' | translate }}" icon="group">
+                    {{ committee.memberAmount }}
+                </os-icon-container>
+            </div>
+        </div>
     </div>
 
     <div *pblNgridCellDef="'menu'; row as committee" class="cell-slot fill">

@@ -15,6 +15,10 @@
 }
 
 .os-chip {
+    /**
+    * Corrects the `-4px` from `mat-chip-list-wrapper`.
+    */
+    margin: 4px;
     background: rgb(var(--os-chip-red), var(--os-chip-green), var(--os-chip-blue));
 
     /**

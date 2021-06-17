@@ -1,20 +1,16 @@
-<mat-icon
-    *ngIf="!swap && showIcon"
-    [matTooltip]="iconTooltip"
-    [class]="iconAction ? 'pointer' : ''"
-    (click)="iconClick()"
-    [color]="color"
-    >{{ icon }}</mat-icon
->
+<ng-container *ngIf="!swap && showIcon; then iconTemplate"></ng-container>
 <span class="content-node" [ngClass]="noWrap ? 'single-line' : 'break-lines'">
     <ng-content></ng-content>
     <ng-content select="[afterContent]"></ng-content>
 </span>
-<mat-icon
-    *ngIf="swap && showIcon"
-    [matTooltip]="iconTooltip"
-    [class]="iconAction ? 'pointer' : ''"
-    (click)="iconClick()"
-    [color]="color"
-    >{{ icon }}</mat-icon
->
+<ng-container *ngIf="swap && showIcon; then iconTemplate"></ng-container>
+
+<ng-template #iconTemplate>
+    <mat-icon
+        [matTooltip]="iconTooltip"
+        [ngClass]="{ pointer: iconAction, mirrored: mirrored }"
+        (click)="iconClick()"
+        [color]="color"
+        >{{ icon }}</mat-icon
+    >
+</ng-template>

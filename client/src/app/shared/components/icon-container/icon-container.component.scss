@@ -6,6 +6,10 @@
         width: $iconSize;
         height: $iconSize;
         margin-top: 0 !important;
+
+        &.mirrored {
+            transform: rotate(180deg);
+        }
     }
 
     & > .content-node {

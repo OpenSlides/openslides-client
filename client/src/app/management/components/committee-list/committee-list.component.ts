@@ -29,27 +29,20 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
     public readonly tableColumnDefinition: PblColumnDefinition[] = [
         {
             prop: 'name',
+            minWidth: 250,
             width: 'auto'
-        },
-        {
-            prop: 'organization_tags',
-            width: '250px'
         },
         {
             prop: 'forwarding',
             width: '250px'
         },
         {
-            prop: 'meetings',
-            width: '70px'
-        },
-        {
-            prop: 'participants',
-            width: '70px'
-        },
-        {
             prop: 'managers',
             width: '200px'
+        },
+        {
+            prop: 'meta',
+            width: '70px'
         }
     ];
 
