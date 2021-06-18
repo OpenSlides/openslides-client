@@ -1,6 +1,7 @@
 import { inject, TestBed } from '@angular/core/testing';
 
 import { DiffService, ModificationType } from './diff.service';
+import { E2EImportsModule } from '../../../e2e-imports.module';
 import { LinenumberingService } from './linenumbering.service';
 
 describe('DiffService', () => {
@@ -167,6 +168,7 @@ describe('DiffService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
+            imports: [E2EImportsModule],
             providers: [DiffService]
         });
     });
@@ -548,7 +550,7 @@ describe('DiffService', () => {
         ));
 
         it('detects a simple insertion, despite &nbsp; tags', inject([DiffService], (service: DiffService) => {
-            const htmlBefore = '<P>dsds dsfsdfsdf sdf sdfs dds sdf dsds dsfsdfsdf</P>',
+            const htmlBefore = '<P>dsds dsfsdfsdf sdf sdfs dds sdf dsds dsfsdfsdf</P>',
                 htmlAfter = '<P>dsds&nbsp;dsfsdfsdf sdf sdfs dds sd345 3453 45f dsds&nbsp;dsfsdfsdf</P>';
             const calculatedType = service.detectReplacementType(htmlBefore, htmlAfter);
             expect(calculatedType).toBe(ModificationType.TYPE_INSERTION);
@@ -843,7 +845,7 @@ describe('DiffService', () => {
         ));
 
         it('does not repeat the last word (1)', inject([DiffService], (service: DiffService) => {
-            const before = '<P>sem. Nulla consequat massa quis enim. </P>',
+            const before = '<P>sem. Nulla consequat massa quis enim. </P>',
                 after = '<p>sem. Nulla consequat massa quis enim. TEST<br>\nTEST</p>';
             const diff = service.diff(before, after);
 
@@ -934,7 +936,7 @@ describe('DiffService', () => {
             const diff = service.diff(before, after);
 
             expect(diff).toBe(
-                '<P class="delete">...so frißt er Euch alle mit Haut und Haar.</P><P class="insert">...so frißt er <SPAN>Euch alle</SPAN> mit Haut und Haar.</P>'
+                '<p>...so frißt er <del>Euch alle</del><ins><span style="color: #000000;">Euch alle</span></ins> mit Haut und Haar.</p>'
             );
         }));
 
@@ -945,7 +947,7 @@ describe('DiffService', () => {
             const diff = service.diff(before, after);
 
             expect(diff).toBe(
-                '<P class="delete">...so frißt er Euch alle mit Haut und Haar.</P><P class="insert">...so frißt er <SPAN style="font-size: 2em; opacity: 0.5">Euch alle</SPAN> mit Haut und Haar.</P>'
+                '<p>...so frißt er <del>Euch alle</del><ins><span style="font-size: 2em; color: #000000; opacity: 0.5">Euch alle</span></ins> mit Haut und Haar.</p>'
             );
         }));
 
@@ -995,6 +997,30 @@ describe('DiffService', () => {
                 const diff = service.diff(before, after);
                 expect(diff).toBe(
                     '<p>Lorem ipsum dolor sit amet, consetetur <del><br></del>sadipscing elitr.<ins> Sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua..</ins><br>Bavaria ipsum dolor sit amet o’ha wea nia ausgähd<br><del>kummt nia hoam i hob di narrisch gean</del><ins>Autonomie erfährt ihre Grenzen</ins></p>'
+                );
+            }
+        ));
+
+        it('does not fall back to block level replacement when only a formatting is inserted', inject(
+            [DiffService],
+            (service: DiffService) => {
+                const before = '<p>This is a text with a word that will be formatted</p>',
+                    after = '<p>This is a text with a <span class="testclass">word</span> that will be formatted</p>';
+                const diff = service.diff(before, after);
+                expect(diff).toBe(
+                    '<p>This is a text with a <del>word</del><ins><span class="testclass">word</span></ins> that will be formatted</p>'
+                );
+            }
+        ));
+
+        it('does not fall back to block level replacement when only a formatting is deleted', inject(
+            [DiffService],
+            (service: DiffService) => {
+                const before = '<p>This is a text with a <strong>word</strong> that is formatted</p>',
+                    after = '<p>This is a text with a word that is formatted</p>';
+                const diff = service.diff(before, after);
+                expect(diff).toBe(
+                    '<p>This is a text with a <del><strong>word</strong></del><ins>word</ins> that is formatted</p>'
                 );
             }
         ));
@@ -1143,8 +1169,8 @@ describe('DiffService', () => {
                     '<p>holen, da rief sie alle sieben herbei und sprach:</p>\n\n<p><span style="color: #000000;">Hello</span></p>\n\n<p><span style="color: #000000;">World</span></p>\n\n<p><span style="color: #000000;">Ya</span></p>\n\n<p>Die Geißlein sagten: " Liebe Mutter, wir wollen uns schon in acht nehmen, du kannst ohne</p>';
             const diff = service.diff(before, after);
             expect(diff).toBe(
-                '<P class="delete"><SPAN class="line-number-3 os-line-number" data-line-number="3" contenteditable="false"> </SPAN>holen, da rief sie alle sieben herbei und sprach:</P><DEL>\n\n</DEL>' +
-                    '<P class="delete"><SPAN class="line-number-4 os-line-number" data-line-number="4" contenteditable="false"> </SPAN><SPAN>"Liebe Kinder, ich will hinaus in den Wald, seid auf der Hut vor dem Wolf! Wenn er <BR class="os-line-break"><SPAN class="line-number-5 os-line-number" data-line-number="5" contenteditable="false"> </SPAN>hereinkommt, frisst er euch alle mit Haut und Haar. Der Bösewicht verstellt sich oft, aber <BR class="os-line-break"><SPAN class="line-number-6 os-line-number" data-line-number="6" contenteditable="false"> </SPAN>an der rauen Stimme und an seinen schwarzen Füßen werdet ihr ihn schon erkennen."</SPAN></P><DEL>\n\n</DEL><P class="delete"><SPAN class="line-number-7 os-line-number" data-line-number="7" contenteditable="false"> </SPAN>Die Geißlein sagten: " Liebe Mutter, wir wollen uns schon in acht nehmen, du kannst ohne </P>' +
+                '<P class="delete"><SPAN class="line-number-3 os-line-number" data-line-number="3" contenteditable="false"> </SPAN>holen, da rief sie alle sieben herbei und sprach:</P><DEL>\n\n</DEL>' +
+                    '<P class="delete"><SPAN class="line-number-4 os-line-number" data-line-number="4" contenteditable="false"> </SPAN><SPAN>"Liebe Kinder, ich will hinaus in den Wald, seid auf der Hut vor dem Wolf! Wenn er <BR class="os-line-break"><SPAN class="line-number-5 os-line-number" data-line-number="5" contenteditable="false"> </SPAN>hereinkommt, frisst er euch alle mit Haut und Haar. Der Bösewicht verstellt sich oft, aber <BR class="os-line-break"><SPAN class="line-number-6 os-line-number" data-line-number="6" contenteditable="false"> </SPAN>an der rauen Stimme und an seinen schwarzen Füßen werdet ihr ihn schon erkennen."</SPAN></P><DEL>\n\n</DEL><P class="delete"><SPAN class="line-number-7 os-line-number" data-line-number="7" contenteditable="false"> </SPAN>Die Geißlein sagten: " Liebe Mutter, wir wollen uns schon in acht nehmen, du kannst ohne </P>' +
                     '<P class="insert">holen, da rief sie alle sieben herbei und sprach:</P><INS>\n\n</INS>' +
                     '<P class="insert"><SPAN>Hello</SPAN></P><INS>\n\n</INS>' +
                     '<P class="insert"><SPAN>World</SPAN></P><INS>\n\n</INS>' +
@@ -1198,23 +1224,23 @@ describe('DiffService', () => {
 
     describe('addCSSClassToFirstTag function', () => {
         it('works with plain tags', inject([DiffService], (service: DiffService) => {
-            const strIn = "<ol start='2'><li>",
-                inserted = service.addCSSClassToFirstTag(strIn, 'newClass');
+            const str = "<ol start='2'><li>",
+                inserted = service.addCSSClassToFirstTag(str, 'newClass');
             expect(inserted).toBe('<ol start=\'2\' class="newClass"><li>');
         }));
 
         it('works with tags already having classes', inject([DiffService], (service: DiffService) => {
-            const strIn = "<ol start='2' class='my-old-class'><li>",
-                inserted = service.addCSSClassToFirstTag(strIn, 'newClass');
+            const str = "<ol start='2' class='my-old-class'><li>",
+                inserted = service.addCSSClassToFirstTag(str, 'newClass');
             expect(inserted).toBe('<ol start=\'2\' class="my-old-class newClass"><li>');
         }));
     });
 
     describe('removeDuplicateClassesInsertedByCkeditor', () => {
         it('removes additional classes', inject([DiffService], (service: DiffService) => {
-            const strIn =
+            const str =
                     '<ul class="os-split-before os-split-after"><li class="os-split-before"><ul class="os-split-before os-split-after"><li class="os-split-before">...here it goes on</li><li class="os-split-before">This has been added</li></ul></li></ul>',
-                cleaned = service.removeDuplicateClassesInsertedByCkeditor(strIn);
+                cleaned = service.removeDuplicateClassesInsertedByCkeditor(str);
             expect(cleaned).toBe(
                 '<UL class="os-split-before os-split-after"><LI class="os-split-before"><UL class="os-split-before os-split-after"><LI class="os-split-before">...here it goes on</LI><LI>This has been added</LI></UL></LI></UL>'
             );

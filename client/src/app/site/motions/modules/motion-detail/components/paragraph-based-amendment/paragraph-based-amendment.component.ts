@@ -13,6 +13,7 @@ import { MotionServiceCollectorService } from '../../../services/motion-service-
 interface ParagraphBasedAmendmentContent {
     amendment_paragraph_$: { [paragraph_number: number]: any };
     selected_paragraphs: ParagraphToChoose[];
+    broken_paragraphs: string[];
 }
 
 @Component({
@@ -46,7 +47,11 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
 
     public selectedParagraphs = [];
 
+    public brokenParagraphs = [];
+
     public contentForm: FormGroup;
+
+    public amendmentErrorMessage: string | null = null;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -81,7 +86,13 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
      * @returns {DiffLinesInParagraph[]}
      */
     public getAmendmentParagraphs(): DiffLinesInParagraph[] {
-        return this.motion?.getAmendmentParagraphLines(this.showAmendmentContext) || [];
+        try {
+            this.amendmentErrorMessage = null;
+            return this.motion?.getAmendmentParagraphLines(this.showAmendmentContext) || [];
+        } catch (e) {
+            this.amendmentErrorMessage = e.toString();
+            return [];
+        }
     }
 
     public getAmendmentParagraphLinesTitle(paragraph: DiffLinesInParagraph): string {
@@ -100,6 +111,7 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
         const contentPatch = this.createForm();
         this.contentForm = this.fb.group(contentPatch.amendment_paragraph_$);
         this.selectedParagraphs = contentPatch.selected_paragraphs;
+        this.brokenParagraphs = contentPatch.broken_paragraphs;
         this.propagateChanges();
     }
 
@@ -110,7 +122,8 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
     private createForm(): ParagraphBasedAmendmentContent {
         const contentPatch: ParagraphBasedAmendmentContent = {
             selected_paragraphs: [],
-            amendment_paragraph_$: {}
+            amendment_paragraph_$: {},
+            broken_paragraphs: []
         };
         const leadMotion = this.motion.lead_motion;
         // Hint: lineLength is sometimes not loaded yet when this form is initialized;
@@ -125,6 +138,17 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
                     contentPatch.amendment_paragraph_$[paragraphNo] = [amendmentParagraph, Validators.required];
                 }
             });
+            // If the motion has been shortened after the amendment has been created, we will show the paragraphs
+            // of the amendment as read-only
+            for (
+                let paragraphNo = paragraphsToChoose.length;
+                paragraphNo < this.motion.amendment_paragraph_$.length;
+                paragraphNo++
+            ) {
+                if (this.motion.amendment_paragraph(paragraphNo) !== null) {
+                    contentPatch.broken_paragraphs.push(this.motion.amendment_paragraph(paragraphNo));
+                }
+            }
         }
         return contentPatch;
     }

@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 
+import { TranslateService } from '@ngx-translate/core';
+
 import { LineNumberedString, LinenumberingService, LineNumberRange } from './linenumbering.service';
 import { ViewUnifiedChange } from '../../shared/models/motions/view-unified-change';
 
@@ -21,8 +23,7 @@ const DOCUMENT_FRAGMENT_NODE = 11;
 export enum ModificationType {
     TYPE_REPLACEMENT = 'replacement',
     TYPE_INSERTION = 'insertion',
-    TYPE_DELETION = 'deletion',
-    TYPE_OTHER = 'other'
+    TYPE_DELETION = 'deletion'
 }
 
 /**
@@ -241,7 +242,10 @@ export class DiffService {
      *
      * @param {LinenumberingService} lineNumberingService
      */
-    public constructor(private readonly lineNumberingService: LinenumberingService) {}
+    public constructor(
+        private readonly lineNumberingService: LinenumberingService,
+        protected translate: TranslateService
+    ) {}
 
     /**
      * Searches for the line breaking node within the given Document specified by the given lineNumber.
@@ -543,7 +547,21 @@ export class DiffService {
             '&sect;': '§',
             '&eacute;': 'é',
             '&rsquo;': '’',
-            '&euro;': '€'
+            '&euro;': '€',
+            '&reg;': '®',
+            '&trade;': '™',
+            '&raquo;': '»',
+            '&laquo;': '«',
+            '&Acirc;': 'Â',
+            '&acirc;': 'â',
+            '&Ccedil;': 'Ç',
+            '&ccedil;': 'ç',
+            '&Egrave;': 'È',
+            '&egrave;': 'è',
+            '&Ntilde;': 'Ñ',
+            '&ntilde;': 'ñ',
+            '&Euml;': 'Ë',
+            '&euml;': 'ë'
         };
 
         html = html
@@ -751,18 +769,18 @@ export class DiffService {
      * @returns {string[]}
      */
     private tokenizeHtml(str: string): string[] {
-        const splitArrayEntriesEmbedSeparator = (arrIn: string[], by: string, prepend: boolean): string[] => {
+        const splitArrayEntriesEmbedSeparator = (strings: string[], by: string, prepend: boolean): string[] => {
             const newArr = [];
-            for (let i = 0; i < arrIn.length; i++) {
-                if (arrIn[i][0] === '<' && (by === ' ' || by === '\n')) {
+            for (let i = 0; i < strings.length; i++) {
+                if (strings[i][0] === '<' && (by === ' ' || by === '\n')) {
                     // Don't split HTML tags
-                    newArr.push(arrIn[i]);
+                    newArr.push(strings[i]);
                     continue;
                 }
 
-                const parts = arrIn[i].split(by);
+                const parts = strings[i].split(by);
                 if (parts.length === 1) {
-                    newArr.push(arrIn[i]);
+                    newArr.push(strings[i]);
                 } else {
                     let j;
                     if (prepend) {
@@ -784,14 +802,14 @@ export class DiffService {
             }
             return newArr;
         };
-        const splitArrayEntriesSplitSeparator = (arrIn: string[], by: string): string[] => {
+        const splitArrayEntriesSplitSeparator = (strings: string[], by: string): string[] => {
             const newArr = [];
-            for (let i = 0; i < arrIn.length; i++) {
-                if (arrIn[i][0] === '<') {
-                    newArr.push(arrIn[i]);
+            for (let i = 0; i < strings.length; i++) {
+                if (strings[i][0] === '<') {
+                    newArr.push(strings[i]);
                     continue;
                 }
-                const parts = arrIn[i].split(by);
+                const parts = strings[i].split(by);
                 for (let j = 0; j < parts.length; j++) {
                     if (j > 0) {
                         newArr.push(by);
@@ -947,7 +965,7 @@ export class DiffService {
         let found, inner;
         while (!!(found = findDel.exec(html))) {
             inner = found[1].replace(/<br[^>]*>/gi, '');
-            if (inner.match(/<[^>]*>/)) {
+            if (!this.isValidInlineHtml(inner)) {
                 return true;
             }
         }
@@ -1088,8 +1106,8 @@ export class DiffService {
             const del = found[0],
                 split = returnStr.split(del);
 
-            const findInsGroupFinder = /^(?:<ins>.*?<\/ins>)+/gi,
-                foundIns = findInsGroupFinder.exec(split[1]);
+            const findsGroupFinder = /^(?:<ins>.*?<\/ins>)+/gi,
+                foundIns = findsGroupFinder.exec(split[1]);
             if (foundIns) {
                 const ins = foundIns[0];
 
@@ -1313,24 +1331,24 @@ export class DiffService {
      * - extracting line 2 to 3 results in <p class="os-split-after os-split-before">Line 2</p>
      * - extracting line 3 to null/4 results in <p class="os-split-before">Line 3</p>
      *
-     * @param {LineNumberedString} htmlIn
+     * @param {LineNumberedString} html
      * @param {number} fromLine
      * @param {number} toLine
      * @returns {ExtractedContent}
      */
-    public extractRangeByLineNumbers(htmlIn: LineNumberedString, fromLine: number, toLine: number): ExtractedContent {
-        if (typeof htmlIn !== 'string') {
+    public extractRangeByLineNumbers(html: LineNumberedString, fromLine: number, toLine: number): ExtractedContent {
+        if (typeof html !== 'string') {
             throw new Error('Invalid call - extractRangeByLineNumbers expects a string as first argument');
         }
 
-        const cacheKey = fromLine + '-' + toLine + '-' + this.lineNumberingService.djb2hash(htmlIn),
+        const cacheKey = fromLine + '-' + toLine + '-' + this.lineNumberingService.djb2hash(html),
             cached = this.diffCache.get(cacheKey);
 
         if (cached) {
             return cached;
         }
 
-        const fragment = this.htmlToFragment(htmlIn);
+        const fragment = this.htmlToFragment(html);
         this.insertInternalLineMarkers(fragment);
         if (toLine === null) {
             const internalLineMarkers = fragment.querySelectorAll('OS-LINEBREAK'),
@@ -1848,18 +1866,34 @@ export class DiffService {
         // We only do this for P for now, as for more complex types like UL/LI that tend to be nestend,
         // information would get lost by this that we will need to recursively merge it again later on.
         let oldIsSplitAfter = false,
-            newIsSplitAfter = false;
+            newIsSplitAfter = false,
+            oldIsSplitBefore = false,
+            newIsSplitBefore = false;
         htmlOld = htmlOld.replace(
-            /(\s*<p[^>]+class\s*=\s*["'][^"']*)os-split-after/gi,
+            /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-after */gi,
             (match: string, beginning: string): string => {
                 oldIsSplitAfter = true;
                 return beginning;
             }
         );
         htmlNew = htmlNew.replace(
-            /(\s*<p[^>]+class\s*=\s*["'][^"']*)os-split-after/gi,
+            /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-after */gi,
             (match: string, beginning: string): string => {
                 newIsSplitAfter = true;
+                return beginning;
+            }
+        );
+        htmlOld = htmlOld.replace(
+            /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-before */gi,
+            (match: string, beginning: string): string => {
+                oldIsSplitBefore = true;
+                return beginning;
+            }
+        );
+        htmlNew = htmlNew.replace(
+            /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-before */gi,
+            (match: string, beginning: string): string => {
+                newIsSplitBefore = true;
                 return beginning;
             }
         );
@@ -2063,6 +2097,46 @@ export class DiffService {
             }
         );
 
+        // <ins><STRONG></ins>formatted<ins></STRONG></ins> => <del>formatted</del><ins><STRONG>formatted</STRONG></ins>
+        diffUnnormalized = diffUnnormalized.replace(
+            /<ins><(span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?><\/ins>([^<]*)<ins><\/\1><\/ins>/gi,
+            (whole: string, inlineTag: string, tagAttributes: string, content: string): string => {
+                return (
+                    '<del>' +
+                    content +
+                    '</del>' +
+                    '<ins><' +
+                    inlineTag +
+                    (tagAttributes ? tagAttributes : '') +
+                    '>' +
+                    content +
+                    '</' +
+                    inlineTag +
+                    '></ins>'
+                );
+            }
+        );
+
+        // <del><STRONG></del>formatted<del></STRONG></del> => <del><STRONG>formatted</STRONG></del><ins>formatted</ins>
+        diffUnnormalized = diffUnnormalized.replace(
+            /<del><(span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?><\/del>([^<]*)<del><\/\1><\/del>/gi,
+            (whole: string, inlineTag: string, tagAttributes: string, content: string): string => {
+                return (
+                    '<del><' +
+                    inlineTag +
+                    (tagAttributes ? tagAttributes : '') +
+                    '>' +
+                    content +
+                    '</' +
+                    inlineTag +
+                    '></del>' +
+                    '<ins>' +
+                    content +
+                    '</ins>'
+                );
+            }
+        );
+
         // </p> </ins> -> </ins></p>
         diffUnnormalized = diffUnnormalized.replace(
             /(<\/(p|div|blockquote|li)>)(\s*)<\/(ins|del)>/gi,
@@ -2092,6 +2166,9 @@ export class DiffService {
         if (oldIsSplitAfter || newIsSplitAfter) {
             diff = this.addClassToLastNode(diff, 'os-split-after');
         }
+        if (oldIsSplitBefore || newIsSplitBefore) {
+            diff = this.addClassToLastNode(diff, 'os-split-before');
+        }
 
         this.diffCache.put(cacheKey, diff);
         return diff;
@@ -2114,9 +2191,9 @@ export class DiffService {
         let html = motionHtml;
 
         // Changes need to be applied from the bottom up, to prevent conflicts with changing line numbers.
-        changes.sort((change1: ViewUnifiedChange, change2: ViewUnifiedChange) => {
-            return change1.getLineFrom() - change2.getLineFrom();
-        });
+        changes.sort(
+            (change1: ViewUnifiedChange, change2: ViewUnifiedChange) => change2.getLineFrom() - change1.getLineFrom()
+        );
 
         changes.forEach((change: ViewUnifiedChange) => {
             if (!change.isTitleChange()) {
@@ -2233,7 +2310,15 @@ export class DiffService {
             // That's a pretty serious inconsistency that should not happen at all,
             // we're just doing some basic damage control here.
             const msg =
-                'Inconsistent data. A change recommendation is probably referring to a non-existant line number.';
+                this.translate.instant('Inconsistent data.') +
+                ' ' +
+                this.translate.instant(
+                    'A change recommendation or amendment is probably referring to a non-existant line number.'
+                ) +
+                ' ' +
+                this.translate.instant(
+                    'If it is an amendment, you can back up its content when editing it and delete it afterwards.'
+                );
             return '<em style="color: red; font-weight: bold;">' + msg + '</em>';
         }
 
@@ -2294,7 +2379,11 @@ export class DiffService {
             // That's a pretty serious inconsistency that should not happen at all,
             // we're just doing some basic damage control here.
             const msg =
-                'Inconsistent data. A change recommendation is probably referring to a non-existant line number.';
+                this.translate.instant('Inconsistent data.') +
+                ' ' +
+                this.translate.instant(
+                    'A change recommendation or amendment is probably referring to a non-existant line number.'
+                );
             return '<em style="color: red; font-weight: bold;">' + msg + '</em>';
         }
 
