@@ -43,6 +43,10 @@ export class Speaker extends BaseModel<Speaker> {
     public list_of_speakers_id: Id; // list_of_speakers/speaker_ids;
     public user_id: Id; // user/speaker_$<meeting_id>_ids;
 
+    public get speakingTime(): number {
+        return this.end_time - this.begin_time || 0;
+    }
+
     public constructor(input?: any) {
         super(Speaker.COLLECTION, input);
     }

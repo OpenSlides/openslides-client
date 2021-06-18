@@ -3,14 +3,13 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { PblColumnDefinition } from '@pebula/ngrid/lib/grid';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import {
-    ListOfSpeakersRepositoryService,
-    SpeakingTimeStructureLevelObject
-} from 'app/core/repositories/agenda/list-of-speakers-repository.service';
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
+import { SpeakingTimeStructureLevelObject } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
+import { SpeakerRepositoryService } from 'app/core/repositories/agenda/speaker-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DurationService } from 'app/core/ui-services/duration.service';
-import { ViewSpeaker } from 'app/site/agenda/models/view-speaker';
-import { BaseComponent } from 'app/site/base/components/base.component';
+import { ViewMeeting } from 'app/management/models/view-meeting';
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 
 @Component({
     selector: 'os-user-statistics',
@@ -19,21 +18,11 @@ import { BaseComponent } from 'app/site/base/components/base.component';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class UserStatisticsComponent extends BaseComponent {
-    /**
-     * Returns the total duration for a whole assembly.
-     */
-    public get totalDuration(): string {
-        return this.parseDuration(this.speakingTimeAsNumber, true);
-    }
-
-    public get numberOfUniqueSpeakers(): number {
-        return this.uniqueSpeakers.length;
-    }
-
-    public get numberOfWordRequests(): number {
-        return this._numberOfWordRequests;
-    }
+export class UserStatisticsComponent extends BaseModelContextComponent {
+    public finishedSpeakers = this.speakerRepo.finishedSpeakersObservable();
+    public pointOfOrders = this.speakerRepo.pointOfOrderSpeakerObservable();
+    public uniqueSpeakers = this.speakerRepo.uniqueSpeakersObservable();
+    public totalSpeakingTime = this.speakerRepo.totalSpeakingTime();
 
     /**
      * Returns an observable containing a list. This list contains objects separated by the structure-level of speakers.
@@ -73,21 +62,14 @@ export class UserStatisticsComponent extends BaseComponent {
     public readonly filterProps: string[] = ['structureLevel'];
 
     /**
-     * Holds information about hours, minutes and seconds for the total duration of requests to speak.
-     */
-    private speakingTimeAsNumber = 0;
-
-    /**
      * List of unique speakers.
      */
-    private uniqueSpeakers: ViewSpeaker[] = [];
-    private _numberOfWordRequests = 0;
     private statisticIsOpen = false;
     private relationSpeakingTimeStructureLevelSubject = new BehaviorSubject<SpeakingTimeStructureLevelObject[]>([]);
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        private losRepo: ListOfSpeakersRepositoryService,
+        private speakerRepo: SpeakerRepositoryService,
         private durationService: DurationService
     ) {
         super(componentServiceCollector);
@@ -105,19 +87,18 @@ export class UserStatisticsComponent extends BaseComponent {
         }
     }
 
-    /**
-     * This iterates over a list of list-of-speakers. For each speaker it calculates the duration the speaker
-     * has spoken.
-     */
-    private pushNextState(): void {
-        const list = this.losRepo.getSpeakingTimeStructureLevelRelation();
-        list.sort((a, b) => b.finishedSpeakers.length - a.finishedSpeakers.length);
-        for (const entry of list) {
-            this.speakingTimeAsNumber += entry.speakingTime;
-            this._numberOfWordRequests += entry.finishedSpeakers.length;
-        }
-        this.relationSpeakingTimeStructureLevelSubject.next(list);
-        this.uniqueSpeakers = this.losRepo.getAllFirstContributions();
+    public getModelRequest(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [this.activeMeetingId],
+            follow: [
+                {
+                    idField: 'speaker_ids',
+                    fieldset: 'statistics'
+                }
+            ],
+            fieldset: []
+        };
     }
 
     /**
@@ -130,16 +111,6 @@ export class UserStatisticsComponent extends BaseComponent {
     }
 
     private startSubscription(): void {
-        this.subscriptions.push(
-            this.losRepo.getViewModelListObservable().subscribe(() => {
-                this.reset();
-                this.pushNextState();
-            })
-        );
-    }
-
-    private reset(): void {
-        this._numberOfWordRequests = 0;
-        this.speakingTimeAsNumber = 0;
+        this.subscriptions.push(this.speakerRepo.getViewModelListObservable().subscribe());
     }
 }

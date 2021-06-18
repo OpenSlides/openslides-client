@@ -31,6 +31,10 @@ export class ViewSpeaker extends BaseViewModel<Speaker> {
         }
     }
 
+    public get isFinished(): boolean {
+        return this.state === SpeakerState.FINISHED;
+    }
+
     public get name(): string {
         return this.user ? this.user.full_name : '';
     }
