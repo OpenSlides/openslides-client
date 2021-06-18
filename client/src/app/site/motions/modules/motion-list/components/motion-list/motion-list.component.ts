@@ -64,20 +64,22 @@ interface InfoDialog {
      */
     title: string;
 
-    /**
-     * The motion block id
-     */
-    block_id: number;
+    update: {
+        /**
+         * The motion block id
+         */
+        block_id: number;
 
-    /**
-     * The category id
-     */
-    category_id: number;
+        /**
+         * The category id
+         */
+        category_id: number;
 
-    /**
-     * The motions tag ids
-     */
-    tag_ids: number[];
+        /**
+         * The motions tag ids
+         */
+        tag_ids: number[];
+    };
 
     /**
      * The id of the state
@@ -515,9 +517,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
         // The interface holding the current information from motion.
         this.infoDialog = {
             title: motion.title,
-            block_id: motion.block_id,
-            category_id: motion.category_id,
-            tag_ids: motion.tag_ids,
+            update: { block_id: motion.block_id, category_id: motion.category_id, tag_ids: motion.tag_ids },
             state_id: motion.state_id,
             recommendation_id: motion.recommendation_id
         };
@@ -533,7 +533,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
         if (result) {
             delete result.title; // Do not update the title!
             await this.motionRepo.updateWithStateAndRecommendation(
-                result,
+                result.update,
                 result.state_id,
                 result.recommendation_id,
                 motion
