@@ -174,6 +174,16 @@
     </div>
 </pbl-ngrid>
 
+<!-- Template for the managing buttons -->
+<ng-template #manageButton let-mediafile="mediafile" let-place="place">
+    <button mat-menu-item (click)="toggleMediafileUsage($event, mediafile, place)">
+        <mat-icon color="accent">
+            {{ isMediafileUsed(mediafile, place) ? 'check_box' : 'check_box_outline_blank' }}
+        </mat-icon>
+        <span>{{ getDisplayNameForPlace(place) | translate }}</span>
+    </button>
+</ng-template>
+
 <!-- Menu for single files in the list -->
 <mat-menu #singleMediafileMenu="matMenu">
     <ng-template matMenuContent let-mediafile="mediafile">
@@ -181,24 +191,18 @@
             <!-- Exclusive for images -->
             <div *ngIf="mediafile.isImage()">
                 <div *ngFor="let place of logoPlaces">
-                    <button mat-menu-item (click)="toggleLogoUsage($event, mediafile, place)">
-                        <mat-icon color="accent">
-                            {{ mediafile.used_as_logo_in_meeting(place) ? 'check_box' : 'check_box_outline_blank' }}
-                        </mat-icon>
-                        <span>{{ logoDisplayNames[place] | translate }}</span>
-                    </button>
+                    <ng-container
+                        *ngTemplateOutlet="manageButton; context: { mediafile: mediafile, place: place }"
+                    ></ng-container>
                 </div>
             </div>
 
             <!-- Exclusive for fonts -->
             <div *ngIf="mediafile.isFont()">
                 <div *ngFor="let place of fontPlaces">
-                    <button mat-menu-item (click)="toggleFontUsage($event, mediafile, place)">
-                        <mat-icon color="accent">
-                            {{ mediafile.used_ad_font_in_meeting(place) ? 'check_box' : 'check_box_outline_blank' }}
-                        </mat-icon>
-                        <span>{{ fontDisplayNames[place] | translate }}</span>
-                    </button>
+                    <ng-container
+                        *ngTemplateOutlet="manageButton; context: { mediafile: mediafile, place: place }"
+                    ></ng-container>
                 </div>
             </div>
             <mat-divider *ngIf="mediafile.isFont() || mediafile.isImage()"></mat-divider>

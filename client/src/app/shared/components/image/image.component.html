@@ -1,6 +1,10 @@
-<ng-container *ngIf="!loaded">
-    <mat-progress-spinner mode="determinate" [value]="progress"></mat-progress-spinner>
-</ng-container>
-<ng-container *ngIf="loaded">
-    <img [src]="resource | trust: 'url'" />
+<ng-container *ngIf="source">
+    <div>
+        <ng-container *ngIf="!loaded">
+            <mat-progress-spinner mode="determinate" [value]="progress" [diameter]="50"></mat-progress-spinner>
+        </ng-container>
+        <ng-container *ngIf="loaded">
+            <img [src]="resource | trust: 'url'" />
+        </ng-container>
+    </div>
 </ng-container>
