@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 
+import { Observable } from 'rxjs';
+import { count, distinct, filter, flatMap, map, mergeMap, reduce, switchMap } from 'rxjs/operators';
+
 import { SpeakerAction } from 'app/core/actions/speaker-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Id, UnsafeHtml } from 'app/core/definitions/key-types';
@@ -21,7 +24,10 @@ export class SpeakerRepositoryService extends BaseRepositoryWithActiveMeeting<Vi
     }
 
     public getFieldsets(): Fieldsets<Speaker> {
-        return { [DEFAULT_FIELDSET]: ['begin_time', 'end_time', 'weight', 'note', 'speech_state', 'point_of_order'] };
+        const basicFields: (keyof Speaker)[] = ['begin_time', 'end_time', 'point_of_order', 'speech_state'];
+        const statisticsFieldset: (keyof Speaker)[] = basicFields.concat(['user_id']);
+        const defaultSet: (keyof Speaker)[] = basicFields.concat(['weight', 'note']);
+        return { [DEFAULT_FIELDSET]: defaultSet, statistics: statisticsFieldset };
     }
 
     public getVerboseName = (plural: boolean = false) => {
@@ -95,5 +101,37 @@ export class SpeakerRepositoryService extends BaseRepositoryWithActiveMeeting<Vi
     public setContraSpeech(speaker: ViewSpeaker): Promise<void> {
         const speechState = speaker.speech_state === SpeechState.CONTRA ? null : SpeechState.CONTRA;
         return this.update(speechState, speaker);
+    }
+
+    public finishedSpeakersObservable(): Observable<ViewSpeaker[]> {
+        return this.getViewModelListObservable().pipe(
+            map(speakerList => speakerList.filter(speaker => speaker.isFinished))
+        );
+    }
+
+    public uniqueSpeakersObservable(): Observable<ViewSpeaker[]> {
+        return this.finishedSpeakersObservable().pipe(
+            map(speakerList =>
+                speakerList.filter(
+                    (speaker, index, list) => list.findIndex(s => s.user_id === speaker.user_id) === index
+                )
+            )
+        );
+    }
+
+    public pointOfOrderSpeakerObservable(): Observable<ViewSpeaker[]> {
+        return this.finishedSpeakersObservable().pipe(
+            map(speakerList => speakerList.filter(speaker => speaker.point_of_order))
+        );
+    }
+
+    public totalSpeakingTime(): Observable<number> {
+        return this.finishedSpeakersObservable().pipe(
+            map(speakerList =>
+                speakerList.reduce((acc, val) => {
+                    return acc + val.speakingTime;
+                }, 0)
+            )
+        );
     }
 }

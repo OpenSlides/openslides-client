@@ -8,19 +8,24 @@
     <table class="user-statistics-table">
         <tr>
             <td>{{ 'Number of all requests to speak' | translate }}</td>
-            <td>{{ numberOfWordRequests }}</td>
+            <td>{{ (finishedSpeakers | async).length }}</td>
+        </tr>
+        <tr>
+            <td>{{ 'Thereof point of orders' | translate }}</td>
+            <td>{{ (pointOfOrders | async).length }}</td>
         </tr>
         <tr>
             <td>{{ 'Unique speakers' | translate }}</td>
-            <td>{{ numberOfUniqueSpeakers }}</td>
+            <td>{{ (uniqueSpeakers | async).length }}</td>
         </tr>
         <tr>
             <td>{{ 'Duration of all requests to speak' | translate }}</td>
-            <td>{{ totalDuration }}</td>
+            <!-- I believe we had a pipe fot that, but could not find it -->
+            <td>{{ parseDuration(totalSpeakingTime | async) }}</td>
         </tr>
     </table>
     <os-list-view-table
-        class="user-statistics-table--virtual-scroll "
+        class="user-statistics-table--virtual-scroll"
         [listObservable]="statisticsByStructureLevelObservable"
         [columns]="columnDefinition"
         [filterProps]="filterProps"

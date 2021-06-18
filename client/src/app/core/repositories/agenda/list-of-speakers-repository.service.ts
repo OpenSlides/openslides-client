@@ -36,7 +36,10 @@ export class ListOfSpeakersRepositoryService extends BaseRepositoryWithActiveMee
     }
 
     public getFieldsets(): Fieldsets<ListOfSpeakers> {
-        return { [DEFAULT_FIELDSET]: ['closed', 'content_object_id', 'speaker_ids'] };
+        const defaultFieldset: (keyof ListOfSpeakers)[] = ['closed', 'content_object_id', 'speaker_ids'];
+        return {
+            [DEFAULT_FIELDSET]: defaultFieldset
+        };
     }
 
     public getVerboseName = (plural: boolean = false) => {
@@ -85,24 +88,6 @@ export class ListOfSpeakersRepositoryService extends BaseRepositoryWithActiveMee
 
     public isFirstContribution(speaker: ViewSpeaker): boolean {
         return !this.getViewModelList().some(list => list.hasSpeakerSpoken(speaker));
-    }
-
-    /**
-     * List every speaker only once, who has spoken
-     *
-     * @returns A list with all different speakers.
-     */
-    public getAllFirstContributions(): ViewSpeaker[] {
-        const speakers: ViewSpeaker[] = this.getViewModelList().flatMap(
-            (los: ViewListOfSpeakers) => los.finishedSpeakers
-        );
-        const firstContributions: ViewSpeaker[] = [];
-        for (const speaker of speakers) {
-            if (!firstContributions.find(s => s.user_id === speaker.user_id)) {
-                firstContributions.push(speaker);
-            }
-        }
-        return firstContributions;
     }
 
     /**
