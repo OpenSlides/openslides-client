@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { OrganizationSetting } from 'app/shared/models/event-management/organization';
-import { CustomTranslationService } from '../translate/custom-translation.service';
 import { OrganizationService } from '../core-services/organization.service';
 
 /**
@@ -33,7 +32,7 @@ export class OrganizationSettingsService {
     /**
      * Listen for changes of setting variables.
      */
-    public constructor(private organization: OrganizationService, private ctService: CustomTranslationService) {
+    public constructor(private organization: OrganizationService) {
         organization.organizationObservable.subscribe(activeOrganization => {
             if (activeOrganization) {
                 for (const key of Object.keys(this.settingSubjects)) {
@@ -41,7 +40,6 @@ export class OrganizationSettingsService {
                 }
             }
         });
-        this.get('custom_translations').subscribe((ct: any) => this.ctService.customTranslationSubject.next(ct));
     }
 
     /**

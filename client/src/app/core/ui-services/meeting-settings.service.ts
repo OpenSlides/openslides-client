@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 import { ActiveMeetingService } from '../core-services/active-meeting.service';
 import { Settings } from 'app/shared/models/event-management/meeting';
+import { CustomTranslationService } from '../translate/custom-translation.service';
 
 /**
  * Handler for setting variables for organsations.
@@ -32,7 +33,10 @@ export class MeetingSettingsService {
     /**
      * Listen for changes of setting variables.
      */
-    public constructor(private activeMeetingService: ActiveMeetingService) {
+    public constructor(
+        private activeMeetingService: ActiveMeetingService,
+        customTranslationService: CustomTranslationService
+    ) {
         this.activeMeetingService.meetingObservable.subscribe(meeting => {
             if (meeting) {
                 for (const key of Object.keys(this.settingSubjects)) {
@@ -40,6 +44,9 @@ export class MeetingSettingsService {
                 }
             }
         });
+        this.get('custom_translations').subscribe(customTranslations =>
+            customTranslationService.customTranslationSubject.next(customTranslations)
+        );
     }
 
     /**

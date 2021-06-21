@@ -30,7 +30,6 @@ export class OrganizationRepositoryService extends BaseRepository<ViewOrganizati
             'privacy_policy',
             'login_text',
             'theme',
-            'custom_translations',
             'enable_electronic_voting',
             'reset_password_verbose_errors'
         );
