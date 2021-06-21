@@ -22,22 +22,22 @@ export class StreamContainer<T> {
     public hasErroredAmount = 0;
     public errorHandler: (type: ErrorType, error: CommunicationError, message: string) => void = null;
 
-    public messageHandler: (message: T) => void;
+    public messageHandler: (message: T, isFirstResponse: boolean) => void;
     public stream?: Stream<T>;
 
     public constructor(
         public endpoint: EndpointConfiguration,
-        messageHandler: (message: T, streamId: number) => void,
+        messageHandler: (message: T, streamId: number, isFirstResponse: boolean) => void,
         public params: () => Params,
         public body: () => any,
         public description: string
     ) {
-        this.messageHandler = (message: T) => {
+        this.messageHandler = (message: T, isFirstResponse: boolean) => {
             if (this.hasErroredAmount > 0) {
                 console.log(`resetting error amount for ${this.endpoint} since there was a connect message`);
                 this.hasErroredAmount = 0;
             }
-            messageHandler(message, this.id);
+            messageHandler(message, this.id, isFirstResponse);
         };
     }
 }

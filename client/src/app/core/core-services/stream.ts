@@ -31,6 +31,10 @@ export class Stream<T> {
         return this._errorContent;
     }
 
+    public get hasFirstResponse(): boolean {
+        return this.gotFirstResponse.wasResolved;
+    }
+
     public readonly gotFirstResponse = new Deferred<boolean>();
 
     /**
@@ -52,7 +56,7 @@ export class Stream<T> {
 
     public constructor(
         observable: Observable<HttpEvent<string>>,
-        private messageHandler: (message: T) => void,
+        private messageHandler: (message: T, isFirstResponse: boolean) => void,
         private errorHandler: ErrorHandler
     ) {
         this.subscription = observable.subscribe(
@@ -124,9 +128,10 @@ export class Stream<T> {
                     }
                     return;
                 } else {
+                    const isFirstResponse = !this.hasFirstResponse;
                     this.gotFirstResponse.resolve(this.hasError);
                     // console.log('received', parsedContent);
-                    this.messageHandler(parsedContent);
+                    this.messageHandler(parsedContent, isFirstResponse);
                 }
             } else {
                 this.checkedUntilIndex = event.loaded;

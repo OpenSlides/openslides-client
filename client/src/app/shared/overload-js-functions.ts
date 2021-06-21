@@ -14,7 +14,9 @@ declare global {
         intersect(other: T[]): T[];
         /**
          * Compares each element of two arrays to check, which elements are included in one array but not in the other.
-         * It returns a new array, containing all elements, that are included only one of them.
+         * It returns a new array, containing all elements, that are included only one of them. If `symmetric` is equals
+         * to `false`, only the elements, that are included in the first array and not in the second one will be
+         * returned.
          *
          * @param other Another array, which elements are compared to the original ones.
          * @param symmetric If all elements from both arrays, that are included only in one of them, should be returned.

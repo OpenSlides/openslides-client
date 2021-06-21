@@ -17,6 +17,7 @@ export interface Relation {
     ownIdFieldDefaultAttribute?: 'active-meeting'; // may be given if structured=true
     ownIdFieldPrefix?: string; // given, if structured=true
     ownIdFieldSuffix?: string; // given, if structured=true
+    isFullList?: boolean; // if this relation requests a full-list of view-models in a specific repo.
 }
 
 export function makeO2O<A extends BaseViewModel, B extends BaseViewModel>(args: {
@@ -59,6 +60,7 @@ export function makeM2O<O extends BaseViewModel, M extends BaseViewModel>(args: 
     OIdField?: keyof O & string;
     MIdField?: keyof M & string;
     order?: keyof M & string;
+    isFullList?: boolean;
 }): Relation[] {
     return [
         // M -> O
@@ -80,7 +82,8 @@ export function makeM2O<O extends BaseViewModel, M extends BaseViewModel>(args: 
             many: true,
             generic: false,
             structured: false,
-            order: args.order
+            order: args.order,
+            isFullList: args.isFullList
         }
     ];
 }
@@ -94,6 +97,8 @@ export function makeM2M<A extends BaseViewModel, B extends BaseViewModel>(args: 
     BIdField?: keyof B & string;
     AOrder?: keyof A & string;
     BOrder?: keyof B & string;
+    AisFullList?: boolean;
+    BisFullList?: boolean;
 }): Relation[] {
     return [
         // A -> B
@@ -105,7 +110,8 @@ export function makeM2M<A extends BaseViewModel, B extends BaseViewModel>(args: 
             many: true,
             generic: false,
             structured: false,
-            order: args.BOrder
+            order: args.BOrder,
+            isFullList: args.BisFullList
         },
         // B -> A
         {
@@ -116,7 +122,8 @@ export function makeM2M<A extends BaseViewModel, B extends BaseViewModel>(args: 
             many: true,
             generic: false,
             structured: false,
-            order: args.AOrder
+            order: args.AOrder,
+            isFullList: args.AisFullList
         }
     ];
 }

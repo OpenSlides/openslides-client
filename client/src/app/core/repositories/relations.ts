@@ -117,19 +117,22 @@ export const RELATIONS: Relation[] = [
         OViewModel: ViewOrganization,
         MViewModel: ViewCommittee,
         OField: 'committees',
-        MField: 'organization'
+        MField: 'organization',
+        isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewOrganization,
         MViewModel: ViewResource,
         OField: 'resources',
-        MField: 'organization'
+        MField: 'organization',
+        isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewOrganization,
         MViewModel: ViewOrganizationTag,
         OField: 'organization_tags',
-        MField: 'organization'
+        MField: 'organization',
+        isFullList: true
     }),
     // ########## User
     ...makeManyStructuredUsers2MRelation({
@@ -312,21 +315,24 @@ export const RELATIONS: Relation[] = [
         OViewModel: ViewMeeting,
         MViewModel: ViewTag,
         OField: 'tags',
-        MField: 'meeting'
+        MField: 'meeting',
+        isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewAgendaItem,
         OField: 'agenda_items',
         MField: 'meeting',
-        order: 'weight'
+        order: 'weight',
+        isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewListOfSpeakers,
         OField: 'lists_of_speakers',
         OIdField: 'list_of_speakers_ids',
-        MField: 'meeting'
+        MField: 'meeting',
+        isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
@@ -338,43 +344,50 @@ export const RELATIONS: Relation[] = [
         OViewModel: ViewMeeting,
         MViewModel: ViewTopic,
         OField: 'topics',
-        MField: 'meeting'
+        MField: 'meeting',
+        isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewGroup,
         OField: 'groups',
-        MField: 'meeting'
+        MField: 'meeting',
+        isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewPersonalNote,
         OField: 'personal_notes',
-        MField: 'meeting'
+        MField: 'meeting',
+        isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewMediafile,
         OField: 'mediafiles',
-        MField: 'meeting'
+        MField: 'meeting',
+        isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewMotion,
         OField: 'motions',
-        MField: 'meeting'
+        MField: 'meeting',
+        isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewMotionCommentSection,
         OField: 'motion_comment_sections',
-        MField: 'meeting'
+        MField: 'meeting',
+        isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewMotionComment,
         OField: 'motion_comments',
-        MField: 'meeting'
+        MField: 'meeting',
+        isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
@@ -382,73 +395,85 @@ export const RELATIONS: Relation[] = [
         OField: 'motion_categories',
         OIdField: 'motion_category_ids',
         MField: 'meeting',
-        order: 'weight'
+        order: 'weight',
+        isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewMotionBlock,
         OField: 'motion_blocks',
-        MField: 'meeting'
+        MField: 'meeting',
+        isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewMotionSubmitter,
         OField: 'motion_submitters',
-        MField: 'meeting'
+        MField: 'meeting',
+        isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewMotionChangeRecommendation,
         OField: 'motion_change_recommendations',
-        MField: 'meeting'
+        MField: 'meeting',
+        isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewMotionWorkflow,
         OField: 'motion_workflows',
-        MField: 'meeting'
+        MField: 'meeting',
+        isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewMotionState,
         OField: 'motion_states',
-        MField: 'meeting'
+        MField: 'meeting',
+        isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewMotionStatuteParagraph,
         OField: 'motion_statute_paragraphs',
-        MField: 'meeting'
+        MField: 'meeting',
+        isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewPoll,
         OField: 'polls',
-        MField: 'meeting'
+        MField: 'meeting',
+        isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewOption,
         OField: 'options',
-        MField: 'meeting'
+        MField: 'meeting',
+        isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewVote,
         OField: 'votes',
-        MField: 'meeting'
+        MField: 'meeting',
+        isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewAssignment,
         OField: 'assignments',
-        MField: 'meeting'
+        MField: 'meeting',
+        isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewAssignmentCandidate,
         OField: 'assignment_candidates',
-        MField: 'meeting'
+        MField: 'meeting',
+        isFullList: true
     }),
     ...makeM2M({
         AViewModel: ViewMeeting,
@@ -548,7 +573,8 @@ export const RELATIONS: Relation[] = [
         ownIdField: 'user_ids',
         many: true,
         generic: false,
-        structured: false
+        structured: false,
+        isFullList: true
     },
     // ########## Personal notes
     ...makeGenericO2M<ViewPersonalNote>({

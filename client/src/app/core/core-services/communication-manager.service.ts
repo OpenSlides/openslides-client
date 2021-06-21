@@ -55,7 +55,7 @@ export class CommunicationManagerService {
 
     public async connect<T>(
         endpointName: string,
-        messageHandler: (message: T, streamId: number) => void,
+        messageHandler: (message: T, streamId: number, isFirstResponse: boolean) => void,
         body: HttpBodyGetter,
         params: HttpParamsGetter,
         description: string
@@ -82,7 +82,7 @@ export class CommunicationManagerService {
 
     private getStreamContainer<T>(
         endpoint: EndpointConfiguration,
-        messageHandler: (message: T, streamId: number) => void,
+        messageHandler: (message: T, streamId: number, isFirstResponse: boolean) => void,
         body: HttpBodyGetter,
         params?: HttpParamsGetter,
         description?: string

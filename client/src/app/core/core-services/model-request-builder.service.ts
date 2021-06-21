@@ -83,11 +83,39 @@ interface BaseSimplifiedModelRequest {
     additionalFields?: AdditionalField[];
 }
 
+interface DescriptorResponse<T extends FieldDescriptor> {
+    descriptor: T;
+    collectionsToUpdate: Collection[];
+}
+
 export interface Fieldsets<M extends BaseModel> {
     [name: string]: (keyof M | IAllStructuredFields)[];
 }
 
 export const DEFAULT_FIELDSET = 'detail';
+
+class ModelRequestObject {
+    public readonly ids: Id[] | undefined;
+    public readonly collectionsToUpdate: Set<Collection>;
+
+    public constructor(
+        public readonly collection: Collection,
+        public readonly simplifiedRequest: BaseSimplifiedModelRequest,
+        public readonly fields: Fields,
+        public readonly args: { ids?: Id[] } = {}
+    ) {
+        this.ids = args.ids;
+        this.collectionsToUpdate = new Set();
+    }
+
+    public getModelRequest(): ModelRequest {
+        return {
+            collection: this.collection,
+            ids: this.ids,
+            fields: this.fields
+        };
+    }
+}
 
 @Injectable({
     providedIn: 'root'
@@ -111,45 +139,44 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
         this.loaded.resolve();
     }
 
-    public async build(simplifiedModelRequest: SimplifiedModelRequest): Promise<ModelRequest> {
+    public async build(
+        simplifiedModelRequest: SimplifiedModelRequest
+    ): Promise<{ request: ModelRequest; collectionsToUpdate: Collection[] }> {
         await this.loaded;
         const collection = simplifiedModelRequest.viewModelCtor.COLLECTION;
-        const request: ModelRequest = {
+
+        const modelRequestObject = new ModelRequestObject(
             collection,
-            ids: simplifiedModelRequest.ids,
-            fields: {}
+            simplifiedModelRequest,
+            {},
+            { ids: simplifiedModelRequest.ids }
+        );
+        this.addFields(modelRequestObject);
+
+        return {
+            request: modelRequestObject.getModelRequest(),
+            collectionsToUpdate: Array.from(modelRequestObject.collectionsToUpdate)
         };
-
-        this.addFields(collection, request.fields, simplifiedModelRequest);
-
-        return request;
     }
 
-    private addFields(collection: Collection, fields: Fields, request: BaseSimplifiedModelRequest): void {
+    private addFields(modelRequestObject: ModelRequestObject): void {
         // Add datafields
-        this.addDataFields(fields, collection, request.fieldset, request.additionalFields);
+        this.addDataFields(modelRequestObject);
 
         // Add relations
-        if (request.follow) {
-            this.addFollowedRelations(collection, request.follow, fields);
+        if (modelRequestObject.simplifiedRequest.follow) {
+            this.addFollowedRelations(modelRequestObject);
         }
     }
 
     // fields is modified as a side effect
-    private addDataFields(
-        fields: Fields,
-        collection: Collection,
-        fieldset?: Fieldset,
-        additionalFields?: AdditionalField[]
-    ): void {
-        if (!fieldset) {
-            fieldset = DEFAULT_FIELDSET;
-        }
+    private addDataFields(modelRequestObject: ModelRequestObject): void {
+        const fieldset = modelRequestObject.simplifiedRequest.fieldset || DEFAULT_FIELDSET;
         let fieldsetFields: AdditionalField[];
         if (typeof fieldset === 'string') {
-            const registeredFieldsets = this.fieldsets[collection];
+            const registeredFieldsets = this.fieldsets[modelRequestObject.collection];
             if (!registeredFieldsets || !registeredFieldsets[fieldset]) {
-                throw new Error(`Unregistered fieldset ${fieldset} for collection ${collection}`);
+                throw new Error(`Unregistered fieldset ${fieldset} for collection ${modelRequestObject.collection}`);
             }
             fieldsetFields = registeredFieldsets[fieldset] as (
                 | Field
@@ -160,31 +187,31 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
             fieldsetFields = fieldset;
         }
 
-        fieldsetFields.push('id'); // Important: The id is used to detect, if a model was deleted, becuase this issues
+        fieldsetFields.push('id'); // Important: The id is used to detect, if a model was deleted, because this issues
         // an autoupdate with id=null
 
-        if (additionalFields) {
-            fieldsetFields = fieldsetFields.concat(additionalFields);
+        if (modelRequestObject.simplifiedRequest.additionalFields) {
+            fieldsetFields = fieldsetFields.concat(modelRequestObject.simplifiedRequest.additionalFields);
         }
 
         // insert the fieldsetFields into fields
         for (const f of fieldsetFields) {
             if (typeof f === 'string') {
-                fields[f] = null;
+                modelRequestObject.fields[f] = null;
             } else if (isAllStructuredFields(f)) {
-                fields[f.templateField] = {
+                modelRequestObject.fields[f.templateField] = {
                     type: 'template'
                     // no `values` here: Do not follow these, just resolve them.
                 };
             } else {
                 // Specific structured field
-                fields[fillTemplateValueInTemplateField(f.templateIdField, f.templateValue)] = null;
+                modelRequestObject.fields[fillTemplateValueInTemplateField(f.templateIdField, f.templateValue)] = null;
             }
         }
     }
 
-    private addFollowedRelations(collection: Collection, followList: FollowList, fields: Fields): void {
-        for (const entry of followList) {
+    private addFollowedRelations(modelRequestObject: ModelRequestObject): void {
+        for (const entry of modelRequestObject.simplifiedRequest.follow) {
             let follow: Follow;
             if (typeof entry === 'string') {
                 follow = {
@@ -193,11 +220,11 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
             } else {
                 follow = entry;
             }
-            this.getFollowedRelation(collection, follow, fields);
+            this.getFollowedRelation(modelRequestObject, follow);
         }
     }
 
-    private getFollowedRelation(collection: Collection, follow: Follow, fields: Fields): void {
+    private getFollowedRelation(modelRequestObject: ModelRequestObject, follow: Follow): void {
         let effectiveIdField: Field; // the id field of the model. For specific structured fields
         // it is the structured field, not template field, e.g. group_$1_ids instead of group_$_ids.
         let queryIdField: Field; // The field to query the relation for. For specific structured relations
@@ -210,57 +237,80 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
         }
         const isSpecificStructuredField = queryIdField !== effectiveIdField;
 
-        const relation: Relation | null = this.relationManager.findRelation(collection, queryIdField);
+        const relation: Relation | null = this.relationManager.findRelation(
+            modelRequestObject.collection,
+            queryIdField
+        );
         if (!relation) {
             throw new Error(
-                `Relation with ownIdField ${queryIdField} (effective ${effectiveIdField}) in collection ${collection} unknown!`
+                `Relation with ownIdField ${queryIdField} (effective ${effectiveIdField}) in collection ${modelRequestObject.collection} unknown!`
             );
         }
 
-        let descriptor: FieldDescriptor;
+        let response: DescriptorResponse<
+            RelationFieldDescriptor | GenericRelationFieldDecriptor | StructuredFieldDecriptor
+        >;
         if (!relation.generic && (!relation.structured || isSpecificStructuredField)) {
-            descriptor = this.getRelationFieldDescriptor(relation, follow);
+            response = this.getRelationFieldDescriptor(relation, follow);
         } else if (relation.generic) {
-            descriptor = this.getGenericRelationFieldDescriptor(relation, follow);
+            response = this.getGenericRelationFieldDescriptor(relation, follow);
         } else {
-            descriptor = this.getStructuredFieldDescriptor(relation, follow);
+            response = this.getStructuredFieldDescriptor(relation, follow);
         }
 
-        fields[effectiveIdField] = descriptor;
+        modelRequestObject.fields[effectiveIdField] = response.descriptor;
+        response.collectionsToUpdate.forEach(collection => modelRequestObject.collectionsToUpdate.add(collection));
     }
 
-    private getRelationFieldDescriptor(relation: Relation, follow: Follow): RelationFieldDescriptor {
+    private getRelationFieldDescriptor(
+        relation: Relation,
+        follow: Follow
+    ): DescriptorResponse<RelationFieldDescriptor> {
         const foreignCollection = relation.foreignViewModel.COLLECTION;
-        const descriptor: RelationFieldDescriptor = {
-            type: relation.many ? 'relation-list' : 'relation',
-            collection: foreignCollection,
-            fields: {}
+        const modelRequestObject = new ModelRequestObject(foreignCollection, follow, {});
+        if (relation.isFullList) {
+            modelRequestObject.collectionsToUpdate.add(foreignCollection);
+        }
+        this.addFields(modelRequestObject);
+        return {
+            descriptor: {
+                type: relation.many ? 'relation-list' : 'relation',
+                collection: foreignCollection,
+                fields: modelRequestObject.fields
+            },
+            collectionsToUpdate: Array.from(modelRequestObject.collectionsToUpdate)
         };
-        this.addFields(foreignCollection, descriptor.fields, follow);
-        return descriptor;
     }
 
-    private getGenericRelationFieldDescriptor(relation: Relation, follow: Follow): GenericRelationFieldDecriptor {
+    private getGenericRelationFieldDescriptor(
+        relation: Relation,
+        follow: Follow
+    ): DescriptorResponse<GenericRelationFieldDecriptor> {
         const descriptor: GenericRelationFieldDecriptor = {
             type: relation.many ? 'generic-relation-list' : 'generic-relation',
             fields: {}
         };
         this.addGenericRelation(relation.foreignViewModelPossibilities, descriptor.fields, follow);
-        return descriptor;
+        return { descriptor, collectionsToUpdate: [] };
     }
 
-    private getStructuredFieldDescriptor(relation: Relation, follow: Follow): StructuredFieldDecriptor {
+    private getStructuredFieldDescriptor(
+        relation: Relation,
+        follow: Follow
+    ): DescriptorResponse<StructuredFieldDecriptor> {
         const descriptor: StructuredFieldDecriptor = {
             type: 'template'
         };
 
+        let response: DescriptorResponse<RelationFieldDescriptor | GenericRelationFieldDecriptor>;
         if (relation.generic) {
-            descriptor.values = this.getGenericRelationFieldDescriptor(relation, follow);
+            response = this.getGenericRelationFieldDescriptor(relation, follow);
         } else {
-            descriptor.values = this.getRelationFieldDescriptor(relation, follow);
+            response = this.getRelationFieldDescriptor(relation, follow);
         }
+        descriptor.values = response.descriptor;
 
-        return descriptor;
+        return { descriptor, collectionsToUpdate: response.collectionsToUpdate };
     }
 
     private addGenericRelation(
@@ -277,7 +327,8 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
         // Add datafields
         for (const viewModel of possibleViewModels) {
             try {
-                this.addDataFields(fields, viewModel.COLLECTION, request.fieldset, request.additionalFields);
+                const modelRequestObject = new ModelRequestObject(viewModel.COLLECTION, request, fields);
+                this.addDataFields(modelRequestObject);
             } catch (e) {
                 console.warn(e);
             }
@@ -288,7 +339,8 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
             for (const viewModel of possibleViewModels) {
                 try {
                     // The last to write to fields will win...
-                    this.addFollowedRelations(viewModel.COLLECTION, request.follow, fields);
+                    const modelRequestObject = new ModelRequestObject(viewModel.COLLECTION, request, fields);
+                    this.addFollowedRelations(modelRequestObject);
                 } catch (e) {
                     console.warn(e);
                 }

@@ -1,10 +1,9 @@
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { auditTime, filter } from 'rxjs/operators';
+import { auditTime } from 'rxjs/operators';
 
 import { ActionRequest, ActionService } from '../core-services/action.service';
 import { Collection } from 'app/shared/models/base/collection';
-import { AuthService } from '../core-services/auth.service';
 import { BaseModel, ModelConstructor } from '../../shared/models/base/base-model';
 import { BaseViewModel, ViewModelConstructor } from '../../site/base/base-view-model';
 import { CollectionMapperService } from '../core-services/collection-mapper.service';
@@ -143,7 +142,15 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
 
     public onAfterAppsLoaded(): void {
         this.baseViewModelCtor = this.collectionMapperService.getViewModelConstructor(this.collection);
-        this.DS.clearObservable.subscribe(() => this.clear());
+        this.DS.clearObservable.subscribe(removedCollections => {
+            if (
+                !removedCollections ||
+                (Array.isArray(removedCollections) && removedCollections.includes(this.collection))
+            ) {
+                // "removedCollections" is available if collections to be cleared are specified.
+                this.clear();
+            }
+        });
         this.translate.onLangChange.subscribe(change => {
             this.languageCollator = new Intl.Collator(change.lang);
             if (this.unsafeViewModelListSubject.value) {
