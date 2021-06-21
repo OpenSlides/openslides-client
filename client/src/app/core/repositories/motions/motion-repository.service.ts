@@ -156,19 +156,19 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
     }
 
     public updateWithStateAndRecommendation(
-        update: any,
+        update: Partial<MotionAction.UpdatePayload>,
         stateId: Id,
         recommendationId: Id,
         viewMotion: ViewMotion
     ): Promise<void> {
         const actions = [];
-        if (update) {
+        if (update && Object.values(update).filter(value => !!value).length) {
             actions.push({ action: MotionAction.UPDATE, data: [this.getUpdatePayload(update, viewMotion)] });
         }
         if (stateId && stateId !== viewMotion.state_id) {
             actions.push({ action: MotionAction.SET_STATE, data: [{ id: viewMotion.id, state_id: stateId }] });
         }
-        if (recommendationId) {
+        if (recommendationId && recommendationId !== viewMotion.recommendation_id) {
             actions.push({
                 action: MotionAction.SET_RECOMMENDATION,
                 data: [
