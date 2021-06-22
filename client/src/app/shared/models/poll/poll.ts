@@ -3,7 +3,7 @@ import { CalculablePollKey } from 'app/site/polls/services/poll.service';
 import { BaseDecimalModel } from '../base/base-decimal-model';
 import { HasMeetingId } from '../base/has-meeting-id';
 import { HasProjectionIds } from '../base/has-projectable-ids';
-import { MajorityMethod, PollMethod, PollPercentBase, PollState, PollType } from './poll-constants';
+import { EntitledUsersEntry, MajorityMethod, PollMethod, PollPercentBase, PollState, PollType } from './poll-constants';
 
 export class Poll extends BaseDecimalModel<Poll> {
     public static readonly COLLECTION = 'poll';
@@ -35,6 +35,8 @@ export class Poll extends BaseDecimalModel<Poll> {
     public global_yes: boolean;
     public global_no: boolean;
     public global_abstain: boolean;
+    public is_pseudoanonymized: boolean;
+    public entitled_users_at_stop: EntitledUsersEntry[];
 
     public get isCreated(): boolean {
         return this.state === PollState.Created;

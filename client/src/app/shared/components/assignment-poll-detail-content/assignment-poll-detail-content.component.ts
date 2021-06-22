@@ -2,8 +2,7 @@ import { Component, Input } from '@angular/core';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { PollState } from 'app/shared/models/poll/poll-constants';
-import { PollMethod } from 'app/shared/models/poll/poll-constants';
+import { PollMethod, PollPercentBase, PollState } from 'app/shared/models/poll/poll-constants';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { AssignmentPollService } from 'app/site/assignments/modules/assignment-poll/services/assignment-poll.service';
@@ -69,6 +68,10 @@ export class AssignmentPollDetailContentComponent extends BaseComponent {
 
     public get canSeeResults(): boolean {
         return this.operator.hasPerms(this.permission.assignmentsCanManage) || this.isPublished;
+    }
+
+    public get isPercentBaseEntitled(): boolean {
+        return this.poll.onehundred_percent_base === PollPercentBase.Entitled;
     }
 
     public constructor(

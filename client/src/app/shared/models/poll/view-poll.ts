@@ -5,8 +5,10 @@ import { DetailNavigable } from 'app/site/base/detail-navigable';
 import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
 import { ViewGroup } from 'app/site/users/models/view-group';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { BaseModel } from '../base/base-model';
 import { Poll } from './poll';
 import {
+    AssignmentPollMethodVerbose,
     MajorityMethodVerbose,
     PollClassType,
     PollClassTypeVerbose,
@@ -20,7 +22,9 @@ import {
 import { Projectiondefault } from '../projector/projector';
 import { ViewOption } from './view-option';
 
-export class ViewPoll<C extends BaseViewModel = any> extends BaseProjectableViewModel<Poll> implements DetailNavigable {
+export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
+    extends BaseProjectableViewModel<Poll>
+    implements DetailNavigable {
     public get poll(): Poll {
         return this._model;
     }
@@ -40,7 +44,11 @@ export class ViewPoll<C extends BaseViewModel = any> extends BaseProjectableView
     }
 
     public get pollmethodVerbose(): string {
-        return PollMethodVerbose[this.pollmethod];
+        if (this.isAssignmentPoll) {
+            return AssignmentPollMethodVerbose[this.pollmethod];
+        } else if (this.isMotionPoll) {
+            return PollMethodVerbose[this.pollmethod];
+        }
     }
 
     public get percentBaseVerbose(): string {
@@ -100,6 +108,14 @@ export class ViewPoll<C extends BaseViewModel = any> extends BaseProjectableView
         }
     }
 
+    public getContentObjectDetailStateURL(): string {
+        if (this.content_object_id) {
+            return this.getContentObject().getDetailStateURL();
+        } else {
+            return '';
+        }
+    }
+
     public get hasVotes(): boolean {
         return this.results.flatMap(option => option.votes).some(vote => vote.weight > 0);
     }
@@ -133,11 +149,11 @@ export class ViewPoll<C extends BaseViewModel = any> extends BaseProjectableView
     }
 }
 
-interface IPollRelations<C extends BaseViewModel = any> {
+interface IPollRelations<C extends BaseViewModel<BaseModel> = any> {
     content_object?: C;
     voted: ViewUser[];
     entitled_groups: ViewGroup[];
     options: ViewOption[];
     global_option: ViewOption;
 }
-export interface ViewPoll<C extends BaseViewModel = any> extends HasMeeting, IPollRelations<C>, Poll {}
+export interface ViewPoll<C extends BaseViewModel<BaseModel>> extends HasMeeting, IPollRelations<C>, Poll {}

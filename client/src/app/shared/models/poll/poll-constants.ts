@@ -83,7 +83,14 @@ export enum PollPercentBase {
     YNA = 'YNA',
     Valid = 'valid',
     Cast = 'cast',
+    Entitled = 'entitled',
     Disabled = 'disabled'
+}
+
+export interface EntitledUsersEntry {
+    user_id: number;
+    voted: boolean;
+    vote_delegated_to_id?: number;
 }
 
 export const VOTE_MAJORITY = -1;
@@ -143,6 +150,7 @@ export const AssignmentPollPercentBaseVerbose = {
     YNA: _('Yes/No/Abstain per candidate'),
     valid: _('All valid ballots'),
     cast: _('All casted ballots'),
+    entitled: _('All entitled users'),
     disabled: _('Disabled (no percents)')
 };
 
@@ -163,6 +171,7 @@ export const PollPercentBaseVerbose = {
     YNA: 'Yes/No/Abstain',
     valid: 'All valid ballots',
     cast: 'All casted ballots',
+    entitled: 'All entitled users',
     disabled: 'Disabled (no percents)'
 };
 

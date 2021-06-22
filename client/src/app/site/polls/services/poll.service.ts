@@ -8,6 +8,7 @@ import { ChartData, ChartDate } from 'app/shared/components/charts/charts.compon
 import { Poll } from 'app/shared/models/poll/poll';
 import {
     AssignmentPollMethodVerbose,
+    EntitledUsersEntry,
     MajorityMethod,
     PollClassType,
     PollColor,
@@ -114,6 +115,7 @@ export interface BasePollData<PM, PB> {
 
 export interface PollData extends BasePollData<string, string> {
     type: string;
+    entitled_users_at_stop: EntitledUsersEntry[];
     amount_global_yes?: number;
     amount_global_no?: number;
     amount_global_abstain?: number;
@@ -289,7 +291,8 @@ export abstract class PollService {
     public showPercentOfValidOrCast(poll: ViewPoll): boolean {
         return (
             poll.onehundred_percent_base === PollPercentBase.Valid ||
-            poll.onehundred_percent_base === PollPercentBase.Cast
+            poll.onehundred_percent_base === PollPercentBase.Cast ||
+            poll.onehundred_percent_base === PollPercentBase.Entitled
         );
     }
 

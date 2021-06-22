@@ -169,7 +169,8 @@ export const RELATIONS: Relation[] = [
         otherViewModel: ViewPoll,
         structuredField: 'poll_voted',
         structuredIdField: 'poll_voted_$_ids',
-        otherViewModelField: 'voted'
+        otherViewModelField: 'voted',
+        otherViewModelIdField: 'voted_ids'
     }),
     ...makeOneStructuredUser2MRelation({
         otherViewModel: ViewVote,
