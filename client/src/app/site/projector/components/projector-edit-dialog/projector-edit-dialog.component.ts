@@ -156,9 +156,8 @@ export class ProjectorEditDialogComponent extends BaseComponent implements OnIni
      */
     public onChangeForm(): void {
         if (this.previewProjector && this.projector && this.updateForm.valid) {
-            Object.assign(this.previewProjector, this.updateForm.value);
-            throw new Error('TODO');
-            // this.preview.setProjector(this.previewProjector);
+            const copy = new Projector(this.previewProjector);
+            this.previewProjector = Object.assign(copy, this.updateForm.value);
             this.cd.markForCheck();
         }
     }

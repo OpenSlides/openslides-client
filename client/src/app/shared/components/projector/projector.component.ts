@@ -180,7 +180,7 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
             return;
         }
 
-        this.slides = projector.current_projections.map(projection => {
+        this.slides = (projector.current_projections || []).map(projection => {
             const slideData: SlideData<any> = {
                 collection: collectionFromFqid(projection.content_object_id),
                 data: projection.content,
