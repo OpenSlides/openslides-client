@@ -404,7 +404,7 @@
         </mat-form-field>
 
         <!-- Recommendation -->
-        <mat-form-field *ngIf="perms.isAllowed('change_state', selectedMotion)">
+        <mat-form-field *ngIf="isRecommendationEnabled(selectedMotion)">
             <mat-select placeholder="{{ 'Recommendation' | translate }}" [(ngModel)]="infoDialog.recommendation_id">
                 <mat-option
                     *ngFor="let recommendation of getPossibleRecommendations(selectedMotion)"

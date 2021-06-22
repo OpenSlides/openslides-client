@@ -10,12 +10,16 @@ import { AmendmentFilterListService } from '../../services/amendment-filter-list
 import { AmendmentSortListService } from '../../services/amendment-sort-list.service';
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
-import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
+import {
+    GET_POSSIBLE_RECOMMENDATIONS,
+    MotionRepositoryService
+} from 'app/core/repositories/motions/motion-repository.service';
 import { MotionService } from 'app/core/repositories/motions/motion.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { LinenumberingService } from 'app/core/ui-services/linenumbering.service';
 import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
+import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
 import { ItemTypeChoices } from 'app/shared/models/agenda/agenda-item';
 import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
@@ -117,22 +121,26 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
             this.amendmentFilterService.parentMotionId = undefined;
         }
 
-        console.log('TODO: meetingsettingsservice');
-        /*this.configService
-            .get<boolean>('motions_show_sequential_numbers')
-            .subscribe(show => (this.showSequentialNumber = show));*/
+        this.meetingSettingService
+            .get('motions_show_sequential_number')
+            .subscribe(show => (this.showSequentialNumber = show));
     }
 
     protected getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [this.activeMeetingIdService.meetingId], // TODO
+            ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
                     idField: 'motion_ids',
                     follow: [
+                        'category_id',
+                        'block_id',
+                        'tag_ids',
+                        'personal_note_ids',
                         {
                             idField: 'state_id',
+                            follow: ['next_state_ids', GET_POSSIBLE_RECOMMENDATIONS],
                             fieldset: 'list'
                         },
                         {
@@ -147,7 +155,8 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
                                     fieldset: 'shortName'
                                 }
                             ]
-                        }
+                        },
+                        SPEAKER_BUTTON_FOLLOW
                     ],
                     fieldset: 'amendment'
                 }

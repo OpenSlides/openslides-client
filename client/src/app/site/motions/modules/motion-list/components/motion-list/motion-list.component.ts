@@ -188,6 +188,11 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
     public motionsVerboseName: string;
 
     /**
+     * The recommender of the current meeting.
+     */
+    private recommender?: string;
+
+    /**
      * Constructor implements title and translation Module.
      *
      * @param titleService Title
@@ -256,7 +261,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
                 .subscribe(enabled => (this.amendmentsEnabled = enabled)),
 
             this.meetingSettingsService.get('motions_recommendations_by').subscribe(recommender => {
-                this.recommendationEnabled = !!recommender;
+                this.recommender = recommender;
             }),
             this.meetingSettingsService
                 .get('motions_show_sequential_number')
@@ -501,6 +506,14 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
             condition: tileCategory.condition,
             isActive: false
         });
+    }
+
+    public isRecommendationEnabled(motion: ViewMotion): boolean {
+        return (
+            (this.perms.isAllowed('change_metadata') || motion.recommendation) &&
+            this.recommender &&
+            !!this.getPossibleRecommendations(motion).length
+        );
     }
 
     /**

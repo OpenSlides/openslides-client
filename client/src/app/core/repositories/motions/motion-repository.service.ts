@@ -215,7 +215,10 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
             { templateField: 'amendment_paragraph_$' },
             'poll_ids'
         ]);
-        const amendmentFields: TypedFieldset<Motion> = listFields.concat(['text']);
+        const amendmentFields: TypedFieldset<Motion> = listFields.concat([
+            'text',
+            { templateField: 'amendment_paragraph_$' }
+        ]);
         const callListFields: TypedFieldset<Motion> = titleFields.concat(['sort_weight', 'sort_parent_id']);
         return {
             [DEFAULT_FIELDSET]: detailFields,
