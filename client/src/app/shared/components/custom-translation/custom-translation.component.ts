@@ -1,6 +1,11 @@
 import { Component, forwardRef, OnInit } from '@angular/core';
 import { ControlValueAccessor, FormArray, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
 
+interface TranslationBox {
+    original: string;
+    translation: string;
+}
+
 /**
  * Custom translations as custom form component
  *
@@ -48,9 +53,9 @@ export class CustomTranslationComponent implements ControlValueAccessor, OnInit 
         });
 
         this.translationBoxes = this.translationForm.get('translationBoxes') as FormArray;
-        this.translationBoxes.valueChanges.subscribe(value => {
+        this.translationBoxes.valueChanges.subscribe((value: TranslationBox[]) => {
             if (this.translationBoxes.valid) {
-                this.propagateChange(value);
+                this.propagateChange(value.mapToObject(entry => ({ [entry.original]: entry.translation })));
             }
         });
     }
@@ -67,8 +72,8 @@ export class CustomTranslationComponent implements ControlValueAccessor, OnInit 
      */
     public writeValue(obj: any): void {
         if (obj) {
-            for (const item of obj) {
-                this.addNewTranslation(item.original, item.translation);
+            for (const key of Object.keys(obj)) {
+                this.addNewTranslation(key, obj[key]);
             }
         }
     }

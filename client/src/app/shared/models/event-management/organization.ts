@@ -8,7 +8,6 @@ export interface OrganizationSetting {
     privacy_policy: string;
     login_text: string;
     theme: string;
-    custom_translations: JSON[];
     reset_password_verbose_errors: boolean;
     enable_electronic_voting: boolean;
 }

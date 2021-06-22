@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { TranslateDefaultParser, TranslateStore } from '@ngx-translate/core';
 
-import { CustomTranslations, CustomTranslationService } from './custom-translation.service';
+import { CustomTranslation, CustomTranslationService } from './custom-translation.service';
 
 /**
  * Custom translate parser. Intercepts and use custom translations from the organization settings service.
@@ -12,7 +12,7 @@ export class OpenSlidesTranslateParser extends TranslateDefaultParser {
     /**
      * Saves the custom translations retrieved from the config service
      */
-    private customTranslations: CustomTranslations = [];
+    private customTranslations: CustomTranslation = {};
 
     /**
      * Subscribes to the custom translations and watches for updated custom translations.
@@ -22,7 +22,7 @@ export class OpenSlidesTranslateParser extends TranslateDefaultParser {
 
         ctService.customTranslationSubject.subscribe(ct => {
             if (!ct) {
-                ct = [];
+                ct = {};
             }
             this.customTranslations = ct;
             // trigger reload of all languages. This does not hurt performance,
@@ -48,9 +48,9 @@ export class OpenSlidesTranslateParser extends TranslateDefaultParser {
      */
     public getValue(target: any, key: string): any {
         const translation = super.getValue(target, key);
-        const customTranslation = this.customTranslations.find(c => c.original === translation);
-        if (customTranslation) {
-            return customTranslation.translation;
+        const customTranslationKey = Object.keys(this.customTranslations).find(original => original === translation);
+        if (customTranslationKey) {
+            return this.customTranslations[customTranslationKey];
         } else {
             return translation;
         }

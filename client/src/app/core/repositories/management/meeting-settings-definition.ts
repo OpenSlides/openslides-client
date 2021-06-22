@@ -927,5 +927,21 @@ export const meetingSettings: SettingsGroup[] = [
                 ]
             }
         ]
+    },
+    {
+        label: 'Custom translations',
+        icon: 'language',
+        subgroups: [
+            {
+                label: 'Custom translations',
+                settings: [
+                    {
+                        key: 'custom_translations',
+                        label: 'Custom translations',
+                        type: 'translations'
+                    }
+                ]
+            }
+        ]
     }
 ];
