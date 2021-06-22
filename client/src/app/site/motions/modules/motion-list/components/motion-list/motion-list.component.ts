@@ -19,7 +19,6 @@ import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.
 import { OsFilterOptionCondition } from 'app/core/ui-services/base-filter-list.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
-import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
@@ -228,7 +227,6 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
         public multiselectService: MotionMultiselectService,
         public perms: PermissionsService,
         private motionExport: MotionExportService,
-        private overlayService: OverlayService,
         public vp: ViewportService,
         public operator: OperatorService,
         private activeMeetingIdService: ActiveMeetingIdService
@@ -467,15 +465,6 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
                     this.isMultiSelect ? this.selectedRows : this.dataSource.filteredData
                 )
             );
-    }
-
-    /**
-     * Wraps multiselect actions to close the multiselect mode or throw an error if one happens.
-     *
-     * @param multiselectPromise The promise returned by multiselect actions.
-     */
-    public async multiselectWrapper(multiselectPromise: Promise<void>): Promise<void> {
-        multiselectPromise.then(() => this.overlayService.hideSpinner(), this.raiseError);
     }
 
     /**

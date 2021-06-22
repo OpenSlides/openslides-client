@@ -1,8 +1,8 @@
-import { AfterViewInit, ApplicationRef, Component, OnInit } from '@angular/core';
+import { ApplicationRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { TranslateService } from '@ngx-translate/core';
-import { filter, take } from 'rxjs/operators';
+import { first, tap } from 'rxjs/operators';
 
 import { ActiveMeetingIdService } from './core/core-services/active-meeting-id.service';
 import { ActiveMeetingService } from './core/core-services/active-meeting.service';
@@ -12,14 +12,14 @@ import { Deferred } from './core/promises/deferred';
 import { LifecycleService } from './core/core-services/lifecycle.service';
 import { LoadFontService } from './core/ui-services/load-font.service';
 import { OfflineService } from './core/core-services/offline.service';
+import { OpenSlidesStatusService } from './core/core-services/openslides-status.service';
 import { OpenSlidesService } from './core/core-services/openslides.service';
 import { OperatorService } from './core/core-services/operator.service';
-import { OrganizationService } from './core/core-services/organization.service';
-import { OverlayService } from './core/ui-services/overlay.service';
 import { overloadJsFunctions } from './shared/overload-js-functions';
 import { RouteGuard } from './core/core-services/route.guard';
 import { RoutingStateService } from './core/ui-services/routing-state.service';
 import { ServertimeService } from './core/core-services/servertime.service';
+import { SpinnerService } from './core/ui-services/spinner.service';
 import { ThemeService } from './core/ui-services/theme.service';
 import { VotingBannerService } from './core/ui-services/voting-banner.service';
 
@@ -54,14 +54,16 @@ export class AppComponent implements OnInit {
         servertimeService: ServertimeService,
         operator: OperatorService,
         themeService: ThemeService,
-        overlayService: OverlayService,
+        spinnerService: SpinnerService,
         countUsersService: CountUsersService, // Needed to register itself.
         loadFontService: LoadFontService,
         dataStoreUpgradeService: DataStoreUpgradeService, // to start it.
         routingState: RoutingStateService,
         votingBannerService: VotingBannerService, // needed for initialisation
-        offlineSerice: OfflineService
+        offlineSerice: OfflineService,
+        private openslidesStatus: OpenSlidesStatusService
     ) {
+        spinnerService.show(null, { hideWhenStable: true });
         // manually add the supported languages
         translate.addLangs(['en', 'de', 'cs', 'ru']);
         // this language will be used as a fallback when a translation isn't found in the current language
@@ -83,8 +85,11 @@ export class AppComponent implements OnInit {
         await this.appRef.isStable
             .pipe(
                 // take only the stable state
-                filter(s => s),
-                take(1)
+                first(stable => stable),
+                tap(() => {
+                    console.debug('App is stable now.');
+                    this.openslidesStatus.setStable();
+                })
             )
             .toPromise();
         await this.onInitDone;

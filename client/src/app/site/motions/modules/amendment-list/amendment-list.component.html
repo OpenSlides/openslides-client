@@ -141,8 +141,7 @@
 
         <ng-container *osPerms="[permission.motionsCanManage, permission.motionsCanManageMetadata]">
             <mat-divider></mat-divider>
-            <os-motion-multiselect-actions [selectedMotions]="selectedRows" (action)="multiselectWrapper($event)">
-            </os-motion-multiselect-actions>
+            <os-motion-multiselect-actions [selectedMotions]="selectedRows"> </os-motion-multiselect-actions>
         </ng-container>
     </div>
 </mat-menu>

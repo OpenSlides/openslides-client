@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { StorageService } from './storage.service';
 
@@ -29,7 +29,11 @@ export class DataStoreUpgradeService {
     /**
      * Notify, when upgrade has checked.
      */
-    public readonly upgradeChecked = new BehaviorSubject(false);
+    public get upgradeChecked(): Observable<boolean> {
+        return this.upgradeCheckedSubject.asObservable();
+    }
+
+    private readonly upgradeCheckedSubject = new BehaviorSubject(false);
 
     /**
      * @param autoupdateService
@@ -48,11 +52,11 @@ export class DataStoreUpgradeService {
             .subscribe(serverVersion => this.checkForUpgrade(serverVersion));
         */
         // TODO temporary: get the spinner working:
-        this.upgradeChecked.next(true);
+        this.upgradeCheckedSubject.next(true);
     }
 
     public async checkForUpgrade(serverVersion: SchemaVersion): Promise<boolean> {
-        this.upgradeChecked.next(false);
+        this.upgradeCheckedSubject.next(false);
         console.log('Server schema version:', serverVersion);
         const clientVersion = await this.storageService.get<SchemaVersion>(SCHEMA_VERSION);
         await this.storageService.set(SCHEMA_VERSION, serverVersion);
@@ -82,7 +86,7 @@ export class DataStoreUpgradeService {
         } else {
             console.log('\t-> No upgrade needed.');
         }
-        this.upgradeChecked.next(true);
+        this.upgradeCheckedSubject.next(true);
         return doUpgrade;
     }
 }

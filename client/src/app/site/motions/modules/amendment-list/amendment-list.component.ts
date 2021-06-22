@@ -14,7 +14,6 @@ import { MotionRepositoryService } from 'app/core/repositories/motions/motion-re
 import { MotionService } from 'app/core/repositories/motions/motion.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { LinenumberingService } from 'app/core/ui-services/linenumbering.service';
-import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { ItemTypeChoices } from 'app/shared/models/agenda/agenda-item';
 import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
@@ -92,7 +91,6 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
         private motionExport: MotionExportService,
         private linenumberingService: LinenumberingService,
         private pdfExport: MotionPdfExportService,
-        private overlayService: OverlayService,
         private activeMeetingIdService: ActiveMeetingIdService
     ) {
         super(componentServiceCollector);
@@ -190,15 +188,6 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
                     this.isMultiSelect ? this.selectedRows : this.dataSource.filteredData
                 )
             );
-    }
-
-    /**
-     * Function to await the promises. Afterwards it will hide the spinner.
-     *
-     * @param action The promise to await.
-     */
-    public async multiselectWrapper(action: Promise<void>): Promise<void> {
-        action.then(() => this.overlayService.hideSpinner(), this.raiseError);
     }
 
     /**

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 
-import { OverlayService } from './overlay.service';
+import { SpinnerService } from './spinner.service';
 
 const givePermsMessage = _('Please allow OpenSlides to access your microphone and/or camera');
 const accessDeniedMessage = _('Media access is denied');
@@ -15,7 +15,7 @@ export class UserMediaPermService {
     private hasAudioDevice: boolean;
     private hasVideoDevice: boolean;
 
-    public constructor(private translate: TranslateService, private overlayService: OverlayService) {}
+    public constructor(private translate: TranslateService, private spinnerService: SpinnerService) {}
 
     public async requestMediaAccess(): Promise<void> {
         await this.detectAvailableDevices();
@@ -100,10 +100,10 @@ export class UserMediaPermService {
      * Please allow OpenSlides to use your microphone
      */
     private showAwaitPermInfo(): void {
-        this.overlayService.showSpinner(this.translate.instant(givePermsMessage), true);
+        this.spinnerService.show(this.translate.instant(givePermsMessage));
     }
 
     private hideAwaitPermInfo(): void {
-        this.overlayService.hideSpinner();
+        this.spinnerService.hide();
     }
 }

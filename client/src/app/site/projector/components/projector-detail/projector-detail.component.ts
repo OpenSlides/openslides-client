@@ -8,6 +8,7 @@ import { timer } from 'rxjs';
 import { ScrollScaleDirection } from 'app/core/actions/projector-action';
 import { ProjectorMessageAction } from 'app/core/actions/projector-message-action';
 import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
+import { OpenSlidesStatusService } from 'app/core/core-services/openslides-status.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
@@ -94,7 +95,8 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
         private promptService: PromptService,
         private operator: OperatorService,
         private activeMeetingService: ActiveMeetingService,
-        private meetingRepo: MeetingRepositoryService
+        private meetingRepo: MeetingRepositoryService,
+        private openslidesStatus: OpenSlidesStatusService
     ) {
         super(componentServiceCollector);
 
@@ -146,7 +148,7 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
             'messages and countdowns'
         );
 
-        this.subscriptions.push(timer(0, 500).subscribe(() => this.cd.detectChanges()));
+        this.installUpdater();
     }
 
     public editProjector(): void {
@@ -295,5 +297,10 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
                 this.messageRepo.create(message);
             }
         });
+    }
+
+    private async installUpdater(): Promise<void> {
+        await this.openslidesStatus.stable;
+        this.subscriptions.push(timer(0, 500).subscribe(() => this.cd.detectChanges()));
     }
 }

@@ -2,8 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } fro
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { MainMenuService } from 'app/core/core-services/main-menu.service';
-import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { RoutingStateService } from 'app/core/ui-services/routing-state.service';
+import { SearchService } from 'app/core/ui-services/search.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 
 export const HEAD_BAR_HEIGHT = 64; // height of the head-bar in px.
@@ -179,7 +179,7 @@ export class HeadBarComponent implements OnInit {
         private router: Router,
         private route: ActivatedRoute,
         private routingState: RoutingStateService,
-        private overlayService: OverlayService
+        private searchService: SearchService
     ) {}
 
     /**
@@ -221,7 +221,7 @@ export class HeadBarComponent implements OnInit {
      * Opens the `super-search.component`.
      */
     public openSearch(): void {
-        this.overlayService.showSearch();
+        this.searchService.showSearch();
     }
 
     /**

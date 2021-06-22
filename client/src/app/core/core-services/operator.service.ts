@@ -112,7 +112,13 @@ export class OperatorService {
         return this._readyDeferred;
     }
 
+    public get isReadyObservable(): Observable<boolean> {
+        return this.operatorReadySubject.asObservable();
+    }
+
     private currentOperatorDataSubscription: ModelSubscription | null = null;
+
+    private operatorReadySubject = new BehaviorSubject<boolean>(false);
 
     private get activeMeetingId(): number | null {
         return this.activeMeetingService.meetingId;
@@ -258,6 +264,8 @@ export class OperatorService {
             if (isReady) {
                 this._ready = true;
                 this._readyDeferred.resolve();
+                this.operatorReadySubject.next(true);
+                console.debug('operator is ready!');
             }
         });
     }
@@ -265,6 +273,7 @@ export class OperatorService {
     private setNotReady(): void {
         this._lockActiveMeeting = false;
         this._ready = false;
+        this.operatorReadySubject.next(false);
 
         this.groupIds = undefined;
         this.permissions = undefined;

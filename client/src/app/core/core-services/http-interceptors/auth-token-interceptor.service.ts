@@ -11,7 +11,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-import { AuthTokenService } from './auth-token.service';
+import { AuthTokenService } from '../auth-token.service';
 
 @Injectable({
     providedIn: 'root'

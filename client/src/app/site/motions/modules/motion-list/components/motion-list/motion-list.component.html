@@ -339,11 +339,11 @@
                 <mat-icon>forward</mat-icon>
                 <span>{{ 'Forward' | translate }}</span>
             </button>
-            <os-motion-multiselect-actions [selectedMotions]="selectedRows" (action)="multiselectWrapper($event)">
+            <os-motion-multiselect-actions [selectedMotions]="selectedRows">
                 <button
                     mat-menu-item
                     [disabled]="!selectedRows.length"
-                    (click)="multiselectWrapper(multiselectService.moveInAgenda(selectedRows))"
+                    (click)="multiselectService.moveInAgenda(selectedRows)"
                 >
                     <mat-icon>sort</mat-icon>
                     <span>{{ 'Move to agenda item' | translate }}</span>
@@ -351,7 +351,7 @@
                 <button
                     mat-menu-item
                     [disabled]="!selectedRows.length"
-                    (click)="multiselectWrapper(multiselectService.moveInCallList(selectedRows))"
+                    (click)="multiselectService.moveInCallList(selectedRows)"
                 >
                     <mat-icon>format_indent_increase</mat-icon>
                     <span>{{ 'Move in call list' | translate }}</span>
