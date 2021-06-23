@@ -40,7 +40,12 @@
 >
     <!-- Meta -->
     <div *pblNgridCellDef="'meta'; row as motion" class="cell-slot fill">
-        <a class="detail-link" [routerLink]="motion.getDetailStateURL()" [state]="{ back: 'true' }"></a>
+        <a
+            class="detail-link"
+            [routerLink]="motion.getDetailStateURL()"
+            [state]="{ back: 'true' }"
+            *ngIf="!isMultiSelect"
+        ></a>
         <div class="innerTable">
             <!-- number and line -->
             <div class="title-line one-line">
