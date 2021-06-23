@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 import { Id } from 'app/core/definitions/key-types';
 import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
@@ -19,7 +19,9 @@ import { BaseModelContextComponent } from 'app/site/base/components/base-model-c
     template: ''
 })
 export abstract class BasePollComponent<C extends BaseViewModel = any> extends BaseModelContextComponent {
-    public stateChangePending = false;
+    private stateChangePendingSubject = new Subject<boolean>();
+    public readonly stateChangePendingObservable = this.stateChangePendingSubject.asObservable();
+
     public chartDataSubject: BehaviorSubject<ChartData> = new BehaviorSubject([]);
 
     public get poll(): ViewPoll<C> {
@@ -79,13 +81,9 @@ export abstract class BasePollComponent<C extends BaseViewModel = any> extends B
     }
 
     private async changeState(targetState: PollState): Promise<void> {
-        this.stateChangePending = true;
-        this.repo
-            .changePollState(this._poll, targetState)
-            .catch(this.raiseError)
-            .finally(() => {
-                this.stateChangePending = false;
-            });
+        this.stateChangePendingSubject.next(true);
+        await this.repo.changePollState(this._poll, targetState).catch(this.raiseError);
+        this.stateChangePendingSubject.next(false);
     }
 
     public async resetState(): Promise<void> {
