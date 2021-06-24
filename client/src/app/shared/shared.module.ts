@@ -112,6 +112,8 @@ import { CmlPermsDirective } from './directives/cml-perms.directive';
 import { BasicListViewTableComponent } from './components/basic-list-view-table/basic-list-view-table.component';
 import { PointOfOrderDialogComponent } from './components/point-of-order-dialog/point-of-order-dialog.component';
 import { CustomTranslationComponent } from './components/custom-translation/custom-translation.component';
+import { UserMultiselectActionsComponent } from './components/user-multiselect-actions/user-multiselect-actions.component';
+import { UserChangePasswordComponent } from './components/user-change-password/user-change-password.component';
 
 const declarations = [
     PermsDirective,
@@ -191,7 +193,9 @@ const declarations = [
     OmlPermsDirective,
     BasicListViewTableComponent,
     PointOfOrderDialogComponent,
-    CustomTranslationComponent
+    CustomTranslationComponent,
+    UserMultiselectActionsComponent,
+    UserChangePasswordComponent
 ];
 
 const sharedModules = [

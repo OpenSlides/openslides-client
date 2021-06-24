@@ -13,6 +13,7 @@ import { MeetingEditComponent } from './components/meeting-edit/meeting-edit.com
 import { MeetingListComponent } from './components/meeting-list/meeting-list.component';
 import { MemberEditComponent } from './components/member-edit/member-edit.component';
 import { MemberListComponent } from './components/member-list/member-list.component';
+import { MemberPasswordComponent } from './components/member-password/member-password.component';
 import { OrgaSettingsComponent } from './components/orga-settings/orga-settings.component';
 import { OrganizationTagDialogComponent } from './components/organization-tag-dialog/organization-tag-dialog.component';
 import { OrganizationTagListComponent } from './components/organization-tag-list/organization-tag-list.component';
@@ -32,7 +33,8 @@ import { OrganizationTagListComponent } from './components/organization-tag-list
         OrgaSettingsComponent,
         AccountDialogComponent,
         OrganizationTagListComponent,
-        OrganizationTagDialogComponent
+        OrganizationTagDialogComponent,
+        MemberPasswordComponent
     ]
 })
 export class ManagementModule {}

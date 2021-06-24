@@ -8,7 +8,8 @@ import { Observable, OperatorFunction } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { MemberService } from 'app/core/core-services/member.service';
-import { OML } from 'app/core/core-services/organization-permission';
+import { CML, OML } from 'app/core/core-services/organization-permission';
+import { ORGANIZATION_ID } from 'app/core/core-services/organization.service';
 import { Id } from 'app/core/definitions/key-types';
 import { CommitteeRepositoryService } from 'app/core/repositories/management/committee-repository.service';
 import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
@@ -34,6 +35,7 @@ const EditCommitteeLabel = _('Edit committee');
 })
 export class CommitteeEditComponent extends BaseModelContextComponent implements OnInit {
     public readonly OML = OML;
+    public readonly CML = CML;
 
     public addCommitteeLabel = AddCommitteeLabel;
     public editCommitteeLabel = EditCommitteeLabel;
@@ -43,7 +45,7 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
     public organizationMembers: Observable<ViewUser[]>;
     public meetingsObservable: Observable<ViewMeeting[]>;
 
-    private editCommittee: ViewCommittee;
+    public editCommittee: ViewCommittee;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -78,7 +80,7 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
 
     public getPipeFilterFn(): OperatorFunction<ViewCommittee[], ViewCommittee[]> {
         return map((committees: ViewCommittee[]) =>
-            committees.filter(committee => committee.id !== this.editCommittee.id)
+            committees.filter(committee => committee.id !== this.editCommittee?.id)
         );
     }
 
@@ -154,15 +156,14 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
             name: ['', Validators.required],
             description: [''],
             organization_tag_ids: [[]],
-            user_ids: [[]]
+            user_ids: [[]],
+            forward_to_committee_ids: [[]],
+            receive_forwardings_from_committee_ids: [[]]
         };
         if (!this.isCreateView) {
             partialForm = {
-                ...partialForm,
+                ...partialForm
                 // template_meeting_id: [null], // TODO: Not yet
-                default_meeting_id: [null],
-                forward_to_committee_ids: [[]],
-                receive_forwardings_from_committee_ids: [[]]
             };
         }
         this.committeeForm = this.formBuilder.group(partialForm);
@@ -176,7 +177,7 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
         this.requestModels(
             {
                 viewModelCtor: ViewOrganization,
-                ids: [1],
+                ids: [ORGANIZATION_ID],
                 follow: [
                     {
                         idField: 'committee_ids',

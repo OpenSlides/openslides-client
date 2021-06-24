@@ -3,7 +3,7 @@
     [hasMainButton]="true"
     mainButtonIcon="edit"
     (mainEvent)="isEditingUser = !isEditingUser"
-    [goBack]="true"
+    [goBack]="false"
     [nav]="false"
     [editMode]="isEditingUser"
     [isSaveButtonEnabled]="isFormValid"
@@ -16,9 +16,24 @@
         <h2 *ngIf="!isNewUser">{{ user?.full_name }}</h2>
     </div>
 
+    <!-- Navigation -->
     <ng-container class="custom-menu-slot">
         <os-management-navigation></os-management-navigation>
     </ng-container>
+
+    <!-- Menu -->
+    <ng-container class="menu-slot">
+        <button type="button" mat-icon-button [matMenuTriggerFor]="userExtraMenu">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+    </ng-container>
+
+    <mat-menu #userExtraMenu="matMenu">
+        <button mat-menu-item [routerLink]="['/', 'members', 'password', user?.id]">
+            <mat-icon>security</mat-icon>
+            <span>{{ 'Change password' | translate }}</span>
+        </button>
+    </mat-menu>
 </os-head-bar>
 
 <os-user-detail-view
@@ -93,7 +108,7 @@
                     <mat-label>{{ 'Organization management level' | translate }}</mat-label>
                     <mat-select formControlName="organization_management_level">
                         <mat-option *ngFor="let level of organizationManagementLevels" [value]="level">
-                            {{ level }}
+                            {{ getOmlVerboseName(level) | translate }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -130,7 +145,7 @@
         <!-- Organization management level -->
         <div *ngIf="user.organization_management_level">
             <h4>{{ 'Organization management level' | translate }}</h4>
-            <span>{{ user.organization_management_level | translate }}</span>
+            <span>{{ getOmlVerboseName(user.organization_management_level) | translate }}</span>
         </div>
     </ng-template>
 </os-user-detail-view>

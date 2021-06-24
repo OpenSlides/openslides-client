@@ -419,7 +419,7 @@ export class OperatorService {
      */
     public hasCommitteePermissions(committeeId: Id | undefined, ...permissionsToCheck: CML[]): boolean {
         // If a user can manage an entire organization, they can also manage every committee.
-        if (!this.CML || !committeeId) {
+        if (!this.CML) {
             return false;
         }
         if (this.hasOrganizationPermissions(OML.superadmin, OML.can_manage_organization)) {
