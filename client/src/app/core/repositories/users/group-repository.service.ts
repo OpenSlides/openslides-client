@@ -68,9 +68,9 @@ export class GroupRepositoryService
             .join(', ');
     }
 
-    public create(group: GroupAction.CreateParameters): Promise<Identifiable> {
-        const payload: GroupAction.CreatePayload = this.getCreatePayload(group);
-        return this.sendActionToBackend(GroupAction.CREATE, payload);
+    public create(...groups: GroupAction.CreateParameters[]): Promise<Identifiable> {
+        const payload: GroupAction.CreatePayload[] = groups.map(group => this.getCreatePayload(group));
+        return this.sendBulkActionToBackend(GroupAction.CREATE, payload);
     }
 
     public update(update: Partial<Group>, group: ViewGroup): Promise<void> {
@@ -117,11 +117,6 @@ export class GroupRepositoryService
             ids: [this.activeMeetingId],
             follow: [{ idField: 'group_ids', fieldset: 'title' }]
         };
-    }
-
-    public bulkCreate(groups: Partial<GroupAction.CreatePayload>[]): Promise<Identifiable[]> {
-        const payload: GroupAction.CreatePayload[] = groups.map(newGroup => this.getCreatePayload(newGroup));
-        return this.sendBulkActionToBackend(GroupAction.CREATE, payload);
     }
 
     private getCreatePayload(partialGroup: Partial<GroupAction.CreatePayload>): GroupAction.CreatePayload {

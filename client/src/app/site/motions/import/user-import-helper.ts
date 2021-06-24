@@ -8,7 +8,11 @@ import { ImportHelper, ImportResolveInformation } from '../../common/import/impo
 export class UserImportHelper implements ImportHelper<Motion> {
     private newUsers: CsvMapping[] = [];
 
-    public constructor(private repo: UserRepositoryService, private verboseName: string) {}
+    public constructor(
+        private repo: UserRepositoryService,
+        private verboseName: string,
+        private property: keyof Motion
+    ) {}
 
     public findByName(name: string): CsvMapping[] {
         const result: CsvMapping[] = [];
@@ -35,7 +39,7 @@ export class UserImportHelper implements ImportHelper<Motion> {
         if (!this.newUsers.length) {
             return;
         }
-        const userIds = await this.repo.bulkCreate(this.newUsers.map(newUser => ({ username: newUser.name })));
+        const userIds = await this.repo.create(...this.newUsers.map(newUser => ({ username: newUser.name })));
         this.newUsers = this.newUsers.map((user, index) => ({
             name: user.name,
             id: userIds[index].id
@@ -49,24 +53,24 @@ export class UserImportHelper implements ImportHelper<Motion> {
             verboseName: this.verboseName
         };
         const ids: Id[] = [];
-        for (const submitter of item[propertyName]) {
-            if (submitter.id) {
-                ids.push(submitter.id);
+        for (const user of item[propertyName]) {
+            if (user.id) {
+                ids.push(user.id);
                 continue;
             }
             if (!this.newUsers.length) {
                 ++result.unresolvedModels;
                 continue;
             }
-            const mapped = this.newUsers.find(user => user.name === submitter.name);
+            const mapped = this.newUsers.find(newUser => newUser.name === newUser.name);
             if (mapped) {
-                submitter.id = mapped.id;
+                user.id = mapped.id;
                 ids.push(mapped.id);
             } else {
                 ++result.unresolvedModels;
             }
         }
-        item.submitter_ids = ids;
+        (item[this.property] as any) = ids;
         return result;
     }
 

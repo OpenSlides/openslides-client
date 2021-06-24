@@ -376,8 +376,8 @@ export abstract class BaseImportService<M extends BaseModel> {
             if (entry.status !== 'new') {
                 continue;
             }
-            entry.newEntry = this.resolveEntry(entry);
-            entriesToCreate.push(entry.newEntry);
+            const model = this.resolveEntry(entry);
+            entriesToCreate.push(model);
         }
 
         await this.bulkCreateFn(entriesToCreate);
@@ -386,8 +386,6 @@ export abstract class BaseImportService<M extends BaseModel> {
         }
         this.updatePreview();
     }
-
-    protected abstract getConfig(): ImportConfig<M>;
 
     /**
      * A helper function to specify import-helpers for `M`.
@@ -504,4 +502,8 @@ export abstract class BaseImportService<M extends BaseModel> {
         }
         return true;
     }
+
+    // Abstract methods
+    public abstract downloadCsvExample(): void;
+    protected abstract getConfig(): ImportConfig<M>;
 }

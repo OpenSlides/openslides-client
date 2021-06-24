@@ -35,7 +35,7 @@ export class GroupImportHelper implements ImportHelper<User> {
         if (!this.newGroups.length) {
             return;
         }
-        const ids = await this.repo.bulkCreate(this.newGroups.map(entry => ({ name: entry.name })));
+        const ids = await this.repo.create(...this.newGroups.map(entry => ({ name: entry.name })));
         this.newGroups = this.newGroups.map((entry, index) => ({
             name: entry.name,
             id: ids[index].id
@@ -50,6 +50,9 @@ export class GroupImportHelper implements ImportHelper<User> {
         };
         const property = item[propertyName];
         const ids: Id[] = [];
+        if (!Array.isArray(property)) {
+            return result;
+        }
         for (const group of property) {
             if (group.id) {
                 ids.push(group.id);

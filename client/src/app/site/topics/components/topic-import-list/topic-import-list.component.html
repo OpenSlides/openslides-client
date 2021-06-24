@@ -11,10 +11,10 @@
     </div>
 </os-head-bar>
 
-<mat-card class="os-form-card import-table spacer-bottom-60">
-    <mat-tab-group (selectedTabChange)="onTabChange()">
-        <!-- textAreaImport-->
-        <mat-tab label="{{ 'Text import' | translate }}">
+<os-import-list-view [importer]="importer" [columns]="columns" [possibleFields]="possibleFields">
+    <mat-tab label="{{ 'Text import' | translate }}" osImportListFirstTab>
+        <ng-template matTabLabel>{{ 'Text import' | translate }}</ng-template>
+        <ng-template matTabContent>
             <div [formGroup]="textAreaForm">
                 <div>
                     <span>{{ 'Paste/write your topics in this textbox.' | translate }}</span>
@@ -37,197 +37,18 @@
                     <span>{{ 'Preview' | translate }}</span>
                 </button>
             </div>
-        </mat-tab>
+        </ng-template>
+    </mat-tab>
 
-        <!-- CSV import tab -->
-        <mat-tab label="{{ 'CSV import' | translate }}">
-            <span>{{
-                'Required comma or semicolon separated values with these column header names in the first row:'
-                    | translate
-            }}</span>
-            <br />
-            <div class="code red-warning-text">
-                <span>{{ 'Title' | translate }}</span
-                >,&nbsp; <span>{{ 'Text' | translate }}</span
-                >,&nbsp; <span>{{ 'Duration' | translate }}</span
-                >,&nbsp; <span>{{ 'Comment' | translate }}</span
-                >,&nbsp;
-                <span>{{ 'Internal item' | translate }}</span>
-            </div>
-            <ul>
-                <li>{{ 'Title is required. All other fields are optional and may be empty.' | translate }}</li>
-                <li>
-                    {{
-                        'Additional columns after the required ones may be present and will not affect the import.'
-                            | translate
-                    }}
-                </li>
-            </ul>
-            <button mat-button color="accent" (click)="downloadCsvExample()">
-                {{ 'Download CSV example file' | translate }}
-            </button>
-            <div class="wrapper">
-                <mat-form-field>
-                    <mat-label>{{ 'Encoding of the file' | translate }}</mat-label>
-                    <mat-select
-                        class="selection"
-                        (selectionChange)="selectEncoding($event)"
-                        [value]="encodings[0].value"
-                    >
-                        <mat-option *ngFor="let option of encodings" [value]="option.value">
-                            {{ option.label | translate }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <mat-form-field>
-                    <mat-label>{{ 'Column separator' | translate }}</mat-label>
-                    <mat-select class="selection" (selectionChange)="selectColSep($event)" value="">
-                        <mat-option *ngFor="let option of columnSeparators" [value]="option.value">
-                            {{ option.label | translate }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <mat-form-field>
-                    <mat-label>{{ 'Text separator' | translate }}</mat-label>
-                    <mat-select class="selection" (selectionChange)="selectTextSep($event)" value='"'>
-                        <mat-option *ngFor="let option of textSeparators" [value]="option.value">
-                            {{ option.label | translate }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div>
-                <div>
-                    <input
-                        id="agenda-import-file-input"
-                        type="file"
-                        class="hidden-input"
-                        accept="text"
-                        #fileInput
-                        (change)="onSelectFile($event)"
-                    />
-                    <button mat-button onclick="document.getElementById('agenda-import-file-input').click()">
-                        <span>{{ 'Select file' | translate }}</span>
-                    </button>
-                </div>
-            </div>
-        </mat-tab>
-    </mat-tab-group>
-</mat-card>
+    <ng-container requiredFields>
+        <li>{{ 'Title is required. All other fields are optional and may be empty.' | translate }}</li>
+    </ng-container>
 
-<!-- preview table -->
-<mat-card *ngIf="hasFile" class="os-form-card import-table spacer-bottom-60">
-    <h3>{{ 'Preview' | translate }}</h3>
-    <div class="summary">
-        <!-- new entries -->
-        <div *ngIf="newCount">
-            &nbsp;
-            <mat-icon inline>playlist_add</mat-icon>
-            <span>&nbsp;{{ newCount }}&nbsp;</span> <span>{{ 'Topics(s) will be imported.' | translate }}</span>
-        </div>
-        <!-- errors/duplicates -->
-        <div *ngIf="nonImportableCount" class="red-warning-text">
-            &nbsp;
-            <mat-icon inline>warning</mat-icon>
-            <span>&nbsp;{{ nonImportableCount }}&nbsp;</span> <span>{{ 'entries will be ommitted.' | translate }}</span>
-        </div>
-        <!-- have been imported -->
-        <div *ngIf="doneCount" class="green-text">
-            &nbsp;
-            <mat-icon inline>done</mat-icon>
-            <span>&nbsp;{{ doneCount }}&nbsp;</span> <span>{{ 'Topics have been imported.' | translate }}</span>
-        </div>
+    <div *pblNgridCellDef="'newEntry.agenda_duration'; row as entry">
+        {{ getDuration(entry.newEntry.agenda_duration) }}
     </div>
-    <div *ngIf="newCount">
-        <span>{{ 'After verifiy the preview click on "import" please (see top right).' | translate }}</span>
+
+    <div *pblNgridCellDef="'newEntry.agenda_type'; row as entry">
+        {{ getTypeString(entry.newEntry.agenda_type) | translate }}
     </div>
-    <div>
-        <mat-select *ngIf="nonImportableCount" class="filter-imports" [(value)]="shown" (selectionChange)="setFilter()">
-            <mat-option value="all">{{ 'Show all' | translate }}</mat-option>
-            <mat-option value="error">{{ 'Show errors only' | translate }}</mat-option>
-            <mat-option value="noerror">{{ 'Show correct entries only' | translate }}</mat-option>
-        </mat-select>
-    </div>
-    <div class="table-container">
-        <table mat-table [dataSource]="dataSource" matSort>
-            <!-- Status column -->
-            <ng-container matColumnDef="status" class="first-column" sticky>
-                <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                <mat-cell *matCellDef="let entry" class="first-column">
-                    <div *ngIf="entry.status === 'error'">
-                        <mat-icon
-                            class="red-warning-text"
-                            matTooltip="{{ entry.errors.length }} {{ 'errors' | translate }}"
-                        >
-                            {{ getActionIcon(entry) }}
-                        </mat-icon>
-                    </div>
-                    <div *ngIf="entry.status === 'new'">
-                        <mat-icon matTooltip="{{ 'Topic will be imported' | translate }}">
-                            {{ getActionIcon(entry) }}
-                        </mat-icon>
-                    </div>
-                    <div *ngIf="entry.status === 'done'">
-                        <mat-icon matTooltip="{{ 'Topic has been imported' | translate }}">
-                            {{ getActionIcon(entry) }}
-                        </mat-icon>
-                    </div>
-                </mat-cell>
-            </ng-container>
-
-            <!-- title column -->
-            <ng-container matColumnDef="title">
-                <mat-header-cell *matHeaderCellDef>{{ 'Title' | translate }}</mat-header-cell>
-                <mat-cell *matCellDef="let entry">
-                    <mat-icon
-                        color="warn"
-                        inline
-                        *ngIf="hasError(entry, 'Duplicates')"
-                        matTooltip="{{ getVerboseError('Duplicates') | translate }}"
-                    >
-                        warning
-                    </mat-icon>
-                    <mat-icon
-                        color="warn"
-                        inline
-                        *ngIf="hasError(entry, 'NoTitle')"
-                        matTooltip="{{ getVerboseError('NoTitle') | translate }}"
-                    >
-                        warning
-                    </mat-icon>
-                    {{ entry.newEntry.title }}
-                </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="text">
-                <mat-header-cell *matHeaderCellDef>{{ 'Text' | translate }}</mat-header-cell>
-                <mat-cell *matCellDef="let entry" matTooltip="{{ getLongPreview(entry.newEntry.text) }}">
-                    {{ getShortPreview(entry.newEntry.text) }}
-                </mat-cell>
-            </ng-container>
-
-            <!-- duration column -->
-            <ng-container matColumnDef="agenda_duration">
-                <mat-header-cell *matHeaderCellDef>{{ 'Duration' | translate }}</mat-header-cell>
-                <mat-cell *matCellDef="let entry"> {{ getDuration(entry.newEntry.agenda_duration) }} </mat-cell>
-            </ng-container>
-
-            <!-- comment column-->
-            <ng-container matColumnDef="agenda_comment">
-                <mat-header-cell *matHeaderCellDef>{{ 'Comment' | translate }}</mat-header-cell>
-                <mat-cell *matCellDef="let entry"> {{ entry.newEntry.agenda_comment }} </mat-cell>
-            </ng-container>
-
-            <!-- type column -->
-            <ng-container matColumnDef="agenda_type">
-                <mat-header-cell *matHeaderCellDef>{{ 'Type' | translate }}</mat-header-cell>
-                <mat-cell *matCellDef="let entry">
-                    {{ getTypeString(entry.newEntry.agenda_type) | translate }}
-                </mat-cell>
-            </ng-container>
-
-            <mat-header-row *matHeaderRowDef="getColumnDefinition()"></mat-header-row>
-            <mat-row [ngClass]="getStateClass(row)" *matRowDef="let row; columns: getColumnDefinition()"> </mat-row>
-        </table>
-    </div>
-</mat-card>
+</os-import-list-view>

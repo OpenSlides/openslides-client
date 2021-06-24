@@ -400,7 +400,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         const selectedChoice = await this.choiceService.open(content, null, false, options);
         if (selectedChoice) {
             const value = selectedChoice.action === options[0];
-            this.repo.bulkSetState(this.selectedRows, field, value).catch(this.raiseError);
+            this.repo.setState(field, value, ...this.selectedRows).catch(this.raiseError);
         }
     }
 

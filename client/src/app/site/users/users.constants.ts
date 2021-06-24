@@ -28,7 +28,7 @@ export const userHeadersAndVerboseNames: { [key: string]: string } = {
     last_name: 'Surname',
     comment: 'Comment',
     is_active: 'Is active',
-    is_physical_person: 'Is a committee',
+    is_physical_person: 'Is a physical person',
     is_present_in_meeting_ids: 'Is present',
     default_password: 'Initial password',
     email: 'Email',

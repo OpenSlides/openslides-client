@@ -17,8 +17,21 @@ import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.se
 import { ViewUnifiedChange } from 'app/shared/models/motions/view-unified-change';
 import { reconvertChars } from 'app/shared/utils/reconvert-chars';
 import { stripHtmlTags } from 'app/shared/utils/strip-html-tags';
+import { MotionCsvExportExample } from '../export/motion-csv-export-example';
 import { ChangeRecoMode, getMotionExportHeadersAndVerboseNames, sortMotionPropertyList } from '../motions.constants';
 import { ViewMotion } from '../models/view-motion';
+
+export interface MotionCsvExport {
+    number?: string;
+    submitters?: string;
+    title: string;
+    text: string;
+    reason?: string;
+    category?: string;
+    motion_block?: string;
+    supporters?: string;
+    tags?: string;
+}
 
 /**
  * Exports CSVs for motions. Collect all CSV types here to have them in one place.
@@ -167,19 +180,8 @@ export class MotionCsvExportService {
     }
 
     public exportDummyMotion(): void {
-        const prefixes = ['A', 'B', 'C'];
-        const headersAndVerboseNames = getMotionExportHeadersAndVerboseNames();
-        const headerKeys = Object.keys(headersAndVerboseNames);
-        const headerRow = Object.values<string>(headersAndVerboseNames);
-        const rows = prefixes.map(prefix => {
-            return headerKeys.map(header => {
-                const value = headersAndVerboseNames[header];
-                if (header === 'category') {
-                    return `${prefix} - ${value}`;
-                }
-                return value + prefix;
-            });
-        });
-        this.csvExport.dummyCSVExport(headerRow, rows, `${this.translate.instant('motions-example')}.csv`);
+        const rows: MotionCsvExport[] = MotionCsvExportExample;
+        const filename = `${this.translate.instant('motions')}-${this.translate.instant('example')}.csv`;
+        this.csvExport.dummyCSVExport<MotionCsvExport>(getMotionExportHeadersAndVerboseNames() as any, rows, filename);
     }
 }

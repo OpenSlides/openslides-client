@@ -52,7 +52,7 @@ export class UserMultiselectActionsComponent extends BaseComponent implements On
                 )
             );
         }
-        this.repo.bulkResetPasswordsToDefault(this.selectedUsers).catch(this.raiseError);
+        this.repo.resetPasswordToDefault(...this.selectedUsers).catch(this.raiseError);
     }
 
     /**
@@ -86,7 +86,7 @@ export class UserMultiselectActionsComponent extends BaseComponent implements On
     public async deleteSelected(): Promise<void> {
         const title = this.translate.instant('Are you sure you want to delete all selected participants?');
         if (await this.promptService.open(title)) {
-            this.repo.bulkDelete(this.selectedUsers).catch(this.raiseError);
+            this.repo.delete(...this.selectedUsers).catch(this.raiseError);
         }
     }
 }

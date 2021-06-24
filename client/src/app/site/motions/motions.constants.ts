@@ -80,7 +80,6 @@ const motionHeadersAndVerboseNames = {
     category: 'Category',
     tags: 'Tags',
     motion_block: 'Motion block',
-    origin: 'Origin',
     recommendation: 'Recommendation',
     state: 'State'
 };
