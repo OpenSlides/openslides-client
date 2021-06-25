@@ -99,7 +99,7 @@
             type="button"
             class="red-warning-text"
             (click)="deleteSingle(meeting)"
-            *osCmlPerms="CML.can_manage"
+            *osCmlPerms="CML.can_manage; committeeId: currentCommittee.id"
         >
             <mat-icon>delete</mat-icon>
             <span>

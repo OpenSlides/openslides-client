@@ -12,6 +12,9 @@ export namespace CommitteeAction {
         user_ids?: Id[];
         // For UPDATE: Required permission: CML.can_manage || OML.can_manage_organization
         organization_tag_ids?: Id[];
+        // Required permission: OML.can_manage_organization
+        forward_to_committee_ids?: Id[];
+        receive_forwardings_from_committee_ids?: Id[];
     }
 
     /**
@@ -30,9 +33,6 @@ export namespace CommitteeAction {
         // Required permission: CML.can_manage
         name?: string;
         template_meeting_id?: Id;
-        // Required permission: OML.can_manage_organization
-        forward_to_committee_ids?: Id[];
-        receive_forwardings_from_committee_ids?: Id[];
     }
 
     export interface DeletePayload extends Identifiable {}

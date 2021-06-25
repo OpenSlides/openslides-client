@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { OML } from 'app/core/core-services/organization-permission';
+import { getOmlVerboseName, OML, OMLMapping } from 'app/core/core-services/organization-permission';
 import { CommitteeRepositoryService } from 'app/core/repositories/management/committee-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -90,6 +90,10 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
      */
     public getRandomPassword(): string {
         return this.repo.getRandomPassword();
+    }
+
+    public getOmlVerboseName(omlKey: keyof OMLMapping): string {
+        return getOmlVerboseName(omlKey);
     }
 
     /**

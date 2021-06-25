@@ -65,8 +65,6 @@ export class CommitteeRepositoryService
     public update(update: Partial<Committee>, committee: ViewCommittee): Promise<void> {
         const payload: CommitteeAction.UpdatePayload = {
             id: committee.id,
-            forward_to_committee_ids: update.forward_to_committee_ids,
-            receive_forwardings_from_committee_ids: update.receive_forwardings_from_committee_ids,
             ...this.getPartialCommitteePayload(update)
         };
         return this.sendActionToBackend(CommitteeAction.UPDATE, payload);
@@ -91,7 +89,9 @@ export class CommitteeRepositoryService
     public bulkUnforwardToCommittees(committees: ViewCommittee[], committeeIds: Id[]): Promise<void> {
         const payload: CommitteeAction.UpdatePayload[] = committees.map(committee => ({
             id: committee.id,
-            forward_to_committee_ids: (committee.forward_to_committee_ids || []).filter(id => committeeIds.includes(id))
+            forward_to_committee_ids: (committee.forward_to_committee_ids || []).filter(
+                id => !committeeIds.includes(id)
+            )
         }));
         return this.sendBulkActionToBackend(CommitteeAction.UPDATE, payload);
     }
@@ -127,7 +127,9 @@ export class CommitteeRepositoryService
         return {
             description: committee.description,
             organization_tag_ids: committee.organization_tag_ids,
-            user_ids: committee.user_ids
+            user_ids: committee.user_ids,
+            forward_to_committee_ids: committee.forward_to_committee_ids,
+            receive_forwardings_from_committee_ids: committee.receive_forwardings_from_committee_ids
         };
     }
 }

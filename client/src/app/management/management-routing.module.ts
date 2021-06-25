@@ -10,6 +10,7 @@ import { MeetingEditComponent } from './components/meeting-edit/meeting-edit.com
 import { MeetingListComponent } from './components/meeting-list/meeting-list.component';
 import { MemberEditComponent } from './components/member-edit/member-edit.component';
 import { MemberListComponent } from './components/member-list/member-list.component';
+import { MemberPasswordComponent } from './components/member-password/member-password.component';
 import { OrgaSettingsComponent } from './components/orga-settings/orga-settings.component';
 import { OrganizationTagListComponent } from './components/organization-tag-list/organization-tag-list.component';
 
@@ -29,6 +30,10 @@ const routes: Route[] = [
                     {
                         path: 'create',
                         component: MemberEditComponent
+                    },
+                    {
+                        path: 'password/:id',
+                        component: MemberPasswordComponent
                     },
                     {
                         path: ':id',

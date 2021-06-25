@@ -38,18 +38,21 @@ export class ManagementNavigationComponent {
             route: '/organization-tags',
             displayName: 'Organization tags',
             icon: 'label',
+            permission: OML.can_manage_organization,
             weight: 250
         },
         {
             route: '/members',
             displayName: 'Members',
             icon: 'group',
+            permission: OML.can_manage_users,
             weight: 300
         },
         {
             route: '/settings',
             displayName: 'Settings',
             icon: 'settings',
+            permission: OML.can_manage_organization,
             weight: 400
         }
     ];

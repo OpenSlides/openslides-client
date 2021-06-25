@@ -120,7 +120,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
      *
      * @returns true if the user should be able to create users
      */
-    public get canAddUser(): boolean {
+    public get canManage(): boolean {
         return this.operator.hasPerms(Permission.usersCanManage);
     }
 
@@ -360,16 +360,6 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
     }
 
     /**
-     * Bulk deletes users. Needs multiSelect mode to fill selectedRows
-     */
-    public async deleteSelected(): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to delete all selected participants?');
-        if (await this.promptService.open(title)) {
-            this.repo.bulkDelete(this.selectedRows).catch(this.raiseError);
-        }
-    }
-
-    /**
      * Opens a dialog and sets the group(s) for all selected users.
      * SelectedRows is only filled with data in multiSelect mode
      */
@@ -443,50 +433,6 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
             return this.translate.instant('No email sent');
         }
         return this.repo.lastSentEmailTimeString(user);
-    }
-
-    /**
-     * Handler for bulk resetting passwords to the default ones. Needs multiSelect mode.
-     */
-    public async resetPasswordsToDefaultSelected(): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to reset all passwords to the default ones?');
-        if (!(await this.promptService.open(title))) {
-            return;
-        }
-
-        if (this.selectedRows.find(row => row.user.id === this.operator.operatorId)) {
-            this.raiseError(
-                this.translate.instant(
-                    'Note: Your own password was not changed. Please use the password change dialog instead.'
-                )
-            );
-        }
-        this.repo.bulkResetPasswordsToDefault(this.selectedRows).catch(this.raiseError);
-    }
-
-    /**
-     * Handler for bulk generating new passwords. Needs multiSelect mode.
-     */
-    public async generateNewPasswordsPasswordsSelected(): Promise<void> {
-        const title = this.translate.instant(
-            'Are you sure you want to generate new passwords for all selected participants?'
-        );
-        const content = this.translate.instant(
-            'Note, that the default password will be changed to the new generated one.'
-        );
-        if (!(await this.promptService.open(title, content))) {
-            return;
-        }
-
-        if (this.selectedRows.find(row => row.user.id === this.operator.operatorId)) {
-            this.raiseError(
-                this.translate.instant(
-                    'Note: Your own password was not changed. Please use the password change dialog instead.'
-                )
-            );
-        }
-        const rows = this.selectedRows.filter(row => row.user.id !== this.operator.operatorId);
-        this.repo.bulkGenerateNewPasswords(rows);
     }
 
     /**

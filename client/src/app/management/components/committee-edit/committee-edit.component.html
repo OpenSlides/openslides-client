@@ -35,7 +35,7 @@
             ></os-search-value-selector>
         </mat-form-field>
 
-        <mat-form-field>
+        <mat-form-field *osCmlPerms="CML.can_manage; committeeId: editCommittee?.id">
             <mat-label>{{ 'Organization tags' | translate }}</mat-label>
             <os-search-repo-selector
                 formControlName="organization_tag_ids"
@@ -44,13 +44,41 @@
                 [showNotFoundButton]="true"
                 (clickNotFound)="onOrgaTagNotFound($event)"
                 placeholder="{{ 'Organization tags' | translate }}"
-            ></os-search-repo-selector>
+            >
+                <ng-container notFoundDescription>
+                    {{ 'Add new organization tag' | translate }}
+                </ng-container>
+            </os-search-repo-selector>
         </mat-form-field>
 
         <mat-form-field>
             <mat-label>{{ 'Description' | translate }}</mat-label>
             <input matInput formControlName="description" />
         </mat-form-field>
+
+        <ng-container *osOmlPerms="OML.can_manage_organization">
+            <mat-form-field>
+                <mat-label>{{ 'Can forward motions to committee' | translate }}</mat-label>
+                <os-search-repo-selector
+                    formControlName="forward_to_committee_ids"
+                    [multiple]="true"
+                    [repo]="committeeRepo"
+                    [pipeFn]="getPipeFilterFn()"
+                    [showChips]="false"
+                ></os-search-repo-selector>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>{{ 'Can receive forwarding from committees' | translate }}</mat-label>
+                <os-search-repo-selector
+                    formControlName="receive_forwardings_from_committee_ids"
+                    [multiple]="true"
+                    [repo]="committeeRepo"
+                    [pipeFn]="getPipeFilterFn()"
+                    [showChips]="false"
+                ></os-search-repo-selector>
+            </mat-form-field>
+        </ng-container>
 
         <ng-container *ngIf="!isCreateView">
             <!-- TODO: Not yet -->
@@ -62,39 +90,6 @@
                     [inputListValues]="meetingsObservable"
                 ></os-search-value-selector>
             </mat-form-field> -->
-
-            <mat-form-field>
-                <mat-label>{{ 'Default meeting' | translate }}</mat-label>
-                <os-search-value-selector
-                    formControlName="default_meeting_id"
-                    [multiple]="false"
-                    [inputListValues]="meetingsObservable"
-                ></os-search-value-selector>
-            </mat-form-field>
-
-            <ng-container *osOmlPerms="OML.can_manage_users">
-                <mat-form-field>
-                    <mat-label>{{ 'Can forward motions to committee' | translate }}</mat-label>
-                    <os-search-repo-selector
-                        formControlName="forward_to_committee_ids"
-                        [multiple]="true"
-                        [repo]="committeeRepo"
-                        [pipeFn]="getPipeFilterFn()"
-                        [showChips]="false"
-                    ></os-search-repo-selector>
-                </mat-form-field>
-
-                <mat-form-field>
-                    <mat-label>{{ 'Can receive forwarding from committees' | translate }}</mat-label>
-                    <os-search-repo-selector
-                        formControlName="receive_forwardings_from_committee_ids"
-                        [multiple]="true"
-                        [repo]="committeeRepo"
-                        [pipeFn]="getPipeFilterFn()"
-                        [showChips]="false"
-                    ></os-search-repo-selector>
-                </mat-form-field>
-            </ng-container>
         </ng-container>
     </form>
 </mat-card>

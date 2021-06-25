@@ -1,23 +1,47 @@
+export interface OMLMapping {
+    superadmin: number;
+    can_manage_organization: number;
+    can_manage_users: number;
+}
+
+export interface CMLMapping {
+    can_manage: number;
+}
+
 export enum CML {
-    can_manage = 'can_manage',
-    default = 'default'
+    can_manage = 'can_manage'
 }
 
 export enum OML {
     superadmin = 'superadmin',
     can_manage_organization = 'can_manage_organization',
-    can_manage_users = 'can_manage_users',
-    default = 'default'
+    can_manage_users = 'can_manage_users'
 }
 
-export const omlNameMapping = {
+export const omlNameMapping: OMLMapping = {
     superadmin: 3,
     can_manage_organization: 2,
-    can_manage_users: 1,
-    default: 0
+    can_manage_users: 1
 };
 
 export const cmlNameMapping = {
-    can_manage: 1,
-    default: 0
+    can_manage: 1
 };
+
+export const cmlVerbose = {
+    can_manage: 'Can manage'
+};
+
+export const omlVerbose = {
+    superadmin: 'Superadmin',
+    can_manage_organization: 'Can manage organization',
+    can_manage_users: 'Can manage users'
+};
+
+export function getOmlVerboseName(omlKey: keyof OMLMapping): string {
+    return omlVerbose[omlKey];
+}
+
+export function getCmlVerboseName(cmlKey: keyof CMLMapping): string {
+    return cmlVerbose[cmlKey];
+}

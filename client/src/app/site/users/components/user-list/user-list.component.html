@@ -1,4 +1,4 @@
-<os-head-bar [hasMainButton]="canAddUser" (mainEvent)="onPlusButton()" [multiSelectMode]="isMultiSelect">
+<os-head-bar [hasMainButton]="canManage" (mainEvent)="onPlusButton()" [multiSelectMode]="isMultiSelect">
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Participants' | translate }}</h2>
@@ -209,76 +209,42 @@
         </div>
     </div>
     <div *ngIf="isMultiSelect">
-        <button mat-menu-item (click)="selectAll()">
-            <mat-icon>done_all</mat-icon>
-            <span>{{ 'Select all' | translate }}</span>
-        </button>
-
-        <button mat-menu-item [disabled]="!selectedRows.length" (click)="deselectAll()">
-            <mat-icon>clear</mat-icon>
-            <span>{{ 'Deselect all' | translate }}</span>
-        </button>
-
-        <div *osPerms="permission.usersCanManage">
+        <os-user-multiselect-actions
+            [selectedUsers]="selectedRows"
+            [canManage]="canManage"
+            (selectAll)="selectAll()"
+            (deselectAll)="deselectAll()"
+        >
             <mat-divider></mat-divider>
             <button mat-menu-item [disabled]="!selectedRows.length" (click)="setGroupSelected()">
                 <mat-icon>people</mat-icon>
                 <span>{{ 'Add/remove groups ...' | translate }}</span>
             </button>
 
-            <div *osPerms="permission.usersCanManage">
-                <mat-divider></mat-divider>
+            <mat-divider></mat-divider>
 
-                <button mat-menu-item [disabled]="!selectedRows.length" (click)="setStateSelected('is_active')">
-                    <mat-icon>block</mat-icon>
-                    <span>{{ 'Enable/disable account ...' | translate }}</span>
-                </button>
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="setStateSelected('is_active')">
+                <mat-icon>block</mat-icon>
+                <span>{{ 'Enable/disable account ...' | translate }}</span>
+            </button>
 
-                <button mat-menu-item [disabled]="!selectedRows.length" (click)="setStateSelected('is_present')">
-                    <mat-icon>check_box</mat-icon>
-                    <span>{{ 'Set presence ...' | translate }}</span>
-                </button>
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="setStateSelected('is_present')">
+                <mat-icon>check_box</mat-icon>
+                <span>{{ 'Set presence ...' | translate }}</span>
+            </button>
 
-                <button
-                    mat-menu-item
-                    [disabled]="!selectedRows.length"
-                    (click)="setStateSelected('is_physical_person')"
-                >
-                    <mat-icon>account_balance</mat-icon>
-                    <span>{{ 'Set physical person ...' | translate }}</span>
-                </button>
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="setStateSelected('is_physical_person')">
+                <mat-icon>account_balance</mat-icon>
+                <span>{{ 'Set physical person ...' | translate }}</span>
+            </button>
 
-                <mat-divider></mat-divider>
+            <mat-divider></mat-divider>
 
-                <button mat-menu-item [disabled]="!selectedRows.length" (click)="sendInvitationEmailSelected()">
-                    <mat-icon>mail</mat-icon>
-                    <span>{{ 'Send invitation email' | translate }}</span>
-                </button>
-
-                <button mat-menu-item [disabled]="!selectedRows.length" (click)="resetPasswordsToDefaultSelected()">
-                    <mat-icon>vpn_key</mat-icon>
-                    <span>{{ 'Reset passwords to the default ones' | translate }}</span>
-                </button>
-                <button
-                    mat-menu-item
-                    [disabled]="!selectedRows.length"
-                    (click)="generateNewPasswordsPasswordsSelected()"
-                >
-                    <mat-icon>vpn_key</mat-icon>
-                    <span>{{ 'Generate new passwords' | translate }}</span>
-                </button>
-                <mat-divider></mat-divider>
-                <button
-                    mat-menu-item
-                    class="red-warning-text"
-                    [disabled]="!selectedRows.length"
-                    (click)="deleteSelected()"
-                >
-                    <mat-icon>delete</mat-icon>
-                    <span>{{ 'Delete' | translate }}</span>
-                </button>
-            </div>
-        </div>
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="sendInvitationEmailSelected()">
+                <mat-icon>mail</mat-icon>
+                <span>{{ 'Send invitation email' | translate }}</span>
+            </button>
+        </os-user-multiselect-actions>
     </div>
 </mat-menu>
 

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
@@ -19,9 +18,8 @@ import { ViewUser } from '../../models/view-user';
     styleUrls: ['./password.component.scss']
 })
 export class PasswordComponent extends BaseModelContextComponent implements OnInit {
-    public get isValid(): boolean {
-        return this.canManage && !this.ownPage ? this.adminPasswordForm.valid : this.isUserPasswordValid;
-    }
+    public isValid = false;
+    public passwordForm: PasswordForm | string = '';
 
     /**
      * the user that is currently worked own
@@ -38,40 +36,14 @@ export class PasswordComponent extends BaseModelContextComponent implements OnIn
      */
     public canManage: boolean;
 
-    /**
-     * formGroup for the admin user
-     */
-    public adminPasswordForm: FormGroup;
-
-    /**
-     * Value of the formGroup for a user.
-     */
-    public userPasswordForm: PasswordForm;
-
-    /**
-     * If the value of a new password for a user is valid.
-     */
-    public isUserPasswordValid = false;
-
-    /**
-     * if all password inputs is hidden
-     */
-    public hidePassword = true;
-
-    /**
-     * if the old password should be shown
-     */
-    public hideOldPassword = true;
-
     private urlUserId: number | null;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private route: ActivatedRoute,
         private router: Router,
-        private repo: UserRepositoryService,
         private operator: OperatorService,
-        private formBuilder: FormBuilder
+        public repo: UserRepositoryService
     ) {
         super(componentServiceCollector);
     }
@@ -100,10 +72,6 @@ export class PasswordComponent extends BaseModelContextComponent implements OnIn
         this.operator.operatorUpdatedEvent.subscribe(() => {
             this.updateUser();
         });
-
-        this.adminPasswordForm = this.formBuilder.group({
-            newPassword: ['', Validators.required]
-        });
     }
 
     private updateUser(): void {
@@ -126,49 +94,22 @@ export class PasswordComponent extends BaseModelContextComponent implements OnIn
      * Handles the whole save routine for every possible event
      */
     public async save(): Promise<void> {
+        if (!this.isValid) {
+            return;
+        }
         // can Manage, but not own Page (a.k.a. Admin)
         try {
             if (this.canManage && !this.ownPage) {
-                if (!this.adminPasswordForm.valid) {
-                    return;
-                }
-                const password = this.adminPasswordForm.value.newPassword;
+                const password = this.passwordForm as string;
                 await this.repo.setPassword(this.user, password);
                 this.router.navigate([this.activeMeetingId, 'users', this.user.id]);
             } else if (this.ownPage) {
-                if (!this.isUserPasswordValid) {
-                    return;
-                }
-
-                const { oldPassword, newPassword }: PasswordForm = this.userPasswordForm;
+                const { oldPassword, newPassword }: PasswordForm = this.passwordForm as PasswordForm;
                 await this.repo.setPasswordSelf(this.user, oldPassword, newPassword);
                 this.router.navigate(['..'], { relativeTo: this.route });
             }
         } catch (e) {
             this.raiseError(e);
         }
-    }
-
-    /**
-     * clicking Shift and Enter will save automatically
-     *
-     * @param event has the code
-     */
-    public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === 'Enter' && event.shiftKey) {
-            this.save();
-        }
-    }
-
-    /**
-     * Takes generated password and puts it into admin PW field
-     * and displays it
-     */
-    public generatePassword(): void {
-        const randomPassword = this.repo.getRandomPassword();
-        this.adminPasswordForm.patchValue({
-            newPassword: randomPassword
-        });
-        this.hidePassword = false;
     }
 }
