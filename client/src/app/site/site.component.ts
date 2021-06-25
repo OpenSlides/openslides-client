@@ -13,7 +13,7 @@ import { OfflineBroadcastService } from 'app/core/core-services/offline-broadcas
 import { TimeTravelService } from 'app/core/core-services/time-travel.service';
 import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { OverlayService } from 'app/core/ui-services/overlay.service';
+import { SearchService } from 'app/core/ui-services/search.service';
 import { UpdateService } from 'app/core/ui-services/update.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { MainMenuEntry, MainMenuService } from '../core/core-services/main-menu.service';
@@ -85,11 +85,10 @@ export class SiteComponent extends BaseComponent implements OnInit {
         private mainMenuService: MainMenuService,
         public historyService: HistoryService,
         public timeTravel: TimeTravelService,
-        private overlayService: OverlayService,
+        private searchService: SearchService,
         public pollRepo: PollRepositoryService
     ) {
         super(componentServiceCollector);
-        overlayService.showSpinner(this.translate.instant('Loading data. Please wait...'));
 
         this.searchform = new FormGroup({ query: new FormControl([]) });
     }
@@ -181,7 +180,7 @@ export class SiteComponent extends BaseComponent implements OnInit {
         if (event.altKey && event.shiftKey && event.code === 'KeyF') {
             event.preventDefault();
             event.stopPropagation();
-            this.overlayService.showSearch();
+            this.searchService.showSearch();
         }
     }
 

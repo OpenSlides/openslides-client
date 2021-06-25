@@ -1,5 +1,7 @@
 // MaterialUI modules
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { PortalModule } from '@angular/cdk/portal';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CdkTreeModule } from '@angular/cdk/tree';
 import { NgModule } from '@angular/core';
@@ -73,6 +75,8 @@ const components = [
     MatDividerModule,
     DragDropModule,
     CdkTreeModule,
+    OverlayModule,
+    PortalModule,
     ScrollingModule
 ];
 

@@ -1,16 +1,32 @@
-import { Injectable } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
+import { ComponentPortal, ComponentType, TemplatePortal } from '@angular/cdk/portal';
+import { ComponentRef, Injectable, InjectionToken, Injector, StaticProvider, TemplateRef, Type } from '@angular/core';
 
-import { Observable, Subject } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
+import { OverlayComponent } from 'app/site/common/components/overlay/overlay.component';
 
-import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
-import { SuperSearchComponent } from 'app/site/common/components/super-search/super-search.component';
-import { DataStoreUpgradeService } from '../core-services/data-store-upgrade.service';
-import { LifecycleService } from '../core-services/lifecycle.service';
-import { OfflineBroadcastService } from '../core-services/offline-broadcast.service';
-import { OpenSlidesService } from '../core-services/openslides.service';
-import { OperatorService } from '../core-services/operator.service';
+export const OVERLAY_COMPONENT_DATA = new InjectionToken<any>('overlay-component-data');
+
+export type OverlayPosition = 'center' | 'left' | 'top' | 'right' | 'bottom';
+
+export interface CustomOverlayConfig<T = any> {
+    disposeOnClose?: boolean;
+    backdropClass?: string;
+    data?: T;
+    position?: OverlayPosition;
+}
+
+export class OverlayInstance {
+    public constructor(
+        private readonly overlayRef: OverlayRef,
+        public readonly componentRef: ComponentRef<OverlayComponent>,
+        public readonly overlayComponent: OverlayComponent
+    ) {}
+
+    public close(): void {
+        this.componentRef.destroy();
+        this.overlayRef.dispose();
+    }
+}
 
 /**
  * Component to control the visibility of components, that overlay the whole window.
@@ -21,154 +37,64 @@ import { OperatorService } from '../core-services/operator.service';
 })
 export class OverlayService {
     /**
-     * Holds the reference to the search-dialog.
-     * Necessary to prevent opening multiple dialogs at once.
-     */
-    private searchReference: MatDialogRef<SuperSearchComponent> = null;
-
-    /**
-     * Subject, that holds the visibility and message. The component can observe this.
-     */
-    private spinner: Subject<{ isVisible: boolean; text?: string }> = new Subject();
-
-    /**
-     * Flag, that indicates, if the upgrade has checked.
-     */
-    private upgradeChecked = false;
-
-    /**
-     * The current user.
-     */
-    private user = null;
-
-    /**
-     * Flag, whether the app has booted.
-     */
-    private hasBooted = false;
-
-    /**
-     * Flag, whether the client is offline or not
-     */
-    private isOffline = false;
-
-    /**
      *
      * @param dialogService Injects the `MatDialog` to show the `super-search.component`
      */
-    public constructor(
-        private dialogService: MatDialog,
-        private operator: OperatorService,
-        OpenSlides: OpenSlidesService,
-        upgradeService: DataStoreUpgradeService,
-        offlineBroadcastService: OfflineBroadcastService,
-        lifecycleService: LifecycleService
-    ) {
-        // Subscribe to the current user.
-        this.user = 1; // temp to get the spinner working
-        /*operator.getViewUserObservable().subscribe(user => {
-            if (user) {
-                this.user = user;
-                this.checkConnection();
+    public constructor(private overlay: Overlay, private injector: Injector) {}
+
+    public open<T>(
+        templateOrComponent: TemplateRef<T> | ComponentType<T>,
+        config: CustomOverlayConfig = {}
+    ): OverlayInstance {
+        const overlay = this.createOverlay(config);
+        if (templateOrComponent instanceof TemplateRef) {
+            overlay.overlayComponent.attachTemplate(
+                new TemplatePortal(templateOrComponent, null, {
+                    $implicit: config.data,
+                    instance: overlay
+                } as any)
+            );
+        } else {
+            const injector = this.createInjector(config, overlay);
+            overlay.overlayComponent.attachComponent(new ComponentPortal(templateOrComponent, null, injector));
+        }
+
+        return overlay;
+    }
+
+    /**
+     * Function to create an `OverlayComponent`-instace. This behaves like the `MatDialog`.
+     *
+     * @param config optional. A custom configuration for the `OverlayComponent`.
+     */
+    public createOverlay(config: CustomOverlayConfig = {}): OverlayInstance {
+        const overlayRef = this.overlay.create(this.getOverlayConfig(config));
+        const componentRef = overlayRef.attach(new ComponentPortal(OverlayComponent));
+        componentRef.instance.position = config.position || 'center';
+        return new OverlayInstance(overlayRef, componentRef, componentRef.instance);
+    }
+
+    private getOverlayConfig(config: CustomOverlayConfig): OverlayConfig {
+        return {
+            hasBackdrop: false,
+            disposeOnNavigation: false,
+            backdropClass: config.backdropClass,
+            height: '100%',
+            width: '100%'
+        };
+    }
+
+    private createInjector(config: CustomOverlayConfig, instance: OverlayInstance): Injector {
+        const providers: StaticProvider[] = [
+            {
+                provide: OverlayInstance,
+                useValue: instance
+            },
+            {
+                provide: OVERLAY_COMPONENT_DATA,
+                useValue: config.data
             }
-        });*/
-        // Subscribe to the booting-step.
-        lifecycleService.openslidesBooted.subscribe(() => {
-            this.hasBooted = true;
-            this.checkConnection();
-        });
-        lifecycleService.openslidesShutdowned.subscribe(() => {
-            this.hasBooted = false;
-            this.checkConnection();
-        });
-        // Subscribe to the upgrade-mechanism.
-        upgradeService.upgradeChecked.subscribe(upgradeDone => {
-            this.upgradeChecked = upgradeDone;
-            this.checkConnection();
-        });
-        // Subscribe to check if we are offline
-        offlineBroadcastService.isOfflineObservable.pipe(distinctUntilChanged()).subscribe(offline => {
-            this.isOffline = offline;
-            this.checkConnection();
-        });
-    }
-
-    /**
-     * Function to show the `global-spinner.component`.
-     *
-     * @param text optional. If the spinner should show a message.
-     * @param forceAppearing optional. If the spinner must be shown.
-     */
-    public showSpinner(text?: string, forceAppearing?: boolean): void {
-        if (!this.isConnectionStable() || forceAppearing) {
-            setTimeout(() => this.spinner.next({ isVisible: true, text }));
-        }
-    }
-
-    /**
-     * Function to hide the `global-spinner.component`.
-     */
-    public hideSpinner(): void {
-        setTimeout(() => this.spinner.next({ isVisible: false }));
-    }
-
-    /**
-     * Function to get the visibility as observable.
-     *
-     * @returns class member `visibility`.
-     */
-    public getSpinner(): Observable<{ isVisible: boolean; text?: string }> {
-        return this.spinner;
-    }
-
-    /**
-     * Sets the state of the `SuperSearchComponent`.
-     *
-     * @param isVisible If the component should be shown or not.
-     */
-    public showSearch(data?: any): void {
-        if (!this.searchReference) {
-            this.searchReference = this.dialogService.open(SuperSearchComponent, {
-                ...largeDialogSettings,
-                data: data ? data : null,
-                disableClose: false,
-                panelClass: 'super-search-container'
-            });
-            this.searchReference.afterClosed().subscribe(() => {
-                this.searchReference = null;
-            });
-        }
-    }
-
-    /**
-     * Checks, if the connection is stable.
-     * This relates to `appStable`, `booted` and `user || anonymous`.
-     *
-     * @returns True, if the three booleans are all true.
-     */
-    public isConnectionStable(): boolean {
-        return (this.upgradeChecked || this.isOffline) && this.hasBooted && (!!this.user || this.operator.isAnonymous);
-    }
-
-    /**
-     * Function to check, if the app is stable and, if true, hide the spinner.
-     */
-    private checkConnection(): void {
-        if (this.isConnectionStable()) {
-            this.hideSpinner();
-        }
-    }
-
-    /**
-     * Function to reset the properties for the spinner.
-     *
-     * Necessary to get the initial state, if the user logs out
-     * and still stays at the website.
-     */
-    public logout(): void {
-        this.hasBooted = false;
-
-        // Fix for spinner
-        // this.user = null;
-        // this.upgradeChecked = false;
+        ];
+        return Injector.create({ providers, parent: this.injector });
     }
 }

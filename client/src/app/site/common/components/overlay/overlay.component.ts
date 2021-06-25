@@ -1,4 +1,7 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { CdkPortalOutlet, ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+
+import { OverlayPosition } from 'app/core/ui-services/overlay.service';
 
 @Component({
     selector: 'os-overlay',
@@ -6,13 +9,22 @@ import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@a
     styleUrls: ['./overlay.component.scss']
 })
 export class OverlayComponent implements OnInit {
+    @ViewChild(CdkPortalOutlet, { static: true })
+    public outletPortal: CdkPortalOutlet;
+
     /**
      * Optional set the position of the component overlying on this overlay.
      *
      * Defaults to `'center'`.
      */
     @Input()
-    public position: 'center' | 'left' | 'top' | 'right' | 'bottom' = 'center';
+    public position: OverlayPosition = 'center';
+
+    /**
+     * An optional class applied to the backdrop of this overlay.
+     */
+    @Input()
+    public backdropClass: string;
 
     /**
      * EventEmitter to handle a click on the backdrop.
@@ -35,6 +47,24 @@ export class OverlayComponent implements OnInit {
      * OnInit
      */
     public ngOnInit(): void {}
+
+    /**
+     * Attaches to the backdrop overlay a custom template.
+     *
+     * @param templateRef The reference to attach.
+     */
+    public attachTemplate<T>(templateRef: TemplatePortal<T>): void {
+        this.outletPortal.attachTemplatePortal(templateRef);
+    }
+
+    /**
+     * Attaches to the backdrop overlay a custom component.
+     *
+     * @param componentRef The component to attach.
+     */
+    public attachComponent<C>(componentRef: ComponentPortal<C>): void {
+        this.outletPortal.attachComponentPortal(componentRef);
+    }
 
     /**
      * Listens to keyboard inputs.

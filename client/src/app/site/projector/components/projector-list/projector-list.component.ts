@@ -15,6 +15,7 @@ import { BehaviorSubject, timer } from 'rxjs';
 
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
+import { OpenSlidesStatusService } from 'app/core/core-services/openslides-status.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
@@ -80,7 +81,8 @@ export class ProjectorListComponent extends BaseModelContextComponent implements
         private operator: OperatorService,
         private dialogService: MatDialog,
         private cd: ChangeDetectorRef,
-        private activeMeetingIdService: ActiveMeetingIdService
+        private activeMeetingIdService: ActiveMeetingIdService,
+        private openslidesStatus: OpenSlidesStatusService
     ) {
         super(componentServiceCollector);
 
@@ -88,14 +90,7 @@ export class ProjectorListComponent extends BaseModelContextComponent implements
             name: ['', Validators.required]
         });
 
-        /**
-         * Angulars change detection goes nuts, since countdown and motios with long texts are pushing too much data
-         */
-        this.subscriptions.push(
-            timer(0, 1000).subscribe(() => {
-                this.cd.detectChanges();
-            })
-        );
+        this.installUpdater();
     }
 
     /**
@@ -153,5 +148,17 @@ export class ProjectorListComponent extends BaseModelContextComponent implements
     public ngOnDestroy(): void {
         super.ngOnDestroy();
         this.cd.detach();
+    }
+
+    private async installUpdater(): Promise<void> {
+        await this.openslidesStatus.stable;
+        /**
+         * Angulars change detection goes nuts, since countdown and motios with long texts are pushing too much data
+         */
+        this.subscriptions.push(
+            timer(0, 1000).subscribe(() => {
+                this.cd.detectChanges();
+            })
+        );
     }
 }

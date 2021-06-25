@@ -11,7 +11,7 @@ import { OperatorService } from 'app/core/core-services/operator.service';
 import { OrganizationService } from 'app/core/core-services/organization.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { OrganizationSettingsService } from 'app/core/ui-services/organization-settings.service';
-import { OverlayService } from 'app/core/ui-services/overlay.service';
+import { SpinnerService } from 'app/core/ui-services/spinner.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { ViewOrganization } from 'app/management/models/view-organization';
 import { fadeInAnim } from 'app/shared/animations';
@@ -104,9 +104,9 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
         private formBuilder: FormBuilder,
         private orgaService: OrganizationService,
         private orgaSettings: OrganizationSettingsService,
-        private overlayService: OverlayService,
         private browserSupport: BrowserSupportService,
-        private activeMeeting: ActiveMeetingService
+        private activeMeeting: ActiveMeetingService,
+        private spinnerService: SpinnerService
     ) {
         super(componentServiceCollector);
         // Hide the spinner if the user is at `login-mask`
@@ -171,12 +171,11 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
     public async formLogin(/*authType: UserAuthType*/): Promise<void> {
         this.loginErrorMsg = '';
         try {
-            // this.overlayService.logout(); // Ensures displaying spinner, if logging in
-            // this.overlayService.showSpinner(this.translate.instant(this.loginMessage), true);
+            this.spinnerService.show(this.loginMessage, { hideWhenStable: true });
             const { username, password }: { username: string; password: string } = this.loginForm.value;
             await this.authService.login(username, password, this.currentMeetingId);
         } catch (e) {
-            // this.overlayService.hideSpinner();
+            this.spinnerService.hide();
             this.loginForm.get('password').setErrors({ notFound: true });
             this.loginErrorMsg = e;
         }

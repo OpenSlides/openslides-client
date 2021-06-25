@@ -18,8 +18,8 @@ import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.
 import { PersonalNoteRepositoryService } from 'app/core/repositories/users/personal-note-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ChoiceService } from 'app/core/ui-services/choice.service';
-import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
+import { SpinnerService } from 'app/core/ui-services/spinner.service';
 import { TreeService } from 'app/core/ui-services/tree.service';
 import { AgendaItemType } from 'app/shared/models/agenda/agenda-item';
 import { Displayable } from 'app/site/base/displayable';
@@ -57,7 +57,7 @@ export class MotionMultiselectService {
      * @param motionBlockRepo
      * @param httpService
      * @param treeService
-     * @param overlayService to show a spinner when http-requests are made.
+     * @param spinnerService to show a spinner when http-requests are made.
      */
     public constructor(
         private repo: MotionRepositoryService,
@@ -72,7 +72,7 @@ export class MotionMultiselectService {
         private agendaRepo: AgendaItemRepositoryService,
         private motionBlockRepo: MotionBlockRepositoryService,
         private treeService: TreeService,
-        private overlayService: OverlayService,
+        private spinnerService: SpinnerService,
         private serviceCollector: RepositoryServiceCollector
     ) {}
 
@@ -84,8 +84,8 @@ export class MotionMultiselectService {
     public async delete(motions: ViewMotion[]): Promise<void> {
         const title = this.translate.instant('Are you sure you want to delete all selected motions?');
         if (await this.promptService.open(title)) {
-            await this.repo.delete(...motions);
-            this.overlayService.hideSpinner();
+            const message = `${motions.length} ${this.translate.instant(this.messageForSpinner)}`;
+            this.spinnerService.show(message, { hideAfterPromiseResolved: () => this.repo.delete(...motions) });
         }
     }
 
@@ -95,17 +95,17 @@ export class MotionMultiselectService {
      * @param motions The motions to change
      */
     public async setStateOfMultiple(motions: ViewMotion[]): Promise<void> {
-        if (motions.every(motion => motion.state.workflow_id === motions[0].state.workflow_id)) {
-            const title = this.translate.instant('This will set the following state for all selected motions:');
-            const choices = this.workflowRepo.getWorkflowStatesForMotions(motions);
-            const selectedChoice = await this.choiceService.open(title, choices);
-            if (selectedChoice) {
-                const message = `${motions.length} ` + this.translate.instant(this.messageForSpinner);
-                this.overlayService.showSpinner(message, true);
-                await this.repo.setState(selectedChoice.items as number, ...motions);
-            }
-        } else {
+        if (motions.some(motion => motion.state.workflow_id !== motions[0].state.workflow_id)) {
             throw new Error(this.translate.instant('You cannot change the state of motions in different workflows!'));
+        }
+        const title = this.translate.instant('This will set the following state for all selected motions:');
+        const choices = this.workflowRepo.getWorkflowStatesForMotions(motions);
+        const selectedChoice = await this.choiceService.open(title, choices);
+        if (selectedChoice) {
+            const message = `${motions.length} ` + this.translate.instant(this.messageForSpinner);
+            this.spinnerService.show(message, {
+                hideAfterPromiseResolved: () => this.repo.setState(selectedChoice.items as number, ...motions)
+            });
         }
     }
 
@@ -115,36 +115,33 @@ export class MotionMultiselectService {
      * @param motions The motions to change
      */
     public async setRecommendation(motions: ViewMotion[]): Promise<void> {
-        if (motions.every(motion => motion.state.workflow_id === motions[0].state.workflow_id)) {
-            const title = this.translate.instant(
-                'This will set the following recommendation for all selected motions:'
-            );
-
-            // hacks custom Displayables from recommendations
-            // TODO: Recommendations should be an own class
-            const choices: Displayable[] = this.workflowRepo
-                .getWorkflowStatesForMotions(motions)
-                .filter(workflowState => !!workflowState.recommendation_label)
-                .map(workflowState => ({
-                    id: workflowState.id,
-                    getTitle: () => workflowState.recommendation_label,
-                    getListTitle: () => workflowState.recommendation_label
-                }));
-            const clearChoice = this.translate.instant('Delete recommendation');
-            const selectedChoice = await this.choiceService.open(title, choices, false, null, clearChoice);
-            if (selectedChoice) {
-                const message = `${motions.length} ` + this.translate.instant(this.messageForSpinner);
-                this.overlayService.showSpinner(message, true);
-                if (selectedChoice.action) {
-                    await this.repo.resetRecommendation(...motions);
-                } else {
-                    await this.repo.setRecommendation(selectedChoice.items as number, ...motions);
-                }
-            }
-        } else {
+        if (motions.some(motion => motion.state.workflow_id !== motions[0].state.workflow_id)) {
             throw new Error(
                 this.translate.instant('You cannot change the recommendation of motions in different workflows!')
             );
+        }
+        const title = this.translate.instant('This will set the following recommendation for all selected motions:');
+
+        // hacks custom Displayables from recommendations
+        // TODO: Recommendations should be an own class
+        const choices: Displayable[] = this.workflowRepo
+            .getWorkflowStatesForMotions(motions)
+            .filter(workflowState => !!workflowState.recommendation_label)
+            .map(workflowState => ({
+                id: workflowState.id,
+                getTitle: () => workflowState.recommendation_label,
+                getListTitle: () => workflowState.recommendation_label
+            }));
+        const clearChoice = this.translate.instant('Delete recommendation');
+        const selectedChoice = await this.choiceService.open(title, choices, false, null, clearChoice);
+        if (selectedChoice) {
+            const message = `${motions.length} ` + this.translate.instant(this.messageForSpinner);
+            this.spinnerService.show(message, {
+                hideAfterPromiseResolved: () =>
+                    selectedChoice.action
+                        ? this.repo.resetRecommendation(...motions)
+                        : this.repo.setRecommendation(selectedChoice.items as number, ...motions)
+            });
         }
     }
 
@@ -165,9 +162,10 @@ export class MotionMultiselectService {
         );
         if (selectedChoice) {
             const message = this.translate.instant(this.messageForSpinner);
-            this.overlayService.showSpinner(message, true);
             const categoryId = selectedChoice.action ? null : (selectedChoice.items as number);
-            await this.repo.setCategory(categoryId, ...motions);
+            this.spinnerService.show(message, {
+                hideAfterPromiseResolved: () => this.repo.setCategory(categoryId, ...motions)
+            });
         }
     }
 
@@ -190,23 +188,22 @@ export class MotionMultiselectService {
             choices
         );
         if (selectedChoice) {
-            let promise: Promise<any> = null;
+            let promiseFn: () => Promise<any> = null;
             if (selectedChoice.action === ADD) {
                 const payload: MotionSubmitterAction.CreatePayload[] = (selectedChoice.items as number[]).flatMap(
                     userId => motions.map(motion => ({ user_id: userId, motion_id: motion.id }))
                 );
-                promise = this.sendBulkActionToBackend(MotionSubmitterAction.CREATE, payload);
+                promiseFn = () => this.sendBulkActionToBackend(MotionSubmitterAction.CREATE, payload);
             } else if (selectedChoice.action === REMOVE) {
                 const payload: MotionSubmitterAction.DeletePayload[] = this.getSubmitterIds(
                     selectedChoice.items as number[],
                     motions
                 ).map(submitterId => ({ id: submitterId }));
-                promise = this.sendBulkActionToBackend(MotionSubmitterAction.DELETE, payload);
+                promiseFn = () => this.sendBulkActionToBackend(MotionSubmitterAction.DELETE, payload);
             }
 
             const message = `${motions.length} ` + this.translate.instant(this.messageForSpinner);
-            this.overlayService.showSpinner(message, true);
-            return await promise;
+            this.spinnerService.show(message, { hideAfterPromiseResolved: promiseFn });
         }
     }
 
@@ -255,8 +252,9 @@ export class MotionMultiselectService {
             }
 
             const message = `${motions.length} ` + this.translate.instant(this.messageForSpinner);
-            this.overlayService.showSpinner(message, true);
-            return this.sendBulkActionToBackend(MotionAction.UPDATE, requestData);
+            this.spinnerService.show(message, {
+                hideAfterPromiseResolved: () => this.sendBulkActionToBackend(MotionAction.UPDATE, requestData)
+            });
         }
     }
 
@@ -277,9 +275,10 @@ export class MotionMultiselectService {
         );
         if (selectedChoice) {
             const message = this.translate.instant(this.messageForSpinner);
-            this.overlayService.showSpinner(message, true);
             const blockId = selectedChoice.action ? null : (selectedChoice.items as number);
-            await this.repo.setBlock(blockId, ...motions);
+            this.spinnerService.show(message, {
+                hideAfterPromiseResolved: () => this.repo.setBlock(blockId, ...motions)
+            });
         }
     }
 
@@ -316,7 +315,10 @@ export class MotionMultiselectService {
                 });
             }
 
-            await this.actionService.sendRequests(requests);
+            const message = `${motions.length} ${this.translate.instant(this.messageForSpinner)}`;
+            this.spinnerService.show(message, {
+                hideAfterPromiseResolved: () => this.actionService.sendRequests(requests)
+            });
         }
     }
 
@@ -359,7 +361,10 @@ export class MotionMultiselectService {
                 parentId,
                 olderSibling
             );
-            await this.repo.sortMotions(this.treeService.stripTree(sortedTree));
+            const message = `${motions.length} ${this.translate.instant(this.messageForSpinner)}`;
+            this.spinnerService.show(message, {
+                hideAfterPromiseResolved: () => this.repo.sortMotions(this.treeService.stripTree(sortedTree))
+            });
         }
     }
 
@@ -376,8 +381,9 @@ export class MotionMultiselectService {
             // `bulkSetStar` does imply that "true" sets favorites while "false" unsets favorites
             const isFavorite = selectedChoice.action === options[0];
             const message = this.translate.instant(`I have ${motions.length} favorite motions. Please wait ...`);
-            this.overlayService.showSpinner(message, true);
-            await this.personalNoteRepo.setPersonalNote({ star: isFavorite }, ...motions);
+            this.spinnerService.show(message, {
+                hideAfterPromiseResolved: () => this.personalNoteRepo.setPersonalNote({ star: isFavorite }, ...motions)
+            });
         }
     }
 

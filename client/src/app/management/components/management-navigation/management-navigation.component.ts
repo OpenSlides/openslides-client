@@ -4,7 +4,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { AccountDialogComponent } from '../account-dialog/account-dialog.component';
 import { AuthService } from 'app/core/core-services/auth.service';
 import { OML } from 'app/core/core-services/organization-permission';
-import { OverlayService } from 'app/core/ui-services/overlay.service';
 import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
 
 interface OrgaMenuEntry {
@@ -57,11 +56,7 @@ export class ManagementNavigationComponent {
         }
     ];
 
-    public constructor(
-        private authService: AuthService,
-        private overlayService: OverlayService,
-        private dialog: MatDialog
-    ) {}
+    public constructor(private authService: AuthService, private dialog: MatDialog) {}
 
     public openAccountDialog(): void {
         this.dialog.open(AccountDialogComponent, {
@@ -71,6 +66,5 @@ export class ManagementNavigationComponent {
 
     public logout(): void {
         this.authService.logout();
-        this.overlayService.logout();
     }
 }

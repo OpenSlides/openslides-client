@@ -25,7 +25,6 @@ $narrow-spacing: (
 @import './app/shared/components/projector-button/projector-button.component.scss';
 @import './app/site/agenda/components/list-of-speakers/list-of-speakers.component.scss-theme.scss';
 @import './app/shared/components/sorting-tree/sorting-tree.component.scss-theme.scss';
-@import './app/shared/components/global-spinner/global-spinner.component.scss';
 @import './app/shared/components/tile/tile.component.scss';
 @import './app/shared/components/block-tile/block-tile.component.scss';
 @import './app/shared/components/icon-container/icon-container.component.scss';
@@ -55,7 +54,6 @@ $narrow-spacing: (
     @include os-projector-button-style($theme);
     @include os-list-of-speakers-style($theme);
     @include os-sorting-tree-style($theme);
-    @include os-global-spinner-theme($theme);
     @include os-tile-style($theme);
     @include os-mediafile-list-theme($theme);
     @include os-super-search-style($theme);
