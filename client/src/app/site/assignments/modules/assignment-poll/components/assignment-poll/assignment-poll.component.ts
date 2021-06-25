@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Id } from 'app/core/definitions/key-types';
 import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
+import { ChoiceService } from 'app/core/ui-services/choice.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { VotingService } from 'app/core/ui-services/voting.service';
@@ -75,6 +76,7 @@ export class AssignmentPollComponent extends BasePollComponent<ViewAssignment> i
         componentServiceCollector: ComponentServiceCollector,
         dialog: MatDialog,
         promptService: PromptService,
+        choiceService: ChoiceService,
         repo: PollRepositoryService,
         pollDialog: AssignmentPollDialogService,
         private pollService: AssignmentPollService,
@@ -83,7 +85,7 @@ export class AssignmentPollComponent extends BasePollComponent<ViewAssignment> i
         private operator: OperatorService,
         private votingService: VotingService
     ) {
-        super(componentServiceCollector, dialog, promptService, repo, pollDialog);
+        super(componentServiceCollector, dialog, promptService, choiceService, repo, pollDialog);
     }
 
     public ngOnInit(): void {

@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 import { Id } from 'app/core/definitions/key-types';
 import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
 import { BasePollDialogService } from 'app/core/ui-services/base-poll-dialog.service';
+import { ChoiceService } from 'app/core/ui-services/choice.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ChartData } from 'app/shared/components/charts/charts.component';
@@ -53,30 +54,46 @@ export abstract class BasePollComponent<C extends BaseViewModel = any> extends B
         componentServiceCollector: ComponentServiceCollector,
         protected dialog: MatDialog,
         protected promptService: PromptService,
+        protected choiceService: ChoiceService,
         protected repo: PollRepositoryService,
         protected pollDialog: BasePollDialogService
     ) {
         super(componentServiceCollector);
     }
 
-    public async changeState(key: PollState): Promise<void> {
-        if (key === PollState.Created) {
-            const title = this.translate.instant('Are you sure you want to reset this vote?');
-            const content = this.translate.instant('All votes will be lost.');
-            if (await this.promptService.open(title, content)) {
-                this.stateChangePending = true;
-                await this.repo.resetPoll(this._poll);
-                this.stateChangePending = false;
+    public async nextPollState(): Promise<void> {
+        const currentState: PollState = this._poll.state;
+        if (currentState === PollState.Created || currentState === PollState.Finished) {
+            await this.changeState(this._poll.nextState);
+        } else if (currentState === PollState.Started) {
+            const title = this.translate.instant('Are you sure you want to stop this voting?');
+            const actions = [this.translate.instant('Stop'), this.translate.instant('Stop & publish')];
+            const choice = await this.choiceService.open(title, null, false, actions);
+
+            if (choice?.action === 'Stop') {
+                await this.changeState(PollState.Finished);
+            } else if (choice?.action === 'Stop & publish') {
+                await this.changeState(PollState.Published);
             }
-        } else {
-            this.stateChangePending = true;
-            await this.doActionDependingOnState(key);
-            this.stateChangePending = false;
         }
     }
 
-    public resetState(): void {
-        this.changeState(PollState.Created);
+    private async changeState(targetState: PollState): Promise<void> {
+        this.stateChangePending = true;
+        this.repo
+            .changePollState(this._poll, targetState)
+            .catch(this.raiseError)
+            .finally(() => {
+                this.stateChangePending = false;
+            });
+    }
+
+    public async resetState(): Promise<void> {
+        const title = this.translate.instant('Are you sure you want to reset this vote?');
+        const content = this.translate.instant('All votes will be lost.');
+        if (await this.promptService.open(title, content)) {
+            this.changeState(PollState.Created);
+        }
     }
 
     /**
@@ -95,17 +112,6 @@ export abstract class BasePollComponent<C extends BaseViewModel = any> extends B
      */
     public openDialog(): void {
         this.pollDialog.openDialog(this._poll);
-    }
-
-    protected doActionDependingOnState(nextState: PollState): Promise<void> {
-        switch (nextState) {
-            case PollState.Started:
-                return this.repo.startPoll(this._poll);
-            case PollState.Finished:
-                return this.repo.stopPoll(this._poll);
-            case PollState.Published:
-                return this.repo.publishPoll(this._poll);
-        }
     }
 
     protected initializePoll(id: Id): void {
