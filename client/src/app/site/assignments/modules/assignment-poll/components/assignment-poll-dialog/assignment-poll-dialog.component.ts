@@ -1,20 +1,13 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { Component, Inject } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
-import { PollAction } from 'app/core/actions/poll-action';
-import { PollDialogData, PollDialogResult } from 'app/core/ui-services/base-poll-dialog.service';
+import { PollDialogData } from 'app/core/ui-services/base-poll-dialog.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseModel } from 'app/shared/models/base/base-model';
-import {
-    GeneralValueVerbose,
-    LOWEST_VOTE_VALUE,
-    PollType,
-    VoteValue,
-    VoteValueVerbose
-} from 'app/shared/models/poll/poll-constants';
+import { GeneralValueVerbose, VoteValue } from 'app/shared/models/poll/poll-constants';
 import { PollPropertyVerbose } from 'app/shared/models/poll/poll-constants';
 import {
     AssignmentPollMethodVerbose,
@@ -66,7 +59,6 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
     }
 
     public onBeforeInit(): void {
-        console.log('pollData', this.pollData);
         this.subscriptions.push(
             this.pollForm.contentForm.valueChanges.pipe(debounceTime(150), distinctUntilChanged()).subscribe(() => {
                 this.triggerUpdate();

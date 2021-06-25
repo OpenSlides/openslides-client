@@ -127,6 +127,9 @@ export class MotionPollService extends PollService {
             case PollPercentBase.Cast:
                 totalByBase = poll.votescast;
                 break;
+            case PollPercentBase.Entitled:
+                totalByBase = poll.entitled_users_at_stop.length;
+                break;
             case PollPercentBase.Disabled:
                 break;
             default:

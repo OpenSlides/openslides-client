@@ -28,7 +28,7 @@ export class VoteRepositoryService extends BaseRepositoryWithActiveMeeting<ViewV
     };
 
     public getFieldsets(): Fieldsets<Vote> {
-        const detail: (keyof Vote)[] = ['delegated_user_id', 'option_id', 'user_id', 'value', 'weight'];
+        const detail: (keyof Vote)[] = ['delegated_user_id', 'option_id', 'user_id', 'value', 'weight', 'user_token'];
         return {
             [DEFAULT_FIELDSET]: detail
         };

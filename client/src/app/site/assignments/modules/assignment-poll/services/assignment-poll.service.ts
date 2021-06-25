@@ -160,6 +160,7 @@ export class AssignmentPollService extends PollService {
 
         return tableData;
     }
+
     public getPercentBase(poll: PollData): number {
         const base: PollPercentBase = poll.onehundred_percent_base as PollPercentBase;
         let totalByBase: number;
@@ -175,6 +176,9 @@ export class AssignmentPollService extends PollService {
                 break;
             case PollPercentBase.Valid:
                 totalByBase = poll.votesvalid;
+                break;
+            case PollPercentBase.Entitled:
+                totalByBase = poll.entitled_users_at_stop?.length || 0;
                 break;
             case PollPercentBase.Cast:
                 totalByBase = poll.votescast;

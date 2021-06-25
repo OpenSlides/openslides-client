@@ -1,4 +1,10 @@
-import { MajorityMethod, PollPercentBase, PollState, PollType } from 'app/shared/models/poll/poll-constants';
+import {
+    EntitledUsersEntry,
+    MajorityMethod,
+    PollPercentBase,
+    PollState,
+    PollType
+} from 'app/shared/models/poll/poll-constants';
 import { PollMethod } from 'app/shared/models/poll/poll-constants';
 import { PollDataOption } from 'app/site/polls/services/poll.service';
 import { BasePollSlideData } from 'app/slides/poll/polls/base-poll-slide-data';
@@ -27,6 +33,8 @@ export interface AssignmentPollSlideData extends BasePollSlideData {
             no?: number;
             abstain?: number;
         }[];
+
+        entitled_users_at_stop: EntitledUsersEntry[];
 
         // optional for published polls:
         amount_global_yes?: number;

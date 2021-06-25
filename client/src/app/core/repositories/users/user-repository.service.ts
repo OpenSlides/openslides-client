@@ -99,23 +99,25 @@ export class UserRepositoryService
             'last_name',
             'username' /* Required! To getShortName */
         ];
+        const singleVotesFields = shortNameFields.concat([
+            { templateField: 'vote_weight_$' },
+            { templateField: 'structure_level_$' },
+            { templateField: 'number_$' }
+        ]);
         /**
          * TODO: Some of thouse are not needed in the lists
          */
-        const listFields = shortNameFields.concat([
+        const listFields = shortNameFields.concat(singleVotesFields, [
             'email',
             'gender',
             'is_active',
             'is_physical_person',
             'is_present_in_meeting_ids',
             'last_email_send',
-            { templateField: 'number_$' },
             'default_number',
-            { templateField: 'comment_$' },
             'default_structure_level',
-            { templateField: 'structure_level_$' },
             'default_vote_weight',
-            { templateField: 'vote_weight_$' }
+            { templateField: 'comment_$' }
         ]);
         const detailFields = listFields.concat(['username', 'about_me', 'comment', 'default_password']);
         const orgaListFields = listFields.concat(['committee_ids']);
@@ -126,7 +128,8 @@ export class UserRepositoryService
             shortName: shortNameFields,
             list: listFields,
             orgaList: orgaListFields,
-            orgaEdit: orgaEditFields
+            orgaEdit: orgaEditFields,
+            singleVotes: singleVotesFields
         };
     }
 

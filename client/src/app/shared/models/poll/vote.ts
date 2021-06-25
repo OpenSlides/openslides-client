@@ -35,6 +35,7 @@ export class Vote extends BaseModel<Vote> {
     public option_id: Id; // (assignment|motion)_option/vote_ids;
     public user_id?: Id; // user/(assignment|motion)_vote_$<meeting_id>_ids;
     public delegated_user_id?: Id; // user/(assignment|motion)_delegated_vote_$_ids;
+    public user_token: string;
 
     public get valueVerbose(): string {
         return VoteValueVerbose[this.value];

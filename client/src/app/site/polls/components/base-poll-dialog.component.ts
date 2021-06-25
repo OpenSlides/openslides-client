@@ -10,6 +10,7 @@ import { BaseModel } from 'app/shared/models/base/base-model';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import {
     LOWEST_VOTE_VALUE,
+    PollClassType,
     PollMethod,
     PollType,
     VoteValue,
@@ -37,6 +38,8 @@ export abstract class BasePollDialogComponent extends BaseComponent implements O
 
     public voteValueVerbose = VoteValueVerbose;
 
+    public pollClassType = PollClassType;
+
     /**
      * The summary values that will have fields in the dialog
      */
@@ -49,17 +52,17 @@ export abstract class BasePollDialogComponent extends BaseComponent implements O
     public analogVoteFields: VoteValue[] = [];
 
     public get isAnalogPoll(): boolean {
-        return (
-            this.pollForm &&
-            this.pollForm.contentForm &&
-            this.pollForm.contentForm.get('type').value === PollType.Analog
-        );
+        return this.pollForm?.contentForm?.get('type').value === PollType.Analog || false;
     }
 
     @ViewChild('pollForm', { static: true })
     protected pollForm: PollFormComponent;
 
     protected options: OptionsObject[] = [];
+
+    public get formsValid(): boolean {
+        return this.pollForm.contentForm.valid && this.dialogVoteForm.valid;
+    }
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -97,24 +100,7 @@ export abstract class BasePollDialogComponent extends BaseComponent implements O
     public submitPoll(): void {
         const pollForm = this.pollForm.getValues();
         const voteForm = this.dialogVoteForm.value;
-        const payload: any = {
-            pollmethod: pollForm.pollmethod,
-            title: pollForm.title,
-            type: pollForm.type || this.pollData.type,
-            id: this.pollData.poll?.id,
-            content_object_id: this.pollData.content_object_id,
-            options: this.getOptions(voteForm.options),
-            votescast: voteForm.votescast,
-            votesinvalid: voteForm.votesinvalid,
-            votesvalid: voteForm.votesvalid,
-            amount_global_abstain: voteForm.amount_global_abstain,
-            amount_global_yes: voteForm.amount_global_yes,
-            amount_global_no: voteForm.amount_global_no,
-            publish_immediately: this.publishImmediately,
-            onehundred_percent_base: pollForm.onehundred_percent_base,
-            majority_method: pollForm.majority_method,
-            entitled_group_ids: pollForm.entitled_group_ids
-        };
+        const payload: any = { ...pollForm, ...voteForm };
         payload.options = this.getOptions(voteForm.options);
         this.dialogRef.close(payload);
     }

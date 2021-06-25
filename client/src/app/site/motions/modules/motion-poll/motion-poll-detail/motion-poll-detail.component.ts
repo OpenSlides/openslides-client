@@ -2,19 +2,22 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewEncapsulatio
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PblColumnDefinition } from '@pebula/ngrid';
+import { Observable } from 'rxjs';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
 import { VoteRepositoryService } from 'app/core/repositories/polls/vote-repository.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
+import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
+import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { MotionPollDialogService } from 'app/site/motions/services/motion-poll-dialog.service';
 import { MotionPollService } from 'app/site/motions/services/motion-poll.service';
-import { BasePollDetailComponent, BaseVoteData } from 'app/site/polls/components/base-poll-detail.component';
+import { BasePollDetailComponentDirective, BaseVoteData } from 'app/site/polls/components/base-poll-detail.component';
 
 @Component({
     selector: 'os-motion-poll-detail',
@@ -23,9 +26,12 @@ import { BasePollDetailComponent, BaseVoteData } from 'app/site/polls/components
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class MotionPollDetailComponent extends BasePollDetailComponent {
+export class MotionPollDetailComponent extends BasePollDetailComponentDirective<
+    ViewPoll<ViewMotion>,
+    MotionPollService
+> {
     public motion: ViewMotion;
-    public columnDefinition: PblColumnDefinition[] = [
+    public columnDefinitionSingleVotesTable: PblColumnDefinition[] = [
         {
             prop: 'user',
             width: 'auto',
@@ -38,7 +44,7 @@ export class MotionPollDetailComponent extends BasePollDetailComponent {
         }
     ];
 
-    public filterProps = ['user.getFullName', 'valueVerbose'];
+    public filterPropsSingleVotesTable = ['user.getFullName', 'valueVerbose'];
 
     public get showResults(): boolean {
         return this.hasPerms() || this.poll.isPublished;
@@ -49,37 +55,42 @@ export class MotionPollDetailComponent extends BasePollDetailComponent {
         repo: PollRepositoryService,
         route: ActivatedRoute,
         groupRepo: GroupRepositoryService,
-        prompt: PromptService,
+        promptService: PromptService,
         pollDialog: MotionPollDialogService,
         pollService: MotionPollService,
         votesRepo: VoteRepositoryService,
         operator: OperatorService,
         cd: ChangeDetectorRef,
         meetingSettingsService: MeetingSettingsService,
-        router: Router
+        userRepo: UserRepositoryService,
+        private router: Router
     ) {
         super(
             componentServiceCollector,
             repo,
             route,
-            router,
             groupRepo,
-            prompt,
+            promptService,
             pollDialog,
             pollService,
             votesRepo,
             operator,
             cd,
-            meetingSettingsService
+            meetingSettingsService,
+            userRepo
         );
     }
 
-    protected createVotesData(): BaseVoteData[] {
-        return this.poll.options[0]?.votes || [];
+    protected createVotesData(): void {
+        this.setVotesData(this.poll?.options[0]?.votes);
     }
 
     public openDialog(): void {
         this.pollDialog.openDialog(this.poll);
+    }
+
+    protected onDeleted(): void {
+        this.router.navigateByUrl(this.poll.getContentObjectDetailStateURL());
     }
 
     protected hasPerms(): boolean {

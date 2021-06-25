@@ -59,6 +59,9 @@ export class PollFormComponent extends BaseComponent implements OnInit {
     @Input()
     private pollService: PollService;
 
+    @Input()
+    public pollClassType: PollClassType;
+
     /**
      * The different types the poll can accept.
      */
@@ -87,6 +90,10 @@ export class PollFormComponent extends BaseComponent implements OnInit {
 
     public showNonNominalWarning = false;
 
+    public get isAssignmentPoll(): boolean {
+        return this.pollClassType === PollClassType.Assignment;
+    }
+
     public get isEVotingEnabled(): boolean {
         if (this.pollService) {
             return this.pollService.isElectronicVotingEnabled;
@@ -113,6 +120,10 @@ export class PollFormComponent extends BaseComponent implements OnInit {
 
     private get globalNoControl(): AbstractControl {
         return this.contentForm.get('global_no');
+    }
+
+    private get percentBaseControl(): AbstractControl {
+        return this.contentForm.get('onehundred_percent_base');
     }
 
     /**
@@ -158,9 +169,9 @@ export class PollFormComponent extends BaseComponent implements OnInit {
                 this.contentForm.valueChanges.pipe(startWith('')),
                 this.pollMethodControl.valueChanges.pipe(startWith('')),
                 this.pollTypeControl.valueChanges.pipe(startWith(''))
-            ]).subscribe(([contentFormCh, pollMethodControlCh]) => {
+            ]).subscribe(([contentFormCh]) => {
                 this.updatePollValues(contentFormCh);
-                this.updatePercentBases(pollMethodControlCh);
+                this.updatePercentBases();
                 this.setWarning();
             })
         );
@@ -189,7 +200,7 @@ export class PollFormComponent extends BaseComponent implements OnInit {
         this.pollTypeControl.disable();
     }
 
-    public showAmountAndGlobal(data: any): boolean {
+    public showMinMaxVotes(data: any): boolean {
         const selectedPollMethod: PollMethod = this.pollMethodControl.value;
         return (selectedPollMethod === 'Y' || selectedPollMethod === 'N') && (!data || !data.state || data.isCreated);
     }
@@ -198,31 +209,34 @@ export class PollFormComponent extends BaseComponent implements OnInit {
      * updates the available percent bases according to the pollmethod
      * @param method the currently chosen pollmethod
      */
-    private updatePercentBases(method: PollMethod): void {
-        if (method) {
-            let forbiddenBases = [];
-            if (method === PollMethod.YN) {
-                forbiddenBases = [PollPercentBase.YNA, PollPercentBase.Y];
-            } else if (method === PollMethod.YNA) {
-                forbiddenBases = [PollPercentBase.Y];
-            } else if (method === PollMethod.Y || PollMethod.N) {
-                forbiddenBases = [PollPercentBase.YN, PollPercentBase.YNA];
-            }
-
-            const bases = {};
-            for (const [key, value] of Object.entries(this.percentBases)) {
-                if (!forbiddenBases.includes(key)) {
-                    bases[key] = value;
-                }
-            }
-            // update value in case that its no longer valid
-            const percentBaseControl = this.contentForm.get('onehundred_percent_base');
-            percentBaseControl.setValue(this.getNormedPercentBase(percentBaseControl.value, method), {
-                emitEvent: false
-            });
-
-            this.validPercentBases = bases;
+    private updatePercentBases(): void {
+        const method = this.pollMethodControl.value;
+        if (!method) {
+            return;
         }
+
+        let forbiddenBases = [];
+        if (method === PollMethod.YN) {
+            forbiddenBases = [PollPercentBase.YNA, PollPercentBase.Y];
+        } else if (method === PollMethod.YNA) {
+            forbiddenBases = [PollPercentBase.Y];
+        } else if (method === PollMethod.Y || PollMethod.N) {
+            forbiddenBases = [PollPercentBase.YN, PollPercentBase.YNA];
+        }
+
+        const bases = {};
+        for (const [key, value] of Object.entries(this.percentBases)) {
+            if (!forbiddenBases.includes(key)) {
+                bases[key] = value;
+            }
+        }
+
+        // update value in case that its no longer valid
+        this.percentBaseControl.setValue(this.getNormedPercentBase(this.percentBaseControl.value, method), {
+            emitEvent: false
+        });
+
+        this.validPercentBases = bases;
     }
 
     private getNormedPercentBase(base: PollPercentBase, method: PollMethod): PollPercentBase {
@@ -278,7 +292,7 @@ export class PollFormComponent extends BaseComponent implements OnInit {
                 ]
             ];
             // show pollmethod only for assignment polls
-            if (this.data.pollClassType === PollClassType.Assignment) {
+            if (this.isAssignmentPoll) {
                 this.pollValues.push([
                     this.pollService.getVerboseNameForKey('pollmethod'),
                     this.pollService.getVerboseNameForValue('pollmethod', data.pollmethod)
@@ -329,7 +343,10 @@ export class PollFormComponent extends BaseComponent implements OnInit {
             type: ['', Validators.required],
             pollmethod: ['', Validators.required],
             onehundred_percent_base: ['', Validators.required],
-            majority_method: ['', Validators.required],
+            /**
+             * This was not used before?
+             */
+            // majority_method: ['', Validators.required],
             votes_amount: this.fb.group(
                 {
                     max_votes_amount: [1, [Validators.required, Validators.min(1)]],
