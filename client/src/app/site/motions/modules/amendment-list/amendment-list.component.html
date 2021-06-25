@@ -8,7 +8,7 @@
     <div class="title-slot" *ngIf="parentMotion">
         <h2>
             {{ 'Amendments to' | translate }}
-            {{ (parentMotion | async)?.identifierOrTitle }}
+            {{ (parentMotion | async)?.numberOrTitle }}
         </h2>
     </div>
 
