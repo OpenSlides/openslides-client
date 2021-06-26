@@ -147,7 +147,8 @@ export class ProjectorEditDialogComponent extends BaseComponent implements OnIni
      * Saves the current changes on the projector
      */
     public async applyChanges(): Promise<void> {
-        await this.repo.update(this.updateForm.value, this.projector);
+        const payload = this.fitUpdatePayload(this.updateForm.value);
+        await this.repo.update(payload, this.projector);
     }
 
     /**
@@ -189,5 +190,13 @@ export class ProjectorEditDialogComponent extends BaseComponent implements OnIni
             const ratio = validatedRatio[0];
             this.updateForm.get('aspectRatio').setValue(ratio);
         }
+    }
+
+    private fitUpdatePayload(contentForm: any): Partial<Projector> {
+        const payload: Partial<Projector> = { ...contentForm };
+        const aspectRatio = payload.aspectRatio.split(':');
+        payload.aspect_ratio_numerator = parseInt(aspectRatio[0], 10);
+        payload.aspect_ratio_denominator = parseInt(aspectRatio[1], 10);
+        return payload;
     }
 }

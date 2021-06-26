@@ -71,6 +71,7 @@ export class ProjectorRepositoryService extends BaseRepositoryWithActiveMeeting<
     public async update(update: Partial<Projector>, viewModel: ViewProjector): Promise<void> {
         const payload: ProjectorAction.UpdatePayload = {
             id: viewModel.id,
+            name: update.name,
             ...this.getPartialPayload(update)
         };
         return await this.sendActionToBackend(ProjectorAction.UPDATE, payload);
