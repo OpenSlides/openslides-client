@@ -35,11 +35,6 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
         organization_management_level: []
     };
 
-    public readonly additionalValidators = OneOfValidator.validation(
-        ['committee_ids', 'organization_management_level'],
-        'management_level'
-    );
-
     public isFormValid = false;
     public personalInfoFormValue = {};
     public formErrors: { [name: string]: boolean } | null = null;
