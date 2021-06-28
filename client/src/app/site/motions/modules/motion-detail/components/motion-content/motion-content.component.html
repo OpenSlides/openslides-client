@@ -234,14 +234,5 @@
                 </mat-form-field>
             </div>
         </div>
-
-        <!-- Origin form -->
-        <div class="content-field" *ngIf="editMotion">
-            <div *ngIf="perms.isAllowed('change_metadata', motion)">
-                <mat-form-field>
-                    <input matInput placeholder="{{ 'Origin' | translate }}" formControlName="origin" />
-                </mat-form-field>
-            </div>
-        </div>
     </div>
 </form>

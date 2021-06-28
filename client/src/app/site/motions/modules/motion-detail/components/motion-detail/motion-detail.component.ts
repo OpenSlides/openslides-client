@@ -438,6 +438,10 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
                             GET_POSSIBLE_RECOMMENDATIONS
                         ]
                     },
+                    {
+                        idField: 'origin_id',
+                        fieldset: 'title'
+                    },
                     'attachment_ids',
                     SPEAKER_BUTTON_FOLLOW
                 ]

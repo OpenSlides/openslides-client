@@ -401,7 +401,6 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
             supporter_ids: [[]],
             workflow_id: [],
             tag_ids: [[]],
-            origin: [''],
             selected_paragraphs: [],
             broken_paragraphs: [],
             statute_amendment: [''], // Internal value for the checkbox, not saved to the model
