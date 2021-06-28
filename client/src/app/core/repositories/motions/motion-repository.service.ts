@@ -213,7 +213,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
             'recommendation_extension',
             'agenda_item_id', // for add/remove from agenda,
             { templateField: 'amendment_paragraph_$' },
-            'poll_ids'
+            'poll_ids',
+            'origin_id'
         ]);
         const amendmentFields: TypedFieldset<Motion> = listFields.concat([
             'text',
