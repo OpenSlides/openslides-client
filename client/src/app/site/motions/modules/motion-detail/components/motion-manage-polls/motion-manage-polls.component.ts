@@ -27,15 +27,10 @@ export class MotionManagePollsComponent extends BaseComponent {
 
     public openDialog(): void {
         const defaultPollData = this.motionPollService.getDefaultPollData(this.motion);
-        const dialogData: PollDialogData = {
+        const dialogData: Partial<PollDialogData> = {
             content_object_id: this.motion.fqid,
             content_object: this.motion,
-            pollmethod: defaultPollData.pollmethod,
-            title: defaultPollData.title,
-            type: defaultPollData.type,
-            isPublished: defaultPollData.isPublished,
-            majority_method: defaultPollData.majority_method,
-            onehundred_percent_base: defaultPollData.onehundred_percent_base
+            ...defaultPollData
         };
 
         this.pollDialog.openDialog(dialogData);
