@@ -14,8 +14,11 @@ import { BaseSlideComponent } from 'app/slides/base-slide-component';
 export class ItemListSlideComponent extends BaseSlideComponent<ItemListSlideData> {
     @Input()
     public set data(value: SlideData<ItemListSlideData>) {
+        // This is a hack to circumvent the relating handling for the title functions.
+        // E.g. for topics, the title function would use `topic.agenda_item.item_number`, which
+        // should refer to the provided `agenda_item_number` in the payload.
         value.data.items.forEach(
-            item => (item.title_information.agenda_item_number = () => item.title_information._agenda_item_number)
+            item => (item.title_information.agenda_item = { item_number: item.title_information.agenda_item_number })
         );
         this._data = value;
     }
@@ -29,7 +32,7 @@ export class ItemListSlideComponent extends BaseSlideComponent<ItemListSlideData
     }
 
     public getTitle(item: SlideItem): string {
-        const repo = this.collectionMapperService.getRepository(item.collection);
+        const repo = this.collectionMapperService.getRepository(item.title_information.collection);
         if (isBaseIsAgendaItemContentObjectRepository(repo)) {
             return repo.getListTitle(item.title_information);
         } else {
