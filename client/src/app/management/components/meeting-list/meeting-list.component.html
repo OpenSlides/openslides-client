@@ -22,6 +22,13 @@
         </button>
     </div>
 
+    <!-- Menu slot -->
+    <ng-container class="menu-slot">
+        <button mat-icon-button [matMenuTriggerFor]="moreCommitteeMenu">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+    </ng-container>
+
     <ng-container class="custom-menu-slot">
         <os-management-navigation></os-management-navigation>
     </ng-container>
@@ -104,6 +111,17 @@
             <mat-icon>delete</mat-icon>
             <span>
                 {{ 'Delete' | translate }}
+            </span>
+        </button>
+    </ng-template>
+</mat-menu>
+
+<mat-menu #moreCommitteeMenu="matMenu">
+    <ng-template matMenuContent>
+        <button mat-menu-item type="button" [routerLink]="['import-meeting']">
+            <mat-icon>cloud_upload</mat-icon>
+            <span>
+                {{ 'Import meeting' | translate }}
             </span>
         </button>
     </ng-template>

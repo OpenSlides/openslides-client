@@ -154,6 +154,8 @@ export class Meeting extends BaseModel<Meeting> {
 
     public id: Id;
 
+    public imported_at: number;
+
     public projector_ids: Id[]; // (projector/meeting_id)[];
     public all_projection_ids: Id[]; // (projection/meeting_id)[];
     public projector_message_ids: Id[]; // (projector_message/meeting_id)[];

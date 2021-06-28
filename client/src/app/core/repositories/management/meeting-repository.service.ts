@@ -22,6 +22,10 @@ export enum MeetingProjectionType {
     AgendaItemList = 'agenda_item_list'
 }
 
+export interface ImportMeeting {
+    [collection: string]: unknown[];
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -105,6 +109,14 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         return this.sendActionToBackend(MeetingAction.CREATE, meetingPayload);
     }
 
+    public import(committeeId: Id, meeting: ImportMeeting): Promise<Identifiable> {
+        const payload: MeetingAction.ImportPayload = {
+            committee_id: committeeId,
+            meeting: this.sanitizeImportData(meeting)
+        };
+        return this.sendActionToBackend(MeetingAction.IMPORT, payload);
+    }
+
     /**
      * If required again, out into service. Casting dates out of most things
      * DATE
@@ -173,5 +185,21 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             id: meetingId
         };
         return this.sendActionToBackend(MeetingAction.DELETE_ALL_SPEAKERS_OF_ALL_LISTS, payload);
+    }
+
+    /**
+     * Removes all empty collections from an import meeting.
+     *
+     * @param meeting The meeting to import as plain object.
+     * @returns The meeting without empty collections.
+     */
+    private sanitizeImportData(meeting: ImportMeeting): ImportMeeting {
+        const temp = { ...meeting };
+        for (const key of Object.keys(temp)) {
+            if (temp[key].length === 0) {
+                delete temp[key];
+            }
+        }
+        return temp;
     }
 }

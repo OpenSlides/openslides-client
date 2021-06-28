@@ -1,0 +1,11 @@
+<os-head-bar [nav]="false" [goBack]="true">
+    <!-- Title -->
+    <div class="title-slot">
+        <h2>{{ 'Import meetings' | translate }}</h2>
+    </div>
+</os-head-bar>
+
+<mat-card class="os-card">
+    <os-file-upload [columns]="columns" [uploadFileFn]="getUploadFileFn()" (uploadSucceeded)="onUploadSucceeded()">
+    </os-file-upload>
+</mat-card>

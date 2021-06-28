@@ -7,6 +7,7 @@ import { CommitteeListComponent } from './components/committee-list/committee-li
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ManagementComponent } from './components/management/management.component';
 import { MeetingEditComponent } from './components/meeting-edit/meeting-edit.component';
+import { MeetingImportComponent } from './components/meeting-import/meeting-import.component';
 import { MeetingListComponent } from './components/meeting-list/meeting-list.component';
 import { MemberEditComponent } from './components/member-edit/member-edit.component';
 import { MemberListComponent } from './components/member-list/member-list.component';
@@ -70,6 +71,10 @@ const routes: Route[] = [
                             {
                                 path: 'edit-meeting/:meetingId',
                                 component: MeetingEditComponent
+                            },
+                            {
+                                path: 'import-meeting',
+                                component: MeetingImportComponent
                             }
                         ]
                     }

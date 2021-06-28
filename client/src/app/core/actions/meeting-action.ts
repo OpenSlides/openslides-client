@@ -1,6 +1,6 @@
-import { AgendaItemType } from 'app/shared/models/agenda/agenda-item';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Id, UnsafeHtml } from '../definitions/key-types';
+import { ImportMeeting } from '../repositories/management/meeting-repository.service';
 
 export namespace MeetingAction {
     export const CREATE = 'meeting.create';
@@ -12,6 +12,7 @@ export namespace MeetingAction {
     export const SET_LOGO = 'meeting.set_logo';
     export const UNSET_FONT = 'meeting.unset_font';
     export const UNSET_LOGO = 'meeting.unset_logo';
+    export const IMPORT = 'meeting.import';
 
     export interface CreatePayload {
         // Required
@@ -186,5 +187,10 @@ export namespace MeetingAction {
     }
     export interface UnsetFontPayload extends Identifiable {
         place: string;
+    }
+
+    export interface ImportPayload {
+        committee_id: Id;
+        meeting: ImportMeeting;
     }
 }
