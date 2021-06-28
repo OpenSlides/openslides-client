@@ -420,7 +420,7 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
 
     public downloadMultiple(mediafiles: ViewMediafile[] = this.dataSource.source): void {
         const eventName = this.meetingSettingsService.instant('name');
-        const dirName = this.directory?.filename ?? this.translate.instant('Files');
+        const dirName = this.directory?.title ?? this.translate.instant('Files');
         const archiveName = `${eventName} - ${dirName}`.trim();
         this.repo.downloadArchive(archiveName, mediafiles);
     }
