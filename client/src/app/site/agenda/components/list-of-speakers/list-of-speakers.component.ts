@@ -109,8 +109,6 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
                     this.setListOfSpeakers(clos);
                 })
             );
-        } else {
-            this.setListOfSpeakersById(id);
         }
 
         this.subscriptions.push(this.viewport.isMobileSubject.subscribe(isMobile => (this.isMobile = isMobile)));
