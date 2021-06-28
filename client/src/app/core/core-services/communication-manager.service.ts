@@ -56,9 +56,9 @@ export class CommunicationManagerService {
     public async connect<T>(
         endpointName: string,
         messageHandler: (message: T, streamId: number, isFirstResponse: boolean) => void,
-        body: HttpBodyGetter,
-        params: HttpParamsGetter,
-        description: string
+        body: HttpBodyGetter = () => {},
+        params: HttpParamsGetter = null,
+        description: string = endpointName
     ): Promise<() => void> {
         if (!params) {
             params = () => null;

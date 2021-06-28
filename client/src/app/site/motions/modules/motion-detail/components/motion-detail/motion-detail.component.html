@@ -194,6 +194,10 @@
         [motion]="motion"
         [editMotion]="editMotion"
         [newMotion]="newMotion"
+        [osListenEditing]="{
+            editMode: editMotion,
+            model: motion
+        }"
         (save)="saveMotion($event)"
         (formChanged)="temporaryMotion = $event"
         (validStateChanged)="canSave = $event"

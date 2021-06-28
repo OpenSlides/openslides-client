@@ -63,26 +63,27 @@ interface EditNotification {
     type: EditNotificationType;
 }
 
+interface EditObject {
+    editMode: boolean;
+    model: BaseModel;
+}
+
 @Directive({
     selector: '[osListenEditing]'
 })
 export class ListenEditingDirective extends BaseComponent implements OnDestroy {
     @Input()
-    public set osListenEditing(isSo: boolean) {
-        this.isEditing = isSo;
-        if (isSo) {
+    public set osListenEditing(editObject: EditObject) {
+        this.isEditing = editObject.editMode;
+        this.baseModel = editObject.model;
+        if (this.isEditing && this.baseModel) {
             this.enterEditMode();
         } else {
             this.leaveEditMode();
         }
     }
 
-    public get osListenEditing(): boolean {
-        return this.isEditing;
-    }
-
-    @Input()
-    public baseModel: BaseModel;
+    private baseModel: BaseModel;
 
     /**
      * Array to recognize, if there are other persons working on the same
