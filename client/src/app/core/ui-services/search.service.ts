@@ -1,12 +1,9 @@
 import { Injectable } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 import { TranslateService } from '@ngx-translate/core';
 
 import { Motion } from 'app/shared/models/motions/motion';
-import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseViewModel } from 'app/site/base/base-view-model';
-import { SuperSearchComponent } from 'app/site/common/components/super-search/super-search.component';
 import { BaseRepository } from '../repositories/base-repository';
 import { Searchable } from '../../site/base/searchable';
 import { ViewModelStoreService } from '../core-services/view-model-store.service';
@@ -131,12 +128,6 @@ export interface TranslatedCollection {
 })
 export class SearchService {
     /**
-     * Holds the reference to the search-dialog.
-     * Necessary to prevent opening multiple dialogs at once.
-     */
-    private searchReference: MatDialogRef<SuperSearchComponent> = null;
-
-    /**
      * All searchable models in our own representation.
      */
     private searchModels: {
@@ -155,11 +146,7 @@ export class SearchService {
     /**
      * @param viewModelStore The store to search in.
      */
-    public constructor(
-        private viewModelStore: ViewModelStoreService,
-        private translate: TranslateService,
-        private dialogService: MatDialog
-    ) {
+    public constructor(private viewModelStore: ViewModelStoreService, private translate: TranslateService) {
         this.languageCollator = new Intl.Collator(this.translate.currentLang);
         this.translate.onLangChange.subscribe(params => {
             this.languageCollator = new Intl.Collator(params.lang);
@@ -199,25 +186,6 @@ export class SearchService {
             verboseNamePlural: searchModel.verboseNamePlural,
             openInNewTab: searchModel.openInNewTab
         }));
-    }
-
-    /**
-     * Sets the state of the `SuperSearchComponent`.
-     *
-     * @param isVisible If the component should be shown or not.
-     */
-    public showSearch(data?: any): void {
-        if (!this.searchReference) {
-            this.searchReference = this.dialogService.open(SuperSearchComponent, {
-                ...largeDialogSettings,
-                data: data ? data : null,
-                disableClose: false,
-                panelClass: 'super-search-container'
-            });
-            this.searchReference.afterClosed().subscribe(() => {
-                this.searchReference = null;
-            });
-        }
     }
 
     /**
