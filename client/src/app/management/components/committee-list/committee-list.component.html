@@ -57,7 +57,6 @@
     </div>
 
     <div *pblNgridCellDef="'forwarding'; row as committee" class="cell-slot fill">
-        <a class="detail-link" [routerLink]="committee.id" *ngIf="!isMultiSelect"></a>
         <div>
             <div *ngIf="committee.forward_to_committees?.length">
                 <os-icon-container
@@ -89,7 +88,6 @@
     </div>
 
     <div *pblNgridCellDef="'managers'; row as committee" class="cell-slot fill">
-        <a class="detail-link" [routerLink]="committee.id" *ngIf="!isMultiSelect"></a>
         <os-icon-container
             iconTooltip="{{ 'Managers' | translate }}"
             icon="build"
@@ -105,7 +103,6 @@
     </div>
 
     <div *pblNgridCellDef="'meta'; row as committee" class="cell-slot fill">
-        <a class="detail-link" [routerLink]="committee.id" *ngIf="!isMultiSelect"></a>
         <div>
             <div *ngIf="committee.meetingAmount">
                 <os-icon-container iconTooltip="{{ 'Meetings' | translate }}" icon="calendar_today">
