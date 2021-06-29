@@ -11,7 +11,8 @@ import { MotionBlockRepositoryService } from 'app/core/repositories/motions/moti
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import {
     GET_POSSIBLE_RECOMMENDATIONS,
-    MotionRepositoryService
+    MotionRepositoryService,
+    SUBMITTER_FOLLOW
 } from 'app/core/repositories/motions/motion-repository.service';
 import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/motion-workflow-repository.service';
 import { MotionService } from 'app/core/repositories/motions/motion.service';
@@ -319,15 +320,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
                             idField: 'recommendation_id',
                             fieldset: 'list'
                         },
-                        {
-                            idField: 'submitter_ids',
-                            follow: [
-                                {
-                                    idField: 'user_id',
-                                    fieldset: 'shortName'
-                                }
-                            ]
-                        },
+                        SUBMITTER_FOLLOW,
                         SPEAKER_BUTTON_FOLLOW
                     ],
                     fieldset: 'list',

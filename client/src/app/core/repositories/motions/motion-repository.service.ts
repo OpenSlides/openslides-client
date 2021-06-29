@@ -38,6 +38,16 @@ export const GET_POSSIBLE_RECOMMENDATIONS: Follow = {
     ]
 };
 
+export const SUBMITTER_FOLLOW: Follow = {
+    idField: 'submitter_ids',
+    follow: [
+        {
+            idField: 'user_id',
+            fieldset: 'shortName'
+        }
+    ]
+};
+
 /**
  * Repository Services for motions (and potentially categories)
  *

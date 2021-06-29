@@ -9,7 +9,7 @@ import { SimplifiedModelRequest } from 'app/core/core-services/model-request-bui
 import { Permission } from 'app/core/core-services/permission';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
-import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
+import { MotionRepositoryService, SUBMITTER_FOLLOW } from 'app/core/repositories/motions/motion-repository.service';
 import { MotionService } from 'app/core/repositories/motions/motion.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
@@ -175,15 +175,7 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
                             idField: 'recommendation_id',
                             fieldset: 'list'
                         },
-                        {
-                            idField: 'submitter_ids',
-                            follow: [
-                                {
-                                    idField: 'user_id',
-                                    fieldset: 'shortName'
-                                }
-                            ]
-                        },
+                        SUBMITTER_FOLLOW,
                         SPEAKER_BUTTON_FOLLOW
                     ]
                 },
