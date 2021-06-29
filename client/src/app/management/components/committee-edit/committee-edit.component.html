@@ -25,14 +25,9 @@
             <mat-error>{{ 'The title is required' | translate }}</mat-error>
         </mat-form-field>
 
-        <mat-form-field *osOmlPerms="OML.can_manage_organization">
-            <mat-label> {{ 'Committee users' | translate }}</mat-label>
-            <os-search-value-selector
-                formControlName="user_ids"
-                [multiple]="true"
-                placeholder="{{ 'Committee users' | translate }}"
-                [inputListValues]="organizationMembers"
-            ></os-search-value-selector>
+        <mat-form-field>
+            <mat-label>{{ 'Description' | translate }}</mat-label>
+            <input matInput formControlName="description" />
         </mat-form-field>
 
         <mat-form-field *osCmlPerms="CML.can_manage; committeeId: editCommittee?.id">
@@ -51,9 +46,14 @@
             </os-search-repo-selector>
         </mat-form-field>
 
-        <mat-form-field>
-            <mat-label>{{ 'Description' | translate }}</mat-label>
-            <input matInput formControlName="description" />
+        <mat-form-field *osOmlPerms="OML.can_manage_users">
+            <mat-label> {{ 'Committee users' | translate }}</mat-label>
+            <os-search-value-selector
+                formControlName="user_ids"
+                [multiple]="true"
+                placeholder="{{ 'Committee users' | translate }}"
+                [inputListValues]="organizationMembers"
+            ></os-search-value-selector>
         </mat-form-field>
 
         <ng-container *osOmlPerms="OML.can_manage_organization">

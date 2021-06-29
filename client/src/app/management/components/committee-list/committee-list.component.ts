@@ -30,11 +30,13 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
         {
             prop: 'name',
             minWidth: 250,
-            width: 'auto'
+            width: 'auto',
+            maxWidth: 650
         },
         {
             prop: 'forwarding',
-            width: '250px'
+            minWidth: 500,
+            width: 'auto'
         },
         {
             prop: 'managers',
