@@ -255,7 +255,7 @@
     <div class="os-form-card-mobile" mat-dialog-content>
         <mat-form-field>
             <mat-select placeholder="{{ 'Groups' | translate }}" [(ngModel)]="infoDialog.group_ids" multiple>
-                <mat-option *ngFor="let group of groups" [value]="group.id">
+                <mat-option *ngFor="let group of groupsObservable | async" [value]="group.id">
                     {{ group.getTitle() | translate }}
                 </mat-option>
             </mat-select>
