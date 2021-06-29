@@ -35,20 +35,6 @@ interface PollResultData {
     providedIn: 'root'
 })
 export class MotionPollService extends PollService {
-    /**
-     * The default percentage base
-     */
-    public defaultPercentBase: PollPercentBase;
-
-    /**
-     * The default majority method
-     */
-    public defaultMajorityMethod: MajorityMethod;
-
-    public defaultGroupIds: number[];
-
-    public defaultPollType: PollType;
-
     public constructor(
         organizationSettingsService: OrganizationSettingsService,
         pollKeyVerbose: PollKeyVerbosePipe,

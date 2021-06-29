@@ -35,21 +35,7 @@ export const UnknownUserLabel = _('Deleted user');
     providedIn: 'root'
 })
 export class AssignmentPollService extends PollService {
-    /**
-     * The default percentage base
-     */
-    public defaultPercentBase: PollPercentBase;
-
-    /**
-     * The default majority method
-     */
-    public defaultMajorityMethod: MajorityMethod;
-
-    public defaultGroupIds: number[];
-
     public defaultPollMethod: PollMethod;
-
-    public defaultPollType: PollType;
 
     private sortByVote: boolean;
 

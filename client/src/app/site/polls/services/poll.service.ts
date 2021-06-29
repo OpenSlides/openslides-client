@@ -178,17 +178,17 @@ export abstract class PollService {
     /**
      * The default majority method
      */
-    public abstract defaultMajorityMethod: MajorityMethod;
+    public defaultMajorityMethod: MajorityMethod;
 
     /**
      * Per default entitled to vote
      */
-    public abstract defaultGroupIds: number[];
+    public defaultGroupIds: number[];
 
     /**
      * The default poll type
      */
-    public abstract defaultPollType: PollType;
+    public defaultPollType: PollType;
 
     /**
      * The majority method currently in use

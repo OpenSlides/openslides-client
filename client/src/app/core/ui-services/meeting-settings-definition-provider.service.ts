@@ -63,7 +63,7 @@ export class MeetingSettingsDefinitionProvider {
             case 'boolean':
                 return false;
             case 'choice':
-                return Object.values(setting.choices)[0];
+                return null;
             case 'groups':
             case 'translations':
                 return [];
