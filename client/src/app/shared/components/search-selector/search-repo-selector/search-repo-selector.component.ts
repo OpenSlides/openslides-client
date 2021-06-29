@@ -46,6 +46,12 @@ export class SearchRepoSelectorComponent extends BaseSearchValueSelectorComponen
 
     private modelSubscription: ModelSubscription;
 
+    /**
+     * Flag to indicate if the model-subscription was already made.
+     * Prevents establishing a second model-subscription without closing it.
+     */
+    private hasModelSubscriptionFired = false;
+
     public constructor(
         formBuilder: FormBuilder,
         @Optional() @Self() public ngControl: NgControl,
@@ -97,6 +103,10 @@ export class SearchRepoSelectorComponent extends BaseSearchValueSelectorComponen
     }
 
     private async doModelRequest(): Promise<void> {
+        if (this.hasModelSubscriptionFired) {
+            return;
+        }
+        this.hasModelSubscriptionFired = true;
         this.cleanModelSubscription();
         this.modelSubscription = await this.modelRequestService.requestModels(
             this.repo.getRequestToGetAllModels(),
