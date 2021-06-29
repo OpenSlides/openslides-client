@@ -122,6 +122,10 @@ export class PollFormComponent extends BaseComponent implements OnInit {
         return this.contentForm.get('global_no');
     }
 
+    private get globalAbstainControl(): AbstractControl {
+        return this.contentForm.get('global_abstain');
+    }
+
     private get percentBaseControl(): AbstractControl {
         return this.contentForm.get('onehundred_percent_base');
     }
@@ -162,6 +166,7 @@ export class PollFormComponent extends BaseComponent implements OnInit {
             }
 
             this.patchForm(this.contentForm);
+            this.updatePollForm(this.data);
         }
 
         this.subscriptions.push(
@@ -170,11 +175,21 @@ export class PollFormComponent extends BaseComponent implements OnInit {
                 this.pollMethodControl.valueChanges.pipe(startWith('')),
                 this.pollTypeControl.valueChanges.pipe(startWith(''))
             ]).subscribe(([contentFormCh]) => {
-                this.updatePollValues(contentFormCh);
-                this.updatePercentBases();
-                this.setWarning();
+                this.updatePollForm(contentFormCh);
             })
         );
+    }
+
+    /**
+     * Updates the whole <poll-form />-component.
+     *
+     * @param update New data to pass into form-fields.
+     */
+    private updatePollForm(update: Partial<ViewPoll>): void {
+        this.updatePollValues(update);
+        this.updateGlobalVoteControls(update);
+        this.updatePercentBases();
+        this.setWarning();
     }
 
     /**
@@ -320,19 +335,6 @@ export class PollFormComponent extends BaseComponent implements OnInit {
                     this.pollService.getVerboseNameForKey('min_votes_amount'),
                     data.min_votes_amount
                 ]);
-
-                const suppressEvent = {
-                    emitEvent: false
-                };
-                if (pollMethod === PollMethod.Y) {
-                    this.globalYesControl.disable(suppressEvent);
-                    this.globalYesControl.setValue(false, suppressEvent);
-                    this.globalNoControl.enable(suppressEvent);
-                } else if (pollMethod === PollMethod.N) {
-                    this.globalNoControl.disable(suppressEvent);
-                    this.globalNoControl.setValue(false, suppressEvent);
-                    this.globalYesControl.enable(suppressEvent);
-                }
             }
         }
     }
@@ -359,6 +361,37 @@ export class PollFormComponent extends BaseComponent implements OnInit {
             global_no: [false],
             global_abstain: [false]
         });
+    }
+
+    private enableGlobalVoteControls(): void {
+        const suppressEvent = {
+            emitEvent: false
+        };
+        this.globalYesControl.enable(suppressEvent);
+        this.globalNoControl.enable(suppressEvent);
+        this.globalAbstainControl.enable(suppressEvent);
+    }
+
+    private updateGlobalVoteControls(data: Partial<ViewPoll>): void {
+        const pollMethod = data.pollmethod;
+        if (pollMethod) {
+            const suppressEvent = {
+                emitEvent: false
+            };
+            this.enableGlobalVoteControls();
+            if (pollMethod.includes(PollMethod.Y)) {
+                this.globalYesControl.disable(suppressEvent);
+                this.globalYesControl.setValue(false, suppressEvent);
+            }
+            if (pollMethod.includes(PollMethod.N)) {
+                this.globalNoControl.disable(suppressEvent);
+                this.globalNoControl.setValue(false, suppressEvent);
+            }
+            if (pollMethod.includes('A')) {
+                this.globalAbstainControl.disable(suppressEvent);
+                this.globalAbstainControl.setValue(false, suppressEvent);
+            }
+        }
     }
 
     public openVotingWarning(event: MouseEvent): void {
