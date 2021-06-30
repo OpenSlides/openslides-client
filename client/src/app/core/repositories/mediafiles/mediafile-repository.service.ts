@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 
+import { saveAs } from 'file-saver';
+import * as JSZip from 'jszip';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -86,16 +88,15 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
     }
 
     public async downloadArchive(archiveName: string, files: ViewMediafile[]): Promise<void> {
-        throw new Error('TODO');
-        /*const zip = new JSZip();
+        const zip = new JSZip();
         for (const file of files) {
             if (!file.is_directory) {
                 const base64Data = await this.http.downloadAsBase64(file.url);
-                zip.file(file.filename, base64Data, { base64: true });
+                zip.file(file.title, base64Data, { base64: true });
             }
         }
         const archive = await zip.generateAsync({ type: 'blob' });
-        saveAs(archive, archiveName);*/
+        saveAs(archive, archiveName);
     }
 
     public getDirectoryBehaviorSubject(): BehaviorSubject<ViewMediafile[]> {
@@ -122,7 +123,6 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
     }
 
     public async uploadFile(partialMediafile: Partial<MediafileAction.CreateFilePayload>): Promise<Identifiable> {
-        console.log('uploadFile', partialMediafile);
         const payload: MediafileAction.CreateFilePayload = {
             meeting_id: this.activeMeetingIdService.meetingId,
             file: partialMediafile.file,
