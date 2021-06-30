@@ -4,10 +4,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { PblColumnDefinition } from '@pebula/ngrid';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
-import { SimplifiedModelRequest, SpecificStructuredField } from 'app/core/core-services/model-request-builder.service';
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
@@ -92,7 +92,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
     /**
      * All available groups, where the user can be in.
      */
-    public groups: ViewGroup[];
+    public groupsObservable: Observable<ViewGroup[]> = this.groupRepo.getViewModelListObservableWithoutDefaultGroup();
 
     public readonly users: BehaviorSubject<ViewUser[]> = new BehaviorSubject<ViewUser[]>([]);
 
@@ -211,15 +211,6 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
     public ngOnInit(): void {
         super.ngOnInit();
         super.setTitle('Participants');
-
-        // Initialize the groups
-        this.groups = this.groupRepo.getViewModelList().filter(group => group.id !== 1);
-
-        this.subscriptions.push(
-            this.groupRepo
-                .getViewModelListObservable()
-                .subscribe(groups => (this.groups = groups.filter(group => group.id !== 1)))
-        );
     }
 
     protected getModelRequest(): SimplifiedModelRequest {
@@ -244,6 +235,9 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
                             }
                         }
                     ]
+                },
+                {
+                    idField: 'group_ids'
                 }
             ],
             fieldset: []
@@ -370,7 +364,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         const ADD = _('add group(s)');
         const REMOVE = _('remove group(s)');
         const choices = [ADD, REMOVE];
-        const selectedChoice = await this.choiceService.open(content, this.groupRepo.getViewModelList(), true, choices);
+        const selectedChoice = await this.choiceService.open(content, this.groupsObservable, true, choices);
         if (selectedChoice) {
             if (selectedChoice.action === ADD) {
                 this.repo.bulkAddGroupsToUsers(this.selectedRows, selectedChoice.items as number[]);
