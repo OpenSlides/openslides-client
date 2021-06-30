@@ -1,7 +1,8 @@
 export interface SlideItem {
     title_information: {
         collection: string;
-        [args: string]: any;
+        agenda_item: { item_number: number };
+        agenda_item_number: number;
     };
     depth: number;
 }
