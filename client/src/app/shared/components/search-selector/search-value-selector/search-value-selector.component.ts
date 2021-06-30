@@ -1,5 +1,4 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -7,11 +6,9 @@ import {
     Input,
     Optional,
     Self,
-    ViewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { FormBuilder, NgControl } from '@angular/forms';
-import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 
 import { TranslateService } from '@ngx-translate/core';
@@ -54,9 +51,6 @@ import { Selectable } from '../../selectable';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SearchValueSelectorComponent extends BaseSearchValueSelectorComponent {
-    @ViewChild(CdkVirtualScrollViewport, { static: true })
-    public cdkVirtualScrollViewPort: CdkVirtualScrollViewport;
-
     /**
      * The inputlist subject. Subscribes to it and updates the selector, if the subject
      * changes its values.
@@ -90,33 +84,5 @@ export class SearchValueSelectorComponent extends BaseSearchValueSelectorCompone
         element: ElementRef<HTMLElement>
     ) {
         super(formBuilder, focusMonitor, element, ngControl);
-    }
-
-    public openSelect(event: boolean): void {
-        if (event) {
-            this.cdkVirtualScrollViewPort.scrollToIndex(0);
-            this.cdkVirtualScrollViewPort.checkViewportSize();
-        }
-    }
-
-    public removeChipItem(item: Selectable): void {
-        this.addRemoveId(item.id);
-    }
-
-    private addRemoveId(item: number): void {
-        const idx = this.selectedIds.indexOf(item);
-        if (idx > -1) {
-            this.selectedIds.splice(idx, 1);
-        } else {
-            this.selectedIds.push(item);
-        }
-        this.contentForm.setValue(this.selectedIds);
-    }
-
-    public onSelectionChange(change: MatOptionSelectionChange): void {
-        if (this.multiple && change.isUserInput) {
-            const value = change.source.value;
-            this.addRemoveId(value);
-        }
     }
 }

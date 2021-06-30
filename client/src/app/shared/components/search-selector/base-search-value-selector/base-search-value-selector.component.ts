@@ -1,7 +1,10 @@
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
 
+import { Id } from 'app/core/definitions/key-types';
 import { BaseFormControlComponent } from 'app/shared/components/base-form-control';
 import { ParentErrorStateMatcher } from 'app/shared/parent-error-state-matcher';
 import { Selectable } from '../../selectable';
@@ -10,6 +13,9 @@ import { Selectable } from '../../selectable';
     template: ''
 })
 export abstract class BaseSearchValueSelectorComponent extends BaseFormControlComponent<Selectable> {
+    @ViewChild(CdkVirtualScrollViewport, { static: true })
+    public cdkVirtualScrollViewPort: CdkVirtualScrollViewport;
+
     @ViewChild('matSelect')
     public matSelect: MatSelect;
 
@@ -74,7 +80,7 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormControlCo
         return this.chipPlaceholder ? `${this.chipPlaceholder.nativeElement.clientWidth - 16}px` : '100%';
     }
 
-    public selectedIds: any[] = [];
+    public selectedIds: Id[] = [];
 
     /**
      * All items
@@ -116,13 +122,32 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormControlCo
         }
     }
 
-    public removeItem(itemId: number): void {
-        const items = <number[]>this.contentForm.value;
-        items.splice(
-            items.findIndex(item => item === itemId),
-            1
-        );
-        this.contentForm.setValue(items);
+    public onChipRemove(itemId: Id): void {
+        this.addOrRemoveId(itemId);
+    }
+
+    public addOrRemoveId(id: Id): void {
+        const index = this.selectedIds.indexOf(id);
+        if (index > -1) {
+            this.selectedIds.splice(index, 1);
+        } else {
+            this.selectedIds.push(id);
+        }
+        this.contentForm.setValue(this.selectedIds);
+    }
+
+    public onOpenChanged(event: boolean): void {
+        if (event) {
+            this.cdkVirtualScrollViewPort.scrollToIndex(0);
+            this.cdkVirtualScrollViewPort.checkViewportSize();
+        }
+    }
+
+    public onSelectionChange(change: MatOptionSelectionChange): void {
+        if (change.isUserInput && this.multiple) {
+            const value = change.source.value;
+            this.addOrRemoveId(value);
+        }
     }
 
     public onContainerClick(event: MouseEvent): void {
