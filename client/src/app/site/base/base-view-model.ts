@@ -41,8 +41,11 @@ export abstract class BaseViewModel<M extends BaseModel = any> {
     public canAccess(): boolean {
         return true;
     }
-    public getDetailStateURL(): string {
-        throw new Error(`getDetailStateURL needs to be overwritten in ${this.constructor.name}`);
+    /**
+     * Override in children
+     */
+    public getDetailStateURL(): string | null {
+        return '';
     }
 }
 export interface BaseViewModel<M extends BaseModel = any> extends Displayable, Identifiable, Collection {
