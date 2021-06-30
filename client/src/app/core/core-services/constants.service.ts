@@ -39,12 +39,15 @@ export class ConstantsService {
     private subjects: { [key: string]: BehaviorSubject<any> } = {};
 
     public constructor(communicationManager: CommunicationManagerService, private http: HttpService) {
-        communicationManager.startCommunicationEvent.subscribe(async () => {
-            this.constants = await this.http.get<Constants>(environment.urlPrefix + '/core/constants/');
-            Object.keys(this.subjects).forEach(key => {
-                this.subjects[key].next(this.constants[key]);
-            });
-        });
+        /**
+         * startCommunicationEvent does not exist
+         */
+        // communicationManager.startCommunicationEvent.subscribe(async () => {
+        //     this.constants = await this.http.get<Constants>(environment.urlPrefix + '/core/constants/');
+        //     Object.keys(this.subjects).forEach(key => {
+        //         this.subjects[key].next(this.constants[key]);
+        //     });
+        // });
     }
 
     /**

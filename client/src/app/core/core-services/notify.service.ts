@@ -1,6 +1,13 @@
 import { Injectable } from '@angular/core';
 
-import { Observable, Subject } from 'rxjs';
+import { combineLatest, Observable, Subject } from 'rxjs';
+
+import { ActiveMeetingIdService } from './active-meeting-id.service';
+import { CommunicationManagerService } from './communication-manager.service';
+import { HTTPMethod } from '../definitions/http-methods';
+import { HttpService } from './http.service';
+import { LifecycleService } from './lifecycle.service';
+import { OperatorService } from './operator.service';
 
 /**
  * Encapslates the name and content of every message regardless of being a request or response.
@@ -17,11 +24,6 @@ interface NotifyBase<T> {
     message: T;
 }
 
-function isNotifyBase(obj: object): obj is NotifyResponse<any> {
-    const base = obj as NotifyBase<any>;
-    return !!obj && base.message !== undefined && base.name !== undefined;
-}
-
 /**
  * This interface has all fields for a notify request to the server. Next to name and content
  * one can give an array of user ids (or the value `true` for all users) and an array of
@@ -30,6 +32,11 @@ function isNotifyBase(obj: object): obj is NotifyResponse<any> {
 export interface NotifyRequest<T> extends NotifyBase<T> {
     channel_id: string;
     to_all?: boolean;
+
+    /**
+     * Targeted Meeting as MeetingID
+     */
+    to_meeting?: number;
 
     /**
      * User ids (or `true` for all users) to send this message to.
@@ -64,19 +71,16 @@ export interface NotifyResponse<T> extends NotifyBase<T> {
     sendByThisUser: boolean;
 }
 
-function isNotifyResponse(obj: object): obj is NotifyResponse<any> {
-    const response = obj as NotifyResponse<any>;
-    // Note: we do not test for sendByThisUser, since it is set later in our code.
-    return isNotifyBase(obj) && response.sender_channel_id !== undefined && response.sender_user_id !== undefined;
-}
-
 interface ChannelIdResponse {
     channel_id: string;
 }
 
-function isChannelIdResponse(obj: object): obj is ChannelIdResponse {
-    return !!obj && (obj as ChannelIdResponse).channel_id !== undefined;
-}
+const IccPath = '/system/icc';
+/**
+ * Does currently not exist
+ */
+// const iccHealthPath = `${IccPath}/health`
+const iccHealthPath = IccPath;
 
 /**
  * Handles all incoming and outgoing notify messages via {@link WebsocketService}.
@@ -97,19 +101,81 @@ export class NotifyService {
         [name: string]: Subject<NotifyResponse<any>>;
     } = {};
 
+    private channelId: string;
+    private commCloseFn: () => void;
+
     /**
      * Constructor to create the NotifyService. Registers itself to the WebsocketService.
      * @param websocketService
      */
-    public constructor() {
-        /*websocketService.getOberservable<NotifyResponse<any>>('notify').subscribe(notify => {
-            notify.sendByThisUser = notify.senderUserId === (this.operator.user ? this.operator.operatorId : 0);
-            this.notifySubject.next(notify);
-            if (this.messageSubjects[notify.name]) {
-                this.messageSubjects[notify.name].next(notify);
+    public constructor(
+        private httpService: HttpService,
+        private operator: OperatorService,
+        private activeMeetingIdService: ActiveMeetingIdService,
+        private lifecycleService: LifecycleService,
+        private commManager: CommunicationManagerService
+    ) {
+        /**
+         * watch for both the meeting ID and lifecycle
+         * enables logging out to be anonymous ICC and
+         * re-logging in to a new ICC channel without a hazzle
+         */
+        combineLatest([
+            this.activeMeetingIdService.meetingIdObservable,
+            this.lifecycleService.openslidesBooted
+        ]).subscribe(([meetingId]) => {
+            if (meetingId) {
+                this.connect(meetingId);
+            } else {
+                this.disconnect();
             }
-        });*/
-        console.warn('TODO: Enable notify service');
+        });
+    }
+
+    private async connect(meetingId: number): Promise<void> {
+        if (!meetingId) {
+            throw new Error('Cannot connect to ICC, no meeting ID was provided');
+        }
+
+        this.disconnect();
+
+        const iccMeeting = `${IccPath}?meeting_id=${meetingId}`;
+        this.commManager.registerEndpoint('icc', iccMeeting, iccHealthPath, HTTPMethod.GET);
+        this.commCloseFn = await this.commManager.connect<NotifyResponse<any> | ChannelIdResponse>(
+            'icc',
+            (notify: NotifyResponse<any> | ChannelIdResponse) => {
+                if ((notify as ChannelIdResponse).channel_id) {
+                    this.handleChannelIdResponse(notify as ChannelIdResponse);
+                } else {
+                    this.handleNotifyResponse(notify as NotifyResponse<any>);
+                }
+            }
+        );
+    }
+
+    private disconnect(): void {
+        if (this.commCloseFn) {
+            try {
+                this.commCloseFn();
+            } catch (e) {
+                console.warn('Was not able to properly close previous ICC connection: ', e);
+            }
+            this.commCloseFn = undefined;
+        }
+    }
+
+    private handleChannelIdResponse(response: ChannelIdResponse): void {
+        this.channelId = response.channel_id;
+    }
+
+    private handleNotifyResponse(notify: NotifyResponse<any>): void {
+        notify = notify as NotifyResponse<any>;
+
+        notify.sendByThisUser = notify.sender_user_id === this.operator.operatorId || false;
+        this.notifySubject.next(notify);
+        if (this.messageSubjects[notify.name]) {
+            this.messageSubjects[notify.name].next(notify);
+        }
     }
 
     /**
@@ -161,16 +227,17 @@ export class NotifyService {
         users?: number[],
         channels?: string[]
     ): Promise<void> {
-        throw new Error('TODO');
-        /*if (!this.channelId) {
+        if (!this.channelId) {
             throw new Error('No channel id!');
         }
 
         const notify: NotifyRequest<T> = {
             name: name,
             message: message,
-            channel_id: this.channelId
+            channel_id: this.channelId,
+            to_meeting: this.activeMeetingIdService.meetingId
         };
+
         if (toAll === true) {
             notify.to_all = true;
         }
@@ -180,7 +247,8 @@ export class NotifyService {
         if (channels) {
             notify.to_channels = channels;
         }
-        this.websocketService.send('notify', notify);*/
+
+        await this.httpService.post<unknown>('/system/icc/send', notify);
     }
 
     /**
