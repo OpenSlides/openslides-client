@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { ProjectorService } from 'app/core/ui-services/projector.service';
 import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { BaseComponent } from 'app/site/base/components/base.component';
