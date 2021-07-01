@@ -106,6 +106,7 @@
                 <mat-form-field>
                     <mat-label>{{ 'Organization management level' | translate }}</mat-label>
                     <mat-select formControlName="organization_management_level">
+                        <mat-option [value]="null">-</mat-option>
                         <mat-option *ngFor="let level of organizationManagementLevels" [value]="level">
                             {{ getOmlVerboseName(level) | translate }}
                         </mat-option>
