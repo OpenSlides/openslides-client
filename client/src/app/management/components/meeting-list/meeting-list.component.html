@@ -53,15 +53,14 @@
                     </span>
                 </ng-container>
             </div>
+            <div>
+                <os-chip-list *ngIf="meeting.organization_tags?.length" [model]="meeting.organization_tags">
+                    <ng-template let-tag>
+                        {{ tag.name }}
+                    </ng-template>
+                </os-chip-list>
+            </div>
         </div>
-    </div>
-
-    <div *pblNgridCellDef="'organization_tags'; row as meeting" class="cell-slot fill">
-        <os-chip-list *ngIf="meeting.organization_tags?.length" [model]="meeting.organization_tags">
-            <ng-template let-tag>
-                {{ tag.name }}
-            </ng-template>
-        </os-chip-list>
     </div>
 
     <div *pblNgridCellDef="'users'; row as meeting" class="cell-slot fill">
