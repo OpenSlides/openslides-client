@@ -32,11 +32,8 @@ export class MeetingListComponent extends BaseListViewComponent<ViewOrganization
     public tableColumnDefinition: PblColumnDefinition[] = [
         {
             prop: 'name',
-            width: 'auto'
-        },
-        {
-            prop: 'organization_tags',
-            width: 'auto'
+            width: 'auto',
+            minWidth: 250
         },
         {
             prop: 'users',
@@ -65,12 +62,13 @@ export class MeetingListComponent extends BaseListViewComponent<ViewOrganization
         super.setTitle('Meetings');
         this.getCommitteeByUrl();
 
-        this.meetingRepo.getGeneralViewModelObservable().subscribe(() => {
-            console.log('meeting update', this.currentCommittee, this.currentCommittee?.meetings);
-            if (this.currentCommittee) {
-                this.meetingsSubject.next(this.currentCommittee.meetings);
-            }
-        });
+        this.subscriptions.push(
+            this.meetingRepo.getGeneralViewModelObservable().subscribe(() => {
+                if (this.currentCommittee) {
+                    this.meetingsSubject.next(this.currentCommittee.meetings);
+                }
+            })
+        );
     }
 
     public onCreateMeeting(): void {
@@ -110,7 +108,6 @@ export class MeetingListComponent extends BaseListViewComponent<ViewOrganization
         this.subscriptions.push(
             this.committeeRepo.getViewModelObservable(id).subscribe(committee => {
                 this.currentCommittee = committee;
-                console.log('committee update', committee, committee?.meetings);
                 this.meetingsSubject.next(committee?.meetings || []);
             })
         );
