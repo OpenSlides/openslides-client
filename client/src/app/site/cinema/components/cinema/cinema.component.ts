@@ -1,24 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { BaseViewModel } from 'app/site/base/base-view-model';
-import { BaseComponent } from 'app/site/base/components/base.component';
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { DetailNavigable, isDetailNavigable } from 'app/site/base/detail-navigable';
 import { HasProjectorTitle } from 'app/site/base/projectable';
 import { ViewProjection } from 'app/site/projector/models/view-projection';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
-import { CurrentListOfSpeakersService } from 'app/site/projector/services/current-list-of-speakers.service';
+import {
+    CurrentListOfSpeakersService,
+    CURRENT_LIST_OF_SPEAKERS_FOLLOW
+} from 'app/site/projector/services/current-list-of-speakers.service';
 
 @Component({
     selector: 'os-cinema',
     templateUrl: './cinema.component.html',
     styleUrls: ['./cinema.component.scss']
 })
-export class CinemaComponent extends BaseComponent implements OnInit {
+export class CinemaComponent extends BaseModelContextComponent implements OnInit {
     public listOfSpeakers: ViewListOfSpeakers;
     public projector: ViewProjector;
     private currentProjection: ViewProjection | null = null;
@@ -106,6 +111,7 @@ export class CinemaComponent extends BaseComponent implements OnInit {
     }
 
     public ngOnInit(): void {
+        super.ngOnInit();
         super.setTitle('Autopilot');
     }
 
@@ -119,5 +125,14 @@ export class CinemaComponent extends BaseComponent implements OnInit {
 
     public async readdLastSpeaker(): Promise<void> {
         await this.listOfSpeakersRepo.readdLastSpeaker(this.listOfSpeakers).catch(this.raiseError);
+    }
+
+    protected getModelRequest(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [this.activeMeetingId],
+            follow: [CURRENT_LIST_OF_SPEAKERS_FOLLOW],
+            fieldset: ''
+        };
     }
 }

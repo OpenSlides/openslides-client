@@ -9,12 +9,16 @@ import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/li
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { ListOfSpeakersContentComponent } from 'app/shared/components/list-of-speakers-content/list-of-speakers-content.component';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { CurrentListOfSpeakersSlideService } from 'app/site/projector/services/current-list-of-speakers-slide.service';
-import { CurrentListOfSpeakersService } from 'app/site/projector/services/current-list-of-speakers.service';
+import {
+    CurrentListOfSpeakersService,
+    CURRENT_LIST_OF_SPEAKERS_FOLLOW
+} from 'app/site/projector/services/current-list-of-speakers.service';
 import { ViewListOfSpeakers } from '../../models/view-list-of-speakers';
 
 /**
@@ -96,7 +100,6 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
 
     public ngOnInit(): void {
         const id = parseInt(this.route.snapshot.url[this.route.snapshot.url.length - 1]?.path, 10);
-        this.setListOfSpeakersById(id);
         // Check, if we are on the current list of speakers.
         this.isCurrentListOfSpeakers =
             this.route.snapshot.url.length > 0
@@ -104,11 +107,19 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
                 : true;
 
         if (this.isCurrentListOfSpeakers) {
+            this.requestModels({
+                viewModelCtor: ViewMeeting,
+                ids: [this.activeMeetingId],
+                follow: [CURRENT_LIST_OF_SPEAKERS_FOLLOW],
+                fieldset: ''
+            });
             this.subscriptions.push(
                 this.currentListOfSpeakersService.currentListOfSpeakersObservable.subscribe(clos => {
                     this.setListOfSpeakers(clos);
                 })
             );
+        } else {
+            this.setListOfSpeakersById(id);
         }
 
         this.subscriptions.push(this.viewport.isMobileSubject.subscribe(isMobile => (this.isMobile = isMobile)));
