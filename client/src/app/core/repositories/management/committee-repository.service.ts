@@ -65,6 +65,7 @@ export class CommitteeRepositoryService
     public update(update: Partial<Committee>, committee: ViewCommittee): Promise<void> {
         const payload: CommitteeAction.UpdatePayload = {
             id: committee.id,
+            name: update.name,
             ...this.getPartialCommitteePayload(update)
         };
         return this.sendActionToBackend(CommitteeAction.UPDATE, payload);
