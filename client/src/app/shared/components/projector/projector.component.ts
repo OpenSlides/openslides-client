@@ -5,6 +5,7 @@ import { Subject, Subscription } from 'rxjs';
 import { collectionFromFqid } from 'app/core/core-services/key-transforms';
 import { Follow } from 'app/core/core-services/model-request-builder.service';
 import { OfflineBroadcastService } from 'app/core/core-services/offline-broadcast.service';
+import { ProjectionRepositoryService } from 'app/core/repositories/projector/projection-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MediaManageService } from 'app/core/ui-services/media-manage.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
@@ -39,6 +40,9 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
     public get projector(): ViewProjector {
         return this._projector;
     }
+
+    private oldProjectorId = null;
+    private projectionSubscription: Subscription | null = null;
 
     /**
      * The current projector size. This is for checking,
@@ -113,11 +117,6 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
     public isOffline = false;
 
     /**
-     * Holds the subscription to the offline-service.
-     */
-    private offlineSubscription: Subscription;
-
-    /**
      * A subject that fires, if the container is resized.
      */
     public resizeSubject = new Subject<void>();
@@ -136,7 +135,8 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
         private meetingSettingsService: MeetingSettingsService,
         private offlineBroadcastService: OfflineBroadcastService,
         private elementRef: ElementRef,
-        private mediaManageService: MediaManageService
+        private mediaManageService: MediaManageService,
+        private projectionRepo: ProjectionRepositoryService
     ) {
         super(componentServiceCollector);
 
@@ -168,31 +168,21 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
             }
         });
 
-        this.offlineSubscription = this.offlineBroadcastService.isOfflineObservable.subscribe(
-            isOffline => (this.isOffline = isOffline)
+        this.subscriptions.push(
+            this.offlineBroadcastService.isOfflineObservable.subscribe(isOffline => (this.isOffline = isOffline))
         );
     }
 
     private setProjector(projector: ViewProjector): void {
         this._projector = projector;
+        if (projector?.id !== this.oldProjectorId) {
+            this.oldProjectorId = projector?.id;
+            this.updateProjectionSubscription();
+        }
 
         if (!projector) {
             return;
         }
-
-        this.slides = (projector.current_projections || []).map(projection => {
-            const slideData: SlideData<any> = {
-                collection: collectionFromFqid(projection.content_object_id),
-                data: projection.content,
-                stable: !!projection.stable,
-                type: projection.type || '',
-                options: projection.options || {}
-            };
-            if (projection.content?.error) {
-                slideData.error = projection.content.error;
-            }
-            return slideData;
-        });
 
         const oldSize: Size = { ...this.currentProjectorSize };
         this.currentProjectorSize.height = projector.height;
@@ -206,6 +196,37 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
         this.css.headerFooter.color = projector.header_font_color;
         this.css.headerFooter.backgroundColor = projector.header_background_color;
         this.updateCSS();
+    }
+
+    private updateProjectionSubscription(): void {
+        if (this.projectionSubscription) {
+            this.projectionSubscription.unsubscribe();
+            this.projectionSubscription = null;
+        }
+        this.updateSlides();
+        if (this.projector) {
+            this.projectionSubscription = this.projectionRepo.getGeneralViewModelObservable().subscribe(projection => {
+                if (projection?.current_projector_id === this.projector.id) {
+                    this.updateSlides();
+                }
+            });
+        }
+    }
+
+    private updateSlides(): void {
+        this.slides = (this.projector?.current_projections || []).map(projection => {
+            const slideData: SlideData<any> = {
+                collection: collectionFromFqid(projection.content_object_id),
+                data: projection.content,
+                stable: !!projection.stable,
+                type: projection.type || '',
+                options: projection.options || {}
+            };
+            if (projection.content?.error) {
+                slideData.error = projection.content.error;
+            }
+            return slideData;
+        });
     }
 
     /**
@@ -259,12 +280,9 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
     }
 
     public ngOnDestroy(): void {
+        this.subscriptions.push(this.projectionSubscription);
         super.ngOnDestroy();
         document.head.removeChild(this.styleElement);
         this.styleElement = null;
-        if (this.offlineSubscription) {
-            this.offlineSubscription.unsubscribe();
-            this.offlineSubscription = null;
-        }
     }
 }

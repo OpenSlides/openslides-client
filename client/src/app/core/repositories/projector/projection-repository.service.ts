@@ -37,7 +37,8 @@ export class ProjectionRepositoryService extends BaseRepositoryWithActiveMeeting
         const defaultKeys: (keyof Projection)[] = ['stable', 'type', 'options', 'weight'];
         return {
             [DEFAULT_FIELDSET]: defaultKeys,
-            content: defaultKeys.concat(['content'])
+            content: defaultKeys.concat(['content', 'current_projector_id']) // the current_projector_id is
+            // needed by the projector component to map projections to projectors.
         };
     }
 
