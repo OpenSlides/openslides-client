@@ -433,7 +433,8 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
                     },
                     {
                         idField: 'origin_id',
-                        fieldset: 'title'
+                        fieldset: 'title',
+                        follow: ['meeting_id']
                     },
                     'attachment_ids',
                     SPEAKER_BUTTON_FOLLOW
