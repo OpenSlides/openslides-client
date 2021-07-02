@@ -54,7 +54,7 @@ export abstract class BaseComponent implements OnDestroy {
     /**
      * Subscriptions added to this list will be cleared 'on destroy'
      */
-    protected subscriptions: Subscription[] = [];
+    protected subscriptions: (Subscription | null)[] = [];
 
     /**
      * Settings for the TinyMCE editor selector
@@ -187,7 +187,9 @@ export abstract class BaseComponent implements OnDestroy {
      */
     protected cleanSubjects(): void {
         for (const sub of this.subscriptions) {
-            sub.unsubscribe();
+            if (sub) {
+                sub.unsubscribe();
+            }
         }
         this.subscriptions = [];
     }
