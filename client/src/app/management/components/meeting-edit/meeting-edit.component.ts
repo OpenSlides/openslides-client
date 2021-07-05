@@ -6,19 +6,18 @@ import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 import { MeetingAction } from 'app/core/actions/meeting-action';
-import { OperatorService } from 'app/core/core-services/operator.service';
 import { CML, OML } from 'app/core/core-services/organization-permission';
 import { Id } from 'app/core/definitions/key-types';
 import { CommitteeRepositoryService } from 'app/core/repositories/management/committee-repository.service';
 import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
 import { OrganizationTagRepositoryService } from 'app/core/repositories/management/organization-tag-repository.service';
-import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ColorService } from 'app/core/ui-services/color.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ViewCommittee } from 'app/management/models/view-committee';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
+import { ViewUser } from 'app/site/users/models/view-user';
 
 const AddMeetingLabel = _('New meeting');
 const EditMeetingLabel = _('Edit meeting');
@@ -31,6 +30,10 @@ const EditMeetingLabel = _('Edit meeting');
 export class MeetingEditComponent extends BaseModelContextComponent implements OnInit {
     public readonly CML = CML;
     public readonly OML = OML;
+
+    public get availableUsers(): ViewUser[] {
+        return (this.committee?.users || []).concat(this.editMeeting?.users || []);
+    }
 
     public addMeetingLabel = AddMeetingLabel;
     public editMeetingLabel = EditMeetingLabel;
@@ -52,8 +55,6 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
         private formBuilder: FormBuilder,
         private meetingRepo: MeetingRepositoryService,
         private committeeRepo: CommitteeRepositoryService,
-        private userRepo: UserRepositoryService,
-        private operator: OperatorService,
         public orgaTagRepo: OrganizationTagRepositoryService,
         private colorService: ColorService
     ) {
@@ -85,9 +86,7 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
         } else {
             const userIds = this.meetingForm.value.user_ids as Id[];
             const addedUsers = userIds.difference(this.editMeeting.user_ids);
-            // removedUsers must not contain guests or so. We do not want to remove users, that do not belong
-            // to the committee.
-            const removedUsers = this.editMeeting.user_ids.difference(userIds).intersect(this.committee.user_ids);
+            const removedUsers = this.editMeeting.user_ids.difference(userIds);
 
             const payload: MeetingAction.UpdatePayload = this.meetingForm.value;
             delete (payload as any).user_ids; // do not send them to the server.
@@ -142,6 +141,7 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
             {
                 viewModelCtor: ViewMeeting,
                 ids: [this.meetingId],
+                follow: [{ idField: 'user_ids', fieldset: 'shortName' }],
                 fieldset: 'edit'
             },
             'meeting'
@@ -196,9 +196,8 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
         const patchMeeting: any = meeting.getUpdatedModelData({
             start_time: meeting.start_time ? new Date(meeting.start_time * 1000) : undefined,
             end_time: meeting.end_time ? new Date(meeting.end_time * 1000) : undefined,
-            userIds: meeting.user_ids
+            user_ids: [...meeting.user_ids]
         } as any);
         this.meetingForm.patchValue(patchMeeting);
-        console.log('update', meeting, patchMeeting, this.meetingForm.value);
     }
 }
