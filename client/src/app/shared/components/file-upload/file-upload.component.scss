@@ -1,0 +1,18 @@
+.selection-area {
+    margin-bottom: 1em;
+    cursor: pointer;
+}
+
+.upload-area {
+    margin-bottom: 1em;
+}
+
+.action-buttons {
+    button + button {
+        margin-left: 1em;
+    }
+}
+
+pbl-ngrid {
+    max-height: 500px;
+}

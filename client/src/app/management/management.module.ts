@@ -10,6 +10,7 @@ import { ManagementNavigationComponent } from './components/management-navigatio
 import { ManagementRoutingModule } from './management-routing.module';
 import { ManagementComponent } from './components/management/management.component';
 import { MeetingEditComponent } from './components/meeting-edit/meeting-edit.component';
+import { MeetingImportComponent } from './components/meeting-import/meeting-import.component';
 import { MeetingListComponent } from './components/meeting-list/meeting-list.component';
 import { MemberEditComponent } from './components/member-edit/member-edit.component';
 import { MemberListComponent } from './components/member-list/member-list.component';
@@ -34,7 +35,8 @@ import { OrganizationTagListComponent } from './components/organization-tag-list
         AccountDialogComponent,
         OrganizationTagListComponent,
         OrganizationTagDialogComponent,
-        MemberPasswordComponent
+        MemberPasswordComponent,
+        MeetingImportComponent
     ]
 })
 export class ManagementModule {}

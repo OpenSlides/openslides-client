@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 
-import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
+import { PblColumnDefinition } from '@pebula/ngrid';
 import { BehaviorSubject } from 'rxjs';
 
 import { ModelSubscription } from 'app/core/core-services/autoupdate.service';
@@ -12,7 +12,7 @@ import { GroupRepositoryService } from 'app/core/repositories/users/group-reposi
 import { toBase64 } from 'app/core/to-base64';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ViewMeeting } from 'app/management/models/view-meeting';
-import { CreateMediafile } from 'app/shared/models/mediafiles/create-mediafile';
+import { Identifiable } from 'app/shared/models/base/identifiable';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { ViewGroup } from 'app/site/users/models/view-group';
@@ -35,7 +35,24 @@ export class MediaUploadContentComponent extends BaseModelContextComponent imple
     /**
      * Columns to display in the upload-table
      */
-    public displayedColumns: string[] = ['title', 'filename', 'information', 'access_groups', 'remove'];
+    public vScrollColumns: PblColumnDefinition[] = [
+        {
+            prop: 'title',
+            label: this.translate.instant('Title')
+        },
+        {
+            prop: 'filename',
+            label: this.translate.instant('Filename')
+        },
+        {
+            prop: 'information',
+            label: this.translate.instant('Information')
+        },
+        {
+            prop: 'access_groups',
+            label: this.translate.instant('Access groups')
+        }
+    ];
 
     /**
      * Determine wether to show the progress bar
@@ -149,34 +166,6 @@ export class MediaUploadContentComponent extends BaseModelContextComponent imple
     }
 
     /**
-     * Converts given FileData into FormData format and hands it over to the repository
-     * to upload
-     *
-     * @param fileData the file to upload to the server, should fit to the FileData interface
-     */
-    public async uploadFile(fileData: FileData): Promise<void> {
-        const data = {
-            filename: fileData.mediafile.name,
-            file: await toBase64(fileData.mediafile),
-            title: fileData.title,
-            parent_id: this.directoryId,
-            access_group_ids: fileData.form.value.access_group_ids || []
-        };
-
-        // raiseError will automatically ignore existing files
-        await this.repo.uploadFile(data as CreateMediafile).then(
-            fileId => {
-                this.filesUploadedIds.push(fileId.id);
-                // remove the uploaded file from the array
-                this.onRemoveButton(fileData);
-            },
-            error => {
-                this.errorMessage = error;
-            }
-        );
-    }
-
-    /**
      * Returns the filetype from the file or a generic "File", if the type could
      * not be determinated.
      *
@@ -211,119 +200,26 @@ export class MediaUploadContentComponent extends BaseModelContextComponent imple
         file.title = newTitle;
     }
 
-    /**
-     * Add a file to list to upload later
-     *
-     * @param file the file to upload
-     */
-    public addFile(file: File): void {
-        const newFile: FileData = {
+    public getUploadFileFn(): (file: FileData) => Promise<Identifiable> {
+        return async file => {
+            const payload = {
+                filename: file.mediafile.name,
+                file: await toBase64(file.mediafile),
+                title: file.title,
+                parent_id: this.directoryId,
+                access_group_ids: file.form.value.access_group_ids || []
+            };
+            return await this.repo.uploadFile(payload);
+        };
+    }
+
+    public getAddFileFn(): (file: File) => FileData {
+        return file => ({
             mediafile: file,
             title: file.name,
             form: this.formBuilder.group({
                 access_group_ids: [[]]
             })
-        };
-        this.uploadList.data.push(newFile);
-
-        if (this.table) {
-            this.table.renderRows();
-        }
-    }
-
-    /**
-     * Handler for the select file event
-     *
-     * @param $event holds the file. Triggered by changing the file input element
-     */
-    public onSelectFile(event: any): void {
-        if (event.target.files && event.target.files.length > 0) {
-            // file list is a special kind of collection, so array.foreach does not apply
-            for (const addedFile of event.target.files) {
-                this.addFile(addedFile);
-            }
-        }
-    }
-
-    /**
-     * Handler for the drop-file event
-     *
-     * @param event holds the file. Triggered by dropping in the area
-     */
-    public onDropFile(event: NgxFileDropEntry[]): void {
-        for (const droppedFile of event) {
-            // Check if the dropped element is a file. "Else" would be a dir.
-            if (droppedFile.fileEntry.isFile) {
-                const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
-                fileEntry.file((file: File) => {
-                    this.addFile(file);
-                });
-            }
-        }
-    }
-
-    /**
-     * Click handler for the upload button.
-     * Iterate over the upload list and executes `uploadFile` on each element
-     */
-    public async onUploadButton(): Promise<void> {
-        if (this.uploadList && this.uploadList.data.length > 0) {
-            this.errorMessage = '';
-            this.showProgress = true;
-
-            if (this.parallel) {
-                const promises = this.uploadList.data.map(file => this.uploadFile(file));
-                await Promise.all(promises);
-            } else {
-                for (const file of this.uploadList.data) {
-                    await this.uploadFile(file);
-                }
-            }
-            this.showProgress = false;
-
-            if (this.errorMessage === '') {
-                this.uploadSuccessEvent.next(this.filesUploadedIds);
-            } else {
-                this.table.renderRows();
-                const filenames = this.uploadList.data.map(file => file.mediafile.name);
-                this.errorEvent.next(`${this.errorMessage}\n${filenames}`);
-            }
-        }
-    }
-
-    /**
-     * Calculate the progress to display in the progress bar
-     * Only used in synchronous upload since parallel upload
-     *
-     * @returns the upload progress in percent.
-     */
-    public calcUploadProgress(): number {
-        if (this.filesUploadedIds && this.filesUploadedIds.length > 0 && this.uploadList.data) {
-            return 100 / (this.uploadList.data.length / this.filesUploadedIds.length);
-        } else {
-            return 0;
-        }
-    }
-
-    /**
-     * Removes the given file from the upload table
-     *
-     * @param file the file to remove
-     */
-    public onRemoveButton(file: FileData): void {
-        if (this.uploadList.data) {
-            this.uploadList.data.splice(this.uploadList.data.indexOf(file), 1);
-            this.table.renderRows();
-        }
-    }
-
-    /**
-     * Click handler for the clear button. Deletes the upload list
-     */
-    public onClearButton(): void {
-        this.uploadList.data = [];
-        if (this.table) {
-            this.table.renderRows();
-        }
+        });
     }
 }

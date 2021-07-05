@@ -114,6 +114,7 @@ import { PointOfOrderDialogComponent } from './components/point-of-order-dialog/
 import { CustomTranslationComponent } from './components/custom-translation/custom-translation.component';
 import { UserMultiselectActionsComponent } from './components/user-multiselect-actions/user-multiselect-actions.component';
 import { UserChangePasswordComponent } from './components/user-change-password/user-change-password.component';
+import { FileUploadComponent } from './components/file-upload/file-upload.component';
 
 const declarations = [
     PermsDirective,
@@ -195,7 +196,8 @@ const declarations = [
     PointOfOrderDialogComponent,
     CustomTranslationComponent,
     UserMultiselectActionsComponent,
-    UserChangePasswordComponent
+    UserChangePasswordComponent,
+    FileUploadComponent
 ];
 
 const sharedModules = [
