@@ -115,10 +115,6 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
         this.propagateChanges();
     }
 
-    protected onLeaveEditMode(): void {
-        this.cleanSubjects();
-    }
-
     private createForm(): ParagraphBasedAmendmentContent {
         const contentPatch: ParagraphBasedAmendmentContent = {
             selected_paragraphs: [],
@@ -154,7 +150,8 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
     }
 
     private propagateChanges(): void {
-        this.subscriptions.push(
+        this.updateSubscription(
+            'contentForm',
             this.contentForm.valueChanges.subscribe(value => {
                 if (value) {
                     this.formChanged.emit({ amendment_paragraph_$: value });

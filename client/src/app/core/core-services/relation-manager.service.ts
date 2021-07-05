@@ -1,9 +1,13 @@
 import { Injectable } from '@angular/core';
 
+import { Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
+
 import { ActiveMeetingIdService } from './active-meeting-id.service';
 import { RELATIONS } from 'app/core/repositories/relations';
 import { BaseModel } from 'app/shared/models/base/base-model';
 import { BaseViewModel } from 'app/site/base/base-view-model';
+import { CollectionMapperService } from './collection-mapper.service';
 import { collectionIdFromFqid } from './key-transforms';
 import { Relation } from '../definitions/relations';
 import { ViewModelStoreService } from './view-model-store.service';
@@ -22,7 +26,8 @@ export class RelationManagerService {
 
     public constructor(
         private viewModelStoreService: ViewModelStoreService,
-        private activeMeetingIdService: ActiveMeetingIdService
+        private activeMeetingIdService: ActiveMeetingIdService,
+        private collectionMapper: CollectionMapperService
     ) {
         this.loadRelations();
     }
@@ -89,14 +94,36 @@ export class RelationManagerService {
         }
     }
 
+    public getObservableForRelation<M extends BaseModel>(model: M, relation: Relation): Observable<any> {
+        if (!relation.generic && !relation.structured) {
+            const foreignRepo = this.collectionMapper.getRepository(relation.foreignViewModel);
+            return foreignRepo.getModifiedIdsObservable().pipe(
+                map(modifiedIds => {
+                    if (relation.many) {
+                        return model[relation.ownIdField].intersect(modifiedIds).length > 0;
+                    } else {
+                        return modifiedIds.includes(model[relation.ownIdField]);
+                    }
+                }),
+                filter(hasChanges => !!hasChanges),
+                map(() => {
+                    return this.handleNormalRelation(model, relation, relation.ownIdField);
+                })
+            );
+        } else {
+            throw new Error(
+                'Generic and/or structured relations are not yet implemented for detection of changing relations.'
+            );
+        }
+    }
+
     private handleNormalRelation<M extends BaseModel>(model: M, relation: Relation, idField: string): any {
         if (relation.many) {
             const foreignViewModels = this.viewModelStoreService.getMany(relation.foreignViewModel, model[idField]);
             this.sortViewModels(foreignViewModels, relation.order);
             return foreignViewModels;
         } else {
-            const foreignViewModel = this.viewModelStoreService.get(relation.foreignViewModel, model[idField]);
-            return foreignViewModel;
+            return this.viewModelStoreService.get(relation.foreignViewModel, model[idField]);
         }
     }
 
@@ -115,8 +142,7 @@ export class RelationManagerService {
             }
             let collection, id;
             [collection, id] = collectionIdFromFqid(fqid);
-            const foreignViewModel = this.viewModelStoreService.get(collection, id);
-            return foreignViewModel;
+            return this.viewModelStoreService.get(collection, id);
         }
     }
 

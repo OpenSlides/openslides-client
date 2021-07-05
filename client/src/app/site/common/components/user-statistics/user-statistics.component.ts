@@ -81,9 +81,9 @@ export class UserStatisticsComponent extends BaseModelContextComponent {
     public changeViewOfStatistics(): void {
         this.statisticIsOpen = !this.statisticIsOpen;
         if (this.statisticIsOpen) {
-            this.startSubscription();
+            this.updateSubscription('speakers', this.speakerRepo.getViewModelListObservable().subscribe());
         } else {
-            this.cleanSubjects();
+            this.cleanSubscriptions();
         }
     }
 
@@ -108,9 +108,5 @@ export class UserStatisticsComponent extends BaseModelContextComponent {
         return !withHours
             ? this.durationService.durationToString(time, 'm')
             : this.durationService.durationToStringWithHours(time);
-    }
-
-    private startSubscription(): void {
-        this.subscriptions.push(this.speakerRepo.getViewModelListObservable().subscribe());
     }
 }
