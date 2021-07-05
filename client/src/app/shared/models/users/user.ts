@@ -25,6 +25,7 @@ export class User extends BaseDecimalModel<User> {
     public is_active: boolean;
     public is_physical_person: boolean;
     public default_password?: string;
+    public can_change_own_password: boolean;
     public gender?: string;
     public comment_$: string[];
     public number_$: string[];

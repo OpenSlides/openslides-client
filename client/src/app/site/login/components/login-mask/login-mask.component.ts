@@ -168,7 +168,7 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
      *
      * Send username and password to the {@link AuthService}
      */
-    public async formLogin(/*authType: UserAuthType*/): Promise<void> {
+    public async formLogin(): Promise<void> {
         this.loginErrorMsg = '';
         try {
             this.spinnerService.show(this.loginMessage, { hideWhenStable: true });

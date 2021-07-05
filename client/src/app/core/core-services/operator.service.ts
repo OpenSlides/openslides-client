@@ -23,6 +23,13 @@ import { UserRepositoryService } from '../repositories/users/user-repository.ser
 
 const UNKOWN_USER_ID = -1; // this is an invalid id **and** not equal to 0, null, undefined.
 
+const OPERATOR_FIELDS = [
+    'organization_management_level',
+    'committee_$_management_level',
+    'committee_ids',
+    'can_change_own_password'
+];
+
 function getUserCML(user: ViewUser): { [id: number]: string } | null {
     if (!user.committee_$_management_level) {
         return null;
@@ -70,12 +77,16 @@ export class OperatorService {
     private OML: string | undefined = undefined; //  null is valid, so use undefined here
     private CML: { [id: number]: string } | undefined = undefined;
 
-    public get isSuperAdmin(): boolean {
+    public get isMeetingAdmin(): boolean {
         if (this.defaultGroupId) {
             return this.isInGroupIdsNonAdminCheck(this.defaultGroupId);
         } else {
             throw new NoActiveMeeting();
         }
+    }
+
+    public get canChangeOwnPassword(): boolean {
+        return this.isAuthenticated && this.userSubject.value?.can_change_own_password;
     }
 
     /**
@@ -508,7 +519,7 @@ export class OperatorService {
                 ids: [this.operatorId],
                 viewModelCtor: ViewUser,
                 fieldset: 'shortName',
-                additionalFields: ['organization_management_level', 'committee_$_management_level', 'committee_ids'],
+                additionalFields: OPERATOR_FIELDS,
                 follow: [
                     {
                         idField: SpecificStructuredField('group_$_ids', this.activeMeetingId),
@@ -548,7 +559,7 @@ export class OperatorService {
                 ids: [this.operatorId],
                 viewModelCtor: ViewUser,
                 fieldset: 'shortName',
-                additionalFields: ['organization_management_level', 'committee_$_management_level', 'committee_ids']
+                additionalFields: OPERATOR_FIELDS
             };
         } else {
             // not logged in and no anonymous. We are done with loading, so we have

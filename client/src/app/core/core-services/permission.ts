@@ -7,29 +7,26 @@ export enum Permission {
     agendaItemCanSee = 'agenda_item.can_see',
     agendaItemCanSeeInternalItems = 'agenda_item.can_see_internal',
 
-    listOfSpeakersCanManage = 'list_of_speakers.can_manage',
-    listOfSpeakersCanSee = 'list_of_speakers.can_see',
-    listOfSpeakersCanBeSpeaker = 'list_of_speakers.can_be_speaker',
-
     assignmentsCanManage = 'assignment.can_manage',
     assignmentsCanNominateOther = 'assignment.can_nominate_other',
     assignmentsCanNominateSelf = 'assignment.can_nominate_self',
     assignmentsCanSee = 'assignment.can_see',
 
-    meetingCanManageSettings = 'meeting.can_manage_settings',
-    meetingCanManageLogosAndFonts = 'meeting.can_manage_logos_and_fonts',
-    meetingCanSeeHistory = 'meeting.can_see_history',
-    meetingCanSeeAutopilot = 'meeting.can_see_autopilot',
-    meetingCanSeeFrontpage = 'meeting.can_see_frontpage',
-    meetingCanSeeLiveStream = 'meeting.can_see_livestream',
+    chatCanManage = 'chat.can_manage',
 
-    projectorCanSee = 'projector.can_see',
-    projectorCanManage = 'projector.can_manage',
-
-    tagsCanManage = 'tag.can_manage',
+    listOfSpeakersCanManage = 'list_of_speakers.can_manage',
+    listOfSpeakersCanSee = 'list_of_speakers.can_see',
+    listOfSpeakersCanBeSpeaker = 'list_of_speakers.can_be_speaker',
 
     mediafilesCanManage = 'mediafile.can_manage',
     mediafilesCanSee = 'mediafile.can_see',
+
+    meetingCanManageSettings = 'meeting.can_manage_settings',
+    meetingCanManageLogosAndFonts = 'meeting.can_manage_logos_and_fonts',
+    meetingCanSeeFrontpage = 'meeting.can_see_frontpage',
+    meetingCanSeeAutopilot = 'meeting.can_see_autopilot',
+    meetingCanSeeLiveStream = 'meeting.can_see_livestream',
+    meetingCanSeeHistory = 'meeting.can_see_history',
 
     motionsCanCreate = 'motion.can_create',
     motionsCanCreateAmendments = 'motion.can_create_amendments',
@@ -40,7 +37,13 @@ export enum Permission {
     motionsCanSeeInternal = 'motion.can_see_internal',
     motionsCanSupport = 'motion.can_support',
 
-    usersCanChangeOwnPassword = 'user.can_change_own_password',
+    pollCanManage = 'poll.can_manage',
+
+    projectorCanSee = 'projector.can_see',
+    projectorCanManage = 'projector.can_manage',
+
+    tagsCanManage = 'tag.can_manage',
+
     usersCanManage = 'user.can_manage',
     usersCanSeeExtraData = 'user.can_see_extra_data',
     usersCanSee = 'user.can_see'
@@ -115,9 +118,16 @@ export const PERMISSIONS: AppPermission[] = [
                 display_name: 'Can see extra data of users (e.g. email and comment)',
                 value: Permission.usersCanSeeExtraData
             },
-            { display_name: 'Can change its own password', value: Permission.usersCanChangeOwnPassword },
             { display_name: 'Can manage users', value: Permission.usersCanManage }
         ]
+    },
+    {
+        name: 'Chat',
+        permissions: [{ display_name: 'Can manage the chat', value: Permission.chatCanManage }]
+    },
+    {
+        name: 'Poll',
+        permissions: [{ display_name: 'Can manage polls', value: Permission.pollCanManage }]
     },
     {
         name: 'General',

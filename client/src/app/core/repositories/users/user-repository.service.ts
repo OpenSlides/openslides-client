@@ -35,8 +35,6 @@ export interface NewUser {
  */
 export type UserStateField = 'is_active' | 'is_present_in_meetings' | 'is_physical_person';
 
-export type AuthType = 'default' | 'saml';
-
 /**
  * type for determining the user name from a string during import.
  * See {@link parseUserString} for implementations

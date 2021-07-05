@@ -7,17 +7,17 @@ import { OperatorService } from 'app/core/core-services/operator.service';
 /**
  * Directive to check if the operator is a superadmin
  *
- * @example <div *osIsSuperadmin ..> ... < /div>
+ * @example <div *osIsMeetingAdmin ..> ... < /div>
  */
 @Directive({
-    selector: '[osIsSuperAdmin]'
+    selector: '[osIsMeetingAdmin]'
 })
-export class IsSuperAdminDirective implements OnInit, OnDestroy {
+export class IsMeetingAdminDirective implements OnInit, OnDestroy {
     /**
-     * Holds the value of the last is superadmin check. Therefore one can check, if the
+     * Holds the value of the last is meeting admin check. Therefore one can check, if the
      * permission has changes, to save unnecessary view updates, if not.
      */
-    private lastIsSuperAdminCheckResult = false;
+    private lastIsMeetingAdminCheckResult = false;
 
     private operatorSubscription: Subscription | null;
 
@@ -52,17 +52,17 @@ export class IsSuperAdminDirective implements OnInit, OnDestroy {
      * Shows or hides certain content in the view.
      */
     private updateView(): void {
-        const isSuperadmin = this.operator.isSuperAdmin;
-        const superADminChanged = isSuperadmin !== this.lastIsSuperAdminCheckResult;
+        const isMeetingAdmin = this.operator.isMeetingAdmin;
+        const meetingAdminChanged = isMeetingAdmin !== this.lastIsMeetingAdminCheckResult;
 
-        if (isSuperadmin && superADminChanged) {
+        if (isMeetingAdmin && meetingAdminChanged) {
             // clean up and add the template
             this.viewContainer.clear();
             this.viewContainer.createEmbeddedView(this.template);
-        } else if (!isSuperadmin) {
+        } else if (!isMeetingAdmin) {
             // will remove the content of the container
             this.viewContainer.clear();
         }
-        this.lastIsSuperAdminCheckResult = isSuperadmin;
+        this.lastIsMeetingAdminCheckResult = isMeetingAdmin;
     }
 }

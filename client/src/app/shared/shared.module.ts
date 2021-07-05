@@ -19,7 +19,7 @@ import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 
 // directives
 import { PermsDirective } from './directives/perms.directive';
-import { IsSuperAdminDirective } from './directives/is-super-admin.directive';
+import { IsMeetingAdminDirective } from './directives/is-meeting-admin.directive';
 import { DomChangeDirective } from './directives/dom-change.directive';
 import { AutofocusDirective } from './directives/autofocus.directive';
 
@@ -118,7 +118,7 @@ import { FileUploadComponent } from './components/file-upload/file-upload.compon
 
 const declarations = [
     PermsDirective,
-    IsSuperAdminDirective,
+    IsMeetingAdminDirective,
     DomChangeDirective,
     AutofocusDirective,
     HeadBarComponent,

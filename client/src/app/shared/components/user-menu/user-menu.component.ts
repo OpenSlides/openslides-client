@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 
 import { AuthService } from 'app/core/core-services/auth.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { AuthType, UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
+import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { OrganizationSettingsService } from 'app/core/ui-services/organization-settings.service';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
@@ -27,8 +27,6 @@ export class UserMenuComponent extends BaseModelContextComponent implements OnIn
 
     public allowSelfSetPresent: boolean;
 
-    public authType: AuthType = 'default';
-
     public get isPresent(): boolean {
         return this.user.isPresentInMeeting();
     }
@@ -49,6 +47,10 @@ export class UserMenuComponent extends BaseModelContextComponent implements OnIn
         private userRepo: UserRepositoryService
     ) {
         super(componentServiceCollector);
+    }
+
+    public canChangeOwnPassword(): boolean {
+        return this.user.can_change_own_password;
     }
 
     public ngOnInit(): void {
@@ -90,7 +92,7 @@ export class UserMenuComponent extends BaseModelContextComponent implements OnIn
         this.requestModels({
             viewModelCtor: ViewUser,
             ids: [this._userId],
-            fieldset: ['is_present_in_meeting_ids']
+            fieldset: ['is_present_in_meeting_ids', 'can_change_own_password']
         });
 
         if (this.userSubscription) {

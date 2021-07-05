@@ -177,7 +177,7 @@ export class HistoryListComponent extends BaseComponent implements OnInit {
      * @param history Represents the selected element
      */
     public async onClickRow(history: History): Promise<void> {
-        if (!this.operator.isSuperAdmin) {
+        if (!this.operator.isMeetingAdmin) {
             return;
         }
 
