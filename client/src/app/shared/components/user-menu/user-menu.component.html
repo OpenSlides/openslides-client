@@ -33,24 +33,16 @@
                 <span class="menu-text">{{ 'Show profile' | translate }}</span>
             </a>
             <!-- Change password -->
-            <ng-container *ngIf="authType === 'default'">
-                <a
-                    [ngClass]="{ active: isOnChangePasswordPage() }"
-                    *osPerms="permission.usersCanChangeOwnPassword"
-                    [routerLink]="getChangePasswordPageUrl()"
-                    (click)="onClickNavEntry()"
-                    mat-list-item
-                >
-                    <mat-icon class="menu-icon">vpn_key</mat-icon>
-                    <span class="menu-text">{{ 'Change password' | translate }}</span>
-                </a>
-            </ng-container>
-            <ng-container *ngIf="authType === 'saml'">
-                <a *osPerms="permission.usersCanChangeOwnPassword" [href]="samlChangePasswordUrl" mat-list-item>
-                    <mat-icon class="menu-icon">vpn_key</mat-icon>
-                    <span class="menu-text">{{ 'Change password' | translate }}</span>
-                </a>
-            </ng-container>
+            <a
+                [ngClass]="{ active: isOnChangePasswordPage() }"
+                *ngIf="canChangeOwnPassword"
+                [routerLink]="getChangePasswordPageUrl()"
+                (click)="onClickNavEntry()"
+                mat-list-item
+            >
+                <mat-icon class="menu-icon">vpn_key</mat-icon>
+                <span class="menu-text">{{ 'Change password' | translate }}</span>
+            </a>
 
             <!-- To manage view -->
             <a routerLink="/" mat-list-item>

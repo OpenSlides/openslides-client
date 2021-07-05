@@ -213,7 +213,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
                 return this.operator.hasPerms(Permission.usersCanManage) || this.ownPage;
             case 'changePassword':
                 return (
-                    (this.ownPage && this.operator.hasPerms(Permission.usersCanChangeOwnPassword)) ||
+                    (this.ownPage && this.operator.canChangeOwnPassword) ||
                     this.operator.hasPerms(Permission.usersCanManage)
                 );
             default:

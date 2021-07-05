@@ -18,8 +18,7 @@ const routes: Route[] = [
     },
     {
         path: 'password',
-        component: PasswordComponent,
-        data: { basePerm: Permission.usersCanChangeOwnPassword }
+        component: PasswordComponent
     },
     {
         path: 'password/:id',
