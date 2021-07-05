@@ -2,12 +2,38 @@ import { Injectable } from '@angular/core';
 
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
+import { Follow } from 'app/core/core-services/model-request-builder.service';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
-import { ProjectorService } from 'app/core/ui-services/projector.service';
-import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
-import { SlideManager } from 'app/slides/services/slide-manager.service';
+import { hasListOfSpeakers, ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { ViewProjector } from '../models/view-projector';
+
+/**
+ * A `Follow`-object to request the reference projector of a meeting
+ * and depending on it the content-object's list of speakers.
+ */
+export const CURRENT_LIST_OF_SPEAKERS_FOLLOW: Follow = {
+    idField: 'reference_projector_id',
+    follow: [
+        {
+            idField: 'current_projection_ids',
+            follow: [
+                {
+                    idField: 'content_object_id',
+                    follow: [
+                        {
+                            idField: 'list_of_speakers_id',
+                            follow: [
+                                { idField: 'speaker_ids', follow: [{ idField: 'user_id', fieldset: 'shortName' }] }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            fieldset: 'content'
+        }
+    ]
+};
 
 /**
  * Observes the projector config for a given projector and returns a observable of the
@@ -43,15 +69,13 @@ export class CurrentListOfSpeakersService {
     public currentListOfSpeakersObservable = this.currentListOfSpeakerSubject.asObservable();
 
     public constructor(
-        private projectorService: ProjectorService,
         private projectorRepo: ProjectorRepositoryService,
-        private listOfSpeakersRepo: ListOfSpeakersRepositoryService,
-        private slideManager: SlideManager
+        private listOfSpeakersRepo: ListOfSpeakersRepositoryService
     ) {
         // Watch for changes and update the current list of speakers for every projector.
         this.projectorRepo.getGeneralViewModelObservable().subscribe(projector => {
             if (projector) {
-                // this.setListOfSpeakersForProjector(projector); TODO!!
+                this.setListOfSpeakersForProjector(projector);
             }
         });
 
@@ -67,8 +91,7 @@ export class CurrentListOfSpeakersService {
      * Use the subject to get it
      */
     private getCurrentListOfSpeakers(): ViewListOfSpeakers | null {
-        // TODO!!
-        return null; // this.getCurrentListOfSpeakersForProjector(this.closRefProjector);
+        return this.getCurrentListOfSpeakersForProjector(this.closRefProjector);
     }
 
     /**
@@ -130,21 +153,11 @@ export class CurrentListOfSpeakersService {
      * @returns The view list of speakers or null, if there is no such projector element.
      */
     private getCurrentListOfSpeakersForProjector(projector: ViewProjector): ViewListOfSpeakers | null {
-        throw new Error('TODO');
-        /*const nonStableElements = projector.elements.filter(element => !element.stable);
-        for (const nonStableElement of nonStableElements) {
-            const identifiableNonStableElement = this.slideManager.getIdentifiableProjectorElement(nonStableElement);
-            try {
-                const viewModel = this.projectorService.getViewModelFromIdentifiableProjectorElement(
-                    identifiableNonStableElement
-                );
-                if (isBaseViewModelWithListOfSpeakers(viewModel)) {
-                    return viewModel.listOfSpeakers;
-                }
-            } catch (e) {
-                // make TypeScript silent.
+        for (const projection of projector.current_projections) {
+            if (hasListOfSpeakers(projection.content_object)) {
+                return projection.content_object.list_of_speakers;
             }
-        }*/
+        }
         return null;
     }
 }
