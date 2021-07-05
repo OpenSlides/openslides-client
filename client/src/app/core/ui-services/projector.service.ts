@@ -13,7 +13,9 @@ export interface SlideData<T = { error?: string }> {
     data: T;
     stable: boolean;
     type: string;
-    options: object;
+    options: {
+        [key: string]: any;
+    };
     error?: string;
 }
 

@@ -1,9 +1,13 @@
 import { Component, Input } from '@angular/core';
 
-import { MediafileRepositoryService } from 'app/core/repositories/mediafiles/mediafile-repository.service';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+
+import { ProjectionRepositoryService } from 'app/core/repositories/projector/projection-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
+import { ViewProjection } from '../../models/view-projection';
 import { ViewProjector } from '../../models/view-projector';
 
 /**
@@ -15,63 +19,44 @@ import { ViewProjector } from '../../models/view-projector';
     styleUrls: ['./presentation-control.component.scss']
 })
 export class PresentationControlComponent extends BaseComponent {
-    /**
-     * The projector.
-     */
-    private _projector: ViewProjector;
-
     @Input()
     public set projector(projector: ViewProjector) {
-        this._projector = projector;
-        this.updateElements();
+        this.projectorSubject.next(projector);
     }
+
+    private projectorSubject = new BehaviorSubject<ViewProjector | null>(null);
 
     public get projector(): ViewProjector {
-        return this._projector;
+        return this.projectorSubject.value;
     }
 
-    // All mediafile elements.
-    public elements: any /*MediafileProjectorElement*/[] = [];
+    public projections: Observable<ViewProjection[]>;
 
-    /**
-     * Constructor
-     *
-     * @param titleService
-     * @param translate
-     * @param matSnackBar
-     * @param mediafileRepo
-     * @param slideManager
-     * @param projectorService
-     */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        private mediafileRepo: MediafileRepositoryService
+        private projectionRepo: ProjectionRepositoryService
     ) {
         super(componentServiceCollector);
+
+        this.projections = this.projectorSubject.pipe(
+            switchMap(projector => projector?.current_projections_as_observable || []),
+            map(projections => projections.filter(projection => this.getMediafile(projection)?.isProjectable()))
+        );
     }
 
-    /**
-     * Updates incoming elements
-     */
-    private updateElements(): void {
-        /*this.elements = this.projector.elements.filter(element => {
-            if (element.name !== Mediafile.COLLECTION || !element.id) {
-                return false;
-            }
-            const mediafile = this.mediafileRepo.getViewModel(element.id);
-            return !!mediafile && mediafile.isProjectable();
-        });*/
-    }
-
-    public getMediafile(element: any /*MediafileProjectorElement*/): ViewMediafile {
-        return this.mediafileRepo.getViewModel(element.id);
+    public getMediafile(projection: ViewProjection): ViewMediafile | null {
+        if (projection.content_object instanceof ViewMediafile) {
+            return projection.content_object;
+        } else {
+            return null;
+        }
     }
 
     /**
      * @returns the currently used page number (1 in case of unnumbered elements)
      */
-    public getPage(element: any /*MediafileProjectorElement*/): number {
-        return element.page || 1;
+    public getPage(projection: ViewProjection): number {
+        return projection.options.page || 1;
     }
 
     /**
@@ -79,9 +64,9 @@ export class PresentationControlComponent extends BaseComponent {
      *
      * @param element
      */
-    public pdfForward(element: any /*MediafileProjectorElement*/): void {
-        if (this.getPage(element) < this.getMediafile(element).pages) {
-            this.pdfSetPage(element, this.getPage(element) + 1);
+    public pdfForward(projection: ViewProjection): void {
+        if (this.getPage(projection) < this.getMediafile(projection).pages) {
+            this.pdfSetPage(projection, this.getPage(projection) + 1);
         }
     }
 
@@ -90,9 +75,9 @@ export class PresentationControlComponent extends BaseComponent {
      *
      * @param element
      */
-    public pdfBackward(element: any /*MediafileProjectorElement*/): void {
-        if (this.getPage(element) > 1) {
-            this.pdfSetPage(element, this.getPage(element) - 1);
+    public pdfBackward(projection: ViewProjection): void {
+        if (this.getPage(projection) > 1) {
+            this.pdfSetPage(projection, this.getPage(projection) - 1);
         }
     }
 
@@ -103,32 +88,28 @@ export class PresentationControlComponent extends BaseComponent {
      * @param element
      * @param page
      */
-    public pdfSetPage(element: any /*MediafileProjectorElement*/, page: number): void {
-        if (this.getMediafile(element).pages >= page) {
-            element.page = page;
-            this.updateElement(element);
-        }
+    public pdfSetPage(projection: ViewProjection, page: number): void {
+        projection.options.page = page;
+        this.updateProjectionOptions(projection);
     }
 
-    public zoom(element: any /*MediafileProjectorElement*/, direction: 'in' | 'out' | 'reset'): void {
+    public zoom(projection: ViewProjection, direction: 'in' | 'out' | 'reset'): void {
         if (direction === 'reset') {
-            element.zoom = 0;
+            projection.options.zoom = 0;
         } else if (direction === 'in') {
-            element.zoom = (element.zoom || 0) + 1;
+            projection.options.zoom = (projection.options.zoom || 0) + 1;
         } else if (direction === 'out') {
-            element.zoom = (element.zoom || 0) - 1;
+            projection.options.zoom = (projection.options.zoom || 0) - 1;
         }
-        this.updateElement(element);
+        this.updateProjectionOptions(projection);
     }
 
-    public fullscreen(element: any /*MediafileProjectorElement*/): void {
-        element.fullscreen = !element.fullscreen;
-        this.updateElement(element);
+    public fullscreen(projection: ViewProjection): void {
+        projection.options.fullscreen = !projection.options.fullscreen;
+        this.updateProjectionOptions(projection);
     }
 
-    private updateElement(element: any /*MediafileProjectorElement*/): void {
-        /*const idElement = this.slideManager.getIdentifiableProjectorElement(element);
-        this.projectorService.updateElement(this.projector.projector, idElement).catch(this.raiseError);*/
-        throw new Error('TODO');
+    private updateProjectionOptions(projection: ViewProjection): void {
+        this.projectionRepo.updateOption(projection);
     }
 }

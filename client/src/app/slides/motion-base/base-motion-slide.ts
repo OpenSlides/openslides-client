@@ -1,17 +1,19 @@
 import { TranslateService } from '@ngx-translate/core';
 
+import { TitleInformationWithAgendaItem } from '../agenda_item_number';
+import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { BaseSlideComponent } from 'app/slides/base-slide-component';
 
-export interface ReferencedMotionTitleInformation {
+export interface MotionTitleInformation extends TitleInformationWithAgendaItem {
     title: string;
-    number?: string;
+    number: string;
 }
 
 /**
  * Format for referenced motions: A mapping of motion ids to their title information.
  */
 export interface ReferencedMotions {
-    [id: number]: ReferencedMotionTitleInformation;
+    [id: number]: MotionTitleInformation;
 }
 
 /**
@@ -19,7 +21,7 @@ export interface ReferencedMotions {
  * replacing referenced motions (format: `[motion:<id>]`) in strings.
  */
 export class BaseMotionSlideComponent<T extends object> extends BaseSlideComponent<T> {
-    public constructor(protected translate: TranslateService) {
+    public constructor(protected translate: TranslateService, private motionRepo: MotionRepositoryService) {
         super();
     }
 
@@ -32,7 +34,7 @@ export class BaseMotionSlideComponent<T extends object> extends BaseSlideCompone
      * @returns the new string
      */
     public replaceReferencedMotions(text: string, referencedMotions: ReferencedMotions): string {
-        return text.replace(/\[motion:(\d+)\]/g, (match, id) => {
+        return text.replace(/\[motion\/(\d+)\]/g, (_, id) => {
             const referencedMotion = referencedMotions[id];
             if (referencedMotion) {
                 return this.getNumberOrTitle(referencedMotion);
@@ -42,11 +44,7 @@ export class BaseMotionSlideComponent<T extends object> extends BaseSlideCompone
         });
     }
 
-    protected getNumberOrTitle(titleInformation: ReferencedMotionTitleInformation): string {
-        if (titleInformation.number) {
-            return titleInformation.number;
-        } else {
-            return titleInformation.title;
-        }
+    protected getNumberOrTitle(titleInformation: MotionTitleInformation): string {
+        return this.motionRepo.getNumberOrTitle(titleInformation as any);
     }
 }

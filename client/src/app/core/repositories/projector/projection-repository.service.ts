@@ -42,6 +42,14 @@ export class ProjectionRepositoryService extends BaseRepositoryWithActiveMeeting
         };
     }
 
+    public async updateOption(projection: ViewProjection): Promise<void> {
+        const payload: ProjectionAction.UpdateOptionsPayload = {
+            id: projection.id,
+            options: projection.options
+        };
+        return await this.sendActionToBackend(ProjectionAction.UPDATE_OPTIONS, payload);
+    }
+
     /**
      * Deletes a projection. It can only be deleted, if It is a current or preview projection.
      */

@@ -1,5 +1,6 @@
+import { Id } from 'app/core/definitions/key-types';
+
 export interface MediafileSlideData {
-    path: string;
+    id: Id;
     mimetype: string;
-    media_url_prefix: string;
 }

@@ -1,8 +1,8 @@
-import { ReferencedMotions, ReferencedMotionTitleInformation } from '../motion-base/base-motion-slide';
+import { MotionTitleInformation, ReferencedMotions } from '../motion-base/base-motion-slide';
 
-export interface MotionBlockSlideMotionRepresentation extends ReferencedMotionTitleInformation {
+export interface MotionBlockSlideMotionRepresentation extends MotionTitleInformation {
     recommendation?: {
-        name: string;
+        recommendation_label: string;
         css_class: string;
     };
     recommendation_extension?: string;
@@ -14,5 +14,5 @@ export interface MotionBlockSlideMotionRepresentation extends ReferencedMotionTi
 export interface MotionBlockSlideData {
     title: string;
     motions: MotionBlockSlideMotionRepresentation[];
-    referenced_motions: ReferencedMotions;
+    referenced: ReferencedMotions;
 }

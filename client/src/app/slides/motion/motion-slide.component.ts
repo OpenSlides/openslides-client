@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { MotionChangeRecommendationRepositoryService } from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
 import { MotionLineNumberingService } from 'app/core/repositories/motions/motion-line-numbering.service';
+import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { DiffLinesInParagraph, DiffService, LineRange } from 'app/core/ui-services/diff.service';
 import { LineNumberedString, LinenumberingService } from 'app/core/ui-services/linenumbering.service';
 import { SlideData } from 'app/core/ui-services/projector.service';
@@ -107,12 +108,13 @@ export class MotionSlideComponent
 
     public constructor(
         translate: TranslateService,
+        motionRepo: MotionRepositoryService,
         private motionLineNumbering: MotionLineNumberingService,
         private changeRepo: MotionChangeRecommendationRepositoryService,
         private lineNumbering: LinenumberingService,
         private diff: DiffService
     ) {
-        super(translate);
+        super(translate, motionRepo);
     }
 
     protected setData(value: SlideData<MotionSlideData>): void {
