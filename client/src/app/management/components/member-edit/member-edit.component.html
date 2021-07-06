@@ -40,7 +40,7 @@
     [isEditing]="isEditingUser"
     [isNewUser]="isNewUser"
     [additionalFormControls]="additionalFormControls"
-    [generatePasswordFn]="randomPasswordFn"
+    [generatePasswordFn]="getRandomPasswordFn()"
     [user]="user"
     (changeEvent)="personalInfoFormValue = $event"
     (validEvent)="isFormValid = $event"
@@ -102,6 +102,18 @@
                     ></os-search-repo-selector>
                 </mat-form-field>
             </div>
+            <div *osOmlPerms="OML.can_manage_organization">
+                <mat-form-field>
+                    <os-search-repo-selector
+                        formControlName="committee_$_management_level"
+                        [multiple]="true"
+                        placeholder="{{ 'Is manager of committee' | translate }}"
+                        [repo]="committeeRepo"
+                        [transformPropagateFn]="transformPropagateFn"
+                        [transformSetFn]="transformSetFn()"
+                    ></os-search-repo-selector>
+                </mat-form-field>
+            </div>
             <div *osOmlPerms="OML.can_manage_users">
                 <mat-form-field>
                     <mat-label>{{ 'Organization management level' | translate }}</mat-label>
@@ -140,6 +152,12 @@
             <span *ngFor="let committee of user.committees; let last = last">
                 {{ committee.getTitle() | translate }}<span *ngIf="!last">,&nbsp;</span>
             </span>
+        </div>
+
+        <!-- Committee management -->
+        <div *ngIf="user.committee_$_management_level?.length">
+            <h4>{{ 'Can manage committees' | translate }}</h4>
+            <div>{{ getUserCommitteeManagementLevels() }}</div>
         </div>
 
         <!-- Organization management level -->

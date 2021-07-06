@@ -56,6 +56,20 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormControlCo
     public noOptionsFoundLabel = 'No options found';
 
     /**
+     * A function can be passed to transform a value before it is set as value of the underlying form-control.
+     */
+    @Input()
+    public transformSetFn?: (value: any) => Selectable;
+
+    /**
+     * A function can be passed to transform a value propagated from a change-event of the underlying form-control,
+     * before it is propagated to the parent form-group/ng-model.
+     * Useful to change the output of a form-control.
+     */
+    @Input()
+    public transformPropagateFn?: (value: Selectable) => Selectable;
+
+    /**
      * Emits the currently searched string.
      */
     @Output()
@@ -175,8 +189,9 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormControlCo
         if (typeof value === 'function') {
             throw new Error(`Warning: Trying to set a function as value: ${value}`);
         }
-        this.contentForm.setValue(value);
-        this.selectedIds = value ? (value as []) : [];
+        const nextValue = this.transformSetFn ? this.transformSetFn(value) : value;
+        this.contentForm.setValue(nextValue);
+        this.selectedIds = (nextValue as []) ?? [];
         this.triggerUpdate();
     }
 
@@ -185,6 +200,11 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormControlCo
      * This method is only called, if this form is not empty.
      */
     protected onAfterFirstUpdate(): void | Promise<void> {}
+
+    protected push(value: Selectable): void {
+        const nextValue = this.transformPropagateFn ? this.transformPropagateFn(value) : value;
+        super.push(nextValue);
+    }
 
     private triggerUpdate(): void {
         if (this.empty) {
