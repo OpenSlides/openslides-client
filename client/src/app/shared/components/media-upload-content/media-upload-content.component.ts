@@ -139,19 +139,11 @@ export class MediaUploadContentComponent extends BaseModelContextComponent imple
         });
 
         // detect changes in the form
-        this.directorySelectionForm.valueChanges.subscribe(formResult => {
-            // undefined == none selection.
-            if (formResult.directoryId || formResult.directoryId === undefined) {
-                this.directoryId = formResult.directoryId || null;
-                let url = `/${this.activeMeetingId}/mediafiles/upload`;
-                if (this.directoryId) {
-                    url += `/${this.directoryId}`;
-                }
-                this.router.navigate([url], {
-                    replaceUrl: true
-                });
-            }
-        });
+        this.subscriptions.push(
+            this.directorySelectionForm.valueChanges.subscribe(formResult => {
+                this.directoryId = formResult.directoryId;
+            })
+        );
 
         this.requestModels({
             viewModelCtor: ViewMeeting,
