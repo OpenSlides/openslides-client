@@ -1,10 +1,17 @@
 <div mat-dialog-title>{{ 'Forward motions to' | translate }}:</div>
 <div mat-dialog-content>
-    <os-selection-tree
-        parentKey="parent_id"
-        [data]="availableMeetingsObservable"
-        (selectionChanged)="currentSelectedMeetings = $event"
-    ></os-selection-tree>
+    <mat-radio-group class="forward-dialog-selection" [(ngModel)]="currentSelectedMeeting">
+        <ng-container *ngFor="let committee of availableMeetingsObservable | async">
+            <div *ngIf="committee.meetings?.length">
+                <h4>{{ committee.name }}</h4>
+                <div *ngFor="let meeting of committee.meetings">
+                    <mat-radio-button [value]="meeting.id">
+                        {{ meeting.name }}
+                    </mat-radio-button>
+                </div>
+            </div>
+        </ng-container>
+    </mat-radio-group>
 </div>
 <div mat-dialog-actions>
     <button mat-button color="primary" (click)="onSaveClicked()">{{ 'Save' | translate }}</button>

@@ -104,7 +104,6 @@ import { SwipeDirective } from './directives/swipe.directive';
 import { ListenEditingDirective } from './directives/listen-editing.directive';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
 import { UserDetailViewComponent } from './components/user-detail-view/user-detail-view.component';
-import { SelectionTreeComponent } from './components/selection-tree/selection-tree.component';
 import { ChipComponent } from './components/chip/chip.component';
 import { ChipListComponent } from './components/chip-list/chip-list.component';
 import { OmlPermsDirective } from './directives/oml-perms.directive';
@@ -187,7 +186,6 @@ const declarations = [
     ListenEditingDirective,
     ChangePasswordComponent,
     UserDetailViewComponent,
-    SelectionTreeComponent,
     ChipComponent,
     ChipListComponent,
     CmlPermsDirective,
