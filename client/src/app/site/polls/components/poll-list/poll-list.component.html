@@ -3,7 +3,7 @@
 </os-head-bar>
 
 <os-list-view-table
-    [listObservableProvider]="polls"
+    [listObservableProvider]="pollRepo"
     [vScrollFixed]="64"
     [columns]="tableColumnDefinition"
     listStorageKey="polls"
@@ -30,15 +30,13 @@
 
     <!-- Voted Indicator -->
     <div *pblNgridCellDef="'votability'; row as poll" class="cell-slot fill">
-        <mat-icon *ngIf="poll.wasVoted" color="accent" matTooltip="{{ 'You have already voted.' | translate }}">
-            check_circle
-        </mat-icon>
-        <mat-icon
-            *ngIf="!poll.wasVoted && poll.wasVoted !== null"
-            color="warn"
-            matTooltip="{{ 'Voting is currently in progress.' | translate }}"
-        >
-            warning
-        </mat-icon>
+        <ng-container *ngIf="canBeVoteFor(poll); then inProgress; else notInProgress"></ng-container>
     </div>
 </os-list-view-table>
+
+<ng-template #inProgress>
+    <mat-icon color="warn" matTooltip="{{ 'Voting is currently in progress.' | translate }}"> warning </mat-icon>
+</ng-template>
+<ng-template #notInProgress>
+    <mat-icon color="accent" matTooltip="{{ 'You have already voted.' | translate }}"> check_circle </mat-icon>
+</ng-template>

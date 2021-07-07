@@ -37,7 +37,7 @@ export class VotingBannerService {
      */
     private checkForVotablePolls(polls: ViewPoll[]): void {
         // display no banner if in history mode or there are no polls to vote
-        const pollsToVote = polls.filter(poll => this.votingService.canVote(poll) && !poll.user_has_voted);
+        const pollsToVote = polls.filter(poll => this.votingService.canVote(poll) && !poll.operatorHasVoted());
         if ((this.historyService.isInHistoryMode && this.currentBanner) || !pollsToVote.length) {
             this.sliceBanner();
             return;

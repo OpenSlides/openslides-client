@@ -106,6 +106,7 @@ export class ActiveMeetingService {
                     // needed for the voting-banner
                     idField: 'poll_ids',
                     fieldset: 'list',
+                    additionalFields: ['voted_ids'],
                     follow: [{ idField: 'content_object_id' }]
                 },
                 { idField: 'default_projector_$_id' }

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { PollAction } from 'app/core/actions/poll-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
+import { OperatorService } from 'app/core/core-services/operator.service';
 import { Collection, Decimal, Id } from 'app/core/definitions/key-types';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Poll } from 'app/shared/models/poll/poll';
@@ -28,7 +29,7 @@ interface AnalogPollGlobalValues {
     providedIn: 'root'
 })
 export class PollRepositoryService extends BaseRepositoryWithActiveMeeting<ViewPoll, Poll> {
-    public constructor(repoServiceCollector: RepositoryServiceCollector) {
+    public constructor(repoServiceCollector: RepositoryServiceCollector, private operator: OperatorService) {
         super(repoServiceCollector, Poll);
     }
 
@@ -363,5 +364,13 @@ export class PollRepositoryService extends BaseRepositoryWithActiveMeeting<ViewP
                 return this.publishPoll(poll);
                 break;
         }
+    }
+
+    protected createViewModel(model: Poll): ViewPoll {
+        const viewPoll = super.createViewModel(model);
+        viewPoll.operatorHasVoted = (): boolean => {
+            return (viewPoll.voted_ids || []).includes(this.operator.operatorId);
+        };
+        return viewPoll;
     }
 }
