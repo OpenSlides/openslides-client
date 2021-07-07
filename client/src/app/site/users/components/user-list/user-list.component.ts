@@ -221,6 +221,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
                 {
                     idField: 'user_ids',
                     fieldset: 'list',
+                    additionalFields: ['default_password'], // used for PDF
                     follow: [
                         {
                             idField: {

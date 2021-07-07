@@ -110,7 +110,20 @@ export class AssignmentListComponent extends BaseListViewComponent<ViewAssignmen
             follow: [
                 {
                     idField: 'assignment_ids',
-                    follow: [SPEAKER_BUTTON_FOLLOW],
+                    follow: [
+                        SPEAKER_BUTTON_FOLLOW,
+                        // This makes PDF-export working.
+                        // Should be removed if the AU-service provides a "single-shot"-route.
+                        // See OpenSlides/openslides-autoupdate-service#260.
+                        {
+                            idField: 'candidate_ids',
+                            follow: [{ idField: 'user_id', fieldset: 'shortName' }]
+                        },
+                        {
+                            idField: 'poll_ids'
+                        }
+                        // End of block
+                    ],
                     fieldset: 'list'
                 }
             ],
@@ -145,8 +158,8 @@ export class AssignmentListComponent extends BaseListViewComponent<ViewAssignmen
      * @param assignments Optional parameter: If given, the chosen list will be exported,
      * otherwise the whole list of assignments is exported.
      */
-    public downloadAssignmentButton(assignments?: ViewAssignment[]): void {
-        this.pdfService.exportMultipleAssignments(assignments ? assignments : this.repo.getViewModelList());
+    public async downloadAssignmentButton(assignments?: ViewAssignment[]): Promise<void> {
+        this.pdfService.exportMultipleAssignments(assignments ?? this.repo.getViewModelList());
     }
 
     public getCandidateAmount(assignments: ViewAssignment): number {

@@ -311,6 +311,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
                         'block_id',
                         'tag_ids',
                         'personal_note_ids',
+                        { idField: 'comment_ids', follow: [{ idField: 'section_id' }] }, // Necessary for PDf
                         {
                             idField: 'state_id',
                             follow: ['next_state_ids', GET_POSSIBLE_RECOMMENDATIONS],
@@ -324,7 +325,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
                         SPEAKER_BUTTON_FOLLOW
                     ],
                     fieldset: 'list',
-                    additionalFields: ['text']
+                    additionalFields: ['text', 'reason']
                 },
                 {
                     idField: 'motion_category_ids',

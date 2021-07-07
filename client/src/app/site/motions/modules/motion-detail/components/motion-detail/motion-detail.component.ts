@@ -33,9 +33,11 @@ import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/spea
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
+import { LineNumberingMode, PERSONAL_NOTE_ID } from 'app/site/motions/motions.constants';
 import { AmendmentFilterListService } from 'app/site/motions/services/amendment-filter-list.service';
 import { AmendmentSortListService } from 'app/site/motions/services/amendment-sort-list.service';
 import { MotionFilterListService } from 'app/site/motions/services/motion-filter-list.service';
+import { MotionPdfExportService } from 'app/site/motions/services/motion-pdf-export.service';
 import { MotionSortListService } from 'app/site/motions/services/motion-sort-list.service';
 import { PermissionsService } from 'app/site/motions/services/permissions.service';
 import { MotionContentComponent } from '../motion-content/motion-content.component';
@@ -128,7 +130,8 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         private amendmentService: AmendmentService,
         private amendmentSortService: AmendmentSortListService,
         private amendmentFilterService: AmendmentFilterListService,
-        private cd: ChangeDetectorRef
+        private cd: ChangeDetectorRef,
+        private pdfExport: MotionPdfExportService
     ) {
         super(componentServiceCollector);
     }
@@ -243,13 +246,15 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
      * Click handler for the pdf button
      */
     public onDownloadPdf(): void {
-        throw new Error('Todo');
-        // this.pdfExport.exportSingleMotion(this.motion, {
-        //     lnMode: this.lnMode === this.LineNumberingMode.Inside ? this.LineNumberingMode.Outside : this.lnMode,
-        //     crMode: this.crMode,
-        //     // export all comment fields as well as personal note
-        //     comments: this.motion.usedCommentSectionIds.concat([PERSONAL_NOTE_ID])
-        // });
+        this.pdfExport.exportSingleMotion(this.motion, {
+            lnMode:
+                this.viewService.currentLineNumberingMode === LineNumberingMode.Inside
+                    ? LineNumberingMode.Outside
+                    : this.viewService.currentLineNumberingMode,
+            crMode: this.viewService.currentChangeRecommendationMode,
+            // export all comment fields as well as personal note
+            comments: this.motion.usedCommentSectionIds.concat([PERSONAL_NOTE_ID])
+        });
     }
 
     /**

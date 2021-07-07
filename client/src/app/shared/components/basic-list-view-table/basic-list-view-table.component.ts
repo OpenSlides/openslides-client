@@ -571,25 +571,26 @@ export class BasicListViewTableComponent<V extends BaseViewModel> implements OnI
      * @returns the filter predicate object
      */
     private getFilterPredicate(): DataSourcePredicate {
-        const toFiltering = (currValue: any, split: string[], trimmedInput: string) => {
-            if (!currValue) {
+        const toFiltering = (originItem: V, split: string[], trimmedInput: string) => {
+            let property: unknown;
+            if (!originItem) {
                 return;
             }
             for (const subProp of split) {
-                currValue = currValue[subProp];
+                property = originItem[subProp];
             }
-            if (!currValue) {
+            if (!property) {
                 return;
             }
 
             let propertyAsString = '';
             // If the property is a function, call it.
-            if (typeof currValue === 'function') {
-                propertyAsString = '' + currValue();
-            } else if (currValue.constructor === Array) {
-                propertyAsString = currValue.join('');
+            if (typeof property === 'function') {
+                propertyAsString = '' + property.bind(originItem)();
+            } else if (Array.isArray(property) || property.constructor === Array) {
+                propertyAsString = property.join('');
             } else {
-                propertyAsString = '' + currValue;
+                propertyAsString = '' + property;
             }
 
             if (propertyAsString) {
