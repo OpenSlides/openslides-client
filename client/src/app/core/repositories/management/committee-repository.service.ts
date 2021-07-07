@@ -78,10 +78,10 @@ export class CommitteeRepositoryService
 
     public bulkForwardToCommittees(committees: ViewCommittee[], committeeIds: Id[]): Promise<void> {
         const payload: CommitteeAction.UpdatePayload[] = committees.map(committee => {
-            committeeIds = committeeIds.concat(committee.forward_to_committee_ids || []);
+            const forwardToIds = new Set(committeeIds.concat(committee.forward_to_committee_ids || []));
             return {
                 id: committee.id,
-                forward_to_committee_ids: committeeIds
+                forward_to_committee_ids: Array.from(forwardToIds)
             };
         });
         return this.sendBulkActionToBackend(CommitteeAction.UPDATE, payload);
