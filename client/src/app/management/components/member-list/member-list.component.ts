@@ -59,7 +59,7 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
     public async deleteSelected(): Promise<void> {
         const title = this.translate.instant('Are you sure you want to delete all selected participants?');
         if (await this.promptService.open(title)) {
-            this.repo.bulkDelete(this.selectedRows).catch(this.raiseError);
+            this.repo.delete(...this.selectedRows).catch(this.raiseError);
         }
     }
 

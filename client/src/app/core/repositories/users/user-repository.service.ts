@@ -135,21 +135,15 @@ export class UserRepositoryService
         };
     }
 
-    public create(partialUser: Partial<UserAction.CreatePayload>): Promise<Identifiable> {
-        const payload: UserAction.CreatePayload = {
+    public create(...usersToCreate: Partial<UserAction.CreatePayload>[]): Promise<Identifiable[]> {
+        const payload: UserAction.CreatePayload[] = usersToCreate.map(partialUser => ({
             ...this.getBaseUserPayload(partialUser),
             is_present_in_meeting_ids: partialUser.is_present_in_meeting_ids
-        };
-        this.sanitizePayload(payload);
-        return this.sendActionToBackend(UserAction.CREATE, payload);
-    }
-
-    public update(update: Partial<UserAction.UpdatePayload>, viewUser: ViewUser): Promise<void> {
-        const payload: UserAction.UpdatePayload = {
-            id: viewUser.id,
-            ...this.getBaseUserPayload(update)
-        };
-        return this.sendActionToBackend(UserAction.UPDATE, payload);
+        }));
+        for (const entry of payload) {
+            this.sanitizePayload(entry);
+        }
+        return this.sendBulkActionToBackend(UserAction.CREATE, payload);
     }
 
     /**
@@ -159,9 +153,9 @@ export class UserRepositoryService
      * @param patch An update-payload object or a function to generate a payload. The function gets a user as argument.
      * @param users A list of users, who will be updated.
      */
-    public async bulkUpdate(
-        patch: UserAction.UpdatePayload | ((user: ViewUser) => UserAction.UpdatePayload),
-        users: ViewUser[]
+    public update(
+        patch: Partial<UserAction.UpdatePayload> | ((user: ViewUser) => Partial<UserAction.UpdatePayload>),
+        ...users: ViewUser[]
     ): Promise<void> {
         const updatePayload = users.map(user => {
             const update = typeof patch === 'function' ? patch(user) : patch;
@@ -170,7 +164,7 @@ export class UserRepositoryService
                 ...this.getBaseUserPayload(update)
             };
         });
-        return this.sendActionsToBackend([{ action: UserAction.UPDATE, data: updatePayload }]);
+        return this.sendBulkActionToBackend(UserAction.UPDATE, updatePayload);
     }
 
     private getBaseUserPayload(partialUser: any): Partial<UserAction.BaseUserPayload> {
@@ -337,7 +331,7 @@ export class UserRepositoryService
      * @param password The password to set
      * @param setAsDefault Control, if the default password should be updated. Defaults to `true`.
      */
-    public async setPassword(user: ViewUser, password: string, setAsDefault?: boolean): Promise<void> {
+    public setPassword(user: ViewUser, password: string, setAsDefault?: boolean): Promise<void> {
         const payload: UserAction.SetPasswordPayload = {
             id: user.id,
             password,
@@ -346,20 +340,13 @@ export class UserRepositoryService
         return this.sendActionToBackend(UserAction.SET_PASSWORD, payload);
     }
 
-    public async resetPasswordToDefault(user: ViewUser): Promise<void> {
-        const payload: UserAction.ResetPasswordToDefaultPayload = {
-            id: user.id
-        };
-        return this.sendActionToBackend(UserAction.RESET_PASSWORD_TO_DEFAULT, payload);
-    }
-
     /**
      * Updates the password and sets a new one, if the old one was correct.
      *
      * @param oldPassword the old password
      * @param newPassword the new password
      */
-    public async setPasswordSelf(user: ViewUser, oldPassword: string, newPassword: string): Promise<void> {
+    public setPasswordSelf(user: ViewUser, oldPassword: string, newPassword: string): Promise<void> {
         this.preventAlterationOnDemoUsers(user); // What does this do?
         const payload: UserAction.SetPasswordSelfPayload = {
             old_password: oldPassword,
@@ -368,14 +355,14 @@ export class UserRepositoryService
         return this.sendActionToBackend(UserAction.SET_PASSWORD_SELF, payload);
     }
 
-    public async setPresent(user: ViewUser, present: boolean): Promise<void> {
+    public setPresent(user: ViewUser, present: boolean): Promise<void> {
         this.preventAlterationOnDemoUsers(user);
         const payload: UserAction.SetPresentPayload = {
             id: user.id,
             meeting_id: this.activeMeetingId,
             present
         };
-        this.sendActionToBackend(UserAction.SET_PRESENT, payload);
+        return this.sendActionToBackend(UserAction.SET_PRESENT, payload);
     }
 
     /**
@@ -384,7 +371,7 @@ export class UserRepositoryService
      *
      * @param users The users to reset the passwords from
      */
-    public async bulkResetPasswordsToDefault(users: ViewUser[]): Promise<void> {
+    public resetPasswordToDefault(...users: ViewUser[]): Promise<void> {
         this.preventInDemo();
         const payload: UserAction.ResetPasswordToDefaultPayload[] = users.map(user => ({ id: user.id }));
         return this.sendBulkActionToBackend(UserAction.RESET_PASSWORD_TO_DEFAULT, payload);
@@ -396,40 +383,16 @@ export class UserRepositoryService
      *
      * @param users The users to generate new passwords for
      */
-    public async bulkGenerateNewPasswords(users: ViewUser[]): Promise<void> {
+    public bulkGenerateNewPasswords(users: ViewUser[]): Promise<void> {
         this.preventInDemo();
         const payload: UserAction.GenerateNewPasswordPayload[] = users.map(user => ({ id: user.id }));
         return this.sendBulkActionToBackend(UserAction.GENERATE_NEW_PASSWORD, payload);
     }
 
-    /**
-     * Creates and saves a list of users in a bulk operation.
-     *
-     * @param newEntries
-     */
-    public async bulkCreate(newEntries: Partial<UserAction.CreatePayload>[]): Promise<Identifiable[]> {
-        const data: UserAction.CreatePayload[] = newEntries.map(entry => {
-            return this.getBaseUserPayload(entry);
-        });
-        return this.sendBulkActionToBackend(UserAction.CREATE, data);
-    }
-
-    public delete(viewUser: ViewUser): Promise<void> {
-        const payload: UserAction.DeletePayload = { id: viewUser.id };
-        return this.sendActionToBackend(UserAction.DELETE, payload);
-    }
-
-    /**
-     * Deletes many users. The operator will not be deleted (if included in `users`)
-     *
-     * @param users The users to delete
-     */
-    public async bulkDelete(users: ViewUser[]): Promise<void> {
+    public delete(...users: ViewUser[]): Promise<void> {
         this.preventInDemo();
-        return this.sendBulkActionToBackend(
-            UserAction.DELETE,
-            users.map(user => ({ id: user.id }))
-        );
+        const payload: UserAction.DeletePayload[] = users.map(user => ({ id: user.id }));
+        return this.sendBulkActionToBackend(UserAction.DELETE, payload);
     }
 
     /**
@@ -439,7 +402,7 @@ export class UserRepositoryService
      * @param field The boolean field to set
      * @param value The value to set this field to.
      */
-    public async bulkSetState(users: ViewUser[], field: UserStateField, value: boolean): Promise<void> {
+    public setState(field: UserStateField, value: boolean, ...users: ViewUser[]): Promise<void> {
         this.preventAlterationOnDemoUsers(users);
         const payload: UserAction.UpdatePayload[] = users.map(user => ({ id: user.id, [field]: value }));
         return this.sendBulkActionToBackend(UserAction.UPDATE, payload);
@@ -454,7 +417,7 @@ export class UserRepositoryService
                 group_ids: groupIds.filter((groupId, index, self) => self.indexOf(groupId) === index)
             };
         };
-        return this.bulkUpdate(patchFn, users);
+        return this.update(patchFn, ...users);
     }
 
     public bulkRemoveGroupsFromUsers(users: ViewUser[], groupIds: Id[]): Promise<void> {
@@ -463,7 +426,7 @@ export class UserRepositoryService
             id: user.id,
             group_ids: user.group_ids().filter(groupId => !groupIds.includes(groupId))
         });
-        return this.bulkUpdate(patchFn, users);
+        return this.update(patchFn, ...users);
     }
 
     public bulkAssignUsersToCommitteesAsMembers(users: ViewUser[], committeeIds: Id[]): Promise<void> {
@@ -474,7 +437,7 @@ export class UserRepositoryService
                 committee_ids: committeeIds.filter((committeeId, index, self) => self.indexOf(committeeId) === index)
             };
         };
-        return this.bulkUpdate(patchFn, users);
+        return this.update(patchFn, ...users);
     }
 
     public bulkUnassignUsersFromCommitteesAsMembers(users: ViewUser[], committeeIds: Id[]): Promise<void> {
@@ -482,7 +445,7 @@ export class UserRepositoryService
             id: user.id,
             committee_ids: (user.committee_ids || []).filter(committeeId => !committeeIds.includes(committeeId))
         });
-        return this.bulkUpdate(patchFn, users);
+        return this.update(patchFn, ...users);
     }
 
     /**
@@ -584,12 +547,12 @@ export class UserRepositoryService
     public async createFromString(user: string): Promise<NewUser> {
         const newUser = this.parseStringIntoUser(user) as any;
         const createdUser = await this.create(newUser);
-        return { id: createdUser.id, name: user } as NewUser;
+        return { id: createdUser[0].id, name: user } as NewUser;
     }
 
     /**
-     * Tries to convert a user string into an user. Names that don't fit the scheme given
-     * will be entered into the first_name field
+     * Tries to convert a given string into an user (representated by a `FullNameInformation`-object).
+     * Names that don't fit the scheme given will be entered into the first_name field.
      *
      * Naming schemes are:
      * - firstSpaceLast: One or two space-separated words are assumed, matching
@@ -599,10 +562,14 @@ export class UserRepositoryService
      *
      * @param inputUser A raw user string
      * @param schema optional hint on how to handle the strings.
-     * @returns A User object (note: is only a local object, not uploaded to the server)
+     * @returns A `FullNameInformation`-object.
      */
-    public parseStringIntoUser(inputUser: string, schema: StringNamingSchema = 'firstSpaceLast'): Partial<User> {
-        const newUser: Partial<User> = {};
+    public parseStringIntoUser(inputUser: string, schema: StringNamingSchema = 'firstSpaceLast'): FullNameInformation {
+        const newUser: FullNameInformation = {
+            username: '',
+            structure_level: () => '',
+            number: () => ''
+        };
         if (schema === 'lastCommaFirst') {
             const commaSeparated = inputUser.split(',');
             switch (commaSeparated.length) {

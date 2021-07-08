@@ -4,15 +4,37 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Papa } from 'ngx-papaparse';
 
+import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { BaseImportService, ImportConfig, NewEntry } from 'app/core/ui-services/base-import.service';
+import { CsvExportService } from 'app/core/ui-services/csv-export.service';
+import { Identifiable } from 'app/shared/models/base/identifiable';
 import { User } from 'app/shared/models/users/user';
 import { ImportHelper } from 'app/site/common/import/import-helper';
 import { GroupImportHelper } from '../import/group-import-helper';
+import { userExportExample } from '../export/user-export-example';
 import { userHeadersAndVerboseNames } from '../users.constants';
 
 const GROUP_PROPERTY = 'group_ids';
+
+export interface UserExport {
+    title?: string;
+    first_name?: string;
+    last_name?: string;
+    comment?: string;
+    is_active?: string | boolean;
+    is_present_in_meeting_ids?: string | boolean;
+    is_physical_person?: string | boolean;
+    default_password?: string;
+    email?: string;
+    username?: string;
+    gender?: string;
+    default_number?: string | number;
+    default_structure_level?: string;
+    default_vote_weight?: string | number;
+    group_ids?: string;
+}
 
 @Injectable({
     providedIn: 'root'
@@ -48,11 +70,25 @@ export class UserImportService extends BaseImportService<User> {
     public constructor(
         private repo: UserRepositoryService,
         private groupRepo: GroupRepositoryService,
+        private activeMeetingId: ActiveMeetingIdService,
+        private exporter: CsvExportService,
         translate: TranslateService,
         papa: Papa,
         matSnackbar: MatSnackBar
     ) {
         super(translate, papa, matSnackbar);
+    }
+
+    /**
+     * Triggers an example csv download
+     */
+    public downloadCsvExample(): void {
+        const rows: UserExport[] = userExportExample;
+        this.exporter.dummyCSVExport<UserExport>(
+            userHeadersAndVerboseNames,
+            rows,
+            `${this.translate.instant('participants-example')}.csv`
+        );
     }
 
     /**
@@ -71,7 +107,7 @@ export class UserImportService extends BaseImportService<User> {
             }
             const nameSchema = line.includes(',') ? 'lastCommaFirst' : 'firstSpaceLast';
             const user = this.repo.parseStringIntoUser(line, nameSchema);
-            newEntries.push(this.parseLineToImportEntry(user));
+            newEntries.push(this.parseLineToImportEntry(user as any));
         }
         this.setParsedEntries(newEntries);
     }
@@ -81,7 +117,7 @@ export class UserImportService extends BaseImportService<User> {
             modelHeadersAndVerboseNames: userHeadersAndVerboseNames,
             hasDuplicatesFn: (entry: Partial<User>) =>
                 this.repo.getViewModelList().some(user => user.username === entry.username),
-            bulkCreateFn: (entries: any[]) => this.repo.bulkCreate(entries)
+            bulkCreateFn: (entries: any[]) => this.createUsers(entries)
         };
     }
 
@@ -119,14 +155,14 @@ export class UserImportService extends BaseImportService<User> {
      * @param user
      * @returns a NewEntry with duplicate/error information
      */
-    private parseLineToImportEntry(user: any): NewEntry<User> {
+    private parseLineToImportEntry(user: User): NewEntry<User> {
         const newEntry: NewEntry<User> = {
             newEntry: user,
             hasDuplicates: false,
             status: 'new',
             errors: []
         };
-        if (user.isValid) {
+        if (user.first_name || user.last_name || user.username) {
             newEntry.hasDuplicates = this.repo
                 .getViewModelList()
                 .some(existingUser => existingUser.full_name === this.repo.getFullName(user));
@@ -137,5 +173,13 @@ export class UserImportService extends BaseImportService<User> {
             this.setError(newEntry, 'NoName');
         }
         return newEntry;
+    }
+
+    private createUsers(users: any[]): Promise<Identifiable[]> {
+        for (const user of users) {
+            user.is_present_in_meeting_ids =
+                user.is_present_in_meeting_ids === '1' ? [this.activeMeetingId.meetingId] : [];
+        }
+        return this.repo.create(...users);
     }
 }

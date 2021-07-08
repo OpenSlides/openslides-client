@@ -3,9 +3,10 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { columnFactory, PblColumnDefinition } from '@pebula/ngrid';
 
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { NewEntry } from 'app/core/ui-services/base-import.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { CsvExportService } from 'app/core/ui-services/csv-export.service';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { User } from 'app/shared/models/users/user';
 import { BaseImportListComponent } from 'app/site/base/components/base-import-list.component';
 import { UserImportService } from '../../services/user-import.service';
@@ -23,14 +24,14 @@ import { headerMap, userHeadersAndVerboseNames } from '../../users.constants';
 export class UserImportListComponent extends BaseImportListComponent<User> {
     public textAreaForm: FormGroup;
 
-    public headerRowDefinition = Object.values(userHeadersAndVerboseNames);
+    public possibleFields = Object.values(userHeadersAndVerboseNames);
 
     private statusImportColumn: PblColumnDefinition = {
         label: this.translate.instant('Status'),
         prop: `status`
     };
 
-    private get generateImportColumns(): PblColumnDefinition[] {
+    public get generateImportColumns(): PblColumnDefinition[] {
         return headerMap.map((property, index: number) => {
             const singleColumnDef: PblColumnDefinition = {
                 label: this.translate.instant(userHeadersAndVerboseNames[property]),
@@ -60,93 +61,10 @@ export class UserImportListComponent extends BaseImportListComponent<User> {
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         formBuilder: FormBuilder,
-        private exporter: CsvExportService,
-        protected importer: UserImportService
+        public importer: UserImportService
     ) {
         super(componentServiceCollector, importer);
         this.textAreaForm = formBuilder.group({ inputtext: [''] });
-    }
-
-    /**
-     * Triggers an example csv download
-     */
-    public downloadCsvExample(): void {
-        const rows = [
-            [
-                'Dr.',
-                'Max',
-                'Mustermann',
-                'Berlin',
-                1234567890,
-                'Delegates, Staff',
-                'xyz',
-                1,
-                1,
-                ,
-                'initialPassword',
-                null,
-                'mmustermann',
-                'male',
-                1.0
-            ],
-            [
-                null,
-                'John',
-                'Doe',
-                'Washington',
-                '75/99/8-2',
-                'Committees',
-                'This is a comment, without doubt',
-                1,
-                1,
-                null,
-                null,
-                'john.doe@email.com',
-                'jdoe',
-                'diverse',
-                2.0
-            ],
-            [
-                null,
-                'Julia',
-                'Bloggs',
-                'London',
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                'jbloggs',
-                'female',
-                1.5
-            ],
-            [null, null, 'Executive Board', null, null, null, null, null, null, 1, null, null, 'executive', null, 2.5]
-        ];
-        this.exporter.dummyCSVExport(
-            Object.values(userHeadersAndVerboseNames),
-            rows,
-            `${this.translate.instant('participants-example')}.csv`
-        );
-    }
-
-    /**
-     * Guess the type of the property, since
-     * `const type = typeof User[property];`
-     * always returns undefined
-     */
-    private guessType(userProperty: keyof User): 'string' | 'number' | 'boolean' {
-        const numberProperties: (keyof User)[] = ['id', 'vote_weight'];
-        const booleanProperties: (keyof User)[] = ['is_present_in_meeting_ids', 'is_physical_person', 'is_active'];
-        if (numberProperties.includes(userProperty)) {
-            return 'number';
-        } else if (booleanProperties.includes(userProperty)) {
-            return 'boolean';
-        } else {
-            return 'string';
-        }
     }
 
     /**
@@ -176,5 +94,38 @@ export class UserImportListComponent extends BaseImportListComponent<User> {
      */
     public onTabChange(): void {
         this.importer.clearPreview();
+    }
+
+    protected getModelRequest(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [this.activeMeetingId],
+            follow: [
+                {
+                    idField: 'user_ids',
+                    fieldset: 'shortName'
+                },
+                {
+                    idField: 'group_ids'
+                }
+            ]
+        };
+    }
+
+    /**
+     * Guess the type of the property, since
+     * `const type = typeof User[property];`
+     * always returns undefined
+     */
+    private guessType(userProperty: keyof User): 'string' | 'number' | 'boolean' {
+        const numberProperties: (keyof User)[] = ['id', 'vote_weight'];
+        const booleanProperties: (keyof User)[] = ['is_present_in_meeting_ids', 'is_physical_person', 'is_active'];
+        if (numberProperties.includes(userProperty)) {
+            return 'number';
+        } else if (booleanProperties.includes(userProperty)) {
+            return 'boolean';
+        } else {
+            return 'string';
+        }
     }
 }

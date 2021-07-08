@@ -7,11 +7,8 @@ import { Papa } from 'ngx-papaparse';
 import { MotionStatuteParagraphRepositoryService } from 'app/core/repositories/motions/motion-statute-paragraph-repository.service';
 import { BaseImportService, ImportConfig } from 'app/core/ui-services/base-import.service';
 import { MotionStatuteParagraph } from 'app/shared/models/motions/motion-statute-paragraph';
-
-const statuteHeadersAndVerboseNames = {
-    title: 'Title',
-    text: 'Text'
-};
+import { StatuteCsvExportService } from './statute-csv-export.service';
+import { statuteHeadersAndVerboseNames } from '../modules/statute-paragraph/statute-paragraph.constants';
 
 /**
  * Service for motion imports
@@ -41,11 +38,16 @@ export class StatuteImportService extends BaseImportService<MotionStatuteParagra
      */
     public constructor(
         private repo: MotionStatuteParagraphRepositoryService,
+        private exporter: StatuteCsvExportService,
         translate: TranslateService,
         papa: Papa,
         matSnackbar: MatSnackBar
     ) {
         super(translate, papa, matSnackbar);
+    }
+
+    public downloadCsvExample(): void {
+        this.exporter.exportDummyCSV();
     }
 
     protected getConfig(): ImportConfig<any> {

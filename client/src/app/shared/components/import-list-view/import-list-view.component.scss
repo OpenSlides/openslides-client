@@ -1,0 +1,13 @@
+@import '~assets/styles/tables.scss';
+
+:host {
+    --os-row-height: 50px;
+}
+
+.import-list-preview-table {
+    height: 500px;
+
+    .pbl-ngrid-row {
+        height: var(--os-row-height);
+    }
+}

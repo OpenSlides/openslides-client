@@ -115,6 +115,9 @@ import { CustomTranslationComponent } from './components/custom-translation/cust
 import { UserMultiselectActionsComponent } from './components/user-multiselect-actions/user-multiselect-actions.component';
 import { UserChangePasswordComponent } from './components/user-change-password/user-change-password.component';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
+import { ImportListLastTabDirective } from './components/import-list-view/import-list-last-tab.directive';
+import { ImportListFirstTabDirective } from './components/import-list-view/import-list-first-tab.directive';
+import { ImportListViewComponent } from './components/import-list-view/import-list-view.component';
 
 const declarations = [
     PermsDirective,
@@ -197,7 +200,10 @@ const declarations = [
     CustomTranslationComponent,
     UserMultiselectActionsComponent,
     UserChangePasswordComponent,
-    FileUploadComponent
+    FileUploadComponent,
+    ImportListViewComponent,
+    ImportListFirstTabDirective,
+    ImportListLastTabDirective
 ];
 
 const sharedModules = [

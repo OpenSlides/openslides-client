@@ -3,7 +3,13 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { CsvColumnDefinitionProperty, CsvExportService } from 'app/core/ui-services/csv-export.service';
+import { statuteHeadersAndVerboseNames } from '../modules/statute-paragraph/statute-paragraph.constants';
 import { ViewMotionStatuteParagraph } from '../models/view-motion-statute-paragraph';
+
+interface StatuteParagraphExport {
+    title?: string;
+    text?: string;
+}
 
 /**
  * Exports CSVs for statute paragraphs.
@@ -37,13 +43,12 @@ export class StatuteCsvExportService {
      * Exports a short example file
      */
     public exportDummyCSV(): void {
-        const header = ['Title', 'Text'];
-        const rows = [
-            ['§1', 'This is the first section'],
-            ['§1, A 3', 'This is another important aspect'],
-            ['§2', 'Yet another']
+        const rows: StatuteParagraphExport[] = [
+            { title: '§1', text: 'This is the first section' },
+            { title: '§1, A 3', text: 'This is another important aspect' },
+            { title: '§2', text: 'Yet another' }
         ];
         const filename = `${this.translate.instant('Statute')}-${this.translate.instant('example')}.csv`;
-        this.csvExport.dummyCSVExport(header, rows, filename);
+        this.csvExport.dummyCSVExport(statuteHeadersAndVerboseNames, rows, filename);
     }
 }

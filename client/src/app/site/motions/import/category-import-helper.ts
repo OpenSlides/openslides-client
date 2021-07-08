@@ -19,7 +19,7 @@ export class CategoryImportHelper implements ImportHelper<Motion> {
             if (category.prefix && cat.prefix !== category.prefix) {
                 return false;
             }
-            if (this.translate.instant(cat.name) === category.name) {
+            if (this.translate.instant(cat.name) === this.translate.instant(category.name)) {
                 return true;
             }
             return false;

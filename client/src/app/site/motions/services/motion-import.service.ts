@@ -14,6 +14,7 @@ import { Motion } from 'app/shared/models/motions/motion';
 import { CategoryImportHelper } from '../import/category-import-helper';
 import { ImportHelper } from '../../common/import/import-helper';
 import { MotionBlockImportHelper } from '../import/motion-block-import-helper';
+import { MotionCsvExportService } from './motion-csv-export.service';
 import { getMotionExportHeadersAndVerboseNames, motionExpectedHeaders } from '../motions.constants';
 import { TagImportHelper } from '../import/tag-import-helper';
 import { UserImportHelper } from '../import/user-import-helper';
@@ -65,11 +66,16 @@ export class MotionImportService extends BaseImportService<Motion> {
         private motionBlockRepo: MotionBlockRepositoryService,
         private userRepo: UserRepositoryService,
         private tagRepo: TagRepositoryService,
+        private exporter: MotionCsvExportService,
         translate: TranslateService,
         papa: Papa,
         matSnackbar: MatSnackBar
     ) {
         super(translate, papa, matSnackbar);
+    }
+
+    public downloadCsvExample(): void {
+        this.exporter.exportDummyMotion();
     }
 
     protected getConfig(): ImportConfig {
@@ -86,8 +92,8 @@ export class MotionImportService extends BaseImportService<Motion> {
             [MOTION_BLOCK_PROPERTY]: new MotionBlockImportHelper(this.motionBlockRepo, this.translate),
             [CATEGORY_PROPERTY]: new CategoryImportHelper(this.categoryRepo, this.translate),
             [TAG_PROPERTY]: new TagImportHelper(this.tagRepo),
-            [SUBMITTER_PROPERTY]: new UserImportHelper(this.userRepo, 'Submitters'),
-            [SUPPORTER_PROPERTY]: new UserImportHelper(this.userRepo, 'Supporters')
+            [SUBMITTER_PROPERTY]: new UserImportHelper(this.userRepo, 'Submitters', 'submitter_ids'),
+            [SUPPORTER_PROPERTY]: new UserImportHelper(this.userRepo, 'Supporters', 'supporter_ids')
         };
     }
 }

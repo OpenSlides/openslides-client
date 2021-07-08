@@ -1,0 +1,200 @@
+<mat-card class="os-form-card import-table spacer-bottom-60">
+    <mat-tab-group *ngIf="hasSeveralTabs()" (selectedTabChange)="onTabChange()">
+        <!-- Tabs before CSV import tab -->
+        <mat-tab *ngFor="let tab of importListFirstTabs">
+            <ng-template matTabLabel>
+                <ng-template [cdkPortalOutlet]="tab.templateLabel"></ng-template>
+            </ng-template>
+            <ng-container *ngTemplateOutlet="tab._explicitContent"></ng-container>
+        </mat-tab>
+
+        <!-- CSV import tab -->
+        <mat-tab label="{{ 'CSV import' | translate }}">
+            <ng-template matTabContent>
+                <ng-container *ngTemplateOutlet="defaultTabContent"></ng-container>
+            </ng-template>
+        </mat-tab>
+
+        <!-- Tabs after CSV import tab -->
+        <mat-tab *ngFor="let tab of importListLastTabs">
+            <ng-template matTabLabel>
+                <ng-template [cdkPortalOutlet]="tab.templateLabel"></ng-template>
+            </ng-template>
+            <ng-container *ngTemplateOutlet="tab._explicitContent"></ng-container>
+        </mat-tab>
+    </mat-tab-group>
+    <ng-container *ngIf="!hasSeveralTabs(); then defaultTabContent"></ng-container>
+</mat-card>
+
+<!-- preview table -->
+<mat-card *ngIf="hasFile | async" class="os-form-card spacer-bottom-60">
+    <h3>{{ 'Preview' | translate }}</h3>
+    <div>
+        <!-- new entries -->
+        <div *ngIf="newCount">
+            &nbsp;
+            <mat-icon inline>playlist_add</mat-icon>
+            <span>&nbsp;{{ newCount }}&nbsp;</span> <span>{{ 'Participant(s) will be imported.' | translate }}</span>
+        </div>
+        <!-- errors/duplicates -->
+        <div *ngIf="nonImportableCount" class="red-warning-text">
+            &nbsp;
+            <mat-icon inline>warning</mat-icon>
+            <span>&nbsp;{{ nonImportableCount }}&nbsp;</span> <span>{{ 'entries will be ommitted.' | translate }}</span>
+        </div>
+        <!-- have been imported -->
+        <div *ngIf="doneCount" class="green-text">
+            &nbsp;
+            <mat-icon inline>done</mat-icon>
+            <span>&nbsp;{{ doneCount }}&nbsp;</span> <span>{{ 'Participants have been imported.' | translate }}</span>
+        </div>
+    </div>
+    <div *ngIf="newCount">
+        <span>{{ 'After verifiy the preview click on "import" please (see top right).' | translate }}</span>
+    </div>
+
+    <mat-select *ngIf="nonImportableCount" class="filter-imports" [(value)]="shown" (selectionChange)="setFilter()">
+        <mat-option value="all">{{ 'Show all' | translate }}</mat-option>
+        <mat-option value="error">{{ 'Show errors only' | translate }}</mat-option>
+        <mat-option value="noerror">{{ 'Show correct entries only' | translate }}</mat-option>
+    </mat-select>
+
+    <div>
+        <pbl-ngrid
+            class="import-list-preview-table"
+            [attr.vScrollFixed]="rowHeight !== -1 ? rowHeight : false"
+            [attr.vScrollAuto]="rowHeight === -1"
+            [showHeader]="true"
+            [dataSource]="vScrollDataSource"
+            [columns]="columnSet"
+        >
+            <ng-container *ngTemplateOutlet="statusTemplate"></ng-container>
+            <div *pblNgridCellTypeDef="'boolean'; value as value">
+                <mat-checkbox disabled [checked]="value"></mat-checkbox>
+            </div>
+            <div *pblNgridCellDef="'*'; row as row; col as col; value as value">
+                <ng-container
+                    *ngTemplateOutlet="entryTemplate; context: { entry: row.newEntry, cell: row, def: col.prop }"
+                ></ng-container>
+            </div>
+            <ng-content></ng-content>
+        </pbl-ngrid>
+    </div>
+</mat-card>
+
+<ng-template #defaultTabContent>
+    <br />
+    <span>
+        {{
+            'Required comma or semicolon separated values with these column header names in the first row:' | translate
+        }}
+    </span>
+    <br />
+    <div class="code red-warning-text">
+        <span *ngFor="let entry of possibleFields; let last = last">
+            {{ entry | translate }}<span *ngIf="!last">, </span>
+        </span>
+    </div>
+    <ul>
+        <ng-content select="[requiredFields]"></ng-content>
+        <li>
+            {{
+                'Additional columns after the required ones may be present and will not affect the import.' | translate
+            }}
+        </li>
+    </ul>
+    <button mat-button color="accent" (click)="downloadCsvExample()">
+        {{ 'Download CSV example file' | translate }}
+    </button>
+    <div class="wrapper">
+        <mat-form-field>
+            <mat-label>{{ 'Encoding of the file' | translate }}</mat-label>
+            <mat-select class="selection" (selectionChange)="selectEncoding($event)" [value]="encodings[0].value">
+                <mat-option *ngFor="let option of encodings" [value]="option.value">
+                    {{ option.label | translate }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>{{ 'Column separator' | translate }}</mat-label>
+            <mat-select class="selection" (selectionChange)="selectColSep($event)" value="">
+                <mat-option *ngFor="let option of columnSeparators" [value]="option.value">
+                    {{ option.label | translate }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>{{ 'Text separator' | translate }}</mat-label>
+            <mat-select class="selection" (selectionChange)="selectTextSep($event)" value='"'>
+                <mat-option *ngFor="let option of textSeparators" [value]="option.value">
+                    {{ option.label | translate }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div>
+        <div>
+            <input
+                id="user-import-file-input"
+                type="file"
+                class="hidden-input"
+                accept="text"
+                #fileInput
+                (change)="onSelectFile($event)"
+            />
+            <button mat-button color="accent" (click)="fileInput.click()">
+                <span>{{ 'Select file' | translate }}</span>
+            </button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #statusTemplate>
+    <div *pblNgridCellDef="'status'; row as entry">
+        <div *ngIf="entry.status === 'error'">
+            <mat-icon class="red-warning-text" matTooltip="{{ entry.errors.length }} {{ 'errors' | translate }}">
+                {{ getActionIcon(entry) }}
+            </mat-icon>
+            <mat-icon
+                color="warn"
+                *ngIf="hasError(entry, 'ParsingErrors')"
+                matTooltip="{{ getVerboseError('ParsingErrors') | translate }}"
+            >
+                warning
+            </mat-icon>
+        </div>
+        <div *ngIf="entry.status === 'new'">
+            <mat-icon matTooltip="{{ modelName + ' will be imported' | translate }}">
+                {{ getActionIcon(entry) }}
+            </mat-icon>
+        </div>
+        <div *ngIf="entry.status === 'done'">
+            <mat-icon matTooltip="{{ modelName + ' has been imported' | translate }}">
+                {{ getActionIcon(entry) }}
+            </mat-icon>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #entryTemplate let-cell="cell" let-entry="entry" let-def="def">
+    <div *ngIf="entry[def]">
+        <mat-icon color="warn" *ngIf="hasError(cell, def)" matTooltip="{{ getVerboseError(def) | translate }}">
+            warning
+        </mat-icon>
+        <ng-container *ngIf="isArray(entry[def])">
+            <div *ngFor="let subentry of entry[def]">
+                {{ subentry.name | translate }}
+                <mat-icon class="newBadge" color="accent" inline *ngIf="!subentry.id">add</mat-icon>
+                &nbsp;
+            </div>
+        </ng-container>
+        <ng-container *ngIf="!isArray(entry[def])">
+            <ng-container *ngIf="!isObject(entry[def])">{{ entry[def] | translate }}</ng-container>
+            <ng-container *ngIf="isObject(entry[def])">
+                {{ entry[def].name | translate }}
+                <mat-icon class="newBadge" color="accent" inline *ngIf="!entry[def].id"> add </mat-icon>
+            </ng-container>
+            &nbsp;
+        </ng-container>
+    </div>
+</ng-template>

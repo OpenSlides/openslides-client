@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { UserAction } from 'app/core/actions/user-action';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { getOmlVerboseName, OML, OMLMapping } from 'app/core/core-services/organization-permission';
 import { CommitteeRepositoryService } from 'app/core/repositories/management/committee-repository.service';
@@ -148,12 +149,12 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
         const payload = {
             ...this.personalInfoFormValue
         };
-        const identifiable = await this.repo.create(payload);
+        const identifiable = await this.repo.create(payload)[0];
         this.router.navigate(['..', identifiable.id], { relativeTo: this.route });
     }
 
     private async updateUser(): Promise<void> {
-        const payload = {
+        const payload: Partial<UserAction.UpdatePayload> = {
             ...this.personalInfoFormValue
         };
         await this.repo.update(payload, this.user);

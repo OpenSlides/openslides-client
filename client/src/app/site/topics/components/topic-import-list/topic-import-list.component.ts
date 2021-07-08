@@ -1,13 +1,15 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
+import { PblColumnDefinition } from '@pebula/ngrid';
+
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { CsvExportService } from 'app/core/ui-services/csv-export.service';
 import { DurationService } from 'app/core/ui-services/duration.service';
 import { AgendaItemType, ItemTypeChoices } from 'app/shared/models/agenda/agenda-item';
 import { Topic } from 'app/shared/models/topics/topic';
 import { BaseImportListComponent } from 'app/site/base/components/base-import-list.component';
 import { TopicImportService } from '../../../topics/services/topic-import.service';
+import { topicHeadersAndVerboseNames } from '../../topics.constants';
 
 /**
  * Component for the agenda import list view.
@@ -22,6 +24,13 @@ export class TopicImportListComponent extends BaseImportListComponent<Topic> {
      */
     public textAreaForm: FormGroup;
 
+    public possibleFields = Object.values(topicHeadersAndVerboseNames);
+
+    public columns: PblColumnDefinition[] = Object.keys(topicHeadersAndVerboseNames).map(header => ({
+        prop: `newEntry.${header}`,
+        label: this.translate.instant(topicHeadersAndVerboseNames[header])
+    }));
+
     /**
      * Constructor for list view bases
      *
@@ -35,30 +44,12 @@ export class TopicImportListComponent extends BaseImportListComponent<Topic> {
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        importer: TopicImportService,
+        public importer: TopicImportService,
         formBuilder: FormBuilder,
-        private exporter: CsvExportService,
         private durationService: DurationService
     ) {
         super(componentServiceCollector, importer);
         this.textAreaForm = formBuilder.group({ inputtext: [''] });
-    }
-
-    /**
-     * Triggers an example csv download
-     */
-    public downloadCsvExample(): void {
-        const headerRow = ['Title', 'Text', 'Duration', 'Comment', 'Internal item'];
-        const rows = [
-            ['Demo 1', 'Demo text 1', '1:00', 'test comment', null],
-            ['Break', null, '0:10', null, 'internal', null],
-            ['Demo 2', 'Demo text 2', '1:30', null, 'hidden']
-        ];
-        this.exporter.dummyCSVExport(
-            headerRow,
-            rows,
-            `${this.translate.instant('Agenda')}-${this.translate.instant('example')}.csv`
-        );
     }
 
     /**

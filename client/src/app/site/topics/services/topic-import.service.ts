@@ -7,10 +7,19 @@ import { Papa } from 'ngx-papaparse';
 import { AgendaItemCreationPayload } from 'app/core/actions/common/agenda-item-creation-payload';
 import { TopicRepositoryService } from 'app/core/repositories/topics/topic-repository.service';
 import { BaseImportService, ImportConfig, NewEntry } from 'app/core/ui-services/base-import.service';
+import { CsvExportService } from 'app/core/ui-services/csv-export.service';
 import { DurationService } from 'app/core/ui-services/duration.service';
 import { AgendaItemType, ItemTypeChoices } from 'app/shared/models/agenda/agenda-item';
 import { Topic } from 'app/shared/models/topics/topic';
 import { topicHeadersAndVerboseNames } from '../topics.constants';
+
+interface TopicExport {
+    title?: string;
+    text?: string;
+    agenda_duration?: string;
+    agenda_comment?: string;
+    agenda_type?: string;
+}
 
 @Injectable({
     providedIn: 'root'
@@ -41,11 +50,26 @@ export class TopicImportService extends BaseImportService<Topic> {
     public constructor(
         private durationService: DurationService,
         private repo: TopicRepositoryService,
+        private exporter: CsvExportService,
         translate: TranslateService,
         papa: Papa,
         matSnackBar: MatSnackBar
     ) {
         super(translate, papa, matSnackBar);
+    }
+
+    public downloadCsvExample(): void {
+        const rows: TopicExport[] = [
+            { title: 'Demo 1', text: 'Demo text 1', agenda_duration: '1:00', agenda_comment: 'Test comment' },
+            { title: 'Break', agenda_duration: '0:10', agenda_type: 'internal' },
+            { title: 'Demo 2', text: 'Demo text 2', agenda_duration: '1:30', agenda_type: 'hidden' }
+        ];
+
+        this.exporter.dummyCSVExport<TopicExport>(
+            topicHeadersAndVerboseNames,
+            rows,
+            `${this.translate.instant('Agenda')}-${this.translate.instant('example')}.csv`
+        );
     }
 
     protected getConfig(): ImportConfig<any> {
