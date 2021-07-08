@@ -5,9 +5,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { Identifiable } from 'app/shared/models/base/identifiable';
-import { mediumDialogSettings } from 'app/shared/utils/dialog-settings';
-import { Displayable } from 'app/site/base/displayable';
+import { Id } from 'app/core/definitions/key-types';
+import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { MotionForwardDialogComponent } from 'app/site/motions/modules/motion-detail/components/motion-forward-dialog/motion-forward-dialog.component';
 import { MotionRepositoryService } from './motion-repository.service';
@@ -24,14 +23,11 @@ export class MotionService {
 
     public async forwardMotionsToMeetings(...motions: ViewMotion[]): Promise<void> {
         const dialogRef = this.dialog.open(MotionForwardDialogComponent, {
-            ...mediumDialogSettings
+            ...infoDialogSettings
         });
-        const meetings = (await dialogRef.afterClosed().toPromise()) as Identifiable[];
-        if (meetings) {
-            await this.repo.createForwarded(
-                meetings.map(meeting => meeting.id),
-                ...motions
-            );
+        const toMeetingId = (await dialogRef.afterClosed().toPromise()) as Id;
+        if (toMeetingId) {
+            await this.repo.createForwarded([toMeetingId], ...motions);
         }
     }
 
