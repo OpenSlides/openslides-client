@@ -10,7 +10,6 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
-import { BaseComponent } from 'app/site/base/components/base.component';
 
 /**
  * The start component. Greeting page for OpenSlides

@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 
-import { Id } from 'app/core/definitions/key-types';
 import { PollDialogData } from 'app/core/ui-services/base-poll-dialog.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';

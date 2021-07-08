@@ -10,7 +10,6 @@ import { PollPercentBase } from 'app/shared/models/poll/poll-constants';
 import {
     AssignmentPollMethodVerbose,
     MajorityMethodVerbose,
-    PollMethod,
     PollPercentBaseVerbose,
     PollTypeVerbose
 } from 'app/shared/models/poll/poll-constants';

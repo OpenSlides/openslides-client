@@ -7,7 +7,7 @@ import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.se
 import { OrganizationSettingsService } from 'app/core/ui-services/organization-settings.service';
 import { Motion } from 'app/shared/models/motions/motion';
 import { Poll } from 'app/shared/models/poll/poll';
-import { MajorityMethod, PollMethod, PollPercentBase, PollType } from 'app/shared/models/poll/poll-constants';
+import { PollMethod, PollPercentBase } from 'app/shared/models/poll/poll-constants';
 import { ViewOption } from 'app/shared/models/poll/view-option';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { ParsePollNumberPipe } from 'app/shared/pipes/parse-poll-number.pipe';

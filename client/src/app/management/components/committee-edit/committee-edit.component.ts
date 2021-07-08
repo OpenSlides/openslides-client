@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { Observable, OperatorFunction } from 'rxjs';
@@ -14,7 +14,6 @@ import { Id } from 'app/core/definitions/key-types';
 import { CommitteeRepositoryService } from 'app/core/repositories/management/committee-repository.service';
 import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
 import { OrganizationTagRepositoryService } from 'app/core/repositories/management/organization-tag-repository.service';
-import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ColorService } from 'app/core/ui-services/color.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ViewCommittee } from 'app/management/models/view-committee';
@@ -51,12 +50,10 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
         componentServiceCollector: ComponentServiceCollector,
         private formBuilder: FormBuilder,
         private memberService: MemberService,
-        private userRepo: UserRepositoryService,
         public committeeRepo: CommitteeRepositoryService,
         public orgaTagRepo: OrganizationTagRepositoryService,
         private colorService: ColorService,
         private meetingRepo: MeetingRepositoryService,
-        private router: Router,
         private route: ActivatedRoute,
         private location: Location
     ) {

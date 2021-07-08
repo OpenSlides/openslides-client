@@ -7,7 +7,7 @@ import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { AssignmentPollService } from 'app/site/assignments/modules/assignment-poll/services/assignment-poll.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { PollData, PollTableData, VotingResult } from 'app/site/polls/services/poll.service';
+import { PollTableData, VotingResult } from 'app/site/polls/services/poll.service';
 
 @Component({
     selector: 'os-assignment-poll-detail-content',

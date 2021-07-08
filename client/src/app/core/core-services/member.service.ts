@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 import { ViewUser } from 'app/site/users/models/view-user';
 import { HttpService } from './http.service';

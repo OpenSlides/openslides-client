@@ -1,5 +1,4 @@
 import { Identifiable } from 'app/shared/models/base/identifiable';
-import { Id } from '../definitions/key-types';
 
 export namespace ListOfSpeakersAction {
     export const UPDATE = 'list_of_speakers.update';

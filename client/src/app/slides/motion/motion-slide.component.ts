@@ -60,30 +60,6 @@ export class MotionSlideComponent
      */
     public referencingMotions = [];
 
-    @Input()
-    public set data(value: SlideData<MotionSlideData>) {
-        this._data = value;
-        this.lnMode = value.data.line_numbering_mode;
-        this.lineLength = value.data.line_length;
-        this.preamble = value.data.preamble;
-        // this.crMode = value.element.mode || 'original';
-        throw new Error('TODO');
-
-        /*this.textDivStyles.width = value.data.show_meta_box ? 'calc(100% - 250px)' : '100%';
-
-        if (value.data.recommendation_referencing_motions) {
-            this.referencingMotions = value.data.recommendation_referencing_motions.sort((a, b) =>
-                a.number.localeCompare(b.number)
-            );
-        }
-
-        this.recalcUnifiedChanges();*/
-    }
-
-    public get data(): SlideData<MotionSlideData> {
-        return this._data;
-    }
-
     public get showMetaTable(): boolean {
         return (
             !this.data.data.show_meta_box &&
@@ -137,6 +113,25 @@ export class MotionSlideComponent
         private diff: DiffService
     ) {
         super(translate);
+    }
+
+    protected setData(value: SlideData<MotionSlideData>): void {
+        super.setData(value);
+        this.lnMode = value.data.line_numbering_mode;
+        this.lineLength = value.data.line_length;
+        this.preamble = value.data.preamble;
+        // this.crMode = value.element.mode || 'original';
+
+        /*this.textDivStyles.width = value.data.show_meta_box ? 'calc(100% - 250px)' : '100%';
+
+        if (value.data.recommendation_referencing_motions) {
+            this.referencingMotions = value.data.recommendation_referencing_motions.sort((a, b) =>
+                a.number.localeCompare(b.number)
+            );
+        }*/
+
+        this.recalcUnifiedChanges();
+        throw new Error('TODO');
     }
 
     public getRecommendationLabel(): string {

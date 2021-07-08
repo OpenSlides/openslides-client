@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 
@@ -94,7 +94,6 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         motionServiceCollector: MotionServiceCollectorService,
-        private el: ElementRef,
         private linenumberingService: LinenumberingService,
         private promptService: PromptService
     ) {

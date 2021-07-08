@@ -1,9 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
-import { ProjectorCountdownAction } from 'app/core/actions/projector-countdown-action';
-import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
-import { StorageService } from 'app/core/core-services/storage.service';
 import { ProjectorCountdownRepositoryService } from 'app/core/repositories/projector/projector-countdown-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DurationService } from 'app/core/ui-services/duration.service';
@@ -50,8 +47,7 @@ export class CountdownControlsComponent extends BaseComponent {
         private promptService: PromptService,
         private projectionDialogService: ProjectionDialogService,
         private durationService: DurationService,
-        private dialog: MatDialog,
-        private activeMeetingIdService: ActiveMeetingIdService
+        private dialog: MatDialog
     ) {
         super(componentServiceCollector);
 

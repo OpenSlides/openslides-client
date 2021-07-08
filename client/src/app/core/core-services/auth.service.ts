@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { environment } from 'environments/environment';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
-import { ActiveMeetingIdService } from './active-meeting-id.service';
 import { AuthToken, AuthTokenService } from './auth-token.service';
 import { DataStoreService } from './data-store.service';
 import { HttpService } from './http.service';
@@ -17,12 +16,6 @@ export interface LoginResponse {
     message: string;
     success: boolean;
     token?: string;
-}
-
-interface LoginData {
-    username: string;
-    password: string;
-    cookies?: boolean;
 }
 
 /**

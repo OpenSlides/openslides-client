@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { ProjectorAction, ScrollScaleDirection } from 'app/core/actions/projector-action';
-import { HttpService } from 'app/core/core-services/http.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Id } from 'app/core/definitions/key-types';
 import { Identifiable } from 'app/shared/models/base/identifiable';
@@ -22,7 +21,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
     providedIn: 'root'
 })
 export class ProjectorRepositoryService extends BaseRepositoryWithActiveMeeting<ViewProjector, Projector> {
-    public constructor(repositoryServiceCollector: RepositoryServiceCollector, private http: HttpService) {
+    public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, Projector);
     }
 

@@ -111,13 +111,13 @@ export class PresenceDetailComponent implements OnInit {
      *
      * @param id the id of the user to be shown as lastChangedUser
      */
-    private subscribeUser(id: number): void {
+    /*private subscribeUser(id: number): void {
         this.clearSubscription();
         this.errorMsg = null;
         this._userSubscription = this.userRepo
             .getViewModelObservable(id)
             .subscribe(user => (this.lastChangedUser = user));
-    }
+    }*/
 
     /**
      * Clears the currently displayed user and subscription, if any is present

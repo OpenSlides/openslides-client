@@ -9,8 +9,4 @@ import { ProjectorMessageSlideData } from './projector-message-slide-data';
     styleUrls: ['./projector-message-slide.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class ProjectorMessageSlideComponent extends BaseSlideComponent<ProjectorMessageSlideData> {
-    public constructor() {
-        super();
-    }
-}
+export class ProjectorMessageSlideComponent extends BaseSlideComponent<ProjectorMessageSlideData> {}

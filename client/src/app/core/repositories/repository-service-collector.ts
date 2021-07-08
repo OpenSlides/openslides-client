@@ -4,7 +4,6 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { ActionService } from '../core-services/action.service';
 import { ActiveMeetingIdService } from '../core-services/active-meeting-id.service';
-import { AuthService } from '../core-services/auth.service';
 import { CollectionMapperService } from '../core-services/collection-mapper.service';
 import { DataStoreService } from '../core-services/data-store.service';
 import { ErrorService } from '../ui-services/error.service';

@@ -1,11 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
-import { Title } from '@angular/platform-browser';
 
-import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
 import { Observable } from 'rxjs';
 
-import { OperatorService } from 'app/core/core-services/operator.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { EntitledUsersEntry } from 'app/shared/models/poll/poll-constants';
 import { BaseComponent } from 'app/site/base/components/base.component';

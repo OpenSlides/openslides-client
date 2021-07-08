@@ -1,24 +1,19 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 
 import { StorageMap } from '@ngx-pwa/local-storage';
 
-import { OperatorService } from 'app/core/core-services/operator.service';
-import { Deferred } from 'app/core/promises/deferred';
-import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { UserMediaPermService } from 'app/core/ui-services/user-media-perm.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { CurrentListOfSpeakersService } from 'app/site/projector/services/current-list-of-speakers.service';
 
-declare var JitsiMeetExternalAPI: any;
+// declare var JitsiMeetExternalAPI: any;
 
 interface JitsiMember {
     id: string;
     displayName: string;
 }
 
-interface ConferenceJoinedResult {
+/*interface ConferenceJoinedResult {
     roomName: string;
     id: string;
     displayName: string;
@@ -41,7 +36,7 @@ interface JitsiSettings {
 interface ConferenceMember {
     name: string;
     focus: boolean;
-}
+}*/
 
 enum ConferenceState {
     stream,
@@ -74,17 +69,17 @@ enum ConferenceState {
 export class JitsiComponent extends BaseComponent implements OnInit, OnDestroy {
     public enableJitsi: boolean;
 
-    private autoconnect: boolean;
+    // private autoconnect: boolean;
     private roomName: string;
     private roomPassword: string;
     private jitsiDomain: string;
 
     public restricted = false;
     public videoStreamUrl: string;
-    private nextSpeakerAmount: number;
+    // private nextSpeakerAmount: number;
 
     // do not set the password twice
-    private isPasswortSet = false;
+    // private isPasswortSet = false;
 
     public isJitsiDialogOpen = false;
     public showJitsiWindow = true;
@@ -103,11 +98,11 @@ export class JitsiComponent extends BaseComponent implements OnInit, OnDestroy {
     public isJoined: boolean;
     public streamRunning: boolean;
 
-    private options: object;
+    /*private options: object;
 
     private lockLoaded: Deferred<void> = new Deferred();
     private constantsLoaded: Deferred<void> = new Deferred();
-    private configsLoaded: Deferred<void> = new Deferred();
+    private configsLoaded: Deferred<void> = new Deferred();*/
 
     // storage locks
     public isJitsiActiveInAnotherTab = false;
@@ -174,7 +169,7 @@ export class JitsiComponent extends BaseComponent implements OnInit, OnDestroy {
     public currentState: ConferenceState;
     public isEnterMeetingRoomVisible = true;
 
-    private configOverwrite = {
+    /*private configOverwrite = {
         startAudioOnly: false,
         // allows jitsi on mobile devices
         disableDeepLinking: true,
@@ -219,17 +214,16 @@ export class JitsiComponent extends BaseComponent implements OnInit, OnDestroy {
             'help',
             'mute-everyone'
         ]
-    };
+    };*/
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        private operator: OperatorService,
-        private storageMap: StorageMap,
-        private userRepo: UserRepositoryService,
-        /*private constantsService: ConstantsService,
-        private configService: ConfigService,*/
+        // private operator: OperatorService,
+        private storageMap: StorageMap /*private userRepo: UserRepositoryService,
+        private constantsService: ConstantsService,
+        private configService: ConfigService,
         private closService: CurrentListOfSpeakersService,
-        private userMediaPermService: UserMediaPermService
+        private userMediaPermService: UserMediaPermService*/
     ) {
         super(componentServiceCollector);
     }
@@ -393,7 +387,7 @@ export class JitsiComponent extends BaseComponent implements OnInit, OnDestroy {
         }*/
     }
 
-    private loadApiCallbacks(): void {
+    /*private loadApiCallbacks(): void {
         this.api.on('videoConferenceJoined', (info: ConferenceJoinedResult) => {
             this.onEnterConference(info);
         });
@@ -434,7 +428,7 @@ export class JitsiComponent extends BaseComponent implements OnInit, OnDestroy {
         if (this.videoStreamUrl) {
             this.showJitsiDialog();
         }
-    }
+    }*/
 
     /*private autoJoinJitsiByLosIndex(operatorClosIndex: number): void {
         if (operatorClosIndex !== UserListIndexType.NotOnList) {
@@ -459,7 +453,7 @@ export class JitsiComponent extends BaseComponent implements OnInit, OnDestroy {
         if (!this.isAccessPermitted) {
             this.viewStream();
         }
-    }*/
+    }
 
     private setRoomPassword(): void {
         if (this.roomPassword && !this.isPasswortSet) {
@@ -481,9 +475,9 @@ export class JitsiComponent extends BaseComponent implements OnInit, OnDestroy {
             id: newSpeakerId,
             displayName: this.members[newSpeakerId].name
         };
-    }
+    }*/
 
-    private addMember(newMember: JitsiMember): void {
+    /*private addMember(newMember: JitsiMember): void {
         this.members[newMember.id] = {
             name: newMember.displayName,
             focus: false
@@ -503,7 +497,7 @@ export class JitsiComponent extends BaseComponent implements OnInit, OnDestroy {
         if (this.currentDominantSpeaker?.id === member.id) {
             this.newDominantSpeaker(member.id);
         }
-    }
+    }*/
 
     private clearMembers(): void {
         this.members = {};
@@ -519,18 +513,18 @@ export class JitsiComponent extends BaseComponent implements OnInit, OnDestroy {
             this.hideJitsiDialog();
         }
         this.isJoined = false;
-        this.isPasswortSet = false;
+        // this.isPasswortSet = false;
         this.currentDominantSpeaker = null;
     }
 
-    private setOptions(): void {
+    /*private setOptions(): void {
         this.options = {
             roomName: this.roomName,
             parentNode: this.jitsiNode.nativeElement,
             configOverwrite: this.configOverwrite,
             interfaceConfigOverwrite: this.interfaceConfigOverwrite
         };
-    }
+    }*/
 
     public toggleShowJitsi(): void {
         this.showJitsiWindow = !this.showJitsiWindow;
@@ -564,7 +558,7 @@ export class JitsiComponent extends BaseComponent implements OnInit, OnDestroy {
         this.storageMap.set(this.STREAM_RUNNING_STORAGE_KEY, true).subscribe(() => {});
     }
 
-    private onLiveStreamAvailable(liveStreamUrl: string): void {
+    /*private onLiveStreamAvailable(liveStreamUrl: string): void {
         this.videoStreamUrl = liveStreamUrl;
         // this is the "dead" state; you would see the jitsi state; but are not connected
         // or the connection is prohibited. If this occurs and a live stream
@@ -574,7 +568,7 @@ export class JitsiComponent extends BaseComponent implements OnInit, OnDestroy {
         } else if (!this.videoStreamUrl && this.enableJitsi) {
             this.setConferenceState(ConferenceState.jitsi);
         }
-    }
+    }*/
 
     private async deleteJitsiLock(): Promise<void> {
         await this.storageMap.delete(this.RTC_LOGGED_STORAGE_KEY).toPromise();

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { BaseSlideComponent } from 'app/slides/base-slide-component';
 import {
@@ -13,29 +13,18 @@ import {
 })
 export class CurrentListOfSpeakersOverlaySlideComponent extends BaseSlideComponent<CommonListOfSpeakersSlideData> {
     /**
-     * Gets the data. Sets necessary information for the list of speakers in the overlay.
-     *
-     * @param data The passed data to this overlay.
-     */
-    @Input()
-    public set data(data: any) {
-        if (data.data.current) {
-            this.currentSpeaker = data.data.current;
-        }
-        if (data.data.waiting) {
-            this.nextSpeakers = data.data.waiting;
-        }
-    }
-
-    /**
      * The current speaker.
      */
-    public currentSpeaker: SlideSpeaker;
+    public get currentSpeaker(): SlideSpeaker {
+        return this.data.data.current;
+    }
 
     /**
      * List with the next speakers for this list.
      */
-    public nextSpeakers: SlideSpeaker[] = [];
+    public get nextSpeakers(): SlideSpeaker[] {
+        return this.data.data.waiting || [];
+    }
 
     public constructor() {
         super();

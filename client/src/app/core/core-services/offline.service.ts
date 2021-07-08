@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { HttpStreamEndpointService } from './http-stream-endpoint.service';
 import { OfflineBroadcastService, OfflineReason, OfflineReasonValue } from './offline-broadcast.service';
-import { OpenSlidesService } from './openslides.service';
 
 /**
  * This service handles everything connected with being offline.
@@ -18,7 +17,6 @@ export class OfflineService {
     private reason: OfflineReason | null = null;
 
     public constructor(
-        private OpenSlides: OpenSlidesService,
         private offlineBroadcastService: OfflineBroadcastService,
         private authService: AuthService,
         private httpEnpointService: HttpStreamEndpointService

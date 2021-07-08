@@ -2,8 +2,6 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { SpeakerRepositoryService } from 'app/core/repositories/agenda/speaker-repository.service';
-import { Identifiable } from 'app/shared/models/base/identifiable';
 import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 
 @Component({
@@ -19,8 +17,7 @@ export class PointOfOrderDialogComponent {
     public constructor(
         public dialogRef: MatDialogRef<PointOfOrderDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public listOfSpeakers: ViewListOfSpeakers,
-        private fb: FormBuilder,
-        private speakerRepo: SpeakerRepositoryService
+        private fb: FormBuilder
     ) {
         this.editForm = this.fb.group({
             note: ['', [Validators.required, Validators.maxLength(this.MAX_LENGTH)]]

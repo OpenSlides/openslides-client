@@ -25,11 +25,6 @@ interface FontDocument extends Document {
     providedIn: 'root'
 })
 export class LoadFontService {
-    /**
-     * The prefix to load custom fonts from
-     */
-    private urlPrefix = window.location.origin;
-
     public constructor(private mediaManageService: MediaManageService) {
         this.loadCustomFont();
     }

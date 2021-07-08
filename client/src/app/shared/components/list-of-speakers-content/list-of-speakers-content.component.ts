@@ -75,7 +75,7 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
     public enableProContraSpeech: boolean;
     private pointOfOrderEnabled: boolean;
     private canSetMarkSelf: boolean;
-    private noteForAll: boolean;
+    public noteForAll: boolean;
 
     public get title(): string {
         return this._listOfSpeakers?.getTitle();

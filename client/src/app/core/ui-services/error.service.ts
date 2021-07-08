@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { TranslateService } from '@ngx-translate/core';
 
@@ -7,8 +7,6 @@ import { TranslateService } from '@ngx-translate/core';
     providedIn: 'root'
 })
 export class ErrorService {
-    private messageSnackBar: MatSnackBarRef<SimpleSnackBar>;
-
     public constructor(private translate: TranslateService, private matSnackBar: MatSnackBar) {}
 
     public showError = (message: string | Error) => {
@@ -24,7 +22,7 @@ export class ErrorService {
         } else {
             errorNotification = message;
         }
-        this.messageSnackBar = this.matSnackBar.open(errorNotification, this.translate.instant('OK'), {
+        this.matSnackBar.open(errorNotification, this.translate.instant('OK'), {
             duration: 0
         });
     };
