@@ -194,12 +194,7 @@ export abstract class BasePollDetailComponentDirective<V extends ViewPoll<BaseVi
                 },
                 {
                     idField: 'voted_ids',
-                    follow: [
-                        {
-                            idField: 'user_id',
-                            fieldset: 'singleVotes'
-                        }
-                    ]
+                    fieldset: 'singleVotes'
                 },
                 {
                     idField: 'option_ids',
