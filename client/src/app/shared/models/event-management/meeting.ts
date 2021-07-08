@@ -1,5 +1,6 @@
 import { AgendaItemType } from '../agenda/agenda-item';
 import { Id } from 'app/core/definitions/key-types';
+import { ApplauseType } from 'app/site/interaction/services/applause.service';
 import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.constants';
 import { BaseModel } from '../base/base-model';
 import { HasProjectionIds } from '../base/has-projectable-ids';
@@ -39,10 +40,28 @@ export interface Settings {
     enable_anonymous: boolean;
 
     // Jitsi/Livestream settings
+    jitsi_domain: string;
+    jitsi_room_name: string;
+    jitsi_room_password: string;
+
     conference_show: boolean;
     conference_auto_connect: boolean;
     conference_los_restriction: boolean;
     conference_stream_url: string;
+    conference_open_microphone: boolean;
+    conference_open_video: boolean;
+    conference_auto_connect_next_speakers: number;
+    conference_stream_poster_url: string;
+    conference_enable_helpdesk: boolean;
+
+    // Applause
+    applause_enable: boolean;
+    applause_type: ApplauseType;
+    applause_show_level: boolean;
+    applause_min_amount: number;
+    applause_max_amount: number;
+    applause_timeout: number;
+    applause_particle_image_url: string;
 
     // Projector
     projector_countdown_default_time: number;

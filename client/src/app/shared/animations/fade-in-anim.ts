@@ -1,12 +1,11 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 
-const fadeIn = [style({ height: 0, opacity: 0 }), animate('600ms ease')];
+const fadeIn = [style({ opacity: 0 }), animate('600ms ease')];
 const fadeOut = [
-    style({ height: '*', opacity: 1 }),
+    style({ opacity: 1 }),
     animate(
         '600ms ease',
         style({
-            height: 0,
             opacity: 0
         })
     )

@@ -1,0 +1,3 @@
+<div [osResized]="resizeSubject" *ngIf="isStable | async" class="particle-wrapper">
+    <Particles id="particles" [options]="options" (particlesLoaded)="particlesLoaded($event)"> </Particles>
+</div>

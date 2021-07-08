@@ -77,5 +77,20 @@
                 </ng-container>
             </os-search-repo-selector>
         </mat-form-field>
+
+        <ng-container *osOmlPerms="OML.superadmin; and: !isCreateView">
+            <mat-form-field>
+                <mat-label>{{ 'Jitsi domain' | translate }}</mat-label>
+                <input matInput formControlName="jitsi_domain" />
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>{{ 'Jitsi room name' | translate }}</mat-label>
+                <input matInput formControlName="jitsi_room_name" />
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>{{ 'Jitsi room password' | translate }}</mat-label>
+                <input matInput formControlName="jitsi_room_password" />
+            </mat-form-field>
+        </ng-container>
     </form>
 </mat-card>

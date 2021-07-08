@@ -133,6 +133,95 @@ export const meetingSettings: SettingsGroup[] = [
                         helpText: _(
                             'Remove URL to deactivate livestream. Check extra group permission to see livestream.'
                         )
+                    },
+                    {
+                        key: 'conference_open_microphone',
+                        label: _('Automatically open the microphone for new conference speakers'),
+                        helpText: _('Server settings required to activate Jitsi Meet integration.'),
+                        type: 'boolean'
+                    },
+                    {
+                        key: 'conference_open_video',
+                        label: _('Automatically open the web cam for new conference speakers'),
+                        helpText: _('Server settings required to activate Jitsi Meet integration.'),
+                        type: 'boolean'
+                    },
+                    {
+                        key: 'conference_auto_connect_next_speakers',
+                        label: _('Number of speakers automatically connecting to the live conference'),
+                        helpText: _('Live conference has to be active. Choose 0 to disable auto connect.'),
+                        type: 'integer',
+                        default: 0
+                    },
+                    {
+                        key: 'conference_stream_poster_url',
+                        label: _('Livestream poster image url'),
+                        helpText: _(
+                            'Shows if livestream is not started. Recommended image format: 500x280px, PNG or JPG'
+                        )
+                    },
+                    {
+                        key: 'conference_enable_helpdesk',
+                        label: _('Enable virtual help desk room'),
+                        helpText: _(
+                            'Shows a button with help icon to connect to an extra Jitsi conference room for technical audio/video tests.'
+                        ),
+                        type: 'boolean'
+                    }
+                ]
+            },
+            {
+                label: _('Applause'),
+                settings: [
+                    {
+                        key: 'applause_enable',
+                        label: _('Enable virtual applause'),
+                        type: 'boolean'
+                    },
+                    {
+                        key: 'applause_type',
+                        label: _('Applause virtualization'),
+                        type: 'choice',
+                        choices: {
+                            'applause-type-bar': _('Level indicator'),
+                            'applause-type-particles': _('Particles')
+                        },
+                        default: 'applause-type-bar'
+                    },
+                    {
+                        key: 'applause_show_level',
+                        label: _('Show applause amount'),
+                        type: 'boolean'
+                    },
+                    {
+                        key: 'applause_min_amount',
+                        label: _('Lowest applause amount'),
+                        helpText: _('Defines the minimum deflection which is required to recognize applause.'),
+                        type: 'integer',
+                        default: 1
+                    },
+                    {
+                        key: 'applause_max_amount',
+                        label: _('Highest applause amount'),
+                        helpText: _(
+                            'Defines the maximum deflection. Entering zero will use the amount of present participants instead.'
+                        ),
+                        type: 'integer',
+                        default: 0
+                    },
+                    {
+                        key: 'applause_timeout',
+                        label: _('Applause interval in seconds'),
+                        helpText: _('Defines the time in which applause amounts are add up.'),
+                        type: 'integer',
+                        default: 5
+                    },
+                    {
+                        key: 'applause_particle_image_url',
+                        label: _('Applause particle image URL'),
+                        helpText: _(
+                            'Shows the given image as applause particle. Recommended image format: 24x24px, PNG, JPG or SVG'
+                        )
                     }
                 ]
             },
