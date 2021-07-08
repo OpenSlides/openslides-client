@@ -1,9 +1,7 @@
 <div id="container" class="projector-container" [osResized]="resizeSubject" #container>
     <div id="projector" class="projector">
         <div id="offline-indicator" *ngIf="isOffline">
-            <mat-icon>
-                fiber_manual_record
-            </mat-icon>
+            <mat-icon>fiber_manual_record</mat-icon>
         </div>
         <div id="header" class="headerFooter" *ngIf="projector && projector.show_header_footer">
             <!-- projector logo -->
@@ -22,7 +20,7 @@
 
         <os-projector-clock *ngIf="projector.show_clock" [color]="projector.header_font_color"></os-projector-clock>
 
-        <div *ngFor="let slide of slides">
+        <div *ngFor="let slide of slides | async">
             <os-slide-container
                 [slideData]="slide"
                 [scroll]="projector.scroll"

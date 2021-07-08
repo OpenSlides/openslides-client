@@ -586,7 +586,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
      */
     private destroy(): void {
         this.hasModelSubscriptionInitiated = false;
-        this.cleanSubjects();
+        this.cleanSubscriptions();
         this.viewService.reset();
         this.cd.detach();
     }

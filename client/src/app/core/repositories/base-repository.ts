@@ -17,6 +17,26 @@ import { Relation } from '../definitions/relations';
 import { RepositoryServiceCollectorWithoutActiveMeetingService } from './repository-service-collector-without-active-meeting-service';
 import { ViewModelStoreService } from '../core-services/view-model-store.service';
 
+const RELATION_AS_OBSERVABLE_SUFFIX = '_as_observable';
+
+/**
+ * Base repo for all collections. An overview of all observables and the flow of data:
+ *
+ * The data in the repos are **only** changed by the DSUpdateManager. During an autoupdate an
+ * updateslot is opened (se datastore.service.ts). All changes are collected and afterwards
+ * written to the repos with `deleteModels` and `changeModels`. Nothing else must call these
+ * functions! To not flood the system with updates, this is done without publishing anything.
+ * When this is done, the updateSlot gets committed and for each repo `commitUpdate` is called.
+ * This issues controlled updates:
+ *
+ * - unsafeViewModelListSubject is triggered with the current list of unsafe view models. This list
+ *   is not sorted. It is piped to `viewModelListSubject`, where the data is sorted.
+ * - each changed or deleted model is published with `updateViewModelObservable`. This function
+ *   published each (safe, accessible) viewmodel in `viewModelSubjects` and every view model in
+ *   the `generalViewModelSubject`.
+ *
+ *
+ */
 export abstract class BaseRepository<V extends BaseViewModel, M extends BaseModel>
     implements OnAfterAppsLoaded, Collection, HasViewModelListObservable<V> {
     /**
@@ -50,6 +70,11 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      * Observable subject for any changes of view models. Unaccessible view models are included.
      */
     protected readonly generalViewModelSubject: Subject<V> = new Subject<V>();
+
+    /**
+     * On every update of data, this observable contains a list of affected ids (changed and deleted).
+     */
+    protected readonly modifiedIdsSubject: Subject<Id[]> = new Subject<Id[]>();
 
     /**
      * Can be used by the sort functions.
@@ -208,16 +233,26 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         let viewModel = new this.baseViewModelCtor(model);
         viewModel = new Proxy(viewModel, {
             get: (target: V, property) => {
-                // target is our viewModel and property the requsted value: viewModel[property]
+                // target is our viewModel and property the requested value: viewModel[property]
                 let result: any; // This is what we have to resolve: viewModel[property] -> result
                 const _model: M = target.getModel();
                 const relation = typeof property === 'string' ? this.relationsByKey[property] : null;
 
+                let relationAsObservable = null;
+                if (
+                    typeof property === 'string' &&
+                    property.substr(-RELATION_AS_OBSERVABLE_SUFFIX.length) === RELATION_AS_OBSERVABLE_SUFFIX
+                ) {
+                    relationAsObservable = this.relationsByKey[
+                        property.substr(0, property.length - RELATION_AS_OBSERVABLE_SUFFIX.length)
+                    ];
+                }
+
                 // try to find a getter for property
                 if (property in target) {
                     // iterate over prototype chain
-                    let prototypeFunc = this.baseViewModelCtor,
-                        descriptor = null;
+                    let prototypeFunc = this.baseViewModelCtor;
+                    let descriptor = null;
                     do {
                         descriptor = Object.getOwnPropertyDescriptor(prototypeFunc.prototype, property);
                         if (!descriptor || !descriptor.get) {
@@ -233,6 +268,8 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
                     }
                 } else if (property in _model) {
                     result = _model[property];
+                } else if (relationAsObservable) {
+                    result = this.relationManager.getObservableForRelation(_model, relationAsObservable);
                 } else if (relation) {
                     result = this.relationManager.handleRelation(_model, relation);
                 }
@@ -341,6 +378,13 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     }
 
     /**
+     * This observable fires on every update once contains each changed id.
+     */
+    public getModifiedIdsObservable(): Observable<Id[]> {
+        return this.modifiedIdsSubject.asObservable();
+    }
+
+    /**
      * Updates the ViewModel observable using a ViewModel corresponding to the id
      */
     protected updateViewModelObservable(id: Id): void {
@@ -358,6 +402,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         modelIds.forEach(id => {
             this.updateViewModelObservable(id);
         });
+        this.modifiedIdsSubject.next(modelIds);
     }
 
     protected raiseError = (error: string | Error) => {

@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+
 import { StructuredRelation } from 'app/core/definitions/relations';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { Projectiondefault, Projector } from 'app/shared/models/projector/projector';
@@ -22,6 +24,7 @@ export class ViewProjector extends BaseViewModel<Projector> {
 }
 interface IProjectorRelations {
     current_projections: ViewProjection[];
+    current_projections_as_observable: Observable<ViewProjection[]>;
     preview_projections: ViewProjection[];
     history_projections: ViewProjection[];
     used_as_reference_projector_in_meeting?: ViewMeeting;

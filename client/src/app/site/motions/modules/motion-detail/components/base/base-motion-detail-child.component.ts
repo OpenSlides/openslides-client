@@ -48,8 +48,6 @@ export abstract class BaseMotionDetailChildComponent extends BaseComponent {
         this._isEditing = isEditing;
         if (isEditing) {
             this.onEnterEditMode();
-        } else {
-            this.onLeaveEditMode();
         }
     }
 
@@ -195,11 +193,6 @@ export abstract class BaseMotionDetailChildComponent extends BaseComponent {
     protected onEnterEditMode(): void {}
 
     /**
-     * Function called when the edit-mode is set to `false`
-     */
-    protected onLeaveEditMode(): void {}
-
-    /**
      * Function called when a new motion is passed and it's an text-based amendment
      */
     protected onInitTextBasedAmendment(): void {}
@@ -228,7 +221,7 @@ export abstract class BaseMotionDetailChildComponent extends BaseComponent {
     }
 
     private destroy(): void {
-        this.cleanSubjects();
+        this.cleanSubscriptions();
     }
 
     private getSharedSubscriptionsToRepositories(): Subscription[] {

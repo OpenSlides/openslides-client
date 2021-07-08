@@ -198,7 +198,8 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
         private assignmentPollService: AssignmentPollService
     ) {
         super(componentServiceCollector);
-        this.subscriptions.push(
+        this.updateSubscription(
+            'allUsers',
             this.userRepo.getViewModelListObservable().subscribe(users => {
                 this.allUsers.next(users);
                 this.filterCandidates();
@@ -252,7 +253,6 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
     private observeRoute(): void {
         this.navigationSubscription = this.router.events.subscribe(navEvent => {
             if (navEvent instanceof NavigationEnd) {
-                this.cleanSubjects();
                 this.getAssignmentByUrl();
             }
         });
@@ -283,7 +283,8 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
             this.editAssignment = true;
             this.assignment = new ViewAssignment(new Assignment());
         } else {
-            this.subscriptions.push(
+            this.updateSubscription(
+                'route',
                 this.route.params.subscribe(params => {
                     this.loadAssignmentById(+params.id);
                 })
@@ -313,7 +314,8 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
             ]
         });
 
-        this.subscriptions.push(
+        this.updateSubscription(
+            'assignment',
             this.assignmentRepo.getViewModelObservable(assignmentId).subscribe(assignment => {
                 if (assignment) {
                     const title = assignment.getTitle();
@@ -323,7 +325,10 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
                         this.patchForm(this.assignment);
                     }
                 }
-            }),
+            })
+        );
+        this.updateSubscription(
+            'candidates',
             this.candidatesForm.valueChanges.subscribe(async formResult => {
                 // resetting a form triggers a form.next(null) - check if data is present
                 if (formResult && formResult.userId) {

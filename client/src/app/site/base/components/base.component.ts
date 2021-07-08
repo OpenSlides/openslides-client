@@ -56,6 +56,8 @@ export abstract class BaseComponent implements OnDestroy {
      */
     protected subscriptions: (Subscription | null)[] = [];
 
+    private subscriptionMap: { [name: string]: Subscription | null } = {};
+
     /**
      * Settings for the TinyMCE editor selector
      */
@@ -123,7 +125,19 @@ export abstract class BaseComponent implements OnDestroy {
             this.messageSnackBar.dismiss();
         }
 
-        this.cleanSubjects();
+        this.cleanSubscriptions();
+    }
+
+    public updateSubscription(name: string, subscription: Subscription): void {
+        this.clearSubscription(name);
+        this.subscriptionMap[name] = subscription;
+    }
+
+    public clearSubscription(name: string): void {
+        if (this.subscriptionMap[name]) {
+            this.subscriptionMap[name].unsubscribe();
+            delete this.subscriptionMap[name];
+        }
     }
 
     /**
@@ -185,13 +199,17 @@ export abstract class BaseComponent implements OnDestroy {
      * life cycle does not accept that navigation to the same URL
      * executes the life cycle again
      */
-    protected cleanSubjects(): void {
+    protected cleanSubscriptions(): void {
         for (const sub of this.subscriptions) {
             if (sub) {
                 sub.unsubscribe();
             }
         }
+        for (const subscription of Object.values(this.subscriptionMap)) {
+            subscription.unsubscribe();
+        }
         this.subscriptions = [];
+        this.subscriptionMap = {};
     }
 
     /**
