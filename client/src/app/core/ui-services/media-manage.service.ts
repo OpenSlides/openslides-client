@@ -5,7 +5,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { ActionService } from '../core-services/action.service';
 import { ActiveMeetingService } from '../core-services/active-meeting.service';
 import { Id } from '../definitions/key-types';
-import { MediafileAction } from '../actions/mediafile-action';
 import { MeetingAction } from '../actions/meeting-action';
 import { ViewMediafile } from '../../site/mediafiles/models/view-mediafile';
 

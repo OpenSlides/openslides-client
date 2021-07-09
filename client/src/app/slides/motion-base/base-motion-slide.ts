@@ -1,5 +1,3 @@
-import { Directive } from '@angular/core';
-
 import { TranslateService } from '@ngx-translate/core';
 
 import { BaseSlideComponent } from 'app/slides/base-slide-component';

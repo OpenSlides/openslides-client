@@ -24,7 +24,6 @@ import { PROJECTOR_CONTENT_FOLLOW } from 'app/shared/components/projector/projec
 import { SizeObject } from 'app/shared/components/tile/tile.component';
 import { infoDialogSettings, largeDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
-import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewProjectorCountdown } from 'app/site/projector/models/view-projector-countdown';
 import { ViewProjectorMessage } from 'app/site/projector/models/view-projector-message';
 import { CountdownDialogComponent, CountdownDialogData } from '../countdown-dialog/countdown-dialog.component';

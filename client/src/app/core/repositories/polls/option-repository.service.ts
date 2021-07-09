@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 
-import { PollAction } from 'app/core/actions/poll-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Option } from 'app/shared/models/poll/option';
 import { ViewOption } from 'app/shared/models/poll/view-option';

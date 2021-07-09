@@ -15,7 +15,7 @@ import { CategoryImportHelper } from '../import/category-import-helper';
 import { ImportHelper } from '../../common/import/import-helper';
 import { MotionBlockImportHelper } from '../import/motion-block-import-helper';
 import { MotionCsvExportService } from './motion-csv-export.service';
-import { getMotionExportHeadersAndVerboseNames, motionExpectedHeaders } from '../motions.constants';
+import { getMotionExportHeadersAndVerboseNames } from '../motions.constants';
 import { TagImportHelper } from '../import/tag-import-helper';
 import { UserImportHelper } from '../import/user-import-helper';
 

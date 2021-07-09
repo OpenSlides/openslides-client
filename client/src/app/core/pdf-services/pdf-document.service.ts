@@ -5,7 +5,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { saveAs } from 'file-saver';
 
 import { ProgressSnackBarComponent } from 'app/shared/components/progress-snack-bar/progress-snack-bar.component';
-import { Settings } from 'app/shared/models/event-management/meeting';
 import { MotionExportInfo } from 'app/site/motions/services/motion-export.service';
 import { HttpService } from '../core-services/http.service';
 import { FontPlace, MediaManageService } from '../ui-services/media-manage.service';

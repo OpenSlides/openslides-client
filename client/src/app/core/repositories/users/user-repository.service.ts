@@ -457,11 +457,11 @@ export class UserRepositoryService
      */
     public async bulkSendInvitationEmail(users: ViewUser[]): Promise<string> {
         this.preventInDemo();
-        const user_ids = users.map(user => user.id);
+        /*const user_ids = users.map(user => user.id);
         const users_email_subject = this.meetingSettingsService.instant('users_email_subject');
         const users_email_body = this.meetingSettingsService.instant('users_email_body');
         const subject = this.translate.instant(users_email_subject);
-        const message = this.translate.instant(users_email_body);
+        const message = this.translate.instant(users_email_body);*/
 
         throw new Error('TODO');
         /* const response = await this.httpService.post<{ count: number; no_email_ids: number[] }>(

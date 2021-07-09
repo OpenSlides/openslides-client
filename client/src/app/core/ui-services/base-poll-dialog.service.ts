@@ -71,7 +71,7 @@ export abstract class BasePollDialogService {
     }
 
     protected async create(payload: any): Promise<void> {
-        const id = await this.repo.create(payload);
+        await this.repo.create(payload);
     }
 
     protected async update(payload: any, poll: ViewPoll): Promise<void> {

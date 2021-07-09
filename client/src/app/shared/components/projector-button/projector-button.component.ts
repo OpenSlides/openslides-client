@@ -4,10 +4,7 @@ import { Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
 import { Permission } from 'app/core/core-services/permission';
-import { StorageService } from 'app/core/core-services/storage.service';
-import { ProjectionRepositoryService } from 'app/core/repositories/projector/projection-repository.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
-import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { ProjectionDialogService } from 'app/core/ui-services/projection-dialog.service';
 import { ProjectorService } from 'app/core/ui-services/projector.service';
 import { isProjectable, Projectable } from 'app/site/base/projectable';
@@ -69,8 +66,7 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
     public constructor(
         private projectorRepo: ProjectorRepositoryService,
         private projectionDialogService: ProjectionDialogService,
-        private projectorService: ProjectorService,
-        private projectionRepo: ProjectionRepositoryService
+        private projectorService: ProjectorService
     ) {}
 
     /**

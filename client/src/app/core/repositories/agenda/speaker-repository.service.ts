@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
-import { count, distinct, filter, flatMap, map, mergeMap, reduce, switchMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 import { SpeakerAction } from 'app/core/actions/speaker-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';

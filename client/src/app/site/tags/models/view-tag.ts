@@ -1,6 +1,5 @@
-import { Id } from 'app/core/definitions/key-types';
 import { SearchRepresentation } from 'app/core/ui-services/search.service';
-import { HasMeeting, ViewMeeting } from 'app/management/models/view-meeting';
+import { HasMeeting } from 'app/management/models/view-meeting';
 import { HasTagIds } from 'app/shared/models/base/has-tag-ids';
 import { Tag } from 'app/shared/models/core/tag';
 import { Searchable } from 'app/site/base/searchable';

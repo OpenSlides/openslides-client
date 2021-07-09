@@ -1,5 +1,5 @@
 import { CdkPortalOutlet, ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
-import { Component, EventEmitter, HostListener, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
 
 import { OverlayPosition } from 'app/core/ui-services/overlay.service';
 

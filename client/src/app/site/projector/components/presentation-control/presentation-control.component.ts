@@ -2,10 +2,8 @@ import { Component, Input } from '@angular/core';
 
 import { MediafileRepositoryService } from 'app/core/repositories/mediafiles/mediafile-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { ProjectorService } from 'app/core/ui-services/projector.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
-import { SlideManager } from 'app/slides/services/slide-manager.service';
 import { ViewProjector } from '../../models/view-projector';
 
 /**
@@ -47,9 +45,7 @@ export class PresentationControlComponent extends BaseComponent {
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
-        private mediafileRepo: MediafileRepositoryService,
-        private slideManager: SlideManager,
-        private projectorService: ProjectorService
+        private mediafileRepo: MediafileRepositoryService
     ) {
         super(componentServiceCollector);
     }

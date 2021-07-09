@@ -1,8 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
 
-import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { SlideData } from 'app/core/ui-services/projector.service';
 import { BaseMotionSlideComponent } from '../motion-base/base-motion-slide';
 import { MotionBlockSlideData, MotionBlockSlideMotionRepresentation } from './motion-block-slide-data';
@@ -32,53 +31,6 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
      * For sorting motion blocks by their displayed title
      */
     private languageCollator: Intl.Collator;
-
-    /**
-     * Sort the motions given.
-     */
-    @Input()
-    public set data(data: SlideData<MotionBlockSlideData>) {
-        if (data && data.data.motions) {
-            data.data.motions = data.data.motions.sort((a, b) =>
-                this.languageCollator.compare(this.getNumberOrTitle(a), this.getNumberOrTitle(b))
-            );
-
-            // Populate the motion with the recommendation_label
-            data.data.motions.forEach(motion => {
-                if (motion.recommendation) {
-                    let recommendation = this.translate.instant(motion.recommendation.name);
-                    if (motion.recommendation_extension) {
-                        recommendation +=
-                            ' ' +
-                            this.replaceReferencedMotions(
-                                motion.recommendation_extension,
-                                data.data.referenced_motions
-                            );
-                    }
-                    motion.recommendationLabel = recommendation;
-                } else {
-                    motion.recommendationLabel = null;
-                }
-            });
-
-            // Check, if all motions have the same recommendation label
-            if (data.data.motions.length > 0) {
-                const recommendationLabel = data.data.motions[0].recommendationLabel;
-                if (data.data.motions.every(motion => motion.recommendationLabel === recommendationLabel)) {
-                    this.commonRecommendation = recommendationLabel;
-                }
-            } else {
-                this.commonRecommendation = null;
-            }
-        } else {
-            this.commonRecommendation = null;
-        }
-        this._data = data;
-    }
-
-    public get data(): SlideData<MotionBlockSlideData> {
-        return this._data;
-    }
 
     /**
      * If this is set, all motions have the same recommendation, saved in this variable.
@@ -134,6 +86,48 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
     public constructor(translate: TranslateService) {
         super(translate);
         this.languageCollator = new Intl.Collator(this.translate.currentLang);
+    }
+
+    /**
+     * Sort the motions given.
+     */
+    protected setData(value: SlideData<MotionBlockSlideData>): void {
+        if (value && value.data.motions) {
+            value.data.motions = value.data.motions.sort((a, b) =>
+                this.languageCollator.compare(this.getNumberOrTitle(a), this.getNumberOrTitle(b))
+            );
+
+            // Populate the motion with the recommendation_label
+            value.data.motions.forEach(motion => {
+                if (motion.recommendation) {
+                    let recommendation = this.translate.instant(motion.recommendation.name);
+                    if (motion.recommendation_extension) {
+                        recommendation +=
+                            ' ' +
+                            this.replaceReferencedMotions(
+                                motion.recommendation_extension,
+                                value.data.referenced_motions
+                            );
+                    }
+                    motion.recommendationLabel = recommendation;
+                } else {
+                    motion.recommendationLabel = null;
+                }
+            });
+
+            // Check, if all motions have the same recommendation label
+            if (value.data.motions.length > 0) {
+                const recommendationLabel = value.data.motions[0].recommendationLabel;
+                if (value.data.motions.every(motion => motion.recommendationLabel === recommendationLabel)) {
+                    this.commonRecommendation = recommendationLabel;
+                }
+            } else {
+                this.commonRecommendation = null;
+            }
+        } else {
+            this.commonRecommendation = null;
+        }
+        super.setData(value);
     }
 
     /**

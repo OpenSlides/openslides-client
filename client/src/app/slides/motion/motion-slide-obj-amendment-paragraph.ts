@@ -1,4 +1,4 @@
-import { LineRange, ModificationType } from 'app/core/ui-services/diff.service';
+import { LineRange } from 'app/core/ui-services/diff.service';
 import { MergeAmendment } from 'app/shared/models/motions/motion-state';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from 'app/shared/models/motions/view-unified-change';
 import { MotionSlideDataAmendment } from './motion-slide-data';

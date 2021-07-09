@@ -14,14 +14,14 @@ export abstract class BaseSlideComponent<T extends object> {
      */
     @Input()
     public set data(value: SlideData<T>) {
-        this._data = value;
+        this.setData(value);
     }
 
     public get data(): SlideData<T> {
         return this._data;
     }
 
-    protected _data: SlideData<T>;
+    private _data: SlideData<T>;
 
     /**
      * The projector where this slide is projected on.
@@ -30,4 +30,8 @@ export abstract class BaseSlideComponent<T extends object> {
     public projector: ViewProjector;
 
     public constructor() {}
+
+    protected setData(value: SlideData<T>): void {
+        this._data = value;
+    }
 }

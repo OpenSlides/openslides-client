@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router, RouterEvent, RoutesRecognized } from '@angular/router';
 
 import { BehaviorSubject, Observable } from 'rxjs';

@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
 
 import { PblColumnDefinition } from '@pebula/ngrid';
 import { BehaviorSubject } from 'rxjs';
@@ -65,11 +64,6 @@ export class MediaUploadContentComponent extends BaseModelContextComponent imple
     public uploadList: MatTableDataSource<FileData>;
 
     /**
-     * Holds the IDs of the uploaded files
-     */
-    private filesUploadedIds: number[] = [];
-
-    /**
      * Determine if uploading should happen parallel or synchronously.
      * Synchronous uploading might be necessary if we see that stuff breaks
      */
@@ -119,8 +113,7 @@ export class MediaUploadContentComponent extends BaseModelContextComponent imple
         componentServiceCollector: ComponentServiceCollector,
         private repo: MediafileRepositoryService,
         private formBuilder: FormBuilder,
-        private groupRepo: GroupRepositoryService,
-        private router: Router
+        private groupRepo: GroupRepositoryService
     ) {
         super(componentServiceCollector);
         this.directoryBehaviorSubject = this.repo.getDirectoryBehaviorSubject();

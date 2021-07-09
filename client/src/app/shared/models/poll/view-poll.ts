@@ -16,7 +16,6 @@ import {
     PollPercentBaseVerbose,
     PollStateChangeActionVerbose,
     PollStateVerbose,
-    PollType,
     PollTypeVerbose
 } from './poll-constants';
 import { Projectiondefault } from '../projector/projector';

@@ -1,5 +1,5 @@
 // External imports
-import { ChangeDetectorRef, Component, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
 
@@ -26,11 +26,7 @@ export class GlobalSpinnerComponent {
      * @param translate Service to get translations for the messages.
      * @param cd Service to manual initiate a change of the UI.
      */
-    public constructor(
-        protected translate: TranslateService,
-        private cd: ChangeDetectorRef,
-        @Inject(OVERLAY_COMPONENT_DATA) data: { text: string }
-    ) {
+    public constructor(protected translate: TranslateService, @Inject(OVERLAY_COMPONENT_DATA) data: { text: string }) {
         this.text = data?.text || 'Loading data. Please wait ...';
     }
 }

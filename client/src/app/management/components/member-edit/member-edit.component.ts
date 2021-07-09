@@ -8,7 +8,6 @@ import { CommitteeRepositoryService } from 'app/core/repositories/management/com
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
-import { OneOfValidator } from 'app/shared/validators/one-of-validator';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
 

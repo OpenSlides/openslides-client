@@ -8,8 +8,4 @@ import { ProjectorCountdownSlideData } from './projector-countdown-slide-data';
     templateUrl: './projector-countdown-slide.component.html',
     styleUrls: ['./projector-countdown-slide.component.scss']
 })
-export class CountdownSlideComponent extends BaseSlideComponent<ProjectorCountdownSlideData> {
-    public constructor() {
-        super();
-    }
-}
+export class CountdownSlideComponent extends BaseSlideComponent<ProjectorCountdownSlideData> {}

@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewEncapsulatio
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PblColumnDefinition } from '@pebula/ngrid';
-import { Observable } from 'rxjs';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
@@ -17,7 +16,7 @@ import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { MotionPollDialogService } from 'app/site/motions/services/motion-poll-dialog.service';
 import { MotionPollService } from 'app/site/motions/services/motion-poll.service';
-import { BasePollDetailComponentDirective, BaseVoteData } from 'app/site/polls/components/base-poll-detail.component';
+import { BasePollDetailComponentDirective } from 'app/site/polls/components/base-poll-detail.component';
 
 @Component({
     selector: 'os-motion-poll-detail',

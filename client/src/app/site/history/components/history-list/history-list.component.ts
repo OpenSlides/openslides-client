@@ -6,7 +6,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'environments/environment';
 import { BehaviorSubject, Subject } from 'rxjs';
 
-import { CollectionMapperService } from 'app/core/core-services/collection-mapper.service';
 import { HttpService } from 'app/core/core-services/http.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { TimeTravelService } from 'app/core/core-services/time-travel.service';
@@ -84,8 +83,7 @@ export class HistoryListComponent extends BaseComponent implements OnInit {
         private formBuilder: FormBuilder,
         private motionRepo: MotionRepositoryService,
         private promptService: PromptService,
-        private activatedRoute: ActivatedRoute,
-        private collectionMapper: CollectionMapperService
+        private activatedRoute: ActivatedRoute
     ) {
         super(componentServiceCollector);
 

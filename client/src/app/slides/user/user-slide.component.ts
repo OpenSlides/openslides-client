@@ -7,8 +7,4 @@ import { UserSlideData } from './user-slide-data';
     selector: 'os-user-slide',
     templateUrl: './user-slide.component.html'
 })
-export class UserSlideComponent extends BaseSlideComponent<UserSlideData> {
-    public constructor() {
-        super();
-    }
-}
+export class UserSlideComponent extends BaseSlideComponent<UserSlideData> {}

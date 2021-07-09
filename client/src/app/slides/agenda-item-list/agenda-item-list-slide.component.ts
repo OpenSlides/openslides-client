@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { ItemListSlideData, SlideItem } from './agenda-item-list-slide-data';
 import { CollectionMapperService } from 'app/core/core-services/collection-mapper.service';
@@ -12,23 +12,18 @@ import { BaseSlideComponent } from 'app/slides/base-slide-component';
     styleUrls: ['./agenda-item-list-slide.component.scss']
 })
 export class ItemListSlideComponent extends BaseSlideComponent<ItemListSlideData> {
-    @Input()
-    public set data(value: SlideData<ItemListSlideData>) {
+    public constructor(private collectionMapperService: CollectionMapperService) {
+        super();
+    }
+
+    protected setData(value: SlideData<ItemListSlideData>): void {
         // This is a hack to circumvent the relating handling for the title functions.
         // E.g. for topics, the title function would use `topic.agenda_item.item_number`, which
         // should refer to the provided `agenda_item_number` in the payload.
         value.data.items.forEach(
             item => (item.title_information.agenda_item = { item_number: item.title_information.agenda_item_number })
         );
-        this._data = value;
-    }
-
-    public get data(): SlideData<ItemListSlideData> {
-        return this._data;
-    }
-
-    public constructor(private collectionMapperService: CollectionMapperService) {
-        super();
+        super.setData(value);
     }
 
     public getTitle(item: SlideItem): string {

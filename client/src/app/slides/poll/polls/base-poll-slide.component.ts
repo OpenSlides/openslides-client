@@ -1,4 +1,4 @@
-import { Directive, forwardRef, Inject, Input } from '@angular/core';
+import { Directive, forwardRef, Inject } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs';
 
@@ -16,9 +16,15 @@ export abstract class BasePollSlideComponent<
 > extends BaseSlideComponent<T> {
     public chartDataSubject: BehaviorSubject<ChartData> = new BehaviorSubject([]);
 
-    @Input()
-    public set data(value: SlideData<T>) {
-        this._data = value;
+    public constructor(
+        @Inject(forwardRef(() => PollService))
+        public pollService: S
+    ) {
+        super();
+    }
+
+    protected setData(value: SlideData<T>): void {
+        super.setData(value);
         this.getDecimalFields().forEach(field => {
             if (value.data.poll[field] !== undefined) {
                 value.data.poll[field] = parseFloat(value.data.poll[field]);
@@ -28,17 +34,6 @@ export abstract class BasePollSlideComponent<
             const chartData = this.pollService.generateChartData(value.data.poll);
             this.chartDataSubject.next(chartData);
         }
-    }
-
-    public get data(): SlideData<T> {
-        return this._data;
-    }
-
-    public constructor(
-        @Inject(forwardRef(() => PollService))
-        public pollService: S
-    ) {
-        super();
     }
 
     protected abstract getDecimalFields(): string[];

@@ -1,4 +1,3 @@
-import { Id } from 'app/core/definitions/key-types';
 import { HasMeeting } from 'app/management/models/view-meeting';
 import { HasPersonalNoteIds } from 'app/shared/models/base/has-personal-note-ids';
 import { PersonalNote } from 'app/shared/models/users/personal-note';

@@ -9,7 +9,6 @@ import { DataStoreService, DataStoreUpdateManagerService } from './data-store.se
 import { HistoryService } from './history.service';
 import { HttpService } from './http.service';
 import { LifecycleService } from './lifecycle.service';
-import { OpenSlidesService } from './openslides.service';
 
 interface HistoryData {
     [collection: string]: BaseModel[];

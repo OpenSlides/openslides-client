@@ -44,9 +44,9 @@ export class AppComponent implements OnInit {
     public constructor(
         translate: TranslateService,
         private appRef: ApplicationRef,
-        private openslidesService: OpenSlidesService,
-        private activeMeetingIdService: ActiveMeetingIdService,
-        private activeMeetingService: ActiveMeetingService,
+        openslidesService: OpenSlidesService,
+        activeMeetingIdService: ActiveMeetingIdService,
+        activeMeetingService: ActiveMeetingService,
         private lifecycleService: LifecycleService,
         routeGuard: RouteGuard,
         router: Router,

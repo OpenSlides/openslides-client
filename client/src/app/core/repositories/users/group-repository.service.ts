@@ -4,7 +4,6 @@ import { Observable, OperatorFunction } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { GroupAction } from 'app/core/actions/group-action';
-import { HttpService } from 'app/core/core-services/http.service';
 import {
     DEFAULT_FIELDSET,
     Fieldsets,
@@ -35,7 +34,7 @@ export const DEFAULT_GROUP_INDEX = 1;
 export class GroupRepositoryService
     extends BaseRepositoryWithActiveMeeting<ViewGroup, Group>
     implements ModelRequestRepository {
-    public constructor(repositoryServiceCollector: RepositoryServiceCollector, private http: HttpService) {
+    public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, Group);
     }
 

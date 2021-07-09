@@ -5,9 +5,8 @@ import { Label } from 'ng2-charts';
 import { from, Observable, Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 
-import { SpecificStructuredField } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { Fqid, Id } from 'app/core/definitions/key-types';
+import { Id } from 'app/core/definitions/key-types';
 import { Deferred } from 'app/core/promises/deferred';
 import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
 import { VoteRepositoryService } from 'app/core/repositories/polls/vote-repository.service';
@@ -17,9 +16,7 @@ import { BasePollDialogService } from 'app/core/ui-services/base-poll-dialog.ser
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
-import { ViewMeeting } from 'app/management/models/view-meeting';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
-import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewGroup } from 'app/site/users/models/view-group';

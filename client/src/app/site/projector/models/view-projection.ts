@@ -1,5 +1,4 @@
 import { HasMeeting } from 'app/management/models/view-meeting';
-import { BaseModel } from 'app/shared/models/base/base-model';
 import { Projection } from 'app/shared/models/projector/projection';
 import { HasProjectorTitle, ProjectorTitle } from 'app/site/base/projectable';
 import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
