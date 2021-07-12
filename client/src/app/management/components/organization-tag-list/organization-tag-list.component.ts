@@ -47,7 +47,7 @@ export class OrganizationTagListComponent extends BaseListViewComponent<ViewOrga
         private colorService: ColorService
     ) {
         super(serviceCollector);
-        super.setTitle('Organization tags');
+        super.setTitle('Tags');
         this.canMultiSelect = true;
     }
 
@@ -81,7 +81,7 @@ export class OrganizationTagListComponent extends BaseListViewComponent<ViewOrga
     public async deleteOrganizationTags(...orgaTags: ViewOrganizationTag[]): Promise<void> {
         const dialogTitle =
             orgaTags.length === 1
-                ? this.translate.instant('Are you sure you want to delete this organization tag?')
+                ? this.translate.instant('Are you sure you want to delete this tag?')
                 : this.translate.instant('Are you sure you want to delete all selected tags?');
         const dialogSubtitle = orgaTags.length === 1 ? orgaTags[0].name : '';
         if (await this.promptService.open(dialogTitle, dialogSubtitle)) {

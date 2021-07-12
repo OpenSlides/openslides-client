@@ -26,7 +26,7 @@ export class OrganizationTagRepositoryService
     }
 
     public getVerboseName = (plural?: boolean): string => {
-        return plural ? 'Organization tags' : 'Organization tag';
+        return plural ? 'tags' : 'tag';
     };
     public getTitle = (viewModel: ViewOrganizationTag): string => {
         return viewModel.name;

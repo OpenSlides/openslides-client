@@ -147,8 +147,8 @@ export const AssignmentPollPercentBaseVerbose = {
 };
 
 export const PollMethodVerbose = {
-    YN: 'Yes/No',
-    YNA: 'Yes/No/Abstain'
+    YN: _('Yes/No'),
+    YNA: _('Yes/No/Abstain')
 };
 
 export const PollPercentBaseVerbose = {
@@ -161,15 +161,15 @@ export const PollPercentBaseVerbose = {
 };
 
 export const VoteValueVerbose = {
-    Y: 'Yes',
-    N: 'No',
-    A: 'Abstain'
+    Y: _('Yes'),
+    N: _('No'),
+    A: _('Abstain')
 };
 
 export const GeneralValueVerbose = {
-    votesvalid: 'Valid votes',
-    votesinvalid: 'Invalid votes',
-    votescast: 'Total votes cast',
+    votesvalid: _('Valid votes'),
+    votesinvalid: _('Invalid votes'),
+    votescast: _('Total votes cast'),
     votesno: 'Votes No',
     votesabstain: 'Votes abstain'
 };

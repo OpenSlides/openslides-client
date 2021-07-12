@@ -87,8 +87,8 @@
         </div>
 
         <div>
-            <mat-checkbox formControlName="is_active">{{ 'Is active' | translate }}</mat-checkbox>
-            <mat-checkbox formControlName="is_physical_person">{{ 'Is a physical person' | translate }}</mat-checkbox>
+            <mat-checkbox formControlName="is_active">{{ 'active' | translate }}</mat-checkbox>
+            <mat-checkbox formControlName="is_physical_person">{{ 'natural person' | translate }}</mat-checkbox>
             <ng-container *ngTemplateOutlet="moreChecks; context: { form: personalInfoForm }"></ng-container>
         </div>
     </form>

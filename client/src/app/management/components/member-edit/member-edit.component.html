@@ -12,7 +12,7 @@
 >
     <!-- Title -->
     <div class="title-slot">
-        <h2 *ngIf="isNewUser">{{ 'New participant' | translate }}</h2>
+        <h2 *ngIf="isNewUser">{{ 'New member' | translate }}</h2>
         <h2 *ngIf="!isNewUser">{{ user?.full_name }}</h2>
     </div>
 
@@ -109,7 +109,7 @@
             </div>
             <div *osOmlPerms="OML.can_manage_users">
                 <mat-form-field>
-                    <mat-label>{{ 'Organization management level' | translate }}</mat-label>
+                    <mat-label>{{ 'User permission' | translate }}</mat-label>
                     <mat-select formControlName="organization_management_level">
                         <mat-option [value]="null">-</mat-option>
                         <mat-option *ngFor="let level of organizationManagementLevels" [value]="level">
@@ -155,7 +155,7 @@
 
         <!-- Organization management level -->
         <div *ngIf="user.organization_management_level">
-            <h4>{{ 'Organization management level' | translate }}</h4>
+            <h4>{{ 'User permission' | translate }}</h4>
             <span>{{ getOmlVerboseName(user.organization_management_level) | translate }}</span>
         </div>
     </ng-template>
