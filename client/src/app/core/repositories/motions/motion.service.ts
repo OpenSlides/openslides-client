@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
@@ -18,7 +19,8 @@ export class MotionService {
     public constructor(
         private translate: TranslateService,
         private repo: MotionRepositoryService,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private snackbar: MatSnackBar
     ) {}
 
     public async forwardMotionsToMeetings(...motions: ViewMotion[]): Promise<void> {
@@ -27,7 +29,14 @@ export class MotionService {
         });
         const toMeetingId = (await dialogRef.afterClosed().toPromise()) as Id;
         if (toMeetingId) {
-            await this.repo.createForwarded([toMeetingId], ...motions);
+            try {
+                await this.repo.createForwarded([toMeetingId], ...motions);
+                const verboseName = motions.length === 1 ? 'motion' : 'motions';
+                const message = `${motions.length} ${this.translate.instant(`${verboseName} successfully forwarded`)}`;
+                this.snackbar.open(message, 'Ok');
+            } catch (e) {
+                this.snackbar.open(e.toString(), 'Ok');
+            }
         }
     }
 
