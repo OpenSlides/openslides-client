@@ -25,9 +25,6 @@ export class MeetingSettingsDefinitionProvider {
             if (!setting.choices && !setting.choicesFunc) {
                 throw new Error(`You must provide choices for ${setting.key}`);
             }
-            if (setting.choices && setting.default && !Object.values(setting.choices).includes(setting.default)) {
-                throw new Error(`Invalid default for ${setting.key}: ${setting.default}`);
-            }
         }
         if (setting.default) {
             if (setting.type === 'integer' && typeof setting.default !== 'number') {
@@ -35,6 +32,9 @@ export class MeetingSettingsDefinitionProvider {
             }
             if (setting.type === 'boolean' && typeof setting.default !== 'boolean') {
                 throw new Error(`Invalid default for ${setting.key}: ${setting.default} (${typeof setting.default})`);
+            }
+            if (setting.type === 'choice' && setting.choices && !setting.choices.hasOwnProperty(setting.default)) {
+                throw new Error(`Invalid default for ${setting.key}: ${setting.default}`);
             }
         }
     }
