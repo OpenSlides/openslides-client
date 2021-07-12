@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
 
+import { modifyAgendaItemNumber } from '../agenda_item_number';
+import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { SlideData } from 'app/core/ui-services/projector.service';
 import { BaseMotionSlideComponent } from '../motion-base/base-motion-slide';
 import { MotionBlockSlideData, MotionBlockSlideMotionRepresentation } from './motion-block-slide-data';
@@ -83,8 +85,8 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
         return this.makeIndicesArray(this.columns);
     }
 
-    public constructor(translate: TranslateService) {
-        super(translate);
+    public constructor(translate: TranslateService, motionRepo: MotionRepositoryService) {
+        super(translate, motionRepo);
         this.languageCollator = new Intl.Collator(this.translate.currentLang);
     }
 
@@ -92,6 +94,12 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
      * Sort the motions given.
      */
     protected setData(value: SlideData<MotionBlockSlideData>): void {
+        // modify all title information
+        if (value?.data) {
+            value.data.motions.forEach(motion => modifyAgendaItemNumber(motion));
+            Object.values(value.data.referenced).forEach(motion => modifyAgendaItemNumber(motion));
+        }
+
         if (value && value.data.motions) {
             value.data.motions = value.data.motions.sort((a, b) =>
                 this.languageCollator.compare(this.getNumberOrTitle(a), this.getNumberOrTitle(b))
@@ -100,14 +108,10 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
             // Populate the motion with the recommendation_label
             value.data.motions.forEach(motion => {
                 if (motion.recommendation) {
-                    let recommendation = this.translate.instant(motion.recommendation.name);
+                    let recommendation = this.translate.instant(motion.recommendation.recommendation_label);
                     if (motion.recommendation_extension) {
                         recommendation +=
-                            ' ' +
-                            this.replaceReferencedMotions(
-                                motion.recommendation_extension,
-                                value.data.referenced_motions
-                            );
+                            ' ' + this.replaceReferencedMotions(motion.recommendation_extension, value.data.referenced);
                     }
                     motion.recommendationLabel = recommendation;
                 } else {

@@ -62,7 +62,8 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
             'mimetype',
             'filesize',
             'create_timestamp',
-            'has_inherited_access_groups'
+            'has_inherited_access_groups',
+            'pdf_information'
         ]);
         return {
             [DEFAULT_FIELDSET]: listFields,

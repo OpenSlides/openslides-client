@@ -40,7 +40,7 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
     }
 
     public get pages(): number | null {
-        return this.mediafile.pdf_information.pages || null;
+        return this.mediafile.pdf_information?.pages || null;
     }
 
     public get timestamp(): string {

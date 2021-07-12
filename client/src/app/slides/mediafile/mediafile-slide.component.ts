@@ -11,12 +11,11 @@ import { MediafileSlideData } from './mediafile-slide-data';
 })
 export class MediafileSlideComponent extends BaseSlideComponent<MediafileSlideData> {
     public get url(): string {
-        return `${this.data.data.media_url_prefix}${this.data.data.path}`;
+        return `/system/media/get/${this.data.data.id}`;
     }
 
     public get zoom(): number {
-        // return Math.pow(1.1, this.data.element.zoom || 0);
-        throw new Error('TODO');
+        return Math.pow(1.1, this.data.options.zoom || 0);
     }
 
     public get isImage(): boolean {

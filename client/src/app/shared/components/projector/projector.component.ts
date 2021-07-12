@@ -169,7 +169,7 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
         );
 
         this.slides = this.projectorSubject.pipe(
-            switchMap(projector => projector?.current_projections_as_observable),
+            switchMap(projector => projector?.current_projections_as_observable || []),
             map(projections =>
                 projections.map(
                     projection =>

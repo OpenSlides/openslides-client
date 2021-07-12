@@ -1,6 +1,6 @@
 import { MergeAmendment } from 'app/shared/models/motions/motion-state';
 import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.constants';
-import { ReferencedMotions, ReferencedMotionTitleInformation } from '../motion-base/base-motion-slide';
+import { MotionTitleInformation, ReferencedMotions } from '../motion-base/base-motion-slide';
 
 /**
  * This interface describes the data returned by the server about an amendment.
@@ -68,7 +68,7 @@ export interface MotionSlideData {
     recommender?: string;
     recommendation?: string;
     recommendation_extension?: string;
-    recommendation_referencing_motions?: ReferencedMotionTitleInformation[];
+    recommendation_referencing_motions?: MotionTitleInformation[];
     referenced_motions?: ReferencedMotions;
     base_motion?: MotionSlideDataBaseMotion;
     base_statute?: MotionSlideDataBaseStatute;

@@ -8,7 +8,9 @@ export class Projection extends BaseModel<Projection> {
     public id: Id;
     public stable?: boolean;
     public type?: string;
-    public options: object;
+    public options: {
+        [key: string]: any;
+    };
     public weight: number;
 
     // Calculated field
