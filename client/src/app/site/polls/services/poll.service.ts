@@ -9,7 +9,6 @@ import { Poll } from 'app/shared/models/poll/poll';
 import {
     AssignmentPollMethodVerbose,
     EntitledUsersEntry,
-    MajorityMethod,
     PollClassType,
     PollColor,
     PollMethod,
@@ -18,12 +17,7 @@ import {
     PollType,
     VOTE_UNDOCUMENTED
 } from 'app/shared/models/poll/poll-constants';
-import {
-    MajorityMethodVerbose,
-    PollPercentBaseVerbose,
-    PollPropertyVerbose,
-    PollTypeVerbose
-} from 'app/shared/models/poll/poll-constants';
+import { PollPercentBaseVerbose, PollPropertyVerbose, PollTypeVerbose } from 'app/shared/models/poll/poll-constants';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { ParsePollNumberPipe } from 'app/shared/pipes/parse-poll-number.pipe';
 import { PollKeyVerbosePipe } from 'app/shared/pipes/poll-key-verbose.pipe';
@@ -54,55 +48,6 @@ export const VoteValuesVerbose = {
     N: 'No',
     A: 'Abstain'
 };
-
-/**
- * Interface representing possible majority calculation methods. The implementing
- * calc function should return an integer number that must be reached for the
- * option to successfully fulfill the quorum, or null if disabled
- */
-export interface CalculableMajorityMethod {
-    value: string;
-    display_name: string;
-    calc: (base: number) => number | null;
-}
-
-/**
- * Function to round up the passed value of a poll.
- *
- * @param value The calculated value of 100%-base.
- * @param addOne Flag, if the result should be increased by 1.
- *
- * @returns The necessary value to get the majority.
- */
-export const calcMajority = (value: number, addOne: boolean = false) => {
-    return Math.ceil(value) + (addOne ? 1 : 0);
-};
-
-/**
- * List of available majority methods, used in motion and assignment polls
- */
-export const PollMajorityMethod: CalculableMajorityMethod[] = [
-    {
-        value: 'simple_majority',
-        display_name: 'Simple majority',
-        calc: base => calcMajority(base / 2, true)
-    },
-    {
-        value: 'two-thirds_majority',
-        display_name: 'Two-thirds majority',
-        calc: base => calcMajority((base * 2) / 3)
-    },
-    {
-        value: 'three-quarters_majority',
-        display_name: 'Three-quarters majority',
-        calc: base => calcMajority((base * 3) / 4)
-    },
-    {
-        value: 'disabled',
-        display_name: 'Disabled',
-        calc: a => null
-    }
-];
 
 export interface BasePollData<PM, PB> {
     pollmethod: PM;
@@ -176,11 +121,6 @@ export abstract class PollService {
     public defaultPercentBase: PollPercentBase;
 
     /**
-     * The default majority method
-     */
-    public defaultMajorityMethod: MajorityMethod;
-
-    /**
      * Per default entitled to vote
      */
     public defaultGroupIds: number[];
@@ -189,11 +129,6 @@ export abstract class PollService {
      * The default poll type
      */
     public defaultPollType: PollType;
-
-    /**
-     * The majority method currently in use
-     */
-    public majorityMethod: CalculableMajorityMethod;
 
     public isElectronicVotingEnabled: boolean;
 
@@ -237,7 +172,6 @@ export abstract class PollService {
     public getDefaultPollData(): Partial<Poll> {
         return {
             onehundred_percent_base: this.defaultPercentBase,
-            majority_method: this.defaultMajorityMethod,
             entitled_group_ids: this.defaultGroupIds,
             type: this.isElectronicVotingEnabled ? this.defaultPollType : PollType.Analog
         };
@@ -245,8 +179,6 @@ export abstract class PollService {
 
     public getVerboseNameForValue(key: string, value: string): string {
         switch (key) {
-            case 'majority_method':
-                return MajorityMethodVerbose[value];
             case 'onehundred_percent_base':
                 return PollPercentBaseVerbose[value];
             case 'pollmethod':

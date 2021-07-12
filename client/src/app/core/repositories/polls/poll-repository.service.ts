@@ -54,7 +54,6 @@ export class PollRepositoryService extends BaseRepositoryWithActiveMeeting<ViewP
             'votesinvalid',
             'votesvalid',
             'option_ids',
-            'majority_method',
             'onehundred_percent_base',
             'global_option_id',
             'global_yes',
@@ -100,7 +99,6 @@ export class PollRepositoryService extends BaseRepositoryWithActiveMeeting<ViewP
         const payload: PollAction.CreateAnalogPollPayload = {
             meeting_id: this.activeMeetingId,
             title: poll.title,
-            majority_method: poll.majority_method,
             onehundred_percent_base: poll.onehundred_percent_base,
             pollmethod: poll.pollmethod,
             publish_immediately: poll.publish_immediately,
@@ -123,7 +121,6 @@ export class PollRepositoryService extends BaseRepositoryWithActiveMeeting<ViewP
         const payload: PollAction.CreateElectronicPollPayload = {
             meeting_id: this.activeMeetingId,
             title: poll.title,
-            majority_method: poll.majority_method,
             onehundred_percent_base: poll.onehundred_percent_base,
             pollmethod: poll.pollmethod,
             type: poll.type,
@@ -182,7 +179,6 @@ export class PollRepositoryService extends BaseRepositoryWithActiveMeeting<ViewP
             publish_immediately: update.publish_immediately,
             allow_multiple_votes_per_candidate: update.allow_multiple_votes_per_candidate,
             description: update.description,
-            majority_method: update.majority_method,
             max_votes_amount: update.max_votes_amount,
             min_votes_amount: update.min_votes_amount,
             onehundred_percent_base: update.onehundred_percent_base,
@@ -201,7 +197,6 @@ export class PollRepositoryService extends BaseRepositoryWithActiveMeeting<ViewP
             id: poll.id,
             publish_immediately: update.publish_immediately,
             description: update.description,
-            majority_method: update.majority_method,
             onehundred_percent_base: update.onehundred_percent_base,
             title: update.title,
             ...this.getAnalogPollVotesValues(update)
@@ -218,7 +213,6 @@ export class PollRepositoryService extends BaseRepositoryWithActiveMeeting<ViewP
             entitled_group_ids: update.entitled_group_ids,
             allow_multiple_votes_per_candidate: update.allow_multiple_votes_per_candidate,
             description: update.description,
-            majority_method: update.majority_method,
             max_votes_amount: update.max_votes_amount,
             min_votes_amount: update.min_votes_amount,
             onehundred_percent_base: update.onehundred_percent_base,

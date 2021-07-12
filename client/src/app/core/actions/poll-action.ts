@@ -66,7 +66,6 @@ export namespace PollAction {
         global_no?: boolean;
         global_abstain?: boolean;
         onehundred_percent_base?: string;
-        majority_method?: string;
     }
 
     interface PartialUpdatePayload {
@@ -74,7 +73,6 @@ export namespace PollAction {
         title?: string;
         description?: string;
         onehundred_percent_base?: string;
-        majority_method?: string;
     }
 
     interface PartialUpdateCreatedPollPayload {

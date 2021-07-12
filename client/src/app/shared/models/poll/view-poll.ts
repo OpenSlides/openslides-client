@@ -9,7 +9,6 @@ import { BaseModel } from '../base/base-model';
 import { Poll } from './poll';
 import {
     AssignmentPollMethodVerbose,
-    MajorityMethodVerbose,
     PollClassType,
     PollClassTypeVerbose,
     PollMethodVerbose,
@@ -68,10 +67,6 @@ export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
 
     public get typeVerbose(): string {
         return PollTypeVerbose[this.type];
-    }
-
-    public get majorityMethodVerbose(): string {
-        return MajorityMethodVerbose[this.majority_method];
     }
 
     public get wasVoted(): boolean {

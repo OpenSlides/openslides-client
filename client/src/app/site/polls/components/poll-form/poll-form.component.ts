@@ -11,12 +11,7 @@ import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.se
 import { VotingPrivacyWarningComponent } from 'app/shared/components/voting-privacy-warning/voting-privacy-warning.component';
 import { PollType } from 'app/shared/models/poll/poll-constants';
 import { PollMethod, PollPercentBase } from 'app/shared/models/poll/poll-constants';
-import {
-    MajorityMethodVerbose,
-    PollClassType,
-    PollPropertyVerbose,
-    PollTypeVerbose
-} from 'app/shared/models/poll/poll-constants';
+import { PollClassType, PollPropertyVerbose, PollTypeVerbose } from 'app/shared/models/poll/poll-constants';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { ParentErrorStateMatcher } from 'app/shared/parent-error-state-matcher';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
@@ -66,11 +61,6 @@ export class PollFormComponent extends BaseComponent implements OnInit {
      * The different types the poll can accept.
      */
     public pollTypes = PollTypeVerbose;
-
-    /**
-     * The majority methods for the poll.
-     */
-    public majorityMethods = MajorityMethodVerbose;
 
     /**
      * the filtered `percentBases`.
@@ -345,10 +335,6 @@ export class PollFormComponent extends BaseComponent implements OnInit {
             type: ['', Validators.required],
             pollmethod: ['', Validators.required],
             onehundred_percent_base: ['', Validators.required],
-            /**
-             * This was not used before?
-             */
-            // majority_method: ['', Validators.required],
             votes_amount: this.fb.group(
                 {
                     max_votes_amount: [1, [Validators.required, Validators.min(1)]],

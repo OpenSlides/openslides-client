@@ -3,7 +3,7 @@ import { CalculablePollKey } from 'app/site/polls/services/poll.service';
 import { BaseDecimalModel } from '../base/base-decimal-model';
 import { HasMeetingId } from '../base/has-meeting-id';
 import { HasProjectionIds } from '../base/has-projectable-ids';
-import { EntitledUsersEntry, MajorityMethod, PollMethod, PollPercentBase, PollState, PollType } from './poll-constants';
+import { EntitledUsersEntry, PollMethod, PollPercentBase, PollState, PollType } from './poll-constants';
 
 export class Poll extends BaseDecimalModel<Poll> {
     public static readonly COLLECTION = 'poll';
@@ -18,7 +18,6 @@ export class Poll extends BaseDecimalModel<Poll> {
     public votesinvalid: number;
     public votescast: number;
     public onehundred_percent_base: PollPercentBase;
-    public majority_method: MajorityMethod;
     public voted_id: number[];
     public user_has_voted: boolean;
     public user_has_voted_for_delegations: Id[];
