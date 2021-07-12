@@ -46,9 +46,6 @@ export class AssignmentPollService extends PollService {
             .get('assignment_poll_default_100_percent_base')
             .subscribe(base => (this.defaultPercentBase = base));
         this.meetingSettingsService
-            .get('assignment_poll_default_majority_method')
-            .subscribe(method => (this.defaultMajorityMethod = method));
-        this.meetingSettingsService
             .get('assignment_poll_default_group_ids')
             .subscribe(ids => (this.defaultGroupIds = ids));
         this.meetingSettingsService

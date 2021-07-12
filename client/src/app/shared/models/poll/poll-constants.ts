@@ -63,13 +63,6 @@ export enum PollType {
     Pseudoanonymous = 'pseudoanonymous'
 }
 
-export enum MajorityMethod {
-    Simple = 'simple',
-    TwoThirds = 'two_thirds',
-    ThreeQuarters = 'three_quarters',
-    Disabled = 'disabled'
-}
-
 export enum PollMethod {
     Y = 'Y',
     YN = 'YN',
@@ -123,7 +116,6 @@ export const PollTypeVerbose = {
 };
 
 export const PollPropertyVerbose = {
-    majority_method: _('Required majority'),
     onehundred_percent_base: _('100% base'),
     type: _('Voting type'),
     pollmethod: _('Voting method'),
@@ -152,13 +144,6 @@ export const AssignmentPollPercentBaseVerbose = {
     cast: _('All casted ballots'),
     entitled: _('All entitled users'),
     disabled: _('Disabled (no percents)')
-};
-
-export const MajorityMethodVerbose = {
-    simple: 'Simple majority',
-    two_thirds: 'Two-thirds majority',
-    three_quarters: 'Three-quarters majority',
-    disabled: 'Disabled'
 };
 
 export const PollMethodVerbose = {

@@ -9,7 +9,6 @@ import { MotionWorkflow } from 'app/shared/models/motions/motion-workflow';
 import { PollPercentBase } from 'app/shared/models/poll/poll-constants';
 import {
     AssignmentPollMethodVerbose,
-    MajorityMethodVerbose,
     PollPercentBaseVerbose,
     PollTypeVerbose
 } from 'app/shared/models/poll/poll-constants';
@@ -649,13 +648,6 @@ export const meetingSettings: SettingsGroup[] = [
                         choices: switchKeyValue(PollPercentBaseVerbose)
                     },
                     {
-                        key: 'motion_poll_default_majority_method',
-                        label: 'Required majority',
-                        type: 'choice',
-                        choices: switchKeyValue(MajorityMethodVerbose),
-                        helpText: 'Default method to check whether a motion has reached the required majority.'
-                    },
-                    {
                         key: 'motion_poll_default_group_ids',
                         label: 'Default groups with voting rights',
                         default: [],
@@ -739,13 +731,6 @@ export const meetingSettings: SettingsGroup[] = [
                         default: PollPercentBase.Valid,
                         type: 'choice',
                         choices: switchKeyValue(PollPercentBaseVerbose)
-                    },
-                    {
-                        key: 'assignment_poll_default_majority_method',
-                        label: 'Required majority',
-                        type: 'choice',
-                        choices: switchKeyValue(MajorityMethodVerbose),
-                        helpText: 'Default method to check whether a candidate has reached the required majority.'
                     },
                     {
                         key: 'assignment_poll_default_group_ids',

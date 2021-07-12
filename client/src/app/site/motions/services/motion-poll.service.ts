@@ -47,9 +47,6 @@ export class MotionPollService extends PollService {
         this.meetingSettingsService
             .get('motion_poll_default_100_percent_base')
             .subscribe(base => (this.defaultPercentBase = base));
-        this.meetingSettingsService
-            .get('motion_poll_default_majority_method')
-            .subscribe(method => (this.defaultMajorityMethod = method));
         this.meetingSettingsService.get('motion_poll_default_type').subscribe(type => (this.defaultPollType = type));
         this.meetingSettingsService.get('motion_poll_default_group_ids').subscribe(ids => (this.defaultGroupIds = ids));
     }

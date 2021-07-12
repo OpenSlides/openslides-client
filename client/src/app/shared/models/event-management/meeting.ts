@@ -3,7 +3,7 @@ import { Id } from 'app/core/definitions/key-types';
 import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.constants';
 import { BaseModel } from '../base/base-model';
 import { HasProjectionIds } from '../base/has-projectable-ids';
-import { MajorityMethod, PollMethod, PollPercentBase, PollType } from '../poll/poll-constants';
+import { PollMethod, PollPercentBase, PollType } from '../poll/poll-constants';
 
 export type UserSortProperty = 'first_name' | 'last_name' | 'number';
 export type ExportCsvEncoding = 'utf-8' | 'iso-8859-15';
@@ -115,7 +115,6 @@ export interface Settings {
     motion_poll_ballot_paper_number: number;
     motion_poll_default_type: PollType;
     motion_poll_default_100_percent_base: PollPercentBase;
-    motion_poll_default_majority_method: MajorityMethod;
     motion_poll_default_group_ids: Id[]; // (group/used_as_motion_poll_default_id)[];
 
     // Users
@@ -145,7 +144,6 @@ export interface Settings {
     assignment_poll_default_type: PollType;
     assignment_poll_default_method: PollMethod;
     assignment_poll_default_100_percent_base: PollPercentBase;
-    assignment_poll_default_majority_method: MajorityMethod;
     assignment_poll_default_group_ids: Id[]; // (group/used_as_assignment_poll_default_id)[];
 }
 

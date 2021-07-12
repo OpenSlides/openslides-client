@@ -125,7 +125,6 @@ export namespace MeetingAction {
         motion_poll_ballot_paper_number?: number;
         motion_poll_default_type?: string;
         motion_poll_default_100_percent_base?: string;
-        motion_poll_default_majority_method?: string;
         motion_poll_default_group_ids?: Id[];
 
         users_sort_by?: string;
@@ -153,7 +152,6 @@ export namespace MeetingAction {
         assignment_poll_default_type?: string;
         assignment_poll_default_method?: string;
         assignment_poll_default_100_percent_base?: string;
-        assignment_poll_default_majority_method?: string;
         assignment_poll_default_group_ids?: Id[];
 
         poll_ballot_paper_selection?: string;
@@ -162,7 +160,6 @@ export namespace MeetingAction {
         poll_default_type?: string;
         poll_default_method?: string;
         poll_default_100_percent_base?: string;
-        poll_default_majority_method?: string;
         poll_default_group_ids?: Id[];
 
         present_user_ids?: Id[];

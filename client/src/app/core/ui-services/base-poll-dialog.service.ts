@@ -22,7 +22,6 @@ export interface PollDialogData {
 
     isPublished?: boolean;
     onehundred_percent_base?: string;
-    majority_method?: string;
 }
 
 export interface PollDialogResult {
