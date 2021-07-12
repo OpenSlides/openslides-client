@@ -1,27 +1,27 @@
-<!--<div
+<div
     class="countdown overlay"
-    *ngIf="data && !data.element.fullscreen"
-    [ngClass]="{ 'only-time-indicator': data.element.displayType === 'onlyTimeIndicator' }"
+    *ngIf="data && !data.options.fullscreen"
+    [ngClass]="{ 'only-time-indicator': data.options.displayType === 'onlyTimeIndicator' }"
     [ngStyle]="{
         'margin-top': !projector || projector.show_header_footer ? '80px' : '30px'
     }"
 >
     <os-countdown-time
         [countdown]="data.data"
-        [displayType]="data.element.displayType"
+        [displayType]="data.options.displayType"
         [warningTime]="data.data.warning_time"
     ></os-countdown-time>
     <div *ngIf="data.data.description" class="description">
         {{ data.data.description }}
     </div>
 </div>
-<div class="countdown fullscreen" *ngIf="data && data.element.fullscreen">
+<div class="countdown fullscreen" *ngIf="data && data.options.fullscreen">
     <div>
         <os-countdown-time
             [countdown]="data.data"
             [fullscreen]="true"
-            [displayType]="data.element.displayType"
+            [displayType]="data.options.displayType"
             [warningTime]="data.data.warning_time"
         ></os-countdown-time>
     </div>
-</div>-->
+</div>
