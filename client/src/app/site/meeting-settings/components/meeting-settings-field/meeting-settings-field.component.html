@@ -29,9 +29,9 @@
                         <ng-container *ngIf="getRestrictedValue(setting.choices)">
                             <mat-option
                                 *ngFor="let choice of getRestrictedValue(setting.choices) | keyvalue: keepEntryOrder"
-                                [value]="choice.value"
+                                [value]="choice.key"
                             >
-                                {{ choice.key | translate }}
+                                {{ choice.value | translate }}
                             </mat-option>
                         </ng-container>
                     </mat-select>
