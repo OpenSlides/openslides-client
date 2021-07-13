@@ -1,3 +1,9 @@
+/**
+ * Problems in docker setup.
+ * Removed from dev-deps, install locally
+ *
+ * npm install -g npm-license-crawler
+ */
 const crawler = require('npm-license-crawler');
 const fs = require('fs');
 
