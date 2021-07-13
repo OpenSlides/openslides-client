@@ -155,6 +155,12 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
                     },
                     {
                         idField: {
+                            templateIdField: 'vote_delegations_$_from_ids',
+                            templateValue: this.activeMeetingId.toString()
+                        }
+                    },
+                    {
+                        idField: {
                             templateIdField: 'vote_delegated_$_to_id',
                             templateValue: this.activeMeetingId?.toString()
                         }

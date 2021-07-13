@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { UserAction } from 'app/core/actions/user-action';
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { getOmlVerboseName, OML, OMLMapping } from 'app/core/core-services/organization-permission';
+import { CML, getOmlVerboseName, OML, OMLMapping } from 'app/core/core-services/organization-permission';
+import { Id } from 'app/core/definitions/key-types';
 import { CommitteeRepositoryService } from 'app/core/repositories/management/committee-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -23,20 +23,17 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
         return Object.values(OML).filter(level => this.operator.hasOrganizationPermissions(level));
     }
 
-    public get randomPasswordFn(): () => string {
-        return () => this.getRandomPassword();
-    }
-
     public readonly additionalFormControls = {
         committee_ids: [[]],
         default_structure_level: [''],
         default_number: [''],
         default_vote_weight: [''],
-        organization_management_level: []
+        organization_management_level: [],
+        committee_$_management_level: []
     };
 
     public isFormValid = false;
-    public personalInfoFormValue = {};
+    public personalInfoFormValue: any = {};
     public formErrors: { [name: string]: boolean } | null = null;
 
     public isEditingUser = false;
@@ -56,7 +53,24 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
     }
 
     public ngOnInit(): void {
+        super.ngOnInit();
         this.getUserByUrl();
+    }
+
+    public transformPropagateFn(value?: Id[]): any {
+        return (value || []).mapToObject(id => ({ [id]: CML.can_manage }));
+    }
+
+    public transformSetFn(): (value?: string[]) => any {
+        return (value?: string[]) => {
+            const managementIds = [];
+            for (const strId of value || []) {
+                if (this.user.committee_management_level(parseInt(strId, 10)) === CML.can_manage) {
+                    managementIds.push(parseInt(strId, 10));
+                }
+            }
+            return managementIds;
+        };
     }
 
     public async onSubmit(): Promise<void> {
@@ -83,8 +97,8 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
     /**
      * Handler for the generate Password button.
      */
-    public getRandomPassword(): string {
-        return this.repo.getRandomPassword();
+    public getRandomPasswordFn(): () => string {
+        return () => this.repo.getRandomPassword();
     }
 
     public getOmlVerboseName(omlKey: keyof OMLMapping): string {
@@ -101,6 +115,19 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
             await this.repo.delete(this.user);
             this.router.navigate(['./members/']);
         }
+    }
+
+    public getUserCommitteeManagementLevels(): string {
+        const committeesToManage = [];
+        for (const id of this.user.committee_$_management_level) {
+            if (this.user.committee_management_level(id) === CML.can_manage) {
+                committeesToManage.push(this.committeeRepo.getViewModel(id));
+            }
+        }
+        return this.user.committee_$_management_level
+            .filter(id => this.user.committee_management_level(id) === CML.can_manage)
+            .map(id => this.committeeRepo.getViewModel(id).getTitle())
+            .join(', ');
     }
 
     private getUserByUrl(): void {
@@ -145,19 +172,53 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
     }
 
     private async createUser(): Promise<void> {
-        const payload = {
-            ...this.personalInfoFormValue
-        };
-        const identifiable = await this.repo.create(payload)[0];
+        const payload = this.getPartialUserPayload();
+        const identifiable = (await this.repo.create(payload))[0];
         this.router.navigate(['..', identifiable.id], { relativeTo: this.route });
     }
 
     private async updateUser(): Promise<void> {
-        const payload: Partial<UserAction.UpdatePayload> = {
-            ...this.personalInfoFormValue
-        };
+        const payload = this.getPartialUserPayload();
         await this.repo.update(payload, this.user);
         this.isEditingUser = false;
+    }
+
+    private getPartialUserPayload(): any {
+        const payload = {
+            ...this.personalInfoFormValue,
+            committee_$_management_level: this.getCommitteeManagementLevelPayload(),
+            committee_ids: this.getCommitteeMembershipAsIds()
+        };
+        return payload;
+    }
+
+    /**
+     * Function to compare old CML of this user with new selected. Necessary to get removed management permissions and
+     * parse them as `[committeeId]: null`.
+     *
+     * @returns An object with adjusted CML.
+     */
+    private getCommitteeManagementLevelPayload(): { [committeeId: number]: CML | null } {
+        const committeeManagementIds = Object.keys(this.personalInfoFormValue.committee_$_management_level || {});
+        const oldCommitteeManagementIds = (this.user?.committee_$_management_level || []) as any[];
+        return {
+            ...this.personalInfoFormValue.committee_$_management_level,
+            ...oldCommitteeManagementIds.difference(committeeManagementIds).mapToObject(id => ({ [id]: null }))
+        };
+    }
+
+    /**
+     * Function to get assigned CML to committees, which this user is not related to. Users can get permissions only
+     * for a committee, they are related to.
+     *
+     * @returns An array with ids for the committees this user is related to.
+     */
+    private getCommitteeMembershipAsIds(): Id[] {
+        const committeeMembership = (this.personalInfoFormValue.committee_ids || []) as Id[];
+        const committeeManager = Object.keys(this.personalInfoFormValue.committee_$_management_level || {}).map(strId =>
+            parseInt(strId, 10)
+        ) as Id[];
+        return committeeMembership.concat(committeeManager.difference(committeeMembership));
     }
 
     private checkFormForErrors(): void {

@@ -135,9 +135,11 @@ export abstract class BaseFormControlComponent<T>
     }
     public registerOnChange(fn: any): void {
         this._onChange = fn;
+        this.push(this.value);
     }
     public registerOnTouched(fn: any): void {
         this._onTouched = fn;
+        this.push(this.value);
     }
     public setDisabledState?(isDisabled: boolean): void {
         this.disabled = isDisabled;

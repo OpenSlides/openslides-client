@@ -137,12 +137,9 @@ export class UserRepositoryService
 
     public create(...usersToCreate: Partial<UserAction.CreatePayload>[]): Promise<Identifiable[]> {
         const payload: UserAction.CreatePayload[] = usersToCreate.map(partialUser => ({
-            ...this.getBaseUserPayload(partialUser),
-            is_present_in_meeting_ids: partialUser.is_present_in_meeting_ids
+            ...this.sanitizePayload(this.getBaseUserPayload(partialUser)),
+            is_present_in_meeting_ids: partialUser.is_present_in_meeting_ids || []
         }));
-        for (const entry of payload) {
-            this.sanitizePayload(entry);
-        }
         return this.sendBulkActionToBackend(UserAction.CREATE, payload);
     }
 
@@ -161,7 +158,7 @@ export class UserRepositoryService
             const update = typeof patch === 'function' ? patch(user) : patch;
             return {
                 id: user.id,
-                ...this.getBaseUserPayload(update)
+                ...this.sanitizePayload(this.getBaseUserPayload(update))
             };
         });
         return this.sendBulkActionToBackend(UserAction.UPDATE, updatePayload);
@@ -652,11 +649,11 @@ export class UserRepositoryService
         return new Date(user.user.last_email_send).toLocaleString(this.translate.currentLang);
     }
 
-    private sanitizePayload(payload: any): void {
+    private sanitizePayload(payload: any): any {
         const temp = { ...payload };
-        for (const key of Object.keys(temp)) {
-            if (temp[key] === undefined || (typeof temp[key] === 'string' && !temp[key].trim().length)) {
-                delete payload[key];
+        for (const key of Object.keys(temp).filter(field => !this.isFieldAllowedToBeEmpty(field))) {
+            if (typeof temp[key] === 'string' && !temp[key].trim().length) {
+                payload[key] = undefined;
             } else if (Array.isArray(temp[key])) {
                 continue;
             } else if (typeof temp[key] === 'object' && !!temp[key]) {
@@ -666,6 +663,23 @@ export class UserRepositoryService
                 }
             }
         }
+        return { ...payload };
+    }
+
+    private isFieldAllowedToBeEmpty(field: string): boolean {
+        const fields: string[] = [
+            'title',
+            'email',
+            'first_name',
+            'last_name',
+            'comment_$',
+            'about_me_$',
+            'number_$',
+            'structure_level_$',
+            'default_number',
+            'default_structure_level'
+        ];
+        return fields.includes(field);
     }
 
     private preventAlterationOnDemoUsers(users: ViewUser | ViewUser[]): void {
