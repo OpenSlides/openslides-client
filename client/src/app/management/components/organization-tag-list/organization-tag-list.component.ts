@@ -2,12 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { PblColumnDefinition } from '@pebula/ngrid';
+import { Observable, of } from 'rxjs';
 
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OrganizationTagRepositoryService } from 'app/core/repositories/management/organization-tag-repository.service';
 import { ColorService } from 'app/core/ui-services/color.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
+import { ViewCommittee } from 'app/management/models/view-committee';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { ViewOrganization } from 'app/management/models/view-organization';
 import { ViewOrganizationTag } from 'app/management/models/view-organization-tag';
 import { mediumDialogSettings } from 'app/shared/utils/dialog-settings';
@@ -93,6 +96,14 @@ export class OrganizationTagListComponent extends BaseListViewComponent<ViewOrga
         this.deleteOrganizationTags(...this.selectedRows);
     }
 
+    public getCommitteesByTag(orgaTag: ViewOrganizationTag): Observable<ViewCommittee[]> {
+        return of(orgaTag.tagged.filter(tagged => tagged.collection === ViewCommittee.COLLECTION) as ViewCommittee[]);
+    }
+
+    public getMeetingsByTag(orgaTag: ViewOrganizationTag): Observable<ViewMeeting[]> {
+        return of(orgaTag.tagged.filter(tagged => tagged.collection === ViewMeeting.COLLECTION) as ViewMeeting[]);
+    }
+
     protected getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewOrganization,
@@ -103,10 +114,7 @@ export class OrganizationTagListComponent extends BaseListViewComponent<ViewOrga
                     idField: 'organization_tag_ids',
                     follow: [
                         {
-                            idField: 'committee_ids'
-                        },
-                        {
-                            idField: 'meeting_ids'
+                            idField: 'tagged_ids'
                         }
                     ]
                 }
