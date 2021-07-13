@@ -43,9 +43,9 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         public committeeRepo: CommitteeRepositoryService,
-        private repo: UserRepositoryService,
-        private route: ActivatedRoute,
         private router: Router,
+        private route: ActivatedRoute,
+        private repo: UserRepositoryService,
         private promptService: PromptService,
         private operator: OperatorService
     ) {
@@ -87,9 +87,8 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
     }
 
     public onCancel(): void {
-        if (this.isNewUser) {
-            this.router.navigate(['..'], { relativeTo: this.route });
-        } else {
+        this.router.navigate(['..'], { relativeTo: this.route });
+        if (!this.isNewUser) {
             this.isEditingUser = false;
         }
     }
@@ -105,10 +104,14 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
         return getOmlVerboseName(omlKey);
     }
 
+    public editMember(): void {
+        this.router.navigate(['edit'], { relativeTo: this.route });
+    }
+
     /**
      * click on the delete user button
      */
-    public async deleteUserButton(): Promise<void> {
+    public async deleteUser(): Promise<void> {
         const title = this.translate.instant('Are you sure you want to delete this member?');
         const content = this.user.full_name;
         if (await this.promptService.open(title, content)) {
@@ -131,15 +134,22 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
     }
 
     private getUserByUrl(): void {
-        if (this.route.snapshot.url[0] && this.route.snapshot.url[0].path === 'create') {
-            super.setTitle('New member');
-            this.isNewUser = true;
-            this.isEditingUser = true;
-        } else {
+        this.subscriptions.push(
             this.route.params.subscribe(params => {
-                this.loadUserById(Number(params.id));
-            });
-        }
+                if (params.id) {
+                    this.loadUserById(+params.id);
+                } else {
+                    super.setTitle('New member');
+                    this.isNewUser = true;
+                    this.isEditingUser = true;
+                }
+            }),
+            this.route.url.subscribe(segments => {
+                if (segments[0]?.path === 'edit') {
+                    this.isEditingUser = true;
+                }
+            })
+        );
     }
 
     private loadUserById(userId: number): void {

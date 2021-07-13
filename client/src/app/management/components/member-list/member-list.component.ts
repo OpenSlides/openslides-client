@@ -6,6 +6,7 @@ import { PblColumnDefinition } from '@pebula/ngrid';
 
 import { MemberService } from 'app/core/core-services/member.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
+import { OML } from 'app/core/core-services/organization-permission';
 import { Id } from 'app/core/definitions/key-types';
 import { CommitteeRepositoryService } from 'app/core/repositories/management/committee-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
@@ -21,6 +22,8 @@ import { ViewUser } from 'app/site/users/models/view-user';
     styleUrls: ['./member-list.component.scss']
 })
 export class MemberListComponent extends BaseListViewComponent<ViewUser> implements OnInit {
+    public readonly OML = OML;
+
     public tableColumnDefinition: PblColumnDefinition[] = [
         {
             prop: 'short_name',
@@ -29,6 +32,10 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
         {
             prop: 'info',
             width: '65%'
+        },
+        {
+            prop: 'utils',
+            width: '40px'
         }
     ];
 
@@ -56,10 +63,18 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
         this.router.navigate(['create'], { relativeTo: this.route });
     }
 
-    public async deleteSelected(): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to delete all selected participants?');
+    public navigateToMember(member: ViewUser): void {
+        this.router.navigate([member.id, 'edit'], { relativeTo: this.route });
+    }
+
+    public async deleteSelected(...members: ViewUser[]): Promise<void> {
+        const title = this.translate.instant(
+            members.length === 1
+                ? 'Are you sure you want to delete this member?'
+                : 'Are you sure you want to delete all selected participants?'
+        );
         if (await this.promptService.open(title)) {
-            this.repo.delete(...this.selectedRows).catch(this.raiseError);
+            this.repo.delete(...members).catch(this.raiseError);
         }
     }
 

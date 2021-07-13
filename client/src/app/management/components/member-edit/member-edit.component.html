@@ -2,7 +2,7 @@
     [customMenu]="true"
     [hasMainButton]="true"
     mainButtonIcon="edit"
-    (mainEvent)="isEditingUser = !isEditingUser"
+    (mainEvent)="editMember()"
     [goBack]="false"
     [nav]="false"
     [editMode]="isEditingUser"
@@ -27,13 +27,6 @@
             <mat-icon>more_vert</mat-icon>
         </button>
     </ng-container>
-
-    <mat-menu #userExtraMenu="matMenu">
-        <button mat-menu-item [routerLink]="['/', 'members', 'password', user?.id]">
-            <mat-icon>security</mat-icon>
-            <span>{{ 'Change password' | translate }}</span>
-        </button>
-    </mat-menu>
 </os-head-bar>
 
 <os-user-detail-view
@@ -167,3 +160,17 @@
         </div>
     </ng-template>
 </os-user-detail-view>
+
+<mat-menu #userExtraMenu="matMenu">
+    <button mat-menu-item [routerLink]="['/', 'members', user?.id, 'password']">
+        <mat-icon>security</mat-icon>
+        <span>{{ 'Change password' | translate }}</span>
+    </button>
+    <ng-container *osOmlPerms="OML.can_manage_users">
+        <mat-divider></mat-divider>
+        <button (click)="deleteUser()" mat-menu-item class="red-warning-text">
+            <mat-icon>delete</mat-icon>
+            <span>{{ 'Delete' | translate }}</span>
+        </button>
+    </ng-container>
+</mat-menu>
