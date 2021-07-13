@@ -41,7 +41,19 @@ export class UserDetailViewComponent extends BaseComponent {
     public moreIcons: TemplateRef<any>;
 
     @Input()
-    public user: ViewUser;
+    public set user(user: ViewUser) {
+        const oldUser = this._user;
+        this._user = user;
+        if (!oldUser) {
+            this.prepareForm();
+        }
+    }
+
+    public get user(): ViewUser {
+        return this._user;
+    }
+
+    private _user: ViewUser;
 
     @Input()
     public isNewUser = false;

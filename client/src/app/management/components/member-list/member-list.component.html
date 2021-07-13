@@ -56,7 +56,30 @@
             </os-icon-container>
         </div>
     </div>
+    <!-- Menu column -->
+    <ng-container *osOmlPerms="OML.can_manage_users">
+        <div *pblNgridCellDef="'utils'; row as user" class="cell-slot fill">
+            <div>
+                <button mat-icon-button [matMenuTriggerFor]="singleMenu" [matMenuTriggerData]="{ member: user }">
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+            </div>
+        </div>
+    </ng-container>
 </os-basic-list-view-table>
+
+<mat-menu #singleMenu="matMenu">
+    <ng-template matMenuContent let-member="member">
+        <a mat-menu-item [routerLink]="[member.id, 'edit']">
+            <mat-icon>edit</mat-icon>
+            <span>{{ 'Edit' | translate }}</span>
+        </a>
+        <button mat-menu-item class="red-warning-text" (click)="deleteSelected(member)">
+            <mat-icon>delete</mat-icon>
+            <span>{{ 'Delete' | translate }}</span>
+        </button>
+    </ng-template>
+</mat-menu>
 
 <mat-menu #memberMenu="matMenu">
     <div *ngIf="!isMultiSelect">
@@ -81,7 +104,12 @@
             <span>{{ 'Assign/Unassign committees' | translate }}</span>
         </button>
         <mat-divider></mat-divider>
-        <button mat-menu-item class="red-warning-text" [disabled]="!selectedRows.length" (click)="deleteSelected()">
+        <button
+            mat-menu-item
+            class="red-warning-text"
+            [disabled]="!selectedRows.length"
+            (click)="deleteSelected(selectedRows)"
+        >
             <mat-icon>delete</mat-icon>
             <span>{{ 'Delete' | translate }}</span>
         </button>

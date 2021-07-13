@@ -33,12 +33,18 @@ const routes: Route[] = [
                         component: MemberEditComponent
                     },
                     {
-                        path: 'password/:id',
-                        component: MemberPasswordComponent
-                    },
-                    {
                         path: ':id',
-                        component: MemberEditComponent
+                        children: [
+                            { path: '', component: MemberEditComponent },
+                            {
+                                path: 'edit',
+                                component: MemberEditComponent
+                            },
+                            {
+                                path: 'password',
+                                component: MemberPasswordComponent
+                            }
+                        ]
                     }
                 ]
             },
