@@ -265,3 +265,5 @@ _('results');
 // organization strings
 _('Can manage organization');
 _('Can manage members');
+_('Default committee');
+_('Default meeting');

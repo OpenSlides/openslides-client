@@ -90,7 +90,7 @@
                     <os-search-repo-selector
                         formControlName="committee_ids"
                         [multiple]="true"
-                        placeholder="{{ 'Member in committees' | translate }}"
+                        placeholder="{{ 'Committee member' | translate }}"
                         [repo]="committeeRepo"
                     ></os-search-repo-selector>
                 </mat-form-field>
@@ -100,7 +100,7 @@
                     <os-search-repo-selector
                         formControlName="committee_$_management_level"
                         [multiple]="true"
-                        placeholder="{{ 'Is manager of committee' | translate }}"
+                        placeholder="{{ 'Committee manager' | translate }}"
                         [repo]="committeeRepo"
                         [transformPropagateFn]="transformPropagateFn"
                         [transformSetFn]="transformSetFn()"
@@ -141,7 +141,7 @@
 
         <!-- Committees -->
         <div *ngIf="user.committee_ids?.length">
-            <h4>{{ 'Committees' | translate }}</h4>
+            <h4>{{ 'Committee member' | translate }}</h4>
             <span *ngFor="let committee of user.committees; let last = last">
                 {{ committee.getTitle() | translate }}<span *ngIf="!last">,&nbsp;</span>
             </span>
@@ -149,7 +149,7 @@
 
         <!-- Committee management -->
         <div *ngIf="user.committee_$_management_level?.length">
-            <h4>{{ 'Can manage committees' | translate }}</h4>
+            <h4>{{ 'Committee manager' | translate }}</h4>
             <div>{{ getUserCommitteeManagementLevels() }}</div>
         </div>
 

@@ -313,9 +313,6 @@ msgstr ""
 msgid "Can manage comments"
 msgstr ""
 
-msgid "Can manage committees"
-msgstr ""
-
 msgid "Can manage configuration"
 msgstr ""
 
@@ -553,7 +550,13 @@ msgstr ""
 msgid "Committee"
 msgstr ""
 
+msgid "Committee manager"
+msgstr ""
+
 msgid "Committee managers"
+msgstr ""
+
+msgid "Committee member"
 msgstr ""
 
 msgid "Committee members"
@@ -685,6 +688,9 @@ msgstr ""
 msgid "Default 100 % base of an election result"
 msgstr ""
 
+msgid "Default committee"
+msgstr ""
+
 msgid "Default election method"
 msgstr ""
 
@@ -698,6 +704,9 @@ msgid "Default groups with voting rights"
 msgstr ""
 
 msgid "Default line numbering"
+msgstr ""
+
+msgid "Default meeting"
 msgstr ""
 
 msgid "Default number"
@@ -1248,9 +1257,6 @@ msgstr ""
 msgid "Is favorite"
 msgstr ""
 
-msgid "Is manager of committee"
-msgstr ""
-
 msgid "Is no amendment and has no amendments"
 msgstr ""
 
@@ -1381,9 +1387,6 @@ msgid "Meeting URL"
 msgstr ""
 
 msgid "Meetings"
-msgstr ""
-
-msgid "Member in committees"
 msgstr ""
 
 msgid "Members"
