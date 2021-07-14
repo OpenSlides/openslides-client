@@ -162,7 +162,7 @@ export class SortFilterBarComponent<V extends BaseViewModel> {
      * on Click, remove Filter
      * @param filter
      */
-    public removeFilterFromStack(filter: OsFilterIndicator): void {
+    public removeFilterFromStack(filter: OsFilterIndicator<V>): void {
         this.filterService.toggleFilterOption(filter.property, filter.option);
     }
 

@@ -30,7 +30,7 @@ export class AssignmentFilterListService extends BaseFilterListService<ViewAssig
     /**
      * @returns the filter definition
      */
-    protected getFilterDefinitions(): OsFilter[] {
+    protected getFilterDefinitions(): OsFilter<ViewAssignment>[] {
         return [
             {
                 label: 'Phase',

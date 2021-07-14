@@ -41,8 +41,8 @@ export class AmendmentFilterListService extends MotionFilterListService {
     /**
      * Filters by motion parent id
      */
-    private motionFilterOptions: OsFilter = {
-        property: 'parent_id',
+    private motionFilterOptions: OsFilter<ViewMotion> = {
+        property: 'lead_motion_id',
         label: 'Motion',
         options: []
     };
@@ -115,7 +115,7 @@ export class AmendmentFilterListService extends MotionFilterListService {
     /**
      * Currently, no filters for the amendment list, except the pre-filter
      */
-    protected getFilterDefinitions(): OsFilter[] {
+    protected getFilterDefinitions(): OsFilter<ViewMotion>[] {
         if (this.motionFilterOptions) {
             return [this.motionFilterOptions].concat(super.getFilterDefinitions());
         }

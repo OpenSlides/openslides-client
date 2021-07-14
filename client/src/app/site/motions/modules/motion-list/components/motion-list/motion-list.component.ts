@@ -483,7 +483,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
     public changeToViewWithTileCategory(tileCategory: TileCategoryInformation): void {
         this.onChangeView('list');
         this.filterService.clearAllFilters();
-        this.filterService.toggleFilterOption(tileCategory.filter, {
+        this.filterService.toggleFilterOption(tileCategory.filter as any, {
             label: tileCategory.name,
             condition: tileCategory.condition,
             isActive: false
