@@ -1,7 +1,7 @@
 import { ViewCommittee } from 'app/management/models/view-committee';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { ViewOrganization } from 'app/management/models/view-organization';
-import { ViewOrganizationTag } from 'app/management/models/view-organization-tag';
+import { HasOrganizationTags, ViewOrganizationTag } from 'app/management/models/view-organization-tag';
 import { ViewResource } from 'app/management/models/view-resource';
 import { ViewOption } from 'app/shared/models/poll/view-option';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
@@ -134,6 +134,13 @@ export const RELATIONS: Relation[] = [
         MField: 'organization',
         isFullList: true
     }),
+    ...makeGenericM2M<ViewOrganizationTag, HasOrganizationTags>({
+        viewModel: ViewOrganizationTag,
+        possibleViewModels: [ViewCommittee, ViewMeeting],
+        possibleViewModelsField: 'organization_tags',
+        viewModelField: 'tagged',
+        viewModelIdField: 'tagged_ids'
+    }),
     // ########## User
     ...makeManyStructuredUsers2MRelation({
         otherViewModel: ViewGroup,
@@ -250,12 +257,6 @@ export const RELATIONS: Relation[] = [
         BViewModel: ViewCommittee,
         AField: 'forward_to_committees',
         BField: 'receive_forwardings_from_committees'
-    }),
-    ...makeM2M({
-        AViewModel: ViewCommittee,
-        BViewModel: ViewOrganizationTag,
-        AField: 'organization_tags',
-        BField: 'committees'
     }),
     // ########## Meetings
     ...makeO2O({
@@ -481,12 +482,6 @@ export const RELATIONS: Relation[] = [
         BViewModel: ViewUser,
         AField: 'present_users',
         BField: 'is_present_in_meetings'
-    }),
-    ...makeM2M({
-        AViewModel: ViewMeeting,
-        BViewModel: ViewOrganizationTag,
-        AField: 'organization_tags',
-        BField: 'meetings'
     }),
     ...makeO2O({
         AViewModel: ViewMeeting,

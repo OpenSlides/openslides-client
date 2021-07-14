@@ -3,7 +3,7 @@ import { BaseViewModel } from 'app/site/base/base-view-model';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { ViewMeeting } from './view-meeting';
 import { ViewOrganization } from './view-organization';
-import { ViewOrganizationTag } from './view-organization-tag';
+import { HasOrganizationTags } from './view-organization-tag';
 
 export class ViewCommittee extends BaseViewModel<Committee> {
     public static COLLECTION = Committee.COLLECTION;
@@ -28,7 +28,6 @@ interface ICommitteeRelations {
     forward_to_committees: ViewCommittee[];
     receive_forwardings_from_committees: ViewCommittee[];
     organization: ViewOrganization;
-    organization_tags: ViewOrganizationTag[];
     template_meeting: ViewMeeting;
 }
-export interface ViewCommittee extends Committee, ICommitteeRelations {}
+export interface ViewCommittee extends Committee, ICommitteeRelations, HasOrganizationTags {}

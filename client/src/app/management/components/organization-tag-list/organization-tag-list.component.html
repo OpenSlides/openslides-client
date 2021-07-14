@@ -40,24 +40,26 @@
     </div>
     <div *pblNgridCellDef="'info'; row as orgaTag" class="cell-slot fill">
         <div>
-            <div *ngIf="orgaTag.committees?.length">
+            <div *ngIf="getCommitteesByTag(orgaTag) | async as committees">
                 <os-icon-container
+                    *ngIf="committees.length"
                     icon="account_balance"
                     iconTooltip="{{ 'Related committees' | translate }}"
                     [noWrap]="true"
                 >
-                    <span *ngFor="let committee of orgaTag.committees; last as last">
+                    <span *ngFor="let committee of committees; last as last">
                         {{ committee.name }}<span *ngIf="!last">,&nbsp;</span>
                     </span>
                 </os-icon-container>
             </div>
-            <div *ngIf="orgaTag.meetings?.length">
+            <div *ngIf="getMeetingsByTag(orgaTag) | async as meetings">
                 <os-icon-container
+                    *ngIf="meetings.length"
                     icon="calendar_today"
                     iconTooltip="{{ 'Related meetings' | translate }}"
                     [noWrap]="true"
                 >
-                    <span *ngFor="let meeting of orgaTag.meetings; last as last">
+                    <span *ngFor="let meeting of meetings; last as last">
                         {{ meeting.name }}<span *ngIf="!last">,&nbsp;</span>
                     </span>
                 </os-icon-container>
