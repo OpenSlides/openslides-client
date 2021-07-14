@@ -31,27 +31,27 @@
         </mat-form-field>
 
         <mat-form-field *osCmlPerms="CML.can_manage; committeeId: editCommittee?.id">
-            <mat-label>{{ 'Organization tags' | translate }}</mat-label>
+            <mat-label>{{ 'Tags' | translate }}</mat-label>
             <os-search-repo-selector
                 formControlName="organization_tag_ids"
                 [repo]="orgaTagRepo"
                 [multiple]="true"
                 [showNotFoundButton]="true"
                 (clickNotFound)="onOrgaTagNotFound($event)"
-                placeholder="{{ 'Organization tags' | translate }}"
+                placeholder="{{ 'Tags' | translate }}"
             >
                 <ng-container notFoundDescription>
-                    {{ 'Add new organization tag' | translate }}
+                    {{ 'Create new tag' | translate }}
                 </ng-container>
             </os-search-repo-selector>
         </mat-form-field>
 
         <mat-form-field *osOmlPerms="OML.can_manage_users">
-            <mat-label> {{ 'Committee users' | translate }}</mat-label>
+            <mat-label> {{ 'Committee members' | translate }}</mat-label>
             <os-search-value-selector
                 formControlName="user_ids"
                 [multiple]="true"
-                placeholder="{{ 'Committee users' | translate }}"
+                placeholder="{{ 'Committee members' | translate }}"
                 [inputListValues]="organizationMembers"
             ></os-search-value-selector>
         </mat-form-field>
@@ -69,7 +69,7 @@
             </mat-form-field>
 
             <mat-form-field>
-                <mat-label>{{ 'Can receive forwarding from committees' | translate }}</mat-label>
+                <mat-label>{{ 'Can receive motions from committee' | translate }}</mat-label>
                 <os-search-repo-selector
                     formControlName="receive_forwardings_from_committee_ids"
                     [multiple]="true"

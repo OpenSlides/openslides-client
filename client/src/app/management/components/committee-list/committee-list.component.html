@@ -70,7 +70,7 @@
             </div>
             <div *ngIf="committee.receive_forwardings_from_committees?.length">
                 <os-icon-container
-                    iconTooltip="{{ 'Can receive forwardings from committees' | translate }}"
+                    iconTooltip="{{ 'Can receive motions from committee' | translate }}"
                     icon="arrow_right_alt"
                     [mirrored]="true"
                 >
@@ -89,7 +89,7 @@
 
     <div *pblNgridCellDef="'managers'; row as committee" class="cell-slot fill">
         <os-icon-container
-            iconTooltip="{{ 'Managers' | translate }}"
+            iconTooltip="{{ 'Committee managers' | translate }}"
             icon="build"
             [showIcon]="!!committee.managers?.length"
         >
@@ -170,7 +170,7 @@
             <mat-divider></mat-divider>
             <button mat-menu-item (click)="forwardToCommittees()">
                 <mat-icon>swap_horiz</mat-icon>
-                <span>{{ 'Unforward/forward to committees' | translate }}</span>
+                <span>{{ 'Motion forwarding' | translate }} ...</span>
             </button>
             <button mat-menu-item [disabled]="true">
                 <mat-icon>local_offer</mat-icon>

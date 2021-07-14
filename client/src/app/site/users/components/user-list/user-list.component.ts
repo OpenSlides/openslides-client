@@ -391,7 +391,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
                 verboseStateName = 'present';
                 break;
             case 'is_physical_person':
-                options = [_('no committee'), _('committee')]; // switched order: no committee=physical person
+                options = [_('natural person'), _('no natural person')]; // switched order: no committee=physical person
                 verboseStateName = 'committee';
                 break;
         }

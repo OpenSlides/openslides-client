@@ -64,7 +64,7 @@
         <!-- Permission: CML.can_manage (implicit or OML.can_manage_organization or higher) -->
         <!-- Only check for CML.can_manage -> this includes check for OML.can_manage_organization or higher -->
         <mat-form-field *osCmlPerms="CML.can_manage; committeeId: committee?.id">
-            <mat-label>{{ 'Organization tags' | translate }}</mat-label>
+            <mat-label>{{ 'Tags' | translate }}</mat-label>
             <os-search-repo-selector
                 [repo]="orgaTagRepo"
                 [multiple]="true"
@@ -73,7 +73,7 @@
                 (clickNotFound)="onOrgaTagNotFound($event)"
             >
                 <ng-container notFoundDescription>
-                    {{ 'Add new organization tag' | translate }}
+                    {{ 'Create new tag' | translate }}
                 </ng-container>
             </os-search-repo-selector>
         </mat-form-field>

@@ -80,10 +80,10 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
 
     public async assignCommitteesToUsers(): Promise<void> {
         const content = this.translate.instant(
-            'This will add or remove the following groups for all selected participants:'
+            'This will add or remove the following committees for all selected participants:'
         );
-        const ADD = _('add committee(s)');
-        const REMOVE = _('remove committee(s)');
+        const ADD = _('Add');
+        const REMOVE = _('Remove');
         const choices = [ADD, REMOVE];
         const selectedChoice = await this.choiceService.open(
             content,

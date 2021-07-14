@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>{{ (isCreateView ? 'Create an organization tag' : 'Edit an organization tag') | translate }}</h2>
+<h2 mat-dialog-title>{{ (isCreateView ? 'New tag' : 'Edit tag') | translate }}</h2>
 <div mat-dialog-content class="organization-tag-content">
     <form [formGroup]="organizationTagForm">
         <mat-form-field appearance="fill">
@@ -21,7 +21,7 @@
                 mat-icon-button
                 matSuffix
                 (click)="generateColor()"
-                matTooltip="{{ 'Generate a new color' | translate }}"
+                matTooltip="{{ 'Generate new color' | translate }}"
             >
                 <mat-icon> sync </mat-icon>
             </button>

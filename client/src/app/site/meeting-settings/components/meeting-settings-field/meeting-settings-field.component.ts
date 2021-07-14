@@ -137,7 +137,7 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
             this.subscriptions.push(
                 repo.getViewModelListObservable().subscribe(models => {
                     this.setting.choices = models.mapToObject(model => ({
-                        [model[def.labelKey]]: model[def.idKey]
+                        [model[def.idKey]]: model[def.labelKey]
                     }));
                     this.cd.markForCheck();
                 })

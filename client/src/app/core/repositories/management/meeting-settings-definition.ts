@@ -84,23 +84,23 @@ export const meetingSettings: SettingsGroup[] = [
         icon: 'home',
         subgroups: [
             {
-                label: 'Event',
+                label: _('Event'),
                 settings: [
                     {
                         key: 'name',
-                        label: 'Event name',
+                        label: _('Event name'),
                         default: 'OpenSlides',
                         validators: [Validators.maxLength(100)]
                     },
                     {
                         key: 'description',
-                        label: 'Short description of event',
-                        default: 'Presentation and assembly system',
+                        label: _('Short description of event'),
+                        default: _('Presentation and assembly system'),
                         validators: [Validators.maxLength(100)]
                     },
                     {
                         key: 'location',
-                        label: 'Event location'
+                        label: _('Event location')
                     }
                 ]
             },
@@ -109,79 +109,83 @@ export const meetingSettings: SettingsGroup[] = [
                 settings: [
                     {
                         key: 'conference_show',
-                        label: 'Show live conference window',
+                        label: _('Show live conference window'),
                         type: 'boolean',
-                        helpText: 'Server settings required to activate Jitsi Meet integration.'
+                        helpText: _('Server settings required to activate Jitsi Meet integration.')
                     },
                     {
                         key: 'conference_auto_connect',
-                        label: 'Connect all users to live conference automatically.',
+                        label: _('Connect all users to live conference automatically.'),
                         type: 'boolean',
-                        helpText: 'Server settings required to activate Jitsi Meet integration.'
+                        helpText: _('Server settings required to activate Jitsi Meet integration.')
                     },
                     {
                         key: 'conference_los_restriction',
-                        label: 'Allow only current speakers and list of speakers managers to enter the live conference',
+                        label: _(
+                            'Allow only current speakers and list of speakers managers to enter the live conference'
+                        ),
                         type: 'boolean',
-                        helpText: 'Server settings required to activate Jitsi Meet integration.'
+                        helpText: _('Server settings required to activate Jitsi Meet integration.')
                     },
                     {
                         key: 'conference_stream_url',
-                        label: 'Livestream url',
-                        helpText: 'Remove URL to deactivate livestream. Check extra group permission to see livestream.'
+                        label: _('Livestream URL'),
+                        helpText: _(
+                            'Remove URL to deactivate livestream. Check extra group permission to see livestream.'
+                        )
                     }
                 ]
             },
             {
-                label: 'Projector',
+                label: _('Projector'),
                 settings: [
                     {
                         key: 'projector_countdown_warning_time',
-                        label: 'Show orange countdown in the last x seconds of speaking time',
+                        label: _('Show orange countdown in the last x seconds of speaking time'),
                         type: 'integer',
-                        helpText: 'Enter duration in seconds. Choose 0 to disable warning color.',
+                        helpText: _('Enter duration in seconds. Choose 0 to disable warning color.'),
                         validators: [Validators.min(0)]
                     },
                     {
                         key: 'projector_countdown_default_time',
-                        label: 'Predefined seconds of new countdowns',
+                        label: _('Predefined seconds of new countdowns'),
                         default: 60,
                         type: 'integer'
                     }
                 ]
             },
             {
-                label: 'System',
+                label: _('System'),
                 settings: [
                     {
                         key: 'enable_anonymous',
-                        label: 'Allow access for anonymous guest users',
+                        label: _('Allow access for anonymous guest users'),
                         type: 'boolean'
                     }
                 ]
             },
             {
-                label: 'Export',
+                label: _('Export'),
                 settings: [
                     {
                         key: 'export_csv_separator',
-                        label: 'Separator used for all csv exports and examples',
+                        label: _('Separator used for all CSV exports and examples'),
                         default: ','
                     },
                     {
                         key: 'export_csv_encoding',
-                        label: 'Default encoding for all csv exports',
+                        label: _('Default encoding for all CSV exports'),
                         default: 'utf-8',
                         type: 'choice',
                         choices: {
                             // matches ExportCsvEncoding
-                            'utf-8': _('UTF-8'),
-                            'iso-8859-15': _('ISO-8859-15')
+                            'utf-8': 'UTF-8',
+                            'iso-8859-15': 'ISO-8859-15'
                         }
                     },
                     {
                         key: 'export_pdf_pagenumber_alignment',
-                        label: 'Page number alignment in PDF',
+                        label: _('Page number alignment in PDF'),
                         default: 'center',
                         type: 'choice',
                         choices: {
@@ -192,7 +196,7 @@ export const meetingSettings: SettingsGroup[] = [
                     },
                     {
                         key: 'export_pdf_fontsize',
-                        label: 'Standard font size in PDF',
+                        label: _('Standard font size in PDF'),
                         default: 10,
                         type: 'choice',
                         choices: {
@@ -203,12 +207,12 @@ export const meetingSettings: SettingsGroup[] = [
                     },
                     {
                         key: 'export_pdf_pagesize',
-                        label: 'Standard page size in PDF',
+                        label: _('Standard page size in PDF'),
                         default: 'A4',
                         type: 'choice',
                         choices: {
-                            A4: _('DIN A4'),
-                            A5: _('DIN A5')
+                            A4: 'DIN A4',
+                            A5: 'DIN A5'
                         }
                     }
                 ]
@@ -216,49 +220,27 @@ export const meetingSettings: SettingsGroup[] = [
         ]
     },
     {
-        label: 'Agenda',
+        label: _('Agenda'),
         icon: 'today',
         subgroups: [
             {
-                label: 'General',
-                settings: [
-                    {
-                        key: 'start_time',
-                        label: 'Begin of event',
-                        type: 'date',
-                        helpText: 'Input format: DD.MM.YYYY'
-                    },
-                    {
-                        key: 'end_time', // not in code anymore
-                        label: 'End of event',
-                        type: 'date',
-                        helpText: 'Input format: DD.MM.YYYY'
-                    },
-                    {
-                        key: 'agenda_show_subtitles',
-                        label: 'Show motion submitters in the agenda',
-                        type: 'boolean'
-                    }
-                ]
-            },
-            {
-                label: 'Numbering',
+                label: _('Numbering'),
                 settings: [
                     {
                         key: 'agenda_enable_numbering',
-                        label: 'Enable numbering for agenda items',
+                        label: _('Enable numbering for agenda items'),
                         default: true,
                         type: 'boolean'
                     },
                     {
                         key: 'agenda_number_prefix',
-                        label: 'Numbering prefix for agenda items',
-                        helpText: 'This prefix will be set if you run the automatic agenda numbering.',
+                        label: _('Numbering prefix for agenda items'),
+                        helpText: _('This prefix will be set if you run the automatic agenda numbering.'),
                         validators: [Validators.maxLength(20)]
                     },
                     {
                         key: 'agenda_numeral_system',
-                        label: 'Numeral system for agenda items',
+                        label: _('Numeral system for agenda items'),
                         default: 'arabic',
                         type: 'choice',
                         choices: {
@@ -269,11 +251,11 @@ export const meetingSettings: SettingsGroup[] = [
                 ]
             },
             {
-                label: 'Visibility',
+                label: _('Visibility'),
                 settings: [
                     {
                         key: 'agenda_item_creation',
-                        label: 'Add to agenda',
+                        label: _('Add to agenda'),
                         default: 'default_yes',
                         type: 'choice',
                         choices: {
@@ -286,7 +268,7 @@ export const meetingSettings: SettingsGroup[] = [
                     },
                     {
                         key: 'agenda_new_items_default_visibility',
-                        label: 'Default visibility for new agenda items (except topics)',
+                        label: _('Default visibility for new agenda items (except topics)'),
                         default: AgendaItemType.internal,
                         type: 'choice',
                         choices: {
@@ -297,81 +279,87 @@ export const meetingSettings: SettingsGroup[] = [
                     },
                     {
                         key: 'agenda_show_internal_items_on_projector',
-                        label: 'Show internal items when projecting subitems',
+                        label: _('Show internal items when projecting subitems'),
+                        type: 'boolean'
+                    },
+                    {
+                        key: 'agenda_show_subtitles',
+                        label: _('Show motion submitters in the agenda'),
                         type: 'boolean'
                     }
                 ]
             },
             {
-                label: 'List of speakers',
+                label: _('List of speakers'),
                 settings: [
                     {
                         key: 'list_of_speakers_amount_last_on_projector',
-                        label: 'Number of last speakers to be shown on the projector',
+                        label: _('Number of last speakers to be shown on the projector'),
                         type: 'integer',
                         validators: [Validators.min(0)]
                     },
                     {
                         key: 'list_of_speakers_amount_next_on_projector',
-                        label: 'Number of the next speakers to be shown on the projector',
+                        label: _('Number of the next speakers to be shown on the projector'),
                         default: -1,
                         type: 'integer',
-                        helpText: 'Enter number of the next shown speakers. Choose -1 to show all next speakers.',
+                        helpText: _('Enter number of the next shown speakers. Choose -1 to show all next speakers.'),
                         validators: [Validators.min(-1)]
                     },
                     {
                         key: 'list_of_speakers_couple_countdown',
-                        label: 'Couple countdown with the list of speakers',
+                        label: _('Couple countdown with the list of speakers'),
                         default: true,
                         type: 'boolean',
-                        helpText: '[Begin speech] starts the countdown, [End speech] stops the countdown.'
+                        helpText: _('[Begin speech] starts the countdown, [End speech] stops the countdown.')
                     },
                     {
                         key: 'list_of_speakers_enable_point_of_order_speakers',
-                        label: 'Enable point of order',
+                        label: _('Enable point of order'),
                         default: false,
                         type: 'boolean'
                     },
                     {
                         key: 'list_of_speakers_speaker_note_for_everyone',
-                        label:
-                            'Everyone can see the request of a point of order (instead of managers for list of speakers only)',
+                        label: _(
+                            'Everyone can see the request of a point of order (instead of managers for list of speakers only)'
+                        ),
                         type: 'boolean',
                         default: false
                     },
                     {
                         key: 'list_of_speakers_show_amount_of_speakers_on_slide',
-                        label: 'Show the amount of speakers in subtitle of list of speakers slide',
+                        label: _('Show the amount of speakers in subtitle of list of speakers slide'),
                         default: true,
                         type: 'boolean'
                     },
                     {
                         key: 'list_of_speakers_present_users_only',
-                        label: 'Only present participants can be added to the list of speakers',
+                        label: _('Only present participants can be added to the list of speakers'),
                         type: 'boolean',
                         default: false
                     },
                     {
                         key: 'list_of_speakers_show_first_contribution',
-                        label: 'Show hint »first speech« in the list of speakers management view',
+                        label: _('Show hint »first speech« in the list of speakers management view'),
                         type: 'boolean',
                         default: false
                     },
                     {
                         key: 'list_of_speakers_initially_closed',
-                        label: 'List of speakers is initially closed',
+                        label: _('List of speakers is initially closed'),
                         type: 'boolean',
                         default: false
                     },
                     {
                         key: 'list_of_speakers_enable_pro_contra_speech',
-                        label: 'Enable forspeech / counter speech',
+                        label: _('Enable forspeech / counter speech'),
                         type: 'boolean',
                         default: true
                     },
                     {
                         key: 'list_of_speakers_can_set_contribution_self',
-                        label: 'Enable star icon to mark speaker (e.g. for contribution)',
+                        label: _('Enable star icon to mark speaker (e.g. for contribution)'),
                         type: 'boolean',
                         default: false
                     }
@@ -380,15 +368,15 @@ export const meetingSettings: SettingsGroup[] = [
         ]
     },
     {
-        label: 'Motions',
+        label: _('Motions'),
         icon: 'assignment',
         subgroups: [
             {
-                label: 'General',
+                label: _('General'),
                 settings: [
                     {
                         key: 'motions_default_workflow_id',
-                        label: 'Workflow of new motions',
+                        label: _('Workflow of new motions'),
                         default: 1,
                         type: 'choice',
                         choicesFunc: {
@@ -399,7 +387,7 @@ export const meetingSettings: SettingsGroup[] = [
                     },
                     {
                         key: 'motions_default_amendment_workflow_id',
-                        label: 'Workflow of new amendments',
+                        label: _('Workflow of new amendments'),
                         default: 1,
                         type: 'choice',
                         choicesFunc: {
@@ -410,7 +398,7 @@ export const meetingSettings: SettingsGroup[] = [
                     },
                     {
                         key: 'motions_default_statute_amendment_workflow_id',
-                        label: 'Workflow of new statute amendments',
+                        label: _('Workflow of new statute amendments'),
                         default: 1,
                         type: 'choice',
                         choicesFunc: {
@@ -421,84 +409,87 @@ export const meetingSettings: SettingsGroup[] = [
                     },
                     {
                         key: 'motions_preamble',
-                        label: 'Motion preamble',
-                        default: 'The assembly may decide:'
+                        label: _('Motion preamble'),
+                        default: _('The assembly may decide:')
                     },
                     {
                         key: 'motions_default_line_numbering',
-                        label: 'Default line numbering',
+                        label: _('Default line numbering'),
                         default: 'outside',
                         type: 'choice',
                         choices: {
                             // matches LineNumberingMode
                             outside: _('outside'),
                             inline: _('inline'),
-                            none: _('Disabled')
+                            none: _('disabled')
                         }
                     },
                     {
                         key: 'motions_line_length',
-                        label: 'Line length',
+                        label: _('Line length'),
                         default: 85,
                         type: 'integer',
-                        helpText:
-                            'The maximum number of characters per line. Relevant when line numbering is enabled. Min: 40',
+                        helpText: _(
+                            'The maximum number of characters per line. Relevant when line numbering is enabled. Min: 40'
+                        ),
                         validators: [Validators.min(40)]
                     },
                     {
                         key: 'motions_reason_required',
-                        label: 'Reason required for creating new motion',
+                        label: _('Reason required for creating new motion'),
                         type: 'boolean'
                     },
                     {
                         key: 'motions_enable_text_on_projector',
-                        label: 'Show motion text on projector',
+                        label: _('Show motion text on projector'),
                         default: true,
                         type: 'boolean'
                     },
                     {
                         key: 'motions_enable_reason_on_projector',
-                        label: 'Show reason on projector',
+                        label: _('Show reason on projector'),
                         default: true,
                         type: 'boolean'
                     },
                     {
                         key: 'motions_enable_recommendation_on_projector',
-                        label: 'Show recommendation on projector',
+                        label: _('Show recommendation on projector'),
                         default: true,
                         type: 'boolean'
                     },
                     {
                         key: 'motions_show_referring_motions',
-                        label: 'Show referring motions',
+                        label: _('Show referring motions'),
                         default: true,
                         type: 'boolean'
                     },
                     {
                         key: 'motions_enable_sidebox_on_projector',
-                        label: 'Show meta information box below the title on projector',
+                        label: _('Show meta information box below the title on projector'),
                         type: 'boolean'
                     },
                     {
                         key: 'motions_show_sequential_number',
-                        label: 'Show the sequential number for a motion',
+                        label: _('Show the sequential number for a motion'),
+                        helpText: _('In motion list, motion detail and PDF.'),
                         default: true,
                         type: 'boolean'
                     },
                     {
                         key: 'motions_recommendations_by',
-                        label: 'Name of recommender',
-                        helpText:
+                        label: _('Name of recommender'),
+                        helpText: _(
                             'Will be displayed as label before selected recommendation. Use an empty value to disable the recommendation system.'
+                        )
                     },
                     {
                         key: 'motions_statute_recommendations_by',
-                        label: 'Name of recommender for statute amendments',
-                        helpText: 'Will be displayed as label before selected recommendation in statute amendments.'
+                        label: _('Name of recommender for statute amendments'),
+                        helpText: _('Will be displayed as label before selected recommendation in statute amendments.')
                     },
                     {
                         key: 'motions_recommendation_text_mode',
-                        label: 'Default text version for change recommendations',
+                        label: _('Default text version for change recommendations'),
                         default: 'diff',
                         type: 'choice',
                         choices: {
@@ -511,22 +502,22 @@ export const meetingSettings: SettingsGroup[] = [
                     },
                     {
                         key: 'motions_default_sorting',
-                        label: 'Sort motions by',
+                        label: _('Sort motions by'),
                         default: 'number',
                         type: 'choice',
                         choices: {
-                            weight: _('Call list'),
-                            number: _('number')
+                            number: _('Motion number'),
+                            weight: _('Call list')
                         }
                     }
                 ]
             },
             {
-                label: 'Numbering',
+                label: _('Numbering'),
                 settings: [
                     {
                         key: 'motions_number_type',
-                        label: 'Number',
+                        label: _('Motion number'),
                         default: 'per_category',
                         type: 'choice',
                         choices: {
@@ -537,7 +528,7 @@ export const meetingSettings: SettingsGroup[] = [
                     },
                     {
                         key: 'motions_number_min_digits',
-                        label: 'Number of minimal digits for number',
+                        label: _('Minimum number of digits for motion number'),
                         default: 1,
                         type: 'integer',
                         helpText: 'Uses leading zeros to sort motions correctly by number.',
@@ -552,37 +543,32 @@ export const meetingSettings: SettingsGroup[] = [
                 ]
             },
             {
-                label: 'Amendments',
+                label: _('Amendments'),
                 settings: [
                     {
-                        key: 'motions_statutes_enabled',
-                        label: 'Activate statute amendments',
+                        key: 'motions_amendments_enabled',
+                        label: _('Activate amendments'),
                         type: 'boolean'
                     },
                     {
-                        key: 'motions_amendments_enabled',
-                        label: 'Activate amendments',
+                        key: 'motions_statutes_enabled',
+                        label: _('Activate statute amendments'),
                         type: 'boolean'
                     },
                     {
                         key: 'motions_amendments_in_main_list',
-                        label: 'Show amendments together with motions',
+                        label: _('Show amendments together with motions'),
                         default: true,
                         type: 'boolean'
                     },
                     {
-                        key: 'motions_amendments_of_amendments',
-                        label: 'Allow amendments of amendments',
-                        type: 'boolean'
-                    },
-                    {
                         key: 'motions_amendments_prefix',
-                        label: 'Prefix for the number for amendments',
+                        label: _('Prefix for the motion number for amendments'),
                         default: '-'
                     },
                     {
                         key: 'motions_amendments_text_mode',
-                        label: 'How to create new amendments',
+                        label: _('How to create new amendments'),
                         default: 'paragraph',
                         type: 'choice',
                         choices: {
@@ -593,30 +579,35 @@ export const meetingSettings: SettingsGroup[] = [
                     },
                     {
                         key: 'motions_amendments_multiple_paragraphs',
-                        label: 'Amendments can change multiple paragraphs',
+                        label: _('Amendments can change multiple paragraphs'),
                         default: true,
+                        type: 'boolean'
+                    },
+                    {
+                        key: 'motions_amendments_of_amendments',
+                        label: _('Allow amendments of amendments'),
                         type: 'boolean'
                     }
                 ]
             },
             {
-                label: 'Supporters',
+                label: _('Supporters'),
                 settings: [
                     {
                         key: 'motions_supporters_min_amount',
-                        label: 'Number of (minimum) required supporters for a motion',
+                        label: _('Number of (minimum) required supporters for a motion'),
                         type: 'integer',
-                        helpText: 'Choose 0 to disable the supporting system.',
+                        helpText: _('Choose 0 to disable the supporting system.'),
                         validators: [Validators.min(0)]
                     }
                 ]
             },
             {
-                label: 'Voting and ballot papers',
+                label: _('Voting and ballot papers'),
                 settings: [
                     {
                         key: 'motion_poll_default_type',
-                        label: 'Default voting type',
+                        label: _('Default voting type'),
                         type: 'choice',
                         choices: PollTypeVerbose,
                         restrictionFn: (orgaSettings, value: any) => {
@@ -629,20 +620,20 @@ export const meetingSettings: SettingsGroup[] = [
                     },
                     {
                         key: 'motion_poll_default_100_percent_base',
-                        label: 'Default 100 % base of a voting result',
+                        label: _('Default 100 % base of a voting result'),
                         default: PollPercentBase.YNA,
                         type: 'choice',
                         choices: PollPercentBaseVerbose
                     },
                     {
                         key: 'motion_poll_default_group_ids',
-                        label: 'Default groups with voting rights',
+                        label: _('Default groups with voting rights'),
                         default: [],
                         type: 'groups'
                     },
                     {
                         key: 'motion_poll_ballot_paper_selection',
-                        label: 'Number of ballot papers',
+                        label: _('Number of ballot papers'),
                         default: 'CUSTOM_NUMBER',
                         type: 'choice',
                         choices: {
@@ -653,7 +644,7 @@ export const meetingSettings: SettingsGroup[] = [
                     },
                     {
                         key: 'motion_poll_ballot_paper_number',
-                        label: 'Custom number of ballot papers',
+                        label: _('Custom number of ballot papers'),
                         default: 8,
                         type: 'integer',
                         validators: [Validators.min(1)]
@@ -661,25 +652,25 @@ export const meetingSettings: SettingsGroup[] = [
                 ]
             },
             {
-                label: 'PDF export',
+                label: _('PDF export'),
                 settings: [
                     {
                         key: 'motions_export_title',
-                        label: 'Title for PDF documents of motions',
+                        label: _('Title for PDF documents of motions'),
                         default: 'Motions'
                     },
                     {
                         key: 'motions_export_preamble',
-                        label: 'Preamble text for PDF documents of motions'
+                        label: _('Preamble text for PDF documents of motions')
                     },
                     {
                         key: 'motions_export_submitter_recommendation',
-                        label: 'Show submitters and recommendation/state in table of contents',
+                        label: _('Show submitters and recommendation/state in table of contents'),
                         type: 'boolean'
                     },
                     {
                         key: 'motions_export_follow_recommendation',
-                        label: 'Show checkbox to record decision',
+                        label: _('Show checkbox to record decision'),
                         type: 'boolean'
                     }
                 ]
@@ -687,21 +678,21 @@ export const meetingSettings: SettingsGroup[] = [
         ]
     },
     {
-        label: 'Elections',
+        label: _('Elections'),
         icon: 'how_to_vote',
         subgroups: [
             {
-                label: 'Ballot',
+                label: _('Ballot'),
                 settings: [
                     {
                         key: 'assignment_poll_default_method',
-                        label: 'Default election method',
+                        label: _('Default election method'),
                         type: 'choice',
                         choices: AssignmentPollMethodVerbose
                     },
                     {
                         key: 'assignment_poll_default_type',
-                        label: 'Default voting type',
+                        label: _('Default voting type'),
                         type: 'choice',
                         choices: PollTypeVerbose,
                         restrictionFn: (orgaSettings, value: any) => {
@@ -714,36 +705,36 @@ export const meetingSettings: SettingsGroup[] = [
                     },
                     {
                         key: 'assignment_poll_default_100_percent_base',
-                        label: 'Default 100 % base of an election result',
+                        label: _('Default 100 % base of an election result'),
                         default: PollPercentBase.Valid,
                         type: 'choice',
                         choices: PollPercentBaseVerbose
                     },
                     {
                         key: 'assignment_poll_default_group_ids',
-                        label: 'Default groups with voting rights',
+                        label: _('Default groups with voting rights'),
                         type: 'groups'
                     },
                     {
                         key: 'assignment_poll_add_candidates_to_list_of_speakers',
-                        label: 'Put all candidates on the list of speakers',
+                        label: _('Put all candidates on the list of speakers'),
                         default: true,
                         type: 'boolean'
                     },
                     {
                         key: 'assignment_poll_sort_poll_result_by_votes',
-                        label: 'Sort election results by amount of votes',
+                        label: _('Sort election results by amount of votes'),
                         default: true,
                         type: 'boolean'
                     }
                 ]
             },
             {
-                label: 'Ballot papers',
+                label: _('Ballot papers'),
                 settings: [
                     {
                         key: 'assignment_poll_ballot_paper_selection',
-                        label: 'Number of ballot papers',
+                        label: _('Number of ballot papers'),
                         default: 'CUSTOM_NUMBER',
                         type: 'choice',
                         choices: {
@@ -754,7 +745,7 @@ export const meetingSettings: SettingsGroup[] = [
                     },
                     {
                         key: 'assignment_poll_ballot_paper_number',
-                        label: 'Custom number of ballot papers',
+                        label: _('Custom number of ballot papers'),
                         default: 8,
                         type: 'integer',
                         validators: [Validators.min(1)]
@@ -762,31 +753,31 @@ export const meetingSettings: SettingsGroup[] = [
                 ]
             },
             {
-                label: 'PDF export',
+                label: _('PDF export'),
                 settings: [
                     {
                         key: 'assignments_export_title',
-                        label: 'Title for PDF document (all elections)',
+                        label: _('Title for PDF document (all elections)'),
                         default: 'Elections'
                     },
                     {
                         key: 'assignments_export_preamble',
-                        label: 'Preamble text for PDF document (all elections)'
+                        label: _('Preamble text for PDF document (all elections)')
                     }
                 ]
             }
         ]
     },
     {
-        label: 'Participants',
+        label: _('Participants'),
         icon: 'groups',
         subgroups: [
             {
-                label: 'General',
+                label: _('General'),
                 settings: [
                     {
                         key: 'users_sort_by',
-                        label: 'Sort name of participants by',
+                        label: _('Sort name of participants by'),
                         default: 'first_name',
                         type: 'choice',
                         choices: {
@@ -798,89 +789,90 @@ export const meetingSettings: SettingsGroup[] = [
                     },
                     {
                         key: 'users_enable_presence_view',
-                        label: 'Enable participant presence view',
+                        label: _('Enable participant presence view'),
                         type: 'boolean'
                     },
                     {
                         key: 'users_allow_self_set_present',
-                        label: 'Allow users to set themselves as present',
+                        label: _('Allow users to set themselves as present'),
                         type: 'boolean',
-                        helpText: 'e.g. for online meetings'
+                        helpText: _('e.g. for online meetings')
                     },
                     {
                         key: 'users_enable_vote_weight',
-                        label: 'Activate vote weight',
+                        label: _('Activate vote weight'),
                         type: 'boolean'
                     }
                 ]
             },
             {
-                label: 'PDF export',
+                label: _('PDF export'),
                 settings: [
                     {
                         key: 'users_pdf_welcometitle',
-                        label: 'Title for access data and welcome PDF',
-                        default: 'Welcome to OpenSlides'
+                        label: _('Title for access data and welcome PDF'),
+                        default: _('Welcome to OpenSlides')
                     },
                     {
                         key: 'users_pdf_welcometext',
-                        label: 'Help text for access data and welcome PDF',
-                        default: '[Place for your welcome and help text.]'
+                        label: _('Help text for access data and welcome PDF'),
+                        default: _('[Place for your welcome and help text.]')
                     },
                     {
                         key: 'users_pdf_url',
-                        label: 'System URL',
-                        default: 'http://example.com:8000',
-                        helpText: 'Used for QRCode in PDF of access data.'
+                        label: _('Meeting URL'),
+                        default: 'https://example.com',
+                        helpText: _('Used for QRCode in PDF of access data.')
                     },
                     {
                         key: 'users_pdf_wlan_ssid',
-                        label: 'WLAN name (SSID)',
-                        helpText: 'Used for WLAN QRCode in PDF of access data.'
+                        label: _('WLAN name (SSID)'),
+                        helpText: _('Used for WLAN QRCode in PDF of access data.')
                     },
                     {
                         key: 'users_pdf_wlan_password',
-                        label: 'WLAN password',
-                        helpText: 'Used for WLAN QRCode in PDF of access data.'
+                        label: _('WLAN password'),
+                        helpText: _('Used for WLAN QRCode in PDF of access data.')
                     },
                     {
                         key: 'users_pdf_wlan_encryption',
-                        label: 'WLAN encryption',
+                        label: _('WLAN encryption'),
                         type: 'choice',
-                        helpText: 'Used for WLAN QRCode in PDF of access data.',
+                        helpText: _('Used for WLAN QRCode in PDF of access data.'),
                         choices: {
                             '': '---------',
                             WEP: 'WEP',
                             WPA: 'WPA/WPA2',
-                            nopass: 'No encryption'
+                            nopass: _('No encryption')
                         }
                     }
                 ]
             },
             {
-                label: 'Email',
+                label: _('Email'),
                 settings: [
                     {
                         key: 'users_email_sender',
-                        label: 'Sender name',
+                        label: _('Sender name'),
                         default: 'OpenSlides',
-                        helpText:
+                        helpText: _(
                             'The sender address is defined in the OpenSlides server settings and should modified by administrator only.'
+                        )
                     },
                     {
                         key: 'users_email_replyto',
-                        label: 'Reply address'
+                        label: _('Reply address')
                     },
                     {
                         key: 'users_email_subject',
-                        label: 'Email subject',
-                        default: 'OpenSlides access data',
-                        helpText: 'You can use {event_name} and {username} as placeholder.'
+                        label: _('Email subject'),
+                        default: _('OpenSlides access data'),
+                        helpText: _('You can use {event_name} and {username} as placeholder.')
                     },
                     {
                         key: 'users_email_body',
-                        label: 'Email body',
-                        default: dedent`
+                        label: _('Email body'),
+                        default: _(dedent`
                             Dear {name},
 
                             this is your personal OpenSlides login:
@@ -889,17 +881,18 @@ export const meetingSettings: SettingsGroup[] = [
                                 username: {username}
                                 password: {password}
 
-                            This email was generated automatically.`,
+                            This email was generated automatically.`),
                         type: 'text',
-                        helpText:
+                        helpText: _(
                             'Use these placeholders: {name}, {event_name}, {url}, {username}, {password}. The url referrs to the system url.'
+                        )
                     }
                 ]
             }
         ]
     },
     {
-        label: 'Custom translations',
+        label: _('Custom translations'),
         icon: 'language',
         subgroups: [
             {
