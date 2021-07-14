@@ -16,10 +16,13 @@ msgid "100% base"
 msgstr "100-%-Basis"
 
 msgid ""
-"<a href=\"http://www.openslides.com\">OpenSlides</a> is a free web based "
+"<a href=\"https://openslides.com\">OpenSlides</a> is a free web based "
 "presentation and assembly system for visualizing and controlling agenda, "
 "motions and elections of an assembly."
 msgstr ""
+"<a href=\"https://openslides.com\">OpenSlides</a> ist ein freies, "
+"webbasiertes Präsentations- und Versammlungssystem zur Darstellung und "
+"Steuerung von Tagesordnung, Anträgen und Wahlen einer Versammlung."
 
 msgid "<unknown motion>"
 msgstr "<unbekannter Antrag>"
@@ -573,8 +576,14 @@ msgstr "Kommentare"
 msgid "Committee"
 msgstr "Gremium"
 
+msgid "Committee manager"
+msgstr "Gremienverwalter"
+
 msgid "Committee managers"
 msgstr "Gremienverwalter"
+
+msgid "Committee member"
+msgstr "Gremienmitglied"
 
 msgid "Committee members"
 msgstr "Gremienmitglieder"
@@ -714,6 +723,9 @@ msgstr "Voreingestellte 100-%-Basis eines Abstimmungsergebnisses"
 msgid "Default 100 % base of an election result"
 msgstr "Voreingestellte 100-%-Basis eines Wahlergebnisses"
 
+msgid "Default committee"
+msgstr "Standardgremium"
+
 msgid "Default election method"
 msgstr "Voreingestellte Wahlmethode"
 
@@ -728,6 +740,9 @@ msgstr "Voreingestellte Gruppen mit Stimmrecht"
 
 msgid "Default line numbering"
 msgstr "Voreingestellte Zeilennummerierung"
+
+msgid "Default meeting"
+msgstr "Standardveranstaltung"
 
 msgid "Default number"
 msgstr "Standard-Nummer"
@@ -1433,9 +1448,6 @@ msgstr "Veranstaltungs-URL"
 msgid "Meetings"
 msgstr "Veranstaltungen"
 
-msgid "Member in committees"
-msgstr "Mitglied in Gremien"
-
 msgid "Members"
 msgstr "Mitglieder"
 
@@ -2137,10 +2149,10 @@ msgid "Rejection (not authorized)"
 msgstr "Verwerfung (nicht berechtigt)"
 
 msgid "Related committees"
-msgstr ""
+msgstr "Zugehörige Gremien"
 
 msgid "Related meetings"
-msgstr ""
+msgstr "Zugehörige Veranstaltungen"
 
 msgid "Remove"
 msgstr "Entfernen"
