@@ -75,12 +75,13 @@ interface ChannelIdResponse {
     channel_id: string;
 }
 
-const IccPath = '/system/icc';
+const notifyPath = '/system/icc/notify';
+const publishPath = `${notifyPath}/publish`;
 /**
  * Does currently not exist
  */
 // const iccHealthPath = `${IccPath}/health`
-const iccHealthPath = IccPath;
+const iccHealthPath = notifyPath;
 
 /**
  * Handles all incoming and outgoing notify messages via {@link WebsocketService}.
@@ -139,7 +140,7 @@ export class NotifyService {
 
         this.disconnect();
 
-        const iccMeeting = `${IccPath}?meeting_id=${meetingId}`;
+        const iccMeeting = `${notifyPath}?meeting_id=${meetingId}`;
         this.commManager.registerEndpoint('icc', iccMeeting, iccHealthPath, HTTPMethod.GET);
         this.commCloseFn = await this.commManager.connect<NotifyResponse<any> | ChannelIdResponse>(
             'icc',
@@ -248,7 +249,7 @@ export class NotifyService {
             notify.to_channels = channels;
         }
 
-        await this.httpService.post<unknown>('/system/icc/send', notify);
+        await this.httpService.post<unknown>(publishPath, notify);
     }
 
     /**
