@@ -248,6 +248,12 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
                 // convert to an actual integer
                 value = +value;
                 break;
+            case 'choice':
+                // if choicesFunc is set, the keys are ids and therefore need to be converted to ints
+                if (this.setting.choicesFunc) {
+                    value = +value;
+                }
+                break;
         }
         this.sendUpdate(value);
         this.cd.detectChanges();
