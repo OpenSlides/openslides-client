@@ -17,9 +17,10 @@
     >
         <div class="nav-toolbar">
             <!-- logo -->
-            <a routerLink="/" (click)="mobileAutoCloseNav()">
+            <a [routerLink]="['/', meeting?.id]" (click)="mobileAutoCloseNav()">
                 <os-logo class="os-logo-container"></os-logo>
             </a>
+            <h2>{{ meeting?.name }}</h2>
         </div>
 
         <!-- User Menu -->
@@ -35,7 +36,7 @@
                     (click)="mobileAutoCloseNav()"
                     [routerLink]="entry.route"
                     routerLinkActive="active"
-                    [routerLinkActiveOptions]="{ exact: isStartPage(entry.route) }"
+                    [routerLinkActiveOptions]="{ exact: isRouteExact(entry.route) }"
                 >
                     <mat-icon>{{ entry.icon }}</mat-icon>
                     <span>{{ entry.displayName | translate }}</span>
