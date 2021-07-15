@@ -84,7 +84,7 @@ export class AgendaPdfService {
                     },
                     {
                         width: 60,
-                        text: nodeItem.item.item_number
+                        text: nodeItem.item.item_number || ''
                     },
                     {
                         text: nodeItem.item.content_object.getTitle()

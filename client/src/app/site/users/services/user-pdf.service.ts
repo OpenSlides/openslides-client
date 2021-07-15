@@ -40,7 +40,7 @@ export class UserPdfService {
                 style: 'userDataTitle'
             }
         ];
-        if (user.structure_level) {
+        if (user.structure_level()) {
             userHeadline.push({
                 text: user.structure_level(),
                 style: 'userDataHeading'
@@ -168,7 +168,7 @@ export class UserPdfService {
                 style: 'userDataTopic'
             },
             {
-                text: user.default_password,
+                text: user.default_password || '-',
                 style: 'userDataValue'
             },
             {

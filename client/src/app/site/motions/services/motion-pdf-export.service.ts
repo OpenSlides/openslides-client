@@ -85,17 +85,16 @@ export class MotionPdfExportService {
      * @param motion
      */
     public exportPersonalNote(motion: ViewMotion): void {
-        throw new Error('TODO');
         // Get the note in a clever way. E.g. (this should work...):
-        // const personalNote = motion.personal_notes[0];
-        // const note = personalNote ? personalNote.note : '';
+        const personalNote = motion.personal_notes[0];
+        const note = personalNote ? personalNote.note : '';
 
-        /*const doc = this.motionPdfService.textToDocDef(note, motion, 'Personal note');
-        const filename = `${motion.identifierOrTitle} - ${this.translate.instant('Personal note')}`;
+        const doc = this.motionPdfService.textToDocDef(note, motion, 'Personal note');
+        const filename = `${motion.number} - ${this.translate.instant('Personal note')}`;
         const metadata = {
             title: filename
         };
-        this.pdfDocumentService.download(doc, filename, metadata);*/
+        this.pdfDocumentService.download(doc, filename, metadata);
     }
 
     /**

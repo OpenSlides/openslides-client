@@ -83,16 +83,10 @@ export class PdfDocumentService {
      * @returns the vfs-object
      */
     private async initVfs(): Promise<object> {
-        const fontPathList: string[] = []; /*Array.from(
+        const fontPathList: string[] = Array.from(
             // create a list without redundancies
-            new Set(
-                this.meetingSettingsService
-                    .instant<string[]>('fonts_available')
-                    .map(available => this.meetingSettingsService.instant<any>(available))
-                    .map(font => font.path || `/${font.default}`)
-            )
-        );*/
-        // TODO: medamanageservice
+            new Set(this.mediaManageService.allFontPlaces.map(place => `/${this.mediaManageService.getFontUrl(place)}`))
+        );
 
         const promises = fontPathList.map(fontPath => {
             return this.httpService.downloadAsBase64(fontPath).then(base64 => {
