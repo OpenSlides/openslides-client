@@ -228,7 +228,6 @@ export class OperatorService {
 
                 this.OML = user.organization_management_level || null;
                 this.CML = getUserCML(user);
-                this.CML = {}; // TODO: this is just a dummy
 
                 this.operatorShortNameSubject.next(this._shortName);
                 this.userSubject.next(user);
@@ -400,6 +399,9 @@ export class OperatorService {
             console.warn('has perms: Usage outside of meeting!');
             return false;
         }
+        if (this.hasOrganizationPermissions(OML.superadmin)) {
+            return true;
+        }
 
         let result: boolean;
         if (!this.groupIds) {
@@ -455,34 +457,61 @@ export class OperatorService {
 
     /**
      * Determines whether the current operator is included in at least one of the committees, which are passed.
+     * This function checks also if an operator is a "superadmin" -> then, they is technically in every committee.
      *
      * @param committees Several committees to check if the current operator is included in them.
      *
      * @returns `true`, if the current operator is included in at least one of the given committees.
      */
     public isInCommittees(...committees: Committee[]): boolean {
+        if (this.hasOrganizationPermissions(OML.superadmin)) {
+            return true;
+        }
+        return this.isInCommitteesNonAdminCheck(...committees);
+    }
+
+    /**
+     * A plain check if an operator is in at least one of the given committees. There is no permission check,
+     * so this function will not return `true` even though an operator is a superadmin.
+     *
+     * @param committees Several committees to check if the current operator is included in them.
+     *
+     * @returns `true` if the operator is in at least one of the given committees.
+     */
+    public isInCommitteesNonAdminCheck(...committees: Committee[]): boolean {
         return committees.some(committee => this.currentCommitteeIds.includes(committee.id));
     }
 
     /**
-     * Returns true, if the operator is in at least one group or he is in the admin group.
-     * @param groups The groups to check
+     * This function checks if the operator is in one of the given groups. It is also a permission check.
+     * That means, if the operator is an admin or a superadmin, this function will return `true`, too.
      *
      * TODO: what if no active meeting??
+     *
+     * @param groups The groups to check
+     *
+     * @returns true, if the operator is in at least one group or he is in the admin group.
      */
     public isInGroup(...groups: Group[]): boolean {
         return this.isInGroupIds(...groups.map(group => group.id));
     }
 
     /**
-     * Returns true, if the operator is in at least one group or he is in the admin group.
-     * @param groups The group ids to check
+     * This checks if an operator is in at least one of the given groups. It is also a permission check.
+     * That means, if the operator is an admin or a superadmin, this function returns `true`, too.
      *
      * TODO: what if no active meeting??
+     *
+     * @param groups The group ids to check
+     *
+     * @returns `true`, if the operator is in at least one group or they are an admin or a superadmin.
      */
     public isInGroupIds(...groupIds: number[]): boolean {
         if (!this.groupIds) {
             return false;
+        }
+        if (this.hasOrganizationPermissions(OML.superadmin)) {
+            return true;
         }
         if (!this.isInGroupIdsNonAdminCheck(...groupIds)) {
             // An admin has all perms and is technically in every group.
@@ -492,8 +521,13 @@ export class OperatorService {
     }
 
     /**
-     * Returns true, if the operator is in at least one group.
+     * Function to clear check if an operator is in at least of the given groups.
+     * This check is not a check for permissions and does neither include a check for an admin
+     * nor include a check for a superadmin.
+     *
      * @param groups The group ids to check
+     *
+     * @returns `true` if the operator is in at least one of the given groups.
      */
     public isInGroupIdsNonAdminCheck(...groupIds: number[]): boolean {
         if (!this.groupIds) {
@@ -504,6 +538,7 @@ export class OperatorService {
         }
         return groupIds.some(id => this.groupIds.includes(id));
     }
+
     /**
      * Function to build an operator-request, if an active-meeting is present.
      * Requested fields depend on the active-meeting.

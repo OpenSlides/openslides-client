@@ -116,7 +116,7 @@ export class CommitteeRepositoryService
             return (
                 this.operator.hasCommitteePermissions(model.id, CML.can_manage) ||
                 this.operator.hasOrganizationPermissions(OML.can_manage_users) ||
-                this.operator.isInCommittees(model)
+                this.operator.isInCommitteesNonAdminCheck(model)
             );
         };
         return viewModel;
