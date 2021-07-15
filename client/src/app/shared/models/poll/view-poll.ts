@@ -85,6 +85,12 @@ export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
         return this.global_option?.abstain;
     }
 
+    /**
+     * Is injected by the poll-repo
+     * TODO: Can be removed, when OpenSlides/openslides-autoupdate-service#262 is resolved.
+     */
+    public operatorHasVoted: () => boolean;
+
     public canBeVotedFor(): boolean {
         return this.isStarted;
     }

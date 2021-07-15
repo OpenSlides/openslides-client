@@ -33,7 +33,11 @@ const VotingErrorVerbose = {
     providedIn: 'root'
 })
 export class VotingService {
-    public constructor(private operator: OperatorService) {}
+    private currentUser?: ViewUser;
+
+    public constructor(private operator: OperatorService) {
+        this.operator.userObservable.subscribe(user => (this.currentUser = user));
+    }
 
     /**
      * checks whether the operator can vote on the given poll
@@ -47,37 +51,28 @@ export class VotingService {
      * checks whether the operator can vote on the given poll
      * @returns null if no errors exist (= user can vote) or else a VotingError
      */
-    public getVotePermissionError(
-        poll: ViewPoll,
-        user: ViewUser = null /*this.operator.viewUser*/
-    ): VotingError | void {
+    public getVotePermissionError(poll: ViewPoll, user: ViewUser = this.currentUser): VotingError | void {
         if (this.operator.isAnonymous) {
             return VotingError.USER_IS_ANONYMOUS;
         }
-        // TODO: enable. Currently this fals, becuase poll.groups_id is null (The accessor must be entitled_group_ids)
-        /*if (!this.operator.isInGroupIdsNonAdminCheck(...poll.groups_id)) {
+        if (!this.operator.isInGroupIdsNonAdminCheck(...(poll.entitled_group_ids || []))) {
             return VotingError.USER_HAS_NO_PERMISSION;
-        }*/
+        }
         if (poll.type === PollType.Analog) {
             return VotingError.POLL_WRONG_TYPE;
         }
         if (poll.state !== PollState.Started) {
             return VotingError.POLL_WRONG_STATE;
         }
-        // TODO: This is not possible anymore
-        /*
-        if (!user.is_present && !this.operator.viewUser.canVoteFor(user)) {
+        if (!user.isPresentInMeeting() && !this.currentUser.canVoteFor(user)) {
             return VotingError.USER_NOT_PRESENT;
         }
-        if (user.isVoteRightDelegated && this.operator.user.id === user.id) {
+        if (user.isVoteRightDelegated && this.currentUser.id === user.id) {
             return VotingError.USER_HAS_DELEGATED_RIGHT;
-        }*/
+        }
     }
 
-    public getVotePermissionErrorVerbose(
-        poll: ViewPoll,
-        user: ViewUser = null /*this.operator.viewUser*/
-    ): string | void {
+    public getVotePermissionErrorVerbose(poll: ViewPoll, user: ViewUser = this.currentUser): string | void {
         const error = this.getVotePermissionError(poll, user);
         if (error) {
             return VotingErrorVerbose[error];
