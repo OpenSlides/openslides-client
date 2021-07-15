@@ -8,6 +8,11 @@ import { HasPersonalNoteIds } from '../base/has-personal-note-ids';
 import { HasProjectionIds } from '../base/has-projectable-ids';
 import { HasTagIds } from '../base/has-tag-ids';
 
+export interface MotionFormattingRepresentation {
+    text: string;
+    modified_final_version: string;
+}
+
 export interface HasReferencedMotionInRecommendationExtensionIds {
     referenced_in_motion_recommendation_extension_ids: Id[]; // (motion/recommendation_extension_reference_ids)[];
 }
@@ -23,7 +28,7 @@ export interface AmendmentParagraphs {
  *
  * @ignore
  */
-export class Motion extends BaseModel<Motion> {
+export class Motion extends BaseModel<Motion> implements MotionFormattingRepresentation {
     public static COLLECTION = 'motion';
 
     public id: Id;

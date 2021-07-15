@@ -3,10 +3,10 @@ import { NgModule } from '@angular/core';
 
 import { SharedModule } from 'app/shared/shared.module';
 import { SlideToken } from 'app/slides/slide-token';
-import { MotionPollSlideComponent } from './motion-poll-slide.component';
+import { PollSlideComponent } from './poll-slide.component';
 @NgModule({
     imports: [CommonModule, SharedModule],
-    declarations: [MotionPollSlideComponent],
-    providers: [{ provide: SlideToken.token, useValue: MotionPollSlideComponent }]
+    declarations: [PollSlideComponent],
+    providers: [{ provide: SlideToken.token, useValue: PollSlideComponent }]
 })
-export class MotionPollSlideModule {}
+export class PollSlideModule {}

@@ -61,9 +61,6 @@ export interface BasePollData<PM, PB> {
 export interface PollData extends BasePollData<string, string> {
     type: string;
     entitled_users_at_stop: EntitledUsersEntry[];
-    amount_global_yes?: number;
-    amount_global_no?: number;
-    amount_global_abstain?: number;
     options: PollDataOption[];
     global_option: PollDataOption;
 }

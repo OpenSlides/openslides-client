@@ -2,9 +2,9 @@ import { ModuleWithProviders } from '@angular/compiler/src/core';
 import { NgModule } from '@angular/core';
 import { ROUTES } from '@angular/router';
 
-import { allSlides } from './all-slides';
 import { SlideManager } from './services/slide-manager.service';
 import { SLIDE_MANIFESTS } from './slide-manifest';
+import { Slides } from './slides';
 
 /**
  * This module takes care about all slides and dynamic loading of them.
@@ -23,8 +23,8 @@ export class SlidesModule {
             ngModule: SlidesModule,
             providers: [
                 // provider for Angular CLI to analyze
-                { provide: ROUTES, useValue: allSlides, multi: true },
-                { provide: SLIDE_MANIFESTS, useValue: allSlides }
+                { provide: ROUTES, useValue: Slides, multi: true },
+                { provide: SLIDE_MANIFESTS, useValue: Slides }
             ]
         };
     }

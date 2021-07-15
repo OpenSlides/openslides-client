@@ -1,20 +1,20 @@
 import { LineRange } from 'app/core/ui-services/diff.service';
 import { MergeAmendment } from 'app/shared/models/motions/motion-state';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from 'app/shared/models/motions/view-unified-change';
-import { MotionSlideDataAmendment } from './motion-slide-data';
+import { AmendmentData } from './motion-slide-data';
 
 /**
  * This class adds methods to the MotionsMotionSlideDataChangeReco data object
  * necessary for use it as a UnifiedChange in the Diff-Functions
  */
-export class MotionSlideObjAmendmentParagraph implements ViewUnifiedChange {
+export class AmendmentParagraphUnifiedChange implements ViewUnifiedChange {
     public id: number;
     public type: number;
     public merge_amendment_into_final: MergeAmendment;
-    public merge_amendment_into_diff: number;
+    public merge_amendment_into_diff: MergeAmendment;
 
     public constructor(
-        data: MotionSlideDataAmendment,
+        data: AmendmentData,
         private paragraphNo: number,
         private newText: string,
         private lineRange: LineRange
@@ -57,7 +57,7 @@ export class MotionSlideObjAmendmentParagraph implements ViewUnifiedChange {
     }
 
     public showInDiffView(): boolean {
-        return this.merge_amendment_into_diff === 1;
+        return this.merge_amendment_into_diff === MergeAmendment.YES;
     }
 
     public showInFinalView(): boolean {

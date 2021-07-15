@@ -2,6 +2,7 @@ import { Component, Input, ViewEncapsulation } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
 
+import { AmendmentParagraphUnifiedChange } from './amendment-paragraph-unified-change';
 import { MotionChangeRecommendationRepositoryService } from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
 import { MotionLineNumberingService } from 'app/core/repositories/motions/motion-line-numbering.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
@@ -12,9 +13,8 @@ import { ViewUnifiedChange, ViewUnifiedChangeType } from 'app/shared/models/moti
 import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.constants';
 import { IBaseScaleScrollSlideComponent } from 'app/slides/base-scale-scroll-slide-component';
 import { BaseMotionSlideComponent } from '../motion-base/base-motion-slide';
-import { MotionSlideData, MotionSlideDataAmendment } from './motion-slide-data';
-import { MotionSlideObjAmendmentParagraph } from './motion-slide-obj-amendment-paragraph';
-import { MotionSlideObjChangeReco } from './motion-slide-obj-change-reco';
+import { ChangeRecommendationUnifiedChange } from './change-recommendation-unified-change';
+import { AmendmentData, MotionSlideData } from './motion-slide-data';
 
 @Component({
     selector: 'os-motion-slide',
@@ -54,7 +54,12 @@ export class MotionSlideComponent
     /**
      * All change recommendations AND amendments, sorted by line number.
      */
-    public allChangingObjects: ViewUnifiedChange[];
+    private allChangingObjects: ViewUnifiedChange[];
+
+    /**
+     * The formatted motion text ready to display
+     */
+    public formattedMotionTextPlain: string | null = null;
 
     /**
      * Reference to all referencing motions to store sorted by `number`.
@@ -63,9 +68,9 @@ export class MotionSlideComponent
 
     public get showMetaTable(): boolean {
         return (
-            !this.data.data.show_meta_box &&
+            !this.data.data.show_sidebox &&
             (this.data.data?.submitters.length > 0 ||
-                (!!this.data.data.recommendation && !!this.data.data.recommender) ||
+                (!!this.data.data.recommendation_label && !!this.data.data.recommender) ||
                 !!this.data.data.recommendation_referencing_motions)
         );
     }
@@ -122,28 +127,28 @@ export class MotionSlideComponent
         this.lnMode = value.data.line_numbering_mode;
         this.lineLength = value.data.line_length;
         this.preamble = value.data.preamble;
-        // this.crMode = value.element.mode || 'original';
+        this.crMode = value.options.mode || 'original';
 
-        /*this.textDivStyles.width = value.data.show_meta_box ? 'calc(100% - 250px)' : '100%';
+        this.textDivStyles.width = value.data.show_sidebox ? 'calc(100% - 250px)' : '100%';
 
         if (value.data.recommendation_referencing_motions) {
             this.referencingMotions = value.data.recommendation_referencing_motions.sort((a, b) =>
                 a.number.localeCompare(b.number)
             );
-        }*/
+        }
 
         this.recalcUnifiedChanges();
-        throw new Error('TODO');
+        this.recalcMotionText();
     }
 
     public getRecommendationLabel(): string {
-        let recommendation = this.translate.instant(this.data.data.recommendation);
+        let recommendation = this.translate.instant(this.data.data.recommendation_label);
         if (this.data.data.recommendation_extension) {
             recommendation +=
                 ' ' +
                 this.replaceReferencedMotions(
                     this.data.data.recommendation_extension,
-                    this.data.data.referenced_motions
+                    this.data.data.recommendation_referenced_motions
                 );
         }
         return recommendation;
@@ -152,10 +157,10 @@ export class MotionSlideComponent
     /**
      * Returns all paragraphs that are affected by the given amendment as unified change objects.
      *
-     * @param {MotionSlideDataAmendment} amendment
-     * @returns {MotionSlideObjAmendmentParagraph[]}
+     * @param {AmendmentData} amendment
+     * @returns {AmendmentParagraphUnifiedChange[]}
      */
-    public getAmendmentAmendedParagraphs(amendment: MotionSlideDataAmendment): MotionSlideObjAmendmentParagraph[] {
+    public getAmendmentAmendedParagraphs(amendment: AmendmentData): AmendmentParagraphUnifiedChange[] {
         if (!amendment.amendment_paragraphs) {
             return [];
         }
@@ -164,30 +169,28 @@ export class MotionSlideComponent
         baseHtml = this.lineNumbering.insertLineNumbers(baseHtml, this.lineLength);
         const baseParagraphs = this.lineNumbering.splitToParagraphs(baseHtml);
 
-        return amendment.amendment_paragraphs
-            .map(
-                (newText: string, paraNo: number): MotionSlideObjAmendmentParagraph => {
-                    if (newText === null) {
-                        return null;
-                    }
+        const paragraphNumbers = Object.keys(amendment.amendment_paragraphs)
+            .map(x => +x)
+            .sort();
 
-                    const origText = baseParagraphs[paraNo],
-                        diff = this.diff.diff(origText, newText),
-                        affectedLines = this.diff.detectAffectedLineRange(diff);
+        return paragraphNumbers
+            .map(paraNo => {
+                const origText = baseParagraphs[paraNo],
+                    diff = this.diff.diff(origText, amendment.amendment_paragraphs[paraNo]),
+                    affectedLines = this.diff.detectAffectedLineRange(diff);
 
-                    if (affectedLines === null) {
-                        return null;
-                    }
-
-                    const affectedDiff = this.diff.formatDiff(
-                        this.diff.extractRangeByLineNumbers(diff, affectedLines.from, affectedLines.to)
-                    );
-                    const affectedConsolidated = this.diff.diffHtmlToFinalText(affectedDiff);
-
-                    return new MotionSlideObjAmendmentParagraph(amendment, paraNo, affectedConsolidated, affectedLines);
+                if (affectedLines === null) {
+                    return null;
                 }
-            )
-            .filter((para: MotionSlideObjAmendmentParagraph) => para !== null);
+
+                const affectedDiff = this.diff.formatDiff(
+                    this.diff.extractRangeByLineNumbers(diff, affectedLines.from, affectedLines.to)
+                );
+                const affectedConsolidated = this.diff.diffHtmlToFinalText(affectedDiff);
+
+                return new AmendmentParagraphUnifiedChange(amendment, paraNo, affectedConsolidated, affectedLines);
+            })
+            .filter(x => x !== null);
     }
 
     /**
@@ -199,14 +202,15 @@ export class MotionSlideComponent
 
         if (this.data.data.change_recommendations) {
             this.data.data.change_recommendations.forEach(change => {
-                this.allChangingObjects.push(new MotionSlideObjChangeReco(change));
+                this.allChangingObjects.push(new ChangeRecommendationUnifiedChange(change));
             });
         }
         if (this.data.data.amendments) {
             this.data.data.amendments.forEach(amendment => {
                 if (amendment.change_recommendations?.length) {
-                    const amendmentCRData = amendment.change_recommendations;
-                    const amendmentCRs = amendmentCRData.map(cr => new MotionSlideObjChangeReco(cr));
+                    const amendmentCRs = amendment.change_recommendations.map(
+                        cr => new ChangeRecommendationUnifiedChange(cr)
+                    );
                     this.allChangingObjects.push(...amendmentCRs);
                 } else {
                     const paras = this.getAmendmentAmendedParagraphs(amendment);
@@ -225,6 +229,17 @@ export class MotionSlideComponent
         });
     }
 
+    private recalcMotionText(): void {
+        const changes = this.crMode === ChangeRecoMode.Original ? [] : this.getAllTextChangingObjects();
+        this.formattedMotionTextPlain = this.motionLineNumbering.formatMotion(
+            this.data.data,
+            this.crMode,
+            changes,
+            this.lineLength,
+            this.highlightedLine
+        );
+    }
+
     /**
      * Returns true, if this is a statute amendment
      *
@@ -240,11 +255,7 @@ export class MotionSlideComponent
      * @returns {boolean}
      */
     public isParagraphBasedAmendment(): boolean {
-        return (
-            this.data.data.is_child &&
-            this.data.data.amendment_paragraphs &&
-            this.data.data.amendment_paragraphs.length > 0
-        );
+        return !!this.data.data.lead_motion;
     }
 
     /**
@@ -325,24 +336,22 @@ export class MotionSlideComponent
      */
     public getAmendedParagraphs(): DiffLinesInParagraph[] {
         const motion = this.data.data;
-        const baseHtml = this.lineNumbering.insertLineNumbers(motion.base_motion?.text, this.lineLength);
+        const baseHtml = this.lineNumbering.insertLineNumbers(motion.lead_motion?.text, this.lineLength);
         const baseParagraphs = this.lineNumbering.splitToParagraphs(baseHtml);
 
-        const amendmentParagraphs = motion.amendment_paragraphs
-            .map(
-                (amendmentText: string, paraNo: number): DiffLinesInParagraph => {
-                    if (amendmentText === null) {
-                        return null;
-                    }
-                    return this.diff.getAmendmentParagraphsLines(
-                        paraNo,
-                        baseParagraphs[paraNo],
-                        amendmentText,
-                        this.lineLength,
-                        this.crMode === ChangeRecoMode.Diff ? this.getAllTextChangingObjects() : undefined
-                    );
-                }
-            )
+        const paragraphNumbers = Object.keys(motion.amendment_paragraphs)
+            .map(x => +x)
+            .sort();
+        const amendmentParagraphs = paragraphNumbers
+            .map(paraNo => {
+                return this.diff.getAmendmentParagraphsLines(
+                    paraNo,
+                    baseParagraphs[paraNo],
+                    motion.amendment_paragraphs[paraNo.toString()],
+                    this.lineLength,
+                    this.crMode === ChangeRecoMode.Diff ? this.getAllTextChangingObjects() : undefined
+                );
+            })
             .filter((para: DiffLinesInParagraph) => para !== null);
 
         return amendmentParagraphs;
@@ -391,7 +400,7 @@ export class MotionSlideComponent
      */
     public getAmendmentDiff(change: ViewUnifiedChange): string {
         const motion = this.data.data;
-        const baseHtml = this.lineNumbering.insertLineNumbers(motion.base_motion?.text, this.lineLength);
+        const baseHtml = this.lineNumbering.insertLineNumbers(motion.lead_motion?.text, this.lineLength);
 
         return this.diff.getChangeDiff(baseHtml, change, this.lineLength, this.highlightedLine);
     }
