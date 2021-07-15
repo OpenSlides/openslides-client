@@ -43,8 +43,16 @@ mat-sidenav-container {
     display: flex;
     margin: auto;
     width: 250px;
-    height: 80px;
+    margin-bottom: 10px;
+    justify-content: space-evenly;
     align-items: center;
+    flex-direction: column;
+
+    h2 {
+        font-weight: lighter;
+        margin: 0;
+        text-align: center;
+    }
 }
 
 // CSS for the toggle button
@@ -94,8 +102,7 @@ mat-sidenav-container {
 .os-logo-container {
     margin: auto;
     width: 230px !important;
-    margin-left: 10px;
-    max-height: 80px;
+    height: 80px;
     display: flex;
 }
 

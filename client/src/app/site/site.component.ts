@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { navItemAnim } from '../shared/animations';
+import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { HistoryService } from 'app/core/core-services/history.service';
 import { OfflineBroadcastService } from 'app/core/core-services/offline-broadcast.service';
 import { TimeTravelService } from 'app/core/core-services/time-travel.service';
@@ -15,6 +16,7 @@ import { PollRepositoryService } from 'app/core/repositories/polls/poll-reposito
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { SuperSearchService } from 'app/core/ui-services/super-search.service';
 import { UpdateService } from 'app/core/ui-services/update.service';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { MainMenuEntry, MainMenuService } from '../core/core-services/main-menu.service';
 import { ViewportService } from '../core/ui-services/viewport.service';
@@ -64,6 +66,10 @@ export class SiteComponent extends BaseComponent implements OnInit {
         return this.mainMenuService.entries;
     }
 
+    public get meeting(): ViewMeeting {
+        return this.activeMeeting.meeting;
+    }
+
     /**
      * Constructor
      * @param route
@@ -78,6 +84,7 @@ export class SiteComponent extends BaseComponent implements OnInit {
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         _offlineBroadcastService: OfflineBroadcastService,
+        private activeMeeting: ActiveMeetingService,
         private updateService: UpdateService,
         private router: Router,
         public vp: ViewportService,
@@ -167,8 +174,8 @@ export class SiteComponent extends BaseComponent implements OnInit {
         }
     }
 
-    public isStartPage(route: string): boolean {
-        return route === '.';
+    public isRouteExact(route: string): boolean {
+        return route === '.' || route === '/';
     }
 
     /**
