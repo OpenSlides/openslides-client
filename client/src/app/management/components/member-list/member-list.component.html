@@ -32,6 +32,8 @@
     [multiSelect]="isMultiSelect"
     listStorageKey="member"
     (dataSourceChange)="onDataSourceChange($event)"
+    [filterService]="filterService"
+    [sortService]="sortService"
 >
     <!-- Name column -->
     <div *pblNgridCellDef="'short_name'; row as user; rowContext as rowContext" class="cell-slot fill">

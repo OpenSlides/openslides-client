@@ -32,7 +32,7 @@ export class PollFilterListService extends BaseFilterListService<ViewPoll> {
     /**
      * @returns the filter definition
      */
-    protected getFilterDefinitions(): OsFilter[] {
+    protected getFilterDefinitions(): OsFilter<ViewPoll>[] {
         return [
             {
                 property: 'state',

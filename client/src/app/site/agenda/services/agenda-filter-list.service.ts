@@ -25,7 +25,7 @@ export class AgendaFilterListService extends BaseFilterListService<ViewAgendaIte
      */
     protected storageKey = 'AgendaList';
 
-    public tagFilterOptions: OsFilter = {
+    public tagFilterOptions: OsFilter<ViewAgendaItem> = {
         property: 'tag_ids',
         label: 'Tags',
         options: []
@@ -51,7 +51,7 @@ export class AgendaFilterListService extends BaseFilterListService<ViewAgendaIte
     /**
      * @returns the filter definition
      */
-    protected getFilterDefinitions(): OsFilter[] {
+    protected getFilterDefinitions(): OsFilter<ViewAgendaItem>[] {
         return [
             {
                 label: 'Status',

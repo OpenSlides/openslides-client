@@ -13,6 +13,8 @@ import { UserRepositoryService } from 'app/core/repositories/users/user-reposito
 import { ChoiceService } from 'app/core/ui-services/choice.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
+import { MemberFilterService } from 'app/management/services/member-filter.service';
+import { MemberSortService } from 'app/management/services/member-sort.service';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
 import { ViewUser } from 'app/site/users/models/view-user';
 
@@ -47,7 +49,9 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
         private router: Router,
         private route: ActivatedRoute,
         private promptService: PromptService,
-        private choiceService: ChoiceService
+        private choiceService: ChoiceService,
+        public readonly filterService: MemberFilterService,
+        public readonly sortService: MemberSortService
     ) {
         super(componentServiceCollector);
         super.setTitle('Members');

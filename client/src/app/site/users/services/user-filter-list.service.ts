@@ -20,8 +20,8 @@ export class UserFilterListService extends BaseFilterListService<ViewUser> {
      */
     protected storageKey = 'UserList';
 
-    private userGroupFilterOptions: OsFilter = {
-        property: 'groups_id',
+    private userGroupFilterOptions: OsFilter<ViewUser> = {
+        property: 'group_ids',
         label: 'Groups',
         options: []
     };
@@ -52,8 +52,8 @@ export class UserFilterListService extends BaseFilterListService<ViewUser> {
     /**
      * @returns the filter definition
      */
-    protected getFilterDefinitions(): OsFilter[] {
-        const staticFilterOptions: OsFilter[] = [
+    protected getFilterDefinitions(): OsFilter<ViewUser>[] {
+        const staticFilterOptions: OsFilter<ViewUser>[] = [
             {
                 property: 'isPresentInMeeting',
                 label: 'Presence',
