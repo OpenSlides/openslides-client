@@ -92,9 +92,6 @@ import { AssignmentPollDetailContentComponent } from './components/assignment-po
 
 import { GlobalSpinnerComponent } from './components/global-spinner/global-spinner.component';
 import { UserMenuComponent } from './components/user-menu/user-menu.component';
-import { JitsiComponent } from './components/jitsi/jitsi.component';
-import { VjsPlayerComponent } from './components/vjs-player/vjs-player.component';
-import { LiveStreamComponent } from './components/live-stream/live-stream.component';
 import { ListOfSpeakersContentComponent } from './components/list-of-speakers-content/list-of-speakers-content.component';
 import { ImageComponent } from './components/image/image.component';
 import { OnlyNumberDirective } from './directives/only-number.directive';
@@ -117,6 +114,8 @@ import { FileUploadComponent } from './components/file-upload/file-upload.compon
 import { ImportListLastTabDirective } from './components/import-list-view/import-list-last-tab.directive';
 import { ImportListFirstTabDirective } from './components/import-list-view/import-list-first-tab.directive';
 import { ImportListViewComponent } from './components/import-list-view/import-list-view.component';
+import { VideoPlayerComponent } from './components/video-player/video-player.component';
+import { ProgressComponent } from './components/progress/progress.component';
 
 const declarations = [
     PermsDirective,
@@ -178,9 +177,6 @@ const declarations = [
     VotingPrivacyWarningComponent,
     MotionPollDetailContentComponent,
     AssignmentPollDetailContentComponent,
-    JitsiComponent,
-    VjsPlayerComponent,
-    LiveStreamComponent,
     ListOfSpeakersContentComponent,
     ImageComponent,
     OnlyNumberDirective,
@@ -201,7 +197,9 @@ const declarations = [
     FileUploadComponent,
     ImportListViewComponent,
     ImportListFirstTabDirective,
-    ImportListLastTabDirective
+    ImportListLastTabDirective,
+    VideoPlayerComponent,
+    ProgressComponent
 ];
 
 const sharedModules = [

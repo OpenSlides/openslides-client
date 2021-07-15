@@ -52,7 +52,10 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             'url_name',
             'enable_anonymous',
             'is_template',
-            'default_group_id' // needed for adding users
+            'default_group_id', // needed for adding users
+            'jitsi_domain',
+            'jitsi_room_name',
+            'jitsi_room_password'
         ]);
         const dashboardFields: (keyof Meeting)[] = listFields.concat('location');
         const startPageFields: (keyof Meeting)[] = accessField.concat(['welcome_title', 'welcome_text']);
@@ -62,7 +65,9 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             list: listFields,
             edit: editFields,
             dashboard: dashboardFields,
-            settings: this.meetingSettingsDefinitionProvider.getSettingsKeys(),
+            settings: this.meetingSettingsDefinitionProvider
+                .getSettingsKeys()
+                .concat('jitsi_domain', 'jitsi_room_name', 'jitsi_room_password'),
             startPage: startPageFields
         };
     }

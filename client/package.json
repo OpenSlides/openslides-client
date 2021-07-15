@@ -65,6 +65,7 @@
         "lz4js": "^0.2.0",
         "material-design-icons-iconfont": "6.1.0",
         "moment": "^2.27.0",
+        "ng-particles": "^2.13.4",
         "ng2-charts": "^2.4.0",
         "ng2-pdf-viewer": "6.3.2",
         "ngx-device-detector": "^2.0.0",
@@ -78,6 +79,7 @@
         "tinymce": "5.7.1",
         "ts-dedent": "^1.1.1",
         "tslib": "^1.10.0",
+        "tsparticles": "^1.30.4",
         "video.js": "^7.8.4",
         "zone.js": "~0.10.2"
     },
