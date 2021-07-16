@@ -13,7 +13,7 @@ export interface MotionTitleInformation extends TitleInformationWithAgendaItem {
  * Format for referenced motions: A mapping of motion ids to their title information.
  */
 export interface ReferencedMotions {
-    [id: number]: MotionTitleInformation;
+    [fqid: string]: MotionTitleInformation;
 }
 
 /**

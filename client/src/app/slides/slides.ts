@@ -9,7 +9,7 @@ import { SlideManifest } from './slide-manifest';
  * the angular CLI scans this file just at it's start time and creates the modules then. There
  * is no such thing as "dynamic update" in this case..
  */
-export const allSlides: SlideManifest[] = [
+export const Slides: SlideManifest[] = [
     {
         path: 'agenda_item_list',
         loadChildren: () => import('./agenda-item-list/agenda-item-list-slide.module').then(m => m.ItemListSlideModule),
@@ -73,17 +73,13 @@ export const allSlides: SlideManifest[] = [
         scaleable: true,
         scrollable: true
     },
-    /*{
-        path: 'motions/motion-poll',
-        loadChildren: () => import('./motions/motion-poll/motion-poll-slide.module').then(m => m.MotionPollSlideModule),
-        verboseName: 'Vote',
-    },
     {
-        path: 'assignments/assignment-poll',
-        loadChildren: () =>
-            import('./assignments/assignment-poll/assignment-poll-slide.module').then(m => m.AssignmentPollSlideModule),
-        verboseName: 'Ballot',
-    },*/
+        path: 'poll',
+        loadChildren: () => import('./poll/poll-slide.module').then(m => m.PollSlideModule),
+        verboseName: 'Vote',
+        scaleable: false,
+        scrollable: false
+    },
     {
         path: 'projector_countdown',
         loadChildren: () =>

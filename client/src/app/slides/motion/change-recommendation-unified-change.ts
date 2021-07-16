@@ -1,23 +1,22 @@
+import { ModificationType } from 'app/core/ui-services/diff.service';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from 'app/shared/models/motions/view-unified-change';
-import { MotionSlideDataChangeReco } from './motion-slide-data';
+import { ChangeRecommendationData } from './motion-slide-data';
 
 /**
  * This class adds methods to the MotionsMotionSlideDataChangeReco data object
  * necessary for use it as a UnifiedChange in the Diff-Functions
  */
-export class MotionSlideObjChangeReco implements MotionSlideDataChangeReco, ViewUnifiedChange {
-    public creation_time: string;
+export class ChangeRecommendationUnifiedChange implements ChangeRecommendationData, ViewUnifiedChange {
     public id: number;
-    public internal: boolean;
     public line_from: number;
     public line_to: number;
-    public motion_id: number;
     public other_description: string;
     public rejected: false;
     public text: string;
-    public type: number;
+    public type: ModificationType;
+    public creation_time: number;
 
-    public constructor(data: MotionSlideDataChangeReco) {
+    public constructor(data: ChangeRecommendationData) {
         Object.assign(this, data);
     }
 

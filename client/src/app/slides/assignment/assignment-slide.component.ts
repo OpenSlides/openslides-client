@@ -8,12 +8,4 @@ import { AssignmentSlideData } from './assignment-slide-data';
     templateUrl: './assignment-slide.component.html',
     styleUrls: ['./assignment-slide.component.scss']
 })
-export class AssignmentSlideComponent extends BaseSlideComponent<AssignmentSlideData> {
-    public constructor() {
-        super();
-    }
-
-    public getUserName(relatedUser: { user: string }): string {
-        return relatedUser.user;
-    }
-}
+export class AssignmentSlideComponent extends BaseSlideComponent<AssignmentSlideData> {}

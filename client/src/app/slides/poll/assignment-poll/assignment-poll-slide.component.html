@@ -1,9 +1,0 @@
-<ng-container *ngIf="data && data.data">
-    <div class="slidetitle">
-        <h1 class="assignment-title">{{ data.data.assignment.title }}</h1>
-        <h2 class="poll-title">{{ data.data.poll.title }}</h2>
-    </div>
-    <div *ngIf="data.data.poll.state === PollState.Published">
-        <os-assignment-poll-detail-content [poll]="data.data.poll"></os-assignment-poll-detail-content>
-    </div>
-</ng-container>

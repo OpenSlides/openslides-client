@@ -1,7 +1,7 @@
-<div *ngIf="data">
+<div *ngIf="data && projector">
     <div
         id="sidebox"
-        *ngIf="data.data.show_meta_box"
+        *ngIf="data.data.show_sidebox"
         [ngStyle]="{ 'margin-top': projector.show_header_footer ? '144px' : '94px' }"
     >
         <!-- Submitters -->
@@ -17,16 +17,16 @@
         </div>
     </div>
 
-    <div [ngStyle]="{ width: data.data.show_meta_box ? 'calc(100% - 250px)' : '100%' }">
+    <div [ngStyle]="{ width: data.data.show_sidebox ? 'calc(100% - 250px)' : '100%' }">
         <!-- Title -->
         <div class="spacer" [ngStyle]="{ height: projector.show_header_footer ? '50px' : '0' }"></div>
-        <div [ngClass]="{ slidetitle: data.data.show_meta_box }">
+        <div [ngClass]="{ slidetitle: data.data.show_sidebox }">
             <h1>
                 <span *ngIf="data.data.number">{{ data.data.number }}:</span>
                 {{ getTitleWithChanges() }}
             </h1>
             <!-- recommendation referencing motions -->
-            <h2 *ngIf="data.data.show_meta_box && data.data.recommendation_referencing_motions">
+            <h2 *ngIf="data.data.show_sidebox && data.data.recommendation_referencing_motions">
                 <span>{{ 'Referring motions' | translate }}</span
                 >:
                 <span *ngFor="let titleInformation of referencingMotions; let last = last">
@@ -75,7 +75,7 @@
         <div id="text" [ngStyle]="textDivStyles">
             <!-- Text -->
             <span
-                *ngIf="isStatuteAmendment() || isParagraphBasedAmendment() || !!getFormattedText()"
+                *ngIf="isStatuteAmendment() || isParagraphBasedAmendment() || formattedMotionTextPlain"
                 class="text-prefix-label"
             >
                 {{ preamble | translate }}</span
@@ -93,7 +93,7 @@
                         <div class="bold">{{ 'Changed title' | translate }}:</div>
                         <div [innerHTML]="getFormattedTitleDiff() | trust: 'html'"></div>
                     </div>
-                    <div *ngIf="getFormattedText()" [innerHTML]="getFormattedText() | trust: 'html'"></div>
+                    <div *ngIf="formattedMotionTextPlain" [innerHTML]="formattedMotionTextPlain | trust: 'html'"></div>
                 </div>
             </ng-container>
 

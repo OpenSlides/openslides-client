@@ -208,9 +208,9 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     }
 
     /**
-     * get the formated motion text from the repository.
+     * get the formatted motion text from the repository.
      *
-     * @returns formated motion texts
+     * @returns formatted motion texts
      */
     public getFormattedTextPlain(): string {
         // Prevent this.sortedChangingObjects to be reordered from within formatMotion
