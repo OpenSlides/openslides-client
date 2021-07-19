@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 import { MeetingAction } from 'app/core/actions/meeting-action';
+import { OperatorService } from 'app/core/core-services/operator.service';
 import { CML, OML } from 'app/core/core-services/organization-permission';
 import { Id } from 'app/core/definitions/key-types';
 import { CommitteeRepositoryService } from 'app/core/repositories/management/committee-repository.service';
@@ -35,6 +36,10 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
         return (this.committee?.users || []).concat(this.editMeeting?.users || []);
     }
 
+    private get isJitsiManipulationAllowed(): boolean {
+        return !this.isCreateView && this.operator.isSuperAdmin;
+    }
+
     public addMeetingLabel = AddMeetingLabel;
     public editMeetingLabel = EditMeetingLabel;
 
@@ -56,7 +61,8 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
         private meetingRepo: MeetingRepositoryService,
         private committeeRepo: CommitteeRepositoryService,
         public orgaTagRepo: OrganizationTagRepositoryService,
-        private colorService: ColorService
+        private colorService: ColorService,
+        private operator: OperatorService
     ) {
         super(componentServiceCollector);
         this.createOrEdit();
@@ -179,7 +185,7 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
         const currentDate = new Date();
         currentDate.setHours(0, 0, 0, 0);
 
-        const rawForm: any = {
+        const rawForm: { [key: string]: any } = {
             name: ['', Validators.required],
             // server bug
             // set_as_template: [false],
@@ -191,10 +197,10 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
             organization_tag_ids: [[]]
         };
 
-        if (!this.isCreateView) {
-            rawForm.jitsi_domain = [[]];
-            rawForm.jitsi_room_name = [[]];
-            rawForm.jitsi_room_password = [[]];
+        if (this.isJitsiManipulationAllowed) {
+            rawForm.jitsi_domain = [''];
+            rawForm.jitsi_room_name = [''];
+            rawForm.jitsi_room_password = [''];
         }
 
         this.meetingForm = this.formBuilder.group(rawForm);
