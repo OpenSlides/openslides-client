@@ -27,14 +27,14 @@
             <os-projector-button
                 *osPerms="permission.projectorCanManage"
                 class="projector-button"
-                [object]="_getProjectorButtonObject(viewModel)"
+                [object]="viewModel"
                 (changeEvent)="viewUpdateEvent()"
             ></os-projector-button>
             <!-- Projector indicator -->
             <div class="projector-button" *osPerms="permission.projectorCanManage; complement: true">
                 <mat-icon
                     color="accent"
-                    *ngIf="projectorService.isProjected(_getProjectorButtonObject(viewModel))"
+                    *ngIf="projectorService.isProjected(viewModel)"
                     matTooltip="{{ 'Currently projected' | translate }}"
                 >
                     videocam

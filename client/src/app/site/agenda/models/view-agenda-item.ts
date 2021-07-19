@@ -1,4 +1,5 @@
 import { AgendaListTitle } from 'app/core/repositories/agenda/agenda-item-repository.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { AgendaItem, ItemTypeChoices } from 'app/shared/models/agenda/agenda-item';
 import { HasAgendaItemId } from 'app/shared/models/base/has-agenda-item-id';
@@ -7,6 +8,7 @@ import { Projectiondefault } from 'app/shared/models/projector/projector';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { DetailNavigable } from 'app/site/base/detail-navigable';
+import { isProjectable } from 'app/site/base/projectable';
 import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
 import { HasTags } from 'app/site/tags/models/view-tag';
 
@@ -57,8 +59,14 @@ export class ViewAgendaItem extends BaseProjectableViewModel<AgendaItem> {
         return { title: this.getTitle(), subtitle };
     };
 
-    public getProjectionBuildDescriptor(): ProjectionBuildDescriptor {
-        throw new Error('TODO');
+    public getProjectionBuildDescriptor(meetingSettingsService?: MeetingSettingsService): ProjectionBuildDescriptor {
+        if (!this.content_object) {
+            return null;
+        }
+        if (!isProjectable(this.content_object)) {
+            throw new Error('Content object must be projectable');
+        }
+        return this.content_object.getProjectionBuildDescriptor(meetingSettingsService);
     }
 
     public getProjectiondefault(): Projectiondefault {
