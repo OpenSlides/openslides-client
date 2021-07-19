@@ -34,7 +34,6 @@ import { AgendaItemType } from 'app/shared/models/agenda/agenda-item';
 import { Projectiondefault } from 'app/shared/models/projector/projector';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
-import { isProjectable } from 'app/site/base/projectable';
 import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
 import { ViewTopic } from 'app/site/topics/models/view-topic';
 import { ViewAgendaItem } from '../../models/view-agenda-item';
@@ -211,12 +210,6 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
             return `/${item.content_object.getDetailStateURL()}`;
         }
     }
-
-    public getProjectorButtonObject = (agendaItem: ViewAgendaItem) => {
-        if (isProjectable(agendaItem.content_object)) {
-            return agendaItem.content_object;
-        }
-    };
 
     public getSpeakerButtonObject = (agendaItem: ViewAgendaItem) => {
         if (hasListOfSpeakers(agendaItem.content_object)) {

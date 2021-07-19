@@ -13,8 +13,7 @@ import { hasListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers'
 import { HasListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { BaseViewModel } from 'app/site/base/base-view-model';
-import { isProjectable, Projectable } from 'app/site/base/projectable';
-import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
+import { isProjectable } from 'app/site/base/projectable';
 import { BasicListViewTableComponent } from '../basic-list-view-table/basic-list-view-table.component';
 
 export interface CssClassDefinition {
@@ -92,9 +91,6 @@ export class ListViewTableComponent<
     public showListOfSpeakers = true;
 
     @Input()
-    public getProjectorButtonObject: (viewModel: V) => ProjectionBuildDescriptor | Projectable | null = null;
-
-    @Input()
     public getSpeakerButtonObject: (viewModel: V) => (BaseViewModel & HasListOfSpeakers) | null = null;
 
     public readonly permission = Permission;
@@ -158,27 +154,11 @@ export class ListViewTableComponent<
     }
 
     public isElementProjected = (context: PblNgridRowContext<V>) => {
-        if (
-            this.allowProjector &&
-            this.projectorService.isProjected(this._getProjectorButtonObject(context.$implicit as V))
-        ) {
+        const viewModel = context.$implicit as V;
+        if (this.allowProjector && isProjectable(viewModel) && this.projectorService.isProjected(viewModel)) {
             return 'projected';
         }
     };
-
-    /**
-     * @param viewModel The model of the table
-     * @returns a view model that can be projected
-     */
-    public _getProjectorButtonObject(viewModel: V): ProjectionBuildDescriptor | Projectable | null {
-        if (this.getProjectorButtonObject === null) {
-            if (isProjectable(viewModel)) {
-                return viewModel;
-            }
-        } else {
-            return this.getProjectorButtonObject(viewModel);
-        }
-    }
 
     public _getSpeakerButtonObject(viewModel: V): HasListOfSpeakers | null {
         if (this.getSpeakerButtonObject === null) {
