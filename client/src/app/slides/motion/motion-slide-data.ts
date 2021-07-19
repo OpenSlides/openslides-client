@@ -75,5 +75,5 @@ export interface MotionSlideData extends MotionFormattingRepresentation {
     show_sidebox: boolean;
     line_length: number;
     preamble: string;
-    line_numbering_mode: LineNumberingMode;
+    line_numbering: LineNumberingMode;
 }
