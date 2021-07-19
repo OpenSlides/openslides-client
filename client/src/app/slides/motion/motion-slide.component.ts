@@ -124,7 +124,7 @@ export class MotionSlideComponent
 
     protected setData(value: SlideData<MotionSlideData>): void {
         super.setData(value);
-        this.lnMode = value.data.line_numbering_mode;
+        this.lnMode = value.data.line_numbering;
         this.lineLength = value.data.line_length;
         this.preamble = value.data.preamble;
         this.crMode = value.options.mode || 'original';
