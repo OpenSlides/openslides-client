@@ -85,6 +85,14 @@ export class OperatorService {
         }
     }
 
+    public get isSuperAdmin(): boolean {
+        return this.hasOrganizationPermissions(OML.superadmin);
+    }
+
+    public get isOrgaManager(): boolean {
+        return this.hasOrganizationPermissions(OML.can_manage_organization);
+    }
+
     public get canChangeOwnPassword(): boolean {
         return this.isAuthenticated && this.userSubject.value?.can_change_own_password;
     }
@@ -399,7 +407,7 @@ export class OperatorService {
             console.warn('has perms: Usage outside of meeting!');
             return false;
         }
-        if (this.hasOrganizationPermissions(OML.superadmin)) {
+        if (this.isSuperAdmin) {
             return true;
         }
 
@@ -444,7 +452,7 @@ export class OperatorService {
         if (!this.CML) {
             return false;
         }
-        if (this.hasOrganizationPermissions(OML.superadmin, OML.can_manage_organization)) {
+        if (this.isSuperAdmin || this.isOrgaManager) {
             return true;
         }
         // A user can have a CML for any committee but they could be not present in some of them.
@@ -464,7 +472,7 @@ export class OperatorService {
      * @returns `true`, if the current operator is included in at least one of the given committees.
      */
     public isInCommittees(...committees: Committee[]): boolean {
-        if (this.hasOrganizationPermissions(OML.superadmin)) {
+        if (this.isSuperAdmin) {
             return true;
         }
         return this.isInCommitteesNonAdminCheck(...committees);
@@ -510,7 +518,7 @@ export class OperatorService {
         if (!this.groupIds) {
             return false;
         }
-        if (this.hasOrganizationPermissions(OML.superadmin)) {
+        if (this.isSuperAdmin) {
             return true;
         }
         if (!this.isInGroupIdsNonAdminCheck(...groupIds)) {
