@@ -20,11 +20,11 @@ export class ProjectionRepositoryService extends BaseRepositoryWithActiveMeeting
     };
 
     public getTitle = (viewProjection: ViewProjection) => {
-        return viewProjection.content_object.getProjectorTitle(viewProjection.projection).title;
+        return viewProjection.content_object?.getProjectorTitle(viewProjection.projection).title;
     };
 
     public getSubtitle = (viewProjection: ViewProjection) => {
-        return viewProjection.content_object.getProjectorTitle(viewProjection.projection).subtitle;
+        return viewProjection.content_object?.getProjectorTitle(viewProjection.projection).subtitle;
     };
 
     protected createViewModel(model: Projection): ViewProjection {

@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 import { ProjectionRepositoryService } from 'app/core/repositories/projector/projection-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -21,27 +20,16 @@ import { ViewProjector } from '../../models/view-projector';
 export class PresentationControlComponent extends BaseComponent {
     @Input()
     public set projector(projector: ViewProjector) {
-        this.projectorSubject.next(projector);
+        this.projections = projector.current_projections_as_observable;
     }
 
-    private projectorSubject = new BehaviorSubject<ViewProjector | null>(null);
-
-    public get projector(): ViewProjector {
-        return this.projectorSubject.value;
-    }
-
-    public projections: Observable<ViewProjection[]>;
+    public projections: Observable<ViewProjection[]> = new Observable<ViewProjection[]>();
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private projectionRepo: ProjectionRepositoryService
     ) {
         super(componentServiceCollector);
-
-        this.projections = this.projectorSubject.pipe(
-            switchMap(projector => projector?.current_projections_as_observable || []),
-            map(projections => projections.filter(projection => this.getMediafile(projection)?.isProjectable()))
-        );
     }
 
     public getMediafile(projection: ViewProjection): ViewMediafile | null {

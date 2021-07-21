@@ -385,7 +385,7 @@ export const meetingSettings: SettingsGroup[] = [
                         key: 'list_of_speakers_amount_last_on_projector',
                         label: _('Number of last speakers to be shown on the projector'),
                         type: 'integer',
-                        validators: [Validators.min(0)]
+                        validators: [Validators.min(-1)]
                     },
                     {
                         key: 'list_of_speakers_amount_next_on_projector',

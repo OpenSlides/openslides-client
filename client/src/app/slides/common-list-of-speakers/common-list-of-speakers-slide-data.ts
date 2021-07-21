@@ -1,19 +1,23 @@
+import { TitleInformationWithAgendaItem } from '../agenda_item_number';
+import { SpeechState } from 'app/shared/models/agenda/speaker';
+
 export interface SlideSpeaker {
     user: string;
-    marked: boolean;
+    speech_state: SpeechState;
+    note: string;
     point_of_order: boolean;
 }
 
+interface TitleInformation extends TitleInformationWithAgendaItem {
+    collection: string;
+    [key: string]: any; // Each content object can have a variety of fields.
+}
+
 export interface CommonListOfSpeakersSlideData {
-    waiting?: SlideSpeaker[];
+    waiting: SlideSpeaker[];
     current?: SlideSpeaker;
-    finished?: SlideSpeaker[];
-    title_information?: {
-        _agenda_item_number: string;
-        agend_item_number: () => string;
-        [key: string]: any;
-    };
-    content_object_collection?: string;
-    closed?: boolean;
-    list_of_speakers_show_amount_of_speakers_on_slide?: boolean;
+    finished: SlideSpeaker[];
+    title_information: TitleInformation;
+    closed: boolean;
+    number_of_waiting_speakers?: number;
 }
