@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
 
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
 
 import { collectionFromFqid } from 'app/core/core-services/key-transforms';
 import { Follow } from 'app/core/core-services/model-request-builder.service';
@@ -106,7 +106,7 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
     /**
      * All slides to show on this projector
      */
-    public slides: Observable<SlideData<object>[]>;
+    public slides: Observable<SlideData<object>[]> = new Observable<SlideData<object>[]>();
 
     /**
      * Info about if the user is offline.
@@ -168,10 +168,14 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
             this.offlineBroadcastService.isOfflineObservable.subscribe(isOffline => (this.isOffline = isOffline))
         );
 
-        this.slides = this.projectorSubject.pipe(
-            switchMap(projector => projector?.current_projections_as_observable || []),
-            map(projections =>
-                projections.map(
+        const trigger$ = merge(
+            this.projectorSubject,
+            this.projectorSubject.pipe(mergeMap(projector => projector?.current_projections_as_observable || []))
+        );
+
+        this.slides = combineLatest([this.projectorSubject, trigger$]).pipe(
+            map((data: [ViewProjector, any]) => {
+                return (data[0]?.current_projections || []).map(
                     projection =>
                         ({
                             collection: collectionFromFqid(projection.content_object_id),
@@ -181,8 +185,8 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
                             options: projection.options || {},
                             ...(!!projection.content?.error && { error: projection.content.error })
                         } as SlideData)
-                )
-            )
+                );
+            })
         );
 
         this.subscriptions.push(

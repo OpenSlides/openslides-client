@@ -1,13 +1,13 @@
-<div *ngIf="data">
+<div *ngIf="data?.data">
     <div class="slidetitle">
         <h1>
             {{ 'List of speakers' | translate }}
             <mat-icon *ngIf="data.data.closed">lock</mat-icon>
         </h1>
         <h2>
-            {{ getTitle() }}
-            <span *ngIf="getSpeakersCount() > 0 && data.data.list_of_speakers_show_amount_of_speakers_on_slide">
-                &ndash; {{ getSpeakersCount() }} <span>{{ 'Speakers' | translate }}</span>
+            {{ title }}
+            <span *ngIf="waitingSpeakers !== null">
+                &ndash; {{ waitingSpeakers }} <span>{{ 'Speakers' | translate }}</span>
             </span>
         </h2>
     </div>
@@ -15,28 +15,30 @@
     <!-- Last speakers -->
     <div *ngIf="data.data.finished && data.data.finished.length" class="lastSpeakers">
         <div *ngFor="let speaker of data.data.finished">
-            {{ speaker.user }}
-            <mat-icon *ngIf="speaker.marked">star</mat-icon>
-            <mat-icon *ngIf="speaker.point_of_order" color="warn"> warning</mat-icon>
+            <ng-container *ngTemplateOutlet="speakerTemplate; context:{speaker:speaker}"></ng-container>
         </div>
     </div>
 
     <!-- Current speaker -->
     <div *ngIf="data.data.current" class="currentSpeaker">
         <mat-icon class="micicon">mic</mat-icon>
-        {{ data.data.current.user }}
-        <mat-icon *ngIf="data.data.current.marked">star</mat-icon>
-        <mat-icon *ngIf="data.data.current.point_of_order" color="warn"> warning</mat-icon>
+        <ng-container *ngTemplateOutlet="speakerTemplate; context:{speaker:data.data.current}"></ng-container>
     </div>
 
     <!-- Next speakers -->
     <div *ngIf="data.data.waiting && data.data.waiting.length">
         <ol class="nextSpeakers">
             <li *ngFor="let speaker of data.data.waiting">
-                {{ speaker.user }}
-                <mat-icon *ngIf="speaker.marked">star</mat-icon>
-                <mat-icon *ngIf="speaker.point_of_order" color="warn"> warning</mat-icon>
+                <ng-container *ngTemplateOutlet="speakerTemplate; context:{speaker:speaker}"></ng-container>
             </li>
         </ol>
     </div>
 </div>
+
+<ng-template let-speaker="speaker" #speakerTemplate>
+    {{ speaker.user }}
+    <mat-icon *ngIf="speaker.speech_state === SpeechState.CONTRIBUTION">star</mat-icon>
+    <mat-icon *ngIf="speaker.speech_state === SpeechState.PRO" class="green-text">add_circle</mat-icon>
+    <mat-icon *ngIf="speaker.speech_state === SpeechState.CONTRA" class="red-warning-text">remove_circle</mat-icon>
+    <mat-icon *ngIf="speaker.point_of_order" color="warn">warning</mat-icon>
+</ng-template>
