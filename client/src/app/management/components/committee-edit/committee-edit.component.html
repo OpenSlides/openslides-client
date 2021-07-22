@@ -56,6 +56,16 @@
             ></os-search-value-selector>
         </mat-form-field>
 
+        <mat-form-field *osOmlPerms="OML.can_manage_users">
+            <mat-label> {{ 'Committee managers' | translate }}</mat-label>
+            <os-search-value-selector
+                formControlName="manager_ids"
+                [multiple]="true"
+                placeholder="{{ 'Committee managers' | translate }}"
+                [inputListValues]="organizationMembers"
+            ></os-search-value-selector>
+        </mat-form-field>
+
         <ng-container *osOmlPerms="OML.can_manage_organization">
             <mat-form-field>
                 <mat-label>{{ 'Can forward motions to committee' | translate }}</mat-label>

@@ -122,6 +122,12 @@ export class CommitteeRepositoryService
         return viewModel;
     }
 
+    /**
+     * TODO CLEANUP: This seems unnecessary.
+     * removing all entries that are not fit to a class can be done using
+     * decorators
+     * https://www.typescriptlang.org/docs/handbook/decorators.html#metadata
+     */
     private getPartialCommitteePayload(
         committee: Partial<CommitteeAction.PartialPayload>
     ): CommitteeAction.PartialPayload {
@@ -129,6 +135,7 @@ export class CommitteeRepositoryService
             description: committee.description,
             organization_tag_ids: committee.organization_tag_ids,
             user_ids: committee.user_ids,
+            manager_ids: committee.manager_ids,
             forward_to_committee_ids: committee.forward_to_committee_ids,
             receive_forwardings_from_committee_ids: committee.receive_forwardings_from_committee_ids
         };

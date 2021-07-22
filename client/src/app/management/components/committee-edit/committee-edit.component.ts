@@ -23,6 +23,7 @@ import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Committee } from 'app/shared/models/event-management/committee';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { OperatorService } from 'app/core/core-services/operator.service';
 
 const AddCommitteeLabel = _('New committee');
 const EditCommitteeLabel = _('Edit committee');
@@ -55,7 +56,8 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
         private colorService: ColorService,
         private meetingRepo: MeetingRepositoryService,
         private route: ActivatedRoute,
-        private location: Location
+        private location: Location,
+        private operator: OperatorService
     ) {
         super(componentServiceCollector);
         this.createForm();
@@ -73,6 +75,10 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
     public async ngOnInit(): Promise<void> {
         this.requestUpdates();
         await this.fetchUsers();
+
+        if (this.isCreateView) {
+            this.preselectSelfAsManager();
+        }
     }
 
     public getPipeFilterFn(): OperatorFunction<ViewCommittee[], ViewCommittee[]> {
@@ -154,6 +160,7 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
             description: [''],
             organization_tag_ids: [[]],
             user_ids: [[]],
+            manager_ids: [[]],
             forward_to_committee_ids: [[]],
             receive_forwardings_from_committee_ids: [[]]
         };
@@ -164,6 +171,11 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
             };
         }
         this.committeeForm = this.formBuilder.group(partialForm);
+    }
+
+    private preselectSelfAsManager(): void {
+        const managerIdCtrl = this.committeeForm.get('manager_ids');
+        managerIdCtrl.patchValue([this.operator.operatorId]);
     }
 
     private updateForm(committee: ViewCommittee): void {
