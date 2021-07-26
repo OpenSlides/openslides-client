@@ -13,6 +13,8 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewCommittee } from 'app/management/models/view-committee';
 import { ViewOrganization } from 'app/management/models/view-organization';
+import { CommitteeFilterService } from 'app/management/services/committee-filter.service';
+import { CommitteeSortService } from 'app/management/services/committee-sort.service';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
 
 @Component({
@@ -50,6 +52,8 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
         componentServiceCollector: ComponentServiceCollector,
         public repo: CommitteeRepositoryService,
         public operator: OperatorService,
+        public filterService: CommitteeFilterService,
+        public sortService: CommitteeSortService,
         private router: Router,
         private route: ActivatedRoute,
         private promptService: PromptService,
