@@ -9,6 +9,7 @@
     <mat-icon
         [matTooltip]="iconTooltip"
         [ngClass]="{ pointer: iconAction, mirrored: mirrored }"
+        [ngStyle]="{ transform: getRotation() }"
         (click)="iconClick()"
         [color]="color"
         >{{ icon }}</mat-icon
