@@ -33,7 +33,7 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
     public readonly OML = OML;
 
     public get availableUsers(): ViewUser[] {
-        return (this.committee?.users || []).concat(this.editMeeting?.users || []);
+        return Array.from(new Set((this.committee?.users || []).concat(this.editMeeting?.users || [])));
     }
 
     private get isJitsiManipulationAllowed(): boolean {
