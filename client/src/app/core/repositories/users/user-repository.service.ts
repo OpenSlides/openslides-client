@@ -352,14 +352,14 @@ export class UserRepositoryService
         return this.sendActionToBackend(UserAction.SET_PASSWORD_SELF, payload);
     }
 
-    public setPresent(user: ViewUser, present: boolean): Promise<void> {
-        this.preventAlterationOnDemoUsers(user);
-        const payload: UserAction.SetPresentPayload = {
+    public setPresent(isPresent: boolean, ...users: ViewUser[]): Promise<void> {
+        this.preventAlterationOnDemoUsers(users);
+        const payload: UserAction.SetPresentPayload[] = users.map(user => ({
             id: user.id,
             meeting_id: this.activeMeetingId,
-            present
-        };
-        return this.sendActionToBackend(UserAction.SET_PRESENT, payload);
+            present: isPresent
+        }));
+        return this.sendBulkActionToBackend(UserAction.SET_PRESENT, payload);
     }
 
     /**

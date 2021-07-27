@@ -223,17 +223,17 @@
 
             <mat-divider></mat-divider>
 
-            <button mat-menu-item [disabled]="!selectedRows.length" (click)="setStateSelected('is_active')">
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="changeActiveStateOfSelectedUsers()">
                 <mat-icon>block</mat-icon>
                 <span>{{ 'Enable/disable account ...' | translate }}</span>
             </button>
 
-            <button mat-menu-item [disabled]="!selectedRows.length" (click)="setStateSelected('is_present')">
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="changePresentStateOfSelectedUsers()">
                 <mat-icon>check_box</mat-icon>
                 <span>{{ 'Set presence ...' | translate }}</span>
             </button>
 
-            <button mat-menu-item [disabled]="!selectedRows.length" (click)="setStateSelected('is_physical_person')">
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="changePhysicalStateOfSelectedUsers()">
                 <mat-icon>account_balance</mat-icon>
                 <span>{{ 'Set natural person ...' | translate }}</span>
             </button>
