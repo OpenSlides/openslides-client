@@ -470,6 +470,10 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
     public async createMotion(newMotionValues: Partial<MotionAction.CreatePayload>): Promise<void> {
         try {
             let response: Identifiable;
+            newMotionValues.submitter_ids =
+                Array.isArray(newMotionValues.submitter_ids) && newMotionValues.submitter_ids.length > 0
+                    ? newMotionValues.submitter_ids
+                    : [this.operator.operatorId];
             if (this.parentId) {
                 response = await this.amendmentService.createTextBased({
                     ...newMotionValues,
