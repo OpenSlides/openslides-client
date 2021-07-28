@@ -90,6 +90,17 @@
             <mat-icon>library_add</mat-icon>
             <span>{{ 'Multiselect' | translate }}</span>
         </button>
+        <ng-container *osOmlPerms="OML.can_manage_users">
+            <button mat-menu-item (click)="csvExportMemberList()">
+                <mat-icon>archive</mat-icon>
+                <span>{{ 'Export as CSV' | translate }}</span>
+            </button>
+
+            <button mat-menu-item routerLink="import">
+                <mat-icon>cloud_upload</mat-icon>
+                <span>{{ 'Import' | translate }}</span>
+            </button>
+        </ng-container>
     </div>
     <div *ngIf="isMultiSelect">
         <button mat-menu-item (click)="selectAll()">

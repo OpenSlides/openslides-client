@@ -86,8 +86,8 @@ export class CsvExportService {
         filename: string,
         {
             lineSeparator = '\r\n',
-            columnSeparator = this.meetingSettingsService.instant('export_csv_separator'),
-            encoding = this.meetingSettingsService.instant('export_csv_encoding')
+            columnSeparator = this.meetingSettingsService.instant('export_csv_separator') ?? ',',
+            encoding = this.meetingSettingsService.instant('export_csv_encoding') ?? 'utf-8'
         }: {
             lineSeparator?: string;
             columnSeparator?: string;
@@ -182,8 +182,8 @@ export class CsvExportService {
     }
 
     public dummyCSVExport<I>(headerAndVerboseNames: I, rows: I[], filename: string): void {
-        const separator = this.meetingSettingsService.instant('export_csv_separator');
-        const encoding = this.meetingSettingsService.instant('export_csv_encoding');
+        const separator = this.meetingSettingsService.instant('export_csv_separator') ?? ',';
+        const encoding = this.meetingSettingsService.instant('export_csv_encoding') ?? 'utf-8';
         const headerRow = [
             Object.values(headerAndVerboseNames)
                 .map(label => this.translate.instant(label as string))
