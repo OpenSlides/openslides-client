@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 import { OrganizationAction } from 'app/core/actions/organization-action';
+import { OperatorService } from 'app/core/core-services/operator.service';
 import { OML } from 'app/core/core-services/organization-permission';
 import { OrganizationRepositoryService } from 'app/core/repositories/management/organization-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -32,7 +33,8 @@ export class OrgaSettingsComponent extends BaseModelContextComponent implements 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private orgaRepo: OrganizationRepositoryService,
-        private formBuilder: FormBuilder
+        private formBuilder: FormBuilder,
+        private operator: OperatorService
     ) {
         super(componentServiceCollector);
         super.setTitle(this.pageTitle);
@@ -60,17 +62,22 @@ export class OrgaSettingsComponent extends BaseModelContextComponent implements 
 
     private createForm(): void {
         if (this.currentOrgaSettings) {
-            this.orgaSettingsForm = this.formBuilder.group({
+            let rawSettingsForm: any = {
                 name: [this.currentOrgaSettings.name],
                 description: [this.currentOrgaSettings.description],
                 legal_notice: [this.currentOrgaSettings.legal_notice],
                 privacy_policy: [this.currentOrgaSettings.privacy_policy],
                 login_text: [this.currentOrgaSettings.login_text],
                 theme: [this.currentOrgaSettings.theme],
-                // custom_translations: [this.currentOrgaSettings.custom_translations],
-                enable_electronic_voting: [this.currentOrgaSettings.enable_electronic_voting],
                 reset_password_verbose_errors: [this.currentOrgaSettings.reset_password_verbose_errors]
-            });
+            };
+            if (this.operator.isSuperAdmin) {
+                rawSettingsForm = {
+                    ...rawSettingsForm,
+                    enable_electronic_voting: [this.currentOrgaSettings.enable_electronic_voting]
+                };
+            }
+            this.orgaSettingsForm = this.formBuilder.group(rawSettingsForm);
         } else {
             console.warn('no Organization loaded');
         }
