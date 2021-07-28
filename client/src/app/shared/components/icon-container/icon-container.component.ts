@@ -36,6 +36,12 @@ export class IconContainerComponent {
     public mirrored = false;
 
     /**
+     * Defines a rotation of an icon in the range of 0° up to 359°.
+     */
+    @Input()
+    public rotation: number;
+
+    /**
      * Reverse text and icon.
      * Show the icon behind the text
      */
@@ -74,5 +80,9 @@ export class IconContainerComponent {
      */
     public iconClick(): void {
         this.iconAction.emit();
+    }
+
+    public getRotation(): string {
+        return `rotate(${this.rotation % 360}deg)`;
     }
 }

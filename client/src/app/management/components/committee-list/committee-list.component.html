@@ -42,7 +42,7 @@
     <div *pblNgridCellDef="'name'; value as name; row as committee" class="cell-slot fill">
         <a class="detail-link" [routerLink]="committee.id" *ngIf="!isMultiSelect && committee.canAccess()"></a>
         <div>
-            <div class="ellipsis-overflow">
+            <div class="title-line ellipsis-overflow">
                 {{ name }}
                 <div class="subtitle" *ngIf="committee.description?.trim()">
                     {{ committee.description }}
@@ -59,14 +59,16 @@
     </div>
 
     <div *pblNgridCellDef="'forwarding'; row as committee" class="cell-slot fill">
-        <div>
+        <div class="forwarding-wrapper">
             <div *ngIf="committee.forward_to_committees?.length">
                 <os-icon-container
                     iconTooltip="{{ 'Can forward motions to committee' | translate }}"
                     icon="arrow_right_alt"
+                    [noWrap]="true"
+                    [rotation]="270"
                 >
-                    <span *ngFor="let forwardingCommittee of committee.forward_to_committees; let last = last">
-                        {{ forwardingCommittee.name }}<span *ngIf="!last">,&nbsp;</span>
+                    <span>
+                        {{ committee.forward_to_committees.length }}
                     </span>
                 </os-icon-container>
             </div>
@@ -74,34 +76,15 @@
                 <os-icon-container
                     iconTooltip="{{ 'Can receive motions from committee' | translate }}"
                     icon="arrow_right_alt"
-                    [mirrored]="true"
+                    [rotation]="90"
+                    [noWrap]="true"
                 >
-                    <span
-                        *ngFor="
-                            let receivingCommittee of committee.receive_forwardings_from_committees;
-                            let last = last
-                        "
-                    >
-                        {{ receivingCommittee.name }}<span *ngIf="!last">,&nbsp;</span>
+                    <span>
+                        {{ committee.receive_forwardings_from_committees.length }}
                     </span>
                 </os-icon-container>
             </div>
         </div>
-    </div>
-
-    <div *pblNgridCellDef="'managers'; row as committee" class="cell-slot fill">
-        <os-icon-container
-            iconTooltip="{{ 'Committee managers' | translate }}"
-            icon="build"
-            [showIcon]="!!committee.managers?.length"
-        >
-            <div>
-                <span *ngFor="let manager of committee.managers; let last = last">
-                    <span>{{ manager?.short_name }}</span>
-                    <span *ngIf="!last">,&nbsp;</span>
-                </span>
-            </div>
-        </os-icon-container>
     </div>
 
     <div *pblNgridCellDef="'meta'; row as committee" class="cell-slot fill">

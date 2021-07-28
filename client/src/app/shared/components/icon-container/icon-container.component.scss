@@ -21,6 +21,7 @@
 os-icon-container {
     display: flex;
     align-items: center;
+    width: 100%;
 
     & + & {
         margin-top: 5px;
@@ -48,7 +49,7 @@ os-icon-container {
     }
 
     .content-node {
-        display: inline-flex;
+        display: inline-block;
         margin: auto 5px;
         text-overflow: ellipsis;
         overflow: hidden;

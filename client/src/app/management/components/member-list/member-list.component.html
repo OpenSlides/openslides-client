@@ -45,12 +45,13 @@
         </div>
     </div>
     <!-- Info column -->
-    <div *pblNgridCellDef="'info'; row as user">
+    <div *pblNgridCellDef="'info'; row as user" class="committee-wrapper">
         <div class="flex-center">
             <os-icon-container
                 icon="account_balance"
                 iconTooltip="{{ 'Committees' | translate }}"
                 [showIcon]="!!user.committee_ids?.length"
+                [noWrap]="true"
             >
                 <span *ngFor="let committee of user.committees; last as last">
                     {{ committee.name | translate }}<span *ngIf="!last">,&nbsp;</span>
