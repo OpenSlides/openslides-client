@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 
-import { Observable } from 'rxjs';
+import { combineLatest, merge, Observable } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
 
 import { ProjectionRepositoryService } from 'app/core/repositories/projector/projection-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -19,11 +20,22 @@ import { ViewProjector } from '../../models/view-projector';
 })
 export class PresentationControlComponent extends BaseComponent {
     @Input()
-    public set projector(projector: ViewProjector) {
-        this.projections = projector.current_projections_as_observable;
+    public set projectorObservable(projector$: Observable<ViewProjector | null>) {
+        const trigger$ = merge(
+            projector$,
+            projector$.pipe(mergeMap(projector => projector?.current_projections_as_observable || []))
+        );
+
+        this.projections$ = combineLatest([projector$, trigger$]).pipe(
+            map((data: [ViewProjector, any]) =>
+                (data[0]?.current_projections || []).filter(projection =>
+                    this.getMediafile(projection)?.isProjectable()
+                )
+            )
+        );
     }
 
-    public projections: Observable<ViewProjection[]> = new Observable<ViewProjection[]>();
+    public projections$: Observable<ViewProjection[]>;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,

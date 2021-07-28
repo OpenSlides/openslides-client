@@ -1,42 +1,44 @@
-<mat-expansion-panel *ngIf="(projections | async) as value">
-    <mat-expansion-panel-header>
-        <span>{{ 'Media file' | translate }}</span>
-    </mat-expansion-panel-header>
-    <div *ngFor="let projection of value">
-        <i>{{ getMediafile(projection).getTitle() }}</i>
-        <div *ngIf="getMediafile(projection).isImage()">
-            <button type="button" *ngIf="!projection.options.fullscreen" mat-icon-button (click)="fullscreen(projection)">
-                <mat-icon>check_box_outline_blank</mat-icon>
-            </button>
-            <button type="button" *ngIf="projection.options.fullscreen" mat-icon-button (click)="fullscreen(projection)">
-                <mat-icon>check_box</mat-icon>
-            </button>
-            <span>{{ 'fullscreen' | translate }}</span>
+<ng-container *ngIf="(projections$ | async) as projections">
+    <mat-expansion-panel *ngIf="projections.length">
+        <mat-expansion-panel-header>
+            <span>{{ 'Media file' | translate }}</span>
+        </mat-expansion-panel-header>
+        <div *ngFor="let projection of projections">
+            <i>{{ getMediafile(projection).getTitle() }}</i>
+            <div *ngIf="getMediafile(projection).isImage()">
+                <button type="button" *ngIf="!projection.options.fullscreen" mat-icon-button (click)="fullscreen(projection)">
+                    <mat-icon>check_box_outline_blank</mat-icon>
+                </button>
+                <button type="button" *ngIf="projection.options.fullscreen" mat-icon-button (click)="fullscreen(projection)">
+                    <mat-icon>check_box</mat-icon>
+                </button>
+                <span>{{ 'fullscreen' | translate }}</span>
+            </div>
+            <div *ngIf="getMediafile(projection).isPdf()">
+                <button type="button" mat-icon-button (click)="pdfBackward(projection)" [disabled]="getPage(projection) <= 1">
+                    <mat-icon>arrow_back</mat-icon>
+                </button>
+                <button
+                    type="button"
+                    mat-icon-button
+                    (click)="pdfForward(projection)"
+                    [disabled]="getPage(projection) >= getMediafile(projection).pages"
+                >
+                    <mat-icon>arrow_forward</mat-icon>
+                </button>
+                <!-- TODO: Use form for page number; use pdfSetPage then. Do not forget to include a range check in pdfSetPage. -->
+                <span>{{ 'Page' | translate }}</span> {{ getPage(projection) }}/{{ getMediafile(projection).pages }}
+                <br />
+                <button type="button" mat-icon-button (click)="zoom(projection, 'in')">
+                    <mat-icon>zoom_in</mat-icon>
+                </button>
+                <button type="button" mat-icon-button (click)="zoom(projection, 'reset')">
+                    <mat-icon>replay</mat-icon>
+                </button>
+                <button type="button" mat-icon-button (click)="zoom(projection, 'out')">
+                    <mat-icon>zoom_out</mat-icon>
+                </button>
+            </div>
         </div>
-        <div *ngIf="getMediafile(projection).isPdf()">
-            <button type="button" mat-icon-button (click)="pdfBackward(projection)" [disabled]="getPage(projection) <= 1">
-                <mat-icon>arrow_back</mat-icon>
-            </button>
-            <button
-                type="button"
-                mat-icon-button
-                (click)="pdfForward(projection)"
-                [disabled]="getPage(projection) >= getMediafile(projection).pages"
-            >
-                <mat-icon>arrow_forward</mat-icon>
-            </button>
-            <!-- TODO: Use form for page number; use pdfSetPage then. Do not forget to include a range check in pdfSetPage. -->
-            <span>{{ 'Page' | translate }}</span> {{ getPage(projection) }}/{{ getMediafile(projection).pages }}
-            <br />
-            <button type="button" mat-icon-button (click)="zoom(projection, 'in')">
-                <mat-icon>zoom_in</mat-icon>
-            </button>
-            <button type="button" mat-icon-button (click)="zoom(projection, 'reset')">
-                <mat-icon>replay</mat-icon>
-            </button>
-            <button type="button" mat-icon-button (click)="zoom(projection, 'out')">
-                <mat-icon>zoom_out</mat-icon>
-            </button>
-        </div>
-    </div>
-</mat-expansion-panel>
+    </mat-expansion-panel>
+</ng-container>
