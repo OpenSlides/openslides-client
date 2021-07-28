@@ -20,6 +20,14 @@ export class ViewCommittee extends BaseViewModel<Committee> {
     public get memberAmount(): number {
         return this.user_ids?.length || 0;
     }
+
+    public get hasForwardings(): boolean {
+        return this.forward_to_committee_ids.length > 0;
+    }
+
+    public get hasReceivings(): boolean {
+        return this.receive_forwardings_from_committee_ids.length > 0;
+    }
 }
 interface ICommitteeRelations {
     meetings: ViewMeeting[];
