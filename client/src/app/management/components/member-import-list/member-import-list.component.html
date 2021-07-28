@@ -45,16 +45,6 @@
         </ng-template>
     </mat-tab>
 
-    <div *pblNgridCellDef="'newEntry.group_ids'; row as entry">
-        <span *ngFor="let group of entry.newEntry.group_ids; let last = last">
-            <span>
-                <mat-icon color="accent">{{ group.id ? '' : 'add' }}</mat-icon>
-            </span>
-            <span>{{ group.name }}</span>
-            <span *ngIf="!last">,</span>
-        </span>
-    </div>
-
     <ng-container requiredFields>
         <li>
             {{
