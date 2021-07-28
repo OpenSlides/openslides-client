@@ -117,6 +117,10 @@ export class UserRepositoryService
             'default_vote_weight',
             { templateField: 'comment_$' }
         ]);
+        const committeeEditFields = shortNameFields.concat([
+            'committee_ids',
+            { templateField: 'committee_$_management_level' }
+        ]);
         const detailFields = listFields.concat(['username', 'about_me', 'comment', 'default_password']);
         const orgaListFields = listFields.concat(['committee_ids']);
         const orgaEditFields = orgaListFields.concat([
@@ -131,7 +135,8 @@ export class UserRepositoryService
             list: listFields,
             orgaList: orgaListFields,
             orgaEdit: orgaEditFields,
-            singleVotes: singleVotesFields
+            singleVotes: singleVotesFields,
+            committeeEdit: committeeEditFields
         };
     }
 

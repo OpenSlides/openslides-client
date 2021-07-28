@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
@@ -8,6 +8,7 @@ import { Observable, OperatorFunction } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { MemberService } from 'app/core/core-services/member.service';
+import { OperatorService } from 'app/core/core-services/operator.service';
 import { CML, OML } from 'app/core/core-services/organization-permission';
 import { ORGANIZATION_ID } from 'app/core/core-services/organization.service';
 import { Id } from 'app/core/definitions/key-types';
@@ -36,6 +37,8 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
     public readonly OML = OML;
     public readonly CML = CML;
 
+    private committeeId: number = null;
+
     public addCommitteeLabel = AddCommitteeLabel;
     public editCommitteeLabel = EditCommitteeLabel;
 
@@ -46,6 +49,10 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
 
     public editCommittee: ViewCommittee;
 
+    private get managerIdCtrl(): AbstractControl {
+        return this.committeeForm.get('manager_ids');
+    }
+
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private formBuilder: FormBuilder,
@@ -55,7 +62,8 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
         private colorService: ColorService,
         private meetingRepo: MeetingRepositoryService,
         private route: ActivatedRoute,
-        private location: Location
+        private location: Location,
+        private operator: OperatorService
     ) {
         super(componentServiceCollector);
         this.createForm();
@@ -71,8 +79,12 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
     }
 
     public async ngOnInit(): Promise<void> {
-        this.requestUpdates();
         await this.fetchUsers();
+        this.requestUpdates();
+
+        if (this.isCreateView) {
+            this.preselectSelfAsManager();
+        }
     }
 
     public getPipeFilterFn(): OperatorFunction<ViewCommittee[], ViewCommittee[]> {
@@ -121,8 +133,8 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
             this.isCreateView = false;
             this.subscriptions.push(
                 this.route.params.subscribe(async params => {
-                    const committeeId: number = Number(params.committeeId);
-                    this.loadCommittee(committeeId);
+                    this.committeeId = Number(params.committeeId);
+                    this.loadCommittee(this.committeeId);
                 })
             );
         }
@@ -154,6 +166,7 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
             description: [''],
             organization_tag_ids: [[]],
             user_ids: [[]],
+            manager_ids: [[]],
             forward_to_committee_ids: [[]],
             receive_forwardings_from_committee_ids: [[]]
         };
@@ -166,8 +179,19 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
         this.committeeForm = this.formBuilder.group(partialForm);
     }
 
+    private preselectSelfAsManager(): void {
+        this.managerIdCtrl.patchValue([this.operator.operatorId]);
+    }
+
     private updateForm(committee: ViewCommittee): void {
         this.committeeForm.patchValue(committee.committee);
+
+        if (this.committeeId && committee.users?.length) {
+            const committeeManagers = committee.users.filter(user => {
+                return user.committee_management_level(this.committeeId) === CML.can_manage;
+            });
+            this.managerIdCtrl.patchValue(committeeManagers.map(user => user.id));
+        }
     }
 
     private requestUpdates(): void {
@@ -189,11 +213,11 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
 
     private async fetchUsers(): Promise<void> {
         const userIds = await this.memberService.fetchAllOrgaUsers();
-        this.requestModels(
+        await this.requestModels(
             {
                 viewModelCtor: ViewUser,
                 ids: userIds,
-                fieldset: 'list'
+                fieldset: 'committeeEdit'
             },
             'loadUsers'
         );
