@@ -375,34 +375,16 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         }
     }
 
-    /**
-     * Handler for bulk setting/unsetting the 'active' attribute.
-     * Uses selectedRows defined via multiSelect mode.
-     */
-    public async setStateSelected(field: UserStateField): Promise<void> {
-        let options: [string, string];
-        let verboseStateName: string;
-        switch (field) {
-            case 'is_active':
-                options = [_('active'), _('inactive')];
-                verboseStateName = 'active';
-                break;
-            case 'is_present_in_meetings':
-                options = [_('present'), _('absent')];
-                verboseStateName = 'present';
-                break;
-            case 'is_physical_person':
-                options = [_('natural person'), _('no natural person')]; // switched order: no committee=physical person
-                verboseStateName = 'committee';
-                break;
-        }
-        const content = this.translate.instant(`Set status for selected participants:`);
+    public async changeActiveStateOfSelectedUsers(): Promise<void> {
+        await this.setStateSelected('is_active');
+    }
 
-        const selectedChoice = await this.choiceService.open(content, null, false, options);
-        if (selectedChoice) {
-            const value = selectedChoice.action === options[0];
-            this.repo.setState(field, value, ...this.selectedRows).catch(this.raiseError);
-        }
+    public async changePresentStateOfSelectedUsers(): Promise<void> {
+        await this.setStateSelected('is_present_in_meetings');
+    }
+
+    public async changePhysicalStateOfSelectedUsers(): Promise<void> {
+        await this.setStateSelected('is_physical_person');
     }
 
     /**
@@ -441,7 +423,37 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
             this.operator.hasPerms(Permission.usersCanManage) ||
             (this.allowSelfSetPresent && this.operator.operatorId === viewUser.id);
         if (isAllowed) {
-            this.repo.setPresent(viewUser, !this.isUserPresent(viewUser));
+            this.repo.setPresent(!this.isUserPresent(viewUser), viewUser);
+        }
+    }
+
+    /**
+     * Handler for bulk setting/unsetting the 'active' attribute.
+     * Uses selectedRows defined via multiSelect mode.
+     */
+    private async setStateSelected(field: UserStateField): Promise<void> {
+        let options: [string, string];
+        switch (field) {
+            case 'is_active':
+                options = [_('active'), _('inactive')];
+                break;
+            case 'is_present_in_meetings':
+                options = [_('present'), _('absent')];
+                break;
+            case 'is_physical_person':
+                options = [_('natural person'), _('no natural person')];
+                break;
+        }
+        const content = this.translate.instant(`Set status for selected participants:`);
+
+        const selectedChoice = await this.choiceService.open(content, null, false, options);
+        if (selectedChoice) {
+            const value = selectedChoice.action === options[0];
+            if (field === 'is_present_in_meetings') {
+                await this.repo.setPresent(value, ...this.selectedRows);
+            } else {
+                await this.repo.setState(field, value, ...this.selectedRows);
+            }
         }
     }
 }

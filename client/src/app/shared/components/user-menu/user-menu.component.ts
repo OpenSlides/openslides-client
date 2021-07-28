@@ -153,7 +153,7 @@ export class UserMenuComponent extends BaseModelContextComponent implements OnIn
     }
 
     public toggleUserIsPresent(): void {
-        this.userRepo.setPresent(this.user, !this.isPresent);
+        this.userRepo.setPresent(!this.isPresent, this.user);
     }
 
     public onClickNavEntry(): void {
