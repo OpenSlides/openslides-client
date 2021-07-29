@@ -58,6 +58,16 @@
             ></os-search-value-selector>
         </mat-form-field>
 
+        <mat-form-field>
+            <mat-label>{{ 'Administrators' | translate }}</mat-label>
+            <os-search-value-selector
+                formControlName="admin_ids"
+                [multiple]="true"
+                placeholder="{{ 'Administrators' | translate }}"
+                [inputListValues]="availableUsers"
+            ></os-search-value-selector>
+        </mat-form-field>
+
         <!-- server bug -->
         <!-- <mat-checkbox disabled formControlName="set_as_template">Set as template</mat-checkbox> -->
 

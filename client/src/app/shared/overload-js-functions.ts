@@ -76,7 +76,7 @@ function overloadArrayFunctions(): void {
     });
 
     Object.defineProperty(Array.prototype, 'intersect', {
-        value: function <T>(other: T[]): T[] {
+        value: function <T>(other: T[] = []): T[] {
             let a = this;
             let b = other;
             if (b.length < a.length) {
@@ -89,7 +89,7 @@ function overloadArrayFunctions(): void {
     });
 
     Object.defineProperty(Array.prototype, 'difference', {
-        value: function <T>(other: T[], symmetric: boolean = false): T[] {
+        value: function <T>(other: T[] = [], symmetric: boolean = false): T[] {
             const difference = new Set<T>(this);
             for (const entry of other) {
                 if (difference.has(entry)) {
