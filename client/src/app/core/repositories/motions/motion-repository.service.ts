@@ -103,14 +103,11 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         return this.sendBulkActionToBackend(MotionAction.CREATE, payload);
     }
 
-    public createForwarded(meetingIds: Id[], ...motions: Partial<Motion>[]): Promise<void> {
+    public createForwarded(meetingIds: Id[], ...motions: MotionAction.ForwardMotion[]): Promise<void> {
         const payload: MotionAction.CreateForwardedPayload[] = meetingIds.flatMap(id => {
             return motions.map(motion => ({
                 meeting_id: id,
-                title: motion.title,
-                text: motion.text,
-                origin_id: motion.id,
-                reason: motion.reason
+                ...motion
             }));
         });
         return this.sendBulkActionToBackend(MotionAction.CREATE_FORWARDED, payload);

@@ -19,6 +19,7 @@ import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
 import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.constants';
+import { MotionFormatService } from 'app/site/motions/services/motion-format.service';
 import { MotionServiceCollectorService } from '../../../services/motion-service-collector.service';
 import { MotionViewService } from '../../../services/motion-view.service';
 
@@ -123,6 +124,10 @@ export abstract class BaseMotionDetailChildComponent extends BaseComponent {
 
     protected get motionLineNumbering(): MotionLineNumberingService {
         return this.motionServiceCollector.motionLineNumbering;
+    }
+
+    protected get motionFormatService(): MotionFormatService {
+        return this.motionServiceCollector.motionFormatService;
     }
 
     protected get viewService(): MotionViewService {

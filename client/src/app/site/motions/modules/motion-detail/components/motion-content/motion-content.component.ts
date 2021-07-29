@@ -220,7 +220,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         } else {
             changes = Object.assign([], this.getAllTextChangingObjects());
         }
-        const formattedText = this.motionLineNumbering.formatMotion(
+        const formattedText = this.motionFormatService.formatMotion(
             this.motion,
             this.changeRecoMode,
             changes,

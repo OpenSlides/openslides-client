@@ -11,6 +11,7 @@ import { LineNumberedString, LinenumberingService } from 'app/core/ui-services/l
 import { SlideData } from 'app/core/ui-services/projector.service';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from 'app/shared/models/motions/view-unified-change';
 import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.constants';
+import { MotionFormatService } from 'app/site/motions/services/motion-format.service';
 import { IBaseScaleScrollSlideComponent } from 'app/slides/base-scale-scroll-slide-component';
 import { BaseMotionSlideComponent } from '../motion-base/base-motion-slide';
 import { ChangeRecommendationUnifiedChange } from './change-recommendation-unified-change';
@@ -115,6 +116,7 @@ export class MotionSlideComponent
         translate: TranslateService,
         motionRepo: MotionRepositoryService,
         private motionLineNumbering: MotionLineNumberingService,
+        private motionFormatService: MotionFormatService,
         private changeRepo: MotionChangeRecommendationRepositoryService,
         private lineNumbering: LinenumberingService,
         private diff: DiffService
@@ -231,7 +233,7 @@ export class MotionSlideComponent
 
     private recalcMotionText(): void {
         const changes = this.crMode === ChangeRecoMode.Original ? [] : this.getAllTextChangingObjects();
-        this.formattedMotionTextPlain = this.motionLineNumbering.formatMotion(
+        this.formattedMotionTextPlain = this.motionFormatService.formatMotion(
             this.data.data,
             this.crMode,
             changes,

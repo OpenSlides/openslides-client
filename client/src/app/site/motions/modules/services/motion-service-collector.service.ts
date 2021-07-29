@@ -10,6 +10,7 @@ import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/m
 import { MotionService } from 'app/core/repositories/motions/motion.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
+import { MotionFormatService } from '../../services/motion-format.service';
 import { MotionViewService } from './motion-view.service';
 
 @Injectable({
@@ -27,6 +28,7 @@ export class MotionServiceCollectorService {
         public tagRepo: TagRepositoryService,
         public motionService: MotionService,
         public motionLineNumbering: MotionLineNumberingService,
-        public motionViewService: MotionViewService
+        public motionViewService: MotionViewService,
+        public motionFormatService: MotionFormatService
     ) {}
 }

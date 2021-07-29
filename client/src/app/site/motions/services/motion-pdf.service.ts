@@ -7,16 +7,16 @@ import { PdfDocumentService } from 'app/core/pdf-services/pdf-document.service';
 import { MotionChangeRecommendationRepositoryService } from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
 import { MotionLineNumberingService } from 'app/core/repositories/motions/motion-line-numbering.service';
-import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { MotionStatuteParagraphRepositoryService } from 'app/core/repositories/motions/motion-statute-paragraph-repository.service';
 import { MotionService } from 'app/core/repositories/motions/motion.service';
 import { LinenumberingService } from 'app/core/ui-services/linenumbering.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
-import { ViewUnifiedChange, ViewUnifiedChangeType } from 'app/shared/models/motions/view-unified-change';
+import { ViewUnifiedChangeType } from 'app/shared/models/motions/view-unified-change';
 import { ParsePollNumberPipe } from 'app/shared/pipes/parse-poll-number.pipe';
 import { PollKeyVerbosePipe } from 'app/shared/pipes/poll-key-verbose.pipe';
 import { getRecommendationTypeName } from 'app/shared/utils/recommendation-type-names';
 import { MotionExportInfo } from './motion-export.service';
+import { MotionFormatService } from './motion-format.service';
 import { MotionPollService } from './motion-poll.service';
 import { ChangeRecoMode, InfoToExport, LineNumberingMode, PERSONAL_NOTE_ID } from '../motions.constants';
 import { ViewMotion } from '../models/view-motion';
@@ -45,7 +45,6 @@ export class MotionPdfService {
 
     public constructor(
         private translate: TranslateService,
-        private motionRepo: MotionRepositoryService,
         private motionService: MotionService,
         private motionLineNumbering: MotionLineNumberingService,
         private statuteRepo: MotionStatuteParagraphRepositoryService,
@@ -57,7 +56,8 @@ export class MotionPdfService {
         private commentRepo: MotionCommentSectionRepositoryService,
         private pollKeyVerbose: PollKeyVerbosePipe,
         private parsePollNumber: ParsePollNumberPipe,
-        private motionPollService: MotionPollService
+        private motionPollService: MotionPollService,
+        private motionFormatService: MotionFormatService
     ) {}
 
     /**
@@ -156,7 +156,7 @@ export class MotionPdfService {
      */
     private createTitle(motion: ViewMotion, crMode: ChangeRecoMode, lineLength: number): object {
         // summary of change recommendations (for motion diff version only)
-        const changes = this.getUnifiedChanges(motion, lineLength);
+        const changes = this.motionFormatService.getUnifiedChanges(motion, lineLength);
         const titleChange = changes.find(change => change?.isTitleChange());
         const changedTitle = this.changeRecoRepo.getTitleWithChanges(motion.title, titleChange, crMode);
 
@@ -415,7 +415,7 @@ export class MotionPdfService {
         }
 
         // summary of change recommendations (for motion diff version only)
-        const changes = this.getUnifiedChanges(motion, lineLength);
+        const changes = this.motionFormatService.getUnifiedChanges(motion, lineLength);
 
         if (crMode === ChangeRecoMode.Diff && changes.length > 0) {
             const columnLineNumbers = [];
@@ -594,7 +594,7 @@ export class MotionPdfService {
         } else {
             // lead motion or normal amendments
 
-            const changes = this.getUnifiedChanges(motion, lineLength);
+            const changes = this.motionFormatService.getUnifiedChanges(motion, lineLength);
             const textChanges = changes.filter(change => !change.isTitleChange());
             const titleChange = changes.find(change => change.isTitleChange());
 
@@ -607,41 +607,12 @@ export class MotionPdfService {
                     changedTitle +
                     '</span><br>';
             }
-            const formattedText = this.motionLineNumbering.formatMotion(motion, crMode, textChanges, lineLength);
+            const formattedText = this.motionFormatService.formatMotion(motion, crMode, textChanges, lineLength);
             // reformat motion text to split long HTML elements to easier convert into PDF
             motionText += this.linenumberingService.splitInlineElementsAtLineBreaks(formattedText);
         }
 
         return this.htmlToPdfService.convertHtml(motionText, lnMode);
-    }
-
-    /**
-     * changes need to be sorted, by "line from".
-     * otherwise, formatMotion will make unexpected results by messing up the
-     * order of changes applied to the motion
-     *
-     * TODO: Cleanup, everything change reco and amendment based needs a unified structure.
-     *
-     * @param motion
-     * @param lineLength
-     * @returns
-     */
-    private getUnifiedChanges(motion: ViewMotion, lineLength: number): ViewUnifiedChange[] {
-        const motionChangeRecos = this.changeRecoRepo.getChangeRecoOfMotion(motion.id);
-
-        const motionAmendments: any[] = this.motionRepo
-            .getAmendmentsByMotionInstantly(motion.id)
-            .flatMap((amendment: ViewMotion) => {
-                const changeRecos = this.changeRecoRepo
-                    .getChangeRecoOfMotion(amendment.id)
-                    .filter(reco => reco.showInFinalView());
-                return this.motionLineNumbering.getAmendmentAmendedParagraphs(amendment, lineLength, changeRecos);
-            });
-
-        return motionChangeRecos
-            .concat(motionAmendments)
-            .filter(change => !!change)
-            .sort((a, b) => a.getLineFrom() - b.getLineFrom()) as ViewUnifiedChange[];
     }
 
     /**

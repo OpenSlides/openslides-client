@@ -2,10 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
 
-import { MotionChangeRecommendationRepositoryService } from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
-import { MotionLineNumberingService } from 'app/core/repositories/motions/motion-line-numbering.service';
-import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { MotionService } from 'app/core/repositories/motions/motion.service';
 import {
     CsvColumnDefinitionMap,
@@ -14,10 +11,10 @@ import {
 } from 'app/core/ui-services/csv-export.service';
 import { LinenumberingService } from 'app/core/ui-services/linenumbering.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
-import { ViewUnifiedChange } from 'app/shared/models/motions/view-unified-change';
 import { reconvertChars } from 'app/shared/utils/reconvert-chars';
 import { stripHtmlTags } from 'app/shared/utils/strip-html-tags';
 import { MotionCsvExportExample } from '../export/motion-csv-export-example';
+import { MotionFormatService } from './motion-format.service';
 import { ChangeRecoMode, getMotionExportHeadersAndVerboseNames, sortMotionPropertyList } from '../motions.constants';
 import { ViewMotion } from '../models/view-motion';
 
@@ -45,10 +42,8 @@ export class MotionCsvExportService {
         private translate: TranslateService,
         private meetingSettingsService: MeetingSettingsService,
         private linenumberingService: LinenumberingService,
-        private changeRecoRepo: MotionChangeRecommendationRepositoryService,
-        private motionRepo: MotionRepositoryService,
         private motionService: MotionService,
-        private motionLineNumbering: MotionLineNumberingService,
+        private motionFormatService: MotionFormatService,
         private commentRepo: MotionCommentSectionRepositoryService
     ) {}
 
@@ -62,36 +57,10 @@ export class MotionCsvExportService {
     private createText(motion: ViewMotion, crMode: ChangeRecoMode): string {
         // get the line length from the config
         const lineLength = this.meetingSettingsService.instant('motions_line_length');
-
-        // lead motion or normal amendments
-        // TODO: Consider title change recommendation
-        const changes: ViewUnifiedChange[] = Object.assign([], this.changeRecoRepo.getChangeRecoOfMotion(motion.id));
-
-        // TODO: Cleanup, everything change reco and amendment based needs a unified structure.
-        const amendments = this.motionRepo.getAmendmentsByMotionInstantly(motion.id);
-        if (amendments) {
-            for (const amendment of amendments) {
-                const changeRecos = this.changeRecoRepo
-                    .getChangeRecoOfMotion(amendment.id)
-                    .filter(reco => reco.showInFinalView());
-                const changedParagraphs = this.motionLineNumbering.getAmendmentAmendedParagraphs(
-                    amendment,
-                    lineLength,
-                    changeRecos
-                );
-                for (const change of changedParagraphs) {
-                    changes.push(change as ViewUnifiedChange);
-                }
-            }
-        }
-
-        // changes need to be sorted, by "line from".
-        // otherwise, formatMotion will make unexpected results by messing up the
-        // order of changes applied to the motion
-        changes.sort((a, b) => a.getLineFrom() - b.getLineFrom());
-        const text = this.motionLineNumbering.formatMotion(motion, crMode, changes, lineLength);
-
-        return this.linenumberingService.stripLineNumbers(text);
+        const changes = this.motionFormatService.getUnifiedChanges(motion, lineLength);
+        const text = this.motionFormatService.formatMotion(motion, crMode, changes, lineLength);
+        const strippedLines = this.linenumberingService.stripLineNumbers(text);
+        return strippedLines;
     }
 
     /**
