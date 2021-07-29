@@ -217,12 +217,29 @@
     </mat-basic-chip>
 </div>
 
-<!-- Origin - display only -->
-<div *ngIf="motion?.origin">
+<!-- Origins - display only -->
+<div *ngIf="motion?.all_origins?.length">
     <h4>{{ 'Origin' | translate }}</h4>
-    <a [routerLink]="motion.origin.getDetailStateURL()">
-        {{ motion.origin.meeting?.name }}
-    </a>
+    <div class="origin-view">
+        <ng-container *ngFor="let origin of getOriginMotions(); let last = last">
+            <div>
+                <ng-container *ngTemplateOutlet="meetingLink; context: { motion: origin }"></ng-container>
+            </div>
+            <div class="flex-center">
+                <mat-icon *ngIf="!last">north</mat-icon>
+            </div>
+        </ng-container>
+    </div>
+</div>
+
+<!-- Forwardings - display only -->
+<div *ngIf="motion?.derived_motions?.length">
+    <h4>{{ 'Forwarding' | translate }}</h4>
+    <div>
+        <div *ngFor="let derived of motion.derived_motions; let last = last">
+            <ng-container *ngTemplateOutlet="meetingLink; context: { motion: derived }"></ng-container>
+        </div>
+    </div>
 </div>
 
 <!-- Amendments -->
@@ -242,3 +259,12 @@
 
 <!-- motion polls -->
 <os-motion-manage-polls [motion]="motion"></os-motion-manage-polls>
+
+<ng-template let-motion="motion" #meetingLink>
+    <a *ngIf="motion.meeting?.canAccess()" [routerLink]="motion.getDetailStateURL()">
+        {{ motion.meeting?.name }}
+    </a>
+    <div *ngIf="!motion.meeting?.canAccess()">
+        {{ motion.meeting?.name }}
+    </div>
+</ng-template>
