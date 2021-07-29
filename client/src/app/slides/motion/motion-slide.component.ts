@@ -336,6 +336,10 @@ export class MotionSlideComponent
      */
     public getAmendedParagraphs(): DiffLinesInParagraph[] {
         const motion = this.data.data;
+        if (!motion.amendment_paragraphs) {
+            return [];
+        }
+
         const baseHtml = this.lineNumbering.insertLineNumbers(motion.lead_motion?.text, this.lineLength);
         const baseParagraphs = this.lineNumbering.splitToParagraphs(baseHtml);
 

@@ -209,6 +209,7 @@ export class SlideContainerComponent extends BaseComponent {
     private setDataForComponent(): void {
         if (this.slideRef && this.slideRef.instance) {
             this.slideRef.instance.data = this.slideData;
+            this.slideRef.changeDetectorRef.detectChanges();
         }
     }
 

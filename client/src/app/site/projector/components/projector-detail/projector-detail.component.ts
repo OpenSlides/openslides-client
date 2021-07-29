@@ -1,14 +1,14 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 
-import { timer } from 'rxjs';
+import { Observable } from 'rxjs';
+import { map, mergeMap, switchMap } from 'rxjs/operators';
 
 import { ScrollScaleDirection } from 'app/core/actions/projector-action';
 import { ProjectorMessageAction } from 'app/core/actions/projector-message-action';
 import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
-import { OpenSlidesStatusService } from 'app/core/core-services/openslides-status.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
@@ -40,14 +40,15 @@ import { ViewProjector } from '../../models/view-projector';
 @Component({
     selector: 'os-projector-detail',
     templateUrl: './projector-detail.component.html',
-    styleUrls: ['./projector-detail.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: ['./projector-detail.component.scss']
 })
 export class ProjectorDetailComponent extends BaseModelContextComponent implements OnInit {
     /**
      * The projector to show.
      */
     public projector: ViewProjector;
+
+    public projectorObservable: Observable<ViewProjector>;
 
     public scrollScaleDirection = ScrollScaleDirection;
 
@@ -90,12 +91,10 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
         private currentListOfSpeakersSlideService: CurrentListOfSpeakersSlideService,
         private currentSpeakerChyronService: CurrentSpeakerChyronSlideService,
         private durationService: DurationService,
-        private cd: ChangeDetectorRef,
         private promptService: PromptService,
         private operator: OperatorService,
         private activeMeetingService: ActiveMeetingService,
-        private meetingRepo: MeetingRepositoryService,
-        private openslidesStatus: OpenSlidesStatusService
+        private meetingRepo: MeetingRepositoryService
     ) {
         super(componentServiceCollector);
 
@@ -112,31 +111,43 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
      * Gets the projector and subscribes to it.
      */
     public ngOnInit(): void {
-        this.route.params.subscribe(params => {
-            const projectorId = parseInt(params.id, 10) || 1;
+        const projectorId$ = this.route.params.pipe(map(params => parseInt(params.id, 10) || 1));
+        this.projectorObservable = projectorId$.pipe(
+            switchMap(projectorId => this.projectorRepo.getViewModelObservable(projectorId))
+        );
 
-            this.requestModels({
-                viewModelCtor: ViewProjector,
-                ids: [projectorId],
-                follow: [
-                    {
-                        idField: 'history_projection_ids',
-                        follow: [{ idField: 'content_object_id' }]
-                    },
-                    PROJECTOR_CONTENT_FOLLOW
-                ]
-            });
-
-            this.subscriptions.push(
-                this.projectorRepo.getViewModelObservable(projectorId).subscribe(projector => {
-                    if (projector) {
-                        const title = projector.name;
-                        super.setTitle(title);
-                        this.projector = projector;
-                    }
-                })
-            );
-        });
+        this.subscriptions.push(
+            projectorId$
+                .pipe(
+                    mergeMap(projectorId => {
+                        return this.requestModels({
+                            viewModelCtor: ViewProjector,
+                            ids: [projectorId],
+                            follow: [
+                                {
+                                    idField: 'history_projection_ids',
+                                    follow: [
+                                        {
+                                            idField: 'content_object_id',
+                                            follow: [{ idField: 'content_object_id' }]
+                                            // e.g. list of speakers: For the title, we need the LOS's content object
+                                        }
+                                    ]
+                                },
+                                PROJECTOR_CONTENT_FOLLOW
+                            ]
+                        });
+                    })
+                )
+                .subscribe(),
+            this.projectorObservable.subscribe(projector => {
+                if (projector) {
+                    const title = projector.name;
+                    super.setTitle(title);
+                    this.projector = projector;
+                }
+            })
+        );
 
         this.requestModels(
             {
@@ -146,20 +157,12 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
             },
             'messages and countdowns'
         );
-
-        this.installUpdater();
     }
 
     public editProjector(): void {
-        const dialogRef = this.dialog.open(ProjectorEditDialogComponent, {
+        this.dialog.open(ProjectorEditDialogComponent, {
             data: this.projector,
             ...largeDialogSettings
-        });
-
-        dialogRef.afterClosed().subscribe(event => {
-            if (event) {
-                this.cd.detectChanges();
-            }
         });
     }
 
@@ -296,10 +299,5 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
                 this.messageRepo.create(message);
             }
         });
-    }
-
-    private async installUpdater(): Promise<void> {
-        await this.openslidesStatus.stable;
-        this.subscriptions.push(timer(0, 500).subscribe(() => this.cd.detectChanges()));
     }
 }

@@ -99,6 +99,9 @@ export class RelationManagerService {
             const foreignRepo = this.collectionMapper.getRepository(relation.foreignViewModel);
             return foreignRepo.getModifiedIdsObservable().pipe(
                 map(modifiedIds => {
+                    if (!model[relation.ownIdField]) {
+                        return true;
+                    }
                     if (relation.many) {
                         return model[relation.ownIdField].intersect(modifiedIds).length > 0;
                     } else {
