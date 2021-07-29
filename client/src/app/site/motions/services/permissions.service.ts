@@ -159,12 +159,6 @@ export class PermissionsService {
                     (!motion.lead_motion_id || (motion.lead_motion_id && this.amendmentOfAmendment))
                 );
             }
-            case 'can_manage_metadata': {
-                return (
-                    this.operator.hasPerms(Permission.motionsCanManage) &&
-                    this.operator.hasPerms(Permission.motionsCanManageMetadata)
-                );
-            }
             case 'can_manage_config': {
                 return this.operator.hasPerms(Permission.meetingCanManageSettings);
             }

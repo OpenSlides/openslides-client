@@ -28,6 +28,20 @@ import {
 } from '../motion-change-recommendation-dialog/motion-change-recommendation-dialog.component';
 import { MotionServiceCollectorService } from '../../../services/motion-service-collector.service';
 
+/**
+ * fields that are required for the motion form but are not part of any motion payload
+ */
+interface MotionFormFields extends MotionAction.CreatePayload {
+    // from update payload
+    modified_final_version: string;
+    // apparently from no payload
+    statute_amendment: string;
+    statute_paragraph_id: string;
+    parent_id: string;
+}
+
+type MotionFormControlsConfig = { [key in keyof Partial<MotionFormFields>]: any };
+
 @Component({
     selector: 'os-motion-content',
     templateUrl: './motion-content.component.html',
@@ -383,32 +397,30 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
      * Creates the forms for the Motion and the MotionVersion
      */
     private createForm(): FormGroup {
-        const reason: any[] = [''];
-        if (this.reasonRequired) {
-            reason.push(Validators.required);
-        }
-        return this.fb.group({
-            number: [''],
+        const motionFormControls: MotionFormControlsConfig = {
             title: ['', Validators.required],
             text: ['', this.isParagraphBasedAmendment ? null : Validators.required],
-            reason: reason,
+            reason: ['', this.reasonRequired ? null : Validators.required],
             category_id: [],
             attachment_ids: [[]],
-            agenda_create: [''],
             agenda_parent_id: [],
-            agenda_type: [''],
             submitter_ids: [[]],
             supporter_ids: [[]],
             workflow_id: [],
             tag_ids: [[]],
-            selected_paragraphs: [],
-            broken_paragraphs: [],
             statute_amendment: [''], // Internal value for the checkbox, not saved to the model
             statute_paragraph_id: [],
             block_id: [],
             parent_id: [],
-            modified_final_version: ['']
-        });
+            modified_final_version: [''],
+            ...(this.perms.isAllowed('change_metadata') && {
+                number: [''],
+                agenda_create: [''],
+                agenda_type: ['']
+            })
+        };
+
+        return this.fb.group(motionFormControls);
     }
 
     private getWorkflowIdForCreateFormByParagraph(paragraph?: number): number {
