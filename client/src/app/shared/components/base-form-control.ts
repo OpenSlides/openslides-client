@@ -42,7 +42,7 @@ export abstract class BaseFormControlComponent<T>
     }
 
     public get value(): T | null {
-        return this.contentForm.value || null;
+        return this.contentForm.value;
     }
 
     @Input()
