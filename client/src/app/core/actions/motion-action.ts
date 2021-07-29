@@ -61,12 +61,14 @@ export namespace MotionAction {
 
     export interface DeletePayload extends Identifiable {}
 
-    export interface CreateForwardedPayload extends HasMeetingId {
+    export interface ForwardMotion {
         title: string;
         text: UnsafeHtml;
         origin_id: Id;
         reason?: UnsafeHtml;
     }
+
+    export interface CreateForwardedPayload extends HasMeetingId, ForwardMotion {}
 
     export interface SetRecommendationPayload extends Identifiable {
         recommendation_id: Id;

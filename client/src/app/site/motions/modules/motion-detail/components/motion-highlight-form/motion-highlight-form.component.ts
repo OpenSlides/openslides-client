@@ -157,7 +157,7 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
         const changes: ViewUnifiedChange[] = this.getAllChangingObjectsSorted().filter(changingObject =>
             changingObject.showInFinalView()
         );
-        let finalVersion = this.motionLineNumbering.formatMotion(
+        let finalVersion = this.motionFormatService.formatMotion(
             this.motion,
             ChangeRecoMode.Final,
             changes,

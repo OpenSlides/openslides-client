@@ -10,6 +10,7 @@ import { Id } from 'app/core/definitions/key-types';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { MotionForwardDialogComponent } from 'app/site/motions/modules/motion-detail/components/motion-forward-dialog/motion-forward-dialog.component';
+import { MotionFormatService } from 'app/site/motions/services/motion-format.service';
 import { MotionRepositoryService } from './motion-repository.service';
 
 @Injectable({
@@ -20,7 +21,8 @@ export class MotionService {
         private translate: TranslateService,
         private repo: MotionRepositoryService,
         private dialog: MatDialog,
-        private snackbar: MatSnackBar
+        private snackbar: MatSnackBar,
+        private motionFormatService: MotionFormatService
     ) {}
 
     public async forwardMotionsToMeetings(...motions: ViewMotion[]): Promise<void> {
@@ -30,7 +32,8 @@ export class MotionService {
         const toMeetingId = (await dialogRef.afterClosed().toPromise()) as Id;
         if (toMeetingId) {
             try {
-                await this.repo.createForwarded([toMeetingId], ...motions);
+                const forwardMotions = motions.map(motion => this.motionFormatService.formatMotionForForward(motion));
+                await this.repo.createForwarded([toMeetingId], ...forwardMotions);
                 const verboseName = motions.length === 1 ? 'motion' : 'motions';
                 const message = `${motions.length} ${this.translate.instant(`${verboseName} successfully forwarded`)}`;
                 this.snackbar.open(message, 'Ok');

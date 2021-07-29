@@ -5,8 +5,7 @@ import { Subscription } from 'rxjs';
 
 import { DiffLinesInParagraph, DiffService } from 'app/core/ui-services/diff.service';
 import { LineNumberedString, LinenumberingService, LineNumberRange } from 'app/core/ui-services/linenumbering.service';
-import { MotionFormattingRepresentation } from 'app/shared/models/motions/motion';
-import { ViewUnifiedChange, ViewUnifiedChangeType } from 'app/shared/models/motions/view-unified-change';
+import { ViewUnifiedChange } from 'app/shared/models/motions/view-unified-change';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionAmendedParagraph } from 'app/site/motions/models/view-motion-amended-paragraph';
 import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
@@ -37,12 +36,6 @@ export interface ParagraphToChoose {
      * The last line number
      */
     lineTo: number;
-}
-
-interface DifferedViewArguments {
-    changes: ViewUnifiedChange[];
-    lineLength: number;
-    highlightedLine?: number;
 }
 
 @Injectable({
@@ -101,115 +94,6 @@ export class MotionLineNumberingService {
             }
         }
     }
-
-    /**
-     * Format the motion text using the line numbering and change
-     * reco algorithm.
-     *
-     * Can be called from detail view and exporter
-     * @param targetMotion The motion representation
-     * @param crMode indicator for the change reco mode
-     * @param changes all change recommendations and amendments, sorted by line number
-     * @param lineLength the current line
-     * @param highlightedLine the currently highlighted line (default: none)
-     */
-    public formatMotion(
-        targetMotion: MotionFormattingRepresentation,
-        crMode: ChangeRecoMode,
-        changes: ViewUnifiedChange[],
-        lineLength: number = 80,
-        highlightedLine?: number
-    ): string | null {
-        if (!targetMotion?.text) {
-            return null;
-        }
-
-        const fn = {
-            [ChangeRecoMode.Original]: this.getOriginalView,
-            [ChangeRecoMode.Changed]: this.getChangedView,
-            [ChangeRecoMode.Diff]: this.getDiffView,
-            [ChangeRecoMode.Final]: this.getFinalView,
-            [ChangeRecoMode.ModifiedFinal]: this.getModifiedFinalView
-        }[crMode];
-
-        if (!fn) {
-            throw new Error(`unrecognized ChangeRecoMode option (${crMode})`);
-        }
-
-        return fn(targetMotion, { changes, lineLength, highlightedLine });
-    }
-
-    private getOriginalView = (targetMotion: MotionFormattingRepresentation, args: DifferedViewArguments): string => {
-        const { lineLength, highlightedLine }: DifferedViewArguments = args;
-        return this.lineNumberingService.insertLineNumbers(targetMotion.text, lineLength, highlightedLine);
-    };
-
-    private getChangedView = (targetMotion: MotionFormattingRepresentation, args: DifferedViewArguments): string => {
-        const { changes, lineLength, highlightedLine }: DifferedViewArguments = args;
-        const filteredChangeRecommendations = changes.filter(
-            change => change.getChangeType() === ViewUnifiedChangeType.TYPE_CHANGE_RECOMMENDATION
-        );
-        return this.diffService.getTextWithChanges(
-            targetMotion.text,
-            filteredChangeRecommendations,
-            lineLength,
-            highlightedLine
-        );
-    };
-
-    private getDiffView = (targetMotion: MotionFormattingRepresentation, args: DifferedViewArguments): string => {
-        const { changes, lineLength, highlightedLine }: DifferedViewArguments = args;
-        const text = [];
-        const changesToShow = changes.filter(change => change.showInDiffView());
-        const motionText = this.lineNumberingService.insertLineNumbers(targetMotion.text, lineLength);
-
-        for (let i = 0; i < changesToShow.length; i++) {
-            text.push(
-                this.diffService.extractMotionLineRange(
-                    motionText,
-                    {
-                        from: i === 0 ? 1 : changesToShow[i - 1].getLineTo(),
-                        to: changesToShow[i].getLineFrom()
-                    },
-                    true,
-                    lineLength,
-                    highlightedLine
-                )
-            );
-
-            text.push(this.diffService.getChangeDiff(motionText, changesToShow[i], lineLength, highlightedLine));
-        }
-
-        text.push(
-            this.diffService.getTextRemainderAfterLastChange(motionText, changesToShow, lineLength, highlightedLine)
-        );
-        return text.join('');
-    };
-
-    private getFinalView = (targetMotion: MotionFormattingRepresentation, args: DifferedViewArguments): string => {
-        const { changes, lineLength, highlightedLine }: DifferedViewArguments = args;
-        const appliedChanges: ViewUnifiedChange[] = changes.filter(change => change.showInFinalView());
-        return this.diffService.getTextWithChanges(targetMotion.text, appliedChanges, lineLength, highlightedLine);
-    };
-
-    private getModifiedFinalView = (
-        targetMotion: MotionFormattingRepresentation,
-        args: DifferedViewArguments
-    ): string => {
-        const { changes, lineLength, highlightedLine }: DifferedViewArguments = args;
-        if (targetMotion.modified_final_version) {
-            return this.lineNumberingService.insertLineNumbers(
-                targetMotion.modified_final_version,
-                lineLength,
-                highlightedLine,
-                null,
-                1
-            );
-        } else {
-            // Use the final version as fallback, if the modified does not exist.
-            return this.formatMotion(targetMotion, ChangeRecoMode.Final, changes, lineLength, highlightedLine);
-        }
-    };
 
     public formatStatuteAmendment(
         paragraphs: ViewMotionStatuteParagraph[],
