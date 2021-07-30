@@ -2,6 +2,8 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+
 import { MotionChangeRecommendationRepositoryService } from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { LineRange, ModificationType } from 'app/core/ui-services/diff.service';
@@ -56,15 +58,15 @@ export class MotionChangeRecommendationDialogComponent extends BaseChangeRecomme
     public replacementTypes = [
         {
             value: ModificationType.TYPE_REPLACEMENT,
-            title: this.translate.instant('Replacement')
+            title: _('Replacement')
         },
         {
             value: ModificationType.TYPE_INSERTION,
-            title: this.translate.instant('Insertion')
+            title: _('Insertion')
         },
         {
             value: ModificationType.TYPE_DELETION,
-            title: this.translate.instant('Deletion')
+            title: _('Deletion')
         }
     ];
 

@@ -24,6 +24,9 @@ msgstr ""
 msgid "A client error occurred. Please contact your system administrator."
 msgstr ""
 
+msgid "A conference is already running in your OpenSlides session."
+msgstr ""
+
 msgid "A file with this title or filename already exists in this directory."
 msgstr ""
 
@@ -172,6 +175,9 @@ msgstr ""
 msgid "Allow users to set themselves as present"
 msgstr ""
 
+msgid "Allow verbose error messages for reset password process"
+msgstr ""
+
 msgid "Allowed access groups for this directory"
 msgstr ""
 
@@ -212,6 +218,18 @@ msgid "Anonymizing can only be done after finishing a poll."
 msgstr ""
 
 msgid "Anonymous"
+msgstr ""
+
+msgid "Applause"
+msgstr ""
+
+msgid "Applause interval in seconds"
+msgstr ""
+
+msgid "Applause particle image URL"
+msgstr ""
+
+msgid "Applause visualization"
 msgstr ""
 
 msgid "Apply"
@@ -304,6 +322,9 @@ msgstr ""
 msgid "Can create motions"
 msgstr ""
 
+msgid "Can forward motions"
+msgstr ""
+
 msgid "Can forward motions to committee"
 msgstr ""
 
@@ -359,6 +380,9 @@ msgid "Can nominate oneself"
 msgstr ""
 
 msgid "Can put oneself on the list of speakers"
+msgstr ""
+
+msgid "Can receive motions"
 msgstr ""
 
 msgid "Can receive motions from committee"
@@ -434,6 +458,12 @@ msgid "Cannot create PDF files on this browser."
 msgstr ""
 
 msgid "Cannot do that in demo mode!"
+msgstr ""
+
+msgid "Cannot forward motions"
+msgstr ""
+
+msgid "Cannot receive motions"
 msgstr ""
 
 msgid "Categories"
@@ -568,6 +598,9 @@ msgstr ""
 msgid "Complex Workflow"
 msgstr ""
 
+msgid "Conference room"
+msgstr ""
+
 msgid "Confirm new password"
 msgstr ""
 
@@ -578,6 +611,9 @@ msgid "Connect all users to live conference automatically."
 msgstr ""
 
 msgid "Content"
+msgstr ""
+
+msgid "Continue livestream"
 msgstr ""
 
 msgid "Contra speech"
@@ -733,6 +769,17 @@ msgstr ""
 msgid "Default voting type"
 msgstr ""
 
+msgid ""
+"Defines the maximum deflection. Entering zero will use the amount of "
+"present participants instead."
+msgstr ""
+
+msgid "Defines the minimum deflection which is required to recognize applause."
+msgstr ""
+
+msgid "Defines the time in which applause amounts are add up."
+msgstr ""
+
 msgid "Delegates"
 msgstr ""
 
@@ -755,6 +802,9 @@ msgid "Delete whole history"
 msgstr ""
 
 msgid "Deleted user"
+msgstr ""
+
+msgid "Deletion"
 msgstr ""
 
 msgid "Delivering vote... Please wait!"
@@ -809,6 +859,9 @@ msgid "Download CSV example file"
 msgstr ""
 
 msgid "Download folder"
+msgstr ""
+
+msgid "Downloading ..."
 msgstr ""
 
 msgid "Drop files into this area OR click here to select files"
@@ -918,6 +971,12 @@ msgstr ""
 msgid "Enable star icon to mark speaker (e.g. for contribution)"
 msgstr ""
 
+msgid "Enable virtual applause"
+msgstr ""
+
+msgid "Enable virtual help desk room"
+msgstr ""
+
 msgid "Enable/disable account ..."
 msgstr ""
 
@@ -933,13 +992,10 @@ msgstr ""
 msgid "Enforce page breaks"
 msgstr ""
 
-msgid "Enter conference"
+msgid "Enter conference room"
 msgstr ""
 
 msgid "Enter duration in seconds. Choose 0 to disable warning color."
-msgstr ""
-
-msgid "Enter live conference"
 msgstr ""
 
 msgid ""
@@ -988,10 +1044,7 @@ msgstr ""
 msgid "Exit"
 msgstr ""
 
-msgid "Exit conference"
-msgstr ""
-
-msgid "Exit live conference and continue livestream"
+msgid "Exit conference room"
 msgstr ""
 
 msgid "Expand all"
@@ -1069,6 +1122,9 @@ msgstr ""
 msgid "Forward"
 msgstr ""
 
+msgid "Forward motions"
+msgstr ""
+
 msgid "Forward motions to"
 msgstr ""
 
@@ -1105,6 +1161,9 @@ msgstr ""
 msgid "Generate password"
 msgstr ""
 
+msgid "Give applause"
+msgstr ""
+
 msgid "Given name"
 msgstr ""
 
@@ -1124,9 +1183,6 @@ msgid "Groups with write permissions"
 msgstr ""
 
 msgid "Guest"
-msgstr ""
-
-msgid "Hang up"
 msgstr ""
 
 msgid "Has amendments"
@@ -1156,6 +1212,9 @@ msgstr ""
 msgid "Headline color"
 msgstr ""
 
+msgid "Help desk"
+msgstr ""
+
 msgid "Help text for access data and welcome PDF"
 msgstr ""
 
@@ -1166,6 +1225,9 @@ msgid "Hide more text"
 msgstr ""
 
 msgid "Hide password"
+msgstr ""
+
+msgid "Highest applause amount"
 msgstr ""
 
 msgid "Hint on voting"
@@ -1233,6 +1295,9 @@ msgstr ""
 msgid "Insert topics here"
 msgstr ""
 
+msgid "Insertion"
+msgstr ""
+
 msgid "Installed plugins"
 msgstr ""
 
@@ -1281,6 +1346,15 @@ msgstr ""
 msgid "Item number"
 msgstr ""
 
+msgid "Jitsi domain"
+msgstr ""
+
+msgid "Jitsi room name"
+msgstr ""
+
+msgid "Jitsi room password"
+msgstr ""
+
 msgid "Keep each item in a single line."
 msgstr ""
 
@@ -1309,6 +1383,9 @@ msgid "Left"
 msgstr ""
 
 msgid "Legal notice"
+msgstr ""
+
+msgid "Level indicator"
 msgstr ""
 
 msgid "License"
@@ -1341,13 +1418,7 @@ msgstr ""
 msgid "List view"
 msgstr ""
 
-msgid "Live conference"
-msgstr ""
-
 msgid "Live conference has to be active. Choose 0 to disable auto connect."
-msgstr ""
-
-msgid "Livestream"
 msgstr ""
 
 msgid "Livestream URL"
@@ -1366,6 +1437,9 @@ msgid "Login as guest"
 msgstr ""
 
 msgid "Logout"
+msgstr ""
+
+msgid "Lowest applause amount"
 msgstr ""
 
 msgid "Main motion and line number"
@@ -1446,6 +1520,9 @@ msgstr ""
 msgid "Motion deleted"
 msgstr ""
 
+msgid "Motion forwarded to"
+msgstr ""
+
 msgid "Motion forwarding"
 msgstr ""
 
@@ -1480,9 +1557,6 @@ msgid "Move to agenda item"
 msgstr ""
 
 msgid "Multiselect"
-msgstr ""
-
-msgid "Mute / Unmute"
 msgstr ""
 
 msgid "My account"
@@ -1596,6 +1670,9 @@ msgstr ""
 msgid "No comment"
 msgstr ""
 
+msgid "No committee"
+msgstr ""
+
 msgid "No concernment"
 msgstr ""
 
@@ -1618,6 +1695,9 @@ msgid "No information available"
 msgstr ""
 
 msgid "No items selected"
+msgstr ""
+
+msgid "No meeting"
 msgstr ""
 
 msgid "No meetings available"
@@ -1882,6 +1962,9 @@ msgstr ""
 msgid "Participants have been imported."
 msgstr ""
 
+msgid "Particles"
+msgstr ""
+
 msgid "Password"
 msgstr ""
 
@@ -2035,6 +2118,9 @@ msgstr ""
 msgid "Reason required for creating new motion"
 msgstr ""
 
+msgid "Receive motions"
+msgstr ""
+
 msgid "Received votes"
 msgstr ""
 
@@ -2047,7 +2133,7 @@ msgstr ""
 msgid "Recommendation set to {arg1}"
 msgstr ""
 
-msgid "Reenter to live conference"
+msgid "Reenter to conference room"
 msgstr ""
 
 msgid "Refer to committee"
@@ -2112,6 +2198,9 @@ msgstr ""
 msgid "Remove me"
 msgstr ""
 
+msgid "Replacement"
+msgstr ""
+
 msgid "Reply address"
 msgstr ""
 
@@ -2133,9 +2222,6 @@ msgid "Reset"
 msgstr ""
 
 msgid "Reset password"
-msgstr ""
-
-msgid "Reset password verbose errors"
 msgstr ""
 
 msgid "Reset passwords to the default ones"
@@ -2315,10 +2401,16 @@ msgstr ""
 msgid "Show amendments together with motions"
 msgstr ""
 
+msgid "Show applause amount"
+msgstr ""
+
 msgid "Show checkbox to record decision"
 msgstr ""
 
 msgid "Show clock"
+msgstr ""
+
+msgid "Show conference room"
 msgstr ""
 
 msgid "Show correct entries only"
@@ -2399,12 +2491,24 @@ msgstr ""
 msgid "Show title"
 msgstr ""
 
-msgid "Show/Hide video conference"
+msgid ""
+"Shows a button with help icon to connect to an extra Jitsi conference room "
+"for technical audio/video tests."
 msgstr ""
 
 msgid ""
 "Shows if livestream is not started. Recommended image format: 500x200px, "
 "PNG or JPG"
+msgstr ""
+
+msgid ""
+"Shows if livestream is not started. Recommended image format: 500x280px, "
+"PNG or JPG"
+msgstr ""
+
+msgid ""
+"Shows the given image as applause particle. Recommended image format: "
+"24x24px, PNG, JPG or SVG"
 msgstr ""
 
 msgid "Simple Workflow"
@@ -2576,12 +2680,6 @@ msgid "The list of speakers is closed."
 msgstr ""
 
 msgid "The list of speakers is open."
-msgstr ""
-
-msgid "The live conference is already running in your OpenSlides session."
-msgstr ""
-
-msgid "The livestream is disabled because you are inside a conference"
 msgstr ""
 
 msgid ""
@@ -2889,6 +2987,9 @@ msgstr ""
 msgid "You are not allowed to see all entitled users."
 msgstr ""
 
+msgid "You are not allowed to see the livestream"
+msgstr ""
+
 msgid "You are not authenticated."
 msgstr ""
 
@@ -2979,9 +3080,6 @@ msgid "Your browser is not supported by OpenSlides!"
 msgstr ""
 
 msgid "Your device has no microphone"
-msgstr ""
-
-msgid "Your download starts soon"
 msgstr ""
 
 msgid "Your input does not match the following structure: \"hh:mm\""
