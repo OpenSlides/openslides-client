@@ -39,7 +39,7 @@ export namespace MotionAction {
         reason?: UnsafeHtml; // is required, if special settings are set
         origin_id?: Id;
 
-        // Special field: The content is different as retrieving a mtion
+        // Special field: The content is different as retrieving a motion
         submitter_ids?: Id[]; // User ids!!! Not the motion_submitter through-model ids!!!
     }
 
@@ -53,8 +53,8 @@ export namespace MotionAction {
     export interface UpdatePayload extends Identifiable, OptionalPayload {
         // Optional
         title?: string;
-        text?: string;
-        reason?: string;
+        text?: UnsafeHtml;
+        reason?: UnsafeHtml;
         amendment_paragraph_$?: { [paragraph_number: number]: UnsafeHtml };
         modified_final_version?: string;
     }
