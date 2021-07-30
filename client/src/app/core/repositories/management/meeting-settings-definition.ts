@@ -148,7 +148,7 @@ export const meetingSettings: SettingsGroup[] = [
                     },
                     {
                         key: 'conference_auto_connect_next_speakers',
-                        label: _('Number of speakers automatically connecting to the live conference'),
+                        label: _('Number of next speakers automatically connecting to the live conference'),
                         helpText: _('Live conference has to be active. Choose 0 to disable auto connect.'),
                         type: 'integer',
                         default: 0
@@ -180,7 +180,7 @@ export const meetingSettings: SettingsGroup[] = [
                     },
                     {
                         key: 'applause_type',
-                        label: _('Applause virtualization'),
+                        label: _('Applause visualization'),
                         type: 'choice',
                         choices: {
                             'applause-type-bar': _('Level indicator'),

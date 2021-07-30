@@ -38,6 +38,9 @@ msgid "A client error occurred. Please contact your system administrator."
 msgstr ""
 "Ein Client-Fehler ist aufgetreten. Bitte kontaktieren Sie den Administrator."
 
+msgid "A conference is already running in your OpenSlides session."
+msgstr "Eine Konferenz läuft bereits in Ihrer OpenSlides-Sitzung."
+
 msgid "A file with this title or filename already exists in this directory."
 msgstr ""
 "Eine Datei mit diesem Titel oder Dateinamen existiert bereits in diesem "
@@ -196,6 +199,10 @@ msgstr "Unterstützung möglich"
 msgid "Allow users to set themselves as present"
 msgstr "Teilnehmende erlauben sich selbst auf anwesend zu setzen"
 
+msgid "Allow verbose error messages for reset password process"
+msgstr ""
+"Ausführliche Fehlermeldungen für das Zurücksetzen des Passworts zulassen"
+
 msgid "Allowed access groups for this directory"
 msgstr "Zulässige Zugriffsgruppen für dieses Verzeichnis"
 
@@ -237,6 +244,18 @@ msgstr "Anonymisieren kann erst nach Beenden der Stimmabgabe erfolgen."
 
 msgid "Anonymous"
 msgstr "Anonym"
+
+msgid "Applause"
+msgstr "Applaus"
+
+msgid "Applause interval in seconds"
+msgstr "Applaus-Zeitintervall in Sekunden"
+
+msgid "Applause particle image URL"
+msgstr "Applaus-Partikelbild-URL"
+
+msgid "Applause visualization"
+msgstr "Applaus-Visualisierung"
 
 msgid "Apply"
 msgstr "Übernehmen"
@@ -328,6 +347,9 @@ msgstr "Darf Änderungsanträge stellen"
 msgid "Can create motions"
 msgstr "Darf Anträge erstellen"
 
+msgid "Can forward motions"
+msgstr "Darf Anträge weiterleiten"
+
 msgid "Can forward motions to committee"
 msgstr "Darf Anträge weiterleiten an Gremium"
 
@@ -384,6 +406,9 @@ msgstr "Darf selbst für Wahlen kandidieren"
 
 msgid "Can put oneself on the list of speakers"
 msgstr "Darf sich selbst auf die Redeliste setzen"
+
+msgid "Can receive motions"
+msgstr "Darf Anträge erhalten"
 
 msgid "Can receive motions from committee"
 msgstr "Darf Anträge erhalten von Gremium"
@@ -460,6 +485,12 @@ msgstr "In diesem Browser können keine PDF-Dateien erstellt werden."
 
 msgid "Cannot do that in demo mode!"
 msgstr "Diese Aktion ist im Demo-Modus nicht möglich!"
+
+msgid "Cannot forward motions"
+msgstr "Darf keine Anträge weiterleiten"
+
+msgid "Cannot receive motions"
+msgstr "Darf keine Anträge erhalten"
 
 msgid "Categories"
 msgstr "Sachgebiete"
@@ -594,6 +625,9 @@ msgstr "Gremien"
 msgid "Complex Workflow"
 msgstr "Komplexer Arbeitsablauf"
 
+msgid "Conference room"
+msgstr "Konferenzraum"
+
 msgid "Confirm new password"
 msgstr "Neues Passwort bestätigen"
 
@@ -605,6 +639,9 @@ msgstr "Alle Nutzer automatisch mit der Livekonferenz verbinden"
 
 msgid "Content"
 msgstr "Inhalt"
+
+msgid "Continue livestream"
+msgstr "Livestream fortsetzen"
 
 msgid "Contra speech"
 msgstr "Gegenrede"
@@ -769,6 +806,22 @@ msgstr "Standard-Stimmgewicht"
 msgid "Default voting type"
 msgstr "Voreingestellte Art der Stimmabgabe"
 
+msgid ""
+"Defines the maximum deflection. Entering zero will use the amount of present"
+" participants instead."
+msgstr ""
+"Definiert den maximalen Ausschlag. Bei Eingabe von 0 wird die Anzahl der "
+"anwesenden Teilnehmenden verwendet."
+
+msgid ""
+"Defines the minimum deflection which is required to recognize applause."
+msgstr ""
+"Definiert den minimalen Ausschlag, der erforderlich ist, um Applaus zu "
+"erkennen."
+
+msgid "Defines the time in which applause amounts are add up."
+msgstr "Definiert die Zeit in der Applauswerte aufsummiert werden."
+
 msgid "Delegates"
 msgstr "Delegierte"
 
@@ -792,6 +845,9 @@ msgstr "Chronik löschen"
 
 msgid "Deleted user"
 msgstr "Gelöschter Nutzer"
+
+msgid "Deletion"
+msgstr "Streichung"
 
 msgid "Delivering vote... Please wait!"
 msgstr "Stimmabgabe läuft ... Bitte etwas Geduld!"
@@ -846,6 +902,9 @@ msgstr "CSV-Beispiel-Datei herunterladen"
 
 msgid "Download folder"
 msgstr "Verzeichnis herunterladen"
+
+msgid "Downloading ..."
+msgstr "Herunterladen ..."
 
 msgid "Drop files into this area OR click here to select files"
 msgstr ""
@@ -965,6 +1024,12 @@ msgstr ""
 "Stern-Icon zum Markieren von Redner*innen aktivieren (z.B. zur Einbringung "
 "eines Antrags)"
 
+msgid "Enable virtual applause"
+msgstr "Virtuellen Applaus einschalten"
+
+msgid "Enable virtual help desk room"
+msgstr "Virtuellen Help-Desk-Raum einschalten"
+
 msgid "Enable/disable account ..."
 msgstr "Account ein-/ausschalten ..."
 
@@ -980,16 +1045,13 @@ msgstr "Rede beenden"
 msgid "Enforce page breaks"
 msgstr "Seitenumbrüche erzwingen"
 
-msgid "Enter conference"
-msgstr "Konferenz beitreten"
+msgid "Enter conference room"
+msgstr "Konferenzraum beitreten"
 
 msgid "Enter duration in seconds. Choose 0 to disable warning color."
 msgstr ""
 "Geben Sie die Dauer in Sekunden an. Zum Deaktivieren der Warn-Farbe 0 "
 "auswählen."
-
-msgid "Enter live conference"
-msgstr "Livekonferenz beitreten"
 
 msgid ""
 "Enter number of the next shown speakers. Choose -1 to show all next "
@@ -1043,11 +1105,8 @@ msgstr ""
 msgid "Exit"
 msgstr "Beenden"
 
-msgid "Exit conference"
-msgstr "Konferenz verlassen"
-
-msgid "Exit live conference and continue livestream"
-msgstr "Livekonferenz verlassen und Livestream fortsetzen"
+msgid "Exit conference room"
+msgstr "Konferenzraum verlassen"
 
 msgid "Expand all"
 msgstr "Alle ausklappen"
@@ -1124,6 +1183,9 @@ msgstr "Fürrede"
 msgid "Forward"
 msgstr "Weiterleiten"
 
+msgid "Forward motions"
+msgstr "Anträge weiterleiten"
+
 msgid "Forward motions to"
 msgstr "Anträge weiterleiten an"
 
@@ -1160,6 +1222,9 @@ msgstr "Neue Passwörter generieren"
 msgid "Generate password"
 msgstr "Passwort generieren"
 
+msgid "Give applause"
+msgstr "Applaus geben"
+
 msgid "Given name"
 msgstr "Vorname"
 
@@ -1180,9 +1245,6 @@ msgstr "Gruppen mit Schreibberechtigungen"
 
 msgid "Guest"
 msgstr "Gast"
-
-msgid "Hang up"
-msgstr "Auflegen"
 
 msgid "Has amendments"
 msgstr "Hat Änderungsanträge"
@@ -1211,6 +1273,9 @@ msgstr "Schriftfarbe Kopfbereich"
 msgid "Headline color"
 msgstr "Überschriftenfarbe"
 
+msgid "Help desk"
+msgstr "Help Desk"
+
 msgid "Help text for access data and welcome PDF"
 msgstr "Hilfetext für das Zugangsdaten- und Willkommens-PDF"
 
@@ -1222,6 +1287,9 @@ msgstr "weniger anzeigen"
 
 msgid "Hide password"
 msgstr "Passwort verstecken"
+
+msgid "Highest applause amount"
+msgstr "Höchster Applauswert"
 
 msgid "Hint on voting"
 msgstr "Hinweis zur Stimmabgabe"
@@ -1290,6 +1358,9 @@ msgstr "Teilnehmende hier importieren"
 msgid "Insert topics here"
 msgstr "Themen hier importieren"
 
+msgid "Insertion"
+msgstr "Ergänzung"
+
 msgid "Installed plugins"
 msgstr "Installierte Plugins"
 
@@ -1338,6 +1409,15 @@ msgstr "Ist anwesend"
 msgid "Item number"
 msgstr "Tagesordnungspunkt-Nummer"
 
+msgid "Jitsi domain"
+msgstr "Jitsi-Domain"
+
+msgid "Jitsi room name"
+msgstr "Jitsi-Raumname"
+
+msgid "Jitsi room password"
+msgstr "Jitsi-Raumpasswort"
+
 msgid "Keep each item in a single line."
 msgstr "Verwenden Sie eine Zeile pro Eintrag."
 
@@ -1367,6 +1447,9 @@ msgstr "Links"
 
 msgid "Legal notice"
 msgstr "Impressum"
+
+msgid "Level indicator"
+msgstr "Pegelanzeige"
 
 msgid "License"
 msgstr "Lizenz"
@@ -1398,16 +1481,10 @@ msgstr "Redelisten sind zunächst geschlossen"
 msgid "List view"
 msgstr "Listenansicht"
 
-msgid "Live conference"
-msgstr "Livekonferenz"
-
 msgid "Live conference has to be active. Choose 0 to disable auto connect."
 msgstr ""
 "Die Livekonferenz muss aktiv sein. Wählen Sie 0 um den automatischen "
 "Verbindungsaufbau zu deaktivieren."
-
-msgid "Livestream"
-msgstr "Livestream"
 
 msgid "Livestream URL"
 msgstr "Livestream-URL"
@@ -1426,6 +1503,9 @@ msgstr "Als Gast anmelden"
 
 msgid "Logout"
 msgstr "Abmelden"
+
+msgid "Lowest applause amount"
+msgstr "Niedrigster Applauswert"
 
 msgid "Main motion and line number"
 msgstr "Hauptantrag und Zeilennummer"
@@ -1507,6 +1587,9 @@ msgstr "Antrag erstellt"
 msgid "Motion deleted"
 msgstr "Antrag gelöscht"
 
+msgid "Motion forwarded to"
+msgstr "Antrag weitergeleitet an"
+
 msgid "Motion forwarding"
 msgstr "Antragsweiterleitung"
 
@@ -1542,9 +1625,6 @@ msgstr "Zu TOP verschieben"
 
 msgid "Multiselect"
 msgstr "Mehrfachauswahl"
-
-msgid "Mute / Unmute"
-msgstr "Stummschaltung aktivieren / deaktivieren"
 
 msgid "My account"
 msgstr "Mein Konto"
@@ -1657,6 +1737,9 @@ msgstr "Keine Änderung am Text."
 msgid "No comment"
 msgstr "Kein Kommentar"
 
+msgid "No committee"
+msgstr "Kein Gremium"
+
 msgid "No concernment"
 msgstr "Nichtbefassung"
 
@@ -1680,6 +1763,9 @@ msgstr "Keine Informationen verfügbar"
 
 msgid "No items selected"
 msgstr "Keine Einträge ausgewählte"
+
+msgid "No meeting"
+msgstr "Keine Veranstaltung"
 
 msgid "No meetings available"
 msgstr "Keine Veranstaltungen vorhanden"
@@ -1950,6 +2036,9 @@ msgstr "Teilnehmende"
 msgid "Participants have been imported."
 msgstr "Teilnehmende wurden importiert."
 
+msgid "Particles"
+msgstr "Partikel"
+
 msgid "Password"
 msgstr "Passwort"
 
@@ -2106,6 +2195,9 @@ msgstr "Begründung"
 msgid "Reason required for creating new motion"
 msgstr "Begründung erforderlich zur Erstellung neuer Anträge"
 
+msgid "Receive motions"
+msgstr "Anträge erhalten"
+
 msgid "Received votes"
 msgstr "Empfangene Stimmen"
 
@@ -2118,8 +2210,8 @@ msgstr "Empfehlung"
 msgid "Recommendation set to {arg1}"
 msgstr "Empfehlung gesetzt auf {arg1}"
 
-msgid "Reenter to live conference"
-msgstr "Livekonferenz erneut beitreten"
+msgid "Reenter to conference room"
+msgstr "Konferenzraum erneut beitreten"
 
 msgid "Refer to committee"
 msgstr "In Ausschuss verweisen"
@@ -2185,6 +2277,9 @@ msgstr "Vom Antragsblock entfernen "
 msgid "Remove me"
 msgstr "Entferne mich"
 
+msgid "Replacement"
+msgstr "Ersetzung"
+
 msgid "Reply address"
 msgstr "Antwortadresse"
 
@@ -2209,9 +2304,6 @@ msgstr "Zurücksetzen"
 
 msgid "Reset password"
 msgstr "Passwort zurücksetzen"
-
-msgid "Reset password verbose errors"
-msgstr ""
 
 msgid "Reset passwords to the default ones"
 msgstr "Passwörter zurücksetzen auf Initiales"
@@ -2391,11 +2483,17 @@ msgstr "Änderungsantrag im Hauptantrag anzeigen"
 msgid "Show amendments together with motions"
 msgstr "Änderungsanträge zusätzlich in der Hauptantragsübersicht anzeigen"
 
+msgid "Show applause amount"
+msgstr "Applauswert anzeigen"
+
 msgid "Show checkbox to record decision"
 msgstr "Ankreuzfelder zum Dokumentieren der Entscheidung anzeigen"
 
 msgid "Show clock"
 msgstr "Uhr anzeigen"
+
+msgid "Show conference room"
+msgstr "Konferenzraum anzeigen"
 
 msgid "Show correct entries only"
 msgstr "Nur korrekte Einträge anzeigen"
@@ -2479,8 +2577,12 @@ msgstr "Diesen Text auf der Login-Seite anzeigen"
 msgid "Show title"
 msgstr "Veranstaltungstitel anzeigen"
 
-msgid "Show/Hide video conference"
-msgstr "Videokonferenz anzeigen/verstecken"
+msgid ""
+"Shows a button with help icon to connect to an extra Jitsi conference room "
+"for technical audio/video tests."
+msgstr ""
+"Zeigt einen Fragezeichen-Button an, um sich mit einem extra Jitsi-"
+"Konferenzraum für technische Audio-/Video-Tests zu verbinden."
 
 msgid ""
 "Shows if livestream is not started. Recommended image format: 500x200px, PNG"
@@ -2488,6 +2590,20 @@ msgid ""
 msgstr ""
 "Wird angezeigt, wenn der Livestream nicht gestartet werden kann. "
 "Bildformatempfehlung: 500x200px, PNG oder JPG"
+
+msgid ""
+"Shows if livestream is not started. Recommended image format: 500x280px, PNG"
+" or JPG"
+msgstr ""
+"Wird angezeigt, wenn der Livestream nicht gestartet werden kann. "
+"Bildformatempfehlung: 500x280px, PNG oder JPG"
+
+msgid ""
+"Shows the given image as applause particle. Recommended image format: "
+"24x24px, PNG, JPG or SVG"
+msgstr ""
+"Zeigt das angegebene Bild als Applaus-Partikel. Bildformatempfehlung: "
+"24x24px, PNG, JPG oder SVG"
 
 msgid "Simple Workflow"
 msgstr "Einfacher Arbeitsablauf"
@@ -2663,14 +2779,6 @@ msgstr "Die Redeliste ist geschlossen."
 
 msgid "The list of speakers is open."
 msgstr "Die Redeliste ist geöffnet."
-
-msgid "The live conference is already running in your OpenSlides session."
-msgstr "Die Livekonferenz läuft bereits in Ihrer OpenSlides-Sitzung."
-
-msgid "The livestream is disabled because you are inside a conference"
-msgstr ""
-"Der Livestream ist deaktiviert, weil Sie gerade an der Livekonferenz "
-"teilnehmen."
 
 msgid ""
 "The maximum number of characters per line. Relevant when line numbering is "
@@ -3005,6 +3113,9 @@ msgstr "Ja/Nein/Enthaltung pro Kandidat"
 msgid "You are not allowed to see all entitled users."
 msgstr "Sie sind nicht berechtigt alle Stimmberechtigte zu sehen."
 
+msgid "You are not allowed to see the livestream"
+msgstr "Sie sind nicht berechtigt den Livestream zu sehen."
+
 msgid "You are not authenticated."
 msgstr "Sie sind nicht authentifiziert."
 
@@ -3111,9 +3222,6 @@ msgstr "Ihr Browser wird von OpenSlides nicht unterstützt!"
 
 msgid "Your device has no microphone"
 msgstr "Es wurde kein Mikrofon an ihrem Gerät gefunden."
-
-msgid "Your download starts soon"
-msgstr ""
 
 msgid "Your input does not match the following structure: \"hh:mm\""
 msgstr "Ihre Eingabe entspricht nicht der folgenden Struktur: \"hh:mm\""

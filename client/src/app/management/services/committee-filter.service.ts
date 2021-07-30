@@ -16,7 +16,7 @@ export class CommitteeFilterService extends BaseFilterListService<ViewCommittee>
 
     private orgaTagFilterOptions: OsFilter<ViewCommittee> = {
         property: 'organization_tag_ids',
-        label: this.translate.instant('Organization tags'),
+        label: this.translate.instant('Tags'),
         options: []
     };
 
@@ -27,29 +27,25 @@ export class CommitteeFilterService extends BaseFilterListService<ViewCommittee>
         private translate: TranslateService
     ) {
         super(store, historyService);
-        this.updateFilterForRepo(
-            organizationTagRepo,
-            this.orgaTagFilterOptions,
-            this.translate.instant('No organization tags')
-        );
+        this.updateFilterForRepo(organizationTagRepo, this.orgaTagFilterOptions, this.translate.instant('No tags'));
     }
 
     protected getFilterDefinitions(): OsFilter<ViewCommittee>[] {
         return [
             {
                 property: 'hasForwardings',
-                label: this.translate.instant('Forwardings'),
+                label: this.translate.instant('Forward motions'),
                 options: [
-                    { label: this.translate.instant('Has forwardings'), condition: true },
-                    { label: this.translate.instant('Has no forwardings'), condition: false }
+                    { label: this.translate.instant('Can forward motions'), condition: true },
+                    { label: this.translate.instant('Cannot forward motions'), condition: false }
                 ]
             },
             {
                 property: 'hasReceivings',
-                label: this.translate.instant('Receivings'),
+                label: this.translate.instant('Receive motions'),
                 options: [
-                    { label: this.translate.instant('Has receivings'), condition: true },
-                    { label: this.translate.instant('Has no receivings'), condition: false }
+                    { label: this.translate.instant('Can receive motions'), condition: true },
+                    { label: this.translate.instant('Cannot receive motions'), condition: false }
                 ]
             },
             this.orgaTagFilterOptions
