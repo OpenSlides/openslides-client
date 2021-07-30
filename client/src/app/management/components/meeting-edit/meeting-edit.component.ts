@@ -91,13 +91,18 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
                 .catch(this.raiseError);
         } else {
             const userIds = this.meetingForm.value.user_ids as Id[];
-            const addedUsers = userIds.difference(this.editMeeting.user_ids);
-            const removedUsers = this.editMeeting.user_ids.difference(userIds);
+            const addedUserIds = (userIds || []).difference(this.editMeeting.user_ids);
+            const removedUserIds = (this.editMeeting.user_ids || []).difference(userIds);
+            const adminIds = this.meetingForm.value.admin_ids as Id[];
+            const previousAdminIds = this.editMeeting.admin_group.user_ids || [];
+            const addedAdminIds = (adminIds || []).difference(previousAdminIds);
+            const removedAdminIds = previousAdminIds.difference(adminIds);
 
             const payload: MeetingAction.UpdatePayload = this.meetingForm.value;
             delete (payload as any).user_ids; // do not send them to the server.
+            delete (payload as any).admin_ids; // do not send them to the server.
             this.meetingRepo
-                .update(payload, this.editMeeting, addedUsers, removedUsers)
+                .update(payload, this.editMeeting, { addedUserIds, removedUserIds, addedAdminIds, removedAdminIds })
                 .then(() => {
                     this.location.back();
                 })
@@ -147,7 +152,10 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
             {
                 viewModelCtor: ViewMeeting,
                 ids: [this.meetingId],
-                follow: [{ idField: 'user_ids', fieldset: 'shortName' }],
+                follow: [
+                    { idField: 'user_ids', fieldset: 'shortName' },
+                    { idField: 'admin_group_id', follow: [{ idField: 'user_ids', fieldset: 'shortName' }] }
+                ],
                 fieldset: 'edit'
             },
             'meeting'
@@ -176,6 +184,7 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
             this.committeeRepo.getViewModelObservable(this.committeeId).subscribe(committee => {
                 if (committee) {
                     this.committee = committee;
+                    this.updateFormByCommittee();
                 }
             })
         );
@@ -194,6 +203,7 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
             start_time: [currentDate],
             end_time: [currentDate],
             user_ids: [[]],
+            admin_ids: [[], Validators.minLength(1)],
             organization_tag_ids: [[]]
         };
 
@@ -210,8 +220,17 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
         const patchMeeting: any = meeting.getUpdatedModelData({
             start_time: meeting.start_time ? new Date(meeting.start_time * 1000) : undefined,
             end_time: meeting.end_time ? new Date(meeting.end_time * 1000) : undefined,
-            user_ids: [...meeting.user_ids]
+            user_ids: [...(meeting.user_ids || [])],
+            admin_ids: [...(meeting.admin_group?.user_ids || [])]
         } as any);
         this.meetingForm.patchValue(patchMeeting);
+    }
+
+    private updateFormByCommittee(): void {
+        if (this.isCreateView && (this.committee?.user_ids || []).includes(this.operator.operatorId)) {
+            this.meetingForm.patchValue({
+                admin_ids: [this.operator.operatorId]
+            });
+        }
     }
 }

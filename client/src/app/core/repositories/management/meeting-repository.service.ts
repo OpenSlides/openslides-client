@@ -26,6 +26,13 @@ export interface ImportMeeting {
     [collection: string]: unknown[];
 }
 
+interface MeetingUserModifiedFields {
+    addedUserIds?: Id[];
+    removedUserIds?: Id[];
+    addedAdminIds?: Id[];
+    removedAdminIds?: Id[];
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -146,8 +153,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
     public update(
         update: MeetingAction.OptionalUpdatePayload,
         meeting: ViewMeeting,
-        addedUserIds?: Id[],
-        removedUserIds?: Id[]
+        options: MeetingUserModifiedFields = {}
     ): Promise<void> {
         update.start_time = this.anyDateToUnix(update.start_time);
         update.end_time = this.anyDateToUnix(update.end_time);
@@ -163,21 +169,56 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             }
         ];
 
-        if (addedUserIds?.length || removedUserIds?.length) {
-            if (!meeting.default_group_id) {
-                throw new Error('The default group is needed!');
-            }
+        let { removedUserIds = [] }: MeetingUserModifiedFields = options;
+        const { addedUserIds, addedAdminIds, removedAdminIds = [] }: MeetingUserModifiedFields = options;
+        // Users, removed from the default group, are not removed from the admin group
+        removedUserIds = removedUserIds.difference(addedAdminIds).difference(meeting.admin_group.user_ids);
 
-            const addData = (addedUserIds || []).map(id => ({
-                id,
-                group_$_ids: { [meeting.id]: [meeting.default_group_id] }
-            }));
-            const removeData = (removedUserIds || []).map(id => ({ id, group_$_ids: { [meeting.id]: [] } }));
+        const updateData: { id: Id; group_$_ids: { [meetingId: number]: Id[] } }[] = [];
+        // Adding a user as admin also adds they to the default-group
+        if (addedAdminIds?.length) {
+            updateData.push(...this.getUserGroupUpdatePayload(addedAdminIds, meeting.id, meeting.admin_group_id));
+        }
+        if (addedUserIds?.length) {
+            updateData.push(
+                ...this.getUserGroupUpdatePayload(
+                    addedUserIds.difference(addedAdminIds),
+                    meeting.id,
+                    meeting.default_group_id
+                )
+            );
+        }
+        if (removedAdminIds?.length) {
+            // Users, removed from the admin group, are not removed from the default group.
+            // But if they are removed from the whole meeting, remove them completely.
+            const remainingRemovedAdminIds = removedAdminIds.filter(
+                userId =>
+                    (meeting.user_ids.includes(userId) || addedUserIds.includes(userId)) &&
+                    !removedUserIds.includes(userId)
+            );
+            // If users removed from the default group but added to the admin group of a meeting, then they are still
+            // admins and can only be removed this way
+            const completelyRemovedAdminIds = removedAdminIds.filter(
+                userId =>
+                    !meeting.user_ids.includes(userId) &&
+                    !addedUserIds.includes(userId) &&
+                    !removedUserIds.includes(userId)
+            );
+            updateData.push(
+                ...this.getUserGroupUpdatePayload(remainingRemovedAdminIds, meeting.id, meeting.default_group_id)
+            );
+            updateData.push(...this.getUserGroupUpdatePayload(completelyRemovedAdminIds, meeting.id));
+        }
+        if (removedUserIds?.length) {
+            updateData.push(...this.getUserGroupUpdatePayload(removedUserIds, meeting.id));
+        }
+        if (updateData.length) {
             actions.push({
                 action: UserAction.UPDATE,
-                data: addData.concat(removeData)
+                data: updateData
             });
         }
+
         return this.sendActionsToBackend(actions);
     }
 
@@ -206,5 +247,16 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             }
         }
         return temp;
+    }
+
+    private getUserGroupUpdatePayload(
+        ids: Id[] = [],
+        meetingId: Id,
+        groupId?: Id
+    ): { id: Id; group_$_ids: { [meetingId: number]: Id[] } }[] {
+        return ids.map(id => ({
+            id,
+            group_$_ids: { [meetingId]: groupId ? [groupId] : [] }
+        }));
     }
 }
