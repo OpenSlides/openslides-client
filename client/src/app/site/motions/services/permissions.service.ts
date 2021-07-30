@@ -49,7 +49,6 @@ export class PermissionsService {
      * - reset_state
      * - change_recommendation
      * - can_create_amendments
-     * - can_manage_metadata
      * - manage
      *
      * @param action the action the user tries to perform

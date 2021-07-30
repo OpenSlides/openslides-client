@@ -63,6 +63,14 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         return this.motion?.showPreamble;
     }
 
+    public get canChangeMetadata(): boolean {
+        return this.perms.isAllowed('change_metadata', this.motion);
+    }
+
+    public get canManage(): boolean {
+        return this.perms.isAllowed('manage', this.motion);
+    }
+
     /**
      * check if the 'final version edit mode' is active
      *
@@ -139,7 +147,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         private router: Router,
         private route: ActivatedRoute,
         private cd: ChangeDetectorRef,
-        public perms: PermissionsService
+        private perms: PermissionsService
     ) {
         super(componentServiceCollector, motionServiceCollector);
     }
@@ -347,7 +355,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     }
 
     protected getSubscriptions(): Subscription[] {
-        // since updates are usually not commig at the same time, every change to
+        // since updates are usually not coming at the same time, every change to
         // any subject has to mark the view for checking
         if (this.motion) {
             return [
@@ -400,7 +408,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         const motionFormControls: MotionFormControlsConfig = {
             title: ['', Validators.required],
             text: ['', this.isParagraphBasedAmendment ? null : Validators.required],
-            reason: ['', this.reasonRequired ? null : Validators.required],
+            reason: ['', this.reasonRequired ? Validators.required : null],
             category_id: [],
             attachment_ids: [[]],
             agenda_parent_id: [],
@@ -413,7 +421,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
             block_id: [],
             parent_id: [],
             modified_final_version: [''],
-            ...(this.perms.isAllowed('change_metadata') && {
+            ...(this.canChangeMetadata && {
                 number: [''],
                 agenda_create: [''],
                 agenda_type: ['']

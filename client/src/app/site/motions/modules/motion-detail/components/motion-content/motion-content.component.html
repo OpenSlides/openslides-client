@@ -58,7 +58,7 @@
 
     <!-- Submitter -->
     <div *ngIf="newMotion" class="content-field">
-        <ng-container *ngIf="perms.isAllowed('change_metadata', motion)">
+        <ng-container *ngIf="canChangeMetadata">
             <mat-form-field>
                 <os-search-repo-selector
                     formControlName="submitter_ids"
@@ -79,10 +79,7 @@
 
     <div class="form-id-title">
         <!-- number -->
-        <div
-            *ngIf="editMotion && !newMotion && perms.isAllowed('change_metadata', motion)"
-            class="content-field form-number"
-        >
+        <div *ngIf="editMotion && !newMotion && canChangeMetadata" class="content-field form-number">
             <mat-form-field *ngIf="editMotion">
                 <input matInput autofocus placeholder="{{ 'Number' | translate }}" formControlName="number" />
             </mat-form-field>
@@ -188,7 +185,7 @@
                     </mat-list-item>
                 </mat-list>
             </div>
-            <div *osPerms="permission.motionsCanManage; and: editMotion">
+            <div *ngIf="canManage && editMotion">
                 <os-attachment-control
                     formControlName="attachment_ids"
                     (errorHandler)="showUploadError($event)"
@@ -196,13 +193,13 @@
             </div>
         </div>
 
-        <div *ngIf="newMotion">
-            <os-agenda-content-object-form [form]="contentForm"></os-agenda-content-object-form>
-        </div>
+        <ng-container *ngIf="canChangeMetadata">
+            <div *ngIf="newMotion">
+                <os-agenda-content-object-form [form]="contentForm"></os-agenda-content-object-form>
+            </div>
 
-        <!-- Supporter form -->
-        <div class="content-field" *ngIf="editMotion && minSupporters">
-            <div *ngIf="perms.isAllowed('change_metadata', motion)">
+            <!-- Supporter form -->
+            <div class="content-field" *ngIf="editMotion && minSupporters">
                 <mat-form-field>
                     <os-search-repo-selector
                         formControlName="supporter_ids"
@@ -219,11 +216,9 @@
                     </os-search-repo-selector>
                 </mat-form-field>
             </div>
-        </div>
 
-        <!-- Workflow -->
-        <div class="content-field" *ngIf="editMotion">
-            <div *ngIf="perms.isAllowed('change_metadata', motion)">
+            <!-- Workflow -->
+            <div class="content-field" *ngIf="editMotion">
                 <mat-form-field>
                     <os-search-repo-selector
                         formControlName="workflow_id"
@@ -233,6 +228,6 @@
                     ></os-search-repo-selector>
                 </mat-form-field>
             </div>
-        </div>
+        </ng-container>
     </div>
 </form>
