@@ -75,13 +75,10 @@ interface ChannelIdResponse {
     channel_id: string;
 }
 
-const notifyPath = '/system/icc/notify';
+const iccPath = '/system/icc';
+const notifyPath = `${iccPath}/notify`;
 const publishPath = `${notifyPath}/publish`;
-/**
- * Does currently not exist
- */
-// const iccHealthPath = `${IccPath}/health`
-const iccHealthPath = notifyPath;
+const iccHealthPath = `${iccPath}/health`;
 
 /**
  * Handles all incoming and outgoing notify messages via {@link WebsocketService}.
