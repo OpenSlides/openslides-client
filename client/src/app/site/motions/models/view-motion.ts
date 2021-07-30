@@ -351,8 +351,9 @@ interface IMotionRelations {
     sort_parent?: ViewMotion;
     sort_children: ViewMotion[];
     origin?: ViewMotion;
-    derived_motions: ViewMotion[];
-    forwarding_tree_motions: ViewMotion[];
+    derived_motions?: ViewMotion[];
+    all_derived_motions?: ViewMotion[];
+    all_origins?: ViewMotion[];
     state?: ViewMotionState;
     recommendation?: ViewMotionState;
     recommendation_extension_reference: (BaseViewModel & HasReferencedMotionsInRecommendationExtension)[];

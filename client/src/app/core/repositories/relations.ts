@@ -632,18 +632,17 @@ export const RELATIONS: Relation[] = [
         MViewModel: ViewMotion,
         OViewModel: ViewMotion,
         MField: 'origin',
-        OField: 'derived_motions'
+        OField: 'all_derived_motions'
     }),
-    // motion/forwarding_tree_motion_ids -> Motion
-    {
-        ownViewModels: [ViewMotion],
-        foreignViewModel: ViewMotion,
-        ownField: 'forwarding_tree_motions',
-        ownIdField: 'forwarding_tree_motion_ids',
-        many: true,
-        generic: false,
-        structured: false
-    },
+    // motion/all_origin_ids -> motion/derived_motion_ids
+    ...makeM2M({
+        AViewModel: ViewMotion,
+        BViewModel: ViewMotion,
+        AField: 'all_origins',
+        AIdField: 'all_origin_ids',
+        BField: 'derived_motions',
+        BIdField: 'derived_motion_ids'
+    }),
     ...makeM2O({
         MViewModel: ViewMotion,
         OViewModel: ViewMotionState,

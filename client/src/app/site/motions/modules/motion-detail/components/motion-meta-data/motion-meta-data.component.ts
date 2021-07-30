@@ -220,6 +220,11 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
         return allStates.filter(state => state.recommendation_label);
     }
 
+    public getOriginMotions(): ViewMotion[] {
+        const copy = [...(this.motion.all_origins || [])];
+        return copy.reverse();
+    }
+
     protected getSubscriptions(): Subscription[] {
         return [
             this.repo.getAmendmentsByMotionAsObservable(this.motion.id).subscribe(value => (this.amendments = value)),

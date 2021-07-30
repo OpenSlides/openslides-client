@@ -404,6 +404,16 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
                 ids: [motionId],
                 follow: [
                     {
+                        idField: 'all_origin_ids',
+                        fieldset: 'title',
+                        follow: ['meeting_id']
+                    },
+                    {
+                        idField: 'derived_motion_ids',
+                        fieldset: 'title',
+                        follow: ['meeting_id']
+                    },
+                    {
                         idField: 'change_recommendation_ids'
                     },
                     {
