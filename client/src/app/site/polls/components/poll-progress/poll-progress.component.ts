@@ -27,7 +27,7 @@ export class PollProgressComponent extends BaseComponent implements OnInit {
     }
 
     private get canSeeNames(): boolean {
-        return this.operator.hasPerms(this.permission.usersCanSee);
+        return this.operator.hasPerms(this.permission.userCanSee);
     }
 
     private get canManageSpeakers(): boolean {
@@ -39,9 +39,9 @@ export class PollProgressComponent extends BaseComponent implements OnInit {
      */
     private get canManagePoll(): boolean {
         if (this.poll.pollClassType === PollClassType.Motion) {
-            return this.operator.hasPerms(this.permission.motionsCanManagePolls);
+            return this.operator.hasPerms(this.permission.motionCanManagePolls);
         } else if (this.poll.pollClassType === PollClassType.Assignment) {
-            return this.operator.hasPerms(this.permission.assignmentsCanManage);
+            return this.operator.hasPerms(this.permission.assignmentCanManage);
         }
         return false;
     }

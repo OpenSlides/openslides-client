@@ -31,7 +31,7 @@
     <!-- Extra Controls -->
     <div class="extra-controls-slot" *ngIf="!vp.isMobile">
         <button
-            *osPerms="[permission.motionsCanManage, permission.motionsCanManageMetadata]"
+            *osPerms="[permission.motionCanManage, permission.motionCanManageMetadata]"
             mat-button
             (click)="onFollowRecButton()"
             [disabled]="isFollowingProhibited()"
@@ -157,7 +157,7 @@
 <mat-menu #motionBlockMenu="matMenu">
     <div *ngIf="vp.isMobile">
         <button
-            *osPerms="[permission.motionsCanManage, permission.motionsCanManageMetadata]"
+            *osPerms="[permission.motionCanManage, permission.motionCanManageMetadata]"
             mat-menu-item
             (click)="onFollowRecButton()"
             [disabled]="isFollowingProhibited()"
@@ -182,7 +182,7 @@
         </button>
     </div>
 
-    <div *osPerms="[permission.motionsCanManage, permission.motionsCanManageMetadata]">
+    <div *osPerms="[permission.motionCanManage, permission.motionCanManageMetadata]">
         <button mat-menu-item (click)="toggleEditMode()">
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit' | translate }}</span>

@@ -110,7 +110,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
      * @returns true if the presence view is available to administrators
      */
     public get presenceViewConfigured(): boolean {
-        return this._presenceViewConfigured && this.operator.hasPerms(Permission.usersCanManage);
+        return this._presenceViewConfigured && this.operator.hasPerms(Permission.userCanManage);
     }
 
     private voteWeightEnabled: boolean;
@@ -121,11 +121,11 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
      * @returns true if the user should be able to create users
      */
     public get canManage(): boolean {
-        return this.operator.hasPerms(Permission.usersCanManage);
+        return this.operator.hasPerms(Permission.userCanManage);
     }
 
     public get canSeeExtra(): boolean {
-        return this.operator.hasPerms(Permission.usersCanSeeExtraData);
+        return this.operator.hasPerms(Permission.userCanSeeExtraData);
     }
 
     public get showVoteWeight(): boolean {
@@ -262,7 +262,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         } else if (this.allowSelfSetPresent && this.operator.operatorId === user.id) {
             return false;
         } else {
-            return !this.operator.hasPerms(Permission.usersCanManage);
+            return !this.operator.hasPerms(Permission.userCanManage);
         }
     }
 
@@ -274,7 +274,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
      * @param user is an instance of ViewUser. This is the given user, who will be modified.
      */
     public openEditInfo(user: ViewUser, ev: MouseEvent): void {
-        if (this.isMultiSelect || !this.operator.hasPerms(Permission.usersCanManage)) {
+        if (this.isMultiSelect || !this.operator.hasPerms(Permission.userCanManage)) {
             return;
         }
         ev.stopPropagation();
@@ -420,7 +420,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
      */
     public setPresent(viewUser: ViewUser): void {
         const isAllowed =
-            this.operator.hasPerms(Permission.usersCanManage) ||
+            this.operator.hasPerms(Permission.userCanManage) ||
             (this.allowSelfSetPresent && this.operator.operatorId === viewUser.id);
         if (isAllowed) {
             this.repo.setPresent(!this.isUserPresent(viewUser), viewUser);

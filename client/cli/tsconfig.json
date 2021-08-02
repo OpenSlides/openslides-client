@@ -1,0 +1,11 @@
+{
+    "extends": "../tsconfig",
+    "compilerOptions": {
+        "baseUrl": "../src",
+        "module": "commonjs",
+        "target": "es2017",
+        "paths": {
+            "*": ["*"]
+        }
+    }
+}

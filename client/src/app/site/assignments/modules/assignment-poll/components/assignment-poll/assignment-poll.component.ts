@@ -51,7 +51,7 @@ export class AssignmentPollComponent extends BasePollComponent<ViewAssignment> i
     public get showPoll(): boolean {
         if (this.poll) {
             if (
-                this.operator.hasPerms(this.permission.assignmentsCanManage) ||
+                this.operator.hasPerms(this.permission.assignmentCanManage) ||
                 this.poll.isPublished ||
                 (this.poll.isEVoting && !this.poll.isCreated)
             ) {
@@ -62,7 +62,7 @@ export class AssignmentPollComponent extends BasePollComponent<ViewAssignment> i
     }
 
     public get showMetaInfo(): boolean {
-        return !this.poll.stateHasVotes && this.operator.hasPerms(this.permission.assignmentsCanManage);
+        return !this.poll.stateHasVotes && this.operator.hasPerms(this.permission.assignmentCanManage);
     }
 
     public get showCandidatesInMetaInfo(): boolean {

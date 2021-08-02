@@ -19,6 +19,7 @@ import { LifecycleService } from './lifecycle.service';
 import { SimplifiedModelRequest, SpecificStructuredField } from './model-request-builder.service';
 import { CML, cmlNameMapping, OML, omlNameMapping } from './organization-permission';
 import { Permission } from './permission';
+import { childPermissions } from './permission-children';
 import { UserRepositoryService } from '../repositories/users/user-repository.service';
 
 const UNKOWN_USER_ID = -1; // this is an invalid id **and** not equal to 0, null, undefined.
@@ -380,22 +381,27 @@ export class OperatorService {
      * Saves the current WhoAmI to storage with the updated permissions
      */
     private calcPermissions(): Permission[] {
-        let permissions;
-        if (!this.groupIds) {
-            permissions = [];
-        } else if (this.isAnonymous || this.groupIds.length === 0) {
-            // Anonymous or users in the default group.
-            permissions = this.activeMeeting?.default_group?.permissions || [];
+        const permissionSet = new Set<Permission>();
+        if (this.isAnonymous) {
+            // Anonymous is always in the default group.
+            this.activeMeeting?.default_group?.permissions.forEach(perm => permissionSet.add(perm));
         } else {
-            const permissionSet = new Set<string>();
-            this.DS.getMany(Group, this.groupIds).forEach(group => {
-                group.permissions?.forEach(permission => {
-                    permissionSet.add(permission);
+            if (this.groupIds?.length) {
+                this.DS.getMany(Group, this.groupIds).forEach(group => {
+                    group.permissions?.forEach(permission => {
+                        permissionSet.add(permission);
+                    });
                 });
-            });
-            permissions = Array.from(permissionSet.values());
+            }
         }
-
+        // add implicitly given children
+        // copy set beforehand to not iterate over the newly added members
+        for (const permission of new Set(permissionSet)) {
+            for (const childPermission of childPermissions[permission]) {
+                permissionSet.add(childPermission);
+            }
+        }
+        const permissions = Array.from(permissionSet.values());
         return permissions;
     }
 

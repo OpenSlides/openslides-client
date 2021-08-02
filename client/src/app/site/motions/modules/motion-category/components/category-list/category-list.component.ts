@@ -59,7 +59,7 @@ export class CategoryListComponent extends BaseListViewComponent<ViewMotionCateg
      * @returns true if the user may alter motions or their metadata
      */
     public get canEdit(): boolean {
-        return this.operator.hasPerms(Permission.motionsCanManage);
+        return this.operator.hasPerms(Permission.motionCanManage);
     }
 
     /**

@@ -1,24 +1,31 @@
 import { Injectable } from '@angular/core';
 
 import { Settings } from 'app/shared/models/event-management/meeting';
+import { meetingSettingsDefaults } from '../repositories/management/meeting-settings-defaults';
 import { meetingSettings, SettingsGroup, SettingsItem } from '../repositories/management/meeting-settings-definition';
+
+type SettingsMap = { [key in keyof Settings]: SettingsItem };
 
 @Injectable({
     providedIn: 'root'
 })
 export class MeetingSettingsDefinitionProvider {
-    private settingsMap: { [key in keyof Settings]: SettingsItem } = (() => {
-        const sm = {};
-        for (const group of meetingSettings) {
-            for (const subgroup of group.subgroups) {
-                for (const setting of subgroup.settings) {
-                    this.validateSetting(setting);
-                    sm[setting.key] = setting;
+    private _settingsMap: SettingsMap;
+    private get settingsMap(): SettingsMap {
+        if (!this._settingsMap) {
+            const sm = {};
+            for (const group of meetingSettings) {
+                for (const subgroup of group.subgroups) {
+                    for (const setting of subgroup.settings) {
+                        this.validateSetting(setting);
+                        sm[setting.key] = setting;
+                    }
                 }
             }
+            this._settingsMap = sm as SettingsMap;
         }
-        return sm as { [key in keyof Settings]: SettingsItem };
-    })();
+        return this._settingsMap;
+    }
 
     private validateSetting(setting: SettingsItem): void {
         if (setting.type === 'choice') {
@@ -26,16 +33,21 @@ export class MeetingSettingsDefinitionProvider {
                 throw new Error(`You must provide choices for ${setting.key}`);
             }
         }
-        if (setting.default) {
-            if (setting.type === 'integer' && typeof setting.default !== 'number') {
-                throw new Error(`Invalid default for ${setting.key}: ${setting.default} (${typeof setting.default})`);
-            }
-            if (setting.type === 'boolean' && typeof setting.default !== 'boolean') {
-                throw new Error(`Invalid default for ${setting.key}: ${setting.default} (${typeof setting.default})`);
-            }
-            if (setting.type === 'choice' && setting.choices && !setting.choices.hasOwnProperty(setting.default)) {
-                throw new Error(`Invalid default for ${setting.key}: ${setting.default}`);
-            }
+    }
+
+    public validateDefault(settingKey: string, defaultValue: any): void {
+        const setting = this.settingsMap[settingKey];
+        if (
+            ((!setting.type || setting.type === 'text') && typeof defaultValue !== 'string') ||
+            (setting.type === 'integer' && typeof defaultValue !== 'number') ||
+            (setting.type === 'boolean' && typeof defaultValue !== 'boolean')
+        ) {
+            throw new Error(`Invalid default for ${setting.key}: ${defaultValue} (${typeof defaultValue})`);
+        }
+        if (setting.type === 'choice' && setting.choices && !setting.choices.hasOwnProperty(defaultValue)) {
+            throw new Error(
+                `Invalid default for ${setting.key}: ${defaultValue} (valid choices: ${Object.keys(setting.choices)})`
+            );
         }
     }
 
@@ -51,9 +63,13 @@ export class MeetingSettingsDefinitionProvider {
         return Object.keys(this.settingsMap) as (keyof Settings)[];
     }
 
+    public getSettingsMap(): { [key in keyof Settings]: SettingsItem } {
+        return this.settingsMap;
+    }
+
     public getDefaultValue(setting: keyof Settings | SettingsItem): any {
         const settingItem = typeof setting === 'string' ? this.settingsMap[setting] : setting;
-        return settingItem.default ?? this.getDefaultValueForType(settingItem);
+        return meetingSettingsDefaults[settingItem.key] ?? this.getDefaultValueForType(settingItem);
     }
 
     public getDefaultValueForType(setting: SettingsItem): any {

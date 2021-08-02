@@ -7,8 +7,8 @@ import { AssignmentListComponent } from './components/assignment-list/assignment
 
 const routes: Route[] = [
     { path: '', component: AssignmentListComponent, pathMatch: 'full' },
-    { path: 'new', component: AssignmentDetailComponent, data: { basePerm: Permission.assignmentsCanManage } },
-    { path: ':id', component: AssignmentDetailComponent, data: { basePerm: Permission.assignmentsCanSee } },
+    { path: 'new', component: AssignmentDetailComponent, data: { basePerm: Permission.assignmentCanManage } },
+    { path: ':id', component: AssignmentDetailComponent, data: { basePerm: Permission.assignmentCanSee } },
     {
         path: 'polls',
         loadChildren: () => import('./modules/assignment-poll/assignment-poll.module').then(m => m.AssignmentPollModule)

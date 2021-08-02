@@ -67,7 +67,7 @@
 
 <ng-content></ng-content>
 
-<ng-container *osPerms="permission.motionsCanManage">
+<ng-container *osPerms="permission.motionCanManage">
     <button mat-menu-item [disabled]="!selectedMotions.length" (click)="openExportDialog()">
         <mat-icon>archive</mat-icon>
         <span>{{ 'Export selected motions' | translate }}</span>

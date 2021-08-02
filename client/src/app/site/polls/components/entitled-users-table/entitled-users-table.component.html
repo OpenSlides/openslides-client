@@ -1,4 +1,4 @@
-<div *osPerms="permission.usersCanSee">
+<div *osPerms="permission.userCanSee">
     <os-list-view-table
         [listObservable]="entitledUsersObservable"
         [columns]="columnDefinitionEntitledUsersTable"
@@ -30,6 +30,6 @@
         </div>
     </os-list-view-table>
 </div>
-<div class="no-can-see-users" *osPerms="permission.usersCanSee; complement: true">
+<div class="no-can-see-users" *osPerms="permission.userCanSee; complement: true">
     <i>{{ 'You are not allowed to see all entitled users.' | translate }}</i>
 </div>

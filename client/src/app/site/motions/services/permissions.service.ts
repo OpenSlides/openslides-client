@@ -57,14 +57,14 @@ export class PermissionsService {
     public isAllowed(action: string, motion?: ViewMotion): boolean {
         switch (action) {
             case 'create': {
-                return this.operator.hasPerms(Permission.motionsCanCreate);
+                return this.operator.hasPerms(Permission.motionCanCreate);
             }
             case 'support': {
                 if (!motion || !motion.state) {
                     return false;
                 }
                 return (
-                    this.operator.hasPerms(Permission.motionsCanSupport) &&
+                    this.operator.hasPerms(Permission.motionCanSupport) &&
                     this.configMinSupporters > 0 &&
                     motion.state?.allow_support &&
                     (!motion.submitters ||
@@ -88,8 +88,8 @@ export class PermissionsService {
                     return false;
                 }
                 return (
-                    (this.operator.hasPerms(Permission.motionsCanManage) ||
-                        this.operator.hasPerms(Permission.motionsCanManageMetadata)) &&
+                    (this.operator.hasPerms(Permission.motionCanManage) ||
+                        this.operator.hasPerms(Permission.motionCanManageMetadata)) &&
                     motion.state &&
                     motion.state.allow_create_poll
                 );
@@ -101,7 +101,7 @@ export class PermissionsService {
                     return false;
                 }
                 return (
-                    this.operator.hasPerms(Permission.motionsCanManage) ||
+                    this.operator.hasPerms(Permission.motionCanManage) ||
                     (motion.state &&
                         motion.state.allow_submitter_edit &&
                         motion.submitters &&
@@ -111,14 +111,14 @@ export class PermissionsService {
                 );
             }
             case 'update_submitters': {
-                return this.operator.hasPerms(Permission.motionsCanManage);
+                return this.operator.hasPerms(Permission.motionCanManage);
             }
             case 'delete': {
                 if (!motion) {
                     return false;
                 }
                 return (
-                    this.operator.hasPerms(Permission.motionsCanManage) &&
+                    this.operator.hasPerms(Permission.motionCanManage) &&
                     motion.state &&
                     motion.state.allow_submitter_edit &&
                     motion.submitters &&
@@ -133,8 +133,8 @@ export class PermissionsService {
                     return false;
                 }
                 return (
-                    this.operator.hasPerms(Permission.motionsCanManage) ||
-                    this.operator.hasPerms(Permission.motionsCanManageMetadata) ||
+                    this.operator.hasPerms(Permission.motionCanManage) ||
+                    this.operator.hasPerms(Permission.motionCanManageMetadata) ||
                     (motion.state &&
                         motion.state.allow_submitter_edit &&
                         !this.operator.isAnonymous &&
@@ -144,8 +144,8 @@ export class PermissionsService {
             }
             case 'change_metadata': {
                 return (
-                    this.operator.hasPerms(Permission.motionsCanManage) ||
-                    this.operator.hasPerms(Permission.motionsCanManageMetadata)
+                    this.operator.hasPerms(Permission.motionCanManage) ||
+                    this.operator.hasPerms(Permission.motionCanManageMetadata)
                 );
             }
             case 'can_create_amendments': {
@@ -153,7 +153,7 @@ export class PermissionsService {
                     return false;
                 }
                 return (
-                    this.operator.hasPerms(Permission.motionsCanCreateAmendments) &&
+                    this.operator.hasPerms(Permission.motionCanCreateAmendments) &&
                     this.amendmentEnabled &&
                     (!motion.lead_motion_id || (motion.lead_motion_id && this.amendmentOfAmendment))
                 );
@@ -162,7 +162,7 @@ export class PermissionsService {
                 return this.operator.hasPerms(Permission.meetingCanManageSettings);
             }
             case 'manage': {
-                return this.operator.hasPerms(Permission.motionsCanManage);
+                return this.operator.hasPerms(Permission.motionCanManage);
             }
             default: {
                 return false;

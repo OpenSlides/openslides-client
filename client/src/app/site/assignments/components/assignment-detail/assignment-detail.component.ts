@@ -353,7 +353,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
      * @returns true if the user is able to perform the action
      */
     public hasPerms(operation: 'addSelf' | 'addOthers' | 'createPoll' | 'manage'): boolean {
-        const isManager = this.operator.hasPerms(Permission.assignmentsCanManage);
+        const isManager = this.operator.hasPerms(Permission.assignmentCanManage);
         switch (operation) {
             case 'addSelf':
                 if (isManager && !this.assignment.isFinished) {
@@ -361,7 +361,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
                 } else {
                     return (
                         this.assignment?.isSearchingForCandidates &&
-                        this.operator.hasPerms(Permission.assignmentsCanNominateSelf) &&
+                        this.operator.hasPerms(Permission.assignmentCanNominateSelf) &&
                         !this.assignment.isFinished
                     );
                 }
@@ -371,7 +371,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
                 } else {
                     return (
                         this.assignment?.isSearchingForCandidates &&
-                        this.operator.hasPerms(Permission.assignmentsCanNominateOther) &&
+                        this.operator.hasPerms(Permission.assignmentCanNominateOther) &&
                         !this.assignment.isFinished
                     );
                 }

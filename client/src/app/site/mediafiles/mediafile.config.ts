@@ -21,7 +21,7 @@ export const MediafileAppConfig: AppConfig = {
             displayName: 'Files',
             icon: 'attach_file',
             weight: 600,
-            permission: Permission.mediafilesCanSee
+            permission: Permission.mediafileCanSee
         }
     ]
 };

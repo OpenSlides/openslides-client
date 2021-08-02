@@ -79,7 +79,7 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
      * @return true if the user can manage media files
      */
     public get canEdit(): boolean {
-        return this.operator.hasPerms(Permission.mediafilesCanManage);
+        return this.operator.hasPerms(Permission.mediafileCanManage);
     }
 
     /**

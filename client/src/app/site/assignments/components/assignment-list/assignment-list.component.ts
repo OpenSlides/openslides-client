@@ -59,7 +59,7 @@ export class AssignmentListComponent extends BaseListViewComponent<ViewAssignmen
     public filterProps = ['title', 'candidates', 'assignment_related_users', 'tags', 'candidateAmount'];
 
     public get canManageAssignments(): boolean {
-        return this.operator.hasPerms(Permission.assignmentsCanManage);
+        return this.operator.hasPerms(Permission.assignmentCanManage);
     }
 
     /**

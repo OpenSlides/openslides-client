@@ -1,4 +1,5 @@
 import { Permission } from 'app/core/core-services/permission';
+import { childPermissions } from 'app/core/core-services/permission-children';
 import { HasMeeting, ViewMeeting } from 'app/management/models/view-meeting';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { Group } from 'app/shared/models/users/group';
@@ -15,7 +16,11 @@ export class ViewGroup extends BaseViewModel<Group> {
     }
 
     public hasPermission(perm: Permission): boolean {
-        return this.permissions?.includes(perm);
+        return this.permissions?.some(permission => permission === perm || childPermissions[permission].includes(perm));
+    }
+
+    public hasPermissionImplicitly(perm: Permission): boolean {
+        return this.permissions?.some(permission => childPermissions[permission].includes(perm));
     }
 }
 interface IGroupRelations {

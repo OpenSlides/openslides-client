@@ -93,6 +93,6 @@ export class MotionPollDetailComponent extends BasePollDetailComponentDirective<
     }
 
     protected hasPerms(): boolean {
-        return this.operator.hasPerms(Permission.motionsCanManagePolls);
+        return this.operator.hasPerms(Permission.motionCanManagePolls);
     }
 }

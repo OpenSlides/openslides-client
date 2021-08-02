@@ -10,7 +10,7 @@
             type="button"
             mat-icon-button
             (click)="createNewFolder(newFolderDialog)"
-            *osPerms="permission.mediafilesCanManage; and: !isMultiSelect"
+            *osPerms="permission.mediafileCanManage; and: !isMultiSelect"
         >
             <mat-icon>create_new_folder</mat-icon>
         </button>
@@ -251,14 +251,14 @@
             <mat-icon>clear</mat-icon>
             <span>{{ 'Deselect all' | translate }}</span>
         </button>
-        <mat-divider *osPerms="permission.mediafilesCanManage"></mat-divider>
+        <mat-divider *osPerms="permission.mediafileCanManage"></mat-divider>
         <button mat-menu-item [disabled]="!selectedRows.length" (click)="downloadMultiple(selectedRows)">
             <mat-icon>cloud_download</mat-icon>
             <span>{{ 'Download' | translate }}</span>
         </button>
         <button
             mat-menu-item
-            *osPerms="permission.mediafilesCanManage"
+            *osPerms="permission.mediafileCanManage"
             [disabled]="!selectedRows.length"
             (click)="move(moveDialog, selectedRows)"
         >
@@ -268,7 +268,7 @@
         <mat-divider></mat-divider>
         <button
             mat-menu-item
-            *osPerms="permission.mediafilesCanManage"
+            *osPerms="permission.mediafileCanManage"
             [disabled]="!selectedRows.length"
             (click)="deleteSelected()"
         >

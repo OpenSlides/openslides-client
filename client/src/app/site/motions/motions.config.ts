@@ -95,7 +95,7 @@ export const MotionsAppConfig: AppConfig = {
             displayName: 'Motions',
             icon: 'assignment',
             weight: 300,
-            permission: Permission.motionsCanSee
+            permission: Permission.motionCanSee
         }
     ]
 };

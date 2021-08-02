@@ -75,7 +75,7 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
     public restrictedColumns: ColumnRestriction[] = [
         {
             columnName: 'remove',
-            permission: Permission.motionsCanManage
+            permission: Permission.motionCanManage
         }
     ];
 

@@ -144,7 +144,7 @@ export class AssignmentPollDetailComponent extends BasePollDetailComponentDirect
     }
 
     protected hasPerms(): boolean {
-        return this.operator.hasPerms(Permission.assignmentsCanManage);
+        return this.operator.hasPerms(Permission.assignmentCanManage);
     }
 
     protected onDeleted(): void {
