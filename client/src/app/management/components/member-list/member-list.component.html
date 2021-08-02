@@ -1,17 +1,8 @@
-<os-head-bar
-    [customMenu]="true"
-    [hasMainButton]="true"
-    (mainEvent)="createNewMember()"
-    [multiSelectMode]="isMultiSelect"
->
+<os-head-bar [hasMainButton]="true" (mainEvent)="createNewMember()" [multiSelectMode]="isMultiSelect">
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Members' | translate }}</h2>
     </div>
-
-    <ng-container class="custom-menu-slot">
-        <os-management-navigation></os-management-navigation>
-    </ng-container>
 
     <!-- Menu -->
     <div class="menu-slot">
@@ -34,6 +25,9 @@
     (dataSourceChange)="onDataSourceChange($event)"
     [filterService]="filterService"
     [sortService]="sortService"
+    [hiddenInMobile]="['info']"
+    [alwaysShowMenu]="true"
+    [vScrollFixed]="60"
 >
     <!-- Name column -->
     <div *pblNgridCellDef="'short_name'; row as user; rowContext as rowContext" class="cell-slot fill">
@@ -48,7 +42,7 @@
     <div *pblNgridCellDef="'info'; row as user" class="committee-wrapper">
         <div class="flex-center">
             <os-icon-container
-                icon="account_balance"
+                icon="auto_awesome_mosaic"
                 iconTooltip="{{ 'Committees' | translate }}"
                 [showIcon]="!!user.committee_ids?.length"
                 [noWrap]="true"
@@ -61,7 +55,7 @@
     </div>
     <!-- Menu column -->
     <ng-container *osOmlPerms="OML.can_manage_users">
-        <div *pblNgridCellDef="'utils'; row as user" class="cell-slot fill">
+        <div *pblNgridCellDef="'menu'; row as user" class="cell-slot fill">
             <div>
                 <button mat-icon-button [matMenuTriggerFor]="singleMenu" [matMenuTriggerData]="{ member: user }">
                     <mat-icon>more_vert</mat-icon>
@@ -114,7 +108,7 @@
         </button>
         <mat-divider></mat-divider>
         <button mat-menu-item [disabled]="!selectedRows.length" (click)="assignCommitteesToUsers()">
-            <mat-icon>account_balance</mat-icon>
+            <mat-icon>auto_awesome_mosaic</mat-icon>
             <span>{{ 'Set/remove committees' | translate }} ...</span>
         </button>
         <mat-divider></mat-divider>

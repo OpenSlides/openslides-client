@@ -1,98 +1,33 @@
-<mat-sidenav-container
-    #siteContainer
-    class="main-container"
-    (backdropClick)="toggleSideNav()"
-    osSwipe
-    [swipeConstraints]="'left'"
-    (swipeRight)="sideNav.open()"
-    (swipeLeft)="mobileAutoCloseNav()"
->
-    <mat-sidenav
-        #sideNav
-        [mode]="vp.isMobile ? 'over' : 'side'"
-        [opened]="!vp.isMobile"
-        disableClose="!vp.isMobile"
-        class="side-panel"
-    >
-        <div class="nav-toolbar">
-            <!-- logo -->
-            <a [routerLink]="['/', meeting?.id]" (click)="mobileAutoCloseNav()">
-                <os-logo class="os-logo-container"></os-logo>
-            </a>
-            <h2>{{ meeting?.name }}</h2>
-        </div>
-
-        <!-- User Menu -->
-        <os-user-menu (navEvent)="mobileAutoCloseNav()"></os-user-menu>
-
+<os-sidenav #sideNav>
+    <ng-template osSidenavDrawerContent>
         <!-- navigation -->
         <mat-nav-list class="main-nav">
-            <span *ngFor="let entry of mainMenuEntries">
-                <a
-                    [@navItemAnim]
-                    *osPerms="entry.permission"
-                    mat-list-item
-                    (click)="mobileAutoCloseNav()"
-                    [routerLink]="entry.route"
-                    routerLinkActive="active"
-                    [routerLinkActiveOptions]="{ exact: isRouteExact(entry.route) }"
-                >
-                    <mat-icon>{{ entry.icon }}</mat-icon>
-                    <span>{{ entry.displayName | translate }}</span>
-                </a>
-            </span>
-            <mat-divider></mat-divider>
-            <a
-                [@navItemAnim]
-                mat-list-item
-                routerLink="legalnotice"
-                routerLinkActive="active"
-                (click)="mobileAutoCloseNav()"
-            >
-                <mat-icon>info</mat-icon>
-                <span>{{ 'Legal notice' | translate }}</span>
-            </a>
-            <a
-                [@navItemAnim]
-                mat-list-item
-                routerLink="privacypolicy"
-                routerLinkActive="active"
-                (click)="mobileAutoCloseNav()"
-            >
-                <mat-icon>security</mat-icon>
-                <span>{{ 'Privacy policy' | translate }}</span>
-            </a>
-            <a
-                [@navItemAnim]
-                mat-list-item
-                href="https://openslides.com"
-                target="_blank"
-                (click)="mobileAutoCloseNav()"
-            >
+            <ng-container *ngFor="let entry of mainMenuEntries">
                 <span>
-                    <small><os-copyright-sign></os-copyright-sign>&nbsp;Copyright by OpenSlides</small>
+                    <a
+                        [@navItemAnim]
+                        *osPerms="entry.permission"
+                        mat-list-item
+                        (click)="mobileAutoCloseNav()"
+                        [routerLink]="entry.route"
+                        routerLinkActive="active"
+                        [routerLinkActiveOptions]="{ exact: isRouteExact(entry.route) }"
+                    >
+                        <mat-icon>{{ entry.icon }}</mat-icon>
+                        <span>{{ entry.displayName | translate }}</span>
+                    </a>
                 </span>
-            </a>
+                <mat-divider *ngIf="entry.hasDividerBelow"></mat-divider>
+            </ng-container>
             <div class="os-footer-logo-container">
                 <os-logo [footer]="true"></os-logo>
             </div>
         </mat-nav-list>
-        <!-- Toggle-button -->
-        <div class="nav-toggle-button-container" *ngIf="!vp.isMobile">
-            <button *ngIf="sideNav.opened" mat-raised-button (click)="toggleSideNav()" class="nav-toggle-button left">
-                <mat-icon>arrow_back_ios</mat-icon>
-            </button>
-        </div>
-    </mat-sidenav>
-    <mat-sidenav-content>
-        <!-- Toggle-button -->
-        <div class="nav-toggle-button-container" *ngIf="!vp.isMobile">
-            <button *ngIf="!sideNav.opened" mat-raised-button (click)="toggleSideNav()" class="nav-toggle-button right">
-                <mat-icon>arrow_forward_ios</mat-icon>
-            </button>
-        </div>
+    </ng-template>
+    <ng-template osSidenavContent>
         <div class="content">
             <main>
+                <os-global-headbar></os-global-headbar>
                 <router-outlet #o="outlet"></router-outlet>
             </main>
         </div>
@@ -100,5 +35,5 @@
             <os-action-bar></os-action-bar>
             <os-interaction-container></os-interaction-container>
         </div>
-    </mat-sidenav-content>
-</mat-sidenav-container>
+    </ng-template>
+</os-sidenav>

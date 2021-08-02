@@ -35,10 +35,6 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
         {
             prop: 'info',
             width: '65%'
-        },
-        {
-            prop: 'utils',
-            width: '40px'
         }
     ];
 

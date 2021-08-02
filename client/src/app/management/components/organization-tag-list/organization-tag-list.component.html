@@ -1,17 +1,8 @@
-<os-head-bar
-    [customMenu]="true"
-    [hasMainButton]="true"
-    (mainEvent)="createOrganizationTag()"
-    [multiSelectMode]="isMultiSelect"
->
+<os-head-bar [hasMainButton]="true" (mainEvent)="createOrganizationTag()" [multiSelectMode]="isMultiSelect">
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Tags' | translate }}</h2>
     </div>
-
-    <ng-container class="custom-menu-slot">
-        <os-management-navigation></os-management-navigation>
-    </ng-container>
 
     <!-- Menu -->
     <div class="menu-slot">
@@ -32,6 +23,8 @@
     [multiSelect]="isMultiSelect"
     listStorageKey="orgaTags"
     (dataSourceChange)="onDataSourceChange($event)"
+    [vScrollFixed]="60"
+    [hiddenInMobile]="['info', 'menu']"
 >
     <div *pblNgridCellDef="'name'; row as orgaTag" class="cell-slot fill">
         <div>

@@ -1,5 +1,4 @@
 <os-head-bar
-    [customMenu]="true"
     prevUrl="/committees"
     [nav]="false"
     [hasMainButton]="operator.hasCommitteePermissions(currentCommittee?.id, CML.can_manage)"
@@ -27,10 +26,6 @@
         <button mat-icon-button [matMenuTriggerFor]="moreCommitteeMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
-    </ng-container>
-
-    <ng-container class="custom-menu-slot">
-        <os-management-navigation></os-management-navigation>
     </ng-container>
 </os-head-bar>
 

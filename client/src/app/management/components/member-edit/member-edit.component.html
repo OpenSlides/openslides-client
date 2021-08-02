@@ -1,5 +1,4 @@
 <os-head-bar
-    [customMenu]="true"
     [hasMainButton]="true"
     mainButtonIcon="edit"
     (mainEvent)="editMember()"
@@ -15,11 +14,6 @@
         <h2 *ngIf="isNewUser">{{ 'New member' | translate }}</h2>
         <h2 *ngIf="!isNewUser">{{ user?.full_name }}</h2>
     </div>
-
-    <!-- Navigation -->
-    <ng-container class="custom-menu-slot">
-        <os-management-navigation></os-management-navigation>
-    </ng-container>
 
     <!-- Menu -->
     <ng-container class="menu-slot">

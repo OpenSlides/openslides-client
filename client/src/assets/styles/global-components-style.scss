@@ -182,6 +182,10 @@
         font-size: 18px;
     }
 
+    .white-divider {
+        border-top-color: white;
+    }
+
     /** Custom themes for NGrid. Could be an own file if it gets more */
     .pbl-ngrid-container {
         background: mat-color($background, card);
@@ -214,17 +218,34 @@
         color: mat-color($primary, default-contrast) !important;
     }
 
+    .background-accent {
+        background: mat-color($accent) !important;
+        color: mat-color($accent, default-contrast) !important;
+    }
+
     .background-card {
         background: mat-color($background, card);
         color: mat-color($foreground, text);
     }
 
-    .primary-foreground {
+    .foreground-primary {
         color: mat-color($primary);
     }
 
-    .accent-foreground {
+    .foreground-primary-contrast {
+        color: mat-color($primary, default-contrast);
+    }
+
+    .foreground-accent {
         color: mat-color($accent);
+    }
+
+    .foreground-accent-contrast {
+        color: mat-color($accent, default-contrast);
+    }
+
+    .foreground-warn {
+        color: mat-color($warn);
     }
 
     .svg-primary {

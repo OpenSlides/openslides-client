@@ -1,6 +1,4 @@
 <os-head-bar
-    [customMenu]="true"
-    [isSearchEnabled]="false"
     [editMode]="hasEdits"
     [isSaveButtonEnabled]="orgaSettingsForm?.valid"
     (cancelEditEvent)="revertChanges()"
@@ -10,10 +8,6 @@
     <div class="title-slot">
         <h2>{{ pageTitle | translate }}</h2>
     </div>
-
-    <ng-container class="custom-menu-slot">
-        <os-management-navigation></os-management-navigation>
-    </ng-container>
 </os-head-bar>
 
 <mat-card class="os-card spacer-bottom-60" *ngIf="orgaSettingsForm">

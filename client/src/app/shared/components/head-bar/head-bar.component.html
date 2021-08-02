@@ -1,4 +1,4 @@
-<mat-toolbar color="primary" [ngClass]="multiSelectMode ? 'multi-select' : ''" class="sticky-toolbar">
+<mat-toolbar color="accent" [ngClass]="multiSelectMode ? 'multi-select' : ''" class="sticky-toolbar">
     <div class="toolbar-left">
         <ng-container *ngIf="!editMode">
             <ng-container *ngIf="!showBackButton">
@@ -36,11 +36,6 @@
         <ng-content select=".central-info-slot"></ng-content>
     </div>
     <div class="spacer"></div>
-
-    <!-- Button to open the global search -->
-    <button *ngIf="!editMode && isSearchEnabled" mat-icon-button (click)="openSearch()">
-        <mat-icon>search</mat-icon>
-    </button>
 
     <div class="toolbar-right">
         <!-- Extra controls slot -->

@@ -1,5 +1,20 @@
+@import '~assets/styles/variables.scss';
+
 .no-content {
+    padding: 16px 0;
     text-align: center;
+}
+
+.orga-information {
+    padding: 0 20px;
+
+    .orga-name {
+        font-size: 1.875rem;
+    }
+
+    .orga-description {
+        font-size: 0.875rem;
+    }
 }
 
 .dashboard-logo {
@@ -9,16 +24,25 @@
 }
 
 .meeting-list-container {
+    @include desktop {
+        width: 1000px;
+        margin: 20px auto;
+    }
     display: flex;
-    width: 1000px;
-    margin: 20px auto;
+    margin: 0 8px 8px;
 }
 
-.meeting-icon-wrapper {
+.meeting-icon-wrapper,
+.pseudo-icon-spacer {
+    @include phone {
+        width: 40px;
+        font-size: 0.75rem;
+        margin-right: 8px;
+    }
     width: 80px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     flex-direction: column;
 
     mat-icon {
@@ -29,31 +53,44 @@
     }
 }
 
+.orga-information {
+    @include phone {
+        width: calc(100% - 88px);
+    }
+    width: calc(100% - 128px);
+}
+
 .meeting-list {
-    width: 100%;
+    @include phone {
+        width: calc(100% - 40px);
+    }
+    width: calc(100% - 80px);
+}
+
+.meeting-list {
     box-shadow: 0 8px 10px 1px rgb(0 0 0 / 14%), 0 3px 14px 2px rgb(0 0 0 / 12%), 0 5px 5px -3px rgb(0 0 0 / 40%);
     height: 240px;
     display: block;
     background: white;
     overflow: hidden;
 
-    &.no-meeting {
-        height: fit-content;
-    }
-
     cdk-virtual-scroll-viewport {
         height: 100%;
     }
 
     div.alternate {
-        background: rgba(192, 192, 192, 0.1);
+        background: rgba(0, 0, 0, 0.02);
+    }
+
+    .no-meetings-card {
+        padding: 16px 20px;
     }
 }
 
 .meeting-box {
     outline: none;
     cursor: pointer;
-    padding: 10px;
+    padding: 10px 20px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -66,16 +103,48 @@
         flex: 3;
     }
 
+    &--information-phone {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.75rem;
+    }
+
     &--left,
     &--right {
         flex: 1;
+    }
+
+    &:hover {
+        background: rgba(0, 0, 0, 0.04);
+    }
+}
+
+#active-meetings {
+    .meeting-list {
+        height: fit-content;
+
+        .meeting-box {
+            &--mid {
+                font-size: 22px;
+            }
+
+            &:last-child {
+                border: none;
+            }
+        }
+    }
+}
+
+#future-meetings {
+    .meeting-box {
+        color: black;
     }
 }
 
 #previous-meetings,
 #no-date-meetings {
     .meeting-box {
-        color: rgba(0, 0, 0, 0.4);
+        color: rgba(0, 0, 0, 0.65);
     }
 
     .meeting-icon-wrapper {

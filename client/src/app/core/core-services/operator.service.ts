@@ -27,7 +27,9 @@ const OPERATOR_FIELDS = [
     'organization_management_level',
     'committee_$_management_level',
     'committee_ids',
-    'can_change_own_password'
+    'can_change_own_password',
+    'structure_$_level',
+    'default_structure_level'
 ];
 
 function getUserCML(user: ViewUser): { [id: number]: string } | null {
@@ -235,8 +237,8 @@ export class OperatorService {
                 }
 
                 // The OML has to be changed only if new data come in.
-                if (user.organization_management_level !== undefined) {
-                    this.OML = user.organization_management_level;
+                if (user.organization_management_level !== undefined || this.OML === undefined) {
+                    this.OML = user.organization_management_level || null;
                 }
 
                 this.CML = getUserCML(user);

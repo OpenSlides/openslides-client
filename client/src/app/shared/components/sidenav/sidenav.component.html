@@ -1,0 +1,63 @@
+<mat-sidenav-container
+    class="main-container"
+    (backdropClick)="toggle()"
+    osSwipe
+    swipeConstraints="left"
+    (swipeRight)="sideNav.open()"
+    (swipeLeft)="mobileAutoCloseNav()"
+>
+    <mat-sidenav
+        #sideNav
+        [mode]="isMobile ? 'over' : 'side'"
+        [opened]="!isMobile"
+        disableClose="!isMobile"
+        class="side-panel"
+        [ngClass]="{ 'background-primary': isPrimaryBackground }"
+    >
+        <div class="nav-toolbar">
+            <!-- logo -->
+            <a [routerLink]="getLinkToMainPage()" (click)="mobileAutoCloseNav()">
+                <os-logo [hasDarkBackground]="isPrimaryBackground" class="os-logo-container"></os-logo>
+            </a>
+        </div>
+        <ng-container *ngTemplateOutlet="drawerContent"></ng-container>
+        <a
+            mat-menu-item
+            href="https://openslides.com"
+            target="_blank"
+            class="copyright-link"
+            (click)="mobileAutoCloseNav()"
+        >
+            <span>
+                <small><os-copyright-sign></os-copyright-sign>&nbsp;Copyright by OpenSlides</small>
+            </span>
+        </a>
+        <ng-container
+            *ngIf="sideNav.opened"
+            [ngTemplateOutlet]="sideNavToggleButton"
+            [ngTemplateOutletContext]="{ isOpen: sideNav.opened }"
+        ></ng-container>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <ng-container
+            *ngIf="!sideNav.opened"
+            [ngTemplateOutlet]="sideNavToggleButton"
+            [ngTemplateOutletContext]="{ isOpen: sideNav.opened }"
+        ></ng-container>
+        <ng-container *ngTemplateOutlet="content"></ng-container>
+    </mat-sidenav-content>
+</mat-sidenav-container>
+
+<ng-template #sideNavToggleButton let-isOpen="isOpen">
+    <!-- Toggle-button -->
+    <div class="nav-toggle-button-container" *ngIf="!isMobile">
+        <button
+            mat-raised-button
+            (click)="toggle()"
+            class="nav-toggle-button"
+            [ngClass]="{ left: isOpen, right: !isOpen, 'background-accent': isPrimaryBackground }"
+        >
+            <mat-icon>{{ isOpen ? 'arrow_back_ios' : 'arrow_forward_ios' }}</mat-icon>
+        </button>
+    </div>
+</ng-template>

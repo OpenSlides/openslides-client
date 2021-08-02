@@ -30,21 +30,25 @@ export class LogoComponent implements OnInit {
     @Input()
     public default = false;
 
+    @Input()
+    public hasDarkBackground = false;
+
     public constructor(private themeService: ThemeService, private mediaManageService: MediaManageService) {}
 
     public ngOnInit(): void {
+        const useDarkLogo = this.themeService.isDarkTheme || this.hasDarkBackground;
         if (this.default) {
             /**
              * reversed colors, default logo is usually on a negative contrast background
              * (i.e. mat-bar)
              */
-            this.logoPath = this.themeService.isDarkTheme ? DEFAULT_LOGO_DARK_THEME : DEFAULT_LOGO;
+            this.logoPath = useDarkLogo ? DEFAULT_LOGO_DARK_THEME : DEFAULT_LOGO;
         } else {
             this.mediaManageService.getLogoUrlObservable('web_header').subscribe(path => {
                 if (this.footer !== !!path) {
                     this.logoPath = path;
                 } else {
-                    this.logoPath = this.themeService.isDarkTheme ? DEFAULT_LOGO_DARK_THEME : DEFAULT_LOGO;
+                    this.logoPath = useDarkLogo ? DEFAULT_LOGO_DARK_THEME : DEFAULT_LOGO;
                 }
             });
         }
