@@ -32,6 +32,7 @@ export class CurrentSpeakerChyronSlideService {
             content_object_id: `meeting/${meetingId}`,
             type: MeetingProjectionType.CurrentSpeakerChyron,
             projectionDefault: Projectiondefault.currentListOfSpeakers,
+            stable: true,
             getDialogTitle: () => 'Current speaker chyron'
         };
     }

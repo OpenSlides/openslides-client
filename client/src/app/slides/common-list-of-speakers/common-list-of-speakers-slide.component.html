@@ -1,4 +1,4 @@
-<div *ngIf="data?.data">
+<div *ngIf="data?.data && !data.stable">
     <div class="slidetitle">
         <h1>
             {{ 'List of speakers' | translate }}
@@ -33,6 +33,21 @@
             </li>
         </ol>
     </div>
+</div>
+
+<div id="overlay" *ngIf="data?.data && data.stable">
+    <h3>{{ 'List of speakers' | translate }}</h3>
+
+    <div *ngIf="data.data.current" class="currentSpeaker one-line">
+        <mat-icon>mic</mat-icon>
+        <ng-container *ngTemplateOutlet="speakerTemplate; context:{speaker:data.data.current}"></ng-container>
+    </div>
+
+    <ol *ngIf="data.data.waiting && data.data.waiting.length" class="nextSpeakers">
+        <li *ngFor="let speaker of data.data.waiting" class="one-line">
+            <ng-container *ngTemplateOutlet="speakerTemplate; context:{speaker:speaker}"></ng-container>
+        </li>
+    </ol>
 </div>
 
 <ng-template let-speaker="speaker" #speakerTemplate>

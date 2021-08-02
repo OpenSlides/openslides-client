@@ -31,13 +31,20 @@ export class CommonListOfSpeakersSlideComponent extends BaseSlideComponent<Commo
     }
 
     protected setData(value: SlideData<CommonListOfSpeakersSlideData>): void {
-        modifyAgendaItemNumber(value.data.title_information);
+        const hasData = value?.data && Object.keys(value.data).length > 0; // the CLOS slide may be empty `{}`.
+        if (hasData) {
+            modifyAgendaItemNumber(value.data.title_information);
+        }
         super.setData(value);
 
-        const repo = this.collectionMapperService.getRepository(this.data.data.title_information.collection);
-        if (!isBaseIsAgendaItemContentObjectRepository(repo)) {
-            throw new Error('The content object has no agenda base repository!');
+        if (hasData) {
+            const repo = this.collectionMapperService.getRepository(this.data.data.title_information.collection);
+            if (!isBaseIsAgendaItemContentObjectRepository(repo)) {
+                throw new Error('The content object has no agenda base repository!');
+            }
+            this.title = repo.getAgendaSlideTitle(this.data.data.title_information);
+        } else {
+            this.title = '';
         }
-        this.title = repo.getAgendaSlideTitle(this.data.data.title_information);
     }
 }
