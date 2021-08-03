@@ -248,12 +248,12 @@ export class UserRepositoryService
         const additions: string[] = [];
 
         // addition: add number and structure level
-        const structure_level = user.structure_level() || '';
+        const structure_level = user.structure_level ? user.structure_level() : null;
         if (structure_level) {
             additions.push(structure_level);
         }
 
-        const number = user.number() || '';
+        const number = user.number ? user.number() : null;
         if (number) {
             additions.push(`${this.translate.instant('No.')} ${number}`);
         }

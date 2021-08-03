@@ -6,27 +6,12 @@ import { PollRepositoryService } from 'app/core/repositories/polls/poll-reposito
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { OrganizationSettingsService } from 'app/core/ui-services/organization-settings.service';
 import { Motion } from 'app/shared/models/motions/motion';
+import { OptionData, PollData } from 'app/shared/models/poll/generic-poll';
 import { Poll } from 'app/shared/models/poll/poll';
-import { PollMethod, PollPercentBase } from 'app/shared/models/poll/poll-constants';
-import { ViewOption } from 'app/shared/models/poll/view-option';
-import { ViewPoll } from 'app/shared/models/poll/view-poll';
+import { PollMethod, PollPercentBase, PollType } from 'app/shared/models/poll/poll-constants';
 import { ParsePollNumberPipe } from 'app/shared/pipes/parse-poll-number.pipe';
 import { PollKeyVerbosePipe } from 'app/shared/pipes/poll-key-verbose.pipe';
-import {
-    BasePollData,
-    CalculablePollKey,
-    PollData,
-    PollService,
-    PollTableData,
-    VotingResult
-} from 'app/site/polls/services/poll.service';
-import { ViewMotion } from '../models/view-motion';
-
-interface PollResultData {
-    yes?: number;
-    no?: number;
-    abstain?: number;
-}
+import { PollService, PollTableData, VotingResult } from 'app/site/polls/services/poll.service';
 
 /**
  * Service class for motion polls.
@@ -35,6 +20,10 @@ interface PollResultData {
     providedIn: 'root'
 })
 export class MotionPollService extends PollService {
+    public defaultPercentBase: PollPercentBase;
+    public defaultPollType: PollType;
+    public defaultGroupIds: number[];
+
     public constructor(
         organizationSettingsService: OrganizationSettingsService,
         pollKeyVerbose: PollKeyVerbosePipe,
@@ -52,10 +41,13 @@ export class MotionPollService extends PollService {
     }
 
     public getDefaultPollData(contentObject?: Motion): Partial<Poll> {
-        const poll = super.getDefaultPollData();
-
-        poll.title = this.translate.instant('Vote');
-        poll.pollmethod = PollMethod.YNA;
+        const poll: Partial<Poll> = {
+            title: this.translate.instant('Vote'),
+            onehundred_percent_base: this.defaultPercentBase,
+            entitled_group_ids: this.defaultGroupIds,
+            type: this.isElectronicVotingEnabled ? this.defaultPollType : PollType.Analog,
+            pollmethod: PollMethod.YNA
+        };
 
         if (contentObject) {
             const length = this.repo.getViewModelListByContentObject(contentObject.fqid).length;
@@ -67,89 +59,31 @@ export class MotionPollService extends PollService {
         return poll;
     }
 
-    public generateTableData(poll: ViewPoll<ViewMotion> | PollData): PollTableData[] {
-        if (poll instanceof ViewPoll) {
-            let tableData: PollTableData[] = poll.options.flatMap(vote =>
-                super.getVoteTableKeys(poll).map(key => this.createTableDataEntry(poll, key, vote))
-            );
-            tableData.push(...super.getSumTableKeys(poll).map(key => this.createTableDataEntry(poll, key)));
+    public generateTableData(poll: PollData): PollTableData[] {
+        let tableData: PollTableData[] = poll.options.flatMap(option =>
+            super.getVoteTableKeys(poll).map(key => this.createTableDataEntry(poll, key, option))
+        );
+        tableData.push(...super.getSumTableKeys(poll).map(key => this.createTableDataEntry(poll, key)));
 
-            tableData = tableData.filter(localeTableData => !localeTableData.value.some(result => result.hide));
-            return tableData;
-        } else {
-            return [];
-        }
+        tableData = tableData.filter(localeTableData => !localeTableData.value.some(result => result.hide));
+        return tableData;
     }
 
     public showChart(poll: PollData): boolean {
         return poll && poll.options && poll.options.some(option => option.yes >= 0 && option.no >= 0);
     }
 
-    public getPercentBase(poll: PollData): number {
-        const base: PollPercentBase = poll.onehundred_percent_base as PollPercentBase;
-
-        let totalByBase: number;
-        const result = poll.options[0];
-        switch (base) {
-            case PollPercentBase.YN:
-                if (result.yes >= 0 && result.no >= 0) {
-                    totalByBase = this.sumYN(result);
-                }
-                break;
-            case PollPercentBase.YNA:
-                if (result.yes >= 0 && result.no >= 0 && result.abstain >= 0) {
-                    totalByBase = this.sumYNA(result);
-                }
-                break;
-            case PollPercentBase.Valid:
-                // auslagern
-                if (result.yes >= 0 && result.no >= 0 && result.abstain >= 0) {
-                    totalByBase = poll.votesvalid;
-                }
-                break;
-            case PollPercentBase.Cast:
-                totalByBase = poll.votescast;
-                break;
-            case PollPercentBase.Entitled:
-                totalByBase = poll.entitled_users_at_stop.length;
-                break;
-            case PollPercentBase.Disabled:
-                break;
-            default:
-                throw new Error('The given poll has no percent base: ' + poll);
-        }
-
-        return totalByBase;
-    }
-
-    protected getResultFromPoll(poll: PollData, key: CalculablePollKey): number[] {
-        return poll.options.map(option => option[key]);
-    }
-
-    private createTableDataEntry(poll: BasePollData<any, any>, result: VotingResult, vote?: ViewOption): PollTableData {
+    private createTableDataEntry(poll: PollData, result: VotingResult, option?: OptionData): PollTableData {
         return {
             votingOption: result.vote,
             value: [
                 {
-                    amount: vote ? vote[result.vote] : poll[result.vote],
+                    amount: option ? option[result.vote] : poll[result.vote],
                     hide: result.hide,
                     icon: result.icon,
                     showPercent: result.showPercent
                 }
             ]
         };
-    }
-
-    private sumYN(result: PollResultData): number {
-        let sum = 0;
-        sum += result.yes > 0 ? result.yes : 0;
-        sum += result.no > 0 ? result.no : 0;
-        return sum;
-    }
-
-    private sumYNA(result: PollResultData): number {
-        let sum = this.sumYN(result);
-        sum += result.abstain > 0 ? result.abstain : 0;
-        return sum;
     }
 }

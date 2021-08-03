@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 
-import { BehaviorSubject } from 'rxjs';
-
+import { modifyAgendaItemNumber } from '../agenda_item_number';
+import { CollectionMapperService } from 'app/core/core-services/collection-mapper.service';
 import { collectionFromFqid } from 'app/core/core-services/key-transforms';
 import { SlideData } from 'app/core/ui-services/projector.service';
-import { ChartData } from 'app/shared/components/charts/charts.component';
+import { OptionData, OptionTitle, PollData } from 'app/shared/models/poll/generic-poll';
 import { PollState } from 'app/shared/models/poll/poll-constants';
 import { PollService } from 'app/site/polls/services/poll.service';
 import { BaseSlideComponent } from '../base-slide-component';
-import { GlobalOption, PollSlideData } from './poll-slide-data';
+import { PollSlideData, SlideOption } from './poll-slide-data';
 
 export enum PollContentObjectType {
     Standalone = 'standalone',
@@ -25,10 +25,14 @@ export class PollSlideComponent extends BaseSlideComponent<PollSlideData> {
     public PollState = PollState;
     public PollContentObjectType = PollContentObjectType;
 
-    public chartDataSubject: BehaviorSubject<ChartData> = new BehaviorSubject([]);
     public pollContentObjectType: PollContentObjectType = null;
 
-    public constructor(public pollService: PollService) {
+    public title: string;
+    public subtitle: string;
+
+    public polldata: PollData;
+
+    public constructor(public pollService: PollService, private collectionMapperService: CollectionMapperService) {
         super();
     }
 
@@ -41,13 +45,15 @@ export class PollSlideComponent extends BaseSlideComponent<PollSlideData> {
                 (value.data[field] as any) = parseFloat(value.data[field] as any);
             }
         });
-        ['yes', 'no', 'abstain'].forEach((field: keyof GlobalOption) => {
-            if (value.data.global_option[field] !== undefined) {
-                (value.data.global_option[field] as any) = parseFloat(value.data.global_option[field] as any);
-            }
-        });
+        if (value.data.global_option) {
+            ['yes', 'no', 'abstain'].forEach((field: keyof SlideOption) => {
+                if (value.data.global_option[field] !== undefined) {
+                    (value.data.global_option[field] as any) = parseFloat(value.data.global_option[field] as any);
+                }
+            });
+        }
         value.data.options.forEach(option => {
-            ['yes', 'no', 'abstain'].forEach((field: keyof GlobalOption) => {
+            ['yes', 'no', 'abstain'].forEach((field: keyof SlideOption) => {
                 if (option[field] !== undefined) {
                     (option[field] as any) = parseFloat(option[field] as any);
                 }
@@ -55,8 +61,7 @@ export class PollSlideComponent extends BaseSlideComponent<PollSlideData> {
         });
 
         if (value.data.state === PollState.Published) {
-            const chartData = this.pollService.generateChartData(value.data);
-            this.chartDataSubject.next(chartData);
+            this.polldata = this.createPollData(value.data);
         }
 
         if (value.data.content_object_id) {
@@ -64,5 +69,63 @@ export class PollSlideComponent extends BaseSlideComponent<PollSlideData> {
         } else {
             this.pollContentObjectType = PollContentObjectType.Standalone;
         }
+
+        if (value.data.title_information) {
+            modifyAgendaItemNumber(value.data.title_information);
+            const repo = this.collectionMapperService.getRepository(value.data.title_information.collection);
+            this.title = repo.getTitle(value.data.title_information as any);
+            this.subtitle = value.data.title;
+        } else {
+            this.title = value.data.title;
+            this.subtitle = null;
+        }
+    }
+
+    private createPollData(data: PollSlideData): PollData {
+        const getContentObjectTitle = () => {
+            if (data.title_information) {
+                modifyAgendaItemNumber(data.title_information);
+                const repo = this.collectionMapperService.getRepository(data.title_information.collection);
+                return repo.getTitle(data.title_information as any);
+            } else {
+                return null;
+            }
+        };
+        const poll: PollData = {
+            getContentObjectTitle,
+            pollmethod: data.pollmethod,
+            state: data.state,
+            onehundred_percent_base: data.onehundred_percent_base,
+            votesvalid: data.votesvalid,
+            votesinvalid: data.votesinvalid,
+            votescast: data.votescast,
+            type: data.type,
+            entitled_users_at_stop: data.entitled_users_at_stop,
+            options: data.options.map((option, i) => this.createOptionData(option, i + 1)),
+            global_option: data.global_option
+                ? this.createOptionData(data.global_option)
+                : ({ getOptionTitle: () => ({ title: '' }) } as OptionData)
+        };
+        return poll;
+    }
+
+    private createOptionData(data: SlideOption, weight: number = 1): OptionData {
+        console.log(data);
+        const getOptionTitle: () => OptionTitle = () => {
+            if (data.text) {
+                return { title: data.text };
+            } else {
+                modifyAgendaItemNumber(data.content_object);
+                const repo = this.collectionMapperService.getRepository(data.content_object.collection);
+                return { title: repo.getTitle(data.content_object as any) };
+            }
+        };
+        return {
+            getOptionTitle,
+            yes: data.yes,
+            no: data.no,
+            abstain: data.abstain,
+            weight: weight
+        };
     }
 }

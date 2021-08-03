@@ -5,6 +5,7 @@ export class Option extends BaseDecimalModel<Option> {
     public static COLLECTION = 'option';
     public static readonly DECIMAL_FIELDS: (keyof Option)[] = ['yes', 'no', 'abstain'];
     public id: Id;
+    public text: string;
     public yes: number;
     public no: number;
     public abstain: number;

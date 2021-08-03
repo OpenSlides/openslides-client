@@ -6,6 +6,7 @@ import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descri
 import { ViewGroup } from 'app/site/users/models/view-group';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { BaseModel } from '../base/base-model';
+import { PollData } from './generic-poll';
 import { Poll } from './poll';
 import {
     AssignmentPollMethodVerbose,
@@ -22,7 +23,7 @@ import { ViewOption } from './view-option';
 
 export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
     extends BaseProjectableViewModel<Poll>
-    implements DetailNavigable {
+    implements DetailNavigable, PollData {
     public get poll(): Poll {
         return this._model;
     }
@@ -73,23 +74,15 @@ export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
         return this.user_has_voted;
     }
 
-    public get amount_global_yes(): number {
-        return this.global_option?.yes;
-    }
-
-    public get amount_global_no(): number {
-        return this.global_option?.no;
-    }
-
-    public get amount_global_abstain(): number {
-        return this.global_option?.abstain;
-    }
-
     /**
      * Is injected by the poll-repo
      * TODO: Can be removed, when OpenSlides/openslides-autoupdate-service#262 is resolved.
      */
     public operatorHasVoted: () => boolean;
+
+    public getContentObjectTitle(): string | null {
+        return this.content_object?.getTitle();
+    }
 
     public canBeVotedFor(): boolean {
         return this.isStarted;

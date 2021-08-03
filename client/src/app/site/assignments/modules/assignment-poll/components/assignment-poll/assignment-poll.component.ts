@@ -10,14 +10,11 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { VotingService } from 'app/core/ui-services/voting.service';
 import { VotingPrivacyWarningComponent } from 'app/shared/components/voting-privacy-warning/voting-privacy-warning.component';
-import { PollState } from 'app/shared/models/poll/poll-constants';
-import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { BasePollComponent } from 'app/site/polls/components/base-poll.component';
 import { AssignmentPollDialogService } from '../../services/assignment-poll-dialog.service';
 import { AssignmentPollPdfService } from '../../services/assignment-poll-pdf.service';
-import { AssignmentPollService } from '../../services/assignment-poll.service';
 
 /**
  * Component for a single assignment poll. Used in assignment detail view
@@ -79,7 +76,6 @@ export class AssignmentPollComponent extends BasePollComponent<ViewAssignment> i
         choiceService: ChoiceService,
         repo: PollRepositoryService,
         pollDialog: AssignmentPollDialogService,
-        private pollService: AssignmentPollService,
         private formBuilder: FormBuilder,
         private pdfService: AssignmentPollPdfService,
         private operator: OperatorService,
@@ -108,14 +104,5 @@ export class AssignmentPollComponent extends BasePollComponent<ViewAssignment> i
 
     public openVotingWarning(): void {
         this.dialog.open(VotingPrivacyWarningComponent, infoDialogSettings);
-    }
-
-    protected onAfterUpdatePoll(poll: ViewPoll): void {
-        if (poll.state !== PollState.Finished && poll.state !== PollState.Published) {
-            return;
-        }
-        this.candidatesLabels = this.pollService.getChartLabels(poll);
-        const chartData = this.pollService.generateChartData(poll);
-        this.chartDataSubject.next(chartData);
     }
 }

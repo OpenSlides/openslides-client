@@ -21,7 +21,7 @@
                     <!-- Percent numbers -->
                     <td class="result-cell-definition">
                         <span *ngIf="row.value[0].showPercent">
-                            {{ row.value[0].amount | pollPercentBase: poll:'motion' }}
+                            {{ row.value[0].amount | pollPercentBase: poll }}
                         </span>
                     </td>
 
@@ -33,7 +33,7 @@
                 <tr *ngIf="isPercentBaseEntitled" class="entitled-users-row">
                     <td>{{ 'Entitled users' | translate }}</td>
                     <td class="result-cell-definition">
-                        {{ poll.entitled_users_at_stop.length | pollPercentBase: poll:'motion' }}
+                        {{ poll.entitled_users_at_stop.length | pollPercentBase: poll }}
                     </td>
                     <td class="result-cell-definition">
                         {{ poll.entitled_users_at_stop.length }}
