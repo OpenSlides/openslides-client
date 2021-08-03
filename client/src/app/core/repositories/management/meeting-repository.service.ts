@@ -13,6 +13,7 @@ import { ViewMeeting } from 'app/management/models/view-meeting';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Meeting } from 'app/shared/models/event-management/meeting';
 import { Projection } from 'app/shared/models/projector/projection';
+import { ViewUser } from 'app/site/users/models/view-user';
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollectorWithoutActiveMeetingService } from '../repository-service-collector-without-active-meeting-service';
 
@@ -26,11 +27,11 @@ export interface ImportMeeting {
     [collection: string]: unknown[];
 }
 
-interface MeetingUserModifiedFields {
-    addedUserIds?: Id[];
-    removedUserIds?: Id[];
-    addedAdminIds?: Id[];
-    removedAdminIds?: Id[];
+export interface MeetingUserModifiedFields {
+    addedUsers?: ViewUser[];
+    removedUsers?: ViewUser[];
+    addedAdmins?: ViewUser[];
+    removedAdmins?: ViewUser[];
 }
 
 @Injectable({
@@ -169,53 +170,33 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             }
         ];
 
-        let { removedUserIds = [] }: MeetingUserModifiedFields = options;
-        const { addedUserIds, addedAdminIds, removedAdminIds = [] }: MeetingUserModifiedFields = options;
-        // Users, removed from the default group, are not removed from the admin group
-        removedUserIds = removedUserIds.difference(addedAdminIds).difference(meeting.admin_group.user_ids);
+        /**
+         * This is a mapping of user-id -> group-ids for a given meeting
+         */
+        const userUpdate: { [userId: number]: Id[] } = {};
+        const { addedUsers, removedUsers, addedAdmins, removedAdmins }: MeetingUserModifiedFields = options;
+        if (addedUsers?.length || removedUsers?.length) {
+            if (!meeting.default_group_id) {
+                throw new Error('A default group is required');
+            }
+            this.getNewGroupsForUsers(userUpdate, addedUsers, meeting.id, meeting.default_group_id);
+            this.getNewGroupsForUsers(userUpdate, removedUsers, meeting.id, meeting.default_group_id);
+        }
+        if (addedAdmins?.length || removedAdmins?.length) {
+            if (!meeting.admin_group_id) {
+                throw new Error('An admin group is required');
+            }
+            this.getNewGroupsForUsers(userUpdate, addedAdmins, meeting.id, meeting.admin_group_id);
+            this.getNewGroupsForUsers(userUpdate, removedAdmins, meeting.id, meeting.admin_group_id);
+        }
 
-        const updateData: { id: Id; group_$_ids: { [meetingId: number]: Id[] } }[] = [];
-        // Adding a user as admin also adds they to the default-group
-        if (addedAdminIds?.length) {
-            updateData.push(...this.getUserGroupUpdatePayload(addedAdminIds, meeting.id, meeting.admin_group_id));
-        }
-        if (addedUserIds?.length) {
-            updateData.push(
-                ...this.getUserGroupUpdatePayload(
-                    addedUserIds.difference(addedAdminIds),
-                    meeting.id,
-                    meeting.default_group_id
-                )
-            );
-        }
-        if (removedAdminIds?.length) {
-            // Users, removed from the admin group, are not removed from the default group.
-            // But if they are removed from the whole meeting, remove them completely.
-            const remainingRemovedAdminIds = removedAdminIds.filter(
-                userId =>
-                    (meeting.user_ids.includes(userId) || addedUserIds.includes(userId)) &&
-                    !removedUserIds.includes(userId)
-            );
-            // If users removed from the default group but added to the admin group of a meeting, then they are still
-            // admins and can only be removed this way
-            const completelyRemovedAdminIds = removedAdminIds.filter(
-                userId =>
-                    !meeting.user_ids.includes(userId) &&
-                    !addedUserIds.includes(userId) &&
-                    !removedUserIds.includes(userId)
-            );
-            updateData.push(
-                ...this.getUserGroupUpdatePayload(remainingRemovedAdminIds, meeting.id, meeting.default_group_id)
-            );
-            updateData.push(...this.getUserGroupUpdatePayload(completelyRemovedAdminIds, meeting.id));
-        }
-        if (removedUserIds?.length) {
-            updateData.push(...this.getUserGroupUpdatePayload(removedUserIds, meeting.id));
-        }
-        if (updateData.length) {
+        if (Object.keys(userUpdate).length) {
             actions.push({
                 action: UserAction.UPDATE,
-                data: updateData
+                data: Object.keys(userUpdate).map(userId => ({
+                    id: parseInt(userId, 10),
+                    group_$_ids: { [meeting.id]: userUpdate[userId] }
+                }))
             });
         }
 
@@ -249,14 +230,34 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         return temp;
     }
 
-    private getUserGroupUpdatePayload(
-        ids: Id[] = [],
+    /**
+     * Maps group-ids for users to their id.
+     * If the given groupId is already existing, it will be removed. Otherwise it will be added.
+     * @warning This changes the passed `data`-object as a side-effect.
+     *
+     * @param data An object containing the previous group-ids for users mapped to user-ids
+     * @param users An array of users, whose groups for a specific meeting are updated
+     * @param meetingId The id of a meeting, users assigned to or removed from
+     * @param groupId The id of a group, that is assigned to or removed from a user
+     *
+     * @returns An object containing user-ids as keys and an array of ids as values, which are the next group-ids
+     * for the related user.
+     */
+    private getNewGroupsForUsers(
+        data: { [userId: number]: Id[] },
+        users: ViewUser[],
         meetingId: Id,
-        groupId?: Id
-    ): { id: Id; group_$_ids: { [meetingId: number]: Id[] } }[] {
-        return ids.map(id => ({
-            id,
-            group_$_ids: { [meetingId]: groupId ? [groupId] : [] }
-        }));
+        groupId: Id
+    ): void {
+        const getNextGroupIds = (groupIds: Id[]) => {
+            const index = groupIds.findIndex(id => groupId === id);
+            if (index > -1) {
+                groupIds.splice(index, 1);
+            } else {
+                groupIds = (groupIds || []).concat(groupId);
+            }
+            return groupIds;
+        };
+        users.forEach(user => (data[user.id] = getNextGroupIds(data[user.id] || user.group_ids(meetingId))));
     }
 }

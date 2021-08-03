@@ -74,7 +74,7 @@ export class OperatorService {
     // If groupIds is undefined or [], the default group must be used (given, there is an active meeting).
     private permissions: Permission[] | undefined = undefined;
     private groupIds: Id[] | undefined = undefined;
-    private OML: string | undefined = undefined; //  null is valid, so use undefined here
+    private OML: string | null | undefined = undefined; //  null is valid, so use undefined here
     private CML: { [id: number]: string } | undefined = undefined;
 
     public get isMeetingAdmin(): boolean {
@@ -234,7 +234,11 @@ export class OperatorService {
                     this.permissions = this.calcPermissions();
                 }
 
-                this.OML = user.organization_management_level || null;
+                // The OML has to be changed only if new data come in.
+                if (user.organization_management_level !== undefined) {
+                    this.OML = user.organization_management_level;
+                }
+
                 this.CML = getUserCML(user);
 
                 this.operatorShortNameSubject.next(this._shortName);

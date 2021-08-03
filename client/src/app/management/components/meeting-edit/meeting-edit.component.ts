@@ -10,8 +10,12 @@ import { OperatorService } from 'app/core/core-services/operator.service';
 import { CML, OML } from 'app/core/core-services/organization-permission';
 import { Id } from 'app/core/definitions/key-types';
 import { CommitteeRepositoryService } from 'app/core/repositories/management/committee-repository.service';
-import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
+import {
+    MeetingRepositoryService,
+    MeetingUserModifiedFields
+} from 'app/core/repositories/management/meeting-repository.service';
 import { OrganizationTagRepositoryService } from 'app/core/repositories/management/organization-tag-repository.service';
+import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ColorService } from 'app/core/ui-services/color.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ViewCommittee } from 'app/management/models/view-committee';
@@ -62,7 +66,8 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
         private committeeRepo: CommitteeRepositoryService,
         public orgaTagRepo: OrganizationTagRepositoryService,
         private colorService: ColorService,
-        private operator: OperatorService
+        private operator: OperatorService,
+        private userRepo: UserRepositoryService
     ) {
         super(componentServiceCollector);
         this.createOrEdit();
@@ -90,19 +95,11 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
                 })
                 .catch(this.raiseError);
         } else {
-            const userIds = this.meetingForm.value.user_ids as Id[];
-            const addedUserIds = (userIds || []).difference(this.editMeeting.user_ids);
-            const removedUserIds = (this.editMeeting.user_ids || []).difference(userIds);
-            const adminIds = this.meetingForm.value.admin_ids as Id[];
-            const previousAdminIds = this.editMeeting.admin_group.user_ids || [];
-            const addedAdminIds = (adminIds || []).difference(previousAdminIds);
-            const removedAdminIds = previousAdminIds.difference(adminIds);
-
-            const payload: MeetingAction.UpdatePayload = this.meetingForm.value;
+            const payload: MeetingAction.UpdatePayload = { ...this.meetingForm.value };
             delete (payload as any).user_ids; // do not send them to the server.
             delete (payload as any).admin_ids; // do not send them to the server.
             this.meetingRepo
-                .update(payload, this.editMeeting, { addedUserIds, removedUserIds, addedAdminIds, removedAdminIds })
+                .update(payload, this.editMeeting, this.getUsersToUpdateForMeetingObject())
                 .then(() => {
                     this.location.back();
                 })
@@ -153,8 +150,15 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
                 viewModelCtor: ViewMeeting,
                 ids: [this.meetingId],
                 follow: [
-                    { idField: 'user_ids', fieldset: 'shortName' },
-                    { idField: 'admin_group_id', follow: [{ idField: 'user_ids', fieldset: 'shortName' }] }
+                    { idField: 'user_ids', fieldset: 'shortName', follow: ['group_$_ids'] },
+                    {
+                        idField: 'admin_group_id',
+                        follow: [{ idField: 'user_ids', fieldset: 'shortName', follow: ['group_$_ids'] }]
+                    },
+                    {
+                        idField: 'default_group_id',
+                        follow: [{ idField: 'user_ids', fieldset: 'shortName', follow: ['group_$_ids'] }]
+                    }
                 ],
                 fieldset: 'edit'
             },
@@ -175,7 +179,7 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
             {
                 viewModelCtor: ViewCommittee,
                 ids: [this.committeeId],
-                follow: [{ idField: 'user_ids', fieldset: 'shortName' }],
+                follow: [{ idField: 'user_ids', fieldset: 'shortName', follow: ['group_$_ids'] }],
                 fieldset: 'list'
             },
             'committee'
@@ -220,7 +224,7 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
         const patchMeeting: any = meeting.getUpdatedModelData({
             start_time: meeting.start_time ? new Date(meeting.start_time * 1000) : undefined,
             end_time: meeting.end_time ? new Date(meeting.end_time * 1000) : undefined,
-            user_ids: [...(meeting.user_ids || [])],
+            user_ids: [...(meeting.default_group?.user_ids || [])],
             admin_ids: [...(meeting.admin_group?.user_ids || [])]
         } as any);
         this.meetingForm.patchValue(patchMeeting);
@@ -232,5 +236,30 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
                 admin_ids: [this.operator.operatorId]
             });
         }
+    }
+
+    /**
+     * Creates an object containing added and removed participant-user-ids as well as
+     * added and removed admin-user-ids for the current editted meeting.
+     *
+     * @returns A `MeetingUserModifiedFields`-object containing the keys `addedUsers`, `removedUsers`, `addedAdmins`
+     * and `removedAdmins`
+     */
+    private getUsersToUpdateForMeetingObject(): MeetingUserModifiedFields {
+        const nextUserIds = this.meetingForm.value.user_ids as Id[];
+        const previousUserIds = this.editMeeting.default_group.user_ids || [];
+        const addedUserIds = (nextUserIds || []).difference(previousUserIds);
+        const removedUserIds = previousUserIds.difference(nextUserIds);
+        const nextAdminIds = this.meetingForm.value.admin_ids as Id[];
+        const previousAdminIds = this.editMeeting.admin_group.user_ids || [];
+        const addedAdminIds = (nextAdminIds || []).difference(previousAdminIds);
+        const removedAdminIds = previousAdminIds.difference(nextAdminIds);
+
+        return {
+            addedUsers: addedUserIds.map(id => this.userRepo.getViewModel(id)),
+            removedUsers: removedUserIds.map(id => this.userRepo.getViewModel(id)),
+            addedAdmins: addedAdminIds.map(id => this.userRepo.getViewModel(id)),
+            removedAdmins: removedAdminIds.map(id => this.userRepo.getViewModel(id))
+        };
     }
 }
