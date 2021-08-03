@@ -27,8 +27,4 @@ export abstract class BaseScaleScrollSlideComponent<T extends object>
 
     @Input()
     public scale: number;
-
-    public constructor() {
-        super();
-    }
 }
