@@ -9,6 +9,7 @@ import { BaseModel } from 'app/shared/models/base/base-model';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { CollectionMapperService } from './collection-mapper.service';
 import { collectionIdFromFqid } from './key-transforms';
+import { Collection, Fqid, Id } from '../definitions/key-types';
 import { Relation } from '../definitions/relations';
 import { ViewModelStoreService } from './view-model-store.service';
 
@@ -132,8 +133,8 @@ export class RelationManagerService {
 
     private handleGenericRelation<M extends BaseModel>(model: M, relation: Relation): any {
         if (relation.many) {
-            const foreignViewModels = model[relation.ownIdField].map(fqid => {
-                let collection, id;
+            const foreignViewModels = (model[relation.ownIdField] || []).map((fqid: Fqid) => {
+                let collection: Collection, id: Id;
                 [collection, id] = collectionIdFromFqid(fqid);
                 return this.viewModelStoreService.get(collection, id);
             });
