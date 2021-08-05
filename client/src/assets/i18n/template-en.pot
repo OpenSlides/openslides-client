@@ -131,6 +131,9 @@ msgstr ""
 msgid "Admin"
 msgstr ""
 
+msgid "Administrators"
+msgstr ""
+
 msgid "After verifiy the preview click on \"import\" please (see top right)."
 msgstr ""
 
@@ -302,6 +305,9 @@ msgid "Begin speech"
 msgstr ""
 
 msgid "CSV import"
+msgstr ""
+
+msgid "Calendar"
 msgstr ""
 
 msgid "Call list"
@@ -622,6 +628,9 @@ msgstr ""
 msgid "Contribution"
 msgstr ""
 
+msgid "Copy and paste your member names in this textbox."
+msgstr ""
+
 msgid "Copy and paste your participant names in this textbox."
 msgstr ""
 
@@ -859,9 +868,6 @@ msgid "Download CSV example file"
 msgstr ""
 
 msgid "Download folder"
-msgstr ""
-
-msgid "Downloading ..."
 msgstr ""
 
 msgid "Drop files into this area OR click here to select files"
@@ -1254,6 +1260,9 @@ msgid "Import"
 msgstr ""
 
 msgid "Import meeting"
+msgstr ""
+
+msgid "Import members"
 msgstr ""
 
 msgid "Import motions"
@@ -2163,12 +2172,6 @@ msgstr ""
 msgid "Rejection (not authorized)"
 msgstr ""
 
-msgid "Related committees"
-msgstr ""
-
-msgid "Related meetings"
-msgstr ""
-
 msgid "Remove"
 msgstr ""
 
@@ -2456,9 +2459,6 @@ msgid "Show password"
 msgstr ""
 
 msgid "Show preview"
-msgstr ""
-
-msgid "Show profile"
 msgstr ""
 
 msgid "Show reason on projector"

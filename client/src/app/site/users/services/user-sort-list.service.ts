@@ -28,7 +28,7 @@ export class UserSortListService extends BaseSortListService<ViewUser> {
         { property: 'last_name', label: 'Surname' },
         { property: 'is_present_in_meeting_ids', label: 'Presence' },
         { property: 'is_active', label: 'Is active' },
-        { property: 'is_physical_person', label: 'Is a physical person' },
+        { property: 'is_physical_person', label: 'Is a natural person' },
         { property: 'number', label: 'Participant number' },
         { property: 'structure_level', label: 'Structure level' },
         { property: 'vote_weight', label: 'Vote weight' },

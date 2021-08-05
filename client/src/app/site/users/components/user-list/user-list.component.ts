@@ -327,7 +327,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
                 { property: 'comment' },
                 { property: 'is_active', label: 'Is active' },
                 { property: 'is_present_in_meetings', label: 'Is present in meeting' },
-                { property: 'is_physical_person', label: 'Is a physical person' },
+                { property: 'is_physical_person', label: 'Is a natural person' },
                 { property: 'default_password', label: 'Initial password' },
                 { property: 'email' },
                 { property: 'username' },

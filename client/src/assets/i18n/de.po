@@ -151,6 +151,9 @@ msgstr "Vertagung"
 msgid "Admin"
 msgstr "Admin"
 
+msgid "Administrators"
+msgstr "Administratoren"
+
 msgid "After verifiy the preview click on \"import\" please (see top right)."
 msgstr ""
 "Nach Prüfung der Vorschau klicken Sie bitte auf \"Importieren\" (oben "
@@ -328,6 +331,9 @@ msgstr "Rede beginnen"
 
 msgid "CSV import"
 msgstr "CSV-Import"
+
+msgid "Calendar"
+msgstr "Kalender"
 
 msgid "Call list"
 msgstr "Aufrufliste"
@@ -649,6 +655,9 @@ msgstr "Gegenrede"
 msgid "Contribution"
 msgstr "Einbringung"
 
+msgid "Copy and paste your member names in this textbox."
+msgstr "Kopieren Sie die Name Ihrer Mitglieder in diese Textbox."
+
 msgid "Copy and paste your participant names in this textbox."
 msgstr "Kopieren Sie die Name Ihrer Teilnehmer/innen in diese Textbox."
 
@@ -902,9 +911,6 @@ msgstr "CSV-Beispiel-Datei herunterladen"
 
 msgid "Download folder"
 msgstr "Verzeichnis herunterladen"
-
-msgid "Downloading ..."
-msgstr "Herunterladen ..."
 
 msgid "Drop files into this area OR click here to select files"
 msgstr ""
@@ -1318,6 +1324,9 @@ msgstr "Importieren"
 
 msgid "Import meeting"
 msgstr "Veranstaltung importieren"
+
+msgid "Import members"
+msgstr "Mitglieder importieren"
 
 msgid "Import motions"
 msgstr "Anträge importieren"
@@ -2240,12 +2249,6 @@ msgstr "Ablehnung"
 msgid "Rejection (not authorized)"
 msgstr "Verwerfung (nicht berechtigt)"
 
-msgid "Related committees"
-msgstr "Zugehörige Gremien"
-
-msgid "Related meetings"
-msgstr "Zugehörige Veranstaltungen"
-
 msgid "Remove"
 msgstr "Entfernen"
 
@@ -2540,9 +2543,6 @@ msgstr "Passwort anzeigen"
 
 msgid "Show preview"
 msgstr "Vorschau anzeigen"
-
-msgid "Show profile"
-msgstr "Profil anzeigen"
 
 msgid "Show reason on projector"
 msgstr "Begründung auf dem Projektor anzeigen"
