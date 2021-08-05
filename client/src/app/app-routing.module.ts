@@ -35,10 +35,8 @@ const routes: Route[] = [
     },
     {
         path: '',
-        loadChildren: () => import('./management/management.module').then(m => m.ManagementModule)
+        loadChildren: () => import('./main/main.module').then(m => m.MainModule)
     },
-    { path: ':meetingId', loadChildren: () => import('./site/site.module').then(m => m.SiteModule) },
-    // { path: '', redirectTo: 'manage', pathMatch: 'full' },
     { path: '**', redirectTo: '' }
 ];
 
