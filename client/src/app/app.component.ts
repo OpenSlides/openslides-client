@@ -18,7 +18,6 @@ import { OpenSlidesStatusService } from './core/core-services/openslides-status.
 import { OpenSlidesService } from './core/core-services/openslides.service';
 import { OperatorService } from './core/core-services/operator.service';
 import { overloadJsFunctions } from './shared/overload-js-functions';
-import { RouteGuard } from './core/core-services/route.guard';
 import { RoutingStateService } from './core/ui-services/routing-state.service';
 import { ServertimeService } from './core/core-services/servertime.service';
 import { SpinnerService } from './core/ui-services/spinner.service';
@@ -50,7 +49,6 @@ export class AppComponent implements OnInit {
         activeMeetingIdService: ActiveMeetingIdService,
         activeMeetingService: ActiveMeetingService,
         private lifecycleService: LifecycleService,
-        routeGuard: RouteGuard,
         router: Router,
         offlineService: OfflineService,
         servertimeService: ServertimeService,

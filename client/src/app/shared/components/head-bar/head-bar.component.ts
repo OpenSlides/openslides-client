@@ -6,7 +6,7 @@ import { RoutingStateService } from 'app/core/ui-services/routing-state.service'
 import { SuperSearchService } from 'app/core/ui-services/super-search.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 
-export const HEAD_BAR_HEIGHT = 64; // height of the head-bar in px.
+export const HEAD_BAR_HEIGHT = 50; // height of the head-bar in px.
 
 /**
  * Reusable head bar component for Apps.

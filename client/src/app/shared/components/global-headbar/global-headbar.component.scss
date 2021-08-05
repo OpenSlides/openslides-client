@@ -1,0 +1,28 @@
+:host {
+    display: block;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+.global-headbar {
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    padding-left: 26px;
+}
+
+.align-left,
+.align-right {
+    max-width: 50%;
+}
+
+.spacer {
+    flex: 1;
+    height: 100%;
+}
+
+.display-name {
+    font-weight: 400;
+    font-size: 1rem;
+}

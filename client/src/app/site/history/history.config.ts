@@ -13,7 +13,8 @@ export const HistoryAppConfig: AppConfig = {
             displayName: 'History',
             icon: 'history',
             weight: 1200,
-            permission: Permission.meetingCanSeeHistory
+            permission: Permission.meetingCanSeeHistory,
+            hasDividerBelow: true
         }
     ]
 };

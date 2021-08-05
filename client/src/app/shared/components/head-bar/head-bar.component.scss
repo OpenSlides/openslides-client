@@ -6,10 +6,10 @@
 }
 
 .sticky-toolbar {
-    top: 0;
+    top: 40px;
     z-index: 5;
     position: sticky;
-    height: 64px !important;
+    height: 50px !important;
 
     .toolbar-left {
         display: flex;

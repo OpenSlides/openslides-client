@@ -1,5 +1,4 @@
 <os-head-bar
-    [customMenu]="true"
     [hasMainButton]="operator.hasOrganizationPermissions(OML.can_manage_organization)"
     [multiSelectMode]="isMultiSelect"
     (mainEvent)="createNewCommittee()"
@@ -21,10 +20,6 @@
         <button mat-icon-button (click)="toggleMultiSelect()"><mat-icon>arrow_back</mat-icon></button>
         <span>{{ selectedRows.length }}&nbsp;</span><span>{{ 'selected' | translate }}</span>
     </div>
-
-    <ng-container class="custom-menu-slot">
-        <os-management-navigation></os-management-navigation>
-    </ng-container>
 </os-head-bar>
 
 <os-basic-list-view-table
@@ -90,7 +85,7 @@
     <div *pblNgridCellDef="'meta'; row as committee" class="cell-slot fill">
         <div>
             <div *ngIf="committee.meetingAmount">
-                <os-icon-container iconTooltip="{{ 'Meetings' | translate }}" icon="calendar_today">
+                <os-icon-container iconTooltip="{{ 'Meetings' | translate }}" icon="event_available">
                     {{ committee.meetingAmount }}
                 </os-icon-container>
             </div>

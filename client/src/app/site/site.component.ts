@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSidenav } from '@angular/material/sidenav';
 import { NavigationEnd, Router } from '@angular/router';
 
 import { Subscription } from 'rxjs';
@@ -13,6 +12,7 @@ import { TimeTravelService } from 'app/core/core-services/time-travel.service';
 import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ViewMeeting } from 'app/management/models/view-meeting';
+import { SidenavComponent } from 'app/shared/components/sidenav/sidenav.component';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { MainMenuEntry, MainMenuService } from '../core/core-services/main-menu.service';
 import { ViewportService } from '../core/ui-services/viewport.service';
@@ -27,8 +27,8 @@ export class SiteComponent extends BaseComponent implements OnInit {
     /**
      * HTML element of the side panel
      */
-    @ViewChild('sideNav', { static: true })
-    public sideNav: MatSidenav;
+    @ViewChild('sideNav', { static: true, read: SidenavComponent })
+    public sideNav: SidenavComponent;
 
     /**
      * is the user logged in, or the anonymous is active.

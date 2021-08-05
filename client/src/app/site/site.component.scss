@@ -4,105 +4,25 @@
     flex-direction: column;
 }
 
-/* Main navigation */
-mat-sidenav-container {
-    height: 100%;
-    width: 100%;
-
-    mat-sidenav.side-panel {
-        border: 0;
-        box-shadow: 3px 0px 10px 0px rgba(0, 0, 0, 0.2);
-        width: 260px;
-        overflow-x: hidden;
-
-        mat-toolbar,
-        mat-toolbar-row {
-            height: 80px;
-        }
-
-        mat-nav-list {
-            padding-top: 0;
-            padding-bottom: 20px;
-        }
-        mat-nav-list.main-nav {
-            border-top-width: 1px;
-            border-top-style: solid;
-            span {
-                font-weight: 400;
-            }
-        }
-
-        mat-icon {
-            min-width: 20px; //puts the text to the right on the same level
-            margin-right: 25px;
-        }
+mat-nav-list {
+    padding-top: 0;
+    padding-bottom: 20px;
+}
+mat-nav-list.main-nav {
+    span {
+        font-weight: 400;
     }
 }
 
-.nav-toolbar {
-    display: flex;
-    margin: auto;
-    width: 250px;
-    margin-bottom: 10px;
-    justify-content: space-evenly;
-    align-items: center;
-    flex-direction: column;
-
-    h2 {
-        font-weight: lighter;
-        margin: 0;
-        text-align: center;
-    }
-}
-
-// CSS for the toggle button
-.nav-toggle-button-container {
-    position: fixed;
-    z-index: 99;
-    bottom: 24px;
-    & > div {
-        position: relative;
-    }
-
-    .nav-toggle-button {
-        bottom: 0;
-
-        position: absolute;
-        visibility: visible;
-        transform: none;
-        width: 24px;
-        min-width: 24px;
-        height: 48px;
-        padding: 0 0 2px;
-
-        &.left {
-            left: 236px;
-            padding-left: 8px;
-            border-radius: 50px 0 0 50px;
-        }
-
-        &.right {
-            left: 0;
-            padding-right: 8px;
-            border-radius: 0 50px 50px 0;
-        }
-
-        mat-icon {
-            $size: 18px;
-            height: $size;
-            width: $size;
-            font-size: $size;
-            margin: 0;
-        }
-    }
+mat-icon {
+    min-width: 20px; //puts the text to the right on the same level
+    margin-right: 25px;
 }
 
 /* The top logo container can contain any logo with any size.
    It needs to always fit.*/
 .os-logo-container {
     margin: auto;
-    width: 230px !important;
-    height: 80px;
     display: flex;
 }
 
@@ -110,7 +30,6 @@ mat-sidenav-container {
    specified. It can only contain the standard logo */
 .os-footer-logo-container {
     width: 150px;
-    margin-left: 16px;
 }
 
 .os-logo-container:focus,

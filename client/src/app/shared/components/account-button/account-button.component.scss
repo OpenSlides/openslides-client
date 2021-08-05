@@ -1,0 +1,39 @@
+$height: 12px;
+
+:host {
+    display: flex;
+    flex-direction: row;
+}
+
+.operator-information {
+    align-items: flex-end;
+    justify-content: center;
+    flex-direction: column;
+
+    font-weight: 400;
+    margin: 4px;
+    max-width: calc(100% - 40px);
+
+    * {
+        line-height: $height;
+        height: $height;
+    }
+
+    .first-line {
+        font-size: $height;
+    }
+}
+
+.username-wrapper {
+    padding: 0px 16px 6px 18px;
+    max-height: 48px;
+
+    .username {
+        font-weight: 400;
+        font-size: 1rem;
+    }
+}
+
+a {
+    text-decoration: none;
+}

@@ -275,7 +275,7 @@
 
             <!-- Statutes -->
             <button mat-menu-item routerLink="statute-paragraphs" *ngIf="statutesEnabled">
-                <mat-icon>account_balance</mat-icon>
+                <mat-icon>auto_awesome_mosaic</mat-icon>
                 <span>{{ 'Statute' | translate }}</span>
             </button>
 
@@ -352,7 +352,11 @@
                     <mat-icon>format_indent_increase</mat-icon>
                     <span>{{ 'Move in call list' | translate }}</span>
                 </button>
-                <button mat-menu-item [disabled]="!selectedRows.length" (click)="forwardMotionsToMeetings(selectedRows)">
+                <button
+                    mat-menu-item
+                    [disabled]="!selectedRows.length"
+                    (click)="forwardMotionsToMeetings(selectedRows)"
+                >
                     <mat-icon>forward</mat-icon>
                     <span>{{ 'Forward' | translate }}</span>
                 </button>

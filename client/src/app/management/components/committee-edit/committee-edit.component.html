@@ -1,5 +1,4 @@
 <os-head-bar
-    [customMenu]="true"
     [nav]="false"
     [editMode]="true"
     [isSaveButtonEnabled]="committeeForm.valid"
@@ -11,10 +10,6 @@
         <h2 *ngIf="isCreateView">{{ addCommitteeLabel | translate }}</h2>
         <h2 *ngIf="!isCreateView">{{ editCommitteeLabel | translate }}</h2>
     </div>
-
-    <ng-container class="custom-menu-slot">
-        <os-management-navigation></os-management-navigation>
-    </ng-container>
 </os-head-bar>
 
 <mat-card class="os-card">

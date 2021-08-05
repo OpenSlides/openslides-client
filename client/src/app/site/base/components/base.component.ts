@@ -87,7 +87,7 @@ export abstract class BaseComponent implements OnDestroy {
         }
     };
 
-    public get activeMeetingId(): Id {
+    public get activeMeetingId(): Id | null {
         return this.componentServiceCollector.activeMeetingId.meetingId;
     }
 

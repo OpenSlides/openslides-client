@@ -2,37 +2,13 @@ import { Injectable } from '@angular/core';
 
 import { Subject } from 'rxjs';
 
+import { BaseMenuEntry } from '../definitions/base-menu-entry';
 import { Permission } from './permission';
 
 /**
  * This represents one entry in the main menu
  */
-export interface MainMenuEntry {
-    /**
-     * The route for the router to navigate to on click.
-     */
-    route: string;
-
-    /**
-     * The display string to be shown.
-     */
-    displayName: string;
-
-    /**
-     * The font awesom icon to display.
-     */
-    icon: string;
-
-    /**
-     * For sorting the entries.
-     */
-    weight: number;
-
-    /**
-     * The permission to see the entry.
-     */
-    permission?: Permission;
-}
+export interface MainMenuEntry extends BaseMenuEntry<Permission> {}
 
 /**
  * Collects main menu entries and provides them to the main menu component.

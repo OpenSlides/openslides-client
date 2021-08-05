@@ -1,15 +1,17 @@
-<span *ngFor="let entry of menuEntries">
-    <a *osOmlPerms="entry.permission" mat-menu-item class="management-router-link" [routerLink]="entry.route">
-        <mat-icon>{{ entry.icon }}</mat-icon>
-        <span>{{ entry.displayName | translate }}</span>
-    </a>
-</span>
-<div mat-menu-item (click)="openAccountDialog()">
-    <mat-icon>person</mat-icon>
-    <span>{{ 'My account' | translate }}</span>
-</div>
-<mat-divider></mat-divider>
-<button mat-menu-item (click)="logout()">
-    <mat-icon>exit_to_app</mat-icon>
-    <span>{{ 'Logout' | translate }}</span>
-</button>
+<ng-container *ngFor="let entry of menuEntries">
+    <span>
+        <a
+            *osOmlPerms="entry.permission"
+            mat-menu-item
+            class="management-router-link"
+            (click)="closeSidenavOnMobile()"
+            [routerLink]="entry.route"
+            routerLinkActive="background-accent"
+            [routerLinkActiveOptions]="{ exact: isRouteExact(entry.route) }"
+        >
+            <mat-icon>{{ entry.icon }}</mat-icon>
+            <span>{{ entry.displayName | translate }}</span>
+        </a>
+    </span>
+    <mat-divider class="white-divider" *ngIf="entry.hasDividerBelow"></mat-divider>
+</ng-container>

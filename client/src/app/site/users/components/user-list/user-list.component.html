@@ -46,7 +46,7 @@
             </div>
             <div class="icon-group">
                 <mat-icon matTooltip="{{ 'Is no natural person' | translate }}" *ngIf="!user.is_physical_person">
-                    account_balance
+                    auto_awesome_mosaic
                 </mat-icon>
                 <mat-icon matTooltip="{{ 'Inactive' | translate }}" *ngIf="!user.is_active && canSeeExtra">
                     block
@@ -234,7 +234,7 @@
             </button>
 
             <button mat-menu-item [disabled]="!selectedRows.length" (click)="changePhysicalStateOfSelectedUsers()">
-                <mat-icon>account_balance</mat-icon>
+                <mat-icon>auto_awesome_mosaic</mat-icon>
                 <span>{{ 'Set natural person ...' | translate }}</span>
             </button>
 

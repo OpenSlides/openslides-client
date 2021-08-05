@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
+import { ORGANIZATION_ID } from 'app/core/core-services/organization.service';
 import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
 import { OrganizationRepositoryService } from 'app/core/repositories/management/organization-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { ViewOrganization } from 'app/management/models/view-organization';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
@@ -25,7 +27,15 @@ export class DashboardComponent extends BaseModelContextComponent implements OnI
     }
 
     public get orgaName(): string {
-        return this._orgaName;
+        return this.organization?.name || '';
+    }
+
+    public get orgaDescription(): string {
+        return this.organization?.description || '';
+    }
+
+    public get isPhone(): boolean {
+        return this.vp.isMobile;
     }
 
     public previousMeetings: ViewMeeting[] = [];
@@ -33,13 +43,14 @@ export class DashboardComponent extends BaseModelContextComponent implements OnI
     public futureMeetings: ViewMeeting[] = [];
     public noDateMeetings: ViewMeeting[] = [];
 
-    private _orgaName = '';
+    private organization: ViewOrganization | undefined = undefined; // not initialized
 
     public constructor(
         protected componentServiceCollector: ComponentServiceCollector,
         private organizationRepo: OrganizationRepositoryService,
         private meetingRepo: MeetingRepositoryService,
-        private operator: OperatorService
+        private operator: OperatorService,
+        private vp: ViewportService
     ) {
         super(componentServiceCollector);
         super.setTitle('Dashboard');
@@ -48,10 +59,22 @@ export class DashboardComponent extends BaseModelContextComponent implements OnI
 
     public ngOnInit(): void {
         this.subscriptions.push(
-            this.organizationRepo.getViewModelObservable(1).subscribe(organization => {
-                this._orgaName = organization?.name;
+            this.organizationRepo.getViewModelObservable(ORGANIZATION_ID).subscribe(organization => {
+                this.organization = organization;
             })
         );
+    }
+
+    public getHeightByMeetings(meetings: ViewMeeting[]): string {
+        let height = 0;
+        if (meetings.length === 0) {
+            return 'fit-content';
+        } else if (meetings.length > 3) {
+            height = 240;
+        } else {
+            height = meetings.length * 60;
+        }
+        return `${height}px`;
     }
 
     private loadMeetings(): void {

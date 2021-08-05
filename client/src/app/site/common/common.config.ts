@@ -6,9 +6,10 @@ export const CommonAppConfig: AppConfig = {
     mainMenuEntries: [
         {
             route: '/',
-            displayName: 'Dashboard',
-            icon: 'dashboard',
-            weight: 0
+            displayName: 'Meetings',
+            icon: 'apps',
+            weight: 0,
+            hasDividerBelow: true
         },
         {
             route: '.',

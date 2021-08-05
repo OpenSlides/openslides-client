@@ -1,5 +1,11 @@
-<div class="manage-component-wrapper background--default">
-    <main class="background--default">
-        <router-outlet></router-outlet>
-    </main>
-</div>
+<os-sidenav #sideNav [isPrimaryBackground]="true">
+    <ng-template osSidenavDrawerContent>
+        <os-management-navigation></os-management-navigation>
+    </ng-template>
+    <ng-template osSidenavContent>
+        <main class="background--default">
+            <os-global-headbar></os-global-headbar>
+            <router-outlet #o="outlet"></router-outlet>
+        </main>
+    </ng-template>
+</os-sidenav>

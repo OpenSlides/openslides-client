@@ -91,7 +91,6 @@ import { MotionPollDetailContentComponent } from './components/motion-poll-detai
 import { AssignmentPollDetailContentComponent } from './components/assignment-poll-detail-content/assignment-poll-detail-content.component';
 
 import { GlobalSpinnerComponent } from './components/global-spinner/global-spinner.component';
-import { UserMenuComponent } from './components/user-menu/user-menu.component';
 import { ListOfSpeakersContentComponent } from './components/list-of-speakers-content/list-of-speakers-content.component';
 import { ImageComponent } from './components/image/image.component';
 import { OnlyNumberDirective } from './directives/only-number.directive';
@@ -116,6 +115,11 @@ import { ImportListFirstTabDirective } from './components/import-list-view/impor
 import { ImportListViewComponent } from './components/import-list-view/import-list-view.component';
 import { VideoPlayerComponent } from './components/video-player/video-player.component';
 import { ProgressComponent } from './components/progress/progress.component';
+import { GlobalHeadbarComponent } from './components/global-headbar/global-headbar.component';
+import { SidenavComponent } from './components/sidenav/sidenav.component';
+import { SidenavContentDirective } from './components/sidenav/sidenav-content.directive';
+import { SidenavDrawerContentDirective } from './components/sidenav/sidenav-drawer-content.directive';
+import { AccountButtonComponent } from './components/account-button/account-button.component';
 
 const declarations = [
     PermsDirective,
@@ -158,7 +162,6 @@ const declarations = [
     RoundedInputComponent,
     ProgressSnackBarComponent,
     GlobalSpinnerComponent,
-    UserMenuComponent,
     SuperSearchComponent,
     OverlayComponent,
     PreviewComponent,
@@ -199,7 +202,12 @@ const declarations = [
     ImportListFirstTabDirective,
     ImportListLastTabDirective,
     VideoPlayerComponent,
-    ProgressComponent
+    ProgressComponent,
+    GlobalHeadbarComponent,
+    SidenavComponent,
+    SidenavContentDirective,
+    SidenavDrawerContentDirective,
+    AccountButtonComponent
 ];
 
 const sharedModules = [
