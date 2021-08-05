@@ -247,9 +247,9 @@ export abstract class BasePollDialogComponent extends BaseComponent implements O
             votesvalid: data.votesvalid,
             votesinvalid: data.votesinvalid,
             votescast: data.votescast,
-            amount_global_yes: data.amount_global_yes,
-            amount_global_no: data.amount_global_no,
-            amount_global_abstain: data.amount_global_abstain
+            amount_global_yes: data.global_option?.yes,
+            amount_global_no: data.global_option?.no,
+            amount_global_abstain: data.global_option?.abstain
         };
         for (const option of data.options) {
             const votes: any = {};

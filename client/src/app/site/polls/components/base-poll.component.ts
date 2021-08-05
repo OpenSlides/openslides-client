@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
-import { BehaviorSubject, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 
 import { Id } from 'app/core/definitions/key-types';
 import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
@@ -9,7 +9,6 @@ import { BasePollDialogService } from 'app/core/ui-services/base-poll-dialog.ser
 import { ChoiceService } from 'app/core/ui-services/choice.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
-import { ChartData } from 'app/shared/components/charts/charts.component';
 import { PollState, PollType } from 'app/shared/models/poll/poll-constants';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { BaseViewModel } from 'app/site/base/base-view-model';
@@ -21,8 +20,6 @@ import { BaseModelContextComponent } from 'app/site/base/components/base-model-c
 export abstract class BasePollComponent<C extends BaseViewModel = any> extends BaseModelContextComponent {
     private stateChangePendingSubject = new Subject<boolean>();
     public readonly stateChangePendingObservable = this.stateChangePendingSubject.asObservable();
-
-    public chartDataSubject: BehaviorSubject<ChartData> = new BehaviorSubject([]);
 
     public get poll(): ViewPoll<C> {
         return this._poll;

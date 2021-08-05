@@ -5,20 +5,16 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { OrganizationSettingsService } from 'app/core/ui-services/organization-settings.service';
 import { ChartData, ChartDate } from 'app/shared/components/charts/charts.component';
-import { Poll } from 'app/shared/models/poll/poll';
+import { PollData } from 'app/shared/models/poll/generic-poll';
 import {
     AssignmentPollMethodVerbose,
-    EntitledUsersEntry,
-    PollClassType,
     PollColor,
     PollMethod,
     PollPercentBase,
-    PollState,
     PollType,
     VOTE_UNDOCUMENTED
 } from 'app/shared/models/poll/poll-constants';
 import { PollPercentBaseVerbose, PollPropertyVerbose, PollTypeVerbose } from 'app/shared/models/poll/poll-constants';
-import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { ParsePollNumberPipe } from 'app/shared/pipes/parse-poll-number.pipe';
 import { PollKeyVerbosePipe } from 'app/shared/pipes/poll-key-verbose.pipe';
 
@@ -49,37 +45,11 @@ export const VoteValuesVerbose = {
     A: 'Abstain'
 };
 
-export interface BasePollData<PM, PB> {
-    pollmethod: PM;
-    state: PollState;
-    onehundred_percent_base: PB;
-    votesvalid: number;
-    votesinvalid: number;
-    votescast: number;
-}
-
-export interface PollData extends BasePollData<string, string> {
-    type: string;
-    entitled_users_at_stop: EntitledUsersEntry[];
-    options: PollDataOption[];
-    global_option: PollDataOption;
-}
-
-export interface PollDataOption {
-    content_object?: {
-        short_name?: string;
-    };
-    yes?: number;
-    no?: number;
-    abstain?: number;
-    weight?: number;
-}
-
 /**
  * Interface describes the possible data for the result-table.
  */
 export interface PollTableData {
-    votingOption?: string;
+    votingOption: string;
     votingOptionSubtitle?: string;
     class?: string;
     value: VotingResult[];
@@ -111,23 +81,10 @@ const PollChartBarThickness = 20;
 @Injectable({
     providedIn: 'root'
 })
-export abstract class PollService {
-    /**
-     * The default percentage base
-     */
-    public defaultPercentBase: PollPercentBase;
-
-    /**
-     * Per default entitled to vote
-     */
-    public defaultGroupIds: number[];
-
-    /**
-     * The default poll type
-     */
-    public defaultPollType: PollType;
-
+export class PollService {
     public isElectronicVotingEnabled: boolean;
+
+    protected sortByVote = false;
 
     /**
      * list of poll keys that are numbers and can be part of a quorum calculation
@@ -145,10 +102,171 @@ export abstract class PollService {
             .subscribe(isEnabled => (this.isElectronicVotingEnabled = isEnabled));
     }
 
+    public generateTableData(poll: PollData): PollTableData[] {
+        const tableData: PollTableData[] = poll.options
+            .sort((a, b) => {
+                if (this.sortByVote) {
+                    let compareValue;
+                    if (poll.pollmethod === PollMethod.N) {
+                        // least no on top:
+                        compareValue = a.no - b.no;
+                    } else {
+                        // most yes on top
+                        compareValue = b.yes - a.yes;
+                    }
+
+                    // Equal votes, sort by weight to have equal votes correctly sorted.
+                    if (compareValue === 0 && a.weight && b.weight) {
+                        // least weight on top
+                        return a.weight - b.weight;
+                    } else {
+                        return compareValue;
+                    }
+                }
+
+                // PollData does not have weight, we need to rely on the order of things.
+                if (a.weight && b.weight) {
+                    // least weight on top
+                    return a.weight - b.weight;
+                } else {
+                    return 0;
+                }
+            })
+            .map(option => {
+                const title = option.getOptionTitle();
+                const pollTableEntry: PollTableData = {
+                    class: 'user',
+                    value: this.getVoteTableKeys(poll).map(
+                        key =>
+                            ({
+                                vote: key.vote,
+                                amount: option[key.vote],
+                                icon: key.icon,
+                                hide: key.hide,
+                                showPercent: key.showPercent
+                            } as VotingResult)
+                    ),
+                    votingOption: title.title
+                };
+                if (title.subtitle) {
+                    pollTableEntry.votingOptionSubtitle = title.subtitle;
+                }
+
+                return pollTableEntry;
+            });
+        tableData.push(...this.formatVotingResultToTableData(this.getGlobalVoteKeys(poll), poll));
+        tableData.push(...this.formatVotingResultToTableData(this.getSumTableKeys(poll), poll));
+
+        return tableData;
+    }
+
+    public getChartLabels(poll: PollData): string[] {
+        const fields = this.getPollDataFieldsByMethod(poll);
+        return poll.options.map(option => {
+            const votingResults = fields.map(field => {
+                const voteValue = option[field];
+                const votingKey = this.translate.instant(this.pollKeyVerbose.transform(field));
+                const resultValue = this.parsePollNumber.transform(voteValue);
+                const resultInPercent = this.getVoteValueInPercent(voteValue, poll);
+                let resultLabel = `${votingKey}: ${resultValue}`;
+
+                // 0 is a valid number in this case
+                if (resultInPercent !== null) {
+                    resultLabel += ` (${resultInPercent})`;
+                }
+                return resultLabel;
+            });
+            const optionName = option.getOptionTitle();
+            return `${optionName} · ${votingResults.join(' · ')}`;
+        });
+    }
+
+    private getGlobalVoteKeys(poll: PollData): VotingResult[] {
+        return [
+            {
+                vote: 'amount_global_yes',
+                showPercent: this.showPercentOfValidOrCast(poll),
+                hide:
+                    poll.global_option?.yes === VOTE_UNDOCUMENTED ||
+                    !poll.global_option?.yes ||
+                    poll.pollmethod === PollMethod.N
+            },
+            {
+                vote: 'amount_global_no',
+                showPercent: this.showPercentOfValidOrCast(poll),
+                hide: poll.global_option?.no === VOTE_UNDOCUMENTED || !poll.global_option?.no
+            },
+            {
+                vote: 'amount_global_abstain',
+                showPercent: this.showPercentOfValidOrCast(poll),
+                hide: poll.global_option?.abstain === VOTE_UNDOCUMENTED || !poll.global_option?.abstain
+            }
+        ];
+    }
+
+    private formatVotingResultToTableData(resultList: VotingResult[], poll: PollData): PollTableData[] {
+        return resultList
+            .filter(key => {
+                return !key.hide;
+            })
+            .map(key => ({
+                votingOption: key.vote,
+                class: 'sums',
+                value: [
+                    {
+                        amount: poll[key.vote],
+                        hide: key.hide,
+                        showPercent: key.showPercent
+                    } as VotingResult
+                ]
+            }));
+    }
+
     /**
      * return the total number of votes depending on the selected percent base
      */
-    public abstract getPercentBase(poll: PollData): number;
+    public getPercentBase(poll: PollData): number {
+        const base: PollPercentBase = poll.onehundred_percent_base as PollPercentBase;
+        let totalByBase: number;
+        switch (base) {
+            case PollPercentBase.YN:
+                totalByBase = this.sumOptionsYN(poll);
+                break;
+            case PollPercentBase.YNA:
+                totalByBase = this.sumOptionsYNA(poll);
+                break;
+            case PollPercentBase.Y:
+                totalByBase = this.sumOptionsYNA(poll);
+                break;
+            case PollPercentBase.Valid:
+                totalByBase = poll.votesvalid;
+                break;
+            case PollPercentBase.Entitled:
+                totalByBase = poll.entitled_users_at_stop?.length || 0;
+                break;
+            case PollPercentBase.Cast:
+                totalByBase = poll.votescast;
+                break;
+            default:
+                break;
+        }
+        return totalByBase;
+    }
+
+    private sumOptionsYN(poll: PollData): number {
+        return poll.options.reduce((o, n) => {
+            o += n.yes > 0 ? n.yes : 0;
+            o += n.no > 0 ? n.no : 0;
+            return o;
+        }, 0);
+    }
+
+    private sumOptionsYNA(poll: PollData): number {
+        return poll.options.reduce((o, n) => {
+            o += n.abstain > 0 ? n.abstain : 0;
+            return o;
+        }, this.sumOptionsYN(poll));
+    }
 
     public getVoteValueInPercent(value: number, poll: PollData): string | null {
         const totalByBase = this.getPercentBase(poll);
@@ -160,18 +278,6 @@ export abstract class PollService {
             }
         }
         return null;
-    }
-
-    /**
-     * Assigns the default poll data to the object. To be extended in subclasses
-     * @param poll the poll/object to fill
-     */
-    public getDefaultPollData(): Partial<Poll> {
-        return {
-            onehundred_percent_base: this.defaultPercentBase,
-            entitled_group_ids: this.defaultGroupIds,
-            type: this.isElectronicVotingEnabled ? this.defaultPollType : PollType.Analog
-        };
     }
 
     public getVerboseNameForValue(key: string, value: string): string {
@@ -189,7 +295,7 @@ export abstract class PollService {
         return PollPropertyVerbose[key];
     }
 
-    public getVoteTableKeys(poll: ViewPoll): VotingResult[] {
+    public getVoteTableKeys(poll: PollData): VotingResult[] {
         return [
             {
                 vote: 'yes',
@@ -209,7 +315,7 @@ export abstract class PollService {
         ];
     }
 
-    private showAbstainPercent(poll: ViewPoll): boolean {
+    private showAbstainPercent(poll: PollData): boolean {
         return (
             poll.onehundred_percent_base === PollPercentBase.YNA ||
             poll.onehundred_percent_base === PollPercentBase.Valid ||
@@ -217,7 +323,7 @@ export abstract class PollService {
         );
     }
 
-    public showPercentOfValidOrCast(poll: ViewPoll): boolean {
+    public showPercentOfValidOrCast(poll: PollData): boolean {
         return (
             poll.onehundred_percent_base === PollPercentBase.Valid ||
             poll.onehundred_percent_base === PollPercentBase.Cast ||
@@ -225,7 +331,7 @@ export abstract class PollService {
         );
     }
 
-    public getSumTableKeys(poll: ViewPoll): VotingResult[] {
+    public getSumTableKeys(poll: PollData): VotingResult[] {
         return [
             {
                 vote: 'votesvalid',
@@ -248,38 +354,31 @@ export abstract class PollService {
         ];
     }
 
-    public generateChartData(poll: PollData | ViewPoll): ChartData {
-        const fields = this.getPollDataFields(poll);
+    public generateChartData(poll: PollData): ChartData {
+        const fields = this.getPollDataFieldsByMethod(poll);
 
-        const data: ChartData = fields
-            .filter(key => {
-                return this.getPollDataFieldsByPercentBase(poll).includes(key);
-            })
-            .map(key => {
-                return {
-                    data: this.getResultFromPoll(poll, key),
-                    label: key.toUpperCase(),
-                    backgroundColor: PollColor[key],
-                    hoverBackgroundColor: PollColor[key],
-                    barThickness: PollChartBarThickness,
-                    maxBarThickness: PollChartBarThickness
-                } as ChartDate;
-            });
+        const data: ChartData = fields.map(key => {
+            return {
+                data: this.getResultFromPoll(poll, key),
+                label: key.toUpperCase(),
+                backgroundColor: PollColor[key],
+                hoverBackgroundColor: PollColor[key],
+                barThickness: PollChartBarThickness,
+                maxBarThickness: PollChartBarThickness
+            } as ChartDate;
+        });
 
         return data;
-    }
-
-    protected getPollDataFields(poll: PollData | ViewPoll): CalculablePollKey[] {
-        const isAssignment: boolean = (poll as ViewPoll).pollClassType === PollClassType.Assignment;
-        return isAssignment ? this.getPollDataFieldsByMethod(poll) : this.getPollDataFieldsByPercentBase(poll);
     }
 
     /**
      * Extracts yes-no-abstain such as valid, invalids and totals from Poll and PollData-Objects
      */
-    protected abstract getResultFromPoll(poll: PollData, key: CalculablePollKey): number[];
+    protected getResultFromPoll(poll: PollData, key: CalculablePollKey): number[] {
+        return [...poll.options, poll.global_option].map(option => option[key]);
+    }
 
-    private getPollDataFieldsByMethod(poll: PollData | ViewPoll): CalculablePollKey[] {
+    protected getPollDataFieldsByMethod(poll: PollData): CalculablePollKey[] {
         switch (poll.pollmethod) {
             case PollMethod.YNA: {
                 return ['yes', 'no', 'abstain'];
@@ -292,20 +391,6 @@ export abstract class PollService {
             }
             default: {
                 return ['yes'];
-            }
-        }
-    }
-
-    private getPollDataFieldsByPercentBase(poll: PollData | ViewPoll): CalculablePollKey[] {
-        switch (poll.onehundred_percent_base) {
-            case PollPercentBase.YN: {
-                return ['yes', 'no'];
-            }
-            case PollPercentBase.Cast: {
-                return ['yes', 'no', 'abstain', 'votesinvalid'];
-            }
-            default: {
-                return ['yes', 'no', 'abstain'];
             }
         }
     }

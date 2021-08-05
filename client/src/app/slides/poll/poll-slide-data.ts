@@ -1,3 +1,4 @@
+import { TitleInformationWithAgendaItem } from '../agenda_item_number';
 import { Fqid } from 'app/core/definitions/key-types';
 import {
     EntitledUsersEntry,
@@ -6,30 +7,31 @@ import {
     PollState,
     PollType
 } from 'app/shared/models/poll/poll-constants';
-import { PollData } from 'app/site/polls/services/poll.service';
 
-export interface GlobalOption {
+export interface SlideOption {
     yes?: number;
     no?: number;
     abstain?: number;
-}
-
-interface Option extends GlobalOption {
     text?: string;
-    content_object?: any;
+    content_object?: TitleInformation;
 }
 
-export interface PollSlideData extends PollData {
+interface TitleInformation extends TitleInformationWithAgendaItem {
+    collection: string;
+    [key: string]: any; // Each content object can have a variety of fields.
+}
+
+export interface PollSlideData {
     content_object_id: Fqid;
-    title_information: any;
+    title_information: TitleInformation;
     title: string;
     description: string;
     type: PollType;
     state: PollState;
     global_yes: boolean;
-    glboal_no: boolean;
+    global_no: boolean;
     global_abstain: boolean;
-    options: Option[];
+    options: SlideOption[];
 
     // These keys are only available, if poll/state == "published"
     entitled_users_at_stop: EntitledUsersEntry[];
@@ -39,5 +41,5 @@ export interface PollSlideData extends PollData {
     votesvalid: number;
     votesinvalid: number;
     votescast: number;
-    global_option: GlobalOption;
+    global_option: SlideOption;
 }

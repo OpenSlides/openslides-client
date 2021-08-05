@@ -2,11 +2,11 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@a
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { PollData } from 'app/shared/models/poll/generic-poll';
 import { PollState } from 'app/shared/models/poll/poll-constants';
-import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { MotionPollService } from 'app/site/motions/services/motion-poll.service';
-import { PollData, PollTableData } from 'app/site/polls/services/poll.service';
+import { PollTableData } from 'app/site/polls/services/poll.service';
 import { ChartData } from '../charts/charts.component';
 
 @Component({
@@ -16,20 +16,20 @@ import { ChartData } from '../charts/charts.component';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MotionPollDetailContentComponent extends BaseComponent {
-    private _poll: ViewPoll | PollData;
+    private _poll: PollData;
 
     public chartData: ChartData;
     public tableData: PollTableData[];
 
     @Input()
-    public set poll(pollData: ViewPoll | PollData) {
+    public set poll(pollData: PollData) {
         this._poll = pollData;
         this.setTableData();
         this.setChartData();
         this.cd.markForCheck();
     }
 
-    public get poll(): ViewPoll | PollData {
+    public get poll(): PollData {
         return this._poll;
     }
 

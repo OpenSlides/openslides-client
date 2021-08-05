@@ -77,8 +77,8 @@ export const Slides: SlideManifest[] = [
         path: 'poll',
         loadChildren: () => import('./poll/poll-slide.module').then(m => m.PollSlideModule),
         verboseName: 'Vote',
-        scaleable: false,
-        scrollable: false
+        scaleable: true,
+        scrollable: true
     },
     {
         path: 'projector_countdown',

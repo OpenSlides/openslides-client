@@ -2,9 +2,8 @@ import { Component, Input } from '@angular/core';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { PollData } from 'app/shared/models/poll/generic-poll';
 import { PollMethod, PollPercentBase, PollState } from 'app/shared/models/poll/poll-constants';
-import { ViewPoll } from 'app/shared/models/poll/view-poll';
-import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { AssignmentPollService } from 'app/site/assignments/modules/assignment-poll/services/assignment-poll.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { PollTableData, VotingResult } from 'app/site/polls/services/poll.service';
@@ -16,7 +15,7 @@ import { PollTableData, VotingResult } from 'app/site/polls/services/poll.servic
 })
 export class AssignmentPollDetailContentComponent extends BaseComponent {
     @Input()
-    public poll: ViewPoll<ViewAssignment>;
+    public poll: PollData;
 
     private get method(): string {
         return this.poll.pollmethod;
