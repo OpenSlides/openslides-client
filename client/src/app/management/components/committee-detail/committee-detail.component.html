@@ -45,7 +45,11 @@
         </div>
 
         <!-- forward motions to -->
-        <os-committee-meta-info icon="file_upload" [title]="forwardLabel">
+        <os-committee-meta-info
+            icon="file_upload"
+            [title]="forwardLabel"
+            *ngIf="committee.forward_to_committees.length > 0"
+        >
             <ul class="content-list">
                 <li *ngFor="let forwarding of committee.forward_to_committees">
                     <a [routerLink]="['/', 'committees', forwarding.id]">
@@ -56,7 +60,11 @@
         </os-committee-meta-info>
 
         <!-- receive motions from -->
-        <os-committee-meta-info icon="file_download" [title]="receiveLabel">
+        <os-committee-meta-info
+            icon="file_download"
+            [title]="receiveLabel"
+            *ngIf="committee.receive_forwardings_from_committees.length > 0"
+        >
             <ul class="content-list">
                 <li *ngFor="let receive of committee.receive_forwardings_from_committees">
                     <a [routerLink]="['/', 'committees', receive.id]">

@@ -37,6 +37,10 @@ export class ViewCommittee extends BaseViewModel<Committee> {
         return this.users_as_observable.pipe(map(users => this.getManagers(users)));
     }
 
+    public get managerAmount(): number {
+        return this.getManagers().length || 0;
+    }
+
     public getManagers(users: ViewUser[] = this.users): ViewUser[] {
         return users.filter(user => {
             const hasCML = user.committee_management_level(this.committee.id) === CML.can_manage;
