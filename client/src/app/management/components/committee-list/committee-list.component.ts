@@ -115,7 +115,7 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
                     follow: [
                         {
                             idField: 'user_ids',
-                            fieldset: 'shortName'
+                            fieldset: 'committeeList'
                         },
                         {
                             idField: 'organization_tag_ids'

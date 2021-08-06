@@ -1,9 +1,9 @@
 <mat-toolbar class="global-headbar" color="primary">
-    <div class="align-left one-line">
-        <span class="display-name">{{ displayName }}</span>
+    <div class="one-line display-name">
+        <span>{{ displayName }}</span>
     </div>
     <div class="spacer"></div>
-    <div class="align-right">
+    <div>
         <!-- Button to open the global search -->
         <button *ngIf="isSearchEnabled" mat-icon-button (click)="openSearch()">
             <mat-icon>search</mat-icon>

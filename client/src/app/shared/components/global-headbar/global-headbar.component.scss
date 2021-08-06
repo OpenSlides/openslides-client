@@ -7,14 +7,10 @@
 
 .global-headbar {
     height: 40px;
+    line-height: 40px;
     display: flex;
     flex-direction: row;
     padding-left: 26px;
-}
-
-.align-left,
-.align-right {
-    max-width: 50%;
 }
 
 .spacer {
@@ -24,5 +20,5 @@
 
 .display-name {
     font-weight: 400;
-    font-size: 1rem;
+    font-size: 14px;
 }

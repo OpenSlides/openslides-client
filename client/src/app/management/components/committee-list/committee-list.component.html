@@ -58,9 +58,8 @@
             <div *ngIf="committee.forward_to_committees?.length">
                 <os-icon-container
                     iconTooltip="{{ 'Can forward motions to committee' | translate }}"
-                    icon="arrow_right_alt"
+                    icon="file_upload"
                     [noWrap]="true"
-                    [rotation]="270"
                 >
                     <span>
                         {{ committee.forward_to_committees.length }}
@@ -70,8 +69,7 @@
             <div *ngIf="committee.receive_forwardings_from_committees?.length">
                 <os-icon-container
                     iconTooltip="{{ 'Can receive motions from committee' | translate }}"
-                    icon="arrow_right_alt"
-                    [rotation]="90"
+                    icon="file_download"
                     [noWrap]="true"
                 >
                     <span>
@@ -92,6 +90,11 @@
             <div *ngIf="committee.memberAmount">
                 <os-icon-container iconTooltip="{{ 'Members' | translate }}" icon="group">
                     {{ committee.memberAmount }}
+                </os-icon-container>
+            </div>
+            <div *ngIf="committee.managerAmount">
+                <os-icon-container iconTooltip="{{ 'Committee managers' | translate }}" icon="engineering">
+                    {{ committee.managerAmount }}
                 </os-icon-container>
             </div>
         </div>
