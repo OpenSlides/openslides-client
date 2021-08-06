@@ -266,8 +266,23 @@ msgstr "Übernehmen"
 msgid "Arabic"
 msgstr "Arabisch"
 
+msgid "Archive"
+msgstr "Archivieren"
+
+msgid "Archive meeting"
+msgstr "Veranstaltung archivieren"
+
+msgid "Are you sure you want to archive this meeting?"
+msgstr "Soll diese Veranstaltung wirklich archiviert werden?"
+
 msgid "Are you sure you want to delete all selected motions?"
 msgstr "Sollen alle ausgewählten Anträge wirklich gelöscht werden?"
+
+msgid "Are you sure you want to delete this meeting?"
+msgstr "Soll diese Veranstaltung wirklich gelöscht werden?"
+
+msgid "Are you sure you want to duplicate this meeting?"
+msgstr "Soll diese Veranstaltung wirklich dupliziert werden?"
 
 msgid "Are you sure you want to submit a point of order?"
 msgstr "Soll wirklich ein Geschäftsordnungsantrag gestellt werden?"
@@ -733,9 +748,6 @@ msgstr "Benutzerdefinierte Anzahl von Stimmzetteln"
 msgid "Custom translations"
 msgstr "Benutzerdefinierte Übersetzungen"
 
-msgid "Dashboard"
-msgstr "Dashboard"
-
 msgid ""
 "Dear {name},\n"
 "\n"
@@ -843,6 +855,9 @@ msgstr "Löschen"
 msgid "Delete final print template"
 msgstr "Beschluss-Druckvorlage löschen"
 
+msgid "Delete meeting"
+msgstr "Veranstaltung löschen"
+
 msgid "Delete projector"
 msgstr "Projektor löschen"
 
@@ -918,6 +933,9 @@ msgstr ""
 
 msgid "Duplicate"
 msgstr "Duplizieren"
+
+msgid "Duplicate meeting"
+msgstr "Veranstaltung duplizieren"
 
 msgid "Duration"
 msgstr "Dauer"
@@ -1922,6 +1940,9 @@ msgstr "Offene Einträge"
 msgid "Open list of speakers"
 msgstr "Redeliste öffnen"
 
+msgid "Open meeting"
+msgstr "Veranstaltung öffnen"
+
 msgid "Open projection dialog"
 msgstr "Projektionsdialog öffnen"
 
@@ -2206,6 +2227,9 @@ msgstr "Begründung erforderlich zur Erstellung neuer Anträge"
 
 msgid "Receive motions"
 msgstr "Anträge erhalten"
+
+msgid "Receive motions from"
+msgstr "Anträge erhalten von"
 
 msgid "Received votes"
 msgstr "Empfangene Stimmen"
@@ -2834,6 +2858,9 @@ msgstr "Der Wahlgang enthält gelöschte Nutzer."
 
 msgid "This change collides with another one."
 msgstr "Diese Änderung kollidiert mit einer anderen."
+
+msgid "This committee has no managers!"
+msgstr "Dieses Gremium hat keine Gremiumverwalter!"
 
 msgid "This element does not exist at this time."
 msgstr "Dieses Element existiert nicht zu diesem Zeitpunkt."

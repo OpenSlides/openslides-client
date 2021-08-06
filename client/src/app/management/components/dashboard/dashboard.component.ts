@@ -53,7 +53,7 @@ export class DashboardComponent extends BaseModelContextComponent implements OnI
         private vp: ViewportService
     ) {
         super(componentServiceCollector);
-        super.setTitle('Dashboard');
+        super.setTitle('Calendar');
         this.loadMeetings();
     }
 
