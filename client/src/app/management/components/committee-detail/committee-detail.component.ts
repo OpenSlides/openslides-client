@@ -16,8 +16,8 @@ import { ViewMeeting } from 'app/management/models/view-meeting';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
 
-const ForwardLabel = _('Forward motions to:');
-const ReceiveLabel = _('Receive motions from:');
+const ForwardLabel = _('Forward motions to');
+const ReceiveLabel = _('Receive motions from');
 @Component({
     selector: 'os-committee-detail',
     templateUrl: './committee-detail.component.html',

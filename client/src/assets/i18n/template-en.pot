@@ -241,7 +241,22 @@ msgstr ""
 msgid "Arabic"
 msgstr ""
 
+msgid "Archive"
+msgstr ""
+
+msgid "Archive meeting"
+msgstr ""
+
+msgid "Are you sure you want to archive this meeting?"
+msgstr ""
+
 msgid "Are you sure you want to delete all selected motions?"
+msgstr ""
+
+msgid "Are you sure you want to delete this meeting?"
+msgstr ""
+
+msgid "Are you sure you want to duplicate this meeting?"
 msgstr ""
 
 msgid "Are you sure you want to submit a point of order?"
@@ -706,9 +721,6 @@ msgstr ""
 msgid "Custom translations"
 msgstr ""
 
-msgid "Dashboard"
-msgstr ""
-
 msgid ""
 "Dear {name},\n"
 "\n"
@@ -801,6 +813,9 @@ msgstr ""
 msgid "Delete final print template"
 msgstr ""
 
+msgid "Delete meeting"
+msgstr ""
+
 msgid "Delete projector"
 msgstr ""
 
@@ -874,6 +889,9 @@ msgid "Drop files into this area OR click here to select files"
 msgstr ""
 
 msgid "Duplicate"
+msgstr ""
+
+msgid "Duplicate meeting"
 msgstr ""
 
 msgid "Duration"
@@ -1848,6 +1866,9 @@ msgstr ""
 msgid "Open list of speakers"
 msgstr ""
 
+msgid "Open meeting"
+msgstr ""
+
 msgid "Open projection dialog"
 msgstr ""
 
@@ -2128,6 +2149,9 @@ msgid "Reason required for creating new motion"
 msgstr ""
 
 msgid "Receive motions"
+msgstr ""
+
+msgid "Receive motions from"
 msgstr ""
 
 msgid "Received votes"
@@ -2729,6 +2753,9 @@ msgid "This ballot contains deleted users."
 msgstr ""
 
 msgid "This change collides with another one."
+msgstr ""
+
+msgid "This committee has no managers!"
 msgstr ""
 
 msgid "This element does not exist at this time."
