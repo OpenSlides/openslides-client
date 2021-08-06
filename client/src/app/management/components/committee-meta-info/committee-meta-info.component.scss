@@ -1,0 +1,22 @@
+.meta-info-grid {
+    margin-top: 1em;
+    display: grid;
+    width: 100%;
+    grid-gap: 0.5em;
+    grid-template-areas:
+        'symbol headline'
+        'symbol content';
+    grid-template-columns: min-content auto;
+
+    .symbol {
+        grid-area: symbol;
+    }
+
+    .headline {
+        grid-area: headline;
+    }
+
+    .content {
+        grid-area: content;
+    }
+}

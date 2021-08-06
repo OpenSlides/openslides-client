@@ -1,0 +1,30 @@
+.committee-details {
+    position: relative;
+    margin-bottom: 3em !important;
+
+    .committee-description {
+        margin-top: 1em;
+    }
+
+    .user-footer {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+    }
+
+    .content-list {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+    }
+}
+
+.meeting-list {
+    .meeting-preview-card {
+        display: block;
+    }
+
+    .meeting-preview-card + .meeting-preview-card {
+        margin-top: 2em;
+    }
+}

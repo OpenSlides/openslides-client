@@ -67,6 +67,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         ]);
         const dashboardFields: (keyof Meeting)[] = listFields.concat('location');
         const startPageFields: (keyof Meeting)[] = accessField.concat(['welcome_title', 'welcome_text']);
+        const previewFields: (keyof Meeting)[] = nameFields.concat('user_ids', 'location', 'description');
 
         return {
             [DEFAULT_FIELDSET]: nameFields,
@@ -76,7 +77,8 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             settings: this.meetingSettingsDefinitionProvider
                 .getSettingsKeys()
                 .concat('jitsi_domain', 'jitsi_room_name', 'jitsi_room_password'),
-            startPage: startPageFields
+            startPage: startPageFields,
+            preview: previewFields
         };
     }
 
