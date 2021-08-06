@@ -1,0 +1,47 @@
+.meeting-prev {
+    margin: 0 auto;
+    padding: 0;
+    max-width: 800px;
+    position: relative;
+
+    .mat-card-header {
+        height: 40px;
+        display: flex !important;
+
+        .mat-card-header-text {
+            margin-top: auto !important;
+            margin-bottom: auto !important;
+
+            .mat-card-title {
+                margin: 0;
+            }
+        }
+
+        .meeting-edit-button {
+            margin-left: auto;
+        }
+    }
+
+    .mat-card-content {
+        margin-top: 1em;
+
+        .date-loc {
+            font-size: large;
+            margin-bottom: 0.5em;
+        }
+    }
+
+    .mat-card-actions {
+        padding-bottom: 15px;
+    }
+
+    .user-footer {
+        position: absolute;
+        right: 0.5em;
+        bottom: 0;
+    }
+}
+
+.prev-content {
+    padding: 0 20px;
+}

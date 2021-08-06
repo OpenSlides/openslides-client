@@ -1,0 +1,76 @@
+<mat-card class="meeting-prev">
+    <mat-card-header class="background-accent">
+        <mat-card-title class="break-word">
+            {{ title }}
+        </mat-card-title>
+
+        <button
+            *osCmlPerms="CML.can_manage; committeeId: committeeId"
+            class="meeting-edit-button"
+            type="button"
+            mat-icon-button
+            [matMenuTriggerFor]="meetingMenu"
+        >
+            <mat-icon>more_vert</mat-icon>
+        </button>
+    </mat-card-header>
+    <mat-card-content class="prev-content">
+        <!-- date location -->
+        <div class="date-loc">
+            <!-- location -->
+            <span>
+                {{ location }}
+            </span>
+
+            <!-- date -->
+            <span>
+                <!-- TODO: CLEANUP: copied from dashboard -->
+                <ng-container *ngIf="meeting.start_time === meeting.end_time">
+                    <span>{{ meeting.start_time | localizedDate: 'll' }}</span>
+                </ng-container>
+                <ng-container *ngIf="meeting.start_time !== meeting.end_time">
+                    <span *ngIf="meeting.start_time">{{ meeting.start_time | localizedDate: 'll' }}</span>
+                    <span *ngIf="meeting.start_time && meeting.end_time"> - </span>
+                    <span *ngIf="meeting.end_time">{{ meeting.end_time | localizedDate: 'll' }}</span>
+                </ng-container>
+            </span>
+        </div>
+
+        <!-- desc -->
+        <div>
+            {{ description }}
+        </div>
+    </mat-card-content>
+    <mat-card-actions class="prev-content">
+        <a mat-stroked-button color="primary" [routerLink]="meeting.getUrl()">{{ 'Open meeting' | translate }}</a>
+    </mat-card-actions>
+
+    <!-- users -->
+    <div class="user-footer">
+        <a mat-icon-button matTooltip="{{ 'Participants' | translate }}">
+            <mat-icon [matBadgeHidden]="!showUserAmount" [matBadge]="userAmount"> group </mat-icon>
+        </a>
+    </div>
+</mat-card>
+
+<mat-menu #meetingMenu="matMenu">
+    <a mat-menu-item [routerLink]="['edit-meeting', meeting.id]">
+        <mat-icon>edit</mat-icon>
+        <span>{{ 'Edit' | translate }}</span>
+    </a>
+    <!-- TODO Duplicate is not yet implemented -->
+    <button mat-menu-item disabled (click)="onDuplicate()">
+        <mat-icon>file_copy</mat-icon>
+        <span>{{ 'Duplicate' | translate }}</span>
+    </button>
+    <!-- TODO Archive is not yet implemented -->
+    <button mat-menu-item disabled (click)="onArchive()">
+        <mat-icon>archive</mat-icon>
+        <span>{{ 'Archive' | translate }}</span>
+    </button>
+    <mat-divider></mat-divider>
+    <button mat-menu-item class="red-warning-text" (click)="onDeleteMeeting()">
+        <mat-icon>delete</mat-icon>
+        <span>{{ 'Delete' | translate }}</span>
+    </button>
+</mat-menu>

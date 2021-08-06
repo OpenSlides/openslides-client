@@ -1,3 +1,7 @@
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+import { CML } from 'app/core/core-services/organization-permission';
 import { Committee } from 'app/shared/models/event-management/committee';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { ViewUser } from 'app/site/users/models/view-user';
@@ -28,11 +32,23 @@ export class ViewCommittee extends BaseViewModel<Committee> {
     public get hasReceivings(): boolean {
         return this.receive_forwardings_from_committee_ids.length > 0;
     }
+
+    public get managerObservable(): Observable<ViewUser[]> {
+        return this.users_as_observable.pipe(map(users => this.getManagers(users)));
+    }
+
+    public getManagers(users: ViewUser[] = this.users): ViewUser[] {
+        return users.filter(user => {
+            const hasCML = user.committee_management_level(this.committee.id) === CML.can_manage;
+            return hasCML;
+        });
+    }
 }
 interface ICommitteeRelations {
     meetings: ViewMeeting[];
     default_meeting: ViewMeeting;
     users: ViewUser[];
+    users_as_observable: Observable<ViewUser[]>;
     forward_to_committees: ViewCommittee[];
     receive_forwardings_from_committees: ViewCommittee[];
     organization: ViewOrganization;
