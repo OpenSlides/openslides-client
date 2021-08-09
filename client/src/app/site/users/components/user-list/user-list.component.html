@@ -161,18 +161,18 @@
 
 <mat-menu #userMenu="matMenu">
     <div *ngIf="!isMultiSelect">
-        <button mat-menu-item *osPerms="permission.usersCanManage" (click)="toggleMultiSelect()">
+        <button mat-menu-item *osPerms="permission.userCanManage" (click)="toggleMultiSelect()">
             <mat-icon>library_add</mat-icon>
             <span>{{ 'Multiselect' | translate }}</span>
         </button>
 
-        <button mat-menu-item *osPerms="permission.usersCanManage" routerLink="groups">
+        <button mat-menu-item *osPerms="permission.userCanManage" routerLink="groups">
             <mat-icon>people</mat-icon>
             <span>{{ 'Groups' | translate }}</span>
         </button>
 
         <div *ngIf="presenceViewConfigured">
-            <button mat-menu-item *osPerms="permission.usersCanManage" routerLink="presence">
+            <button mat-menu-item *osPerms="permission.userCanManage" routerLink="presence">
                 <mat-icon>transfer_within_a_station</mat-icon>
                 <span>{{ 'Presence' | translate }}</span>
             </button>
@@ -183,17 +183,17 @@
             <span>{{ 'List of participants (PDF)' | translate }}</span>
         </button>
 
-        <button mat-menu-item *osPerms="permission.usersCanManage" (click)="onDownloadAccessPdf()">
+        <button mat-menu-item *osPerms="permission.userCanManage" (click)="onDownloadAccessPdf()">
             <mat-icon>picture_as_pdf</mat-icon>
             <span>{{ 'Access data (PDF)' | translate }}</span>
         </button>
 
-        <button mat-menu-item *osPerms="permission.usersCanManage" (click)="csvExportUserList()">
+        <button mat-menu-item *osPerms="permission.userCanManage" (click)="csvExportUserList()">
             <mat-icon>archive</mat-icon>
             <span>{{ 'Export as CSV' | translate }}</span>
         </button>
 
-        <button mat-menu-item *osPerms="permission.usersCanManage" routerLink="import">
+        <button mat-menu-item *osPerms="permission.userCanManage" routerLink="import">
             <mat-icon>cloud_upload</mat-icon>
             <span>{{ 'Import' | translate }}</span>
         </button>

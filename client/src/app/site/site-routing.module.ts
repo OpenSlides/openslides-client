@@ -39,17 +39,17 @@ const routes: Route[] = [
             {
                 path: 'assignments',
                 loadChildren: () => import('./assignments/assignments.module').then(m => m.AssignmentsModule),
-                data: { basePerm: Permission.assignmentsCanSee }
+                data: { basePerm: Permission.assignmentCanSee }
             },
             {
                 path: 'mediafiles',
                 loadChildren: () => import('./mediafiles/mediafiles.module').then(m => m.MediafilesModule),
-                data: { basePerm: Permission.mediafilesCanSee }
+                data: { basePerm: Permission.mediafileCanSee }
             },
             {
                 path: 'motions',
                 loadChildren: () => import('./motions/motions.module').then(m => m.MotionsModule),
-                data: { basePerm: Permission.motionsCanSee }
+                data: { basePerm: Permission.motionCanSee }
             },
             {
                 path: 'settings',
@@ -66,7 +66,7 @@ const routes: Route[] = [
             {
                 path: 'tags',
                 loadChildren: () => import('./tags/tag.module').then(m => m.TagModule),
-                data: { basePerm: Permission.tagsCanManage }
+                data: { basePerm: Permission.tagCanManage }
             },
             {
                 path: 'history',
@@ -82,7 +82,7 @@ const routes: Route[] = [
                 path: 'polls',
                 loadChildren: () => import('./polls/polls.module').then(m => m.PollsModule),
                 // one of them is sufficient
-                data: { basePerm: [Permission.motionsCanSee, Permission.assignmentsCanSee] }
+                data: { basePerm: [Permission.motionCanSee, Permission.assignmentCanSee] }
             },
             {
                 path: 'autopilot',

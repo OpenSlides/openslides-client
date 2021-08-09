@@ -66,7 +66,7 @@ export class AssignmentPollDetailContentComponent extends BaseComponent {
     }
 
     public get canSeeResults(): boolean {
-        return this.operator.hasPerms(this.permission.assignmentsCanManage) || this.isPublished;
+        return this.operator.hasPerms(this.permission.assignmentCanManage) || this.isPublished;
     }
 
     public get isPercentBaseEntitled(): boolean {

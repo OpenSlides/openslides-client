@@ -24,7 +24,7 @@ const routes: Route[] = [
     },
     {
         path: 'upload',
-        data: { basePerm: Permission.mediafilesCanManage },
+        data: { basePerm: Permission.mediafileCanManage },
         children: [
             {
                 path: ':id',

@@ -28,7 +28,7 @@ export const AssignmentsAppConfig: AppConfig = {
             displayName: 'Elections',
             icon: 'how_to_vote',
             weight: 400,
-            permission: Permission.assignmentsCanSee
+            permission: Permission.assignmentCanSee
         }
     ]
 };

@@ -14,7 +14,7 @@ const routes: Route[] = [
         path: '',
         component: UserListComponent,
         pathMatch: 'full',
-        data: { basePerm: Permission.usersCanSee }
+        data: { basePerm: Permission.userCanSee }
     },
     {
         path: 'password',
@@ -23,28 +23,28 @@ const routes: Route[] = [
     {
         path: 'password/:id',
         component: PasswordComponent,
-        data: { basePerm: Permission.usersCanManage }
+        data: { basePerm: Permission.userCanManage }
     },
     {
         path: 'new',
         component: UserDetailComponent,
-        data: { basePerm: Permission.usersCanManage }
+        data: { basePerm: Permission.userCanManage }
     },
     {
         path: 'import',
         component: UserImportListComponent,
-        data: { basePerm: Permission.usersCanManage }
+        data: { basePerm: Permission.userCanManage }
     },
     {
         path: 'presence',
         component: PresenceDetailComponent,
         // TODO: 'users_enable_presence_view' missing in permissions
-        data: { basePerm: Permission.usersCanManage }
+        data: { basePerm: Permission.userCanManage }
     },
     {
         path: 'groups',
         component: GroupListComponent,
-        data: { basePerm: Permission.usersCanManage }
+        data: { basePerm: Permission.userCanManage }
     },
     {
         path: ':id',

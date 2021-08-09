@@ -40,7 +40,7 @@ export abstract class BasePermsDirective<P> implements OnInit, OnDestroy {
 
     /**
      * Add a true-false-condition additional to osPerms
-     * `*osPerms="permission.mediafilesCanManage; and: !isMultiSelect"`
+     * `*osPerms="permission.mediafileCanManage; and: !isMultiSelect"`
      */
     private and = true;
 

@@ -53,7 +53,7 @@ export class MotionPollDetailContentComponent extends BaseComponent {
     }
 
     public get canSeeResults(): boolean {
-        return this.operator.hasPerms(this.permission.motionsCanManagePolls) || this.isPublished;
+        return this.operator.hasPerms(this.permission.motionCanManagePolls) || this.isPublished;
     }
 
     public constructor(

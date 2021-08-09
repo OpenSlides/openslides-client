@@ -12,7 +12,7 @@
         </div>
 
         <!-- Dot Menu -->
-        <span class="poll-actions" *osPerms="permission.motionsCanManagePolls">
+        <span class="poll-actions" *osPerms="permission.motionCanManagePolls">
             <button mat-icon-button [matMenuTriggerFor]="pollDetailMenu">
                 <mat-icon class="small-icon">more_horiz</mat-icon>
             </button>
@@ -23,7 +23,7 @@
     <div class="italic spacer-bottom-20">
         <!-- Type and State -->
         <div class="type-and-state italic spacer-bottom-20 break-word">
-            <span *osPerms="permission.motionsCanManagePolls; and: poll.isEVoting">
+            <span *osPerms="permission.motionCanManagePolls; and: poll.isEVoting">
                 <os-icon-container
                     class="poll-type break-word"
                     icon="info"
@@ -46,7 +46,7 @@
     </div>
 
     <!-- Change state button -->
-    <span *osPerms="permission.motionsCanManagePolls; and: !hideChangeState">
+    <span *osPerms="permission.motionCanManagePolls; and: !hideChangeState">
         <button
             mat-stroked-button
             [ngClass]="pollStateActions[poll.state].css"
@@ -90,7 +90,7 @@
 </ng-template>
 
 <ng-template #emptyTemplate>
-    <span *osPerms="permission.motionsCanManagePolls; and: poll.type === 'analog'">
+    <span *osPerms="permission.motionCanManagePolls; and: poll.type === 'analog'">
         <button mat-stroked-button (click)="openDialog()" matTooltip="{{ 'Edit' | translate }}">
             <mat-icon>edit</mat-icon>
         </button>
@@ -102,7 +102,7 @@
 
 <!-- More Menu -->
 <mat-menu #pollDetailMenu="matMenu">
-    <button *osPerms="permission.motionsCanManagePolls" mat-menu-item (click)="openDialog()">
+    <button *osPerms="permission.motionCanManagePolls" mat-menu-item (click)="openDialog()">
         <mat-icon>edit</mat-icon>
         <span>{{ 'Edit' | translate }}</span>
     </button>
@@ -115,7 +115,7 @@
         <mat-icon>picture_as_pdf</mat-icon>
         <span>{{ 'Ballot papers' | translate }}</span>
     </button>
-    <div *osPerms="permission.motionsCanManagePolls">
+    <div *osPerms="permission.motionCanManagePolls">
         <mat-divider></mat-divider>
 
         <!-- Reset Button -->

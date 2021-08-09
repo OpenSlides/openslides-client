@@ -5,12 +5,12 @@
 export enum Permission {
     agendaItemCanManage = 'agenda_item.can_manage',
     agendaItemCanSee = 'agenda_item.can_see',
-    agendaItemCanSeeInternalItems = 'agenda_item.can_see_internal',
+    agendaItemCanSeeInternal = 'agenda_item.can_see_internal',
 
-    assignmentsCanManage = 'assignment.can_manage',
-    assignmentsCanNominateOther = 'assignment.can_nominate_other',
-    assignmentsCanNominateSelf = 'assignment.can_nominate_self',
-    assignmentsCanSee = 'assignment.can_see',
+    assignmentCanManage = 'assignment.can_manage',
+    assignmentCanNominateOther = 'assignment.can_nominate_other',
+    assignmentCanNominateSelf = 'assignment.can_nominate_self',
+    assignmentCanSee = 'assignment.can_see',
 
     chatCanManage = 'chat.can_manage',
 
@@ -18,8 +18,8 @@ export enum Permission {
     listOfSpeakersCanSee = 'list_of_speakers.can_see',
     listOfSpeakersCanBeSpeaker = 'list_of_speakers.can_be_speaker',
 
-    mediafilesCanManage = 'mediafile.can_manage',
-    mediafilesCanSee = 'mediafile.can_see',
+    mediafileCanManage = 'mediafile.can_manage',
+    mediafileCanSee = 'mediafile.can_see',
 
     meetingCanManageSettings = 'meeting.can_manage_settings',
     meetingCanManageLogosAndFonts = 'meeting.can_manage_logos_and_fonts',
@@ -28,26 +28,28 @@ export enum Permission {
     meetingCanSeeLiveStream = 'meeting.can_see_livestream',
     meetingCanSeeHistory = 'meeting.can_see_history',
 
-    motionsCanCreate = 'motion.can_create',
-    motionsCanCreateAmendments = 'motion.can_create_amendments',
-    motionsCanManage = 'motion.can_manage',
-    motionsCanManageMetadata = 'motion.can_manage_metadata',
-    motionsCanManagePolls = 'motion.can_manage_polls',
-    motionsCanSee = 'motion.can_see',
-    motionsCanSeeInternal = 'motion.can_see_internal',
-    motionsCanSupport = 'motion.can_support',
+    motionCanCreate = 'motion.can_create',
+    motionCanCreateAmendments = 'motion.can_create_amendments',
+    motionCanManage = 'motion.can_manage',
+    motionCanManageMetadata = 'motion.can_manage_metadata',
+    motionCanManagePolls = 'motion.can_manage_polls',
+    motionCanSee = 'motion.can_see',
+    motionCanSeeInternal = 'motion.can_see_internal',
+    motionCanSupport = 'motion.can_support',
 
     pollCanManage = 'poll.can_manage',
 
     projectorCanSee = 'projector.can_see',
     projectorCanManage = 'projector.can_manage',
 
-    tagsCanManage = 'tag.can_manage',
+    tagCanManage = 'tag.can_manage',
 
-    usersCanManage = 'user.can_manage',
-    usersCanSeeExtraData = 'user.can_see_extra_data',
-    usersCanSee = 'user.can_see'
+    userCanManage = 'user.can_manage',
+    userCanSeeExtraData = 'user.can_see_extra_data',
+    userCanSee = 'user.can_see'
 }
+
+export type PermissionsMap = { [key in Permission]?: Permission[] };
 
 export interface DisplayPermission {
     display_name: string;
@@ -73,7 +75,7 @@ export const PERMISSIONS: AppPermission[] = [
             { display_name: 'Can see agenda', value: Permission.agendaItemCanSee },
             {
                 display_name: 'Can see internal items and time scheduling of agenda',
-                value: Permission.agendaItemCanSeeInternalItems
+                value: Permission.agendaItemCanSeeInternal
             },
             { display_name: 'Can see list of speakers', value: Permission.listOfSpeakersCanSee },
             { display_name: 'Can manage agenda', value: Permission.agendaItemCanManage },
@@ -84,41 +86,41 @@ export const PERMISSIONS: AppPermission[] = [
     {
         name: 'Motions',
         permissions: [
-            { display_name: 'Can see motions', value: Permission.motionsCanSee },
-            { display_name: 'Can see motions in internal state', value: Permission.motionsCanSeeInternal },
-            { display_name: 'Can create motions', value: Permission.motionsCanCreate },
-            { display_name: 'Can create amendments', value: Permission.motionsCanCreateAmendments },
-            { display_name: 'Can support motions', value: Permission.motionsCanSupport },
-            { display_name: 'Can manage motions', value: Permission.motionsCanManage },
-            { display_name: 'Can manage motion metadata', value: Permission.motionsCanManageMetadata },
-            { display_name: 'Can manage motion polls', value: Permission.motionsCanManagePolls }
+            { display_name: 'Can see motions', value: Permission.motionCanSee },
+            { display_name: 'Can see motions in internal state', value: Permission.motionCanSeeInternal },
+            { display_name: 'Can create motions', value: Permission.motionCanCreate },
+            { display_name: 'Can create amendments', value: Permission.motionCanCreateAmendments },
+            { display_name: 'Can support motions', value: Permission.motionCanSupport },
+            { display_name: 'Can manage motions', value: Permission.motionCanManage },
+            { display_name: 'Can manage motion metadata', value: Permission.motionCanManageMetadata },
+            { display_name: 'Can manage motion polls', value: Permission.motionCanManagePolls }
         ]
     },
     {
         name: 'Elections',
         permissions: [
-            { display_name: 'Can see elections', value: Permission.assignmentsCanSee },
-            { display_name: 'Can manage elections', value: Permission.assignmentsCanManage },
-            { display_name: 'Can nominate another participant', value: Permission.assignmentsCanNominateOther },
-            { display_name: 'Can nominate oneself', value: Permission.assignmentsCanNominateSelf }
+            { display_name: 'Can see elections', value: Permission.assignmentCanSee },
+            { display_name: 'Can manage elections', value: Permission.assignmentCanManage },
+            { display_name: 'Can nominate another participant', value: Permission.assignmentCanNominateOther },
+            { display_name: 'Can nominate oneself', value: Permission.assignmentCanNominateSelf }
         ]
     },
     {
         name: 'Files',
         permissions: [
-            { display_name: 'Can see the list of files', value: Permission.mediafilesCanSee },
-            { display_name: 'Can manage files', value: Permission.mediafilesCanManage }
+            { display_name: 'Can see the list of files', value: Permission.mediafileCanSee },
+            { display_name: 'Can manage files', value: Permission.mediafileCanManage }
         ]
     },
     {
         name: 'Participants',
         permissions: [
-            { display_name: 'Can see names of users', value: Permission.usersCanSee },
+            { display_name: 'Can see names of users', value: Permission.userCanSee },
             {
                 display_name: 'Can see extra data of users (e.g. email and comment)',
-                value: Permission.usersCanSeeExtraData
+                value: Permission.userCanSeeExtraData
             },
-            { display_name: 'Can manage users', value: Permission.usersCanManage }
+            { display_name: 'Can manage users', value: Permission.userCanManage }
         ]
     },
     {
@@ -138,7 +140,7 @@ export const PERMISSIONS: AppPermission[] = [
             { display_name: 'Can see history', value: Permission.meetingCanSeeHistory },
             { display_name: 'Can manage settings', value: Permission.meetingCanManageSettings },
             { display_name: 'Can manage logos and fonts', value: Permission.meetingCanManageLogosAndFonts },
-            { display_name: 'Can manage tags', value: Permission.tagsCanManage }
+            { display_name: 'Can manage tags', value: Permission.tagCanManage }
         ]
     }
 ];

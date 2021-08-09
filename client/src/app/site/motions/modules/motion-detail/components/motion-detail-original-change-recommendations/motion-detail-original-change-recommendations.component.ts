@@ -237,7 +237,7 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
      * The permissions of the user have changed -> activate / deactivate editing functionality
      */
     private checkPermissions(): void {
-        if (this.operator.hasPerms(Permission.motionsCanManage)) {
+        if (this.operator.hasPerms(Permission.motionCanManage)) {
             this.can_manage = true;
             if (this.selectedFrom === null) {
                 this.startCreating();

@@ -62,7 +62,7 @@ export class MotionBlockListComponent extends BaseListViewComponent<ViewMotionBl
      * @returns true if the user may alter motions or their metadata
      */
     public get canEdit(): boolean {
-        return this.operator.hasPerms(Permission.motionsCanManage, Permission.motionsCanManageMetadata);
+        return this.operator.hasPerms(Permission.motionCanManage, Permission.motionCanManageMetadata);
     }
 
     /**

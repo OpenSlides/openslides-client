@@ -57,7 +57,7 @@
     <div class="motion-text-with-diffs">
         <div *ngIf="getTitleChangingObject() as changedTitle">
             <div class="diff-box diff-box-{{ changedTitle.getChangeId() }} clearfix">
-                <div class="action-row" *osPerms="permission.motionsCanManage">
+                <div class="action-row" *osPerms="permission.motionCanManage">
                     <button
                         mat-icon-button
                         *ngIf="isRecommendation(changedTitle)"
@@ -108,7 +108,7 @@
                 <div class="action-row">
                     <button
                         mat-icon-button
-                        *osPerms="permission.motionsCanManage; and: isRecommendation(change)"
+                        *osPerms="permission.motionCanManage; and: isRecommendation(change)"
                         type="button"
                         [matMenuTriggerFor]="changeRecommendationMenu"
                         [matMenuTriggerData]="{ change: change }"
@@ -189,7 +189,7 @@
             </a>
 
             <!-- perms.isAllowed('change_state', motion) (which does not exist)-->
-            <ng-container *osPerms="permission.motionsCanManage">
+            <ng-container *osPerms="permission.motionCanManage">
                 <mat-divider *ngIf="change.amendment.state.next_states.length > 0"></mat-divider>
                 <button
                     *ngFor="let state of change.amendment.state.next_states"

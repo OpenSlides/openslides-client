@@ -76,7 +76,7 @@ export class PasswordComponent extends BaseModelContextComponent implements OnIn
 
     private updateUser(): void {
         this.ownPage = this.urlUserId ? this.operator.operatorId === this.urlUserId : true;
-        this.canManage = this.operator.hasPerms(Permission.usersCanManage);
+        this.canManage = this.operator.hasPerms(Permission.userCanManage);
     }
 
     /**

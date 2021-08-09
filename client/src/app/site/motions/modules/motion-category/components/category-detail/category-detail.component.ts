@@ -62,7 +62,7 @@ export class CategoryDetailComponent extends BaseModelContextComponent implement
      * @returns true if the user may alter motions
      */
     public get canEdit(): boolean {
-        return this.operator.hasPerms(Permission.motionsCanManage);
+        return this.operator.hasPerms(Permission.motionCanManage);
     }
 
     /**

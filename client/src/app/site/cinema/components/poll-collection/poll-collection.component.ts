@@ -109,9 +109,9 @@ export class PollCollectionComponent extends BaseComponent implements OnInit {
      */
     public canManagePoll(poll: ViewPoll): boolean {
         if (poll.pollClassType === PollClassType.Motion) {
-            return this.operator.hasPerms(this.permission.motionsCanManagePolls);
+            return this.operator.hasPerms(this.permission.motionCanManagePolls);
         } else if (poll.pollClassType === PollClassType.Assignment) {
-            return this.operator.hasPerms(this.permission.assignmentsCanManage);
+            return this.operator.hasPerms(this.permission.assignmentCanManage);
         }
         return false;
     }

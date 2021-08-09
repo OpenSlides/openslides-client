@@ -52,7 +52,7 @@ export class PresenceDetailComponent implements OnInit {
      * @returns true if the user is allowed to use this view
      */
     public get permission(): boolean {
-        return this.operator.hasPerms(Permission.usersCanManage) && this._enabledInConfig;
+        return this.operator.hasPerms(Permission.userCanManage) && this._enabledInConfig;
     }
 
     /**

@@ -42,6 +42,7 @@
                                     <mat-checkbox
                                         *ngIf="!group.isAdminGroup"
                                         [checked]="group.hasPermission(perm.value)"
+                                        [disabled]="group.hasPermissionImplicitly(perm.value)"
                                         (change)="togglePermission(group, perm.value)"
                                     ></mat-checkbox>
                                     <mat-checkbox

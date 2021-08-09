@@ -202,25 +202,23 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
     public isAllowed(action: string): boolean {
         switch (action) {
             case 'delete':
-                return this.operator.hasPerms(Permission.usersCanManage) && !this.ownPage;
+                return this.operator.hasPerms(Permission.userCanManage) && !this.ownPage;
             case 'manage':
-                return this.operator.hasPerms(Permission.usersCanManage);
+                return this.operator.hasPerms(Permission.userCanManage);
             case 'seeName':
-                return this.operator.hasPerms(Permission.usersCanSee, Permission.usersCanManage) || this.ownPage;
+                return this.operator.hasPerms(Permission.userCanSee, Permission.userCanManage) || this.ownPage;
             case 'seeOtherUsers':
-                return this.operator.hasPerms(Permission.usersCanSee, Permission.usersCanManage);
+                return this.operator.hasPerms(Permission.userCanSee, Permission.userCanManage);
             case 'seeExtra':
-                return this.operator.hasPerms(Permission.usersCanSeeExtraData, Permission.usersCanManage);
+                return this.operator.hasPerms(Permission.userCanSeeExtraData, Permission.userCanManage);
             case 'seePersonal':
-                return (
-                    this.operator.hasPerms(Permission.usersCanSeeExtraData, Permission.usersCanManage) || this.ownPage
-                );
+                return this.operator.hasPerms(Permission.userCanSeeExtraData, Permission.userCanManage) || this.ownPage;
             case 'changePersonal':
-                return this.operator.hasPerms(Permission.usersCanManage) || this.ownPage;
+                return this.operator.hasPerms(Permission.userCanManage) || this.ownPage;
             case 'changePassword':
                 return (
                     (this.ownPage && this.operator.canChangeOwnPassword) ||
-                    this.operator.hasPerms(Permission.usersCanManage)
+                    this.operator.hasPerms(Permission.userCanManage)
                 );
             default:
                 return false;

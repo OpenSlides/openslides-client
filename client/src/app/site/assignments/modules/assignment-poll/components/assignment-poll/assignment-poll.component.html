@@ -10,7 +10,7 @@
 
             <!-- Type and State -->
             <div class="type-and-state italic spacer-bottom-20">
-                <span *osPerms="permission.assignmentsCanManage; and: poll.isEVoting">
+                <span *osPerms="permission.assignmentCanManage; and: poll.isEVoting">
                     <os-icon-container
                         class="poll-type"
                         icon="info"
@@ -35,7 +35,7 @@
                 <!-- Buttons -->
                 <button
                     mat-icon-button
-                    *osPerms="[permission.projectorCanManage, permission.assignmentsCanManage]"
+                    *osPerms="[permission.projectorCanManage, permission.assignmentCanManage]"
                     [matMenuTriggerFor]="pollItemMenu"
                     (click)="$event.stopPropagation()"
                 >
@@ -44,7 +44,7 @@
             </div>
 
             <!-- Change state button -->
-            <div *osPerms="permission.assignmentsCanManage; and: !hideChangeState">
+            <div *osPerms="permission.assignmentCanManage; and: !hideChangeState">
                 <button
                     mat-stroked-button
                     [ngClass]="pollStateActions[poll.state].css"
@@ -64,7 +64,7 @@
             </div>
 
             <!-- Enter Votes Hint -->
-            <div *osPerms="permission.assignmentsCanManage; and: poll.isAnalog && !poll.stateHasVotes">
+            <div *osPerms="permission.assignmentCanManage; and: poll.isAnalog && !poll.stateHasVotes">
                 {{ 'Edit to enter votes.' | translate }}
             </div>
         </div>
@@ -91,7 +91,7 @@
 </mat-card>
 
 <mat-menu #pollItemMenu="matMenu">
-    <div *osPerms="permission.assignmentsCanManage">
+    <div *osPerms="permission.assignmentCanManage">
         <button mat-menu-item (click)="openDialog()">
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit' | translate }}</span>
@@ -100,7 +100,7 @@
     <div *osPerms="permission.projectorCanManage">
         <os-projector-button [object]="poll" [menuItem]="true"></os-projector-button>
     </div>
-    <div *osPerms="permission.assignmentsCanManage">
+    <div *osPerms="permission.assignmentCanManage">
         <button mat-menu-item (click)="printBallot()">
             <mat-icon>picture_as_pdf</mat-icon>
             <span>{{ 'Ballot papers' | translate }}</span>
