@@ -122,7 +122,12 @@ export class UserRepositoryService
             { templateField: 'committee_$_management_level' }
         ]);
         const committeeListFields = [{ templateField: 'committee_$_management_level' }];
-        const detailFields = listFields.concat(['username', 'about_me', 'comment', 'default_password']);
+        const detailFields = listFields.concat([
+            'username',
+            { templateField: 'about_me_$' },
+            'comment',
+            'default_password'
+        ]);
         const orgaListFields = listFields.concat(['committee_ids']);
         const orgaEditFields = orgaListFields.concat([
             'default_password',

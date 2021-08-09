@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, combineLatest } from 'rxjs';
 
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SpecificStructuredField } from 'app/core/core-services/model-request-builder.service';
@@ -95,7 +95,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
         return this.pollService.isElectronicVotingEnabled && this.voteWeightEnabled;
     }
 
-    private userId: Id = 0;
+    private userId: Id = undefined; // Not initialized
 
     /**
      * Constructor for user
@@ -131,19 +131,24 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
             this.setEditMode(true);
         } else {
             this.subscriptions.push(
-                this.route.params.subscribe(params => {
-                    this.userId = +params.id;
-                    this.loadUserById();
-                }),
-                this.activeMeetingIdService.meetingIdObservable.subscribe(() => this.loadUserById())
+                combineLatest([this.route.params, this.activeMeetingIdService.meetingIdObservable]).subscribe(
+                    async ([params, _]) => {
+                        if (params.id) {
+                            this.userId = +params.id;
+                        }
+                        if (this.userId) {
+                            await this.loadUserById();
+                        }
+                    }
+                )
             );
         }
     }
 
-    private loadUserById(): void {
+    private async loadUserById(): Promise<void> {
         const meetingId = this.activeMeetingIdService.meetingId;
         if (meetingId) {
-            this.requestModels({
+            await this.requestModels({
                 viewModelCtor: ViewUser,
                 ids: [this.userId],
                 follow: [
