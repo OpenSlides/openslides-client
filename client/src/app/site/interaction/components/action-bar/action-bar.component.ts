@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/
 import { Router } from '@angular/router';
 
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { fadeInAnim, fadeInOutAnim } from 'app/shared/animations';
@@ -32,8 +33,6 @@ export class ActionBarComponent extends BaseComponent {
     public showCallDialog: Observable<boolean> = this.rtcService.showCallDialogObservable;
     public showLiveConf: Observable<boolean> = this.interactionService.showLiveConfObservable;
 
-    public isSupportEnabled: Observable<boolean> = this.rtcService.isSupportEnabled;
-
     private canEnterCallObservable: Observable<boolean> = this.callRestrictionService.canEnterCallObservable;
     public canEnterCall = false;
 
@@ -62,6 +61,15 @@ export class ActionBarComponent extends BaseComponent {
             return _(cannotEnterTooltip);
         }
     }
+
+    public get showHelpDesk(): Observable<boolean> {
+        return combineLatest([this.rtcService.isSupportEnabled, this.isJoined]).pipe(
+            map(([isSupportEnabled, isJoined]) => {
+                return isSupportEnabled && !isJoined;
+            })
+        );
+    }
+
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private router: Router,
