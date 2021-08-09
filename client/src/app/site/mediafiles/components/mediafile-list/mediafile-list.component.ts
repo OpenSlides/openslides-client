@@ -144,6 +144,17 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
             width: 'auto',
             minWidth: 60
         },
+        /**
+         * Shows the mimetype of files,
+         * Useful for debugging certain behavior
+         */
+        /*
+        {
+             prop: 'mimetype',
+             width: 'auto',
+             minWidth: 60
+        },
+        */
         {
             prop: 'info',
             width: '20%',
@@ -270,6 +281,17 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
 
     public getDateFromTimestamp(timestamp: string): string {
         return new Date(timestamp).toLocaleString(this.translate.currentLang);
+    }
+
+    public isFileUsed(file: ViewMediafile, place: string): boolean {
+        if (file.isImage()) {
+            const used = file.used_as_logo_in_meeting_id(place);
+            return !!used;
+        } else if (file.isFont()) {
+            const used = file.used_as_font_in_meeting_id(place);
+            return !!used;
+        }
+        return false;
     }
 
     /**

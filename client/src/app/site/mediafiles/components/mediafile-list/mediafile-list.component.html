@@ -131,6 +131,11 @@
         </div>
     </div>
 
+    <!-- Mimetype (usually hidden) -->
+    <div *pblNgridCellDef="'minetype'; row as mediafile" class="fill clickable">
+        {{ mediafile.mimetype }}
+    </div>
+
     <!-- Info column -->
     <div *pblNgridCellDef="'info'; row as mediafile" class="fill clickable" (click)="onEditFile(mediafile)">
         <os-icon-container *ngIf="mediafile.access_groups.length" icon="group">

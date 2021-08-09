@@ -63,6 +63,6 @@ export class CurrentSpeakerChyronSlideService {
         if (!descriptor) {
             return;
         }
-        this.projectorRepo.project(descriptor, [projector]);
+        this.projectorRepo.toggle(descriptor, [projector]);
     }
 }
