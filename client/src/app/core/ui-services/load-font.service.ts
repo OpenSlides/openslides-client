@@ -36,15 +36,27 @@ export class LoadFontService {
      * Falls back to the normal OSFont when no custom  font was set.
      */
     private loadCustomFont(): void {
-        this.mediaManageService.getFontUrlObservable('regular').subscribe(url => {
-            if (url) {
-                this.setCustomProjectorFont(url, 400);
+        this.mediaManageService.getFontUrlObservable('regular').subscribe(regular => {
+            if (regular) {
+                this.setCustomProjectorFont(regular, 400);
             }
         });
 
-        this.mediaManageService.getFontUrlObservable('bold').subscribe(url => {
-            if (url) {
-                this.setCustomProjectorFont(url, 500);
+        this.mediaManageService.getFontUrlObservable('bold').subscribe(bold => {
+            if (bold) {
+                this.setCustomProjectorFont(bold, 500);
+            }
+        });
+
+        this.mediaManageService.getFontUrlObservable('monospace').subscribe(mono => {
+            if (mono) {
+                this.setNewFontFace('OSFont Monospace', mono);
+            }
+        });
+
+        this.mediaManageService.getFontUrlObservable('chyron_speaker_name').subscribe(chyronFont => {
+            if (chyronFont) {
+                this.setNewFontFace('OSFont ChyronName', chyronFont);
             }
         });
     }
@@ -53,18 +65,25 @@ export class LoadFontService {
      * Sets a new font for the custom projector. Weight is required to
      * differentiate between bold and normal fonts
      *
-     * @param url the font url
+     * @param fonturl the font object from the config service
      * @param weight the desired weight of the font
      */
-    private setCustomProjectorFont(url: string, weight: number): void {
-        const fontFace = new FontFace('customProjectorFont', `url(${url})`, { weight: weight });
-        fontFace
+    private setCustomProjectorFont(fonturl: string, weight: number): void {
+        if (!fonturl) {
+            return;
+        }
+        this.setNewFontFace('customProjectorFont', fonturl, weight);
+    }
+
+    private setNewFontFace(fontName: string, fontPath: string, weight: number = 400): void {
+        const customFont = new FontFace(fontName, `url(${fontPath})`, { weight: weight });
+        customFont
             .load()
             .then(res => {
                 (document as FontDocument).fonts.add(res);
             })
             .catch(error => {
-                console.error(error);
+                console.error(`Error setting font "${fontName}" with path "${fontPath}" :: `, error);
             });
     }
 }

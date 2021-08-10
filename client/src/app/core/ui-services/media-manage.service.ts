@@ -28,20 +28,22 @@ export const LogoDisplayNames: { [place in LogoPlace]: string } = {
     pdf_ballot_paper: 'PDF ballot paper logo'
 };
 
-export type FontPlace = 'regular' | 'italic' | 'bold' | 'bold_italic' | 'monospace';
+export type FontPlace = 'regular' | 'italic' | 'bold' | 'bold_italic' | 'monospace' | 'chyron_speaker_name';
 export const FontDisplayNames: { [place in FontPlace]: string } = {
     regular: 'Font regular',
     italic: 'Font italic',
     bold: 'Font bold',
     bold_italic: 'Font bold italic',
-    monospace: 'Font monospace'
+    monospace: 'Font monospace',
+    chyron_speaker_name: 'Chyron speaker name'
 };
 export const FontDefaults: { [place in FontPlace]: string } = {
     regular: 'assets/fonts/fira-sans-latin-400.woff',
     italic: 'assets/fonts/fira-sans-latin-400italic.woff',
     bold: 'assets/fonts/fira-sans-latin-500.woff',
     bold_italic: 'assets/fonts/fira-sans-latin-500italic.woff',
-    monospace: 'assets/fonts/roboto-condensed-bold.woff'
+    monospace: 'assets/fonts/roboto-condensed-bold.woff',
+    chyron_speaker_name: 'assets/fonts/fira-sans-latin-400.woff'
 };
 
 /**
@@ -67,7 +69,7 @@ export class MediaManageService {
     }
 
     public get allFontPlaces(): FontPlace[] {
-        return ['regular', 'italic', 'bold', 'bold_italic', 'monospace'];
+        return ['regular', 'italic', 'bold', 'bold_italic', 'monospace', 'chyron_speaker_name'];
     }
 
     private readonly logoUrlSubjects: { [place in LogoPlace]?: BehaviorSubject<string | null> } = {};
