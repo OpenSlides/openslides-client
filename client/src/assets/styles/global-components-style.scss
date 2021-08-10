@@ -182,6 +182,10 @@
         font-size: 18px;
     }
 
+    .small-text {
+        font-size: 12px;
+    }
+
     .white-divider {
         border-top-color: white;
     }
@@ -208,6 +212,11 @@
      * CLEANUP:
      * whole themes can be replaced using classes like this one
      */
+    .background-default {
+        background: mat-color($background, background);
+        color: mat-color($foreground, text);
+    }
+
     .background-primary {
         background: mat-color($primary);
         color: mat-color($primary, default-contrast) !important;
@@ -246,6 +255,10 @@
 
     .foreground-warn {
         color: mat-color($warn);
+    }
+
+    .foreground-icon {
+        color: mat-color($foreground, icon);
     }
 
     .svg-primary {

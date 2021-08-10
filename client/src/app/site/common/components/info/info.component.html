@@ -1,10 +1,15 @@
 <os-head-bar [nav]="false" [goBack]="true">
     <div class="title-slot">
-        <h2>{{ 'Legal notice' | translate }}</h2>
+        <h2>{{ 'Information' | translate }}</h2>
     </div>
 </os-head-bar>
 
-<os-legal-notice-content></os-legal-notice-content>
+<mat-card class="os-card">
+    <h2>{{ 'Privacy policy' | translate }}</h2>
+    <os-privacy-policy-content></os-privacy-policy-content>
+    <h2>{{ 'Legal notice' | translate }}</h2>
+    <os-legal-notice-content></os-legal-notice-content>
+</mat-card>
 
 <mat-card class="os-card" *osPerms="permission.userCanManage">
     <h2>{{ 'Statistics' | translate }}</h2>

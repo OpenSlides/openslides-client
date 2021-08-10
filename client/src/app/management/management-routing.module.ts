@@ -2,8 +2,7 @@ import { NgModule } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
 
 import { AuthGuard } from 'app/core/core-services/auth-guard.service';
-import { LegalNoticeComponent } from 'app/site/common/components/legal-notice/legal-notice.component';
-import { PrivacyPolicyComponent } from 'app/site/common/components/privacy-policy/privacy-policy.component';
+import { InfoComponent } from 'app/site/common/components/info/info.component';
 import { CommitteeDetailComponent } from './components/committee-detail/committee-detail.component';
 import { CommitteeEditComponent } from './components/committee-edit/committee-edit.component';
 import { CommitteeListComponent } from './components/committee-list/committee-list.component';
@@ -102,12 +101,8 @@ const routes: Route[] = [
                 component: OrgaSettingsComponent
             },
             {
-                path: 'legalnotice',
-                component: LegalNoticeComponent
-            },
-            {
-                path: 'privacypolicy',
-                component: PrivacyPolicyComponent
+                path: 'info',
+                component: InfoComponent
             }
         ],
         canActivateChild: [AuthGuard]

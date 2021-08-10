@@ -28,7 +28,7 @@
         {{ searchResultCount }} {{ searchResultCount === 1 ? ('result' | translate) : ('results' | translate) }}
     </h4>
     <mat-divider></mat-divider>
-    <div class="result-view" *ngIf="searchResults.length > 0">
+    <div class="result-view background-default" *ngIf="searchResults.length > 0">
         <div class="result-list">
             <mat-accordion [displayMode]="'flat'">
                 <ng-container *ngFor="let result of searchResults">
@@ -52,7 +52,7 @@
                         <ng-template matExpansionPanelContent>
                             <mat-list role="list">
                                 <mat-list-item
-                                    [ngClass]="selectedModel === model ? 'selected' : ''"
+                                    [ngClass]="selectedModel === model ? 'selected background-primary' : ''"
                                     role="listitem"
                                     (click)="changeModel(model)"
                                     (dblclick)="viewResult(model)"
@@ -68,7 +68,7 @@
                                             (click)="showPreview = !showPreview"
                                             matTooltip="{{ 'Show preview' | translate }}"
                                         >
-                                            <mat-icon>
+                                            <mat-icon class="foreground-icon">
                                                 {{ showPreview ? 'visibility_off' : 'visibility_on' }}
                                             </mat-icon>
                                         </button>
@@ -77,9 +77,7 @@
                                             (click)="viewResult(model)"
                                             matTooltip="{{ 'View' | translate }}"
                                         >
-                                            <mat-icon>
-                                                present_to_all
-                                            </mat-icon>
+                                            <mat-icon class="foreground-icon"> present_to_all </mat-icon>
                                         </button>
                                     </div>
                                     <mat-divider></mat-divider>
