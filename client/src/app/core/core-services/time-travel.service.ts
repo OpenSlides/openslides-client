@@ -1,95 +1,46 @@
 import { Injectable } from '@angular/core';
 
-import { environment } from 'environments/environment';
-
-import { BaseModel } from 'app/shared/models/base/base-model';
-import { History } from 'app/shared/models/core/history';
-import { CollectionMapperService } from './collection-mapper.service';
-import { DataStoreService, DataStoreUpdateManagerService } from './data-store.service';
-import { HistoryService } from './history.service';
-import { HttpService } from './http.service';
-import { LifecycleService } from './lifecycle.service';
-
-interface HistoryData {
-    [collection: string]: BaseModel[];
-}
+import { HistoryService, Position } from './history.service';
 
 /**
  * Service to enable browsing OpenSlides in a previous version.
  *
- * This should stop auto updates, save the current ChangeID and overwrite the DataStore with old Values
- * from the servers History.
- *
- * Restoring is nor possible yet. Simply reload
+ * This is a big TODO. This service and the history service should be combined.
+ * Whats to do for adding a history-mode:
+ * - restart the communication. The autoupdate service should accept a position (integer).
+ *   This position selected should be passed to every autoupdate
+ * - Block all meeting editing in the http/action service
+ * - Deal with presenters
+ * - Do not activate the ICC
+ * - Listen to the active meeting service: If the meeting is changed (also to null),
+ *   the history mode has to be left
+ * - Freeze the operator: It must not listen to updates from the autoupdate. Why?
+ *   Maybe the operator had different perms (or wans't even assigned to this meeting).
+ *   This would break the capability of this user to freely navigate.
  */
 @Injectable({
     providedIn: 'root'
 })
 export class TimeTravelService {
-    public constructor(
-        private httpService: HttpService,
-        private modelMapperService: CollectionMapperService,
-        private DS: DataStoreService,
-        private historyService: HistoryService,
-        private lifecycleService: LifecycleService,
-        private DSUpdateManager: DataStoreUpdateManagerService
-    ) {}
+    public constructor(private historyService: HistoryService) {}
 
     /**
      * Main entry point to set OpenSlides to another history point.
      *
-     * @param history the desired point in the history of OpenSlides
+     * @param position the desired point in the history of OpenSlides
      */
-    public async loadHistoryPoint(history: History): Promise<void> {
-        const updateSlot = await this.DSUpdateManager.getNewUpdateSlot(this.DS);
-
-        await this.stopTime(history);
-        const historyData: HistoryData = await this.getHistoryData(history);
-
-        const allModels = [];
-        Object.keys(historyData).forEach(collection => {
-            const targetClass = this.modelMapperService.getModelConstructor(collection);
-            historyData[collection].forEach(model => {
-                allModels.push(new targetClass(model));
-            });
-        });
-        // await this.DS.set(allModels, 0);
-
-        this.DSUpdateManager.commit(updateSlot);
+    public loadHistoryPoint(position: Position): void {
+        this.stopTime(position);
     }
 
     /**
-     * Leaves the history mode. Just restart OpenSlides:
-     * The active user is checked, a new WS connection established and
-     * all missed auto updates are requested.
+     * Leaves the history mode.
      */
-    public async resumeTime(): Promise<void> {
+    public resumeTime(): void {
         this.historyService.leaveHistoryMode();
-        await this.DS.set();
-        await this.lifecycleService.reboot();
     }
 
-    /**
-     * Read the history on a given time
-     *
-     * @param date the Date object
-     * @returns the full history on the given date
-     */
-    private async getHistoryData(history: History): Promise<HistoryData> {
-        const queryParams = { timestamp: Math.ceil(history.timestamp) };
-        return await this.httpService.get<HistoryData>(
-            `${environment.urlPrefix}/core/history/data/`,
-            null,
-            queryParams
-        );
-    }
-
-    /**
-     * Clears the DataStore and stops the WebSocket connection
-     */
-    private async stopTime(history: History): Promise<void> {
-        // await this.webSocketService.close();
-        await this.DS.set(); // Same as clear, but not persistent.
-        this.historyService.enterHistoryMode(history);
+    private stopTime(position: Position): void {
+        this.historyService.enterHistoryMode(position);
     }
 }

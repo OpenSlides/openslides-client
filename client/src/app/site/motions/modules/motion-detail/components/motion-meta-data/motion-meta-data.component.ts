@@ -3,9 +3,9 @@ import { Component } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { Tag } from 'app/shared/models/core/tag';
 import { Settings } from 'app/shared/models/event-management/meeting';
 import { MotionBlock } from 'app/shared/models/motions/motion-block';
+import { Tag } from 'app/shared/models/tag/tag';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
 import { ViewMotionState } from 'app/site/motions/models/view-motion-state';
