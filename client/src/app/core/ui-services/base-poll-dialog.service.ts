@@ -41,7 +41,7 @@ export interface PollDialogResult {
     providedIn: 'root'
 })
 export abstract class BasePollDialogService {
-    protected dialogComponent: ComponentType<BasePollDialogComponent>;
+    protected abstract dialogComponent: ComponentType<BasePollDialogComponent>;
 
     public constructor(private dialog: MatDialog, protected repo: PollRepositoryService) {}
 

@@ -176,7 +176,7 @@ export class PollService {
                 }
                 return resultLabel;
             });
-            const optionName = option.getOptionTitle();
+            const optionName = option.getOptionTitle().title;
             return `${optionName} · ${votingResults.join(' · ')}`;
         });
     }
@@ -374,7 +374,7 @@ export class PollService {
      * Extracts yes-no-abstain such as valid, invalids and totals from Poll and PollData-Objects
      */
     protected getResultFromPoll(poll: PollData, key: CalculablePollKey): number[] {
-        return [...poll.options, poll.global_option].map(option => option[key]);
+        return [...poll.options, poll.global_option].map(option => (option ? option[key] : undefined));
     }
 
     protected getPollDataFieldsByMethod(poll: PollData): CalculablePollKey[] {

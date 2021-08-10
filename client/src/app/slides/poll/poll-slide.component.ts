@@ -9,6 +9,7 @@ import { PollState } from 'app/shared/models/poll/poll-constants';
 import { PollService } from 'app/site/polls/services/poll.service';
 import { BaseSlideComponent } from '../base-slide-component';
 import { PollSlideData, SlideOption } from './poll-slide-data';
+import { of } from 'rxjs';
 
 export enum PollContentObjectType {
     Standalone = 'standalone',
@@ -91,6 +92,7 @@ export class PollSlideComponent extends BaseSlideComponent<PollSlideData> {
                 return null;
             }
         };
+        const options = data.options.map((option, i) => this.createOptionData(option, i + 1));
         const poll: PollData = {
             getContentObjectTitle,
             pollmethod: data.pollmethod,
@@ -101,7 +103,8 @@ export class PollSlideComponent extends BaseSlideComponent<PollSlideData> {
             votescast: data.votescast,
             type: data.type,
             entitled_users_at_stop: data.entitled_users_at_stop,
-            options: data.options.map((option, i) => this.createOptionData(option, i + 1)),
+            options: options,
+            options_as_observable: of(options),
             global_option: data.global_option
                 ? this.createOptionData(data.global_option)
                 : ({ getOptionTitle: () => ({ title: '' }) } as OptionData)

@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
+
+import { Subscription } from 'rxjs';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -15,7 +17,7 @@ import { ChartData } from '../charts/charts.component';
     styleUrls: ['./motion-poll-detail-content.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MotionPollDetailContentComponent extends BaseComponent {
+export class MotionPollDetailContentComponent extends BaseComponent implements OnDestroy {
     private _poll: PollData;
 
     public chartData: ChartData;
@@ -24,8 +26,7 @@ export class MotionPollDetailContentComponent extends BaseComponent {
     @Input()
     public set poll(pollData: PollData) {
         this._poll = pollData;
-        this.setTableData();
-        this.setChartData();
+        this.setupTableData();
         this.cd.markForCheck();
     }
 
@@ -56,6 +57,8 @@ export class MotionPollDetailContentComponent extends BaseComponent {
         return this.operator.hasPerms(this.permission.motionCanManagePolls) || this.isPublished;
     }
 
+    private tableDataSubscription: Subscription | null = null;
+
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private pollService: MotionPollService,
@@ -65,11 +68,28 @@ export class MotionPollDetailContentComponent extends BaseComponent {
         super(componentServiceCollector);
     }
 
-    private setTableData(): void {
-        this.tableData = this.pollService.generateTableData(this.poll);
+    public ngOnDestroy(): void {
+        super.ngOnDestroy();
+        this.cleanup();
+    }
+
+    private setupTableData(): void {
+        this.cleanup();
+        this.tableDataSubscription = this.pollService.generateTableDataAsObservable(this.poll).subscribe(tableData => {
+            this.tableData = tableData;
+            this.setChartData();
+            this.cd.markForCheck();
+        });
     }
 
     private setChartData(): void {
         this.chartData = this.pollService.generateChartData(this.poll);
+    }
+
+    private cleanup(): void {
+        if (this.tableDataSubscription) {
+            this.tableDataSubscription.unsubscribe();
+            this.tableDataSubscription = null;
+        }
     }
 }

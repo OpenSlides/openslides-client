@@ -10,7 +10,6 @@ import { PollRepositoryService } from 'app/core/repositories/polls/poll-reposito
 import { VoteRepositoryService } from 'app/core/repositories/polls/vote-repository.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
-import { BasePollDialogService } from 'app/core/ui-services/base-poll-dialog.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
@@ -21,6 +20,7 @@ import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { BasePollDetailComponentDirective } from 'app/site/polls/components/base-poll-detail.component';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { AssignmentPollDialogService } from '../../services/assignment-poll-dialog.service';
 import { AssignmentPollService } from '../../services/assignment-poll.service';
 
 @Component({
@@ -69,7 +69,7 @@ export class AssignmentPollDetailComponent extends BasePollDetailComponentDirect
         protected route: ActivatedRoute,
         protected groupRepo: GroupRepositoryService,
         protected promptService: PromptService,
-        protected pollDialog: BasePollDialogService,
+        protected pollDialog: AssignmentPollDialogService,
         protected pollService: AssignmentPollService,
         protected votesRepo: VoteRepositoryService,
         protected operator: OperatorService,
