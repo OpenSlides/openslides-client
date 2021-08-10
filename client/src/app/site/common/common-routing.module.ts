@@ -3,8 +3,7 @@ import { Route, RouterModule } from '@angular/router';
 
 import { Permission } from 'app/core/core-services/permission';
 import { ErrorComponent } from './components/error/error.component';
-import { LegalNoticeComponent } from './components/legal-notice/legal-notice.component';
-import { PrivacyPolicyComponent } from './components/privacy-policy/privacy-policy.component';
+import { InfoComponent } from './components/info/info.component';
 import { StartComponent } from './components/start/start.component';
 
 const routes: Route[] = [
@@ -15,12 +14,8 @@ const routes: Route[] = [
         data: { basePerm: Permission.meetingCanSeeFrontpage }
     },
     {
-        path: 'legalnotice',
-        component: LegalNoticeComponent
-    },
-    {
-        path: 'privacypolicy',
-        component: PrivacyPolicyComponent
+        path: 'info',
+        component: InfoComponent
     },
     {
         path: 'error',

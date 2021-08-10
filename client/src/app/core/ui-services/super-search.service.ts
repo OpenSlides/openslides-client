@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
+import { SuperSearchComponent } from 'app/shared/components/super-search/super-search.component';
 import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
-import { SuperSearchComponent } from 'app/site/common/components/super-search/super-search.component';
 
 @Injectable({
     providedIn: 'root'

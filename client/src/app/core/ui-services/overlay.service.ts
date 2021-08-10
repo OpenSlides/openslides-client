@@ -2,7 +2,7 @@ import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal, ComponentType, TemplatePortal } from '@angular/cdk/portal';
 import { ComponentRef, Injectable, InjectionToken, Injector, StaticProvider, TemplateRef } from '@angular/core';
 
-import { OverlayComponent } from 'app/site/common/components/overlay/overlay.component';
+import { OverlayComponent } from 'app/shared/components/overlay/overlay.component';
 
 export const OVERLAY_COMPONENT_DATA = new InjectionToken<any>('overlay-component-data');
 

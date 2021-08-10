@@ -56,12 +56,10 @@
 
         <mat-divider></mat-divider>
 
-        <a mat-menu-item routerLink="legalnotice" routerLinkActive="active">
+        <a mat-menu-item routerLink="info" routerLinkActive="active" class="small-text">
             <mat-icon>info</mat-icon>
             <span>{{ 'Legal notice' | translate }}</span>
-        </a>
-        <a mat-menu-item routerLink="privacypolicy" routerLinkActive="active">
-            <mat-icon>security</mat-icon>
+            <span> &middot; </span>
             <span>{{ 'Privacy policy' | translate }}</span>
         </a>
     </ng-template>

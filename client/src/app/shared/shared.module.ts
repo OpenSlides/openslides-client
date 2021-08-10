@@ -69,8 +69,7 @@ import { ExtensionFieldComponent } from './components/extension-field/extension-
 import { AttachmentControlComponent } from './components/attachment-control/attachment-control.component';
 import { RoundedInputComponent } from './components/rounded-input/rounded-input.component';
 import { ProgressSnackBarComponent } from './components/progress-snack-bar/progress-snack-bar.component';
-import { SuperSearchComponent } from 'app/site/common/components/super-search/super-search.component';
-import { OverlayComponent } from 'app/site/common/components/overlay/overlay.component';
+import { OverlayComponent } from 'app/shared/components/overlay/overlay.component';
 import { PreviewComponent } from './components/preview/preview.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 
@@ -120,6 +119,7 @@ import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { SidenavContentDirective } from './components/sidenav/sidenav-content.directive';
 import { SidenavDrawerContentDirective } from './components/sidenav/sidenav-drawer-content.directive';
 import { AccountButtonComponent } from './components/account-button/account-button.component';
+import { SuperSearchComponent } from './components/super-search/super-search.component';
 
 const declarations = [
     PermsDirective,
