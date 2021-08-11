@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { TagAction } from 'app/core/actions/tag-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
-import { Tag } from 'app/shared/models/core/tag';
+import { Tag } from 'app/shared/models/tag/tag';
 import { ViewTag } from 'app/site/tags/models/view-tag';
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';

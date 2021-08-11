@@ -1,7 +1,7 @@
 import { SearchRepresentation } from 'app/core/ui-services/search.service';
 import { HasMeeting } from 'app/management/models/view-meeting';
 import { HasTagIds } from 'app/shared/models/base/has-tag-ids';
-import { Tag } from 'app/shared/models/core/tag';
+import { Tag } from 'app/shared/models/tag/tag';
 import { Searchable } from 'app/site/base/searchable';
 import { BaseViewModel } from '../../base/base-view-model';
 

@@ -10,7 +10,7 @@ import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
-import { Tag } from 'app/shared/models/core/tag';
+import { Tag } from 'app/shared/models/tag/tag';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
 import { ViewTag } from '../../models/view-tag';

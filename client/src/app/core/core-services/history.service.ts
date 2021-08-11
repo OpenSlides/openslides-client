@@ -1,7 +1,33 @@
 import { Injectable } from '@angular/core';
 
-import { History } from 'app/shared/models/core/history';
 import { BannerDefinition, BannerService } from '../ui-services/banner.service';
+
+export class Position {
+    public position: number;
+    public timestamp: number;
+    public information: string[];
+    public user: string;
+
+    public get date(): Date {
+        return new Date(this.timestamp * 1000);
+    }
+
+    public constructor(input: Position) {
+        if (input) {
+            Object.assign(this, input);
+        }
+    }
+
+    /**
+     * Converts the date (this.now) to a time and date string.
+     *
+     * @param locale locale indicator, i.e 'de-DE'
+     * @returns a human readable kind of time and date representation
+     */
+    public getLocaleString(locale: string): string {
+        return this.date.toLocaleString(locale);
+    }
+}
 
 /**
  * Holds information about OpenSlides. This is not included into other services to
@@ -12,9 +38,9 @@ import { BannerDefinition, BannerService } from '../ui-services/banner.service';
 })
 export class HistoryService {
     /**
-     * in History mode, saves the history point.
+     * in History mode, saves the position
      */
-    private history: History = null;
+    private position: Position = null;
     private bannerDefinition: BannerDefinition = {
         type: 'history'
     };
@@ -23,7 +49,7 @@ export class HistoryService {
      * Returns, if OpenSlides is in the history mode.
      */
     public get isInHistoryMode(): boolean {
-        return !!this.history;
+        return !!this.position;
     }
 
     /**
@@ -38,14 +64,14 @@ export class HistoryService {
      * @returns the timestamp as string
      */
     public getHistoryTimeStamp(format: string): string {
-        return this.history ? this.history.getLocaleString(format) : null;
+        return this.position ? this.position.getLocaleString(format) : null;
     }
 
     /**
      * Enters the history mode
      */
-    public enterHistoryMode(history: History): void {
-        this.history = history;
+    public enterHistoryMode(position: Position): void {
+        this.position = position;
         this.banner.addBanner(this.bannerDefinition);
     }
 
@@ -53,7 +79,7 @@ export class HistoryService {
      * Leaves the history mode
      */
     public leaveHistoryMode(): void {
-        this.history = null;
+        this.position = null;
         this.banner.removeBanner(this.bannerDefinition);
     }
 }

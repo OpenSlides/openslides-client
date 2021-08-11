@@ -1,6 +1,6 @@
 import { AppConfig } from '../../core/definitions/app-config';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
-import { Tag } from '../../shared/models/core/tag';
+import { Tag } from '../../shared/models/tag/tag';
 import { ViewTag } from './models/view-tag';
 
 export const TagAppConfig: AppConfig = {

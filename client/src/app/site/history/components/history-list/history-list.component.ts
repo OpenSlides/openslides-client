@@ -3,23 +3,24 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { environment } from 'environments/environment';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
+import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
+import { Position } from 'app/core/core-services/history.service';
 import { HttpService } from 'app/core/core-services/http.service';
-import { OperatorService } from 'app/core/core-services/operator.service';
-import { TimeTravelService } from 'app/core/core-services/time-travel.service';
+import { fqidFromCollectionAndId, idFromFqid } from 'app/core/core-services/key-transforms';
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { ViewModelStoreService } from 'app/core/core-services/view-model-store.service';
+import { Fqid, Id } from 'app/core/definitions/key-types';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { PromptService } from 'app/core/ui-services/prompt.service';
-import { History } from 'app/shared/models/core/history';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { Motion } from 'app/shared/models/motions/motion';
 import { langToLocale } from 'app/shared/utils/lang-to-locale';
-import { BaseViewModel } from 'app/site/base/base-view-model';
-import { BaseComponent } from 'app/site/base/components/base.component';
-import { isDetailNavigable } from 'app/site/base/detail-navigable';
-import { ViewUser } from 'app/site/users/models/view-user';
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
+import { ViewMotion } from 'app/site/motions/models/view-motion';
+
+const COLLECTION = Motion.COLLECTION;
 
 /**
  * A list view for the history.
@@ -31,75 +32,59 @@ import { ViewUser } from 'app/site/users/models/view-user';
     templateUrl: './history-list.component.html',
     styleUrls: ['./history-list.component.scss']
 })
-export class HistoryListComponent extends BaseComponent implements OnInit {
+export class HistoryListComponent extends BaseModelContextComponent implements OnInit {
     /**
      * Subject determine when the custom timestamp subject changes
      */
     public customTimestampChanged: Subject<number> = new Subject<number>();
 
-    public dataSource: MatTableDataSource<History> = new MatTableDataSource<History>();
+    public dataSource: MatTableDataSource<Position> = new MatTableDataSource<Position>();
 
     public pageSizes = [50, 100, 150, 200, 250];
 
     /**
-     * The form for the selection of the model
-     * When more models are supproted, add a "collection"-dropdown
+     * The form for the selection of the motion
+     * When more models are supported, add a "collection"-dropdown
      */
-    public modelSelectForm: FormGroup;
+    public motionSelectForm: FormGroup;
 
     /**
-     * The observer for the selected collection, which is currently hardcoded
-     * to motions.
+     * The observer for the all motions
      */
-    public collectionObserver: BehaviorSubject<BaseViewModel[]>;
+    public motions: Observable<ViewMotion[]>;
 
-    /**
-     * The current selected collection. THis may move to `modelSelectForm`, if this can be choosen.
-     */
-    private currentCollection = Motion.COLLECTION;
-
-    public get currentModelId(): number | null {
-        return this.modelSelectForm.controls.model.value;
+    public get currentMotionId(): number | null {
+        return this.motionSelectForm.controls.motion.value;
     }
 
-    /**
-     * Constructor for the history list component
-     *
-     * @param titleService Setting the title
-     * @param translate Handle translations
-     * @param matSnackBar Showing errors and messages
-     * @param repo The history repository
-     * @param viewModelStore Access view models
-     * @param router route to pages
-     * @param operator checks if the user is a super admin
-     */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private viewModelStore: ViewModelStoreService,
         private router: Router,
-        private operator: OperatorService,
-        private timeTravelService: TimeTravelService,
         private http: HttpService,
         private formBuilder: FormBuilder,
         private motionRepo: MotionRepositoryService,
-        private promptService: PromptService,
-        private activatedRoute: ActivatedRoute
+        private activatedRoute: ActivatedRoute,
+        private activeMeetingIdService: ActiveMeetingIdService
     ) {
         super(componentServiceCollector);
 
-        this.modelSelectForm = this.formBuilder.group({
-            model: []
+        this.motionSelectForm = this.formBuilder.group({
+            motion: []
         });
-        this.collectionObserver = this.motionRepo.getViewModelListBehaviorSubject();
+        this.motions = this.motionRepo.getViewModelListBehaviorSubject();
 
-        this.modelSelectForm.controls.model.valueChanges.subscribe((id: number) => {
-            const elementId = `${this.currentCollection}:${id}`;
-            this.queryByElementId(elementId);
+        this.motionSelectForm.controls.motion.valueChanges.subscribe((id: number) => {
+            if (!id) {
+                return;
+            }
+            const fqid = fqidFromCollectionAndId(COLLECTION, id);
+            this.queryByFqid(fqid);
 
             // Update the URL.
             this.router.navigate([], {
                 relativeTo: this.activatedRoute,
-                queryParams: { element: elementId },
+                queryParams: { fqid: fqid },
                 replaceUrl: true
             });
         });
@@ -109,42 +94,87 @@ export class HistoryListComponent extends BaseComponent implements OnInit {
      * Init function for the history list.
      */
     public ngOnInit(): void {
+        super.ngOnInit();
         super.setTitle('History');
 
-        this.dataSource.filterPredicate = (history: History, filter: string) => {
+        this.dataSource.filterPredicate = (position: Position, filter: string) => {
             filter = filter ? filter.toLowerCase() : '';
 
-            if (!history) {
+            if (!position) {
                 return false;
             }
-
-            const userfullname = this.getUserName(history);
-            if (userfullname.toLowerCase().indexOf(filter) >= 0) {
+            if (position.user.toLowerCase().indexOf(filter) >= 0) {
                 return true;
             }
 
-            if (this.getElementInfo(history) && this.getElementInfo(history).toLowerCase().indexOf(filter) >= 0) {
-                return true;
+            if (this.currentMotionId) {
+                const motion = this.viewModelStore.get(COLLECTION, this.currentMotionId);
+                if (motion && motion.getTitle().toLowerCase().indexOf(filter) >= 0) {
+                    return true;
+                }
             }
 
-            return this.parseInformation(history).toLowerCase().indexOf(filter) >= 0;
+            return this.parseInformation(position).toLowerCase().indexOf(filter) >= 0;
         };
 
         // If an element id is given, validate it and update the view.
-        /**
-         * 'TODO: No element ids anymore'
-         */
-        // const params = this.activatedRoute.snapshot.queryParams;
-        // throw new Error('TODO: No element ids anymore');
-        /*if (this.collectionMapper.isElementIdValid(params.element)) {
-            this.queryByElementId(params.element);
-            this.modelSelectForm.patchValue(
+        this.loadFromParams();
+    }
+
+    private loadFromParams(): void {
+        const fqid = this.activatedRoute.snapshot.queryParams?.fqid;
+        if (!fqid) {
+            return;
+        }
+
+        let id: Id;
+        try {
+            id = idFromFqid(fqid);
+        } catch {
+            return;
+        }
+        if (!id) {
+            return;
+        }
+        this.queryByFqid(fqid);
+        this.motionSelectForm.patchValue(
+            {
+                motion: id
+            },
+            { emitEvent: false }
+        );
+    }
+
+    protected getModelRequest(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [this.activeMeetingIdService.meetingId],
+            follow: [
                 {
-                    model: parseInt(params.element.split(':')[1], 10)
-                },
-                { emitEvent: false }
-            );
-        }*/
+                    idField: 'motion_ids'
+                }
+            ],
+            fieldset: []
+        };
+    }
+
+    /**
+     * Sets the data source to the requested element id.
+     */
+    private async queryByFqid(fqid: Fqid): Promise<void> {
+        try {
+            const response = await this.http.post<[Position[]]>('/system/presenter/handle_request', [
+                {
+                    presenter: 'get_history_information',
+                    data: {
+                        fqid
+                    }
+                }
+            ]);
+            this.dataSource.data = response[0].map(data => new Position(data));
+        } catch (e) {
+            this.raiseError(e);
+        }
     }
 
     /**
@@ -153,29 +183,16 @@ export class HistoryListComponent extends BaseComponent implements OnInit {
      * @returns an array of strings that contains the required row definition
      */
     public getRowDef(): string[] {
-        return ['time', 'element', 'info', 'user'];
-    }
-
-    /**
-     * Tries get the title of the BaseModel element corresponding to
-     * a history object.
-     *
-     * @param history a history object
-     * @returns the title of the history element or null if it could not be found
-     */
-    public getElementInfo(history: History): string {
-        const model = this.viewModelStore.get(history.collection, history.modelId);
-        return model ? model.getListTitle() : null;
+        return ['time', 'info', 'user'];
     }
 
     /**
      * Click handler for rows in the history table.
      * Serves as an entry point for the time travel routine
-     *
-     * @param history Represents the selected element
      */
-    public async onClickRow(history: History): Promise<void> {
-        if (!this.operator.isMeetingAdmin) {
+    public async onClickRow(position: Position): Promise<void> {
+        throw new Error('TODO');
+        /*if (!this.operator.isMeetingAdmin) {
             return;
         }
 
@@ -186,55 +203,26 @@ export class HistoryListComponent extends BaseComponent implements OnInit {
         } else {
             const message = this.translate.instant('Cannot navigate to the selected history element.');
             this.raiseError(message);
-        }
+        }*/
     }
 
-    public getTimestamp(history: History): string {
-        return history.getLocaleString(langToLocale(this.translate.currentLang));
-    }
-
-    /**
-     * clears the whole history.
-     */
-    public async clearHistory(): Promise<void> {
-        const title = this.translate.instant('Are you sure you want delete the whole history?');
-        if (await this.promptService.open(title)) {
-            try {
-                await this.http.delete(`${environment.urlPrefix}/core/history/information/`);
-                this.refresh();
-            } catch (e) {
-                this.raiseError(e);
-            }
-        }
+    public getTimestamp(position: Position): string {
+        return position.getLocaleString(langToLocale(this.translate.currentLang));
     }
 
     public refresh(): void {
-        if (this.currentCollection && this.currentModelId) {
-            this.queryByElementId(`${this.currentCollection}:${this.currentModelId}`);
+        if (this.currentMotionId) {
+            this.queryByFqid(fqidFromCollectionAndId(COLLECTION, this.currentMotionId));
         }
     }
 
     /**
      * Returns a translated history information string which contains optional (translated) arguments.
-     *
-     * @param history the history
      */
-    public parseInformation(history: History): string {
-        if (!history.information || !history.information.length) {
-            return '';
-        }
-
-        const baseString = this.translate.instant(history.information[0]);
-        let argumentString;
-        if (history.information.length > 1) {
-            argumentString = this.translate.instant(history.information[1]);
-        }
-        return baseString.replace(/{arg1}/g, argumentString);
-    }
-
-    public getUserName(history: History): string {
-        const user = this.viewModelStore.get(ViewUser, history.user_id);
-        return user ? user.full_name : '';
+    public parseInformation(position: Position): string {
+        return Object.keys(position.information)
+            .map(key => `${key}: ${position.information[key].join(', ')}`)
+            .join('; ');
     }
 
     /**
@@ -244,24 +232,5 @@ export class HistoryListComponent extends BaseComponent implements OnInit {
      */
     public applySearch(value: string): void {
         this.dataSource.filter = value;
-    }
-
-    /**
-     * Sets the data source to the requested element id.
-     */
-    private async queryByElementId(elementId: string): Promise<void> {
-        try {
-            const historyData = await this.http.get<History[]>(
-                `${environment.urlPrefix}/core/history/information/`,
-                null,
-                {
-                    type: 'element',
-                    value: elementId
-                }
-            );
-            this.dataSource.data = historyData.map(data => new History(data));
-        } catch (e) {
-            this.raiseError(e);
-        }
     }
 }

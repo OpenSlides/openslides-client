@@ -18,6 +18,14 @@ export function collectionIdFromFqid(fqid: Fqid): [Collection, Id] {
     return [parts[0], +parts[1]];
 }
 
+export function idFromFqid(fqid: Fqid): Id {
+    const parts = fqid.split(KEYSEPERATOR);
+    if (parts.length !== 2) {
+        throw new Error(`The given fqid "${fqid}" is not valid.`);
+    }
+    return +parts[1];
+}
+
 export function collectionIdFieldFromFqfield(fqfield: Fqfield): [Collection, Id, Field] {
     const parts = fqfield.split(KEYSEPERATOR) as any[];
     if (parts.length !== 3) {
