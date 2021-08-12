@@ -49,11 +49,7 @@ export class ViewModelStoreService {
         }
         const repository = this.getRepository<T>(collectionType);
 
-        return ids
-            .map(id => {
-                return repository.getViewModel(id);
-            })
-            .filter(model => !!model); // remove non valid models.
+        return ids.map(id => repository.getViewModel(id)).filter(model => !!model); // remove non valid models.
     }
 
     /**

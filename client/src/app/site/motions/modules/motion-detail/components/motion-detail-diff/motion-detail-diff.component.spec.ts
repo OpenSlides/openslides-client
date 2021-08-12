@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { E2EImportsModule } from 'e2e-imports.module';
 
@@ -20,8 +20,7 @@ import { MotionDetailOriginalChangeRecommendationsComponent } from '../motion-de
             [scrollToChange]="scrollToChange"
             [lineNumberingMode]="lnMode"
             (createChangeRecommendation)="createChangeRecommendation($event)"
-        >
-        </os-motion-detail-diff>
+        ></os-motion-detail-diff>
     `
 })
 class TestHostComponent {
@@ -42,16 +41,18 @@ describe('MotionDetailDiffComponent', () => {
     let component: TestHostComponent;
     let fixture: ComponentFixture<TestHostComponent>;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
-            imports: [E2EImportsModule],
-            declarations: [
-                TestHostComponent,
-                MotionDetailDiffComponent,
-                MotionDetailOriginalChangeRecommendationsComponent
-            ]
-        }).compileComponents();
-    }));
+    beforeEach(
+        waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [E2EImportsModule],
+                declarations: [
+                    TestHostComponent,
+                    MotionDetailDiffComponent,
+                    MotionDetailOriginalChangeRecommendationsComponent
+                ]
+            }).compileComponents();
+        })
+    );
 
     beforeEach(() => {
         fixture = TestBed.createComponent(TestHostComponent);

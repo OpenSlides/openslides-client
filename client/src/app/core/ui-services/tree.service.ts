@@ -81,8 +81,8 @@ export class TreeService {
         return {
             name: item.getTitle(),
             id: item.id,
-            item: item,
-            children: children
+            item,
+            children
         };
     }
 
@@ -369,7 +369,7 @@ export class TreeService {
             item: item.item,
             expandable: !!children,
             isExpanded: !!children,
-            level: level,
+            level,
             isSeen: true
         };
         const flatNodes: FlatNode<T>[] = [node];

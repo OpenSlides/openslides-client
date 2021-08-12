@@ -23,18 +23,15 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 })
 export class CommitteeRepositoryService
     extends BaseRepository<ViewCommittee, Committee>
-    implements ModelRequestRepository {
+    implements ModelRequestRepository
+{
     public constructor(repositoryServiceCollector: RepositoryServiceCollector, private operator: OperatorService) {
         super(repositoryServiceCollector, Committee);
     }
 
-    public getTitle = (viewCommittee: ViewCommittee) => {
-        return viewCommittee.name;
-    };
+    public getTitle = (viewCommittee: ViewCommittee) => viewCommittee.name;
 
-    public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Committees' : 'Committee');
-    };
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Committees' : 'Committee');
 
     public getFieldsets(): Fieldsets<Committee> {
         const titleFields: (keyof Committee)[] = ['name', 'description'];
@@ -112,13 +109,10 @@ export class CommitteeRepositoryService
 
     protected createViewModel(model: Committee): ViewCommittee {
         const viewModel = super.createViewModel(model);
-        viewModel.canAccess = () => {
-            return (
-                this.operator.hasCommitteePermissions(model.id, CML.can_manage) ||
-                this.operator.hasOrganizationPermissions(OML.can_manage_users) ||
-                this.operator.isInCommitteesNonAdminCheck(model)
-            );
-        };
+        viewModel.canAccess = () =>
+            this.operator.hasCommitteePermissions(model.id, CML.can_manage) ||
+            this.operator.hasOrganizationPermissions(OML.can_manage_users) ||
+            this.operator.isInCommitteesNonAdminCheck(model);
         return viewModel;
     }
 

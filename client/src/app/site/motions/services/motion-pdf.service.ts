@@ -220,11 +220,7 @@ export class MotionPdfService {
 
         // submitters
         if (!infoToExport || infoToExport.includes('submitters')) {
-            const submitters = motion.submittersAsUsers
-                .map(user => {
-                    return user.full_name;
-                })
-                .join(', ');
+            const submitters = motion.submittersAsUsers.map(user => user.full_name).join(', ');
 
             metaTableBody.push([
                 {
@@ -240,11 +236,7 @@ export class MotionPdfService {
         // supporters
         const minSupporters = this.meetingSettingsService.instant('motions_supporters_min_amount');
         if (minSupporters && motion.supporters.length > 0) {
-            const supporters = motion.supporters
-                .map(supporter => {
-                    return supporter.full_name;
-                })
-                .join(', ');
+            const supporters = motion.supporters.map(supporter => supporter.full_name).join(', ');
 
             metaTableBody.push([
                 {
@@ -314,11 +306,7 @@ export class MotionPdfService {
 
         // tags
         if (motion.tags.length && (!infoToExport || infoToExport.includes('tags'))) {
-            const tags = motion.tags
-                .map(tag => {
-                    return tag;
-                })
-                .join(', ');
+            const tags = motion.tags.map(tag => tag).join(', ');
 
             metaTableBody.push([
                 {
@@ -770,8 +758,8 @@ export class MotionPdfService {
     private createComments(motion: ViewMotion, comments: number[]): object[] {
         const result: object[] = [];
         for (const comment of comments) {
-            let name = '',
-                content = '';
+            let name = '';
+            let content = '';
             if (comment === PERSONAL_NOTE_ID) {
                 name = this.translate.instant('Personal note');
                 content = motion && motion.getPersonalNote() && motion.getPersonalNote().note;

@@ -76,7 +76,7 @@ export class LoadFontService {
     }
 
     private setNewFontFace(fontName: string, fontPath: string, weight: number = 400): void {
-        const customFont = new FontFace(fontName, `url(${fontPath})`, { weight: weight });
+        const customFont = new FontFace(fontName, `url(${fontPath})`, { weight });
         customFont
             .load()
             .then(res => {

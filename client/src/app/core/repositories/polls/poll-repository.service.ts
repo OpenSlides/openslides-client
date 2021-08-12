@@ -33,12 +33,8 @@ export class PollRepositoryService extends BaseRepositoryWithActiveMeeting<ViewP
         super(repoServiceCollector, Poll);
     }
 
-    public getVerboseName = (plural?: boolean): string => {
-        return plural ? 'Polls' : 'Poll';
-    };
-    public getTitle = (viewModel: ViewPoll): string => {
-        return viewModel.title;
-    };
+    public getVerboseName = (plural?: boolean): string => (plural ? 'Polls' : 'Poll');
+    public getTitle = (viewModel: ViewPoll): string => viewModel.title;
 
     public getFieldsets(): Fieldsets<Poll> {
         const listFieldset: (keyof Poll)[] = [
@@ -368,9 +364,7 @@ export class PollRepositoryService extends BaseRepositoryWithActiveMeeting<ViewP
 
     protected createViewModel(model: Poll): ViewPoll {
         const viewPoll = super.createViewModel(model);
-        viewPoll.operatorHasVoted = (): boolean => {
-            return (viewPoll.voted_ids || []).includes(this.operator.operatorId);
-        };
+        viewPoll.operatorHasVoted = (): boolean => (viewPoll.voted_ids || []).includes(this.operator.operatorId);
         return viewPoll;
     }
 }

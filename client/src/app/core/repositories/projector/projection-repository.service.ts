@@ -15,17 +15,13 @@ export class ProjectionRepositoryService extends BaseRepositoryWithActiveMeeting
         super(repositoryServiceCollector, Projection);
     }
 
-    public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Projections' : 'Projection');
-    };
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Projections' : 'Projection');
 
-    public getTitle = (viewProjection: ViewProjection) => {
-        return viewProjection.content_object?.getProjectorTitle(viewProjection.projection).title;
-    };
+    public getTitle = (viewProjection: ViewProjection) =>
+        viewProjection.content_object?.getProjectorTitle(viewProjection.projection).title;
 
-    public getSubtitle = (viewProjection: ViewProjection) => {
-        return viewProjection.content_object?.getProjectorTitle(viewProjection.projection).subtitle;
-    };
+    public getSubtitle = (viewProjection: ViewProjection) =>
+        viewProjection.content_object?.getProjectorTitle(viewProjection.projection).subtitle;
 
     protected createViewModel(model: Projection): ViewProjection {
         const viewModel = super.createViewModel(model);

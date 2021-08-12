@@ -229,9 +229,7 @@ export class DiffService {
     // @TODO Decide on a more sophisticated implementation
     private diffCache = {
         _cache: {},
-        get: (key: string): any => {
-            return this.diffCache._cache[key] === undefined ? null : this.diffCache._cache[key];
-        },
+        get: (key: string): any => (this.diffCache._cache[key] === undefined ? null : this.diffCache._cache[key]),
         put: (key: string, val: any): void => {
             this.diffCache._cache[key] = val;
         }
@@ -352,8 +350,8 @@ export class DiffService {
             return;
         }
         const lineNumbers = fragment.querySelectorAll('span.os-line-number');
-        let lineMarker,
-            maxLineNumber = 0;
+        let lineMarker;
+        let maxLineNumber = 0;
 
         lineNumbers.forEach((insertBefore: Node) => {
             const lineNumberElement = <Element>insertBefore;
@@ -394,8 +392,8 @@ export class DiffService {
         let nthLIOfOL = null;
         while (descendantNode.parentNode) {
             if (descendantNode.parentNode === olNode) {
-                let lisBeforeOl = 0,
-                    foundMe = false;
+                let lisBeforeOl = 0;
+                let foundMe = false;
                 for (let i = 0; i < olNode.childNodes.length && !foundMe; i++) {
                     if (olNode.childNodes[i] === descendantNode) {
                         foundMe = true;
@@ -418,12 +416,12 @@ export class DiffService {
      * @returns {CommonAncestorData}
      */
     public getCommonAncestor(node1: Node, node2: Node): CommonAncestorData {
-        const trace1 = this.getNodeContextTrace(node1),
-            trace2 = this.getNodeContextTrace(node2),
-            childTrace1 = [],
-            childTrace2 = [];
-        let commonAncestor = null,
-            commonIndex = null;
+        const trace1 = this.getNodeContextTrace(node1);
+        const trace2 = this.getNodeContextTrace(node2);
+        const childTrace1 = [];
+        const childTrace2 = [];
+        let commonAncestor = null;
+        let commonIndex = null;
 
         for (let i = 0; i < trace1.length && i < trace2.length; i++) {
             if (trace1[i] === trace2[i]) {
@@ -438,7 +436,7 @@ export class DiffService {
             childTrace2.push(trace2[i]);
         }
         return {
-            commonAncestor: commonAncestor,
+            commonAncestor,
             trace1: childTrace1,
             trace2: childTrace2,
             index: commonIndex
@@ -502,14 +500,14 @@ export class DiffService {
                 if (attributes === undefined) {
                     attributes = '';
                 }
-                const attributesList = [],
-                    attributesMatcher = /( [^"'=]*)(= *((["'])(.*?)\4))?/gi;
+                const attributesList = [];
+                const attributesMatcher = /( [^"'=]*)(= *((["'])(.*?)\4))?/gi;
                 let match;
                 do {
                     match = attributesMatcher.exec(attributes);
                     if (match) {
-                        let attrNormalized = match[1].toUpperCase(),
-                            attrValue = match[5];
+                        let attrNormalized = match[1].toUpperCase();
+                        let attrValue = match[5];
                         if (match[2] !== undefined) {
                             if (attrNormalized === ' CLASS') {
                                 attrValue = attrValue
@@ -630,15 +628,16 @@ export class DiffService {
             return ModificationType.TYPE_REPLACEMENT;
         }
 
-        let i, foundDiff;
+        let i;
+        let foundDiff;
         for (i = 0, foundDiff = false; i < htmlOld.length && i < htmlNew.length && foundDiff === false; i++) {
             if (htmlOld[i] !== htmlNew[i]) {
                 foundDiff = true;
             }
         }
 
-        const remainderOld = htmlOld.substr(i - 1),
-            remainderNew = htmlNew.substr(i - 1);
+        const remainderOld = htmlOld.substr(i - 1);
+        const remainderNew = htmlNew.substr(i - 1);
         let type = ModificationType.TYPE_REPLACEMENT;
 
         if (remainderOld.length > remainderNew.length) {
@@ -707,8 +706,8 @@ export class DiffService {
      * @returns {object}
      */
     private diffArrays(oldArr: any, newArr: any): any {
-        const ns = {},
-            os = {};
+        const ns = {};
+        const os = {};
         let i;
 
         for (i = 0; i < newArr.length; i++) {
@@ -960,9 +959,10 @@ export class DiffService {
     private diffDetectBrokenDiffHtml(html: string): boolean {
         // If other HTML tags are contained within INS/DEL (e.g. "<ins>Test</p></ins>"), let's better be cautious
         // The "!!(found=...)"-construction is only used to make jshint happy :)
-        const findDel = /<del>([\s\S]*?)<\/del>/gi,
-            findIns = /<ins>([\s\S]*?)<\/ins>/gi;
-        let found, inner;
+        const findDel = /<del>([\s\S]*?)<\/del>/gi;
+        const findIns = /<ins>([\s\S]*?)<\/ins>/gi;
+        let found;
+        let inner;
         while (!!(found = findDel.exec(html))) {
             inner = found[1].replace(/<br[^>]*>/gi, '');
             if (!this.isValidInlineHtml(inner)) {
@@ -992,9 +992,8 @@ export class DiffService {
             if (match.match(/class=["'][a-z0-9 _-]*["']/i)) {
                 return match.replace(
                     /class=["']([a-z0-9 _-]*)["']/i,
-                    (match2: string, previousClasses: string): string => {
-                        return 'class="' + previousClasses + ' ' + className + '"';
-                    }
+                    (match2: string, previousClasses: string): string =>
+                        'class="' + previousClasses + ' ' + className + '"'
                 );
             } else {
                 return match.substring(0, match.length - 1) + ' class="' + className + '">';
@@ -1075,9 +1074,8 @@ export class DiffService {
                 // class="someclass" => class="someclass insert"
                 tagArguments = tagArguments.replace(
                     /(class\s*=\s*)(["'])([^\2]*)\2/gi,
-                    (classWhole: string, attr: string, para: string, content: string): string => {
-                        return attr + para + content + ' ' + className + para;
-                    }
+                    (classWhole: string, attr: string, para: string, content: string): string =>
+                        attr + para + content + ' ' + className + para
                 );
             } else {
                 tagArguments += ' class="' + className + '"';
@@ -1099,15 +1097,15 @@ export class DiffService {
         }
 
         const findDelGroupFinder = /(?:<del>.*?<\/del>)+/gi;
-        let found,
-            returnStr = diffStr;
+        let found;
+        let returnStr = diffStr;
 
         while (!!(found = findDelGroupFinder.exec(diffStr))) {
-            const del = found[0],
-                split = returnStr.split(del);
+            const del = found[0];
+            const split = returnStr.split(del);
 
-            const findsGroupFinder = /^(?:<ins>.*?<\/ins>)+/gi,
-                foundIns = findsGroupFinder.exec(split[1]);
+            const findsGroupFinder = /^(?:<ins>.*?<\/ins>)+/gi;
+            const foundIns = findsGroupFinder.exec(split[1]);
             if (foundIns) {
                 const ins = foundIns[0];
 
@@ -1220,8 +1218,8 @@ export class DiffService {
             return '';
         }
 
-        let html = this.serializeTag(node),
-            found = false;
+        let html = this.serializeTag(node);
+        let found = false;
 
         for (let i = 0; i < node.childNodes.length && !found; i++) {
             if (node.childNodes[i] === toChildTrace[0]) {
@@ -1271,8 +1269,8 @@ export class DiffService {
             return '';
         }
 
-        let html = '',
-            found = false;
+        let html = '';
+        let found = false;
         for (let i = 0; i < node.childNodes.length; i++) {
             if (node.childNodes[i] === fromChildTrace[0]) {
                 found = true;
@@ -1341,8 +1339,8 @@ export class DiffService {
             throw new Error('Invalid call - extractRangeByLineNumbers expects a string as first argument');
         }
 
-        const cacheKey = fromLine + '-' + toLine + '-' + this.lineNumberingService.djb2hash(html),
-            cached = this.diffCache.get(cacheKey);
+        const cacheKey = fromLine + '-' + toLine + '-' + this.lineNumberingService.djb2hash(html);
+        const cached = this.diffCache.get(cacheKey);
 
         if (cached) {
             return cached;
@@ -1351,29 +1349,29 @@ export class DiffService {
         const fragment = this.htmlToFragment(html);
         this.insertInternalLineMarkers(fragment);
         if (toLine === null) {
-            const internalLineMarkers = fragment.querySelectorAll('OS-LINEBREAK'),
-                lastMarker = <Element>internalLineMarkers[internalLineMarkers.length - 1];
+            const internalLineMarkers = fragment.querySelectorAll('OS-LINEBREAK');
+            const lastMarker = <Element>internalLineMarkers[internalLineMarkers.length - 1];
             toLine = parseInt(lastMarker.getAttribute('data-line-number'), 10);
         }
 
-        const fromLineNode = this.getLineNumberNode(fragment, fromLine),
-            toLineNode = toLine ? this.getLineNumberNode(fragment, toLine) : null,
-            ancestorData = this.getCommonAncestor(fromLineNode, toLineNode);
+        const fromLineNode = this.getLineNumberNode(fragment, fromLine);
+        const toLineNode = toLine ? this.getLineNumberNode(fragment, toLine) : null;
+        const ancestorData = this.getCommonAncestor(fromLineNode, toLineNode);
 
-        const fromChildTraceRel = ancestorData.trace1,
-            fromChildTraceAbs = this.getNodeContextTrace(fromLineNode),
-            toChildTraceRel = ancestorData.trace2,
-            toChildTraceAbs = this.getNodeContextTrace(toLineNode),
-            ancestor = ancestorData.commonAncestor;
-        let htmlOut = '',
-            outerContextStart = '',
-            outerContextEnd = '',
-            innerContextStart = '',
-            innerContextEnd = '',
-            previousHtmlEndSnippet = '',
-            followingHtmlStartSnippet = '',
-            fakeOl,
-            offset;
+        const fromChildTraceRel = ancestorData.trace1;
+        const fromChildTraceAbs = this.getNodeContextTrace(fromLineNode);
+        const toChildTraceRel = ancestorData.trace2;
+        const toChildTraceAbs = this.getNodeContextTrace(toLineNode);
+        const ancestor = ancestorData.commonAncestor;
+        let htmlOut = '';
+        let outerContextStart = '';
+        let outerContextEnd = '';
+        let innerContextStart = '';
+        let innerContextEnd = '';
+        let previousHtmlEndSnippet = '';
+        let followingHtmlStartSnippet = '';
+        let fakeOl;
+        let offset;
 
         fromChildTraceAbs.shift();
         const previousHtml = this.serializePartialDomToChild(fragment, fromChildTraceAbs, false);
@@ -1381,8 +1379,8 @@ export class DiffService {
 
         const followingHtml = this.serializePartialDomFromChild(fragment, toChildTraceAbs, false);
 
-        let currNode: Node = fromLineNode,
-            isSplit = false;
+        let currNode: Node = fromLineNode;
+        let isSplit = false;
         while (currNode.parentNode) {
             if (!this.isFirstNonemptyChild(currNode.parentNode, currNode)) {
                 isSplit = true;
@@ -1483,15 +1481,15 @@ export class DiffService {
 
         const ret = {
             html: htmlOut,
-            ancestor: ancestor,
-            outerContextStart: outerContextStart,
-            outerContextEnd: outerContextEnd,
-            innerContextStart: innerContextStart,
-            innerContextEnd: innerContextEnd,
-            previousHtml: previousHtml,
-            previousHtmlEndSnippet: previousHtmlEndSnippet,
-            followingHtml: followingHtml,
-            followingHtmlStartSnippet: followingHtmlStartSnippet
+            ancestor,
+            outerContextStart,
+            outerContextEnd,
+            innerContextStart,
+            innerContextEnd,
+            previousHtml,
+            previousHtmlEndSnippet,
+            followingHtml,
+            followingHtmlStartSnippet
         };
 
         this.diffCache.put(cacheKey, ret);
@@ -1624,8 +1622,8 @@ export class DiffService {
      * @returns {LineRange}
      */
     public detectAffectedLineRange(diffHtml: string): LineRange {
-        const cacheKey = this.lineNumberingService.djb2hash(diffHtml),
-            cached = this.diffCache.get(cacheKey);
+        const cacheKey = this.lineNumberingService.djb2hash(diffHtml);
+        const cached = this.diffCache.get(cacheKey);
         if (cached) {
             return cached;
         }
@@ -1634,9 +1632,9 @@ export class DiffService {
 
         this.insertInternalLineMarkers(fragment);
 
-        const changes = fragment.querySelectorAll('ins, del, .insert, .delete'),
-            firstChange = changes.item(0),
-            lastChange = changes.item(changes.length - 1);
+        const changes = fragment.querySelectorAll('ins, del, .insert, .delete');
+        const firstChange = changes.item(0);
+        const lastChange = changes.item(changes.length - 1);
 
         if (!firstChange || !lastChange) {
             // There are no changes
@@ -1718,12 +1716,12 @@ export class DiffService {
      * @param {number} toLine
      */
     public replaceLines(oldHtml: string, newHTML: string, fromLine: number, toLine: number): string {
-        const data = this.extractRangeByLineNumbers(oldHtml, fromLine, toLine),
-            previousHtml = data.previousHtml + '<TEMPLATE></TEMPLATE>' + data.previousHtmlEndSnippet,
-            previousFragment = this.htmlToFragment(previousHtml),
-            followingHtml = data.followingHtmlStartSnippet + '<TEMPLATE></TEMPLATE>' + data.followingHtml,
-            followingFragment = this.htmlToFragment(followingHtml),
-            newFragment = this.htmlToFragment(newHTML);
+        const data = this.extractRangeByLineNumbers(oldHtml, fromLine, toLine);
+        const previousHtml = data.previousHtml + '<TEMPLATE></TEMPLATE>' + data.previousHtmlEndSnippet;
+        const previousFragment = this.htmlToFragment(previousHtml);
+        const followingHtml = data.followingHtmlStartSnippet + '<TEMPLATE></TEMPLATE>' + data.followingHtml;
+        const followingFragment = this.htmlToFragment(followingHtml);
+        const newFragment = this.htmlToFragment(newHTML);
 
         if (data.html.length > 0 && data.html.substr(-1) === ' ') {
             this.insertDanglingSpace(newFragment);
@@ -1769,7 +1767,8 @@ export class DiffService {
      * @returns {string}
      */
     private diffParagraphs(oldText: string, newText: string, lineLength: number, firstLineNumber: number): string {
-        let oldTextWithBreaks, newTextWithBreaks, currChild;
+        let oldTextWithBreaks;
+        let currChild;
 
         if (lineLength !== null) {
             oldTextWithBreaks = this.lineNumberingService.insertLineNumbersNode(
@@ -1784,7 +1783,7 @@ export class DiffService {
             oldTextWithBreaks.innerHTML = oldText;
         }
         newText = newText.replace(/^\s+/g, '').replace(/\s+$/g, '');
-        newTextWithBreaks = document.createElement('div');
+        const newTextWithBreaks = document.createElement('div');
         newTextWithBreaks.innerHTML = newText;
 
         for (let i = 0; i < oldTextWithBreaks.childNodes.length; i++) {
@@ -1840,13 +1839,13 @@ export class DiffService {
      */
     public diff(htmlOld: string, htmlNew: string, lineLength: number = null, firstLineNumber: number = null): string {
         const cacheKey =
-                lineLength +
-                ' ' +
-                firstLineNumber +
-                ' ' +
-                this.lineNumberingService.djb2hash(htmlOld) +
-                this.lineNumberingService.djb2hash(htmlNew),
-            cached = this.diffCache.get(cacheKey);
+            lineLength +
+            ' ' +
+            firstLineNumber +
+            ' ' +
+            this.lineNumberingService.djb2hash(htmlOld) +
+            this.lineNumberingService.djb2hash(htmlNew);
+        const cached = this.diffCache.get(cacheKey);
         if (cached) {
             return cached;
         }
@@ -1865,10 +1864,10 @@ export class DiffService {
         // and add it afterwards.
         // We only do this for P for now, as for more complex types like UL/LI that tend to be nestend,
         // information would get lost by this that we will need to recursively merge it again later on.
-        let oldIsSplitAfter = false,
-            newIsSplitAfter = false,
-            oldIsSplitBefore = false,
-            newIsSplitBefore = false;
+        let oldIsSplitAfter = false;
+        let newIsSplitAfter = false;
+        let oldIsSplitBefore = false;
+        let newIsSplitBefore = false;
         htmlOld = htmlOld.replace(
             /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-after */gi,
             (match: string, beginning: string): string => {
@@ -1908,9 +1907,8 @@ export class DiffService {
         // We need to do this before removing </del><del> as done in one of the next statements
         diffUnnormalized = diffUnnormalized.replace(
             /<del>(((<BR CLASS="os-line-break">)<\/del><del>)?(<span[^>]+os-line-number[^>]+?>)(\s|<\/?del>)*<\/span>)<\/del>/gi,
-            (found: string, tag: string, brWithDel: string, plainBr: string, span: string): string => {
-                return (plainBr !== undefined ? plainBr : '') + span + ' </span>';
-            }
+            (found: string, tag: string, brWithDel: string, plainBr: string, span: string): string =>
+                (plainBr !== undefined ? plainBr : '') + span + ' </span>'
         );
 
         // Merging individual insert/delete statements into bigger blocks
@@ -1924,9 +1922,7 @@ export class DiffService {
         // Hint: if there is no deletion before the line break, we have the same issue, but cannot solve this here.
         diffUnnormalized = diffUnnormalized.replace(
             /(<\/del>)(<BR CLASS="os-line-break"><span[^>]+os-line-number[^>]+?>\s*<\/span>)(<ins>[\s\S]*?<\/ins>)/gi,
-            (found: string, del: string, br: string, ins: string): string => {
-                return del + ins + br;
-            }
+            (found: string, del: string, br: string, ins: string): string => del + ins + br
         );
 
         // If only a few characters of a word have changed, don't display this as a replacement of the whole word,
@@ -1934,11 +1930,11 @@ export class DiffService {
         diffUnnormalized = diffUnnormalized.replace(
             /<del>([a-z0-9,_-]* ?)<\/del><ins>([a-z0-9,_-]* ?)<\/ins>/gi,
             (found: string, oldText: string, newText: string): string => {
-                let foundDiff = false,
-                    commonStart = '',
-                    commonEnd = '',
-                    remainderOld = oldText,
-                    remainderNew = newText;
+                let foundDiff = false;
+                let commonStart = '';
+                let commonEnd = '';
+                let remainderOld = oldText;
+                let remainderNew = newText;
 
                 while (remainderOld.length > 0 && remainderNew.length > 0 && !foundDiff) {
                     if (remainderOld[0] === remainderNew[0]) {
@@ -1977,9 +1973,7 @@ export class DiffService {
         // Replace spaces in line numbers by &nbsp;
         diffUnnormalized = diffUnnormalized.replace(
             /<span[^>]+os-line-number[^>]+?>\s*<\/span>/gi,
-            (found: string): string => {
-                return found.toLowerCase().replace(/> <\/span/gi, '>&nbsp;</span');
-            }
+            (found: string): string => found.toLowerCase().replace(/> <\/span/gi, '>&nbsp;</span')
         );
 
         // <P><ins>NEUE ZEILE</P>\n<P></ins> => <ins><P>NEUE ZEILE</P>\n</ins><P>
@@ -1994,27 +1988,24 @@ export class DiffService {
                 space: string,
                 block2: string,
                 att2: string
-            ): string => {
-                return (
-                    '<' +
-                    insDel +
-                    '><' +
-                    block1 +
-                    att1 +
-                    '>' +
-                    content +
-                    '</' +
-                    block1 +
-                    '>' +
-                    space +
-                    '</' +
-                    insDel +
-                    '><' +
-                    block2 +
-                    att2 +
-                    '>'
-                );
-            }
+            ): string =>
+                '<' +
+                insDel +
+                '><' +
+                block1 +
+                att1 +
+                '>' +
+                content +
+                '</' +
+                block1 +
+                '>' +
+                space +
+                '</' +
+                insDel +
+                '><' +
+                block2 +
+                att2 +
+                '>'
         );
 
         // If larger inserted HTML text contains block elements, we separate the inserted text into
@@ -2037,9 +2028,8 @@ export class DiffService {
         // <del>deleted text</P></del><ins>inserted.</P></ins> => <del>deleted tet</del><ins>inserted.</ins></P>
         diffUnnormalized = diffUnnormalized.replace(
             /<del>([^<]*)<\/(p|div|blockquote|li)><\/del><ins>([^<]*)<\/\2>(\s*)<\/ins>/gi,
-            (whole: string, deleted: string, tag: string, inserted: string, white: string): string => {
-                return '<del>' + deleted + '</del><ins>' + inserted + '</ins></' + tag + '>' + white;
-            }
+            (whole: string, deleted: string, tag: string, inserted: string, white: string): string =>
+                '<del>' + deleted + '</del><ins>' + inserted + '</ins></' + tag + '>' + white
         );
 
         // <ins>...</p><p>...</ins> => <ins>...</ins></p><p><ins>...</ins>
@@ -2092,57 +2082,49 @@ export class DiffService {
         // <del></p><ins> Added text</p></ins> -> <ins> Added text</ins></p>
         diffUnnormalized = diffUnnormalized.replace(
             /<del><\/(p|div|blockquote|li)><\/del><ins>([\s\S]*?)<\/\1>(\s*)<\/ins>/gi,
-            (whole: string, blockTag: string, content: string, space: string): string => {
-                return '<ins>' + content + '</ins></' + blockTag + '>' + space;
-            }
+            (whole: string, blockTag: string, content: string, space: string): string =>
+                '<ins>' + content + '</ins></' + blockTag + '>' + space
         );
 
         // <ins><STRONG></ins>formatted<ins></STRONG></ins> => <del>formatted</del><ins><STRONG>formatted</STRONG></ins>
         diffUnnormalized = diffUnnormalized.replace(
             /<ins><(span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?><\/ins>([^<]*)<ins><\/\1><\/ins>/gi,
-            (whole: string, inlineTag: string, tagAttributes: string, content: string): string => {
-                return (
-                    '<del>' +
-                    content +
-                    '</del>' +
-                    '<ins><' +
-                    inlineTag +
-                    (tagAttributes ? tagAttributes : '') +
-                    '>' +
-                    content +
-                    '</' +
-                    inlineTag +
-                    '></ins>'
-                );
-            }
+            (whole: string, inlineTag: string, tagAttributes: string, content: string): string =>
+                '<del>' +
+                content +
+                '</del>' +
+                '<ins><' +
+                inlineTag +
+                (tagAttributes ? tagAttributes : '') +
+                '>' +
+                content +
+                '</' +
+                inlineTag +
+                '></ins>'
         );
 
         // <del><STRONG></del>formatted<del></STRONG></del> => <del><STRONG>formatted</STRONG></del><ins>formatted</ins>
         diffUnnormalized = diffUnnormalized.replace(
             /<del><(span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?><\/del>([^<]*)<del><\/\1><\/del>/gi,
-            (whole: string, inlineTag: string, tagAttributes: string, content: string): string => {
-                return (
-                    '<del><' +
-                    inlineTag +
-                    (tagAttributes ? tagAttributes : '') +
-                    '>' +
-                    content +
-                    '</' +
-                    inlineTag +
-                    '></del>' +
-                    '<ins>' +
-                    content +
-                    '</ins>'
-                );
-            }
+            (whole: string, inlineTag: string, tagAttributes: string, content: string): string =>
+                '<del><' +
+                inlineTag +
+                (tagAttributes ? tagAttributes : '') +
+                '>' +
+                content +
+                '</' +
+                inlineTag +
+                '></del>' +
+                '<ins>' +
+                content +
+                '</ins>'
         );
 
         // </p> </ins> -> </ins></p>
         diffUnnormalized = diffUnnormalized.replace(
             /(<\/(p|div|blockquote|li)>)(\s*)<\/(ins|del)>/gi,
-            (whole: string, ending: string, blockTag: string, space: string, insdel: string): string => {
-                return '</' + insdel + '>' + ending + space;
-            }
+            (whole: string, ending: string, blockTag: string, space: string, insdel: string): string =>
+                '</' + insdel + '>' + ending + space
         );
 
         if (diffUnnormalized.substr(0, workaroundPrepend.length) === workaroundPrepend) {
@@ -2232,9 +2214,7 @@ export class DiffService {
          * If the affect line has change recos, overwirte the diff with the change reco
          */
         if (changeRecos && changeRecos.length) {
-            const recoToThisLine = changeRecos.find(reco => {
-                return reco.getLineFrom() === affected_lines.from;
-            });
+            const recoToThisLine = changeRecos.find(reco => reco.getLineFrom() === affected_lines.from);
             if (recoToThisLine) {
                 diff = this.diff(origText, recoToThisLine.getChangeNewText());
             }
@@ -2267,14 +2247,14 @@ export class DiffService {
         );
 
         return {
-            paragraphNo: paragraphNo,
+            paragraphNo,
             paragraphLineFrom: paragraph_line_range.from,
             paragraphLineTo: paragraph_line_range.to,
             diffLineFrom: affected_lines.from,
             diffLineTo: affected_lines.to,
-            textPre: textPre,
-            text: text,
-            textPost: textPost
+            textPre,
+            text,
+            textPost
         } as DiffLinesInParagraph;
     }
 
@@ -2294,7 +2274,8 @@ export class DiffService {
         lineLength: number,
         highlight?: number
     ): string {
-        let data, oldText;
+        let data;
+        let oldText;
 
         try {
             data = this.extractRangeByLineNumbers(html, change.getLineFrom(), change.getLineTo());

@@ -11,6 +11,7 @@ import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
+import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 
 @Component({
     selector: 'os-poll-collection',
@@ -23,9 +24,9 @@ export class PollCollectionComponent extends BaseComponent implements OnInit {
 
     public lastPublishedPoll: ViewPoll;
 
-    private _currentProjection: BaseViewModel<any>;
+    private _currentProjection: BaseProjectableViewModel<any>;
 
-    public get currentProjection(): BaseViewModel<any> {
+    public get currentProjection(): BaseProjectableViewModel<any> {
         return this._currentProjection;
     }
 
@@ -41,7 +42,7 @@ export class PollCollectionComponent extends BaseComponent implements OnInit {
     }
 
     @Input()
-    public set currentProjection(viewModel: BaseViewModel<any>) {
+    public set currentProjection(viewModel: BaseProjectableViewModel<any>) {
         this._currentProjection = viewModel;
         this.updateLastPublished();
     }
@@ -71,13 +72,7 @@ export class PollCollectionComponent extends BaseComponent implements OnInit {
         this.subscriptions.push(
             this.repo
                 .getViewModelListObservable()
-                .pipe(
-                    map(polls => {
-                        return polls.filter(poll => {
-                            return poll.canBeVotedFor();
-                        });
-                    })
-                )
+                .pipe(map(polls => polls.filter(poll => poll.canBeVotedFor())))
                 .subscribe(polls => {
                     this.polls = polls;
                     this.cd.markForCheck();

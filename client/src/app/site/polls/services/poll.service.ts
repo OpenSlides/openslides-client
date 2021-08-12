@@ -206,9 +206,7 @@ export class PollService {
 
     private formatVotingResultToTableData(resultList: VotingResult[], poll: PollData): PollTableData[] {
         return resultList
-            .filter(key => {
-                return !key.hide;
-            })
+            .filter(key => !key.hide)
             .map(key => ({
                 votingOption: key.vote,
                 class: 'sums',
@@ -357,16 +355,17 @@ export class PollService {
     public generateChartData(poll: PollData): ChartData {
         const fields = this.getPollDataFieldsByMethod(poll);
 
-        const data: ChartData = fields.map(key => {
-            return {
-                data: this.getResultFromPoll(poll, key),
-                label: key.toUpperCase(),
-                backgroundColor: PollColor[key],
-                hoverBackgroundColor: PollColor[key],
-                barThickness: PollChartBarThickness,
-                maxBarThickness: PollChartBarThickness
-            } as ChartDate;
-        });
+        const data: ChartData = fields.map(
+            key =>
+                ({
+                    data: this.getResultFromPoll(poll, key),
+                    label: key.toUpperCase(),
+                    backgroundColor: PollColor[key],
+                    hoverBackgroundColor: PollColor[key],
+                    barThickness: PollChartBarThickness,
+                    maxBarThickness: PollChartBarThickness
+                } as ChartDate)
+        );
 
         return data;
     }

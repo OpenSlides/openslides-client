@@ -67,13 +67,9 @@ export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeake
         return this.sendBulkActionToBackend(AssignmentAction.DELETE, payload);
     }
 
-    public getTitle = (viewAssignment: ViewAssignment) => {
-        return viewAssignment.title;
-    };
+    public getTitle = (viewAssignment: ViewAssignment) => viewAssignment.title;
 
-    public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Elections' : 'Election');
-    };
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Elections' : 'Election');
 
     private getPartialPayload(model: Partial<ViewAssignment>): any {
         return {

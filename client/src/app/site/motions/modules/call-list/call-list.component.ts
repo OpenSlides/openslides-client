@@ -120,25 +120,19 @@ export class CallListComponent extends BaseSortTreeComponent<ViewMotion> impleme
         this.subscriptions.push(
             this.tagRepo.getViewModelListBehaviorSubject().subscribe(tags => {
                 if (tags && tags.length) {
-                    this.tagFilterOptions = tags.map(tag => {
-                        return {
-                            label: tag.name,
-                            id: tag.id,
-                            state:
-                                this.tagFilterOptions &&
-                                this.tagFilterOptions.some(tagfilter => {
-                                    return tagfilter.id === tag.id && tagfilter.state === true;
-                                })
-                        };
-                    });
+                    this.tagFilterOptions = tags.map(tag => ({
+                        label: tag.name,
+                        id: tag.id,
+                        state:
+                            this.tagFilterOptions &&
+                            this.tagFilterOptions.some(tagfilter => tagfilter.id === tag.id && tagfilter.state === true)
+                    }));
                     this.tagFilterOptions.push({
                         label: this.translate.instant('No tags'),
                         id: 0,
                         state:
                             this.tagFilterOptions &&
-                            this.tagFilterOptions.some(tagfilter => {
-                                return tagfilter.id === 0 && tagfilter.state === true;
-                            })
+                            this.tagFilterOptions.some(tagfilter => tagfilter.id === 0 && tagfilter.state === true)
                     });
                 } else {
                     this.tagFilterOptions = [];
@@ -149,25 +143,21 @@ export class CallListComponent extends BaseSortTreeComponent<ViewMotion> impleme
         this.subscriptions.push(
             this.categoryRepo.getViewModelListBehaviorSubject().subscribe(categories => {
                 if (categories && categories.length) {
-                    this.categoryFilterOptions = categories.map(cat => {
-                        return {
-                            label: cat.prefixedName,
-                            id: cat.id,
-                            state:
-                                this.categoryFilterOptions &&
-                                this.categoryFilterOptions.some(catfilter => {
-                                    return catfilter.id === cat.id && catfilter.state === true;
-                                })
-                        };
-                    });
+                    this.categoryFilterOptions = categories.map(cat => ({
+                        label: cat.prefixedName,
+                        id: cat.id,
+                        state:
+                            this.categoryFilterOptions &&
+                            this.categoryFilterOptions.some(
+                                catfilter => catfilter.id === cat.id && catfilter.state === true
+                            )
+                    }));
                     this.categoryFilterOptions.push({
                         label: this.translate.instant('No category'),
                         id: 0,
                         state:
                             this.categoryFilterOptions &&
-                            this.categoryFilterOptions.some(catfilter => {
-                                return catfilter.id === 0 && catfilter.state === true;
-                            })
+                            this.categoryFilterOptions.some(catfilter => catfilter.id === 0 && catfilter.state === true)
                     });
                 } else {
                     this.categoryFilterOptions = [];

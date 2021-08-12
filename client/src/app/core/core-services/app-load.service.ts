@@ -92,9 +92,9 @@ export class AppLoadService {
         });
 
         // Collect all services to notify for the OnAfterAppsLoadedHook
-        const onAfterAppsLoadedItems = ServicesToLoadOnAppsLoaded.map(service => {
-            return this.injector.get(service);
-        }).concat(repositories);
+        const onAfterAppsLoadedItems = ServicesToLoadOnAppsLoaded.map(service => this.injector.get(service)).concat(
+            repositories
+        );
 
         // Notify them.
         onAfterAppsLoadedItems.forEach(repo => {

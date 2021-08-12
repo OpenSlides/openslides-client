@@ -44,8 +44,6 @@ export class AssignmentFilterListService extends BaseFilterListService<ViewAssig
      * Creates options for assignment phases
      */
     private createPhaseOptions(): OsFilterOption[] {
-        return AssignmentPhases.map(ap => {
-            return { label: ap.display_name, condition: ap.value, isActive: false };
-        });
+        return AssignmentPhases.map(ap => ({ label: ap.display_name, condition: ap.value, isActive: false }));
     }
 }

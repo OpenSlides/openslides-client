@@ -256,9 +256,9 @@ export class AmendmentCreateWizardComponent extends BaseModelContextComponent im
         } else {
             newParagraphs = Object.assign([], oldSelected);
             newParagraphs.push(paragraph);
-            newParagraphs.sort((para1: ParagraphToChoose, para2: ParagraphToChoose): number => {
-                return para1.paragraphNo - para2.paragraphNo;
-            });
+            newParagraphs.sort(
+                (para1: ParagraphToChoose, para2: ParagraphToChoose): number => para1.paragraphNo - para2.paragraphNo
+            );
 
             this.contentForm.addControl(
                 'text_' + paragraph.paragraphNo,

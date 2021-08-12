@@ -19,13 +19,9 @@ export class VoteRepositoryService extends BaseRepositoryWithActiveMeeting<ViewV
         super(repositoryServiceCollector, Vote);
     }
 
-    public getTitle = (viewVote: object) => {
-        return 'Vote';
-    };
+    public getTitle = (viewVote: object) => 'Vote';
 
-    public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Votes' : 'Vote');
-    };
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Votes' : 'Vote');
 
     public getFieldsets(): Fieldsets<Vote> {
         const detail: (keyof Vote)[] = ['delegated_user_id', 'option_id', 'user_id', 'value', 'weight', 'user_token'];

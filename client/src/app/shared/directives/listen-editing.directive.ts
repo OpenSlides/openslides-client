@@ -140,7 +140,7 @@ export class ListenEditingDirective extends BaseComponent implements OnDestroy {
             baseModelFqid: this.baseModel.fqid,
             senderId: this.operator.operatorId,
             senderName: this.operator.shortName,
-            type: type
+            type
         };
         if (user) {
             this.notifyService.sendToUsers(this.EDIT_NOTIFICATION_NAME, content, user);

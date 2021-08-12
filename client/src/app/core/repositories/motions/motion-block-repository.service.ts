@@ -64,13 +64,10 @@ export class MotionBlockRepositoryService extends BaseIsAgendaItemAndListOfSpeak
         };
     }
 
-    public getTitle = (viewMotionBlock: ViewMotionBlock) => {
-        return viewMotionBlock.title;
-    };
+    public getTitle = (viewMotionBlock: ViewMotionBlock) => viewMotionBlock.title;
 
-    public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Motion blocks' : 'Motion block');
-    };
+    public getVerboseName = (plural: boolean = false) =>
+        this.translate.instant(plural ? 'Motion blocks' : 'Motion block');
 
     /**
      * Removes the motion block id from the given motion
@@ -110,9 +107,9 @@ export class MotionBlockRepositoryService extends BaseIsAgendaItemAndListOfSpeak
      * Sets the default sorting (e.g. in dropdowns and for new users) to 'title'
      */
     private initSorting(): void {
-        this.setSortFunction((a: ViewMotionBlock, b: ViewMotionBlock) => {
-            return this.languageCollator.compare(a.title, b.title);
-        });
+        this.setSortFunction((a: ViewMotionBlock, b: ViewMotionBlock) =>
+            this.languageCollator.compare(a.title, b.title)
+        );
     }
 
     private getCreatePayload(partialModel: Partial<MotionBlockAction.CreatePayload>): MotionBlockAction.CreatePayload {

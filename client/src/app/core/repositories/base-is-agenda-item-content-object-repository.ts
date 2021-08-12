@@ -32,7 +32,8 @@ export abstract class BaseIsAgendaItemContentObjectRepository<
         M extends BaseModel & HasAgendaItemId
     >
     extends BaseRepositoryWithActiveMeeting<V, M>
-    implements IBaseIsAgendaItemContentObjectRepository<V, M> {
+    implements IBaseIsAgendaItemContentObjectRepository<V, M>
+{
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
         baseModelCtor: ModelConstructor<M>,

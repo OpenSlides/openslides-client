@@ -243,12 +243,10 @@ export class MotionMultiselectService {
                     };
                 });
             } else {
-                requestData = motions.map(motion => {
-                    return {
-                        id: motion.id,
-                        tag_ids: []
-                    };
-                });
+                requestData = motions.map(motion => ({
+                    id: motion.id,
+                    tag_ids: []
+                }));
             }
 
             const message = `${motions.length} ` + this.translate.instant(this.messageForSpinner);

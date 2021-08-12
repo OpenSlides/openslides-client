@@ -24,9 +24,7 @@ export class PollPercentBasePipe implements PipeTransform {
 
     public transform(value: number, poll: PollData): string | null {
         // logic handles over the pollService to avoid circular dependencies
-        let voteValueInPercent: string;
-
-        voteValueInPercent = this.pollService.getVoteValueInPercent(value, poll);
+        const voteValueInPercent: string = this.pollService.getVoteValueInPercent(value, poll);
 
         if (voteValueInPercent) {
             return `(${voteValueInPercent})`;

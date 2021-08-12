@@ -103,9 +103,9 @@ export class HttpService {
         };
 
         try {
-            const response = await (this.http.request<T>(method, url, options as any) as Observable<
-                HttpResponse<T>
-            >).toPromise();
+            const response = await (
+                this.http.request<T>(method, url, options as any) as Observable<HttpResponse<T>>
+            ).toPromise();
             return response.body;
         } catch (error) {
             throw this.processError(error);

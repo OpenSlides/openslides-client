@@ -59,9 +59,9 @@ export class MotionBlockImportHelper implements ImportHelper<Motion> {
             return { id: existingBlocks[0].id, name: existingBlocks[0].title };
         } else {
             if (!this.newMotionBlocks.find(newBlock => newBlock.name === name)) {
-                this.newMotionBlocks.push({ name: name });
+                this.newMotionBlocks.push({ name });
             }
-            return { name: name };
+            return { name };
         }
     }
 }

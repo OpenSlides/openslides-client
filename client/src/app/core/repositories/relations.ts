@@ -85,7 +85,7 @@ function _makeStructuredUserRelation<V extends BaseViewModel>(
             foreignViewModel: ViewUser,
             ownField: args.otherViewModelField,
             ownIdField: args.otherViewModelIdField,
-            many: many,
+            many,
             generic: false,
             structured: false
         }

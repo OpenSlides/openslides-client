@@ -383,11 +383,7 @@ export class DataStoreService {
         if (!modelCollection) {
             return [];
         }
-        const models = ids
-            .map(id => {
-                return modelCollection[id];
-            })
-            .filter(model => !!model); // remove non valid models.
+        const models = ids.map(id => modelCollection[id]).filter(model => !!model); // remove non valid models.
         return models as T[];
     }
 
@@ -497,7 +493,7 @@ export class DataStoreService {
             }
             this.publishDeletedInformation({
                 collection,
-                id: id
+                id
             });
         });
     }

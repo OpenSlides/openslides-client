@@ -429,9 +429,7 @@ export class OperatorService {
         } else if (this.isAuthenticated && this.groupIds.includes(this.adminGroupId)) {
             result = true;
         } else {
-            result = checkPerms.some(permission => {
-                return this.permissions.includes(permission);
-            });
+            result = checkPerms.some(permission => this.permissions.includes(permission));
         }
         if (!this._ready) {
             console.log('has perms', checkPerms, result, this.groupIds, this.isAuthenticated, this.permissions);

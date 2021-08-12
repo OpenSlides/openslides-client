@@ -38,7 +38,8 @@ const RELATION_AS_OBSERVABLE_SUFFIX = '_as_observable';
  *
  */
 export abstract class BaseRepository<V extends BaseViewModel, M extends BaseModel>
-    implements OnAfterAppsLoaded, Collection, HasViewModelListObservable<V> {
+    implements OnAfterAppsLoaded, Collection, HasViewModelListObservable<V>
+{
     /**
      * Stores all the viewModel in an object
      */
@@ -188,9 +189,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         this.viewModelListSubject.next(viewModels.filter(m => m.canAccess()).sort(this.viewModelSortFn));
     }
 
-    public getListTitle: (viewModel: V) => string = (viewModel: V) => {
-        return this.getTitle(viewModel);
-    };
+    public getListTitle: (viewModel: V) => string = (viewModel: V) => this.getTitle(viewModel);
 
     /**
      * Deletes all models from the repository (internally, no requests). Changes need
@@ -243,9 +242,8 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
                     typeof property === 'string' &&
                     property.substr(-RELATION_AS_OBSERVABLE_SUFFIX.length) === RELATION_AS_OBSERVABLE_SUFFIX
                 ) {
-                    relationAsObservable = this.relationsByKey[
-                        property.substr(0, property.length - RELATION_AS_OBSERVABLE_SUFFIX.length)
-                    ];
+                    relationAsObservable =
+                        this.relationsByKey[property.substr(0, property.length - RELATION_AS_OBSERVABLE_SUFFIX.length)];
                 }
 
                 // try to find a getter for property

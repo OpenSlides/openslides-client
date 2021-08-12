@@ -4,29 +4,15 @@ import pdfMake from 'pdfmake/build/pdfmake';
 
 const osTableLayout = {
     switchColorTableLayout: {
-        hLineWidth: rowIndex => {
-            return rowIndex === 1;
-        },
-        vLineWidth: () => {
-            return 0;
-        },
-        fillColor: rowIndex => {
-            return rowIndex % 2 === 0 ? '#EEEEEE' : null;
-        }
+        hLineWidth: rowIndex => rowIndex === 1,
+        vLineWidth: () => 0,
+        fillColor: rowIndex => (rowIndex % 2 === 0 ? '#EEEEEE' : null)
     },
     metaboxLayout: {
-        fillColor: () => {
-            return '#dddddd';
-        },
-        hLineWidth: (i, node) => {
-            return i === 0 || i === node.table.body.length ? 0 : 0.5;
-        },
-        vLineWidth: () => {
-            return 0;
-        },
-        hLineColor: () => {
-            return 'white';
-        }
+        fillColor: () => '#dddddd',
+        hLineWidth: (i, node) => (i === 0 || i === node.table.body.length ? 0 : 0.5),
+        vLineWidth: () => 0,
+        hLineColor: () => 'white'
     }
 };
 

@@ -19,13 +19,9 @@ export class OptionRepositoryService extends BaseRepositoryWithActiveMeeting<Vie
         super(repositoryServiceCollector, Option);
     }
 
-    public getTitle = (_viewOption: ViewOption) => {
-        return 'Option';
-    };
+    public getTitle = (_viewOption: ViewOption) => 'Option';
 
-    public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Options' : 'Option');
-    };
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Options' : 'Option');
 
     public getFieldsets(): Fieldsets<Option> {
         const detail: (keyof Option)[] = ['vote_ids', 'poll_id', 'content_object_id', 'yes', 'no', 'abstain'];

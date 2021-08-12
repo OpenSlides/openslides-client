@@ -19,13 +19,9 @@ export class ProjectorMessageRepositoryService extends BaseRepositoryWithActiveM
         super(repositoryServiceCollector, ProjectorMessage);
     }
 
-    public getTitle = (viewProjectorMessage: ViewProjectorMessage) => {
-        return this.getVerboseName();
-    };
+    public getTitle = (viewProjectorMessage: ViewProjectorMessage) => this.getVerboseName();
 
-    public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Messages' : 'Message');
-    };
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Messages' : 'Message');
 
     public getFieldsets(): Fieldsets<ProjectorMessage> {
         return {

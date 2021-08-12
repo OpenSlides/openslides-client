@@ -48,7 +48,7 @@ export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
         };
         this.dialogService.open(MotionTitleChangeRecommendationDialogComponent, {
             ...infoDialogSettings,
-            data: data
+            data
         });
     }
 

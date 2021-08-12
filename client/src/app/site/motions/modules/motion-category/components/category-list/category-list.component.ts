@@ -40,7 +40,7 @@ export class CategoryListComponent extends BaseListViewComponent<ViewMotionCateg
     public tableColumnDefinition: PblColumnDefinition[] = [
         {
             prop: 'title',
-            width: 'auto'
+            width: '100%'
         },
         {
             prop: 'amount',

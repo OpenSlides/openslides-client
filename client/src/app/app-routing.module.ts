@@ -58,7 +58,7 @@ export class MyStrategy extends RouteReuseStrategy {
 }
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })],
+    imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload', relativeLinkResolution: 'legacy' })],
     exports: [RouterModule],
     providers: [{ provide: RouteReuseStrategy, useClass: MyStrategy }]
 })

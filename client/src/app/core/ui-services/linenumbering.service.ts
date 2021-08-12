@@ -105,9 +105,8 @@ export class LinenumberingService {
      */
     private lineNumberCache = {
         _cache: {},
-        get: (key: string): any => {
-            return this.lineNumberCache._cache[key] === undefined ? null : this.lineNumberCache._cache[key];
-        },
+        get: (key: string): any =>
+            this.lineNumberCache._cache[key] === undefined ? null : this.lineNumberCache._cache[key],
         put: (key: string, val: any): void => {
             this.lineNumberCache._cache[key] = val;
         }
@@ -484,9 +483,7 @@ export class LinenumberingService {
         let cachedParagraphs = this.lineNumberCache.get(cacheKey);
         if (!cachedParagraphs) {
             const fragment = this.htmlToFragment(html);
-            cachedParagraphs = this.splitNodeToParagraphs(fragment).map((node: Element): string => {
-                return node.outerHTML;
-            });
+            cachedParagraphs = this.splitNodeToParagraphs(fragment).map((node: Element): string => node.outerHTML);
 
             this.lineNumberCache.put(cacheKey, cachedParagraphs);
         }
@@ -569,9 +566,9 @@ export class LinenumberingService {
      */
     public textNodeToLines(node: Node, length: number, highlight: number = -1): Element[] {
         const out = [];
-        let currLineStart = 0,
-            i = 0,
-            firstTextNode = true;
+        let currLineStart = 0;
+        let i = 0;
+        let firstTextNode = true;
         const addLine = (text: string) => {
             let lineNode;
             if (firstTextNode) {
@@ -600,8 +597,8 @@ export class LinenumberingService {
             return lineNode;
         };
         const addLinebreakToPreviousNode = (lineNode: Element, offset: number) => {
-            const firstText = lineNode.nodeValue.substr(0, offset + 1),
-                secondText = lineNode.nodeValue.substr(offset + 1);
+            const firstText = lineNode.nodeValue.substr(0, offset + 1);
+            const secondText = lineNode.nodeValue.substr(offset + 1);
             const lineBreak = this.createLineBreak();
             const firstNode = document.createTextNode(firstText);
             lineNode.parentNode.insertBefore(firstNode, lineNode);
@@ -639,7 +636,7 @@ export class LinenumberingService {
                         lineBreakAt = this.lastInlineBreakablePoint;
                     } else {
                         lineBreakAt = {
-                            node: node,
+                            node,
                             offset: i - 1
                         };
                     }
@@ -665,7 +662,7 @@ export class LinenumberingService {
 
                 if (node.nodeValue[i] === ' ' || node.nodeValue[i] === '-' || node.nodeValue[i] === '\n') {
                     this.lastInlineBreakablePoint = {
-                        node: node,
+                        node,
                         offset: i
                     };
                 }
@@ -724,9 +721,9 @@ export class LinenumberingService {
                     element.appendChild(ret[j]);
                 }
             } else if (oldChildren[i].nodeType === ELEMENT_NODE) {
-                const childElement = <Element>oldChildren[i],
-                    firstword = this.lengthOfFirstInlineWord(childElement),
-                    overlength = this.currentInlineOffset + firstword > length && this.currentInlineOffset > 0;
+                const childElement = <Element>oldChildren[i];
+                const firstword = this.lengthOfFirstInlineWord(childElement);
+                const overlength = this.currentInlineOffset + firstword > length && this.currentInlineOffset > 0;
                 if (overlength && this.isInlineElement(childElement)) {
                     this.currentInlineOffset = 0;
                     this.lastInlineBreakablePoint = null;
@@ -787,8 +784,8 @@ export class LinenumberingService {
                     element.appendChild(ret[j]);
                 }
             } else if (oldChildren[i].nodeType === ELEMENT_NODE) {
-                const firstword = this.lengthOfFirstInlineWord(oldChildren[i]),
-                    overlength = this.currentInlineOffset + firstword > length && this.currentInlineOffset > 0;
+                const firstword = this.lengthOfFirstInlineWord(oldChildren[i]);
+                const overlength = this.currentInlineOffset + firstword > length && this.currentInlineOffset > 0;
                 if (
                     overlength &&
                     this.isInlineElement(oldChildren[i]) &&
@@ -910,7 +907,8 @@ export class LinenumberingService {
         callback?: () => void,
         firstLine?: number
     ): LineNumberedString {
-        let newHtml, newRoot;
+        let newHtml;
+        let newRoot;
 
         if (highlight > 0) {
             // Caching versions with highlighted line numbers is probably not worth it
@@ -997,8 +995,8 @@ export class LinenumberingService {
      * @param {Element} lineNumberNode
      */
     public highlightUntilNextLine(lineNumberNode: Element): void {
-        let currentNode: Node = lineNumberNode,
-            foundNextLineNumber = false;
+        let currentNode: Node = lineNumberNode;
+        let foundNextLineNumber = false;
 
         do {
             let wasHighlighted = false;
@@ -1036,8 +1034,8 @@ export class LinenumberingService {
      * @return {string}
      */
     public highlightLine(html: string, lineNumber: number): string {
-        const fragment = this.htmlToFragment(html),
-            lineNumberNode = this.getLineNumberNode(fragment, lineNumber);
+        const fragment = this.htmlToFragment(html);
+        const lineNumberNode = this.getLineNumberNode(fragment, lineNumber);
 
         if (lineNumberNode) {
             this.highlightUntilNextLine(lineNumberNode);

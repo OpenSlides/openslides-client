@@ -66,13 +66,10 @@ export class MotionStatuteParagraphRepositoryService extends BaseRepositoryWithA
         return this.sendActionToBackend(MotionStatuteParagraphAction.SORT, payload);
     }
 
-    public getTitle = (viewMotionStatuteParagraph: ViewMotionStatuteParagraph) => {
-        return viewMotionStatuteParagraph.title;
-    };
+    public getTitle = (viewMotionStatuteParagraph: ViewMotionStatuteParagraph) => viewMotionStatuteParagraph.title;
 
-    public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Statute paragraphs' : 'Statute paragraph');
-    };
+    public getVerboseName = (plural: boolean = false) =>
+        this.translate.instant(plural ? 'Statute paragraphs' : 'Statute paragraph');
 
     private getCreatePayload(
         partialStatuteParagraph: Partial<MotionStatuteParagraph>

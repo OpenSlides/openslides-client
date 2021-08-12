@@ -23,15 +23,12 @@ export class ProjectorCountdownRepositoryService extends BaseRepositoryWithActiv
         super(repositoryServiceCollector, ProjectorCountdown);
     }
 
-    public getTitle = (viewProjectorCountdown: ViewProjectorCountdown) => {
-        return viewProjectorCountdown.description
+    public getTitle = (viewProjectorCountdown: ViewProjectorCountdown) =>
+        viewProjectorCountdown.description
             ? `${viewProjectorCountdown.title} (${viewProjectorCountdown.description})`
             : viewProjectorCountdown.title;
-    };
 
-    public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Countdowns' : 'Countdown');
-    };
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Countdowns' : 'Countdown');
 
     public getFieldsets(): Fieldsets<ProjectorCountdown> {
         return {

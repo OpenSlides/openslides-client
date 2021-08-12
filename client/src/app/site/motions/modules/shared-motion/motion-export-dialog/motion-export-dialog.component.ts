@@ -127,9 +127,9 @@ export class MotionExportDialogComponent implements OnInit {
             this.defaults.metaInfo.push('id');
         }
         // Get the export order, exclude everything that does not count as meta-data
-        this.metaInfoExportOrder = motionImportExportHeaderOrder.filter(metaData => {
-            return !noMetaData.some(noMeta => metaData === noMeta);
-        });
+        this.metaInfoExportOrder = motionImportExportHeaderOrder.filter(
+            metaData => !noMetaData.some(noMeta => metaData === noMeta)
+        );
         this.createForm();
     }
 

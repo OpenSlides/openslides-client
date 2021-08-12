@@ -42,13 +42,10 @@ export class CountUsersStatisticsService {
      * an observable where the statistics are published.
      */
     public countUsers(): [string, Observable<CountUserStatistics>] {
-        let token: string;
-        let userDataObservable: Observable<CountUserData>;
-
         // Start counting
         // TODO: maybe we shold bet the observable bofore the actual countig was
         // started. We might miss some user ids.
-        [token, userDataObservable] = this.countUserService.countUsers();
+        const [token, userDataObservable] = this.countUserService.countUsers();
         this.runningCounts[token] = new BehaviorSubject<CountUserStatistics>({
             activeUserHandles: 0,
             activeUsers: {},

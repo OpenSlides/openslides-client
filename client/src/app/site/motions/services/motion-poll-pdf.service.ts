@@ -76,7 +76,7 @@ export class MotionPollPdfService extends PollPdfService {
         }
         const rowsPerPage = 4;
         this.pdfService.downloadWithBallotPaper(
-            this.getPages(rowsPerPage, { sheetend: 40, title: title, subtitle: subtitle }),
+            this.getPages(rowsPerPage, { sheetend: 40, title, subtitle }),
             fileName,
             this.logoUrl
         );

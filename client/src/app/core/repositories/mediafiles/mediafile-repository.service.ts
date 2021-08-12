@@ -42,18 +42,12 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
             }
         });
 
-        this.viewModelSortFn = (a: ViewMediafile, b: ViewMediafile) => {
-            return this.languageCollator.compare(a.title, b.title);
-        };
+        this.viewModelSortFn = (a: ViewMediafile, b: ViewMediafile) => this.languageCollator.compare(a.title, b.title);
     }
 
-    public getTitle = (viewMediafile: ViewMediafile) => {
-        return viewMediafile.title;
-    };
+    public getTitle = (viewMediafile: ViewMediafile) => viewMediafile.title;
 
-    public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Files' : 'File');
-    };
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Files' : 'File');
 
     public getFieldsets(): Fieldsets<Mediafile> {
         const fileSelectionFields: (keyof Mediafile)[] = ['title', 'is_directory'];
@@ -74,8 +68,8 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
 
     public getListObservableDirectory(parentId: number | null): Observable<ViewMediafile[]> {
         return this.getViewModelListObservable().pipe(
-            map(mediafiles => {
-                return mediafiles.filter(mediafile => {
+            map(mediafiles =>
+                mediafiles.filter(mediafile => {
                     // instead of being null or undefined, for the root dir
                     // mediafile.parent_id is simply not the in object
                     if (!mediafile.parent_id && !parentId) {
@@ -83,8 +77,8 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
                     } else {
                         return mediafile.parent_id === parentId;
                     }
-                });
-            })
+                })
+            )
         );
     }
 

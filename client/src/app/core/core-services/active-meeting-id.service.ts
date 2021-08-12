@@ -25,11 +25,7 @@ export class ActiveMeetingIdService {
 
     public constructor(private router: Router, private DS: DataStoreService) {
         this.router.events
-            .pipe(
-                filter((event: RouterEvent): boolean => {
-                    return event instanceof RoutesRecognized;
-                })
-            )
+            .pipe(filter((event: RouterEvent): boolean => event instanceof RoutesRecognized))
             .subscribe((event: RoutesRecognized) => {
                 const parts = event.url.split('/');
                 let meetingId = null;

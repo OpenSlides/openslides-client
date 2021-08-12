@@ -25,7 +25,8 @@ import { AmendmentData, MotionSlideData } from './motion-slide-data';
 })
 export class MotionSlideComponent
     extends BaseMotionSlideComponent<MotionSlideData>
-    implements IBaseScaleScrollSlideComponent<MotionSlideData> {
+    implements IBaseScaleScrollSlideComponent<MotionSlideData>
+{
     /**
      * Indicates the LineNumberingMode Mode.
      */
@@ -177,9 +178,9 @@ export class MotionSlideComponent
 
         return paragraphNumbers
             .map(paraNo => {
-                const origText = baseParagraphs[paraNo],
-                    diff = this.diff.diff(origText, amendment.amendment_paragraphs[paraNo]),
-                    affectedLines = this.diff.detectAffectedLineRange(diff);
+                const origText = baseParagraphs[paraNo];
+                const diff = this.diff.diff(origText, amendment.amendment_paragraphs[paraNo]);
+                const affectedLines = this.diff.detectAffectedLineRange(diff);
 
                 if (affectedLines === null) {
                     return null;
@@ -349,15 +350,15 @@ export class MotionSlideComponent
             .map(x => +x)
             .sort();
         const amendmentParagraphs = paragraphNumbers
-            .map(paraNo => {
-                return this.diff.getAmendmentParagraphsLines(
+            .map(paraNo =>
+                this.diff.getAmendmentParagraphsLines(
                     paraNo,
                     baseParagraphs[paraNo],
                     motion.amendment_paragraphs[paraNo.toString()],
                     this.lineLength,
                     this.crMode === ChangeRecoMode.Diff ? this.getAllTextChangingObjects() : undefined
-                );
-            })
+                )
+            )
             .filter((para: DiffLinesInParagraph) => para !== null);
 
         return amendmentParagraphs;

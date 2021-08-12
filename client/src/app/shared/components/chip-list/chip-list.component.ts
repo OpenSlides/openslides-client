@@ -54,9 +54,9 @@ export class ChipListComponent implements OnInit, OnDestroy {
     }
 
     private initSubscription(): void {
-        this.subscription = (this.model as Observable<
-            HasColor | HtmlColor | (HtmlColor | HasColor)[]
-        >).subscribe(models => this.initModels(models));
+        this.subscription = (this.model as Observable<HasColor | HtmlColor | (HtmlColor | HasColor)[]>).subscribe(
+            models => this.initModels(models)
+        );
     }
 
     private initModels(models: HtmlColor | HasColor | (HtmlColor | HasColor)[]): void {

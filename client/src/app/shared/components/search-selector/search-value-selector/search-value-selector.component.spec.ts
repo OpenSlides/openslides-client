@@ -1,13 +1,13 @@
 import { Component, ViewChild } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormBuilder } from '@angular/forms';
 
 import { BehaviorSubject } from 'rxjs';
 
-import { E2EImportsModule } from '../../../../e2e-imports.module';
-import { EmptySelectable } from '../empty-selectable';
+import { E2EImportsModule } from 'e2e-imports.module';
 import { SearchValueSelectorComponent } from './search-value-selector.component';
-import { Selectable } from '../selectable';
+import { Selectable } from '../../selectable';
+import { EmptySelectable } from '../../empty-selectable';
 
 describe('SearchValueSelectorComponent', () => {
     @Component({
@@ -22,12 +22,14 @@ describe('SearchValueSelectorComponent', () => {
     let hostComponent: TestHostComponent;
     let hostFixture: ComponentFixture<TestHostComponent>;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
-            imports: [E2EImportsModule],
-            declarations: [TestHostComponent]
-        }).compileComponents();
-    }));
+    beforeEach(
+        waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [E2EImportsModule],
+                declarations: [TestHostComponent]
+            }).compileComponents();
+        })
+    );
 
     beforeEach(() => {
         hostFixture = TestBed.createComponent(TestHostComponent);

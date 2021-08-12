@@ -83,9 +83,7 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormControlCo
 
     public get selectedItems(): Selectable[] {
         if (this.multiple && this.selectableItems?.length && this.contentForm.value) {
-            return this.selectableItems.filter(item => {
-                return this.contentForm.value.includes(item.id);
-            });
+            return this.selectableItems.filter(item => this.contentForm.value.includes(item.id));
         }
         return [];
     }

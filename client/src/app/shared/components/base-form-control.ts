@@ -22,9 +22,7 @@ import { Subject, Subscription } from 'rxjs';
  * ```
  */
 @Directive()
-export abstract class BaseFormControlComponent<T>
-    extends MatFormFieldControl<T>
-    implements OnDestroy, ControlValueAccessor {
+export abstract class BaseFormControlComponent<T> implements MatFormFieldControl<T>, OnDestroy, ControlValueAccessor {
     public static nextId = 0;
 
     @HostBinding() public id = `base-form-control-${BaseFormControlComponent.nextId++}`;
@@ -68,7 +66,11 @@ export abstract class BaseFormControlComponent<T>
     @Input()
     public set disabled(disable: boolean) {
         this._disabled = coerceBooleanProperty(disable);
-        this._disabled ? this.contentForm.disable() : this.contentForm.enable();
+        if (this._disabled) {
+            this.contentForm.disable();
+        } else {
+            this.contentForm.enable();
+        }
         this.stateChanges.next();
     }
 
@@ -102,8 +104,6 @@ export abstract class BaseFormControlComponent<T>
         protected element: ElementRef<HTMLElement>,
         @Optional() @Self() public ngControl: NgControl
     ) {
-        super();
-
         this.initializeForm();
 
         if (this.ngControl !== null) {

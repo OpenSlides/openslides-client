@@ -25,13 +25,9 @@ export class ProjectorRepositoryService extends BaseRepositoryWithActiveMeeting<
         super(repositoryServiceCollector, Projector);
     }
 
-    public getTitle = (viewProjector: ViewProjector) => {
-        return viewProjector.name;
-    };
+    public getTitle = (viewProjector: ViewProjector) => viewProjector.name;
 
-    public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Projectors' : 'Projector');
-    };
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Projectors' : 'Projector');
 
     public getFieldsets(): Fieldsets<Projector> {
         return {
@@ -137,9 +133,9 @@ export class ProjectorRepositoryService extends BaseRepositoryWithActiveMeeting<
     ): Promise<void> {
         const payload: ProjectorAction.ControlViewPayload = {
             id: projector.id,
-            field: field,
-            direction: direction,
-            step: step
+            field,
+            direction,
+            step
         };
         return await this.sendActionToBackend(ProjectorAction.CONTROL_VIEW, payload);
     }
@@ -218,9 +214,7 @@ export class ProjectorRepositoryService extends BaseRepositoryWithActiveMeeting<
 
     public getReferenceProjectorObservable(): Observable<ViewProjector> {
         return this.getViewModelListObservable().pipe(
-            map(projectors => {
-                return projectors.find(projector => projector.isReferenceProjector);
-            })
+            map(projectors => projectors.find(projector => projector.isReferenceProjector))
         );
     }
 }

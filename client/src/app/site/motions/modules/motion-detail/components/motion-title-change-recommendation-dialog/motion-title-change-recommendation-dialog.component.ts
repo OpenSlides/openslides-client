@@ -37,9 +37,7 @@ export interface MotionTitleChangeRecommendationDialogComponentData extends Base
     styleUrls: ['./motion-title-change-recommendation-dialog.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class MotionTitleChangeRecommendationDialogComponent extends BaseChangeRecommendationDialogComponent<
-    MotionTitleChangeRecommendationDialogComponentData
-> {
+export class MotionTitleChangeRecommendationDialogComponent extends BaseChangeRecommendationDialogComponent<MotionTitleChangeRecommendationDialogComponentData> {
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         @Inject(MAT_DIALOG_DATA) public data: MotionTitleChangeRecommendationDialogComponentData,

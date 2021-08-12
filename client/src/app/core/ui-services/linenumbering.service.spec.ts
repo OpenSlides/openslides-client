@@ -3,32 +3,26 @@ import { inject, TestBed } from '@angular/core/testing';
 import { LinenumberingService } from './linenumbering.service';
 
 describe('LinenumberingService', () => {
-    const brMarkup = (no: number): string => {
-            return (
-                '<br class="os-line-break">' +
-                '<span contenteditable="false" class="os-line-number line-number-' +
-                no +
-                '" data-line-number="' +
-                no +
-                '">&nbsp;</span>'
-            );
-        },
-        noMarkup = (no: number): string => {
-            return (
-                '<span contenteditable="false" class="os-line-number line-number-' +
-                no +
-                '" data-line-number="' +
-                no +
-                '">&nbsp;</span>'
-            );
-        },
-        longstr = (length: number): string => {
-            let outstr = '';
-            for (let i = 0; i < length; i++) {
-                outstr += String.fromCharCode(65 + (i % 26));
-            }
-            return outstr;
-        };
+    const brMarkup = (no: number): string =>
+        '<br class="os-line-break">' +
+        '<span contenteditable="false" class="os-line-number line-number-' +
+        no +
+        '" data-line-number="' +
+        no +
+        '">&nbsp;</span>';
+    const noMarkup = (no: number): string =>
+        '<span contenteditable="false" class="os-line-number line-number-' +
+        no +
+        '" data-line-number="' +
+        no +
+        '">&nbsp;</span>';
+    const longstr = (length: number): string => {
+        let outstr = '';
+        for (let i = 0; i < length; i++) {
+            outstr += String.fromCharCode(65 + (i % 26));
+        }
+        return outstr;
+    };
 
     beforeEach(() => {
         TestBed.configureTestingModule({

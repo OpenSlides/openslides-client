@@ -63,7 +63,8 @@ type FullNameInformation = ShortNameInformation & LevelAndNumberInformation;
 })
 export class UserRepositoryService
     extends BaseRepositoryWithActiveMeeting<ViewUser, User>
-    implements ModelRequestRepository {
+    implements ModelRequestRepository
+{
     /**
      * The property the incoming data is sorted by
      */
@@ -209,9 +210,7 @@ export class UserRepositoryService
         return partialPayload;
     }
 
-    public getTitle = (viewUser: ViewUser) => {
-        return this.getFullName(viewUser);
-    };
+    public getTitle = (viewUser: ViewUser) => this.getFullName(viewUser);
 
     public getRequestToGetAllModels(): SimplifiedModelRequest {
         return {
@@ -278,9 +277,8 @@ export class UserRepositoryService
         }
     }
 
-    public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Participants' : 'Participant');
-    };
+    public getVerboseName = (plural: boolean = false) =>
+        this.translate.instant(plural ? 'Participants' : 'Participant');
 
     /**
      * Generates a random password
@@ -527,9 +525,9 @@ export class UserRepositoryService
      * @returns all users matching that name (unsorted)
      */
     public getUsersByName(name: string): ViewUser[] {
-        return this.getViewModelList().filter(user => {
-            return user.full_name === name || user.short_name === name || user.number() === name;
-        });
+        return this.getViewModelList().filter(
+            user => user.full_name === name || user.short_name === name || user.number() === name
+        );
     }
 
     /**

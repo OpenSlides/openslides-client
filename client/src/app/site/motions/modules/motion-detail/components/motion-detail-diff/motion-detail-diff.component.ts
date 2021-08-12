@@ -350,7 +350,7 @@ export class MotionDetailDiffComponent extends BaseComponent implements AfterVie
         };
         this.dialogService.open(MotionChangeRecommendationDialogComponent, {
             ...mediumDialogSettings,
-            data: data
+            data
         });
     }
 
@@ -365,7 +365,7 @@ export class MotionDetailDiffComponent extends BaseComponent implements AfterVie
         };
         this.dialogService.open(MotionTitleChangeRecommendationDialogComponent, {
             ...mediumDialogSettings,
-            data: data
+            data
         });
     }
 

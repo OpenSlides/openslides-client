@@ -81,34 +81,32 @@ export class MotionCsvExportService {
         }
 
         const properties = sortMotionPropertyList(['number', 'title'].concat(contentToExport));
-        const exportProperties: (
-            | CsvColumnDefinitionProperty<ViewMotion>
-            | CsvColumnDefinitionMap<ViewMotion>
-        )[] = properties.map(option => {
-            if (option === 'recommendation') {
-                return {
-                    label: 'recommendation',
-                    map: motion => this.motionService.getExtendedRecommendationLabel(motion)
-                };
-            } else if (option === 'state') {
-                return {
-                    label: 'state',
-                    map: motion => this.motionService.getExtendedStateLabel(motion)
-                };
-            } else if (option === 'text') {
-                return {
-                    label: 'Text',
-                    map: motion => this.createText(motion, crMode)
-                };
-            } else if (option === 'block') {
-                return {
-                    label: 'Motion block',
-                    map: motion => (motion.block ? motion.block.getTitle() : '')
-                };
-            } else {
-                return { property: option } as CsvColumnDefinitionProperty<ViewMotion>;
-            }
-        });
+        const exportProperties: (CsvColumnDefinitionProperty<ViewMotion> | CsvColumnDefinitionMap<ViewMotion>)[] =
+            properties.map(option => {
+                if (option === 'recommendation') {
+                    return {
+                        label: 'recommendation',
+                        map: motion => this.motionService.getExtendedRecommendationLabel(motion)
+                    };
+                } else if (option === 'state') {
+                    return {
+                        label: 'state',
+                        map: motion => this.motionService.getExtendedStateLabel(motion)
+                    };
+                } else if (option === 'text') {
+                    return {
+                        label: 'Text',
+                        map: motion => this.createText(motion, crMode)
+                    };
+                } else if (option === 'block') {
+                    return {
+                        label: 'Motion block',
+                        map: motion => (motion.block ? motion.block.getTitle() : '')
+                    };
+                } else {
+                    return { property: option } as CsvColumnDefinitionProperty<ViewMotion>;
+                }
+            });
         exportProperties.push(
             ...comments.map(commentId => ({
                 label: this.commentRepo.getViewModel(commentId).getTitle(),

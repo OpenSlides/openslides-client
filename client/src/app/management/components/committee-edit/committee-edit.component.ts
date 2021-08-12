@@ -187,9 +187,9 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
         this.committeeForm.patchValue(committee.committee);
 
         if (this.committeeId && committee.users?.length) {
-            const committeeManagers = committee.users.filter(user => {
-                return user.committee_management_level(this.committeeId) === CML.can_manage;
-            });
+            const committeeManagers = committee.users.filter(
+                user => user.committee_management_level(this.committeeId) === CML.can_manage
+            );
             this.managerIdCtrl.patchValue(committeeManagers.map(user => user.id));
         }
     }

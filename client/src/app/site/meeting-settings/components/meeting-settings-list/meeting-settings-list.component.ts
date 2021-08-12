@@ -35,7 +35,8 @@ import {
 })
 export class MeetingSettingsListComponent
     extends BaseModelContextComponent
-    implements CanComponentDeactivate, OnInit, OnDestroy {
+    implements CanComponentDeactivate, OnInit, OnDestroy
+{
     public settingsGroup: SettingsGroup;
 
     public meeting: ViewMeeting;

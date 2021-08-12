@@ -5,25 +5,19 @@ import { E2EImportsModule } from '../../../e2e-imports.module';
 import { LinenumberingService } from './linenumbering.service';
 
 describe('DiffService', () => {
-    const brMarkup = (no: number): string => {
-        return (
-            '<br class="os-line-break">' +
-            '<span class="line-number-' +
-            no.toString() +
-            ' os-line-number" contenteditable="false" data-line-number="' +
-            no +
-            '">&nbsp;</span>'
-        );
-    };
-    const noMarkup = (no: number): string => {
-        return (
-            '<span class="line-number-' +
-            no.toString() +
-            ' os-line-number" contenteditable="false" data-line-number="' +
-            no +
-            '">&nbsp;</span>'
-        );
-    };
+    const brMarkup = (no: number): string =>
+        '<br class="os-line-break">' +
+        '<span class="line-number-' +
+        no.toString() +
+        ' os-line-number" contenteditable="false" data-line-number="' +
+        no +
+        '">&nbsp;</span>';
+    const noMarkup = (no: number): string =>
+        '<span class="line-number-' +
+        no.toString() +
+        ' os-line-number" contenteditable="false" data-line-number="' +
+        no +
+        '">&nbsp;</span>';
 
     const baseHtml1 =
         '<p>' +
@@ -186,7 +180,9 @@ describe('DiffService', () => {
         }));
 
         it('finds the common ancestor', inject([DiffService], (service: DiffService) => {
-            let fromLineNode, toLineNode, commonAncestor;
+            let fromLineNode;
+            let toLineNode;
+            let commonAncestor;
 
             fromLineNode = service.getLineNumberNode(baseHtmlDom1, 6);
             toLineNode = service.getLineNumberNode(baseHtmlDom1, 7);
@@ -205,8 +201,8 @@ describe('DiffService', () => {
         }));
 
         it('renders DOMs correctly (1)', inject([DiffService], (service: DiffService) => {
-            const lineNo = service.getLineNumberNode(baseHtmlDom1, 7),
-                greatParent = lineNo.parentNode.parentNode;
+            const lineNo = service.getLineNumberNode(baseHtmlDom1, 7);
+            const greatParent = lineNo.parentNode.parentNode;
             let lineTrace = [lineNo.parentNode, lineNo];
 
             const pre = service.serializePartialDomToChild(greatParent, lineTrace, true);
@@ -226,9 +222,9 @@ describe('DiffService', () => {
         }));
 
         it('renders DOMs correctly (2)', inject([DiffService], (service: DiffService) => {
-            const lineNo = service.getLineNumberNode(baseHtmlDom1, 9),
-                greatParent = lineNo.parentNode.parentNode,
-                lineTrace = [lineNo.parentNode, lineNo];
+            const lineNo = service.getLineNumberNode(baseHtmlDom1, 9);
+            const greatParent = lineNo.parentNode.parentNode;
+            const lineTrace = [lineNo.parentNode, lineNo];
 
             const pre = service.serializePartialDomToChild(greatParent, lineTrace, true);
             expect(pre).toBe('<LI class="li-class"><UL><LI>Level 2 LI 8</LI>');
@@ -481,9 +477,9 @@ describe('DiffService', () => {
         }));
 
         it('does not accidently merge two separate words', inject([DiffService], (service: DiffService) => {
-            const merged = service.replaceLines(baseHtml1, '<p>Line 1INSERTION</p>', 1, 2),
-                containsError = merged.indexOf('Line 1INSERTIONLine 2'),
-                containsCorrectVersion = merged.indexOf('Line 1INSERTION Line 2');
+            const merged = service.replaceLines(baseHtml1, '<p>Line 1INSERTION</p>', 1, 2);
+            const containsError = merged.indexOf('Line 1INSERTIONLine 2');
+            const containsCorrectVersion = merged.indexOf('Line 1INSERTION Line 2');
             expect(containsError).toBe(-1);
             expect(containsCorrectVersion).toBe(3);
         }));
@@ -493,21 +489,21 @@ describe('DiffService', () => {
             (service: DiffService) => {
                 // The newlines between UL and LI are the problem here
                 const merged = service.replaceLines(
-                        baseHtml1,
-                        '<ul class="ul-class">' + '\n' + '<li class="li-class">Line 6Inserted</li>' + '\n' + '</ul>',
-                        6,
-                        7
-                    ),
-                    containsError = merged.indexOf('Line 6InsertedLine 7'),
-                    containsCorrectVersion = merged.indexOf('Line 6Inserted Line 7');
+                    baseHtml1,
+                    '<ul class="ul-class">' + '\n' + '<li class="li-class">Line 6Inserted</li>' + '\n' + '</ul>',
+                    6,
+                    7
+                );
+                const containsError = merged.indexOf('Line 6InsertedLine 7');
+                const containsCorrectVersion = merged.indexOf('Line 6Inserted Line 7');
                 expect(containsError).toBe(-1);
                 expect(containsCorrectVersion > 0).toBe(true);
             }
         ));
 
         it('keeps ampersands escaped', inject([DiffService], (service: DiffService) => {
-            const pre = '<p>' + noMarkup(1) + 'foo &amp; bar</p>',
-                after = '<p>' + noMarkup(1) + 'foo &amp; bar ins</p>';
+            const pre = '<p>' + noMarkup(1) + 'foo &amp; bar</p>';
+            const after = '<p>' + noMarkup(1) + 'foo &amp; bar ins</p>';
             const merged = service.replaceLines(pre, after, 1, 2);
             expect(merged).toBe('<P>foo &amp; bar ins</P>');
         }));
@@ -515,15 +511,15 @@ describe('DiffService', () => {
 
     describe('detecting the type of change', () => {
         it('detects a simple insertion', inject([DiffService], (service: DiffService) => {
-            const htmlBefore = '<p>Test 1</p>',
-                htmlAfter = '<p>Test 1 Test 2</p>' + '\n' + '<p>Test 3</p>';
+            const htmlBefore = '<p>Test 1</p>';
+            const htmlAfter = '<p>Test 1 Test 2</p>' + '\n' + '<p>Test 3</p>';
             const calculatedType = service.detectReplacementType(htmlBefore, htmlAfter);
             expect(calculatedType).toBe(ModificationType.TYPE_INSERTION);
         }));
 
         it('detects a simple insertion, ignoring case of tags', inject([DiffService], (service: DiffService) => {
-            const htmlBefore = '<p>Test 1</p>',
-                htmlAfter = '<P>Test 1 Test 2</P>' + '\n' + '<P>Test 3</P>';
+            const htmlBefore = '<p>Test 1</p>';
+            const htmlAfter = '<P>Test 1 Test 2</P>' + '\n' + '<P>Test 3</P>';
             const calculatedType = service.detectReplacementType(htmlBefore, htmlAfter);
             expect(calculatedType).toBe(ModificationType.TYPE_INSERTION);
         }));
@@ -531,8 +527,8 @@ describe('DiffService', () => {
         it('detects a simple insertion, ignoring trailing whitespaces', inject(
             [DiffService],
             (service: DiffService) => {
-                const htmlBefore = '<P>Lorem ipsum dolor sit amet, sed diam voluptua. At </P>',
-                    htmlAfter = '<P>Lorem ipsum dolor sit amet, sed diam voluptua. At2</P>';
+                const htmlBefore = '<P>Lorem ipsum dolor sit amet, sed diam voluptua. At </P>';
+                const htmlAfter = '<P>Lorem ipsum dolor sit amet, sed diam voluptua. At2</P>';
                 const calculatedType = service.detectReplacementType(htmlBefore, htmlAfter);
                 expect(calculatedType).toBe(ModificationType.TYPE_INSERTION);
             }
@@ -541,45 +537,45 @@ describe('DiffService', () => {
         it('detects a simple insertion, ignoring spaces between UL and LI', inject(
             [DiffService],
             (service: DiffService) => {
-                const htmlBefore = '<UL><LI>accusam et justo duo dolores et ea rebum.</LI></UL>',
-                    htmlAfter =
-                        '<UL>' + '\n' + '<LI>accusam et justo duo dolores et ea rebum 123.</LI>' + '\n' + '</UL>';
+                const htmlBefore = '<UL><LI>accusam et justo duo dolores et ea rebum.</LI></UL>';
+                const htmlAfter =
+                    '<UL>' + '\n' + '<LI>accusam et justo duo dolores et ea rebum 123.</LI>' + '\n' + '</UL>';
                 const calculatedType = service.detectReplacementType(htmlBefore, htmlAfter);
                 expect(calculatedType).toBe(ModificationType.TYPE_INSERTION);
             }
         ));
 
         it('detects a simple insertion, despite &nbsp; tags', inject([DiffService], (service: DiffService) => {
-            const htmlBefore = '<P>dsds dsfsdfsdf sdf sdfs dds sdf dsds dsfsdfsdf</P>',
-                htmlAfter = '<P>dsds&nbsp;dsfsdfsdf sdf sdfs dds sd345 3453 45f dsds&nbsp;dsfsdfsdf</P>';
+            const htmlBefore = '<P>dsds dsfsdfsdf sdf sdfs dds sdf dsds dsfsdfsdf</P>';
+            const htmlAfter = '<P>dsds&nbsp;dsfsdfsdf sdf sdfs dds sd345 3453 45f dsds&nbsp;dsfsdfsdf</P>';
             const calculatedType = service.detectReplacementType(htmlBefore, htmlAfter);
             expect(calculatedType).toBe(ModificationType.TYPE_INSERTION);
         }));
 
         it('detects a simple deletion', inject([DiffService], (service: DiffService) => {
-            const htmlBefore = '<p>Test 1 Test 2</p>' + '\n' + '<p>Test 3</p>',
-                htmlAfter = '<p>Test 1</p>';
+            const htmlBefore = '<p>Test 1 Test 2</p>' + '\n' + '<p>Test 3</p>';
+            const htmlAfter = '<p>Test 1</p>';
             const calculatedType = service.detectReplacementType(htmlBefore, htmlAfter);
             expect(calculatedType).toBe(ModificationType.TYPE_DELETION);
         }));
 
         it('detects a simple deletion, ignoring case of tags', inject([DiffService], (service: DiffService) => {
-            const htmlBefore = '<p>Test 1 Test 2</p>' + '\n' + '<p>Test 3</p>',
-                htmlAfter = '<P>Test 1</P>';
+            const htmlBefore = '<p>Test 1 Test 2</p>' + '\n' + '<p>Test 3</p>';
+            const htmlAfter = '<P>Test 1</P>';
             const calculatedType = service.detectReplacementType(htmlBefore, htmlAfter);
             expect(calculatedType).toBe(ModificationType.TYPE_DELETION);
         }));
 
         it('detects a simple deletion, ignoring trailing whitespaces', inject([DiffService], (service: DiffService) => {
-            const htmlBefore = '<P>Lorem ipsum dolor sit amet, sed diam voluptua. At2</P>',
-                htmlAfter = '<P>Lorem ipsum dolor sit amet, sed diam voluptua. At </P>';
+            const htmlBefore = '<P>Lorem ipsum dolor sit amet, sed diam voluptua. At2</P>';
+            const htmlAfter = '<P>Lorem ipsum dolor sit amet, sed diam voluptua. At </P>';
             const calculatedType = service.detectReplacementType(htmlBefore, htmlAfter);
             expect(calculatedType).toBe(ModificationType.TYPE_DELETION);
         }));
 
         it('detects a simple replacement', inject([DiffService], (service: DiffService) => {
-            const htmlBefore = '<p>Test 1 Test 2</p>' + '\n' + '<p>Test 3</p>',
-                htmlAfter = '<p>Test 1</p>' + '\n' + '<p>Test 2</p>' + '\n' + '<p>Test 3</p>';
+            const htmlBefore = '<p>Test 1 Test 2</p>' + '\n' + '<p>Test 3</p>';
+            const htmlAfter = '<p>Test 1</p>' + '\n' + '<p>Test 2</p>' + '\n' + '<p>Test 3</p>';
             const calculatedType = service.detectReplacementType(htmlBefore, htmlAfter);
             expect(calculatedType).toBe(ModificationType.TYPE_REPLACEMENT);
         }));
@@ -587,8 +583,8 @@ describe('DiffService', () => {
 
     describe('diff normalization', () => {
         it('uppercases normal HTML tags', inject([DiffService], (service: DiffService) => {
-            const unnormalized = 'The <strong>brown</strong> fox',
-                normalized = service.normalizeHtmlForDiff(unnormalized);
+            const unnormalized = 'The <strong>brown</strong> fox';
+            const normalized = service.normalizeHtmlForDiff(unnormalized);
             expect(normalized).toBe('The <STRONG>brown</STRONG> fox');
         }));
 
@@ -596,9 +592,9 @@ describe('DiffService', () => {
             [DiffService],
             (service: DiffService) => {
                 const unnormalized =
-                        'This is our cool <a href="https://www.openslides.de/">home page</a> - have a look! ' +
-                        '<input type="checkbox" checked title=\'A title with "s\'>',
-                    normalized = service.normalizeHtmlForDiff(unnormalized);
+                    'This is our cool <a href="https://www.openslides.de/">home page</a> - have a look! ' +
+                    '<input type="checkbox" checked title=\'A title with "s\'>';
+                const normalized = service.normalizeHtmlForDiff(unnormalized);
                 expect(normalized).toBe(
                     'This is our cool <A HREF="https://www.openslides.de/">home page</A> - have a look! ' +
                         '<INPUT CHECKED TITLE=\'A title with "s\' TYPE="checkbox">'
@@ -607,34 +603,34 @@ describe('DiffService', () => {
         ));
 
         it('strips unnecessary spaces', inject([DiffService], (service: DiffService) => {
-            const unnormalized = '<ul> <li>Test</li>\n</ul>',
-                normalized = service.normalizeHtmlForDiff(unnormalized);
+            const unnormalized = '<ul> <li>Test</li>\n</ul>';
+            const normalized = service.normalizeHtmlForDiff(unnormalized);
             expect(normalized).toBe('<UL><LI>Test</LI></UL>');
         }));
 
         it('normalizes html entities', inject([DiffService], (service: DiffService) => {
-            const unnormalized = 'German characters like &szlig; or &ouml;',
-                normalized = service.normalizeHtmlForDiff(unnormalized);
+            const unnormalized = 'German characters like &szlig; or &ouml;';
+            const normalized = service.normalizeHtmlForDiff(unnormalized);
             expect(normalized).toBe('German characters like ß or ö');
         }));
 
         it('sorts css classes', inject([DiffService], (service: DiffService) => {
-            const unnormalized = "<P class='os-split-before os-split-after'>Test</P>",
-                normalized = service.normalizeHtmlForDiff(unnormalized);
+            const unnormalized = "<P class='os-split-before os-split-after'>Test</P>";
+            const normalized = service.normalizeHtmlForDiff(unnormalized);
             expect(normalized).toBe("<P CLASS='os-split-after os-split-before'>Test</P>");
         }));
 
         it('treats newlines like spaces', inject([DiffService], (service: DiffService) => {
-            const unnormalized = '<P>Test line\n\t 2</P>',
-                normalized = service.normalizeHtmlForDiff(unnormalized);
+            const unnormalized = '<P>Test line\n\t 2</P>';
+            const normalized = service.normalizeHtmlForDiff(unnormalized);
             expect(normalized).toBe('<P>Test line 2</P>');
         }));
     });
 
     describe('the core diff algorithm', () => {
         it('acts as documented by the official documentation', inject([DiffService], (service: DiffService) => {
-            const before = 'The red brown fox jumped over the rolling log.',
-                after = 'The brown spotted fox leaped over the rolling log.';
+            const before = 'The red brown fox jumped over the rolling log.';
+            const after = 'The brown spotted fox leaped over the rolling log.';
             const diff = service.diff(before, after);
             expect(diff).toBe(
                 'The <del>red </del>brown <ins>spotted </ins>fox <del>jum</del><ins>lea</ins>ped over the rolling log.'
@@ -642,8 +638,8 @@ describe('DiffService', () => {
         }));
 
         it('ignores changing cases in HTML tags', inject([DiffService], (service: DiffService) => {
-            const before = 'The <strong>brown</strong> spotted fox jumped over the rolling log.',
-                after = 'The <STRONG>brown</STRONG> spotted fox leaped over the rolling log.';
+            const before = 'The <strong>brown</strong> spotted fox jumped over the rolling log.';
+            const after = 'The <STRONG>brown</STRONG> spotted fox leaped over the rolling log.';
             const diff = service.diff(before, after);
 
             expect(diff).toBe(
@@ -652,8 +648,8 @@ describe('DiffService', () => {
         }));
 
         it('does not insert spaces after a unchanged BR tag', inject([DiffService], (service: DiffService) => {
-            const before = '<p>' + noMarkup(1) + 'Hendl Kirwa hod Maßkruag<br>' + noMarkup(2) + 'gmahde Wiesn</p>',
-                after = '<p>Hendl Kirwa hod Maßkruag<br>\ngmahde Wiesn</p>';
+            const before = '<p>' + noMarkup(1) + 'Hendl Kirwa hod Maßkruag<br>' + noMarkup(2) + 'gmahde Wiesn</p>';
+            const after = '<p>Hendl Kirwa hod Maßkruag<br>\ngmahde Wiesn</p>';
             const diff = service.diff(before, after);
 
             expect(diff).toBe(before);
@@ -663,11 +659,11 @@ describe('DiffService', () => {
             [DiffService],
             (service: DiffService) => {
                 const before =
-                        '<p><span class="os-line-number line-number-5" data-line-number="5" contenteditable="false">&nbsp;</span>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>',
-                    after =
-                        '<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>\n' +
-                        '\n' +
-                        '<p>Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>';
+                    '<p><span class="os-line-number line-number-5" data-line-number="5" contenteditable="false">&nbsp;</span>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>';
+                const after =
+                    '<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>\n' +
+                    '\n' +
+                    '<p>Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>';
                 const diff = service.diff(before, after);
                 expect(diff).toBe(
                     '<p><span class="line-number-5 os-line-number" contenteditable="false" data-line-number="5">&nbsp;</span>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>\n' +
@@ -680,9 +676,9 @@ describe('DiffService', () => {
             [DiffService],
             (service: DiffService) => {
                 const before =
-                        '<p class="os-split-after"><span class="os-line-number line-number-1" data-line-number="1" contenteditable="false">&nbsp;</span>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor </p>',
-                    after =
-                        '<p class="os-split-after">Bla ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor</p>';
+                    '<p class="os-split-after"><span class="os-line-number line-number-1" data-line-number="1" contenteditable="false">&nbsp;</span>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor </p>';
+                const after =
+                    '<p class="os-split-after">Bla ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor</p>';
                 const diff = service.diff(before, after);
 
                 expect(diff).toBe(
@@ -692,8 +688,8 @@ describe('DiffService', () => {
         ));
 
         it('merges multiple inserts and deletes', inject([DiffService], (service: DiffService) => {
-            const before = 'Some additional text to circumvent the threshold Test1 Test2 Test3 Test4 Test5 Test9',
-                after = 'Some additional text to circumvent the threshold Test1 Test6 Test7 Test8 Test9';
+            const before = 'Some additional text to circumvent the threshold Test1 Test2 Test3 Test4 Test5 Test9';
+            const after = 'Some additional text to circumvent the threshold Test1 Test6 Test7 Test8 Test9';
             const diff = service.diff(before, after);
 
             expect(diff).toBe(
@@ -702,16 +698,16 @@ describe('DiffService', () => {
         }));
 
         it('detects insertions and deletions in a word (1)', inject([DiffService], (service: DiffService) => {
-            const before = 'Test1 Test2 Test3 Test4 Test5 Test6 Test7',
-                after = 'Test1 Test Test3 Test4addon Test5 Test6 Test7';
+            const before = 'Test1 Test2 Test3 Test4 Test5 Test6 Test7';
+            const after = 'Test1 Test Test3 Test4addon Test5 Test6 Test7';
             const diff = service.diff(before, after);
 
             expect(diff).toBe('Test1 Test<del>2</del> Test3 Test4<ins>addon</ins> Test5 Test6 Test7');
         }));
 
         it('detects insertions and deletions in a word (2)', inject([DiffService], (service: DiffService) => {
-            const before = 'Test Test',
-                after = 'Test Testappend';
+            const before = 'Test Test';
+            const after = 'Test Testappend';
             const diff = service.diff(before, after);
 
             expect(diff).toBe('Test Test<ins>append</ins>');
@@ -719,9 +715,9 @@ describe('DiffService', () => {
 
         it('recognizes commas as a word separator', inject([DiffService], (service: DiffService) => {
             const before =
-                    'Lorem ipsum dolor sit amet, consetetur sadipscing elitr sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat',
-                after =
-                    'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat';
+                'Lorem ipsum dolor sit amet, consetetur sadipscing elitr sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat';
+            const after =
+                'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat';
             const diff = service.diff(before, after);
 
             expect(diff).toBe(
@@ -730,26 +726,26 @@ describe('DiffService', () => {
         }));
 
         it('cannot handle changing CSS-classes', inject([DiffService], (service: DiffService) => {
-            const before = "<p class='p1'>Test1 Test2</p>",
-                after = "<p class='p2'>Test1 Test2</p>";
+            const before = "<p class='p1'>Test1 Test2</p>";
+            const after = "<p class='p2'>Test1 Test2</p>";
             const diff = service.diff(before, after);
 
             expect(diff).toBe('<P class="p1 delete">Test1 Test2</P><P class="p2 insert">Test1 Test2</P>');
         }));
 
         it('handles inserted paragraphs', inject([DiffService], (service: DiffService) => {
-            const before = "<P>liebliche Stimme, aber deine Stimme ist rauh; du bist der Wolf.' Da gieng der </P>",
-                after =
-                    "<p>liebliche Stimme, aber deine Stimme ist rauh; du bist der Wolf.'</p>\
+            const before = "<P>liebliche Stimme, aber deine Stimme ist rauh; du bist der Wolf.' Da gieng der </P>";
+            const after =
+                "<p>liebliche Stimme, aber deine Stimme ist rauh; du bist der Wolf.'</p>\
 \
 <p>Der Wolf hatte danach richtig schlechte laune, trank eine Flasche Rum,</p>\
 \
-<p>machte eine Weltreise und kam danach wieder um die Ziegen zu fressen. Da ging der</p>",
-                expected =
-                    '<P class="delete">liebliche Stimme, aber deine Stimme ist rauh; du bist der Wolf.\' Da gieng der </P>' +
-                    '<P class="insert">liebliche Stimme, aber deine Stimme ist rauh; du bist der Wolf.\'</P>' +
-                    '<P class="insert">Der Wolf hatte danach richtig schlechte laune, trank eine Flasche Rum,</P>' +
-                    '<P class="insert">machte eine Weltreise und kam danach wieder um die Ziegen zu fressen. Da ging der</P>';
+<p>machte eine Weltreise und kam danach wieder um die Ziegen zu fressen. Da ging der</p>";
+            const expected =
+                '<P class="delete">liebliche Stimme, aber deine Stimme ist rauh; du bist der Wolf.\' Da gieng der </P>' +
+                '<P class="insert">liebliche Stimme, aber deine Stimme ist rauh; du bist der Wolf.\'</P>' +
+                '<P class="insert">Der Wolf hatte danach richtig schlechte laune, trank eine Flasche Rum,</P>' +
+                '<P class="insert">machte eine Weltreise und kam danach wieder um die Ziegen zu fressen. Da ging der</P>';
 
             const diff = service.diff(before, after);
             expect(diff).toBe(expected);
@@ -761,13 +757,13 @@ describe('DiffService', () => {
              * would be seriously broken
              */
             const before =
-                    "<P>rief sie alle sieben herbei und sprach 'liebe Kinder, ich will hinaus in den Wald, seid </P>",
-                after =
-                    "<p>rief sie alle sieben herbei und sprach 'liebe Kinder, ich will hinaus in den Wald, seid Noch</p>" +
-                    '<p>Test 123</p>',
-                expected =
-                    "<p>rief sie alle sieben herbei und sprach 'liebe Kinder, ich will hinaus in den Wald, seid<ins> Noch</ins></p>" +
-                    '<p class="insert">Test 123</p>';
+                "<P>rief sie alle sieben herbei und sprach 'liebe Kinder, ich will hinaus in den Wald, seid </P>";
+            const after =
+                "<p>rief sie alle sieben herbei und sprach 'liebe Kinder, ich will hinaus in den Wald, seid Noch</p>" +
+                '<p>Test 123</p>';
+            const expected =
+                "<p>rief sie alle sieben herbei und sprach 'liebe Kinder, ich will hinaus in den Wald, seid<ins> Noch</ins></p>" +
+                '<p class="insert">Test 123</p>';
 
             const diff = service.diff(before, after);
             expect(diff).toBe(expected);
@@ -776,29 +772,29 @@ describe('DiffService', () => {
         it('handles insterted paragraphs (3)', inject([DiffService], (service: DiffService) => {
             // Hint: os-split-after should be moved from the first paragraph to the second one
             const before =
-                    '<p class="os-split-after"><span class="os-line-number line-number-1" data-line-number="1" contenteditable="false">&nbsp;</span>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, </p>',
-                after =
-                    '<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.</p>\n' +
-                    '\n' +
-                    '<p>Stet clita kasd gubergren, no sea takimata sanctus est.</p>',
-                expected =
-                    '<p><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Lorem ipsum dolor sit amet, consetetur sadipscing elitr,<ins> sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.</ins></p>\n' +
-                    '<p class="insert os-split-after">Stet clita kasd gubergren, no sea takimata sanctus est.</p>';
+                '<p class="os-split-after"><span class="os-line-number line-number-1" data-line-number="1" contenteditable="false">&nbsp;</span>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, </p>';
+            const after =
+                '<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.</p>\n' +
+                '\n' +
+                '<p>Stet clita kasd gubergren, no sea takimata sanctus est.</p>';
+            const expected =
+                '<p><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Lorem ipsum dolor sit amet, consetetur sadipscing elitr,<ins> sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.</ins></p>\n' +
+                '<p class="insert os-split-after">Stet clita kasd gubergren, no sea takimata sanctus est.</p>';
 
             const diff = service.diff(before, after);
             expect(diff).toBe(expected);
         }));
 
         it('handles inserted paragraphs (4)', inject([DiffService], (service: DiffService) => {
-            const before = '<p>This is a random first line that remains unchanged.</p>',
-                after =
-                    '<p>This is a random first line that remains unchanged.</p>' +
-                    '<p style="text-align: justify;"><span style="color: #000000;">Inserting this line should not make any troubles, especially not affect the first line</span></p>' +
-                    '<p style="text-align: justify;"><span style="color: #000000;">Neither should this line</span></p>',
-                expected =
-                    '<p>This is a random first line that remains unchanged.</p>' +
-                    '<p style="text-align: justify;" class="insert"><span style="color: #000000;">Inserting this line should not make any troubles, especially not affect the first line</span></p>' +
-                    '<p style="text-align: justify;" class="insert"><span style="color: #000000;">Neither should this line</span></p>';
+            const before = '<p>This is a random first line that remains unchanged.</p>';
+            const after =
+                '<p>This is a random first line that remains unchanged.</p>' +
+                '<p style="text-align: justify;"><span style="color: #000000;">Inserting this line should not make any troubles, especially not affect the first line</span></p>' +
+                '<p style="text-align: justify;"><span style="color: #000000;">Neither should this line</span></p>';
+            const expected =
+                '<p>This is a random first line that remains unchanged.</p>' +
+                '<p style="text-align: justify;" class="insert"><span style="color: #000000;">Inserting this line should not make any troubles, especially not affect the first line</span></p>' +
+                '<p style="text-align: justify;" class="insert"><span style="color: #000000;">Neither should this line</span></p>';
 
             const diff = service.diff(before, after);
             expect(diff).toBe(expected);
@@ -806,11 +802,11 @@ describe('DiffService', () => {
 
         it('handles inserted paragraphs (5)', inject([DiffService], (service: DiffService) => {
             const before =
-                    '<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.</p>\n<p>Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>',
-                after =
-                    '<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\n<p>NEUE ZEILE</p>\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.</p>\n<p>Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>',
-                expected =
-                    '<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\n<p class="insert">NEUE ZEILE</p>\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.</p>\n<p>Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>';
+                '<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.</p>\n<p>Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>';
+            const after =
+                '<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\n<p>NEUE ZEILE</p>\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.</p>\n<p>Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>';
+            const expected =
+                '<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\n<p class="insert">NEUE ZEILE</p>\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.</p>\n<p>Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>';
 
             const diff = service.diff(before, after);
             expect(diff).toBe(expected);
@@ -818,8 +814,8 @@ describe('DiffService', () => {
 
         it('handles completely deleted paragraphs', inject([DiffService], (service: DiffService) => {
             const before =
-                    "<P>Ihr könnt ohne Sorge fortgehen.'Da meckerte die Alte und machte sich getrost auf den Weg.</P>",
-                after = '';
+                "<P>Ihr könnt ohne Sorge fortgehen.'Da meckerte die Alte und machte sich getrost auf den Weg.</P>";
+            const after = '';
             const diff = service.diff(before, after);
             expect(diff).toBe(
                 '<p class="delete">Ihr könnt ohne Sorge fortgehen.\'Da meckerte die Alte und machte sich getrost auf den Weg.</p>'
@@ -830,9 +826,9 @@ describe('DiffService', () => {
             [DiffService],
             (service: DiffService) => {
                 const before =
-                        '<P>Bavaria ipsum dolor sit amet o’ha wea nia ausgähd, kummt nia hoam i hob di narrisch gean helfgod ebba ded baddscher. Des so so, nia Biawambn back mas? Kaiwe Hetschapfah Trachtnhuat, a bravs.</P>',
-                    after =
-                        '<p>Bavaria ipsum dolor sit amet o’ha wea nia ausgähd, kummt nia hoam i hob di narrisch gean helfgod ebba ded baddscher.</p>\n<p>Des so so, nia Biawambn back mas? Kaiwe Hetschapfah Trachtnhuat, a bravs.';
+                    '<P>Bavaria ipsum dolor sit amet o’ha wea nia ausgähd, kummt nia hoam i hob di narrisch gean helfgod ebba ded baddscher. Des so so, nia Biawambn back mas? Kaiwe Hetschapfah Trachtnhuat, a bravs.</P>';
+                const after =
+                    '<p>Bavaria ipsum dolor sit amet o’ha wea nia ausgähd, kummt nia hoam i hob di narrisch gean helfgod ebba ded baddscher.</p>\n<p>Des so so, nia Biawambn back mas? Kaiwe Hetschapfah Trachtnhuat, a bravs.';
                 const diff = service.diff(before, after);
 
                 expect(diff).toBe(
@@ -845,16 +841,16 @@ describe('DiffService', () => {
         ));
 
         it('does not repeat the last word (1)', inject([DiffService], (service: DiffService) => {
-            const before = '<P>sem. Nulla consequat massa quis enim. </P>',
-                after = '<p>sem. Nulla consequat massa quis enim. TEST<br>\nTEST</p>';
+            const before = '<P>sem. Nulla consequat massa quis enim. </P>';
+            const after = '<p>sem. Nulla consequat massa quis enim. TEST<br>\nTEST</p>';
             const diff = service.diff(before, after);
 
             expect(diff).toBe('<p>sem. Nulla consequat massa quis enim.<ins> TEST<br>TEST</ins></p>');
         }));
 
         it('does not repeat the last word (2)', inject([DiffService], (service: DiffService) => {
-            const before = '<P>...so frißt er Euch alle mit Haut und Haar.</P>',
-                after = '<p>...so frißt er Euch alle mit Haut und Haar und Augen und Därme und alles.</p>';
+            const before = '<P>...so frißt er Euch alle mit Haut und Haar.</P>';
+            const after = '<p>...so frißt er Euch alle mit Haut und Haar und Augen und Därme und alles.</p>';
             const diff = service.diff(before, after);
 
             expect(diff).toBe(
@@ -866,9 +862,9 @@ describe('DiffService', () => {
             [DiffService],
             (service: DiffService) => {
                 const before =
-                        '<p>Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi.</p>\n<p>Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>',
-                    after =
-                        '<p>Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi.</p>\n<p>Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, NEU NEU NEU.</p>';
+                    '<p>Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi.</p>\n<p>Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>';
+                const after =
+                    '<p>Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi.</p>\n<p>Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, NEU NEU NEU.</p>';
                 const diff = service.diff(before, after);
 
                 expect(diff).toBe(
@@ -880,9 +876,9 @@ describe('DiffService', () => {
         it('does not break when an insertion followes a beginning tag occuring twice', inject(
             [DiffService],
             (service: DiffService) => {
-                const before = '<P>...so frißt er Euch alle mit Haut und Haar.</P>\n<p>Test</p>',
-                    after =
-                        '<p>Einfügung 1 ...so frißt er Euch alle mit Haut und Haar und Augen und Därme und alles.</p>\n<p>Test</p>';
+                const before = '<P>...so frißt er Euch alle mit Haut und Haar.</P>\n<p>Test</p>';
+                const after =
+                    '<p>Einfügung 1 ...so frißt er Euch alle mit Haut und Haar und Augen und Därme und alles.</p>\n<p>Test</p>';
                 const diff = service.diff(before, after);
 
                 expect(diff).toBe(
@@ -893,11 +889,11 @@ describe('DiffService', () => {
 
         it('detects inline insertions exceeding block paragraphs', inject([DiffService], (service: DiffService) => {
             const before =
-                    '<P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</P>\n' +
-                    '<P>At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</P>',
-                after =
-                    '<P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Insertion 1</P>\n' +
-                    '<P>Insertion 2 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</P>';
+                '<P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</P>\n' +
+                '<P>At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</P>';
+            const after =
+                '<P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Insertion 1</P>\n' +
+                '<P>Insertion 2 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</P>';
 
             const diff = service.diff(before, after);
 
@@ -911,28 +907,28 @@ describe('DiffService', () => {
             [DiffService],
             (service: DiffService) => {
                 const before =
-                        '<p>' +
-                        noMarkup(13) +
-                        'diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd ' +
-                        brMarkup(14) +
-                        'gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>',
-                    after = '<p>Test</p>';
-                const diff = service.diff(before, after).toLowerCase(),
-                    expected =
-                        '<p>' +
-                        noMarkup(13) +
-                        '<del>diam voluptua. at vero eos et accusam et justo duo dolores et ea rebum. stet clita kasd </del>' +
-                        brMarkup(14) +
-                        '<del>gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet.</del>' +
-                        '<ins>test</ins></p>';
+                    '<p>' +
+                    noMarkup(13) +
+                    'diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd ' +
+                    brMarkup(14) +
+                    'gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>';
+                const after = '<p>Test</p>';
+                const diff = service.diff(before, after).toLowerCase();
+                const expected =
+                    '<p>' +
+                    noMarkup(13) +
+                    '<del>diam voluptua. at vero eos et accusam et justo duo dolores et ea rebum. stet clita kasd </del>' +
+                    brMarkup(14) +
+                    '<del>gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet.</del>' +
+                    '<ins>test</ins></p>';
 
                 expect(diff).toBe(expected.toLowerCase());
             }
         ));
 
         it('removed inline colors in inserted/deleted parts (1)', inject([DiffService], (service: DiffService) => {
-            const before = '<P>...so frißt er Euch alle mit Haut und Haar.</P>',
-                after = "<P>...so frißt er <span style='color: #000000;'>Euch alle</span> mit Haut und Haar.</P>";
+            const before = '<P>...so frißt er Euch alle mit Haut und Haar.</P>';
+            const after = "<P>...so frißt er <span style='color: #000000;'>Euch alle</span> mit Haut und Haar.</P>";
             const diff = service.diff(before, after);
 
             expect(diff).toBe(
@@ -941,9 +937,9 @@ describe('DiffService', () => {
         }));
 
         it('removed inline colors in inserted/deleted parts (2)', inject([DiffService], (service: DiffService) => {
-            const before = '<P>...so frißt er Euch alle mit Haut und Haar.</P>',
-                after =
-                    "<P>...so frißt er <span style='font-size: 2em; color: #000000; opacity: 0.5'>Euch alle</span> mit Haut und Haar.</P>";
+            const before = '<P>...so frißt er Euch alle mit Haut und Haar.</P>';
+            const after =
+                "<P>...so frißt er <span style='font-size: 2em; color: #000000; opacity: 0.5'>Euch alle</span> mit Haut und Haar.</P>";
             const diff = service.diff(before, after);
 
             expect(diff).toBe(
@@ -953,9 +949,9 @@ describe('DiffService', () => {
 
         it('marks a single moved word as deleted and inserted again', inject([DiffService], (service: DiffService) => {
             const before =
-                    '<p>tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren bla, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>',
-                after =
-                    '<p>tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd bla, no sea takimata sanctus est Lorem ipsum dolor gubergren sit amet.</p>';
+                '<p>tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren bla, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>';
+            const after =
+                '<p>tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd bla, no sea takimata sanctus est Lorem ipsum dolor gubergren sit amet.</p>';
             const diff = service.diff(before, after);
 
             expect(diff).toBe(
@@ -965,9 +961,9 @@ describe('DiffService', () => {
 
         it('works with style-tags in spans', inject([DiffService], (service: DiffService) => {
             const before =
-                    '<p class="os-split-before os-split-after"><span class="os-line-number line-number-4" data-line-number="4" contenteditable="false">&nbsp;</span><span style="color: #0000ff;" class="os-split-before os-split-after">sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing </span></p>',
-                after =
-                    '<p class="os-split-after os-split-before"><span class="os-split-after os-split-before" style="color: #0000ff;">sanctus est Lorem ipsum dolor sit amet. Test Lorem ipsum dolor sit amet, consetetur sadipscing </span></p>';
+                '<p class="os-split-before os-split-after"><span class="os-line-number line-number-4" data-line-number="4" contenteditable="false">&nbsp;</span><span style="color: #0000ff;" class="os-split-before os-split-after">sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing </span></p>';
+            const after =
+                '<p class="os-split-after os-split-before"><span class="os-split-after os-split-before" style="color: #0000ff;">sanctus est Lorem ipsum dolor sit amet. Test Lorem ipsum dolor sit amet, consetetur sadipscing </span></p>';
             const diff = service.diff(before, after);
 
             expect(diff).toBe(
@@ -976,8 +972,8 @@ describe('DiffService', () => {
         }));
 
         it('does not lose words when changes are moved X-wise', inject([DiffService], (service: DiffService) => {
-            const before = 'elitr. einsetzt. VERSCHLUCKT noch die sog. Gleichbleibend (Wird gelöscht).',
-                after = 'elitr, Einfügung durch Änderung der Gleichbleibend, einsetzt.';
+            const before = 'elitr. einsetzt. VERSCHLUCKT noch die sog. Gleichbleibend (Wird gelöscht).';
+            const after = 'elitr, Einfügung durch Änderung der Gleichbleibend, einsetzt.';
 
             const diff = service.diff(before, after);
             expect(diff).toBe(
@@ -989,11 +985,11 @@ describe('DiffService', () => {
             [DiffService],
             (service: DiffService) => {
                 const before =
-                        '<p>Lorem ipsum dolor sit amet, consetetur <br>sadipscing elitr.<br>Bavaria ipsum dolor sit amet o’ha wea nia ausgähd<br>kummt nia hoam i hob di narrisch gean</p>',
-                    after =
-                        '<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr. Sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua..<br>\n' +
-                        'Bavaria ipsum dolor sit amet o’ha wea nia ausgähd<br>\n' +
-                        'Autonomie erfährt ihre Grenzen</p>';
+                    '<p>Lorem ipsum dolor sit amet, consetetur <br>sadipscing elitr.<br>Bavaria ipsum dolor sit amet o’ha wea nia ausgähd<br>kummt nia hoam i hob di narrisch gean</p>';
+                const after =
+                    '<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr. Sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua..<br>\n' +
+                    'Bavaria ipsum dolor sit amet o’ha wea nia ausgähd<br>\n' +
+                    'Autonomie erfährt ihre Grenzen</p>';
                 const diff = service.diff(before, after);
                 expect(diff).toBe(
                     '<p>Lorem ipsum dolor sit amet, consetetur <del><br></del>sadipscing elitr.<ins> Sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua..</ins><br>Bavaria ipsum dolor sit amet o’ha wea nia ausgähd<br><del>kummt nia hoam i hob di narrisch gean</del><ins>Autonomie erfährt ihre Grenzen</ins></p>'
@@ -1004,8 +1000,8 @@ describe('DiffService', () => {
         it('does not fall back to block level replacement when only a formatting is inserted', inject(
             [DiffService],
             (service: DiffService) => {
-                const before = '<p>This is a text with a word that will be formatted</p>',
-                    after = '<p>This is a text with a <span class="testclass">word</span> that will be formatted</p>';
+                const before = '<p>This is a text with a word that will be formatted</p>';
+                const after = '<p>This is a text with a <span class="testclass">word</span> that will be formatted</p>';
                 const diff = service.diff(before, after);
                 expect(diff).toBe(
                     '<p>This is a text with a <del>word</del><ins><span class="testclass">word</span></ins> that will be formatted</p>'
@@ -1016,8 +1012,8 @@ describe('DiffService', () => {
         it('does not fall back to block level replacement when only a formatting is deleted', inject(
             [DiffService],
             (service: DiffService) => {
-                const before = '<p>This is a text with a <strong>word</strong> that is formatted</p>',
-                    after = '<p>This is a text with a word that is formatted</p>';
+                const before = '<p>This is a text with a <strong>word</strong> that is formatted</p>';
+                const after = '<p>This is a text with a word that is formatted</p>';
                 const diff = service.diff(before, after);
                 expect(diff).toBe(
                     '<p>This is a text with a <del><strong>word</strong></del><ins>word</ins> that is formatted</p>'
@@ -1026,8 +1022,8 @@ describe('DiffService', () => {
         ));
 
         it('works with multiple inserted paragraphs', inject([DiffService], (service: DiffService) => {
-            const before = '<p>This is the text before</p>',
-                after = '<p>This is the text before</p>\n<p>This is one added line</p>\n<p>Another added line</p>';
+            const before = '<p>This is the text before</p>';
+            const after = '<p>This is the text before</p>\n<p>This is one added line</p>\n<p>Another added line</p>';
             const diff = service.diff(before, after);
             expect(diff).toBe(
                 '<p>This is the text before</p>\n<p class="insert">This is one added line</p>\n<p class="insert">Another added line</p>'
@@ -1037,12 +1033,12 @@ describe('DiffService', () => {
         it('does not a change in a very specific case', inject([DiffService], (service: DiffService) => {
             // See diff._fixWrongChangeDetection
             const inHtml =
-                    '<p>Test 123<br>wir strikt ab. lehnen wir ' +
-                    brMarkup(1486) +
-                    'ab.<br>' +
-                    noMarkup(1487) +
-                    'Gegenüber</p>',
-                outHtml = '<p>Test 123<br>\n' + 'wir strikt ab. lehnen wir ab.<br>\n' + 'Gegenüber</p>';
+                '<p>Test 123<br>wir strikt ab. lehnen wir ' +
+                brMarkup(1486) +
+                'ab.<br>' +
+                noMarkup(1487) +
+                'Gegenüber</p>';
+            const outHtml = '<p>Test 123<br>\n' + 'wir strikt ab. lehnen wir ab.<br>\n' + 'Gegenüber</p>';
             const diff = service.diff(inHtml, outHtml);
             expect(diff).toBe(
                 '<p>Test 123<br>wir strikt ab. lehnen wir ' +
@@ -1055,13 +1051,13 @@ describe('DiffService', () => {
 
         it('does not delete a paragraph before an inserted one', inject([DiffService], (service: DiffService) => {
             const inHtml =
-                    '<ul class="os-split-before"><li>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</li>\n' +
-                    '</ul>',
-                outHtml =
-                    '<ul class="os-split-before">\n' +
-                    '<li>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</li>\n' +
-                    '<li class="testclass">At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</li>\n' +
-                    '</ul>';
+                '<ul class="os-split-before"><li>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</li>\n' +
+                '</ul>';
+            const outHtml =
+                '<ul class="os-split-before">\n' +
+                '<li>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</li>\n' +
+                '<li class="testclass">At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</li>\n' +
+                '</ul>';
             const diff = service.diff(inHtml, outHtml);
             expect(diff).toBe(
                 '<ul class="os-split-before">' +
@@ -1147,15 +1143,15 @@ describe('DiffService', () => {
 
         it('works with a replaced list item', inject([DiffService], (service: DiffService) => {
             const before =
-                    '<ul><li>Lorem ipsum <strong>dolor sit amet</strong>, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.</li></ul>',
-                after = '<ul>\n<li>\n<p>At vero eos et accusam et justo duo dolores et ea rebum.</p>\n</li>\n</ul>\n',
-                expected =
-                    '<UL class="delete"><LI>' +
-                    noMarkup(1) +
-                    'Lorem ipsum <STRONG>dolor sit amet</STRONG>, consetetur sadipscing elitr, sed diam nonumy ' +
-                    brMarkup(2) +
-                    'eirmod tempor.</LI></UL>' +
-                    '<UL class="insert">\n<LI>\n<P>At vero eos et accusam et justo duo dolores et ea rebum.</P>\n</LI>\n</UL>';
+                '<ul><li>Lorem ipsum <strong>dolor sit amet</strong>, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.</li></ul>';
+            const after = '<ul>\n<li>\n<p>At vero eos et accusam et justo duo dolores et ea rebum.</p>\n</li>\n</ul>\n';
+            const expected =
+                '<UL class="delete"><LI>' +
+                noMarkup(1) +
+                'Lorem ipsum <STRONG>dolor sit amet</STRONG>, consetetur sadipscing elitr, sed diam nonumy ' +
+                brMarkup(2) +
+                'eirmod tempor.</LI></UL>' +
+                '<UL class="insert">\n<LI>\n<P>At vero eos et accusam et justo duo dolores et ea rebum.</P>\n</LI>\n</UL>';
             const diff = service.diff(before, after, 80, 1);
             const diffNormalized = service.normalizeHtmlForDiff(diff).toLowerCase();
             const expectedNormalized = service.normalizeHtmlForDiff(expected).toLowerCase();
@@ -1164,9 +1160,9 @@ describe('DiffService', () => {
 
         it('detects broken HTML and lowercases class names', inject([DiffService], (service: DiffService) => {
             const before =
-                    '<p><span class="line-number-3 os-line-number" data-line-number="3" contenteditable="false">&nbsp;</span>holen, da rief sie alle sieben herbei und sprach:</p>\n\n<p><span class="line-number-4 os-line-number" data-line-number="4" contenteditable="false">&nbsp;</span><span style="color: #000000;">"Liebe Kinder, ich will hinaus in den Wald, seid auf der Hut vor dem Wolf! Wenn er <br class="os-line-break"><span class="line-number-5 os-line-number" data-line-number="5" contenteditable="false">&nbsp;</span>hereinkommt, frisst er euch alle mit Haut und Haar. Der Bösewicht verstellt sich oft, aber <br class="os-line-break"><span class="line-number-6 os-line-number" data-line-number="6" contenteditable="false">&nbsp;</span>an der rauen Stimme und an seinen schwarzen Füßen werdet ihr ihn schon erkennen."</span></p>\n\n<p><span class="line-number-7 os-line-number" data-line-number="7" contenteditable="false">&nbsp;</span>Die Geißlein sagten: " Liebe Mutter, wir wollen uns schon in acht nehmen, du kannst ohne </p>',
-                after =
-                    '<p>holen, da rief sie alle sieben herbei und sprach:</p>\n\n<p><span style="color: #000000;">Hello</span></p>\n\n<p><span style="color: #000000;">World</span></p>\n\n<p><span style="color: #000000;">Ya</span></p>\n\n<p>Die Geißlein sagten: " Liebe Mutter, wir wollen uns schon in acht nehmen, du kannst ohne</p>';
+                '<p><span class="line-number-3 os-line-number" data-line-number="3" contenteditable="false">&nbsp;</span>holen, da rief sie alle sieben herbei und sprach:</p>\n\n<p><span class="line-number-4 os-line-number" data-line-number="4" contenteditable="false">&nbsp;</span><span style="color: #000000;">"Liebe Kinder, ich will hinaus in den Wald, seid auf der Hut vor dem Wolf! Wenn er <br class="os-line-break"><span class="line-number-5 os-line-number" data-line-number="5" contenteditable="false">&nbsp;</span>hereinkommt, frisst er euch alle mit Haut und Haar. Der Bösewicht verstellt sich oft, aber <br class="os-line-break"><span class="line-number-6 os-line-number" data-line-number="6" contenteditable="false">&nbsp;</span>an der rauen Stimme und an seinen schwarzen Füßen werdet ihr ihn schon erkennen."</span></p>\n\n<p><span class="line-number-7 os-line-number" data-line-number="7" contenteditable="false">&nbsp;</span>Die Geißlein sagten: " Liebe Mutter, wir wollen uns schon in acht nehmen, du kannst ohne </p>';
+            const after =
+                '<p>holen, da rief sie alle sieben herbei und sprach:</p>\n\n<p><span style="color: #000000;">Hello</span></p>\n\n<p><span style="color: #000000;">World</span></p>\n\n<p><span style="color: #000000;">Ya</span></p>\n\n<p>Die Geißlein sagten: " Liebe Mutter, wir wollen uns schon in acht nehmen, du kannst ohne</p>';
             const diff = service.diff(before, after);
             expect(diff).toBe(
                 '<P class="delete"><SPAN class="line-number-3 os-line-number" data-line-number="3" contenteditable="false"> </SPAN>holen, da rief sie alle sieben herbei und sprach:</P><DEL>\n\n</DEL>' +
@@ -1224,14 +1220,14 @@ describe('DiffService', () => {
 
     describe('addCSSClassToFirstTag function', () => {
         it('works with plain tags', inject([DiffService], (service: DiffService) => {
-            const str = "<ol start='2'><li>",
-                inserted = service.addCSSClassToFirstTag(str, 'newClass');
+            const str = "<ol start='2'><li>";
+            const inserted = service.addCSSClassToFirstTag(str, 'newClass');
             expect(inserted).toBe('<ol start=\'2\' class="newClass"><li>');
         }));
 
         it('works with tags already having classes', inject([DiffService], (service: DiffService) => {
-            const str = "<ol start='2' class='my-old-class'><li>",
-                inserted = service.addCSSClassToFirstTag(str, 'newClass');
+            const str = "<ol start='2' class='my-old-class'><li>";
+            const inserted = service.addCSSClassToFirstTag(str, 'newClass');
             expect(inserted).toBe('<ol start=\'2\' class="my-old-class newClass"><li>');
         }));
     });
@@ -1239,8 +1235,8 @@ describe('DiffService', () => {
     describe('removeDuplicateClassesInsertedByCkeditor', () => {
         it('removes additional classes', inject([DiffService], (service: DiffService) => {
             const str =
-                    '<ul class="os-split-before os-split-after"><li class="os-split-before"><ul class="os-split-before os-split-after"><li class="os-split-before">...here it goes on</li><li class="os-split-before">This has been added</li></ul></li></ul>',
-                cleaned = service.removeDuplicateClassesInsertedByCkeditor(str);
+                '<ul class="os-split-before os-split-after"><li class="os-split-before"><ul class="os-split-before os-split-after"><li class="os-split-before">...here it goes on</li><li class="os-split-before">This has been added</li></ul></li></ul>';
+            const cleaned = service.removeDuplicateClassesInsertedByCkeditor(str);
             expect(cleaned).toBe(
                 '<UL class="os-split-before os-split-after"><LI class="os-split-before"><UL class="os-split-before os-split-after"><LI class="os-split-before">...here it goes on</LI><LI>This has been added</LI></UL></LI></UL>'
             );
@@ -1250,27 +1246,27 @@ describe('DiffService', () => {
     describe('detecting changed line number range', () => {
         it('detects changed line numbers in the middle', inject([DiffService], (service: DiffService) => {
             const before =
-                    '<p>' +
-                    noMarkup(1) +
-                    'foo &amp; bar' +
-                    brMarkup(2) +
-                    'Another line' +
-                    brMarkup(3) +
-                    'This will be changed' +
-                    brMarkup(4) +
-                    'This, too' +
-                    brMarkup(5) +
-                    'End</p>',
-                after =
-                    '<p>' +
-                    noMarkup(1) +
-                    'foo &amp; bar' +
-                    brMarkup(2) +
-                    'Another line' +
-                    brMarkup(3) +
-                    'This has been changed' +
-                    brMarkup(4) +
-                    'End</p>';
+                '<p>' +
+                noMarkup(1) +
+                'foo &amp; bar' +
+                brMarkup(2) +
+                'Another line' +
+                brMarkup(3) +
+                'This will be changed' +
+                brMarkup(4) +
+                'This, too' +
+                brMarkup(5) +
+                'End</p>';
+            const after =
+                '<p>' +
+                noMarkup(1) +
+                'foo &amp; bar' +
+                brMarkup(2) +
+                'Another line' +
+                brMarkup(3) +
+                'This has been changed' +
+                brMarkup(4) +
+                'End</p>';
 
             const diff = service.diff(before, after);
             const affected = service.detectAffectedLineRange(diff);

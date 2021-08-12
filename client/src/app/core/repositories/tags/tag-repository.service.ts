@@ -55,21 +55,15 @@ export class TagRepositoryService extends BaseRepositoryWithActiveMeeting<ViewTa
         };
     }
 
-    public getTitle = (viewTag: ViewTag) => {
-        return viewTag.name;
-    };
+    public getTitle = (viewTag: ViewTag) => viewTag.name;
 
-    public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Tags' : 'Tag');
-    };
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Tags' : 'Tag');
 
     /**
      * Sets the default sorting (e.g. in dropdowns and for new users) to 'name'
      */
     private initSorting(): void {
-        this.setSortFunction((a: ViewTag, b: ViewTag) => {
-            return this.languageCollator.compare(a.name, b.name);
-        });
+        this.setSortFunction((a: ViewTag, b: ViewTag) => this.languageCollator.compare(a.name, b.name));
     }
 
     private getCreatePayload(partialTag: Partial<Tag>): TagAction.CreatePayload {

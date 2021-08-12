@@ -36,9 +36,11 @@ export class AgendaSortComponent extends BaseSortTreeComponent<ViewAgendaItem> i
      * Adds the property `state` to identify if the option is marked as active.
      * When reset the filters, the option `state` will be set to `false`.
      */
-    public filterOptions: SortTreeFilterOption[] = ItemTypeChoices.map(item => {
-        return { label: item.name, id: item.key, state: false };
-    });
+    public filterOptions: SortTreeFilterOption[] = ItemTypeChoices.map(item => ({
+        label: item.name,
+        id: item.key,
+        state: false
+    }));
 
     /**
      * BehaviourSubject to get informed every time the filters change.
@@ -110,9 +112,9 @@ export class AgendaSortComponent extends BaseSortTreeComponent<ViewAgendaItem> i
          */
         const filter = this.activeFilters.subscribe((value: SortTreeFilterId[]) => {
             this.hasActiveFilter = value.length === 0 ? false : true;
-            this.changeFilter.emit((item: ViewAgendaItem): boolean => {
-                return !(value.includes(item.type) || value.length === 0);
-            });
+            this.changeFilter.emit(
+                (item: ViewAgendaItem): boolean => !(value.includes(item.type) || value.length === 0)
+            );
         });
         this.subscriptions.push(filter);
     }

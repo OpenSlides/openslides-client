@@ -544,7 +544,7 @@ export class HtmlToPdfService {
         let foundLineNumbers = [];
         const lineNumber = this.getLineNumber(element);
         if (lineNumber) {
-            foundLineNumbers.push({ lineNumber: lineNumber });
+            foundLineNumbers.push({ lineNumber });
         } else if (element.nodeName === 'BR') {
             // Check if there is a new line, but it does not get a line number.
             // If so, insert a dummy line, so the line numbers stays aligned with

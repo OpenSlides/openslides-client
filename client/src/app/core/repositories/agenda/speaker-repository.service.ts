@@ -30,13 +30,9 @@ export class SpeakerRepositoryService extends BaseRepositoryWithActiveMeeting<Vi
         return { [DEFAULT_FIELDSET]: defaultSet, statistics: statisticsFieldset };
     }
 
-    public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Speakers' : 'Speaker');
-    };
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Speakers' : 'Speaker');
 
-    public getTitle = (viewSpeaker: ViewSpeaker) => {
-        return viewSpeaker.user ? viewSpeaker.user.getShortName() : '';
-    };
+    public getTitle = (viewSpeaker: ViewSpeaker) => (viewSpeaker.user ? viewSpeaker.user.getShortName() : '');
 
     public create(
         listOfSpeakers: ListOfSpeakers,
@@ -127,11 +123,7 @@ export class SpeakerRepositoryService extends BaseRepositoryWithActiveMeeting<Vi
 
     public totalSpeakingTime(): Observable<number> {
         return this.finishedSpeakersObservable().pipe(
-            map(speakerList =>
-                speakerList.reduce((acc, val) => {
-                    return acc + val.speakingTime;
-                }, 0)
-            )
+            map(speakerList => speakerList.reduce((acc, val) => acc + val.speakingTime, 0))
         );
     }
 }

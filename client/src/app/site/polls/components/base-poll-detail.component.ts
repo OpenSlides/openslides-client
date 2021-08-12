@@ -31,7 +31,8 @@ export interface BaseVoteData {
 @Directive()
 export abstract class BasePollDetailComponentDirective<V extends ViewPoll<BaseViewModel>, S extends PollService>
     extends BaseModelContextComponent
-    implements OnInit, OnDestroy {
+    implements OnInit, OnDestroy
+{
     /**
      * All the groups of users.
      */

@@ -33,7 +33,8 @@ export abstract class BaseIsAgendaItemAndListOfSpeakersContentObjectRepository<
         M extends BaseModel & HasAgendaItemId & HasListOfSpeakersId
     >
     extends BaseRepositoryWithActiveMeeting<V, M>
-    implements IBaseIsAgendaItemContentObjectRepository<V, M>, IBaseIsListOfSpeakersContentObjectRepository<V, M> {
+    implements IBaseIsAgendaItemContentObjectRepository<V, M>, IBaseIsListOfSpeakersContentObjectRepository<V, M>
+{
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
         baseModelCtor: ModelConstructor<M>,
@@ -54,13 +55,9 @@ export abstract class BaseIsAgendaItemAndListOfSpeakersContentObjectRepository<
         return numberPrefix + this.getTitle(viewModel);
     }
 
-    public getListOfSpeakersTitle = (viewModel: V) => {
-        return this.getAgendaListTitle(viewModel).title;
-    };
+    public getListOfSpeakersTitle = (viewModel: V) => this.getAgendaListTitle(viewModel).title;
 
-    public getListOfSpeakersSlideTitle = (viewModel: V) => {
-        return this.getAgendaSlideTitle(viewModel);
-    };
+    public getListOfSpeakersSlideTitle = (viewModel: V) => this.getAgendaSlideTitle(viewModel);
 
     protected createViewModel(model: M): V {
         const viewModel = super.createViewModel(model);

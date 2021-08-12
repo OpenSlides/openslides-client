@@ -200,9 +200,11 @@ export class SortingListComponent implements OnInit, OnDestroy {
                         } else if (dropBehind === true) {
                             before.push(this.sortedItems[i]);
                         } else {
-                            Math.min(...this.multiSelectedIndex) < i
-                                ? before.push(this.sortedItems[i])
-                                : behind.push(this.sortedItems[i]);
+                            if (Math.min(...this.multiSelectedIndex) < i) {
+                                before.push(this.sortedItems[i]);
+                            } else {
+                                behind.push(this.sortedItems[i]);
+                            }
                         }
                     }
                 } else {

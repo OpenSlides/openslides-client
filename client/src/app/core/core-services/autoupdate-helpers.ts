@@ -27,8 +27,7 @@ export function modelDataToAutoupdateFormat(models: ModelData): AutoupdateModelD
 export function autoupdateFormatToModelData(data: AutoupdateModelData): ModelData {
     const modelData = {};
     for (const fqfield of Object.keys(data)) {
-        let collection, id, field;
-        [collection, id, field] = collectionIdFieldFromFqfield(fqfield);
+        const [collection, id, field] = collectionIdFieldFromFqfield(fqfield);
         if (modelData[collection] === undefined) {
             modelData[collection] = {};
         }

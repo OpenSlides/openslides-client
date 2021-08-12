@@ -215,9 +215,7 @@ export abstract class BaseSortListService<V extends BaseViewModel> extends BaseS
      */
     protected updateSortedData(): void {
         if (this.inputData) {
-            this.inputData.sort((itemA, itemB) => {
-                return this.sortItems(itemA, itemB, this.sortProperty, this.ascending);
-            });
+            this.inputData.sort((itemA, itemB) => this.sortItems(itemA, itemB, this.sortProperty, this.ascending));
             this.outputSubject.next(this.inputData);
         }
     }

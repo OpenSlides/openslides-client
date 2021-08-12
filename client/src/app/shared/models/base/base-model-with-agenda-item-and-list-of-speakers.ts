@@ -12,7 +12,8 @@ export function isBaseModelWithAgendaItemAndListOfSpeakers(obj: any): obj is Bas
  */
 export abstract class BaseModelWithAgendaItemAndListOfSpeakers<T = object>
     extends BaseModel<T>
-    implements BaseModelWithAgendaItem<T>, BaseModelWithListOfSpeakers<T> {
+    implements BaseModelWithAgendaItem<T>, BaseModelWithListOfSpeakers<T>
+{
     public agenda_item_id?: Id;
     public list_of_speakers_id?: Id;
 }

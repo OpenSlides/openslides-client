@@ -32,13 +32,9 @@ export class AssignmentCandidateRepositoryService extends BaseRepositoryWithActi
         };
     }
 
-    public getTitle = (viewAssignmentCandidate: ViewAssignmentCandidate) => {
-        return viewAssignmentCandidate.user.getTitle();
-    };
+    public getTitle = (viewAssignmentCandidate: ViewAssignmentCandidate) => viewAssignmentCandidate.user.getTitle();
 
-    public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Candidates' : 'Candidate');
-    };
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Candidates' : 'Candidate');
 
     public create(assignment: ViewAssignment, userId: Id): Promise<Identifiable> {
         const payload: AssignmentCandidateAction.CreatePayload = {
