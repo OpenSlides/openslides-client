@@ -167,11 +167,11 @@ export class SearchService {
         openInNewTab: boolean = false
     ): void {
         this.searchModels.push({
-            collection: collection,
+            collection,
             verboseNameSingular: repo.getVerboseName(),
             verboseNamePlural: repo.getVerboseName(true),
-            displayOrder: displayOrder,
-            openInNewTab: openInNewTab
+            displayOrder,
+            openInNewTab
         });
         this.searchModels.sort((a, b) => a.displayOrder - b.displayOrder);
     }

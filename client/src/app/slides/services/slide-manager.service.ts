@@ -64,7 +64,7 @@ export class SlideManager {
      *
      * @param slideName The slide to search.
      */
-    public async getSlideFactory<T extends BaseSlideComponent<object>>(
+    public async getSlideFactory<T extends BaseSlideComponent<Record<string, unknown>>>(
         slideName: string
     ): Promise<ComponentFactory<T>> {
         const manifest = this.getManifest(slideName);

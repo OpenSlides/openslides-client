@@ -20,17 +20,14 @@ import { RepositoryServiceCollectorWithoutActiveMeetingService } from '../reposi
 })
 export class OrganizationTagRepositoryService
     extends BaseRepository<ViewOrganizationTag, OrganizationTag>
-    implements ModelRequestRepository {
+    implements ModelRequestRepository
+{
     public constructor(serviceCollector: RepositoryServiceCollectorWithoutActiveMeetingService) {
         super(serviceCollector, OrganizationTag);
     }
 
-    public getVerboseName = (plural?: boolean): string => {
-        return plural ? 'tags' : 'tag';
-    };
-    public getTitle = (viewModel: ViewOrganizationTag): string => {
-        return viewModel.name;
-    };
+    public getVerboseName = (plural?: boolean): string => (plural ? 'tags' : 'tag');
+    public getTitle = (viewModel: ViewOrganizationTag): string => viewModel.name;
     public getFieldsets(): Fieldsets<OrganizationTag> {
         const detailFieldset: (keyof OrganizationTag)[] = ['color', 'name', 'committee_ids', 'organization_id'];
         return {

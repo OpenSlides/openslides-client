@@ -242,9 +242,8 @@ export class C4DialogComponent implements OnInit, OnDestroy {
                 handle: () => 'search'
             },
             recievedRagequit: {
-                handle: (notify: NotifyResponse<{}>) => {
-                    return notify.sender_channel_id === this.replyChannel ? 'search' : null;
-                }
+                handle: (notify: NotifyResponse<{}>) =>
+                    notify.sender_channel_id === this.replyChannel ? 'search' : null
             }
         },
         myTurn: {
@@ -427,7 +426,7 @@ export class C4DialogComponent implements OnInit, OnDestroy {
      */
     public clickField(row: number, col: number): void {
         if (!this.disableBoard) {
-            this.handleEvent('fieldClicked', { row: row, col: col });
+            this.handleEvent('fieldClicked', { row, col });
         }
     }
 
@@ -577,8 +576,9 @@ export class C4DialogComponent implements OnInit, OnDestroy {
 
 @Component({
     selector: 'os-copyright-sign',
-    template: ` <span (click)="launchC4($event)">©</span> `,
-    styles: [``]
+    template: `
+        <span (click)="launchC4($event)">©</span>
+    `
 })
 export class CopyrightSignComponent {
     private clickTimeout: number | null;

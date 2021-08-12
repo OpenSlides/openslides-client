@@ -95,7 +95,7 @@ export class AssignmentPollPdfService extends PollPdfService {
         }
         const sheetEnd = Math.floor(417 / rowsPerPage);
         this.pdfService.downloadWithBallotPaper(
-            this.getPages(rowsPerPage, { sheetend: sheetEnd, title: title, subtitle: subtitle, poll: poll }),
+            this.getPages(rowsPerPage, { sheetend: sheetEnd, title, subtitle, poll }),
             fileName,
             this.logoUrl
         );
@@ -132,9 +132,7 @@ export class AssignmentPollPdfService extends PollPdfService {
     }
 
     private createCandidateFields(poll: ViewPoll): object {
-        const candidates = poll.options.sort((a, b) => {
-            return a.weight - b.weight;
-        });
+        const candidates = poll.options.sort((a, b) => a.weight - b.weight);
         const resultObject = candidates.map(cand => {
             const candidateName = cand.content_object?.full_name;
             if (candidateName) {
@@ -170,12 +168,10 @@ export class AssignmentPollPdfService extends PollPdfService {
 
     private createYNBallotEntry(option: string, method: PollMethod): object {
         const choices = method === 'YNA' ? ['Yes', 'No', 'Abstain'] : ['Yes', 'No'];
-        const columnstack = choices.map(choice => {
-            return {
-                width: 'auto',
-                stack: [this.createBallotOption(this.translate.instant(choice))]
-            };
-        });
+        const columnstack = choices.map(choice => ({
+            width: 'auto',
+            stack: [this.createBallotOption(this.translate.instant(choice))]
+        }));
         return [
             {
                 text: option,

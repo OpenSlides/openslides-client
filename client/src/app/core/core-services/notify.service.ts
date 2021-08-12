@@ -230,8 +230,8 @@ export class NotifyService {
         }
 
         const notify: NotifyRequest<T> = {
-            name: name,
-            message: message,
+            name,
+            message,
             channel_id: this.channelId,
             to_meeting: this.activeMeetingIdService.meetingId
         };

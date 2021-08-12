@@ -131,7 +131,7 @@ export class StreamingCommunicationService {
         this.closeConnections(); // here we close the connections early.
         this.offlineBroadcastService.goOffline({
             type: OfflineReasonValue.ConnectionLost,
-            endpoint: endpoint
+            endpoint
         });
     }
 

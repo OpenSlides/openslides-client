@@ -34,7 +34,7 @@ export class WorkflowListComponent extends BaseListViewComponent<ViewMotionWorkf
     public tableColumnDefinition: PblColumnDefinition[] = [
         {
             prop: 'name',
-            width: 'auto'
+            width: '100%'
         },
         {
             prop: 'delete'

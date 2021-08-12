@@ -86,8 +86,8 @@ export class MotionService {
      */
     public getRecommendationReferencingMotions(motionId: number): Observable<ViewMotion[]> {
         return this.repo.getViewModelListObservable().pipe(
-            map((motions: ViewMotion[]): ViewMotion[] => {
-                return motions.filter((motion: ViewMotion): boolean => {
+            map((motions: ViewMotion[]): ViewMotion[] =>
+                motions.filter((motion: ViewMotion): boolean => {
                     if (!motion.recommendationExtension) {
                         return false;
                     }
@@ -102,8 +102,8 @@ export class MotionService {
                     }
 
                     return false;
-                });
-            })
+                })
+            )
         );
     }
 

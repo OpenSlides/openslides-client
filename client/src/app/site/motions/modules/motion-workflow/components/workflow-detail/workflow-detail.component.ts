@@ -343,7 +343,7 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
         } else {
             restrictions.splice(restrictionIndex, 1);
         }
-        this.handleRequest(this.stateRepo.update({ restrictions: restrictions }, state));
+        this.handleRequest(this.stateRepo.update({ restrictions }, state));
     }
 
     /**
@@ -384,9 +384,9 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
         this.dialogData = {
             title: title || '',
             description: description || '',
-            value: value,
-            deletable: deletable,
-            allowEmpty: allowEmpty
+            value,
+            deletable,
+            allowEmpty
         };
 
         const dialogRef = this.dialog.open(this.workflowDialog, infoDialogSettings);

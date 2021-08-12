@@ -141,7 +141,7 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
         },
         {
             prop: 'title',
-            width: 'auto',
+            width: '100%',
             minWidth: 60
         },
         /**
@@ -151,7 +151,7 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
         /*
         {
              prop: 'mimetype',
-             width: 'auto',
+             width: '100%',
              minWidth: 60
         },
         */

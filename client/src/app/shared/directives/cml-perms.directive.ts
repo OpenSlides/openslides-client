@@ -13,23 +13,23 @@ export class CmlPermsDirective extends BasePermsDirective<CML> {
         this.setPermissions(perms);
     }
 
-    @Input('osCmlPermsCommitteeId')
+    @Input()
     public set osCmlPermsCommitteeId(id: Id) {
         this.committeeId = id;
         this.updateView();
     }
 
-    @Input('osCmlPermsAnd')
+    @Input()
     public set osCmlPermsAnd(value: boolean) {
         this.setAndCondition(value);
     }
 
-    @Input('osCmlPermsOr')
+    @Input()
     public set osCmlPermsOr(value: boolean) {
         this.setOrCondition(value);
     }
 
-    @Input('osCmlPermsComplement')
+    @Input()
     public set osCmlPermsComplement(value: boolean) {
         this.setComplementCondition(value);
     }

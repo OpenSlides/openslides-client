@@ -153,9 +153,7 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
         const ajaxResponse: AjaxResponse = await ajax(this.videoUrl)
             .pipe(
                 map(response => response),
-                catchError(error => {
-                    return of(error);
-                })
+                catchError(error => of(error))
             )
             .toPromise();
 

@@ -174,8 +174,8 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
         );
 
         this.slides = combineLatest([this.projectorSubject, trigger$]).pipe(
-            map((data: [ViewProjector, any]) => {
-                return (data[0]?.current_projections || []).map(
+            map((data: [ViewProjector, any]) =>
+                (data[0]?.current_projections || []).map(
                     projection =>
                         ({
                             collection: collectionFromFqid(projection.content_object_id),
@@ -185,8 +185,8 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
                             options: projection.options || {},
                             ...(!!projection.content?.error && { error: projection.content.error })
                         } as SlideData)
-                );
-            })
+                )
+            )
         );
 
         this.subscriptions.push(

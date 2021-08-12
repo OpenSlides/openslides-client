@@ -119,8 +119,8 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
         this.subscriptions.push(
             projectorId$
                 .pipe(
-                    mergeMap(projectorId => {
-                        return this.requestModels({
+                    mergeMap(projectorId =>
+                        this.requestModels({
                             viewModelCtor: ViewProjector,
                             ids: [projectorId],
                             follow: [
@@ -136,8 +136,8 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
                                 },
                                 PROJECTOR_CONTENT_FOLLOW
                             ]
-                        });
-                    })
+                        })
+                    )
                 )
                 .subscribe(),
             this.projectorObservable.subscribe(projector => {

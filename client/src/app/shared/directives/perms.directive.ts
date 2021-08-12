@@ -24,15 +24,15 @@ export class PermsDirective extends BasePermsDirective<Permission> {
     /**
      * `*osPerms="...; or:..."` turns into osPermsOr during runtime.
      */
-    @Input('osPermsOr')
-    public set osPermsAlt(value: boolean) {
+    @Input()
+    public set osPermsOr(value: boolean) {
         this.setOrCondition(value);
     }
 
     /**
      * `*osPerms="...; complement:..."` turns into osPermsComplement during runtime.
      */
-    @Input('osPermsComplement')
+    @Input()
     public set osPermsComplement(value: boolean) {
         this.setComplementCondition(value);
     }
@@ -40,7 +40,7 @@ export class PermsDirective extends BasePermsDirective<Permission> {
     /**
      * `*osPerms="...; and:..."` turns into osPermsAnd during runtime.
      */
-    @Input('osPermsAnd')
+    @Input()
     public set osPermsAnd(value: boolean) {
         this.setAndCondition(value);
     }

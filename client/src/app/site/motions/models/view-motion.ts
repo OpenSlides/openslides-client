@@ -330,7 +330,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
 
         return {
             content_object_id: this.fqid,
-            slideOptions: slideOptions,
+            slideOptions,
             projectionDefault: this.getProjectiondefault(),
             getDialogTitle: this.getAgendaSlideTitle
         };

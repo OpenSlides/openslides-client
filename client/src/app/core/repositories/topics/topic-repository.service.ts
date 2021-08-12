@@ -65,9 +65,7 @@ export class TopicRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCon
         };
     }
 
-    public getTitle = (topic: ViewTopic) => {
-        return topic.title;
-    };
+    public getTitle = (topic: ViewTopic) => topic.title;
 
     public getListTitle = (topic: ViewTopic) => {
         if (topic.agenda_item && topic.agenda_item.item_number) {
@@ -77,17 +75,11 @@ export class TopicRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCon
         }
     };
 
-    public getAgendaListTitle = (topic: ViewTopic) => {
-        return { title: this.getListTitle(topic) };
-    };
+    public getAgendaListTitle = (topic: ViewTopic) => ({ title: this.getListTitle(topic) });
 
-    public getAgendaSlideTitle = (topic: ViewTopic) => {
-        return this.getAgendaListTitle(topic).title;
-    };
+    public getAgendaSlideTitle = (topic: ViewTopic) => this.getAgendaListTitle(topic).title;
 
-    public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Topics' : 'Topic');
-    };
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Topics' : 'Topic');
 
     public duplicateTopic(topicAgendaItem: ViewAgendaItem): Promise<Identifiable> {
         return this.create(this.getDuplicatedTopic(topicAgendaItem));

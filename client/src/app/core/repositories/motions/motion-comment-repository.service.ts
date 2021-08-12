@@ -16,13 +16,9 @@ export class MotionCommentRepositoryService extends BaseRepositoryWithActiveMeet
         super(repositoryServiceCollector, MotionComment);
     }
 
-    public getTitle = (viewMotionComment: ViewMotionComment) => {
-        return 'Comment';
-    };
+    public getTitle = (viewMotionComment: ViewMotionComment) => 'Comment';
 
-    public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Comments' : 'Comment');
-    };
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Comments' : 'Comment');
 
     public getFieldsets(): Fieldsets<ViewMotionComment> {
         const commentFields: (keyof ViewMotionComment)[] = ['motion_id', 'section_id', 'comment'];

@@ -171,9 +171,7 @@ export class ListViewTableComponent<
     }
 
     @Input()
-    public toRestrictFn = (restriction: ColumnRestriction) => {
-        return !this.operator.hasPerms(restriction.permission);
-    };
+    public toRestrictFn = (restriction: ColumnRestriction) => !this.operator.hasPerms(restriction.permission);
 
     @Input()
     public toHideFn = () => {

@@ -63,9 +63,9 @@ export class VotingBannerService {
      */
     private createBanner(text: string, link: string): BannerDefinition {
         return {
-            text: text,
+            text,
             subText: this.subText,
-            link: link,
+            link,
             icon: 'how_to_vote',
             largerOnMobileView: true
         };

@@ -14,7 +14,8 @@ import { ViewUnifiedChange, ViewUnifiedChangeType } from '../../../shared/models
  */
 export class ViewMotionChangeRecommendation
     extends BaseViewModel<MotionChangeRecommendation>
-    implements ViewUnifiedChange {
+    implements ViewUnifiedChange
+{
     public static COLLECTION = MotionChangeRecommendation.COLLECTION;
     protected _collection = MotionChangeRecommendation.COLLECTION;
 

@@ -271,7 +271,7 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
      * @param value The new value to set.
      */
     private sendUpdate(value: any): void {
-        this.update.emit({ key: this.setting.key, value: value });
+        this.update.emit({ key: this.setting.key, value });
     }
 
     /**

@@ -33,7 +33,8 @@ export const DEFAULT_GROUP_INDEX = 1;
 })
 export class GroupRepositoryService
     extends BaseRepositoryWithActiveMeeting<ViewGroup, Group>
-    implements ModelRequestRepository {
+    implements ModelRequestRepository
+{
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, Group);
     }
@@ -52,13 +53,9 @@ export class GroupRepositoryService
         };
     }
 
-    public getTitle = (viewGroup: ViewGroup) => {
-        return viewGroup.name;
-    };
+    public getTitle = (viewGroup: ViewGroup) => viewGroup.name;
 
-    public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Groups' : 'Group');
-    };
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Groups' : 'Group');
 
     public getNameForIds(...ids: number[]): string {
         return this.getSortedViewModelList()

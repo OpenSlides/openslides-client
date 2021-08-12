@@ -58,7 +58,7 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
         return {
             properties,
             searchValue: properties.map(property => property.value),
-            type: type
+            type
         };
     }
 

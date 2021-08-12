@@ -42,9 +42,8 @@ export class ListOfSpeakersRepositoryService extends BaseRepositoryWithActiveMee
         };
     }
 
-    public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Lists of speakers' : 'List of speakers');
-    };
+    public getVerboseName = (plural: boolean = false) =>
+        this.translate.instant(plural ? 'Lists of speakers' : 'List of speakers');
 
     public getTitle = (viewListOfSpeakers: ViewListOfSpeakers) => {
         if (viewListOfSpeakers.content_object) {

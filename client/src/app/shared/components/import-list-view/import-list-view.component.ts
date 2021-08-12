@@ -223,9 +223,7 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
 
             this.vScrollDataSource.setFilter(noErrorFilter);
         } else if (this.shown === 'error') {
-            const hasErrorFilter = data => {
-                return !!data.errors.length || data.hasDuplicates;
-            };
+            const hasErrorFilter = data => !!data.errors.length || data.hasDuplicates;
 
             this.vScrollDataSource.setFilter(hasErrorFilter);
         }

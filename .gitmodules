@@ -1,3 +1,0 @@
-[submodule "autoupdate"]
-	path = autoupdate
-	url = https://github.com/OpenSlides/openslides3-autoupdate-service.git

@@ -47,9 +47,7 @@ export class ProjectorService {
     public isProjected(obj: ProjectionBuildDescriptor | Projectable): boolean {
         const descriptor = this.ensureDescriptor(obj);
         const projectors = this.activeMeetingService.meeting?.projectors || [];
-        return projectors.some(projector => {
-            return this.isProjectedOn(descriptor, projector);
-        });
+        return projectors.some(projector => this.isProjectedOn(descriptor, projector));
     }
 
     /**
@@ -61,9 +59,7 @@ export class ProjectorService {
      */
     public isProjectedOn(obj: ProjectionBuildDescriptor | Projectable, projector: ViewProjector): boolean {
         const descriptor = this.ensureDescriptor(obj);
-        return projector.current_projections.some(projection => {
-            return projection.isEqualToDescriptor(descriptor);
-        });
+        return projector.current_projections.some(projection => projection.isEqualToDescriptor(descriptor));
     }
 
     public getMatchingProjectionsFromProjector(

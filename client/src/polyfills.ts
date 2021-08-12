@@ -25,7 +25,7 @@ import 'core-js/es6/array';
 if ('NodeList' in window && !NodeList.prototype.forEach) {
     NodeList.prototype.forEach = function(callback, thisArg) {
         thisArg = thisArg || window;
-        for (var i = 0; i < this.length; i++) {
+        for (let i = 0; i < this.length; i++) {
             callback.call(thisArg, this[i], i, this);
         }
     };
@@ -66,7 +66,7 @@ import 'core-js/es7/reflect';
 /***************************************************************************************************
  * Zone JS and Hammer JS are required by default for Angular itself.
  */
-import 'zone.js/dist/zone';
+import 'zone.js';
 
 /***************************************************************************************************
  * APPLICATION IMPORTS

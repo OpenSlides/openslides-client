@@ -133,7 +133,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
         },
         {
             prop: 'title',
-            width: 'auto'
+            width: '80%'
         },
         {
             prop: 'state',
@@ -371,15 +371,13 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
         this.categoryTiles = categories
             .filter(category => !category.parent_id && !!category.totalAmountOfMotions)
             .sort((a, b) => a.weight - b.weight)
-            .map(category => {
-                return {
-                    filter: 'category_id',
-                    name: category.name,
-                    condition: category.id,
-                    amountOfMotions: category.totalAmountOfMotions,
-                    prefix: category.prefix
-                };
-            });
+            .map(category => ({
+                filter: 'category_id',
+                name: category.name,
+                condition: category.id,
+                amountOfMotions: category.totalAmountOfMotions,
+                prefix: category.prefix
+            }));
     }
 
     /**
@@ -430,9 +428,9 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
     private addToTileInfo(name: string, filter: string, condition: OsFilterOptionCondition, amount: number): void {
         if (amount) {
             this.motionTiles.push({
-                filter: filter,
-                name: name,
-                condition: condition,
+                filter,
+                name,
+                condition,
                 amountOfMotions: amount
             });
         }

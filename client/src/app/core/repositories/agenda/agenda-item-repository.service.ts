@@ -54,9 +54,7 @@ export class AgendaItemRepositoryService extends BaseRepositoryWithActiveMeeting
         };
     }
 
-    public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Items' : 'Item');
-    };
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Items' : 'Item');
 
     private getAgendaTitle(viewAgendaItem: ViewAgendaItem): AgendaListTitle {
         if (viewAgendaItem.content_object) {
@@ -66,13 +64,9 @@ export class AgendaItemRepositoryService extends BaseRepositoryWithActiveMeeting
         }
     }
 
-    public getTitle = (viewAgendaItem: ViewAgendaItem) => {
-        return this.getAgendaTitle(viewAgendaItem).title;
-    };
+    public getTitle = (viewAgendaItem: ViewAgendaItem) => this.getAgendaTitle(viewAgendaItem).title;
 
-    public getSubtitle = (viewAgendaItem: ViewAgendaItem) => {
-        return this.getAgendaTitle(viewAgendaItem).subtitle;
-    };
+    public getSubtitle = (viewAgendaItem: ViewAgendaItem) => this.getAgendaTitle(viewAgendaItem).subtitle;
 
     public getItemNumberPrefix(viewModel: HasAgendaItem): string {
         return viewModel.agenda_item && viewModel.agenda_item.item_number

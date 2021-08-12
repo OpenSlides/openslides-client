@@ -30,11 +30,11 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
     public tableColumnDefinition: PblColumnDefinition[] = [
         {
             prop: 'short_name',
-            width: 'auto'
+            width: '50%'
         },
         {
             prop: 'info',
-            width: '65%'
+            width: '50%'
         }
     ];
 

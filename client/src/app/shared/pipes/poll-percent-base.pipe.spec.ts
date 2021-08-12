@@ -17,8 +17,10 @@ describe('PollPercentBasePipe', () => {
     it('create an instance', inject(
         [AssignmentPollService, MotionPollService],
         (assignmentPollService: AssignmentPollService, motionPollService: MotionPollService) => {
-            const pipe = new PollPercentBasePipe(assignmentPollService, motionPollService);
-            expect(pipe).toBeTruthy();
+            const motionPipe = new PollPercentBasePipe(assignmentPollService);
+            const assignmentPipe = new PollPercentBasePipe(motionPollService);
+            expect(motionPipe).toBeTruthy();
+            expect(assignmentPipe).toBeTruthy();
         }
     ));
 });

@@ -77,11 +77,11 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
     public tableColumnDefinition: PblColumnDefinition[] = [
         {
             prop: 'title',
-            width: 'auto'
+            width: '100%'
         },
         {
             prop: 'info',
-            width: '15%'
+            minWidth: 120
         }
     ];
 

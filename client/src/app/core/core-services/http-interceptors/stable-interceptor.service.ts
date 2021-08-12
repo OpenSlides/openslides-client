@@ -19,9 +19,7 @@ export class StableInterceptorService {
     public intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return this.stableSubject.pipe(
             first(stable => stable),
-            mergeMap(() => {
-                return next.handle(req);
-            })
+            mergeMap(() => next.handle(req))
         );
     }
 

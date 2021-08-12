@@ -31,9 +31,9 @@ export class CategoryImportHelper implements ImportHelper<Motion> {
             };
         } else {
             if (!this.newMotionCategories.find(newCat => newCat.name === name)) {
-                this.newMotionCategories.push({ name: name });
+                this.newMotionCategories.push({ name });
             }
-            return { name: name };
+            return { name };
         }
     }
 
@@ -95,6 +95,6 @@ export class CategoryImportHelper implements ImportHelper<Motion> {
             prefix = categoryString.substring(0, separatorIndex);
             categoryString = categoryString.substring(separatorIndex + prefixSeparator.length);
         }
-        return { prefix: prefix, name: categoryString };
+        return { prefix, name: categoryString };
     }
 }

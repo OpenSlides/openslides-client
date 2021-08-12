@@ -91,9 +91,7 @@ export class AssignmentPollDetailContentComponent extends BaseComponent {
     }
 
     public filterRelevantResults(votingResult: VotingResult[]): VotingResult[] {
-        return votingResult.filter(result => {
-            return result && this.voteFitsMethod(result);
-        });
+        return votingResult.filter(result => result && this.voteFitsMethod(result));
     }
 
     public getVoteAmount(vote: VotingResult, row: PollTableData): number {

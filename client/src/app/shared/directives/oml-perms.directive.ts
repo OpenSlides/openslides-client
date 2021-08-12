@@ -12,17 +12,17 @@ export class OmlPermsDirective extends BasePermsDirective<OML> {
         this.setPermissions(perms);
     }
 
-    @Input('osOmlPermsAnd')
+    @Input()
     public set osOmlPermsAnd(value: boolean) {
         this.setAndCondition(value);
     }
 
-    @Input('osOmlPermsOr')
+    @Input()
     public set osOmlPermsOr(value: boolean) {
         this.setOrCondition(value);
     }
 
-    @Input('osOmlPermsComplement')
+    @Input()
     public set osOmlPermsComplement(value: boolean) {
         this.setComplementCondition(value);
     }

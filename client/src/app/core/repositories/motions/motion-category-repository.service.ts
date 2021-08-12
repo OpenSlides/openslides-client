@@ -30,7 +30,8 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 })
 export class MotionCategoryRepositoryService
     extends BaseRepositoryWithActiveMeeting<ViewMotionCategory, MotionCategory>
-    implements ModelRequestRepository {
+    implements ModelRequestRepository
+{
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, MotionCategory);
 
@@ -78,15 +79,12 @@ export class MotionCategoryRepositoryService
         };
     }
 
-    public getTitle = (viewMotionCategory: ViewMotionCategory) => {
-        return viewMotionCategory.prefix
+    public getTitle = (viewMotionCategory: ViewMotionCategory) =>
+        viewMotionCategory.prefix
             ? viewMotionCategory.prefix + ' - ' + viewMotionCategory.name
             : viewMotionCategory.name;
-    };
 
-    public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Categories' : 'Category');
-    };
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Categories' : 'Category');
 
     /**
      * Updates a categories numbering.

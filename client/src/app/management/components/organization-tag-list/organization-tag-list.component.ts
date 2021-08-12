@@ -23,7 +23,7 @@ export class OrganizationTagListComponent extends BaseListViewComponent<ViewOrga
     public tableColumnDefinition: PblColumnDefinition[] = [
         {
             prop: 'name',
-            width: 'auto'
+            width: '100%'
         },
         {
             prop: 'edit',

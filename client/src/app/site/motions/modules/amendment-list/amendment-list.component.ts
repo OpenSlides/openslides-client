@@ -65,12 +65,12 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
         {
             prop: 'meta',
             minWidth: 250,
-            width: 'auto'
+            width: '50%'
         },
         {
             prop: 'summary',
             minWidth: 280,
-            width: 'auto'
+            width: '50%'
         },
         {
             prop: 'speakers',
@@ -165,11 +165,7 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
     public getAmendmentSummary(amendment: ViewMotion): string {
         const diffLines = amendment.diffLines;
         if (diffLines.length) {
-            return diffLines
-                .map(diffLine => {
-                    return this.linenumberingService.stripLineNumbers(diffLine.text);
-                })
-                .join('[...]');
+            return diffLines.map(diffLine => this.linenumberingService.stripLineNumbers(diffLine.text)).join('[...]');
         } else {
             return amendment.text;
         }

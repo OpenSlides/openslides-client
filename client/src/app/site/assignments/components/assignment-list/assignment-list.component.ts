@@ -40,11 +40,10 @@ export class AssignmentListComponent extends BaseListViewComponent<ViewAssignmen
     public tableColumnDefinition: PblColumnDefinition[] = [
         {
             prop: 'title',
-            width: 'auto'
+            width: '100%'
         },
         {
             prop: 'phase',
-            width: '20%',
             minWidth: 180
         },
         {

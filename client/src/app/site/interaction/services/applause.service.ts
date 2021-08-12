@@ -54,9 +54,7 @@ export class ApplauseService {
 
     public get showApplauseLevelObservable(): Observable<boolean> {
         return combineLatest([this.showApplauseLevelConfigObservable, this.applauseLevelObservable]).pipe(
-            map(([enabled, amount]) => {
-                return enabled && amount > 0;
-            })
+            map(([enabled, amount]) => enabled && amount > 0)
         );
     }
 
@@ -89,12 +87,8 @@ export class ApplauseService {
                 /**
                  * only updates when the effective applause level changes
                  */
-                distinctUntilChanged((prev, curr) => {
-                    return prev.level === curr.level;
-                }),
-                filter(curr => {
-                    return curr.level === 0 || curr.level >= this.minApplauseLevel;
-                })
+                distinctUntilChanged((prev, curr) => prev.level === curr.level),
+                filter(curr => curr.level === 0 || curr.level >= this.minApplauseLevel)
             )
             .subscribe(applause => {
                 this.presentApplauseUsers = applause.presentUsers;

@@ -213,11 +213,12 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
      */
     private isOsFilter(storedFilter: OsFilter<V>[]): boolean {
         if (Array.isArray(storedFilter) && storedFilter.length) {
-            return storedFilter.every(filter => {
-                // Interfaces do not exist at runtime. Manually check if the
-                // Required information of the interface are present
-                return filter.hasOwnProperty('options') && filter.hasOwnProperty('property') && !!filter.property;
-            });
+            return storedFilter.every(
+                filter =>
+                    // Interfaces do not exist at runtime. Manually check if the
+                    // Required information of the interface are present
+                    filter.hasOwnProperty('options') && filter.hasOwnProperty('property') && !!filter.property
+            );
         } else {
             return false;
         }
@@ -291,24 +292,20 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
     ): void {
         repo.getViewModelListObservable().subscribe(viewModel => {
             if (viewModel && viewModel.length) {
-                let filterProperties: (OsFilterOption | string)[];
-
-                filterProperties = viewModel.filter(filterFn ? filterFn : () => true).map((model: HierarchyModel) => {
-                    return {
+                const filterProperties: (OsFilterOption | string)[] = viewModel
+                    .filter(filterFn ? filterFn : () => true)
+                    .map((model: HierarchyModel) => ({
                         condition: model.id,
                         label: model.getTitle(),
                         isChild: !!model.parent,
                         children:
                             model.children && model.children.length
-                                ? model.children.map(child => {
-                                      return {
-                                          label: child.getTitle(),
-                                          condition: child.id
-                                      };
-                                  })
+                                ? model.children.map(child => ({
+                                      label: child.getTitle(),
+                                      condition: child.id
+                                  }))
                                 : undefined
-                    };
-                });
+                    }));
 
                 if (noneOptionLabel) {
                     filterProperties.push('-');
@@ -377,7 +374,11 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
      * @param option filter option
      */
     public toggleFilterOption(filterName: keyof V, option: OsFilterOption): void {
-        option.isActive ? this.removeFilterOption(filterName, option) : this.addFilterOption(filterName, option);
+        if (option.isActive) {
+            this.removeFilterOption(filterName, option);
+        } else {
+            this.addFilterOption(filterName, option);
+        }
         this.storeActiveFilters();
     }
 
@@ -397,7 +398,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
 
             if (filterOption && !filterOption.isActive) {
                 filterOption.isActive = true;
-                this._filterStack.push({ property: filterProperty, option: option });
+                this._filterStack.push({ property: filterProperty, option });
 
                 if (!filter.count) {
                     filter.count = 1;
@@ -432,9 +433,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
                 // remove filter from stack
                 const removeIndex = this._filterStack
                     .map(stacked => stacked.option)
-                    .findIndex(mappedOption => {
-                        return mappedOption.condition === option.condition;
-                    });
+                    .findIndex(mappedOption => mappedOption.condition === option.condition);
 
                 if (removeIndex > -1) {
                     this._filterStack.splice(removeIndex, 1);

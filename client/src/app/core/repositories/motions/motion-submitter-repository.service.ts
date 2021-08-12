@@ -29,13 +29,9 @@ export class MotionSubmitterRepositoryService extends BaseRepositoryWithActiveMe
         };
     }
 
-    public getTitle = (submitter: ViewMotionSubmitter) => {
-        return submitter?.user.getTitle();
-    };
+    public getTitle = (submitter: ViewMotionSubmitter) => submitter?.user.getTitle();
 
-    public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Submitters' : 'Submitter');
-    };
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Submitters' : 'Submitter');
 
     public async create(userId: Id, motion: ViewMotion): Promise<Identifiable> {
         const payload: MotionSubmitterAction.CreatePayload = {

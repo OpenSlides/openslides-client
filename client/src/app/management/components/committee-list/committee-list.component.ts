@@ -30,7 +30,7 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
         {
             prop: 'name',
             minWidth: 250,
-            width: 'auto'
+            width: '100%'
         },
         {
             prop: 'forwarding',

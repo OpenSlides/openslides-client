@@ -110,9 +110,7 @@ export class RelationManagerService {
                     }
                 }),
                 filter(hasChanges => !!hasChanges),
-                map(() => {
-                    return this.handleNormalRelation(model, relation, relation.ownIdField);
-                })
+                map(() => this.handleNormalRelation(model, relation, relation.ownIdField))
             );
         } else {
             throw new Error(
@@ -134,8 +132,7 @@ export class RelationManagerService {
     private handleGenericRelation<M extends BaseModel>(model: M, relation: Relation): any {
         if (relation.many) {
             const foreignViewModels = (model[relation.ownIdField] || []).map((fqid: Fqid) => {
-                let collection: Collection, id: Id;
-                [collection, id] = collectionIdFromFqid(fqid);
+                const [collection, id] = collectionIdFromFqid(fqid);
                 return this.viewModelStoreService.get(collection, id);
             });
             return foreignViewModels;
@@ -144,8 +141,7 @@ export class RelationManagerService {
             if (!fqid) {
                 return null;
             }
-            let collection, id;
-            [collection, id] = collectionIdFromFqid(fqid);
+            const [collection, id] = collectionIdFromFqid(fqid);
             return this.viewModelStoreService.get(collection, id);
         }
     }

@@ -28,9 +28,7 @@ export class ViewProjection extends BaseViewModel<Projection> {
         return this.content_object.getProjectorTitle(this.getModel());
     }
 
-    public getTitle = () => {
-        return this.getProjectorTitle().title;
-    };
+    public getTitle = () => this.getProjectorTitle().title;
 
     public getSubtitle(): string {
         return this.getProjectorTitle().subtitle || '';

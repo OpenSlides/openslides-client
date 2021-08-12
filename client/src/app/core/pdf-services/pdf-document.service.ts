@@ -88,13 +88,11 @@ export class PdfDocumentService {
             new Set(this.mediaManageService.allFontPlaces.map(place => `/${this.mediaManageService.getFontUrl(place)}`))
         );
 
-        const promises = fontPathList.map(fontPath => {
-            return this.httpService.downloadAsBase64(fontPath).then(base64 => {
-                return {
-                    [fontPath.split('/').pop()]: base64
-                };
-            });
-        });
+        const promises = fontPathList.map(fontPath =>
+            this.httpService.downloadAsBase64(fontPath).then(base64 => ({
+                [fontPath.split('/').pop()]: base64
+            }))
+        );
         const binaryDataUrls = await Promise.all(promises);
         let vfs = {};
         binaryDataUrls.map(entry => {
@@ -234,7 +232,7 @@ export class PdfDocumentService {
             text = [line1, line2].join('\n');
         }
         columns.push({
-            text: text,
+            text,
             style: 'headerText',
             alignment: logoHeaderRightUrl ? 'left' : 'right'
         });
@@ -258,8 +256,8 @@ export class PdfDocumentService {
         return {
             color: '#555',
             fontSize: 9,
-            margin: margin,
-            columns: columns,
+            margin,
+            columns,
             columnGap: 10
         };
     }
@@ -351,8 +349,8 @@ export class PdfDocumentService {
 
         const margin = [lrMargin ? lrMargin[0] : 75, 0, lrMargin ? lrMargin[0] : 75, 10];
         return {
-            margin: margin,
-            columns: columns,
+            margin,
+            columns,
             columnGap: 10
         };
     }
@@ -430,7 +428,7 @@ export class PdfDocumentService {
 
         const isIE = /msie\s|trident\//i.test(window.navigator.userAgent);
         if (typeof Worker !== 'undefined' && !isIE) {
-            this.pdfWorker = new Worker('./pdf-worker.worker', {
+            this.pdfWorker = new Worker(new URL('./pdf-worker.worker', import.meta.url), {
                 type: 'module'
             });
 
@@ -453,8 +451,8 @@ export class PdfDocumentService {
 
             this.pdfWorker.postMessage({
                 doc: JSON.parse(JSON.stringify(doc)),
-                fonts: fonts,
-                vfs: vfs
+                fonts,
+                vfs
             });
         } else {
             this.matSnackBar.dismiss();
@@ -612,9 +610,7 @@ export class PdfDocumentService {
      * to the vfs.
      */
     private async loadAllImages(vfs: object): Promise<void> {
-        const promises = this.imageUrls.map(image => {
-            return this.addImageToVfS(image, vfs);
-        });
+        const promises = this.imageUrls.map(image => this.addImageToVfS(image, vfs));
         await Promise.all(promises);
     }
 
@@ -697,7 +693,7 @@ export class PdfDocumentService {
                 body: header[0] ? [...header, ...tocBody] : tocBody
             },
             layout: borderStyle,
-            style: style
+            style
         };
     }
 
@@ -721,14 +717,14 @@ export class PdfDocumentService {
         return [
             {
                 text: identifier,
-                style: style
+                style
             },
             {
                 text: [title, ...subTitle],
                 style: 'tocEntry'
             },
             {
-                pageReference: pageReference,
+                pageReference,
                 style: 'tocEntry',
                 alignment: 'right'
             }
@@ -747,7 +743,7 @@ export class PdfDocumentService {
         return {
             text: '\n' + text,
             style: StyleType.SUB_ENTRY,
-            italics: italics
+            italics
         };
     }
 
@@ -763,7 +759,7 @@ export class PdfDocumentService {
             {
                 type: 'ellipse',
                 x: 0,
-                y: y,
+                y,
                 lineColor: 'black',
                 r1: size,
                 r2: size

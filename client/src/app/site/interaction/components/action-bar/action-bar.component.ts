@@ -64,9 +64,7 @@ export class ActionBarComponent extends BaseComponent {
 
     public get showHelpDesk(): Observable<boolean> {
         return combineLatest([this.rtcService.isSupportEnabled, this.isJoined]).pipe(
-            map(([isSupportEnabled, isJoined]) => {
-                return isSupportEnabled && !isJoined;
-            })
+            map(([isSupportEnabled, isJoined]) => isSupportEnabled && !isJoined)
         );
     }
 

@@ -82,13 +82,9 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         };
     }
 
-    public getTitle = (viewMeeting: ViewMeeting) => {
-        return viewMeeting.name;
-    };
+    public getTitle = (viewMeeting: ViewMeeting) => viewMeeting.name;
 
-    public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Meetings' : 'Meeting');
-    };
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Meetings' : 'Meeting');
 
     public getProjectorTitle = (viewMeeting: ViewMeeting, projection: Projection) => {
         let title;

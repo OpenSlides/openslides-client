@@ -23,7 +23,8 @@ import { ViewOption } from './view-option';
 
 export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
     extends BaseProjectableViewModel<Poll>
-    implements DetailNavigable, PollData {
+    implements DetailNavigable, PollData
+{
     public get poll(): Poll {
         return this._model;
     }

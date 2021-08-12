@@ -104,12 +104,12 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
     }
 
     public createForwarded(meetingIds: Id[], ...motions: MotionAction.ForwardMotion[]): Promise<void> {
-        const payload: MotionAction.CreateForwardedPayload[] = meetingIds.flatMap(id => {
-            return motions.map(motion => ({
+        const payload: MotionAction.CreateForwardedPayload[] = meetingIds.flatMap(id =>
+            motions.map(motion => ({
                 meeting_id: id,
                 ...motion
-            }));
-        });
+            }))
+        );
         return this.sendBulkActionToBackend(MotionAction.CREATE_FORWARDED, payload);
     }
 
@@ -281,9 +281,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         return agendaTitle;
     };
 
-    public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Motions' : 'Motion');
-    };
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Motions' : 'Motion');
 
     public getProjectorTitle = (viewMotion: ViewMotion) => {
         const subtitle =
@@ -394,7 +392,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
             // remove tag from motion
             tag_ids.splice(tagIndex, 1);
         }
-        return this.update({ tag_ids: tag_ids }, viewMotion);
+        return this.update({ tag_ids }, viewMotion);
     }
 
     /**
@@ -443,11 +441,9 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      */
     public getAmendmentsByMotionAsObservable(motionId: number): Observable<ViewMotion[]> {
         return this.getViewModelListObservable().pipe(
-            map((motions: ViewMotion[]): ViewMotion[] => {
-                return motions.filter((motion: ViewMotion): boolean => {
-                    return motion.lead_motion_id === motionId;
-                });
-            })
+            map((motions: ViewMotion[]): ViewMotion[] =>
+                motions.filter((motion: ViewMotion): boolean => motion.lead_motion_id === motionId)
+            )
         );
     }
     /**

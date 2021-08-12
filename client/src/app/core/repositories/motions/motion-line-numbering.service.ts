@@ -86,11 +86,11 @@ export class MotionLineNumberingService {
         this.amendmentChangeRecoSubscriptionMap = {};
         for (const amendment of amendments) {
             if (!this.amendmentChangeRecoSubscriptionMap[amendment.id]) {
-                this.amendmentChangeRecoSubscriptionMap[
-                    amendment.id
-                ] = this.changeRecoRepo.getChangeRecosOfMotionObservable(amendment.id).subscribe(changeRecos => {
-                    this.amendmentChangeRecoMap[amendment.id] = changeRecos;
-                });
+                this.amendmentChangeRecoSubscriptionMap[amendment.id] = this.changeRecoRepo
+                    .getChangeRecosOfMotionObservable(amendment.id)
+                    .subscribe(changeRecos => {
+                        this.amendmentChangeRecoMap[amendment.id] = changeRecos;
+                    });
             }
         }
     }
@@ -193,9 +193,9 @@ export class MotionLineNumberingService {
         const baseParagraphs = this.getTextParagraphs(motion, true, lineLength);
 
         // Changes need to be applied from the bottom up, to prevent conflicts with changing line numbers.
-        changes.sort((change1: ViewUnifiedChange, change2: ViewUnifiedChange) => {
-            return change1.getLineFrom() - change2.getLineFrom();
-        });
+        changes.sort(
+            (change1: ViewUnifiedChange, change2: ViewUnifiedChange) => change1.getLineFrom() - change2.getLineFrom()
+        );
 
         return baseParagraphs.map((paragraph: string, paraNo: number) => {
             let paragraphHasChanges = false;
@@ -264,30 +264,28 @@ export class MotionLineNumberingService {
         if (crMode === ChangeRecoMode.Changed) {
             amendmentParagraphs = this.applyChangesToAmendment(amendment, lineLength, changeRecommendations, true);
         } else {
-            amendmentParagraphs = baseParagraphs.map((_: string, paraNo: number) => {
-                return amendment.amendment_paragraph(paraNo);
-            });
+            amendmentParagraphs = baseParagraphs.map((_: string, paraNo: number) =>
+                amendment.amendment_paragraph(paraNo)
+            );
         }
 
         return amendmentParagraphs
-            .map(
-                (newText: string, paraNo: number): DiffLinesInParagraph => {
-                    if (baseParagraphs[paraNo] === undefined) {
-                        throw new Error(
-                            'Inconsistent data. An amendment is probably referring to a non-existent line number.'
-                        );
-                    } else if (newText !== null) {
-                        return this.diffService.getAmendmentParagraphsLines(
-                            paraNo,
-                            baseParagraphs[paraNo],
-                            newText,
-                            lineLength
-                        );
-                    } else {
-                        return null; // Nothing has changed in this paragraph
-                    }
+            .map((newText: string, paraNo: number): DiffLinesInParagraph => {
+                if (baseParagraphs[paraNo] === undefined) {
+                    throw new Error(
+                        'Inconsistent data. An amendment is probably referring to a non-existent line number.'
+                    );
+                } else if (newText !== null) {
+                    return this.diffService.getAmendmentParagraphsLines(
+                        paraNo,
+                        baseParagraphs[paraNo],
+                        newText,
+                        lineLength
+                    );
+                } else {
+                    return null; // Nothing has changed in this paragraph
                 }
-            )
+            })
             .map((diffLines: DiffLinesInParagraph, paraNo: number) => {
                 // If nothing has changed and we want to keep unchanged paragraphs for the context,
                 // return the original text in "textPre"
@@ -345,39 +343,32 @@ export class MotionLineNumberingService {
         const changedAmendmentParagraphs = this.applyChangesToAmendment(amendment, lineLength, changeRecos, false);
 
         return changedAmendmentParagraphs
-            .map(
-                (newText: string, paragraphNumber: number): ViewMotionAmendedParagraph => {
-                    if (newText === null) {
-                        return null;
-                    }
-
-                    if (baseParagraphs[paragraphNumber] === undefined) {
-                        console.error(
-                            'Inconsistent data. An amendment is probably referring to a non-existent line number.'
-                        );
-                        return null;
-                    }
-
-                    const origText = baseParagraphs[paragraphNumber],
-                        diff = this.diffService.diff(origText, newText),
-                        affectedLines = this.diffService.detectAffectedLineRange(diff);
-
-                    if (affectedLines === null) {
-                        return null;
-                    }
-                    const affectedDiff = this.diffService.formatDiff(
-                        this.diffService.extractRangeByLineNumbers(diff, affectedLines.from, affectedLines.to)
-                    );
-                    const affectedConsolidated = this.diffService.diffHtmlToFinalText(affectedDiff);
-
-                    return new ViewMotionAmendedParagraph(
-                        amendment,
-                        paragraphNumber,
-                        affectedConsolidated,
-                        affectedLines
-                    );
+            .map((newText: string, paragraphNumber: number): ViewMotionAmendedParagraph => {
+                if (newText === null) {
+                    return null;
                 }
-            )
+
+                if (baseParagraphs[paragraphNumber] === undefined) {
+                    console.error(
+                        'Inconsistent data. An amendment is probably referring to a non-existent line number.'
+                    );
+                    return null;
+                }
+
+                const origText = baseParagraphs[paragraphNumber];
+                const diff = this.diffService.diff(origText, newText);
+                const affectedLines = this.diffService.detectAffectedLineRange(diff);
+
+                if (affectedLines === null) {
+                    return null;
+                }
+                const affectedDiff = this.diffService.formatDiff(
+                    this.diffService.extractRangeByLineNumbers(diff, affectedLines.from, affectedLines.to)
+                );
+                const affectedConsolidated = this.diffService.diffHtmlToFinalText(affectedDiff);
+
+                return new ViewMotionAmendedParagraph(amendment, paragraphNumber, affectedConsolidated, affectedLines);
+            })
             .filter((paragraph: ViewMotionAmendedParagraph) => paragraph !== null);
     }
 
@@ -441,8 +432,8 @@ export class MotionLineNumberingService {
 
     public changeHasCollissions(change: ViewUnifiedChange, changes: ViewUnifiedChange[]): boolean {
         return (
-            changes.filter((otherChange: ViewUnifiedChange) => {
-                return (
+            changes.filter(
+                (otherChange: ViewUnifiedChange) =>
                     otherChange.getChangeId() !== change.getChangeId() &&
                     ((otherChange.getLineFrom() >= change.getLineFrom() &&
                         otherChange.getLineFrom() < change.getLineTo()) ||
@@ -450,8 +441,7 @@ export class MotionLineNumberingService {
                             otherChange.getLineTo() <= change.getLineTo()) ||
                         (otherChange.getLineFrom() < change.getLineFrom() &&
                             otherChange.getLineTo() > change.getLineTo()))
-                );
-            }).length > 0
+            ).length > 0
         );
     }
 }

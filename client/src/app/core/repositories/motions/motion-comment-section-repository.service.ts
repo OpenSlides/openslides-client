@@ -46,13 +46,10 @@ export class MotionCommentSectionRepositoryService extends BaseRepositoryWithAct
         };
     }
 
-    public getTitle = (viewMotionCommentSection: ViewMotionCommentSection) => {
-        return viewMotionCommentSection.name;
-    };
+    public getTitle = (viewMotionCommentSection: ViewMotionCommentSection) => viewMotionCommentSection.name;
 
-    public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Comment sections' : 'Comment section');
-    };
+    public getVerboseName = (plural: boolean = false) =>
+        this.translate.instant(plural ? 'Comment sections' : 'Comment section');
 
     public async create(partialModel: Partial<MotionCommentSection>): Promise<Identifiable> {
         const payload: MotionCommentSectionAction.CreatePayload = {

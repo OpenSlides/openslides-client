@@ -44,11 +44,11 @@ export class ChoiceService {
         const dialogRef = this.dialog.open(ChoiceDialogComponent, {
             ...infoDialogSettings,
             data: {
-                title: title,
-                choices: choices,
-                multiSelect: multiSelect,
+                title,
+                choices,
+                multiSelect,
                 actionButtons: actions,
-                clearChoiceOption: clearChoiceOption
+                clearChoiceOption
             }
         });
         return dialogRef.afterClosed().toPromise();

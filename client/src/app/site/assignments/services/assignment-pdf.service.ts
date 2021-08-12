@@ -127,12 +127,10 @@ export class AssignmentPdfService {
     private createCandidateList(assignment: ViewAssignment): object {
         if (assignment.phase !== AssignmentPhase.Finished) {
             const candidatesText = `${this.translate.instant('Candidates')}: `;
-            const userList = assignment.candidates.map(candidate => {
-                return {
-                    text: candidate.user.full_name,
-                    margin: [0, 0, 0, 10]
-                };
-            });
+            const userList = assignment.candidates.map(candidate => ({
+                text: candidate.user.full_name,
+                margin: [0, 0, 0, 10]
+            }));
             const listType = assignment.number_poll_candidates ? 'ol' : 'ul';
 
             return {

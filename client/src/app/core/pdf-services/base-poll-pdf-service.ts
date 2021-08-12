@@ -111,7 +111,7 @@ export abstract class PollPdfService {
             {
                 type: 'ellipse',
                 x: 0,
-                y: y,
+                y,
                 lineColor: 'black',
                 r1: size,
                 r2: size
@@ -149,7 +149,7 @@ export abstract class PollPdfService {
                 table: {
                     headerRows: 1,
                     widths: ['*', '*'],
-                    body: body,
+                    body,
                     pageBreak: 'after'
                 },
                 rowsperpage: rowsPerPage
@@ -202,7 +202,7 @@ export abstract class PollPdfService {
             color: '#555',
             fontSize: 10,
             margin: [30, 10, 10, -10], // [left, top, right, bottom]
-            columns: columns,
+            columns,
             columnGap: 5
         };
     }

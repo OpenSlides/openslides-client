@@ -372,12 +372,13 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
      * (triggered on an update of users or config)
      */
     private filterUsers(): void {
-        const availableUsers = this.usersSubject.getValue().filter(user => {
-            return (
-                (!this.onlyPresentUsers || user.isPresentInMeeting()) &&
-                !this.waitingSpeakers.some(speaker => speaker.user_id === user.id)
+        const availableUsers = this.usersSubject
+            .getValue()
+            .filter(
+                user =>
+                    (!this.onlyPresentUsers || user.isPresentInMeeting()) &&
+                    !this.waitingSpeakers.some(speaker => speaker.user_id === user.id)
             );
-        });
         this.filteredUsersSubject.next(availableUsers);
     }
 

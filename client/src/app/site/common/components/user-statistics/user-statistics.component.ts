@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 
-import { PblColumnDefinition } from '@pebula/ngrid/lib/grid';
+import { PblColumnDefinition } from '@pebula/ngrid';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
@@ -44,17 +44,17 @@ export class UserStatisticsComponent extends BaseModelContextComponent {
     public readonly columnDefinition: PblColumnDefinition[] = [
         {
             prop: 'structureLevel',
-            width: 'auto',
+            width: '40%',
             label: 'Structure level'
         },
         {
             prop: 'durationOfWordRequests',
-            width: 'auto',
+            width: '30%',
             label: this.translate.instant('Duration of requests to speak')
         },
         {
             prop: 'numberOfWordRequests',
-            width: 'auto',
+            width: '30%',
             label: this.translate.instant('Number of requests to speak')
         }
     ];

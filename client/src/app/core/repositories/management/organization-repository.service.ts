@@ -15,13 +15,10 @@ export class OrganizationRepositoryService extends BaseRepository<ViewOrganizati
         super(repositoryServiceCollector, Organization);
     }
 
-    public getTitle = (viewOrganization: ViewOrganization) => {
-        return viewOrganization.name;
-    };
+    public getTitle = (viewOrganization: ViewOrganization) => viewOrganization.name;
 
-    public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Organizations' : 'Organization');
-    };
+    public getVerboseName = (plural: boolean = false) =>
+        this.translate.instant(plural ? 'Organizations' : 'Organization');
 
     public getFieldsets(): Fieldsets<Organization> {
         const coreFieldset: (keyof Organization)[] = ['name', 'description'];

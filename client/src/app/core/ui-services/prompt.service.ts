@@ -20,7 +20,7 @@ export class PromptService {
     public async open(title: string, content: string = ''): Promise<any> {
         const dialogRef = this.dialog.open(PromptDialogComponent, {
             width: '290px',
-            data: { title: title, content: content }
+            data: { title, content }
         });
 
         return dialogRef.afterClosed().toPromise();

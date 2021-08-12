@@ -51,13 +51,9 @@ export class MotionStateRepositoryService extends BaseRepositoryWithActiveMeetin
         };
     }
 
-    public getTitle = (viewMotionState: ViewMotionState) => {
-        return viewMotionState.name;
-    };
+    public getTitle = (viewMotionState: ViewMotionState) => viewMotionState.name;
 
-    public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Workflows' : 'Workflow');
-    };
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Workflows' : 'Workflow');
 
     public async create(model: Partial<ViewMotionState>): Promise<Identifiable> {
         const payload: MotionStateAction.CreatePayload = {

@@ -29,7 +29,7 @@ export class OpenSlidesTranslateParser extends TranslateDefaultParser {
             // in fact the directives and pipes just listen to the selected language.
             this.translateStore.langs.forEach(lang => {
                 this.translateStore.onTranslationChange.emit({
-                    lang: lang,
+                    lang,
                     translations: this.translateStore.translations[lang]
                 });
             });

@@ -43,9 +43,7 @@ export interface MotionChangeRecommendationDialogComponentData extends BaseChang
     templateUrl: './motion-change-recommendation-dialog.component.html',
     styleUrls: ['./motion-change-recommendation-dialog.component.scss']
 })
-export class MotionChangeRecommendationDialogComponent extends BaseChangeRecommendationDialogComponent<
-    MotionChangeRecommendationDialogComponentData
-> {
+export class MotionChangeRecommendationDialogComponent extends BaseChangeRecommendationDialogComponent<MotionChangeRecommendationDialogComponentData> {
     /**
      * The line range affected by this change recommendation
      */

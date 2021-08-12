@@ -26,13 +26,9 @@ export class ResourceRepositoryService extends BaseRepository<ViewResource, Reso
         });
     }
 
-    public getTitle = (viewResource: ViewResource) => {
-        return viewResource.token;
-    };
+    public getTitle = (viewResource: ViewResource) => viewResource.token;
 
-    public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Resources' : 'Resource');
-    };
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Resources' : 'Resource');
 
     public getFieldsets(): Fieldsets<Resource> {
         const detailFieldset: (keyof Resource)[] = ['id', 'mimetype', 'token', 'organization_id'];

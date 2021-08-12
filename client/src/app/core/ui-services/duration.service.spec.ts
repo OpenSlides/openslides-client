@@ -11,8 +11,8 @@ describe('DurationService', () => {
         TestBed.configureTestingModule({
             imports: [E2EImportsModule],
             providers: [DurationService]
-        }),
-            (service = TestBed.inject(DurationService));
+        });
+        service = TestBed.inject(DurationService);
     });
 
     it('should be created', () => {

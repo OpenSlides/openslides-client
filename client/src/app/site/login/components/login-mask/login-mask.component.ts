@@ -134,11 +134,9 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
             ();
 
         // Maybe the operator changes and the user is logged in. If so, redirect him and boot OpenSlides.
-        this.operatorSubscription = this.operator.operatorUpdatedEvent.subscribe(user => {
-            if (user) {
-                this.clearOperatorSubscription();
-                this.authService.redirectUser(this.currentMeetingId);
-            }
+        this.operatorSubscription = this.operator.operatorUpdatedEvent.subscribe(() => {
+            this.clearOperatorSubscription();
+            this.authService.redirectUser(this.currentMeetingId);
         });
 
         this.route.queryParams.pipe(filter(params => params.checkBrowser)).subscribe(params => {

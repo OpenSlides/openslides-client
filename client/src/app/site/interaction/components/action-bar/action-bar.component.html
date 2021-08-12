@@ -1,6 +1,6 @@
-<div class="interaction-bar-wrapper" *ngIf="!(isConfStateNone | async)">
+<div class="interaction-bar-wrapper" *ngIf="(isConfStateNone | async) === false">
     <ng-container *ngIf="isConfStateJitsi | async">
-        <ng-container *ngIf="(isJoined | async) && !(showCallDialog | async)">
+        <ng-container *ngIf="(isJoined | async) && (showCallDialog | async) === false">
             <!-- show dialog -->
             <button
                 mat-mini-fab
@@ -54,7 +54,7 @@
         matTooltip="{{ 'Give applause' | translate }}"
         [disabled]="sendsApplause | async"
         [matBadge]="applauseLevel | async"
-        [matBadgeHidden]="!(showApplauseLevel | async)"
+        [matBadgeHidden]="(showApplauseLevel | async) === false"
         (click)="sendApplause()"
         *ngIf="showApplause | async"
         @fadeIn

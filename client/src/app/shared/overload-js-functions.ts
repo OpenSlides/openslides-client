@@ -46,7 +46,7 @@ export function overloadJsFunctions(): void {
 
 function overloadArrayFunctions(): void {
     Object.defineProperty(Array.prototype, 'toString', {
-        value: function (): string {
+        value(): string {
             let string = '';
             const iterations = Math.min(this.length, 3);
 
@@ -67,7 +67,7 @@ function overloadArrayFunctions(): void {
     });
 
     Object.defineProperty(Array.prototype, 'flatMap', {
-        value: function (o: any): any[] {
+        value(o: any): any[] {
             const concatFunction = (x: any, y: any[]) => x.concat(y);
             const flatMapLogic = (f: any, xs: any) => xs.map(f).reduce(concatFunction, []);
             return flatMapLogic(o, this);
@@ -76,7 +76,7 @@ function overloadArrayFunctions(): void {
     });
 
     Object.defineProperty(Array.prototype, 'intersect', {
-        value: function <T>(other: T[] = []): T[] {
+        value<T>(other: T[] = []): T[] {
             let a = this;
             let b = other;
             if (b.length < a.length) {
@@ -89,7 +89,7 @@ function overloadArrayFunctions(): void {
     });
 
     Object.defineProperty(Array.prototype, 'difference', {
-        value: function <T>(other: T[] = [], symmetric: boolean = false): T[] {
+        value<T>(other: T[] = [], symmetric: boolean = false): T[] {
             const difference = new Set<T>(this);
             for (const entry of other) {
                 if (difference.has(entry)) {
@@ -104,7 +104,7 @@ function overloadArrayFunctions(): void {
     });
 
     Object.defineProperty(Array.prototype, 'mapToObject', {
-        value: function <T>(f: (item: T) => { [key: string]: any }): { [key: string]: any } {
+        value<T>(f: (item: T) => { [key: string]: any }): { [key: string]: any } {
             return this.reduce((aggr, item) => {
                 const res = f(item);
                 for (const key in res) {
@@ -124,7 +124,7 @@ function overloadArrayFunctions(): void {
  */
 function overloadSetFunctions(): void {
     Object.defineProperty(Set.prototype, 'equals', {
-        value: function <T>(other: Set<T>): boolean {
+        value<T>(other: Set<T>): boolean {
             const difference = new Set(this);
             for (const elem of other) {
                 if (difference.has(elem)) {
@@ -145,7 +145,7 @@ function overloadSetFunctions(): void {
  */
 function overloadModulo(): void {
     Object.defineProperty(Number.prototype, 'modulo', {
-        value: function (n: number): number {
+        value(n: number): number {
             return ((this % n) + n) % n;
         },
         enumerable: false

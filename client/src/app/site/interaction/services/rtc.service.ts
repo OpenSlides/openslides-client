@@ -49,7 +49,7 @@ interface MemberKicked {
 /**
  * Jitsi
  */
-declare var JitsiMeetExternalAPI: any;
+declare let JitsiMeetExternalAPI: any;
 
 const configOverwrite = {
     startAudioOnly: false,
@@ -389,8 +389,8 @@ export class RtcService {
         this.options = {
             roomName: this.actualRoomName,
             parentNode: this.jitsiNode.nativeElement,
-            configOverwrite: configOverwrite,
-            interfaceConfigOverwrite: interfaceConfigOverwrite
+            configOverwrite,
+            interfaceConfigOverwrite
         };
     }
 

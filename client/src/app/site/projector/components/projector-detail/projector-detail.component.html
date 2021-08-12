@@ -76,7 +76,7 @@
                     <mat-icon>refresh</mat-icon>
                 </button>
                 <!-- scaling indicator -->
-                <div class="button-size" [ngClass]="projector.scale != 0 ? 'warn' : ''">{{ projector.scale }}</div>
+                <div class="button-size" [ngClass]="projector.scale !== 0 ? 'warn' : ''">{{ projector.scale }}</div>
 
                 <!-- scroll viewport up (fast), decrease scroll counter -->
                 <button
@@ -127,7 +127,7 @@
                     <mat-icon>refresh</mat-icon>
                 </button>
                 <!-- scroll indicator -->
-                <div class="button-size" [ngClass]="projector.scroll != 0 ? 'warn' : ''">
+                <div class="button-size" [ngClass]="projector.scroll !== 0 ? 'warn' : ''">
                     {{ projector.scroll }}
                 </div>
             </div>

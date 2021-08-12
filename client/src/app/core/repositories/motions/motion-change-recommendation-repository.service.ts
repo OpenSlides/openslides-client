@@ -42,22 +42,17 @@ export class MotionChangeRecommendationRepositoryService extends BaseRepositoryW
         super(repositoryServiceCollector, MotionChangeRecommendation);
     }
 
-    public getTitle = (viewMotionChangeRecommendation: ViewMotionChangeRecommendation) => {
-        return this.getVerboseName();
-    };
+    public getTitle = (viewMotionChangeRecommendation: ViewMotionChangeRecommendation) => this.getVerboseName();
 
-    public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Change recommendations' : 'Change recommendation');
-    };
+    public getVerboseName = (plural: boolean = false) =>
+        this.translate.instant(plural ? 'Change recommendations' : 'Change recommendation');
 
     /**
      * return the Observable of all change recommendations belonging to the given motion
      */
     public getChangeRecosOfMotionObservable(motionId: Id): Observable<ViewMotionChangeRecommendation[]> {
         return this.getViewModelListObservable().pipe(
-            map((recos: ViewMotionChangeRecommendation[]) => {
-                return recos.filter(reco => reco.motion_id === motionId);
-            })
+            map((recos: ViewMotionChangeRecommendation[]) => recos.filter(reco => reco.motion_id === motionId))
         );
     }
 

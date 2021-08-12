@@ -261,7 +261,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         const data: MotionChangeRecommendationDialogComponentData = {
             editChangeRecommendation: false,
             newChangeRecommendation: true,
-            lineRange: lineRange,
+            lineRange,
             changeRecommendation: null
         };
         if (this.motion.isParagraphBasedAmendment()) {
@@ -286,7 +286,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         }
         this.dialogService.open(MotionChangeRecommendationDialogComponent, {
             ...mediumDialogSettings,
-            data: data
+            data
         });
     }
 

@@ -32,7 +32,8 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
 })
 export class MotionWorkflowRepositoryService
     extends BaseRepositoryWithActiveMeeting<ViewMotionWorkflow, MotionWorkflow>
-    implements ModelRequestRepository {
+    implements ModelRequestRepository
+{
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, MotionWorkflow);
     }
@@ -47,13 +48,9 @@ export class MotionWorkflowRepositoryService
         };
     }
 
-    public getTitle = (viewMotionWorkflow: ViewMotionWorkflow) => {
-        return viewMotionWorkflow.name;
-    };
+    public getTitle = (viewMotionWorkflow: ViewMotionWorkflow) => viewMotionWorkflow.name;
 
-    public getVerboseName = (plural: boolean = false) => {
-        return this.translate.instant(plural ? 'Workflows' : 'Workflow');
-    };
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Workflows' : 'Workflow');
 
     /**
      * Returns all workflowStates that cover the list of viewMotions given
