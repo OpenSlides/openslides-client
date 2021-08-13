@@ -27,10 +27,10 @@ enum Direction {
  * Interface which extends the `OSFlatNode`.
  * Containing further information like start- and next-position.
  */
-interface ExFlatNode<T extends Identifiable & Displayable> extends FlatNode<T> {
+type ExFlatNode<T extends Identifiable & Displayable> = FlatNode<T> & {
     startPosition: number;
     nextPosition: number;
-}
+};
 
 /**
  * Interface to hold the start position and the current position.

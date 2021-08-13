@@ -4,7 +4,7 @@ import { AgendaItemAction } from 'app/core/actions/agenda-item-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Id } from 'app/core/definitions/key-types';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
-import { TreeIdNode } from 'app/core/ui-services/tree.service';
+import { TreeIdNode, TreeService } from 'app/core/ui-services/tree.service';
 import { AgendaItem, AgendaItemType } from 'app/shared/models/agenda/agenda-item';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { HasAgendaItem, ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
@@ -28,11 +28,12 @@ export interface AgendaListTitle {
 export class AgendaItemRepositoryService extends BaseRepositoryWithActiveMeeting<ViewAgendaItem, AgendaItem> {
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
-        private meetingSettingsService: MeetingSettingsService
+        private meetingSettingsService: MeetingSettingsService,
+        private treeService: TreeService
     ) {
         super(repositoryServiceCollector, AgendaItem);
 
-        this.setSortFunction((a, b) => a.weight - b.weight);
+        this.setSortFunction((a, b) => a.tree_weight - b.tree_weight); // leave the sorting as it is
     }
 
     public getFieldsets(): Fieldsets<AgendaItem> {
@@ -193,5 +194,9 @@ export class AgendaItemRepositoryService extends BaseRepositoryWithActiveMeeting
     public bulkSetAgendaType(items: ViewAgendaItem[], agendaType: AgendaItemType): Promise<void> {
         const payload: AgendaItemAction.UpdatePayload[] = items.map(item => ({ id: item.id, type: agendaType }));
         return this.sendBulkActionToBackend(AgendaItemAction.UPDATE, payload);
+    }
+
+    protected tapViewModels(viewModels: ViewAgendaItem[]): void {
+        this.treeService.injectFlatNodeInformation(viewModels, 'weight', 'parent_id');
     }
 }

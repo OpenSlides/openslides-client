@@ -334,7 +334,7 @@ export class MotionMultiselectService {
         const INSERT_AFTER = this.translate.instant('Insert after');
         const options = [TO_PARENT, INSERT_AFTER];
         const allMotions = this.repo.getViewModelList();
-        const tree = this.treeService.makeTree(allMotions, 'sort_weight', 'sort_parent_id');
+        const tree = this.treeService.makeSortedTree(allMotions, 'sort_weight', 'sort_parent_id');
         const itemsToMove = this.treeService.getBranchesFromTree(tree, motions);
         const partialTree = this.treeService.getTreeWithoutSelection(tree, motions);
         const availableMotions = this.treeService.getFlatItemsFromTree(partialTree);

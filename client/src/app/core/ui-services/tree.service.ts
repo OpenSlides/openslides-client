@@ -28,18 +28,20 @@ export interface OSTreeNode<T> extends TreeNodeWithoutItem {
 }
 
 /**
- * Interface which defines the nodes for the sorting trees.
+ * Interface that describes a node for a flat tree. A flat tree has a flat hierarchy. Every node has no property like
+ * `children` to make a recursive structure and describe relations between parent and child nodes. These information
+ * are given by the properties `position` and `level`.
  *
  * Contains information like
- * item: The base item the node is created from.
- * level: The level of the node. The higher, the deeper the level.
- * position: The position in the array of the node.
- * isExpanded: Boolean if the node is expanded.
- * expandable: Boolean if the node is expandable.
- * id: The id of the node.
- * filtered: Optional boolean to check, if the node is filtered.
+ * @param item: The base item the node is created from.
+ * @param level: The level of the node. The higher, the deeper the level.
+ * @param position: The position in the array of the node.
+ * @param isExpanded: Boolean if the node is expanded.
+ * @param expandable: Boolean if the node is expandable.
+ * @param id: The id of the node.
+ * @param filtered: Optional boolean to check, if the node is filtered.
  */
-export interface FlatNode<T> {
+export type FlatNode<T> = T & {
     item: T;
     level: number;
     position?: number;
@@ -48,7 +50,7 @@ export interface FlatNode<T> {
     expandable: boolean;
     id: number;
     filtered?: boolean;
-}
+};
 
 /**
  * This services handles all operations belonging to trees. It can build trees of plain lists (giving the weight
@@ -87,6 +89,49 @@ export class TreeService {
     }
 
     /**
+     * Function to inject information like `position` and `level` to the passed items. It does not return anything.
+     *
+     * @param items which get the described information injected
+     * @param weightKey a key of the type of the items to sort the items by that key
+     * @param parentKey a key that indicate the id of the parent of an item
+     */
+    public injectFlatNodeInformation<T extends Identifiable & { children: T[]; level?: number; tree_weight?: number }>(
+        items: T[],
+        weightKey: keyof T,
+        parentKey: keyof T
+    ): void {
+        const map = {};
+        const roots = [];
+        let i = 0;
+        let node: any;
+
+        for (i = 0; i < items.length; ++i) {
+            map[items[i].id] = i;
+            items[i].children = [];
+        }
+
+        for (i = 0; i < items.length; ++i) {
+            node = items[i];
+            if (!!node[parentKey]) {
+                items[map[node[parentKey]]].children.push(node);
+            } else {
+                roots.push(node);
+            }
+        }
+
+        roots.sort((nodeA, nodeB) => nodeA[weightKey] - nodeB[weightKey]);
+        const nodes = [];
+        let tree_weight = 0;
+        const toNodes = (root: T, level: number = 0) => {
+            root.tree_weight = tree_weight++;
+            root.level = level;
+            nodes.push(root);
+            root.children.forEach(child => toNodes(child, level + 1));
+        };
+        roots.forEach(root => toNodes(root));
+    }
+
+    /**
      * Function to build flat nodes from `OSTreeNode`s.
      * Iterates recursively through the list of nodes.
      *
@@ -101,7 +146,7 @@ export class TreeService {
         weightKey: keyof T,
         parentKey: keyof T
     ): FlatNode<T>[] {
-        const tree = this.makeTree(items, weightKey, parentKey);
+        const tree = this.makeSortedTree(items, weightKey, parentKey);
         const flatNodes: FlatNode<T>[] = [];
         for (const node of tree) {
             flatNodes.push(...this.makePartialFlatTree(node, 0));
@@ -142,7 +187,7 @@ export class TreeService {
      * @param parentIdKey The key giving access to the parentId property
      * @returns An iterator for all items in the right order.
      */
-    public makeTree<T extends Identifiable & Displayable>(
+    public makeSortedTree<T extends Identifiable & Displayable>(
         items: T[],
         weightKey: keyof T,
         parentIdKey: keyof T
@@ -151,6 +196,14 @@ export class TreeService {
         items.sort((a, b) => this.getAttributeAsNumber(a, weightKey) - this.getAttributeAsNumber(b, weightKey));
         // Build a dict with all children (dict-value) to a specific
         // item id (dict-key).
+        return this.makeTree(items, parentIdKey, (_item, _children) => this.buildTreeNode(_item, _children));
+    }
+
+    public makeTree<T extends Identifiable & Displayable, R>(
+        items: T[],
+        parentIdKey: keyof T,
+        toNodeFn: (item: T, children: R[]) => R
+    ): R[] {
         const children: { [parendId: number]: T[] } = {};
         items.forEach(model => {
             if (model[parentIdKey]) {
@@ -164,13 +217,13 @@ export class TreeService {
         });
         // Recursive function that generates a nested list with all
         // items with there children
-        const getChildren: (_models?: T[]) => OSTreeNode<T>[] = _models => {
+        const getChildren: (_models?: T[]) => R[] = _models => {
             if (!_models) {
-                return;
+                return [];
             }
-            const nodes: OSTreeNode<T>[] = [];
+            const nodes: R[] = [];
             _models.forEach(_model => {
-                nodes.push(this.buildTreeNode(_model, getChildren(children[_model.id])));
+                nodes.push(toNodeFn(_model, getChildren(children[_model.id])));
             });
             return nodes;
         };
@@ -180,7 +233,7 @@ export class TreeService {
     }
 
     /**
-     * Removes `item` from the tree.
+     * Removes the `item`-property from any node in the given tree.
      *
      * @param tree The tree with items
      * @returns The tree without items
@@ -196,25 +249,6 @@ export class TreeService {
             }
             return nodeWithoutItem;
         });
-    }
-
-    /**
-     * Reduce a list of items to nodes independent from each other in a given
-     * branch of a tree
-     *
-     * @param branch the tree to traverse
-     * @param items the items to check
-     * @returns the selection of items that belong to different branches
-     */
-    private getTopItemsFromBranch<T extends Identifiable & Displayable>(branch: OSTreeNode<T>, items: T[]): T[] {
-        const item = items.find(i => branch.item.id === i.id);
-        if (item) {
-            return [item];
-        } else if (!branch.children) {
-            return [];
-        } else {
-            return [].concat(...branch.children.map(child => this.getTopItemsFromBranch(child, items)));
-        }
     }
 
     /**
@@ -349,14 +383,50 @@ export class TreeService {
         return result;
     }
 
+    private createFlatNode<T extends Identifiable & Displayable>(item: OSTreeNode<T>, level: number): FlatNode<T> {
+        const children = item.children;
+        const node: any = {
+            id: item.id,
+            item: item.item,
+            expandable: !!children,
+            isExpanded: !!children,
+            level: level,
+            isSeen: true
+        };
+        return new Proxy(node, {
+            get: (target: FlatNode<T>, property: string | symbol) => {
+                const model = target.item;
+                if (property in target) {
+                    return target[property];
+                }
+                if (model[property]) {
+                    if (typeof model[property] === 'function') {
+                        return model[property].bind(model);
+                    }
+                    return model[property];
+                }
+                return target[property];
+            },
+            set: (target: FlatNode<T>, property: string | symbol, value: any) => {
+                const model = target.item;
+                if (model[property]) {
+                    if (typeof value === 'function') {
+                        model[property] = value.bind(model);
+                    } else {
+                        model[property] = value;
+                    }
+                }
+                target[property] = value;
+                return true;
+            }
+        });
+    }
+
     /**
      * Helper function to go recursively through the children of given node.
      *
      * @param item The current item from which the flat node will be created.
      * @param level The level the flat node will be.
-     * @param additionalTag Optional: A key of the items. If this parameter is set,
-     *                      the nodes will have a tag for filtering them.
-     *
      * @returns An array containing the parent node with all its children.
      */
     private makePartialFlatTree<T extends Identifiable & Displayable>(
@@ -364,14 +434,7 @@ export class TreeService {
         level: number
     ): FlatNode<T>[] {
         const children = item.children;
-        const node: FlatNode<T> = {
-            id: item.id,
-            item: item.item,
-            expandable: !!children,
-            isExpanded: !!children,
-            level,
-            isSeen: true
-        };
+        const node = this.createFlatNode(item, level);
         const flatNodes: FlatNode<T>[] = [node];
         if (children) {
             for (const child of children) {
@@ -398,7 +461,7 @@ export class TreeService {
     ): { node: TreeIdNode; length: number } {
         const children = [];
         // Begins at the position of the node in the array.
-        // Ends if the next node has the same or higher level than the given node.
+        // Ends if the next node has the same or lower level than the given node.
         for (let i = node.position + 1; !!nodes[i] && nodes[i].level >= node.level + 1; ++i) {
             const nextNode = nodes[i];
             // The next node is a child if the level is one higher than the given node.

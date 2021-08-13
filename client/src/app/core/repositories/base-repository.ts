@@ -102,17 +102,6 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     public abstract getVerboseName: (plural?: boolean) => string;
     public abstract getTitle: (viewModel: V) => string;
 
-    /**
-     * Maps the given relations (`relationDefinitions`) to their affected collections. This means,
-     * if a model of the collection updates, the relation needs to be updated.
-     *
-     * Attention: Some inherited repos might put other relations than RelationDefinition in here, so
-     * *always* check the type of the relation.
-     */
-    /*protected relationsByCollection: { [collection: string]: RelationDefinition<BaseViewModel>[] } = {};
-
-    protected reverseRelationsByCollection: { [collection: string]: ReverseRelationDefinition<BaseViewModel>[] } = {};*/
-
     protected relationsByKey: { [key: string]: Relation } = {};
 
     /**
@@ -186,7 +175,12 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     }
 
     public updateViewModelListSubject(viewModels: V[]): void {
-        this.viewModelListSubject.next(viewModels.filter(m => m.canAccess()).sort(this.viewModelSortFn));
+        this.viewModelListSubject.next(
+            viewModels
+                .filter(m => m.canAccess())
+                .tap(models => this.tapViewModels(models))
+                .sort(this.viewModelSortFn)
+        );
     }
 
     public getListTitle: (viewModel: V) => string = (viewModel: V) => this.getTitle(viewModel);
@@ -402,6 +396,8 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         });
         this.modifiedIdsSubject.next(modelIds);
     }
+
+    protected tapViewModels(_viewModels: V[]): void {}
 
     protected raiseError = (error: string | Error) => {
         this.repositoryServiceCollector.errorService.showError(error);

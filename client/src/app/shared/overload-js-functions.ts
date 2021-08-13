@@ -22,6 +22,12 @@ declare global {
          * @param symmetric If all elements from both arrays, that are included only in one of them, should be returned.
          */
         difference(other: T[], symmetric?: boolean): T[];
+        /**
+         * A function to "tap" a whole array and take it to manipulate it or anything else.
+         *
+         * @param callbackFn A function that receives the whole array and has to return nothing.
+         */
+        tap(callbackFn: (self: T[]) => void): T[];
         mapToObject(f: (item: T) => { [key: string]: any }): { [key: string]: any };
     }
 
@@ -114,6 +120,14 @@ function overloadArrayFunctions(): void {
                 }
                 return aggr;
             }, {});
+        },
+        enumerable: false
+    });
+
+    Object.defineProperty(Array.prototype, 'tap', {
+        value: function <T>(callbackFn: (self: T[]) => void): T[] {
+            callbackFn(this);
+            return this;
         },
         enumerable: false
     });
