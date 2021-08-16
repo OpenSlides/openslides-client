@@ -9,6 +9,7 @@ import {
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { CML, OML } from 'app/core/core-services/organization-permission';
 import { ORGANIZATION_ID } from 'app/core/core-services/organization.service';
+import { useDataClass } from 'app/core/decorators/data-class';
 import { Id } from 'app/core/definitions/key-types';
 import { ViewCommittee } from 'app/management/models/view-committee';
 import { ViewOrganization } from 'app/management/models/view-organization';
@@ -17,6 +18,7 @@ import { Committee } from 'app/shared/models/event-management/committee';
 import { BaseRepository } from '../base-repository';
 import { ModelRequestRepository } from '../model-request-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
+import { CommitteeUpdatePayload, CommitteeDeletePayload, CommitteeCreatePayload } from '../../actions/committee-action';
 
 @Injectable({
     providedIn: 'root'
@@ -50,31 +52,33 @@ export class CommitteeRepositoryService
         };
     }
 
+    @useDataClass(CommitteeAction.CREATE)
     public create(committee: Partial<Committee>): Promise<Identifiable> {
-        const payload: CommitteeAction.CreatePayload = {
+        const payload: CommitteeCreatePayload = {
+            ...committee,
             name: committee.name,
-            organization_id: ORGANIZATION_ID,
-            ...this.getPartialCommitteePayload(committee)
+            organization_id: ORGANIZATION_ID
         };
         return this.sendActionToBackend(CommitteeAction.CREATE, payload);
     }
 
+    @useDataClass(CommitteeAction.UPDATE)
     public update(update: Partial<Committee>, committee: ViewCommittee): Promise<void> {
-        const payload: CommitteeAction.UpdatePayload = {
-            id: committee.id,
-            name: update.name,
-            ...this.getPartialCommitteePayload(update)
+        const payload: CommitteeUpdatePayload = {
+            ...update,
+            id: committee.id
         };
         return this.sendActionToBackend(CommitteeAction.UPDATE, payload);
     }
 
+    @useDataClass(CommitteeAction.DELETE)
     public delete(...committees: ViewCommittee[]): Promise<void> {
-        const payload: CommitteeAction.DeletePayload[] = committees.map(committee => ({ id: committee.id }));
+        const payload: CommitteeDeletePayload[] = committees.map(committee => ({ id: committee.id }));
         return this.sendBulkActionToBackend(CommitteeAction.DELETE, payload);
     }
 
     public bulkForwardToCommittees(committees: ViewCommittee[], committeeIds: Id[]): Promise<void> {
-        const payload: CommitteeAction.UpdatePayload[] = committees.map(committee => {
+        const payload: CommitteeUpdatePayload[] = committees.map(committee => {
             const forwardToIds = new Set(committeeIds.concat(committee.forward_to_committee_ids || []));
             return {
                 id: committee.id,
@@ -85,7 +89,7 @@ export class CommitteeRepositoryService
     }
 
     public bulkUnforwardToCommittees(committees: ViewCommittee[], committeeIds: Id[]): Promise<void> {
-        const payload: CommitteeAction.UpdatePayload[] = committees.map(committee => ({
+        const payload: CommitteeUpdatePayload[] = committees.map(committee => ({
             id: committee.id,
             forward_to_committee_ids: (committee.forward_to_committee_ids || []).filter(
                 id => !committeeIds.includes(id)
@@ -114,24 +118,5 @@ export class CommitteeRepositoryService
             this.operator.hasOrganizationPermissions(OML.can_manage_users) ||
             this.operator.isInCommitteesNonAdminCheck(model);
         return viewModel;
-    }
-
-    /**
-     * TODO CLEANUP: This seems unnecessary.
-     * removing all entries that are not fit to a class can be done using
-     * decorators
-     * https://www.typescriptlang.org/docs/handbook/decorators.html#metadata
-     */
-    private getPartialCommitteePayload(
-        committee: Partial<CommitteeAction.PartialPayload>
-    ): CommitteeAction.PartialPayload {
-        return {
-            description: committee.description,
-            organization_tag_ids: committee.organization_tag_ids,
-            user_ids: committee.user_ids,
-            manager_ids: committee.manager_ids,
-            forward_to_committee_ids: committee.forward_to_committee_ids,
-            receive_forwardings_from_committee_ids: committee.receive_forwardings_from_committee_ids
-        };
     }
 }

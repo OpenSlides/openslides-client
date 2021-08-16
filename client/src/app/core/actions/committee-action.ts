@@ -1,40 +1,46 @@
 import { Identifiable } from 'app/shared/models/base/identifiable';
+import { DataClass } from '../decorators/data-class';
 import { Id, UnsafeHtml } from '../definitions/key-types';
 
-export namespace CommitteeAction {
-    export const CREATE = 'committee.create';
-    export const UPDATE = 'committee.update';
-    export const DELETE = 'committee.delete';
+export class CommitteeAction {
+    public static readonly CREATE = 'committee.create';
+    public static readonly UPDATE = 'committee.update';
+    public static readonly DELETE = 'committee.delete';
+}
 
-    export interface PartialPayload {
-        description?: UnsafeHtml;
-        // For UPDATE: Required permission: OML.can_manage_organization
-        user_ids?: Id[];
-        manager_ids?: Id[];
-        // For UPDATE: Required permission: CML.can_manage || OML.can_manage_organization
-        organization_tag_ids?: Id[];
-        // Required permission: OML.can_manage_organization
-        forward_to_committee_ids?: Id[];
-        receive_forwardings_from_committee_ids?: Id[];
-    }
+class CommitteePartialPayload {
+    description?: UnsafeHtml = '';
+    // For UPDATE: Required permission: OML.can_manage_organization
+    user_ids?: Id[] = [];
+    manager_ids?: Id[] = [];
+    // For UPDATE: Required permission: CML.can_manage || OML.can_manage_organization
+    organization_tag_ids?: Id[] = [];
+    // Required permission: OML.can_manage_organization
+    forward_to_committee_ids?: Id[] = [];
+    receive_forwardings_from_committee_ids?: Id[] = [];
+}
 
-    /**
-     * Required permission: `OML.can_manage_organization`
-     */
-    export interface CreatePayload extends PartialPayload {
-        name: string;
-        organization_id: Id;
-    }
+/**
+ * Required permission: `OML.can_manage_organization`
+ */
+@DataClass(CommitteeAction.CREATE)
+export class CommitteeCreatePayload extends CommitteePartialPayload {
+    name: string = '';
+    organization_id: Id = 0;
+}
 
-    /**
-     * Required permission: `CML.can_manage` || `OML.can_manage_organization`
-     */
-    export interface UpdatePayload extends Identifiable, PartialPayload {
-        // Optional
-        // Required permission: CML.can_manage
-        name?: string;
-        template_meeting_id?: Id;
-    }
+/**
+ * Required permission: `CML.can_manage` || `OML.can_manage_organization`
+ */
+@DataClass(CommitteeAction.UPDATE)
+export class CommitteeUpdatePayload extends CommitteePartialPayload implements Identifiable {
+    id: Id = 0;
+    name?: string = '';
+    template_meeting_id?: number = 0;
+    default_meeting_id?: number = 0;
+}
 
-    export interface DeletePayload extends Identifiable {}
+@DataClass(CommitteeAction.DELETE)
+export class CommitteeDeletePayload implements Identifiable {
+    id: Id = 0;
 }
