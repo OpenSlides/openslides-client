@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+
 import { HasMeeting } from 'app/management/models/view-meeting';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { BaseViewModel } from 'app/site/base/base-view-model';
@@ -148,6 +150,7 @@ interface IPollRelations<C extends BaseViewModel<BaseModel> = any> {
     voted: ViewUser[];
     entitled_groups: ViewGroup[];
     options: ViewOption[];
+    options_as_observable: Observable<ViewOption[]>;
     global_option: ViewOption;
 }
 export interface ViewPoll<C extends BaseViewModel<BaseModel>> extends HasMeeting, IPollRelations<C>, Poll {}

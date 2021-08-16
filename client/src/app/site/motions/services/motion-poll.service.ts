@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
+import { merge, Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
@@ -59,18 +61,29 @@ export class MotionPollService extends PollService {
         return poll;
     }
 
+    public generateTableDataAsObservable(poll: PollData): Observable<PollTableData[]> {
+        // The "of(...)"-observable is used to fire the current state the first time.
+        return merge(of(poll.options), poll.options_as_observable).pipe(
+            map(options => this.createTableData(poll, options))
+        );
+    }
+
     public generateTableData(poll: PollData): PollTableData[] {
-        let tableData: PollTableData[] = poll.options.flatMap(option =>
+        return this.createTableData(poll, poll.options);
+    }
+
+    public showChart(poll: PollData): boolean {
+        return poll && poll.options && poll.options.some(option => option.yes >= 0 && option.no >= 0);
+    }
+
+    private createTableData(poll: PollData, options: OptionData[]): PollTableData[] {
+        let tableData: PollTableData[] = options.flatMap(option =>
             super.getVoteTableKeys(poll).map(key => this.createTableDataEntry(poll, key, option))
         );
         tableData.push(...super.getSumTableKeys(poll).map(key => this.createTableDataEntry(poll, key)));
 
         tableData = tableData.filter(localeTableData => !localeTableData.value.some(result => result.hide));
         return tableData;
-    }
-
-    public showChart(poll: PollData): boolean {
-        return poll && poll.options && poll.options.some(option => option.yes >= 0 && option.no >= 0);
     }
 
     private createTableDataEntry(poll: PollData, result: VotingResult, option?: OptionData): PollTableData {

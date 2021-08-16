@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+
 import { EntitledUsersEntry, PollMethod, PollPercentBase, PollState, PollType } from './poll-constants';
 
 /**
@@ -15,6 +17,7 @@ export interface PollData {
     type: PollType;
     entitled_users_at_stop: EntitledUsersEntry[];
     options: OptionData[];
+    options_as_observable: Observable<OptionData[]>;
     global_option: OptionData;
     getContentObjectTitle: () => string | null;
 }
