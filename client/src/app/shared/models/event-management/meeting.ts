@@ -5,6 +5,8 @@ import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.cons
 import { BaseModel } from '../base/base-model';
 import { HasProjectionIds } from '../base/has-projectable-ids';
 import { PollMethod, PollPercentBase, PollType } from '../poll/poll-constants';
+import { DataClass, DataClassProperty, DtoClass } from 'app/core/decorators/data-class';
+import { MeetingAction } from 'app/core/actions/meeting-action';
 
 export type UserSortProperty = 'first_name' | 'last_name' | 'number';
 export type ExportCsvEncoding = 'utf-8' | 'iso-8859-15';
@@ -20,10 +22,14 @@ export type AgendaItemCreation = 'always' | 'never' | 'default_yes' | 'default_n
  */
 export type BallotPaperSelection = 'NUMBER_OF_DELEGATES' | 'NUMBER_OF_ALL_PARTICIPANTS' | 'CUSTOM_NUMBER';
 
-export interface Settings {
+const MEETING_NAME = 'meeting';
+export class Settings {
     // Old "general_*" configs
+    @DataClassProperty([], MEETING_NAME)
     name: string;
+    @DataClassProperty([], MEETING_NAME)
     description: string;
+    @DataClassProperty([], MEETING_NAME)
     location: string;
     start_time: number;
     end_time: number;
@@ -166,6 +172,22 @@ export interface Settings {
     assignment_poll_default_group_ids: Id[]; // (group/used_as_assignment_poll_default_id)[];
 }
 
+@DataClass<Meeting>(MeetingAction.CREATE, {
+    useOnly: [
+        'committee_id',
+        'name',
+        'welcome_title',
+        'welcome_text',
+        'description',
+        'start_time',
+        'end_time',
+        'location',
+        'url_name',
+        'enable_anonymous'
+    ]
+})
+@DataClass<Meeting>(MeetingAction.DELETE, { useOnly: ['id'] })
+@DtoClass()
 export class Meeting extends BaseModel<Meeting> {
     public static COLLECTION = 'meeting';
 
