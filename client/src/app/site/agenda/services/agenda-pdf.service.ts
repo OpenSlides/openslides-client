@@ -42,7 +42,7 @@ export class AgendaPdfService {
      * @returns definitions ready to be opened or exported via {@link PdfDocumentService}
      */
     public agendaListToDocDef(items: ViewAgendaItem[]): object {
-        const tree: OSTreeNode<ViewAgendaItem>[] = this.treeService.makeTree(items, 'weight', 'parent_id');
+        const tree: OSTreeNode<ViewAgendaItem>[] = this.treeService.makeSortedTree(items, 'weight', 'parent_id');
         const title = {
             text: this.translate.instant('Agenda'),
             style: 'title'
