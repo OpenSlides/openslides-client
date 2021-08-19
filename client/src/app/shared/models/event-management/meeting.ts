@@ -7,6 +7,8 @@ import { HasProjectionIds } from '../base/has-projectable-ids';
 import { PollMethod, PollPercentBase, PollType } from '../poll/poll-constants';
 import { DataClass, DataClassProperty, DtoClass } from 'app/core/decorators/data-class';
 import { MeetingAction } from 'app/core/actions/meeting-action';
+import { FormClass, FormClassControl } from 'app/core/decorators/form-class';
+import { OML } from 'app/core/core-services/organization-permission';
 
 export type UserSortProperty = 'first_name' | 'last_name' | 'number';
 export type ExportCsvEncoding = 'utf-8' | 'iso-8859-15';
@@ -25,13 +27,16 @@ export type BallotPaperSelection = 'NUMBER_OF_DELEGATES' | 'NUMBER_OF_ALL_PARTIC
 const MEETING_NAME = 'meeting';
 export class Settings {
     // Old "general_*" configs
-    @DataClassProperty([], MEETING_NAME)
+    @FormClassControl([MeetingAction.CREATE], { required: true })
+    @FormClassControl([MeetingAction.UPDATE])
     name: string;
-    @DataClassProperty([], MEETING_NAME)
+    @FormClassControl([MeetingAction.CREATE, MeetingAction.UPDATE])
     description: string;
-    @DataClassProperty([], MEETING_NAME)
+    @FormClassControl([MeetingAction.CREATE, MeetingAction.UPDATE])
     location: string;
+    @FormClassControl([MeetingAction.CREATE, MeetingAction.UPDATE])
     start_time: number;
+    @FormClassControl([MeetingAction.CREATE, MeetingAction.UPDATE])
     end_time: number;
     welcome_title: string;
     welcome_text: string;
@@ -46,8 +51,11 @@ export class Settings {
     enable_anonymous: boolean;
 
     // Jitsi/Livestream settings
+    @FormClassControl([MeetingAction.UPDATE], { oml: OML.superadmin })
     jitsi_domain: string;
+    @FormClassControl([MeetingAction.UPDATE], { oml: OML.superadmin })
     jitsi_room_name: string;
+    @FormClassControl([MeetingAction.UPDATE], { oml: OML.superadmin })
     jitsi_room_password: string;
 
     conference_show: boolean;
@@ -172,22 +180,7 @@ export class Settings {
     assignment_poll_default_group_ids: Id[]; // (group/used_as_assignment_poll_default_id)[];
 }
 
-@DataClass<Meeting>(MeetingAction.CREATE, {
-    useOnly: [
-        'committee_id',
-        'name',
-        'welcome_title',
-        'welcome_text',
-        'description',
-        'start_time',
-        'end_time',
-        'location',
-        'url_name',
-        'enable_anonymous'
-    ]
-})
-@DataClass<Meeting>(MeetingAction.DELETE, { useOnly: ['id'] })
-@DtoClass()
+@FormClass()
 export class Meeting extends BaseModel<Meeting> {
     public static COLLECTION = 'meeting';
 
@@ -232,6 +225,8 @@ export class Meeting extends BaseModel<Meeting> {
     public template_meeting_for_committee_id: Id; // committee/template_meeting_id;
     public default_meeting_for_committee_id: Id; // committee/default_meeting_id;
     public present_user_ids: Id[]; // (user/is_present_in_meeting_ids)[];
+
+    @FormClassControl([MeetingAction.CREATE, MeetingAction.UPDATE], { type: 'array' })
     public user_ids: Id[]; // Calculated: All ids all users assigned to groups.
     public reference_projector_id: Id; // projector/used_as_reference_projector_meeting_id;
     public default_projector_$_id: string[]; // projector/used_as_default_$_in_meeting_id;
@@ -239,6 +234,7 @@ export class Meeting extends BaseModel<Meeting> {
     public default_group_id: Id; // group/default_group_for_meeting_id;
     public admin_group_id: Id; // group/admin_group_for_meeting_id;
 
+    @FormClassControl([MeetingAction.CREATE, MeetingAction.UPDATE], { type: 'array' })
     public organization_tag_ids: Id[]; // (organization_tag/meeting_ids)[];
 
     public constructor(input?: any) {

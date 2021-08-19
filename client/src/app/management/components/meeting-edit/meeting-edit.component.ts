@@ -23,6 +23,7 @@ import { ViewMeeting } from 'app/management/models/view-meeting';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { FormGroupGeneratorService } from '../../../core/ui-services/form-group-generator.service';
 
 const AddMeetingLabel = _('New meeting');
 const EditMeetingLabel = _('Edit meeting');
@@ -67,7 +68,8 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
         public orgaTagRepo: OrganizationTagRepositoryService,
         private colorService: ColorService,
         private operator: OperatorService,
-        private userRepo: UserRepositoryService
+        private userRepo: UserRepositoryService,
+        private formgroupGenerator: FormGroupGeneratorService
     ) {
         super(componentServiceCollector);
         this.createOrEdit();
@@ -198,26 +200,36 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
         const currentDate = new Date();
         currentDate.setHours(0, 0, 0, 0);
 
-        const rawForm: { [key: string]: any } = {
-            name: ['', Validators.required],
-            // server bug
-            // set_as_template: [false],
-            description: [''],
-            location: [''],
-            start_time: [currentDate],
-            end_time: [currentDate],
-            user_ids: [[]],
-            admin_ids: [[], Validators.minLength(1)],
-            organization_tag_ids: [[]]
-        };
+        const action = this.isCreateView ? MeetingAction.CREATE : MeetingAction.UPDATE;
+        const additionalFormControls = { admin_ids: [[], Validators.minLength(1)] };
+        const rawForm = this.formgroupGenerator.generateFormGroup(action, additionalFormControls, {
+            start_time: { defaultValue: currentDate },
+            end_time: { defaultValue: currentDate }
+        });
+        console.log('createForm', rawForm);
+        // const rawForm: { [key: string]: any } = {
+        //     name: ['', Validators.required],
+        //     // server bug
+        //     // set_as_template: [false],
+        //     description: [''],
+        //     location: [''],
+        //     start_time: [currentDate],
+        //     end_time: [currentDate],
+        //     user_ids: [[]],
+        //     admin_ids: [[], Validators.minLength(1)],
+        //     organization_tag_ids: [[]]
+        // };
 
-        if (this.isJitsiManipulationAllowed) {
-            rawForm.jitsi_domain = [''];
-            rawForm.jitsi_room_name = [''];
-            rawForm.jitsi_room_password = [''];
-        }
+        // if (this.isJitsiManipulationAllowed) {
+        //     rawForm.jitsi_domain = [''];
+        //     rawForm.jitsi_room_name = [''];
+        //     rawForm.jitsi_room_password = [''];
+        // }
 
         this.meetingForm = this.formBuilder.group(rawForm);
+        this.meetingForm.valueChanges.subscribe(() => {
+            console.log('meetingForm', this.meetingForm);
+        });
     }
 
     private updateForm(meeting: ViewMeeting): void {
