@@ -1,0 +1,34 @@
+@use '~@angular/material' as mat;
+
+@import '~assets/styles/color-palettes/os-dynamic-palette';
+@import '~assets/styles/color-palettes/os-background';
+
+$openslides-primary: mat.define-palette($dynamic-theme-primary);
+$openslides-accent: mat.define-palette($dynamic-theme-accent);
+$openslides-warn: mat.define-palette($dynamic-theme-warn);
+
+$openslides-dark-theme: mat.define-dark-theme($openslides-primary, $openslides-accent, $openslides-warn);
+
+$os-outline: mat.get-color-from-palette(mat.$grey-palette, 300);
+
+/** This is the workaround to set a custom background-color
+ *  In the first step the color must be merged, in order to have to a map.
+ *  The components will get a value from this map.
+ */
+$background-dark: map-get($openslides-dark-theme, background);
+$background-dark: map_merge(
+    $background-dark,
+    (
+        background: $os-background
+    )
+);
+
+/**
+ *  Merge the theme with the custom-background.
+ */
+$openslides-dark-theme: map-merge(
+    $openslides-dark-theme,
+    (
+        background: $background-dark
+    )
+);

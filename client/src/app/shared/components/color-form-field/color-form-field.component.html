@@ -1,0 +1,13 @@
+<div class="grid-form">
+    <div class="grid-start">
+        <mat-form-field class="color-picker-form">
+            <span>{{ title | translate }}</span>
+            <input matInput [formControl]="contentForm" type="color" />
+        </mat-form-field>
+    </div>
+    <div class="grid-end">
+        <button type="button" mat-icon-button matTooltip="{{ 'Reset' | translate }}" (click)="onReset()">
+            <mat-icon>replay</mat-icon>
+        </button>
+    </div>
+</div>

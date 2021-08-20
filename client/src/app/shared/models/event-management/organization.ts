@@ -7,7 +7,8 @@ export interface OrganizationSetting {
     legal_notice: string;
     privacy_policy: string;
     login_text: string;
-    theme: string;
+    theme_id: Id; // (theme/theme_for_organization_id);
+    theme_ids: Id[]; // (theme/organization_id);
     reset_password_verbose_errors: boolean;
     enable_electronic_voting: boolean;
     limit_of_meetings: number;

@@ -23,7 +23,7 @@
                 (click)="generateColor()"
                 matTooltip="{{ 'Generate new color' | translate }}"
             >
-                <mat-icon> sync </mat-icon>
+                <mat-icon>sync</mat-icon>
             </button>
             <mat-error *ngIf="organizationTagForm.get('color').errors?.pattern">
                 {{ 'You have to enter six hexadecimal digits' | translate }}
@@ -33,6 +33,6 @@
     </form>
 </div>
 <div mat-dialog-actions>
-    <button mat-raised-button color="primary" (click)="onSaveClicked()">{{ 'Save' | translate }}</button>
-    <button mat-raised-button [mat-dialog-close]="null">{{ 'Cancel' | translate }}</button>
+    <button mat-button color="primary" (click)="onSaveClicked()">{{ 'Save' | translate }}</button>
+    <button mat-button [mat-dialog-close]="null">{{ 'Cancel' | translate }}</button>
 </div>

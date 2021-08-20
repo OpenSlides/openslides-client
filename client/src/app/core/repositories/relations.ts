@@ -33,6 +33,7 @@ import { ViewTopic } from 'app/site/topics/models/view-topic';
 import { ViewGroup } from 'app/site/users/models/view-group';
 import { ViewPersonalNote } from 'app/site/users/models/view-personal-note';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { ViewTheme } from '../../management/models/view-theme';
 import {
     makeGenericM2M,
     makeGenericO2M,
@@ -139,6 +140,19 @@ export const RELATIONS: Relation[] = [
         MViewModel: ViewMeeting,
         OField: 'active_meetings',
         MField: 'is_active_in_organization'
+    }),
+    ...makeM2O({
+        OViewModel: ViewOrganization,
+        MViewModel: ViewTheme,
+        OField: 'themes',
+        MField: 'organization',
+        isFullList: true
+    }),
+    ...makeO2O({
+        AViewModel: ViewOrganization,
+        BViewModel: ViewTheme,
+        AField: 'theme',
+        BField: 'theme_for_organization'
     }),
     // ########## Organization tags
     ...makeGenericM2M<ViewOrganizationTag, HasOrganizationTags>({

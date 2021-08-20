@@ -5,6 +5,7 @@ import { ViewOrganizationTag } from './view-organization-tag';
 import { ViewResource } from './view-resource';
 import { ViewMeeting } from './view-meeting';
 import { Observable } from 'rxjs';
+import { ViewTheme } from './view-theme';
 
 export class ViewOrganization extends BaseViewModel<Organization> {
     public static COLLECTION = Organization.COLLECTION;
@@ -20,5 +21,7 @@ interface IOrganizationRelations {
     organization_tags: ViewOrganizationTag[];
     active_meetings: ViewMeeting[];
     active_meetings_as_observable: Observable<ViewMeeting[]>;
+    theme: ViewTheme;
+    themes: ViewTheme[];
 }
 export interface ViewOrganization extends Organization, IOrganizationRelations {}

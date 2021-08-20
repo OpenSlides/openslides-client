@@ -1,0 +1,17 @@
+:host {
+    display: block;
+}
+
+.grid-form {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+
+    .grid-start {
+        flex: 1;
+
+        .mat-form-field {
+            width: 100%;
+        }
+    }
+}

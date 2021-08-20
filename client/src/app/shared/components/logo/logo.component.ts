@@ -36,11 +36,11 @@ export class LogoComponent extends BaseComponent implements OnInit {
     public hasDarkBackground = false;
 
     private get useDarkLogo(): boolean {
-        return this._isDarkTheme || this.hasDarkBackground;
+        return this._isDarkMode || this.hasDarkBackground;
     }
 
     private _path: string | null = null;
-    private _isDarkTheme = false;
+    private _isDarkMode = false;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -52,8 +52,8 @@ export class LogoComponent extends BaseComponent implements OnInit {
 
     public ngOnInit(): void {
         this.subscriptions.push(
-            this.themeService.isDarkThemeObservable.subscribe(isDarkTheme => {
-                this._isDarkTheme = isDarkTheme;
+            this.themeService.isDarkModeObservable.subscribe(isDarkMode => {
+                this._isDarkMode = isDarkMode;
                 this.changeLogo();
             })
         );

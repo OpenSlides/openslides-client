@@ -1,14 +1,13 @@
+/** Imports the ngrid-theming */
+@use '~@pebula/ngrid' as ngrid;
+
 /** Imports the material-design-theming */
 @use '~@angular/material' as mat;
 @include mat.core();
 
-/** NGrid theme */
-@import '~@pebula/ngrid/theming';
-$narrow-spacing: (
-    spacing: $pbl-spacing-theme-default
-);
-
 /** Import brand theme */
+@import '~assets/styles/themes/default-light.scss';
+@import '~assets/styles/themes/default-dark.scss';
 @import '~assets/styles/themes/blue-dark.scss';
 @import '~assets/styles/themes/blue-light.scss';
 @import '~assets/styles/themes/green-dark.scss';
@@ -71,51 +70,24 @@ $narrow-spacing: (
     @include os-progress-theme($theme);
 }
 
-.openslides-default-light-theme {
-    @include mat.all-component-themes($openslides-blue-light);
-    @include openslides-components-theme($openslides-blue-light);
-    $ngrid-material-theme: pbl-light-theme($openslides-blue-light);
-    @include pbl-ngrid-theme(map-merge($ngrid-material-theme, $narrow-spacing));
+@mixin ngrid-theme($theme) {
+    @include ngrid.ngrid-typography();
+    @include ngrid.ngrid-theme($theme);
+    @include ngrid.predefined-spacing($theme);
 }
 
-.openslides-default-dark-theme {
-    @include mat.all-component-themes($openslides-blue-dark);
-    @include openslides-components-theme($openslides-blue-dark);
-    $ngrid-material-theme: pbl-dark-theme($openslides-blue-dark);
-    @include pbl-ngrid-theme(map-merge($ngrid-material-theme, $narrow-spacing));
+.openslides-light-theme {
+    @include mat.all-component-themes($openslides-light-theme);
+    @include openslides-components-theme($openslides-light-theme);
+    @include ngrid-theme(ngrid.define-light-theme(ngrid.define-palette(ngrid.$blue-palette)));
 }
 
-.openslides-red-light-theme {
-    @include mat.all-component-themes($openslides-red-light);
-    @include openslides-components-theme($openslides-red-light);
-    $ngrid-material-theme: pbl-light-theme($openslides-red-light);
-    @include pbl-ngrid-theme(map-merge($ngrid-material-theme, $narrow-spacing));
+.openslides-dark-theme {
+    @include mat.all-component-themes($openslides-dark-theme);
+    @include openslides-components-theme($openslides-dark-theme);
+    @include ngrid-theme(ngrid.define-dark-theme(ngrid.define-palette(ngrid.$blue-palette)));
 }
 
-.openslides-red-dark-theme {
-    @include mat.all-component-themes($openslides-red-dark);
-    @include openslides-components-theme($openslides-red-dark);
-    $ngrid-material-theme: pbl-dark-theme($openslides-red-dark);
-    @include pbl-ngrid-theme(map-merge($ngrid-material-theme, $narrow-spacing));
-}
-
-.openslides-green-light-theme {
-    @include mat.all-component-themes($openslides-green-light);
-    @include openslides-components-theme($openslides-green-light);
-    $ngrid-material-theme: pbl-light-theme($openslides-green-light);
-    @include pbl-ngrid-theme(map-merge($ngrid-material-theme, $narrow-spacing));
-}
-
-.openslides-green-dark-theme {
-    @include mat.all-component-themes($openslides-green-dark);
-    @include openslides-components-theme($openslides-green-dark);
-    $ngrid-material-theme: pbl-dark-theme($openslides-green-dark);
-    @include pbl-ngrid-theme(map-merge($ngrid-material-theme, $narrow-spacing));
-}
-
-/**
- * Custom configuration for light themes
- */
 [class^='openslides-'][class*='-light-theme'] {
     .logo-container {
         img.dark {

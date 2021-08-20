@@ -83,9 +83,9 @@
             <ng-container *cdkVirtualFor="let meeting of meetingList; let odd = odd; let last = last">
                 <div
                     [ngClass]="{
-                        alternate: odd && !isDarkTheme,
-                        'background-dark': !odd && isDarkTheme,
-                        'background-dark-brighter': odd && isDarkTheme
+                        alternate: odd && (isDarkModeObservable | async) === false,
+                        'background-dark': !odd && (isDarkModeObservable | async),
+                        'background-dark-brighter': odd && (isDarkModeObservable | async)
                     }"
                 >
                     <ng-container

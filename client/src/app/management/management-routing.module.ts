@@ -17,6 +17,7 @@ import { MemberPasswordComponent } from './components/member-password/member-pas
 import { OrgaSettingsComponent } from './components/orga-settings/orga-settings.component';
 import { OrganizationTagListComponent } from './components/organization-tag-list/organization-tag-list.component';
 import { CommitteeImportListComponent } from './components/committee-import-list/committee-import-list.component';
+import { ThemeListComponent } from './components/theme-list/theme-list.component';
 
 const routes: Route[] = [
     {
@@ -100,6 +101,10 @@ const routes: Route[] = [
             {
                 path: 'organization-tags',
                 component: OrganizationTagListComponent
+            },
+            {
+                path: 'designs',
+                component: ThemeListComponent
             },
             {
                 path: 'settings',

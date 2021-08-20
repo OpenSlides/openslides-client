@@ -122,6 +122,7 @@ import { AccountButtonComponent } from './components/account-button/account-butt
 import { SuperSearchComponent } from './components/super-search/super-search.component';
 import { NotFoundDescriptionDirective } from './directives/not-found-description.directive';
 import { MeetingTimeComponent } from './components/meeting-time/meeting-time.component';
+import { ColorFormFieldComponent } from './components/color-form-field/color-form-field.component';
 
 const declarations = [
     PermsDirective,
@@ -211,7 +212,8 @@ const declarations = [
     SidenavDrawerContentDirective,
     AccountButtonComponent,
     NotFoundDescriptionDirective,
-    MeetingTimeComponent
+    MeetingTimeComponent,
+    ColorFormFieldComponent
 ];
 
 const sharedModules = [

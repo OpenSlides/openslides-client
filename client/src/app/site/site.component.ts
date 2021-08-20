@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NavigationEnd, Router } from '@angular/router';
 
-import { Subscription, Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import { navItemAnim } from '../shared/animations';
 import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
@@ -16,7 +16,6 @@ import { SidenavComponent } from 'app/shared/components/sidenav/sidenav.componen
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { MainMenuEntry, MainMenuService } from '../core/core-services/main-menu.service';
 import { ViewportService } from '../core/ui-services/viewport.service';
-import { ThemeService } from '../core/ui-services/theme.service';
 
 @Component({
     selector: 'os-site',
@@ -44,10 +43,6 @@ export class SiteComponent extends BaseComponent implements OnInit {
         return this.activeMeeting.meeting;
     }
 
-    public get isDarkThemeObservable(): Observable<boolean> {
-        return this.themeService.isDarkThemeObservable;
-    }
-
     /**
      * Constructor
      * @param route
@@ -69,8 +64,7 @@ export class SiteComponent extends BaseComponent implements OnInit {
         private mainMenuService: MainMenuService,
         public historyService: HistoryService,
         public timeTravel: TimeTravelService,
-        public pollRepo: PollRepositoryService,
-        private themeService: ThemeService
+        public pollRepo: PollRepositoryService
     ) {
         super(componentServiceCollector);
     }

@@ -27,7 +27,7 @@ export class OrganizationRepositoryService extends BaseRepository<ViewOrganizati
             'legal_notice',
             'privacy_policy',
             'login_text',
-            'theme',
+            'theme_id',
             'enable_electronic_voting',
             'reset_password_verbose_errors',
             'limit_of_meetings'
@@ -42,9 +42,6 @@ export class OrganizationRepositoryService extends BaseRepository<ViewOrganizati
     }
 
     public update(update: Partial<OrganizationAction.UpdatePayload>): Promise<void> {
-        /**
-         * I suppose the orga id is always 1
-         */
         update.id = ORGANIZATION_ID;
         return this.sendActionToBackend(OrganizationAction.UPDATE, update);
     }

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
 
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 
 import { AuthService } from 'app/core/core-services/auth.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
@@ -15,6 +15,7 @@ import { BaseModelContextComponent } from 'app/site/base/components/base-model-c
 import { ViewUser } from 'app/site/users/models/view-user';
 import { Router } from '@angular/router';
 import { getOmlVerboseName } from '../../../core/core-services/organization-permission';
+import { ThemeService } from '../../../core/ui-services/theme.service';
 
 @Component({
     selector: 'os-account-button',
@@ -43,6 +44,10 @@ export class AccountButtonComponent extends BaseModelContextComponent implements
         return this.activeMeetingId !== null;
     }
 
+    public get isDarkModeActiveObservable(): Observable<boolean> {
+        return this.theme.isDarkModeObservable;
+    }
+
     public user: ViewUser | null = null;
     public username = '';
     public isLoggedIn = false;
@@ -58,7 +63,8 @@ export class AccountButtonComponent extends BaseModelContextComponent implements
         private userRepo: UserRepositoryService,
         private authService: AuthService,
         private dialog: MatDialog,
-        private router: Router
+        private router: Router,
+        private theme: ThemeService
     ) {
         super(componentServiceCollector);
     }
@@ -129,6 +135,12 @@ export class AccountButtonComponent extends BaseModelContextComponent implements
 
     public getOmlVerboseName(): string {
         return getOmlVerboseName(this.user?.organization_management_level);
+    }
+
+    public toggleDarkMode(buttonEvent: Event): void {
+        buttonEvent.preventDefault();
+        buttonEvent.stopPropagation();
+        this.theme.toggleDarkMode();
     }
 
     private onOperatorUpdate(): void {

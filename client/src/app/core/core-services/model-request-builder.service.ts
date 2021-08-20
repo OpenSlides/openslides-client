@@ -104,11 +104,23 @@ class ModelRequestObject {
     public constructor(
         public readonly collection: Collection,
         public readonly simplifiedRequest: BaseSimplifiedModelRequest,
-        public readonly fields: Fields,
+        private readonly fields: Fields,
         public readonly args: { ids?: Id[] } = {}
     ) {
         this.ids = args.ids;
         this.collectionsToUpdate = new Set();
+    }
+
+    /**
+     * Sets a value under the given key in the `fields`-map.
+     * Ensures, that the key is written only lower-case letters.
+     */
+    public setFieldEntry(fieldKey: string, fieldValue: FieldDescriptor): void {
+        this.fields[fieldKey.toLowerCase()] = fieldValue;
+    }
+
+    public getFields(): Fields {
+        return this.fields;
     }
 
     public getModelRequest(): ModelRequest {
@@ -202,15 +214,19 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
         // insert the fieldsetFields into fields
         for (const f of fieldsetFields) {
             if (typeof f === 'string') {
-                modelRequestObject.fields[f] = null;
+                modelRequestObject.setFieldEntry(f, null);
             } else if (isAllStructuredFields(f)) {
-                modelRequestObject.fields[f.templateField] = {
+                const fieldValue: FieldDescriptor = {
                     type: 'template'
                     // no `values` here: Do not follow these, just resolve them.
                 };
+                modelRequestObject.setFieldEntry(f.templateField, fieldValue);
             } else {
                 // Specific structured field
-                modelRequestObject.fields[fillTemplateValueInTemplateField(f.templateIdField, f.templateValue)] = null;
+                modelRequestObject.setFieldEntry(
+                    fillTemplateValueInTemplateField(f.templateIdField, f.templateValue),
+                    null
+                );
             }
         }
     }
@@ -263,7 +279,7 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
             response = this.getStructuredFieldDescriptor(relation, follow);
         }
 
-        modelRequestObject.fields[effectiveIdField] = response.descriptor;
+        modelRequestObject.setFieldEntry(effectiveIdField, response.descriptor);
         response.collectionsToUpdate.forEach(collection => modelRequestObject.collectionsToUpdate.add(collection));
     }
 
@@ -281,7 +297,7 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
             descriptor: {
                 type: relation.many ? 'relation-list' : 'relation',
                 collection: foreignCollection,
-                fields: modelRequestObject.fields
+                fields: modelRequestObject.getFields()
             },
             collectionsToUpdate: Array.from(modelRequestObject.collectionsToUpdate)
         };

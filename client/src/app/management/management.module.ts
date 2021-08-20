@@ -22,6 +22,8 @@ import { MemberPasswordComponent } from './components/member-password/member-pas
 import { OrgaSettingsComponent } from './components/orga-settings/orga-settings.component';
 import { OrganizationTagDialogComponent } from './components/organization-tag-dialog/organization-tag-dialog.component';
 import { OrganizationTagListComponent } from './components/organization-tag-list/organization-tag-list.component';
+import { ThemeBuilderDialogComponent } from './components/theme-builder-dialog/theme-builder-dialog.component';
+import { ThemeListComponent } from './components/theme-list/theme-list.component';
 
 @NgModule({
     imports: [CommonModule, SharedModule, ManagementRoutingModule],
@@ -44,7 +46,9 @@ import { OrganizationTagListComponent } from './components/organization-tag-list
         CommitteeDetailComponent,
         MeetingPreviewComponent,
         CommitteeMetaInfoComponent,
-        CommitteeImportListComponent
+        CommitteeImportListComponent,
+        ThemeBuilderDialogComponent,
+        ThemeListComponent
     ]
 })
 export class ManagementModule {}

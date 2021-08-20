@@ -27,15 +27,6 @@
                 <mat-label>{{ 'Show this text on the login page' | translate }}</mat-label>
                 <input matInput formControlName="login_text" />
             </mat-form-field>
-
-            <mat-form-field>
-                <mat-label>{{ 'OpenSlides design theme' | translate }}</mat-label>
-                <mat-select formControlName="theme">
-                    <mat-option *ngFor="let theme of themes" [value]="theme.class">
-                        {{ theme.name | translate }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
         </div>
     </mat-card>
 
