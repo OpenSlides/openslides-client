@@ -84,7 +84,8 @@ export abstract class BaseComponent implements OnDestroy {
         mobile: {
             theme: 'mobile',
             plugins: ['autosave', 'lists', 'autolink']
-        }
+        },
+        paste_preprocess: this.onPastePreprocess
     };
 
     public get activeMeetingId(): Id | null {
@@ -256,5 +257,28 @@ export abstract class BaseComponent implements OnDestroy {
 
     protected onLeaveTinyMce(event: any): void {
         this.saveHint = false;
+    }
+
+    /**
+     * Clean pasted HTML.
+     * If the user decides to copy-paste HTML (like from another OpenSlides motion detail)
+     * - remove all classes
+     * - remove data-line-number="X"
+     * - remove contenteditable="false"
+     *
+     * Not doing so would save control sequences from diff/linenumbering into the
+     * model which will open pandoras pox during PDF generation (and potentially web view)
+     * @param _
+     * @param args
+     */
+    private onPastePreprocess(_: any, args: any): void {
+        const getClassesRe = new RegExp(/\s*class\=\"[\w\W]*?\"/, 'gi');
+        const getDataLineNumberRe = new RegExp(/\s*data-line-number\=\"\d+\"/, 'gi');
+        const getContentEditableRe = new RegExp(/\s*contenteditable\=\"\w+\"/, 'gi');
+        const cleanedContent = (args.content as string)
+            .replace(getClassesRe, '')
+            .replace(getDataLineNumberRe, '')
+            .replace(getContentEditableRe, '');
+        args.content = cleanedContent;
     }
 }
