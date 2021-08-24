@@ -6,6 +6,8 @@ import { CML } from 'app/core/core-services/organization-permission';
 import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
+import { CommitteeRepositoryService } from '../../../core/repositories/management/committee-repository.service';
+import { ViewCommittee } from '../../models/view-committee';
 
 @Component({
     selector: 'os-meeting-preview',
@@ -17,7 +19,7 @@ export class MeetingPreviewComponent {
     public readonly CML = CML;
 
     @Input() public meeting: ViewMeeting = null;
-    @Input() public committeeId: number = null;
+    @Input() public committee: ViewCommittee | null = null;
 
     public get title(): string {
         return this.meeting?.name || '';
@@ -39,9 +41,14 @@ export class MeetingPreviewComponent {
         return (this.userAmount > 0 && this.userAmount < 1000) || false;
     }
 
+    public get isDefaultMeeting(): boolean {
+        return this.meeting.default_meeting_for_committee_id === this.committee.id;
+    }
+
     public constructor(
         private translate: TranslateService,
         private meetingRepo: MeetingRepositoryService,
+        private committeeRepo: CommitteeRepositoryService,
         private promptService: PromptService
     ) {}
 
@@ -79,5 +86,9 @@ export class MeetingPreviewComponent {
         if (confirmed) {
             await this.meetingRepo.delete(this.meeting);
         }
+    }
+
+    public async setAsDefaultMeeting(): Promise<void> {
+        await this.committeeRepo.update({ default_meeting_id: this.meeting.id }, this.committee);
     }
 }

@@ -4,15 +4,18 @@
             {{ title }}
         </mat-card-title>
 
-        <button
-            *osCmlPerms="CML.can_manage; committeeId: committeeId"
-            class="meeting-edit-button"
-            type="button"
-            mat-icon-button
-            [matMenuTriggerFor]="meetingMenu"
-        >
-            <mat-icon>more_vert</mat-icon>
-        </button>
+        <span *osCmlPerms="CML.can_manage; committeeId: committee.id" class="align-right">
+            <button
+                mat-icon-button
+                (click)="setAsDefaultMeeting()"
+                matTooltip="{{ (isDefaultMeeting ? 'Is default meeting' : 'Set as default meeting') | translate }}"
+            >
+                <mat-icon>{{ isDefaultMeeting ? 'star' : 'star_outline' }}</mat-icon>
+            </button>
+            <button type="button" mat-icon-button [matMenuTriggerFor]="meetingMenu">
+                <mat-icon>more_vert</mat-icon>
+            </button>
+        </span>
     </mat-card-header>
     <mat-card-content class="prev-content">
         <!-- date location -->
@@ -30,7 +33,7 @@
                 </ng-container>
                 <ng-container *ngIf="meeting.start_time !== meeting.end_time">
                     <span *ngIf="meeting.start_time">{{ meeting.start_time | localizedDate: 'll' }}</span>
-                    <span *ngIf="meeting.start_time && meeting.end_time"> - </span>
+                    <span *ngIf="meeting.start_time && meeting.end_time">&nbsp;-&nbsp;</span>
                     <span *ngIf="meeting.end_time">{{ meeting.end_time | localizedDate: 'll' }}</span>
                 </ng-container>
             </span>
@@ -48,7 +51,7 @@
     <!-- users -->
     <div class="user-footer">
         <a mat-icon-button matTooltip="{{ 'Participants' | translate }}">
-            <mat-icon [matBadgeHidden]="!showUserAmount" [matBadge]="userAmount"> group </mat-icon>
+            <mat-icon [matBadgeHidden]="!showUserAmount" [matBadge]="userAmount">group</mat-icon>
         </a>
     </div>
 </mat-card>

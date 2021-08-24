@@ -7,10 +7,16 @@ import { ActiveMeetingService } from 'app/core/core-services/active-meeting.serv
 import { HttpService } from 'app/core/core-services/http.service';
 import { Id } from 'app/core/definitions/key-types';
 
+interface PresenterMeeting {
+    id: Id;
+    name: string;
+}
+
 interface ForwardingPresenter {
     id: Id;
-    meetings?: { id: Id; name: string }[];
     name: string;
+    default_meeting_id?: Id;
+    meetings?: PresenterMeeting[];
 }
 
 type ForwardingPresenterResult = ForwardingPresenter[][];
@@ -46,9 +52,19 @@ export class MotionForwardDialogComponent implements OnInit {
         ];
         const result = await this.http.post<ForwardingPresenterResult>('/system/presenter/handle_request', payload);
         this.meetingsSubject.next(result[0]);
+        this.currentSelectedMeeting = this.getFirstDefaultMeetingId();
     }
 
     public onSaveClicked(): void {
         this.dialogRef.close(this.currentSelectedMeeting);
+    }
+
+    public isDefaultMeetingFor(meeting: PresenterMeeting, committee: ForwardingPresenter): boolean {
+        return meeting.id === committee.default_meeting_id;
+    }
+
+    private getFirstDefaultMeetingId(): Id | null {
+        const committees = this.meetingsSubject.value;
+        return committees.find(committee => committee.default_meeting_id)?.default_meeting_id || null;
     }
 }

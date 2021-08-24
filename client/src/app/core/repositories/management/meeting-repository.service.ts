@@ -67,7 +67,12 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         ]);
         const dashboardFields: (keyof Meeting)[] = listFields.concat('location');
         const startPageFields: (keyof Meeting)[] = accessField.concat(['welcome_title', 'welcome_text']);
-        const previewFields: (keyof Meeting)[] = nameFields.concat('user_ids', 'location', 'description');
+        const previewFields: (keyof Meeting)[] = nameFields.concat(
+            'user_ids',
+            'location',
+            'description',
+            'default_meeting_for_committee_id'
+        );
 
         return {
             [DEFAULT_FIELDSET]: nameFields,
