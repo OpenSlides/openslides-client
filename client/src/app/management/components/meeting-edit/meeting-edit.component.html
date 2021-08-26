@@ -19,6 +19,18 @@
             <input matInput formControlName="name" required />
         </mat-form-field>
 
+        <mat-form-field *ngIf="isCreateView">
+            <mat-label>{{ 'Duplicate from' | translate }}</mat-label>
+            <os-search-value-selector
+                [inputListValues]="availableMeetingsObservable"
+                [includeNone]="true"
+                [ngModel]="theDuplicateFromId"
+                [ngModelOptions]="{ standalone: true }"
+                (ngModelChange)="onUpdateDuplicateFrom($event)"
+            ></os-search-value-selector>
+            <mat-hint>{{ 'Users and administrators cannot be edited, if this is set' | translate }}</mat-hint>
+        </mat-form-field>
+
         <mat-form-field>
             <mat-label>{{ 'Description' | translate }}</mat-label>
             <input matInput formControlName="description" />

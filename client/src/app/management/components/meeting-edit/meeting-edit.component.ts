@@ -23,6 +23,10 @@ import { ViewMeeting } from 'app/management/models/view-meeting';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { SimplifiedModelRequest } from '../../../core/core-services/model-request-builder.service';
+import { ViewOrganization } from '../../models/view-organization';
+import { ORGANIZATION_ID, OrganizationService } from '../../../core/core-services/organization.service';
+import { Observable } from 'rxjs';
 
 const AddMeetingLabel = _('New meeting');
 const EditMeetingLabel = _('Edit meeting');
@@ -32,12 +36,16 @@ const EditMeetingLabel = _('Edit meeting');
     templateUrl: './meeting-edit.component.html',
     styleUrls: ['./meeting-edit.component.scss']
 })
-export class MeetingEditComponent extends BaseModelContextComponent implements OnInit {
+export class MeetingEditComponent extends BaseModelContextComponent {
     public readonly CML = CML;
     public readonly OML = OML;
 
     public get availableUsers(): ViewUser[] {
         return Array.from(new Set((this.committee?.users || []).concat(this.editMeeting?.users || [])));
+    }
+
+    public get availableMeetingsObservable(): Observable<ViewMeeting[]> {
+        return this.orga.organization.active_meetings_as_observable;
     }
 
     private get isJitsiManipulationAllowed(): boolean {
@@ -50,12 +58,13 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
     public isCreateView: boolean;
 
     public meetingForm: FormGroup;
+    public theDuplicateFromId: Id;
+
+    public committee: ViewCommittee;
 
     private meetingId: number;
     private editMeeting: ViewMeeting;
     private committeeId: number;
-
-    public committee: ViewCommittee;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -67,7 +76,8 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
         public orgaTagRepo: OrganizationTagRepositoryService,
         private colorService: ColorService,
         private operator: OperatorService,
-        private userRepo: UserRepositoryService
+        private userRepo: UserRepositoryService,
+        private orga: OrganizationService
     ) {
         super(componentServiceCollector);
         this.createOrEdit();
@@ -83,27 +93,9 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
 
     public onSubmit(): void {
         if (this.isCreateView) {
-            const payload: MeetingAction.CreatePayload = {
-                committee_id: this.committeeId,
-                ...this.meetingForm.value
-            };
-
-            this.meetingRepo
-                .create(payload)
-                .then(() => {
-                    this.location.back();
-                })
-                .catch(this.raiseError);
+            this.doCreateMeeting();
         } else {
-            const payload: MeetingAction.UpdatePayload = { ...this.meetingForm.value };
-            delete (payload as any).user_ids; // do not send them to the server.
-            delete (payload as any).admin_ids; // do not send them to the server.
-            this.meetingRepo
-                .update(payload, this.editMeeting, this.getUsersToUpdateForMeetingObject())
-                .then(() => {
-                    this.location.back();
-                })
-                .catch(this.raiseError);
+            this.doUpdateMeeting();
         }
     }
 
@@ -118,6 +110,26 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
         });
         const currentValue: Id[] = this.meetingForm.get('organization_tag_ids').value || [];
         this.meetingForm.patchValue({ organization_tag_ids: currentValue.concat(id) });
+    }
+
+    public onUpdateDuplicateFrom(id: Id | null): void {
+        this.theDuplicateFromId = id;
+        if (id) {
+            this.meetingForm.get('user_ids').disable();
+            this.meetingForm.get('admin_ids').disable();
+        } else if (id === null) {
+            this.meetingForm.get('user_ids').enable();
+            this.meetingForm.get('admin_ids').enable();
+        }
+    }
+
+    protected getModelRequest(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewOrganization,
+            ids: [ORGANIZATION_ID],
+            follow: ['active_meeting_ids'],
+            fieldset: ''
+        };
     }
 
     private createOrEdit(): void {
@@ -242,6 +254,35 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
         }
     }
 
+    private async doCreateMeeting(): Promise<void> {
+        if (this.theDuplicateFromId) {
+            const identifiable = (await this.meetingRepo.duplicateFrom(this.committeeId, this.theDuplicateFromId))[0];
+            const payload: MeetingAction.UpdatePayload = {
+                id: identifiable.id,
+                ...this.meetingForm.value
+            };
+            await this.meetingRepo.update(this.sanitizePayload(payload));
+        } else {
+            const payload: MeetingAction.CreatePayload = {
+                committee_id: this.committeeId,
+                ...this.meetingForm.value
+            };
+
+            await this.meetingRepo.create(payload);
+        }
+        this.location.back();
+    }
+
+    private async doUpdateMeeting(): Promise<void> {
+        const payload: MeetingAction.UpdatePayload = { ...this.meetingForm.value };
+        await this.meetingRepo.update(
+            this.sanitizePayload(payload),
+            this.editMeeting,
+            this.getUsersToUpdateForMeetingObject()
+        );
+        this.location.back();
+    }
+
     /**
      * Creates an object containing added and removed participant-user-ids as well as
      * added and removed admin-user-ids for the current editted meeting.
@@ -265,5 +306,14 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
             addedAdmins: addedAdminIds.map(id => this.userRepo.getViewModel(id)),
             removedAdmins: removedAdminIds.map(id => this.userRepo.getViewModel(id))
         };
+    }
+
+    /**
+     * Removes the `user_ids` and `admin_ids` from an update-payload
+     */
+    private sanitizePayload(payload: any): any {
+        delete payload.user_ids; // This must not be sent
+        delete payload.admin_ids; // This must not be sent
+        return payload;
     }
 }

@@ -133,8 +133,8 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
     }
 
     public update(
-        update: MeetingAction.OptionalUpdatePayload,
-        meeting: ViewMeeting,
+        update: Partial<MeetingAction.UpdatePayload>,
+        meeting?: ViewMeeting,
         options: MeetingUserModifiedFields = {}
     ): Promise<void> {
         update.start_time = this.anyDateToUnix(update.start_time);
@@ -142,13 +142,16 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         if (update.organization_tag_ids === null) {
             update.organization_tag_ids = [];
         }
+        if (!update.id && !meeting) {
+            throw new Error('Either a meeting or an update.id has to be given');
+        }
         const actions: ActionRequest[] = [
             {
                 action: MeetingAction.UPDATE,
                 data: [
                     {
                         ...update,
-                        id: meeting.id
+                        id: update.id || meeting.id
                     }
                 ]
             }
@@ -198,8 +201,16 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         return this.sendActionToBackend(MeetingAction.DELETE_ALL_SPEAKERS_OF_ALL_LISTS, payload);
     }
 
-    public duplicate(...meetings: ViewMeeting[]): Promise<void> {
+    public duplicate(...meetings: ViewMeeting[]): Promise<Identifiable[]> {
         const payload: MeetingAction.ClonePayload[] = meetings.map(meeting => ({ meeting_id: meeting.id }));
+        return this.sendBulkActionToBackend(MeetingAction.CLONE, payload);
+    }
+
+    public duplicateFrom(committeeId: Id, ...meetings: ViewMeeting[] | Id[]): Promise<Identifiable[]> {
+        const payload: MeetingAction.ClonePayload[] = meetings.map((meeting: ViewMeeting | Id) => ({
+            meeting_id: typeof meeting === 'number' ? meeting : meeting.id,
+            committee_id: committeeId
+        }));
         return this.sendBulkActionToBackend(MeetingAction.CLONE, payload);
     }
 

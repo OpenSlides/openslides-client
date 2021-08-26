@@ -60,7 +60,7 @@
         <mat-icon>edit</mat-icon>
         <span>{{ 'Edit' | translate }}</span>
     </a>
-    <button mat-menu-item *ngIf="meeting.isActive" disabled (click)="onDuplicate()">
+    <button mat-menu-item *ngIf="meeting.isActive" (click)="onDuplicate()">
         <mat-icon>file_copy</mat-icon>
         <span>{{ 'Duplicate' | translate }}</span>
     </button>
