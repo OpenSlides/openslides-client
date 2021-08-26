@@ -217,6 +217,11 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         return this.sendActionToBackend(MeetingAction.DELETE_ALL_SPEAKERS_OF_ALL_LISTS, payload);
     }
 
+    public duplicate(...meetings: ViewMeeting[]): Promise<void> {
+        const payload: MeetingAction.ClonePayload[] = meetings.map(meeting => ({ meeting_id: meeting.id }));
+        return this.sendBulkActionToBackend(MeetingAction.CLONE, payload);
+    }
+
     /**
      * Removes all empty collections from an import meeting.
      *
