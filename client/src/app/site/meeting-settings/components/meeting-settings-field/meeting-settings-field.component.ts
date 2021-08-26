@@ -183,6 +183,9 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
         if (this.setting.restrictionFn) {
             return this.setting.restrictionFn(this.orgaSettings, value);
         }
+        if (typeof value === 'number') {
+            value = value.toString() as any;
+        }
         return value;
     }
 
