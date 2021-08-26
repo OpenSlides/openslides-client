@@ -6,7 +6,15 @@
                 <h4>{{ committee.name }}</h4>
                 <div *ngFor="let meeting of committee.meetings">
                     <mat-radio-button [value]="meeting.id">
-                        {{ meeting.name }}
+                        <os-icon-container
+                            [swap]="true"
+                            [icon]="isDefaultMeetingFor(meeting, committee) ? 'star' : 'star_outline'"
+                            iconTooltip="{{
+                                (isDefaultMeetingFor(meeting, committee) ? 'Default meeting' : '') | translate
+                            }}"
+                        >
+                            {{ meeting.name }}
+                        </os-icon-container>
                     </mat-radio-button>
                 </div>
             </div>
@@ -14,6 +22,8 @@
     </mat-radio-group>
 </div>
 <div mat-dialog-actions>
-    <button mat-button [disabled]="!currentSelectedMeeting" color="primary" (click)="onSaveClicked()">{{ 'Forward' | translate }}</button>
+    <button mat-button [disabled]="!currentSelectedMeeting" color="primary" (click)="onSaveClicked()">
+        {{ 'Forward' | translate }}
+    </button>
     <button mat-button [mat-dialog-close]="null">{{ 'Cancel' | translate }}</button>
 </div>

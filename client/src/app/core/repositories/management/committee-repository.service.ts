@@ -63,6 +63,7 @@ export class CommitteeRepositoryService
         const payload: CommitteeAction.UpdatePayload = {
             id: committee.id,
             name: update.name,
+            default_meeting_id: update.default_meeting_id,
             ...this.getPartialCommitteePayload(update)
         };
         return this.sendActionToBackend(CommitteeAction.UPDATE, payload);

@@ -34,6 +34,7 @@ export namespace CommitteeAction {
         // Required permission: CML.can_manage
         name?: string;
         template_meeting_id?: Id;
+        default_meeting_id?: Id;
     }
 
     export interface DeletePayload extends Identifiable {}
