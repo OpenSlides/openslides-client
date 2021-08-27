@@ -6,7 +6,7 @@ import dedent from 'ts-dedent';
 
 import { PermissionsMap } from 'app/core/core-services/permission';
 
-const SOURCE = 'https://raw.githubusercontent.com/OpenSlides/OpenSlides/openslides4-dev/docs/permission.yml';
+const SOURCE = 'https://raw.githubusercontent.com/OpenSlides/OpenSlides/master/docs/permission.yml';
 
 const DESTINATION = path.resolve(path.join(__dirname, '../src/app/core/core-services/permission-children.ts'));
 

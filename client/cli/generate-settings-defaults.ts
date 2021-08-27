@@ -6,7 +6,7 @@ import dedent from 'ts-dedent';
 
 import { MeetingSettingsDefinitionProvider } from 'app/core/ui-services/meeting-settings-definition-provider.service';
 
-const SOURCE = 'https://raw.githubusercontent.com/OpenSlides/OpenSlides/openslides4-dev/docs/models.yml';
+const SOURCE = 'https://raw.githubusercontent.com/OpenSlides/OpenSlides/master/docs/models.yml';
 
 const DESTINATION = path.resolve(
     path.join(__dirname, '../src/app/core/repositories/management/meeting-settings-defaults.ts')
