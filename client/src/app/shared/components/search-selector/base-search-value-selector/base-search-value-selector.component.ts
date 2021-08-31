@@ -1,5 +1,14 @@
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    Output,
+    ViewChild,
+    ContentChild,
+    TemplateRef
+} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
@@ -8,6 +17,7 @@ import { Id } from 'app/core/definitions/key-types';
 import { BaseFormControlComponent } from 'app/shared/components/base-form-control';
 import { ParentErrorStateMatcher } from 'app/shared/parent-error-state-matcher';
 import { Selectable } from '../../selectable';
+import { NotFoundDescriptionDirective } from '../../../directives/not-found-description.directive';
 
 @Component({
     template: ''
@@ -22,6 +32,9 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormControlCo
     @ViewChild('chipPlaceholder', { static: false })
     public chipPlaceholder: ElementRef<HTMLElement>;
 
+    @ContentChild(NotFoundDescriptionDirective, { read: TemplateRef, static: false })
+    public notFoundDescription: TemplateRef<HTMLElement>;
+
     /**
      * Decide if this should be a single or multi-select-field
      */
@@ -32,7 +45,7 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormControlCo
      * Decide, if none should be included, if multiple is false.
      */
     @Input()
-    public includeNone = true;
+    public includeNone = false;
 
     @Input()
     public showChips = true;
@@ -42,12 +55,6 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormControlCo
 
     @Input()
     public errorStateMatcher: ParentErrorStateMatcher;
-
-    /**
-     * Whether to show a button, if there is no matching option.
-     */
-    @Input()
-    public showNotFoundButton = false;
 
     /**
      * Label showing, if there are no options for a specific search.
@@ -77,6 +84,12 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormControlCo
 
     public searchValueForm: FormControl;
 
+    public get showNotFoundButton(): boolean {
+        return (
+            !!this.notFoundDescription && !this.getFilteredItemsBySearchValue().length && !!this.searchValueForm.value
+        );
+    }
+
     public get empty(): boolean {
         return Array.isArray(this.contentForm.value) ? !this.contentForm.value.length : !this.contentForm.value;
     }
@@ -97,7 +110,17 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormControlCo
     /**
      * All items
      */
-    protected selectableItems: Selectable[];
+    protected set selectableItems(items: Selectable[]) {
+        if (!this.multiple && this.includeNone) {
+            this._selectableItems = [this.noneItem].concat(items);
+        } else {
+            this._selectableItems = items;
+        }
+    }
+
+    protected get selectableItems(): Selectable[] {
+        return this._selectableItems;
+    }
 
     protected noneItem: Selectable = {
         getListTitle: () => this.noneTitle,
@@ -105,7 +128,9 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormControlCo
         id: null
     };
 
-    private isFirstUpdate = true;
+    private _isFirstUpdate = true;
+
+    private _selectableItems: Selectable[] = [];
 
     /**
      * Function to get a list filtered by the entered search value.
@@ -127,11 +152,7 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormControlCo
 
             return item.toString().toLowerCase().indexOf(searchValue) > -1;
         });
-        if (!this.multiple && this.includeNone) {
-            return [this.noneItem].concat(filteredItems);
-        } else {
-            return filteredItems;
-        }
+        return filteredItems;
     }
 
     public onChipRemove(itemId: Id): void {
@@ -208,8 +229,8 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormControlCo
         if (this.empty) {
             return;
         }
-        if (this.isFirstUpdate) {
-            this.isFirstUpdate = false;
+        if (this._isFirstUpdate) {
+            this._isFirstUpdate = false;
             this.onAfterFirstUpdate();
         }
     }

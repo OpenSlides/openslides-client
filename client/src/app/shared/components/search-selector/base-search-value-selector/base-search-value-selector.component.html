@@ -9,8 +9,9 @@
     <!-- Custom display of selected items -->
     <mat-select-trigger *ngIf="multiple">
         <ng-container *ngIf="selectedItems?.length">
-            <span *ngFor="let item of selectedItems; let i = index">
-                {{ item.getTitle() | translate }}<span *ngIf="i < selectedItems.length - 1">, </span>
+            <span *ngFor="let item of selectedItems; let last = last">
+                {{ item.getTitle() | translate }}
+                <span *ngIf="!last">,</span>
             </span>
         </ng-container>
     </mat-select-trigger>
@@ -36,9 +37,9 @@
             <div class="os-search-selector--chip-placeholder"></div>
         </div>
     </ng-container>
-    <ng-container *ngIf="showNotFoundButton && !getFilteredItemsBySearchValue().length">
+    <ng-container *ngIf="showNotFoundButton">
         <button class="os-not-found-button" mat-button (click)="onNotFoundClick()">
-            <ng-content select="[notFoundDescription]"></ng-content>
+            <ng-container *ngTemplateOutlet="notFoundDescription"></ng-container>
         </button>
     </ng-container>
     <cdk-virtual-scroll-viewport class="vscroll-viewport" minBufferPx="400" maxBufferPx="600" [itemSize]="50">

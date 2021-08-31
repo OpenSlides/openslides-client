@@ -68,7 +68,7 @@
         <!-- polls -->
         <ng-container *ngIf="assignment && assignment.poll_ids">
             <ng-container *ngFor="let poll of assignment.poll_ids | reverse; trackBy: trackById">
-                <os-assignment-poll [pollId]="poll"> </os-assignment-poll>
+                <os-assignment-poll [pollId]="poll"></os-assignment-poll>
             </ng-container>
         </ng-container>
 
@@ -185,10 +185,10 @@
                                     [showNotFoundButton]="true"
                                     (clickNotFound)="createNewCandidate($event)"
                                 >
-                                    <ng-container notFoundDescription>
+                                    <ng-template osNotFoundDescription>
                                         <mat-icon>add</mat-icon>
                                         {{ 'Create user' | translate }}
-                                    </ng-container>
+                                    </ng-template>
                                 </os-search-value-selector>
                             </mat-form-field>
                         </form>
@@ -244,7 +244,6 @@
                     <os-search-value-selector
                         formControlName="tag_ids"
                         [multiple]="true"
-                        [includeNone]="true"
                         placeholder="{{ 'Tags' | translate }}"
                         [inputListValues]="tagsObserver"
                     ></os-search-value-selector>

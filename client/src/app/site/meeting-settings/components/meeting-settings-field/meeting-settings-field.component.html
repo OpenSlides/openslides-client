@@ -20,7 +20,7 @@
                 <span matSuffix>
                     <mat-icon pull="right" class="red-warning-text" *ngIf="error">error</mat-icon>
                 </span>
-                <mat-error *ngIf="error"> {{ error }} </mat-error>
+                <mat-error *ngIf="error">{{ error }}</mat-error>
 
                 <!-- templates for exchangeable inputs. Add more here if necessary -->
 
@@ -42,7 +42,6 @@
                         formControlName="value"
                         [multiple]="true"
                         [showChips]="false"
-                        [includeNone]="false"
                         [errorStateMatcher]="matcher"
                         [inputListValues]="groupObservable"
                     ></os-search-value-selector>
@@ -105,7 +104,7 @@
                                     (click)="$event.preventDefault()"
                                 ></mat-datepicker-toggle>
                             </div>
-                            <mat-error *ngIf="error"> {{ error }} </mat-error>
+                            <mat-error *ngIf="error">{{ error }}</mat-error>
                             <mat-datepicker #datepicker></mat-datepicker>
                         </mat-form-field>
                         <mat-form-field *ngIf="setting.type === 'datetime'">
@@ -116,7 +115,7 @@
                                     <mat-icon ngxMaterialTimepickerToggleIcon>access_time</mat-icon>
                                 </ngx-material-timepicker-toggle>
                             </div>
-                            <mat-error *ngIf="error"> {{ error }} </mat-error>
+                            <mat-error *ngIf="error">{{ error }}</mat-error>
                             <ngx-material-timepicker #timepicker></ngx-material-timepicker>
                         </mat-form-field>
                     </div>

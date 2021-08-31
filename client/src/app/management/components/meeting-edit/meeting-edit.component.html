@@ -44,7 +44,7 @@
         </mat-form-field>
 
         <mat-form-field>
-            <mat-label> {{ 'Participants' | translate }}</mat-label>
+            <mat-label>{{ 'Participants' | translate }}</mat-label>
             <os-search-value-selector
                 formControlName="user_ids"
                 [multiple]="true"
@@ -77,9 +77,9 @@
                 [showNotFoundButton]="true"
                 (clickNotFound)="onOrgaTagNotFound($event)"
             >
-                <ng-container notFoundDescription>
+                <ng-template osNotFoundDescription>
                     {{ 'Create new tag' | translate }}
-                </ng-container>
+                </ng-template>
             </os-search-repo-selector>
         </mat-form-field>
 
