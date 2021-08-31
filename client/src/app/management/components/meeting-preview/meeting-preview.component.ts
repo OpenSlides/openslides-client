@@ -88,7 +88,11 @@ export class MeetingPreviewComponent {
         }
     }
 
-    public async setAsDefaultMeeting(): Promise<void> {
-        await this.committeeRepo.update({ default_meeting_id: this.meeting.id }, this.committee);
+    public async toggleDefaultMeeting(): Promise<void> {
+        if (this.isDefaultMeeting) {
+            await this.committeeRepo.update({ default_meeting_id: null }, this.committee);
+        } else {
+            await this.committeeRepo.update({ default_meeting_id: this.meeting.id }, this.committee);
+        }
     }
 }

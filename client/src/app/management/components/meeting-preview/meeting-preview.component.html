@@ -7,7 +7,7 @@
         <span *osCmlPerms="CML.can_manage; committeeId: committee.id" class="align-right">
             <button
                 mat-icon-button
-                (click)="setAsDefaultMeeting()"
+                (click)="toggleDefaultMeeting()"
                 matTooltip="{{ (isDefaultMeeting ? 'Is default meeting' : 'Set as default meeting') | translate }}"
             >
                 <mat-icon>{{ isDefaultMeeting ? 'star' : 'star_outline' }}</mat-icon>
