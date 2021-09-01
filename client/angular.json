@@ -95,7 +95,9 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {},
+          "options": {
+            "disableHostCheck": true
+          },
           "configurations": {
             "production": {
               "browserTarget": "client:build:production"
