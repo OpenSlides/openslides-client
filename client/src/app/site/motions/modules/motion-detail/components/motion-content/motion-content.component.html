@@ -68,10 +68,10 @@
                     [showNotFoundButton]="true"
                     (clickNotFound)="createNewSubmitter($event)"
                 >
-                    <ng-container notFoundDescription>
+                    <ng-template osNotFoundDescription>
                         <mat-icon>add</mat-icon>
                         {{ 'Create user' | translate }}
-                    </ng-container>
+                    </ng-template>
                 </os-search-repo-selector>
             </mat-form-field>
         </ng-container>
@@ -139,8 +139,9 @@
                     : ''
             "
         >
-            <span>{{ 'Reason' | translate }}</span
-            >&nbsp;<span *ngIf="reasonRequired && editMotion">*</span>
+            <span>{{ 'Reason' | translate }}</span>
+            &nbsp;
+            <span *ngIf="reasonRequired && editMotion">*</span>
         </h3>
         <div class="motion-text" *ngIf="!editMotion" [innerHtml]="motion?.reason | trust: 'html'"></div>
 
@@ -178,7 +179,10 @@
         <!-- Attachments -->
         <div *ngIf="hasAttachments || editMotion" class="content-field">
             <div *ngIf="!editMotion">
-                <h3>{{ 'Attachments' | translate }}<mat-icon>attach_file</mat-icon></h3>
+                <h3>
+                    {{ 'Attachments' | translate }}
+                    <mat-icon>attach_file</mat-icon>
+                </h3>
                 <mat-list dense>
                     <mat-list-item *ngFor="let file of motion?.attachments">
                         <a [routerLink]="file.url" target="_blank">{{ file.title }}</a>
@@ -209,10 +213,10 @@
                         [showNotFoundButton]="true"
                         (clickNotFound)="createNewSupporter($event)"
                     >
-                        <ng-container notFoundDescription>
+                        <ng-template osNotFoundDescription>
                             <mat-icon>add</mat-icon>
                             {{ 'Create user' | translate }}
-                        </ng-container>
+                        </ng-template>
                     </os-search-repo-selector>
                 </mat-form-field>
             </div>

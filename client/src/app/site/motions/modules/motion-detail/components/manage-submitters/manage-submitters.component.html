@@ -66,10 +66,10 @@
                 [showNotFoundButton]="true"
                 (clickNotFound)="createNewSubmitter($event)"
             >
-                <ng-container notFoundDescription>
+                <ng-template osNotFoundDescription>
                     <mat-icon>add</mat-icon>
                     {{ 'Create user' | translate }}
-                </ng-container>
+                </ng-template>
             </os-search-value-selector>
         </mat-form-field>
     </form>

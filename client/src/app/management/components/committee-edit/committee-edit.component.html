@@ -35,14 +35,14 @@
                 (clickNotFound)="onOrgaTagNotFound($event)"
                 placeholder="{{ 'Tags' | translate }}"
             >
-                <ng-container notFoundDescription>
+                <ng-template osNotFoundDescription>
                     {{ 'Create new tag' | translate }}
-                </ng-container>
+                </ng-template>
             </os-search-repo-selector>
         </mat-form-field>
 
         <mat-form-field *osOmlPerms="OML.can_manage_users">
-            <mat-label> {{ 'Committee members' | translate }}</mat-label>
+            <mat-label>{{ 'Committee members' | translate }}</mat-label>
             <os-search-value-selector
                 formControlName="user_ids"
                 [multiple]="true"
@@ -52,7 +52,7 @@
         </mat-form-field>
 
         <mat-form-field *osOmlPerms="OML.can_manage_users">
-            <mat-label> {{ 'Committee managers' | translate }}</mat-label>
+            <mat-label>{{ 'Committee managers' | translate }}</mat-label>
             <os-search-value-selector
                 formControlName="manager_ids"
                 [multiple]="true"

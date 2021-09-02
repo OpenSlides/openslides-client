@@ -120,6 +120,7 @@ import { SidenavContentDirective } from './components/sidenav/sidenav-content.di
 import { SidenavDrawerContentDirective } from './components/sidenav/sidenav-drawer-content.directive';
 import { AccountButtonComponent } from './components/account-button/account-button.component';
 import { SuperSearchComponent } from './components/super-search/super-search.component';
+import { NotFoundDescriptionDirective } from './directives/not-found-description.directive';
 
 const declarations = [
     PermsDirective,
@@ -207,7 +208,8 @@ const declarations = [
     SidenavComponent,
     SidenavContentDirective,
     SidenavDrawerContentDirective,
-    AccountButtonComponent
+    AccountButtonComponent,
+    NotFoundDescriptionDirective
 ];
 
 const sharedModules = [

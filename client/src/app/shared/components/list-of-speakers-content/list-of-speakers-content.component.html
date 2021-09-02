@@ -4,7 +4,7 @@
         <span>
             {{ title }}
         </span>
-        <mat-icon *ngIf="closed" matTooltip="{{ 'The list of speakers is closed.' | translate }}"> lock </mat-icon>
+        <mat-icon *ngIf="closed" matTooltip="{{ 'The list of speakers is closed.' | translate }}">lock</mat-icon>
     </h1>
     <span *ngIf="customTitle">
         <ng-content></ng-content>
@@ -115,7 +115,8 @@
                         <span *osPerms="permission.agendaCanManageListOfSpeakers; and: !speaker.point_of_order">
                             <!-- Speaker count -->
                             <span *ngIf="hasSpokenCount(speaker)" class="red-warning-text speaker-warning">
-                                {{ hasSpokenCount(speaker) + 1 }}. <span>{{ 'contribution' | translate }}</span>
+                                {{ hasSpokenCount(speaker) + 1 }}.
+                                <span>{{ 'contribution' | translate }}</span>
                             </span>
 
                             <!-- First contribution -->
@@ -214,10 +215,10 @@
                     [showNotFoundButton]="true"
                     (clickNotFound)="onCreateUser($event)"
                 >
-                    <ng-container notFoundDescription>
+                    <ng-template osNotFoundDescription>
                         <mat-icon>add</mat-icon>
                         {{ 'Create user' | translate }}
-                    </ng-container>
+                    </ng-template>
                 </os-search-value-selector>
             </mat-form-field>
         </form>
@@ -248,7 +249,8 @@
             (click)="addPointOfOrder()"
             *ngIf="showPointOfOrders && !isOpInWaitlist(true)"
         >
-            <mat-icon>warning</mat-icon>&nbsp;
+            <mat-icon>warning</mat-icon>
+            &nbsp;
             <span>{{ 'Point of order' | translate }}</span>
         </button>
         <button
@@ -269,14 +271,14 @@
         <ng-container *osPerms="permission.agendaCanManageListOfSpeakers">
             <!-- pro button -->
             <button mat-menu-item (click)="onProContraButtons(speaker, true)" *ngIf="enableProContraSpeech">
-                <mat-icon *ngIf="speaker.speech_state !== SpeechState.PRO"> add_circle_outline </mat-icon>
-                <mat-icon class="green-text" *ngIf="speaker.speech_state === SpeechState.PRO"> add_circle </mat-icon>
+                <mat-icon *ngIf="speaker.speech_state !== SpeechState.PRO">add_circle_outline</mat-icon>
+                <mat-icon class="green-text" *ngIf="speaker.speech_state === SpeechState.PRO">add_circle</mat-icon>
                 <span>{{ 'Forspeech' | translate }}</span>
             </button>
 
             <!-- contra button -->
             <button mat-menu-item (click)="onProContraButtons(speaker, false)" *ngIf="enableProContraSpeech">
-                <mat-icon *ngIf="speaker.speech_state !== SpeechState.CONTRA"> remove_circle_outline </mat-icon>
+                <mat-icon *ngIf="speaker.speech_state !== SpeechState.CONTRA">remove_circle_outline</mat-icon>
                 <mat-icon class="red-warning-text" *ngIf="speaker.speech_state === SpeechState.CONTRA">
                     remove_circle
                 </mat-icon>
@@ -302,7 +304,7 @@
 <ng-template #speakerSubtitle let-speaker="speaker" let-showcolor="showcolor">
     <!-- Pro Speech -->
     <ng-container *ngIf="speaker.speech_state === SpeechState.PRO">
-        <mat-icon inline class="inline-icon-text-align" [class.green-text]="!!showcolor"> add_circle </mat-icon>
+        <mat-icon inline class="inline-icon-text-align" [class.green-text]="!!showcolor">add_circle</mat-icon>
         <i [class.user-subtitle]="!!showcolor">
             {{ 'Forspeech' | translate }}
         </i>
@@ -310,9 +312,7 @@
 
     <!-- Contra Speech -->
     <ng-container *ngIf="speaker.speech_state === SpeechState.CONTRA">
-        <mat-icon inline class="inline-icon-text-align" [class.red-warning-text]="!!showcolor">
-            remove_circle
-        </mat-icon>
+        <mat-icon inline class="inline-icon-text-align" [class.red-warning-text]="!!showcolor">remove_circle</mat-icon>
         <i [class.user-subtitle]="!!showcolor">
             {{ 'Counter speech' | translate }}
         </i>
@@ -333,8 +333,9 @@
             color="{{ !!showcolor ? 'warn' : null }}"
             class="inline-icon-text-align"
             *ngIf="speaker.point_of_order"
-            >warning</mat-icon
         >
+            warning
+        </mat-icon>
         <i [class.red-warning-text]="!!showcolor">
             {{ speaker.note }}
         </i>
