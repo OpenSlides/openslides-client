@@ -13,6 +13,7 @@ import { AccountDialogComponent } from 'app/management/components/account-dialog
 import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'os-account-button',
@@ -55,7 +56,8 @@ export class AccountButtonComponent extends BaseModelContextComponent implements
         private operator: OperatorService,
         private userRepo: UserRepositoryService,
         private authService: AuthService,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private router: Router
     ) {
         super(componentServiceCollector);
     }
@@ -110,6 +112,10 @@ export class AccountButtonComponent extends BaseModelContextComponent implements
         this.dialog.open(AccountDialogComponent, {
             ...largeDialogSettings
         });
+    }
+
+    public async login(): Promise<void> {
+        this.router.navigate(['/', this.activeMeetingId, 'login']);
     }
 
     public async logout(): Promise<void> {

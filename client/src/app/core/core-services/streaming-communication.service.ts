@@ -137,7 +137,7 @@ export class StreamingCommunicationService {
 
     private close<T>(streamContainer: StreamContainer<T>): void {
         if (this.isStreamOpen(streamContainer)) {
-            this.streams[streamContainer.id].stream.close();
+            this.streams[streamContainer.id].stream?.close();
             delete this.streams[streamContainer.id];
         }
     }
