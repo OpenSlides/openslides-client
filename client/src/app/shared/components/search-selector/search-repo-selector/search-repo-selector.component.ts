@@ -73,7 +73,7 @@ export class SearchRepoSelectorComponent extends BaseSearchValueSelectorComponen
     }
 
     public onContainerClick(event: MouseEvent): void {
-        if (!this.selectableItems) {
+        if (!this.selectableItems?.length) {
             this.doModelRequest().then(() => this.initItems());
         }
         super.onContainerClick(event);

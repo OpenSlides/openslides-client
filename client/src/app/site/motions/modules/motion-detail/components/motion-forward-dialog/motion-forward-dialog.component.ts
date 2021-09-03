@@ -63,6 +63,10 @@ export class MotionForwardDialogComponent implements OnInit {
         return meeting.id === committee.default_meeting_id;
     }
 
+    public isActiveMeeting(meeting: PresenterMeeting): boolean {
+        return meeting.id === this.activeMeeting.meetingId;
+    }
+
     private getFirstDefaultMeetingId(): Id | null {
         const committees = this.meetingsSubject.value;
         return committees.find(committee => committee.default_meeting_id)?.default_meeting_id || null;

@@ -47,11 +47,14 @@
             {{ noOptionsFoundLabel | translate }}
         </mat-option>
         <mat-option
-            *cdkVirtualFor="let selectedItem of getFilteredItemsBySearchValue()"
-            [value]="selectedItem.id"
-            (onSelectionChange)="onSelectionChange($event)"
+            #currentOption
+            *cdkVirtualFor="let selectableItem of getFilteredItemsBySearchValue()"
+            [value]="selectableItem.id"
+            [disabled]="disableOptionWhenFn(selectableItem)"
+            [matTooltip]="tooltipFn(selectableItem, currentOption)"
+            (onSelectionChange)="onSelectionChange(selectableItem, $event)"
         >
-            {{ selectedItem.getTitle() | translate }}
+            {{ selectableItem.getTitle() | translate }}
         </mat-option>
     </cdk-virtual-scroll-viewport>
 </mat-select>

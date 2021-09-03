@@ -34,7 +34,7 @@ export class MeetingPreviewComponent {
     }
 
     public get userAmount(): number {
-        return this.meeting?.user_ids.length;
+        return this.meeting?.user_ids?.length || 0;
     }
 
     public get showUserAmount(): boolean {

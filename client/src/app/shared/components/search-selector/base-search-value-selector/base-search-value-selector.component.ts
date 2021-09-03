@@ -10,7 +10,7 @@ import {
     TemplateRef
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MatOptionSelectionChange } from '@angular/material/core';
+import { MatOption, MatOptionSelectionChange } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
 
 import { Id } from 'app/core/definitions/key-types';
@@ -18,6 +18,11 @@ import { BaseFormControlComponent } from 'app/shared/components/base-form-contro
 import { ParentErrorStateMatcher } from 'app/shared/parent-error-state-matcher';
 import { Selectable } from '../../selectable';
 import { NotFoundDescriptionDirective } from '../../../directives/not-found-description.directive';
+
+export interface OsOptionSelectionChanged {
+    value: Selectable;
+    source: MatOption;
+}
 
 @Component({
     template: ''
@@ -77,10 +82,29 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormControlCo
     public transformPropagateFn?: (value: Selectable) => Selectable;
 
     /**
+     * Function to determine depending on a specific selectable item whether the item should be disabled.
+     *
+     * @returns `true` if the item should be disabled.
+     */
+    @Input()
+    public disableOptionWhenFn: (value: Selectable) => boolean = () => false;
+
+    /**
+     * Function to determine whether a tooltip should be displayed on the given option
+     *
+     * @returns either the string that will be displayed as tooltip or `null` if no tooltip should be displayed
+     */
+    @Input()
+    public tooltipFn: (value: Selectable, source: MatOption) => string | null = () => null;
+
+    /**
      * Emits the currently searched string.
      */
     @Output()
     public clickNotFound = new EventEmitter<string>();
+
+    @Output()
+    public selectionChanged = new EventEmitter<OsOptionSelectionChanged>();
 
     public searchValueForm: FormControl;
 
@@ -176,10 +200,10 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormControlCo
         }
     }
 
-    public onSelectionChange(change: MatOptionSelectionChange): void {
+    public onSelectionChange(value: Selectable, change: MatOptionSelectionChange): void {
         if (change.isUserInput && this.multiple) {
-            const value = change.source.value;
-            this.addOrRemoveId(value);
+            this.addOrRemoveId(value.id);
+            this.selectionChanged.emit({ value, source: change.source });
         }
     }
 
