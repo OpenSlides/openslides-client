@@ -231,10 +231,14 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
     }
 
     private updateFormByCommittee(): void {
-        if (this.isCreateView && (this.committee?.user_ids || []).includes(this.operator.operatorId)) {
-            this.meetingForm.patchValue({
-                admin_ids: [this.operator.operatorId]
-            });
+        if (this.isCreateView) {
+            const update: any = {
+                name: `${this.committee?.name} (${this.committee?.meeting_ids?.length + 1 || 1})`
+            };
+            if ((this.committee?.user_ids || []).includes(this.operator.operatorId)) {
+                update.admin_ids = [this.operator.operatorId];
+            }
+            this.meetingForm.patchValue(update);
         }
     }
 
