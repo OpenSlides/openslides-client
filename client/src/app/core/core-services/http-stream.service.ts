@@ -2,79 +2,54 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { HttpOptions } from '../definitions/http-options';
-import { EndpointConfiguration } from './http-stream-endpoint.service';
-import { Stream } from './stream';
-import { CommunicationError, ErrorType } from './stream-utils';
+import { EndpointConfiguration, HttpStreamEndpointService } from './http-stream-endpoint.service';
+import { ErrorDescription, HttpStream, HttpStreamOptions } from './http-stream';
+import { HttpBodyGetter, HttpParamsGetter } from './communication-manager.service';
+import { AuthService } from './auth.service';
+import { OfflineBroadcastService, OfflineReasonValue } from './offline-broadcast.service';
 
 export type Params = HttpParams | { [param: string]: string | string[] };
 
-export class StreamConnectionError extends Error {
-    public constructor(public code: number, message: string) {
-        super(message);
-        this.name = 'StreamConnectionError';
-    }
-}
-
-export class StreamContainer<T> {
-    public readonly id = Math.floor(Math.random() * (900000 - 1) + 100000); // [100000, 999999]
-
-    public retries = 0;
-    public hasErroredAmount = 0;
-    public errorHandler: (type: ErrorType, error: CommunicationError, message: string) => void = null;
-
-    public messageHandler: (message: T, isFirstResponse: boolean) => void;
-    public stream?: Stream<T>;
-
-    public constructor(
-        public endpoint: EndpointConfiguration,
-        messageHandler: (message: T, streamId: number, isFirstResponse: boolean) => void,
-        public params: () => Params,
-        public body: () => any,
-        public description: string
-    ) {
-        this.messageHandler = (message: T, isFirstResponse: boolean) => {
-            if (this.hasErroredAmount > 0) {
-                console.log(
-                    `resetting error amount for ${this.description}:${this.id} since there was a connect message`
-                );
-                this.hasErroredAmount = 0;
-            }
-            messageHandler(message, this.id, isFirstResponse);
-        };
-    }
+export interface RequestOptions {
+    bodyFn?: HttpBodyGetter;
+    paramsFn?: HttpParamsGetter;
 }
 
 @Injectable({
     providedIn: 'root'
 })
 export class HttpStreamService {
-    public constructor(private http: HttpClient) {}
+    public constructor(
+        private http: HttpClient,
+        private endpointService: HttpStreamEndpointService,
+        private auth: AuthService,
+        private offlineService: OfflineBroadcastService
+    ) {}
 
-    /**
-     * Creates the stream inside the streamContainer. An StreamConnectionError is thrown, if
-     * there is an error during connecting.
-     *
-     * This method returnes after the first response (First part of the response body) is
-     * received. This implies, that it might be long time idle, if an service choose not to send anything.
-     */
-    public async connect<T>(streamContainer: StreamContainer<T>): Promise<void> {
-        if (streamContainer.stream) {
-            console.error('Illegal state!');
-            return;
-        }
-
-        const options = this.getOptions(streamContainer);
-        const observable = this.http.request(streamContainer.endpoint.method, streamContainer.endpoint.url, options);
-        const stream = new Stream<T>(observable, streamContainer.messageHandler, streamContainer.errorHandler);
-        streamContainer.stream = stream;
-
-        const hasError = await stream.gotFirstResponse;
-        if (hasError) {
-            throw new StreamConnectionError(stream.statuscode, stream.errorContent.toString());
-        }
+    public create<T>(
+        endpointConfiguration: string | EndpointConfiguration,
+        {
+            onError = (_, description) =>
+                this.onError(this.getEndpointConfiguration(endpointConfiguration), description),
+            shouldReconnectOnFailure = () => this.shouldReconnect(),
+            reconnectTimeout = () => Math.random() * 3000 + 2000,
+            ...otherOptions
+        }: HttpStreamOptions<T> = {},
+        { bodyFn = () => {}, paramsFn = () => null }: RequestOptions = {}
+    ): HttpStream<T> {
+        const endpoint = this.getEndpointConfiguration(endpointConfiguration);
+        const requestOptions = this.getOptions(bodyFn, paramsFn);
+        const stream = this.http.request(endpoint.method, endpoint.url, requestOptions);
+        return new HttpStream(() => stream, {
+            endpoint,
+            onError,
+            shouldReconnectOnFailure,
+            reconnectTimeout,
+            ...otherOptions
+        });
     }
 
-    private getOptions<T>(streamContainer: StreamContainer<T>): HttpOptions {
+    private getOptions(bodyFn: HttpBodyGetter, paramsFn: HttpParamsGetter): HttpOptions {
         const options: HttpOptions = {
             headers: { 'Content-Type': 'application/json' },
             responseType: 'text',
@@ -82,16 +57,48 @@ export class HttpStreamService {
             reportProgress: true
         };
 
-        const params = streamContainer.params();
+        const params = paramsFn();
         if (params) {
             options.params = params;
         }
 
-        const body = streamContainer.body();
+        const body = bodyFn();
         if (body) {
             options.body = body;
         }
 
         return options;
+    }
+
+    private onError(endpoint: EndpointConfiguration, description?: ErrorDescription): void {
+        console.log('ERROR', description);
+        this.offlineService.goOffline({
+            endpoint,
+            type: OfflineReasonValue.ConnectionLost
+        });
+    }
+
+    private shouldReconnect(): boolean {
+        // do not continue, if we are offline!
+        if (this.offlineService.isOffline()) {
+            console.log('we are offline?');
+            return false;
+        }
+
+        // do not continue, if the operator changed!
+        if (!this.auth.isAuthenticated()) {
+            console.log('operator changed, do not retry');
+            return false;
+        }
+
+        return true;
+    }
+
+    private getEndpointConfiguration(endpoint: string | EndpointConfiguration): EndpointConfiguration {
+        if (typeof endpoint === 'string') {
+            return this.endpointService.getEndpoint(endpoint);
+        } else {
+            return endpoint;
+        }
     }
 }

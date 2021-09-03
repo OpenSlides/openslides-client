@@ -18,6 +18,29 @@ import { AssignmentFilterListService } from '../../services/assignment-filter-li
 import { AssignmentPdfExportService } from '../../services/assignment-pdf-export.service';
 import { AssignmentSortListService } from '../../services/assignment-sort-list.service';
 import { AssignmentPhases, ViewAssignment } from '../../models/view-assignment';
+import { Id } from 'app/core/definitions/key-types';
+
+const ASSIGNMENT_TO_PDF_REQUEST = (meetingId: Id): SimplifiedModelRequest => ({
+    viewModelCtor: ViewMeeting,
+    ids: [meetingId],
+    follow: [
+        {
+            idField: 'assignment_ids',
+            follow: [
+                SPEAKER_BUTTON_FOLLOW,
+                {
+                    idField: 'candidate_ids',
+                    follow: [{ idField: 'user_id', fieldset: 'shortName' }]
+                },
+                {
+                    idField: 'poll_ids'
+                }
+            ],
+            fieldset: 'list'
+        }
+    ],
+    fieldset: []
+});
 
 /**
  * List view for the assignments
@@ -109,20 +132,7 @@ export class AssignmentListComponent extends BaseListViewComponent<ViewAssignmen
             follow: [
                 {
                     idField: 'assignment_ids',
-                    follow: [
-                        SPEAKER_BUTTON_FOLLOW,
-                        // This makes PDF-export working.
-                        // Should be removed if the AU-service provides a "single-shot"-route.
-                        // See OpenSlides/openslides-autoupdate-service#260.
-                        {
-                            idField: 'candidate_ids',
-                            follow: [{ idField: 'user_id', fieldset: 'shortName' }]
-                        },
-                        {
-                            idField: 'poll_ids'
-                        }
-                        // End of block
-                    ],
+                    follow: [SPEAKER_BUTTON_FOLLOW],
                     fieldset: 'list'
                 }
             ],
@@ -158,6 +168,7 @@ export class AssignmentListComponent extends BaseListViewComponent<ViewAssignmen
      * otherwise the whole list of assignments is exported.
      */
     public async downloadAssignmentButton(assignments?: ViewAssignment[]): Promise<void> {
+        await this.modelRequestService.instant(ASSIGNMENT_TO_PDF_REQUEST(this.activeMeetingId), 'assignment-to-pdf');
         this.pdfService.exportMultipleAssignments(assignments ?? this.repo.getViewModelList());
     }
 

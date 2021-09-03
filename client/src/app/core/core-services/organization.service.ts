@@ -51,10 +51,7 @@ export class OrganizationService {
     }
 
     private async setupModelSubscription(): Promise<void> {
-        this.modelSubscription = await this.autoupdateService.simpleRequest(
-            this.getModelRequest(),
-            'OrganizationService'
-        );
+        this.modelSubscription = await this.autoupdateService.subscribe(this.getModelRequest(), 'OrganizationService');
         this.repo
             .getViewModelObservable(ORGANIZATION_ID)
             .subscribe(organization => this.organizationSubject.next(organization));

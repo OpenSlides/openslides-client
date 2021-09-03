@@ -8,6 +8,8 @@ import { HTTPMethod } from '../definitions/http-methods';
 import { HttpService } from './http.service';
 import { LifecycleService } from './lifecycle.service';
 import { OperatorService } from './operator.service';
+import { HttpStreamEndpointService } from './http-stream-endpoint.service';
+import { HttpStreamService } from './http-stream.service';
 
 /**
  * Encapslates the name and content of every message regardless of being a request or response.
@@ -75,6 +77,8 @@ interface ChannelIdResponse {
     channel_id: string;
 }
 
+const ICC_ENDPOINT = 'icc';
+
 const iccPath = '/system/icc';
 const notifyPath = `${iccPath}/notify`;
 const publishPath = `${notifyPath}/publish`;
@@ -108,10 +112,12 @@ export class NotifyService {
      */
     public constructor(
         private httpService: HttpService,
+        private httpStreamService: HttpStreamService,
         private operator: OperatorService,
         private activeMeetingIdService: ActiveMeetingIdService,
         private lifecycleService: LifecycleService,
-        private commManager: CommunicationManagerService
+        private commManager: CommunicationManagerService,
+        private httpEndpointService: HttpStreamEndpointService
     ) {
         /**
          * watch for both the meeting ID and lifecycle
@@ -138,17 +144,18 @@ export class NotifyService {
         this.disconnect();
 
         const iccMeeting = `${notifyPath}?meeting_id=${meetingId}`;
-        this.commManager.registerEndpoint('icc', iccMeeting, iccHealthPath, HTTPMethod.GET);
-        this.commCloseFn = await this.commManager.connect<NotifyResponse<any> | ChannelIdResponse>(
-            'icc',
-            (notify: NotifyResponse<any> | ChannelIdResponse) => {
+        this.httpEndpointService.registerEndpoint(ICC_ENDPOINT, iccMeeting, iccHealthPath, HTTPMethod.GET);
+        const httpStream = this.httpStreamService.create<NotifyResponse<any> | ChannelIdResponse>(ICC_ENDPOINT, {
+            onMessage: (notify: NotifyResponse<any> | ChannelIdResponse) => {
                 if ((notify as ChannelIdResponse).channel_id) {
                     this.handleChannelIdResponse(notify as ChannelIdResponse);
                 } else {
                     this.handleNotifyResponse(notify as NotifyResponse<any>);
                 }
-            }
-        );
+            },
+            description: 'NotifyService'
+        });
+        this.commCloseFn = this.commManager.registerStream(httpStream);
     }
 
     private disconnect(): void {

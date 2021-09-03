@@ -3,10 +3,8 @@ import { Injectable } from '@angular/core';
 import { HTTPMethod } from '../definitions/http-methods';
 import { HttpService } from './http.service';
 
-export interface EndpointConfiguration {
-    url: string;
-    healthUrl: string;
-    method: HTTPMethod;
+export class EndpointConfiguration {
+    public constructor(public url: string, public healthUrl: string, public method: HTTPMethod) {}
 }
 
 @Injectable({
@@ -17,8 +15,19 @@ export class HttpStreamEndpointService {
 
     public constructor(private http: HttpService) {}
 
-    public registerEndpoint(name: string, url: string, healthUrl: string, method: HTTPMethod = HTTPMethod.GET): void {
-        this.endpointConfigurations[name] = { url, healthUrl, method };
+    public registerEndpoint(name: string, configuration: EndpointConfiguration): void;
+    public registerEndpoint(name: string, url: string, healthUrl: string, method: HTTPMethod): void;
+    public registerEndpoint(
+        name: string,
+        configuration: EndpointConfiguration | string,
+        healthUrl?: string,
+        method: HTTPMethod = HTTPMethod.GET
+    ): void {
+        if (configuration instanceof EndpointConfiguration) {
+            this.endpointConfigurations[name] = configuration;
+        } else {
+            this.endpointConfigurations[name] = { url: configuration, healthUrl, method };
+        }
     }
 
     public getEndpoint(name: string): EndpointConfiguration {
