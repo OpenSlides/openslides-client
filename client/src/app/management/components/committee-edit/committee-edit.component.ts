@@ -24,9 +24,11 @@ import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Committee } from 'app/shared/models/event-management/committee';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { OsOptionSelectionChanged } from '../../../shared/components/search-selector/base-search-value-selector/base-search-value-selector.component';
 
-const AddCommitteeLabel = _('New committee');
-const EditCommitteeLabel = _('Edit committee');
+const ADD_COMMITTEE_LABEL = _('New committee');
+const EDIT_COMMITTEE_LABEL = _('Edit committee');
+const RECEIVE_FORWARDING_DISABLED_TOOLTIP = _('You can change this option only in the forwarding section.');
 
 @Component({
     selector: 'os-committee-edit',
@@ -39,8 +41,8 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
 
     private committeeId: number = null;
 
-    public addCommitteeLabel = AddCommitteeLabel;
-    public editCommitteeLabel = EditCommitteeLabel;
+    public addCommitteeLabel = ADD_COMMITTEE_LABEL;
+    public editCommitteeLabel = EDIT_COMMITTEE_LABEL;
 
     public isCreateView: boolean;
     public committeeForm: FormGroup;
@@ -70,9 +72,9 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
         this.getCommitteeByUrl();
 
         if (this.isCreateView) {
-            super.setTitle(AddCommitteeLabel);
+            super.setTitle(ADD_COMMITTEE_LABEL);
         } else {
-            super.setTitle(EditCommitteeLabel);
+            super.setTitle(EDIT_COMMITTEE_LABEL);
         }
         this.organizationMembers = this.memberService.getMemberListObservable();
         this.meetingsObservable = this.meetingRepo.getViewModelListObservable();
@@ -91,6 +93,34 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
         return map((committees: ViewCommittee[]) =>
             committees.filter(committee => committee.id !== this.editCommittee?.id)
         );
+    }
+
+    /**
+     * Returns a function to know if the option which contains this committee should be disabled
+     * in the `receive_forwardings_from_committee_ids`-control
+     *
+     * @returns A function that will return a boolean
+     */
+    public getDisableOptionWhenFn(): (value: ViewCommittee) => boolean {
+        return value => {
+            return value.id === this.committeeId;
+        };
+    }
+
+    /**
+     * Returns a function to get a tooltip if the option which contains this committee is rendered
+     * in the `receive_forwardings_from_committee_ids`-control
+     *
+     * @returns A function that will return a tooltip
+     */
+    public getTooltipFn(): (value: ViewCommittee) => string | null {
+        return value => {
+            if (value.id === this.committeeId) {
+                return RECEIVE_FORWARDING_DISABLED_TOOLTIP;
+            } else {
+                return null;
+            }
+        };
     }
 
     public onSubmit(): void {
@@ -115,6 +145,23 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
 
     public onCancel(): void {
         this.location.back();
+    }
+
+    /**
+     * Function to (un-) select the same committee in the `receive_forwardings_from_committee_ids`-control. This
+     * enables then the forwarding to the same committee.
+     *
+     * @param value is the committee that is selected or unselected
+     * @param source is the MatOption that emitted the SelectionChanged-event
+     */
+    public onSelectionChanged({ value, source }: OsOptionSelectionChanged): void {
+        if (value.id === this.committeeId) {
+            const formControlName = 'receive_forwardings_from_committee_ids';
+            const previousValue: Set<Id> = new Set(this.committeeForm.get(formControlName).value || []);
+            const fn = source.selected ? 'add' : 'delete';
+            previousValue[fn](value.id);
+            this.committeeForm.patchValue({ [formControlName]: Array.from(previousValue) });
+        }
     }
 
     public async onOrgaTagNotFound(orgaTagName: string): Promise<void> {

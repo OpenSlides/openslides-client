@@ -128,11 +128,11 @@ export class CommitteeRepositoryService
     ): CommitteeAction.PartialPayload {
         return {
             description: committee.description,
-            organization_tag_ids: committee.organization_tag_ids,
+            organization_tag_ids: committee.organization_tag_ids ?? [],
             user_ids: committee.user_ids,
             manager_ids: committee.manager_ids,
-            forward_to_committee_ids: committee.forward_to_committee_ids,
-            receive_forwardings_from_committee_ids: committee.receive_forwardings_from_committee_ids
+            forward_to_committee_ids: committee.forward_to_committee_ids ?? [],
+            receive_forwardings_from_committee_ids: committee.receive_forwardings_from_committee_ids ?? []
         };
     }
 }
