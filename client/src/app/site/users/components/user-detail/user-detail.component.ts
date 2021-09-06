@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { BehaviorSubject, combineLatest } from 'rxjs';
@@ -26,7 +26,8 @@ import { ViewUser } from '../../models/view-user';
 @Component({
     selector: 'os-user-detail',
     templateUrl: './user-detail.component.html',
-    styleUrls: ['./user-detail.component.scss']
+    styleUrls: ['./user-detail.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserDetailComponent extends BaseModelContextComponent implements OnDestroy {
     public readonly additionalFormControls = {

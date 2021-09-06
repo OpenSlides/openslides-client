@@ -9,7 +9,7 @@ import { BaseModel } from 'app/shared/models/base/base-model';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { CollectionMapperService } from './collection-mapper.service';
 import { collectionIdFromFqid } from './key-transforms';
-import { Collection, Fqid, Id } from '../definitions/key-types';
+import { Fqid } from '../definitions/key-types';
 import { Relation } from '../definitions/relations';
 import { ViewModelStoreService } from './view-model-store.service';
 
