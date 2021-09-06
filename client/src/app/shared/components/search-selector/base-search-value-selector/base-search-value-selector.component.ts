@@ -1,6 +1,6 @@
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import {
-    Component,
+    Directive,
     ElementRef,
     EventEmitter,
     Input,
@@ -24,9 +24,7 @@ export interface OsOptionSelectionChanged {
     source: MatOption;
 }
 
-@Component({
-    template: ''
-})
+@Directive()
 export abstract class BaseSearchValueSelectorComponent extends BaseFormControlComponent<Selectable> {
     @ViewChild(CdkVirtualScrollViewport, { static: true })
     public cdkVirtualScrollViewPort: CdkVirtualScrollViewport;

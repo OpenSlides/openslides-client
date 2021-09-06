@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { Id } from 'app/core/definitions/key-types';
-import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
+import { mediumDialogSettings } from 'app/shared/utils/dialog-settings';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { MotionForwardDialogComponent } from 'app/site/motions/modules/motion-detail/components/motion-forward-dialog/motion-forward-dialog.component';
 import { MotionFormatService } from 'app/site/motions/services/motion-format.service';
@@ -27,13 +27,13 @@ export class MotionService {
 
     public async forwardMotionsToMeetings(...motions: ViewMotion[]): Promise<void> {
         const dialogRef = this.dialog.open(MotionForwardDialogComponent, {
-            ...infoDialogSettings
+            ...mediumDialogSettings
         });
-        const toMeetingId = (await dialogRef.afterClosed().toPromise()) as Id;
-        if (toMeetingId) {
+        const toMeetingIds = (await dialogRef.afterClosed().toPromise()) as Id[];
+        if (toMeetingIds) {
             try {
                 const forwardMotions = motions.map(motion => this.motionFormatService.formatMotionForForward(motion));
-                await this.repo.createForwarded([toMeetingId], ...forwardMotions);
+                await this.repo.createForwarded(toMeetingIds, ...forwardMotions);
                 const verboseName = motions.length === 1 ? 'motion' : 'motions';
                 const message = `${motions.length} ${this.translate.instant(`${verboseName} successfully forwarded`)}`;
                 this.snackbar.open(message, 'Ok');
