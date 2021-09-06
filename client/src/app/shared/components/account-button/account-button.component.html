@@ -14,7 +14,7 @@
         <div (mouseenter)="closeLanguageMenu()">
             <div class="username-wrapper">
                 <div class="username">{{ username }}</div>
-                <div class="subtitle structure-level">{{ user.structure_level() }}</div>
+                <div *ngIf="user" class="subtitle structure-level">{{ user.structure_level() }}</div>
             </div>
 
             <div *ngIf="user && isLoggedIn">
@@ -54,12 +54,19 @@
             </button>
         </div>
 
+        <div *ngIf="!user">
+            <button (click)="login()" mat-menu-item>
+                <mat-icon class="menu-icon">login</mat-icon>
+                <span class="menu-text">{{ 'Login' | translate }}</span>
+            </button>
+        </div>
+
         <mat-divider></mat-divider>
 
         <a mat-menu-item routerLink="info" routerLinkActive="active" class="small-text">
             <mat-icon>info</mat-icon>
             <span>{{ 'Legal notice' | translate }}</span>
-            <span> &middot; </span>
+            <span>&middot;</span>
             <span>{{ 'Privacy policy' | translate }}</span>
         </a>
     </ng-template>

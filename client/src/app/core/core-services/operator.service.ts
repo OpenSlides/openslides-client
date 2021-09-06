@@ -629,8 +629,12 @@ export class OperatorService {
      * This behaviour prevents a non-redirect on the startpage.
      */
     private navigateOnLogout(): void {
+        const url = this.router.routerState.snapshot.url;
+        const urlFragments = url.split('/');
+
         // First, check if a user is at any orga-specific route
-        if (!this.router.routerState.snapshot.root.firstChild?.url?.length) {
+        // if the first fragment is a number, we are in a meeting
+        if (!/\d+/g.test(urlFragments[1])) {
             this.router.navigate(['login']);
             return;
         }

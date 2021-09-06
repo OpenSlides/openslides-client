@@ -37,6 +37,11 @@ export class CommunicationManagerService {
 
     private requestedStreams: { [id: number]: StreamContainerWithCloseFn<any> } = {};
 
+    /**
+     * A temporary cache for the requested streams if the communication stops.
+     */
+    private streamCache: { [id: number]: StreamContainerWithCloseFn<any> } = {};
+
     public constructor(
         private streamingCommunicationService: StreamingCommunicationService,
         private offlineBroadcastService: OfflineBroadcastService,
@@ -72,11 +77,6 @@ export class CommunicationManagerService {
             this._connect(container);
         }
 
-        if (LOG) {
-            console.log('Opened', container.description, container.id, container);
-            this.printActiveStreams();
-        }
-
         return () => this.close(container);
     }
 
@@ -96,6 +96,10 @@ export class CommunicationManagerService {
 
     private _connect<T>(container: StreamContainerWithCloseFn<T>): void {
         container.closeFn = this.streamingCommunicationService.connect(container);
+        if (LOG) {
+            console.log('Opened', container.description, container.id, container);
+            this.printActiveStreams();
+        }
     }
 
     public startCommunication(): void {
@@ -106,8 +110,10 @@ export class CommunicationManagerService {
         this.isRunning = true;
 
         // Do not do it asynchronous blocking: just start everything up and do not care about the succeeding
-        for (const container of Object.values(this.requestedStreams)) {
+        for (const container of Object.values(this.streamCache)) {
+            this.requestedStreams[container.id] = container;
             this._connect(container);
+            delete this.streamCache[container.id];
         }
     }
 
@@ -120,6 +126,7 @@ export class CommunicationManagerService {
             }
             container.stream = null;
             this.close(container);
+            this.streamCache[container.id] = container;
         }
     }
 

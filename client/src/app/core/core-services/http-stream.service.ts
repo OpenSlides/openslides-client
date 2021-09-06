@@ -34,7 +34,9 @@ export class StreamContainer<T> {
     ) {
         this.messageHandler = (message: T, isFirstResponse: boolean) => {
             if (this.hasErroredAmount > 0) {
-                console.log(`resetting error amount for ${this.endpoint} since there was a connect message`);
+                console.log(
+                    `resetting error amount for ${this.description}:${this.id} since there was a connect message`
+                );
                 this.hasErroredAmount = 0;
             }
             messageHandler(message, this.id, isFirstResponse);
