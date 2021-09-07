@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 import { AgendaItemAction } from 'app/core/actions/agenda-item-action';
 import { MotionAction } from 'app/core/actions/motion-action';
@@ -86,6 +87,19 @@ export class MotionMultiselectService {
         if (await this.promptService.open(title)) {
             const message = `${motions.length} ${this.translate.instant(this.messageForSpinner)}`;
             this.spinnerService.show(message, { hideAfterPromiseResolved: () => this.repo.delete(...motions) });
+        }
+    }
+
+    public async setWorkflow(motions: ViewMotion[]): Promise<void> {
+        const title = _('This will set the workflow for all selected motions:');
+        const choices = this.workflowRepo.getViewModelList();
+        const selectedChoice = await this.choiceService.open(title, choices);
+        if (selectedChoice) {
+            const message = `${motions.length} ` + this.translate.instant(this.messageForSpinner);
+            this.spinnerService.show(message, {
+                hideAfterPromiseResolved: () =>
+                    this.repo.update({ workflow_id: selectedChoice.items as number }, ...motions)
+            });
         }
     }
 
