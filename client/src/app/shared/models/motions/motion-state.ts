@@ -41,6 +41,7 @@ export class MotionState extends BaseModel<MotionState> {
     public show_state_extension_field: boolean;
     public merge_amendment_into_final: MergeAmendment;
     public show_recommendation_extension_field: boolean;
+    public weight: number;
 
     public next_state_ids: Id[]; // (motion_state/previous_state_ids)[];
     public previous_state_ids: Id[]; // (motion_state/next_state_ids)[];

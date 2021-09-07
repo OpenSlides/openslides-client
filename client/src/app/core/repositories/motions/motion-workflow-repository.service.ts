@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { saveAs } from 'file-saver';
 
 import { MotionWorkflowAction } from 'app/core/actions/motion-workflow-action';
 import {
@@ -16,6 +17,8 @@ import { ViewMotionWorkflow } from 'app/site/motions/models/view-motion-workflow
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { ModelRequestRepository } from '../model-request-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
+import { MotionState } from '../../../shared/models/motions/motion-state';
+import { MotionStateRepositoryService } from './motion-state-repository.service';
 
 /**
  * Repository Services for Workflows
@@ -34,7 +37,10 @@ export class MotionWorkflowRepositoryService
     extends BaseRepositoryWithActiveMeeting<ViewMotionWorkflow, MotionWorkflow>
     implements ModelRequestRepository
 {
-    public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
+    public constructor(
+        repositoryServiceCollector: RepositoryServiceCollector,
+        private stateRepo: MotionStateRepositoryService
+    ) {
         super(repositoryServiceCollector, MotionWorkflow);
     }
 
@@ -105,5 +111,61 @@ export class MotionWorkflowRepositoryService
                 }
             ]
         };
+    }
+
+    public exportWorkflows(...workflows: ViewMotionWorkflow[]): void {
+        const workflowKeysToCopy: (keyof MotionWorkflow)[] = ['name'];
+        const stateKeysToCopy: (keyof MotionState)[] = [
+            'name',
+            'recommendation_label',
+            'css_class',
+            'restrictions',
+            'allow_support',
+            'allow_create_poll',
+            'allow_submitter_edit',
+            'set_number',
+            'show_state_extension_field',
+            'show_recommendation_extension_field',
+            'merge_amendment_into_final',
+            'weight'
+        ];
+        const json = [];
+        const getNextWorkflowJson = (workflow: ViewMotionWorkflow) => {
+            const nextWorkflow = workflowKeysToCopy.mapToObject(key => ({ [key]: workflow[key] }));
+            nextWorkflow.states = [];
+            for (const state of workflow.states) {
+                if (state.id === workflow.first_state_id) {
+                    nextWorkflow.first_state_name = state.name;
+                }
+                const nextState = stateKeysToCopy.mapToObject(key => ({ [key]: state[key] }));
+                nextState.next_state_names = (state.next_state_ids || []).map(
+                    id => this.stateRepo.getViewModel(id).name
+                );
+                nextState.previous_state_names = (state.previous_state_ids || []).map(
+                    id => this.stateRepo.getViewModel(id).name
+                );
+                nextWorkflow.states.push(nextState);
+            }
+            return nextWorkflow;
+        };
+        for (const workflow of workflows) {
+            json.push(getNextWorkflowJson(workflow));
+        }
+        const blob = new Blob([JSON.stringify(json, undefined, 2)], { type: 'application/json' });
+        const isMultiple = workflows.length > 1;
+        const workflowTranslation = isMultiple
+            ? this.translate.instant('Workflows')
+            : this.translate.instant('Workflow');
+        const fileName = isMultiple
+            ? `${workflowTranslation}.json`
+            : `${workflowTranslation}-${this.translate.instant(workflows[0].name)}.json`;
+        saveAs(blob, fileName);
+    }
+
+    public async import(workflowJson: MotionWorkflowAction.ImportPayload[]): Promise<Identifiable[]> {
+        for (const workflow of workflowJson) {
+            workflow.meeting_id = this.activeMeetingId;
+        }
+        return await this.sendBulkActionToBackend(MotionWorkflowAction.IMPORT, workflowJson);
     }
 }

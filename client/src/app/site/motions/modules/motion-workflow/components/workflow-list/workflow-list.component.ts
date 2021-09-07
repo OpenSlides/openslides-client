@@ -13,6 +13,13 @@ import { MotionWorkflow } from 'app/shared/models/motions/motion-workflow';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
 import { ViewMotionWorkflow } from 'app/site/motions/models/view-motion-workflow';
+import { Id } from '../../../../../../core/definitions/key-types';
+
+const getAllWorkflowStates = (id: Id): SimplifiedModelRequest => ({
+    viewModelCtor: ViewMeeting,
+    ids: [id],
+    follow: [{ idField: 'motion_workflow_ids', follow: ['state_ids'], additionalFields: ['first_state_id'] }]
+});
 
 /**
  * List view for workflows
@@ -64,6 +71,7 @@ export class WorkflowListComponent extends BaseListViewComponent<ViewMotionWorkf
         private activeMeetingIdService: ActiveMeetingIdService
     ) {
         super(componentServiceCollector);
+        this.canMultiSelect = true;
     }
 
     /**
@@ -78,11 +86,7 @@ export class WorkflowListComponent extends BaseListViewComponent<ViewMotionWorkf
         return {
             viewModelCtor: ViewMeeting,
             ids: [this.activeMeetingIdService.meetingId],
-            follow: [
-                {
-                    idField: 'motion_workflow_ids'
-                }
-            ]
+            follow: [{ idField: 'motion_workflow_ids' }]
         };
     }
 
@@ -113,5 +117,10 @@ export class WorkflowListComponent extends BaseListViewComponent<ViewMotionWorkf
         if (await this.promptService.open(title, content)) {
             this.workflowRepo.delete(selected);
         }
+    }
+
+    public async exportWorkflows(): Promise<void> {
+        await this.getModelChanges(getAllWorkflowStates(this.activeMeetingId), 'all_workflow_states');
+        this.workflowRepo.exportWorkflows(...this.selectedRows.map(entry => this.workflowRepo.getViewModel(entry.id)));
     }
 }

@@ -38,7 +38,8 @@ export class MotionStateRepositoryService extends BaseRepositoryWithActiveMeetin
             'set_number',
             'show_state_extension_field',
             'merge_amendment_into_final',
-            'show_recommendation_extension_field'
+            'show_recommendation_extension_field',
+            'weight'
         ]);
         const hasNextStateFields: (keyof MotionState)[] = ['next_state_ids'];
         const blockListFields: (keyof MotionState)[] = listFields.concat(hasNextStateFields);
