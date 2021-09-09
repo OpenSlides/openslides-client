@@ -335,7 +335,13 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
                 {
                     idField: 'user_ids',
                     fieldset: 'shortName'
+                },
+                //// This is used to get all workflows available in the motion-list
+                //// This can be removed after OpenSlides/openslides-autoupdate-service#260 is resolved
+                {
+                    idField: 'motion_workflow_ids'
                 }
+                //// End of block
             ],
             fieldset: []
         };

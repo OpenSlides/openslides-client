@@ -15,6 +15,14 @@
     <span>{{ 'Set status' | translate }}</span>
 </button>
 <button
+    mat-menu-item
+    [disabled]="!selectedMotions.length"
+    (click)="action.emit(multiselectService.setWorkflow(selectedMotions))"
+>
+    <mat-icon>build</mat-icon>
+    <span>{{ 'Set workflow' | translate }}</span>
+</button>
+<button
     *ngIf="recommendationEnabled"
     [disabled]="!selectedMotions.length"
     mat-menu-item
