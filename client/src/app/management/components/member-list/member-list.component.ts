@@ -5,7 +5,7 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { PblColumnDefinition } from '@pebula/ngrid';
 
 import { MemberService } from 'app/core/core-services/member.service';
-import { OML } from 'app/core/core-services/organization-permission';
+import { OML, getOmlVerboseName } from 'app/core/core-services/organization-permission';
 import { Id } from 'app/core/definitions/key-types';
 import { CommitteeRepositoryService } from 'app/core/repositories/management/committee-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
@@ -18,6 +18,7 @@ import { MemberSortService } from 'app/management/services/member-sort.service';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
 import { BaseUserHeadersAndVerboseNames } from 'app/site/users/base/base-user.constants';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { OMLMapping } from '../../../core/core-services/organization-permission';
 
 @Component({
     selector: 'os-members',
@@ -111,6 +112,10 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
             })),
             `${this.translate.instant('Members')}.csv`
         );
+    }
+
+    public getOmlByUser(user: ViewUser): string {
+        return getOmlVerboseName(user.organization_management_level as keyof OMLMapping);
     }
 
     private async loadUsers(start_index: number = 0, entries: number = 10000): Promise<void> {

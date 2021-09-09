@@ -9,7 +9,8 @@
     </div>
 
     <!-- Menu -->
-    <div class="menu-slot">
+    <!-- Only organization managers can do something -->
+    <div class="menu-slot" *osOmlPerms="OML.can_manage_organization">
         <button type="button" mat-icon-button [matMenuTriggerFor]="committeeMenu">
             <mat-icon>more_vert</mat-icon>
         </button>
@@ -18,7 +19,8 @@
     <!-- Multiselect info -->
     <div class="central-info-slot">
         <button mat-icon-button (click)="toggleMultiSelect()"><mat-icon>arrow_back</mat-icon></button>
-        <span>{{ selectedRows.length }}&nbsp;</span><span>{{ 'selected' | translate }}</span>
+        <span>{{ selectedRows.length }}&nbsp;</span>
+        <span>{{ 'selected' | translate }}</span>
     </div>
 </os-head-bar>
 

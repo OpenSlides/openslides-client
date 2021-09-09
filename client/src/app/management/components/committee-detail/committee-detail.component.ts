@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 import { MemberService } from 'app/core/core-services/member.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { CML } from 'app/core/core-services/organization-permission';
+import { CML, OML } from 'app/core/core-services/organization-permission';
 import { CommitteeRepositoryService } from 'app/core/repositories/management/committee-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
@@ -35,6 +35,10 @@ export class CommitteeDetailComponent extends BaseModelContextComponent implemen
         return this.operator.hasCommitteePermissions(this.committeeId, CML.can_manage);
     }
 
+    public get canManageUsers(): boolean {
+        return this.operator.hasOrganizationPermissions(OML.can_manage_users);
+    }
+
     public constructor(
         protected componentServiceCollector: ComponentServiceCollector,
         private route: ActivatedRoute,
@@ -56,7 +60,7 @@ export class CommitteeDetailComponent extends BaseModelContextComponent implemen
     }
 
     public async ngOnInit(): Promise<void> {
-        await super.ngOnInit();
+        super.ngOnInit();
     }
 
     public onCreateMeeting(): void {

@@ -90,10 +90,12 @@ export class AutoupdateService {
      * Which component opens which stream?
      */
     public async simpleRequest(simpleRequest: SimplifiedModelRequest, description: string): Promise<ModelSubscription> {
-        const { request, collectionsToUpdate }: { request: ModelRequest; collectionsToUpdate: Collection[] } =
-            await this.modelRequestBuilder.build(simpleRequest);
-        console.log('autoupdate: new request:', description, simpleRequest, request);
-        return await this.request(request, description, collectionsToUpdate);
+        if (simpleRequest.ids.length > 0 && simpleRequest.ids.every(id => typeof id === 'number')) {
+            const { request, collectionsToUpdate }: { request: ModelRequest; collectionsToUpdate: Collection[] } =
+                await this.modelRequestBuilder.build(simpleRequest);
+            console.log('autoupdate: new request:', description, simpleRequest, request);
+            return await this.request(request, description, collectionsToUpdate);
+        }
     }
 
     private async request(

@@ -75,7 +75,7 @@
         </os-committee-meta-info>
 
         <!-- Member amount -->
-        <os-committee-meta-info icon="group" title="Members">
+        <os-committee-meta-info *ngIf="canManageUsers" icon="group" title="Members">
             {{ getMemberAmount(committee) }}
         </os-committee-meta-info>
 
@@ -97,6 +97,9 @@
 
     <!-- Meetings -->
     <div class="meeting-list">
+        <mat-card class="os-card" *ngIf="!getMeetingsSorted(committee).length">
+            {{ 'There are no meetings yet' | translate }}
+        </mat-card>
         <os-meeting-preview
             *ngFor="let meeting of getMeetingsSorted(committee)"
             class="meeting-preview-card"
