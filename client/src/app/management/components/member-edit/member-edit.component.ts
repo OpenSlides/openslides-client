@@ -10,6 +10,7 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { ViewCommittee } from '../../models/view-committee';
 
 @Component({
     selector: 'os-member-edit',
@@ -121,15 +122,15 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
     }
 
     public getUserCommitteeManagementLevels(): string {
-        const committeesToManage = [];
+        const committeesToManage: ViewCommittee[] = [];
         for (const id of this.user.committee_$_management_level) {
             if (this.user.committee_management_level(id) === CML.can_manage) {
                 committeesToManage.push(this.committeeRepo.getViewModel(id));
             }
         }
-        return this.user.committee_$_management_level
-            .filter(id => this.user.committee_management_level(id) === CML.can_manage)
-            .map(id => this.committeeRepo.getViewModel(id).getTitle())
+        return committeesToManage
+            .filter(committee => !!committee)
+            .map(committee => committee.getTitle())
             .join(', ');
     }
 

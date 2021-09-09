@@ -23,8 +23,8 @@
             <!-- location -->
             <span>
                 {{ location }}
+                <span *ngIf="location && (meeting.start_time || meeting.end_time)">,&nbsp;</span>
             </span>
-
             <!-- date -->
             <span>
                 <!-- TODO: CLEANUP: copied from dashboard -->

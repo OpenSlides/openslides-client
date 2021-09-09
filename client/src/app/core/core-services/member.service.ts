@@ -7,6 +7,8 @@ import { HttpService } from './http.service';
 import { Id } from '../definitions/key-types';
 import { SimplifiedModelRequest } from './model-request-builder.service';
 import { UserRepositoryService } from '../repositories/users/user-repository.service';
+import { OperatorService } from './operator.service';
+import { OML } from './organization-permission';
 
 export interface GetUsersRequest {
     users: Id[];
@@ -16,7 +18,11 @@ export interface GetUsersRequest {
     providedIn: 'root'
 })
 export class MemberService {
-    public constructor(private userRepo: UserRepositoryService, private http: HttpService) {}
+    public constructor(
+        private userRepo: UserRepositoryService,
+        private http: HttpService,
+        private operator: OperatorService
+    ) {}
 
     public getMemberListObservable(): Observable<ViewUser[]> {
         return this.userRepo.getViewModelListObservable();
@@ -31,6 +37,9 @@ export class MemberService {
      * @returns A list of ids from users
      */
     public async fetchAllOrgaUsers(start_index: number = 0, entries: number = 10000): Promise<Id[]> {
+        if (!this.operator.hasOrganizationPermissions(OML.can_manage_users)) {
+            return [];
+        }
         const payload = [
             {
                 presenter: 'get_users',
