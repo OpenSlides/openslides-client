@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { OrganizationService } from 'app/core/core-services/organization.service';
@@ -8,7 +8,7 @@ import { OrganizationService } from 'app/core/core-services/organization.service
     templateUrl: './global-headbar.component.html',
     styleUrls: ['./global-headbar.component.scss']
 })
-export class GlobalHeadbarComponent implements OnInit {
+export class GlobalHeadbarComponent {
     public isSearchEnabled = false;
 
     public get displayName(): string {
@@ -16,6 +16,4 @@ export class GlobalHeadbarComponent implements OnInit {
     }
 
     public constructor(private activeMeeting: ActiveMeetingService, private orgaService: OrganizationService) {}
-
-    public ngOnInit(): void {}
 }

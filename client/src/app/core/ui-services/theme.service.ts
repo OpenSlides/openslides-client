@@ -11,11 +11,11 @@ interface ThemeDefinition {
 
 export const Themes: ThemeDefinition[] = [
     {
-        name: _('OpenSlides Default'),
+        name: _('OpenSlides Blue'),
         class: 'openslides-default-light-theme'
     },
     {
-        name: _('OpenSlides Dark'),
+        name: _('OpenSlides Blue Dark'),
         class: 'openslides-default-dark-theme'
     },
     {
@@ -33,10 +33,6 @@ export const Themes: ThemeDefinition[] = [
     {
         name: _('OpenSlides Green Dark'),
         class: 'openslides-green-dark-theme'
-    },
-    {
-        name: _('OpenSlides Solarized'),
-        class: 'openslides-solarized-dark-theme'
     }
 ];
 

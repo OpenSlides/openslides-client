@@ -6,7 +6,7 @@
             class="management-router-link"
             (click)="closeSidenavOnMobile()"
             [routerLink]="entry.route"
-            routerLinkActive="background-accent"
+            routerLinkActive="background-primary"
             [routerLinkActiveOptions]="{ exact: isRouteExact(entry.route) }"
         >
             <mat-icon>{{ entry.icon }}</mat-icon>

@@ -3,6 +3,13 @@ $height: 14px;
 :host {
     display: flex;
     flex-direction: row;
+    padding: 0 6px 0 12px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+
+    &:hover {
+        background: #5f5f5f;
+    }
 }
 
 .operator-information {

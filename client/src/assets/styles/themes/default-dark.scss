@@ -1,8 +1,0 @@
-@use '~@angular/material' as mat;
-@import '~assets/styles/color-palettes/os-blue';
-
-$openslides-primary: mat.define-palette($openslides-primary-blue);
-$openslides-accent: mat.define-palette($openslides-accent-blue);
-$openslides-warn: mat.define-palette(mat.$red-palette);
-
-$openslides-default-dark: mat.define-dark-theme($openslides-primary, $openslides-accent, $openslides-warn);

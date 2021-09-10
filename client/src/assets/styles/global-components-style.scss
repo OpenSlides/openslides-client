@@ -190,6 +190,19 @@
         border-top-color: white;
     }
 
+    .fake-button {
+        $button-size: 40px;
+        width: $button-size;
+        height: $button-size;
+        line-height: $button-size;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .no-margin {
+        margin: 0;
+    }
+
     /** Custom themes for NGrid. Could be an own file if it gets more */
     .pbl-ngrid-container {
         background: mat.get-color-from-palette($background, card);
@@ -218,7 +231,7 @@
     }
 
     .background-primary {
-        background: mat.get-color-from-palette($primary);
+        background: mat.get-color-from-palette($primary) !important;
         color: mat.get-color-from-palette($primary, default-contrast) !important;
     }
 

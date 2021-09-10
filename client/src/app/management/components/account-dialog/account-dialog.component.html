@@ -1,4 +1,9 @@
-<h2 mat-dialog-title>{{ 'Account of' | translate }} {{ self?.short_name }}</h2>
+<div class="account-dialog-title flex-container">
+    <h2 mat-dialog-title class="left-align no-margin">{{ 'Account of' | translate }} {{ self?.short_name }}</h2>
+    <button mat-icon-button [matDialogClose]="null">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
 <mat-divider></mat-divider>
 <div mat-dialog-content class="account-dialog-container">
     <div class="account-dialog-menu-items">
@@ -32,9 +37,7 @@
     </div>
 </div>
 <mat-divider></mat-divider>
-<div mat-dialog-actions>
-    <button mat-button [mat-dialog-close]="null">{{ 'Close' | translate }}</button>
-</div>
+<div mat-dialog-actions></div>
 
 <ng-template #showProfileView>
     <div class="flex-container">

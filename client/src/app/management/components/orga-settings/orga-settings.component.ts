@@ -68,12 +68,12 @@ export class OrgaSettingsComponent extends BaseModelContextComponent implements 
                 legal_notice: [this.currentOrgaSettings.legal_notice],
                 privacy_policy: [this.currentOrgaSettings.privacy_policy],
                 login_text: [this.currentOrgaSettings.login_text],
-                theme: [this.currentOrgaSettings.theme],
-                reset_password_verbose_errors: [this.currentOrgaSettings.reset_password_verbose_errors]
+                theme: [this.currentOrgaSettings.theme]
             };
             if (this.operator.isSuperAdmin) {
                 rawSettingsForm = {
                     ...rawSettingsForm,
+                    reset_password_verbose_errors: [this.currentOrgaSettings.reset_password_verbose_errors],
                     enable_electronic_voting: [this.currentOrgaSettings.enable_electronic_voting]
                 };
             }

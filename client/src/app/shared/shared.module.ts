@@ -121,6 +121,7 @@ import { SidenavDrawerContentDirective } from './components/sidenav/sidenav-draw
 import { AccountButtonComponent } from './components/account-button/account-button.component';
 import { SuperSearchComponent } from './components/super-search/super-search.component';
 import { NotFoundDescriptionDirective } from './directives/not-found-description.directive';
+import { MeetingTimeComponent } from './components/meeting-time/meeting-time.component';
 
 const declarations = [
     PermsDirective,
@@ -209,7 +210,8 @@ const declarations = [
     SidenavContentDirective,
     SidenavDrawerContentDirective,
     AccountButtonComponent,
-    NotFoundDescriptionDirective
+    NotFoundDescriptionDirective,
+    MeetingTimeComponent
 ];
 
 const sharedModules = [
