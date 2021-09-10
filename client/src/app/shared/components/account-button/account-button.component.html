@@ -1,12 +1,13 @@
-<div class="operator-information flex-center">
-    <div class="first-line one-line">
-        {{ username }}
+<div class="flex-center" [matMenuTriggerFor]="userMenu">
+    <div class="operator-information flex-center">
+        <div class="first-line one-line">
+            {{ username }}
+        </div>
+    </div>
+    <div class="fake-button flex-center">
+        <mat-icon color="primary">{{ isPresent ? 'how_to_reg' : 'person' }}</mat-icon>
     </div>
 </div>
-
-<button mat-icon-button color="warn" [matMenuTriggerFor]="userMenu">
-    <mat-icon>{{ isPresent ? 'how_to_reg' : 'person' }}</mat-icon>
-</button>
 
 <mat-menu #userMenu="matMenu" class="user-menu">
     <ng-template matMenuContent>
@@ -66,7 +67,7 @@
         <a mat-menu-item routerLink="info" routerLinkActive="active" class="small-text">
             <mat-icon>info</mat-icon>
             <span>{{ 'Legal notice' | translate }}</span>
-            <span>&middot;</span>
+            <span>&nbsp;&middot;&nbsp;</span>
             <span>{{ 'Privacy policy' | translate }}</span>
         </a>
     </ng-template>

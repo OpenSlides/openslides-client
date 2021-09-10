@@ -4,12 +4,8 @@
     </div>
 </os-head-bar>
 
-<mat-card class="os-card">
-    <h2>{{ 'Privacy policy' | translate }}</h2>
-    <os-privacy-policy-content></os-privacy-policy-content>
-    <h2>{{ 'Legal notice' | translate }}</h2>
-    <os-legal-notice-content></os-legal-notice-content>
-</mat-card>
+<os-legal-notice-content></os-legal-notice-content>
+<os-privacy-policy-content></os-privacy-policy-content>
 
 <mat-card class="os-card" *osPerms="permission.userCanManage">
     <h2>{{ 'Statistics' | translate }}</h2>

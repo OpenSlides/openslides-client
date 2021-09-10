@@ -23,7 +23,7 @@ export class SidenavComponent {
     private sideNav: MatSidenav | undefined;
 
     @Input()
-    public isPrimaryBackground = false;
+    public isDarkBackground = false;
 
     public get isMobile(): boolean {
         return this.vp.isMobile;

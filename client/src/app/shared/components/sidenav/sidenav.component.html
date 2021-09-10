@@ -12,12 +12,12 @@
         [opened]="!isMobile"
         disableClose="!isMobile"
         class="side-panel"
-        [ngClass]="{ 'background-primary': isPrimaryBackground }"
+        [ngClass]="{ 'background-dark': isDarkBackground }"
     >
         <div class="nav-toolbar">
             <!-- logo -->
             <a [routerLink]="getLinkToMainPage()" (click)="mobileAutoCloseNav()">
-                <os-logo [hasDarkBackground]="isPrimaryBackground" class="os-logo-container"></os-logo>
+                <os-logo [hasDarkBackground]="isDarkBackground" class="os-logo-container"></os-logo>
             </a>
         </div>
         <ng-container *ngTemplateOutlet="drawerContent"></ng-container>
@@ -29,7 +29,10 @@
             (click)="mobileAutoCloseNav()"
         >
             <span>
-                <small><os-copyright-sign></os-copyright-sign>&nbsp;Copyright by OpenSlides</small>
+                <small>
+                    <os-copyright-sign></os-copyright-sign>
+                    &nbsp;Copyright by OpenSlides
+                </small>
             </span>
         </a>
         <ng-container
@@ -55,7 +58,7 @@
             mat-raised-button
             (click)="toggle()"
             class="nav-toggle-button"
-            [ngClass]="{ left: isOpen, right: !isOpen, 'background-accent': isPrimaryBackground }"
+            [ngClass]="{ left: isOpen, right: !isOpen }"
         >
             <mat-icon>{{ isOpen ? 'arrow_back_ios' : 'arrow_forward_ios' }}</mat-icon>
         </button>

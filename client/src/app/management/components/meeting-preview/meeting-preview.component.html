@@ -27,15 +27,7 @@
 
             <!-- date -->
             <span>
-                <!-- TODO: CLEANUP: copied from dashboard -->
-                <ng-container *ngIf="meeting.start_time === meeting.end_time">
-                    <span>{{ meeting.start_time | localizedDate: 'll' }}</span>
-                </ng-container>
-                <ng-container *ngIf="meeting.start_time !== meeting.end_time">
-                    <span *ngIf="meeting.start_time">{{ meeting.start_time | localizedDate: 'll' }}</span>
-                    <span *ngIf="meeting.start_time && meeting.end_time">&nbsp;-&nbsp;</span>
-                    <span *ngIf="meeting.end_time">{{ meeting.end_time | localizedDate: 'll' }}</span>
-                </ng-container>
+                <os-meeting-time [meeting]="meeting"></os-meeting-time>
             </span>
         </div>
 

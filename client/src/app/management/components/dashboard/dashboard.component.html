@@ -14,14 +14,14 @@
 </div>
 
 <mat-card *ngIf="noMeetingsToShow" class="no-content os-card">
-    <i> {{ 'No meetings available' | translate }}</i>
+    <i>{{ 'No meetings available' | translate }}</i>
 </mat-card>
 
 <ng-container *ngIf="!noMeetingsToShow">
     <!-- active meetings -->
     <div id="active-meetings" class="meeting-list-container">
-        <div class="meeting-icon-wrapper foreground-warn">
-            <mat-icon color="warn">access_alarm</mat-icon>
+        <div class="meeting-icon-wrapper foreground-accent">
+            <mat-icon color="accent">access_alarm</mat-icon>
             <span>{{ 'active' | translate }}</span>
         </div>
         <div class="meeting-list background-card">
@@ -118,12 +118,5 @@
 </ng-template>
 
 <ng-template let-meeting="meeting" #meetingTime>
-    <ng-container *ngIf="meeting.start_time === meeting.end_time">
-        <span>{{ meeting.start_time | localizedDate: 'll' }}</span>
-    </ng-container>
-    <ng-container *ngIf="meeting.start_time !== meeting.end_time">
-        <span *ngIf="meeting.start_time">{{ meeting.start_time | localizedDate: 'll' }}</span>
-        <span *ngIf="meeting.start_time && meeting.end_time"> - </span>
-        <span *ngIf="meeting.end_time">{{ meeting.end_time | localizedDate: 'll' }}</span>
-    </ng-container>
+    <os-meeting-time [meeting]="meeting"></os-meeting-time>
 </ng-template>
