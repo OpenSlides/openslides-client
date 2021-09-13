@@ -73,7 +73,18 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
      * The current value of this component's setting.
      */
     @Input()
-    public value: any;
+    public set value(nextValue: any) {
+        if (Array.isArray(nextValue)) {
+            this._firstValue = [...nextValue];
+        } else {
+            this._firstValue = nextValue;
+        }
+        this._value = nextValue;
+    }
+
+    public get value(): any {
+        return this._value;
+    }
 
     /**
      * The form for this configItem.
@@ -95,6 +106,16 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
 
     /** used by the groups config type */
     public groupObservable: Observable<ViewGroup[]> = null;
+
+    /**
+     * The current value of this setting. It is usually the first value, but this does not work for groups...
+     */
+    private _value: any;
+    /**
+     * This is the first value this setting received. Used to determine if the value changed. It is especially for
+     * groups necessary, since the `value` is always the current value when this setting is a group.
+     */
+    private _firstValue: any;
 
     /**
      * The usual component constructor. datetime pickers will set their locale
@@ -165,7 +186,14 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
         this.form.valueChanges
             // The editor fires changes whenever content was changed. Even by AutoUpdate.
             // This checks for discting content
-            .pipe(distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)))
+            .pipe(
+                distinctUntilChanged((previous, next) => {
+                    if (this.setting.type === 'groups') {
+                        return JSON.stringify(this._firstValue) === JSON.stringify(next.value);
+                    }
+                    return JSON.stringify(previous) === JSON.stringify(next);
+                })
+            )
             .subscribe(form => {
                 this.onChange(form.value);
             });
@@ -242,7 +270,7 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
             case 'groups':
                 // we have to check here explicitly if nothing changed because of the search value selector
                 const newS = new Set(value);
-                const oldS = new Set(this.value);
+                const oldS = new Set(this._firstValue);
                 if (newS.equals(oldS)) {
                     return;
                 }
