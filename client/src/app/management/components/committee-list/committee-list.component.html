@@ -46,11 +46,9 @@
                 </div>
             </div>
             <div class="ellipsis-overflow">
-                <os-chip-list *ngIf="committee.organization_tags?.length" [model]="committee.organization_tags">
-                    <ng-template let-tag>
-                        {{ tag.name }}
-                    </ng-template>
-                </os-chip-list>
+                <os-chip *ngFor="let tag of committee.organization_tags" [color]="tag.color">
+                    {{ tag.name }}
+                </os-chip>
             </div>
         </div>
     </div>
