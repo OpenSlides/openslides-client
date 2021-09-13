@@ -83,6 +83,7 @@
     }
 
     .no-meetings-card {
+        border-radius: 0;
         padding: 16px 20px;
     }
 }
@@ -148,6 +149,6 @@
     }
 
     .meeting-icon-wrapper {
-        color: rgba(0, 0, 0, 0.4);
+        color: #8f8f8f;
     }
 }
