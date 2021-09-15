@@ -8,6 +8,7 @@ import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { CommitteeRepositoryService } from '../../../core/repositories/management/committee-repository.service';
 import { ViewCommittee } from '../../models/view-committee';
+import { OML } from '../../../core/core-services/organization-permission';
 
 @Component({
     selector: 'os-meeting-preview',
@@ -17,6 +18,7 @@ import { ViewCommittee } from '../../models/view-committee';
 })
 export class MeetingPreviewComponent {
     public readonly CML = CML;
+    public readonly OML = OML;
 
     @Input() public meeting: ViewMeeting = null;
     @Input() public committee: ViewCommittee | null = null;
@@ -58,10 +60,17 @@ export class MeetingPreviewComponent {
 
         const confirmed = await this.promptService.open(title, content);
         if (confirmed) {
-            /**
-             * seems archive was not yet implemented
-             */
-            // await this.meetingRepo.archive(this.meeting);
+            await this.meetingRepo.archive(this.meeting);
+        }
+    }
+
+    public async onUnarchive(): Promise<void> {
+        const title = `${this.translate.instant('Unarchive meeting')} "${this.title}"`;
+        const content = this.translate.instant('Are you sure you want to unarchive this meeting?');
+
+        const confirmed = await this.promptService.open(title, content);
+        if (confirmed) {
+            await this.meetingRepo.unarchive(this.meeting);
         }
     }
 

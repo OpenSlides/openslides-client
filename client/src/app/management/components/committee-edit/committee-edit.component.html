@@ -16,7 +16,7 @@
     <form class="committee-form" [formGroup]="committeeForm" (ngSubmit)="onSubmit()" *ngIf="committeeForm">
         <mat-form-field>
             <mat-label>{{ 'Title' | translate }}</mat-label>
-            <input matInput formControlName="name" required />
+            <input matInput formControlName="name" required osAutofocus />
             <mat-error>{{ 'The title is required' | translate }}</mat-error>
         </mat-form-field>
 

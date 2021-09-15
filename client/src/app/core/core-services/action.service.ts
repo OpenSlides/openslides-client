@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 
 import { HttpService } from './http.service';
+import { ProcessError } from '../errors/process-error';
+import { ArchiveStatusService } from './archive-status.service';
 
 export interface ActionRequest {
     action: string;
@@ -34,7 +36,7 @@ function isActionError(obj: any): obj is ActionError {
 export class ActionService {
     private readonly ACTION_URL = '/system/action/handle_request';
 
-    private constructor(private http: HttpService) {}
+    private constructor(private http: HttpService, private archiveService: ArchiveStatusService) {}
 
     public async sendRequest<T>(action: string, data: any): Promise<T | null> {
         const results = await this.sendRequests<T>([{ action, data: [data] }]);
@@ -56,6 +58,9 @@ export class ActionService {
     }
 
     public async sendRequests<T>(requests: ActionRequest[]): Promise<T[] | null> {
+        if (this.archiveService.isArchived) {
+            throw new ProcessError('You cannot make changes while a meeting is archived');
+        }
         console.log('send requests:', requests);
         const response = await this.http.post<T>(this.ACTION_URL, requests);
         if (isActionError(response)) {

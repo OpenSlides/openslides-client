@@ -3,6 +3,7 @@ import { BaseViewModel } from 'app/site/base/base-view-model';
 import { ViewCommittee } from './view-committee';
 import { ViewOrganizationTag } from './view-organization-tag';
 import { ViewResource } from './view-resource';
+import { ViewMeeting } from './view-meeting';
 
 export class ViewOrganization extends BaseViewModel<Organization> {
     public static COLLECTION = Organization.COLLECTION;
@@ -15,6 +16,7 @@ export class ViewOrganization extends BaseViewModel<Organization> {
 interface IOrganizationRelations {
     committees: ViewCommittee[];
     resources: ViewResource[];
-    organization_tags: ViewOrganizationTag;
+    organization_tags: ViewOrganizationTag[];
+    active_meetings: ViewMeeting[];
 }
 export interface ViewOrganization extends Organization, IOrganizationRelations {}

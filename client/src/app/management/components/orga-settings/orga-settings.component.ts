@@ -74,7 +74,8 @@ export class OrgaSettingsComponent extends BaseModelContextComponent implements 
                 rawSettingsForm = {
                     ...rawSettingsForm,
                     reset_password_verbose_errors: [this.currentOrgaSettings.reset_password_verbose_errors],
-                    enable_electronic_voting: [this.currentOrgaSettings.enable_electronic_voting]
+                    enable_electronic_voting: [this.currentOrgaSettings.enable_electronic_voting],
+                    limit_of_meetings: [this.currentOrgaSettings.limit_of_meetings ?? 0]
                 };
             }
             this.orgaSettingsForm = this.formBuilder.group(rawSettingsForm);
@@ -98,10 +99,11 @@ export class OrgaSettingsComponent extends BaseModelContextComponent implements 
     }
 
     private updateForm(viewOrga: ViewOrganization): void {
-        if (this.orgaSettingsForm) {
-            const patchMeeting: any = viewOrga.organization;
-            this.orgaSettingsForm.patchValue(patchMeeting);
+        if (!this.orgaSettingsForm) {
+            this.createForm();
         }
+        const patchMeeting: any = viewOrga.organization;
+        this.orgaSettingsForm.patchValue(patchMeeting);
     }
 
     public onSubmit(): void {

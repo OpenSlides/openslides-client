@@ -14,6 +14,8 @@ export namespace MeetingAction {
     export const UNSET_LOGO = 'meeting.unset_logo';
     export const IMPORT = 'meeting.import';
     export const CLONE = 'meeting.clone';
+    export const ARCHIVE = 'meeting.archive';
+    export const UNARCHIVE = 'meeting.unarchive';
 
     interface MetaPayload {
         description?: string;
@@ -193,4 +195,6 @@ export namespace MeetingAction {
     export interface ClonePayload {
         meeting_id: Id;
     }
+    export interface ArchivePayload extends Identifiable {}
+    export interface UnarchivePayload extends Identifiable {}
 }

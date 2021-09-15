@@ -1,20 +1,25 @@
 <mat-card class="meeting-prev">
-    <mat-card-header class="background-accent">
+    <mat-card-header
+        [ngClass]="{ 'background-accent': meeting.isActive, 'background-dark-brighter': meeting.isArchived }"
+    >
         <mat-card-title class="break-word">
             {{ title }}
         </mat-card-title>
 
-        <span *osCmlPerms="CML.can_manage; committeeId: committee.id" class="align-right">
-            <button
-                mat-icon-button
-                (click)="toggleDefaultMeeting()"
-                matTooltip="{{ (isDefaultMeeting ? 'Is default meeting' : 'Set as default meeting') | translate }}"
-            >
-                <mat-icon>{{ isDefaultMeeting ? 'star' : 'star_outline' }}</mat-icon>
-            </button>
-            <button type="button" mat-icon-button [matMenuTriggerFor]="meetingMenu">
-                <mat-icon>more_vert</mat-icon>
-            </button>
+        <span class="align-right">
+            <mat-label class="archived-label" *ngIf="meeting.isArchived">{{ 'Archived' | translate }}</mat-label>
+            <ng-container *osCmlPerms="CML.can_manage; committeeId: committee.id">
+                <button
+                    mat-icon-button
+                    (click)="toggleDefaultMeeting()"
+                    matTooltip="{{ (isDefaultMeeting ? 'Is default meeting' : 'Set as default meeting') | translate }}"
+                >
+                    <mat-icon>{{ isDefaultMeeting ? 'star' : 'star_outline' }}</mat-icon>
+                </button>
+                <button type="button" mat-icon-button [matMenuTriggerFor]="meetingMenu">
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+            </ng-container>
         </span>
     </mat-card-header>
     <mat-card-content class="prev-content">
@@ -53,14 +58,17 @@
         <mat-icon>edit</mat-icon>
         <span>{{ 'Edit' | translate }}</span>
     </a>
-    <button mat-menu-item (click)="onDuplicate()">
+    <button mat-menu-item *ngIf="meeting.isActive" disabled (click)="onDuplicate()">
         <mat-icon>file_copy</mat-icon>
         <span>{{ 'Duplicate' | translate }}</span>
     </button>
-    <!-- TODO Archive is not yet implemented -->
-    <button mat-menu-item disabled (click)="onArchive()">
+    <button mat-menu-item *ngIf="meeting.isActive" (click)="onArchive()">
         <mat-icon>archive</mat-icon>
         <span>{{ 'Archive' | translate }}</span>
+    </button>
+    <button mat-menu-item *osOmlPerms="OML.superadmin; and: meeting.isArchived" (click)="onUnarchive()">
+        <mat-icon>unarchive</mat-icon>
+        <span>{{ 'Unarchive' | translate }}</span>
     </button>
     <mat-divider></mat-divider>
     <button mat-menu-item class="red-warning-text" (click)="onDeleteMeeting()">

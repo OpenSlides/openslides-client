@@ -42,7 +42,7 @@
         <mat-label>{{ 'Privacy Policy' | translate }}</mat-label>
         <editor formControlName="privacy_policy" [init]="tinyMceSettings"></editor>
 
-        <ng-container *osOmlPerms="OML.superadmin">
+        <div class="superadmin-place" *osOmlPerms="OML.superadmin">
             <!-- electronic voting -->
             <section>
                 <mat-checkbox formControlName="enable_electronic_voting">
@@ -55,6 +55,20 @@
                     {{ 'Allow verbose error messages for reset password process' | translate }}
                 </mat-checkbox>
             </section>
-        </ng-container>
+            <section>
+                <mat-form-field>
+                    <mat-label>{{ 'Limit of active meetings' | translate }}</mat-label>
+                    <input
+                        matInput
+                        type="number"
+                        formControlName="limit_of_meetings"
+                        min="0"
+                        [osOnlyNumber]="true"
+                        required
+                    />
+                    <mat-hint>{{ '"0" means an unlimited number of active meetings' | translate }}</mat-hint>
+                </mat-form-field>
+            </section>
+        </div>
     </form>
 </mat-card>

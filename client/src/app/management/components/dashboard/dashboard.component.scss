@@ -102,6 +102,9 @@
     &--mid {
         font-size: 18px;
         flex: 3;
+
+        display: flex;
+        align-items: center;
     }
 
     &--information-phone {

@@ -134,6 +134,13 @@ export const RELATIONS: Relation[] = [
         MField: 'organization',
         isFullList: true
     }),
+    ...makeM2O({
+        OViewModel: ViewOrganization,
+        MViewModel: ViewMeeting,
+        OField: 'active_meetings',
+        MField: 'is_active_in_organization'
+    }),
+    // ########## Organization tags
     ...makeGenericM2M<ViewOrganizationTag, HasOrganizationTags>({
         viewModel: ViewOrganizationTag,
         possibleViewModels: [ViewCommittee, ViewMeeting],

@@ -101,8 +101,13 @@
         <div class="meeting-box--left" *ngIf="!isPhone">
             <ng-container *ngTemplateOutlet="meetingTime; context: { meeting: meeting }"></ng-container>
         </div>
-        <div class="meeting-box--mid">
-            {{ meeting.name }}
+        <div class="meeting-box--mid one-line">
+            <mat-icon *ngIf="meeting.isArchived" matTooltip="{{ 'This meeting is archived' | translate }}">
+                archive
+            </mat-icon>
+            <span class="one-line" [matTooltip]="meeting.name">
+                {{ meeting.name }}
+            </span>
 
             <div *ngIf="isPhone" class="meeting-box--information-phone">
                 <span>

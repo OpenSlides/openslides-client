@@ -51,7 +51,12 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         // decide about the accessibility.
         const accessField: (keyof Meeting)[] = [ViewMeeting.ACCESSIBILITY_FIELD];
 
-        const nameFields: (keyof Meeting)[] = accessField.concat(['name', 'start_time', 'end_time']);
+        const nameFields: (keyof Meeting)[] = accessField.concat([
+            'name',
+            'start_time',
+            'end_time',
+            'is_active_in_organization_id'
+        ]);
         const listFields: (keyof Meeting)[] = nameFields.concat('user_ids', 'organization_tag_ids');
         const editFields: (keyof Meeting)[] = listFields.concat([
             'welcome_title',
@@ -113,12 +118,6 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         return { title };
     };
 
-    protected createViewModel(model: Meeting): ViewMeeting {
-        const viewModel = super.createViewModel(model);
-        viewModel.getProjectorTitle = (projection: Projection) => this.getProjectorTitle(viewModel, projection);
-        return viewModel;
-    }
-
     public create(meetingPayload: Partial<MeetingAction.CreatePayload>): Promise<Identifiable> {
         meetingPayload.start_time = this.anyDateToUnix(meetingPayload.start_time);
         meetingPayload.end_time = this.anyDateToUnix(meetingPayload.end_time);
@@ -131,27 +130,6 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             meeting: this.sanitizeImportData(meeting)
         };
         return this.sendActionToBackend(MeetingAction.IMPORT, payload);
-    }
-
-    /**
-     * If required again, out into service. Casting dates out of most things
-     * DATE
-     * simply saving forms will fire an empty "date"
-     * NUMBER
-     * automatic functions (multi stack actions) will use numbers
-     * MOMENT
-     * using the date picker will send a moment object
-     */
-    private anyDateToUnix(date: Date | Moment | number): number | undefined {
-        if (date instanceof Date) {
-            return Math.round(date.getTime() / 1000);
-        } else if (typeof date === 'number') {
-            return date;
-        } else if (moment.isMoment(date)) {
-            return date.unix();
-        } else {
-            return undefined;
-        }
     }
 
     public update(
@@ -223,6 +201,43 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
     public duplicate(...meetings: ViewMeeting[]): Promise<void> {
         const payload: MeetingAction.ClonePayload[] = meetings.map(meeting => ({ meeting_id: meeting.id }));
         return this.sendBulkActionToBackend(MeetingAction.CLONE, payload);
+    }
+
+    public archive(...meetings: ViewMeeting[]): Promise<void> {
+        const payload: MeetingAction.ArchivePayload[] = meetings.map(meeting => ({ id: meeting.id }));
+        return this.sendBulkActionToBackend(MeetingAction.ARCHIVE, payload);
+    }
+
+    public unarchive(...meetings: ViewMeeting[]): Promise<void> {
+        const payload: MeetingAction.UnarchivePayload[] = meetings.map(meeting => ({ id: meeting.id }));
+        return this.sendBulkActionToBackend(MeetingAction.UNARCHIVE, payload);
+    }
+
+    protected createViewModel(model: Meeting): ViewMeeting {
+        const viewModel = super.createViewModel(model);
+        viewModel.getProjectorTitle = (projection: Projection) => this.getProjectorTitle(viewModel, projection);
+        return viewModel;
+    }
+
+    /**
+     * If required again, out into service. Casting dates out of most things
+     * DATE
+     * simply saving forms will fire an empty "date"
+     * NUMBER
+     * automatic functions (multi stack actions) will use numbers
+     * MOMENT
+     * using the date picker will send a moment object
+     */
+    private anyDateToUnix(date: Date | Moment | number): number | undefined {
+        if (date instanceof Date) {
+            return Math.round(date.getTime() / 1000);
+        } else if (typeof date === 'number') {
+            return date;
+        } else if (moment.isMoment(date)) {
+            return date.unix();
+        } else {
+            return undefined;
+        }
     }
 
     /**
