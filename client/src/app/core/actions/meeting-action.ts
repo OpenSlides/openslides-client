@@ -14,43 +14,41 @@ export namespace MeetingAction {
     export const UNSET_LOGO = 'meeting.unset_logo';
     export const IMPORT = 'meeting.import';
 
-    export interface CreatePayload {
+    interface MetaPayload {
+        description?: string;
+        location?: string;
+        start_time?: number;
+        end_time?: number;
+        organization_tag_ids?: Id[];
+        url_name?: string;
+    }
+
+    export interface CreatePayload extends MetaPayload {
         // Required
         committee_id: Id;
         name: string;
-        welcome_title: string;
 
         // Optional, modified the template_for_committee_id relation
         set_as_template: boolean;
 
         // Optional
-        welcome_text?: UnsafeHtml;
-        description?: string;
-        location?: string;
-        start_time?: number;
-        end_time?: number;
-        url_name?: string;
-        enable_anonymous?: boolean;
+        user_ids?: Id[];
+        admin_ids?: Id[];
     }
     export interface CreateFromTemplatePayload {
         committee_id: Id;
     }
     export interface UpdatePayload extends OptionalUpdatePayload, Identifiable {}
-    export interface OptionalUpdatePayload {
+    export interface OptionalUpdatePayload extends MetaPayload {
         welcome_title?: string;
         welcome_text?: UnsafeHtml;
 
         name?: string;
-        description?: string;
-        location?: string;
-        start_time?: number;
-        end_time?: number;
 
         jitsi_domain?: string;
         jitsi_room_name?: string;
         jitsi_room_password?: string;
 
-        url_name?: string;
         enable_anonymous?: boolean;
 
         conference_show?: boolean;

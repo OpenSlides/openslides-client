@@ -161,6 +161,9 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
     ): Promise<void> {
         update.start_time = this.anyDateToUnix(update.start_time);
         update.end_time = this.anyDateToUnix(update.end_time);
+        if (update.organization_tag_ids === null) {
+            update.organization_tag_ids = [];
+        }
         const actions: ActionRequest[] = [
             {
                 action: MeetingAction.UPDATE,
