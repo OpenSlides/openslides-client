@@ -1,25 +1,19 @@
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { HTTPMethod } from '../definitions/http-methods';
-import { EndpointConfiguration, HttpStreamEndpointService } from './http-stream-endpoint.service';
-import { StreamContainer } from './http-stream.service';
 import { LifecycleService } from './lifecycle.service';
 import { OfflineBroadcastService } from './offline-broadcast.service';
-import { StreamingCommunicationService } from './streaming-communication.service';
+import { HttpStream } from './http-stream';
 
-type HttpParamsGetter = () => HttpParams | { [param: string]: string | string[] };
-type HttpBodyGetter = () => any;
-
-class StreamContainerWithCloseFn<T> extends StreamContainer<T> {
-    public closeFn: () => void;
-}
+export type HttpParamsGetter = () => HttpParams | { [param: string]: string | string[] };
+export type HttpBodyGetter = () => any;
+export type CloseFn = () => void;
 
 const LOG = true;
 
 /**
- * Main class for communication in streams with the server. You have to register an
- * endpoint to communicate with `registerEndpoint` and connect to it with `connect`.
+ * Main class for communication in streams with the server. You have first to register an
+ * endpoint to communicate with by calling `registerEndpoint` and connect to it with `connect`.
  *
  * Note about some behaviours:
  * - The returned function must be called to close the stream.
@@ -35,18 +29,11 @@ const LOG = true;
 export class CommunicationManagerService {
     private isRunning = false;
 
-    private requestedStreams: { [id: number]: StreamContainerWithCloseFn<any> } = {};
-
-    /**
-     * A temporary cache for the requested streams if the communication stops.
-     */
-    private streamCache: { [id: number]: StreamContainerWithCloseFn<any> } = {};
+    private activeStreams: { [id: number]: HttpStream<any> } = {};
 
     public constructor(
-        private streamingCommunicationService: StreamingCommunicationService,
         private offlineBroadcastService: OfflineBroadcastService,
-        private lifecycleService: LifecycleService,
-        private httpEndpointService: HttpStreamEndpointService
+        private lifecycleService: LifecycleService
     ) {
         this.offlineBroadcastService.goOfflineObservable.subscribe(() => this.stopCommunication());
         this.offlineBroadcastService.goOnlineObservable.subscribe(() => this.startCommunication());
@@ -54,52 +41,16 @@ export class CommunicationManagerService {
         this.lifecycleService.openslidesShutdowned.subscribe(() => this.stopCommunication());
     }
 
-    public registerEndpoint(name: string, url: string, healthUrl: string, method?: HTTPMethod): void {
-        this.httpEndpointService.registerEndpoint(name, url, healthUrl, method);
-    }
-
-    public async connect<T>(
-        endpointName: string,
-        messageHandler: (message: T, streamId: number, isFirstResponse: boolean) => void,
-        body: HttpBodyGetter = () => {},
-        params: HttpParamsGetter = null,
-        description: string = endpointName
-    ): Promise<() => void> {
-        if (!params) {
-            params = () => null;
-        }
-
-        const endpoint = this.httpEndpointService.getEndpoint(endpointName);
-        const container = this.getStreamContainer(endpoint, messageHandler, body, params, description);
-        this.requestedStreams[container.id] = container;
-
+    public registerStream<T>(stream: HttpStream<T>): CloseFn {
+        this.activeStreams[stream.id] = stream;
         if (this.isRunning) {
-            this._connect(container);
+            stream.open();
         }
-
-        return () => this.close(container);
-    }
-
-    private getStreamContainer<T>(
-        endpoint: EndpointConfiguration,
-        messageHandler: (message: T, streamId: number, isFirstResponse: boolean) => void,
-        body: HttpBodyGetter,
-        params?: HttpParamsGetter,
-        description?: string
-    ): StreamContainerWithCloseFn<T> {
-        let container;
-        do {
-            container = new StreamContainerWithCloseFn(endpoint, messageHandler, params, body, description);
-        } while (this.requestedStreams[container.id]);
-        return container;
-    }
-
-    private _connect<T>(container: StreamContainerWithCloseFn<T>): void {
-        container.closeFn = this.streamingCommunicationService.connect(container);
         if (LOG) {
-            console.log('Opened', container.description, container.id, container);
+            console.log('OPENED', stream.id, stream.description, stream);
             this.printActiveStreams();
         }
+        return () => this.closeHttpStream(stream);
     }
 
     public startCommunication(): void {
@@ -110,47 +61,39 @@ export class CommunicationManagerService {
         this.isRunning = true;
 
         // Do not do it asynchronous blocking: just start everything up and do not care about the succeeding
-        for (const container of Object.values(this.streamCache)) {
-            this.requestedStreams[container.id] = container;
-            this._connect(container);
-            delete this.streamCache[container.id];
+        for (const stream of Object.values(this.activeStreams)) {
+            stream.open();
+        }
+        if (LOG) {
+            this.printActiveStreams();
         }
     }
 
     private stopCommunication(): void {
         this.isRunning = false;
-        this.streamingCommunicationService.closeConnections();
-        for (const container of Object.values(this.requestedStreams)) {
-            if (container.stream) {
-                container.stream.close();
-            }
-            container.stream = null;
-            this.close(container);
-            this.streamCache[container.id] = container;
+        for (const stream of Object.values(this.activeStreams)) {
+            stream.close();
         }
     }
 
-    private close<T>(container: StreamContainerWithCloseFn<T>): void {
-        if (container.closeFn) {
-            container.closeFn();
-        }
-        delete this.requestedStreams[container.id];
-
+    private closeHttpStream<T>(stream: HttpStream<T>): void {
+        stream.close();
+        delete this.activeStreams[stream.id];
         if (LOG) {
-            console.log('Closed', container.description, container.id, container);
+            console.log('Closed', stream.id);
             this.printActiveStreams();
         }
     }
 
     private printActiveStreams(): void {
-        const ids = Object.keys(this.requestedStreams)
+        const streamIds = Object.keys(this.activeStreams)
             .map(id => +id)
             .sort();
-        const containerMap = {};
-        for (const id of ids) {
-            const container = this.requestedStreams[id];
-            containerMap[id] = { id, description: container.description, body: container.body?.(), container };
+        const openStreamsMap = {};
+        for (const id of streamIds) {
+            const stream = this.activeStreams[id];
+            openStreamsMap[id] = { id, stream, description: stream.description };
         }
-        console.log(ids.length, 'open streams:', containerMap);
+        console.log(streamIds.length, 'open streams:', openStreamsMap);
     }
 }

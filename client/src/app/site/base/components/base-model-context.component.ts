@@ -37,7 +37,7 @@ export abstract class BaseModelContextComponent extends BaseComponent implements
         }
 
         this.cleanCurrentModelSub(subscriptionName);
-        this.localModelSubscriptions[subscriptionName] = await this.modelRequestService.requestModels(
+        this.localModelSubscriptions[subscriptionName] = await this.modelRequestService.subscribe(
             simplifiedModelRequest,
             this.constructor.name + ' ' + subscriptionName // Note: This does not work for
             // productive (minified) code, but it is just a dev thing.

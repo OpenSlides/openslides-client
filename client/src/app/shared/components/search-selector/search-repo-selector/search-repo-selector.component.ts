@@ -108,7 +108,7 @@ export class SearchRepoSelectorComponent extends BaseSearchValueSelectorComponen
         }
         this.hasModelSubscriptionFired = true;
         this.cleanModelSubscription();
-        this.modelSubscription = await this.modelRequestService.requestModels(
+        this.modelSubscription = await this.modelRequestService.subscribe(
             this.repo.getRequestToGetAllModels(),
             `${this.constructor.name}: ${this.repo.constructor.name}`
         );

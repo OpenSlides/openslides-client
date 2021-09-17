@@ -14,10 +14,14 @@ import { SimplifiedModelRequest } from './model-request-builder.service';
 export class ModelRequestService {
     public constructor(private autoupdateService: AutoupdateService) {}
 
-    public async requestModels(
+    public async instant(request: SimplifiedModelRequest, description: string): Promise<void> {
+        return await this.autoupdateService.instant(request, description);
+    }
+
+    public async subscribe(
         simplifiedModelRequest: SimplifiedModelRequest,
         description: string
     ): Promise<ModelSubscription> {
-        return this.autoupdateService.simpleRequest(simplifiedModelRequest, description);
+        return this.autoupdateService.subscribe(simplifiedModelRequest, description);
     }
 }
