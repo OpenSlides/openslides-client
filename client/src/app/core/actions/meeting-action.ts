@@ -13,6 +13,7 @@ export namespace MeetingAction {
     export const UNSET_FONT = 'meeting.unset_font';
     export const UNSET_LOGO = 'meeting.unset_logo';
     export const IMPORT = 'meeting.import';
+    export const CLONE = 'meeting.clone';
 
     export interface CreatePayload {
         // Required
@@ -189,5 +190,9 @@ export namespace MeetingAction {
     export interface ImportPayload {
         committee_id: Id;
         meeting: ImportMeeting;
+    }
+
+    export interface ClonePayload {
+        meeting_id: Id;
     }
 }

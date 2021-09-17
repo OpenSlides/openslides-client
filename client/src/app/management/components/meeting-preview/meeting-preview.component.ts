@@ -71,10 +71,7 @@ export class MeetingPreviewComponent {
 
         const confirmed = await this.promptService.open(title, content);
         if (confirmed) {
-            /**
-             * seems duplicate was not yet implemented
-             */
-            // await this.meetingRepo.duplicate(this.meeting);
+            await this.meetingRepo.duplicate(this.meeting);
         }
     }
 
