@@ -216,7 +216,8 @@ export class PollFormComponent extends BaseComponent implements OnInit {
      */
     private updatePercentBases(): void {
         const method = this.pollMethodControl.value;
-        if (!method) {
+        const type = this.pollTypeControl.value;
+        if (!method && !type) {
             return;
         }
 
@@ -229,6 +230,10 @@ export class PollFormComponent extends BaseComponent implements OnInit {
             forbiddenBases = [PollPercentBase.YN, PollPercentBase.YNA];
         }
 
+        if (type === PollType.Analog) {
+            forbiddenBases.push(PollPercentBase.Entitled);
+        }
+
         const bases = {};
         for (const [key, value] of Object.entries(this.percentBases)) {
             if (!forbiddenBases.includes(key)) {
@@ -237,20 +242,22 @@ export class PollFormComponent extends BaseComponent implements OnInit {
         }
 
         // update value in case that its no longer valid
-        this.percentBaseControl.setValue(this.getNormedPercentBase(this.percentBaseControl.value, method), {
+        this.percentBaseControl.setValue(this.getNormedPercentBase(this.percentBaseControl.value, method, type), {
             emitEvent: false
         });
 
         this.validPercentBases = bases;
     }
 
-    private getNormedPercentBase(base: PollPercentBase, method: PollMethod): PollPercentBase {
+    private getNormedPercentBase(base: PollPercentBase, method: PollMethod, type: PollType): PollPercentBase {
         if (method === PollMethod.YN && (base === PollPercentBase.YNA || base === PollPercentBase.Y)) {
             return PollPercentBase.YN;
         } else if (method === PollMethod.YNA && base === PollPercentBase.Y) {
             return PollPercentBase.YNA;
         } else if (method === PollMethod.Y && (base === PollPercentBase.YN || base === PollPercentBase.YNA)) {
             return PollPercentBase.Y;
+        } else if (type === PollType.Analog && base === PollPercentBase.Entitled) {
+            return PollPercentBase.Cast;
         }
         return base;
     }
