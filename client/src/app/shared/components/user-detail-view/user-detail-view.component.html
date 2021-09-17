@@ -64,13 +64,14 @@
                     placeholder="{{ 'Initial password' | translate }}"
                     formControlName="default_password"
                 />
-                <mat-hint align="end">Generate</mat-hint>
+                <mat-hint *ngIf="isNewUser" align="end">Generate</mat-hint>
                 <button
+                    *ngIf="isNewUser"
                     type="button"
                     mat-button
                     matSuffix
                     mat-icon-button
-                    [disabled]="!isNewUser || !generatePasswordFn"
+                    [disabled]="!generatePasswordFn"
                     (click)="setRandomPassword()"
                 >
                     <mat-icon>sync_problem</mat-icon>
