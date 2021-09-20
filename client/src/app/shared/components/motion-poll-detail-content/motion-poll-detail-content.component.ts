@@ -57,6 +57,10 @@ export class MotionPollDetailContentComponent extends BaseComponent implements O
         return this.operator.hasPerms(this.permission.motionCanManagePolls) || this.isPublished;
     }
 
+    public get showChart(): boolean {
+        return this.pollService.showChart(this.poll);
+    }
+
     private tableDataSubscription: Subscription | null = null;
 
     public constructor(
