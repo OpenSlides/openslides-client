@@ -28,6 +28,12 @@ export abstract class BaseModelContextComponent extends BaseComponent implements
         }
     }
 
+    /**
+     * This subscribes to changes for a specific view-model. Changes will be applied asynchronously.
+     *
+     * @param simplifiedModelRequest A `SimplifiedModelRequest` which goes to the AU-service
+     * @param subscriptionName An optional name for the subscription
+     */
     protected async requestModels(
         simplifiedModelRequest: SimplifiedModelRequest,
         subscriptionName: string = 'default'
@@ -42,6 +48,20 @@ export abstract class BaseModelContextComponent extends BaseComponent implements
             this.constructor.name + ' ' + subscriptionName // Note: This does not work for
             // productive (minified) code, but it is just a dev thing.
         );
+    }
+
+    /**
+     * This requests immediately changes for a specific view-model. Changes will be applied asynchronously,
+     * but it can be wait for.
+     *
+     * @param modelRequest A `SimplifiedModelRequest` which goes to the AU-service
+     * @param description An optional description for the request
+     */
+    protected async getModelChanges(
+        modelRequest: SimplifiedModelRequest,
+        description: string = `${this.constructor.name}`
+    ): Promise<void> {
+        await this.modelRequestService.instant(modelRequest, description);
     }
 
     public ngOnDestroy(): void {

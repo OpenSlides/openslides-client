@@ -38,8 +38,7 @@ const routes: Route[] = [
     {
         path: 'presence',
         component: PresenceDetailComponent,
-        // TODO: 'users_enable_presence_view' missing in permissions
-        data: { basePerm: Permission.userCanManage }
+        data: { basePerm: Permission.userCanManage, meetingSetting: 'users_enable_presence_view' }
     },
     {
         path: 'groups',
