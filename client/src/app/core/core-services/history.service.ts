@@ -49,7 +49,8 @@ export class HistoryService {
      * Returns, if OpenSlides is in the history mode.
      */
     public get isInHistoryMode(): boolean {
-        return !!this.position;
+        return false; // Currently not supported
+        // return !!this.position;
     }
 
     /**
@@ -71,15 +72,17 @@ export class HistoryService {
      * Enters the history mode
      */
     public enterHistoryMode(position: Position): void {
-        this.position = position;
-        this.banner.addBanner(this.bannerDefinition);
+        throw new Error('The history mode is currently not supported');
+        // this.position = position;
+        // this.banner.addBanner(this.bannerDefinition);
     }
 
     /**
      * Leaves the history mode
      */
     public leaveHistoryMode(): void {
-        this.position = null;
-        this.banner.removeBanner(this.bannerDefinition);
+        throw new Error('The history mode is currently not supported');
+        // this.position = null;
+        // this.banner.removeBanner(this.bannerDefinition);
     }
 }

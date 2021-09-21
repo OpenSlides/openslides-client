@@ -8,7 +8,7 @@ import { AssignmentsAppConfig } from 'app/site/assignments/assignments.config';
 import { isSearchable } from 'app/site/base/searchable';
 import { CinemaAppConfig } from 'app/site/cinema/cinema.config';
 import { CommonAppConfig } from 'app/site/common/common.config';
-import { HistoryAppConfig } from 'app/site/history/history.config';
+// import { HistoryAppConfig } from 'app/site/history/history.config';
 import { MediafileAppConfig } from 'app/site/mediafiles/mediafile.config';
 import { SettingsAppConfig } from 'app/site/meeting-settings/meeting-settings.config';
 import { MotionsAppConfig } from 'app/site/motions/motions.config';
@@ -37,7 +37,7 @@ const appConfigs: AppConfig[] = [
     MediafileAppConfig,
     TagAppConfig,
     UsersAppConfig,
-    HistoryAppConfig,
+    // HistoryAppConfig,
     ProjectorAppConfig,
     TopicsAppConfig,
     CinemaAppConfig,
