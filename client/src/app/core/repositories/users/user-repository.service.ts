@@ -556,6 +556,14 @@ export class UserRepositoryService
         return { id: createdUser[0].id, name: user } as NewUser;
     }
 
+    public togglePresenceByNumber(...numbers: string[]): Promise<Identifiable[]> {
+        const payload: UserAction.TogglePresenceByNumberPayload[] = numbers.map(number => ({
+            meeting_id: this.activeMeetingId,
+            number
+        }));
+        return this.sendBulkActionToBackend(UserAction.TOGGLE_PRESENCE_BY_NUMBER, payload);
+    }
+
     /**
      * Tries to convert a given string into an user (representated by a `FullNameInformation`-object).
      * Names that don't fit the scheme given will be entered into the first_name field.

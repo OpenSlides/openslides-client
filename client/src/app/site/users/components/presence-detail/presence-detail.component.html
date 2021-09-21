@@ -5,7 +5,7 @@
     </div>
 </os-head-bar>
 
-<mat-card *ngIf="permission">
+<mat-card>
     <p>{{ 'Check in or check out participants based on their participant numbers:' | translate }}</p>
 
     <mat-form-field [formGroup]="userForm">
@@ -18,10 +18,11 @@
         />
     </mat-form-field>
     <button mat-button (click)="changePresence()">{{ 'Change presence' | translate }}</button>
-    <mat-card *ngIf="lastChangedUser" [ngClass]="lastChangedUser.is_present ? 'success' : 'warning'">
-        <span>{{ lastChangedUser.full_name }}&nbsp;</span> <span>{{ 'is now' | translate }}</span
-        >:
-        <span>&nbsp;{{ lastChangedUser.is_present ? ('present' | translate) : ('absent' | translate) }}</span>
+    <mat-card *ngIf="lastChangedUser" [ngClass]="lastChangedUser.isPresentInMeeting() ? 'success' : 'warning'">
+        <span>{{ lastChangedUser.full_name }}&nbsp;</span>
+        <span>{{ 'is now' | translate }}</span>
+        :
+        <span>&nbsp;{{ lastChangedUser.isPresentInMeeting() ? ('present' | translate) : ('absent' | translate) }}</span>
     </mat-card>
     <mat-card *ngIf="errorMsg" class="error">{{ errorMsg | translate }}</mat-card>
 </mat-card>

@@ -13,6 +13,7 @@ export namespace UserAction {
     export const SET_PRESENT = 'user.set_present';
     export const UPDATE = 'user.update';
     export const UPDATE_SELF = 'user.update_self';
+    export const TOGGLE_PRESENCE_BY_NUMBER = 'user.toggle_presence_by_number';
 
     export interface BaseUserPayload {
         title: string;
@@ -94,5 +95,10 @@ export namespace UserAction {
             [meeting_id: number]: UnsafeHtml;
         };
         email: string;
+    }
+
+    export interface TogglePresenceByNumberPayload {
+        number: string;
+        meeting_id: Id;
     }
 }

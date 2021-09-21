@@ -6,6 +6,8 @@ import { AuthService } from './auth.service';
 import { FallbackRoutesService } from './fallback-routes.service';
 import { OperatorService } from './operator.service';
 import { Permission } from './permission';
+import { MeetingSettingsService } from '../ui-services/meeting-settings.service';
+import { Settings } from '../../shared/models/event-management/meeting';
 
 /**
  * Classical Auth-Guard. Checks if the user has to correct permissions to enter a page, and forwards to login if not.
@@ -26,6 +28,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
         private operator: OperatorService,
         private authService: AuthService,
         private activeMeeting: ActiveMeetingService,
+        private meetingSettingService: MeetingSettingsService,
         private fallbackRoutesService: FallbackRoutesService
     ) {}
 
@@ -40,9 +43,10 @@ export class AuthGuard implements CanActivate, CanActivateChild {
      */
     public async canActivate(route: ActivatedRouteSnapshot): Promise<boolean | UrlTree> {
         const basePerm: Permission | Permission[] = route.data.basePerm;
+        const meetingSetting: keyof Settings = route.data.meetingSetting;
         await this.operator.ready;
         if ((this.operator.isAnonymous && this.activeMeeting.guestsEnabled) || this.operator.isAuthenticated) {
-            return this.hasPerms(basePerm);
+            return this.hasPerms(basePerm) && this.isMeetingSettingEnabled(meetingSetting);
         } else {
             this.router.navigate([route.params?.meetingId || '', 'login']);
             return false;
@@ -72,6 +76,13 @@ export class AuthGuard implements CanActivate, CanActivateChild {
         } else {
             return this.operator.hasPerms(basePerm);
         }
+    }
+
+    private isMeetingSettingEnabled(meetingSetting?: keyof Settings): boolean {
+        if (!meetingSetting) {
+            return true;
+        }
+        return this.meetingSettingService.instant(meetingSetting) as boolean;
     }
 
     /**

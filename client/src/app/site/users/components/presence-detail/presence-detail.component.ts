@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
-import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
-import { OperatorService } from 'app/core/core-services/operator.service';
-import { Permission } from 'app/core/core-services/permission';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
-import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { ViewUser } from '../../models/view-user';
+import { BaseModelContextComponent } from '../../../base/components/base-model-context.component';
+import { ComponentServiceCollector } from '../../../../core/ui-services/component-service-collector';
 
 /**
  * This component offers an input field for user numbers, and sets/unsets the
@@ -21,7 +19,7 @@ import { ViewUser } from '../../models/view-user';
     selector: 'os-presence-detail',
     templateUrl: './presence-detail.component.html'
 })
-export class PresenceDetailComponent implements OnInit {
+export class PresenceDetailComponent extends BaseModelContextComponent implements OnInit {
     /**
      * The form group for the input field
      */
@@ -34,26 +32,10 @@ export class PresenceDetailComponent implements OnInit {
     public lastChangedUser: ViewUser;
 
     /**
-     * Subscription to update {@link lastChangedUser}
+     * A message if an error is thrown when toggling the presence of a user.
+     * Might be `null` if there is no error.
      */
-    private _userSubscription: Subscription = null;
-    public errorMsg: string;
-
-    /**
-     * Config variable if this view is enabled in the config
-     * TODO: Should be a temporary check, until the permission on users-routing.module is fixed
-     */
-    private _enabledInConfig: boolean;
-
-    /**
-     * permission check if user is allowed to access this view.
-     * TODO: Should be a temporary check, until the permission on users-routing.module is fixed
-     *
-     * @returns true if the user is allowed to use this view
-     */
-    public get permission(): boolean {
-        return this.operator.hasPerms(Permission.userCanManage) && this._enabledInConfig;
-    }
+    public errorMsg: string | null = null;
 
     /**
      * Constructor. Subscribes to the configuration if this view should be enabled at all
@@ -64,21 +46,18 @@ export class PresenceDetailComponent implements OnInit {
      * @param translate Translation service
      */
     public constructor(
+        componentServiceCollector: ComponentServiceCollector,
         private userRepo: UserRepositoryService,
-        private formBuilder: FormBuilder,
-        private operator: OperatorService,
-        private translate: TranslateService,
-        private meetingSettingsService: MeetingSettingsService
+        private formBuilder: FormBuilder
     ) {
-        this.meetingSettingsService
-            .get('users_enable_presence_view')
-            .subscribe(enabled => (this._enabledInConfig = enabled));
+        super(componentServiceCollector);
     }
 
     /**
      * initializes the form control
      */
     public ngOnInit(): void {
+        super.ngOnInit();
         this.userForm = this.formBuilder.group({
             number: ''
         });
@@ -90,43 +69,20 @@ export class PresenceDetailComponent implements OnInit {
      */
     public async changePresence(): Promise<void> {
         const number = this.userForm.get('number').value;
-        const users = this.userRepo.getUsersByNumber(number);
         this.userForm.reset();
-        if (users.length === 1) {
-            throw new Error('TODO');
-            /*await this.userRepo.update({ is_present: !users[0].is_present }, users[0]);
-            this.subscribeUser(users[0].id);*/
-        } else if (!users.length) {
-            this.clearSubscription();
-            this.errorMsg = this.translate.instant('Participant cannot be found');
-        } else if (users.length > 1) {
-            this.clearSubscription();
-            this.errorMsg = this.translate.instant('Participant number is not unique');
+        try {
+            this.errorMsg = null;
+            const identifiable = (await this.userRepo.togglePresenceByNumber(number))[0];
+            await this.getModelChanges({
+                ids: [identifiable.id],
+                viewModelCtor: ViewUser,
+                fieldset: 'shortName',
+                additionalFields: ['is_present_in_meeting_ids']
+            });
+            this.lastChangedUser = this.userRepo.getViewModel(identifiable.id);
+        } catch (e) {
+            this.errorMsg = _(e);
         }
-    }
-
-    /**
-     * Subscribes this component to a user given by an id. The
-     * {@link lastChangedUser} will be updated accordingly.
-     *
-     * @param id the id of the user to be shown as lastChangedUser
-     */
-    /*private subscribeUser(id: number): void {
-        this.clearSubscription();
-        this.errorMsg = null;
-        this._userSubscription = this.userRepo
-            .getViewModelObservable(id)
-            .subscribe(user => (this.lastChangedUser = user));
-    }*/
-
-    /**
-     * Clears the currently displayed user and subscription, if any is present
-     */
-    private clearSubscription(): void {
-        if (this._userSubscription) {
-            this._userSubscription.unsubscribe();
-        }
-        this.lastChangedUser = null;
     }
 
     /**
