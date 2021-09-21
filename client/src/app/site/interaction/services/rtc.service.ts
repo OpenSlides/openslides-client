@@ -24,9 +24,12 @@ interface ConferenceJoinedResult {
     formattedDisplayName: string;
 }
 
-interface ConferenceMember {
+export interface ConferenceMemberCollection {
+    [key: number]: ConferenceMember;
+}
+export interface ConferenceMember {
     name: string;
-    focus: boolean;
+    focus?: boolean;
 }
 
 interface DisplayNameChangeResult {
@@ -150,7 +153,7 @@ export class RtcService {
     public jitsiMeetUrl = this.jitsiMeetUrlSubject.asObservable();
 
     private members = {};
-    private memberSubject = new BehaviorSubject<Object>(this.members);
+    private memberSubject = new BehaviorSubject<ConferenceMemberCollection>(this.members);
     public memberObservableObservable = this.memberSubject.asObservable();
 
     private dominantSpeaker: JitsiMember;

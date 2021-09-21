@@ -48,7 +48,7 @@ export class InteractionService {
     ) {
         combineLatest([
             this.showLiveConfObservable,
-            this.streamService.hasLiveStreamUrlObvervable,
+            this.streamService.hasLiveStreamUrlObservable,
             this.streamService.canSeeLiveStreamObservable,
             this.rtcService.isJitsiEnabledObservable,
             this.rtcService.isJoinedObservable,

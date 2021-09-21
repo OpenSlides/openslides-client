@@ -15,7 +15,7 @@ const STREAM_RUNNING_STORAGE_KEY = 'streamIsRunning';
 })
 export class StreamService {
     public liveStreamUrlObservable: Observable<string> = this.settingService.get('conference_stream_url');
-    public hasLiveStreamUrlObvervable: Observable<boolean> = this.liveStreamUrlObservable.pipe(
+    public hasLiveStreamUrlObservable: Observable<boolean> = this.liveStreamUrlObservable.pipe(
         map(url => !!url?.trim() || false)
     );
 

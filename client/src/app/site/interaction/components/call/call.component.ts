@@ -18,8 +18,9 @@ import { BaseComponent } from 'app/site/base/components/base.component';
 import { ApplauseService } from '../../services/applause.service';
 import { CallRestrictionService } from '../../services/call-restriction.service';
 import { InteractionService } from '../../services/interaction.service';
-import { RtcService } from '../../services/rtc.service';
+import { ConferenceMember, ConferenceMemberCollection, RtcService } from '../../services/rtc.service';
 import { StreamService } from '../../services/stream.service';
+import { KeyValue } from '@angular/common';
 
 const helpDeskTitle = _('Help desk');
 const liveConferenceTitle = _('Conference room');
@@ -33,23 +34,30 @@ const connectingTitle = _('connecting ...');
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CallComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
+    @Output()
+    public conferenceTitle: EventEmitter<string> = new EventEmitter();
+
+    @Output()
+    public conferenceSubtitle: EventEmitter<string> = new EventEmitter();
+
     public isJitsiActiveInAnotherTab: Observable<boolean> = this.rtcService.inOtherTab;
     public canEnterCall: Observable<boolean> = this.callRestrictionService.canEnterCallObservable;
     public isJitsiDialogOpen: Observable<boolean> = this.rtcService.showCallDialogObservable;
     public showParticles: Observable<boolean> = this.applauseService.showParticles;
-    public hasLiveStreamUrl: Observable<boolean> = this.streamService.hasLiveStreamUrlObvervable;
+    public hasLiveStreamUrl: Observable<boolean> = this.streamService.hasLiveStreamUrlObservable;
 
     public isJitsiActive: boolean;
     public isJoined: boolean;
+
+    private autoConnect: boolean;
+    private dominantSpeaker: string;
 
     public get showHangUp(): boolean {
         return this.isJitsiActive && this.isJoined;
     }
 
-    private dominantSpeaker: string;
-    private members = {};
-    public get memberList(): string[] {
-        return Object.keys(this.members);
+    public get memberObservable(): Observable<ConferenceMemberCollection> {
+        return this.rtcService.memberObservableObservable;
     }
 
     public get isDisconnected(): boolean {
@@ -63,14 +71,6 @@ export class CallComponent extends BaseComponent implements OnInit, AfterViewIni
     public get isConnected(): boolean {
         return this.isJitsiActive && this.isJoined;
     }
-
-    private autoConnect: boolean;
-
-    @Output()
-    public conferenceTitle: EventEmitter<string> = new EventEmitter();
-
-    @Output()
-    public conferenceSubtitle: EventEmitter<string> = new EventEmitter();
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -96,11 +96,6 @@ export class CallComponent extends BaseComponent implements OnInit, AfterViewIni
                 this.cd.markForCheck();
             }),
 
-            this.rtcService.memberObservableObservable.subscribe(members => {
-                this.members = members;
-                this.cd.markForCheck();
-            }),
-
             this.rtcService.dominantSpeakerObservable.subscribe(domSpeaker => {
                 this.dominantSpeaker = domSpeaker?.displayName;
                 this.updateSubtitle();
@@ -122,6 +117,13 @@ export class CallComponent extends BaseComponent implements OnInit, AfterViewIni
         );
     }
 
+    // closing the tab should also try to stop jitsi.
+    // this will usually not be caught by ngOnDestroy
+    @HostListener('window:beforeunload', ['$event'])
+    public beforeunload($event: any): void {
+        this.rtcService.stopJitsi();
+    }
+
     public ngOnInit(): void {
         this.updateSubtitle();
     }
@@ -132,26 +134,12 @@ export class CallComponent extends BaseComponent implements OnInit, AfterViewIni
         }
     }
 
-    // closing the tab should also try to stop jitsi.
-    // this will usually not be caught by ngOnDestroy
-    @HostListener('window:beforeunload', ['$event'])
-    public beforeunload($event: any): void {
-        this.rtcService.stopJitsi();
-    }
+    public valueNameOrder = (a: KeyValue<number, ConferenceMember>, b: KeyValue<number, ConferenceMember>): number =>
+        a.value.name.localeCompare(b.value.name);
 
     public ngOnDestroy(): void {
         super.ngOnDestroy();
         this.rtcService.stopJitsi();
-    }
-
-    private updateSubtitle(): void {
-        if (this.isJitsiActive && this.isJoined) {
-            this.conferenceSubtitle.next(this.dominantSpeaker || '');
-        } else if (this.isJitsiActive && !this.isJoined) {
-            this.conferenceSubtitle.next(connectingTitle);
-        } else {
-            this.conferenceSubtitle.next(disconnectedTitle);
-        }
     }
 
     public async callRoom(): Promise<void> {
@@ -171,5 +159,15 @@ export class CallComponent extends BaseComponent implements OnInit, AfterViewIni
 
     public viewStream(): void {
         this.interactionService.viewStream();
+    }
+
+    private updateSubtitle(): void {
+        if (this.isJitsiActive && this.isJoined) {
+            this.conferenceSubtitle.next(this.dominantSpeaker || '');
+        } else if (this.isJitsiActive && !this.isJoined) {
+            this.conferenceSubtitle.next(connectingTitle);
+        } else {
+            this.conferenceSubtitle.next(disconnectedTitle);
+        }
     }
 }
