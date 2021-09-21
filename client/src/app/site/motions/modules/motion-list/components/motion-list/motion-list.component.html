@@ -14,7 +14,8 @@
     <!-- Multiselect info -->
     <div class="central-info-slot">
         <button mat-icon-button (click)="toggleMultiSelect()"><mat-icon>arrow_back</mat-icon></button>
-        <span>{{ selectedRows.length }}&nbsp;</span><span>{{ 'selected' | translate }}</span>
+        <span>{{ selectedRows.length }}&nbsp;</span>
+        <span>{{ 'selected' | translate }}</span>
     </div>
 
     <div class="extra-controls-slot">
@@ -96,9 +97,15 @@
                     </span>
 
                     <span *ngIf="showSequential">
-                        <span *ngIf="motion.submitters.length"> &middot; </span>
+                        <span *ngIf="motion.submitters.length">&middot;&nbsp;</span>
                         <span>{{ 'Sequential number' | translate }}</span>
                         {{ motion.sequential_number }}
+                    </span>
+
+                    <span>
+                        <span *ngIf="motion.submitters.length || showSequential">&middot;&nbsp;</span>
+                        <span>{{ 'Created' | translate }}</span>
+                        {{ motion.created | localizedDate }}
                     </span>
                 </div>
 
