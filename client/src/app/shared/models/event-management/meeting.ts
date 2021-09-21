@@ -218,6 +218,7 @@ export class Meeting extends BaseModel<Meeting> {
     public admin_group_id: Id; // group/admin_group_for_meeting_id;
 
     public organization_tag_ids: Id[]; // (organization_tag/meeting_ids)[];
+    public is_active_in_organization_id: Id; // (organization/active_meeting_ids)[];
 
     public constructor(input?: any) {
         super(Meeting.COLLECTION, input);

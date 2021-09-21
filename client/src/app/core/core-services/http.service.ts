@@ -1,7 +1,6 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subject } from 'rxjs';
 
 import { HistoryService } from './history.service';
@@ -9,20 +8,7 @@ import { HTTPMethod } from '../definitions/http-methods';
 import { HttpOptions } from '../definitions/http-options';
 import { formatQueryParams, QueryParams } from '../definitions/query-params';
 import { toBase64 } from '../to-base64';
-
-interface ErrorMessageResponse {
-    message: string;
-    success: boolean;
-}
-
-function isErrorMessageResponse(obj: any): obj is ErrorMessageResponse {
-    return (
-        obj &&
-        typeof obj === 'object' &&
-        typeof obj.message === 'string' &&
-        (obj as ErrorMessageResponse).success === false
-    );
-}
+import { ProcessError } from '../errors/process-error';
 
 type ResponseType = 'arraybuffer' | 'blob' | 'json' | 'text';
 
@@ -49,11 +35,7 @@ export class HttpService {
      * @param translate
      * @param timeTravel requests are only allowed if history mode is disabled
      */
-    public constructor(
-        private http: HttpClient,
-        private translate: TranslateService,
-        private historyService: HistoryService
-    ) {
+    public constructor(private http: HttpClient, private historyService: HistoryService) {
         this.defaultHeaders = new HttpHeaders().set('Content-Type', 'application/json');
     }
 
@@ -79,7 +61,7 @@ export class HttpService {
     ): Promise<T> {
         // end early, if we are in history mode
         if (this.historyService.isInHistoryMode && method !== HTTPMethod.GET) {
-            throw this.processError('You cannot make changes while in history mode');
+            throw new ProcessError('You cannot make changes while in history mode');
         }
 
         // there is a current bug with the responseType.
@@ -108,54 +90,8 @@ export class HttpService {
             ).toPromise();
             return response.body;
         } catch (error) {
-            throw this.processError(error);
+            throw new ProcessError(error);
         }
-    }
-
-    /**
-     * Takes an error thrown by the HttpClient. Processes it to return a string that can
-     * be presented to the user.
-     * @param e The error thrown.
-     * @returns The prepared and translated message for the user
-     */
-    private processError(e: any): string {
-        let error = this.translate.instant('Error') + ': ';
-        // If the error is a string already, return it.
-        if (typeof e === 'string') {
-            return error + this.translate.instant(e);
-        }
-
-        // If the error is no HttpErrorResponse, it's not clear what is wrong.
-        if (!(e instanceof HttpErrorResponse)) {
-            console.error('Unknown error thrown by the http client: ', e);
-            error += this.translate.instant('An unknown error occurred.');
-            return error;
-        }
-
-        if (!e.error) {
-            error += this.translate.instant("The server didn't respond.");
-        } else if (typeof e.error === 'object') {
-            if (isErrorMessageResponse(e.error)) {
-                error += e.error.message;
-            } else {
-                const errorList = Object.keys(e.error).map(key => {
-                    const capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1);
-                    const message = e.error[key];
-                    return `${this.translate.instant(capitalizedKey)}: ${message}`;
-                });
-                error = errorList.join(', ');
-            }
-        } else if (typeof e.error === 'string') {
-            error += this.translate.instant(e.error);
-        } else if (e.status === 500) {
-            error += this.translate.instant('A server error occured. Please contact your system administrator.');
-        } else if (e.status > 500) {
-            error += this.translate.instant('The server could not be reached.') + ` (${e.status})`;
-        } else {
-            error += e.message;
-        }
-
-        return error;
     }
 
     /**

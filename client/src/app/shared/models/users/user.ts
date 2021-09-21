@@ -4,6 +4,7 @@ import { CML } from 'app/core/core-services/organization-permission';
 import { Id } from 'app/core/definitions/key-types';
 import { BaseDecimalModel } from '../base/base-decimal-model';
 import { HasProjectionIds } from '../base/has-projectable-ids';
+import { OMLMapping } from '../../../core/core-services/organization-permission';
 
 /**
  * Iterable pre selection of genders (sexes)
@@ -60,7 +61,7 @@ export class User extends BaseDecimalModel<User> {
     public projection_$_ids: any[];
     public current_projector_$_ids: any[];
 
-    public organization_management_level: string;
+    public organization_management_level: keyof OMLMapping;
     public committee_$_management_level: Id[];
 
     public get isVoteWeightOne(): boolean {

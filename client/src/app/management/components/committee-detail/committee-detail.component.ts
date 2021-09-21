@@ -15,6 +15,7 @@ import { ViewCommittee } from 'app/management/models/view-committee';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { MeetingRepositoryService } from '../../../core/repositories/management/meeting-repository.service';
 
 const ForwardLabel = _('Forward motions to');
 const ReceiveLabel = _('Receive motions from');
@@ -46,7 +47,8 @@ export class CommitteeDetailComponent extends BaseModelContextComponent implemen
         private operator: OperatorService,
         private committeeRepo: CommitteeRepositoryService,
         private promptService: PromptService,
-        private memberService: MemberService
+        private memberService: MemberService,
+        private meetingRepo: MeetingRepositoryService
     ) {
         super(componentServiceCollector);
         this.subscriptions.push(

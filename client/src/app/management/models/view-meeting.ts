@@ -32,6 +32,7 @@ import { ViewPersonalNote } from 'app/site/users/models/view-personal-note';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { ViewCommittee } from './view-committee';
 import { HasOrganizationTags } from './view-organization-tag';
+import { ViewOrganization } from './view-organization';
 
 export interface HasMeeting {
     meeting: ViewMeeting;
@@ -53,6 +54,15 @@ export class ViewMeeting extends BaseViewModel<Meeting> {
     public get userAmount(): number {
         return this.user_ids?.length || 0;
     }
+
+    public get isArchived(): boolean {
+        return !this.is_active_in_organization_id;
+    }
+
+    public get isActive(): boolean {
+        return !!this.is_active_in_organization_id;
+    }
+
     public static COLLECTION = Meeting.COLLECTION;
 
     public static ACCESSIBILITY_FIELD: keyof Meeting = 'description';
@@ -112,5 +122,6 @@ interface IMeetingRelations {
     projections: ViewProjection[];
     default_group: ViewGroup;
     admin_group: ViewGroup;
+    is_active_in_organization: ViewOrganization;
 }
 export interface ViewMeeting extends Meeting, IMeetingRelations, HasProjectorTitle, HasOrganizationTags {}

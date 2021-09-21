@@ -4,3 +4,12 @@
     max-width: 100%;
     margin: auto;
 }
+
+.superadmin-place {
+    section {
+        mat-form-field {
+            display: block;
+            margin: 6px 0;
+        }
+    }
+}

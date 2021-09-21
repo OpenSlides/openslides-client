@@ -21,14 +21,15 @@ export class OrganizationRepositoryService extends BaseRepository<ViewOrganizati
         this.translate.instant(plural ? 'Organizations' : 'Organization');
 
     public getFieldsets(): Fieldsets<Organization> {
-        const coreFieldset: (keyof Organization)[] = ['name', 'description'];
+        const coreFieldset: (keyof Organization)[] = ['name', 'description', 'active_meeting_ids'];
         const settingsFieldset: (keyof (OrganizationSetting & Organization))[] = coreFieldset.concat(
             'legal_notice',
             'privacy_policy',
             'login_text',
             'theme',
             'enable_electronic_voting',
-            'reset_password_verbose_errors'
+            'reset_password_verbose_errors',
+            'limit_of_meetings'
         );
         const detailFieldset: (keyof Organization)[] = coreFieldset.concat('committee_ids', 'organization_tag_ids');
         return {

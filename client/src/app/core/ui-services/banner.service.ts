@@ -48,7 +48,7 @@ export class BannerService {
      * @param toAdd the banner to add
      */
     public addBanner(toAdd: BannerDefinition): void {
-        if (!this.activeBanners.value.find(banner => banner === toAdd)) {
+        if (!this.activeBanners.value.find(banner => JSON.stringify(banner) === JSON.stringify(toAdd))) {
             const newBanners = this.activeBanners.value.concat([toAdd]);
             this.activeBanners.next(newBanners);
         }
@@ -80,7 +80,9 @@ export class BannerService {
      */
     public removeBanner(toRemove: BannerDefinition): void {
         if (toRemove) {
-            const newBanners = this.activeBanners.value.filter(banner => banner !== toRemove);
+            const newBanners = this.activeBanners.value.filter(
+                banner => JSON.stringify(banner) !== JSON.stringify(toRemove)
+            );
             this.activeBanners.next(newBanners);
         }
     }

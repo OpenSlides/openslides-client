@@ -30,6 +30,10 @@ export class OrganizationService {
         return this.organizationSubject.value;
     }
 
+    public get currentActiveMeetings(): number {
+        return this.organization.active_meeting_ids?.length || 0;
+    }
+
     private organizationSubject = new BehaviorSubject<ViewOrganization | null>(null);
 
     private modelSubscription: ModelSubscription | null = null;

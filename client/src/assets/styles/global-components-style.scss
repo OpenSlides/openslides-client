@@ -222,8 +222,25 @@
     }
 
     /**
+    * Background styles used for the global theme
+    */
+    .background-dark {
+        background: #4f4f4f;
+        color: white;
+    }
+
+    .background-dark-brighter {
+        background: #6f6f6f;
+        color: white;
+    }
+
+    .background-dark-brightest {
+        background: #8f8f8f;
+    }
+
+    /**
      * CLEANUP:
-     * whole themes can be replaced using classes like this one
+     * whole theme-related stylesheets can be replaced using classes like this one
      */
     .background-default {
         background: mat.get-color-from-palette($background, background);
@@ -243,6 +260,10 @@
     .background-accent {
         background: mat.get-color-from-palette($accent) !important;
         color: mat.get-color-from-palette($accent, default-contrast) !important;
+    }
+
+    .background-warn {
+        background: mat.get-color-from-palette($warn) !important;
     }
 
     .background-card {

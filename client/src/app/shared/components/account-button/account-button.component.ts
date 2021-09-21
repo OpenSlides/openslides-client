@@ -14,6 +14,7 @@ import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { Router } from '@angular/router';
+import { getOmlVerboseName } from '../../../core/core-services/organization-permission';
 
 @Component({
     selector: 'os-account-button',
@@ -126,6 +127,10 @@ export class AccountButtonComponent extends BaseModelContextComponent implements
         this._languageTrigger?.closeMenu();
     }
 
+    public getOmlVerboseName(): string {
+        return getOmlVerboseName(this.user?.organization_management_level);
+    }
+
     private onOperatorUpdate(): void {
         this.isLoggedIn = !this.operator.isAnonymous;
         this.username = this.isLoggedIn ? this.operator.shortName : this.translate.instant('Guest');
@@ -145,7 +150,7 @@ export class AccountButtonComponent extends BaseModelContextComponent implements
         this.requestModels({
             viewModelCtor: ViewUser,
             ids: [this._userId],
-            fieldset: ['is_present_in_meeting_ids', 'can_change_own_password']
+            fieldset: ['is_present_in_meeting_ids', 'can_change_own_password', 'organization_management_level']
         });
 
         if (this._userSubscription) {

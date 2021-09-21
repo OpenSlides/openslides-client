@@ -55,7 +55,6 @@ export class OnlyNumberDirective implements OnInit {
      * ^: starts with
      * $: ends
      */
-    // private regExp = new RegExp('^([1-9][0-9]*|0)?$');
     private regExp: RegExp;
 
     private allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab'];

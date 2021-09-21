@@ -9,6 +9,8 @@ import { AutoupdateService, ModelSubscription } from './autoupdate.service';
 import { LifecycleService } from './lifecycle.service';
 import { MeetingRepositoryService } from '../repositories/management/meeting-repository.service';
 import { SimplifiedModelRequest } from './model-request-builder.service';
+import { BannerService, BannerDefinition } from '../ui-services/banner.service';
+import { ArchiveStatusService } from './archive-status.service';
 
 export class NoActiveMeeting extends Error {}
 
@@ -16,13 +18,8 @@ export class NoActiveMeeting extends Error {}
     providedIn: 'root'
 })
 export class ActiveMeetingService {
-    private meetingSubject = new BehaviorSubject<ViewMeeting | null>(undefined);
-    private meetingSubcription: Subscription = null;
-
-    protected modelAutoupdateSubscription: ModelSubscription | null = null;
-
     public get guestsEnabled(): boolean {
-        const activeMeeting = this.meetingSubject.getValue();
+        const activeMeeting = this._meetingSubject.getValue();
         return activeMeeting ? activeMeeting.enable_anonymous : false;
     }
 
@@ -35,18 +32,26 @@ export class ActiveMeetingService {
     }
 
     public get meetingObservable(): Observable<ViewMeeting | null> {
-        return this.meetingSubject.asObservable();
+        return this._meetingSubject.asObservable();
     }
 
     public get meeting(): ViewMeeting | null {
-        return this.meetingSubject.getValue();
+        return this._meetingSubject.getValue();
     }
+
+    protected modelAutoupdateSubscription: ModelSubscription | null = null;
+
+    private _currentArchivedBanner: BannerDefinition | null = null;
+    private _meetingSubject = new BehaviorSubject<ViewMeeting | null>(undefined);
+    private _meetingSubcription: Subscription = null;
 
     public constructor(
         private activeMeetingIdService: ActiveMeetingIdService,
         private repo: MeetingRepositoryService,
         private autoupdateService: AutoupdateService,
-        private lifecycle: LifecycleService
+        private lifecycle: LifecycleService,
+        private bannerService: BannerService,
+        private archiveService: ArchiveStatusService
     ) {
         this.activeMeetingIdService.meetingIdObservable.subscribe(id => {
             if (id !== undefined) {
@@ -68,8 +73,8 @@ export class ActiveMeetingService {
             this.modelAutoupdateSubscription = null;
         }
 
-        if (this.meetingSubcription) {
-            this.meetingSubcription.unsubscribe();
+        if (this._meetingSubcription) {
+            this._meetingSubcription.unsubscribe();
         }
 
         if (id) {
@@ -78,14 +83,35 @@ export class ActiveMeetingService {
                 'ActiveMeetingService'
             );
             // Even inaccessible meetings will be observed so that one is on the login-mask available.
-            this.meetingSubcription = this.repo.getGeneralViewModelObservable().subscribe(meeting => {
+            this._meetingSubcription = this.repo.getGeneralViewModelObservable().subscribe(meeting => {
                 if (meeting !== undefined && meeting.id === this.meetingId) {
-                    this.meetingSubject.next(meeting);
+                    this.setupActiveMeeting(meeting);
                 }
             });
         } else {
-            this.meetingSubject.next(null);
+            this.setupActiveMeeting(null);
         }
+    }
+
+    private setupActiveMeeting(meeting: ViewMeeting | null): void {
+        this._meetingSubject.next(meeting);
+        if (meeting?.isArchived) {
+            this.archiveService.isArchivedEvent.next(true);
+            this._currentArchivedBanner = this.createArchivedBanner();
+            this.bannerService.addBanner(this._currentArchivedBanner);
+        } else if (this._currentArchivedBanner) {
+            this.archiveService.isArchivedEvent.next(false);
+            this.bannerService.removeBanner(this._currentArchivedBanner);
+            this._currentArchivedBanner = null;
+        }
+    }
+
+    private createArchivedBanner(): BannerDefinition {
+        return {
+            icon: 'archive',
+            class: 'background-warn',
+            text: 'Archived'
+        };
     }
 
     private getModelRequest(): SimplifiedModelRequest {

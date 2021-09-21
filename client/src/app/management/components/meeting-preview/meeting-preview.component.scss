@@ -9,6 +9,7 @@
         display: flex !important;
 
         .mat-card-header-text {
+            flex: 1;
             margin-top: auto !important;
             margin-bottom: auto !important;
 
@@ -45,4 +46,10 @@
 
 .prev-content {
     padding: 0 20px;
+}
+
+.archived-label {
+    padding: 6px;
+    border: 1px solid;
+    border-radius: 4px;
 }
