@@ -81,7 +81,7 @@ export class CommitteeDetailComponent extends BaseModelContextComponent implemen
     }
 
     public getMemberAmount(committee: ViewCommittee): number {
-        return committee.user_ids.length;
+        return committee.user_ids?.length || 0;
     }
 
     public getMeetingsSorted(committee: ViewCommittee): ViewMeeting[] {
