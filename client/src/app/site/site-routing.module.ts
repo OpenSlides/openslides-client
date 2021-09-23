@@ -68,11 +68,11 @@ const routes: Route[] = [
                 loadChildren: () => import('./tags/tag.module').then(m => m.TagModule),
                 data: { basePerm: Permission.tagCanManage }
             },
-            {
-                path: 'history',
-                loadChildren: () => import('./history/history.module').then(m => m.HistoryModule),
-                data: { basePerm: Permission.meetingCanSeeHistory }
-            },
+            // {
+            //     path: 'history',
+            //     loadChildren: () => import('./history/history.module').then(m => m.HistoryModule),
+            //     data: { basePerm: Permission.meetingCanSeeHistory }
+            // },
             {
                 path: 'projectors',
                 loadChildren: () => import('./projector/projector.module').then(m => m.ProjectorModule),

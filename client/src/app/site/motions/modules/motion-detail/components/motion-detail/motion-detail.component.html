@@ -13,7 +13,8 @@
         <h2 *ngIf="motion && !newMotion">
             <span>{{ 'Motion' | translate }}</span>
             <!-- Whitespace between "Motion" and number -->
-            <span>&nbsp;</span> <span *ngIf="!editMotion">{{ motion.number }}</span>
+            <span>&nbsp;</span>
+            <span *ngIf="!editMotion">{{ motion.number }}</span>
             <!-- <span *ngIf="editMotion">{{ contentForm.get('number').value }}</span> -->
         </h2>
         <h2 *ngIf="newMotion && !amendmentEdit">{{ 'New motion' | translate }}</h2>
@@ -89,7 +90,7 @@
                     <span>{{ 'Remove from agenda' | translate }}</span>
                 </button>
             </div>
-            <button
+            <!-- <button
                 mat-menu-item
                 *osPerms="permission.meetingCanSeeHistory"
                 [routerLink]="['/', activeMeetingId, 'history']"
@@ -99,7 +100,7 @@
                 <span>
                     {{ 'History' | translate }}
                 </span>
-            </button>
+            </button> -->
             <mat-divider *ngIf="perms.isAllowed('update', motion) || perms.isAllowed('manage')"></mat-divider>
             <!-- Forward to meeting -->
             <button mat-menu-item (click)="forwardMotionToMeetings()" *ngIf="perms.isAllowed('manage')">
