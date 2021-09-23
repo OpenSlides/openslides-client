@@ -14,24 +14,9 @@
                 </form>
             </div>
         </ng-container>
-        <mat-divider *ngIf="versionInfo"></mat-divider>
-        <div *ngIf="versionInfo" class="version-text">
-            <a [attr.href]="versionInfo.openslides_url" target="_blank">
-                OpenSlides {{ versionInfo.openslides_version }}
-            </a>
-            <span>({{ 'License' | translate }}: {{ versionInfo.openslides_license }})</span>
-
-            <div *ngIf="versionInfo.plugins.length">
-                <p>
-                    <span>{{ 'Installed plugins' | translate }}:</span>
-                </p>
-                <div *ngFor="let plugin of versionInfo.plugins">
-                    <a [attr.href]="plugin.url" target="_blank">{{ plugin.verbose_name }} {{ plugin.version }}</a>
-                    <div *ngIf="plugin.license">
-                        <span>({{ 'License' | translate }}: {{ plugin.license }})</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <ng-container *ngIf="versionInfo | async as version">
+            <mat-divider></mat-divider>
+            <div class="version-text">OpenSlides Version: {{ version }}</div>
+        </ng-container>
     </div>
 </mat-card>
