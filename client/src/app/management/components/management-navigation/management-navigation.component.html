@@ -6,12 +6,12 @@
             class="management-router-link"
             (click)="closeSidenavOnMobile()"
             [routerLink]="entry.route"
-            routerLinkActive="background-primary"
+            routerLinkActive="foreground-active"
             [routerLinkActiveOptions]="{ exact: isRouteExact(entry.route) }"
         >
             <mat-icon>{{ entry.icon }}</mat-icon>
             <span>{{ entry.displayName | translate }}</span>
         </a>
     </span>
-    <mat-divider class="white-divider" *ngIf="entry.hasDividerBelow"></mat-divider>
+    <mat-divider *ngIf="entry.hasDividerBelow"></mat-divider>
 </ng-container>

@@ -179,7 +179,12 @@
 
     .small-icon {
         @extend .icon;
-        font-size: 18px;
+        @include icon(18px);
+    }
+
+    .very-small-icon {
+        @extend .icon;
+        @include icon(16px);
     }
 
     .small-text {
@@ -188,15 +193,6 @@
 
     .white-divider {
         border-top-color: white;
-    }
-
-    .fake-button {
-        $button-size: 40px;
-        width: $button-size;
-        height: $button-size;
-        line-height: $button-size;
-        text-align: center;
-        cursor: pointer;
     }
 
     .no-margin {
@@ -252,6 +248,11 @@
         color: mat.get-color-from-palette($primary, default-contrast) !important;
     }
 
+    .background-primary-darker {
+        background: mat.get-color-from-palette($primary, 700);
+        color: mat.get-color-from-palette($primary, default-contrast) !important;
+    }
+
     .background-primary-darkest {
         background: mat.get-color-from-palette($primary, 900);
         color: mat.get-color-from-palette($primary, default-contrast) !important;
@@ -269,6 +270,14 @@
     .background-card {
         background: mat.get-color-from-palette($background, card);
         color: mat.get-color-from-palette($foreground, text);
+    }
+
+    .foreground-active {
+        $color: mat.get-color-from-palette(if($is-dark-theme, $accent, $primary));
+        color: $color !important;
+        * {
+            color: $color !important;
+        }
     }
 
     .foreground-primary {
@@ -300,4 +309,15 @@
             fill: mat.get-color-from-palette($primary) !important;
         }
     }
+
+    .light-gray-by-theme {
+        color: if($is-dark-theme, white, rgba(0,0,0,0.65));
+    }
+}
+
+@mixin icon($size) {
+    width: $size;
+    height: $size;
+    line-height: $size;
+    font-size: $size;
 }
