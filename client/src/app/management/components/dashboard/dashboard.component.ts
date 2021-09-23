@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ORGANIZATION_ID } from 'app/core/core-services/organization.service';
@@ -10,11 +10,13 @@ import { ViewMeeting } from 'app/management/models/view-meeting';
 import { ViewOrganization } from 'app/management/models/view-organization';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { ThemeService } from '../../../core/ui-services/theme.service';
 
 @Component({
     selector: 'os-dashboard',
     templateUrl: './dashboard.component.html',
-    styleUrls: ['./dashboard.component.scss']
+    styleUrls: ['./dashboard.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class DashboardComponent extends BaseModelContextComponent implements OnInit {
     public get noMeetingsToShow(): boolean {
@@ -38,6 +40,10 @@ export class DashboardComponent extends BaseModelContextComponent implements OnI
         return this.vp.isMobile;
     }
 
+    public get isDarkTheme(): boolean {
+        return this.themeService.isDarkTheme;
+    }
+
     public previousMeetings: ViewMeeting[] = [];
     public currentMeetings: ViewMeeting[] = [];
     public futureMeetings: ViewMeeting[] = [];
@@ -50,7 +56,8 @@ export class DashboardComponent extends BaseModelContextComponent implements OnI
         private organizationRepo: OrganizationRepositoryService,
         private meetingRepo: MeetingRepositoryService,
         private operator: OperatorService,
-        private vp: ViewportService
+        private vp: ViewportService,
+        private themeService: ThemeService
     ) {
         super(componentServiceCollector);
         super.setTitle('Calendar');

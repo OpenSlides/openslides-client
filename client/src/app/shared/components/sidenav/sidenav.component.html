@@ -12,7 +12,6 @@
         [opened]="!isMobile"
         disableClose="!isMobile"
         class="side-panel"
-        [ngClass]="{ 'background-dark': isDarkBackground }"
     >
         <div class="nav-toolbar">
             <!-- logo -->
@@ -58,7 +57,7 @@
             mat-raised-button
             (click)="toggle()"
             class="nav-toggle-button"
-            [ngClass]="{ left: isOpen, right: !isOpen }"
+            [ngClass]="{ left: isOpen, right: !isOpen, 'background-default': isDarkBackground }"
         >
             <mat-icon>{{ isOpen ? 'arrow_back_ios' : 'arrow_forward_ios' }}</mat-icon>
         </button>

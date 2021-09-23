@@ -18,11 +18,6 @@
             background-color: mat.get-color-from-palette($background, card); //TODO
         }
 
-        .nav-toggle-button {
-            background: mat.get-color-from-palette($background, background);
-            color: mat.get-color-from-palette($foreground, icon);
-        }
-
         /* seperator */
         mat-nav-list.main-nav,
         mat-divider {

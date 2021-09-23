@@ -1,4 +1,4 @@
-<os-sidenav #sideNav>
+<os-sidenav #sideNav [isDarkBackground]="isDarkThemeObservable | async">
     <ng-template osSidenavDrawerContent>
         <!-- navigation -->
         <mat-nav-list class="main-nav">

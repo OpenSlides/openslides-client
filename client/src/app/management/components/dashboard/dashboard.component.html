@@ -8,7 +8,7 @@
 <div class="meeting-list-container">
     <div class="pseudo-icon-spacer"></div>
     <div class="orga-information">
-        <div class="orga-name title-font foreground-accent">{{ orgaName }}</div>
+        <div class="orga-name title-font primary-accent-by-theme">{{ orgaName }}</div>
         <div class="orga-description">{{ orgaDescription }}</div>
     </div>
 </div>
@@ -61,7 +61,7 @@
         </div>
         <ng-container
             [ngTemplateOutlet]="meetingListTemplate"
-            [ngTemplateOutletContext]="{ meetingList: previousMeetings }"
+            [ngTemplateOutletContext]="{ meetingList: previousMeetings, cssClass: 'light-gray-by-theme' }"
         ></ng-container>
     </div>
 
@@ -73,22 +73,28 @@
         </div>
         <ng-container
             [ngTemplateOutlet]="meetingListTemplate"
-            [ngTemplateOutletContext]="{ meetingList: noDateMeetings }"
+            [ngTemplateOutletContext]="{ meetingList: noDateMeetings, cssClass: 'light-gray-by-theme' }"
         ></ng-container>
     </div>
 </ng-container>
 
-<ng-template let-meetingList="meetingList" #meetingListTemplate>
+<ng-template let-meetingList="meetingList" let-cssClass="cssClass" #meetingListTemplate>
     <div class="meeting-list" [ngStyle]="{ height: getHeightByMeetings(meetingList) }">
         <mat-card class="no-meetings-card" *ngIf="!meetingList.length">
             {{ 'No meetings available' | translate }}
         </mat-card>
-        <cdk-virtual-scroll-viewport [itemSize]="60" *ngIf="!!meetingList.length">
+        <cdk-virtual-scroll-viewport [itemSize]="60" *ngIf="!!meetingList.length" class="meeting-list-viewport">
             <ng-container *cdkVirtualFor="let meeting of meetingList; let odd = odd; let last = last">
-                <div [ngClass]="{ alternate: odd }">
+                <div
+                    [ngClass]="{
+                        alternate: odd && !isDarkTheme,
+                        'background-dark': !odd && isDarkTheme,
+                        'background-dark-brighter': odd && isDarkTheme
+                    }"
+                >
                     <ng-container
                         [ngTemplateOutlet]="meetingTemplate"
-                        [ngTemplateOutletContext]="{ meeting: meeting }"
+                        [ngTemplateOutletContext]="{ meeting: meeting, cssClass: cssClass }"
                     ></ng-container>
                 </div>
             </ng-container>

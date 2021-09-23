@@ -44,3 +44,15 @@ $height: 14px;
 a {
     text-decoration: none;
 }
+
+.fake-fab-button {
+    margin: 4px;
+    $button-size: 20px;
+    width: $button-size;
+    height: $button-size;
+    line-height: $button-size;
+    text-align: center;
+    cursor: pointer;
+    background: white;
+    border-radius: 50%;
+}

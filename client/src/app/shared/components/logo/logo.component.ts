@@ -2,6 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { MediaManageService } from 'app/core/ui-services/media-manage.service';
 import { ThemeService } from 'app/core/ui-services/theme.service';
+import { BaseComponent } from '../../../site/base/components/base.component';
+import { ComponentServiceCollector } from '../../../core/ui-services/component-service-collector';
 
 const DEFAULT_LOGO = '/assets/img/openslides-logo.svg';
 const DEFAULT_LOGO_DARK_THEME = '/assets/img/openslides-logo-dark.svg';
@@ -14,7 +16,7 @@ const DEFAULT_LOGO_DARK_THEME = '/assets/img/openslides-logo-dark.svg';
     templateUrl: './logo.component.html',
     styleUrls: ['./logo.component.scss']
 })
-export class LogoComponent implements OnInit {
+export class LogoComponent extends BaseComponent implements OnInit {
     /**
      * Local variable to hold the path for a custom web header.
      */
@@ -33,24 +35,47 @@ export class LogoComponent implements OnInit {
     @Input()
     public hasDarkBackground = false;
 
-    public constructor(private themeService: ThemeService, private mediaManageService: MediaManageService) {}
+    private get useDarkLogo(): boolean {
+        return this._isDarkTheme || this.hasDarkBackground;
+    }
+
+    private _path: string | null = null;
+    private _isDarkTheme = false;
+
+    public constructor(
+        componentServiceCollector: ComponentServiceCollector,
+        private themeService: ThemeService,
+        private mediaManageService: MediaManageService
+    ) {
+        super(componentServiceCollector);
+    }
 
     public ngOnInit(): void {
-        const useDarkLogo = this.themeService.isDarkTheme || this.hasDarkBackground;
+        this.subscriptions.push(
+            this.themeService.isDarkThemeObservable.subscribe(isDarkTheme => {
+                this._isDarkTheme = isDarkTheme;
+                this.changeLogo();
+            })
+        );
         if (this.default) {
             /**
              * reversed colors, default logo is usually on a negative contrast background
              * (i.e. mat-bar)
              */
-            this.logoPath = useDarkLogo ? DEFAULT_LOGO_DARK_THEME : DEFAULT_LOGO;
+            this.logoPath = this.useDarkLogo ? DEFAULT_LOGO_DARK_THEME : DEFAULT_LOGO;
         } else {
             this.mediaManageService.getLogoUrlObservable('web_header').subscribe(path => {
-                if (this.footer !== !!path) {
-                    this.logoPath = path;
-                } else {
-                    this.logoPath = useDarkLogo ? DEFAULT_LOGO_DARK_THEME : DEFAULT_LOGO;
-                }
+                this._path = path;
+                this.changeLogo();
             });
+        }
+    }
+
+    private changeLogo(): void {
+        if (this.footer !== !!this._path) {
+            this.logoPath = this._path;
+        } else {
+            this.logoPath = this.useDarkLogo ? DEFAULT_LOGO_DARK_THEME : DEFAULT_LOGO;
         }
     }
 }

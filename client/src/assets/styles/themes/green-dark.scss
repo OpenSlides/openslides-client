@@ -1,11 +1,11 @@
 @use '~@angular/material' as mat;
 
 @import '~assets/styles/color-palettes/os-green';
+@import '~assets/styles/color-palettes/os-cyan';
 @import '~assets/styles/color-palettes/os-magenta';
-@import '~assets/styles/color-palettes/os-background';
 
 $openslides-primary: mat.define-palette($openslides-primary-green);
-$openslides-accent: mat.define-palette($openslides-accent-green);
+$openslides-accent: mat.define-palette($openslides-accent-cyan);
 $openslides-warn: mat.define-palette($openslides-warn-magenta);
 
 $openslides-green-dark: mat.define-dark-theme($openslides-primary, $openslides-accent, $openslides-warn);

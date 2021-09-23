@@ -228,7 +228,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
      * MOMENT
      * using the date picker will send a moment object
      */
-    private anyDateToUnix(date: Date | Moment | number): number | undefined {
+    private anyDateToUnix(date: Date | Moment | number): number | null {
         if (date instanceof Date) {
             return Math.round(date.getTime() / 1000);
         } else if (typeof date === 'number') {
@@ -236,7 +236,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         } else if (moment.isMoment(date)) {
             return date.unix();
         } else {
-            return undefined;
+            return null;
         }
     }
 
