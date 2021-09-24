@@ -1,62 +1,13 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
-import { environment } from 'environments/environment';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
-import { HttpService } from 'app/core/core-services/http.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { OrganizationSettingsService } from 'app/core/ui-services/organization-settings.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
-
-/**
- * Characterize a plugin. This data is retrieved from the server
- */
-interface PluginDescription {
-    /**
-     * The name of the plugin
-     */
-    verbose_name: string;
-
-    /**
-     * the version
-     */
-    version: string;
-
-    /**
-     * The url to the main webpage of the plugin
-     */
-    url: string;
-
-    /**
-     * The license
-     */
-    license: string;
-}
-
-/**
- * Represents metadata about the current installation.
- */
-interface VersionResponse {
-    /**
-     * The lience string. Like 'MIT', 'GPLv2', ...
-     */
-    openslides_license: string;
-
-    /**
-     * The URl to the main webpage of OpenSlides.
-     */
-    openslides_url: string;
-
-    /**
-     * The current version.
-     */
-    openslides_version: string;
-
-    /**
-     * A list of installed plugins.
-     */
-    plugins: PluginDescription[];
-}
+import { Observable } from 'rxjs';
 
 /**
  * Shared component to hold the content of the Legal notice.
@@ -117,9 +68,9 @@ export class LegalNoticeContentComponent extends BaseComponent implements OnInit
     public legalNotice: string;
 
     /**
-     * Holds the version info retrieved from the server for the ui.
+     * Get an observable to the version info
      */
-    public versionInfo: VersionResponse;
+    public versionInfo: Observable<string> = this.httpClient.get('/assets/version.txt', { responseType: 'text' });
 
     /**
      * Imports the OrgaSettingsService, the translations and the HTTP Service
@@ -130,7 +81,7 @@ export class LegalNoticeContentComponent extends BaseComponent implements OnInit
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         private orgaSettings: OrganizationSettingsService,
-        private http: HttpService,
+        private httpClient: HttpClient,
         fb: FormBuilder
     ) {
         super(componentServiceCollector);
@@ -146,16 +97,6 @@ export class LegalNoticeContentComponent extends BaseComponent implements OnInit
         this.orgaSettings.get('legal_notice').subscribe(legalNotice => {
             this.legalNotice = legalNotice;
         });
-
-        // Query the version info.
-        this.http.get<VersionResponse>(environment.urlPrefix + '/core/version/', {}).then(
-            info => {
-                this.versionInfo = info;
-            },
-            () => {
-                // TODO: error handling if the version info could not be loaded
-            }
-        );
 
         if (this.canBeEdited) {
             this.subscriptions.push(
