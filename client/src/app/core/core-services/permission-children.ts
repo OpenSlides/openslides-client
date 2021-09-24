@@ -26,7 +26,8 @@ export const childPermissions: PermissionsMap = {
     'motion.can_manage_metadata': [Permission.motionCanSee],
     'motion.can_manage_polls': [Permission.motionCanSee],
     'motion.can_see_internal': [Permission.motionCanSee],
-    'motion.can_create': [Permission.motionCanSee],
+    'motion.can_forward_into_this_meeting': [Permission.motionCanSee],
+    'motion.can_create': [Permission.motionCanForwardIntoThisMeeting, Permission.motionCanSee],
     'motion.can_create_amendments': [Permission.motionCanSee],
     'motion.can_manage': [
         Permission.motionCanManageMetadata,
@@ -34,6 +35,7 @@ export const childPermissions: PermissionsMap = {
         Permission.motionCanManagePolls,
         Permission.motionCanSeeInternal,
         Permission.motionCanCreate,
+        Permission.motionCanForwardIntoThisMeeting,
         Permission.motionCanCreateAmendments
     ],
     'motion.can_support': [Permission.motionCanSee],

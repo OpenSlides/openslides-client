@@ -30,6 +30,7 @@ export enum Permission {
 
     motionCanCreate = 'motion.can_create',
     motionCanCreateAmendments = 'motion.can_create_amendments',
+    motionCanForwardIntoThisMeeting = 'motion.can_forward_into_this_meeting',
     motionCanManage = 'motion.can_manage',
     motionCanManageMetadata = 'motion.can_manage_metadata',
     motionCanManagePolls = 'motion.can_manage_polls',
@@ -90,6 +91,7 @@ export const PERMISSIONS: AppPermission[] = [
             { display_name: 'Can see motions in internal state', value: Permission.motionCanSeeInternal },
             { display_name: 'Can create motions', value: Permission.motionCanCreate },
             { display_name: 'Can create amendments', value: Permission.motionCanCreateAmendments },
+            { display_name: 'Can forward into this meeting', value: Permission.motionCanForwardIntoThisMeeting },
             { display_name: 'Can support motions', value: Permission.motionCanSupport },
             { display_name: 'Can manage motions', value: Permission.motionCanManage },
             { display_name: 'Can manage motion metadata', value: Permission.motionCanManageMetadata },
