@@ -24,14 +24,13 @@ export class LegalNoticeContentComponent extends BaseComponent implements OnInit
      * Defaults to `false`.
      */
     @Input()
-    public canBeEdited = false;
+    public isEditable = false;
 
     /**
      * Sets the editing-state and updates the FormGroup with the current value.
      *
      * @param isEditing whether the component is currently in editing-mode.
      */
-    @Input()
     public set isEditing(isEditing: boolean) {
         this.formGroup.patchValue({ legalNotice: this.legalNotice });
         this._isEditing = isEditing;
@@ -72,6 +71,8 @@ export class LegalNoticeContentComponent extends BaseComponent implements OnInit
      */
     public versionInfo: Observable<string> = this.httpClient.get('/assets/version.txt', { responseType: 'text' });
 
+    private _value: string;
+
     /**
      * Imports the OrgaSettingsService, the translations and the HTTP Service
      * @param orgaSettings
@@ -98,10 +99,16 @@ export class LegalNoticeContentComponent extends BaseComponent implements OnInit
             this.legalNotice = legalNotice;
         });
 
-        if (this.canBeEdited) {
+        if (this.isEditable) {
             this.subscriptions.push(
-                this.formGroup.get('legalNotice').valueChanges.subscribe(value => this.update.emit(value))
+                this.formGroup.get('legalNotice').valueChanges.subscribe(value => (this._value = value))
             );
         }
+    }
+
+    public leaveEditMode(doSendUpdate: boolean): void {
+        const toSend = doSendUpdate ? this._value : null;
+        this.update.emit(toSend);
+        this.isEditing = false;
     }
 }

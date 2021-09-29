@@ -20,14 +20,13 @@ export class PrivacyPolicyContentComponent extends BaseComponent implements OnIn
      * Defaults to `false`.
      */
     @Input()
-    public canBeEdited = false;
+    public isEditable = false;
 
     /**
      * Sets the editing-state and updates the FormGroup with the current value.
      *
      * @param isEditing whether the component is currently in editing-mode.
      */
-    @Input()
     public set isEditing(isEditing: boolean) {
         this.formGroup.patchValue({ privacyPolicy: this.privacyPolicy });
         this._isEditing = isEditing;
@@ -46,7 +45,7 @@ export class PrivacyPolicyContentComponent extends BaseComponent implements OnIn
      * Emitter to send updated value to the parent-component.
      */
     @Output()
-    public update = new EventEmitter<{ [key: string]: string }>();
+    public update = new EventEmitter<string>();
 
     /**
      * FormGroup for editing value.
@@ -62,6 +61,8 @@ export class PrivacyPolicyContentComponent extends BaseComponent implements OnIn
      * The actual privacy policy as string
      */
     public privacyPolicy: string;
+
+    private _value: string;
 
     /**
      * Constructor.
@@ -90,10 +91,16 @@ export class PrivacyPolicyContentComponent extends BaseComponent implements OnIn
         this.orgaSettings.get('privacy_policy').subscribe(privacyPolicy => {
             this.privacyPolicy = privacyPolicy;
         });
-        if (this.canBeEdited) {
+        if (this.isEditable) {
             this.subscriptions.push(
-                this.formGroup.get('privacyPolicy').valueChanges.subscribe(value => this.update.emit(value))
+                this.formGroup.get('privacyPolicy').valueChanges.subscribe(value => (this._value = value))
             );
         }
+    }
+
+    public leaveEditMode(doSendUpdate: boolean): void {
+        const toSend = doSendUpdate ? this._value : null;
+        this.update.emit(toSend);
+        this.isEditing = false;
     }
 }

@@ -195,6 +195,24 @@
         border-top-color: white;
     }
 
+    /**
+    * This primarily used to align a title and an icon in one line. The title will use the whole width subtracting
+    * the icon's width. So, the icon will be shown at the right edge.
+    */
+    .action-title {
+        display: flex;
+        align-items: center;
+
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        :first-child {
+            flex: 1;
+        }
+    }
+
     .no-margin {
         margin: 0;
     }
@@ -297,7 +315,11 @@
     }
 
     .foreground-warn {
-        color: mat.get-color-from-palette($warn);
+        $color: mat.get-color-from-palette($warn);
+        color: $color !important;
+        * {
+            color: $color !important;
+        }
     }
 
     .foreground-icon {
@@ -311,7 +333,7 @@
     }
 
     .light-gray-by-theme {
-        color: if($is-dark-theme, white, rgba(0,0,0,0.65));
+        color: if($is-dark-theme, white, rgba(0, 0, 0, 0.65));
     }
 }
 

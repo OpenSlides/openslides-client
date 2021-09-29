@@ -1,5 +1,20 @@
 <mat-card class="os-card">
-    <h1>{{ 'Legal notice' | translate }}</h1>
+    <div class="action-title padding-bottom-10">
+        <h1>{{ 'Legal notice' | translate }}</h1>
+        <div *osOmlPerms="OML.can_manage_organization; and: isEditable">
+            <button (click)="isEditing = true" mat-icon-button *ngIf="!isEditing">
+                <mat-icon>edit</mat-icon>
+            </button>
+            <ng-container *ngIf="isEditing">
+                <button (click)="leaveEditMode(true)" mat-icon-button>
+                    <mat-icon>done</mat-icon>
+                </button>
+                <button (click)="leaveEditMode(false)" mat-icon-button>
+                    <mat-icon>close</mat-icon>
+                </button>
+            </ng-container>
+        </div>
+    </div>
     <div>
         <ng-container *ngIf="!isEditing">
             <div *ngIf="legalNotice" class="legal-notice-text" [innerHtml]="legalNotice | trust: 'html'"></div>

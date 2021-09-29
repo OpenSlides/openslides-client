@@ -46,8 +46,10 @@ $narrow-spacing: (
 
 /** Mix the component-related style-rules. Every single custom style goes here */
 @mixin openslides-components-theme($theme) {
-    @include os-site-theme($theme);
     @include os-components-style($theme);
+
+    /** Components' concerning theme-files */
+    @include os-site-theme($theme);
     @include os-projector-button-style($theme);
     @include os-list-of-speakers-style($theme);
     @include os-sorting-tree-style($theme);

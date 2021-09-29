@@ -6,6 +6,7 @@ import { ViewOrganization } from 'app/management/models/view-organization';
 import { Organization, OrganizationSetting } from 'app/shared/models/event-management/organization';
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
+import { ORGANIZATION_ID } from '../../core-services/organization.service';
 
 @Injectable({
     providedIn: 'root'
@@ -40,11 +41,11 @@ export class OrganizationRepositoryService extends BaseRepository<ViewOrganizati
         };
     }
 
-    public update(update: OrganizationAction.UpdatePayload): Promise<void> {
+    public update(update: Partial<OrganizationAction.UpdatePayload>): Promise<void> {
         /**
          * I suppose the orga id is always 1
          */
-        update.id = 1;
+        update.id = ORGANIZATION_ID;
         return this.sendActionToBackend(OrganizationAction.UPDATE, update);
     }
 }

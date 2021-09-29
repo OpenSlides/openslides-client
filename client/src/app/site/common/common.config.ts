@@ -9,7 +9,8 @@ export const CommonAppConfig: AppConfig = {
             displayName: 'Meetings',
             icon: 'apps',
             weight: 0,
-            hasDividerBelow: true
+            hasDividerBelow: true,
+            cssClass: 'foreground-warn'
         },
         {
             route: '.',
