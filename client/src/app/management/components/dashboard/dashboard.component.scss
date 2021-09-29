@@ -13,16 +13,10 @@ os-dashboard {
         text-align: center;
     }
 
-    .orga-information {
-        padding: 0 20px;
-
-        .orga-name {
-            font-size: 1.875rem;
-        }
-
-        .orga-description {
-            font-size: 0.875rem;
-        }
+    .meeting-spacer {
+        height: 1.5em;
+        font-size: 1.875rem;
+        line-height: 1.5;
     }
 
     .dashboard-logo {
@@ -37,7 +31,7 @@ os-dashboard {
             margin: 20px auto;
         }
         display: flex;
-        margin: 0 8px 8px;
+        margin: 0 8px 8px 0;
     }
 
     .meeting-icon-wrapper,
@@ -45,19 +39,24 @@ os-dashboard {
         @include phone {
             width: 40px;
             font-size: 0.75rem;
-            margin-right: 8px;
         }
+        @include tablet {
+            width: 40px;
+        }
+        padding: 0 10px 0 16px;
         width: 80px;
         display: flex;
         align-items: center;
-        justify-content: flex-start;
+        justify-content: center;
         flex-direction: column;
 
         mat-icon {
-            $size: 40px;
+            padding: 0 8px; // Ensures that the wrapper has really a width of 40px
+            $size: 30px;
+            font-size: $size;
             width: $size;
             height: $size;
-            font-size: $size;
+            line-height: $size;
         }
     }
 
@@ -109,21 +108,6 @@ os-dashboard {
 
         &--mid {
             font-size: 18px;
-            flex: 3;
-
-            display: flex;
-            align-items: center;
-        }
-
-        &--information-phone {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.75rem;
-        }
-
-        &--left,
-        &--right {
-            flex: 1;
         }
 
         &:hover {

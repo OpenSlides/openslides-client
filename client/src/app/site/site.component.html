@@ -6,6 +6,7 @@
                 <span>
                     <a
                         [@navItemAnim]
+                        [ngClass]="entry.cssClass"
                         *osPerms="entry.permission"
                         mat-list-item
                         (click)="mobileAutoCloseNav()"

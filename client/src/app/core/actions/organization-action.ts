@@ -4,5 +4,5 @@ import { OrganizationSetting } from 'app/shared/models/event-management/organiza
 export namespace OrganizationAction {
     export const UPDATE = 'organization.update';
 
-    export interface UpdatePayload extends Identifiable, OrganizationSetting {}
+    export interface UpdatePayload extends Identifiable, Partial<OrganizationSetting> {}
 }

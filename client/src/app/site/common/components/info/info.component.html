@@ -4,8 +4,8 @@
     </div>
 </os-head-bar>
 
-<os-legal-notice-content></os-legal-notice-content>
-<os-privacy-policy-content></os-privacy-policy-content>
+<os-legal-notice-content [isEditable]="true" (update)="updateLegalNotice($event)"></os-legal-notice-content>
+<os-privacy-policy-content [isEditable]="true" (update)="updatePrivacyPolicy($event)"></os-privacy-policy-content>
 
 <mat-card class="os-card" *osPerms="permission.userCanManage">
     <h2>{{ 'Statistics' | translate }}</h2>

@@ -30,10 +30,12 @@
 
         <button type="button" mat-button [matMenuTriggerFor]="lineNumberingMenu">
             <mat-icon>format_list_numbered</mat-icon>
-            &nbsp;<span>{{ 'Line numbering' | translate }}</span>
+            &nbsp;
+            <span>{{ 'Line numbering' | translate }}</span>
             <span *ngIf="lnMode === LineNumberingMode.None">
-                &nbsp;(<span>{{ 'none' | translate }}</span
-                >)
+                &nbsp;(
+                <span>{{ 'none' | translate }}</span>
+                )
             </span>
         </button>
         <button
@@ -43,7 +45,8 @@
             *ngIf="motion && (hasChangingObjects || motion.modified_final_version)"
         >
             <mat-icon>rate_review</mat-icon>
-            &nbsp;<span>{{ verboseChangeRecoMode[crMode] | translate }}</span>
+            &nbsp;
+            <span>{{ verboseChangeRecoMode[crMode] | translate }}</span>
         </button>
 
         <!-- Final edit buttons -->
@@ -78,7 +81,7 @@
                     matTooltip="{{ 'Save final print template' | translate }}"
                     (click)="saveModifiedFinalVersion()"
                 >
-                    <mat-icon>save</mat-icon>
+                    <mat-icon>done</mat-icon>
                 </button>
                 <!-- cancel final version edit -->
                 <button

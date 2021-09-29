@@ -10,39 +10,38 @@
     </div>
 </os-head-bar>
 
-<mat-card class="os-card spacer-bottom-60" *ngIf="orgaSettingsForm">
-    <form class="orga-settings-form" [formGroup]="orgaSettingsForm" (ngSubmit)="onSubmit()">
-        <mat-form-field>
-            <mat-label>{{ 'Name' | translate }}</mat-label>
-            <input matInput formControlName="name" />
-        </mat-form-field>
+<form [formGroup]="orgaSettingsForm" (ngSubmit)="onSubmit()" *ngIf="orgaSettingsForm">
+    <mat-card class="os-card spacer-bottom-60">
+        <div class="orga-settings-form" [formGroup]="orgaSettingsForm" (ngSubmit)="onSubmit()">
+            <mat-form-field>
+                <mat-label>{{ 'Name' | translate }}</mat-label>
+                <input matInput formControlName="name" />
+            </mat-form-field>
 
-        <mat-form-field>
-            <mat-label>{{ 'Description' | translate }}</mat-label>
-            <input matInput formControlName="description" />
-        </mat-form-field>
+            <mat-form-field>
+                <mat-label>{{ 'Description' | translate }}</mat-label>
+                <input matInput formControlName="description" />
+            </mat-form-field>
 
-        <mat-form-field>
-            <mat-label>{{ 'Show this text on the login page' | translate }}</mat-label>
-            <input matInput formControlName="login_text" />
-        </mat-form-field>
+            <mat-form-field>
+                <mat-label>{{ 'Show this text on the login page' | translate }}</mat-label>
+                <input matInput formControlName="login_text" />
+            </mat-form-field>
 
-        <mat-form-field>
-            <mat-label>{{ 'OpenSlides design theme' | translate }}</mat-label>
-            <mat-select formControlName="theme">
-                <mat-option *ngFor="let theme of themes" [value]="theme.class">
-                    {{ theme.name | translate }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
+            <mat-form-field>
+                <mat-label>{{ 'OpenSlides design theme' | translate }}</mat-label>
+                <mat-select formControlName="theme">
+                    <mat-option *ngFor="let theme of themes" [value]="theme.class">
+                        {{ theme.name | translate }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </mat-card>
 
-        <mat-label>{{ 'Legal notice' | translate }}</mat-label>
-        <editor formControlName="legal_notice" [init]="tinyMceSettings"></editor>
-
-        <mat-label>{{ 'Privacy Policy' | translate }}</mat-label>
-        <editor formControlName="privacy_policy" [init]="tinyMceSettings"></editor>
-
-        <div class="superadmin-place" *osOmlPerms="OML.superadmin">
+    <mat-card class="os-card margin-bottom-60" *osOmlPerms="OML.superadmin">
+        <div class="superadmin-place">
+            <h2>Superadmin-{{ 'Settings' | translate }}</h2>
             <!-- electronic voting -->
             <section>
                 <mat-checkbox formControlName="enable_electronic_voting">
@@ -70,5 +69,5 @@
                 </mat-form-field>
             </section>
         </div>
-    </form>
-</mat-card>
+    </mat-card>
+</form>

@@ -6,11 +6,7 @@
 </os-head-bar>
 
 <div class="meeting-list-container">
-    <div class="pseudo-icon-spacer"></div>
-    <div class="orga-information">
-        <div class="orga-name title-font primary-accent-by-theme">{{ orgaName }}</div>
-        <div class="orga-description">{{ orgaDescription }}</div>
-    </div>
+    <div class="meeting-spacer"></div>
 </div>
 
 <mat-card *ngIf="noMeetingsToShow" class="no-content os-card">
@@ -104,27 +100,21 @@
 
 <ng-template let-meeting="meeting" let-cssClass="cssClass" #meetingTemplate>
     <div matRipple class="meeting-box" [ngClass]="cssClass" [routerLink]="meeting.id">
-        <div class="meeting-box--left" *ngIf="!isPhone">
-            <ng-container *ngTemplateOutlet="meetingTime; context: { meeting: meeting }"></ng-container>
-        </div>
-        <div class="meeting-box--mid one-line">
-            <mat-icon *ngIf="meeting.isArchived" matTooltip="{{ 'This meeting is archived' | translate }}">
-                archive
-            </mat-icon>
-            <span class="one-line" [matTooltip]="meeting.name">
+        <div class="one-line">
+            <div class="meeting-box--mid one-line" [matTooltip]="meeting.name">
                 {{ meeting.name }}
-            </span>
-
-            <div *ngIf="isPhone" class="meeting-box--information-phone">
-                <span>
+            </div>
+            <div>
+                <span *ngIf="meeting.location">{{ meeting.location }}</span>
+                <span *ngIf="meeting.location && (meeting.start_time || meeting.end_time)">&nbsp;&middot;&nbsp;</span>
+                <span *ngIf="meeting.start_time || meeting.end_time">
                     <ng-container *ngTemplateOutlet="meetingTime; context: { meeting: meeting }"></ng-container>
-                </span>
-                <span>
-                    {{ meeting.location }}
                 </span>
             </div>
         </div>
-        <div class="meeting-box--right" *ngIf="!isPhone">{{ meeting.location }}</div>
+        <mat-icon *ngIf="meeting.isArchived" matTooltip="{{ 'This meeting is archived' | translate }}">
+            archive
+        </mat-icon>
     </div>
 </ng-template>
 

@@ -10,6 +10,7 @@ import { Permission } from 'app/core/core-services/permission';
 import { Id } from 'app/core/definitions/key-types';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
+import { OML, CML } from '../../../core/core-services/organization-permission';
 
 /**
  * Provides functionalities that will be used by most components
@@ -24,6 +25,17 @@ export abstract class BaseComponent implements OnDestroy {
      * To check permissions in templates using permission.[...]
      */
     public permission = Permission;
+
+    /**
+     * To access the OML in templates
+     */
+    public OML = OML;
+
+    /**
+     * To access the CML in templates
+     */
+    public CML = CML;
+
     /**
      * To manipulate the browser title bar, adds the Suffix "OpenSlides"
      *

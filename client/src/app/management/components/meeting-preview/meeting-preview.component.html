@@ -28,8 +28,8 @@
             <!-- location -->
             <span>
                 {{ location }}
-                <span *ngIf="location && (meeting.start_time || meeting.end_time)">,&nbsp;</span>
             </span>
+            <span *ngIf="location && (meeting.start_time || meeting.end_time)">&nbsp;&middot;&nbsp;</span>
             <!-- date -->
             <span>
                 <os-meeting-time [meeting]="meeting"></os-meeting-time>
@@ -48,7 +48,9 @@
     <!-- users -->
     <div class="user-footer">
         <a mat-icon-button matTooltip="{{ 'Participants' | translate }}">
-            <mat-icon [matBadgeHidden]="!showUserAmount" [matBadge]="userAmount" [matBadgeColor]="'accent'">group</mat-icon>
+            <mat-icon [matBadgeHidden]="!showUserAmount" [matBadge]="userAmount" [matBadgeColor]="'accent'">
+                group
+            </mat-icon>
         </a>
     </div>
 </mat-card>
