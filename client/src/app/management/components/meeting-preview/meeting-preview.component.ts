@@ -55,8 +55,8 @@ export class MeetingPreviewComponent {
     ) {}
 
     public async onArchive(): Promise<void> {
-        const title = `${this.translate.instant('Archive meeting')} "${this.title}"`;
-        const content = this.translate.instant('Are you sure you want to archive this meeting?');
+        const title = this.translate.instant('Are you sure you want to archive this meeting?');
+        const content = this.title;
 
         const confirmed = await this.promptService.open(title, content);
         if (confirmed) {
@@ -65,8 +65,8 @@ export class MeetingPreviewComponent {
     }
 
     public async onUnarchive(): Promise<void> {
-        const title = `${this.translate.instant('Unarchive meeting')} "${this.title}"`;
-        const content = this.translate.instant('Are you sure you want to unarchive this meeting?');
+        const title = this.translate.instant('Are you sure you want to activate this meeting?');
+        const content = this.title;
 
         const confirmed = await this.promptService.open(title, content);
         if (confirmed) {
@@ -75,8 +75,8 @@ export class MeetingPreviewComponent {
     }
 
     public async onDuplicate(): Promise<void> {
-        const title = `${this.translate.instant('Duplicate meeting')} "${this.title}"`;
-        const content = this.translate.instant('Are you sure you want to duplicate this meeting?');
+        const title = this.translate.instant('Are you sure you want to duplicate this meeting?');
+        const content = this.title;
 
         const confirmed = await this.promptService.open(title, content);
         if (confirmed) {
@@ -85,8 +85,8 @@ export class MeetingPreviewComponent {
     }
 
     public async onDeleteMeeting(): Promise<void> {
-        const title = `${this.translate.instant('Delete meeting')} "${this.title}"`;
-        const content = this.translate.instant('Are you sure you want to delete this meeting?');
+        const title = this.translate.instant('Are you sure you want to delete this meeting?');
+        const content = this.title;
 
         const confirmed = await this.promptService.open(title, content);
         if (confirmed) {

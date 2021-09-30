@@ -86,8 +86,8 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
     }
 
     public async deleteSingle(committee: ViewCommittee): Promise<void> {
-        const title = `${this.translate.instant('Delete committee')} "${committee.name}"`;
-        const content = this.translate.instant('Are you sure you want to delete this committee?');
+        const title = this.translate.instant('Are you sure you want to delete this committee?');
+        const content = committee.name;
 
         const confirmed = await this.promptService.open(title, content);
         if (confirmed) {

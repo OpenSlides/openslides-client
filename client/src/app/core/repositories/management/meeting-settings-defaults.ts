@@ -61,7 +61,7 @@ export const meetingSettingsDefaults: { [key: string]: any } = {
     motions_amendments_enabled: false,
     motions_statutes_enabled: false,
     motions_amendments_in_main_list: true,
-    motions_amendments_prefix: _('-'),
+    motions_amendments_prefix: '-',
     motions_amendments_text_mode: 'paragraph',
     motions_amendments_multiple_paragraphs: true,
     motions_amendments_of_amendments: false,

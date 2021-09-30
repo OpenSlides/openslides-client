@@ -12,7 +12,7 @@
                 <button
                     mat-icon-button
                     (click)="toggleDefaultMeeting()"
-                    matTooltip="{{ (isDefaultMeeting ? 'Is default meeting' : 'Set as default meeting') | translate }}"
+                    matTooltip="{{ (isDefaultMeeting ? 'Default meeting' : 'Set as default meeting') | translate }}"
                 >
                     <mat-icon>{{ isDefaultMeeting ? 'star' : 'star_outline' }}</mat-icon>
                 </button>
@@ -70,7 +70,7 @@
     </button>
     <button mat-menu-item *osOmlPerms="OML.superadmin; and: meeting.isArchived" (click)="onUnarchive()">
         <mat-icon>unarchive</mat-icon>
-        <span>{{ 'Unarchive' | translate }}</span>
+        <span>{{ 'Activate' | translate }}</span>
     </button>
     <mat-divider></mat-divider>
     <button mat-menu-item class="red-warning-text" (click)="onDeleteMeeting()">
