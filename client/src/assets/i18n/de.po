@@ -12,6 +12,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "mime-version: 1.0\n"
 
+msgid "\"0\" means an unlimited number of active meetings"
+msgstr "\"0\" bedeutet eine unbegrenzte Anzahl an aktiven Veranstaltungen"
+
 msgid "100% base"
 msgstr "100-%-Basis"
 
@@ -82,6 +85,9 @@ msgstr "Zugangsdaten"
 
 msgid "Account of"
 msgstr "Konto von"
+
+msgid "Activate"
+msgstr "Aktivieren"
 
 msgid "Activate amendments"
 msgstr "Änderungsanträge aktivieren"
@@ -269,8 +275,11 @@ msgstr "Arabisch"
 msgid "Archive"
 msgstr "Archivieren"
 
-msgid "Archive meeting"
-msgstr "Veranstaltung archivieren"
+msgid "Archived"
+msgstr "Archiviert"
+
+msgid "Are you sure you want to activate this meeting?"
+msgstr "Soll diese Veranstaltung wirklich aktiviert werden?"
 
 msgid "Are you sure you want to archive this meeting?"
 msgstr "Soll diese Veranstaltung wirklich archiviert werden?"
@@ -855,17 +864,11 @@ msgstr "Löschen"
 msgid "Delete final print template"
 msgstr "Beschluss-Druckvorlage löschen"
 
-msgid "Delete meeting"
-msgstr "Veranstaltung löschen"
-
 msgid "Delete projector"
 msgstr "Projektor löschen"
 
 msgid "Delete recommendation"
 msgstr "Empfehlung löschen"
-
-msgid "Delete whole history"
-msgstr "Chronik löschen"
 
 msgid "Deleted user"
 msgstr "Gelöschter Nutzer"
@@ -933,9 +936,6 @@ msgstr ""
 
 msgid "Duplicate"
 msgstr "Duplizieren"
-
-msgid "Duplicate meeting"
-msgstr "Veranstaltung duplizieren"
 
 msgid "Duration"
 msgstr "Dauer"
@@ -1009,9 +1009,6 @@ msgid "Electronic voting is disabled. Only analog polls are allowed"
 msgstr ""
 "Die elektronische Stimmabgabe ist deaktiviert. Es sind nur analoge "
 "Abstimmungen erlaubt."
-
-msgid "Element"
-msgstr "Element"
 
 msgid "Email"
 msgstr "E-Mail"
@@ -1388,9 +1385,6 @@ msgstr "Themen hier importieren"
 msgid "Insertion"
 msgstr "Ergänzung"
 
-msgid "Installed plugins"
-msgstr "Installierte Plugins"
-
 msgid "Internal"
 msgstr "Intern"
 
@@ -1478,8 +1472,8 @@ msgstr "Impressum"
 msgid "Level indicator"
 msgstr "Pegelanzeige"
 
-msgid "License"
-msgstr "Lizenz"
+msgid "Limit of active meetings"
+msgstr "Anzahl der maximal aktiven Veranstaltungen"
 
 msgid "Line"
 msgstr "Zeile"
@@ -1785,9 +1779,6 @@ msgstr "Keine Verschlüsselung"
 msgid "No groups selected"
 msgstr "Keine Gruppen ausgewählt"
 
-msgid "No information available"
-msgstr "Keine Informationen verfügbar"
-
 msgid "No items selected"
 msgstr "Keine Einträge ausgewählte"
 
@@ -1949,11 +1940,11 @@ msgstr "Projektionsdialog öffnen"
 msgid "Open requests to speak"
 msgstr "Offene Wortmeldungen"
 
-msgid "OpenSlides Dark"
-msgstr "OpenSlides dunkel"
+msgid "OpenSlides Blue"
+msgstr "OpenSlides blau"
 
-msgid "OpenSlides Default"
-msgstr "OpenSlides Standard"
+msgid "OpenSlides Blue Dark"
+msgstr "OpenSlides blau dunkel"
 
 msgid "OpenSlides Green"
 msgstr "OpenSlides grün"
@@ -1966,9 +1957,6 @@ msgstr "OpenSlides rot"
 
 msgid "OpenSlides Red Dark"
 msgstr "OpenSlides rot dunkel"
-
-msgid "OpenSlides Solarized"
-msgstr "OpenSlides solarisiert"
 
 msgid "OpenSlides access data"
 msgstr "OpenSlides-Zugangsdaten"
@@ -2048,14 +2036,8 @@ msgstr "Elternverzeichnis"
 msgid "Participant"
 msgstr "Teilnehmer/in"
 
-msgid "Participant cannot be found"
-msgstr "Teilnehmende wurde nicht gefunden"
-
 msgid "Participant number"
 msgstr "Teilnehmernummer"
-
-msgid "Participant number is not unique"
-msgstr "Teilnehmernummer ist nicht eindeutig"
 
 msgid "Participant(s) will be imported."
 msgstr "Teilnehmende werden importiert."
@@ -2435,6 +2417,9 @@ msgid "Server settings required to activate Jitsi Meet integration."
 msgstr ""
 "Servereinstellungen erforderlich zur Aktivierung der Jitsi-Meet-Integration."
 
+msgid "Set as default meeting"
+msgstr "Als Standardveranstaltung markieren"
+
 msgid "Set as favorite"
 msgstr "Als Favorit markieren"
 
@@ -2482,6 +2467,9 @@ msgstr "Empfehlung setzen"
 
 msgid "Set status"
 msgstr "Status setzen"
+
+msgid "Set workflow"
+msgstr "Arbeitsablauf setzen"
 
 msgid "Set/remove committees"
 msgstr "Gremien hinzufügen/entfernen"
@@ -2862,11 +2850,11 @@ msgstr "Diese Änderung kollidiert mit einer anderen."
 msgid "This committee has no managers!"
 msgstr "Dieses Gremium hat keine Gremiumverwalter!"
 
-msgid "This element does not exist at this time."
-msgstr "Dieses Element existiert nicht zu diesem Zeitpunkt."
-
 msgid "This field is required."
 msgstr "Dieses Feld ist erforderlich."
+
+msgid "This meeting is archived"
+msgstr "Diese Veranstaltung ist archiviert"
 
 msgid "This paragraph does not exist in the main motion anymore:"
 msgstr "Dieser Absatz existiert im Hauptantrag nicht mehr:"
@@ -2913,6 +2901,9 @@ msgstr "Folgende Empfehlung wird für alle ausgewählten Anträge gesetzt:"
 
 msgid "This will set the following state for all selected motions:"
 msgstr "Folgender Status wird für alle ausgewählten Anträge gesetzt:"
+
+msgid "This will set the workflow for all selected motions:"
+msgstr "Folgender Arbeitsablauf wird für alle ausgewählten Anträge gesetzt:"
 
 msgid "Tile view"
 msgstr "Kachelansicht"
@@ -3152,6 +3143,9 @@ msgstr "Sie sollten nicht hier sein ..."
 msgid ""
 "You are using the history mode of OpenSlides. Changes will not be saved."
 msgstr "Der Chronik-Modus ist aktiv. Änderungen werden nicht gespeichert."
+
+msgid "You can change this option only in the forwarding section."
+msgstr "Sie können diese Option nur im Feld 'weiterleiten an' ändern."
 
 msgid "You can just anonymize named polls"
 msgstr "Sie können nur namentliche Stimmabgaben anonymisieren"

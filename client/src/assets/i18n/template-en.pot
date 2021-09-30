@@ -4,6 +4,9 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "\"0\" means an unlimited number of active meetings"
+msgstr ""
+
 msgid "100% base"
 msgstr ""
 
@@ -64,6 +67,9 @@ msgid "Access-data"
 msgstr ""
 
 msgid "Account of"
+msgstr ""
+
+msgid "Activate"
 msgstr ""
 
 msgid "Activate amendments"
@@ -244,7 +250,10 @@ msgstr ""
 msgid "Archive"
 msgstr ""
 
-msgid "Archive meeting"
+msgid "Archived"
+msgstr ""
+
+msgid "Are you sure you want to activate this meeting?"
 msgstr ""
 
 msgid "Are you sure you want to archive this meeting?"
@@ -813,16 +822,10 @@ msgstr ""
 msgid "Delete final print template"
 msgstr ""
 
-msgid "Delete meeting"
-msgstr ""
-
 msgid "Delete projector"
 msgstr ""
 
 msgid "Delete recommendation"
-msgstr ""
-
-msgid "Delete whole history"
 msgstr ""
 
 msgid "Deleted user"
@@ -891,9 +894,6 @@ msgstr ""
 msgid "Duplicate"
 msgstr ""
 
-msgid "Duplicate meeting"
-msgstr ""
-
 msgid "Duration"
 msgstr ""
 
@@ -957,9 +957,6 @@ msgid "Elections"
 msgstr ""
 
 msgid "Electronic voting is disabled. Only analog polls are allowed"
-msgstr ""
-
-msgid "Element"
 msgstr ""
 
 msgid "Email"
@@ -1325,9 +1322,6 @@ msgstr ""
 msgid "Insertion"
 msgstr ""
 
-msgid "Installed plugins"
-msgstr ""
-
 msgid "Internal"
 msgstr ""
 
@@ -1415,7 +1409,7 @@ msgstr ""
 msgid "Level indicator"
 msgstr ""
 
-msgid "License"
+msgid "Limit of active meetings"
 msgstr ""
 
 msgid "Line"
@@ -1718,9 +1712,6 @@ msgstr ""
 msgid "No groups selected"
 msgstr ""
 
-msgid "No information available"
-msgstr ""
-
 msgid "No items selected"
 msgstr ""
 
@@ -1875,10 +1866,10 @@ msgstr ""
 msgid "Open requests to speak"
 msgstr ""
 
-msgid "OpenSlides Dark"
+msgid "OpenSlides Blue"
 msgstr ""
 
-msgid "OpenSlides Default"
+msgid "OpenSlides Blue Dark"
 msgstr ""
 
 msgid "OpenSlides Green"
@@ -1891,9 +1882,6 @@ msgid "OpenSlides Red"
 msgstr ""
 
 msgid "OpenSlides Red Dark"
-msgstr ""
-
-msgid "OpenSlides Solarized"
 msgstr ""
 
 msgid "OpenSlides access data"
@@ -1974,13 +1962,7 @@ msgstr ""
 msgid "Participant"
 msgstr ""
 
-msgid "Participant cannot be found"
-msgstr ""
-
 msgid "Participant number"
-msgstr ""
-
-msgid "Participant number is not unique"
 msgstr ""
 
 msgid "Participant(s) will be imported."
@@ -2353,6 +2335,9 @@ msgstr ""
 msgid "Server settings required to activate Jitsi Meet integration."
 msgstr ""
 
+msgid "Set as default meeting"
+msgstr ""
+
 msgid "Set as favorite"
 msgstr ""
 
@@ -2399,6 +2384,9 @@ msgid "Set recommendation"
 msgstr ""
 
 msgid "Set status"
+msgstr ""
+
+msgid "Set workflow"
 msgstr ""
 
 msgid "Set/remove committees"
@@ -2758,10 +2746,10 @@ msgstr ""
 msgid "This committee has no managers!"
 msgstr ""
 
-msgid "This element does not exist at this time."
+msgid "This field is required."
 msgstr ""
 
-msgid "This field is required."
+msgid "This meeting is archived"
 msgstr ""
 
 msgid "This paragraph does not exist in the main motion anymore:"
@@ -2797,6 +2785,9 @@ msgid "This will set the following recommendation for all selected motions:"
 msgstr ""
 
 msgid "This will set the following state for all selected motions:"
+msgstr ""
+
+msgid "This will set the workflow for all selected motions:"
 msgstr ""
 
 msgid "Tile view"
@@ -3024,6 +3015,9 @@ msgid "You are not supposed to be here..."
 msgstr ""
 
 msgid "You are using the history mode of OpenSlides. Changes will not be saved."
+msgstr ""
+
+msgid "You can change this option only in the forwarding section."
 msgstr ""
 
 msgid "You can just anonymize named polls"

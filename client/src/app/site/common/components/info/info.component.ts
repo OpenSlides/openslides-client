@@ -18,7 +18,7 @@ export class InfoComponent extends BaseComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        super.setTitle('Information');
+        super.setTitle('Legal notice');
     }
 
     public async updateLegalNotice(text: string): Promise<void> {

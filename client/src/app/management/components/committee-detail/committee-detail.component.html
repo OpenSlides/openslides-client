@@ -98,7 +98,7 @@
     <!-- Meetings -->
     <div class="meeting-list">
         <mat-card class="os-card" *ngIf="!getMeetingsSorted(committee).length">
-            {{ 'There are no meetings yet' | translate }}
+            {{ 'No meetings available' | translate }}
         </mat-card>
         <os-meeting-preview
             *ngFor="let meeting of getMeetingsSorted(committee)"
