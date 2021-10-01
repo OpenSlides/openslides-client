@@ -194,6 +194,10 @@ export namespace MeetingAction {
 
     export interface ClonePayload {
         meeting_id: Id;
+        /**
+         * A `committee_id` can be given to clone a meeting into another committee than its source committee
+         */
+        committee_id?: Id;
     }
     export interface ArchivePayload extends Identifiable {}
     export interface UnarchivePayload extends Identifiable {}

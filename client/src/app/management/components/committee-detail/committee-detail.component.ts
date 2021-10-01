@@ -106,7 +106,8 @@ export class CommitteeDetailComponent extends BaseModelContextComponent implemen
                     ]
                 }
             ],
-            fieldset: 'list'
+            fieldset: 'list',
+            additionalFields: ['default_meeting_id']
         };
     }
 

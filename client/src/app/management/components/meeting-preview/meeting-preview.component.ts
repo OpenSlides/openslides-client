@@ -44,7 +44,7 @@ export class MeetingPreviewComponent {
     }
 
     public get isDefaultMeeting(): boolean {
-        return this.meeting.default_meeting_for_committee_id === this.committee.id;
+        return this.meeting.id === this.committee.default_meeting_id;
     }
 
     public constructor(
