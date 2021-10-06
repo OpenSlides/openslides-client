@@ -141,7 +141,8 @@ export class ActiveMeetingService {
             additionalFields: [
                 { templateField: 'logo_$_id' }, // needed by the media manage service
                 { templateField: 'font_$_id' },
-                'reference_projector_id'
+                'reference_projector_id',
+                'is_active_in_organization_id'
             ]
         };
     }
