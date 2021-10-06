@@ -70,7 +70,7 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
         this.router.navigate([member.id, 'edit'], { relativeTo: this.route });
     }
 
-    public async deleteSelected(...members: ViewUser[]): Promise<void> {
+    public async deleteSelected(members: ViewUser[] = this.selectedRows): Promise<void> {
         const title = this.translate.instant(
             members.length === 1
                 ? 'Are you sure you want to delete this member?'

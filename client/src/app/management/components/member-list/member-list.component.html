@@ -78,7 +78,7 @@
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit' | translate }}</span>
         </a>
-        <button mat-menu-item class="red-warning-text" (click)="deleteSelected(member)">
+        <button mat-menu-item class="red-warning-text" (click)="deleteSelected([member])">
             <mat-icon>delete</mat-icon>
             <span>{{ 'Delete' | translate }}</span>
         </button>
@@ -119,12 +119,7 @@
             <span>{{ 'Set/remove committees' | translate }} ...</span>
         </button>
         <mat-divider></mat-divider>
-        <button
-            mat-menu-item
-            class="red-warning-text"
-            [disabled]="!selectedRows.length"
-            (click)="deleteSelected(selectedRows)"
-        >
+        <button mat-menu-item class="red-warning-text" [disabled]="!selectedRows.length" (click)="deleteSelected()">
             <mat-icon>delete</mat-icon>
             <span>{{ 'Delete' | translate }}</span>
         </button>
