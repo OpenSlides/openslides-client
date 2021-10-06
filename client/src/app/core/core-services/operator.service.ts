@@ -21,16 +21,16 @@ import { CML, cmlNameMapping, OML, omlNameMapping } from './organization-permiss
 import { Permission } from './permission';
 import { childPermissions } from './permission-children';
 import { UserRepositoryService } from '../repositories/users/user-repository.service';
+import { User } from 'app/shared/models/users/user';
 
 const UNKOWN_USER_ID = -1; // this is an invalid id **and** not equal to 0, null, undefined.
 
-const OPERATOR_FIELDS = [
+const OPERATOR_FIELDS: (keyof User)[] = [
     'organization_management_level',
     'committee_$_management_level',
     'committee_ids',
     'can_change_own_password',
-    'structure_$_level',
-    'default_structure_level'
+    'is_present_in_meeting_ids'
 ];
 
 function getUserCML(user: ViewUser): { [id: number]: string } | null {
