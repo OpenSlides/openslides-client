@@ -150,7 +150,14 @@ export class AccountButtonComponent extends BaseModelContextComponent implements
         this.requestModels({
             viewModelCtor: ViewUser,
             ids: [this._userId],
-            fieldset: ['is_present_in_meeting_ids', 'can_change_own_password', 'organization_management_level']
+            fieldset: 'shortName',
+            additionalFields: [
+                'is_present_in_meeting_ids',
+                'can_change_own_password',
+                'organization_management_level',
+                { templateField: 'structure_level_$' },
+                'default_structure_level'
+            ]
         });
 
         if (this._userSubscription) {

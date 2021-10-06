@@ -617,7 +617,8 @@ export class BasicListViewTableComponent<V extends BaseViewModel> implements OnI
 
             // custom filter predicates
             if (!(this.filterProps && this.filterProps.length)) {
-                return;
+                console.warn('No filter props are given');
+                return false;
             }
             for (const prop of this.filterProps) {
                 // find nested props

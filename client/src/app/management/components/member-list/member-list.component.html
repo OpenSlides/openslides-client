@@ -24,6 +24,7 @@
     [multiSelect]="isMultiSelect"
     listStorageKey="member"
     (dataSourceChange)="onDataSourceChange($event)"
+    [filterProps]="['full_name', 'default_structure_level', 'default_number']"
     [filterService]="filterService"
     [sortService]="sortService"
     [hiddenInMobile]="['info']"
