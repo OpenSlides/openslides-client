@@ -125,7 +125,7 @@ function overloadArrayFunctions(): void {
     });
 
     Object.defineProperty(Array.prototype, 'tap', {
-        value: function <T>(callbackFn: (self: T[]) => void): T[] {
+        value<T>(callbackFn: (self: T[]) => void): T[] {
             callbackFn(this);
             return this;
         },

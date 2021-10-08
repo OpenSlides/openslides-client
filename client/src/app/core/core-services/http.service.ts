@@ -172,29 +172,4 @@ export class HttpService {
         const file = await this.get<Blob>(url, {}, {}, headers, 'blob');
         return await toBase64(file);
     }
-
-    /**
-     * Helper function to check if a given URL was reachable
-     * @param url
-     */
-    public async isServiceOnline(url: string): Promise<boolean> {
-        return new Promise<boolean>((resolve, reject) => {
-            const xhr = new XMLHttpRequest();
-            xhr.open('GET', url);
-            xhr.onload = () => {
-                if (xhr.status >= 200 && xhr.status < 300) {
-                    resolve(true);
-                } else {
-                    reject(false);
-                }
-            };
-            xhr.onerror = () => {
-                reject({
-                    status: xhr.status,
-                    statusText: xhr.statusText
-                });
-            };
-            xhr.send();
-        });
-    }
 }

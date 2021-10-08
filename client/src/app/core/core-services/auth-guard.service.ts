@@ -8,6 +8,7 @@ import { OperatorService } from './operator.service';
 import { Permission } from './permission';
 import { MeetingSettingsService } from '../ui-services/meeting-settings.service';
 import { Settings } from '../../shared/models/event-management/meeting';
+import { OpenSlidesRouterService } from './openslides-router.service';
 
 /**
  * Classical Auth-Guard. Checks if the user has to correct permissions to enter a page, and forwards to login if not.
@@ -29,7 +30,8 @@ export class AuthGuard implements CanActivate, CanActivateChild {
         private authService: AuthService,
         private activeMeeting: ActiveMeetingService,
         private meetingSettingService: MeetingSettingsService,
-        private fallbackRoutesService: FallbackRoutesService
+        private fallbackRoutesService: FallbackRoutesService,
+        private osRouter: OpenSlidesRouterService
     ) {}
 
     /**
@@ -48,7 +50,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
         if ((this.operator.isAnonymous && this.activeMeeting.guestsEnabled) || this.operator.isAuthenticated) {
             return this.hasPerms(basePerm) && this.isMeetingSettingEnabled(meetingSetting);
         } else {
-            this.router.navigate([route.params?.meetingId || '', 'login']);
+            this.osRouter.navigateToLogin();
             return false;
         }
     }

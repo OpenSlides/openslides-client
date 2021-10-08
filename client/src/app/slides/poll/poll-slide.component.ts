@@ -103,7 +103,7 @@ export class PollSlideComponent extends BaseSlideComponent<PollSlideData> {
             votescast: data.votescast,
             type: data.type,
             entitled_users_at_stop: data.entitled_users_at_stop,
-            options: options,
+            options,
             options_as_observable: of(options),
             global_option: data.global_option
                 ? this.createOptionData(data.global_option)

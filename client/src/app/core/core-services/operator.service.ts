@@ -22,6 +22,7 @@ import { Permission } from './permission';
 import { childPermissions } from './permission-children';
 import { UserRepositoryService } from '../repositories/users/user-repository.service';
 import { User } from 'app/shared/models/users/user';
+import { OpenSlidesRouterService } from './openslides-router.service';
 
 const UNKOWN_USER_ID = -1; // this is an invalid id **and** not equal to 0, null, undefined.
 
@@ -181,11 +182,14 @@ export class OperatorService {
         private userRepo: UserRepositoryService,
         private groupRepo: GroupRepositoryService,
         private router: Router,
-        private lifecycle: LifecycleService
+        private lifecycle: LifecycleService,
+        osRouter: OpenSlidesRouterService
     ) {
         this.setNotReady();
 
-        this.authService.onLogout.subscribe(() => this.navigateOnLogout());
+        this.authService.onLogout.subscribe(() =>
+            osRouter.navigateToLogin(this.activeMeetingId || this._lastActiveMeetingId)
+        );
 
         // General environment in which the operator moves
         this.authService.authTokenObservable.subscribe(token => {
@@ -621,27 +625,5 @@ export class OperatorService {
             this.operatorUpdatedEvent.emit();
         }
         return null;
-    }
-
-    /**
-     * Checks if guests are enabled. If they are not enabled, then a user has to be navigated
-     * to the login-page.
-     * This behaviour prevents a non-redirect on the startpage.
-     */
-    private navigateOnLogout(): void {
-        const url = this.router.routerState.snapshot.url;
-        const urlFragments = url.split('/');
-
-        // First, check if a user is at any orga-specific route
-        // if the first fragment is a number, we are in a meeting
-        if (!/\d+/g.test(urlFragments[1])) {
-            this.router.navigate(['login']);
-            return;
-        }
-        if (this.anonymousEnabled) {
-            this.router.navigate([`${this.activeMeetingId || this._lastActiveMeetingId}/`]);
-        } else {
-            this.router.navigate([this.activeMeetingId || this._lastActiveMeetingId, 'login']);
-        }
     }
 }

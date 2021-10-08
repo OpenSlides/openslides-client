@@ -102,9 +102,7 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
      * @returns A function that will return a boolean
      */
     public getDisableOptionWhenFn(): (value: ViewCommittee) => boolean {
-        return value => {
-            return value.id === this.committeeId;
-        };
+        return value => value.id === this.committeeId;
     }
 
     /**

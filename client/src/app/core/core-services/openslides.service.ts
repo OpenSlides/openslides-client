@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { LifecycleService } from './lifecycle.service';
 import { OfflineBroadcastService, OfflineReasonValue } from './offline-broadcast.service';
+import { OpenSlidesRouterService } from './openslides-router.service';
 
 /**
  * Handles the bootup/showdown of this application.
@@ -14,7 +15,8 @@ export class OpenSlidesService {
     public constructor(
         private offlineBroadcastService: OfflineBroadcastService,
         private lifecycleService: LifecycleService,
-        private authService: AuthService
+        private authService: AuthService,
+        private osRouter: OpenSlidesRouterService
     ) {
         this.lifecycleService.appLoaded.subscribe(() => this.bootup());
     }
@@ -32,15 +34,12 @@ export class OpenSlidesService {
             return;
         }
 
-        // TODO
-        /*if (!this.operator.isAuthenticated) {
+        if (!this.authService.isAuthenticated()) {
             if (!location.pathname.includes('error')) {
                 this.authService.redirectUrl = location.pathname;
             }
-            this.redirectToLoginIfNotSubpage();
-        } else {
-            this.afterAuthenticatedBootup();
-        }*/
+            this.osRouter.navigateToLogin();
+        }
 
         this.lifecycleService.bootup();
     }
