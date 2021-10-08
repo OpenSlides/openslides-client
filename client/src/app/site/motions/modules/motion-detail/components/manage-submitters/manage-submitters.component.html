@@ -16,7 +16,7 @@
         mat-icon-button
         disableRipple
         *ngIf="isEditMode && perms.isAllowed('change_metadata')"
-        (click)="onClose()"
+        (click)="onCancel()"
     >
         <mat-icon>close</mat-icon>
     </button>
@@ -57,10 +57,10 @@
         </ng-template>
     </os-sorting-list>
 
-    <form class="search-users" *ngIf="users" [formGroup]="addSubmitterForm">
+    <form class="search-users" *ngIf="usersObservable | async as users">
         <mat-form-field>
             <os-search-value-selector
-                formControlName="userId"
+                [formControl]="addSubmitterForm"
                 placeholder="{{ 'Select or search new submitter ...' | translate }}"
                 [inputListValues]="users"
                 [showNotFoundButton]="true"
@@ -73,4 +73,13 @@
             </os-search-value-selector>
         </mat-form-field>
     </form>
+
+    <p>
+        <button type="button" mat-button (click)="onSave()">
+            <span>{{ 'Save' | translate }}</span>
+        </button>
+        <button type="button" mat-button (click)="onCancel()">
+            <span>{{ 'Cancel' | translate }}</span>
+        </button>
+    </p>
 </div>

@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
 
 import { MotionAction } from 'app/core/actions/motion-action';
 import { UnsafeHtml } from 'app/core/definitions/key-types';
-import { NewUser } from 'app/core/repositories/users/user-repository.service';
+import { RawUser } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { LineRange } from 'app/core/ui-services/diff.service';
 import { Settings } from 'app/shared/models/event-management/meeting';
@@ -382,7 +382,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         this.validStateChanged.emit(this.contentForm.valid && this._canSaveParagraphBasedAmendment);
     }
 
-    private addNewUserToFormCtrl(newUserObj: NewUser, controlName: string): void {
+    private addNewUserToFormCtrl(newUserObj: RawUser, controlName: string): void {
         const control = this.contentForm.get(controlName);
         let currentSubmitters: number[] = control.value;
         if (currentSubmitters?.length) {
@@ -393,7 +393,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         control.setValue(currentSubmitters);
     }
 
-    private createNewUser(username: string): Promise<NewUser> {
+    private createNewUser(username: string): Promise<RawUser> {
         return this.userRepo.createFromString(username);
     }
 

@@ -404,7 +404,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         throw error;
     };
 
-    protected async sendActionToBackend(action: string, payload: any): Promise<any> {
+    protected async sendActionToBackend<T>(action: string, payload: T): Promise<any> {
         try {
             return await this.actions.sendRequest(action, payload);
         } catch (e) {
@@ -413,7 +413,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         }
     }
 
-    protected async sendBulkActionToBackend(action: string, payload: any[]): Promise<any> {
+    protected async sendBulkActionToBackend<T>(action: string, payload: T[]): Promise<any> {
         try {
             return await this.actions.sendBulkRequest(action, payload);
         } catch (e) {

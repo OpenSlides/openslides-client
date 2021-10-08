@@ -19,16 +19,14 @@ import { ViewUser } from 'app/site/users/models/view-user';
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { ModelRequestRepository } from '../model-request-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
+import { Displayable } from '../../../site/base/displayable';
 
 export interface MassImportResult {
     importedTrackIds: number[];
     errors: { [id: number]: string };
 }
 
-export interface NewUser {
-    id: number;
-    name: string;
-}
+export type RawUser = FullNameInformation & Identifiable & Displayable;
 
 /**
  * Unified type name for state fields like `is_active`, `is_physical_person` and `is_present_in_meetings`.
@@ -547,13 +545,14 @@ export class UserRepositoryService
     /**
      * Creates a new User from a string
      *
-     * @param user: String to create the user from
+     * @param name: String to create the user from -> assuming its the fullname of a user (not their username)
      * @returns Promise with a created user id and the raw name used as input
      */
-    public async createFromString(user: string): Promise<NewUser> {
-        const newUser = this.parseStringIntoUser(user) as any;
-        const createdUser = await this.create(newUser);
-        return { id: createdUser[0].id, name: user } as NewUser;
+    public async createFromString(name: string): Promise<RawUser> {
+        const newUser = this.parseStringIntoUser(name);
+        const identifiable = (await this.create(newUser))[0];
+        const getNameFn = () => this.getShortName(newUser);
+        return { id: identifiable.id, ...newUser, getTitle: getNameFn, getListTitle: getNameFn };
     }
 
     public togglePresenceByNumber(...numbers: string[]): Promise<Identifiable[]> {
