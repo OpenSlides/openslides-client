@@ -9,6 +9,7 @@ import { ViewMeeting } from 'app/management/models/view-meeting';
 import { CommitteeRepositoryService } from '../../../core/repositories/management/committee-repository.service';
 import { ViewCommittee } from '../../models/view-committee';
 import { OML } from '../../../core/core-services/organization-permission';
+import { MeetingService } from '../../services/meeting.service';
 
 @Component({
     selector: 'os-meeting-preview',
@@ -51,7 +52,8 @@ export class MeetingPreviewComponent {
         private translate: TranslateService,
         private meetingRepo: MeetingRepositoryService,
         private committeeRepo: CommitteeRepositoryService,
-        private promptService: PromptService
+        private promptService: PromptService,
+        private meetingService: MeetingService
     ) {}
 
     public async onArchive(): Promise<void> {
@@ -100,5 +102,9 @@ export class MeetingPreviewComponent {
         } else {
             await this.committeeRepo.update({ default_meeting_id: this.meeting.id }, this.committee);
         }
+    }
+
+    public changeToMeetingUsers(): void {
+        this.meetingService.navigateToMeetingUsers(this.meeting);
     }
 }

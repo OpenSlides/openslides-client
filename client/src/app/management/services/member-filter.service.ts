@@ -9,6 +9,7 @@ import { CommitteeRepositoryService } from 'app/core/repositories/management/com
 import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
 import { BaseFilterListService, OsFilter } from 'app/core/ui-services/base-filter-list.service';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { OsFilterOptions } from '../../core/ui-services/base-filter-list.service';
 
 @Injectable({
     providedIn: 'root'
@@ -22,26 +23,30 @@ export class MemberFilterService extends BaseFilterListService<ViewUser> {
         options: []
     };
 
-    private meetingFilterOptions: OsFilter<ViewUser> = {
-        property: 'is_present_in_meeting_ids',
-        label: this.translate.instant('Meetings'),
-        options: []
-    };
-
     public constructor(
         store: StorageService,
         historyService: HistoryService,
-        meetingRepo: MeetingRepositoryService,
+        private meetingRepo: MeetingRepositoryService,
         committeeRepo: CommitteeRepositoryService,
         private translate: TranslateService
     ) {
         super(store, historyService);
 
-        this.updateFilterForRepo(meetingRepo, this.meetingFilterOptions, this.translate.instant('No meeting'));
         this.updateFilterForRepo(committeeRepo, this.committeeFilterOptions, this.translate.instant('No committee'));
     }
 
     protected getFilterDefinitions(): OsFilter<ViewUser>[] {
+        const meetingFilterOptions: OsFilterOptions = [
+            ...this.meetingRepo.getViewModelList().map(meeting => ({
+                condition: meeting.user_ids,
+                label: meeting.name
+            })),
+            '-',
+            {
+                condition: null,
+                label: this.translate.instant('No meeting')
+            }
+        ];
         const staticFilterDefinitions: OsFilter<ViewUser>[] = [
             {
                 property: 'is_active',
@@ -67,7 +72,11 @@ export class MemberFilterService extends BaseFilterListService<ViewUser> {
                     { condition: true, label: this.translate.instant('Has unchanged vote weight') }
                 ]
             },
-            this.meetingFilterOptions,
+            {
+                property: 'id',
+                label: this.translate.instant('Meetings'),
+                options: meetingFilterOptions
+            },
             this.committeeFilterOptions
         ];
         return staticFilterDefinitions;

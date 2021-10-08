@@ -47,11 +47,11 @@
 
     <!-- users -->
     <div class="user-footer">
-        <a mat-icon-button matTooltip="{{ 'Participants' | translate }}">
+        <button mat-icon-button matTooltip="{{ 'Participants' | translate }}" (click)="changeToMeetingUsers()">
             <mat-icon [matBadgeHidden]="!showUserAmount" [matBadge]="userAmount" [matBadgeColor]="'accent'">
                 group
             </mat-icon>
-        </a>
+        </button>
     </div>
 </mat-card>
 

@@ -95,6 +95,10 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormControlCo
     @Input()
     public tooltipFn: (value: Selectable, source: MatOption) => string | null = () => null;
 
+    @Input()
+    public sortFn: (valueA: Selectable, valueB: Selectable) => number = (a, b) =>
+        a.getTitle().localeCompare(b.getTitle());
+
     /**
      * Emits the currently searched string.
      */
@@ -133,10 +137,11 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormControlCo
      * All items
      */
     protected set selectableItems(items: Selectable[]) {
+        const sortedItems = [...items].sort(this.sortFn);
         if (!this.multiple && this.includeNone) {
-            this._selectableItems = [this.noneItem].concat(items);
+            this._selectableItems = [this.noneItem].concat(sortedItems);
         } else {
-            this._selectableItems = items;
+            this._selectableItems = sortedItems;
         }
     }
 
