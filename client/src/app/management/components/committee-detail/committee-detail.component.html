@@ -81,13 +81,10 @@
 
         <os-committee-meta-info icon="engineering" title="Committee manager" *ngIf="canManageCommittee">
             <ng-container *ngIf="committee.getManagers() as managers">
-                <ul class="content-list" *ngIf="managers.length > 0">
-                    <li *ngFor="let manager of managers">
-                        <a [routerLink]="['/', 'members', manager.id]">
-                            {{ manager }}
-                        </a>
-                    </li>
-                </ul>
+                <span *ngFor="let manager of managers; let last = last">
+                    <a [routerLink]="['/', 'members', manager.id]">{{ manager }}</a>
+                    <span *ngIf="!last">,&nbsp;</span>
+                </span>
                 <i class="red-warning-text" *ngIf="managers.length === 0">
                     {{ 'This committee has no managers!' | translate }}
                 </i>

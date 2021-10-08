@@ -19,6 +19,8 @@ import { BaseListViewComponent } from 'app/site/base/components/base-list-view.c
 import { BaseUserHeadersAndVerboseNames } from 'app/site/users/base/base-user.constants';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { OMLMapping } from '../../../core/core-services/organization-permission';
+import { ORGANIZATION_ID } from '../../../core/core-services/organization.service';
+import { ViewOrganization } from '../../models/view-organization';
 
 @Component({
     selector: 'os-members',
@@ -60,6 +62,7 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
     public ngOnInit(): void {
         super.ngOnInit();
         this.loadUsers();
+        this.loadMeetings();
     }
 
     public createNewMember(): void {
@@ -116,6 +119,29 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
 
     public getOmlByUser(user: ViewUser): string {
         return getOmlVerboseName(user.organization_management_level as keyof OMLMapping);
+    }
+
+    private async loadMeetings(): Promise<void> {
+        await this.requestModels(
+            {
+                viewModelCtor: ViewOrganization,
+                ids: [ORGANIZATION_ID],
+                follow: [
+                    {
+                        idField: 'committee_ids',
+                        fieldset: '',
+                        follow: [
+                            {
+                                idField: 'meeting_ids',
+                                fieldset: '',
+                                follow: [{ idField: 'user_ids', fieldset: 'shortName' }]
+                            }
+                        ]
+                    }
+                ]
+            },
+            'load_meetings'
+        );
     }
 
     private async loadUsers(start_index: number = 0, entries: number = 10000): Promise<void> {

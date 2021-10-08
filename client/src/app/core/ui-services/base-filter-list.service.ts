@@ -82,7 +82,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
     /**
      * The currently used filters.
      */
-    public filterDefinitions: OsFilter<V>[];
+    public filterDefinitions: OsFilter<V>[] = [];
 
     /**
      * @returns the total count of items before the filter
@@ -290,9 +290,9 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
         noneOptionLabel?: string,
         filterFn?: (filter: BaseViewModel<any>) => boolean
     ): void {
-        repo.getViewModelListObservable().subscribe(viewModel => {
-            if (viewModel && viewModel.length) {
-                const filterProperties: (OsFilterOption | string)[] = viewModel
+        repo.getViewModelListObservable().subscribe(viewModels => {
+            if (viewModels && viewModels.length) {
+                const filterProperties: (OsFilterOption | string)[] = viewModels
                     .filter(filterFn ? filterFn : () => true)
                     .map((model: HierarchyModel) => ({
                         condition: model.id,
@@ -349,7 +349,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
                 filteredData = this.inputData;
             } else {
                 filteredData = this.inputData.filter(item =>
-                    this.filterDefinitions.every(filter => !filter.count || this.checkIncluded(item, filter))
+                    this.filterDefinitions.every(filter => !filter.count || this.isPassingFilter(item, filter))
                 );
             }
         }
@@ -453,13 +453,13 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
     }
 
     /**
-     * Checks if a given ViewBaseModel passes a filter.
+     * Checks if a given BaseViewModel passes a filter.
      *
      * @param item Usually a view model
      * @param filter The filter to check
      * @returns true if the item is to be displayed according to the filter
      */
-    private checkIncluded(item: V, filter: OsFilter<V>): boolean {
+    private isPassingFilter(item: V, filter: OsFilter<V>): boolean {
         const nullFilter = filter.options.find(
             option => typeof option !== 'string' && option.isActive && option.condition === null
         );
@@ -472,14 +472,14 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
                 continue;
                 // active option. The item is included if it passes this test
             } else if (option.isActive) {
-                if (this.checkFilterIncluded(item, filter, option)) {
+                if (this.isPassingFilterOption(item, filter, option)) {
                     return true;
                 }
                 // if a null filter is set, the item needs to not pass all inactive filters
             } else if (
                 nullFilter &&
                 (item[filter.property] !== null || item[filter.property] !== undefined) &&
-                this.checkFilterIncluded(item, filter, option)
+                this.isPassingFilterOption(item, filter, option)
             ) {
                 passesNullFilter = false;
             }
@@ -495,31 +495,14 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
      * @param option The option to be checked
      * @returns true if the filter condition matches the item
      */
-    private checkFilterIncluded(item: V, filter: OsFilter<V>, option: OsFilterOption): boolean {
+    private isPassingFilterOption(item: V, filter: OsFilter<V>, option: OsFilterOption): boolean {
         const property = item[filter.property] as unknown;
         if (property === undefined || property === null) {
             return false;
         } else if (Array.isArray(property)) {
-            const compareValueCondition = (value, condition): boolean => {
-                if (value === condition) {
-                    return true;
-                } else if (typeof value === 'object' && 'id' in value && value.id === condition) {
-                    return true;
-                }
-                return false;
-            };
-            for (const value of property) {
-                if (Array.isArray(option.condition)) {
-                    for (const condition of option.condition) {
-                        if (compareValueCondition(value, condition)) {
-                            return true;
-                        }
-                    }
-                } else {
-                    if (compareValueCondition(value, option.condition)) {
-                        return true;
-                    }
-                }
+            const conditions = Array.isArray(option.condition) ? option.condition : [option.condition];
+            if (conditions.find(condition => this.isMatchingCondition(property, condition))) {
+                return true;
             }
         } else if (Array.isArray(option.condition)) {
             if (
@@ -536,10 +519,23 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
             return property.bind(item)() === option.condition;
         } else if (property === option.condition) {
             return true;
-        } else if (item[filter.property].toString() === option.condition) {
+        } else if (property.toString() === option.condition) {
             return true;
         }
         return false;
+    }
+
+    private isMatchingCondition(value: any | any[], condition: OsFilterOptionCondition): boolean {
+        const matchingFn = (currentValue: any) => {
+            if (currentValue === condition) {
+                return true;
+            } else if (typeof value === 'object' && 'id' in value && value.id === condition) {
+                return true;
+            }
+            return false;
+        };
+        const toCheck = Array.isArray(value) ? value : [value];
+        return toCheck.find(currentValue => matchingFn(currentValue));
     }
 
     /**
