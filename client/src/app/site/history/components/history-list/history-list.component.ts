@@ -84,7 +84,7 @@ export class HistoryListComponent extends BaseModelContextComponent implements O
             // Update the URL.
             this.router.navigate([], {
                 relativeTo: this.activatedRoute,
-                queryParams: { fqid: fqid },
+                queryParams: { fqid },
                 replaceUrl: true
             });
         });

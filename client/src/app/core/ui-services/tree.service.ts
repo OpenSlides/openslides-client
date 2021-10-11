@@ -390,7 +390,7 @@ export class TreeService {
             item: item.item,
             expandable: !!children,
             isExpanded: !!children,
-            level: level,
+            level,
             isSeen: true
         };
         return new Proxy(node, {

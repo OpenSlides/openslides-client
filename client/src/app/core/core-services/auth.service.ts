@@ -8,6 +8,7 @@ import { AuthToken, AuthTokenService } from './auth-token.service';
 import { DataStoreService } from './data-store.service';
 import { HttpService } from './http.service';
 import { LifecycleService } from './lifecycle.service';
+import { ProcessError } from '../errors/process-error';
 
 /**
  * Response from a login request.
@@ -127,12 +128,16 @@ export class AuthService {
      */
     public async doWhoAmIRequest(): Promise<boolean> {
         console.log('auth: Do WhoAmI');
-        let online;
+        let online: boolean;
         try {
             await this.http.post<LoginResponse>(`${environment.authUrlPrefix}/who-am-i/`);
             online = true;
         } catch (e) {
-            online = false;
+            if (e instanceof ProcessError && e.status >= 400 && e.status < 500) {
+                online = true;
+            } else {
+                online = false;
+            }
         }
         console.log('auth: WhoAmI done, online:', online, 'authenticated:', !!this.authTokenService.accessToken);
         return online;
