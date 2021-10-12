@@ -172,11 +172,6 @@
         <div class="desktop-right">
             <!-- Content -->
             <mat-card [ngClass]="editMotion ? 'os-form-card' : 'os-card'">
-                <os-motion-highlight-form
-                    #highlightForm
-                    *ngIf="!newMotion && !editMotion"
-                    [motion]="motion"
-                ></os-motion-highlight-form>
                 <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
             </mat-card>
         </div>
@@ -190,6 +185,11 @@
 </ng-template>
 
 <ng-template #contentTemplate>
+    <os-motion-highlight-form
+        #highlightForm
+        *ngIf="!newMotion && !editMotion"
+        [motion]="motion"
+    ></os-motion-highlight-form>
     <os-motion-content
         #content
         [motion]="motion"

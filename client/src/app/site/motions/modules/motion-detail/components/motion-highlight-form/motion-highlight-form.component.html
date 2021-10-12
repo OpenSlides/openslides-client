@@ -30,13 +30,15 @@
 
         <button type="button" mat-button [matMenuTriggerFor]="lineNumberingMenu">
             <mat-icon>format_list_numbered</mat-icon>
-            &nbsp;
-            <span>{{ 'Line numbering' | translate }}</span>
-            <span *ngIf="lnMode === LineNumberingMode.None">
-                &nbsp;(
-                <span>{{ 'none' | translate }}</span>
-                )
-            </span>
+            <ng-container *ngIf="!isMobile">
+                &nbsp;
+                <span>{{ 'Line numbering' | translate }}</span>
+                <span *ngIf="lnMode === LineNumberingMode.None">
+                    &nbsp;(
+                    <span>{{ 'none' | translate }}</span>
+                    )
+                </span>
+            </ng-container>
         </button>
         <button
             type="button"
@@ -45,8 +47,10 @@
             *ngIf="motion && (hasChangingObjects || motion.modified_final_version)"
         >
             <mat-icon>rate_review</mat-icon>
-            &nbsp;
-            <span>{{ verboseChangeRecoMode[crMode] | translate }}</span>
+            <ng-container *ngIf="!isMobile">
+                &nbsp;
+                <span>{{ verboseChangeRecoMode[crMode] | translate }}</span>
+            </ng-container>
         </button>
 
         <!-- Final edit buttons -->

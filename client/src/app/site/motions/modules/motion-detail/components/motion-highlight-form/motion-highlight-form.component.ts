@@ -13,6 +13,7 @@ import { ChangeRecoMode, LineNumberingMode, verboseChangeRecoMode } from 'app/si
 import { BaseMotionDetailChildComponent } from '../base/base-motion-detail-child.component';
 import { MotionServiceCollectorService } from '../../../services/motion-service-collector.service';
 import { ModifiedFinalVersionAction } from '../../../services/motion-view.service';
+import { ViewportService } from '../../../../../../core/ui-services/viewport.service';
 
 @Component({
     selector: 'os-motion-highlight-form',
@@ -91,11 +92,16 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
         return !!Object.keys(this.motion)?.length ?? false;
     }
 
+    public get isMobile(): boolean {
+        return this.vpService.isMobile;
+    }
+
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         motionServiceCollector: MotionServiceCollectorService,
         private linenumberingService: LinenumberingService,
-        private promptService: PromptService
+        private promptService: PromptService,
+        private vpService: ViewportService
     ) {
         super(componentServiceCollector, motionServiceCollector);
     }
