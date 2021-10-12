@@ -512,8 +512,9 @@ export const meetingSettings: SettingsGroup[] = [
                     },
                     {
                         key: 'motions_enable_sidebox_on_projector',
-                        label: _('Show meta information box below the title on projector'),
-                        type: 'boolean'
+                        label: _('Show meta information box beside the title on projector'),
+                        type: 'boolean',
+                        helpText: _('If not checked, it is displayed below the title on projector')
                     },
                     {
                         key: 'motions_show_sequential_number',
