@@ -146,13 +146,6 @@
             </div>
         </div>
 
-        <div *ngIf="isAllowed('seePersonal') && user.isLastEmailSend">
-            <div>
-                <h4>{{ 'Last email sent' | translate }}</h4>
-                <span>{{ getEmailSentTime() }}</span>
-            </div>
-        </div>
-
         <ng-container *ngTemplateOutlet="showView; context: { user: user }"></ng-container>
     </ng-container>
 </ng-template>

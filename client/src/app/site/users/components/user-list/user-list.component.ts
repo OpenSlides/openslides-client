@@ -396,7 +396,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         const title = this.translate.instant('Are you sure you want to send emails to all selected participants?');
         const content = this.selectedRows.length + ' ' + this.translate.instant('emails');
         if (await this.promptService.open(title, content)) {
-            this.repo.bulkSendInvitationEmail(this.selectedRows).catch(this.raiseError);
+            this.repo.sendInvitationEmails(this.selectedRows).then(this.raiseError, this.raiseError);
         }
     }
 
