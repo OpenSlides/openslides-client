@@ -19,8 +19,8 @@ import { ParentErrorStateMatcher } from 'app/shared/parent-error-state-matcher';
 import { Selectable } from '../../selectable';
 import { NotFoundDescriptionDirective } from '../../../directives/not-found-description.directive';
 
-export interface OsOptionSelectionChanged {
-    value: Selectable;
+export interface OsOptionSelectionChanged<T = Selectable> {
+    value: T;
     source: MatOption;
 }
 
@@ -193,7 +193,7 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormControlCo
         } else {
             this.selectedIds.push(id);
         }
-        this.contentForm.setValue(this.selectedIds);
+        this.setNextValue(this.selectedIds);
     }
 
     public onOpenChanged(event: boolean): void {
@@ -210,7 +210,7 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormControlCo
         }
     }
 
-    public onContainerClick(event: MouseEvent): void {
+    public onContainerClick(): void {
         if (!this.matSelect) {
             console.warn('Warning: No #matSelect was defined.');
             return;
@@ -236,7 +236,7 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormControlCo
             throw new Error(`Warning: Trying to set a function as value: ${value}`);
         }
         const nextValue = this.transformSetFn ? this.transformSetFn(value) : value;
-        this.contentForm.setValue(nextValue);
+        this.setNextValue(nextValue);
         this.selectedIds = (nextValue as []) ?? [];
         this.triggerUpdate();
     }
@@ -260,5 +260,9 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormControlCo
             this._isFirstUpdate = false;
             this.onAfterFirstUpdate();
         }
+    }
+
+    private setNextValue(value: any): void {
+        this.contentForm.setValue(value);
     }
 }

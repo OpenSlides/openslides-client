@@ -14,6 +14,7 @@ interface ActionResponse<T extends {}> {
     message: string;
     results?: ((T | null)[] | null)[];
 }
+
 function isActionResponse<T extends {}>(obj: any): obj is ActionResponse<T> {
     const response = obj as ActionResponse<T>;
     return !!obj && response.success === true && !!response.message;
@@ -28,6 +29,40 @@ interface ActionError {
 function isActionError(obj: any): obj is ActionError {
     const response = obj as ActionError;
     return !!obj && response.success === false && !!response.message;
+}
+
+export class Action<T = void> extends Promise<T[]> {
+    private _actions: ActionRequest[];
+    private _sendActionFn: (requests: ActionRequest[]) => Promise<T[]>;
+
+    public constructor(sendActionFn: (requests: ActionRequest[]) => Promise<T[]>, ...actions: ActionRequest[]) {
+        let resolveFn: (value: T[]) => void;
+        super(resolve => {
+            resolveFn = value => (console.log('Action is resolved', value), resolve(value));
+        });
+        this._actions = actions;
+        this._sendActionFn = sendActionFn;
+    }
+
+    public concat(...actions: (Action<any | any[]> | ActionRequest)[]): Action<T> {
+        if (actions.length === 0) {
+            return this;
+        }
+        const concatedActions = actions
+            .flatMap(action => {
+                if (action instanceof Action) {
+                    return action._actions;
+                } else {
+                    return [action];
+                }
+            })
+            .concat(this._actions);
+        return new Action(this._sendActionFn, ...concatedActions);
+    }
+
+    public resolve(): Promise<T[]> {
+        return this._sendActionFn(this._actions);
+    }
 }
 
 @Injectable({
@@ -76,5 +111,9 @@ export class ActionService {
             return results[0];
         }
         throw new Error('Unknown return type from action service');
+    }
+
+    public create<T>(...requests: ActionRequest[]): Action<T> {
+        return new Action<T>(r => this.sendRequests<T>(r), ...requests);
     }
 }

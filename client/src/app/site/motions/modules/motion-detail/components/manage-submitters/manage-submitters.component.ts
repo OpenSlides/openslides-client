@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 
 import { BehaviorSubject, Observable } from 'rxjs';
 
@@ -7,11 +7,19 @@ import { Id } from 'app/core/definitions/key-types';
 import { MotionSubmitterRepositoryService } from 'app/core/repositories/motions/motion-submitter-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionSubmitter } from 'app/site/motions/models/view-motion-submitter';
 import { PermissionsService } from 'app/site/motions/services/permissions.service';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { Selectable } from '../../../../../../shared/components/selectable';
+import { map } from 'rxjs/operators';
+import { BaseComponent } from 'app/site/base/components/base.component';
+
+type Submitter = Selectable & { user_id?: Id };
+
+interface IdMap {
+    [user_id: number]: number;
+}
 
 /**
  * Component for the motion comments view
@@ -21,7 +29,7 @@ import { ViewUser } from 'app/site/users/models/view-user';
     templateUrl: './manage-submitters.component.html',
     styleUrls: ['./manage-submitters.component.scss']
 })
-export class ManageSubmittersComponent extends BaseComponent {
+export class ManageSubmittersComponent extends BaseComponent implements OnInit {
     /**
      * The motion, which the personal note belong to.
      */
@@ -38,33 +46,48 @@ export class ManageSubmittersComponent extends BaseComponent {
     /**
      * Keep all users to display them.
      */
-    public get users(): ViewUser[] {
-        const submitters = this.editSubmitterSubject.value.map(submitter => submitter.user_id);
-        return this._users.value.filter(user => !submitters.includes(user.id));
+    public get usersObservable(): Observable<ViewUser[]> {
+        const submitters = this.editSubmitterSubject.value.map(submitter => submitter.user_id ?? submitter.id);
+        return this._users.pipe(map(users => users.filter(user => !submitters.includes(user.id))));
     }
 
     /**
      * The form to add new submitters
      */
-    public addSubmitterForm: FormGroup;
+    public addSubmitterForm: FormControl;
 
     /**
      * The current list of submitters.
      */
-    public readonly editSubmitterSubject: BehaviorSubject<ViewMotionSubmitter[]> = new BehaviorSubject([]);
+    public readonly editSubmitterSubject: BehaviorSubject<Submitter[]> = new BehaviorSubject([]);
 
     /**
      * The observable from editSubmitterSubject. Fixing this value is a performance boost, because
      * it is just set one time at loading instead of calling .asObservable() every time.
      */
-    public editSubmitterObservable: Observable<ViewMotionSubmitter[]>;
+    public editSubmitterObservable: Observable<Selectable[]>;
 
     /**
      * Saves, if the users edits the note.
      */
-    public isEditMode = false;
+    // public isEditMode = false;
+    public set isEditMode(value: boolean) {
+        this._editMode = value;
+        this._addSubmittersSet.clear();
+        this._removeSubmittersMap = {};
+    }
 
-    private _users: BehaviorSubject<ViewUser[]>;
+    public get isEditMode(): boolean {
+        return this._editMode;
+    }
+
+    private _users: Observable<ViewUser[]>;
+    private _editMode = false;
+
+    private _addSubmittersSet = new Set<Id>();
+    private _removeSubmittersMap: IdMap = {};
+
+    private _oldSubmitters: Set<Id>;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -74,15 +97,38 @@ export class ManageSubmittersComponent extends BaseComponent {
     ) {
         super(componentServiceCollector);
 
-        this.addSubmitterForm = new FormGroup({ userId: new FormControl([]) });
+        this.addSubmitterForm = new FormControl([]);
         this.editSubmitterObservable = this.editSubmitterSubject.asObservable();
+    }
 
-        // detect changes in the form
-        this.addSubmitterForm.valueChanges.subscribe(formResult => {
-            if (formResult && formResult.userId) {
-                this.addUserAsSubmitter(formResult.userId);
-            }
-        });
+    public ngOnInit(): void {
+        this.subscriptions.push(
+            this.addSubmitterForm.valueChanges.subscribe(nextValue => {
+                if (nextValue) {
+                    this.addUserAsSubmitter(this.userRepository.getViewModel(nextValue));
+                }
+            })
+        );
+    }
+
+    /**
+     * Save the submitters
+     */
+    public async onSave(): Promise<void> {
+        if (Object.values(this._removeSubmittersMap).length > 0) {
+            await this.motionSubmitterRepository.delete(...Object.values(this._removeSubmittersMap));
+        }
+        if (this._addSubmittersSet.size > 0) {
+            await this.motionSubmitterRepository.create(this.motion, ...this._addSubmittersSet);
+        }
+        this.isEditMode = false;
+    }
+
+    /**
+     * Close the edit view.
+     */
+    public onCancel(): void {
+        this.isEditMode = false;
     }
 
     /**
@@ -91,32 +137,16 @@ export class ManageSubmittersComponent extends BaseComponent {
     public onEdit(): void {
         this.isEditMode = true;
         this.editSubmitterSubject.next(this.motion.submitters);
-        this.addSubmitterForm.reset();
+        this._oldSubmitters = new Set(this.motion.submitters.map(submitter => submitter.user_id));
+        this.resetForm();
 
         // get all users for the submitter add form
-        this._users = this.userRepository.getViewModelListBehaviorSubject();
-    }
-
-    /**
-     * Close the edit view.
-     */
-    public onClose(): void {
-        this.isEditMode = false;
+        this._users = this.userRepository.getViewModelListObservable();
     }
 
     public async createNewSubmitter(username: string): Promise<void> {
         const newUserObj = await this.userRepository.createFromString(username);
-        await this.addUserAsSubmitter(newUserObj.id);
-    }
-
-    /**
-     * Adds the user to the submitters, if he isn't already in there.
-     *
-     * @param user The user to add
-     */
-    public async addUserAsSubmitter(userId: Id): Promise<void> {
-        await this.motionSubmitterRepository.create(userId, this.motion);
-        this.addSubmitterForm.reset();
+        await this.addUserAsSubmitter(newUserObj);
     }
 
     /**
@@ -125,6 +155,7 @@ export class ManageSubmittersComponent extends BaseComponent {
      * @param submitters The new, sorted submitters.
      */
     public onSortingChange(submitters: ViewMotionSubmitter[]): void {
+        this.editSubmitterSubject.next(submitters);
         this.motionSubmitterRepository.sort(submitters, this.motion);
     }
 
@@ -133,7 +164,35 @@ export class ManageSubmittersComponent extends BaseComponent {
      *
      * @param user The user to remove as a submitters
      */
-    public onRemove(submitter: ViewMotionSubmitter): void {
-        this.motionSubmitterRepository.delete(submitter.id);
+    public onRemove(submitter: Submitter): void {
+        if (submitter.user_id) {
+            this._removeSubmittersMap[submitter.user_id] = submitter.id;
+        } else if (this._addSubmittersSet.has(submitter.id)) {
+            this._addSubmittersSet.delete(submitter.id);
+        }
+        const submitters = this.editSubmitterSubject.getValue();
+        this.editSubmitterSubject.next(submitters.filter(user => user.id !== submitter.id));
+    }
+
+    /**
+     * Adds the user to the submitters, if he isn't already in there.
+     *
+     * @param user The user to add
+     */
+    private async addUserAsSubmitter(submitter: Submitter): Promise<void> {
+        if (!submitter.user_id) {
+            if (this._oldSubmitters.has(submitter.id)) {
+                delete this._removeSubmittersMap[submitter.id];
+            } else {
+                this._addSubmittersSet.add(submitter.id);
+            }
+        }
+        const submitters = this.editSubmitterSubject.value;
+        this.editSubmitterSubject.next(submitters.concat(submitter));
+        this.resetForm();
+    }
+
+    private resetForm(): void {
+        this.addSubmitterForm.reset();
     }
 }

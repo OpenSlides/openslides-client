@@ -33,19 +33,19 @@ export class MotionSubmitterRepositoryService extends BaseRepositoryWithActiveMe
 
     public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Submitters' : 'Submitter');
 
-    public async create(userId: Id, motion: ViewMotion): Promise<Identifiable> {
-        const payload: MotionSubmitterAction.CreatePayload = {
+    public create(motion: ViewMotion, ...userIds: Id[]): Promise<Identifiable[]> {
+        const payload: MotionSubmitterAction.CreatePayload[] = userIds.map(userId => ({
             user_id: userId,
             motion_id: motion.id
-        };
-        return await this.sendActionToBackend(MotionSubmitterAction.CREATE, payload);
+        }));
+        return this.sendBulkActionToBackend(MotionSubmitterAction.CREATE, payload);
     }
 
-    public async delete(submitterId: Id): Promise<Identifiable> {
-        const payload: MotionSubmitterAction.DeletePayload = {
+    public delete(...submitterIds: Id[]): Promise<void[]> {
+        const payload: MotionSubmitterAction.DeletePayload[] = submitterIds.map(submitterId => ({
             id: submitterId
-        };
-        return await this.sendActionToBackend(MotionSubmitterAction.DELETE, payload);
+        }));
+        return this.sendBulkActionToBackend(MotionSubmitterAction.DELETE, payload);
     }
 
     public async sort(submitters: ViewMotionSubmitter[], motion: ViewMotion): Promise<void> {
