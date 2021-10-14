@@ -26,14 +26,6 @@ const routes: Route[] = [
         ]
     },
     {
-        path: 'projector',
-        loadChildren: () =>
-            import('./fullscreen/fullscreen-projector/fullscreen-projector.module').then(
-                m => m.FullscreenProjectorModule
-            ),
-        data: { noInterruption: true }
-    },
-    {
         path: '',
         loadChildren: () => import('./main/main.module').then(m => m.MainModule)
     },

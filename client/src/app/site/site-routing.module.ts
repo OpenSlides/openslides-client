@@ -93,6 +93,14 @@ const routes: Route[] = [
         canActivate: [AuthGuard],
         canActivateChild: [AuthGuard]
     },
+    {
+        path: 'projector',
+        loadChildren: () =>
+            import('../fullscreen/fullscreen-projector/fullscreen-projector.module').then(
+                m => m.FullscreenProjectorModule
+            ),
+        data: { noInterruption: true }
+    },
     // meeting-specific login-routing
     {
         path: 'login',
