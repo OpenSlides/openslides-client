@@ -9,6 +9,10 @@ import { Permission } from 'app/core/core-services/permission';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { Size } from 'app/site/projector/size';
+import { BaseModelContextComponent } from '../../../site/base/components/base-model-context.component';
+import { ComponentServiceCollector } from '../../../core/ui-services/component-service-collector';
+import { Id } from 'app/core/definitions/key-types';
+import { PROJECTOR_CONTENT_FOLLOW } from '../../../shared/components/projector/projector.component';
 
 /**
  * The fullscreen projector. Bootstraps OpenSlides, gets the requested projector,
@@ -21,7 +25,7 @@ import { Size } from 'app/site/projector/size';
     templateUrl: './fullscreen-projector.component.html',
     styleUrls: ['./fullscreen-projector.component.scss']
 })
-export class FullscreenProjectorComponent implements OnInit {
+export class FullscreenProjectorComponent extends BaseModelContextComponent implements OnInit {
     // TODO: isLoading, canSeeProjector and other issues must be displayed!
     public isLoading = true;
     public canSeeProjector = false;
@@ -69,11 +73,13 @@ export class FullscreenProjectorComponent implements OnInit {
      * @param repo
      */
     public constructor(
+        componentServiceCollector: ComponentServiceCollector,
         auth: AuthService, // Needed tro trigger loading of OpenSlides. Starts the Bootup process.
         private route: ActivatedRoute,
         private operator: OperatorService,
         private repo: ProjectorRepositoryService
     ) {
+        super(componentServiceCollector);
         this.resizeSubject.subscribe(() => {
             this.updateProjectorDimensions();
         });
@@ -101,6 +107,7 @@ export class FullscreenProjectorComponent implements OnInit {
      */
     private loadProjector(projectorId: number): void {
         this.projectorId = projectorId;
+        this.requestProjector(projectorId);
         // TODO: what happens on delete?
 
         // Watches the projector. Update the container size, if the projector size changes.
@@ -136,5 +143,13 @@ export class FullscreenProjectorComponent implements OnInit {
             const width = Math.floor(this.containerElement.nativeElement.offsetHeight * projectorAspectRatio);
             this.projectorStyle.width = `${width}px`;
         }
+    }
+
+    private requestProjector(projectorId: Id): void {
+        this.requestModels({
+            viewModelCtor: ViewProjector,
+            ids: [projectorId],
+            follow: [PROJECTOR_CONTENT_FOLLOW]
+        });
     }
 }

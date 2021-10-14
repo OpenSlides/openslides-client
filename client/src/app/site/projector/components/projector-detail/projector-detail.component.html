@@ -24,7 +24,12 @@
 
     <mat-menu #projectorExtraMenu="matMenu">
         <!-- Button for set reference projector -->
-        <button mat-menu-item (click)="setProjectorAsReference()" *ngIf="projector" [disabled]="projector.isReferenceProjector">
+        <button
+            mat-menu-item
+            (click)="setProjectorAsReference()"
+            *ngIf="projector"
+            [disabled]="projector.isReferenceProjector"
+        >
             <mat-icon *ngIf="projector.isReferenceProjector">star</mat-icon>
             <mat-icon *ngIf="!projector.isReferenceProjector">star_border</mat-icon>
             <span>{{ 'Set as reference projector' | translate }}</span>
@@ -41,7 +46,7 @@
 <os-grid-layout *ngIf="projector">
     <os-tile [preferredSize]="projectorTileSizeLeft">
         <div *ngIf="projector" class="projector-detail-wrapper column-left">
-            <a [routerLink]="['/projector', projector.id]" target="_blank">
+            <a [routerLink]="['/', activeMeetingId, 'projector', projector.id]" target="_blank">
                 <div id="projector">
                     <os-projector [projector]="projector"></os-projector>
                 </div>
@@ -282,8 +287,7 @@
                                     class="dynamic-list-entry"
                                     [message]="message"
                                     [projector]="projector"
-                                >
-                                </os-message-controls>
+                                ></os-message-controls>
                             </mat-list-item>
                         </mat-list>
                         <mat-action-row>
