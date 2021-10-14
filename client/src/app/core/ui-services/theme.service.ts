@@ -4,10 +4,17 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 import { OrganizationSettingsService } from './organization-settings.service';
 import { Observable, BehaviorSubject } from 'rxjs';
+import { HtmlColor } from '../definitions/key-types';
 
 interface ThemeDefinition {
     name: string;
     class: string;
+}
+
+class ThemeMap {
+    public primary: HtmlColor;
+    public accent: HtmlColor;
+    public warn: HtmlColor;
 }
 
 export const Themes: ThemeDefinition[] = [
@@ -37,6 +44,33 @@ export const Themes: ThemeDefinition[] = [
     }
 ];
 
+const blueThemeMap: ThemeMap = {
+    primary: '#317796',
+    accent: '#2196f3',
+    warn: '#f06400'
+};
+
+const redThemeMap: ThemeMap = {
+    primary: '#c31c23',
+    accent: '#03a9f4',
+    warn: '#11c2a2'
+};
+
+const greenThemeMap: ThemeMap = {
+    primary: '#46962c',
+    accent: '#55c3b6',
+    warn: '#e359ce'
+};
+
+const themeMaps: { [cssClass: string]: ThemeMap } = {
+    'openslides-default-light-theme': blueThemeMap,
+    'openslides-default-dark-theme': blueThemeMap,
+    'openslides-red-light-theme': redThemeMap,
+    'openslides-red-dark-theme': redThemeMap,
+    'openslides-green-light-theme': greenThemeMap,
+    'openslides-green-dark-theme': greenThemeMap
+};
+
 /**
  * Service to set the theme for OpenSlides.
  */
@@ -54,10 +88,14 @@ export class ThemeService {
     }
 
     public get isDarkTheme(): boolean {
-        if (!this._currentTheme) {
+        if (!this._currentThemeClass) {
             return false;
         }
-        return this._currentTheme.includes('dark');
+        return this._currentThemeClass.includes('dark');
+    }
+
+    public get currentAccentColor(): HtmlColor {
+        return themeMaps[this._currentThemeClass]?.accent ?? blueThemeMap.accent;
     }
 
     private readonly _isDarkThemeSubject = new BehaviorSubject<boolean>(false);
@@ -65,7 +103,7 @@ export class ThemeService {
     /**
      * Holds the current theme as member.
      */
-    private _currentTheme: string;
+    private _currentThemeClass: string;
 
     /**
      * Here it will subscribe to the observer from login data service. The stheme is part of
@@ -91,7 +129,7 @@ export class ThemeService {
      * @param theme The theme which is applied.
      */
     private changeTheme(theme: string): void {
-        this._currentTheme = theme;
+        this._currentThemeClass = theme;
 
         const classList = document.getElementsByTagName('body')[0].classList; // Get the classlist of the body.
         const toRemove = Array.from(classList).filter((item: string) => item.includes('-theme'));

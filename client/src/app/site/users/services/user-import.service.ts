@@ -11,12 +11,13 @@ import { ImportConfig } from 'app/core/ui-services/base-import.service';
 import { CsvExportService } from 'app/core/ui-services/csv-export.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { User } from 'app/shared/models/users/user';
-import { ImportHelper } from 'app/site/common/import/import-helper';
 import { BaseUserExport } from '../base/base-user-export';
 import { BaseUserImportService } from '../base/base-user-import.service';
 import { GroupImportHelper } from '../import/group-import-helper';
 import { userExportExample } from '../export/user-export-example';
 import { userHeadersAndVerboseNames } from '../users.constants';
+import { ImportServiceCollector } from '../../../core/ui-services/import-service-collector';
+import { BeforeImportHandler } from 'app/shared/utils/import/base-before-import-handler';
 
 const GROUP_PROPERTY = 'group_ids';
 
@@ -53,15 +54,13 @@ export class UserImportService extends BaseUserImportService {
      * @param matSnackbar MatSnackBar for displaying error messages
      */
     public constructor(
-        translate: TranslateService,
-        papa: Papa,
-        matSnackbar: MatSnackBar,
+        serviceCollector: ImportServiceCollector,
         repo: UserRepositoryService,
         private groupRepo: GroupRepositoryService,
         private activeMeetingId: ActiveMeetingIdService,
         private exporter: CsvExportService
     ) {
-        super(translate, papa, matSnackbar, repo);
+        super(serviceCollector, repo);
     }
 
     /**
@@ -79,15 +78,16 @@ export class UserImportService extends BaseUserImportService {
     protected getConfig(): ImportConfig {
         return {
             modelHeadersAndVerboseNames: userHeadersAndVerboseNames,
+            verboseNameFn: plural => this.repo.getVerboseName(plural),
             hasDuplicatesFn: (entry: Partial<User>) =>
                 this.repo.getViewModelList().some(user => user.username === entry.username),
-            bulkCreateFn: (entries: any[]) => this.createUsers(entries)
+            createFn: (entries: any[]) => this.createUsers(entries)
         };
     }
 
-    protected getImportHelpers(): { [key: string]: ImportHelper<User> } {
+    protected getBeforeImportHelpers(): { [key: string]: BeforeImportHandler } {
         return {
-            [GROUP_PROPERTY]: new GroupImportHelper(this.groupRepo)
+            [GROUP_PROPERTY]: new GroupImportHelper(this.groupRepo, this.translate)
         };
     }
 

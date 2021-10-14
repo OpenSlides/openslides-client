@@ -28,29 +28,63 @@
 
 <!-- preview table -->
 <mat-card *ngIf="hasFile | async" class="os-form-card spacer-bottom-60">
-    <h3>{{ 'Preview' | translate }}</h3>
+    <div class="action-title">
+        <h2 class="no-margin">{{ 'Summary' | translate }}</h2>
+        <button mat-icon-button (click)="enterFullscreen(fullscreenDialog)" matTooltip="{{ 'Fullscreen' | translate }}">
+            <mat-icon>fullscreen</mat-icon>
+        </button>
+    </div>
     <div>
-        <!-- new entries -->
-        <div *ngIf="newCount">
-            &nbsp;
-            <mat-icon inline>playlist_add</mat-icon>
-            <span>&nbsp;{{ newCount }}&nbsp;</span> <span>{{ 'Participant(s) will be imported.' | translate }}</span>
+        <div>
+            <ng-container *ngFor="let step of importingStepsObservable | async">
+                <div
+                    class="import-list-summary"
+                    [ngClass]="{
+                        'green-text': step.phase === Phase.FINISHED,
+                        'red-warning-text': step.phase === Phase.ERROR
+                    }"
+                >
+                    <ng-container *ngTemplateOutlet="phaseIcon; context: { phase: step.phase }"></ng-container>
+                    <span *ngIf="step.phase !== Phase.ENQUEUED">
+                        {{ step.getModelsImported().length }} {{ 'of' | translate }}
+                    </span>
+                    &nbsp;
+                    <span>{{ step.getModelsToCreate().length }} {{ step.getVerboseName() | translate }}</span>
+                    &nbsp;
+                    <span>{{ getLabelByStepPhase(step.phase) | translate }}</span>
+                </div>
+            </ng-container>
         </div>
         <!-- errors/duplicates -->
         <div *ngIf="nonImportableCount" class="red-warning-text">
             &nbsp;
             <mat-icon inline>warning</mat-icon>
-            <span>&nbsp;{{ nonImportableCount }}&nbsp;</span> <span>{{ 'entries will be ommitted.' | translate }}</span>
-        </div>
-        <!-- have been imported -->
-        <div *ngIf="doneCount" class="green-text">
-            &nbsp;
-            <mat-icon inline>done</mat-icon>
-            <span>&nbsp;{{ doneCount }}&nbsp;</span> <span>{{ 'Participants have been imported.' | translate }}</span>
+            <span>&nbsp;{{ nonImportableCount }}&nbsp;</span>
+            <span>{{ 'entries will be ommitted.' | translate }}</span>
         </div>
     </div>
-    <div *ngIf="newCount">
+    <div class="margin-top-12 margin-bottom-12" *ngIf="newCount">
         <span>{{ 'After verifiy the preview click on "import" please (see top right).' | translate }}</span>
+    </div>
+    <div
+        *ngIf="((leftExpectedHeaders | keyvalue).length > 0 || leftReceivedHeaders.length > 0) && newCount"
+        class="flex-vertical-center"
+    >
+        <div class="fake-button-no-touch">
+            <mat-icon>warning</mat-icon>
+        </div>
+        <div>
+            {{ 'There are some columns that do not match the template' | translate }}
+            <div class="flex-vertical-center">
+                <span
+                    class="flex-vertical-center subtitle"
+                    *ngFor="let header of leftExpectedHeaders | keyvalue; let last = last"
+                >
+                    {{ header.value }}
+                    <span *ngIf="!last">,&nbsp;</span>
+                </span>
+            </div>
+        </div>
     </div>
 
     <mat-select *ngIf="nonImportableCount" class="filter-imports" [(value)]="shown" (selectionChange)="setFilter()">
@@ -59,26 +93,9 @@
         <mat-option value="noerror">{{ 'Show correct entries only' | translate }}</mat-option>
     </mat-select>
 
+    <h2>{{ 'Preview' | translate }}</h2>
     <div>
-        <pbl-ngrid
-            class="import-list-preview-table"
-            [attr.vScrollFixed]="rowHeight !== -1 ? rowHeight : false"
-            [attr.vScrollAuto]="rowHeight === -1"
-            [showHeader]="true"
-            [dataSource]="vScrollDataSource"
-            [columns]="columnSet"
-        >
-            <ng-container *ngTemplateOutlet="statusTemplate"></ng-container>
-            <div *pblNgridCellTypeDef="'boolean'; value as value">
-                <mat-checkbox disabled [checked]="value"></mat-checkbox>
-            </div>
-            <div *pblNgridCellDef="'*'; row as row; col as col; value as value">
-                <ng-container
-                    *ngTemplateOutlet="entryTemplate; context: { entry: row.newEntry, cell: row, def: col.prop }"
-                ></ng-container>
-            </div>
-            <ng-content></ng-content>
-        </pbl-ngrid>
+        <ng-container *ngTemplateOutlet="previewList"></ng-container>
     </div>
 </mat-card>
 
@@ -92,11 +109,20 @@
     <br />
     <div class="code red-warning-text">
         <span *ngFor="let entry of possibleFields; let last = last">
-            {{ entry | translate }}<span *ngIf="!last">, </span>
+            {{ entry | translate }}
+            <span *ngIf="!last">,</span>
         </span>
     </div>
-    <ul>
-        <ng-content select="[requiredFields]"></ng-content>
+    <ul *ngIf="requiredFields.length">
+        <li>
+            <span *ngFor="let field of requiredFields; let last = last">
+                {{ field }}
+                <span *ngIf="!last">,&nbsp;</span>
+            </span>
+            <span *ngIf="requiredFields.length === 1">{{ 'is required' | translate }}.</span>
+            <span *ngIf="requiredFields.length > 1">{{ 'are required' | translate }}.</span>
+            {{ 'All other fields are optional and may be empty.' | translate }}
+        </li>
         <li>
             {{
                 'Additional columns after the required ones may be present and will not affect the import.' | translate
@@ -106,7 +132,7 @@
     <button mat-button color="accent" (click)="downloadCsvExample()">
         {{ 'Download CSV example file' | translate }}
     </button>
-    <div class="wrapper">
+    <div class="wrapper import-list-wrapper">
         <mat-form-field>
             <mat-label>{{ 'Encoding of the file' | translate }}</mat-label>
             <mat-select class="selection" (selectionChange)="selectEncoding($event)" [value]="encodings[0].value">
@@ -150,35 +176,35 @@
 </ng-template>
 
 <ng-template #statusTemplate>
-    <div *pblNgridCellDef="'status'; row as entry">
-        <div *ngIf="entry.status === 'error'">
-            <mat-icon class="red-warning-text" matTooltip="{{ entry.errors.length }} {{ 'errors' | translate }}">
-                {{ getActionIcon(entry) }}
+    <div *pblNgridCellDef="'status'; row as row">
+        <div *ngIf="row.status === 'error'" class="red-warning-text">
+            <mat-icon class="red-warning-text" matTooltip="{{ getErrorDescription(row) }}">
+                {{ getActionIcon(row) }}
             </mat-icon>
             <mat-icon
                 color="warn"
-                *ngIf="hasError(entry, 'ParsingErrors')"
+                *ngIf="hasError(row, 'ParsingErrors')"
                 matTooltip="{{ getVerboseError('ParsingErrors') | translate }}"
             >
                 warning
             </mat-icon>
         </div>
-        <div *ngIf="entry.status === 'new'">
+        <div *ngIf="row.status === 'new'">
             <mat-icon matTooltip="{{ modelName + ' will be imported' | translate }}">
-                {{ getActionIcon(entry) }}
+                {{ getActionIcon(row) }}
             </mat-icon>
         </div>
-        <div *ngIf="entry.status === 'done'">
+        <div *ngIf="row.status === 'done'" class="green-text">
             <mat-icon matTooltip="{{ modelName + ' has been imported' | translate }}">
-                {{ getActionIcon(entry) }}
+                {{ getActionIcon(row) }}
             </mat-icon>
         </div>
     </div>
 </ng-template>
 
-<ng-template #entryTemplate let-cell="cell" let-entry="entry" let-def="def">
+<ng-template #entryTemplate let-row="row" let-entry="entry" let-def="def">
     <div *ngIf="entry[def]">
-        <mat-icon color="warn" *ngIf="hasError(cell, def)" matTooltip="{{ getVerboseError(def) | translate }}">
+        <mat-icon color="warn" *ngIf="hasError(row, def)" matTooltip="{{ getVerboseError(def) | translate }}">
             warning
         </mat-icon>
         <ng-container *ngIf="isArray(entry[def])">
@@ -192,9 +218,82 @@
             <ng-container *ngIf="!isObject(entry[def])">{{ entry[def] | translate }}</ng-container>
             <ng-container *ngIf="isObject(entry[def])">
                 {{ entry[def].name | translate }}
-                <mat-icon class="newBadge" color="accent" inline *ngIf="!entry[def].id"> add </mat-icon>
+                <mat-icon class="newBadge" color="accent" inline *ngIf="!entry[def].id">add</mat-icon>
             </ng-container>
             &nbsp;
         </ng-container>
+    </div>
+</ng-template>
+
+<ng-template #previewList>
+    <pbl-ngrid
+        class="import-list-preview-table"
+        [attr.vScrollFixed]="rowHeight !== -1 ? rowHeight : false"
+        [attr.vScrollAuto]="rowHeight === -1"
+        [showHeader]="true"
+        [dataSource]="vScrollDataSource"
+        [columns]="columnSet"
+    >
+        <div *pblNgridHeaderCellDef="'*'; col as col" class="full-width">
+            <div class="one-line">
+                {{ col.label | translate }}
+            </div>
+            <div class="small-text" *ngIf="col.prop !== 'status' && col.prop !== 'importTrackId'">
+                <mat-form-field *ngIf="isUnknown(col.prop)">
+                    <mat-label>{{ 'Choose a header' | translate }}</mat-label>
+                    <mat-select [ngModel]="headerValueMap" (ngModelChange)="onChangeUnknownHeaderKey(col.prop, $event)">
+                        <mat-option *ngFor="let option of leftReceivedHeaders" [value]="option">
+                            {{ option }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <ng-container *ngTemplateOutlet="statusTemplate"></ng-container>
+        <div *pblNgridCellDef="'importTrackId'; value as value">
+            {{ value }}
+        </div>
+        <div *pblNgridCellTypeDef="'boolean'; value as value">
+            <mat-checkbox disabled [checked]="value"></mat-checkbox>
+        </div>
+        <div
+            class="ngrid-preview one-line"
+            *pblNgridCellDef="'*'; row as row; col as col; value as value"
+            [matTooltip]="getTooltip(value)"
+        >
+            <ng-container
+                *ngTemplateOutlet="entryTemplate; context: { entry: row.newEntry, row: row, def: col.prop }"
+            ></ng-container>
+        </div>
+        <ng-content></ng-content>
+    </pbl-ngrid>
+</ng-template>
+
+<ng-template #fullscreenDialog>
+    <div mat-dialog-title class="action-title">
+        <h1 class="dialog-title">{{ 'Fullscreen preview' | translate }}</h1>
+        <button mat-icon-button [mat-dialog-close]="null" matTooltip="{{ 'Fullscreen exit' | translate }}">
+            <mat-icon>fullscreen_exit</mat-icon>
+        </button>
+    </div>
+    <div mat-dialog-content>
+        <ng-container *ngTemplateOutlet="previewList"></ng-container>
+    </div>
+</ng-template>
+
+<ng-template #phaseIcon let-phase="phase">
+    <div [ngSwitch]="phase">
+        <div *ngSwitchCase="Phase.ENQUEUED">
+            <mat-icon class="icon-16 margin-left-12 margin-right-12"></mat-icon>
+        </div>
+        <div *ngSwitchCase="Phase.PENDING">
+            <mat-icon class="icon-16 margin-left-12 margin-right-12 import-list-icon">sync</mat-icon>
+        </div>
+        <div *ngSwitchCase="Phase.FINISHED">
+            <mat-icon class="icon-16 margin-left-12 margin-right-12">done</mat-icon>
+        </div>
+        <div *ngSwitchCase="Phase.ERROR">
+            <mat-icon class="icon-16 margin-left-12 margin-right-12">close</mat-icon>
+        </div>
     </div>
 </ng-template>

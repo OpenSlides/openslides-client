@@ -8,7 +8,7 @@ export namespace OrganizationTagAction {
 
     export interface OrganizationTagPayload {
         name: string;
-        color: HtmlColor;
+        color?: HtmlColor;
     }
 
     export interface CreatePayload extends OrganizationTagPayload {

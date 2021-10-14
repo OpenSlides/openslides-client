@@ -27,7 +27,7 @@ export interface SpinnerConfig extends CustomOverlayConfig {
     providedIn: 'root'
 })
 export class SpinnerService {
-    private overlayInstance: OverlayInstance | null = null;
+    private overlayInstance: OverlayInstance<GlobalSpinnerComponent> | null = null;
 
     private isOperatorReady = false;
     private hasUpgradeChecked = false;
@@ -44,12 +44,13 @@ export class SpinnerService {
         private router: Router
     ) {}
 
-    public show(text?: string, config: SpinnerConfig = {}): void {
+    public show(text?: string, config: SpinnerConfig = {}): OverlayInstance<GlobalSpinnerComponent> {
         if (this.overlayInstance) {
-            return; // Prevent multiple instances at the same time.
+            return this.overlayInstance; // Prevent multiple instances at the same time.
         }
         this.overlayInstance = this.overlay.open(GlobalSpinnerComponent, {
             ...config,
+            onCloseFn: () => (this.overlayInstance = null),
             data: {
                 text
             }
@@ -59,6 +60,7 @@ export class SpinnerService {
         } else if (config.hideAfterPromiseResolved) {
             this.initPromise(config.hideAfterPromiseResolved);
         }
+        return this.overlayInstance;
     }
 
     public hide(): void {

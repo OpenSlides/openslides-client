@@ -1,8 +1,20 @@
-<ng-container *ngIf="meeting.start_time === meeting.end_time">
-    <span>{{ meeting.start_time | localizedDate: 'll' }}</span>
+<ng-container *ngIf="meeting">
+    <ng-container *ngIf="meeting.start_time === meeting.end_time">
+        <span>{{ meeting.start_time | localizedDate: 'll' }}</span>
+    </ng-container>
+    <ng-container *ngIf="meeting.start_time !== meeting.end_time">
+        <span *ngIf="meeting.start_time">{{ meeting.start_time | localizedDate: 'll' }}</span>
+        <span *ngIf="meeting.start_time && meeting.end_time">&nbsp;-&nbsp;</span>
+        <span *ngIf="meeting.end_time">{{ meeting.end_time | localizedDate: 'll' }}</span>
+    </ng-container>
 </ng-container>
-<ng-container *ngIf="meeting.start_time !== meeting.end_time">
-    <span *ngIf="meeting.start_time">{{ meeting.start_time | localizedDate: 'll' }}</span>
-    <span *ngIf="meeting.start_time && meeting.end_time">&nbsp;-&nbsp;</span>
-    <span *ngIf="meeting.end_time">{{ meeting.end_time | localizedDate: 'll' }}</span>
+<ng-container *ngIf="!meeting">
+    <ng-container *ngIf="startTime === endTime">
+        <span>{{ startTime | localizedDate: 'll' }}</span>
+    </ng-container>
+    <ng-container *ngIf="startTime !== endTime">
+        <span *ngIf="startTime">{{ startTime | localizedDate: 'll' }}</span>
+        <span *ngIf="startTime && endTime">&nbsp;-&nbsp;</span>
+        <span *ngIf="endTime">{{ endTime | localizedDate: 'll' }}</span>
+    </ng-container>
 </ng-container>

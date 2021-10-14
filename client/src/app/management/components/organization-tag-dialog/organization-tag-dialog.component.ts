@@ -9,6 +9,7 @@ import { BaseComponent } from 'app/site/base/components/base.component';
 
 interface OrganizationTagDialogData {
     organizationTag?: ViewOrganizationTag;
+    defaultColor: HtmlColor;
     getRandomColor: () => HtmlColor;
 }
 
@@ -51,7 +52,7 @@ export class OrganizationTagDialogComponent extends BaseComponent implements OnI
 
     public onSaveClicked(): void {
         const { name, color }: { name: string; color: string } = this.organizationTagForm.value;
-        this.dialogRef.close({ name, color: `#${color}` });
+        this.dialogRef.close({ name, color: color.startsWith('#') ? color : `#${color}` });
     }
 
     public generateColor(): void {
@@ -64,7 +65,7 @@ export class OrganizationTagDialogComponent extends BaseComponent implements OnI
     }
 
     private createForm(): void {
-        this._lastValidColor = this.getRandomColor();
+        this._lastValidColor = this.data.defaultColor;
         this.organizationTagForm = this.fb.group({
             name: ['', Validators.required],
             color: [this._lastValidColor, Validators.pattern(/^[0-9a-fA-F]{6}$/)]

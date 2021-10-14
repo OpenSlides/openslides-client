@@ -50,7 +50,7 @@ function isMapDefinition<T>(obj: any): obj is CsvColumnDefinitionMap<T> {
  * The definition of columns in the export. Either use a property for every model or do a custom mapping to
  * a string to be put into the csv.
  */
-type CsvColumnsDefinition<T> = (CsvColumnDefinitionProperty<T> | CsvColumnDefinitionMap<T>)[];
+export type CsvColumnsDefinition<T> = (CsvColumnDefinitionProperty<T> | CsvColumnDefinitionMap<T>)[];
 
 const ISO_8859_15_ENCODING = 'iso-8859-15';
 

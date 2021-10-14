@@ -1,8 +1,4 @@
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-
-import { TranslateService } from '@ngx-translate/core';
-import { Papa } from 'ngx-papaparse';
 
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
@@ -12,12 +8,13 @@ import { UserRepositoryService } from 'app/core/repositories/users/user-reposito
 import { BaseImportService, ImportConfig } from 'app/core/ui-services/base-import.service';
 import { Motion } from 'app/shared/models/motions/motion';
 import { CategoryImportHelper } from '../import/category-import-helper';
-import { ImportHelper } from '../../common/import/import-helper';
 import { MotionBlockImportHelper } from '../import/motion-block-import-helper';
 import { MotionCsvExportService } from './motion-csv-export.service';
 import { getMotionExportHeadersAndVerboseNames } from '../motions.constants';
 import { TagImportHelper } from '../import/tag-import-helper';
 import { UserImportHelper } from '../import/user-import-helper';
+import { ImportServiceCollector } from '../../../core/ui-services/import-service-collector';
+import { BeforeImportHandler } from 'app/shared/utils/import/base-before-import-handler';
 
 const CATEGORY_PROPERTY = 'category';
 const MOTION_BLOCK_PROPERTY = 'motion_block';
@@ -56,9 +53,6 @@ export class MotionImportService extends BaseImportService<Motion> {
      * @param categoryRepo Repository to fetch pre-existing categories
      * @param motionBlockRepo Repository to fetch pre-existing motionBlocks
      * @param userRepo Repository to query/ create users
-     * @param translate Translation service
-     * @param papa External csv parser (ngx-papaparser)
-     * @param matSnackBar snackBar to display import errors
      */
     public constructor(
         private repo: MotionRepositoryService,
@@ -67,11 +61,9 @@ export class MotionImportService extends BaseImportService<Motion> {
         private userRepo: UserRepositoryService,
         private tagRepo: TagRepositoryService,
         private exporter: MotionCsvExportService,
-        translate: TranslateService,
-        papa: Papa,
-        matSnackbar: MatSnackBar
+        serviceCollector: ImportServiceCollector
     ) {
-        super(translate, papa, matSnackbar);
+        super(serviceCollector);
     }
 
     public downloadCsvExample(): void {
@@ -81,19 +73,28 @@ export class MotionImportService extends BaseImportService<Motion> {
     protected getConfig(): ImportConfig {
         return {
             modelHeadersAndVerboseNames: getMotionExportHeadersAndVerboseNames(),
+            verboseNameFn: plural => this.repo.getVerboseName(plural),
             hasDuplicatesFn: (entry: Partial<Motion>) =>
                 this.repo.getViewModelList().some(motion => motion.number === entry.number),
-            bulkCreateFn: (entries: Motion[]) => this.repo.bulkCreate(entries)
+            createFn: (entries: Motion[]) => this.repo.bulkCreate(entries)
         };
     }
 
-    protected getImportHelpers(): { [key: string]: ImportHelper<Motion> } {
+    protected getBeforeImportHelpers(): { [key: string]: BeforeImportHandler<Motion> } {
         return {
             [MOTION_BLOCK_PROPERTY]: new MotionBlockImportHelper(this.motionBlockRepo, this.translate),
             [CATEGORY_PROPERTY]: new CategoryImportHelper(this.categoryRepo, this.translate),
             [TAG_PROPERTY]: new TagImportHelper(this.tagRepo),
-            [SUBMITTER_PROPERTY]: new UserImportHelper(this.userRepo, 'Submitters', 'submitter_ids'),
-            [SUPPORTER_PROPERTY]: new UserImportHelper(this.userRepo, 'Supporters', 'supporter_ids')
+            [SUBMITTER_PROPERTY]: new UserImportHelper({
+                repo: this.userRepo,
+                verboseName: 'Submitters',
+                property: 'submitter_ids'
+            }),
+            [SUPPORTER_PROPERTY]: new UserImportHelper({
+                repo: this.userRepo,
+                verboseName: 'Supporters',
+                property: 'supporter_ids'
+            })
         };
     }
 }

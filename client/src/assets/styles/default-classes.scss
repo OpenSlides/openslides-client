@@ -29,4 +29,11 @@
     .margin-left-#{$i} {
         margin-left: #{$i}px;
     }
+    .icon-#{$i} {
+        $size: #{$i}px;
+        font-size: $size;
+        width: $size !important;
+        height: $size !important;
+        line-height: $size;
+    }
 }

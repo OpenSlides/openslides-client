@@ -1,8 +1,4 @@
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-
-import { TranslateService } from '@ngx-translate/core';
-import { Papa } from 'ngx-papaparse';
 
 import { AgendaItemCreationPayload } from 'app/core/actions/common/agenda-item-creation-payload';
 import { TopicRepositoryService } from 'app/core/repositories/topics/topic-repository.service';
@@ -12,6 +8,7 @@ import { DurationService } from 'app/core/ui-services/duration.service';
 import { AgendaItemType, ItemTypeChoices } from 'app/shared/models/agenda/agenda-item';
 import { Topic } from 'app/shared/models/topics/topic';
 import { topicHeadersAndVerboseNames } from '../topics.constants';
+import { ImportServiceCollector } from '../../../core/ui-services/import-service-collector';
 
 interface TopicExport {
     title?: string;
@@ -43,19 +40,14 @@ export class TopicImportService extends BaseImportService<Topic> {
      *
      * @param durationService: a service for converting time strings and numbers
      * @param repo: The Agenda repository service
-     * @param translate A translation service for translating strings
-     * @param papa Csv parser
-     * @param matSnackBar MatSnackBar for displaying errors
      */
     public constructor(
         private durationService: DurationService,
         private repo: TopicRepositoryService,
         private exporter: CsvExportService,
-        translate: TranslateService,
-        papa: Papa,
-        matSnackBar: MatSnackBar
+        serviceCollector: ImportServiceCollector
     ) {
-        super(translate, papa, matSnackBar);
+        super(serviceCollector);
     }
 
     public downloadCsvExample(): void {
@@ -75,9 +67,10 @@ export class TopicImportService extends BaseImportService<Topic> {
     protected getConfig(): ImportConfig<any> {
         return {
             modelHeadersAndVerboseNames: topicHeadersAndVerboseNames,
+            verboseNameFn: plural => this.repo.getVerboseName(plural),
             hasDuplicatesFn: (entry: Partial<Topic>) =>
                 this.repo.getViewModelList().some(topic => topic.title === entry.title),
-            bulkCreateFn: (entries: any[]) => this.repo.bulkCreate(entries)
+            createFn: (entries: any[]) => this.repo.bulkCreate(entries)
         };
     }
 

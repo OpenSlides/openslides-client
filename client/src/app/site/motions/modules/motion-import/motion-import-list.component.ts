@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 
-import { PblColumnDefinition } from '@pebula/ngrid';
-
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { Motion } from 'app/shared/models/motions/motion';
 import { BaseImportListComponent } from 'app/site/base/components/base-import-list.component';
 import { MotionImportService } from 'app/site/motions/services/motion-import.service';
 import { getVerboseNameOfMotionProperty, motionExpectedHeaders } from '../../motions.constants';
+import { ImportListViewHeaderDefinition } from '../../../../shared/components/import-list-view/import-list-view.component';
 
 /**
  * Component for the motion import list view.
@@ -20,10 +19,12 @@ import { getVerboseNameOfMotionProperty, motionExpectedHeaders } from '../../mot
 export class MotionImportListComponent extends BaseImportListComponent<Motion> {
     public possibleFields = motionExpectedHeaders.map(header => getVerboseNameOfMotionProperty(header));
 
-    public get columns(): PblColumnDefinition[] {
+    public get columns(): ImportListViewHeaderDefinition[] {
         return motionExpectedHeaders.map(header => ({
             prop: `newEntry.${header}`,
-            label: this.translate.instant(getVerboseNameOfMotionProperty(header))
+            label: this.translate.instant(getVerboseNameOfMotionProperty(header)),
+            isTableColumn: true,
+            isRequired: header === 'title' || header === 'text'
         }));
     }
 

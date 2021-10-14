@@ -50,23 +50,26 @@ export class CommitteeRepositoryService
         };
     }
 
-    public create(committee: Partial<Committee>): Promise<Identifiable> {
-        const payload: CommitteeAction.CreatePayload = {
+    public create(...committees: Partial<Committee>[]): Promise<Identifiable[]> {
+        const payload: CommitteeAction.CreatePayload[] = committees.map(committee => ({
             name: committee.name,
             organization_id: ORGANIZATION_ID,
             ...this.getPartialCommitteePayload(committee)
-        };
-        return this.sendActionToBackend(CommitteeAction.CREATE, payload);
+        }));
+        return this.sendBulkActionToBackend(CommitteeAction.CREATE, payload);
     }
 
-    public update(update: Partial<Committee>, committee: ViewCommittee): Promise<void> {
-        const payload: CommitteeAction.UpdatePayload = {
-            id: committee.id,
-            name: update.name,
-            default_meeting_id: update.default_meeting_id,
-            ...this.getPartialCommitteePayload(update)
-        };
-        return this.sendActionToBackend(CommitteeAction.UPDATE, payload);
+    public update(update?: Partial<Committee>, ...committees: ViewCommittee[]): Promise<void> {
+        const createPayload = (id: Id, model: Partial<Committee>) => ({
+            id,
+            name: model.name,
+            default_meeting_id: model.default_meeting_id,
+            ...this.getPartialCommitteePayload(model)
+        });
+        const payload: CommitteeAction.UpdatePayload[] = committees.map(committee =>
+            createPayload(committee.id, update ?? committee)
+        );
+        return this.sendBulkActionToBackend(CommitteeAction.UPDATE, payload);
     }
 
     public delete(...committees: ViewCommittee[]): Promise<void> {

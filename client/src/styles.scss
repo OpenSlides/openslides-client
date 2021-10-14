@@ -216,13 +216,17 @@ b,
     @extend .regular-shadow;
 }
 
-.os-card {
+.os-card,
+.os-form-card {
     max-width: 770px;
     margin-top: 20px !important;
-    margin-bottom: 20px !important;
     margin-left: auto !important;
     margin-right: auto !important;
     font-size: 16px;
+}
+
+.os-card {
+    margin-bottom: 20px !important;
 
     .mat-select-arrow-wrapper {
         visibility: hidden;
@@ -230,11 +234,6 @@ b,
 }
 
 .os-form-card {
-    max-width: 770px;
-    margin-top: 20px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    font-size: 16px;
     padding: 27px;
 
     .mat-form-field {
@@ -814,6 +813,12 @@ button.mat-menu-item.selected {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.flex-vertical-center {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .nocursor {

@@ -62,8 +62,8 @@ export class OverlayComponent implements OnInit {
      *
      * @param componentRef The component to attach.
      */
-    public attachComponent<C>(componentRef: ComponentPortal<C>): void {
-        this.outletPortal.attachComponentPortal(componentRef);
+    public attachComponent<C>(componentRef: ComponentPortal<C>): C {
+        return this.outletPortal.attachComponentPortal(componentRef).instance;
     }
 
     /**

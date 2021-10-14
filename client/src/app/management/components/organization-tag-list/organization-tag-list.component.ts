@@ -13,6 +13,8 @@ import { ViewOrganizationTag } from 'app/management/models/view-organization-tag
 import { mediumDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
 import { OrganizationTagDialogComponent } from '../organization-tag-dialog/organization-tag-dialog.component';
+import { ORGANIZATION_ID } from '../../../core/core-services/organization.service';
+import { ThemeService } from '../../../core/ui-services/theme.service';
 
 @Component({
     selector: 'os-organization-tag-list',
@@ -40,7 +42,8 @@ export class OrganizationTagListComponent extends BaseListViewComponent<ViewOrga
         public repo: OrganizationTagRepositoryService,
         private dialog: MatDialog,
         private promptService: PromptService,
-        private colorService: ColorService
+        private colorService: ColorService,
+        private theme: ThemeService
     ) {
         super(serviceCollector);
         super.setTitle('Tags');
@@ -60,6 +63,7 @@ export class OrganizationTagListComponent extends BaseListViewComponent<ViewOrga
             ...mediumDialogSettings,
             data: {
                 organizationTag: orgaTag,
+                defaultColor: this.theme.currentAccentColor,
                 getRandomColor: () => this.colorService.getRandomHtmlColor()
             }
         });
@@ -92,7 +96,7 @@ export class OrganizationTagListComponent extends BaseListViewComponent<ViewOrga
     protected getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewOrganization,
-            ids: [1],
+            ids: [ORGANIZATION_ID],
             fieldset: 'list',
             follow: [{ idField: 'organization_tag_ids' }]
         };

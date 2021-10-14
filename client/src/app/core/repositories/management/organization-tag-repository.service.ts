@@ -14,6 +14,7 @@ import { OrganizationTag } from 'app/shared/models/event-management/organization
 import { BaseRepository } from '../base-repository';
 import { ModelRequestRepository } from '../model-request-repository';
 import { RepositoryServiceCollectorWithoutActiveMeetingService } from '../repository-service-collector-without-active-meeting-service';
+import { ThemeService } from '../../ui-services/theme.service';
 
 @Injectable({
     providedIn: 'root'
@@ -22,11 +23,14 @@ export class OrganizationTagRepositoryService
     extends BaseRepository<ViewOrganizationTag, OrganizationTag>
     implements ModelRequestRepository
 {
-    public constructor(serviceCollector: RepositoryServiceCollectorWithoutActiveMeetingService) {
+    public constructor(
+        serviceCollector: RepositoryServiceCollectorWithoutActiveMeetingService,
+        private theme: ThemeService
+    ) {
         super(serviceCollector, OrganizationTag);
     }
 
-    public getVerboseName = (plural?: boolean): string => (plural ? 'tags' : 'tag');
+    public getVerboseName = (plural?: boolean): string => (plural ? 'Tags' : 'Tag');
     public getTitle = (viewModel: ViewOrganizationTag): string => viewModel.name;
     public getFieldsets(): Fieldsets<OrganizationTag> {
         const detailFieldset: (keyof OrganizationTag)[] = ['color', 'name', 'committee_ids', 'organization_id'];
@@ -35,13 +39,13 @@ export class OrganizationTagRepositoryService
         };
     }
 
-    public create(tag: OrganizationTagAction.OrganizationTagPayload): Promise<Identifiable> {
-        const payload: OrganizationTagAction.CreatePayload = {
+    public create(...tags: OrganizationTagAction.OrganizationTagPayload[]): Promise<Identifiable[]> {
+        const payload: OrganizationTagAction.CreatePayload[] = tags.map(tag => ({
             name: tag.name,
-            color: tag.color,
+            color: tag.color ?? this.theme.currentAccentColor,
             organization_id: ORGANIZATION_ID
-        };
-        return this.sendActionToBackend(OrganizationTagAction.CREATE, payload);
+        }));
+        return this.sendBulkActionToBackend(OrganizationTagAction.CREATE, payload);
     }
 
     public update(

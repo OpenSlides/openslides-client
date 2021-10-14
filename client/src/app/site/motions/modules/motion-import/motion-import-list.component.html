@@ -11,13 +11,4 @@
     </div>
 </os-head-bar>
 
-<os-import-list-view [importer]="importer" [columns]="columns" [possibleFields]="possibleFields">
-    <ng-container requiredFields>
-        <li>
-            {{
-                'Number, reason, submitter, category, origin and motion block are optional and may be empty.'
-                    | translate
-            }}
-        </li>
-    </ng-container>
-</os-import-list-view>
+<os-import-list-view [importer]="importer" [columns]="columns" [possibleFields]="possibleFields"></os-import-list-view>

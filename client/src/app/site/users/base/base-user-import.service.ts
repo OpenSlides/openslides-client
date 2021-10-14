@@ -1,22 +1,13 @@
-import { MatSnackBar } from '@angular/material/snack-bar';
-
-import { TranslateService } from '@ngx-translate/core';
-import { Papa } from 'ngx-papaparse';
-
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { BaseImportService, NewEntry } from 'app/core/ui-services/base-import.service';
 import { User } from 'app/shared/models/users/user';
+import { ImportServiceCollector } from '../../../core/ui-services/import-service-collector';
 
 export abstract class BaseUserImportService extends BaseImportService<User> {
     public requiredHeaderLength = 3;
 
-    public constructor(
-        translate: TranslateService,
-        papa: Papa,
-        matSnackBar: MatSnackBar,
-        protected repo: UserRepositoryService
-    ) {
-        super(translate, papa, matSnackBar);
+    public constructor(serviceCollector: ImportServiceCollector, protected repo: UserRepositoryService) {
+        super(serviceCollector);
     }
 
     /**

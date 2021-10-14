@@ -6,6 +6,7 @@ import { SharedModule } from 'app/shared/shared.module';
 import { CommitteeDetailComponent } from './components/committee-detail/committee-detail.component';
 import { CommitteeEditComponent } from './components/committee-edit/committee-edit.component';
 import { CommitteeListComponent } from './components/committee-list/committee-list.component';
+import { CommitteeImportListComponent } from './components/committee-import-list/committee-import-list.component';
 import { CommitteeMetaInfoComponent } from './components/committee-meta-info/committee-meta-info.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ManagementNavigationComponent } from './components/management-navigation/management-navigation.component';
@@ -42,7 +43,8 @@ import { OrganizationTagListComponent } from './components/organization-tag-list
         MeetingImportComponent,
         CommitteeDetailComponent,
         MeetingPreviewComponent,
-        CommitteeMetaInfoComponent
+        CommitteeMetaInfoComponent,
+        CommitteeImportListComponent
     ]
 })
 export class ManagementModule {}

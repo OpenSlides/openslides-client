@@ -64,7 +64,7 @@ export class GroupRepositoryService
             .join(', ');
     }
 
-    public create(...groups: GroupAction.CreateParameters[]): Promise<Identifiable> {
+    public create(...groups: GroupAction.CreateParameters[]): Promise<Identifiable[]> {
         const payload: GroupAction.CreatePayload[] = groups.map(group => this.getCreatePayload(group));
         return this.sendBulkActionToBackend(GroupAction.CREATE, payload);
     }

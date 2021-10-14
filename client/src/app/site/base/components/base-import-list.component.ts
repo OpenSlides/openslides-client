@@ -4,12 +4,15 @@ import { auditTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { BaseImportService } from 'app/core/ui-services/base-import.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { BaseModel } from 'app/shared/models/base/base-model';
 import { getLongPreview, getShortPreview } from 'app/shared/utils/previewStrings';
 import { BaseModelContextComponent } from './base-model-context.component';
+import { Identifiable } from '../../../shared/models/base/identifiable';
 
 @Directive()
-export abstract class BaseImportListComponent<M extends BaseModel> extends BaseModelContextComponent implements OnInit {
+export abstract class BaseImportListComponent<M extends Identifiable>
+    extends BaseModelContextComponent
+    implements OnInit
+{
     /**
      * Helper function for previews
      */

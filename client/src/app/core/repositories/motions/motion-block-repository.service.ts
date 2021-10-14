@@ -32,13 +32,8 @@ export class MotionBlockRepositoryService extends BaseIsAgendaItemAndListOfSpeak
         this.initSorting();
     }
 
-    public create(partialModel: Partial<MotionBlockAction.CreatePayload>): Promise<Identifiable> {
-        const payload: MotionBlockAction.CreatePayload = this.getCreatePayload(partialModel);
-        return this.sendActionToBackend(MotionBlockAction.CREATE, payload);
-    }
-
-    public bulkCreate(motionBlocks: Partial<MotionBlock>[]): Promise<Identifiable[]> {
-        const payload: MotionBlockAction.CreatePayload[] = motionBlocks.map(block => this.getCreatePayload(block));
+    public create(...blocks: Partial<MotionBlockAction.CreatePayload>[]): Promise<Identifiable[]> {
+        const payload: MotionBlockAction.CreatePayload[] = blocks.map(block => this.getCreatePayload(block));
         return this.sendBulkActionToBackend(MotionBlockAction.CREATE, payload);
     }
 
@@ -51,8 +46,9 @@ export class MotionBlockRepositoryService extends BaseIsAgendaItemAndListOfSpeak
         return this.sendActionToBackend(MotionBlockAction.UPDATE, payload);
     }
 
-    public delete(viewModel: ViewMotionBlock): Promise<any> {
-        return this.sendActionToBackend(MotionBlockAction.DELETE, { id: viewModel.id });
+    public delete(...viewModels: ViewMotionBlock[]): Promise<void> {
+        const payload: MotionBlockAction.DeletePayload[] = viewModels.map(model => ({ id: model.id }));
+        return this.sendBulkActionToBackend(MotionBlockAction.DELETE, payload);
     }
 
     public getFieldsets(): Fieldsets<MotionBlock> {

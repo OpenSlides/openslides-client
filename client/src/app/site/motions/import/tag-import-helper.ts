@@ -2,12 +2,18 @@ import { Id } from 'app/core/definitions/key-types';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { CsvMapping } from 'app/core/ui-services/base-import.service';
 import { Motion } from 'app/shared/models/motions/motion';
-import { ImportHelper, ImportResolveInformation } from '../../common/import/import-helper';
+import { ImportResolveInformation } from 'app/shared/utils/import/import-resolve-information';
+import { Tag } from '../../../shared/models/tag/tag';
+import { BaseBeforeImportHandler } from 'app/shared/utils/import/base-before-import-handler';
 
-export class TagImportHelper implements ImportHelper<Motion> {
-    private newTags: CsvMapping[] = [];
-
-    public constructor(private repo: TagRepositoryService) {}
+export class TagImportHelper extends BaseBeforeImportHandler<Motion, Tag> {
+    public constructor(private repo: TagRepositoryService) {
+        super({
+            idProperty: 'tag_ids',
+            translateFn: value => value,
+            repo
+        });
+    }
 
     public findByName(name: string): CsvMapping[] {
         const result: CsvMapping[] = [];
@@ -23,26 +29,15 @@ export class TagImportHelper implements ImportHelper<Motion> {
                 result.push({ id: existingTag.id, name: existingTag.name });
                 continue;
             }
-            if (!this.newTags.find(entry => entry.name === tag)) {
-                this.newTags.push({ name: tag });
+            if (!this.modelsToCreate.find(entry => entry.name === tag)) {
+                this.modelsToCreate.push({ name: tag });
             }
             result.push({ name: tag });
         }
         return result;
     }
 
-    public async createUnresolvedEntries(): Promise<void> {
-        if (!this.newTags.length) {
-            return;
-        }
-        const ids = await this.repo.bulkCreate(this.newTags);
-        this.newTags = this.newTags.map((tag, index) => ({
-            name: tag.name,
-            id: ids[index].id
-        }));
-    }
-
-    public linkToItem(item: Motion, propertyName: string): ImportResolveInformation<Motion> {
+    public doResolve(item: Motion, propertyName: string): ImportResolveInformation<Motion> {
         const property = item[propertyName];
         const ids: Id[] = [];
         const result: ImportResolveInformation<Motion> = {
@@ -55,11 +50,11 @@ export class TagImportHelper implements ImportHelper<Motion> {
                 ids.push(tag.id);
                 continue;
             }
-            if (!this.newTags.length) {
+            if (!this.modelsToCreate.length) {
                 ++result.unresolvedModels;
                 continue;
             }
-            const mapped = this.newTags.find(t => t.name === tag.name);
+            const mapped = this.modelsToCreate.find(t => t.name === tag.name);
             if (mapped) {
                 tag.id = mapped.id;
                 ids.push(mapped.id);
