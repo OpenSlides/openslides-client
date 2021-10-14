@@ -72,12 +72,6 @@ export class PollFormComponent extends BaseComponent implements OnInit {
      */
     public pollValues: [string, unknown][] = [];
 
-    /**
-     * Model for the checkbox.
-     * If true, the given poll will immediately be published.
-     */
-    public publishImmediately = true;
-
     public showNonNominalWarning = false;
 
     public get isAssignmentPoll(): boolean {

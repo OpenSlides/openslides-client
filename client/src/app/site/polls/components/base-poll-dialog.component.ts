@@ -100,7 +100,7 @@ export abstract class BasePollDialogComponent extends BaseComponent implements O
     public submitPoll(): void {
         const pollForm = this.pollForm.getValues();
         const voteForm = this.dialogVoteForm.value;
-        const payload: any = { ...pollForm, ...voteForm };
+        const payload: any = { ...pollForm, ...voteForm, publish_immediately: this.publishImmediately };
         payload.options = this.getOptions(voteForm.options);
         this.dialogRef.close(payload);
     }
