@@ -77,26 +77,6 @@ export const meetingSettings: SettingsGroup[] = [
         icon: 'home',
         subgroups: [
             {
-                label: _('Event'),
-                settings: [
-                    {
-                        key: 'name',
-                        label: _('Event name'),
-                        validators: [Validators.maxLength(100)],
-                        dontTranslateDefault: true
-                    },
-                    {
-                        key: 'description',
-                        label: _('Short description of event'),
-                        validators: [Validators.maxLength(100)]
-                    },
-                    {
-                        key: 'location',
-                        label: _('Event location')
-                    }
-                ]
-            },
-            {
                 label: 'Live conference',
                 settings: [
                     {
