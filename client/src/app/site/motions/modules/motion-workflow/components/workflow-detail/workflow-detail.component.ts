@@ -85,7 +85,13 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
     /**
      * Holds the current workflow
      */
-    public workflow: ViewMotionWorkflow;
+    public get workflow(): ViewMotionWorkflow {
+        return this._workflow;
+    }
+
+    public get workflowStates(): ViewMotionState[] {
+        return this._workflow.states.sort((a, b) => a.weight - b.weight);
+    }
 
     /**
      * The header rows that the table should show
@@ -138,6 +144,14 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
         { merge: MergeAmendment.YES, label: 'Yes' }
     ] as AmendmentIntoFinal[];
 
+    private set workflow(workflow: ViewMotionWorkflow) {
+        this._workflow = workflow;
+        this.updateRowDef();
+        this.updateView();
+    }
+
+    private _workflow: ViewMotionWorkflow;
+
     /**
      * Constructor
      *
@@ -185,6 +199,10 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
                         {
                             idField: 'next_state_ids',
                             fieldset: 'title'
+                        },
+                        {
+                            idField: 'previous_state_ids',
+                            fieldset: 'title'
                         }
                     ]
                 }
@@ -195,27 +213,9 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
             this.workflowRepo.getViewModelObservable(workflowId).subscribe(newWorkflow => {
                 if (newWorkflow) {
                     this.workflow = newWorkflow;
-                    this.updateRowDef();
                     this.cd.markForCheck();
                 }
             })
-            /**
-             * FIXME :
-             * this was supposed to call for updates after changes to any of the current view states occure.
-             * Cannot be done anymore, since "state_ids" will appear far later than this observable fires
-             * could be done using deffered, rxjs publish-magic or entirely differently.
-             * settings states active need to work to develop this again
-             */
-            // this.stateRepo
-            //     .getViewModelListObservable()
-            //     .pipe(
-            //         map(states => states.filter(state => this.workflow.state_ids.includes(state.id)))
-            //     )
-            //     .subscribe(states => {
-            //         if (states) {
-            //             this.cd.markForCheck();
-            //         }
-            //     })
         );
     }
 
@@ -364,6 +364,10 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
         this.handleRequest(this.stateRepo.update({ merge_amendment_into_final: amendment }, state));
     }
 
+    public exportCurrentWorkflow(): void {
+        this.workflowRepo.exportWorkflows(this.workflow);
+    }
+
     /**
      * Function to open the edit dialog. Returns the observable to the result after the dialog
      * was closed
@@ -413,6 +417,15 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
     }
 
     /**
+     * Sorts states by their weight and returns them.
+     *
+     * @returns The states of this workflow sorted by their weight.
+     */
+    public getWorkflowStates(): ViewMotionState[] {
+        return this.workflow.states.sort((stateA, stateB) => stateA.weight - stateB.weight);
+    }
+
+    /**
      * Update the rowDefinition after Reloading or changes
      */
     public updateRowDef(): void {
@@ -423,7 +436,7 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
              * FIXME:
              * relations work. Why is states of length 0?
              */
-            this.workflow.states.forEach(state => {
+            this.workflowStates.forEach(state => {
                 this.headerRowDef.push(this.getColumnDef(state));
             });
         }
@@ -437,16 +450,6 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
      */
     public getColumnDef(state: ViewMotionState): string {
         return `${state.name}${state.id}`;
-    }
-
-    /**
-     * Required to detect changes in *ngFor loops
-     *
-     * @param index Corresponding group that was changed
-     * @returns the tracked workflows id
-     */
-    public trackElement(index: number): number {
-        return index;
     }
 
     private deleteWorkflowState(state: ViewMotionState): void {

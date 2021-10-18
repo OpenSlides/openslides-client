@@ -11,6 +11,7 @@ import { Id } from 'app/core/definitions/key-types';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { OML, CML } from '../../../core/core-services/organization-permission';
+import { BaseModel } from 'app/shared/models/base/base-model';
 
 /**
  * Provides functionalities that will be used by most components
@@ -251,8 +252,8 @@ export abstract class BaseComponent implements OnDestroy {
     /**
      * Helper for *ngFor => tracked items by their corresponding id.
      */
-    public trackById(_index: number, item: Id): Id {
-        return item;
+    public trackById(_index: number, item: Id | BaseModel): Id {
+        return typeof item === 'number' ? item : item.id;
     }
 
     /**

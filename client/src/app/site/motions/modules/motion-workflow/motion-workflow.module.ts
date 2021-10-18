@@ -5,9 +5,10 @@ import { SharedModule } from 'app/shared/shared.module';
 import { MotionWorkflowRoutingModule } from './motion-workflow-routing.module';
 import { WorkflowDetailComponent } from './components/workflow-detail/workflow-detail.component';
 import { WorkflowListComponent } from './components/workflow-list/workflow-list.component';
+import { WorkflowImportComponent } from './components/workflow-import/workflow-import.component';
 
 @NgModule({
-    declarations: [WorkflowListComponent, WorkflowDetailComponent],
+    declarations: [WorkflowListComponent, WorkflowDetailComponent, WorkflowImportComponent],
     imports: [CommonModule, MotionWorkflowRoutingModule, SharedModule]
 })
 export class MotionWorkflowModule {}
