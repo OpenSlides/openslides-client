@@ -3,12 +3,18 @@ import { TranslateService } from '@ngx-translate/core';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { CsvMapping } from 'app/core/ui-services/base-import.service';
 import { Motion } from 'app/shared/models/motions/motion';
-import { ImportHelper, ImportResolveInformation } from '../../common/import/import-helper';
+import { MotionCategory } from '../../../shared/models/motions/motion-category';
+import { ImportResolveInformation } from 'app/shared/utils/import/import-resolve-information';
+import { BaseBeforeImportHandler } from 'app/shared/utils/import/base-before-import-handler';
 
-export class CategoryImportHelper implements ImportHelper<Motion> {
-    private newMotionCategories: CsvMapping[] = [];
-
-    public constructor(private repo: MotionCategoryRepositoryService, private translate: TranslateService) {}
+export class CategoryImportHelper extends BaseBeforeImportHandler<Motion, MotionCategory> {
+    public constructor(private repo: MotionCategoryRepositoryService, private translate: TranslateService) {
+        super({
+            idProperty: 'category_id',
+            translateFn: translate.instant,
+            repo
+        });
+    }
 
     public findByName(name: string): CsvMapping {
         const category = this.splitCategoryString(name);
@@ -30,27 +36,14 @@ export class CategoryImportHelper implements ImportHelper<Motion> {
                 id: existingCategory.id
             };
         } else {
-            if (!this.newMotionCategories.find(newCat => newCat.name === name)) {
-                this.newMotionCategories.push({ name });
+            if (!this.modelsToCreate.find(newCat => newCat.name === name)) {
+                this.modelsToCreate.push({ name });
             }
             return { name };
         }
     }
 
-    public async createUnresolvedEntries(): Promise<void> {
-        if (!this.newMotionCategories.length) {
-            return;
-        }
-        const ids = await this.repo.bulkCreate(
-            this.newMotionCategories.map(category => this.splitCategoryString(category.name))
-        );
-        this.newMotionCategories = this.newMotionCategories.map((entry, index) => ({
-            name: entry.name,
-            id: ids[index].id
-        }));
-    }
-
-    public linkToItem(item: Motion, propertyName: string): ImportResolveInformation<Motion> {
+    public doResolve(item: Motion, propertyName: string): ImportResolveInformation<Motion> {
         let property = item[propertyName];
         const result = {
             model: item,
@@ -64,7 +57,7 @@ export class CategoryImportHelper implements ImportHelper<Motion> {
             item.category_id = property.id;
             return result;
         }
-        const newCategory = this.newMotionCategories.find(category => category.name === property.name);
+        const newCategory = this.modelsToCreate.find(category => category.name === property.name);
         if (newCategory) {
             property = newCategory;
             item.category_id = newCategory.id;
@@ -73,6 +66,10 @@ export class CategoryImportHelper implements ImportHelper<Motion> {
             ++result.unresolvedModels;
             return result;
         }
+    }
+
+    protected doTransformModels(models: CsvMapping[]): CsvMapping[] {
+        return models.map(category => this.splitCategoryString(category.name));
     }
 
     /**

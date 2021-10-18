@@ -1,7 +1,17 @@
-import { Component, ContentChildren, ElementRef, Input, OnInit, QueryList, ViewEncapsulation } from '@angular/core';
+import {
+    Component,
+    ContentChildren,
+    ElementRef,
+    Input,
+    OnInit,
+    QueryList,
+    ViewEncapsulation,
+    TemplateRef
+} from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import { MatTab } from '@angular/material/tabs';
 
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { columnFactory, createDS, PblColumnDefinition, PblDataSource, PblNgridColumnSet } from '@pebula/ngrid';
 import { Observable } from 'rxjs';
 import { auditTime, distinctUntilChanged, map } from 'rxjs/operators';
@@ -12,6 +22,17 @@ import { BaseModel } from 'app/shared/models/base/base-model';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ImportListFirstTabDirective } from './import-list-first-tab.directive';
 import { ImportListLastTabDirective } from './import-list-last-tab.directive';
+import { CsvMapping, ImportStepPhase } from '../../../core/ui-services/base-import.service';
+import { MatDialog } from '@angular/material/dialog';
+
+export type ImportListViewHeaderDefinition = PblColumnDefinition & HeaderDefinition;
+
+interface HeaderDefinition {
+    label: string;
+    prop: string;
+    isRequired?: boolean;
+    isTableColumn?: boolean;
+}
 
 @Component({
     selector: 'os-import-list-view',
@@ -30,7 +51,7 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
     public columns?: PblColumnDefinition[];
 
     @Input()
-    public headerDefinition?: { [header: string]: string };
+    public headerDefinition?: ImportListViewHeaderDefinition;
 
     @Input()
     public rowHeight = 50;
@@ -60,15 +81,26 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
     public get defaultColumns(): PblColumnDefinition[] {
         return [
             {
-                label: this.translate.instant('Status'),
+                label: '',
                 prop: 'status',
-                minWidth: 75,
-                maxWidth: 75
+                minWidth: 25,
+                width: '25px',
+                maxWidth: 25
+            },
+            {
+                label: '#',
+                prop: 'importTrackId',
+                minWidth: 25,
+                maxWidth: 25
             }
         ];
     }
 
-    public columnSet: PblNgridColumnSet;
+    public readonly Phase = ImportStepPhase;
+
+    public get columnSet(): PblNgridColumnSet {
+        return this._columnSet;
+    }
 
     /**
      * Data source for ngrid
@@ -90,6 +122,14 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
      * indicator on which elements to display
      */
     public shown: 'all' | 'error' | 'noerror' = 'all';
+
+    public get leftReceivedHeaders(): string[] {
+        return this.importer.leftReceivedHeaders;
+    }
+
+    public get leftExpectedHeaders(): { [key: string]: string } {
+        return this.importer.leftExpectedHeaders;
+    }
 
     /**
      * @returns the amount of total item successfully parsed
@@ -143,9 +183,33 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
         return this.importer && this.hasFile ? this.importer.summary.done : 0;
     }
 
-    private root = this.host.nativeElement;
+    public get importPreviewLabel(): string {
+        return `${this.modelName || 'Models'} will be imported.`;
+    }
 
-    public constructor(componentServiceCollector: ComponentServiceCollector, private host: ElementRef<HTMLElement>) {
+    public get importDoneLabel(): string {
+        return `${this.modelName || 'Models'} have been imported.`;
+    }
+
+    public get importingStepsObservable(): Observable<any> {
+        return this.importer.importStepsObservable;
+    }
+
+    public get requiredFields(): string[] {
+        return this._requiredFields;
+    }
+
+    public headerValueMap = {};
+
+    private _root = this.host.nativeElement;
+    private _requiredFields: string[] = [];
+    private _columnSet: PblNgridColumnSet | null = null;
+
+    public constructor(
+        componentServiceCollector: ComponentServiceCollector,
+        private host: ElementRef<HTMLElement>,
+        private dialog: MatDialog
+    ) {
         super(componentServiceCollector);
     }
 
@@ -154,7 +218,8 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
      */
     public ngOnInit(): void {
         this.importer.clearPreview();
-        this.columnSet = this.createColumnSet();
+        this._columnSet = this.createColumnSet();
+        this._requiredFields = this.createRequiredFields();
         this.resetRowHeight();
     }
 
@@ -213,17 +278,12 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
         if (this.shown === 'all') {
             this.vScrollDataSource.setFilter();
         } else if (this.shown === 'noerror') {
-            const noErrorFilter = data => {
-                if (data.status === 'done') {
-                    return true;
-                } else if (data.status !== 'error') {
-                    return true;
-                }
-            };
+            const noErrorFilter = (data: NewEntry<any>) => data.status === 'done' || data.status !== 'error';
 
             this.vScrollDataSource.setFilter(noErrorFilter);
         } else if (this.shown === 'error') {
-            const hasErrorFilter = data => !!data.errors.length || data.hasDuplicates;
+            const hasErrorFilter = (data: NewEntry<any>) =>
+                data.status === 'error' || !!data.errors.length || data.hasDuplicates;
 
             this.vScrollDataSource.setFilter(hasErrorFilter);
         }
@@ -262,6 +322,26 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
             default:
                 return 'block'; // fallback: Error
         }
+    }
+
+    public getTooltip(value: string | CsvMapping[]): string {
+        if (Array.isArray(value)) {
+            return value.map(entry => entry.name).join(', ');
+        }
+        return value;
+    }
+
+    public getErrorDescription(entry: NewEntry<M>): string {
+        return entry.errors.map(error => _(this.getVerboseError(error))).join(', ');
+    }
+
+    public isUnknown(headerKey: string): boolean {
+        return !this.importer.headerValues[headerKey];
+    }
+
+    public onChangeUnknownHeaderKey(headerKey: string, value: string): void {
+        this.headerValueMap[headerKey] = value;
+        this.importer.setNewHeaderValue({ [headerKey]: value });
     }
 
     /**
@@ -322,12 +402,28 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
         return this.importer.hasError(row, error);
     }
 
+    public async enterFullscreen(dialogTemplate: TemplateRef<any>): Promise<void> {
+        const ref = this.dialog.open(dialogTemplate, { width: '80vw' });
+        await ref.afterClosed().toPromise();
+    }
+
     public isArray(data: any): boolean {
         return Array.isArray(data);
     }
 
     public isObject(data: any): boolean {
         return typeof data === 'object';
+    }
+
+    public getLabelByStepPhase(phase: ImportStepPhase): string {
+        switch (phase) {
+            case ImportStepPhase.FINISHED:
+                return 'have been created';
+            case ImportStepPhase.ERROR:
+                return 'could not be created';
+            default:
+                return 'will be created';
+        }
     }
 
     private createColumnSet(): PblNgridColumnSet {
@@ -338,15 +434,32 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
     }
 
     private createColumns(): PblColumnDefinition[] {
-        if (this.columns) {
-            return this.columns;
-        } else if (this.headerDefinition) {
-            return Object.keys(this.headerDefinition).map(header => ({
-                prop: `newEntry.${header}`,
-                label: this.translate.instant(this.headerDefinition[header])
-            }));
+        const getHeaderProp = (prop: string) => {
+            return prop.startsWith('newEntry.') ? prop : `newEntry.${prop}`;
+        };
+        const definitions = this.columns ?? this.headerDefinition;
+        if (!definitions) {
+            throw new Error('You have to specify the columns to show');
+        }
+        if (Array.isArray(definitions) && definitions.length > 0) {
+            return definitions
+                .filter((definition: ImportListViewHeaderDefinition) => definition.isTableColumn)
+                .map(column => ({
+                    ...column,
+                    prop: getHeaderProp(column.prop),
+                    type: this.getTypeByProperty(getHeaderProp(column.prop).slice('newEntry.'.length))
+                }));
+        }
+    }
+
+    private createRequiredFields(): string[] {
+        const definitions = this.columns ?? this.headerDefinition;
+        if (Array.isArray(definitions) && definitions.length > 0) {
+            return definitions
+                .filter((definition: ImportListViewHeaderDefinition) => definition.isRequired)
+                .map(definition => definition.label);
         } else {
-            throw new Error('No columns are defined!');
+            return [];
         }
     }
 
@@ -356,9 +469,17 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
     private resetRowHeight(): void {
         const styleProperty = '--os-row-height';
         if (this.rowHeight > 0) {
-            this.root.style.setProperty(styleProperty, `${this.rowHeight}px`);
+            this._root.style.setProperty(styleProperty, `${this.rowHeight}px`);
         } else {
-            this.root.style.removeProperty(styleProperty);
+            this._root.style.removeProperty(styleProperty);
+        }
+    }
+
+    private getTypeByProperty(property: string): 'boolean' | 'string' {
+        if (property.startsWith('is') || property.startsWith('has')) {
+            return 'boolean';
+        } else {
+            return 'string';
         }
     }
 }

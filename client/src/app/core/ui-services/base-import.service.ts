@@ -5,10 +5,18 @@ import { TranslateService } from '@ngx-translate/core';
 import { Papa, ParseConfig } from 'ngx-papaparse';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { BaseModel } from 'app/shared/models/base/base-model';
-import { Identifiable } from 'app/shared/models/base/identifiable';
-import { ImportHelper } from 'app/site/common/import/import-helper';
 import { Id } from '../definitions/key-types';
+import { StaticBeforeImportHandler } from '../../shared/utils/import/static-before-import-handler';
+import { StaticBeforeImportConfig } from '../../shared/utils/import/static-before-import-config';
+import { Identifiable } from '../../shared/models/base/identifiable';
+import { ImportServiceCollector } from './import-service-collector';
+import { MergeMap } from '../../shared/utils/merge-map';
+import { BaseAfterImportHandler, AfterImportHandler } from '../../shared/utils/import/base-after-import-handler';
+import { BeforeImportHandler, BaseBeforeImportHandler } from 'app/shared/utils/import/base-before-import-handler';
+import {
+    StaticAfterImportConfig,
+    StaticAfterImportHandler
+} from '../../shared/utils/import/static-after-import-handler';
 
 /**
  * Interface for value- Label combinations.
@@ -48,11 +56,11 @@ export interface ImportCSVPreview {
  * Interface for correlating between strings representing BaseModels and existing
  * BaseModels.
  */
-export interface CsvMapping {
+export type CsvMapping<T = any> = T & {
     name: string;
     id?: Id;
     multiId?: Id[];
-}
+};
 
 /**
  * The permitted states of a new entry. Only a 'new' entry should be imported
@@ -64,10 +72,39 @@ export interface CsvJsonMapping {
     [key: string]: string;
 }
 
-export interface ImportConfig<M extends BaseModel = any> {
-    modelHeadersAndVerboseNames: { [key: string]: string };
-    hasDuplicatesFn: (entry: Partial<M>) => boolean;
-    bulkCreateFn: (entries: any[]) => Promise<Identifiable[]>;
+export interface ImportConfig<ToCreate = any, K = any> {
+    modelHeadersAndVerboseNames: K;
+    verboseNameFn: (plural?: boolean) => string;
+    hasDuplicatesFn: (entry: Partial<ToCreate>) => boolean;
+    createFn: (entries: ToCreate[]) => Promise<Identifiable[]>;
+    updateFn?: (entries: ToCreate[]) => Promise<void>;
+    requiredFields?: (keyof ToCreate)[];
+}
+
+export enum ImportStepPhase {
+    ENQUEUED,
+    PENDING,
+    FINISHED,
+    ERROR
+}
+
+export interface ImportStep {
+    phase: ImportStepPhase;
+    getModelsToCreate(): CsvMapping[];
+    getModelsImported(): CsvMapping[];
+    getVerboseName(plural?: boolean): string;
+}
+
+export interface ImportFind<ToImport> {
+    findByName: (name: string, line: any, index: number) => CsvMapping<ToImport> | CsvMapping<ToImport>[];
+}
+
+export interface ImportResolveHandler<ToCreate, ReturnType = void> {
+    doImport: (originalEntries: ToCreate[]) => ReturnType | Promise<ReturnType>;
+}
+
+export interface ImportCleanup {
+    doCleanup: () => void;
 }
 
 /**
@@ -76,11 +113,13 @@ export interface ImportConfig<M extends BaseModel = any> {
 @Injectable({
     providedIn: 'root'
 })
-export abstract class BaseImportService<M extends BaseModel> {
+export abstract class BaseImportService<ToCreate extends Identifiable> {
+    public chunkSize = 100;
+
     /**
      * List of possible errors and their verbose explanation
      */
-    public abstract errorList: Object;
+    public errorList: { [errorKey: string]: string } = {};
 
     /**
      * The headers expected in the CSV matching import properties (in order)
@@ -90,7 +129,7 @@ export abstract class BaseImportService<M extends BaseModel> {
     /**
      * The minimimal number of header entries needed to successfully create an entry
      */
-    public abstract requiredHeaderLength: number;
+    public requiredHeaderLength = 2;
 
     /**
      * The used column separator. If left on an empty string (default),
@@ -107,6 +146,14 @@ export abstract class BaseImportService<M extends BaseModel> {
      * The encoding used by the FileReader object.
      */
     public encoding = 'utf-8';
+
+    public get currentImportPhaseObservable(): Observable<ImportStepPhase> {
+        return this._currentImportPhaseSubject.asObservable();
+    }
+
+    public get isImportValidObservable(): Observable<boolean> {
+        return this._isImportValidSubject.asObservable();
+    }
 
     /**
      * List of possible encodings and their label. values should be values accepted
@@ -140,7 +187,7 @@ export abstract class BaseImportService<M extends BaseModel> {
     /**
      * BehaviorSubject for displaying a preview for the currently selected entries
      */
-    public newEntries = new BehaviorSubject<NewEntry<M>[]>([]);
+    public newEntries = new BehaviorSubject<NewEntry<ToCreate>[]>([]);
 
     /**
      * Emits an error string to display if a file import cannot be done
@@ -157,25 +204,47 @@ export abstract class BaseImportService<M extends BaseModel> {
         return this._preview;
     }
 
+    public get importStepsObservable(): Observable<ImportStep[]> {
+        return this._importingStepsSubject.asObservable();
+    }
+
+    public get leftReceivedHeaders(): string[] {
+        return this._lostHeaders.received;
+    }
+
+    public get leftExpectedHeaders(): { [key: string]: string } {
+        return this._lostHeaders.expected;
+    }
+
+    public get headerValues(): { [header: string]: string } {
+        return this._headerValueMap;
+    }
+
     /**
      * storing the summary preview for the import, to avoid recalculating it
      * at each display change.
      */
-    protected _preview: ImportCSVPreview;
+    private _preview: ImportCSVPreview;
 
-    protected importHelperMap: { [key: string]: ImportHelper<M> } = {};
+    private _beforeImportHelper: { [key: string]: BeforeImportHandler } = {};
+    private _afterImportHelper: { [key: string]: AfterImportHandler } = {};
 
-    protected modelHeadersAndVerboseNames: { [key: string]: string };
+    private _modelHeadersAndVerboseNames: { [key: string]: string };
 
-    protected bulkCreateFn: (entries: any[]) => Promise<Identifiable[]>;
+    private _verboseNameFn: (plural?: boolean) => string;
+    private _hasDuplicatesFn: (entry: Partial<ToCreate>) => boolean;
 
-    protected hasDuplicatesFn: (entry: Partial<M>) => boolean;
+    private _createFn: (entries: ToCreate[]) => Promise<Identifiable[]>;
+    private _updateFn: (entries: ToCreate[]) => Promise<void>;
+
+    protected readonly translate: TranslateService = this.serviceCollector.translate;
+    protected readonly matSnackbar: MatSnackBar = this.serviceCollector.matSnackBar;
 
     /**
      * Returns the current entries. For internal use in extending classes, as it
      * might not be filled with data at all times (see {@link newEntries} for a BehaviorSubject)
      */
-    protected get entries(): NewEntry<M>[] {
+    protected get entries(): NewEntry<ToCreate>[] {
         return this._entries;
     }
 
@@ -187,12 +256,33 @@ export abstract class BaseImportService<M extends BaseModel> {
     /**
      * FileReader object for file import
      */
-    private reader = new FileReader();
+    private _reader = new FileReader();
+
+    private _importingStepsSubject = new BehaviorSubject<ImportStep[]>([]);
+    private _currentImportPhaseSubject = new BehaviorSubject<ImportStepPhase>(ImportStepPhase.ENQUEUED);
+    private _isImportValidSubject = new BehaviorSubject<boolean>(false);
 
     /**
      * the list of parsed models that have been extracted from the opened file
      */
-    private _entries: NewEntry<M>[] = [];
+    private _entries: NewEntry<ToCreate>[] = [];
+    private _csvLines: { [header: string]: string }[] = [];
+    private _headers: string[] = [];
+    private _headerValueMap: { [header: string]: string } = {};
+    private _requiredFields: (keyof ToCreate)[] = [];
+    private _lostHeaders: { expected: { [key: string]: string }; received: string[] } = {
+        expected: {},
+        received: []
+    };
+
+    private _selfImportHelper: ImportStep = {
+        phase: ImportStepPhase.ENQUEUED,
+        getModelsImported: () => [],
+        getModelsToCreate: () => this.entries.filter(entry => !entry.hasDuplicates),
+        getVerboseName: (plural?: boolean) => this._verboseNameFn(plural)
+    };
+
+    private readonly _papa: Papa = this.serviceCollector.papa;
 
     /**
      * Constructor. Creates a fileReader to subscribe to it for incoming parsed
@@ -202,16 +292,15 @@ export abstract class BaseImportService<M extends BaseModel> {
      * @param papa External csv parser (ngx-papaparser)
      * @param matSnackBar snackBar to display import errors
      */
-    public constructor(protected translate: TranslateService, private papa: Papa, protected matSnackbar: MatSnackBar) {
-        this.reader.onload = (event: FileReaderProgressEvent) => {
+    public constructor(private serviceCollector: ImportServiceCollector) {
+        this._reader.onload = (event: FileReaderProgressEvent) => {
             this.parseInput(event.target.result as string);
         };
         this.init();
     }
 
     /**
-     * Parses the data input. Expects a string as returned by via a
-     * File.readAsText() operation
+     * Parses the data input. Expects a string as returned by via a File.readAsText() operation
      *
      * @param file
      */
@@ -220,21 +309,22 @@ export abstract class BaseImportService<M extends BaseModel> {
         this.clearPreview();
         const papaConfig: ParseConfig = {
             header: true,
-            skipEmptyLines: true,
+            skipEmptyLines: 'greedy',
             quoteChar: this.textSeparator
         };
         if (this.columnSeparator) {
             papaConfig.delimiter = this.columnSeparator;
         }
-        const entryLines = this.papa.parse(file, papaConfig).data;
-        const header = Object.keys(entryLines[0]);
-        const valid = this.checkHeader(header);
+        const result = this._papa.parse(file, papaConfig);
+        this._csvLines = result.data;
+        this._headers = Object.keys(this._csvLines[0]);
+        const valid = this.checkHeaderLength();
+        this.checkHeaderValue();
         if (!valid) {
             return;
         }
-        this._entries = entryLines.map(x => this.mapData(x)).filter(x => !!x);
-        this.newEntries.next(this._entries);
-        this.updatePreview();
+        this.setNextEntries(this._csvLines.map((x, index) => this.mapData(x, index + 1)).filter(x => !!x));
+        this.updateSummary();
     }
 
     /**
@@ -242,14 +332,12 @@ export abstract class BaseImportService<M extends BaseModel> {
      *
      * @param entries: an array of prepared newEntry objects
      */
-    public setParsedEntries(entries: NewEntry<M>[]): void {
+    public setParsedEntries(entries: NewEntry<ToCreate>[]): void {
         this.clearPreview();
         if (!entries) {
             return;
         }
-        this._entries = entries;
-        this.newEntries.next(this._entries);
-        this.updatePreview();
+        this.setNextEntries(entries);
     }
 
     /**
@@ -283,12 +371,20 @@ export abstract class BaseImportService<M extends BaseModel> {
         this._preview = summary;
     }
 
+    public updateSummary(): void {
+        this._importingStepsSubject.next([
+            ...Object.values(this._beforeImportHelper),
+            this.getSelfImportHelper(),
+            ...Object.values(this._afterImportHelper)
+        ]);
+    }
+
     /**
      * a subscribable representation of the new items to be imported
      *
      * @returns an observable BehaviorSubject
      */
-    public getNewEntries(): Observable<NewEntry<M>[]> {
+    public getNewEntries(): Observable<NewEntry<ToCreate>[]> {
         return this.newEntries.asObservable();
     }
 
@@ -319,15 +415,21 @@ export abstract class BaseImportService<M extends BaseModel> {
      * Resets the data and preview (triggered upon selecting an invalid file)
      */
     public clearPreview(): void {
-        this._entries = [];
-        this.newEntries.next([]);
+        Object.values(this._beforeImportHelper).forEach(helper => helper.doCleanup());
+        Object.values(this._afterImportHelper).forEach(helper => helper.doCleanup());
+        this.setNextEntries([]);
+        this._selfImportHelper.getModelsImported = () => [];
+        this._selfImportHelper.phase = ImportStepPhase.ENQUEUED;
+        this._lostHeaders = { expected: {}, received: [] };
         this._preview = null;
+        this._currentImportPhaseSubject.next(ImportStepPhase.ENQUEUED);
+        this._isImportValidSubject.next(false);
     }
 
     /**
      * set a list of short names for error, indicating which column failed
      */
-    public setError(entry: NewEntry<Partial<M>>, error: string): void {
+    public setError(entry: NewEntry<Partial<ToCreate>>, error: string): void {
         if (this.errorList[error]) {
             if (!entry.errors) {
                 entry.errors = [error];
@@ -345,7 +447,7 @@ export abstract class BaseImportService<M extends BaseModel> {
      * @returns the extended error desription for that error
      */
     public verbose(error: string): string {
-        return this.errorList[error];
+        return this.errorList[error] || error;
     }
 
     /**
@@ -355,7 +457,7 @@ export abstract class BaseImportService<M extends BaseModel> {
      * @param error The error to check for
      * @returns true if the error is present
      */
-    public hasError(entry: NewEntry<M>, error: string): boolean {
+    public hasError(entry: NewEntry<ToCreate>, error: string): boolean {
         return entry.errors.includes(error);
     }
 
@@ -366,38 +468,183 @@ export abstract class BaseImportService<M extends BaseModel> {
      * 'done' on success.
      */
     public async doImport(): Promise<void> {
-        const promises: Promise<any>[] = Object.values(this.importHelperMap).map(helper =>
-            helper.createUnresolvedEntries()
+        this._currentImportPhaseSubject.next(ImportStepPhase.PENDING);
+        await this.doBeforeImport();
+
+        const newEntries = this.entries.filter(entry => entry.status === 'new');
+        const { indexMap, modelsToCreate } = this.getModelsToCreate(newEntries);
+
+        this._selfImportHelper.phase = ImportStepPhase.PENDING;
+        const identifiables = await this.createEntries(
+            modelsToCreate.filter(model => !model.id),
+            modelsToCreate.filter(model => !!model.id)
         );
-        await Promise.all(promises);
 
-        const entriesToCreate: any[] = [];
-        for (const entry of this.entries) {
-            if (entry.status !== 'new') {
-                continue;
-            }
+        do {
+            const nextId = identifiables.shift().id;
+            indexMap.set(indexMap.getNextFreeSlot(), nextId);
+        } while (identifiables.length > 0);
+
+        for (let i = 0; i < newEntries.length; ++i) {
+            const entry = newEntries[i];
+            const toCreate = modelsToCreate[i];
+            entry.newEntry.id = indexMap.get(i);
+            toCreate.id = indexMap.get(i);
+        }
+        this._selfImportHelper.getModelsImported = () => newEntries.filter(entry => !!entry.newEntry.id);
+        this._selfImportHelper.phase = ImportStepPhase.FINISHED;
+
+        await this.doAfterImport(modelsToCreate);
+        this.doAfterImportCleanup(newEntries);
+
+        this._currentImportPhaseSubject.next(ImportStepPhase.FINISHED);
+        this.updatePreview();
+    }
+
+    private getModelsToCreate(newEntries: NewEntry<ToCreate>[]): {
+        indexMap: MergeMap<Id>;
+        modelsToCreate: ToCreate[];
+    } {
+        const indexMap = new MergeMap<Id>();
+        const modelsToCreate: ToCreate[] = [];
+        for (let i = 0; i < newEntries.length; ++i) {
+            const entry = newEntries[i];
             const model = this.resolveEntry(entry);
-            entriesToCreate.push(model);
+            modelsToCreate.push(model);
+            if (model.id) {
+                indexMap.set(i, model.id);
+            }
         }
+        return { indexMap, modelsToCreate };
+    }
 
-        await this.bulkCreateFn(entriesToCreate);
-        for (const entry of this.entries.filter(e => e.status === 'new')) {
-            entry.status = 'done';
+    private async doBeforeImport(): Promise<void> {
+        for (const helper of Object.values(this._beforeImportHelper)) {
+            if (helper.getModelsToCreate().length > 0) {
+                await helper.doImport(this.entries.map(entry => entry.newEntry));
+            }
         }
+    }
+
+    private async doAfterImport(modelsToCreate: ToCreate[]): Promise<void> {
+        for (const handler of Object.values(this._afterImportHelper)) {
+            await handler.doImport(modelsToCreate);
+        }
+    }
+
+    private doAfterImportCleanup(newEntries: NewEntry<ToCreate>[]): void {
+        for (const entry of newEntries) {
+            if (!entry.newEntry.id) {
+                entry.status = 'error';
+            } else {
+                entry.status = 'done';
+            }
+        }
+    }
+
+    private async createEntries(entriesToCreate: ToCreate[], entriesToUpdate: ToCreate[]): Promise<Identifiable[]> {
+        const identifiables: Identifiable[] = [];
+        for (let i = 0; i < Math.ceil(entriesToCreate.length / this.chunkSize); ++i) {
+            identifiables.push(
+                ...(await this.sendRequest(
+                    entriesToCreate.slice(i * this.chunkSize, (i + 1) * this.chunkSize),
+                    this._createFn
+                ))
+            );
+        }
+        for (let i = 0; i < Math.ceil(entriesToUpdate.length / this.chunkSize); ++i) {
+            await this.sendRequest<any>(
+                entriesToUpdate.slice(i * this.chunkSize, (i + 1) * this.chunkSize),
+                this._updateFn as any
+            );
+        }
+        return identifiables;
+    }
+
+    private async sendRequest<R>(models: ToCreate[], fn: (entries: ToCreate[]) => Promise<R[]>): Promise<R[]> {
+        const request = async (data: ToCreate[]) => {
+            const returnValue = await fn(data);
+            const previousValue = this._selfImportHelper.getModelsImported();
+            this._selfImportHelper.getModelsImported = () => previousValue.concat(data);
+            return returnValue;
+        };
+        const sendSingleRequest = async (model: ToCreate) => {
+            let returnValue: R[] = [];
+            try {
+                returnValue = await request([model]);
+            } catch (e) {
+                returnValue = [{}] as R[];
+            }
+            return returnValue;
+        };
+        const result: R[] = [];
+        try {
+            result.push(...(await request(models)));
+        } catch (e) {
+            for (const model of models) {
+                result.push(...(await sendSingleRequest(model)));
+            }
+        }
+        return result;
+    }
+
+    public setNewHeaderValue(map: { [headerKey: string]: string }): void {
+        for (const headerKey of Object.keys(map)) {
+            this._headerValueMap[headerKey] = map[headerKey];
+            delete this._lostHeaders.expected[headerKey];
+            this.leftReceivedHeaders.splice(
+                this.leftReceivedHeaders.findIndex(header => header === map[headerKey]),
+                1
+            );
+        }
+        this.checkImportValidness();
+        this.setNextEntries(this._csvLines.map((x, index) => this.mapData(x, index)).filter(x => !!x));
+    }
+
+    private setNextEntries(nextEntries: NewEntry<ToCreate>[]): void {
+        this._entries = nextEntries;
+        this.newEntries.next(this.entries);
         this.updatePreview();
     }
 
     /**
-     * A helper function to specify import-helpers for `M`.
+     * A helper function to specify import-helpers for `ToCreate`.
      * Should be overriden to specify the import-helpers.
      *
-     * @returns A map containing import-helpers for specific attributes of `M`.
+     * @returns A map containing import-helpers for specific attributes of `ToCreate`.
      */
-    protected getImportHelpers(): { [key: string]: ImportHelper<M> } {
+    protected getBeforeImportHelpers(): { [key: string]: BeforeImportHandler<ToCreate, any> } {
         return {};
     }
 
-    protected pipeParseValue(_value: string, _header: keyof M): any {}
+    protected pipeParseValue(_value: string, _header: keyof ToCreate): any {}
+
+    protected registerBeforeImportHelper<ToImport>(
+        header: string,
+        handler: StaticBeforeImportConfig<ToCreate, ToImport> | BaseBeforeImportHandler
+    ): void {
+        if (handler instanceof BaseBeforeImportHandler) {
+            this._beforeImportHelper[header] = handler as any;
+        } else {
+            this._beforeImportHelper[header] = new StaticBeforeImportHandler(handler, key =>
+                this.translate.instant(key)
+            );
+        }
+    }
+
+    protected registerAfterImportHandler<ToImport>(
+        header: string,
+        handler: StaticAfterImportConfig<ToCreate, ToImport> | BaseAfterImportHandler
+    ): void {
+        if (handler instanceof BaseAfterImportHandler) {
+            this._afterImportHelper[header] = handler;
+        } else {
+            this._afterImportHelper[header] = new StaticAfterImportHandler<ToCreate, ToImport>(
+                handler,
+                header as keyof ToCreate
+            );
+        }
+    }
 
     /**
      * Parses a string representing an entry, extracting secondary data, appending
@@ -406,24 +653,33 @@ export abstract class BaseImportService<M extends BaseModel> {
      * @param line
      * @returns a new entry representing an User
      */
-    private mapData(line: CsvJsonMapping): NewEntry<Partial<M>> {
-        const newEntry: Partial<M> = {};
+    private mapData(line: CsvJsonMapping, importTrackId: number): NewEntry<ToCreate> {
+        const newEntry: ToCreate = {} as ToCreate;
         let hasError = false;
-        for (const expectedHeader of this.expectedHeader) {
-            const header = this.translate.instant(this.modelHeadersAndVerboseNames[expectedHeader]);
-            const helper = this.importHelperMap[expectedHeader];
+        const csvEntry = Object.keys(this._headerValueMap).mapToObject(expectedHeader => {
+            const originalHeader = this._headerValueMap[expectedHeader];
+            return { [expectedHeader]: line[originalHeader] };
+        });
+        for (const expectedHeader of Object.keys(this._headerValueMap)) {
+            const helper = this._beforeImportHelper[expectedHeader] || this._afterImportHelper[expectedHeader];
             try {
-                newEntry[expectedHeader] = this.parseValue(line[header], expectedHeader as keyof M, helper);
+                const value = this.parseValue(
+                    csvEntry[expectedHeader],
+                    { header: expectedHeader as keyof ToCreate, line: csvEntry, index: importTrackId },
+                    helper
+                );
+                newEntry[expectedHeader] = value;
             } catch (e) {
-                console.log(`Error while parsing ${header}`, e);
+                console.log(`Error while parsing ${expectedHeader}`, e);
                 hasError = true;
                 continue;
             }
         }
-        const hasDuplicates = this.hasDuplicatesFn(newEntry);
-        const entry: NewEntry<Partial<M>> = {
+        const hasDuplicates = this._hasDuplicatesFn(newEntry);
+        const entry: NewEntry<ToCreate> = {
             newEntry,
             hasDuplicates,
+            importTrackId,
             status: hasDuplicates ? 'error' : 'new',
             errors: hasDuplicates ? ['Duplicates'] : []
         };
@@ -436,17 +692,29 @@ export abstract class BaseImportService<M extends BaseModel> {
     private init(): void {
         const config = this.getConfig();
         this.expectedHeader = Object.keys(config.modelHeadersAndVerboseNames);
-        this.modelHeadersAndVerboseNames = config.modelHeadersAndVerboseNames;
-        this.hasDuplicatesFn = config.hasDuplicatesFn;
-        this.bulkCreateFn = config.bulkCreateFn;
-        this.importHelperMap = this.getImportHelpers();
+        this._modelHeadersAndVerboseNames = config.modelHeadersAndVerboseNames;
+        this._hasDuplicatesFn = config.hasDuplicatesFn;
+        this._verboseNameFn = config.verboseNameFn;
+        this._createFn = config.createFn;
+        this._updateFn = config.updateFn;
+        this._requiredFields = config.requiredFields || [];
+        this.initializeImportHelpers();
     }
 
-    private resolveEntry(entry: NewEntry<M>): M {
-        let model = { ...entry.newEntry } as M;
-        for (const key of Object.keys(this.importHelperMap)) {
-            const helper = this.importHelperMap[key];
-            const result = helper.linkToItem(model, key);
+    private getSelfImportHelper(): ImportStep {
+        return this._selfImportHelper;
+    }
+
+    private initializeImportHelpers(): void {
+        this._beforeImportHelper = { ...this._beforeImportHelper, ...this.getBeforeImportHelpers() };
+        this.updateSummary();
+    }
+
+    private resolveEntry(entry: NewEntry<ToCreate>): ToCreate {
+        let model = { ...entry.newEntry } as ToCreate;
+        for (const key of Object.keys(this._beforeImportHelper)) {
+            const helper = this._beforeImportHelper[key];
+            const result = helper.doResolve(model, key);
             model = result.model;
             if (result.unresolvedModels) {
                 this.setError(entry, result.verboseName);
@@ -457,9 +725,13 @@ export abstract class BaseImportService<M extends BaseModel> {
         return model;
     }
 
-    private parseValue(value: string, header: keyof M, helper?: ImportHelper<M>): any {
+    private parseValue<ToImport>(
+        value: string,
+        { header, line, index }: { line: any; index: number; header: keyof ToCreate },
+        helper?: ImportFind<ToImport>
+    ): any {
         if (helper) {
-            return helper.findByName(value);
+            return helper.findByName(value, line, index);
         }
         value = this.pipeParseValue(value, header) || value;
         return value;
@@ -469,31 +741,30 @@ export abstract class BaseImportService<M extends BaseModel> {
      * reads the _rawFile
      */
     private readFile(): void {
-        this.reader.readAsText(this._rawFile, this.encoding);
+        this._reader.readAsText(this._rawFile, this.encoding);
     }
 
     /**
      * Checks the first line of the csv (the header) for consistency (length)
      *
-     * @param row expected to be an array parsed from the first line of a csv file
      * @returns true if the line has at least the minimum amount of columns
      */
-    private checkHeader(row: string[]): boolean {
+    private checkHeaderLength(): boolean {
         const snackbarDuration = 3000;
-        if (row.length < this.requiredHeaderLength) {
+        if (this._headers.length < this.requiredHeaderLength) {
             this.matSnackbar.open(this.translate.instant('The file has too few columns to be parsed properly.'), '', {
                 duration: snackbarDuration
             });
 
             this.clearPreview();
             return false;
-        } else if (row.length < this.expectedHeader.length) {
+        } else if (this._headers.length < this.expectedHeader.length) {
             this.matSnackbar.open(
                 this.translate.instant('The file seems to have some ommitted columns. They will be considered empty.'),
                 '',
                 { duration: snackbarDuration }
             );
-        } else if (row.length > this.expectedHeader.length) {
+        } else if (this._headers.length > this.expectedHeader.length) {
             this.matSnackbar.open(
                 this.translate.instant('The file seems to have additional columns. They will be ignored.'),
                 '',
@@ -503,7 +774,38 @@ export abstract class BaseImportService<M extends BaseModel> {
         return true;
     }
 
+    private checkHeaderValue(): void {
+        const leftReceivedHeaders = [...this._headers];
+        const expectedHeaders = [...this.expectedHeader];
+        while (expectedHeaders.length > 0) {
+            const toExpected = expectedHeaders.shift();
+            const nextHeader = this._modelHeadersAndVerboseNames[toExpected];
+            const nextHeaderTranslated = this.translate.instant(nextHeader);
+            let index = leftReceivedHeaders.findIndex(header => header === nextHeaderTranslated);
+            if (index > -1) {
+                this._headerValueMap[toExpected] = nextHeaderTranslated;
+                leftReceivedHeaders.splice(index, 1);
+                continue;
+            }
+            index = leftReceivedHeaders.findIndex(header => header === nextHeader);
+            if (index > -1) {
+                this._headerValueMap[toExpected] = nextHeader;
+                leftReceivedHeaders.splice(index, 1);
+                continue;
+            }
+            this._lostHeaders.expected[toExpected] = nextHeaderTranslated;
+        }
+        this._lostHeaders.received = leftReceivedHeaders;
+        this.checkImportValidness();
+    }
+
+    private checkImportValidness(): void {
+        this._isImportValidSubject.next(
+            this._requiredFields.every(field => !Object.keys(this._lostHeaders.expected).includes(field as string))
+        );
+    }
+
     // Abstract methods
     public abstract downloadCsvExample(): void;
-    protected abstract getConfig(): ImportConfig<M>;
+    protected abstract getConfig(): ImportConfig<ToCreate>;
 }

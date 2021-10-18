@@ -16,7 +16,6 @@ import {
 } from 'app/core/repositories/management/meeting-repository.service';
 import { OrganizationTagRepositoryService } from 'app/core/repositories/management/organization-tag-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
-import { ColorService } from 'app/core/ui-services/color.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ViewCommittee } from 'app/management/models/view-committee';
 import { ViewMeeting } from 'app/management/models/view-meeting';
@@ -74,7 +73,6 @@ export class MeetingEditComponent extends BaseModelContextComponent {
         private meetingRepo: MeetingRepositoryService,
         private committeeRepo: CommitteeRepositoryService,
         public orgaTagRepo: OrganizationTagRepositoryService,
-        private colorService: ColorService,
         private operator: OperatorService,
         private userRepo: UserRepositoryService,
         private orga: OrganizationService
@@ -104,10 +102,11 @@ export class MeetingEditComponent extends BaseModelContextComponent {
     }
 
     public async onOrgaTagNotFound(orgaTagName: string): Promise<void> {
-        const { id }: Identifiable = await this.orgaTagRepo.create({
-            name: orgaTagName,
-            color: this.colorService.getRandomHtmlColor()
-        });
+        const { id }: Identifiable = (
+            await this.orgaTagRepo.create({
+                name: orgaTagName
+            })
+        )[0];
         const currentValue: Id[] = this.meetingForm.get('organization_tag_ids').value || [];
         this.meetingForm.patchValue({ organization_tag_ids: currentValue.concat(id) });
     }

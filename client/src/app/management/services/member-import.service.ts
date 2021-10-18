@@ -1,8 +1,4 @@
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-
-import { TranslateService } from '@ngx-translate/core';
-import { Papa } from 'ngx-papaparse';
 
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ImportConfig } from 'app/core/ui-services/base-import.service';
@@ -12,6 +8,7 @@ import { BaseUserExport } from 'app/site/users/base/base-user-export';
 import { BaseUserImportService } from 'app/site/users/base/base-user-import.service';
 import { BaseUserHeadersAndVerboseNames } from 'app/site/users/base/base-user.constants';
 import { MemberCsvExportExample } from '../export/member-csv-export-example';
+import { ImportServiceCollector } from '../../core/ui-services/import-service-collector';
 
 @Injectable({
     providedIn: 'root'
@@ -27,13 +24,11 @@ export class MemberImportService extends BaseUserImportService {
     };
 
     public constructor(
-        translate: TranslateService,
-        papa: Papa,
-        matSnackBar: MatSnackBar,
+        serviceCollector: ImportServiceCollector,
         repo: UserRepositoryService,
         private exporter: CsvExportService
     ) {
-        super(translate, papa, matSnackBar, repo);
+        super(serviceCollector, repo);
     }
 
     public downloadCsvExample(): void {
@@ -47,9 +42,10 @@ export class MemberImportService extends BaseUserImportService {
     protected getConfig(): ImportConfig<User> {
         return {
             modelHeadersAndVerboseNames: BaseUserHeadersAndVerboseNames,
+            verboseNameFn: plural => (plural ? 'Members' : 'Member'),
             hasDuplicatesFn: (entry: Partial<User>) =>
                 this.repo.getViewModelList().some(user => user.username === entry.username),
-            bulkCreateFn: (entries: any[]) => this.repo.create(...entries)
+            createFn: (entries: any[]) => this.repo.create(...entries)
         };
     }
 }

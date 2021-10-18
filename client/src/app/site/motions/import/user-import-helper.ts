@@ -1,18 +1,39 @@
 import { Id } from 'app/core/definitions/key-types';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { CsvMapping } from 'app/core/ui-services/base-import.service';
-import { Motion } from 'app/shared/models/motions/motion';
 import { ViewUser } from 'app/site/users/models/view-user';
-import { ImportHelper, ImportResolveInformation } from '../../common/import/import-helper';
+import { User } from 'app/shared/models/users/user';
+import { ImportResolveInformation } from 'app/shared/utils/import/import-resolve-information';
+import { BaseBeforeImportHandler } from 'app/shared/utils/import/base-before-import-handler';
 
-export class UserImportHelper implements ImportHelper<Motion> {
-    private newUsers: CsvMapping[] = [];
+export class UserImportHelper<Model> extends BaseBeforeImportHandler<Model, User> {
+    private repo: UserRepositoryService;
+    private verboseName: string;
+    private property: keyof Model;
+    private useDefault?: number[];
 
-    public constructor(
-        private repo: UserRepositoryService,
-        private verboseName: string,
-        private property: keyof Motion
-    ) {}
+    public constructor({
+        repo,
+        property,
+        verboseName,
+        useDefault
+    }: {
+        repo: UserRepositoryService;
+        property: keyof Model;
+        verboseName?: string;
+        useDefault?: number[];
+    }) {
+        super({
+            idProperty: property,
+            translateFn: value => value,
+            repo: repo as any,
+            verboseNameFn: verboseName
+        });
+        this.repo = repo;
+        this.property = property;
+        this.verboseName = verboseName;
+        this.useDefault = useDefault;
+    }
 
     public findByName(name: string): CsvMapping[] {
         const result: CsvMapping[] = [];
@@ -35,34 +56,23 @@ export class UserImportHelper implements ImportHelper<Motion> {
         return result;
     }
 
-    public async createUnresolvedEntries(): Promise<void> {
-        if (!this.newUsers.length) {
-            return;
-        }
-        const userIds = await this.repo.create(...this.newUsers.map(newUser => ({ username: newUser.name })));
-        this.newUsers = this.newUsers.map((user, index) => ({
-            name: user.name,
-            id: userIds[index].id
-        }));
-    }
-
-    public linkToItem(item: Motion, propertyName: string): ImportResolveInformation<Motion> {
-        const result: ImportResolveInformation<Motion> = {
+    public doResolve(item: Model, propertyName: string): ImportResolveInformation<Model> {
+        const result: ImportResolveInformation<Model> = {
             model: item,
             unresolvedModels: 0,
             verboseName: this.verboseName
         };
-        const ids: Id[] = [];
+        let ids: Id[] = [];
         for (const user of item[propertyName]) {
             if (user.id) {
                 ids.push(user.id);
                 continue;
             }
-            if (!this.newUsers.length) {
+            if (!this.modelsToCreate.length) {
                 ++result.unresolvedModels;
                 continue;
             }
-            const mapped = this.newUsers.find(newUser => newUser.name === newUser.name);
+            const mapped = this.modelsToCreate.find(newUser => newUser.name === newUser.name);
             if (mapped) {
                 user.id = mapped.id;
                 ids.push(mapped.id);
@@ -70,14 +80,21 @@ export class UserImportHelper implements ImportHelper<Motion> {
                 ++result.unresolvedModels;
             }
         }
-        (item[this.property] as any) = ids;
+        if (ids.length === 0 && this.useDefault) {
+            ids = this.useDefault;
+        }
+        item[this.property as any] = ids;
         return result;
+    }
+
+    protected doTransformModels(models: CsvMapping[]): CsvMapping[] {
+        return models.map(newUser => ({ first_name: newUser.name }));
     }
 
     private getNextEntry(user: string, existingUsers: ViewUser[]): CsvMapping {
         if (!existingUsers.length) {
-            if (!this.newUsers.find(listedUser => listedUser.name === user)) {
-                this.newUsers.push({ name: user });
+            if (!this.modelsToCreate.find(listedUser => listedUser.name === user)) {
+                this.modelsToCreate.push({ name: user });
             }
             return { name: user };
         }

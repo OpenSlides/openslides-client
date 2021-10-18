@@ -16,6 +16,36 @@ import { ViewOrganization } from 'app/management/models/view-organization';
 import { CommitteeFilterService } from 'app/management/services/committee-filter.service';
 import { CommitteeSortService } from 'app/management/services/committee-sort.service';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
+import { CommitteeExportService } from '../../services/committee-export.service';
+import { Follow } from '../../../core/core-services/model-request-builder.service';
+
+const getCommitteesModelRequest = (fellowship?: Follow) => {
+    const FOLLOW: Follow[] = [
+        {
+            idField: 'user_ids',
+            fieldset: 'committeeList'
+        },
+        {
+            idField: 'organization_tag_ids'
+        }
+    ];
+    if (fellowship) {
+        FOLLOW.push(fellowship);
+    }
+
+    return {
+        viewModelCtor: ViewOrganization,
+        ids: [1],
+        follow: [
+            {
+                idField: 'committee_ids',
+                fieldset: 'list',
+                follow: FOLLOW
+            }
+        ],
+        fieldset: []
+    };
+};
 
 @Component({
     selector: 'os-committees',
@@ -48,6 +78,7 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
         public operator: OperatorService,
         public filterService: CommitteeFilterService,
         public sortService: CommitteeSortService,
+        private csvService: CommitteeExportService,
         private router: Router,
         private route: ActivatedRoute,
         private promptService: PromptService,
@@ -104,26 +135,23 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
         }
     }
 
+    public async exportAsCsv(): Promise<void> {
+        await this.getCommitteeMeetings();
+        const committeesToExport = this.selectedRows.length ? this.selectedRows : this.repo.getViewModelList();
+        this.csvService.export(committeesToExport);
+    }
+
     protected getModelRequest(): SimplifiedModelRequest {
-        return {
-            viewModelCtor: ViewOrganization,
-            ids: [1],
-            follow: [
-                {
-                    idField: 'committee_ids',
-                    fieldset: 'list',
-                    follow: [
-                        {
-                            idField: 'user_ids',
-                            fieldset: 'committeeList'
-                        },
-                        {
-                            idField: 'organization_tag_ids'
-                        }
-                    ]
-                }
-            ],
-            fieldset: []
-        };
+        return getCommitteesModelRequest();
+    }
+
+    private async getCommitteeMeetings(): Promise<void> {
+        await this.getModelChanges(
+            getCommitteesModelRequest({
+                idField: 'meeting_ids',
+                additionalFields: ['name', 'start_time', 'end_time'],
+                fieldset: ''
+            })
+        );
     }
 }

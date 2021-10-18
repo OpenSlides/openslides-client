@@ -7,11 +7,13 @@
 
 <ng-template #iconTemplate>
     <mat-icon
+        [inline]="inline"
         [matTooltip]="iconTooltip"
         [ngClass]="{ pointer: iconAction, mirrored: mirrored }"
         [ngStyle]="{ transform: getRotation() }"
         (click)="iconClick()"
         [color]="color"
-        >{{ icon }}</mat-icon
     >
+        {{ icon }}
+    </mat-icon>
 </ng-template>

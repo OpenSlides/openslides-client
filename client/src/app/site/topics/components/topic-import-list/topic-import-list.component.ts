@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
-import { PblColumnDefinition } from '@pebula/ngrid';
-
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DurationService } from 'app/core/ui-services/duration.service';
 import { AgendaItemType, ItemTypeChoices } from 'app/shared/models/agenda/agenda-item';
@@ -10,6 +8,7 @@ import { Topic } from 'app/shared/models/topics/topic';
 import { BaseImportListComponent } from 'app/site/base/components/base-import-list.component';
 import { TopicImportService } from '../../../topics/services/topic-import.service';
 import { topicHeadersAndVerboseNames } from '../../topics.constants';
+import { ImportListViewHeaderDefinition } from '../../../../shared/components/import-list-view/import-list-view.component';
 
 /**
  * Component for the agenda import list view.
@@ -26,9 +25,11 @@ export class TopicImportListComponent extends BaseImportListComponent<Topic> {
 
     public possibleFields = Object.values(topicHeadersAndVerboseNames);
 
-    public columns: PblColumnDefinition[] = Object.keys(topicHeadersAndVerboseNames).map(header => ({
+    public columns: ImportListViewHeaderDefinition[] = Object.keys(topicHeadersAndVerboseNames).map(header => ({
         prop: `newEntry.${header}`,
-        label: this.translate.instant(topicHeadersAndVerboseNames[header])
+        label: this.translate.instant(topicHeadersAndVerboseNames[header]),
+        isTableColumn: true,
+        isRequired: header === 'title'
     }));
 
     /**

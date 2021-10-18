@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 
-import { PblColumnDefinition } from '@pebula/ngrid';
-
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MotionStatuteParagraph } from 'app/shared/models/motions/motion-statute-paragraph';
 import { BaseImportListComponent } from 'app/site/base/components/base-import-list.component';
 import { StatuteImportService } from 'app/site/motions/services/statute-import.service';
+import { ImportListViewHeaderDefinition } from '../../../../../../shared/components/import-list-view/import-list-view.component';
 
 const statuteParagraphHeadersAndVerboseNames = {
     title: 'Title',
@@ -22,10 +21,14 @@ const statuteParagraphHeadersAndVerboseNames = {
 export class StatuteParagraphImportListComponent extends BaseImportListComponent<MotionStatuteParagraph> {
     public possibleFields = Object.values(statuteParagraphHeadersAndVerboseNames);
 
-    public columns: PblColumnDefinition[] = Object.keys(statuteParagraphHeadersAndVerboseNames).map(header => ({
-        prop: `newEntry.${header}`,
-        label: this.translate.instant(statuteParagraphHeadersAndVerboseNames[header])
-    }));
+    public columns: ImportListViewHeaderDefinition[] = Object.keys(statuteParagraphHeadersAndVerboseNames).map(
+        header => ({
+            prop: `newEntry.${header}`,
+            label: this.translate.instant(statuteParagraphHeadersAndVerboseNames[header]),
+            isTableColumn: true,
+            isRequired: true
+        })
+    );
 
     /**
      * Constructor for list view bases

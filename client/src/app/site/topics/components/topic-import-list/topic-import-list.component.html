@@ -40,10 +40,6 @@
         </ng-template>
     </mat-tab>
 
-    <ng-container requiredFields>
-        <li>{{ 'Title is required. All other fields are optional and may be empty.' | translate }}</li>
-    </ng-container>
-
     <div *pblNgridCellDef="'newEntry.agenda_duration'; row as entry">
         {{ getDuration(entry.newEntry.agenda_duration) }}
     </div>

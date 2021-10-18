@@ -30,7 +30,7 @@ export interface BaseMenuEntry<P = any> {
     permission?: P;
 
     /**
-     * A string attached as css-class directly to an Html-Tag for this menu-entry.
+     * A string passed as css class to the related html tag.
      */
     cssClass?: string;
 }

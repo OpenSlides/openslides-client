@@ -38,12 +38,7 @@ export class MotionCategoryRepositoryService
         this.setSortFunction((a, b) => a.weight - b.weight);
     }
 
-    public create(partialCategory: Partial<MotionCategory>): Promise<Identifiable> {
-        const payload: MotionCategoryAction.CreatePayload = this.getCreatePayload(partialCategory);
-        return this.sendActionToBackend(MotionCategoryAction.CREATE, payload);
-    }
-
-    public bulkCreate(categories: Partial<MotionCategoryAction.CreatePayload>[]): Promise<Identifiable[]> {
+    public create(...categories: Partial<MotionCategory>[]): Promise<Identifiable[]> {
         const payload: MotionCategoryAction.CreatePayload[] = categories.map(category =>
             this.getCreatePayload(category)
         );

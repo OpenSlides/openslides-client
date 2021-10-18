@@ -16,6 +16,7 @@ import { MemberListComponent } from './components/member-list/member-list.compon
 import { MemberPasswordComponent } from './components/member-password/member-password.component';
 import { OrgaSettingsComponent } from './components/orga-settings/orga-settings.component';
 import { OrganizationTagListComponent } from './components/organization-tag-list/organization-tag-list.component';
+import { CommitteeImportListComponent } from './components/committee-import-list/committee-import-list.component';
 
 const routes: Route[] = [
     {
@@ -64,6 +65,10 @@ const routes: Route[] = [
                     {
                         path: 'create',
                         component: CommitteeEditComponent
+                    },
+                    {
+                        path: 'import',
+                        component: CommitteeImportListComponent
                     },
                     {
                         path: ':committeeId',

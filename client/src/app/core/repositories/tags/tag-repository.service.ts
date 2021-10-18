@@ -27,12 +27,7 @@ export class TagRepositoryService extends BaseRepositoryWithActiveMeeting<ViewTa
         this.initSorting();
     }
 
-    public async create(partialTag: Partial<Tag>): Promise<Identifiable> {
-        const payload: TagAction.CreatePayload = this.getCreatePayload(partialTag);
-        return this.sendActionToBackend(TagAction.CREATE, payload);
-    }
-
-    public bulkCreate(tags: Partial<Tag>[]): Promise<Identifiable[]> {
+    public async create(...tags: Partial<Tag>[]): Promise<Identifiable[]> {
         const payload: TagAction.CreatePayload[] = tags.map(tag => this.getCreatePayload(tag));
         return this.sendBulkActionToBackend(TagAction.CREATE, payload);
     }

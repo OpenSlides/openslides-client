@@ -8,6 +8,7 @@
                         [@navItemAnim]
                         [ngClass]="entry.cssClass"
                         *osPerms="entry.permission"
+                        [ngClass]="entry.cssClass"
                         mat-list-item
                         (click)="mobileAutoCloseNav()"
                         [routerLink]="entry.route"

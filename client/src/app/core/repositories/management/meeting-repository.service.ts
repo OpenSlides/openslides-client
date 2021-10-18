@@ -118,10 +118,13 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         return { title };
     };
 
-    public create(meetingPayload: Partial<MeetingAction.CreatePayload>): Promise<Identifiable> {
-        meetingPayload.start_time = this.anyDateToUnix(meetingPayload.start_time);
-        meetingPayload.end_time = this.anyDateToUnix(meetingPayload.end_time);
-        return this.sendActionToBackend(MeetingAction.CREATE, meetingPayload);
+    public create(...meetings: Partial<MeetingAction.CreatePayload>[]): Promise<Identifiable[]> {
+        const payload = meetings.map(meetingPayload => ({
+            ...meetingPayload,
+            start_time: this.anyDateToUnix(meetingPayload.start_time),
+            end_time: this.anyDateToUnix(meetingPayload.end_time)
+        }));
+        return this.sendBulkActionToBackend(MeetingAction.CREATE, payload);
     }
 
     public import(committeeId: Id, meeting: ImportMeeting): Promise<Identifiable> {
@@ -190,8 +193,9 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         return this.sendActionsToBackend(actions);
     }
 
-    public delete(committee: ViewMeeting): Promise<void> {
-        return this.sendActionToBackend(MeetingAction.DELETE, { id: committee.id });
+    public delete(...meetings: Identifiable[]): Promise<void> {
+        const payload: MeetingAction.DeletePayload[] = meetings.map(meeting => ({ id: meeting.id }));
+        return this.sendBulkActionToBackend(MeetingAction.DELETE, payload);
     }
 
     public deleteAllSpeakersOfAllListsOfSpeakersInAMeeting(meetingId: Id): Promise<void> {
@@ -222,6 +226,15 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
     public unarchive(...meetings: ViewMeeting[]): Promise<void> {
         const payload: MeetingAction.UnarchivePayload[] = meetings.map(meeting => ({ id: meeting.id }));
         return this.sendBulkActionToBackend(MeetingAction.UNARCHIVE, payload);
+    }
+
+    public parseUnixToMeetingTime(time?: number): string {
+        if (!time) {
+            return '';
+        }
+        const date = new Date(time);
+        const month = date.getMonth() + 1 > 9 ? `${date.getMonth() + 1}` : `0${date.getMonth() + 1}`;
+        return `${date.getFullYear()}${month}${date.getDate()}`;
     }
 
     protected createViewModel(model: Meeting): ViewMeeting {

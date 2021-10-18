@@ -138,6 +138,17 @@
             <mat-icon>library_add</mat-icon>
             <span>{{ 'Multiselect' | translate }}</span>
         </button>
+        <ng-container *osOmlPerms="OML.can_manage_organization">
+            <mat-divider></mat-divider>
+            <button mat-menu-item routerLink="import">
+                <mat-icon>cloud_upload</mat-icon>
+                <span>{{ 'Import' | translate }}</span>
+            </button>
+            <button mat-menu-item (click)="exportAsCsv()">
+                <mat-icon>archive</mat-icon>
+                <span>{{ 'Export as CSV' | translate }}</span>
+            </button>
+        </ng-container>
     </div>
     <div *ngIf="isMultiSelect">
         <button mat-menu-item (click)="selectAll()">
@@ -151,17 +162,21 @@
 
         <ng-container *osOmlPerms="OML.can_manage_organization">
             <mat-divider></mat-divider>
-            <button mat-menu-item (click)="forwardToCommittees()">
+            <button mat-menu-item (click)="forwardToCommittees()" [disabled]="!selectedRows.length">
                 <mat-icon>swap_horiz</mat-icon>
                 <span>{{ 'Motion forwarding' | translate }} ...</span>
             </button>
-            <button mat-menu-item [disabled]="true">
+            <button mat-menu-item [disabled]="!selectedRows.length">
                 <mat-icon>local_offer</mat-icon>
                 <span>{{ 'Tags' | translate }}</span>
             </button>
+            <button mat-menu-item (click)="exportAsCsv()" [disabled]="!selectedRows.length">
+                <mat-icon>archive</mat-icon>
+                <span>{{ 'Export as CSV' | translate }}</span>
+            </button>
             <mat-divider></mat-divider>
 
-            <button mat-menu-item [disabled]="true" class="red-warning-text" (click)="deleteMultiple()">
+            <button mat-menu-item [disabled]="!selectedRows.length" class="red-warning-text" (click)="deleteMultiple()">
                 <mat-icon>delete</mat-icon>
                 <span>{{ 'Delete' | translate }}</span>
             </button>

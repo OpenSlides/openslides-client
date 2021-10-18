@@ -1,39 +1,29 @@
 import { FormBuilder, FormControl } from '@angular/forms';
 
-import { columnFactory, PblColumnDefinition } from '@pebula/ngrid';
-
 import { NewEntry } from 'app/core/ui-services/base-import.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { User } from 'app/shared/models/users/user';
 import { BaseImportListComponent } from 'app/site/base/components/base-import-list.component';
 import { BaseUserImportService } from './base-user-import.service';
+import { ImportListViewHeaderDefinition } from '../../../shared/components/import-list-view/import-list-view.component';
 
 export abstract class BaseUserImportListComponent extends BaseImportListComponent<User> {
     public textAreaForm: FormControl;
 
     public possibleFields = Object.values(this.modelHeadersAndVerboseNames);
 
-    private statusImportColumn: PblColumnDefinition = {
-        label: this.translate.instant('Status'),
-        prop: `status`
-    };
-
-    public get generateImportColumns(): PblColumnDefinition[] {
-        return this.modelHeaders.map((property, index: number) => {
-            const singleColumnDef: PblColumnDefinition = {
+    public get generateImportColumns(): ImportListViewHeaderDefinition[] {
+        return this.modelHeaders.map(property => {
+            const singleColumnDef: ImportListViewHeaderDefinition = {
                 label: this.translate.instant(this.modelHeadersAndVerboseNames[property]),
                 prop: `newEntry.${property}`,
-                type: this.guessType(property as keyof User)
+                type: this.guessType(property as keyof User),
+                isTableColumn: true
             };
 
             return singleColumnDef;
         });
     }
-
-    public columnSet = columnFactory()
-        .default({ minWidth: 150 })
-        .table(this.statusImportColumn, ...this.generateImportColumns)
-        .build();
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
