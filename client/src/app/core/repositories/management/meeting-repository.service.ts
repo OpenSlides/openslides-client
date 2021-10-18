@@ -239,14 +239,14 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
      * MOMENT
      * using the date picker will send a moment object
      */
-    private anyDateToUnix(date: Date | Moment | number): number | null {
+    private anyDateToUnix(date: Date | Moment | number | null): number | null {
         if (date instanceof Date) {
             return Math.round(date.getTime() / 1000);
         } else if (typeof date === 'number') {
             return date;
         } else if (moment.isMoment(date)) {
             return date.unix();
-        } else {
+        } else if (date === null) {
             return null;
         }
     }
