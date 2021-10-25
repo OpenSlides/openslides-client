@@ -31,13 +31,8 @@ export class TopicRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCon
         super(repositoryServiceCollector, Topic, agendaItemRepo);
     }
 
-    public create(partialTopic: Partial<TopicAction.CreatePayload>): Promise<Identifiable> {
-        const payload: TopicAction.CreatePayload = this.getCreatePayload(partialTopic);
-        return this.sendActionToBackend(TopicAction.CREATE, payload);
-    }
-
-    public bulkCreate(partialTopics: Partial<TopicAction.CreatePayload>[]): Promise<Identifiable[]> {
-        const payload: TopicAction.CreatePayload[] = partialTopics.map(topic => this.getCreatePayload(topic));
+    public create(...topics: Partial<TopicAction.CreatePayload>[]): Promise<Identifiable[]> {
+        const payload: TopicAction.CreatePayload[] = topics.map(partialTopic => this.getCreatePayload(partialTopic));
         return this.sendBulkActionToBackend(TopicAction.CREATE, payload);
     }
 
@@ -81,15 +76,8 @@ export class TopicRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCon
 
     public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Topics' : 'Topic');
 
-    public duplicateTopic(topicAgendaItem: ViewAgendaItem): Promise<Identifiable> {
-        return this.create(this.getDuplicatedTopic(topicAgendaItem));
-    }
-
-    public duplicateMultipleTopics(agendaItems: ViewAgendaItem[]): Promise<void> {
-        const payload: TopicAction.CreatePayload[] = agendaItems.map(item =>
-            this.getCreatePayload(this.getDuplicatedTopic(item))
-        );
-        return this.sendBulkActionToBackend(TopicAction.CREATE, payload);
+    public duplicateTopics(...topicAgendaItems: ViewAgendaItem[]): Promise<Identifiable[]> {
+        return this.create(...topicAgendaItems.map(topic => this.getDuplicatedTopic(topic)));
     }
 
     private getDuplicatedTopic(topicAgendaItem: ViewAgendaItem): TopicAction.CreatePayload {
