@@ -128,7 +128,7 @@ export const meetingSettings: SettingsGroup[] = [
                         key: 'conference_stream_poster_url',
                         label: _('Livestream poster image url'),
                         helpText: _(
-                            'Shows if livestream is not started. Recommended image format: 500x280px, PNG or JPG'
+                            'Shows if livestream is not started. Recommended image format: 500x200px, PNG or JPG'
                         )
                     },
                     {
