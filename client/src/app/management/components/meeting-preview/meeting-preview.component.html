@@ -8,7 +8,7 @@
 
         <span class="align-right">
             <mat-label class="archived-label" *ngIf="meeting.isArchived">{{ 'Archived' | translate }}</mat-label>
-            <ng-container *osCmlPerms="CML.can_manage; committeeId: committee.id">
+            <ng-container *osCmlPerms="CML.can_manage; committeeId: committee.id; nonAdminCheck: true">
                 <button
                     mat-icon-button
                     (click)="toggleDefaultMeeting()"
@@ -42,7 +42,9 @@
         </div>
     </mat-card-content>
     <mat-card-actions class="prev-content">
-        <a mat-stroked-button color="accent" [routerLink]="meeting.getUrl()">{{ 'Open meeting' | translate }}</a>
+        <ng-container *osCmlPerms="CML.can_manage; committeeId: committee.id; nonAdminCheck: true">
+            <a mat-stroked-button color="accent" [routerLink]="meeting.getUrl()">{{ 'Open meeting' | translate }}</a>
+        </ng-container>
     </mat-card-actions>
 
     <!-- users -->
