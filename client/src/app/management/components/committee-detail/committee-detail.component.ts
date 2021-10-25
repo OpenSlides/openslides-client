@@ -15,7 +15,6 @@ import { ViewCommittee } from 'app/management/models/view-committee';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
-import { MeetingRepositoryService } from '../../../core/repositories/management/meeting-repository.service';
 
 const ForwardLabel = _('Forward motions to');
 const ReceiveLabel = _('Receive motions from');
@@ -32,6 +31,10 @@ export class CommitteeDetailComponent extends BaseModelContextComponent implemen
 
     public currentCommitteeObservable: Observable<ViewCommittee> = null;
 
+    public get canManageMeetingsInCommittee(): boolean {
+        return this.operator.hasCommitteePermissionsNonAdminCheck(this.committeeId, CML.can_manage);
+    }
+
     public get canManageCommittee(): boolean {
         return this.operator.hasCommitteePermissions(this.committeeId, CML.can_manage);
     }
@@ -47,8 +50,7 @@ export class CommitteeDetailComponent extends BaseModelContextComponent implemen
         private operator: OperatorService,
         private committeeRepo: CommitteeRepositoryService,
         private promptService: PromptService,
-        private memberService: MemberService,
-        private meetingRepo: MeetingRepositoryService
+        private memberService: MemberService
     ) {
         super(componentServiceCollector);
         this.subscriptions.push(

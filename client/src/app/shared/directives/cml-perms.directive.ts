@@ -15,7 +15,7 @@ export class CmlPermsDirective extends BasePermsDirective<CML> {
 
     @Input()
     public set osCmlPermsCommitteeId(id: Id) {
-        this.committeeId = id;
+        this._committeeId = id;
         this.updateView();
     }
 
@@ -34,9 +34,20 @@ export class CmlPermsDirective extends BasePermsDirective<CML> {
         this.setComplementCondition(value);
     }
 
-    private committeeId: Id | undefined = undefined;
+    @Input()
+    public set osCmlPermsNonAdminCheck(value: boolean) {
+        this._checkNonAdmin = value;
+        this.updateView();
+    }
+
+    private _committeeId: Id | undefined = undefined;
+    private _checkNonAdmin = false;
 
     protected hasPermissions(): boolean {
-        return this.operator.hasCommitteePermissions(this.committeeId, ...this.permissions);
+        if (this._checkNonAdmin) {
+            return this.operator.hasCommitteePermissionsNonAdminCheck(this._committeeId, ...this.permissions);
+        } else {
+            return this.operator.hasCommitteePermissions(this._committeeId, ...this.permissions);
+        }
     }
 }

@@ -470,6 +470,10 @@ export class OperatorService {
         if (!this.CML) {
             return false;
         }
+        return this.hasCommitteePermissionsNonAdminCheck(committeeId, ...permissionsToCheck);
+    }
+
+    public hasCommitteePermissionsNonAdminCheck(committeeId: Id | undefined, ...permissionsToCheck: CML[]): boolean {
         // A user can have a CML for any committee but they could be not present in some of them.
         if (!this.currentCommitteeIds.includes(committeeId)) {
             return false;

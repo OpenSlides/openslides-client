@@ -1,4 +1,9 @@
-<os-head-bar [customMenu]="true" [nav]="false" [hasMainButton]="canManageCommittee" (mainEvent)="onCreateMeeting()">
+<os-head-bar
+    [customMenu]="true"
+    [nav]="false"
+    [hasMainButton]="canManageMeetingsInCommittee"
+    (mainEvent)="onCreateMeeting()"
+>
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ (currentCommitteeObservable | async)?.name }}</h2>
