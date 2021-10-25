@@ -82,13 +82,12 @@ export class MotionCommentSectionListComponent extends BaseModelContextComponent
         super.ngOnInit();
         super.setTitle('Comment fields');
 
-        /**
-         * Not entirely sure how to get the groups here.
-         * Another call of requestModels?
-         * FIXME: partially depends on the group repository
-         */
         this.groups = this.groupRepo.getViewModelListBehaviorSubject();
-        this.repo.getViewModelListObservable().subscribe(newViewSections => (this.commentSections = newViewSections));
+        this.subscriptions.push(
+            this.repo
+                .getViewModelListObservable()
+                .subscribe(newViewSections => (this.commentSections = newViewSections))
+        );
     }
 
     public getModelRequest(): SimplifiedModelRequest {
@@ -98,8 +97,10 @@ export class MotionCommentSectionListComponent extends BaseModelContextComponent
             follow: [
                 {
                     idField: 'motion_comment_section_ids',
-                    // FIXME: partially depends on the group repository
                     follow: ['comment_ids', 'read_group_ids', 'write_group_ids']
+                },
+                {
+                    idField: 'group_ids'
                 }
             ]
         };
