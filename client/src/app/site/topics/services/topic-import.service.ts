@@ -70,7 +70,7 @@ export class TopicImportService extends BaseImportService<Topic> {
             verboseNameFn: plural => this.repo.getVerboseName(plural),
             hasDuplicatesFn: (entry: Partial<Topic>) =>
                 this.repo.getViewModelList().some(topic => topic.title === entry.title),
-            createFn: (entries: any[]) => this.repo.bulkCreate(entries)
+            createFn: (entries: any[]) => this.repo.create(...entries)
         };
     }
 

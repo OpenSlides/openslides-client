@@ -396,7 +396,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
      * @param item The item to duplicte.
      */
     public duplicateTopic(topicAgendaItem: ViewAgendaItem): void {
-        this.topicRepo.duplicateTopic(topicAgendaItem);
+        this.topicRepo.duplicateTopics(topicAgendaItem);
     }
 
     /**
@@ -405,7 +405,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
      * @param selectedItems All selected items.
      */
     public duplicateMultipleTopics(selectedItems: ViewAgendaItem[]): void {
-        this.topicRepo.duplicateMultipleTopics(selectedItems.filter(item => this.isTopic(item.content_object)));
+        this.topicRepo.duplicateTopics(...selectedItems.filter(item => this.isTopic(item.content_object)));
     }
 
     /**

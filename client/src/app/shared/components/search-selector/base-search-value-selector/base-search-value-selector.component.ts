@@ -97,7 +97,7 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormControlCo
 
     @Input()
     public sortFn: (valueA: Selectable, valueB: Selectable) => number = (a, b) =>
-        a.getTitle().localeCompare(b.getTitle());
+        a ? a.getTitle().localeCompare(b.getTitle()) : 0;
 
     /**
      * Emits the currently searched string.
