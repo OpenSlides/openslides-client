@@ -75,7 +75,11 @@
 </ng-container>
 
 <ng-template let-meetingList="meetingList" let-cssClass="cssClass" #meetingListTemplate>
-    <div class="meeting-list" [ngStyle]="{ height: getHeightByMeetings(meetingList) }">
+    <div
+        class="meeting-list"
+        [ngClass]="{ 'no-meetings': !meetingList.length }"
+        [ngStyle]="{ height: getHeightByMeetings(meetingList) }"
+    >
         <mat-card class="no-meetings-card" *ngIf="!meetingList.length">
             {{ 'No meetings available' | translate }}
         </mat-card>

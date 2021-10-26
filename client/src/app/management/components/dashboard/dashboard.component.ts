@@ -75,7 +75,7 @@ export class DashboardComponent extends BaseModelContextComponent implements OnI
     public getHeightByMeetings(meetings: ViewMeeting[]): string {
         let height = 0;
         if (meetings.length === 0) {
-            return 'fit-content';
+            return '';
         } else if (meetings.length > 3) {
             height = 240;
         } else {
