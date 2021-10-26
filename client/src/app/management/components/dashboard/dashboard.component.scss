@@ -81,6 +81,10 @@ os-dashboard {
         background: white;
         overflow: hidden;
 
+        &.no-meetings {
+            height: fit-content;
+        }
+
         cdk-virtual-scroll-viewport {
             height: 100%;
         }
