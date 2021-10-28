@@ -91,7 +91,10 @@ export const PERMISSIONS: AppPermission[] = [
             { display_name: 'Can see motions in internal state', value: Permission.motionCanSeeInternal },
             { display_name: 'Can create motions', value: Permission.motionCanCreate },
             { display_name: 'Can create amendments', value: Permission.motionCanCreateAmendments },
-            { display_name: 'Can forward into this meeting', value: Permission.motionCanForwardIntoThisMeeting },
+            {
+                display_name: 'Can forward motions into this meeting',
+                value: Permission.motionCanForwardIntoThisMeeting
+            },
             { display_name: 'Can support motions', value: Permission.motionCanSupport },
             { display_name: 'Can manage motions', value: Permission.motionCanManage },
             { display_name: 'Can manage motion metadata', value: Permission.motionCanManageMetadata },

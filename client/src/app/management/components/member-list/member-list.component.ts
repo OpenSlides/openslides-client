@@ -55,7 +55,7 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
         private csvExportService: CsvExportService
     ) {
         super(componentServiceCollector);
-        super.setTitle('Members');
+        super.setTitle('Accounts');
         this.canMultiSelect = true;
     }
 
@@ -113,7 +113,7 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
                 property: key as keyof ViewUser,
                 label: value
             })),
-            `${this.translate.instant('Members')}.csv`
+            `${this.translate.instant('Accounts')}.csv`
         );
     }
 

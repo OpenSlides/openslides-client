@@ -24,11 +24,8 @@
 <!-- Detail -->
 <div *ngIf="workflow">
     <div class="title-line">
-        <strong>
-            <span>{{ 'First state' | translate }}</span>
-            :
-            <span>{{ workflow.first_state?.name | translate }}</span>
-        </strong>
+        <span>{{ 'First state' | translate }}</span>:
+        <span>{{ workflow.first_state?.name | translate }}</span>
     </div>
 
     <div class="scrollable-matrix">

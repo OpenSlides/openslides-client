@@ -45,11 +45,11 @@ export class CommitteeExportService {
                 map: model => (console.log('meeting:', model.meetings[0]), model.meetings[0]?.name)
             },
             {
-                label: "Meeting's start date",
+                label: 'Start date',
                 map: model => this.meetingRepo.parseUnixToMeetingTime(model.meetings[0]?.start_time * 1000)
             },
             {
-                label: "Meeting's end date",
+                label: 'End date',
                 map: model => this.meetingRepo.parseUnixToMeetingTime(model.meetings[0]?.end_time * 1000)
             }
         ];

@@ -50,7 +50,7 @@ export class MemberPasswordComponent extends BaseModelContextComponent implement
      * Triggered by the "x" Button of the Form
      */
     public goBack(): void {
-        this.router.navigate(['members', this.user.id]);
+        this.router.navigate(['accounts', this.user.id]);
     }
 
     /**
@@ -69,7 +69,7 @@ export class MemberPasswordComponent extends BaseModelContextComponent implement
                 const { oldPassword, newPassword }: PasswordForm = this.passwordForm as PasswordForm;
                 await this.repo.setPasswordSelf(this.user, oldPassword, newPassword);
             }
-            this.router.navigate(['members', this.user.id]);
+            this.router.navigate(['accounts', this.user.id]);
         } catch (e) {
             this.raiseError(e);
         }

@@ -117,7 +117,7 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
         const content = this.user.full_name;
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(this.user);
-            this.router.navigate(['./members/']);
+            this.router.navigate(['./accounts/']);
         }
     }
 

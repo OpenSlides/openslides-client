@@ -11,7 +11,7 @@
 >
     <!-- Title -->
     <div class="title-slot">
-        <h2 *ngIf="isNewUser">{{ 'New member' | translate }}</h2>
+        <h2 *ngIf="isNewUser">{{ 'New account' | translate }}</h2>
         <h2 *ngIf="!isNewUser">{{ user?.full_name }}</h2>
     </div>
 
@@ -156,7 +156,7 @@
 </os-user-detail-view>
 
 <mat-menu #userExtraMenu="matMenu">
-    <button mat-menu-item [routerLink]="['/', 'members', user?.id, 'password']">
+    <button mat-menu-item [routerLink]="['/', 'accounts', user?.id, 'password']">
         <mat-icon>security</mat-icon>
         <span>{{ 'Change password' | translate }}</span>
     </button>

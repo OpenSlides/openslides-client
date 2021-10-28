@@ -182,6 +182,7 @@ _('Can see motions in internal state');
 _('Can create motions');
 _('Can support motions');
 _('Can manage motions');
+_('Can forward motions into this meeting');
 _('Can see comments');
 _('Can manage comments');
 _('Can manage motion metadata');
@@ -263,7 +264,7 @@ _('result');
 _('results');
 
 // organization strings
-_('Can manage organization');
-_('Can manage members');
+_('Administrator');
+_('Account management');
 _('Default committee');
 _('Default meeting');

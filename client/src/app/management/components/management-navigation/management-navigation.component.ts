@@ -31,8 +31,8 @@ export class ManagementNavigationComponent {
             weight: 200
         },
         {
-            route: '/members',
-            displayName: 'Members',
+            route: '/accounts',
+            displayName: 'Accounts',
             icon: 'group',
             permission: OML.can_manage_users,
             weight: 300

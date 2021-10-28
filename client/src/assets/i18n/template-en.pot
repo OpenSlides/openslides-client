@@ -4,6 +4,9 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "\"0\" means an unlimited number of active accounts"
+msgstr ""
+
 msgid "\"0\" means an unlimited number of active meetings"
 msgstr ""
 
@@ -66,7 +69,10 @@ msgstr ""
 msgid "Access-data"
 msgstr ""
 
-msgid "Account of"
+msgid "Account management"
+msgstr ""
+
+msgid "Accounts"
 msgstr ""
 
 msgid "Activate"
@@ -137,6 +143,9 @@ msgstr ""
 msgid "Admin"
 msgstr ""
 
+msgid "Administrator"
+msgstr ""
+
 msgid "Administrators"
 msgstr ""
 
@@ -153,6 +162,9 @@ msgid "All casted ballots"
 msgstr ""
 
 msgid "All entitled users"
+msgstr ""
+
+msgid "All other fields are optional and may be empty."
 msgstr ""
 
 msgid "All valid ballots"
@@ -355,6 +367,9 @@ msgstr ""
 msgid "Can forward motions"
 msgstr ""
 
+msgid "Can forward motions into this meeting"
+msgstr ""
+
 msgid "Can forward motions to committee"
 msgstr ""
 
@@ -379,9 +394,6 @@ msgstr ""
 msgid "Can manage logos and fonts"
 msgstr ""
 
-msgid "Can manage members"
-msgstr ""
-
 msgid "Can manage motion metadata"
 msgstr ""
 
@@ -389,9 +401,6 @@ msgid "Can manage motion polls"
 msgstr ""
 
 msgid "Can manage motions"
-msgstr ""
-
-msgid "Can manage organization"
 msgstr ""
 
 msgid "Can manage tags"
@@ -544,6 +553,9 @@ msgstr ""
 msgid "Choose 0 to disable the supporting system."
 msgstr ""
 
+msgid "Choose a header"
+msgstr ""
+
 msgid "Chyron"
 msgstr ""
 
@@ -652,7 +664,7 @@ msgstr ""
 msgid "Contribution"
 msgstr ""
 
-msgid "Copy and paste your member names in this textbox."
+msgid "Copy and paste your account names in this textbox."
 msgstr ""
 
 msgid "Copy and paste your participant names in this textbox."
@@ -728,6 +740,12 @@ msgid "Custom number of ballot papers"
 msgstr ""
 
 msgid "Custom translations"
+msgstr ""
+
+msgid "Customize design"
+msgstr ""
+
+msgid "Dark mode"
 msgstr ""
 
 msgid ""
@@ -843,6 +861,9 @@ msgstr ""
 msgid "Deselect all"
 msgstr ""
 
+msgid "Design"
+msgstr ""
+
 msgid "Designates whether this user is in the room."
 msgstr ""
 
@@ -892,6 +913,9 @@ msgid "Drop files into this area OR click here to select files"
 msgstr ""
 
 msgid "Duplicate"
+msgstr ""
+
+msgid "Duplicate from"
 msgstr ""
 
 msgid "Duration"
@@ -1048,13 +1072,7 @@ msgstr ""
 msgid "Error in form field."
 msgstr ""
 
-msgid "Event"
-msgstr ""
-
 msgid "Event location"
-msgstr ""
-
-msgid "Event name"
 msgstr ""
 
 msgid ""
@@ -1066,6 +1084,9 @@ msgid "Exit"
 msgstr ""
 
 msgid "Exit conference room"
+msgstr ""
+
+msgid "Exit fullscreen"
 msgstr ""
 
 msgid "Expand all"
@@ -1266,6 +1287,9 @@ msgstr ""
 msgid "I know the risk"
 msgstr ""
 
+msgid "If deactivated it is displayed below the title"
+msgstr ""
+
 msgid ""
 "If it is an amendment, you can back up its content when editing it and "
 "delete it afterwards."
@@ -1274,10 +1298,13 @@ msgstr ""
 msgid "Import"
 msgstr ""
 
-msgid "Import meeting"
+msgid "Import accounts"
 msgstr ""
 
-msgid "Import members"
+msgid "Import committees"
+msgstr ""
+
+msgid "Import meeting"
 msgstr ""
 
 msgid "Import motions"
@@ -1290,6 +1317,9 @@ msgid "Import statute"
 msgstr ""
 
 msgid "Import topics"
+msgstr ""
+
+msgid "Import workflows"
 msgstr ""
 
 msgid "In motion list, motion detail and PDF."
@@ -1332,6 +1362,9 @@ msgid "Invalid line number"
 msgstr ""
 
 msgid "Invalid votes"
+msgstr ""
+
+msgid "Is active"
 msgstr ""
 
 msgid "Is already projected"
@@ -1409,6 +1442,12 @@ msgstr ""
 msgid "Level indicator"
 msgstr ""
 
+msgid "Light mode"
+msgstr ""
+
+msgid "Limit of active accounts"
+msgstr ""
+
 msgid "Limit of active meetings"
 msgstr ""
 
@@ -1478,13 +1517,13 @@ msgstr ""
 msgid "Media file"
 msgstr ""
 
+msgid "Meeting"
+msgstr ""
+
 msgid "Meeting URL"
 msgstr ""
 
 msgid "Meetings"
-msgstr ""
-
-msgid "Members"
 msgstr ""
 
 msgid "Message"
@@ -1604,6 +1643,9 @@ msgstr ""
 msgid "New Projector"
 msgstr ""
 
+msgid "New account"
+msgstr ""
+
 msgid "New amendment"
 msgstr ""
 
@@ -1635,9 +1677,6 @@ msgid "New group name"
 msgstr ""
 
 msgid "New meeting"
-msgstr ""
-
-msgid "New member"
 msgstr ""
 
 msgid "New motion"
@@ -1799,11 +1838,6 @@ msgstr ""
 msgid "Number set"
 msgstr ""
 
-msgid ""
-"Number, reason, submitter, category, origin and motion block are optional "
-"and may be empty."
-msgstr ""
-
 msgid "Numbered per category"
 msgstr ""
 
@@ -1823,11 +1857,6 @@ msgid "Offline mode"
 msgstr ""
 
 msgid "Old password"
-msgstr ""
-
-msgid ""
-"One of given name, surname and username has to be filled in. All other "
-"fields are optional and may be empty."
 msgstr ""
 
 msgid "Only countdown"
@@ -1866,28 +1895,7 @@ msgstr ""
 msgid "Open requests to speak"
 msgstr ""
 
-msgid "OpenSlides Blue"
-msgstr ""
-
-msgid "OpenSlides Blue Dark"
-msgstr ""
-
-msgid "OpenSlides Green"
-msgstr ""
-
-msgid "OpenSlides Green Dark"
-msgstr ""
-
-msgid "OpenSlides Red"
-msgstr ""
-
-msgid "OpenSlides Red Dark"
-msgstr ""
-
 msgid "OpenSlides access data"
-msgstr ""
-
-msgid "OpenSlides design theme"
 msgstr ""
 
 msgid "OpenSlides is temporarily reset to following timestamp"
@@ -1965,13 +1973,12 @@ msgstr ""
 msgid "Participant number"
 msgstr ""
 
-msgid "Participant(s) will be imported."
-msgstr ""
-
 msgid "Participants"
 msgstr ""
 
-msgid "Participants have been imported."
+msgid ""
+"Participants and administrators are copied completely and cannot be edited "
+"here."
 msgstr ""
 
 msgid "Particles"
@@ -2398,9 +2405,6 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-msgid "Short description of event"
-msgstr ""
-
 msgid "Show all"
 msgstr ""
 
@@ -2455,7 +2459,7 @@ msgstr ""
 msgid "Show logo"
 msgstr ""
 
-msgid "Show meta information box below the title on projector"
+msgid "Show meta information box beside the title on projector"
 msgstr ""
 
 msgid "Show motion submitters in the agenda"
@@ -2510,11 +2514,6 @@ msgstr ""
 
 msgid ""
 "Shows if livestream is not started. Recommended image format: 500x200px, "
-"PNG or JPG"
-msgstr ""
-
-msgid ""
-"Shows if livestream is not started. Recommended image format: 500x280px, "
 "PNG or JPG"
 msgstr ""
 
@@ -2628,6 +2627,9 @@ msgstr ""
 msgid "Sum of votes including general No/Abstain"
 msgstr ""
 
+msgid "Summary"
+msgstr ""
+
 msgid "Summary of changes"
 msgstr ""
 
@@ -2731,6 +2733,9 @@ msgstr ""
 msgid "There are no items left to chose from"
 msgstr ""
 
+msgid "There are some columns that do not match the template"
+msgstr ""
+
 msgid "There is an error with this amendment. Please edit it manually."
 msgstr ""
 
@@ -2741,6 +2746,9 @@ msgid "This ballot contains deleted users."
 msgstr ""
 
 msgid "This change collides with another one."
+msgstr ""
+
+msgid "This committee already exists"
 msgstr ""
 
 msgid "This committee has no managers!"
@@ -2806,9 +2814,6 @@ msgid "Title for PDF documents of motions"
 msgstr ""
 
 msgid "Title for access data and welcome PDF"
-msgstr ""
-
-msgid "Title is required. All other fields are optional and may be empty."
 msgstr ""
 
 msgid "Topic"
@@ -3145,6 +3150,9 @@ msgstr ""
 msgid "analog"
 msgstr ""
 
+msgid "are required"
+msgstr ""
+
 msgid "ballot-paper"
 msgstr ""
 
@@ -3187,9 +3195,6 @@ msgstr ""
 msgid "entries will be ommitted."
 msgstr ""
 
-msgid "errors"
-msgstr ""
-
 msgid "example"
 msgstr ""
 
@@ -3227,6 +3232,9 @@ msgid "internal"
 msgstr ""
 
 msgid "is now"
+msgstr ""
+
+msgid "is required"
 msgstr ""
 
 msgid "items"

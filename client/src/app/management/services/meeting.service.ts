@@ -8,7 +8,7 @@ export class MeetingService {
     public constructor(private router: Router, private memberFilterService: MemberFilterService) {}
 
     public async navigateToMeetingUsers(meeting: ViewMeeting): Promise<void> {
-        await this.router.navigate(['members']);
+        await this.router.navigate(['accounts']);
         this.memberFilterService.clearAllFilters();
         this.memberFilterService.toggleFilterOption('id', {
             condition: meeting.user_ids,
