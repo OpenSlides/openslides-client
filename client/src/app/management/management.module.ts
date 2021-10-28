@@ -24,6 +24,7 @@ import { OrganizationTagDialogComponent } from './components/organization-tag-di
 import { OrganizationTagListComponent } from './components/organization-tag-list/organization-tag-list.component';
 import { ThemeBuilderDialogComponent } from './components/theme-builder-dialog/theme-builder-dialog.component';
 import { ThemeListComponent } from './components/theme-list/theme-list.component';
+import { MemberDeleteDialogComponent } from './components/member-delete-dialog/member-delete-dialog.component';
 
 @NgModule({
     imports: [CommonModule, SharedModule, ManagementRoutingModule],
@@ -48,7 +49,8 @@ import { ThemeListComponent } from './components/theme-list/theme-list.component
         CommitteeMetaInfoComponent,
         CommitteeImportListComponent,
         ThemeBuilderDialogComponent,
-        ThemeListComponent
+        ThemeListComponent,
+        MemberDeleteDialogComponent
     ]
 })
 export class ManagementModule {}
