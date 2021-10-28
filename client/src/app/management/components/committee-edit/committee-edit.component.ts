@@ -144,18 +144,39 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
     }
 
     /**
+     * Function to automatically unselect a user from the manager-array. If the user remains as committee-manager,
+     * then the backend would remain them as manager and remain them as user, too. If a user would only be added as
+     * committee-manager, then they would be automatically added as committee-user to always have committee-managers
+     * as a subset of committee-users.
+     *
+     * @param value the user who is selected or unselected
+     * @param selected whether the incoming value has been selected or not
+     */
+    public onUserSelectionChanged({ value: user, selected }: OsOptionSelectionChanged<ViewUser>): void {
+        if (selected) {
+            return;
+        }
+        const committeeManagerIds = this.managerIdCtrl.value as Id[];
+        const managerIndex = committeeManagerIds.findIndex(managerId => managerId === user.id);
+        if (managerIndex > -1) {
+            committeeManagerIds.splice(managerIndex, 1);
+            this.managerIdCtrl.setValue(committeeManagerIds);
+        }
+    }
+
+    /**
      * Function to (un-) select the same committee in the `receive_forwardings_from_committee_ids`-control. This
      * enables then the forwarding to the same committee.
      *
      * @param value is the committee that is selected or unselected
-     * @param source is the MatOption that emitted the SelectionChanged-event
+     * @param selected whether the incoming value has been selected or not
      */
-    public onSelectionChanged({ value, source }: OsOptionSelectionChanged): void {
-        if (value.id === this.committeeId) {
+    public onForwardingSelectionChanged({ value: committee, selected }: OsOptionSelectionChanged): void {
+        if (committee.id === this.committeeId) {
             const formControlName = 'receive_forwardings_from_committee_ids';
             const previousValue: Set<Id> = new Set(this.committeeForm.get(formControlName).value || []);
-            const fn = source.selected ? 'add' : 'delete';
-            previousValue[fn](value.id);
+            const fn = selected ? 'add' : 'delete';
+            previousValue[fn](committee.id);
             this.committeeForm.patchValue({ [formControlName]: Array.from(previousValue) });
         }
     }
