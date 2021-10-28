@@ -14,7 +14,7 @@
         <!-- Dot Menu -->
         <span class="poll-actions" *osPerms="permission.motionCanManagePolls">
             <button mat-icon-button [matMenuTriggerFor]="pollDetailMenu">
-                <mat-icon class="small-icon">more_horiz</mat-icon>
+                <mat-icon class="icon-18">more_horiz</mat-icon>
             </button>
         </span>
     </div>
@@ -53,7 +53,7 @@
             (click)="nextPollState()"
             [disabled]="stateChangePendingObservable | async"
         >
-            <mat-icon> {{ pollStateActions[poll.state].icon }}</mat-icon>
+            <mat-icon>{{ pollStateActions[poll.state].icon }}</mat-icon>
             <span class="next-state-label">
                 <ng-container *ngIf="(stateChangePendingObservable | async) === false">
                     {{ poll.nextStateActionVerbose | translate }}
@@ -74,7 +74,7 @@
     <!-- Detail link -->
     <div class="poll-detail-button-wrapper">
         <a mat-icon-button [routerLink]="pollLink" matTooltip="{{ 'More' | translate }}" *ngIf="poll.isPublished">
-            <mat-icon class="small-icon">visibility</mat-icon>
+            <mat-icon class="icon-18">visibility</mat-icon>
         </a>
     </div>
 </mat-card>

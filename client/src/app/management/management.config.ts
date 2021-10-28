@@ -17,6 +17,9 @@ import { ViewOrganization } from './models/view-organization';
 import { ViewOrganizationTag } from './models/view-organization-tag';
 import { ViewResource } from './models/view-resource';
 import { ViewUser } from '../site/users/models/view-user';
+import { Theme } from 'app/shared/models/theme/theme';
+import { ViewTheme } from './models/view-theme';
+import { ThemeRepositoryService } from 'app/core/repositories/themes/theme-repository.service';
 
 export const ManagementAppConfig: AppConfig = {
     name: 'event-management',
@@ -50,6 +53,11 @@ export const ManagementAppConfig: AppConfig = {
             model: OrganizationTag,
             viewModel: ViewOrganizationTag,
             repository: OrganizationTagRepositoryService
+        },
+        {
+            model: Theme,
+            viewModel: ViewTheme,
+            repository: ThemeRepositoryService
         }
     ]
 };

@@ -1,0 +1,66 @@
+<os-head-bar [hasMainButton]="true" (mainEvent)="openThemeBuilderDialog()">
+    <!-- Title -->
+    <div class="title-slot">
+        <h2>{{ 'Design' | translate }}</h2>
+    </div>
+</os-head-bar>
+
+<os-basic-list-view-table
+    [listObservable]="repo.getViewModelListObservable()"
+    [columns]="tableColumnDefinition"
+    [(selectedRows)]="selectedRows"
+    [multiSelect]="isMultiSelect"
+    listStorageKey="themes"
+    (dataSourceChange)="onDataSourceChange($event)"
+    [filterProps]="['name']"
+    [vScrollFixed]="60"
+    [alwaysShowMenu]="true"
+>
+    <div *pblNgridCellDef="'name'; row as theme" class="cell-slot fill pointer" (click)="openThemeBuilderDialog(theme)">
+        <div>
+            {{ theme.name }}
+        </div>
+    </div>
+    <div
+        *pblNgridCellDef="'colors'; row as theme"
+        class="cell-slot fill pointer"
+        (click)="openThemeBuilderDialog(theme)"
+    >
+        <div class="button-group">
+            <div class="fake-button-no-touch" [ngStyle]="{ background: theme.primary_500 }"></div>
+            <div class="fake-button-no-touch" [ngStyle]="{ background: theme.accent_500 }"></div>
+            <div class="fake-button-no-touch" [ngStyle]="{ background: theme.warn_500 }"></div>
+        </div>
+    </div>
+    <div *pblNgridCellDef="'is_active'; row as theme" class="cell-slot fill">
+        <mat-icon
+            class="padding-left-8 padding-right-8"
+            *ngIf="isThemeUsed(theme)"
+            matTooltip="{{ 'Is active' | translate }}"
+        >
+            done
+        </mat-icon>
+    </div>
+    <div *pblNgridCellDef="'menu'; row as theme" class="cell-slot fill">
+        <button mat-icon-button [matMenuTriggerFor]="themeMenu" [matMenuTriggerData]="{ theme: theme }">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+    </div>
+</os-basic-list-view-table>
+
+<mat-menu #themeMenu="matMenu">
+    <ng-template matMenuContent let-theme="theme">
+        <button mat-menu-item [disabled]="isThemeUsed(theme)" (click)="changeCurrentTheme(theme)">
+            <mat-icon>{{ isThemeUsed(theme) ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
+            <span>{{ 'Is active' | translate }}</span>
+        </button>
+        <button mat-menu-item (click)="openThemeBuilderDialog(theme)">
+            <mat-icon>edit</mat-icon>
+            <span>{{ 'Edit' | translate }}</span>
+        </button>
+        <button mat-menu-item class="red-warning-text" (click)="deleteTheme(theme)">
+            <mat-icon>delete</mat-icon>
+            <span>{{ 'Delete' | translate }}</span>
+        </button>
+    </ng-template>
+</mat-menu>

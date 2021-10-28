@@ -42,8 +42,15 @@ export class ManagementNavigationComponent {
             displayName: 'Tags',
             icon: 'local_offer',
             permission: OML.can_manage_organization,
-            weight: 250,
-            hasDividerBelow: true
+            weight: 250
+        },
+        {
+            route: '/designs',
+            displayName: 'Design',
+            icon: 'palette',
+            permission: OML.can_manage_organization,
+            hasDividerBelow: true,
+            weight: 350
         },
         {
             route: '/settings',

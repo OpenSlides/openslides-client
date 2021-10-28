@@ -1,0 +1,11 @@
+@use '~@angular/material' as mat;
+
+@import '~assets/styles/color-palettes/os-dynamic-palette';
+
+$openslides-primary: mat.define-palette($dynamic-theme-primary);
+$openslides-accent: mat.define-palette($dynamic-theme-accent);
+$openslides-warn: mat.define-palette($dynamic-theme-warn);
+
+$openslides-light-theme: mat.define-light-theme($openslides-primary, $openslides-accent, $openslides-warn);
+
+$os-outline: mat.get-color-from-palette(mat.$grey-palette, 300);

@@ -5,7 +5,7 @@
         </div>
     </div>
     <div class="fake-fab-button flex-center">
-        <mat-icon color="primary" class="very-small-icon">{{ isPresent ? 'how_to_reg' : 'person' }}</mat-icon>
+        <mat-icon color="primary" class="icon-16">{{ isPresent ? 'how_to_reg' : 'person' }}</mat-icon>
     </div>
 </div>
 
@@ -13,10 +13,25 @@
     <ng-template matMenuContent>
         <!-- Username -->
         <div (mouseenter)="closeLanguageMenu()">
-            <div class="username-wrapper">
-                <div class="username">{{ username }}</div>
-                <div *ngIf="user" class="subtitle">{{ getOmlVerboseName() | translate }}</div>
-                <div *ngIf="user" class="subtitle structure-level">{{ user.structure_level() }}</div>
+            <div class="username-wrapper action-title">
+                <div>
+                    <div class="username">{{ username }}</div>
+                    <div *ngIf="user" class="subtitle">{{ getOmlVerboseName() | translate }}</div>
+                    <div *ngIf="user" class="subtitle structure-level">{{ user.structure_level() }}</div>
+                </div>
+                <div>
+                    <button
+                        mat-icon-button
+                        (click)="toggleDarkMode($event)"
+                        matTooltip="{{
+                            ((isDarkModeActiveObservable | async) ? 'Light mode' : 'Dark mode') | translate
+                        }}"
+                    >
+                        <mat-icon>
+                            {{ (isDarkModeActiveObservable | async) ? 'brightness_5' : 'brightness_2' }}
+                        </mat-icon>
+                    </button>
+                </div>
             </div>
 
             <div *ngIf="user && isLoggedIn">

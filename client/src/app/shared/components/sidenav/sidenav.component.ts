@@ -22,9 +22,6 @@ export class SidenavComponent {
     @ViewChild('sideNav', { static: true, read: MatSidenav })
     private sideNav: MatSidenav | undefined;
 
-    @Input()
-    public isDarkBackground = false;
-
     public get isMobile(): boolean {
         return this.vp.isMobile;
     }

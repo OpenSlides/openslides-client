@@ -11,6 +11,7 @@ import { ViewOrganization } from 'app/management/models/view-organization';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { ThemeService } from '../../../core/ui-services/theme.service';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'os-dashboard',
@@ -40,8 +41,8 @@ export class DashboardComponent extends BaseModelContextComponent implements OnI
         return this.vp.isMobile;
     }
 
-    public get isDarkTheme(): boolean {
-        return this.themeService.isDarkTheme;
+    public get isDarkModeObservable(): Observable<boolean> {
+        return this.themeService.isDarkModeObservable;
     }
 
     public previousMeetings: ViewMeeting[] = [];

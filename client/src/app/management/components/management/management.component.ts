@@ -15,7 +15,7 @@ import { Observable } from 'rxjs';
 })
 export class ManagementComponent extends BaseComponent implements OnInit {
     public get isDarkThemeObservable(): Observable<boolean> {
-        return this.themeService.isDarkThemeObservable;
+        return this.themeService.isDarkModeObservable;
     }
 
     @ViewChild('sideNav', { static: true, read: SidenavComponent })

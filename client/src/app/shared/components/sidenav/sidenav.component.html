@@ -16,7 +16,7 @@
         <div class="nav-toolbar">
             <!-- logo -->
             <a [routerLink]="getLinkToMainPage()" (click)="mobileAutoCloseNav()">
-                <os-logo [hasDarkBackground]="isDarkBackground" class="os-logo-container"></os-logo>
+                <os-logo class="os-logo-container"></os-logo>
             </a>
         </div>
         <ng-container *ngTemplateOutlet="drawerContent"></ng-container>
@@ -57,7 +57,7 @@
             mat-raised-button
             (click)="toggle()"
             class="nav-toggle-button"
-            [ngClass]="{ left: isOpen, right: !isOpen, 'background-default': isDarkBackground }"
+            [ngClass]="{ left: isOpen, right: !isOpen }"
         >
             <mat-icon>{{ isOpen ? 'arrow_back_ios' : 'arrow_forward_ios' }}</mat-icon>
         </button>

@@ -8,7 +8,6 @@ import { OperatorService } from 'app/core/core-services/operator.service';
 import { OML } from 'app/core/core-services/organization-permission';
 import { OrganizationRepositoryService } from 'app/core/repositories/management/organization-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { Themes } from 'app/core/ui-services/theme.service';
 import { ViewOrganization } from 'app/management/models/view-organization';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 
@@ -24,7 +23,6 @@ export class OrgaSettingsComponent extends BaseModelContextComponent implements 
     private currentOrgaSettings: ViewOrganization;
 
     public orgaSettingsForm: FormGroup;
-    public themes = Themes;
 
     public get hasEdits(): boolean {
         return this.orgaSettingsForm?.dirty || false;
@@ -67,8 +65,7 @@ export class OrgaSettingsComponent extends BaseModelContextComponent implements 
                 description: [this.currentOrgaSettings.description],
                 legal_notice: [this.currentOrgaSettings.legal_notice],
                 privacy_policy: [this.currentOrgaSettings.privacy_policy],
-                login_text: [this.currentOrgaSettings.login_text],
-                theme: [this.currentOrgaSettings.theme]
+                login_text: [this.currentOrgaSettings.login_text]
             };
             if (this.operator.isSuperAdmin) {
                 rawSettingsForm = {
@@ -108,7 +105,9 @@ export class OrgaSettingsComponent extends BaseModelContextComponent implements 
 
     public onSubmit(): void {
         const payload: OrganizationAction.UpdatePayload = this.orgaSettingsForm.value;
-        this.markFormAsClean();
-        this.orgaRepo.update(payload).catch(this.raiseError);
+        this.orgaRepo
+            .update(payload)
+            .then(() => this.markFormAsClean())
+            .catch(this.raiseError);
     }
 }

@@ -14,7 +14,7 @@ import { MatOption, MatOptionSelectionChange } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
 
 import { Id } from 'app/core/definitions/key-types';
-import { BaseFormControlComponent } from 'app/shared/components/base-form-control';
+import { BaseFormFieldControlComponent } from 'app/shared/components/base-form-field-control';
 import { ParentErrorStateMatcher } from 'app/shared/parent-error-state-matcher';
 import { Selectable } from '../../selectable';
 import { NotFoundDescriptionDirective } from '../../../directives/not-found-description.directive';
@@ -25,7 +25,7 @@ export interface OsOptionSelectionChanged<T = Selectable> {
 }
 
 @Directive()
-export abstract class BaseSearchValueSelectorComponent extends BaseFormControlComponent<Selectable> {
+export abstract class BaseSearchValueSelectorComponent extends BaseFormFieldControlComponent<Selectable> {
     @ViewChild(CdkVirtualScrollViewport, { static: true })
     public cdkVirtualScrollViewPort: CdkVirtualScrollViewport;
 
