@@ -69,7 +69,7 @@
         "moment": "^2.27.0",
         "ng-particles": "^2.13.4",
         "ng2-charts": "^2.4.0",
-        "ng2-pdf-viewer": "6.3.2",
+        "ng2-pdf-viewer": "~7.0.1",
         "ngx-device-detector": "^2.0.0",
         "ngx-file-drop": "^11.1.0",
         "ngx-mat-select-search": "^3.3.0",
