@@ -48,6 +48,7 @@
                 [multiple]="true"
                 placeholder="{{ 'Committee members' | translate }}"
                 [inputListValues]="organizationMembers"
+                (selectionChanged)="onUserSelectionChanged($event)"
             ></os-search-value-selector>
         </mat-form-field>
 
@@ -70,7 +71,7 @@
                     [repo]="committeeRepo"
                     [showChips]="false"
                     [lazyLoading]="false"
-                    (selectionChanged)="onSelectionChanged($event)"
+                    (selectionChanged)="onForwardingSelectionChanged($event)"
                 ></os-search-repo-selector>
             </mat-form-field>
 

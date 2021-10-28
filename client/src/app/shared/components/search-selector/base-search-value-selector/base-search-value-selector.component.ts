@@ -21,7 +21,7 @@ import { NotFoundDescriptionDirective } from '../../../directives/not-found-desc
 
 export interface OsOptionSelectionChanged<T = Selectable> {
     value: T;
-    source: MatOption;
+    selected: boolean;
 }
 
 @Directive()
@@ -138,15 +138,15 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormControlCo
      */
     protected set selectableItems(items: Selectable[]) {
         const sortedItems = [...items].sort(this.sortFn);
-        if (!this.multiple && this.includeNone) {
-            this._selectableItems = [this.noneItem].concat(sortedItems);
-        } else {
-            this._selectableItems = sortedItems;
+        this._selectableItemsIdMap = {};
+        const allItems = !this.multiple && this.includeNone ? [this.noneItem].concat(sortedItems) : sortedItems;
+        for (const item of allItems) {
+            this._selectableItemsIdMap[item.id] = item;
         }
     }
 
     protected get selectableItems(): Selectable[] {
-        return this._selectableItems;
+        return Object.values(this._selectableItemsIdMap);
     }
 
     protected noneItem: Selectable = {
@@ -157,7 +157,7 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormControlCo
 
     private _isFirstUpdate = true;
 
-    private _selectableItems: Selectable[] = [];
+    private _selectableItemsIdMap: { [id: number]: Selectable } = {};
 
     /**
      * Function to get a list filtered by the entered search value.
@@ -188,12 +188,16 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormControlCo
 
     public addOrRemoveId(id: Id): void {
         const index = this.selectedIds.indexOf(id);
+        const value = this._selectableItemsIdMap[id];
+        let selected = false;
         if (index > -1) {
             this.selectedIds.splice(index, 1);
         } else {
             this.selectedIds.push(id);
+            selected = true;
         }
         this.setNextValue(this.selectedIds);
+        this.selectionChanged.emit({ value, selected });
     }
 
     public onOpenChanged(event: boolean): void {
@@ -206,7 +210,6 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormControlCo
     public onSelectionChange(value: Selectable, change: MatOptionSelectionChange): void {
         if (change.isUserInput && this.multiple) {
             this.addOrRemoveId(value.id);
-            this.selectionChanged.emit({ value, source: change.source });
         }
     }
 
