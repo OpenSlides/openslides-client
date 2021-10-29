@@ -72,7 +72,8 @@ export class OrgaSettingsComponent extends BaseModelContextComponent implements 
                     ...rawSettingsForm,
                     reset_password_verbose_errors: [this.currentOrgaSettings.reset_password_verbose_errors],
                     enable_electronic_voting: [this.currentOrgaSettings.enable_electronic_voting],
-                    limit_of_meetings: [this.currentOrgaSettings.limit_of_meetings ?? 0]
+                    limit_of_meetings: [this.currentOrgaSettings.limit_of_meetings ?? 0],
+                    limit_of_users: [this.currentOrgaSettings.limit_of_users ?? 0]
                 };
             }
             this.orgaSettingsForm = this.formBuilder.group(rawSettingsForm);

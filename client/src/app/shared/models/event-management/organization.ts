@@ -12,6 +12,7 @@ export interface OrganizationSetting {
     reset_password_verbose_errors: boolean;
     enable_electronic_voting: boolean;
     limit_of_meetings: number;
+    limit_of_users: number;
 }
 
 export class Organization extends BaseModel<Organization> {
