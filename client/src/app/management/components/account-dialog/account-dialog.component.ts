@@ -15,7 +15,7 @@ interface MenuItem {
 
 enum MenuItems {
     CHANGE_PASSWORD = 'Change password',
-    SHOW_PROFILE = 'Show profile'
+    SHOW_PROFILE = 'My profile'
 }
 
 @Component({

@@ -54,11 +54,11 @@ export class CommitteeImportListComponent extends BaseImportListComponent<Commit
         },
         {
             prop: 'meeting_start_date',
-            label: _("Meeting's start date")
+            label: _('Start date')
         },
         {
             prop: 'meeting_end_date',
-            label: _("Meeting's end date")
+            label: _('End date')
         }
     ];
 

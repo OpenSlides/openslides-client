@@ -87,7 +87,7 @@
         <os-committee-meta-info icon="engineering" title="Committee manager" *ngIf="canManageCommittee">
             <ng-container *ngIf="committee.getManagers() as managers">
                 <span *ngFor="let manager of managers; let last = last">
-                    <a [routerLink]="['/', 'members', manager.id]">{{ manager }}</a>
+                    <a [routerLink]="['/', 'accounts', manager.id]">{{ manager }}</a>
                     <span *ngIf="!last">,&nbsp;</span>
                 </span>
                 <i class="red-warning-text" *ngIf="managers.length === 0">

@@ -35,14 +35,14 @@ export class MemberImportService extends BaseUserImportService {
         this.exporter.dummyCSVExport<BaseUserExport>(
             BaseUserHeadersAndVerboseNames,
             MemberCsvExportExample,
-            `${this.translate.instant('members-example')}.csv`
+            `${this.translate.instant('account-example')}.csv`
         );
     }
 
     protected getConfig(): ImportConfig<User> {
         return {
             modelHeadersAndVerboseNames: BaseUserHeadersAndVerboseNames,
-            verboseNameFn: plural => (plural ? 'Members' : 'Member'),
+            verboseNameFn: plural => (plural ? 'Accounts' : 'Account'),
             hasDuplicatesFn: (entry: Partial<User>) =>
                 this.repo.getViewModelList().some(user => user.username === entry.username),
             createFn: (entries: any[]) => this.repo.create(...entries)

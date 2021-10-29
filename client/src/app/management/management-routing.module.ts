@@ -26,7 +26,7 @@ const routes: Route[] = [
         children: [
             { path: '', component: DashboardComponent, pathMatch: 'full' },
             {
-                path: 'members',
+                path: 'accounts',
                 children: [
                     {
                         path: '',

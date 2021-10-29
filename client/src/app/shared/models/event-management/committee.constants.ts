@@ -20,6 +20,6 @@ export const COMMITTEE_PORT_HEADERS_AND_VERBOSE_NAMES: Partial<CommitteeCsvPort>
     organization_tag_ids: _('Tags'),
     manager_ids: _('Administrators'),
     meeting: _('Meeting'),
-    meeting_start_date: _("Meeting's start date"),
-    meeting_end_date: _("Meeting's end date")
+    meeting_start_date: _('Start date'),
+    meeting_end_date: _('End date')
 };
