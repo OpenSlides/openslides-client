@@ -83,8 +83,7 @@ export namespace UserAction {
         new_password: string;
     }
 
-    export interface SetPresentPayload {
-        id: Id;
+    export interface SetPresentPayload extends Identifiable {
         meeting_id: Id;
         present: boolean;
     }

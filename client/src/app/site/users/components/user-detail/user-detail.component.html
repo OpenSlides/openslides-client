@@ -59,6 +59,7 @@
     [isNewUser]="newUser"
     [isEditing]="editUser"
     [additionalFormControls]="additionalFormControls"
+    [additionalAllowedPersonalForms]="['about_me']"
     [isAllowedFn]="isAllowedFn"
     [generatePasswordFn]="randomPasswordFn"
     (changeEvent)="personalInfoFormValue = $event"
@@ -192,7 +193,8 @@
         <div *ngIf="usersGroups && usersGroups.length > 0">
             <h4>{{ 'Groups' | translate }}</h4>
             <span *ngFor="let group of usersGroups; let last = last">
-                {{ group.getTitle() | translate }}<span *ngIf="!last">,&nbsp;</span>
+                {{ group.getTitle() | translate }}
+                <span *ngIf="!last">,&nbsp;</span>
             </span>
         </div>
 
@@ -239,8 +241,8 @@
     </ng-template>
 
     <ng-template #moreIcons let-user="user">
-        <mat-icon *ngIf="user.isPresentInMeeting() && isAllowed('seeName')" matTooltip="{{ 'Is present' | translate }}"
-            >check_box</mat-icon
-        >
+        <mat-icon *ngIf="user.isPresentInMeeting() && isAllowed('seeName')" matTooltip="{{ 'Is present' | translate }}">
+            check_box
+        </mat-icon>
     </ng-template>
 </os-user-detail-view>

@@ -1,5 +1,10 @@
 @import '~assets/styles/drag.scss';
 
+.projector-inactive {
+    color: #303030 !important;
+    background-color: white !important;
+}
+
 .projector-detail-wrapper {
     #projector {
         border: 1px solid lightgrey;

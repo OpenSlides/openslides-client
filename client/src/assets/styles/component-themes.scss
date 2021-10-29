@@ -20,7 +20,6 @@
 
 /** Import the component-related style sheets here */
 @import '~app/site/site.component.scss-theme.scss';
-@import '~app/shared/components/projector-button/projector-button.component.scss';
 @import '~app/site/agenda/components/list-of-speakers/list-of-speakers.component.scss-theme.scss';
 @import '~app/shared/components/sorting-tree/sorting-tree.component.scss-theme.scss';
 @import '~app/shared/components/tile/tile.component.scss';
@@ -49,7 +48,6 @@
 
     /** Components' concerning theme-files */
     @include os-site-theme($theme);
-    @include os-projector-button-style($theme);
     @include os-list-of-speakers-style($theme);
     @include os-sorting-tree-style($theme);
     @include os-tile-style($theme);

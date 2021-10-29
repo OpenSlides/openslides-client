@@ -1,8 +1,17 @@
-<div class="content-container">
-    <mat-card [ngClass]="isEditing ? 'os-form-card' : 'os-card'" class="spacer-bottom-60" (keydown)="onKeyDown($event)">
-        <ng-container *ngIf="isEditing; then editTemplate; else showTemplate"></ng-container>
-    </mat-card>
-</div>
+<ng-container *ngIf="!useMatcard">
+    <ng-container *ngIf="isEditing; then editTemplate; else showTemplate"></ng-container>
+</ng-container>
+<ng-container *ngIf="useMatcard">
+    <div class="content-container">
+        <mat-card
+            [ngClass]="isEditing ? 'os-form-card' : 'os-card'"
+            class="spacer-bottom-60"
+            (keydown)="onKeyDown($event)"
+        >
+            <ng-container *ngIf="isEditing; then editTemplate; else showTemplate"></ng-container>
+        </mat-card>
+    </div>
+</ng-container>
 
 <ng-template #editTemplate>
     <form [formGroup]="personalInfoForm">
@@ -87,7 +96,7 @@
             </mat-form-field>
         </div>
 
-        <div>
+        <div *ngIf="isAllowed('seeExtra')">
             <mat-checkbox formControlName="is_active">{{ 'active' | translate }}</mat-checkbox>
             <mat-checkbox formControlName="is_physical_person">{{ 'natural person' | translate }}</mat-checkbox>
             <ng-container *ngTemplateOutlet="moreChecks; context: { form: personalInfoForm }"></ng-container>
