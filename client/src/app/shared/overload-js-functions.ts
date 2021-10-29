@@ -95,9 +95,9 @@ function overloadArrayFunctions(): void {
     });
 
     Object.defineProperty(Array.prototype, 'difference', {
-        value<T>(other: T[] = [], symmetric: boolean = false): T[] {
+        value<T>(other: T[], symmetric: boolean = false): T[] {
             const difference = new Set<T>(this);
-            for (const entry of other) {
+            for (const entry of other ?? []) {
                 if (difference.has(entry)) {
                     difference.delete(entry);
                 } else if (symmetric) {

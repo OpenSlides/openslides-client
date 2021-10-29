@@ -6,7 +6,6 @@ import {
     FieldDescriptor,
     Fields,
     GenericRelationFieldDecriptor,
-    ModelRequest,
     RelationFieldDescriptor,
     StructuredFieldDecriptor
 } from './autoupdate.service';
@@ -17,11 +16,27 @@ import { Collection, Field, Id } from '../definitions/key-types';
 import { OnAfterAppsLoaded } from '../definitions/on-after-apps-loaded';
 import { RelationManagerService } from './relation-manager.service';
 import { Relation } from '../definitions/relations';
+import { ModelRequestObject } from '../definitions/model-request-object';
 
 export type TypedFieldset<M> = (keyof M | { templateField: keyof M })[];
 
 type Fieldset = string | (Field | IAllStructuredFields)[];
 type FollowList = (string | Follow)[];
+
+export interface BaseSimplifiedModelRequest {
+    /**
+     * Sub-fields can be specified, which fieldset will be loaded, too.
+     */
+    follow?: FollowList;
+    /**
+     * The fieldset, which should be loaded.
+     */
+    fieldset?: Fieldset;
+    /**
+     * Additional fields to be loaded. They will never be followed.
+     */
+    additionalFields?: AdditionalField[];
+}
 
 export interface SimplifiedModelRequest extends BaseSimplifiedModelRequest {
     viewModelCtor: ViewModelConstructor<BaseViewModel>;
@@ -68,24 +83,9 @@ export interface Follow extends BaseSimplifiedModelRequest {
 
 export type AdditionalField = Field | ISpecificStructuredField | IAllStructuredFields;
 
-interface BaseSimplifiedModelRequest {
-    /**
-     * Sub-fields can be specified, which fieldset will be loaded, too.
-     */
-    follow?: FollowList;
-    /**
-     * The fieldset, which should be loaded.
-     */
-    fieldset?: Fieldset;
-    /**
-     * Additional fields to be loaded. They will never be followed.
-     */
-    additionalFields?: AdditionalField[];
-}
-
 interface DescriptorResponse<T extends FieldDescriptor> {
     descriptor: T;
-    collectionsToUpdate: Collection[];
+    collectionsToFullListUpdate: Collection[];
 }
 
 export interface Fieldsets<M extends BaseModel> {
@@ -96,41 +96,6 @@ class UnknownRelationError extends Error {}
 class UnknownFieldsetError extends Error {}
 
 export const DEFAULT_FIELDSET = 'detail';
-
-class ModelRequestObject {
-    public readonly ids: Id[] | undefined;
-    public readonly collectionsToUpdate: Set<Collection>;
-
-    public constructor(
-        public readonly collection: Collection,
-        public readonly simplifiedRequest: BaseSimplifiedModelRequest,
-        private readonly fields: Fields,
-        public readonly args: { ids?: Id[] } = {}
-    ) {
-        this.ids = args.ids;
-        this.collectionsToUpdate = new Set();
-    }
-
-    /**
-     * Sets a value under the given key in the `fields`-map.
-     * Ensures, that the key is written only lower-case letters.
-     */
-    public setFieldEntry(fieldKey: string, fieldValue: FieldDescriptor): void {
-        this.fields[fieldKey.toLowerCase()] = fieldValue;
-    }
-
-    public getFields(): Fields {
-        return this.fields;
-    }
-
-    public getModelRequest(): ModelRequest {
-        return {
-            collection: this.collection,
-            ids: this.ids,
-            fields: this.fields
-        };
-    }
-}
 
 @Injectable({
     providedIn: 'root'
@@ -154,9 +119,7 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
         this.loaded.resolve();
     }
 
-    public async build(
-        simplifiedModelRequest: SimplifiedModelRequest
-    ): Promise<{ request: ModelRequest; collectionsToUpdate: Collection[] }> {
+    public async build(simplifiedModelRequest: SimplifiedModelRequest): Promise<ModelRequestObject> {
         await this.loaded;
         const collection = simplifiedModelRequest.viewModelCtor.COLLECTION;
 
@@ -168,10 +131,7 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
         );
         this.addFields(modelRequestObject);
 
-        return {
-            request: modelRequestObject.getModelRequest(),
-            collectionsToUpdate: Array.from(modelRequestObject.collectionsToUpdate)
-        };
+        return modelRequestObject;
     }
 
     private addFields(modelRequestObject: ModelRequestObject): void {
@@ -280,7 +240,13 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
         }
 
         modelRequestObject.setFieldEntry(effectiveIdField, response.descriptor);
-        response.collectionsToUpdate.forEach(collection => modelRequestObject.collectionsToUpdate.add(collection));
+        response.collectionsToFullListUpdate.forEach(collection =>
+            modelRequestObject.addCollectionToFullListUpdate(
+                modelRequestObject.collection,
+                effectiveIdField,
+                collection
+            )
+        );
     }
 
     private getRelationFieldDescriptor(
@@ -290,7 +256,11 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
         const foreignCollection = relation.foreignViewModel.COLLECTION;
         const modelRequestObject = new ModelRequestObject(foreignCollection, follow, {});
         if (relation.isFullList) {
-            modelRequestObject.collectionsToUpdate.add(foreignCollection);
+            modelRequestObject.addCollectionToFullListUpdate(
+                foreignCollection,
+                follow.idField as string,
+                foreignCollection
+            );
         }
         this.addFields(modelRequestObject);
         return {
@@ -299,7 +269,7 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
                 collection: foreignCollection,
                 fields: modelRequestObject.getFields()
             },
-            collectionsToUpdate: Array.from(modelRequestObject.collectionsToUpdate)
+            collectionsToFullListUpdate: modelRequestObject.getFullListUpdateCollections()
         };
     }
 
@@ -312,7 +282,7 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
             fields: {}
         };
         this.addGenericRelation(relation.foreignViewModelPossibilities, descriptor.fields, follow);
-        return { descriptor, collectionsToUpdate: [] };
+        return { descriptor, collectionsToFullListUpdate: [] };
     }
 
     private getStructuredFieldDescriptor(
@@ -331,7 +301,7 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
         }
         descriptor.values = response.descriptor;
 
-        return { descriptor, collectionsToUpdate: response.collectionsToUpdate };
+        return { descriptor, collectionsToFullListUpdate: response.collectionsToFullListUpdate };
     }
 
     private addGenericRelation(
