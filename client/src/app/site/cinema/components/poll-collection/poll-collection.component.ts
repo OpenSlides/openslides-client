@@ -12,6 +12,9 @@ import { BaseViewModel } from 'app/site/base/base-view-model';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 
 @Component({
     selector: 'os-poll-collection',
@@ -19,12 +22,18 @@ import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-mo
     styleUrls: ['./poll-collection.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PollCollectionComponent extends BaseComponent implements OnInit {
+export class PollCollectionComponent extends BaseModelContextComponent implements OnInit {
     public polls: ViewPoll[];
 
     public lastPublishedPoll: ViewPoll;
 
     private _currentProjection: BaseProjectableViewModel<any>;
+
+    @Input()
+    public set currentProjection(viewModel: BaseProjectableViewModel<any>) {
+        this._currentProjection = viewModel;
+        this.updateLastPublished();
+    }
 
     public get currentProjection(): BaseProjectableViewModel<any> {
         return this._currentProjection;
@@ -39,12 +48,6 @@ export class PollCollectionComponent extends BaseComponent implements OnInit {
             return currPolls.some((p: ViewPoll) => p.isStarted);
         }
         return false;
-    }
-
-    @Input()
-    public set currentProjection(viewModel: BaseProjectableViewModel<any>) {
-        this._currentProjection = viewModel;
-        this.updateLastPublished();
     }
 
     private get showExtendedTitle(): boolean {
@@ -69,6 +72,7 @@ export class PollCollectionComponent extends BaseComponent implements OnInit {
     }
 
     public ngOnInit(): void {
+        super.ngOnInit();
         this.subscriptions.push(
             this.repo
                 .getViewModelListObservable()
@@ -109,6 +113,28 @@ export class PollCollectionComponent extends BaseComponent implements OnInit {
             return this.operator.hasPerms(this.permission.assignmentCanManage);
         }
         return false;
+    }
+
+    protected getModelRequest(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [this.activeMeetingId],
+            follow: [
+                {
+                    idField: 'poll_ids',
+                    follow: [
+                        {
+                            idField: 'option_ids',
+                            follow: [{ idField: 'vote_ids' }, { idField: 'content_object_id' }]
+                        },
+                        {
+                            idField: 'global_option_id',
+                            follow: [{ idField: 'vote_ids' }]
+                        }
+                    ]
+                }
+            ]
+        };
     }
 
     /**

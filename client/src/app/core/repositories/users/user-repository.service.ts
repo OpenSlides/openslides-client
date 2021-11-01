@@ -132,6 +132,10 @@ export class UserRepositoryService
             'default_password',
             { templateField: 'committee_$_management_level' }
         ]);
+        const voteProgressFields: (keyof User | { templateField: keyof User })[] = [
+            'is_present_in_meeting_ids',
+            'group_$_ids'
+        ];
 
         return {
             [DEFAULT_FIELDSET]: detailFields,
@@ -141,7 +145,8 @@ export class UserRepositoryService
             orgaEdit: orgaEditFields,
             singleVotes: singleVotesFields,
             committeeEdit: committeeEditFields,
-            committeeList: committeeListFields
+            committeeList: committeeListFields,
+            voteProgress: voteProgressFields
         };
     }
 

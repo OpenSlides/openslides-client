@@ -1,4 +1,4 @@
-import { Directive, Input } from '@angular/core';
+import { ChangeDetectorRef, Directive, Input } from '@angular/core';
 
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -38,15 +38,16 @@ export abstract class BasePollVoteComponent<C extends BaseViewModel = any> exten
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         operator: OperatorService,
-        protected votingService: VotingService
+        protected votingService: VotingService,
+        protected cd: ChangeDetectorRef
     ) {
         super(componentServiceCollector);
-
         this.subscriptions.push(
             operator.userObservable.subscribe(user => {
                 if (user) {
                     this.user = user;
                     this.delegations = user.vote_delegations_from();
+                    this.cd.markForCheck();
                 }
             })
         );
