@@ -6,11 +6,12 @@ import { CollectionMapperService } from './collection-mapper.service';
 import { CommunicationManagerService } from './communication-manager.service';
 import { DataStoreService, DataStoreUpdateManagerService } from './data-store.service';
 import { HTTPMethod } from '../definitions/http-methods';
-import { Collection } from '../definitions/key-types';
 import { ModelRequestBuilderService, SimplifiedModelRequest } from './model-request-builder.service';
 import { Mutex } from '../promises/mutex';
 import { HttpStreamEndpointService, EndpointConfiguration } from './http-stream-endpoint.service';
 import { HttpStreamService } from './http-stream.service';
+import { Id } from 'app/core/definitions/key-types';
+import { ModelRequestObject } from '../definitions/model-request-object';
 
 export type FieldDescriptor = RelationFieldDescriptor | GenericRelationFieldDecriptor | StructuredFieldDecriptor;
 
@@ -42,6 +43,7 @@ export interface StructuredFieldDecriptor {
 }
 
 export interface ModelSubscription {
+    id: Id;
     close: () => void;
 }
 
@@ -70,7 +72,8 @@ class AutoupdateEndpoint extends EndpointConfiguration {
     providedIn: 'root'
 })
 export class AutoupdateService {
-    private mutex = new Mutex();
+    private _activeRequestObjects: { [id: number]: ModelRequestObject } = {};
+    private _mutex = new Mutex();
 
     /**
      * Constructor to create the AutoupdateService. Calls the constructor of the parent class.
@@ -106,7 +109,8 @@ export class AutoupdateService {
      * Which component requests the autoupdate?
      */
     public async instant(modelRequest: SimplifiedModelRequest, description: string): Promise<void> {
-        const { request, collectionsToUpdate } = await this.modelRequestBuilder.build(modelRequest);
+        const modelRequestObject = await this.modelRequestBuilder.build(modelRequest);
+        const request = modelRequestObject.getModelRequest();
         const httpStream = this.httpStreamService.create(
             AUTOUPDATE_SINGLE_ENDPOINT,
             {
@@ -114,8 +118,8 @@ export class AutoupdateService {
             },
             { bodyFn: () => [request] }
         );
-        const { data, isFirstResponse, stream } = await httpStream.toPromise();
-        await this.handleAutoupdateWithStupidFormat(data, stream.id, collectionsToUpdate, isFirstResponse);
+        const { data, stream } = await httpStream.toPromise();
+        await this.handleAutoupdateWithStupidFormat(data, stream.id);
     }
 
     /**
@@ -128,52 +132,58 @@ export class AutoupdateService {
      */
     public async subscribe(modelRequest: SimplifiedModelRequest, description: string): Promise<ModelSubscription> {
         if (modelRequest.ids.length > 0 && modelRequest.ids.every(id => typeof id === 'number')) {
-            const { request, collectionsToUpdate }: { request: ModelRequest; collectionsToUpdate: Collection[] } =
-                await this.modelRequestBuilder.build(modelRequest);
+            const modelRequestObject = await this.modelRequestBuilder.build(modelRequest);
+            const request = modelRequestObject.getModelRequest();
             console.log('autoupdate: new request:', description, modelRequest, request);
-            return await this.request(request, description, collectionsToUpdate);
+            const modelSubscription = await this.request(request, description);
+            this._activeRequestObjects[modelSubscription.id] = modelRequestObject;
+            return modelSubscription;
         }
     }
 
-    private async request(
-        request: ModelRequest,
-        description: string,
-        collectionsToUpdate: Collection[]
-    ): Promise<ModelSubscription> {
+    private async request(request: ModelRequest, description: string): Promise<ModelSubscription> {
         const httpStream = this.httpStreamService.create(
             AUTOUPDATE_DEFAULT_ENDPOINT,
             {
-                onMessage: (data, isFirstResponse, stream) =>
-                    this.handleAutoupdateWithStupidFormat(data, stream.id, collectionsToUpdate, isFirstResponse),
+                onMessage: (data, _, stream) => this.handleAutoupdateWithStupidFormat(data, stream.id),
                 description
             },
             { bodyFn: () => [request] }
         );
         const closeFn = this.communicationManager.registerStream(httpStream);
-        return { close: closeFn };
+        return {
+            id: httpStream.id,
+            close: () => {
+                closeFn();
+                delete this._activeRequestObjects[httpStream.id];
+            }
+        };
     }
 
-    private async handleAutoupdateWithStupidFormat(
-        autoupdateData: AutoupdateModelData,
-        id: number,
-        collectionsToUpdate: Collection[],
-        isFirstResponse: boolean
-    ): Promise<void> {
+    private async handleAutoupdateWithStupidFormat(autoupdateData: AutoupdateModelData, id: number): Promise<void> {
         const modelData = autoupdateFormatToModelData(autoupdateData);
         console.log('autoupdate: from stream', id, modelData, 'raw data:', autoupdateData);
-        await this.handleAutoupdate(modelData, collectionsToUpdate, isFirstResponse);
+        const fullListUpdateCollections = {};
+        for (const key of Object.keys(autoupdateData)) {
+            const data = key.split('/');
+            const collectionRelation = `${data[0]}/${data[2]}`;
+            if (this._activeRequestObjects[id].getFullListUpdateCollectionRelations().includes(collectionRelation)) {
+                fullListUpdateCollections[
+                    this._activeRequestObjects[id].getForeignCollectionByRelation(collectionRelation)
+                ] = autoupdateData[key];
+            }
+        }
+        await this.handleAutoupdate(modelData, fullListUpdateCollections);
     }
 
     private async handleAutoupdate(
         modelData: ModelData,
-        collectionsToUpdate: Collection[],
-        isFirstResponse: boolean
+        fullListUpdateCollections: { [collection: string]: Id[] }
     ): Promise<void> {
-        const unlock = await this.mutex.lock();
+        const unlock = await this._mutex.lock();
 
         const deletedModels: DeletedModels = {};
         const changedModels: ChangedModels = {};
-        const fullListUpdateCollections: Collection[] = isFirstResponse ? collectionsToUpdate : [];
 
         for (const collection of Object.keys(modelData)) {
             for (const id of Object.keys(modelData[collection])) {
@@ -205,15 +215,13 @@ export class AutoupdateService {
     private async handleChangedAndDeletedModels(
         changedModels: ChangedModels,
         deletedModels: DeletedModels,
-        fullListUpdateCollections: Collection[]
+        fullListUpdateCollections: { [collection: string]: Id[] }
     ): Promise<void> {
         const updateSlot = await this.DSUpdateManager.getNewUpdateSlot(this.DS);
 
-        for (const collection of fullListUpdateCollections) {
+        for (const collection of Object.keys(fullListUpdateCollections)) {
             const models = this.DS.getAll(collection);
-            const ids = models
-                .map(model => model.id)
-                .difference((changedModels[collection] || []).map(model => model.id));
+            const ids = models.map(model => model.id).difference(fullListUpdateCollections[collection]);
             deletedModels[collection] = (deletedModels[collection] || []).concat(ids);
         }
 
