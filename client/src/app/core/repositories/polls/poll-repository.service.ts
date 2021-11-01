@@ -156,8 +156,23 @@ export class PollRepositoryService extends BaseRepositoryWithActiveMeeting<ViewP
         update: Partial<PollAction.UpdateElectronicPollPayload>,
         poll: Poll
     ): Promise<void> {
+        /**
+         * We still want to alter the title and the 100% base after the
+         * poll was saved.
+         *
+         * TODO:
+         * This can be heavily streamlined:
+         * generically, on all "update" (not create) tasks,
+         * compare the current poll with the update and only send
+         * the stuff that is different, since in this
+         * regard the form already only allows to change
+         * title and %base
+         */
         if (poll.state !== PollState.Created) {
-            throw new Error('Cannot update an electronic poll in non created state!');
+            update = {
+                title: update.title,
+                onehundred_percent_base: update.onehundred_percent_base
+            };
         }
         return this.updateCreatedElectronicPoll(update, poll);
     }

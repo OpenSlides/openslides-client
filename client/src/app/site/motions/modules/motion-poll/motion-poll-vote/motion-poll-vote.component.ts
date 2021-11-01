@@ -44,16 +44,9 @@ export class MotionPollVoteComponent extends BasePollVoteComponent implements On
         public votingService: VotingService,
         private pollRepo: PollRepositoryService,
         private promptService: PromptService,
-        private cd: ChangeDetectorRef
+        protected cd: ChangeDetectorRef
     ) {
-        super(componentServiceCollector, operator, votingService);
-
-        // observe user updates to refresh the view on dynamic changes
-        this.subscriptions.push(
-            operator.operatorIdObservable.subscribe(() => {
-                this.cd.markForCheck();
-            })
-        );
+        super(componentServiceCollector, operator, votingService, cd);
     }
 
     public ngOnInit(): void {

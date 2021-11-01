@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
-import { Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 import { Id } from 'app/core/definitions/key-types';
 import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
@@ -18,7 +18,8 @@ import { BaseModelContextComponent } from 'app/site/base/components/base-model-c
     template: ''
 })
 export abstract class BasePollComponent<C extends BaseViewModel = any> extends BaseModelContextComponent {
-    private stateChangePendingSubject = new Subject<boolean>();
+    private stateChangePendingSubject = new BehaviorSubject<boolean>(false);
+
     public readonly stateChangePendingObservable = this.stateChangePendingSubject.asObservable();
 
     public get poll(): ViewPoll<C> {

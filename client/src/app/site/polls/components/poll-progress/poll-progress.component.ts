@@ -9,6 +9,9 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { PollClassType } from 'app/shared/models/poll/poll-constants';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 
 @Component({
     selector: 'os-poll-progress',
@@ -16,7 +19,7 @@ import { BaseComponent } from 'app/site/base/components/base.component';
     styleUrls: ['./poll-progress.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PollProgressComponent extends BaseComponent implements OnInit {
+export class PollProgressComponent extends BaseModelContextComponent implements OnInit {
     @Input()
     public poll: ViewPoll;
 
@@ -64,26 +67,27 @@ export class PollProgressComponent extends BaseComponent implements OnInit {
     }
 
     public ngOnInit(): void {
+        super.ngOnInit();
         if (this.poll) {
             this.subscriptions.push(
                 this.userRepo
                     .getViewModelListObservable()
                     .pipe(
-                        map(users =>
+                        map(users => {
                             /**
                              * Filter the users who would be able to vote:
                              * They are present and don't have their vote right delegated
                              * or the have their vote delegated to a user who is present.
                              * They are in one of the voting groups
                              */
-                            users.filter(
+                            return users.filter(
                                 user =>
                                     user.isPresentInMeeting &&
                                     this.poll.entitled_group_ids.intersect(
                                         user.group_ids(this.activeMeetingIdService.meetingId)
                                     ).length
-                            )
-                        )
+                            );
+                        })
                     )
                     .subscribe(users => {
                         this.max = users.length;
@@ -98,5 +102,24 @@ export class PollProgressComponent extends BaseComponent implements OnInit {
 
     public get valueInPercent(): number {
         return (this.votescast / this.max) * 100;
+    }
+
+    protected getModelRequest(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [this.activeMeetingId],
+            follow: [
+                {
+                    idField: 'user_ids',
+                    fieldset: 'voteProgress',
+                    follow: [
+                        {
+                            idField: 'group_$_ids'
+                        }
+                    ]
+                }
+            ],
+            fieldset: []
+        };
     }
 }

@@ -153,7 +153,10 @@ export class ChartsComponent extends BaseComponent {
 
     private progressInputData(inputChartData: ChartData): void {
         if (this.isCircle) {
-            this.chartData = inputChartData.flatMap(chartDate => chartDate.data);
+            this.chartData = inputChartData.flatMap(chartDate => {
+                // removes undefined and null values
+                return chartDate.data.filter(data => !!data);
+            });
             this.circleColors = [
                 {
                     backgroundColor: inputChartData
