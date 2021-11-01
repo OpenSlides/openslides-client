@@ -104,8 +104,6 @@ export class AuthGuard implements CanActivate, CanActivateChild {
         }
         // Fall-through: If the url is the start page, but no other fallback was found,
         // navigate to the error page.
-
-        this.authService.redirectUrl = location.pathname;
         this.router.navigate(['/error'], {
             queryParams: {
                 error: 'Authentication Error',

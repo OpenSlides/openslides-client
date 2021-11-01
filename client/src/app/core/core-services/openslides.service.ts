@@ -35,9 +35,6 @@ export class OpenSlidesService {
         }
 
         if (!this.authService.isAuthenticated()) {
-            if (!location.pathname.includes('error')) {
-                this.authService.redirectUrl = location.pathname;
-            }
             this.osRouter.navigateToLogin();
         }
 
