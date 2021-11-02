@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
@@ -18,6 +19,8 @@ import { fadeInAnim } from 'app/shared/animations';
 import { ParentErrorStateMatcher } from 'app/shared/parent-error-state-matcher';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { BrowserSupportService } from '../../services/browser-support.service';
+
+const HttpWarning = _('Using OpenSlides over HTTP is not supported. Enable HTTPS to continue.');
 
 /**
  * Login mask component.
@@ -151,6 +154,8 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
         if (this.checkBrowser) {
             this.checkDevice();
         }
+
+        this.checkForUnsecureConnection();
     }
 
     /**
@@ -189,6 +194,12 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
      */
     public resetPassword(): void {
         this.router.navigate(['./reset-password'], { relativeTo: this.route });
+    }
+
+    private checkForUnsecureConnection(): void {
+        if (location.protocol === 'http:') {
+            this.raiseWarning(this.translate.instant(HttpWarning));
+        }
     }
 
     private checkIfGuestsEnabled(meetingId: string): void {
