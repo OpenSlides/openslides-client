@@ -26,11 +26,6 @@ export interface LoginResponse {
     providedIn: 'root'
 })
 export class AuthService {
-    /**
-     * If the user tries to access a certain URL without being authenticated, the URL will be stored here
-     */
-    public redirectUrl: string;
-
     // This is a wrapper around authTokenService.accessTokenObservable
     // We need to control the point, when specific token changes should be propagated.
     // undefined is used to indicate, that there is no valid token yet
@@ -94,14 +89,7 @@ export class AuthService {
 
     public redirectUser(meetingId?: number): void {
         const baseRoute = meetingId ? `${meetingId}/` : '/';
-        let redirect = this.redirectUrl ? this.redirectUrl : baseRoute;
-
-        const excludedUrls = ['login'];
-        if (excludedUrls.some(url => redirect.includes(url))) {
-            redirect = baseRoute;
-        }
-
-        this.router.navigate([`${redirect}`]);
+        this.router.navigate([baseRoute]);
     }
 
     public async logout(): Promise<void> {
