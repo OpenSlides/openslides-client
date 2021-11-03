@@ -1,8 +1,4 @@
 import { Injectable } from '@angular/core';
-
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-
 import { MotionChangeRecommendationAction } from 'app/core/actions/motion-change-recommendation-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Id } from 'app/core/definitions/key-types';
@@ -10,12 +6,15 @@ import { Identifiable } from 'app/shared/models/base/identifiable';
 import { MotionChangeRecommendation } from 'app/shared/models/motions/motion-change-recommendation';
 import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
 import { ChangeRecoMode } from 'app/site/motions/motions.constants';
-import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+import { ViewUnifiedChange } from '../../../shared/models/motions/view-unified-change';
+import { ViewMotion } from '../../../site/motions/models/view-motion';
 import { DiffService, LineRange, ModificationType } from '../../ui-services/diff.service';
 import { LinenumberingService } from '../../ui-services/linenumbering.service';
+import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
-import { ViewMotion } from '../../../site/motions/models/view-motion';
-import { ViewUnifiedChange } from '../../../shared/models/motions/view-unified-change';
 
 /**
  * Repository Services for change recommendations
@@ -28,7 +27,7 @@ import { ViewUnifiedChange } from '../../../shared/models/motions/view-unified-c
  * them to the Server.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MotionChangeRecommendationRepositoryService extends BaseRepositoryWithActiveMeeting<
     ViewMotionChangeRecommendation,
@@ -45,7 +44,7 @@ export class MotionChangeRecommendationRepositoryService extends BaseRepositoryW
     public getTitle = (viewMotionChangeRecommendation: ViewMotionChangeRecommendation) => this.getVerboseName();
 
     public getVerboseName = (plural: boolean = false) =>
-        this.translate.instant(plural ? 'Change recommendations' : 'Change recommendation');
+        this.translate.instant(plural ? `Change recommendations` : `Change recommendation`);
 
     /**
      * return the Observable of all change recommendations belonging to the given motion
@@ -127,7 +126,7 @@ export class MotionChangeRecommendationRepositoryService extends BaseRepositoryW
         if (change) {
             return this.diffService.diff(originalTitle, change.getChangeNewText());
         } else {
-            return '';
+            return ``;
         }
     };
 
@@ -172,7 +171,7 @@ export class MotionChangeRecommendationRepositoryService extends BaseRepositoryW
         lineNumberedParagraphs: string[],
         lineRange: LineRange
     ): Partial<MotionChangeRecommendationAction.CreatePayload> {
-        const consolidatedText = lineNumberedParagraphs.join('\n');
+        const consolidatedText = lineNumberedParagraphs.join(`\n`);
 
         const extracted = this.diffService.extractRangeByLineNumbers(consolidatedText, lineRange.from, lineRange.to);
         const extractedHtml =
@@ -248,15 +247,15 @@ export class MotionChangeRecommendationRepositoryService extends BaseRepositoryW
 
     public getFieldsets(): Fieldsets<MotionChangeRecommendation> {
         const detailFields: (keyof MotionChangeRecommendation)[] = [
-            'id',
-            'motion_id',
-            'line_from',
-            'line_to',
-            'internal',
-            'text',
-            'type',
-            'other_description',
-            'rejected'
+            `id`,
+            `motion_id`,
+            `line_from`,
+            `line_to`,
+            `internal`,
+            `text`,
+            `type`,
+            `other_description`,
+            `rejected`
         ];
         return {
             [DEFAULT_FIELDSET]: detailFields

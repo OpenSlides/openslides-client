@@ -4,7 +4,7 @@ import { E2EImportsModule } from '../../../../../e2e-imports.module';
 import { MeetingSettingsFieldComponent } from '../meeting-settings-field/meeting-settings-field.component';
 import { MeetingSettingsListComponent } from './meeting-settings-list.component';
 
-describe('SettingsListComponent', () => {
+describe(`SettingsListComponent`, () => {
     let component: MeetingSettingsListComponent;
     let fixture: ComponentFixture<MeetingSettingsListComponent>;
 
@@ -23,7 +23,7 @@ describe('SettingsListComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

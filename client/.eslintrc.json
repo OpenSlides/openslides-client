@@ -8,6 +8,7 @@
                 "project": ["tsconfig.json", "e2e/tsconfig.json"],
                 "createDefaultProgram": true
             },
+            "plugins": ["simple-import-sort"],
             "extends": [
                 "plugin:@angular-eslint/ng-cli-compat",
                 "plugin:@angular-eslint/ng-cli-compat--formatting-add-on",
@@ -21,6 +22,7 @@
                 "jsdoc/no-types": ["off"],
                 "no-console": ["off"],
                 "no-bitwise": ["off"],
+                "id-blacklist": ["off"],
                 "@angular-eslint/component-selector": [
                     "error",
                     {
@@ -38,7 +40,7 @@
                     }
                 ],
                 "@typescript-eslint/naming-convention": [
-                    "warn",
+                    "error",
                     {
                         "selector": "variable",
                         "format": ["camelCase", "PascalCase", "UPPER_CASE", "snake_case"],
@@ -46,27 +48,28 @@
                     },
                     {
                         "selector": "typeProperty",
-                        "format": ["camelCase", "snake_case", "UPPER_CASE"]
+                        "format": ["camelCase", "PascalCase", "UPPER_CASE", "snake_case"]
                     },
                     {
                         "selector": "enumMember",
-                        "format": ["camelCase", "PascalCase"]
+                        "format": ["camelCase", "PascalCase", "snake_case", "UPPER_CASE"]
                     }
                 ],
-                "object-shorthand": ["warn"],
-                "max-len": ["warn"],
-                "arrow-body-style": ["warn"],
-                "id-blacklist": ["warn"],
-                "prefer-arrow/prefer-arrow-functions": ["warn"],
-                "@angular-eslint/no-conflicting-lifecycle": ["warn"],
-                "@angular-eslint/no-output-native": ["warn"],
-                "@typescript-eslint/quotes": ["warn"],
-                "@typescript-eslint/adjacent-overload-signatures": ["warn"],
-                "@typescript-eslint/ban-types": ["warn"],
-                "@typescript-eslint/consistent-type-assertions": ["warn"],
-                "@typescript-eslint/member-ordering": ["warn"],
-                "@typescript-eslint/no-namespace": ["warn"],
-                "@typescript-eslint/prefer-for-of": ["warn"]
+                "simple-import-sort/imports": "error",
+                "simple-import-sort/exports": "error",
+                "@typescript-eslint/quotes": ["error", "backtick", { "avoidEscape": false }],
+                "object-shorthand": ["off"],
+                "max-len": ["off"],
+                "arrow-body-style": ["off"],
+                "prefer-arrow/prefer-arrow-functions": ["off"],
+                "@typescript-eslint/ban-types": ["off"],
+                "@angular-eslint/no-conflicting-lifecycle": ["off"],
+                "@angular-eslint/no-output-native": ["off"],
+                "@typescript-eslint/adjacent-overload-signatures": ["off"],
+                "@typescript-eslint/consistent-type-assertions": ["off"],
+                "@typescript-eslint/prefer-for-of": ["off"],
+                "@typescript-eslint/no-namespace": ["off"],
+                "@typescript-eslint/member-ordering": ["off"]
             }
         },
         {

@@ -27,8 +27,8 @@ export class ViewTopic extends BaseProjectableViewModel<Topic> {
     public formatForSearch(): SearchRepresentation {
         return {
             properties: [
-                { key: 'Title', value: this.getTitle() },
-                { key: 'Text', value: this.text, trusted: true }
+                { key: `Title`, value: this.getTitle() },
+                { key: `Text`, value: this.text, trusted: true }
             ],
             searchValue: [this.getTitle(), this.text]
         };

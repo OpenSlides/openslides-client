@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-
 import { TranslateService } from '@ngx-translate/core';
-
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { AbstractPollData, PollPdfService } from 'app/core/pdf-services/base-poll-pdf-service';
 import { PdfDocumentService } from 'app/core/pdf-services/pdf-document.service';
@@ -21,7 +19,7 @@ import { ViewPoll } from 'app/shared/models/poll/view-poll';
  * ```
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MotionPollPdfService extends PollPdfService {
     public constructor(
@@ -35,10 +33,10 @@ export class MotionPollPdfService extends PollPdfService {
     ) {
         super(meetingSettingsService, userRepo, activeMeetingIdService, mediaManageService);
         this.meetingSettingsService
-            .get('motion_poll_ballot_paper_number')
+            .get(`motion_poll_ballot_paper_number`)
             .subscribe(count => (this.ballotCustomCount = count));
         this.meetingSettingsService
-            .get('motion_poll_ballot_paper_selection')
+            .get(`motion_poll_ballot_paper_selection`)
             .subscribe(selection => (this.ballotCountSelection = selection));
     }
 
@@ -59,20 +57,20 @@ export class MotionPollPdfService extends PollPdfService {
      */
     public printBallots(viewPoll: ViewPoll, title?: string, subtitle?: string): void {
         const motion = this.motionRepo.getViewModel(viewPoll.content_object?.id);
-        const fileName = `${this.translate.instant('Motion')} - ${motion.number} - ${this.translate.instant(
-            'ballot-paper'
+        const fileName = `${this.translate.instant(`Motion`)} - ${motion.number} - ${this.translate.instant(
+            `ballot-paper`
         )}`;
         if (!title) {
-            title = `${this.translate.instant('Motion')} - ${motion.number}`;
+            title = `${this.translate.instant(`Motion`)} - ${motion.number}`;
             if (motion.polls.length > 1) {
-                title += ` (${this.translate.instant('Vote')} ${motion.polls.length})`;
+                title += ` (${this.translate.instant(`Vote`)} ${motion.polls.length})`;
             }
         }
         if (!subtitle) {
             subtitle = motion.title;
         }
         if (subtitle.length > 90) {
-            subtitle = subtitle.substring(0, 90) + '...';
+            subtitle = subtitle.substring(0, 90) + `...`;
         }
         const rowsPerPage = 4;
         this.pdfService.downloadWithBallotPaper(
@@ -95,9 +93,9 @@ export class MotionPollPdfService extends PollPdfService {
                 this.getHeader(),
                 this.getTitle(data.title),
                 this.getSubtitle(data.subtitle),
-                this.createBallotOption(this.translate.instant('Yes')),
-                this.createBallotOption(this.translate.instant('No')),
-                this.createBallotOption(this.translate.instant('Abstain'))
+                this.createBallotOption(this.translate.instant(`Yes`)),
+                this.createBallotOption(this.translate.instant(`No`)),
+                this.createBallotOption(this.translate.instant(`Abstain`))
             ],
             margin: [0, 0, 0, data.sheetend]
         };

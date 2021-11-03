@@ -1,13 +1,12 @@
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 
 @Component({
-    selector: 'os-point-of-order-dialog',
-    templateUrl: './point-of-order-dialog.component.html',
-    styleUrls: ['./point-of-order-dialog.component.scss']
+    selector: `os-point-of-order-dialog`,
+    templateUrl: `./point-of-order-dialog.component.html`,
+    styleUrls: [`./point-of-order-dialog.component.scss`]
 })
 export class PointOfOrderDialogComponent {
     public editForm: FormGroup;
@@ -20,7 +19,7 @@ export class PointOfOrderDialogComponent {
         private fb: FormBuilder
     ) {
         this.editForm = this.fb.group({
-            note: ['', [Validators.required, Validators.maxLength(this.MAX_LENGTH)]]
+            note: [``, [Validators.required, Validators.maxLength(this.MAX_LENGTH)]]
         });
     }
 

@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { ListOfSpeakersContentComponent } from './list-of-speakers-content.component';
 
-describe('ListOfSpeakersContentComponent', () => {
+describe(`ListOfSpeakersContentComponent`, () => {
     let component: ListOfSpeakersContentComponent;
     let fixture: ComponentFixture<ListOfSpeakersContentComponent>;
 
@@ -22,7 +21,7 @@ describe('ListOfSpeakersContentComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

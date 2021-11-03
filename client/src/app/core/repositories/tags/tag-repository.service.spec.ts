@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { E2EImportsModule } from '../../../../e2e-imports.module';
 import { TagRepositoryService } from './tag-repository.service';
 
-describe('TagRepositoryService', () => {
+describe(`TagRepositoryService`, () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [E2EImportsModule],
@@ -11,7 +11,7 @@ describe('TagRepositoryService', () => {
         });
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         const service = TestBed.inject(TagRepositoryService);
         expect(service).toBeTruthy();
     });

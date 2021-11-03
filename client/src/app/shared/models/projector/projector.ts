@@ -1,23 +1,24 @@
 import { Id } from 'app/core/definitions/key-types';
+
 import { BaseModel } from '../base/base-model';
 import { HasMeetingId } from '../base/has-meeting-id';
 
 export enum Projectiondefault {
-    agendaAllItems = 'agenda_all_items',
-    topics = 'topics',
-    listOfSpeakers = 'list_of_speakers',
-    currentListOfSpeakers = 'current_list_of_speakers',
-    motion = 'motion',
-    amendment = 'amendment',
-    motionBlock = 'motion_block',
-    assignment = 'assignment',
-    user = 'user',
-    mediafile = 'mediafile',
-    projectorMessage = 'projector_message',
-    projectorCountdown = 'projector_countdowns',
-    assignmentPoll = 'assignment_poll',
-    motionPoll = 'motion_poll',
-    poll = 'poll'
+    agendaAllItems = `agenda_all_items`,
+    topics = `topics`,
+    listOfSpeakers = `list_of_speakers`,
+    currentListOfSpeakers = `current_list_of_speakers`,
+    motion = `motion`,
+    amendment = `amendment`,
+    motionBlock = `motion_block`,
+    assignment = `assignment`,
+    user = `user`,
+    mediafile = `mediafile`,
+    projectorMessage = `projector_message`,
+    projectorCountdown = `projector_countdowns`,
+    assignmentPoll = `assignment_poll`,
+    motionPoll = `motion_poll`,
+    poll = `poll`
 }
 
 /**
@@ -26,7 +27,7 @@ export enum Projectiondefault {
  * @ignore
  */
 export class Projector extends BaseModel<Projector> {
-    public static COLLECTION = 'projector';
+    public static COLLECTION = `projector`;
 
     public id: Id;
     public name: string;
@@ -65,19 +66,19 @@ export class Projector extends BaseModel<Projector> {
      * get the aspect ratio as string
      */
     public get aspectRatio(): string {
-        return [this.aspect_ratio_numerator, this.aspect_ratio_denominator].join(':');
+        return [this.aspect_ratio_numerator, this.aspect_ratio_denominator].join(`:`);
     }
 
     /**
      * Set the aspect ratio
      */
     public set aspectRatio(ratioString: string) {
-        const ratio = ratioString.split(':').map(x => +x);
+        const ratio = ratioString.split(`:`).map(x => +x);
         if (ratio.length === 2) {
             this.aspect_ratio_numerator = ratio[0];
             this.aspect_ratio_denominator = ratio[1];
         } else {
-            throw new Error('Projector received unexpected aspect ratio! ' + ratio.toString());
+            throw new Error(`Projector received unexpected aspect ratio! ` + ratio.toString());
         }
     }
 

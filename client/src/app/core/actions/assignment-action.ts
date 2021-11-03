@@ -1,12 +1,13 @@
 import { AssignmentPhase } from 'app/shared/models/assignments/assignment';
 import { HasMeetingId } from 'app/shared/models/base/has-meeting-id';
 import { Identifiable } from 'app/shared/models/base/identifiable';
+
 import { Id, UnsafeHtml } from '../definitions/key-types';
 
 export namespace AssignmentAction {
-    export const CREATE = 'assignment.create';
-    export const UPDATE = 'assignment.update';
-    export const DELETE = 'assignment.delete';
+    export const CREATE = `assignment.create`;
+    export const UPDATE = `assignment.update`;
+    export const DELETE = `assignment.delete`;
 
     export interface CreatePayload extends HasMeetingId {
         // Required

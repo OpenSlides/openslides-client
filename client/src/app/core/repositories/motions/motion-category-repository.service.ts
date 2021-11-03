@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { MotionCategoryAction } from 'app/core/actions/motion-category-action';
 import {
     DEFAULT_FIELDSET,
@@ -11,6 +10,7 @@ import { ViewMeeting } from 'app/management/models/view-meeting';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { MotionCategory } from 'app/shared/models/motions/motion-category';
 import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
+
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { ModelRequestRepository } from '../model-request-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
@@ -26,7 +26,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
  * them to the Server.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MotionCategoryRepositoryService
     extends BaseRepositoryWithActiveMeeting<ViewMotionCategory, MotionCategory>
@@ -59,14 +59,14 @@ export class MotionCategoryRepositoryService
     }
 
     public getFieldsets(): Fieldsets<MotionCategory> {
-        const detailFields: (keyof MotionCategory)[] = ['name', 'prefix'];
+        const detailFields: (keyof MotionCategory)[] = [`name`, `prefix`];
         const sortListFields: (keyof MotionCategory)[] = detailFields.concat([
-            'weight',
-            'level',
-            'parent_id',
-            'child_ids'
+            `weight`,
+            `level`,
+            `parent_id`,
+            `child_ids`
         ]);
-        const listFields: (keyof MotionCategory)[] = sortListFields.concat(['motion_ids']);
+        const listFields: (keyof MotionCategory)[] = sortListFields.concat([`motion_ids`]);
         return {
             [DEFAULT_FIELDSET]: detailFields,
             list: listFields,
@@ -76,10 +76,10 @@ export class MotionCategoryRepositoryService
 
     public getTitle = (viewMotionCategory: ViewMotionCategory) =>
         viewMotionCategory.prefix
-            ? viewMotionCategory.prefix + ' - ' + viewMotionCategory.name
+            ? viewMotionCategory.prefix + ` - ` + viewMotionCategory.name
             : viewMotionCategory.name;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Categories' : 'Category');
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Categories` : `Category`);
 
     /**
      * Updates a categories numbering.
@@ -132,7 +132,7 @@ export class MotionCategoryRepositoryService
             ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
-                    idField: 'motion_category_ids'
+                    idField: `motion_category_ids`
                 }
             ]
         };

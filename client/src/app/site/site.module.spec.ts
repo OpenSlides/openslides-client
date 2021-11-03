@@ -1,13 +1,13 @@
 import { SiteModule } from './site.module';
 
-describe('SiteModule', () => {
+describe(`SiteModule`, () => {
     let siteModule: SiteModule;
 
     beforeEach(() => {
         siteModule = new SiteModule();
     });
 
-    it('should create an instance', () => {
+    it(`should create an instance`, () => {
         expect(siteModule).toBeTruthy();
     });
 });

@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { MotionMetaDataComponent } from './motion-meta-data.component';
 
-describe('MotionMetaDataComponent', () => {
+describe(`MotionMetaDataComponent`, () => {
     let component: MotionMetaDataComponent;
     let fixture: ComponentFixture<MotionMetaDataComponent>;
 
@@ -23,7 +22,7 @@ describe('MotionMetaDataComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

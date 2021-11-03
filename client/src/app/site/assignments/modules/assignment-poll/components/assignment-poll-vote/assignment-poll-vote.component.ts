@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-
+import { TranslateService } from '@ngx-translate/core';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -10,33 +10,34 @@ import { ViewOption } from 'app/shared/models/poll/view-option';
 import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { BasePollVoteComponent, VoteOption } from 'app/site/polls/components/base-poll-vote.component';
 import { ViewUser } from 'app/site/users/models/view-user';
+
 import { UnknownUserLabel } from '../../services/assignment-poll.service';
 
 const voteOptions = {
     Yes: {
-        vote: 'Y',
-        css: 'voted-yes',
-        icon: 'thumb_up',
-        label: 'Yes'
+        vote: `Y`,
+        css: `voted-yes`,
+        icon: `thumb_up`,
+        label: `Yes`
     } as VoteOption,
     No: {
-        vote: 'N',
-        css: 'voted-no',
-        icon: 'thumb_down',
-        label: 'No'
+        vote: `N`,
+        css: `voted-no`,
+        icon: `thumb_down`,
+        label: `No`
     } as VoteOption,
     Abstain: {
-        vote: 'A',
-        css: 'voted-abstain',
-        icon: 'trip_origin',
-        label: 'Abstain'
+        vote: `A`,
+        css: `voted-abstain`,
+        icon: `trip_origin`,
+        label: `Abstain`
     } as VoteOption
 };
 
 @Component({
-    selector: 'os-assignment-poll-vote',
-    templateUrl: './assignment-poll-vote.component.html',
-    styleUrls: ['./assignment-poll-vote.component.scss'],
+    selector: `os-assignment-poll-vote`,
+    templateUrl: `./assignment-poll-vote.component.html`,
+    styleUrls: [`./assignment-poll-vote.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssignment> implements OnInit {
@@ -55,13 +56,14 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         operator: OperatorService,
         votingService: VotingService,
         private pollRepo: PollRepositoryService,
         private promptService: PromptService,
         protected cd: ChangeDetectorRef
     ) {
-        super(componentServiceCollector, operator, votingService, cd);
+        super(componentServiceCollector, translate, operator, votingService, cd);
     }
 
     public ngOnInit(): void {
@@ -77,28 +79,28 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
         ) {
             return actions.css;
         }
-        return '';
+        return ``;
     }
 
     public getGlobalYesClass(user: ViewUser = this.user): string {
-        if (this.voteRequestData[user.id]?.value === 'Y') {
-            return 'voted-yes';
+        if (this.voteRequestData[user.id]?.value === `Y`) {
+            return `voted-yes`;
         }
-        return '';
+        return ``;
     }
 
     public getGlobalAbstainClass(user: ViewUser = this.user): string {
-        if (this.voteRequestData[user.id]?.value === 'A') {
-            return 'voted-abstain';
+        if (this.voteRequestData[user.id]?.value === `A`) {
+            return `voted-abstain`;
         }
-        return '';
+        return ``;
     }
 
     public getGlobalNoClass(user: ViewUser = this.user): string {
-        if (this.voteRequestData[user.id]?.value === 'N') {
-            return 'voted-no';
+        if (this.voteRequestData[user.id]?.value === `N`) {
+            return `voted-no`;
         }
-        return '';
+        return ``;
     }
 
     private defineVoteOptions(): void {
@@ -133,12 +135,12 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
 
     private isGlobalOptionSelected(user: ViewUser = this.user): boolean {
         const value = this.voteRequestData[user.id]?.value;
-        return value === 'Y' || value === 'N' || value === 'A';
+        return value === `Y` || value === `N` || value === `A`;
     }
 
     public async submitVote(user: ViewUser = this.user): Promise<void> {
-        const title = this.translate.instant('Submit selection now?');
-        const content = this.translate.instant('Your decision cannot be changed afterwards.');
+        const title = this.translate.instant(`Submit selection now?`);
+        const content = this.translate.instant(`Your decision cannot be changed afterwards.`);
         const confirmed = await this.promptService.open(title, content);
         if (confirmed) {
             this.deliveringVote[user.id] = true;
@@ -157,7 +159,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
 
     public saveSingleVote(optionId: number, vote: VoteValue, user: ViewUser = this.user): void {
         if (!this.voteRequestData[user.id]) {
-            throw new Error('The user for your voting request does not exist');
+            throw new Error(`The user for your voting request does not exist`);
         }
 
         if (this.isGlobalOptionSelected(user)) {
@@ -192,7 +194,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
                 }
             } else {
                 this.raiseError(
-                    this.translate.instant('You reached the maximum amount of votes. Deselect somebody first.')
+                    this.translate.instant(`You reached the maximum amount of votes. Deselect somebody first.`)
                 );
             }
         } else {

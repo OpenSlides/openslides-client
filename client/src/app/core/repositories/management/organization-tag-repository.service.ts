@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { OrganizationTagAction } from 'app/core/actions/organization-tag-action';
 import {
     DEFAULT_FIELDSET,
@@ -11,13 +10,14 @@ import { ViewOrganization } from 'app/management/models/view-organization';
 import { ViewOrganizationTag } from 'app/management/models/view-organization-tag';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { OrganizationTag } from 'app/shared/models/event-management/organization-tag';
+
+import { ThemeService } from '../../ui-services/theme.service';
 import { BaseRepository } from '../base-repository';
 import { ModelRequestRepository } from '../model-request-repository';
 import { RepositoryServiceCollectorWithoutActiveMeetingService } from '../repository-service-collector-without-active-meeting-service';
-import { ThemeService } from '../../ui-services/theme.service';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class OrganizationTagRepositoryService
     extends BaseRepository<ViewOrganizationTag, OrganizationTag>
@@ -30,10 +30,10 @@ export class OrganizationTagRepositoryService
         super(serviceCollector, OrganizationTag);
     }
 
-    public getVerboseName = (plural?: boolean): string => (plural ? 'Tags' : 'Tag');
+    public getVerboseName = (plural?: boolean): string => (plural ? `Tags` : `Tag`);
     public getTitle = (viewModel: ViewOrganizationTag): string => viewModel.name;
     public getFieldsets(): Fieldsets<OrganizationTag> {
-        const detailFieldset: (keyof OrganizationTag)[] = ['color', 'name', 'committee_ids', 'organization_id'];
+        const detailFieldset: (keyof OrganizationTag)[] = [`color`, `name`, `committee_ids`, `organization_id`];
         return {
             [DEFAULT_FIELDSET]: detailFieldset
         };
@@ -71,7 +71,7 @@ export class OrganizationTagRepositoryService
             ids: [1],
             follow: [
                 {
-                    idField: 'organization_tag_ids'
+                    idField: `organization_tag_ids`
                 }
             ],
             fieldset: []

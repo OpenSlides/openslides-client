@@ -1,22 +1,21 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
 import { TranslateService } from '@ngx-translate/core';
+import { BaseBeforeImportHandler, BeforeImportHandler } from 'app/shared/utils/import/base-before-import-handler';
 import { Papa, ParseConfig } from 'ngx-papaparse';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { Id } from '../definitions/key-types';
-import { StaticBeforeImportHandler } from '../../shared/utils/import/static-before-import-handler';
-import { StaticBeforeImportConfig } from '../../shared/utils/import/static-before-import-config';
 import { Identifiable } from '../../shared/models/base/identifiable';
-import { ImportServiceCollector } from './import-service-collector';
-import { MergeMap } from '../../shared/utils/merge-map';
-import { BaseAfterImportHandler, AfterImportHandler } from '../../shared/utils/import/base-after-import-handler';
-import { BeforeImportHandler, BaseBeforeImportHandler } from 'app/shared/utils/import/base-before-import-handler';
+import { AfterImportHandler, BaseAfterImportHandler } from '../../shared/utils/import/base-after-import-handler';
 import {
     StaticAfterImportConfig,
     StaticAfterImportHandler
 } from '../../shared/utils/import/static-after-import-handler';
+import { StaticBeforeImportConfig } from '../../shared/utils/import/static-before-import-config';
+import { StaticBeforeImportHandler } from '../../shared/utils/import/static-before-import-handler';
+import { MergeMap } from '../../shared/utils/merge-map';
+import { Id } from '../definitions/key-types';
+import { ImportServiceCollector } from './import-service-collector';
 
 /**
  * Interface for value- Label combinations.
@@ -111,7 +110,7 @@ export interface ImportCleanup {
  * Abstract service for imports
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export abstract class BaseImportService<ToCreate extends Identifiable> {
     public chunkSize = 100;
@@ -135,17 +134,17 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
      * The used column separator. If left on an empty string (default),
      * the papaparse parser will automatically decide on separators.
      */
-    public columnSeparator = '';
+    public columnSeparator = ``;
 
     /**
      * The used text separator.
      */
-    public textSeparator = '"';
+    public textSeparator = `"`;
 
     /**
      * The encoding used by the FileReader object.
      */
-    public encoding = 'utf-8';
+    public encoding = `utf-8`;
 
     public get currentImportPhaseObservable(): Observable<ImportStepPhase> {
         return this._currentImportPhaseSubject.asObservable();
@@ -160,18 +159,18 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
      * by the FileReader API
      */
     public encodings: ValueLabelCombination[] = [
-        { value: 'utf-8', label: 'UTF 8 - Unicode' },
-        { value: 'iso-8859-1', label: 'ISO 8859-1 - West European' },
-        { value: 'iso-8859-15', label: 'ISO 8859-15 - West European (with €)' }
+        { value: `utf-8`, label: `UTF 8 - Unicode` },
+        { value: `iso-8859-1`, label: `ISO 8859-1 - West European` },
+        { value: `iso-8859-15`, label: `ISO 8859-15 - West European (with €)` }
     ];
 
     /**
      * List of possible column separators to pass on to papaParse
      */
     public columnSeparators: ValueLabelCombination[] = [
-        { label: 'Comma', value: ',' },
-        { label: 'Semicolon', value: ';' },
-        { label: 'Automatic', value: '' }
+        { label: `Comma`, value: `,` },
+        { label: `Semicolon`, value: `;` },
+        { label: `Automatic`, value: `` }
     ];
 
     /**
@@ -179,9 +178,9 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
      * it cannot automatically detect textseparators (value must not be an empty string)
      */
     public textSeparators: ValueLabelCombination[] = [
-        { label: 'Double quotes (")', value: '"' },
-        { label: "Single quotes (')", value: "'" },
-        { label: 'Gravis (`)', value: '`' }
+        { label: `Double quotes (")`, value: `"` },
+        { label: `Single quotes (')`, value: `'` },
+        { label: `Gravis (\`)`, value: `\`` }
     ];
 
     /**
@@ -309,7 +308,7 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
         this.clearPreview();
         const papaConfig: ParseConfig = {
             header: true,
-            skipEmptyLines: 'greedy',
+            skipEmptyLines: `greedy`,
             quoteChar: this.textSeparator
         };
         if (this.columnSeparator) {
@@ -354,17 +353,17 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
         };
         this._entries.forEach(entry => {
             summary.total += 1;
-            if (entry.status === 'done') {
+            if (entry.status === `done`) {
                 summary.done += 1;
                 return;
-            } else if (entry.status === 'error' && !entry.hasDuplicates) {
+            } else if (entry.status === `error` && !entry.hasDuplicates) {
                 // errors that are not due to duplicates
                 summary.errors += 1;
                 return;
             } else if (entry.hasDuplicates) {
                 summary.duplicates += 1;
                 return;
-            } else if (entry.status === 'new') {
+            } else if (entry.status === `new`) {
                 summary.new += 1;
             }
         });
@@ -435,7 +434,7 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
                 entry.errors = [error];
             } else if (!entry.errors.includes(error)) {
                 entry.errors.push(error);
-                entry.status = 'error';
+                entry.status = `error`;
             }
         }
     }
@@ -471,7 +470,7 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
         this._currentImportPhaseSubject.next(ImportStepPhase.PENDING);
         await this.doBeforeImport();
 
-        const newEntries = this.entries.filter(entry => entry.status === 'new');
+        const newEntries = this.entries.filter(entry => entry.status === `new`);
         const { indexMap, modelsToCreate } = this.getModelsToCreate(newEntries);
 
         this._selfImportHelper.phase = ImportStepPhase.PENDING;
@@ -535,9 +534,9 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
     private doAfterImportCleanup(newEntries: NewEntry<ToCreate>[]): void {
         for (const entry of newEntries) {
             if (!entry.newEntry.id) {
-                entry.status = 'error';
+                entry.status = `error`;
             } else {
-                entry.status = 'done';
+                entry.status = `done`;
             }
         }
     }
@@ -680,11 +679,11 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
             newEntry,
             hasDuplicates,
             importTrackId,
-            status: hasDuplicates ? 'error' : 'new',
-            errors: hasDuplicates ? ['Duplicates'] : []
+            status: hasDuplicates ? `error` : `new`,
+            errors: hasDuplicates ? [`Duplicates`] : []
         };
         if (hasError) {
-            this.setError(entry, 'ParsingErrors');
+            this.setError(entry, `ParsingErrors`);
         }
         return entry;
     }
@@ -752,7 +751,7 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
     private checkHeaderLength(): boolean {
         const snackbarDuration = 3000;
         if (this._headers.length < this.requiredHeaderLength) {
-            this.matSnackbar.open(this.translate.instant('The file has too few columns to be parsed properly.'), '', {
+            this.matSnackbar.open(this.translate.instant(`The file has too few columns to be parsed properly.`), ``, {
                 duration: snackbarDuration
             });
 
@@ -760,14 +759,14 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
             return false;
         } else if (this._headers.length < this.expectedHeader.length) {
             this.matSnackbar.open(
-                this.translate.instant('The file seems to have some ommitted columns. They will be considered empty.'),
-                '',
+                this.translate.instant(`The file seems to have some ommitted columns. They will be considered empty.`),
+                ``,
                 { duration: snackbarDuration }
             );
         } else if (this._headers.length > this.expectedHeader.length) {
             this.matSnackbar.open(
-                this.translate.instant('The file seems to have additional columns. They will be ignored.'),
-                '',
+                this.translate.instant(`The file seems to have additional columns. They will be ignored.`),
+                ``,
                 { duration: snackbarDuration }
             );
         }

@@ -10,9 +10,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-
-import { BehaviorSubject, timer } from 'rxjs';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OpenSlidesStatusService } from 'app/core/core-services/openslides-status.service';
@@ -25,15 +23,17 @@ import { PROJECTOR_CONTENT_FOLLOW } from 'app/shared/components/projector/projec
 import { Projector } from 'app/shared/models/projector/projector';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
+import { BehaviorSubject, timer } from 'rxjs';
+
 import { ViewProjector } from '../../models/view-projector';
 
 /**
  * List for all projectors.
  */
 @Component({
-    selector: 'os-projector-list',
-    templateUrl: './projector-list.component.html',
-    styleUrls: ['./projector-list.component.scss'],
+    selector: `os-projector-list`,
+    templateUrl: `./projector-list.component.html`,
+    styleUrls: [`./projector-list.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -76,6 +76,7 @@ export class ProjectorListComponent extends BaseModelContextComponent implements
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private repo: ProjectorRepositoryService,
         private formBuilder: FormBuilder,
         private operator: OperatorService,
@@ -84,10 +85,10 @@ export class ProjectorListComponent extends BaseModelContextComponent implements
         private activeMeetingIdService: ActiveMeetingIdService,
         private openslidesStatus: OpenSlidesStatusService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
 
         this.createForm = this.formBuilder.group({
-            name: ['', Validators.required]
+            name: [``, Validators.required]
         });
 
         this.installUpdater();
@@ -98,7 +99,7 @@ export class ProjectorListComponent extends BaseModelContextComponent implements
      */
     public ngOnInit(): void {
         super.ngOnInit();
-        super.setTitle('Projectors');
+        super.setTitle(`Projectors`);
         this.projectors = this.repo.getViewModelListBehaviorSubject();
     }
 
@@ -108,11 +109,11 @@ export class ProjectorListComponent extends BaseModelContextComponent implements
             ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
-                    idField: 'projector_ids',
+                    idField: `projector_ids`,
                     follow: [PROJECTOR_CONTENT_FOLLOW]
                 }
             ],
-            fieldset: ''
+            fieldset: ``
         };
     }
 

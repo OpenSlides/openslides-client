@@ -1,37 +1,36 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-
-import { BehaviorSubject, Observable } from 'rxjs';
-
-import { NoActiveMeeting } from './active-meeting-id.service';
-import { ActiveMeetingService } from './active-meeting.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { Committee } from 'app/shared/models/event-management/committee';
 import { Group } from 'app/shared/models/users/group';
+import { User } from 'app/shared/models/users/user';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { BehaviorSubject, Observable } from 'rxjs';
+
+import { Id } from '../definitions/key-types';
+import { Deferred } from '../promises/deferred';
+import { GroupRepositoryService } from '../repositories/users/group-repository.service';
+import { UserRepositoryService } from '../repositories/users/user-repository.service';
+import { ActiveMeetingService } from './active-meeting.service';
+import { NoActiveMeeting } from './active-meeting-id.service';
 import { AuthService } from './auth.service';
 import { AutoupdateService, ModelSubscription } from './autoupdate.service';
 import { DataStoreService } from './data-store.service';
-import { Deferred } from '../promises/deferred';
-import { GroupRepositoryService } from '../repositories/users/group-repository.service';
-import { Id } from '../definitions/key-types';
 import { LifecycleService } from './lifecycle.service';
 import { SimplifiedModelRequest, SpecificStructuredField } from './model-request-builder.service';
+import { OpenSlidesRouterService } from './openslides-router.service';
 import { CML, cmlNameMapping, OML, omlNameMapping } from './organization-permission';
 import { Permission } from './permission';
 import { childPermissions } from './permission-children';
-import { UserRepositoryService } from '../repositories/users/user-repository.service';
-import { User } from 'app/shared/models/users/user';
-import { OpenSlidesRouterService } from './openslides-router.service';
 
 const UNKOWN_USER_ID = -1; // this is an invalid id **and** not equal to 0, null, undefined.
 
 const OPERATOR_FIELDS: (keyof User)[] = [
-    'organization_management_level',
-    'committee_$_management_level',
-    'committee_ids',
-    'can_change_own_password',
-    'is_present_in_meeting_ids'
+    `organization_management_level`,
+    `committee_$_management_level`,
+    `committee_ids`,
+    `can_change_own_password`,
+    `is_present_in_meeting_ids`
 ];
 
 function getUserCML(user: ViewUser): { [id: number]: string } | null {
@@ -53,7 +52,7 @@ function getUserCML(user: ViewUser): { [id: number]: string } | null {
  * or hide certain information.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class OperatorService {
     public get operatorId(): number | null {
@@ -198,7 +197,7 @@ export class OperatorService {
             }
             const id = token ? token.userId : null;
             if (id !== this._lastUserId) {
-                console.debug('operator: user changed from ', this._lastUserId, 'to', id);
+                console.debug(`operator: user changed from `, this._lastUserId, `to`, id);
                 this._lastUserId = id;
 
                 this.operatorStateChange();
@@ -213,7 +212,7 @@ export class OperatorService {
                 return;
             }
             if (this._lastActiveMeetingId !== meetingId) {
-                console.debug('operator: active meeting id changed from ', this._lastActiveMeetingId, 'to', meetingId);
+                console.debug(`operator: active meeting id changed from `, this._lastActiveMeetingId, `to`, meetingId);
 
                 this.setNotReady();
             }
@@ -224,7 +223,7 @@ export class OperatorService {
             }
             const newMeetingId = meeting?.id || null;
             if (this._lastActiveMeetingId !== newMeetingId) {
-                console.debug('operator: active meeting changed from ', this._lastActiveMeetingId, 'to', newMeetingId);
+                console.debug(`operator: active meeting changed from `, this._lastActiveMeetingId, `to`, newMeetingId);
                 this._lastActiveMeetingId = newMeetingId;
 
                 this.operatorStateChange();
@@ -294,7 +293,7 @@ export class OperatorService {
                 this._ready = true;
                 this._readyDeferred.resolve();
                 this.operatorReadySubject.next(true);
-                console.debug('operator is ready!');
+                console.debug(`operator is ready!`);
             }
         });
     }
@@ -310,7 +309,7 @@ export class OperatorService {
         this.CML = undefined;
 
         if (!this._readyDeferred || this._readyDeferred.wasResolved) {
-            console.log('operator: not ready');
+            console.log(`operator: not ready`);
             this._readyDeferred = new Deferred();
         }
     }
@@ -363,18 +362,18 @@ export class OperatorService {
         if (operatorRequest) {
             // Do not wait for the subscription to be done...
             (async () => {
-                console.log('operator: Do operator model request', operatorRequest);
+                console.log(`operator: Do operator model request`, operatorRequest);
                 console.log(
-                    'operator: configuration: meeting',
+                    `operator: configuration: meeting`,
                     this.activeMeetingId,
-                    'authenticated',
+                    `authenticated`,
                     this.isAuthenticated,
-                    'anonymous enabled',
+                    `anonymous enabled`,
                     this.anonymousEnabled
                 );
                 this.currentOperatorDataSubscription = await this.autoupdateService.subscribe(
                     operatorRequest,
-                    'OperatorService'
+                    `OperatorService`
                 );
             })();
         }
@@ -416,11 +415,11 @@ export class OperatorService {
      */
     public hasPerms(...checkPerms: Permission[]): boolean {
         if (!this._ready) {
-            console.warn('has perms: Operator is not ready!');
+            console.warn(`has perms: Operator is not ready!`);
             return false;
         }
         if (!this.activeMeetingId) {
-            console.warn('has perms: Usage outside of meeting!');
+            console.warn(`has perms: Usage outside of meeting!`);
             return false;
         }
         if (this.isSuperAdmin) {
@@ -436,7 +435,7 @@ export class OperatorService {
             result = checkPerms.some(permission => this.permissions.includes(permission));
         }
         if (!this._ready) {
-            console.log('has perms', checkPerms, result, this.groupIds, this.isAuthenticated, this.permissions);
+            console.log(`has perms`, checkPerms, result, this.groupIds, this.isAuthenticated, this.permissions);
         }
         return result;
     }
@@ -580,12 +579,12 @@ export class OperatorService {
             operatorRequest = {
                 ids: [this.operatorId],
                 viewModelCtor: ViewUser,
-                fieldset: 'shortName',
+                fieldset: `shortName`,
                 additionalFields: OPERATOR_FIELDS,
                 follow: [
                     {
-                        idField: SpecificStructuredField('group_$_ids', this.activeMeetingId),
-                        fieldset: ['permissions']
+                        idField: SpecificStructuredField(`group_$_ids`, this.activeMeetingId),
+                        fieldset: [`permissions`]
                     }
                 ]
             };
@@ -595,8 +594,8 @@ export class OperatorService {
                 viewModelCtor: ViewMeeting,
                 follow: [
                     {
-                        idField: 'default_group_id',
-                        fieldset: ['permissions']
+                        idField: `default_group_id`,
+                        fieldset: [`permissions`]
                     }
                 ],
                 fieldset: []
@@ -604,7 +603,7 @@ export class OperatorService {
         } else {
             // has active meeting without the anonymous enabled *and* not authenticated. This is
             // forbidden and can happen, if someone enters a URL of the meeting.
-            this.router.navigate([this.activeMeetingId, 'login']);
+            this.router.navigate([this.activeMeetingId, `login`]);
         }
         return operatorRequest;
     }
@@ -620,7 +619,7 @@ export class OperatorService {
             return {
                 ids: [this.operatorId],
                 viewModelCtor: ViewUser,
-                fieldset: 'shortName',
+                fieldset: `shortName`,
                 additionalFields: OPERATOR_FIELDS
             };
         } else {

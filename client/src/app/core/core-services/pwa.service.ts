@@ -5,7 +5,7 @@ import { SwUpdate } from '@angular/service-worker';
  * Service for Progressive Web App options
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class PwaService {
     public promptEvent;
@@ -18,7 +18,7 @@ export class PwaService {
         });
 
         // install button
-        window.addEventListener('beforeinstallprompt', event => {
+        window.addEventListener(`beforeinstallprompt`, event => {
             this.promptEvent = event;
         });
     }

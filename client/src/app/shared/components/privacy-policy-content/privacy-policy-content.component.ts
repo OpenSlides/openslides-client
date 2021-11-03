@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { OrganizationSettingsService } from 'app/core/ui-services/organization-settings.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
@@ -10,9 +10,9 @@ import { BaseComponent } from 'app/site/base/components/base.component';
  * Used in login and site container.
  */
 @Component({
-    selector: 'os-privacy-policy-content',
-    templateUrl: './privacy-policy-content.component.html',
-    styleUrls: ['./privacy-policy-content.component.scss']
+    selector: `os-privacy-policy-content`,
+    templateUrl: `./privacy-policy-content.component.html`,
+    styleUrls: [`./privacy-policy-content.component.scss`]
 })
 export class PrivacyPolicyContentComponent extends BaseComponent implements OnInit {
     /**
@@ -75,12 +75,13 @@ export class PrivacyPolicyContentComponent extends BaseComponent implements OnIn
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private orgaSettings: OrganizationSettingsService,
         fb: FormBuilder
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
         this.formGroup = fb.group({
-            privacyPolicy: ''
+            privacyPolicy: ``
         });
     }
 
@@ -88,12 +89,12 @@ export class PrivacyPolicyContentComponent extends BaseComponent implements OnIn
      * Subscribes for the privacy policy text
      */
     public ngOnInit(): void {
-        this.orgaSettings.get('privacy_policy').subscribe(privacyPolicy => {
+        this.orgaSettings.get(`privacy_policy`).subscribe(privacyPolicy => {
             this.privacyPolicy = privacyPolicy;
         });
         if (this.isEditable) {
             this.subscriptions.push(
-                this.formGroup.get('privacyPolicy').valueChanges.subscribe(value => (this._value = value))
+                this.formGroup.get(`privacyPolicy`).valueChanges.subscribe(value => (this._value = value))
             );
         }
     }

@@ -1,19 +1,19 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-
+import { TranslateService } from '@ngx-translate/core';
+import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { Observable } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
-import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { BaseComponent } from 'app/site/base/components/base.component';
 import { ApplauseService } from '../../services/applause.service';
 import { InteractionService } from '../../services/interaction.service';
 import { RtcService } from '../../services/rtc.service';
 import { StreamService } from '../../services/stream.service';
 
 @Component({
-    selector: 'os-interaction-container',
-    templateUrl: './interaction-container.component.html',
-    styleUrls: ['./interaction-container.component.scss'],
+    selector: `os-interaction-container`,
+    templateUrl: `./interaction-container.component.html`,
+    styleUrls: [`./interaction-container.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InteractionContainerComponent extends BaseComponent implements OnInit {
@@ -22,8 +22,8 @@ export class InteractionContainerComponent extends BaseComponent implements OnIn
     private streamRunning = false;
     private streamLoadedOnce = false;
 
-    public containerHeadTitle = '';
-    public containerHeadSubtitle = '';
+    public containerHeadTitle = ``;
+    public containerHeadSubtitle = ``;
 
     public get isApplausEnabled(): Observable<boolean> {
         return this.applauseService.showApplauseObservable;
@@ -51,13 +51,14 @@ export class InteractionContainerComponent extends BaseComponent implements OnIn
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         rtcService: RtcService,
         streamService: StreamService,
         private interactionService: InteractionService,
         private applauseService: ApplauseService,
         private cd: ChangeDetectorRef
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
         this.subscriptions.push(
             rtcService.showCallDialogObservable.subscribe(show => {
                 if (show) {
@@ -93,8 +94,8 @@ export class InteractionContainerComponent extends BaseComponent implements OnIn
     }
 
     private clearTitles(): void {
-        this.containerHeadTitle = '';
-        this.containerHeadSubtitle = '';
+        this.containerHeadTitle = ``;
+        this.containerHeadSubtitle = ``;
         this.cd.markForCheck();
         this.cd.detectChanges();
     }
@@ -105,14 +106,14 @@ export class InteractionContainerComponent extends BaseComponent implements OnIn
 
     public updateTitle(title: string): void {
         if (title !== this.containerHeadTitle) {
-            this.containerHeadTitle = title ?? '';
+            this.containerHeadTitle = title ?? ``;
             this.cd.markForCheck();
         }
     }
 
     public updateSubtitle(title: string): void {
         if (title !== this.containerHeadSubtitle) {
-            this.containerHeadSubtitle = title ?? '';
+            this.containerHeadSubtitle = title ?? ``;
             this.cd.markForCheck();
         }
     }

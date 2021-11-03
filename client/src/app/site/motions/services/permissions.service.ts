@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
+
 import { ViewMotion } from '../models/view-motion';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class PermissionsService {
     public configMinSupporters: number;
@@ -16,13 +16,13 @@ export class PermissionsService {
     public constructor(private operator: OperatorService, private meetingSettingsService: MeetingSettingsService) {
         // load config variables
         this.meetingSettingsService
-            .get('motions_supporters_min_amount')
+            .get(`motions_supporters_min_amount`)
             .subscribe(supporters => (this.configMinSupporters = supporters));
         this.meetingSettingsService
-            .get('motions_amendments_enabled')
+            .get(`motions_amendments_enabled`)
             .subscribe(enabled => (this.amendmentEnabled = enabled));
         this.meetingSettingsService
-            .get('motions_amendments_of_amendments')
+            .get(`motions_amendments_of_amendments`)
             .subscribe(enabled => (this.amendmentOfAmendment = enabled));
     }
 
@@ -56,10 +56,10 @@ export class PermissionsService {
      */
     public isAllowed(action: string, motion?: ViewMotion): boolean {
         switch (action) {
-            case 'create': {
+            case `create`: {
                 return this.operator.hasPerms(Permission.motionCanCreate);
             }
-            case 'support': {
+            case `support`: {
                 if (!motion || !motion.state) {
                     return false;
                 }
@@ -72,7 +72,7 @@ export class PermissionsService {
                     (!motion.supporters || !motion.supporter_ids?.includes(this.operator.operatorId))
                 );
             }
-            case 'unsupport': {
+            case `unsupport`: {
                 if (!motion) {
                     return false;
                 }
@@ -83,7 +83,7 @@ export class PermissionsService {
                     !!motion.supporter_ids?.includes(this.operator.operatorId)
                 );
             }
-            case 'createpoll': {
+            case `createpoll`: {
                 if (!motion) {
                     return false;
                 }
@@ -94,7 +94,7 @@ export class PermissionsService {
                     motion.state.allow_create_poll
                 );
             }
-            case 'update': {
+            case `update`: {
                 // check also for empty ViewMotion object (e.g. if motion.id is null)
                 // important for creating new motion as normal user
                 if (!motion || !motion.id) {
@@ -110,10 +110,10 @@ export class PermissionsService {
                         motion.submitters.some(submitter => submitter.user_id === this.operator.operatorId))
                 );
             }
-            case 'update_submitters': {
+            case `update_submitters`: {
                 return this.operator.hasPerms(Permission.motionCanManage);
             }
-            case 'delete': {
+            case `delete`: {
                 if (!motion) {
                     return false;
                 }
@@ -126,7 +126,7 @@ export class PermissionsService {
                     motion.submitters.some(submitter => submitter.user_id === this.operator.operatorId)
                 );
             }
-            case 'change_state': {
+            case `change_state`: {
                 // check also for empty ViewMotion object (e.g. if motion.id is null)
                 // important for creating new motion as normal user
                 if (!motion || !motion.id) {
@@ -142,13 +142,13 @@ export class PermissionsService {
                         motion.submitters.some(submitter => submitter.user_id === this.operator.operatorId))
                 );
             }
-            case 'change_metadata': {
+            case `change_metadata`: {
                 return (
                     this.operator.hasPerms(Permission.motionCanManage) ||
                     this.operator.hasPerms(Permission.motionCanManageMetadata)
                 );
             }
-            case 'can_create_amendments': {
+            case `can_create_amendments`: {
                 if (!motion) {
                     return false;
                 }
@@ -158,10 +158,10 @@ export class PermissionsService {
                     (!motion.lead_motion_id || (motion.lead_motion_id && this.amendmentOfAmendment))
                 );
             }
-            case 'can_manage_config': {
+            case `can_manage_config`: {
                 return this.operator.hasPerms(Permission.meetingCanManageSettings);
             }
-            case 'manage': {
+            case `manage`: {
                 return this.operator.hasPerms(Permission.motionCanManage);
             }
             default: {

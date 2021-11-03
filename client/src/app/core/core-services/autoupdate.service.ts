@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
+import { Id } from 'app/core/definitions/key-types';
 
-import { autoupdateFormatToModelData, AutoupdateModelData, ModelData } from './autoupdate-helpers';
 import { BaseModel } from '../../shared/models/base/base-model';
+import { HTTPMethod } from '../definitions/http-methods';
+import { ModelRequestObject } from '../definitions/model-request-object';
+import { Mutex } from '../promises/mutex';
+import { autoupdateFormatToModelData, AutoupdateModelData, ModelData } from './autoupdate-helpers';
 import { CollectionMapperService } from './collection-mapper.service';
 import { CommunicationManagerService } from './communication-manager.service';
 import { DataStoreService, DataStoreUpdateManagerService } from './data-store.service';
-import { HTTPMethod } from '../definitions/http-methods';
-import { ModelRequestBuilderService, SimplifiedModelRequest } from './model-request-builder.service';
-import { Mutex } from '../promises/mutex';
-import { HttpStreamEndpointService, EndpointConfiguration } from './http-stream-endpoint.service';
 import { HttpStreamService } from './http-stream.service';
-import { Id } from 'app/core/definitions/key-types';
-import { ModelRequestObject } from '../definitions/model-request-object';
+import { EndpointConfiguration, HttpStreamEndpointService } from './http-stream-endpoint.service';
+import { ModelRequestBuilderService, SimplifiedModelRequest } from './model-request-builder.service';
 
 export type FieldDescriptor = RelationFieldDescriptor | GenericRelationFieldDecriptor | StructuredFieldDecriptor;
 
@@ -54,12 +54,12 @@ interface ChangedModels {
     [collection: string]: BaseModel[];
 }
 
-const AUTOUPDATE_DEFAULT_ENDPOINT = 'autoupdate';
-const AUTOUPDATE_SINGLE_ENDPOINT = 'autoupdate?single';
+const AUTOUPDATE_DEFAULT_ENDPOINT = `autoupdate`;
+const AUTOUPDATE_SINGLE_ENDPOINT = `autoupdate?single`;
 
 class AutoupdateEndpoint extends EndpointConfiguration {
     public constructor(url: string) {
-        super(url, '/system/autoupdate/health', HTTPMethod.POST);
+        super(url, `/system/autoupdate/health`, HTTPMethod.POST);
     }
 }
 
@@ -69,7 +69,7 @@ class AutoupdateEndpoint extends EndpointConfiguration {
  * This service usually creates all models
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AutoupdateService {
     private _activeRequestObjects: { [id: number]: ModelRequestObject } = {};
@@ -92,11 +92,11 @@ export class AutoupdateService {
     ) {
         this.httpEndpointService.registerEndpoint(
             AUTOUPDATE_DEFAULT_ENDPOINT,
-            new AutoupdateEndpoint('/system/autoupdate')
+            new AutoupdateEndpoint(`/system/autoupdate`)
         );
         this.httpEndpointService.registerEndpoint(
             AUTOUPDATE_SINGLE_ENDPOINT,
-            new AutoupdateEndpoint('/system/autoupdate?single=true')
+            new AutoupdateEndpoint(`/system/autoupdate?single=true`)
         );
     }
 
@@ -131,10 +131,10 @@ export class AutoupdateService {
      * Which component opens which stream?
      */
     public async subscribe(modelRequest: SimplifiedModelRequest, description: string): Promise<ModelSubscription> {
-        if (modelRequest.ids.length > 0 && modelRequest.ids.every(id => typeof id === 'number')) {
+        if (modelRequest.ids.length > 0 && modelRequest.ids.every(id => typeof id === `number`)) {
             const modelRequestObject = await this.modelRequestBuilder.build(modelRequest);
             const request = modelRequestObject.getModelRequest();
-            console.log('autoupdate: new request:', description, modelRequest, request);
+            console.log(`autoupdate: new request:`, description, modelRequest, request);
             const modelSubscription = await this.request(request, description);
             this._activeRequestObjects[modelSubscription.id] = modelRequestObject;
             return modelSubscription;
@@ -162,10 +162,10 @@ export class AutoupdateService {
 
     private async handleAutoupdateWithStupidFormat(autoupdateData: AutoupdateModelData, id: number): Promise<void> {
         const modelData = autoupdateFormatToModelData(autoupdateData);
-        console.log('autoupdate: from stream', id, modelData, 'raw data:', autoupdateData);
+        console.log(`autoupdate: from stream`, id, modelData, `raw data:`, autoupdateData);
         const fullListUpdateCollections = {};
         for (const key of Object.keys(autoupdateData)) {
-            const data = key.split('/');
+            const data = key.split(`/`);
             const collectionRelation = `${data[0]}/${data[2]}`;
             if (this._activeRequestObjects[id].getFullListUpdateCollectionRelations().includes(collectionRelation)) {
                 fullListUpdateCollections[

@@ -1,20 +1,21 @@
 import { Component, Input, OnInit } from '@angular/core';
-
+import { TranslateService } from '@ngx-translate/core';
 import { MediaManageService } from 'app/core/ui-services/media-manage.service';
 import { ThemeService } from 'app/core/ui-services/theme.service';
-import { BaseComponent } from '../../../site/base/components/base.component';
-import { ComponentServiceCollector } from '../../../core/ui-services/component-service-collector';
 
-const DEFAULT_LOGO = '/assets/img/openslides-logo.svg';
-const DEFAULT_LOGO_DARK_THEME = '/assets/img/openslides-logo-dark.svg';
+import { ComponentServiceCollector } from '../../../core/ui-services/component-service-collector';
+import { BaseComponent } from '../../../site/base/components/base.component';
+
+const DEFAULT_LOGO = `/assets/img/openslides-logo.svg`;
+const DEFAULT_LOGO_DARK_THEME = `/assets/img/openslides-logo-dark.svg`;
 
 /**
  * Component to hold the logo for the app.
  */
 @Component({
-    selector: 'os-logo',
-    templateUrl: './logo.component.html',
-    styleUrls: ['./logo.component.scss']
+    selector: `os-logo`,
+    templateUrl: `./logo.component.html`,
+    styleUrls: [`./logo.component.scss`]
 })
 export class LogoComponent extends BaseComponent implements OnInit {
     /**
@@ -44,10 +45,11 @@ export class LogoComponent extends BaseComponent implements OnInit {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private themeService: ThemeService,
         private mediaManageService: MediaManageService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     public ngOnInit(): void {
@@ -64,7 +66,7 @@ export class LogoComponent extends BaseComponent implements OnInit {
              */
             this.logoPath = this.useDarkLogo ? DEFAULT_LOGO_DARK_THEME : DEFAULT_LOGO;
         } else {
-            this.mediaManageService.getLogoUrlObservable('web_header').subscribe(path => {
+            this.mediaManageService.getLogoUrlObservable(`web_header`).subscribe(path => {
                 this._path = path;
                 this.changeLogo();
             });

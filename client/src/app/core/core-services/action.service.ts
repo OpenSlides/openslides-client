@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 
-import { HttpService } from './http.service';
 import { ProcessError } from '../errors/process-error';
 import { ArchiveStatusService } from './archive-status.service';
+import { HttpService } from './http.service';
 
 export interface ActionRequest {
     action: string;
@@ -38,7 +38,7 @@ export class Action<T = void> extends Promise<T[]> {
     public constructor(sendActionFn: (requests: ActionRequest[]) => Promise<T[]>, ...actions: ActionRequest[]) {
         let resolveFn: (value: T[]) => void;
         super(resolve => {
-            resolveFn = value => (console.log('Action is resolved', value), resolve(value));
+            resolveFn = value => (console.log(`Action is resolved`, value), resolve(value));
         });
         this._actions = actions;
         this._sendActionFn = sendActionFn;
@@ -66,10 +66,10 @@ export class Action<T = void> extends Promise<T[]> {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ActionService {
-    private readonly ACTION_URL = '/system/action/handle_request';
+    private readonly ACTION_URL = `/system/action/handle_request`;
 
     private constructor(private http: HttpService, private archiveService: ArchiveStatusService) {}
 
@@ -79,7 +79,7 @@ export class ActionService {
             return null;
         }
         if (results.length !== 1) {
-            throw new Error('The action service did not respond with exactly one response for one request.');
+            throw new Error(`The action service did not respond with exactly one response for one request.`);
         }
         return results[0];
     }
@@ -94,9 +94,9 @@ export class ActionService {
 
     public async sendRequests<T>(requests: ActionRequest[]): Promise<T[] | null> {
         if (this.archiveService.isArchived) {
-            throw new ProcessError('You cannot make changes while a meeting is archived');
+            throw new ProcessError(`You cannot make changes while a meeting is archived`);
         }
-        console.log('send requests:', requests);
+        console.log(`send requests:`, requests);
         const response = await this.http.post<T>(this.ACTION_URL, requests);
         if (isActionError(response)) {
             throw response.message;
@@ -106,11 +106,11 @@ export class ActionService {
                 return null;
             }
             if (results.length !== requests.length) {
-                throw new Error('The action service did not return responses for each request.');
+                throw new Error(`The action service did not return responses for each request.`);
             }
             return results[0];
         }
-        throw new Error('Unknown return type from action service');
+        throw new Error(`Unknown return type from action service`);
     }
 
     public create<T>(...requests: ActionRequest[]): Action<T> {

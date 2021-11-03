@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { SwUpdate, UpdateAvailableEvent } from '@angular/service-worker';
-
 import { Observable } from 'rxjs';
 
 /**
  * Handle Service Worker updates using the SwUpdate service form angular.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class UpdateService {
     /**

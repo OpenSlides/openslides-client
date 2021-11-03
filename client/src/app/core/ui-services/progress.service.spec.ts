@@ -2,10 +2,10 @@ import { TestBed } from '@angular/core/testing';
 
 import { ProgressService } from './progress.service';
 
-describe('ProgressService', () => {
+describe(`ProgressService`, () => {
     beforeEach(() => TestBed.configureTestingModule({}));
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         const service: ProgressService = TestBed.inject(ProgressService);
         expect(service).toBeTruthy();
     });

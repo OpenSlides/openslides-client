@@ -10,11 +10,11 @@ import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-mot
 export function getRecommendationTypeName(change: ViewMotionChangeRecommendation): string {
     switch (change.type) {
         case ModificationType.TYPE_REPLACEMENT:
-            return 'Replacement';
+            return `Replacement`;
         case ModificationType.TYPE_INSERTION:
-            return 'Insertion';
+            return `Insertion`;
         case ModificationType.TYPE_DELETION:
-            return 'Deletion';
+            return `Deletion`;
         default:
             return change.other_description;
     }

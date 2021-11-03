@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { ImageComponent } from './image.component';
 
-describe('ResourceComponent', () => {
+describe(`ResourceComponent`, () => {
     let component: ImageComponent;
     let fixture: ComponentFixture<ImageComponent>;
 
@@ -23,7 +22,7 @@ describe('ResourceComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

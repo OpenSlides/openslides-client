@@ -11,11 +11,9 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { TranslateService } from '@ngx-translate/core';
 import { columnFactory, createDS, PblColumnDefinition } from '@pebula/ngrid';
 import { PblNgridDataMatrixRow } from '@pebula/ngrid/target-events';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
@@ -42,15 +40,17 @@ import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { ViewGroup } from 'app/site/users/models/view-group';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+
 import { MediafilesSortListService } from '../../services/mediafiles-sort-list.service';
 
 /**
  * Lists all the uploaded files.
  */
 @Component({
-    selector: 'os-mediafile-list',
-    templateUrl: './mediafile-list.component.html',
-    styleUrls: ['./mediafile-list.component.scss'],
+    selector: `os-mediafile-list`,
+    templateUrl: `./mediafile-list.component.html`,
+    styleUrls: [`./mediafile-list.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -97,13 +97,13 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
     /**
      * The form to edit Files
      */
-    @ViewChild('fileEditForm', { static: true })
+    @ViewChild(`fileEditForm`, { static: true })
     public fileEditForm: FormGroup;
 
     /**
      * Reference to the template
      */
-    @ViewChild('fileEditDialog', { static: true })
+    @ViewChild(`fileEditDialog`, { static: true })
     public fileEditDialog: TemplateRef<string>;
 
     /**
@@ -112,15 +112,15 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
     public get hiddenColumns(): string[] {
         const hidden = [];
         if (!this.canEdit) {
-            hidden.push('info');
+            hidden.push(`info`);
         }
 
         if (!this.isMultiSelect) {
-            hidden.push('selection');
+            hidden.push(`selection`);
         }
 
         if (!this.canAccessFileMenu) {
-            hidden.push('menu');
+            hidden.push(`menu`);
         }
 
         return hidden;
@@ -131,17 +131,17 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
      */
     public tableColumnDefinition: PblColumnDefinition[] = [
         {
-            prop: 'selection',
-            width: '40px'
+            prop: `selection`,
+            width: `40px`
         },
         {
-            prop: 'icon',
-            label: '',
-            width: '40px'
+            prop: `icon`,
+            label: ``,
+            width: `40px`
         },
         {
-            prop: 'title',
-            width: '100%',
+            prop: `title`,
+            width: `100%`,
             minWidth: 60
         },
         /**
@@ -156,19 +156,19 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
         },
         */
         {
-            prop: 'info',
-            width: '20%',
+            prop: `info`,
+            width: `20%`,
             minWidth: 60
         },
         {
-            prop: 'indicator',
-            label: '',
-            width: '40px'
+            prop: `indicator`,
+            label: ``,
+            width: `40px`
         },
         {
-            prop: 'menu',
-            label: '',
-            width: '40px'
+            prop: `menu`,
+            label: ``,
+            width: `40px`
         }
     ];
 
@@ -188,6 +188,7 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private activeMeetingIdService: ActiveMeetingIdService,
         private route: ActivatedRoute,
         private router: Router,
@@ -203,14 +204,14 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
         private cd: ChangeDetectorRef,
         private meetingSettingsService: MeetingSettingsService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
         this.canMultiSelect = true;
 
         this.logoPlaces = this.mediaManage.allLogoPlaces;
         this.fontPlaces = this.mediaManage.allFontPlaces;
 
         this.newDirectoryForm = this.formBuilder.group({
-            title: ['', Validators.required],
+            title: [``, Validators.required],
             access_group_ids: []
         });
         this.moveForm = this.formBuilder.group({
@@ -226,7 +227,7 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
      */
     public ngOnInit(): void {
         super.ngOnInit();
-        super.setTitle('Files');
+        super.setTitle(`Files`);
         this.createDataSource();
 
         const directoryId = this.route.snapshot.url.length > 0 ? +this.route.snapshot.url[0].path : null;
@@ -245,11 +246,11 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
             ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
-                    idField: 'mediafile_ids',
-                    follow: ['access_group_ids', 'inherited_access_group_ids'],
+                    idField: `mediafile_ids`,
+                    follow: [`access_group_ids`, `inherited_access_group_ids`],
                     additionalFields: LOGO_FONT_VALUES
                 },
-                'group_ids'
+                `group_ids`
             ]
         };
     }
@@ -325,21 +326,21 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
                 if (newDirectory) {
                     this.directoryChain = newDirectory.getDirectoryChain();
                     // Update the URL.
-                    this.router.navigate([this.activeMeetingId, 'mediafiles', newDirectory.id]);
+                    this.router.navigate([this.activeMeetingId, `mediafiles`, newDirectory.id]);
                 } else {
                     this.directoryChain = [];
-                    this.router.navigate([this.activeMeetingId, 'mediafiles']);
+                    this.router.navigate([this.activeMeetingId, `mediafiles`]);
                 }
             });
         } else {
             this.directory = null;
             this.directoryChain = [];
-            this.router.navigate(['mediafiles'], { relativeTo: this.route.parent });
+            this.router.navigate([`mediafiles`], { relativeTo: this.route.parent });
         }
     }
 
     public onMainEvent(): void {
-        this.router.navigate(['/', this.activeMeetingId, 'mediafiles', 'upload', this.directory?.id || '']);
+        this.router.navigate([`/`, this.activeMeetingId, `mediafiles`, `upload`, this.directory?.id || ``]);
     }
 
     /**
@@ -374,7 +375,7 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
      * @param file the file to delete
      */
     public async onDelete(file: ViewMediafile): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to delete this file?');
+        const title = this.translate.instant(`Are you sure you want to delete this file?`);
         const content = file.getTitle();
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(file);
@@ -385,7 +386,7 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
     }
 
     public async deleteSelected(): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to delete all selected files and folders?');
+        const title = this.translate.instant(`Are you sure you want to delete all selected files and folders?`);
         if (await this.promptService.open(title)) {
             await this.repo.bulkDelete(this.selectedRows);
             this.deselectAll();
@@ -401,7 +402,7 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
     public formatIndicatorTooltip(file: ViewMediafile): string {
         const settings = this.mediaManage.getPlacesDisplayNames(file);
         const optionNames = settings.map(displayName => this.translate.instant(displayName));
-        return optionNames.join('\n');
+        return optionNames.join(`\n`);
     }
 
     public getDisplayNameForPlace(place: FontPlace | LogoPlace): string {
@@ -441,8 +442,8 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
     }
 
     public downloadMultiple(mediafiles: ViewMediafile[] = this.dataSource.source): void {
-        const eventName = this.meetingSettingsService.instant('name');
-        const dirName = this.directory?.title ?? this.translate.instant('Files');
+        const eventName = this.meetingSettingsService.instant(`name`);
+        const dirName = this.directory?.title ?? this.translate.instant(`Files`);
         const archiveName = `${eventName} - ${dirName}`.trim();
         this.repo.downloadArchive(archiveName, mediafiles);
     }

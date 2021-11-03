@@ -1,25 +1,26 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ProjectorMessageRepositoryService } from 'app/core/repositories/projector/projector-message-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ProjectionDialogService } from 'app/core/ui-services/projection-dialog.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { MessageDialogData } from '../message-dialog/message-dialog.component';
-import { MessageDialogComponent } from '../message-dialog/message-dialog.component';
+
 import { ViewProjector } from '../../models/view-projector';
 import { ViewProjectorMessage } from '../../models/view-projector-message';
+import { MessageDialogData } from '../message-dialog/message-dialog.component';
+import { MessageDialogComponent } from '../message-dialog/message-dialog.component';
 
 /**
  * Small controls component for messages.
  * Used in the projector detail view, can could be embedded anywhere else
  */
 @Component({
-    selector: 'os-message-controls',
-    templateUrl: './message-controls.component.html',
-    styleUrls: ['./message-controls.component.scss']
+    selector: `os-message-controls`,
+    templateUrl: `./message-controls.component.html`,
+    styleUrls: [`./message-controls.component.scss`]
 })
 export class MessageControlsComponent extends BaseComponent implements OnInit {
     /**
@@ -45,12 +46,13 @@ export class MessageControlsComponent extends BaseComponent implements OnInit {
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private repo: ProjectorMessageRepositoryService,
         private promptService: PromptService,
         private projectionDialogService: ProjectionDialogService,
         private dialog: MatDialog
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     /**
@@ -94,8 +96,8 @@ export class MessageControlsComponent extends BaseComponent implements OnInit {
      */
     public async onDelete(): Promise<void> {
         const content =
-            this.translate.instant('Delete message') + ` ${this.translate.instant(this.message.getTitle())}?`;
-        if (await this.promptService.open('Are you sure?', content)) {
+            this.translate.instant(`Delete message`) + ` ${this.translate.instant(this.message.getTitle())}?`;
+        if (await this.promptService.open(`Are you sure?`, content)) {
             this.repo.delete(this.message);
         }
     }

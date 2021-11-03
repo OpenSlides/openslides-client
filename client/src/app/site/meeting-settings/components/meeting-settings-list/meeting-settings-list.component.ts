@@ -8,7 +8,7 @@ import {
     ViewChildren
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
@@ -18,6 +18,7 @@ import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { CanComponentDeactivate } from 'app/shared/utils/watch-for-changes.guard';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
+
 import { SettingsGroup } from '../../../../core/repositories/management/meeting-settings-definition';
 import {
     MeetingSettingsFieldComponent,
@@ -28,9 +29,9 @@ import {
  * List view for the global settings
  */
 @Component({
-    selector: 'os-meeting-settings-list',
-    templateUrl: './meeting-settings-list.component.html',
-    styleUrls: ['./meeting-settings-list.component.scss'],
+    selector: `os-meeting-settings-list`,
+    templateUrl: `./meeting-settings-list.component.html`,
+    styleUrls: [`./meeting-settings-list.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MeetingSettingsListComponent
@@ -47,10 +48,11 @@ export class MeetingSettingsListComponent
     private changedSettings: { [key: string]: any } = {};
 
     /** Provides access to all created settings fields. */
-    @ViewChildren('settingsFields') public settingsFields: QueryList<MeetingSettingsFieldComponent>;
+    @ViewChildren(`settingsFields`) public settingsFields: QueryList<MeetingSettingsFieldComponent>;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private cd: ChangeDetectorRef,
         private route: ActivatedRoute,
         private promptDialog: PromptService,
@@ -58,7 +60,7 @@ export class MeetingSettingsListComponent
         private activeMeetingService: ActiveMeetingService,
         private repo: MeetingRepositoryService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     /**
@@ -66,7 +68,7 @@ export class MeetingSettingsListComponent
      */
     public ngOnInit(): void {
         super.ngOnInit();
-        const settings = this.translate.instant('Settings');
+        const settings = this.translate.instant(`Settings`);
 
         this.subscriptions.push(
             this.route.params.subscribe(params => {
@@ -102,7 +104,7 @@ export class MeetingSettingsListComponent
             this.cd.reattach();
             this.cd.markForCheck();
         } catch (e) {
-            this.matSnackBar.open(e, this.translate.instant('Ok'), {
+            this.matSnackBar.open(e, this.translate.instant(`Ok`), {
                 duration: 0
             });
         }
@@ -113,7 +115,7 @@ export class MeetingSettingsListComponent
      */
     public async resetAll(): Promise<void> {
         const title = this.translate.instant(
-            'Are you sure you want to reset all options to factory defaults? All changes of this settings group will be lost!'
+            `Are you sure you want to reset all options to factory defaults? All changes of this settings group will be lost!`
         );
         if (await this.promptDialog.open(title)) {
             for (const settingsField of this.settingsFields) {
@@ -142,8 +144,8 @@ export class MeetingSettingsListComponent
      */
     public async canDeactivate(): Promise<boolean> {
         if (this.hasChanges()) {
-            const title = this.translate.instant('Do you really want to exit this page?');
-            const content = this.translate.instant('You made changes.');
+            const title = this.translate.instant(`Do you really want to exit this page?`);
+            const content = this.translate.instant(`You made changes.`);
             return await this.promptDialog.open(title, content);
         }
         return true;
@@ -155,12 +157,12 @@ export class MeetingSettingsListComponent
             ids: [this.activeMeetingService.meetingId],
             follow: [
                 {
-                    idField: 'group_ids',
-                    fieldset: 'title'
+                    idField: `group_ids`,
+                    fieldset: `title`
                 },
                 {
-                    idField: 'motion_workflow_ids',
-                    fieldset: 'name'
+                    idField: `motion_workflow_ids`,
+                    fieldset: `name`
                 }
             ]
         };

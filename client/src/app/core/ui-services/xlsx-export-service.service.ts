@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { Color, FillPatterns, Workbook, Worksheet } from 'exceljs/dist/exceljs.min.js';
 import { saveAs } from 'file-saver';
 
@@ -12,7 +11,7 @@ export interface CellFillingDefinition {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class XlsxExportServiceService {
     /**
@@ -34,7 +33,7 @@ export class XlsxExportServiceService {
     public saveXlsx(workbook: Workbook, fileName: string): void {
         workbook.xlsx.writeBuffer().then(blobData => {
             const blob = new Blob([blobData as BlobPart], {
-                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                type: `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
             });
             saveAs(blob, `${fileName}.xlsx`);
         });
@@ -50,8 +49,8 @@ export class XlsxExportServiceService {
      * @param fromRow the row number to start detecting the size
      */
     public autoSize(sheet: Worksheet, fromRow: number): void {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
+        const canvas = document.createElement(`canvas`);
+        const ctx = canvas.getContext(`2d`);
         if (!ctx) {
             return;
         }
@@ -63,7 +62,7 @@ export class XlsxExportServiceService {
             }
 
             row.eachCell((cell, num) => {
-                if (typeof cell.value === 'string') {
+                if (typeof cell.value === `string`) {
                     if (maxColumnLengths[num] === undefined) {
                         maxColumnLengths[num] = 0;
                     }
@@ -94,9 +93,9 @@ export class XlsxExportServiceService {
      * @param columnWidth the width of the column to fit the text in
      */
     public calcRowHeight(title: string, columnWidth: number): number {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        ctx.font = '14pt Arial';
+        const canvas = document.createElement(`canvas`);
+        const ctx = canvas.getContext(`2d`);
+        ctx.font = `14pt Arial`;
         const metricsWidth = Math.floor(ctx.measureText(title).width);
         const factor = Math.ceil(metricsWidth / (columnWidth * 10));
         // add 1 for correction

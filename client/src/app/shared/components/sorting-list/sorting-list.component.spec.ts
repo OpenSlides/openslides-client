@@ -6,10 +6,12 @@ import { EmptySelectable } from '../empty-selectable';
 import { Selectable } from '../selectable';
 import { SortingListComponent } from './sorting-list.component';
 
-describe('SortingListComponent', () => {
+describe(`SortingListComponent`, () => {
     @Component({
-        selector: 'os-host-component',
-        template: '<os-sorting-list><os-sorting-list>'
+        selector: `os-host-component`,
+        template: `
+            <os-sorting-list><os-sorting-list></os-sorting-list></os-sorting-list>
+        `
     })
     class TestHostComponent {
         @ViewChild(SortingListComponent, { static: true })
@@ -33,7 +35,7 @@ describe('SortingListComponent', () => {
         hostComponent = hostFixture.componentInstance;
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         const inputList: Selectable[] = [];
         for (let index = 0; index < 20; index++) {
             inputList.push(new EmptySelectable());

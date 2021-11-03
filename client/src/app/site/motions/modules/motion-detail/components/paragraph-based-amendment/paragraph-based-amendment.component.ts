@@ -1,14 +1,15 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { TranslateService } from '@ngx-translate/core';
 import { UnsafeHtml } from 'app/core/definitions/key-types';
 import { ParagraphToChoose } from 'app/core/repositories/motions/motion-line-numbering.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DiffLinesInParagraph, LineRange } from 'app/core/ui-services/diff.service';
 import { ViewUnifiedChange } from 'app/shared/models/motions/view-unified-change';
 import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.constants';
-import { BaseMotionDetailChildComponent } from '../base/base-motion-detail-child.component';
+
 import { MotionServiceCollectorService } from '../../../services/motion-service-collector.service';
+import { BaseMotionDetailChildComponent } from '../base/base-motion-detail-child.component';
 
 interface ParagraphBasedAmendmentContent {
     amendment_paragraph_$: { [paragraph_number: number]: any };
@@ -17,9 +18,9 @@ interface ParagraphBasedAmendmentContent {
 }
 
 @Component({
-    selector: 'os-paragraph-based-amendment',
-    templateUrl: './paragraph-based-amendment.component.html',
-    styleUrls: ['./paragraph-based-amendment.component.scss']
+    selector: `os-paragraph-based-amendment`,
+    templateUrl: `./paragraph-based-amendment.component.html`,
+    styleUrls: [`./paragraph-based-amendment.component.scss`]
 })
 export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildComponent {
     public readonly LineNumberingMode = LineNumberingMode;
@@ -55,11 +56,12 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         motionServiceCollector: MotionServiceCollectorService,
         private fb: FormBuilder,
         private cd: ChangeDetectorRef
     ) {
-        super(componentServiceCollector, motionServiceCollector);
+        super(componentServiceCollector, translate, motionServiceCollector);
     }
 
     /**
@@ -96,7 +98,7 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
     }
 
     public getAmendmentParagraphLinesTitle(paragraph: DiffLinesInParagraph): string {
-        return this.motion?.getParagraphTitleByParagraph(paragraph) || '';
+        return this.motion?.getParagraphTitleByParagraph(paragraph) || ``;
     }
 
     public isControlInvalid(paragraphNumber: number): boolean {
@@ -151,7 +153,7 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
 
     private propagateChanges(): void {
         this.updateSubscription(
-            'contentForm',
+            `contentForm`,
             this.contentForm.valueChanges.subscribe(value => {
                 if (value) {
                     this.formChanged.emit({ amendment_paragraph_$: value });

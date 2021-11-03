@@ -1,8 +1,8 @@
 import { TranslateService } from '@ngx-translate/core';
-
-import { TitleInformationWithAgendaItem } from '../agenda_item_number';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { BaseSlideComponent } from 'app/slides/base-slide-component';
+
+import { TitleInformationWithAgendaItem } from '../agenda_item_number';
 
 export interface MotionTitleInformation extends TitleInformationWithAgendaItem {
     title: string;
@@ -39,7 +39,7 @@ export class BaseMotionSlideComponent<T extends object> extends BaseSlideCompone
             if (referencedMotion) {
                 return this.getNumberOrTitle(referencedMotion);
             } else {
-                return this.translate.instant('<unknown motion>');
+                return this.translate.instant(`<unknown motion>`);
             }
         });
     }

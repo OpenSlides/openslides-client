@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-
 import { SuperSearchComponent } from 'app/shared/components/super-search/super-search.component';
 import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class SuperSearchService {
     /**
@@ -27,7 +26,7 @@ export class SuperSearchService {
                 ...largeDialogSettings,
                 data: data ? data : null,
                 disableClose: false,
-                panelClass: 'super-search-container'
+                panelClass: `super-search-container`
             });
             this.searchReference.afterClosed().subscribe(() => {
                 this.searchReference = null;

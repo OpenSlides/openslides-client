@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { TopicImportListComponent } from './topic-import-list.component';
 
-describe('TopicImportListComponent', () => {
+describe(`TopicImportListComponent`, () => {
     let component: TopicImportListComponent;
     let fixture: ComponentFixture<TopicImportListComponent>;
 
@@ -23,7 +22,7 @@ describe('TopicImportListComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

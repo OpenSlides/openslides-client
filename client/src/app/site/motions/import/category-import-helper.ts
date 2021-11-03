@@ -1,16 +1,16 @@
 import { TranslateService } from '@ngx-translate/core';
-
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { CsvMapping } from 'app/core/ui-services/base-import.service';
 import { Motion } from 'app/shared/models/motions/motion';
-import { MotionCategory } from '../../../shared/models/motions/motion-category';
-import { ImportResolveInformation } from 'app/shared/utils/import/import-resolve-information';
 import { BaseBeforeImportHandler } from 'app/shared/utils/import/base-before-import-handler';
+import { ImportResolveInformation } from 'app/shared/utils/import/import-resolve-information';
+
+import { MotionCategory } from '../../../shared/models/motions/motion-category';
 
 export class CategoryImportHelper extends BaseBeforeImportHandler<Motion, MotionCategory> {
     public constructor(private repo: MotionCategoryRepositoryService, private translate: TranslateService) {
         super({
-            idProperty: 'category_id',
+            idProperty: `category_id`,
             translateFn: translate.instant,
             repo
         });
@@ -48,7 +48,7 @@ export class CategoryImportHelper extends BaseBeforeImportHandler<Motion, Motion
         const result = {
             model: item,
             unresolvedModels: 0,
-            verboseName: 'Category'
+            verboseName: `Category`
         };
         if (!property) {
             return result;
@@ -80,12 +80,12 @@ export class CategoryImportHelper extends BaseBeforeImportHandler<Motion, Motion
      * @returns an object with .prefix and .name strings
      */
     private splitCategoryString(categoryString: string): { prefix: string; name: string } {
-        let prefixSeparator = ' - ';
+        let prefixSeparator = ` - `;
         if (categoryString.startsWith(prefixSeparator)) {
             prefixSeparator = prefixSeparator.substring(1);
         }
         categoryString = categoryString.trim();
-        let prefix = '';
+        let prefix = ``;
         const separatorIndex = categoryString.indexOf(prefixSeparator);
 
         if (separatorIndex >= 0 && separatorIndex < 6) {

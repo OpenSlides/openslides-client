@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AccountDialogComponent } from './account-dialog.component';
 
-describe('AccountDialogComponent', () => {
+describe(`AccountDialogComponent`, () => {
     let component: AccountDialogComponent;
     let fixture: ComponentFixture<AccountDialogComponent>;
 
@@ -18,7 +18,7 @@ describe('AccountDialogComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

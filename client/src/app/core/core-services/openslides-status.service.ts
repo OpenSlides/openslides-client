@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Deferred } from '../promises/deferred';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class OpenSlidesStatusService {
     public get stable(): Promise<void> {

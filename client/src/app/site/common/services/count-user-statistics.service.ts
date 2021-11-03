@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
-
-import { BehaviorSubject, Observable } from 'rxjs';
-
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { CountUserData, CountUsersService } from 'app/core/ui-services/count-users.service';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 /**
  * The format of the count statistic
@@ -28,7 +26,7 @@ export interface CountUserStatistics {
  * Provides statistics for counting users
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class CountUsersStatisticsService {
     private runningCounts: { [token: string]: BehaviorSubject<CountUserStatistics> } = {};

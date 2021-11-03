@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MemberDeleteDialogComponent } from './member-delete-dialog.component';
 
-describe('MemberDeleteDialogComponent', () => {
+describe(`MemberDeleteDialogComponent`, () => {
     let component: MemberDeleteDialogComponent;
     let fixture: ComponentFixture<MemberDeleteDialogComponent>;
 
@@ -18,7 +18,7 @@ describe('MemberDeleteDialogComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

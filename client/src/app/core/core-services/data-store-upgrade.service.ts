@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { StorageService } from './storage.service';
@@ -11,19 +10,19 @@ interface SchemaVersion {
 }
 
 function isSchemaVersion(obj: any): obj is SchemaVersion {
-    if (!obj || typeof obj !== 'object') {
+    if (!obj || typeof obj !== `object`) {
         return false;
     }
     return obj.db !== undefined && obj.config !== undefined && obj.migration !== undefined;
 }
 
-const SCHEMA_VERSION = 'SchemaVersion';
+const SCHEMA_VERSION = `SchemaVersion`;
 
 /**
  * Manages upgrading the DataStore, if the migration version from the server is higher than the current one.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class DataStoreUpgradeService {
     /**
@@ -57,7 +56,7 @@ export class DataStoreUpgradeService {
 
     public async checkForUpgrade(serverVersion: SchemaVersion): Promise<boolean> {
         this.upgradeCheckedSubject.next(false);
-        console.log('Server schema version:', serverVersion);
+        console.log(`Server schema version:`, serverVersion);
         const clientVersion = await this.storageService.get<SchemaVersion>(SCHEMA_VERSION);
         await this.storageService.set(SCHEMA_VERSION, serverVersion);
 
@@ -76,15 +75,15 @@ export class DataStoreUpgradeService {
                 doUpgrade = true;
             }
         } else {
-            console.log('\tNo client schema version.');
+            console.log(`\tNo client schema version.`);
             doUpgrade = true;
         }
 
         if (doUpgrade) {
-            console.log('\t-> In result of a schema version change: Do full update.');
+            console.log(`\t-> In result of a schema version change: Do full update.`);
             // await this.autoupdateService.doFullUpdate();
         } else {
-            console.log('\t-> No upgrade needed.');
+            console.log(`\t-> No upgrade needed.`);
         }
         this.upgradeCheckedSubject.next(true);
         return doUpgrade;

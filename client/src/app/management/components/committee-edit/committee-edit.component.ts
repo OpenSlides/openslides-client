@@ -2,15 +2,12 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { Observable, OperatorFunction } from 'rxjs';
-import { map } from 'rxjs/operators';
-
+import { TranslateService } from '@ngx-translate/core';
 import { MemberService } from 'app/core/core-services/member.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { CML, OML } from 'app/core/core-services/organization-permission';
 import { ORGANIZATION_ID } from 'app/core/core-services/organization.service';
+import { CML, OML } from 'app/core/core-services/organization-permission';
 import { Id } from 'app/core/definitions/key-types';
 import { CommitteeRepositoryService } from 'app/core/repositories/management/committee-repository.service';
 import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
@@ -23,16 +20,19 @@ import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Committee } from 'app/shared/models/event-management/committee';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { Observable, OperatorFunction } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { OsOptionSelectionChanged } from '../../../shared/components/search-selector/base-search-value-selector/base-search-value-selector.component';
 
-const ADD_COMMITTEE_LABEL = _('New committee');
-const EDIT_COMMITTEE_LABEL = _('Edit committee');
-const RECEIVE_FORWARDING_DISABLED_TOOLTIP = _('You can change this option only in the forwarding section.');
+const ADD_COMMITTEE_LABEL = _(`New committee`);
+const EDIT_COMMITTEE_LABEL = _(`Edit committee`);
+const RECEIVE_FORWARDING_DISABLED_TOOLTIP = _(`You can change this option only in the forwarding section.`);
 
 @Component({
-    selector: 'os-committee-edit',
-    templateUrl: './committee-edit.component.html',
-    styleUrls: ['./committee-edit.component.scss']
+    selector: `os-committee-edit`,
+    templateUrl: `./committee-edit.component.html`,
+    styleUrls: [`./committee-edit.component.scss`]
 })
 export class CommitteeEditComponent extends BaseModelContextComponent implements OnInit {
     public readonly OML = OML;
@@ -51,11 +51,12 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
     public editCommittee: ViewCommittee;
 
     private get managerIdCtrl(): AbstractControl {
-        return this.committeeForm.get('manager_ids');
+        return this.committeeForm.get(`manager_ids`);
     }
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private formBuilder: FormBuilder,
         private memberService: MemberService,
         public committeeRepo: CommitteeRepositoryService,
@@ -65,7 +66,7 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
         private location: Location,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
         this.createForm();
         this.getCommitteeByUrl();
 
@@ -173,9 +174,9 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
      */
     public onForwardingSelectionChanged({ value: committee, selected }: OsOptionSelectionChanged): void {
         if (committee.id === this.committeeId) {
-            const formControlName = 'receive_forwardings_from_committee_ids';
+            const formControlName = `receive_forwardings_from_committee_ids`;
             const previousValue: Set<Id> = new Set(this.committeeForm.get(formControlName).value || []);
-            const fn = selected ? 'add' : 'delete';
+            const fn = selected ? `add` : `delete`;
             previousValue[fn](committee.id);
             this.committeeForm.patchValue({ [formControlName]: Array.from(previousValue) });
         }
@@ -187,12 +188,12 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
                 name: orgaTagName
             })
         )[0];
-        const currentValue: Id[] = this.committeeForm.get('organization_tag_ids').value || [];
+        const currentValue: Id[] = this.committeeForm.get(`organization_tag_ids`).value || [];
         this.committeeForm.patchValue({ organization_tag_ids: currentValue.concat(id) });
     }
 
     private getCommitteeByUrl(): void {
-        if (this.route.snapshot.url[0] && this.route.snapshot.url[0].path === 'create') {
+        if (this.route.snapshot.url[0] && this.route.snapshot.url[0].path === `create`) {
             this.isCreateView = true;
         } else {
             this.isCreateView = false;
@@ -210,10 +211,10 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
             {
                 viewModelCtor: ViewCommittee,
                 ids: [id],
-                fieldset: 'edit',
-                follow: [{ idField: 'forward_to_committee_ids' }, { idField: 'meeting_ids' }]
+                fieldset: `edit`,
+                follow: [{ idField: `forward_to_committee_ids` }, { idField: `meeting_ids` }]
             },
-            'loadCommittee'
+            `loadCommittee`
         );
         this.subscriptions.push(
             this.committeeRepo.getViewModelObservable(id).subscribe(newCommittee => {
@@ -227,8 +228,8 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
 
     private createForm(): void {
         let partialForm: any = {
-            name: ['', Validators.required],
-            description: [''],
+            name: [``, Validators.required],
+            description: [``],
             organization_tag_ids: [[]],
             user_ids: [[]],
             manager_ids: [[]],
@@ -266,13 +267,13 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
                 ids: [ORGANIZATION_ID],
                 follow: [
                     {
-                        idField: 'committee_ids',
-                        fieldset: 'list'
+                        idField: `committee_ids`,
+                        fieldset: `list`
                     }
                 ],
                 fieldset: []
             },
-            'loadOrganization'
+            `loadOrganization`
         );
     }
 
@@ -282,9 +283,9 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
             {
                 viewModelCtor: ViewUser,
                 ids: userIds,
-                fieldset: 'committeeEdit'
+                fieldset: `committeeEdit`
             },
-            'loadUsers'
+            `loadUsers`
         );
     }
 }

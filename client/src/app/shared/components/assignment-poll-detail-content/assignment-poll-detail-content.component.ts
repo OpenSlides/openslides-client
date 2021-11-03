@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-
+import { TranslateService } from '@ngx-translate/core';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PollData } from 'app/shared/models/poll/generic-poll';
@@ -9,9 +9,9 @@ import { BaseComponent } from 'app/site/base/components/base.component';
 import { PollTableData, VotingResult } from 'app/site/polls/services/poll.service';
 
 @Component({
-    selector: 'os-assignment-poll-detail-content',
-    templateUrl: './assignment-poll-detail-content.component.html',
-    styleUrls: ['./assignment-poll-detail-content.component.scss']
+    selector: `os-assignment-poll-detail-content`,
+    templateUrl: `./assignment-poll-detail-content.component.html`,
+    styleUrls: [`./assignment-poll-detail-content.component.scss`]
 })
 export class AssignmentPollDetailContentComponent extends BaseComponent {
     @Input()
@@ -75,16 +75,17 @@ export class AssignmentPollDetailContentComponent extends BaseComponent {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private pollService: AssignmentPollService,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     public getVoteClass(votingResult: VotingResult): string {
         const votingClass = votingResult.vote;
-        if (this.isMethodN && votingClass === 'no') {
-            return 'yes';
+        if (this.isMethodN && votingClass === `no`) {
+            return `yes`;
         } else {
             return votingClass;
         }
@@ -95,7 +96,7 @@ export class AssignmentPollDetailContentComponent extends BaseComponent {
     }
 
     public getVoteAmount(vote: VotingResult, row: PollTableData): number {
-        if (this.isMethodN && row.class === 'user') {
+        if (this.isMethodN && row.class === `user`) {
             if (vote.amount < 0) {
                 return vote.amount;
             } else {
@@ -111,11 +112,11 @@ export class AssignmentPollDetailContentComponent extends BaseComponent {
             return true;
         }
         if (this.isMethodY) {
-            return result.vote === 'yes';
+            return result.vote === `yes`;
         } else if (this.isMethodN) {
-            return result.vote === 'no';
+            return result.vote === `no`;
         } else if (this.isMethodYN) {
-            return result.vote !== 'abstain';
+            return result.vote !== `abstain`;
         } else {
             return true;
         }

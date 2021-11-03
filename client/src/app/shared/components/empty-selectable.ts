@@ -17,7 +17,7 @@ export class EmptySelectable implements Selectable {
     /**
      * gets the title
      */
-    public getTitle = () => '–';
+    public getTitle = () => `–`;
 
     /**
      * gets the list title

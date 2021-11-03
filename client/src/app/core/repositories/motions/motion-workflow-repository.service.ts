@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import { saveAs } from 'file-saver';
-
 import { MotionWorkflowAction } from 'app/core/actions/motion-workflow-action';
 import {
     DEFAULT_FIELDSET,
@@ -14,10 +12,12 @@ import { MotionWorkflow } from 'app/shared/models/motions/motion-workflow';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionState } from 'app/site/motions/models/view-motion-state';
 import { ViewMotionWorkflow } from 'app/site/motions/models/view-motion-workflow';
+import { saveAs } from 'file-saver';
+
+import { MotionState } from '../../../shared/models/motions/motion-state';
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { ModelRequestRepository } from '../model-request-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
-import { MotionState } from '../../../shared/models/motions/motion-state';
 import { MotionStateRepositoryService } from './motion-state-repository.service';
 
 /**
@@ -31,7 +31,7 @@ import { MotionStateRepositoryService } from './motion-state-repository.service'
  * them to the Server.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MotionWorkflowRepositoryService
     extends BaseRepositoryWithActiveMeeting<ViewMotionWorkflow, MotionWorkflow>
@@ -45,7 +45,7 @@ export class MotionWorkflowRepositoryService
     }
 
     public getFieldsets(): Fieldsets<MotionWorkflow> {
-        const nameFields: (keyof MotionWorkflow)[] = ['name'];
+        const nameFields: (keyof MotionWorkflow)[] = [`name`];
         const listFields: (keyof MotionWorkflow)[] = nameFields;
         return {
             [DEFAULT_FIELDSET]: listFields,
@@ -56,7 +56,7 @@ export class MotionWorkflowRepositoryService
 
     public getTitle = (viewMotionWorkflow: ViewMotionWorkflow) => viewMotionWorkflow.name;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Workflows' : 'Workflow');
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Workflows` : `Workflow`);
 
     /**
      * Returns all workflowStates that cover the list of viewMotions given
@@ -107,27 +107,27 @@ export class MotionWorkflowRepositoryService
             ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
-                    idField: 'motion_workflow_ids'
+                    idField: `motion_workflow_ids`
                 }
             ]
         };
     }
 
     public exportWorkflows(...workflows: ViewMotionWorkflow[]): void {
-        const workflowKeysToCopy: (keyof MotionWorkflow)[] = ['name'];
+        const workflowKeysToCopy: (keyof MotionWorkflow)[] = [`name`];
         const stateKeysToCopy: (keyof MotionState)[] = [
-            'name',
-            'recommendation_label',
-            'css_class',
-            'restrictions',
-            'allow_support',
-            'allow_create_poll',
-            'allow_submitter_edit',
-            'set_number',
-            'show_state_extension_field',
-            'show_recommendation_extension_field',
-            'merge_amendment_into_final',
-            'weight'
+            `name`,
+            `recommendation_label`,
+            `css_class`,
+            `restrictions`,
+            `allow_support`,
+            `allow_create_poll`,
+            `allow_submitter_edit`,
+            `set_number`,
+            `show_state_extension_field`,
+            `show_recommendation_extension_field`,
+            `merge_amendment_into_final`,
+            `weight`
         ];
         const json = [];
         const getNextWorkflowJson = (workflow: ViewMotionWorkflow) => {
@@ -151,11 +151,11 @@ export class MotionWorkflowRepositoryService
         for (const workflow of workflows) {
             json.push(getNextWorkflowJson(workflow));
         }
-        const blob = new Blob([JSON.stringify(json, undefined, 2)], { type: 'application/json' });
+        const blob = new Blob([JSON.stringify(json, undefined, 2)], { type: `application/json` });
         const isMultiple = workflows.length > 1;
         const workflowTranslation = isMultiple
-            ? this.translate.instant('Workflows')
-            : this.translate.instant('Workflow');
+            ? this.translate.instant(`Workflows`)
+            : this.translate.instant(`Workflow`);
         const fileName = isMultiple
             ? `${workflowTranslation}.json`
             : `${workflowTranslation}-${this.translate.instant(workflows[0].name)}.json`;

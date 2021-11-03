@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 
-import { BaseSortListService } from './base-sort-list.service';
 import { E2EImportsModule } from '../../../e2e-imports.module';
+import { BaseSortListService } from './base-sort-list.service';
 
-describe('BaseSortListService', () => {
+describe(`BaseSortListService`, () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [E2EImportsModule],

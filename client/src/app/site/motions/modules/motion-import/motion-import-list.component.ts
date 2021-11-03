@@ -1,20 +1,21 @@
 import { Component } from '@angular/core';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { Motion } from 'app/shared/models/motions/motion';
 import { BaseImportListComponent } from 'app/site/base/components/base-import-list.component';
 import { MotionImportService } from 'app/site/motions/services/motion-import.service';
-import { getVerboseNameOfMotionProperty, motionExpectedHeaders } from '../../motions.constants';
+
 import { ImportListViewHeaderDefinition } from '../../../../shared/components/import-list-view/import-list-view.component';
+import { getVerboseNameOfMotionProperty, motionExpectedHeaders } from '../../motions.constants';
 
 /**
  * Component for the motion import list view.
  */
 @Component({
-    selector: 'os-motion-import-list',
-    templateUrl: './motion-import-list.component.html',
-    styleUrls: ['./motion-import-list.component.scss']
+    selector: `os-motion-import-list`,
+    templateUrl: `./motion-import-list.component.html`,
+    styleUrls: [`./motion-import-list.component.scss`]
 })
 export class MotionImportListComponent extends BaseImportListComponent<Motion> {
     public possibleFields = motionExpectedHeaders.map(header => getVerboseNameOfMotionProperty(header));
@@ -24,12 +25,16 @@ export class MotionImportListComponent extends BaseImportListComponent<Motion> {
             prop: `newEntry.${header}`,
             label: this.translate.instant(getVerboseNameOfMotionProperty(header)),
             isTableColumn: true,
-            isRequired: header === 'title' || header === 'text'
+            isRequired: header === `title` || header === `text`
         }));
     }
 
-    public constructor(componentServiceCollector: ComponentServiceCollector, public importer: MotionImportService) {
-        super(componentServiceCollector, importer);
+    public constructor(
+        componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
+        public importer: MotionImportService
+    ) {
+        super(componentServiceCollector, translate, importer);
         this.load();
     }
 
@@ -39,21 +44,21 @@ export class MotionImportListComponent extends BaseImportListComponent<Motion> {
             ids: [this.activeMeetingId],
             follow: [
                 {
-                    idField: 'motion_ids'
+                    idField: `motion_ids`
                 },
                 {
-                    idField: 'user_ids',
-                    fieldset: 'shortName'
+                    idField: `user_ids`,
+                    fieldset: `shortName`
                 },
                 {
-                    idField: 'motion_category_ids'
+                    idField: `motion_category_ids`
                 },
                 {
-                    idField: 'motion_block_ids',
-                    fieldset: 'title'
+                    idField: `motion_block_ids`,
+                    fieldset: `title`
                 },
                 {
-                    idField: 'tag_ids'
+                    idField: `tag_ids`
                 }
             ]
         });

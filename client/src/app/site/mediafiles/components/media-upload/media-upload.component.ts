@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';
 
@@ -9,9 +9,9 @@ import { BaseComponent } from 'app/site/base/components/base.component';
  * Handle file uploads from user
  */
 @Component({
-    selector: 'os-media-upload',
-    templateUrl: './media-upload.component.html',
-    styleUrls: ['./media-upload.component.scss']
+    selector: `os-media-upload`,
+    templateUrl: `./media-upload.component.html`,
+    styleUrls: [`./media-upload.component.scss`]
 })
 export class MediaUploadComponent extends BaseComponent implements OnInit {
     /**
@@ -33,10 +33,11 @@ export class MediaUploadComponent extends BaseComponent implements OnInit {
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private location: Location,
         private route: ActivatedRoute
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     public ngOnInit(): void {

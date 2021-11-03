@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { MemberListComponent } from './member-list.component';
 
-describe('MemberListComponent', () => {
+describe(`MemberListComponent`, () => {
     let component: MemberListComponent;
     let fixture: ComponentFixture<MemberListComponent>;
 
@@ -21,7 +20,7 @@ describe('MemberListComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-
+import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
-import { BehaviorSubject, Observable } from 'rxjs';
-
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { SpeakingTimeStructureLevelObject } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
 import { SpeakerRepositoryService } from 'app/core/repositories/agenda/speaker-repository.service';
@@ -10,11 +8,12 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { DurationService } from 'app/core/ui-services/duration.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Component({
-    selector: 'os-user-statistics',
-    templateUrl: './user-statistics.component.html',
-    styleUrls: ['./user-statistics.component.scss'],
+    selector: `os-user-statistics`,
+    templateUrl: `./user-statistics.component.html`,
+    styleUrls: [`./user-statistics.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -43,23 +42,23 @@ export class UserStatisticsComponent extends BaseModelContextComponent {
 
     public readonly columnDefinition: PblColumnDefinition[] = [
         {
-            prop: 'structureLevel',
-            width: '40%',
-            label: 'Structure level'
+            prop: `structureLevel`,
+            width: `40%`,
+            label: `Structure level`
         },
         {
-            prop: 'durationOfWordRequests',
-            width: '30%',
-            label: this.translate.instant('Duration of requests to speak')
+            prop: `durationOfWordRequests`,
+            width: `30%`,
+            label: this.translate.instant(`Duration of requests to speak`)
         },
         {
-            prop: 'numberOfWordRequests',
-            width: '30%',
-            label: this.translate.instant('Number of requests to speak')
+            prop: `numberOfWordRequests`,
+            width: `30%`,
+            label: this.translate.instant(`Number of requests to speak`)
         }
     ];
 
-    public readonly filterProps: string[] = ['structureLevel'];
+    public readonly filterProps: string[] = [`structureLevel`];
 
     /**
      * List of unique speakers.
@@ -69,10 +68,11 @@ export class UserStatisticsComponent extends BaseModelContextComponent {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private speakerRepo: SpeakerRepositoryService,
         private durationService: DurationService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     /**
@@ -81,7 +81,7 @@ export class UserStatisticsComponent extends BaseModelContextComponent {
     public changeViewOfStatistics(): void {
         this.statisticIsOpen = !this.statisticIsOpen;
         if (this.statisticIsOpen) {
-            this.updateSubscription('speakers', this.speakerRepo.getViewModelListObservable().subscribe());
+            this.updateSubscription(`speakers`, this.speakerRepo.getViewModelListObservable().subscribe());
         } else {
             this.cleanSubscriptions();
         }
@@ -93,8 +93,8 @@ export class UserStatisticsComponent extends BaseModelContextComponent {
             ids: [this.activeMeetingId],
             follow: [
                 {
-                    idField: 'speaker_ids',
-                    fieldset: 'statistics'
+                    idField: `speaker_ids`,
+                    fieldset: `statistics`
                 }
             ],
             fieldset: []
@@ -106,7 +106,7 @@ export class UserStatisticsComponent extends BaseModelContextComponent {
      */
     public parseDuration(time: number, withHours: boolean = false): string {
         return !withHours
-            ? this.durationService.durationToString(time, 'm')
+            ? this.durationService.durationToString(time, `m`)
             : this.durationService.durationToStringWithHours(time);
     }
 }

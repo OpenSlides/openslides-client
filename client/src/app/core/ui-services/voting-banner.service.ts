@@ -1,24 +1,23 @@
 import { Injectable } from '@angular/core';
-
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-
-import { ActiveMeetingService } from '../core-services/active-meeting.service';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
-import { BannerDefinition, BannerService } from './banner.service';
+
+import { ActiveMeetingService } from '../core-services/active-meeting.service';
 import { HistoryService } from '../core-services/history.service';
 import { PollRepositoryService } from '../repositories/polls/poll-repository.service';
+import { BannerDefinition, BannerService } from './banner.service';
 import { VotingService } from './voting.service';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class VotingBannerService {
     private currentBanner: BannerDefinition;
 
-    private subText = _('Click here to vote!');
+    private subText = _(`Click here to vote!`);
 
     public constructor(
         pollRepo: PollRepositoryService,
@@ -47,7 +46,7 @@ export class VotingBannerService {
             pollsToVote.length === 1
                 ? this.createBanner(this.getTextForPoll(pollsToVote[0]), pollsToVote[0].getDetailStateURL())
                 : this.createBanner(
-                      `${pollsToVote.length} ${this.translate.instant('open votes')}`,
+                      `${pollsToVote.length} ${this.translate.instant(`open votes`)}`,
                       `/${this.activeMeeting.meetingId}/polls/`
                   );
         this.sliceBanner(banner);
@@ -66,7 +65,7 @@ export class VotingBannerService {
             text,
             subText: this.subText,
             link,
-            icon: 'how_to_vote',
+            icon: `how_to_vote`,
             largerOnMobileView: true
         };
     }
@@ -81,13 +80,13 @@ export class VotingBannerService {
     private getTextForPoll(poll: ViewPoll): string {
         const contentObject = poll.getContentObject();
         if (contentObject instanceof ViewMotion) {
-            const motionTranslation = this.translate.instant('Motion');
-            const votingOpenedTranslation = this.translate.instant('Voting opened');
+            const motionTranslation = this.translate.instant(`Motion`);
+            const votingOpenedTranslation = this.translate.instant(`Voting opened`);
             return `${motionTranslation} ${contentObject.getNumberOrTitle()}: ${votingOpenedTranslation}`;
         } else if (contentObject instanceof ViewAssignment) {
-            return `${contentObject.getTitle()}: ${this.translate.instant('Ballot opened')}`;
+            return `${contentObject.getTitle()}: ${this.translate.instant(`Ballot opened`)}`;
         } else {
-            return this.translate.instant('Voting opened');
+            return this.translate.instant(`Voting opened`);
         }
     }
 

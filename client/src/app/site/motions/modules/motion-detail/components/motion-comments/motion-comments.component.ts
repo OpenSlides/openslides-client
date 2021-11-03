@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
@@ -15,9 +15,9 @@ import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-co
  * Component for the motion comments view
  */
 @Component({
-    selector: 'os-motion-comments',
-    templateUrl: './motion-comments.component.html',
-    styleUrls: ['./motion-comments.component.scss'],
+    selector: `os-motion-comments`,
+    templateUrl: `./motion-comments.component.html`,
+    styleUrls: [`./motion-comments.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MotionCommentsComponent extends BaseModelContextComponent implements OnInit {
@@ -46,12 +46,13 @@ export class MotionCommentsComponent extends BaseModelContextComponent implement
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private commentSectionRepo: MotionCommentSectionRepositoryService,
         private operator: OperatorService,
         private cd: ChangeDetectorRef,
         private activeMeetingIdService: ActiveMeetingIdService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     public ngOnInit(): void {
@@ -74,9 +75,9 @@ export class MotionCommentsComponent extends BaseModelContextComponent implement
             ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
-                    idField: 'motion_comment_section_ids',
-                    fieldset: 'comment',
-                    follow: [{ idField: 'comment_ids' }]
+                    idField: `motion_comment_section_ids`,
+                    fieldset: `comment`,
+                    follow: [{ idField: `comment_ids` }]
                 }
             ]
         };

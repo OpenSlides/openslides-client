@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
-import { BehaviorSubject, Observable } from 'rxjs';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
@@ -15,15 +13,17 @@ import {
     SortTreeFilterId,
     SortTreeFilterOption
 } from 'app/site/base/components/base-sort-tree.component';
+import { BehaviorSubject, Observable } from 'rxjs';
+
 import { ViewAgendaItem } from '../../models/view-agenda-item';
 
 /**
  * Sort view for the agenda.
  */
 @Component({
-    selector: 'os-agenda-sort',
-    templateUrl: './agenda-sort.component.html',
-    styleUrls: ['./agenda-sort.component.scss']
+    selector: `os-agenda-sort`,
+    templateUrl: `./agenda-sort.component.html`,
+    styleUrls: [`./agenda-sort.component.scss`]
 })
 export class AgendaSortComponent extends BaseSortTreeComponent<ViewAgendaItem> implements OnInit {
     /**
@@ -57,11 +57,12 @@ export class AgendaSortComponent extends BaseSortTreeComponent<ViewAgendaItem> i
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         promptService: PromptService,
         private agendaRepo: AgendaItemRepositoryService,
         private activeMeetingIdService: ActiveMeetingIdService
     ) {
-        super(componentServiceCollector, promptService);
+        super(componentServiceCollector, translate, promptService);
         this.itemsObservable = this.agendaRepo.getViewModelListObservable();
     }
 
@@ -71,11 +72,11 @@ export class AgendaSortComponent extends BaseSortTreeComponent<ViewAgendaItem> i
             ids: [this.activeMeetingIdService.meetingId], // TODO
             follow: [
                 {
-                    idField: 'agenda_item_ids',
+                    idField: `agenda_item_ids`,
                     follow: [
                         {
-                            idField: 'content_object_id',
-                            fieldset: 'title'
+                            idField: `content_object_id`,
+                            fieldset: `title`
                         }
                     ]
                 }
@@ -156,11 +157,11 @@ export class AgendaSortComponent extends BaseSortTreeComponent<ViewAgendaItem> i
     public getIcon(type: string): string {
         switch (type) {
             case AgendaItemType.common:
-                return 'public';
+                return `public`;
             case AgendaItemType.internal:
-                return 'visibility';
+                return `visibility`;
             case AgendaItemType.hidden:
-                return 'visibility_off';
+                return `visibility_off`;
         }
     }
 }

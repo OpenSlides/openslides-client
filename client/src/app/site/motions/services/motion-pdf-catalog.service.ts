@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
-
 import { TranslateService } from '@ngx-translate/core';
+import { BorderType, PdfDocumentService, PdfError, StyleType } from 'app/core/pdf-services/pdf-document.service';
+import { MotionService } from 'app/core/repositories/motions/motion.service';
+import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { BehaviorSubject } from 'rxjs';
 
-import { BorderType, PdfDocumentService, PdfError, StyleType } from 'app/core/pdf-services/pdf-document.service';
-import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
-import { MotionService } from 'app/core/repositories/motions/motion.service';
-import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
-import { MotionExportInfo } from './motion-export.service';
-import { MotionPdfService } from './motion-pdf.service';
 import { ViewMotion } from '../models/view-motion';
 import { ViewMotionCategory } from '../models/view-motion-category';
+import { MotionExportInfo } from './motion-export.service';
+import { MotionPdfService } from './motion-pdf.service';
 
 /**
  * Service to export a list of motions.
@@ -21,7 +20,7 @@ import { ViewMotionCategory } from '../models/view-motion-category';
  * ```
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MotionPdfCatalogService {
     private categoryObserver: BehaviorSubject<ViewMotionCategory[]>;
@@ -52,8 +51,8 @@ export class MotionPdfCatalogService {
     public motionListToDocDef(motions: ViewMotion[], exportInfo: MotionExportInfo): object {
         let doc = [];
         const motionDocList = [];
-        const printToc = exportInfo.pdfOptions.includes('toc');
-        const enforcePageBreaks = exportInfo.pdfOptions.includes('addBreaks');
+        const printToc = exportInfo.pdfOptions.includes(`toc`);
+        const enforcePageBreaks = exportInfo.pdfOptions.includes(`addBreaks`);
 
         for (let motionIndex = 0; motionIndex < motions.length; ++motionIndex) {
             try {
@@ -70,7 +69,7 @@ export class MotionPdfCatalogService {
                     motionDocList.push(this.pdfService.getSpacer());
                 }
             } catch (err) {
-                const errorText = `${this.translate.instant('Error during PDF creation of motion:')} ${
+                const errorText = `${this.translate.instant(`Error during PDF creation of motion:`)} ${
                     motions[motionIndex].numberOrTitle
                 }`;
                 console.error(`${errorText}\nDebugInfo:\n`, err);
@@ -81,8 +80,8 @@ export class MotionPdfCatalogService {
         // print extra data (title, preamble, categories, toc) only if there are more than 1 motion
         if (motions.length > 1 && (!exportInfo.pdfOptions || printToc)) {
             doc.push(
-                this.pdfService.createTitle(this.meetingSettingsService.instant('motions_export_title')),
-                this.pdfService.createPreamble(this.meetingSettingsService.instant('motions_export_preamble')),
+                this.pdfService.createTitle(this.meetingSettingsService.instant(`motions_export_title`)),
+                this.pdfService.createPreamble(this.meetingSettingsService.instant(`motions_export_preamble`)),
                 this.createToc(motions)
             );
         }
@@ -106,11 +105,11 @@ export class MotionPdfCatalogService {
 
         // Create the toc title
         const tocTitle = {
-            text: this.translate.instant('Table of contents'),
-            style: 'heading2'
+            text: this.translate.instant(`Table of contents`),
+            style: `heading2`
         };
         const exportSubmitterRecommendation = this.meetingSettingsService.instant(
-            'motions_export_submitter_recommendation'
+            `motions_export_submitter_recommendation`
         );
 
         // Initialize the header and the layout for border-style.
@@ -135,12 +134,12 @@ export class MotionPdfCatalogService {
                                 [
                                     {
                                         text: category.nameWithParentAbove,
-                                        style: !!category.parent ? 'tocSubcategoryTitle' : 'tocCategoryTitle'
+                                        style: !!category.parent ? `tocSubcategoryTitle` : `tocCategoryTitle`
                                     }
                                 ]
                             ]
                         },
-                        layout: exportSubmitterRecommendation ? 'lightHorizontalLines' : 'noBorders'
+                        layout: exportSubmitterRecommendation ? `lightHorizontalLines` : `noBorders`
                     });
 
                     const tocBody = [];
@@ -150,7 +149,7 @@ export class MotionPdfCatalogService {
                         } else {
                             tocBody.push(
                                 this.pdfService.createTocLine(
-                                    `${motion.number ? motion.number : ''}`,
+                                    `${motion.number ? motion.number : ``}`,
                                     motion.title,
                                     `${motion.id}`,
                                     StyleType.CATEGORY_SECTION
@@ -174,7 +173,7 @@ export class MotionPdfCatalogService {
             const uncatTocBody = motions
                 .filter(motion => !motion.category)
                 .map(motion =>
-                    this.pdfService.createTocLine(`${motion.number ? motion.number : ''}`, motion.title, `${motion.id}`)
+                    this.pdfService.createTocLine(`${motion.number ? motion.number : ``}`, motion.title, `${motion.id}`)
                 );
 
             // only push this array if there is at least one entry
@@ -193,7 +192,7 @@ export class MotionPdfCatalogService {
                 } else {
                     tocBody.push(
                         this.pdfService.createTocLine(
-                            `${motion.number ? motion.number : ''}`,
+                            `${motion.number ? motion.number : ``}`,
                             motion.title,
                             `${motion.id}`
                         )
@@ -215,15 +214,15 @@ export class MotionPdfCatalogService {
      */
     private getTocHeaderDefinition(): object {
         return [
-            { text: this.translate.instant('Number'), style: 'tocHeaderRow' },
+            { text: this.translate.instant(`Number`), style: `tocHeaderRow` },
             {
-                style: 'tocHeaderRow',
+                style: `tocHeaderRow`,
                 text: [
-                    `${this.translate.instant('Title')} · ${this.translate.instant('Submitters')} · `,
-                    { text: `${this.translate.instant('Recommendation')}`, italics: true }
+                    `${this.translate.instant(`Title`)} · ${this.translate.instant(`Submitters`)} · `,
+                    { text: `${this.translate.instant(`Recommendation`)}`, italics: true }
                 ]
             },
-            { text: this.translate.instant('Page'), style: 'tocHeaderRow', alignment: 'right' }
+            { text: this.translate.instant(`Page`), style: `tocHeaderRow`, alignment: `right` }
         ];
     }
 
@@ -236,8 +235,8 @@ export class MotionPdfCatalogService {
      * @returns {Array<Object>} An array containing the `DocDefinitions` for `pdf-make`.
      */
     private appendSubmittersAndRecommendation(motion: ViewMotion, style: StyleType = StyleType.DEFAULT): Object[] {
-        let submitterList = '';
-        let state = '';
+        let submitterList = ``;
+        let state = ``;
         if (motion.state.isFinalState) {
             state = this.motionService.getExtendedStateLabel(motion);
         } else {
@@ -246,11 +245,11 @@ export class MotionPdfCatalogService {
         for (let i = 0; i < motion.submitters.length; ++i) {
             submitterList +=
                 i !== motion.submitters.length - 1
-                    ? motion.submitters[i].getTitle() + ', '
+                    ? motion.submitters[i].getTitle() + `, `
                     : motion.submitters[i].getTitle();
         }
         return this.pdfService.createTocLine(
-            `${motion.number ? motion.number : ''}`,
+            `${motion.number ? motion.number : ``}`,
             motion.title,
             `${motion.id}`,
             style,

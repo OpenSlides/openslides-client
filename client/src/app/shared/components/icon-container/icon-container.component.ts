@@ -1,17 +1,17 @@
 import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
 
 @Component({
-    selector: 'os-icon-container',
-    templateUrl: './icon-container.component.html',
-    styleUrls: ['./icon-container.component.scss']
+    selector: `os-icon-container`,
+    templateUrl: `./icon-container.component.html`,
+    styleUrls: [`./icon-container.component.scss`]
 })
 export class IconContainerComponent {
     /**
      * HostBinding to add the necessary class related to the size.
      */
-    @HostBinding('class')
+    @HostBinding(`class`)
     public get classes(): string {
-        return `${this.size}-container ${this.inline ? 'inline' : ''}`;
+        return `${this.size}-container ${this.inline ? `inline` : ``}`;
     }
 
     /**
@@ -24,7 +24,7 @@ export class IconContainerComponent {
      * Optional size property. Can be large, if needed.
      */
     @Input()
-    public size: 'small' | 'medium' | 'large' | 'gigantic' = 'medium';
+    public size: 'small' | 'medium' | 'large' | 'gigantic' = `medium`;
 
     @Input()
     public inline = false;

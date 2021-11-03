@@ -1,9 +1,4 @@
 import { Injectable } from '@angular/core';
-
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-
-import { AgendaItemRepositoryService, AgendaListTitle } from '../agenda/agenda-item-repository.service';
 import { MotionAction } from 'app/core/actions/motion-action';
 import {
     DEFAULT_FIELDSET,
@@ -22,28 +17,32 @@ import { Projection } from 'app/shared/models/projector/projection';
 import { createAgendaItem } from 'app/shared/utils/create-agenda-item';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ChangeRecoMode } from 'app/site/motions/motions.constants';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+import { AgendaItemRepositoryService, AgendaListTitle } from '../agenda/agenda-item-repository.service';
 import { BaseIsAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-is-agenda-item-and-list-of-speakers-content-object-repository';
-import { MotionLineNumberingService } from './motion-line-numbering.service';
 import { RepositoryServiceCollector } from '../repository-service-collector';
+import { MotionLineNumberingService } from './motion-line-numbering.service';
 
 type SortProperty = 'sort_weight' | 'number';
 
 export const GET_POSSIBLE_RECOMMENDATIONS: Follow = {
-    idField: 'workflow_id',
+    idField: `workflow_id`,
     follow: [
         {
-            idField: 'state_ids',
-            fieldset: ['recommendation_label', 'show_recommendation_extension_field']
+            idField: `state_ids`,
+            fieldset: [`recommendation_label`, `show_recommendation_extension_field`]
         }
     ]
 };
 
 export const SUBMITTER_FOLLOW: Follow = {
-    idField: 'submitter_ids',
+    idField: `submitter_ids`,
     follow: [
         {
-            idField: 'user_id',
-            fieldset: 'shortName'
+            idField: `user_id`,
+            fieldset: `shortName`
         }
     ]
 };
@@ -59,7 +58,7 @@ export const SUBMITTER_FOLLOW: Follow = {
  * them to the Server.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersContentObjectRepository<
     ViewMotion,
@@ -83,12 +82,12 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         private operator: OperatorService
     ) {
         super(repositoryServiceCollector, Motion, agendaItemRepo);
-        this.meetingsSettingsService.get('motions_default_sorting').subscribe(conf => {
+        this.meetingsSettingsService.get(`motions_default_sorting`).subscribe(conf => {
             this.sortProperty = conf as SortProperty;
             this.setConfigSortFn();
         });
 
-        this.meetingsSettingsService.get('motions_line_length').subscribe(lineLength => {
+        this.meetingsSettingsService.get(`motions_line_length`).subscribe(lineLength => {
             this.motionLineLength = lineLength;
         });
     }
@@ -195,39 +194,39 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
     }
 
     public getFieldsets(): Fieldsets<Motion> {
-        const titleFields: TypedFieldset<Motion> = ['title', 'number', 'created'];
+        const titleFields: TypedFieldset<Motion> = [`title`, `number`, `created`];
         const listFields: TypedFieldset<Motion> = titleFields.concat([
-            'sequential_number',
-            'sort_weight',
-            'category_weight',
-            'lead_motion_id', // needed for filtering
-            'amendment_ids'
+            `sequential_number`,
+            `sort_weight`,
+            `category_weight`,
+            `lead_motion_id`, // needed for filtering
+            `amendment_ids`
         ]);
-        const blockListFields: TypedFieldset<Motion> = titleFields.concat(['block_id']);
+        const blockListFields: TypedFieldset<Motion> = titleFields.concat([`block_id`]);
         const detailFields: TypedFieldset<Motion> = titleFields.concat([
-            'sequential_number',
-            'text',
-            'reason',
-            'recommendation_id',
-            'tag_ids',
-            'personal_note_ids',
-            'block_id',
-            'category_id',
-            'lead_motion_id',
-            'comment_ids',
-            'modified_final_version',
-            'state_extension',
-            'recommendation_extension',
-            'agenda_item_id', // for add/remove from agenda,
-            { templateField: 'amendment_paragraph_$' },
-            'poll_ids',
-            'origin_id'
+            `sequential_number`,
+            `text`,
+            `reason`,
+            `recommendation_id`,
+            `tag_ids`,
+            `personal_note_ids`,
+            `block_id`,
+            `category_id`,
+            `lead_motion_id`,
+            `comment_ids`,
+            `modified_final_version`,
+            `state_extension`,
+            `recommendation_extension`,
+            `agenda_item_id`, // for add/remove from agenda,
+            { templateField: `amendment_paragraph_$` },
+            `poll_ids`,
+            `origin_id`
         ]);
         const amendmentFields: TypedFieldset<Motion> = listFields.concat([
-            'text',
-            { templateField: 'amendment_paragraph_$' }
+            `text`,
+            { templateField: `amendment_paragraph_$` }
         ]);
-        const callListFields: TypedFieldset<Motion> = titleFields.concat(['sort_weight', 'sort_parent_id']);
+        const callListFields: TypedFieldset<Motion> = titleFields.concat([`sort_weight`, `sort_parent_id`]);
         return {
             [DEFAULT_FIELDSET]: detailFields,
             list: listFields,
@@ -258,7 +257,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         const numberPrefix = this.agendaItemRepo.getItemNumberPrefix(viewMotion);
         // if the number is set, the title will be 'Motion <number>'.
         if (viewMotion.number) {
-            return `${numberPrefix} ${this.translate.instant('Motion')} ${viewMotion.number}`;
+            return `${numberPrefix} ${this.translate.instant(`Motion`)} ${viewMotion.number}`;
         } else {
             return `${numberPrefix} ${viewMotion.title}`;
         }
@@ -269,19 +268,19 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         // Append the verbose name only, if not the special format 'Motion <number>' is used.
         let title: string;
         if (viewMotion.number) {
-            title = `${numberPrefix}${this.translate.instant('Motion')} ${viewMotion.number} · ${viewMotion.title}`;
+            title = `${numberPrefix}${this.translate.instant(`Motion`)} ${viewMotion.number} · ${viewMotion.title}`;
         } else {
             title = `${numberPrefix}${viewMotion.title} (${this.getVerboseName()})`;
         }
         const agendaTitle: AgendaListTitle = { title };
 
         if (viewMotion.submittersAsUsers && viewMotion.submittersAsUsers.length) {
-            agendaTitle.subtitle = `${this.translate.instant('by')} ${viewMotion.submittersAsUsers.join(', ')}`;
+            agendaTitle.subtitle = `${this.translate.instant(`by`)} ${viewMotion.submittersAsUsers.join(`, `)}`;
         }
         return agendaTitle;
     };
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Motions' : 'Motion');
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Motions` : `Motion`);
 
     public getProjectorTitle = (viewMotion: ViewMotion) => {
         const subtitle =
@@ -518,7 +517,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
                 if (a[this.sortProperty] === b[this.sortProperty]) {
                     return this.languageCollator.compare(a.title, b.title);
                 } else {
-                    if (this.sortProperty === 'sort_weight') {
+                    if (this.sortProperty === `sort_weight`) {
                         // handling numerical values
                         return a.sort_weight - b.sort_weight;
                     } else {

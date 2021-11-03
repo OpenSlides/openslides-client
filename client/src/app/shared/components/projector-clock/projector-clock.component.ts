@@ -1,13 +1,11 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-
+import { ServertimeService } from 'app/core/core-services/servertime.service';
 import { Subscription } from 'rxjs';
 
-import { ServertimeService } from 'app/core/core-services/servertime.service';
-
 @Component({
-    selector: 'os-projector-clock',
-    templateUrl: './projector-clock.component.html',
-    styleUrls: ['./projector-clock.component.scss']
+    selector: `os-projector-clock`,
+    templateUrl: `./projector-clock.component.html`,
+    styleUrls: [`./projector-clock.component.scss`]
 })
 export class ProjectorClockComponent implements OnInit, OnDestroy {
     public time: string;
@@ -33,11 +31,11 @@ export class ProjectorClockComponent implements OnInit, OnDestroy {
 
     private updateClock(): void {
         const time = new Date(this.servertimeService.getServertime());
-        const hours = '0' + time.getHours();
-        const minutes = '0' + time.getMinutes();
+        const hours = `0` + time.getHours();
+        const minutes = `0` + time.getMinutes();
 
         // Will display time in hh:mm format
-        this.time = hours.slice(-2) + ':' + minutes.slice(-2);
+        this.time = hours.slice(-2) + `:` + minutes.slice(-2);
     }
 
     public ngOnDestroy(): void {

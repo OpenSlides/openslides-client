@@ -1,14 +1,13 @@
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
 import { Observable, Subject } from 'rxjs';
 
-import { HistoryService } from './history.service';
 import { HTTPMethod } from '../definitions/http-methods';
 import { HttpOptions } from '../definitions/http-options';
 import { formatQueryParams, QueryParams } from '../definitions/query-params';
-import { toBase64 } from '../to-base64';
 import { ProcessError } from '../errors/process-error';
+import { toBase64 } from '../to-base64';
+import { HistoryService } from './history.service';
 
 type ResponseType = 'arraybuffer' | 'blob' | 'json' | 'text';
 
@@ -16,7 +15,7 @@ type ResponseType = 'arraybuffer' | 'blob' | 'json' | 'text';
  * Service for managing HTTP requests. Allows to send data for every method. Also (TODO) will do generic error handling.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class HttpService {
     /**
@@ -36,7 +35,7 @@ export class HttpService {
      * @param timeTravel requests are only allowed if history mode is disabled
      */
     public constructor(private http: HttpClient, private historyService: HistoryService) {
-        this.defaultHeaders = new HttpHeaders().set('Content-Type', 'application/json');
+        this.defaultHeaders = new HttpHeaders().set(`Content-Type`, `application/json`);
     }
 
     /**
@@ -61,24 +60,24 @@ export class HttpService {
     ): Promise<T> {
         // end early, if we are in history mode
         if (this.historyService.isInHistoryMode && method !== HTTPMethod.GET) {
-            throw new ProcessError('You cannot make changes while in history mode');
+            throw new ProcessError(`You cannot make changes while in history mode`);
         }
 
         // there is a current bug with the responseType.
         // https://github.com/angular/angular/issues/18586
         // castting it to 'json' allows the usage of the current array
         if (!responseType) {
-            responseType = 'json';
+            responseType = `json`;
         }
 
         let url = path + formatQueryParams(queryParams);
-        if (url[0] !== '/') {
+        if (url[0] !== `/`) {
             console.warn(`Please prefix the URL "${url}" with a slash.`);
-            url = '/' + url;
+            url = `/` + url;
         }
 
         const options: HttpOptions = {
-            observe: 'response',
+            observe: `response`,
             body: data,
             headers: customHeader ? customHeader : this.defaultHeaders,
             responseType: responseType as 'json'
@@ -108,7 +107,7 @@ export class HttpService {
         data?: any,
         queryParams?: QueryParams,
         header?: HttpHeaders,
-        responseType: ResponseType = 'json'
+        responseType: ResponseType = `json`
     ): Promise<T> {
         return await this.send<T>(path, HTTPMethod.GET, data, queryParams, header, responseType);
     }
@@ -169,7 +168,7 @@ export class HttpService {
      */
     public async downloadAsBase64(url: string): Promise<string> {
         const headers = new HttpHeaders();
-        const file = await this.get<Blob>(url, {}, {}, headers, 'blob');
+        const file = await this.get<Blob>(url, {}, {}, headers, `blob`);
         return await toBase64(file);
     }
 }

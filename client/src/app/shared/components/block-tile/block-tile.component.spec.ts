@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { BlockTileComponent } from './block-tile.component';
 
-describe('BlockTileComponent', () => {
+describe(`BlockTileComponent`, () => {
     let component: BlockTileComponent;
     let fixture: ComponentFixture<BlockTileComponent>;
 
@@ -23,7 +22,7 @@ describe('BlockTileComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

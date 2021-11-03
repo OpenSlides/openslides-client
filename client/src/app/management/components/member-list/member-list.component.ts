@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
-
 import { MemberService } from 'app/core/core-services/member.service';
-import { OML, getOmlVerboseName } from 'app/core/core-services/organization-permission';
+import { getOmlVerboseName, OML } from 'app/core/core-services/organization-permission';
 import { Id } from 'app/core/definitions/key-types';
 import { CommitteeRepositoryService } from 'app/core/repositories/management/committee-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
@@ -17,30 +16,31 @@ import { MemberSortService } from 'app/management/services/member-sort.service';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
 import { BaseUserHeadersAndVerboseNames } from 'app/site/users/base/base-user.constants';
 import { ViewUser } from 'app/site/users/models/view-user';
-import { OMLMapping } from '../../../core/core-services/organization-permission';
+
 import { ORGANIZATION_ID } from '../../../core/core-services/organization.service';
+import { OMLMapping } from '../../../core/core-services/organization-permission';
 import { ViewOrganization } from '../../models/view-organization';
 
 @Component({
-    selector: 'os-members',
-    templateUrl: './member-list.component.html',
-    styleUrls: ['./member-list.component.scss']
+    selector: `os-members`,
+    templateUrl: `./member-list.component.html`,
+    styleUrls: [`./member-list.component.scss`]
 })
 export class MemberListComponent extends BaseListViewComponent<ViewUser> implements OnInit {
     public readonly OML = OML;
 
     public tableColumnDefinition: PblColumnDefinition[] = [
         {
-            prop: 'short_name',
-            width: '50%'
+            prop: `short_name`,
+            width: `50%`
         },
         {
-            prop: 'info',
-            width: '50%'
+            prop: `info`,
+            width: `50%`
         },
         {
-            prop: 'is_active',
-            width: '100px'
+            prop: `is_active`,
+            width: `100px`
         }
     ];
 
@@ -48,6 +48,7 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
         public repo: UserRepositoryService,
         private committeeRepo: CommitteeRepositoryService,
         protected componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private memberService: MemberService,
         private router: Router,
         private route: ActivatedRoute,
@@ -56,8 +57,8 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
         public readonly sortService: MemberSortService,
         private csvExportService: CsvExportService
     ) {
-        super(componentServiceCollector);
-        super.setTitle('Accounts');
+        super(componentServiceCollector, translate);
+        super.setTitle(`Accounts`);
         this.canMultiSelect = true;
     }
 
@@ -68,11 +69,11 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
     }
 
     public createNewMember(): void {
-        this.router.navigate(['create'], { relativeTo: this.route });
+        this.router.navigate([`create`], { relativeTo: this.route });
     }
 
     public navigateToMember(member: ViewUser): void {
-        this.router.navigate([member.id, 'edit'], { relativeTo: this.route });
+        this.router.navigate([member.id, `edit`], { relativeTo: this.route });
     }
 
     public async deleteSelected(members: ViewUser[] = this.selectedRows): Promise<void> {
@@ -81,10 +82,10 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
 
     public async assignCommitteesToUsers(): Promise<void> {
         const content = this.translate.instant(
-            'This will add or remove the following committees for all selected participants:'
+            `This will add or remove the following committees for all selected participants:`
         );
-        const ADD = _('Add');
-        const REMOVE = _('Remove');
+        const ADD = _(`Add`);
+        const REMOVE = _(`Remove`);
         const choices = [ADD, REMOVE];
         const selectedChoice = await this.choiceService.open(
             content,
@@ -108,7 +109,7 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
                 property: key as keyof ViewUser,
                 label: value
             })),
-            `${this.translate.instant('Accounts')}.csv`
+            `${this.translate.instant(`Accounts`)}.csv`
         );
     }
 
@@ -123,28 +124,28 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
                 ids: [ORGANIZATION_ID],
                 follow: [
                     {
-                        idField: 'committee_ids',
-                        fieldset: '',
+                        idField: `committee_ids`,
+                        fieldset: ``,
                         follow: [
                             {
-                                idField: 'meeting_ids',
-                                fieldset: '',
-                                follow: [{ idField: 'user_ids', fieldset: 'shortName' }]
+                                idField: `meeting_ids`,
+                                fieldset: ``,
+                                follow: [{ idField: `user_ids`, fieldset: `shortName` }]
                             }
                         ]
                     }
                 ]
             },
-            'load_meetings'
+            `load_meetings`
         );
     }
 
     private async loadUsers(start_index: number = 0, entries: number = 10000): Promise<void> {
         try {
             const request = await this.memberService.getAllOrgaUsersModelRequest(start_index, entries);
-            this.requestModels(request, 'load_users');
+            this.requestModels(request, `load_users`);
         } catch (e) {
-            console.log('Error:', e);
+            console.log(`Error:`, e);
         }
     }
 }

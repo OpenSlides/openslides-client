@@ -1,14 +1,12 @@
 import { Component, ContentChild, Input, OnDestroy, OnInit, TemplateRef } from '@angular/core';
-
-import { Observable, Subscription } from 'rxjs';
-
 import { HtmlColor } from 'app/core/definitions/key-types';
 import { HasColor } from 'app/shared/models/base/has-color';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
-    selector: 'os-chip-list',
-    templateUrl: './chip-list.component.html',
-    styleUrls: ['./chip-list.component.scss']
+    selector: `os-chip-list`,
+    templateUrl: `./chip-list.component.html`,
+    styleUrls: [`./chip-list.component.scss`]
 })
 export class ChipListComponent implements OnInit, OnDestroy {
     /**
@@ -66,7 +64,7 @@ export class ChipListComponent implements OnInit, OnDestroy {
         } else {
             nextModels = [models];
         }
-        if (typeof nextModels[0] === 'string') {
+        if (typeof nextModels[0] === `string`) {
             this._models = (nextModels as HtmlColor[]).map(model => ({ color: model }));
         } else {
             this._models = nextModels as HasColor[];

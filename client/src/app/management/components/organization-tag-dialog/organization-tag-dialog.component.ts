@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { HtmlColor } from 'app/core/definitions/key-types';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ViewOrganizationTag } from 'app/management/models/view-organization-tag';
@@ -14,9 +14,9 @@ interface OrganizationTagDialogData {
 }
 
 @Component({
-    selector: 'os-organization-tag-dialog',
-    templateUrl: './organization-tag-dialog.component.html',
-    styleUrls: ['./organization-tag-dialog.component.scss']
+    selector: `os-organization-tag-dialog`,
+    templateUrl: `./organization-tag-dialog.component.html`,
+    styleUrls: [`./organization-tag-dialog.component.scss`]
 })
 export class OrganizationTagDialogComponent extends BaseComponent implements OnInit {
     public get isCreateView(): boolean {
@@ -33,12 +33,13 @@ export class OrganizationTagDialogComponent extends BaseComponent implements OnI
     private _lastValidColor: string;
 
     public constructor(
-        serviceCollector: ComponentServiceCollector,
+        componentServiceCollector: ComponentServiceCollector,
+        translate: TranslateService,
         @Inject(MAT_DIALOG_DATA) public data: OrganizationTagDialogData,
         private dialogRef: MatDialogRef<OrganizationTagDialogComponent>,
         private fb: FormBuilder
     ) {
-        super(serviceCollector);
+        super(componentServiceCollector, translate);
     }
 
     public ngOnInit(): void {
@@ -52,7 +53,7 @@ export class OrganizationTagDialogComponent extends BaseComponent implements OnI
 
     public onSaveClicked(): void {
         const { name, color }: { name: string; color: string } = this.organizationTagForm.value;
-        this.dialogRef.close({ name, color: color.startsWith('#') ? color : `#${color}` });
+        this.dialogRef.close({ name, color: color.startsWith(`#`) ? color : `#${color}` });
     }
 
     public generateColor(): void {
@@ -61,17 +62,17 @@ export class OrganizationTagDialogComponent extends BaseComponent implements OnI
 
     private getRandomColor(): string {
         const nextColor = this.data.getRandomColor();
-        return nextColor.startsWith('#') ? nextColor.slice(1) : nextColor;
+        return nextColor.startsWith(`#`) ? nextColor.slice(1) : nextColor;
     }
 
     private createForm(): void {
         this._lastValidColor = this.data.defaultColor;
         this.organizationTagForm = this.fb.group({
-            name: ['', Validators.required],
+            name: [``, Validators.required],
             color: [this._lastValidColor, Validators.pattern(/^[0-9a-fA-F]{6}$/)]
         });
         this.subscriptions.push(
-            this.organizationTagForm.get('color').valueChanges.subscribe((currentColor: string) => {
+            this.organizationTagForm.get(`color`).valueChanges.subscribe((currentColor: string) => {
                 if (currentColor.length === 6) {
                     this._lastValidColor = currentColor;
                 }
@@ -83,7 +84,7 @@ export class OrganizationTagDialogComponent extends BaseComponent implements OnI
         const color = this.data.organizationTag.color;
         const update = {
             name: this.data.organizationTag.name,
-            color: color.startsWith('#') ? color.slice(1) : color
+            color: color.startsWith(`#`) ? color.slice(1) : color
         };
         this.organizationTagForm.patchValue(update);
     }

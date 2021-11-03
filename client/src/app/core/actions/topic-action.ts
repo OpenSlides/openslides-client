@@ -1,12 +1,13 @@
-import { AgendaItemCreationPayload } from './common/agenda-item-creation-payload';
 import { HasMeetingId } from 'app/shared/models/base/has-meeting-id';
 import { Identifiable } from 'app/shared/models/base/identifiable';
+
 import { Id, UnsafeHtml } from '../definitions/key-types';
+import { AgendaItemCreationPayload } from './common/agenda-item-creation-payload';
 
 export namespace TopicAction {
-    export const CREATE = 'topic.create';
-    export const UPDATE = 'topic.update';
-    export const DELETE = 'topic.delete';
+    export const CREATE = `topic.create`;
+    export const UPDATE = `topic.update`;
+    export const DELETE = `topic.delete`;
 
     interface PartialPayload {
         // optional

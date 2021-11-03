@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Directive, Input } from '@angular/core';
-
+import { TranslateService } from '@ngx-translate/core';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { VotingError, VotingService } from 'app/core/ui-services/voting.service';
@@ -37,11 +37,12 @@ export abstract class BasePollVoteComponent<C extends BaseViewModel = any> exten
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         operator: OperatorService,
         protected votingService: VotingService,
         protected cd: ChangeDetectorRef
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
         this.subscriptions.push(
             operator.userObservable.subscribe(user => {
                 if (user) {
@@ -88,7 +89,7 @@ export abstract class BasePollVoteComponent<C extends BaseViewModel = any> exten
     }
 
     public getVotingError(user: ViewUser = this.user): string | void {
-        console.log('Cannot vote because:', this.votingService.getVotePermissionErrorVerbose(this.poll, user));
+        console.log(`Cannot vote because:`, this.votingService.getVotePermissionErrorVerbose(this.poll, user));
         return this.votingService.getVotePermissionErrorVerbose(this.poll, user);
     }
 }

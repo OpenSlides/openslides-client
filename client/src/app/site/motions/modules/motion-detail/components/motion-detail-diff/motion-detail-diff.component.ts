@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-
+import { TranslateService } from '@ngx-translate/core';
 import { MotionChangeRecommendationRepositoryService } from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
 import { MotionLineNumberingService } from 'app/core/repositories/motions/motion-line-numbering.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
@@ -17,6 +17,8 @@ import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
 import { LineNumberingMode } from 'app/site/motions/motions.constants';
+
+import { ViewMotionAmendedParagraph } from '../../../../models/view-motion-amended-paragraph';
 import {
     MotionChangeRecommendationDialogComponent,
     MotionChangeRecommendationDialogComponentData
@@ -25,7 +27,6 @@ import {
     MotionTitleChangeRecommendationDialogComponent,
     MotionTitleChangeRecommendationDialogComponentData
 } from '../motion-title-change-recommendation-dialog/motion-title-change-recommendation-dialog.component';
-import { ViewMotionAmendedParagraph } from '../../../../models/view-motion-amended-paragraph';
 
 /**
  * This component displays the original motion text with the change blocks inside.
@@ -51,9 +52,9 @@ import { ViewMotionAmendedParagraph } from '../../../../models/view-motion-amend
  * ```
  */
 @Component({
-    selector: 'os-motion-detail-diff',
-    templateUrl: './motion-detail-diff.component.html',
-    styleUrls: ['./motion-detail-diff.component.scss'],
+    selector: `os-motion-detail-diff`,
+    templateUrl: `./motion-detail-diff.component.html`,
+    styleUrls: [`./motion-detail-diff.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
 export class MotionDetailDiffComponent extends BaseComponent implements AfterViewInit {
@@ -104,6 +105,7 @@ export class MotionDetailDiffComponent extends BaseComponent implements AfterVie
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private diff: DiffService,
         private lineNumbering: LinenumberingService,
         private recoRepo: MotionChangeRecommendationRepositoryService,
@@ -114,9 +116,9 @@ export class MotionDetailDiffComponent extends BaseComponent implements AfterVie
         private el: ElementRef,
         private promptService: PromptService
     ) {
-        super(componentServiceCollector);
-        this.meetingSettingsService.get('motions_line_length').subscribe(lineLength => (this.lineLength = lineLength));
-        this.meetingSettingsService.get('motions_preamble').subscribe(preamble => (this.preamble = preamble));
+        super(componentServiceCollector, translate);
+        this.meetingSettingsService.get(`motions_line_length`).subscribe(lineLength => (this.lineLength = lineLength));
+        this.meetingSettingsService.get(`motions_preamble`).subscribe(preamble => (this.preamble = preamble));
     }
 
     /**
@@ -133,7 +135,7 @@ export class MotionDetailDiffComponent extends BaseComponent implements AfterVie
 
         if (lineRange.from >= lineRange.to) {
             // Empty space between two amendments, or between colliding amendments
-            return '';
+            return ``;
         }
 
         let baseText: LineNumberedString;
@@ -141,10 +143,10 @@ export class MotionDetailDiffComponent extends BaseComponent implements AfterVie
             try {
                 baseText = this.motionLineNumbering
                     .getAllAmendmentParagraphsWithOriginalLineNumbers(this.motion, this.lineLength, true)
-                    .join('\n');
+                    .join(`\n`);
             } catch (e) {
                 console.error(e);
-                return '';
+                return ``;
             }
         } else {
             baseText = this.lineNumbering.insertLineNumbers(this.motion.text, this.lineLength);
@@ -183,17 +185,17 @@ export class MotionDetailDiffComponent extends BaseComponent implements AfterVie
      */
     public getTextRemainderAfterLastChange(): string {
         if (!this.lineLength) {
-            return ''; // @TODO This happens in the test case when the lineLength-variable is not set
+            return ``; // @TODO This happens in the test case when the lineLength-variable is not set
         }
         let baseText: LineNumberedString;
         if (this.motion.isParagraphBasedAmendment()) {
             try {
                 baseText = this.motionLineNumbering
                     .getAllAmendmentParagraphsWithOriginalLineNumbers(this.motion, this.lineLength, true)
-                    .join('\n');
+                    .join(`\n`);
             } catch (e) {
                 console.error(e);
-                return '';
+                return ``;
             }
         } else {
             baseText = this.lineNumbering.insertLineNumbers(this.motion.text, this.lineLength);
@@ -209,7 +211,7 @@ export class MotionDetailDiffComponent extends BaseComponent implements AfterVie
      */
     public formatLineRange(change: ViewUnifiedChange): string {
         if (change.getLineFrom() < change.getLineTo() - 1) {
-            return change.getLineFrom().toString(10) + ' - ' + (change.getLineTo() - 1).toString(10);
+            return change.getLineFrom().toString(10) + ` - ` + (change.getLineTo() - 1).toString(10);
         } else {
             return change.getLineFrom().toString(10);
         }
@@ -291,10 +293,10 @@ export class MotionDetailDiffComponent extends BaseComponent implements AfterVie
      */
     public async setAcceptanceValue(change: ViewMotionChangeRecommendation, value: string): Promise<void> {
         try {
-            if (value === 'accepted') {
+            if (value === `accepted`) {
                 await this.recoRepo.setAccepted(change);
             }
-            if (value === 'rejected') {
+            if (value === `rejected`) {
                 await this.recoRepo.setRejected(change);
             }
         } catch (e) {
@@ -322,7 +324,7 @@ export class MotionDetailDiffComponent extends BaseComponent implements AfterVie
     public async deleteChangeRecommendation(reco: ViewMotionChangeRecommendation, $event: MouseEvent): Promise<void> {
         $event.stopPropagation();
         $event.preventDefault();
-        const title = this.translate.instant('Are you sure you want to delete this change recommendation?');
+        const title = this.translate.instant(`Are you sure you want to delete this change recommendation?`);
         if (await this.promptService.open(title)) {
             await this.recoRepo.delete(reco).catch(this.raiseError);
         }
@@ -379,10 +381,10 @@ export class MotionDetailDiffComponent extends BaseComponent implements AfterVie
     private scrollToChangeElement(change: ViewUnifiedChange): void {
         const element = <HTMLElement>this.el.nativeElement;
         const target = element.querySelector(`.diff-box-${change.getChangeId()}`);
-        const containerElement = document.querySelector('mat-sidenav-content');
+        const containerElement = document.querySelector(`mat-sidenav-content`);
         containerElement.scrollTo({
             top: target.getBoundingClientRect().top - HEAD_BAR_HEIGHT,
-            behavior: 'smooth'
+            behavior: `smooth`
         });
     }
 

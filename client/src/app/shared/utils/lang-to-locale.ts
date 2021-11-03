@@ -6,18 +6,18 @@
  */
 export function langToLocale(lang: string): string {
     switch (lang) {
-        case 'en': {
-            return 'en-GB';
+        case `en`: {
+            return `en-GB`;
         }
-        case 'de': {
-            return 'de-DE';
+        case `de`: {
+            return `de-DE`;
         }
-        case 'cz': {
-            return 'cs-CZ';
+        case `cz`: {
+            return `cs-CZ`;
         }
         default: {
             // has YYYY-MM-DD HH:mm:SS
-            return 'lt-LT';
+            return `lt-LT`;
         }
     }
 }

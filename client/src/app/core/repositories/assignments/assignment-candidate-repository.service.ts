@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { AssignmentCandidateAction } from 'app/core/actions/assignment-candidate-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Id } from 'app/core/definitions/key-types';
@@ -7,6 +6,7 @@ import { AssignmentCandidate } from 'app/shared/models/assignments/assignment-ca
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { ViewAssignmentCandidate } from 'app/site/assignments/models/view-assignment-candidate';
+
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
@@ -16,7 +16,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
  * Documentation partially provided in {@link BaseRepository}
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AssignmentCandidateRepositoryService extends BaseRepositoryWithActiveMeeting<
     ViewAssignmentCandidate,
@@ -28,13 +28,13 @@ export class AssignmentCandidateRepositoryService extends BaseRepositoryWithActi
 
     public getFieldsets(): Fieldsets<AssignmentCandidate> {
         return {
-            [DEFAULT_FIELDSET]: ['weight', 'user_id', 'assignment_id']
+            [DEFAULT_FIELDSET]: [`weight`, `user_id`, `assignment_id`]
         };
     }
 
     public getTitle = (viewAssignmentCandidate: ViewAssignmentCandidate) => viewAssignmentCandidate.user.getTitle();
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Candidates' : 'Candidate');
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Candidates` : `Candidate`);
 
     public create(assignment: ViewAssignment, userId: Id): Promise<Identifiable> {
         const payload: AssignmentCandidateAction.CreatePayload = {

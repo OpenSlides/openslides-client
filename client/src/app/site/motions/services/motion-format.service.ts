@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { MotionAction } from 'app/core/actions/motion-action';
 import { MotionChangeRecommendationRepositoryService } from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
 import { MotionLineNumberingService } from 'app/core/repositories/motions/motion-line-numbering.service';
@@ -9,8 +8,9 @@ import { LinenumberingService } from 'app/core/ui-services/linenumbering.service
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { MotionFormattingRepresentation } from 'app/shared/models/motions/motion';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from 'app/shared/models/motions/view-unified-change';
-import { ChangeRecoMode } from '../motions.constants';
+
 import { ViewMotion } from '../models/view-motion';
+import { ChangeRecoMode } from '../motions.constants';
 
 interface DifferedViewArguments {
     changes: ViewUnifiedChange[];
@@ -19,7 +19,7 @@ interface DifferedViewArguments {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MotionFormatService {
     public constructor(
@@ -75,7 +75,7 @@ export class MotionFormatService {
         text.push(
             this.diffService.getTextRemainderAfterLastChange(motionText, changesToShow, lineLength, highlightedLine)
         );
-        return text.join('');
+        return text.join(``);
     };
 
     public getUnifiedChanges(motion: ViewMotion, lineLength: number): ViewUnifiedChange[] {
@@ -103,14 +103,14 @@ export class MotionFormatService {
      * final version with all unified changes
      */
     public formatMotionForForward(motion: ViewMotion): MotionAction.ForwardMotion {
-        const lineLength = this.settings.instant('motions_line_length');
+        const lineLength = this.settings.instant(`motions_line_length`);
         const finalMotionText = this.getFinalMotionText(motion, lineLength);
         const textWithoutLines = this.lineNumberingService.stripLineNumbers(finalMotionText);
 
         return {
             origin_id: motion.id,
             title: motion.title,
-            reason: motion.reason || '',
+            reason: motion.reason || ``,
             text: textWithoutLines
         };
     }

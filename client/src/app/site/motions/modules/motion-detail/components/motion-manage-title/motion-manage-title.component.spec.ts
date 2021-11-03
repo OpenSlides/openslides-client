@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { MotionManageTitleComponent } from './motion-manage-title.component';
 
-describe('MotionManageTitleComponent', () => {
+describe(`MotionManageTitleComponent`, () => {
     let component: MotionManageTitleComponent;
     let fixture: ComponentFixture<MotionManageTitleComponent>;
 
@@ -23,7 +22,7 @@ describe('MotionManageTitleComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

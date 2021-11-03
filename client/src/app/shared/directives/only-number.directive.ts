@@ -1,7 +1,7 @@
 import { Directive, ElementRef, HostListener, Input, OnInit } from '@angular/core';
 
 @Directive({
-    selector: '[osOnlyNumber]'
+    selector: `[osOnlyNumber]`
 })
 export class OnlyNumberDirective implements OnInit {
     @Input()
@@ -57,7 +57,7 @@ export class OnlyNumberDirective implements OnInit {
      */
     private regExp: RegExp;
 
-    private allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab'];
+    private allowedKeys = [`Backspace`, `ArrowLeft`, `ArrowRight`, `ArrowUp`, `ArrowDown`, `Tab`];
 
     public constructor(private hostElement: ElementRef<HTMLInputElement>) {}
 
@@ -65,7 +65,7 @@ export class OnlyNumberDirective implements OnInit {
         this.updateAllowedCharacters();
     }
 
-    @HostListener('keydown', ['$event'])
+    @HostListener(`keydown`, [`$event`])
     public onKeyDown(event: KeyboardEvent): void {
         this.regExp.lastIndex = 0;
         const nextValue = this.hostElement.nativeElement.value + event.key;
@@ -73,13 +73,13 @@ export class OnlyNumberDirective implements OnInit {
             if (
                 this.allowedKeys.includes(event.key) ||
                 // Allow: Ctrl+A
-                (event.key === 'a' && event.ctrlKey) ||
+                (event.key === `a` && event.ctrlKey) ||
                 // Allow: Ctrl+C
-                (event.key === 'c' && event.ctrlKey) ||
+                (event.key === `c` && event.ctrlKey) ||
                 // Allow: Ctrl+V
-                (event.key === 'v' && event.ctrlKey) ||
+                (event.key === `v` && event.ctrlKey) ||
                 // Allow: Ctrl+X
-                (event.key === 'x' && event.ctrlKey) ||
+                (event.key === `x` && event.ctrlKey) ||
                 this.regExp.test(nextValue)
             ) {
                 return;
@@ -90,13 +90,13 @@ export class OnlyNumberDirective implements OnInit {
     }
 
     private updateAllowedCharacters(): void {
-        let regexString = '';
+        let regexString = ``;
         if (this._osOnlyNumberAllowDecimal) {
             const maximumDecimalDigits =
-                this._osOnlyNumberMaxDecimalDigits === 0 ? '' : `{${this._osOnlyNumberMaxDecimalDigits}}`;
+                this._osOnlyNumberMaxDecimalDigits === 0 ? `` : `{${this._osOnlyNumberMaxDecimalDigits}}`;
             regexString = `^([1-9][0-9]*|0)((\,|\.)${maximumDecimalDigits})?$`;
         } else {
-            const hexCharacters = this._osOnlyNumberAllowHex ? 'a-fA-F' : '';
+            const hexCharacters = this._osOnlyNumberAllowHex ? `a-fA-F` : ``;
             const allowedFirstCharacter = `[1-9${hexCharacters}]`;
             const allowedOtherCharacters = `[0-9${hexCharacters}]`;
             regexString = this._osOnlyNumberAllowLeadingZero

@@ -1,12 +1,11 @@
 import { CdkPortalOutlet, ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
 import { Component, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
-
 import { OverlayPosition } from 'app/core/ui-services/overlay.service';
 
 @Component({
-    selector: 'os-overlay',
-    templateUrl: './overlay.component.html',
-    styleUrls: ['./overlay.component.scss']
+    selector: `os-overlay`,
+    templateUrl: `./overlay.component.html`,
+    styleUrls: [`./overlay.component.scss`]
 })
 export class OverlayComponent implements OnInit {
     @ViewChild(CdkPortalOutlet, { static: true })
@@ -18,7 +17,7 @@ export class OverlayComponent implements OnInit {
      * Defaults to `'center'`.
      */
     @Input()
-    public position: OverlayPosition = 'center';
+    public position: OverlayPosition = `center`;
 
     /**
      * An optional class applied to the backdrop of this overlay.
@@ -73,9 +72,9 @@ export class OverlayComponent implements OnInit {
      *
      * @param event `KeyboardEvent`.
      */
-    @HostListener('document:keydown', ['$event'])
+    @HostListener(`document:keydown`, [`$event`])
     public keyListener(event: KeyboardEvent): void {
-        if (event.code === 'Escape') {
+        if (event.code === `Escape`) {
             this.escape.emit();
         }
     }

@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialogRef } from '@angular/material/dialog';
-
-import { BehaviorSubject, Observable } from 'rxjs';
-
 import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { Id } from 'app/core/definitions/key-types';
-import { MatCheckboxChange } from '@angular/material/checkbox';
-import { PresenterService, Presenter } from '../../../../../../core/core-services/presenter.service';
+import { BehaviorSubject, Observable } from 'rxjs';
+
+import { Presenter, PresenterService } from '../../../../../../core/core-services/presenter.service';
 
 interface PresenterMeeting {
     id: Id;
@@ -23,9 +22,9 @@ interface ForwardingPresenter {
 type ForwardingPresenterResult = ForwardingPresenter[];
 
 @Component({
-    selector: 'os-motion-forward-dialog',
-    templateUrl: './motion-forward-dialog.component.html',
-    styleUrls: ['./motion-forward-dialog.component.scss']
+    selector: `os-motion-forward-dialog`,
+    templateUrl: `./motion-forward-dialog.component.html`,
+    styleUrls: [`./motion-forward-dialog.component.scss`]
 })
 export class MotionForwardDialogComponent implements OnInit {
     public get committeesObservable(): Observable<ForwardingPresenter[]> {
@@ -56,7 +55,7 @@ export class MotionForwardDialogComponent implements OnInit {
     }
 
     public onChangeCheckbox({ source, checked }: MatCheckboxChange): void {
-        const fn = checked ? 'add' : 'delete';
+        const fn = checked ? `add` : `delete`;
         this.selectedMeetings[fn](+source.value);
     }
 

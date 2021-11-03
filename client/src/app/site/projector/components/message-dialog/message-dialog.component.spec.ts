@@ -1,11 +1,10 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { MessageDialogComponent } from './message-dialog.component';
 
-describe('MessageDialogComponent', () => {
+describe(`MessageDialogComponent`, () => {
     let component: MessageDialogComponent;
     let fixture: ComponentFixture<MessageDialogComponent>;
 
@@ -31,7 +30,7 @@ describe('MessageDialogComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

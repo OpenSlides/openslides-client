@@ -6,8 +6,8 @@ import { TileComponent } from '../tile/tile.component';
  * Enumeration to define of which the big block is.
  */
 export enum BlockType {
-    text = 'text',
-    node = 'node'
+    text = `text`,
+    node = `node`
 }
 
 /**
@@ -26,27 +26,27 @@ export type ShowOnly = 'title' | 'content' | null;
  * The block part is like a header, the content part contains further information.
  */
 @Component({
-    selector: 'os-block-tile',
-    templateUrl: './block-tile.component.html',
-    styleUrls: ['./block-tile.component.scss']
+    selector: `os-block-tile`,
+    templateUrl: `./block-tile.component.html`,
+    styleUrls: [`./block-tile.component.scss`]
 })
 export class BlockTileComponent extends TileComponent implements AfterViewInit {
     /**
      * Reference to the content of the content part.
      */
-    @ViewChild('contentNode')
+    @ViewChild(`contentNode`)
     public contentNode: ElementRef<HTMLElement>;
 
     /**
      * Reference to the block part, if it is a node.
      */
-    @ViewChild('blockNode')
+    @ViewChild(`blockNode`)
     public blockNode: ElementRef<HTMLElement>;
 
     /**
      * Reference to the action buttons in the content part, if used.
      */
-    @ViewChild('actionNode')
+    @ViewChild(`actionNode`)
     public actionNode: ElementRef<HTMLElement>;
 
     /**
@@ -91,7 +91,7 @@ export class BlockTileComponent extends TileComponent implements AfterViewInit {
      * whether the block part should be displayed above the content or next to it.
      */
     @Input()
-    public orientation: Orientation = 'horizontal';
+    public orientation: Orientation = `horizontal`;
 
     /**
      * Tells, whether the tile should display only one of `Title` or `Content` in the content part.
@@ -121,7 +121,7 @@ export class BlockTileComponent extends TileComponent implements AfterViewInit {
      * if this part contains any nodes.
      */
     public get showBlockNode(): boolean {
-        return typeof this._showBlockNode === 'undefined' ? true : this._showBlockNode;
+        return typeof this._showBlockNode === `undefined` ? true : this._showBlockNode;
     }
 
     /**
@@ -146,7 +146,7 @@ export class BlockTileComponent extends TileComponent implements AfterViewInit {
      * if this part contains any nodes.
      */
     public get showContentNode(): boolean {
-        return typeof this._showContentNode === 'undefined'
+        return typeof this._showContentNode === `undefined`
             ? true
             : this._showContentNode || !!this.only || !!this.title;
     }
@@ -172,7 +172,7 @@ export class BlockTileComponent extends TileComponent implements AfterViewInit {
      * if this part contains any nodes.
      */
     public get showActions(): boolean {
-        return typeof this._showActionNode === 'undefined' ? true : this._showActionNode;
+        return typeof this._showActionNode === `undefined` ? true : this._showActionNode;
     }
 
     /**
@@ -191,13 +191,13 @@ export class BlockTileComponent extends TileComponent implements AfterViewInit {
      * If not, it will check, if the parts contain nodes to display or not.
      */
     public ngAfterViewInit(): void {
-        if (typeof this._showBlockNode === 'undefined') {
+        if (typeof this._showBlockNode === `undefined`) {
             this.showBlockNode = this.checkForContent(this.blockNode);
         }
-        if (typeof this._showContentNode === 'undefined') {
+        if (typeof this._showContentNode === `undefined`) {
             this.showContentNode = this.checkForContent(this.contentNode);
         }
-        if (typeof this._showActionNode === 'undefined') {
+        if (typeof this._showActionNode === `undefined`) {
             this.showActions = this.checkForContent(this.actionNode);
         }
         this.cd.detectChanges();

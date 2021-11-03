@@ -2,6 +2,7 @@ import { SearchRepresentation } from 'app/core/ui-services/search.service';
 import { HasMeeting } from 'app/management/models/view-meeting';
 import { MotionCategory } from 'app/shared/models/motions/motion-category';
 import { Searchable } from 'app/site/base/searchable';
+
 import { BaseViewModel } from '../../base/base-view-model';
 import { ViewMotion } from './view-motion';
 
@@ -29,7 +30,7 @@ export class ViewMotionCategory extends BaseViewModel<MotionCategory> implements
     }
 
     public get prefixedName(): string {
-        return this.prefix ? this.prefix + ' - ' + this.name : this.name;
+        return this.prefix ? this.prefix + ` - ` + this.name : this.name;
     }
 
     /**
@@ -50,7 +51,7 @@ export class ViewMotionCategory extends BaseViewModel<MotionCategory> implements
         const parents = this.collectParents();
         let name = this.prefixedName;
         if (parents.length) {
-            name += ' (' + parents.map(parent => parent.prefixedName).join(', ') + ')';
+            name += ` (` + parents.map(parent => parent.prefixedName).join(`, `) + `)`;
         }
         return name;
     }
@@ -69,8 +70,8 @@ export class ViewMotionCategory extends BaseViewModel<MotionCategory> implements
     public formatForSearch(): SearchRepresentation {
         return {
             properties: [
-                { key: 'Name', value: this.name },
-                { key: 'Prefix', value: this.prefix }
+                { key: `Name`, value: this.name },
+                { key: `Prefix`, value: this.prefix }
             ],
             searchValue: [this.name, this.prefix]
         };

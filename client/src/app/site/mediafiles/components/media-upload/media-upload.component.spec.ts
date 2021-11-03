@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { MediaUploadComponent } from './media-upload.component';
 
-describe('MediaUploadComponent', () => {
+describe(`MediaUploadComponent`, () => {
     let component: MediaUploadComponent;
     let fixture: ComponentFixture<MediaUploadComponent>;
 
@@ -23,7 +22,7 @@ describe('MediaUploadComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

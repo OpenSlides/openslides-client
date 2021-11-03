@@ -1,11 +1,10 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
-import { MotionListComponent } from './motion-list.component';
 import { MotionMultiselectActionsComponent } from '../../../shared-motion/motion-multiselect-actions/motion-multiselect-actions.component';
+import { MotionListComponent } from './motion-list.component';
 
-describe('MotionListComponent', () => {
+describe(`MotionListComponent`, () => {
     let component: MotionListComponent;
     let fixture: ComponentFixture<MotionListComponent>;
 
@@ -24,7 +23,7 @@ describe('MotionListComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

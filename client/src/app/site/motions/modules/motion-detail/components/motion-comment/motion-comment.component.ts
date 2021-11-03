@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-
+import { TranslateService } from '@ngx-translate/core';
 import { UnsafeHtml } from 'app/core/definitions/key-types';
 import { MotionCommentRepositoryService } from 'app/core/repositories/motions/motion-comment-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -12,9 +12,9 @@ import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-co
 import { MotionPdfExportService } from 'app/site/motions/services/motion-pdf-export.service';
 
 @Component({
-    selector: 'os-motion-comment',
-    templateUrl: './motion-comment.component.html',
-    styleUrls: ['./motion-comment.component.scss']
+    selector: `os-motion-comment`,
+    templateUrl: `./motion-comment.component.html`,
+    styleUrls: [`./motion-comment.component.scss`]
 })
 export class MotionCommentComponent extends BaseComponent implements OnInit {
     @Input()
@@ -35,11 +35,12 @@ export class MotionCommentComponent extends BaseComponent implements OnInit {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private fb: FormBuilder,
         private pdfService: MotionPdfExportService,
         private commentRepo: MotionCommentRepositoryService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     public ngOnInit(): void {
@@ -47,7 +48,7 @@ export class MotionCommentComponent extends BaseComponent implements OnInit {
     }
 
     public editComment(): void {
-        this.commentForm.setValue({ comment: this.comment ? this.comment.comment : '' });
+        this.commentForm.setValue({ comment: this.comment ? this.comment.comment : `` });
         this.isCommentEdited = !this.isCommentEdited;
     }
 
@@ -71,11 +72,11 @@ export class MotionCommentComponent extends BaseComponent implements OnInit {
     }
 
     public isCommentFormEmpty(): boolean {
-        return this.getCommentTextFromForm() === '';
+        return this.getCommentTextFromForm() === ``;
     }
 
     public getCommentTextFromForm(): UnsafeHtml {
-        return this.commentForm.get('comment').value;
+        return this.commentForm.get(`comment`).value;
     }
 
     public exportCommentAsPDf(): void {
@@ -83,7 +84,7 @@ export class MotionCommentComponent extends BaseComponent implements OnInit {
     }
 
     private initForms(): void {
-        this.commentForm = this.fb.group({ comment: [''] });
+        this.commentForm = this.fb.group({ comment: [``] });
     }
 
     private createComment(): Promise<Identifiable> {

@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { MotionBlockListComponent } from './motion-block-list.component';
 
-describe('MotionBlockListComponent', () => {
+describe(`MotionBlockListComponent`, () => {
     let component: MotionBlockListComponent;
     let fixture: ComponentFixture<MotionBlockListComponent>;
 
@@ -23,7 +22,7 @@ describe('MotionBlockListComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

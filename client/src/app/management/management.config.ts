@@ -1,28 +1,29 @@
-import { AppConfig } from '../core/definitions/app-config';
 import { CommitteeRepositoryService } from 'app/core/repositories/management/committee-repository.service';
 import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
 import { OrganizationRepositoryService } from 'app/core/repositories/management/organization-repository.service';
 import { OrganizationTagRepositoryService } from 'app/core/repositories/management/organization-tag-repository.service';
 import { ResourceRepositoryService } from 'app/core/repositories/management/resource-repository.service';
+import { ThemeRepositoryService } from 'app/core/repositories/themes/theme-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { Committee } from 'app/shared/models/event-management/committee';
 import { Meeting } from 'app/shared/models/event-management/meeting';
 import { Organization } from 'app/shared/models/event-management/organization';
 import { OrganizationTag } from 'app/shared/models/event-management/organization-tag';
 import { Resource } from 'app/shared/models/event-management/resource';
+import { Theme } from 'app/shared/models/theme/theme';
 import { User } from 'app/shared/models/users/user';
+
+import { AppConfig } from '../core/definitions/app-config';
+import { ViewUser } from '../site/users/models/view-user';
 import { ViewCommittee } from './models/view-committee';
 import { ViewMeeting } from './models/view-meeting';
 import { ViewOrganization } from './models/view-organization';
 import { ViewOrganizationTag } from './models/view-organization-tag';
 import { ViewResource } from './models/view-resource';
-import { ViewUser } from '../site/users/models/view-user';
-import { Theme } from 'app/shared/models/theme/theme';
 import { ViewTheme } from './models/view-theme';
-import { ThemeRepositoryService } from 'app/core/repositories/themes/theme-repository.service';
 
 export const ManagementAppConfig: AppConfig = {
-    name: 'event-management',
+    name: `event-management`,
     models: [
         {
             model: Meeting,

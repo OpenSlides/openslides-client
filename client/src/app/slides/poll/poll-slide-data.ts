@@ -1,4 +1,3 @@
-import { TitleInformationWithAgendaItem } from '../agenda_item_number';
 import { Fqid } from 'app/core/definitions/key-types';
 import {
     EntitledUsersEntry,
@@ -7,6 +6,8 @@ import {
     PollState,
     PollType
 } from 'app/shared/models/poll/poll-constants';
+
+import { TitleInformationWithAgendaItem } from '../agenda_item_number';
 
 export interface SlideOption {
     yes?: number;

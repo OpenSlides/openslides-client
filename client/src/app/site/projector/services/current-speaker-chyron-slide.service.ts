@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
-
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { MeetingProjectionType } from 'app/core/repositories/management/meeting-repository.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { ProjectorService } from 'app/core/ui-services/projector.service';
 import { Projectiondefault } from 'app/shared/models/projector/projector';
 import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
+
 import { ViewProjector } from '../models/view-projector';
 
 /**
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class CurrentSpeakerChyronSlideService {
     public constructor(
@@ -33,7 +33,7 @@ export class CurrentSpeakerChyronSlideService {
             type: MeetingProjectionType.CurrentSpeakerChyron,
             projectionDefault: Projectiondefault.currentListOfSpeakers,
             stable: true,
-            getDialogTitle: () => 'Current speaker chyron'
+            getDialogTitle: () => `Current speaker chyron`
         };
     }
 

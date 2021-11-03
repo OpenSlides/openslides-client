@@ -1,27 +1,28 @@
 import { Identifiable } from 'app/shared/models/base/identifiable';
+
 import { Fqid, Id } from '../definitions/key-types';
 
 /**
  * Directions for scale and scroll requests.
  */
 export enum ScrollScaleDirection {
-    Up = 'up',
-    Down = 'down',
-    Reset = 'reset'
+    Up = `up`,
+    Down = `down`,
+    Reset = `reset`
 }
 
 export namespace ProjectorAction {
-    export const CREATE = 'projector.create';
-    export const UPDATE = 'projector.update';
-    export const DELETE = 'projector.delete';
-    export const CONTROL_VIEW = 'projector.control_view';
-    export const PROJECT = 'projector.project';
-    export const TOGGLE = 'projector.toggle';
-    export const NEXT = 'projector.next';
-    export const PREVIOUS = 'projector.previous';
-    export const ADD_TO_PREVIEW = 'projector.add_to_preview';
-    export const PROJECT_PREVIEW = 'projector.project_preview';
-    export const SORT_PREVIEW = 'projector.sort_preview';
+    export const CREATE = `projector.create`;
+    export const UPDATE = `projector.update`;
+    export const DELETE = `projector.delete`;
+    export const CONTROL_VIEW = `projector.control_view`;
+    export const PROJECT = `projector.project`;
+    export const TOGGLE = `projector.toggle`;
+    export const NEXT = `projector.next`;
+    export const PREVIOUS = `projector.previous`;
+    export const ADD_TO_PREVIEW = `projector.add_to_preview`;
+    export const PROJECT_PREVIEW = `projector.project_preview`;
+    export const SORT_PREVIEW = `projector.sort_preview`;
 
     export interface PartialPayload {
         width?: number;

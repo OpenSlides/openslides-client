@@ -1,6 +1,7 @@
 import { LineRange } from 'app/core/ui-services/diff.service';
 import { MergeAmendment } from 'app/shared/models/motions/motion-state';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from 'app/shared/models/motions/view-unified-change';
+
 import { AmendmentData } from './motion-slide-data';
 
 /**
@@ -25,7 +26,7 @@ export class AmendmentParagraphUnifiedChange implements ViewUnifiedChange {
     }
 
     public getChangeId(): string {
-        return 'amendment-' + this.id.toString(10) + '-' + this.paragraphNo.toString(10);
+        return `amendment-` + this.id.toString(10) + `-` + this.paragraphNo.toString(10);
     }
 
     public getIdentifier(): string {

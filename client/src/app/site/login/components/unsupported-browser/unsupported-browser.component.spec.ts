@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { UnsupportedBrowserComponent } from './unsupported-browser.component';
 
-describe('UnsupportedBrowserComponent', () => {
+describe(`UnsupportedBrowserComponent`, () => {
     let component: UnsupportedBrowserComponent;
     let fixture: ComponentFixture<UnsupportedBrowserComponent>;
 
@@ -23,7 +22,7 @@ describe('UnsupportedBrowserComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

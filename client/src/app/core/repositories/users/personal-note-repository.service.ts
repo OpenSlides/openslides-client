@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
-
 import { PersonalNoteAction } from 'app/core/actions/personal-note-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Fqid } from 'app/core/definitions/key-types';
 import { PersonalNote } from 'app/shared/models/users/personal-note';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { HasPersonalNote, ViewPersonalNote } from 'app/site/users/models/view-personal-note';
+
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 /**
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class PersonalNoteRepositoryService extends BaseRepositoryWithActiveMeeting<ViewPersonalNote, PersonalNote> {
     /**
@@ -26,10 +26,10 @@ export class PersonalNoteRepositoryService extends BaseRepositoryWithActiveMeeti
     public getTitle = (viewPersonalNote: ViewPersonalNote) => this.getVerboseName();
 
     public getVerboseName = (plural: boolean = false) =>
-        this.translate.instant(plural ? 'Personal notes' : 'Personal note');
+        this.translate.instant(plural ? `Personal notes` : `Personal note`);
 
     public getFieldsets(): Fieldsets<PersonalNote> {
-        const detailFields: (keyof PersonalNote)[] = ['id', 'star', 'note'];
+        const detailFields: (keyof PersonalNote)[] = [`id`, `star`, `note`];
         return {
             [DEFAULT_FIELDSET]: detailFields
         };
@@ -75,7 +75,7 @@ export class PersonalNoteRepositoryService extends BaseRepositoryWithActiveMeeti
         content_object_id: Fqid
     ): PersonalNoteAction.CreatePayload {
         if (data.star === undefined && data.note === undefined) {
-            throw new Error('At least one of note or starhas to be given!');
+            throw new Error(`At least one of note or starhas to be given!`);
         }
         return {
             content_object_id,

@@ -1,5 +1,6 @@
 import { Resource } from 'app/shared/models/event-management/resource';
 import { BaseViewModel } from 'app/site/base/base-view-model';
+
 import { ViewOrganization } from './view-organization';
 export class ViewResource extends BaseViewModel<Resource> {
     public static COLLECTION = Resource.COLLECTION;

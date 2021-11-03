@@ -1,4 +1,5 @@
 import { Id, UnsafeHtml } from 'app/core/definitions/key-types';
+
 import { BaseModel } from '../base/base-model';
 import { HasMeetingId } from '../base/has-meeting-id';
 
@@ -12,16 +13,16 @@ export enum SpeakerState {
 }
 
 export enum SpeechState {
-    PRO = 'pro',
-    CONTRA = 'contra',
-    CONTRIBUTION = 'contribution'
+    PRO = `pro`,
+    CONTRA = `contra`,
+    CONTRIBUTION = `contribution`
 }
 
 /**
  * Representation of a speaker in a list of speakers.
  */
 export class Speaker extends BaseModel<Speaker> {
-    public static COLLECTION = 'speaker';
+    public static COLLECTION = `speaker`;
 
     public id: Id;
 

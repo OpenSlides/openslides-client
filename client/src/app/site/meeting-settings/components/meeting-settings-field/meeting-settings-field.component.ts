@@ -10,12 +10,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-
-import * as moment from 'moment';
-import { Moment } from 'moment';
-import { Observable } from 'rxjs';
-import { distinctUntilChanged, filter, map } from 'rxjs/operators';
-
+import { TranslateService } from '@ngx-translate/core';
 import { CollectionMapperService } from 'app/core/core-services/collection-mapper.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -24,6 +19,11 @@ import { OrganizationSettingsService } from 'app/core/ui-services/organization-s
 import { ParentErrorStateMatcher } from 'app/shared/parent-error-state-matcher';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewGroup } from 'app/site/users/models/view-group';
+import * as moment from 'moment';
+import { Moment } from 'moment';
+import { Observable } from 'rxjs';
+import { distinctUntilChanged, filter, map } from 'rxjs/operators';
+
 import { SettingsItem } from '../../../../core/repositories/management/meeting-settings-definition';
 
 export interface SettingsFieldUpdate {
@@ -41,9 +41,9 @@ export interface SettingsFieldUpdate {
  * ```
  */
 @Component({
-    selector: 'os-meeting-settings-field',
-    templateUrl: './meeting-settings-field.component.html',
-    styleUrls: ['./meeting-settings-field.component.scss'],
+    selector: `os-meeting-settings-field`,
+    templateUrl: `./meeting-settings-field.component.html`,
+    styleUrls: [`./meeting-settings-field.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None // to style the date and time pickers
 })
@@ -128,6 +128,7 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private formBuilder: FormBuilder,
         private cd: ChangeDetectorRef,
         private groupRepo: GroupRepositoryService,
@@ -135,7 +136,7 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
         private mapper: CollectionMapperService,
         private orgaSettings: OrganizationSettingsService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     /**
@@ -166,17 +167,17 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
         }
 
         this.form = this.formBuilder.group({
-            value: ['', this.setting.validators ?? []],
-            date: [''],
-            time: ['']
+            value: [``, this.setting.validators ?? []],
+            date: [``],
+            time: [``]
         });
         this.translatedValue = this.value ?? this.meetingSettingsDefinitionProvider.getDefaultValue(this.setting);
-        if (this.setting.type === 'string' || this.setting.type === 'markupText' || this.setting.type === 'text') {
-            if (typeof this.value === 'string' && this.value !== '') {
+        if (this.setting.type === `string` || this.setting.type === `markupText` || this.setting.type === `text`) {
+            if (typeof this.value === `string` && this.value !== ``) {
                 this.translatedValue = this.translate.instant(this.value);
             }
         }
-        if ((this.setting.type === 'datetime' || this.setting.type === 'date') && this.value) {
+        if ((this.setting.type === `datetime` || this.setting.type === `date`) && this.value) {
             const datetimeObj = this.getRestrictedValue(this.unixToDateAndTime(this.value as number));
             this.form.patchValue(datetimeObj);
         }
@@ -188,7 +189,7 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
             // This checks for discting content
             .pipe(
                 distinctUntilChanged((previous, next) => {
-                    if (this.setting.type === 'groups') {
+                    if (this.setting.type === `groups`) {
                         return JSON.stringify(this._firstValue) === JSON.stringify(next.value);
                     }
                     return JSON.stringify(previous) === JSON.stringify(next);
@@ -211,7 +212,7 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
         if (this.setting.restrictionFn) {
             return this.setting.restrictionFn(this.orgaSettings, value);
         }
-        if (typeof value === 'number') {
+        if (typeof value === `number`) {
             value = value.toString() as any;
         }
         return value;
@@ -226,7 +227,7 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
      */
     private unixToDateAndTime(unix: number): { date: Moment; time: string } {
         const date = moment.unix(unix);
-        const time = date.hours() + ':' + date.minutes();
+        const time = date.hours() + `:` + date.minutes();
         return { date, time };
     }
 
@@ -241,7 +242,7 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
     private dateAndTimeToUnix(date: Moment, time: string): number {
         if (date) {
             if (time) {
-                const timeSplit = time.split(':');
+                const timeSplit = time.split(`:`);
                 // + is faster than parseint and number(). ~~ would be fastest but prevented by linter...
                 date.hour(+timeSplit[0]);
                 date.minute(+timeSplit[1]);
@@ -257,17 +258,17 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
      */
     private onChange(value: any): void {
         switch (this.setting.type) {
-            case 'markupText':
+            case `markupText`:
                 // tinyMCE markuptext does not autoupdate on change, only when entering or leaving
                 return;
-            case 'date':
-            case 'datetime':
+            case `date`:
+            case `datetime`:
                 // datetime has to be converted
-                const date = this.form.get('date').value;
-                const time = this.form.get('time').value;
+                const date = this.form.get(`date`).value;
+                const time = this.form.get(`time`).value;
                 value = this.dateAndTimeToUnix(date, time);
                 break;
-            case 'groups':
+            case `groups`:
                 // we have to check here explicitly if nothing changed because of the search value selector
                 const newS = new Set(value);
                 const oldS = new Set(this._firstValue);
@@ -275,11 +276,11 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
                     return;
                 }
                 break;
-            case 'integer':
+            case `integer`:
                 // convert to an actual integer
                 value = +value;
                 break;
-            case 'choice':
+            case `choice`:
                 // if choicesFunc is set, the keys are ids and therefore need to be converted to ints
                 if (this.setting.choicesFunc) {
                     value = +value;
@@ -315,12 +316,12 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
      */
     public formType(type: string): string {
         switch (type) {
-            case 'integer':
-                return 'number';
-            case 'colorpicker':
-                return 'color';
+            case `integer`:
+                return `number`;
+            case `colorpicker`:
+                return `color`;
             default:
-                return 'text';
+                return `text`;
         }
     }
 
@@ -332,7 +333,7 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
      * @returns wheather it should be excluded or not
      */
     public isExcludedType(type: string): boolean {
-        const excluded = ['boolean', 'markupText', 'text', 'translations', 'datetime', 'date'];
+        const excluded = [`boolean`, `markupText`, `text`, `translations`, `datetime`, `date`];
         return excluded.includes(type);
     }
 
@@ -346,7 +347,7 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
         return {
             ...this.tinyMceSettings,
             setup: editor => {
-                editor.on('Blur', ev => {
+                editor.on(`Blur`, ev => {
                     if (ev.target.getContent() !== this.translatedValue) {
                         this.sendUpdate(ev.target.getContent());
                     }

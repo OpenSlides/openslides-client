@@ -18,29 +18,29 @@ export const particleConfig = {
         }
     },
     customImageShape: {
-        type: 'image',
+        type: `image`,
         image: {
             replace_color: false,
             replaceColor: false,
-            src: '',
+            src: ``,
             width: 24,
             height: 24
         }
     },
     charShapeHearth: {
-        type: 'char',
+        type: `char`,
         options: {
             char: {
                 fill: true,
-                value: ['❤'],
+                value: [`❤`],
                 /**
                  * has to be here due to a bug
                  * TRACK: https://github.com/matteobruni/tsparticles/issues/1087
                  * ---
                  */
-                font: 'Verdana',
-                weight: '200',
-                style: ''
+                font: `Verdana`,
+                weight: `200`,
+                style: ``
                 /** --- */
             }
         }
@@ -54,7 +54,7 @@ export const particleConfig = {
     },
     moveUpOptions: {
         enable: true,
-        direction: 'top',
+        direction: `top`,
         speed: 1.0,
         angle: {
             offset: 45,
@@ -66,15 +66,15 @@ export const particleConfig = {
             acceleration: -3
         },
         outModes: {
-            left: 'bounce',
-            right: 'bounce',
-            top: 'destroy'
+            left: `bounce`,
+            right: `bounce`,
+            top: `destroy`
         }
     },
     slowRandomRotation: {
         value: 0,
         enable: true,
-        direction: 'random',
+        direction: `random`,
         animation: {
             enable: true,
             speed: 9
@@ -85,11 +85,11 @@ export const particleConfig = {
         }
     },
     randomColor: {
-        value: 'random'
+        value: `random`
     },
     singleBottomEmitter: [
         {
-            direction: 'top',
+            direction: `top`,
             rate: {
                 quantity: 0,
                 delay: 0.33

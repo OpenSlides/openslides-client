@@ -1,11 +1,11 @@
 import { Directive, OnDestroy } from '@angular/core';
-
+import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition, PblDataSource } from '@pebula/ngrid';
-
 import { StorageService } from 'app/core/core-services/storage.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { BaseModelContextComponent } from './base-model-context.component';
+
 import { BaseViewModel } from '../base-view-model';
+import { BaseModelContextComponent } from './base-model-context.component';
 
 @Directive()
 export abstract class BaseListViewComponent<V extends BaseViewModel>
@@ -42,19 +42,19 @@ export abstract class BaseListViewComponent<V extends BaseViewModel>
     /**
      * NGrid column width for single buttons
      */
-    public singleButtonWidth = '40px';
+    public singleButtonWidth = `40px`;
 
     /**
      * NGrid column width for single buttons with badge
      */
-    public badgeButtonWidth = '45px';
+    public badgeButtonWidth = `45px`;
 
     protected get storage(): StorageService {
         return this.componentServiceCollector.storage;
     }
 
-    public constructor(componentServiceCollector: ComponentServiceCollector) {
-        super(componentServiceCollector);
+    public constructor(componentServiceCollector: ComponentServiceCollector, protected translate: TranslateService) {
+        super(componentServiceCollector, translate);
         this.selectedRows = [];
     }
 

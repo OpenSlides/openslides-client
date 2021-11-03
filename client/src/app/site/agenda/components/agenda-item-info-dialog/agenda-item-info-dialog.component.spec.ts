@@ -1,11 +1,10 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { AgendaItemInfoDialogComponent } from './agenda-item-info-dialog.component';
 
-describe('AgendaItemInfoDialogComponent', () => {
+describe(`AgendaItemInfoDialogComponent`, () => {
     let component: AgendaItemInfoDialogComponent;
     let fixture: ComponentFixture<AgendaItemInfoDialogComponent>;
 
@@ -31,7 +30,7 @@ describe('AgendaItemInfoDialogComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

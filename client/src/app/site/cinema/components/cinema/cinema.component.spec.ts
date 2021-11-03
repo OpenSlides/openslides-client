@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { CinemaComponent } from './cinema.component';
 
-describe('CinemaComponent', () => {
+describe(`CinemaComponent`, () => {
     let component: CinemaComponent;
     let fixture: ComponentFixture<CinemaComponent>;
 
@@ -23,7 +22,7 @@ describe('CinemaComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

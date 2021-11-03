@@ -12,7 +12,6 @@ import {
     Renderer2,
     SimpleChanges
 } from '@angular/core';
-
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { LineRange, ModificationType } from 'app/core/ui-services/diff.service';
@@ -48,9 +47,9 @@ import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-mot
  * ```
  */
 @Component({
-    selector: 'os-motion-detail-original-change-recommendations',
-    templateUrl: './motion-detail-original-change-recommendations.component.html',
-    styleUrls: ['./motion-detail-original-change-recommendations.component.scss'],
+    selector: `os-motion-detail-original-change-recommendations`,
+    templateUrl: `./motion-detail-original-change-recommendations.component.html`,
+    styleUrls: [`./motion-detail-original-change-recommendations.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MotionDetailOriginalChangeRecommendationsComponent implements OnInit, OnChanges, DoCheck {
@@ -117,19 +116,19 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
      */
     public ngOnInit(): void {
         const nativeElement = <Element>this.el.nativeElement;
-        this.element = <Element>nativeElement.querySelector('.text');
+        this.element = <Element>nativeElement.querySelector(`.text`);
 
-        this.renderer.listen(this.el.nativeElement, 'click', (ev: MouseEvent) => {
+        this.renderer.listen(this.el.nativeElement, `click`, (ev: MouseEvent) => {
             const element = <Element>ev.target;
-            if (element.classList.contains('os-line-number') && element.classList.contains('selectable')) {
-                this.clickedLineNumber(parseInt(element.getAttribute('data-line-number'), 10));
+            if (element.classList.contains(`os-line-number`) && element.classList.contains(`selectable`)) {
+                this.clickedLineNumber(parseInt(element.getAttribute(`data-line-number`), 10));
             }
         });
 
-        this.renderer.listen(this.el.nativeElement, 'mouseover', (ev: MouseEvent) => {
+        this.renderer.listen(this.el.nativeElement, `mouseover`, (ev: MouseEvent) => {
             const element = <Element>ev.target;
-            if (element.classList.contains('os-line-number') && element.classList.contains('selectable')) {
-                this.hoverLineNumber(parseInt(element.getAttribute('data-line-number'), 10));
+            if (element.classList.contains(`os-line-number`) && element.classList.contains(`selectable`)) {
+                this.hoverLineNumber(parseInt(element.getAttribute(`data-line-number`), 10));
             }
         });
 
@@ -157,9 +156,9 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
      */
     public calcRecoTop(reco: ViewMotionChangeRecommendation): string {
         const from = <HTMLElement>(
-            this.element.querySelector('.os-line-number.line-number-' + reco.line_from.toString(10))
+            this.element.querySelector(`.os-line-number.line-number-` + reco.line_from.toString(10))
         );
-        return from.offsetTop.toString() + 'px';
+        return from.offsetTop.toString() + `px`;
     }
 
     /**
@@ -168,14 +167,14 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
      */
     public calcRecoHeight(reco: ViewMotionChangeRecommendation): string {
         const from = <HTMLElement>(
-            this.element.querySelector('.os-line-number.line-number-' + reco.line_from.toString(10))
+            this.element.querySelector(`.os-line-number.line-number-` + reco.line_from.toString(10))
         );
-        const to = <HTMLElement>this.element.querySelector('.os-line-number.line-number-' + reco.line_to.toString(10));
+        const to = <HTMLElement>this.element.querySelector(`.os-line-number.line-number-` + reco.line_to.toString(10));
         if (to) {
-            return (to.offsetTop - from.offsetTop).toString() + 'px';
+            return (to.offsetTop - from.offsetTop).toString() + `px`;
         } else {
             // Last line - lets assume a realistic value
-            return '20px';
+            return `20px`;
         }
     }
 
@@ -246,17 +245,17 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
             this.can_manage = false;
             this.selectedFrom = null;
             if (this.element) {
-                Array.from(this.element.querySelectorAll('.os-line-number')).forEach((lineNumber: Element) => {
-                    lineNumber.classList.remove('selectable');
-                    lineNumber.classList.remove('selected');
+                Array.from(this.element.querySelectorAll(`.os-line-number`)).forEach((lineNumber: Element) => {
+                    lineNumber.classList.remove(`selectable`);
+                    lineNumber.classList.remove(`selected`);
                 });
             }
         }
     }
 
     private setLineNumberCache(): void {
-        Array.from(this.element.querySelectorAll('.os-line-number')).forEach((lineNumberEl: Element) => {
-            const lineNumber = parseInt(lineNumberEl.getAttribute('data-line-number'), 10);
+        Array.from(this.element.querySelectorAll(`.os-line-number`)).forEach((lineNumberEl: Element) => {
+            const lineNumber = parseInt(lineNumberEl.getAttribute(`data-line-number`), 10);
             if (this.minLineNo === null || lineNumber < this.minLineNo) {
                 this.minLineNo = lineNumber;
             }
@@ -292,12 +291,12 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
         }
 
         const alreadyAffectedLines = this.getAffectedLineNumbers();
-        Array.from(this.element.querySelectorAll('.os-line-number')).forEach((lineNumber: Element) => {
-            lineNumber.classList.remove('selected');
-            if (alreadyAffectedLines.indexOf(parseInt(lineNumber.getAttribute('data-line-number'), 10)) === -1) {
-                lineNumber.classList.add('selectable');
+        Array.from(this.element.querySelectorAll(`.os-line-number`)).forEach((lineNumber: Element) => {
+            lineNumber.classList.remove(`selected`);
+            if (alreadyAffectedLines.indexOf(parseInt(lineNumber.getAttribute(`data-line-number`), 10)) === -1) {
+                lineNumber.classList.add(`selectable`);
             } else {
-                lineNumber.classList.remove('selectable');
+                lineNumber.classList.remove(`selectable`);
             }
         });
     }
@@ -337,15 +336,15 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
         if (this.selectedFrom === null) {
             return;
         }
-        Array.from(this.element.querySelectorAll('.os-line-number')).forEach((lineNumber: Element) => {
-            const line = parseInt(lineNumber.getAttribute('data-line-number'), 10);
+        Array.from(this.element.querySelectorAll(`.os-line-number`)).forEach((lineNumber: Element) => {
+            const line = parseInt(lineNumber.getAttribute(`data-line-number`), 10);
             if (
                 (line >= this.selectedFrom && line <= lineNumberHovered) ||
                 (line >= lineNumberHovered && line <= this.selectedFrom)
             ) {
-                lineNumber.classList.add('selected');
+                lineNumber.classList.add(`selected`);
             } else {
-                lineNumber.classList.remove('selected');
+                lineNumber.classList.remove(`selected`);
             }
         });
     }

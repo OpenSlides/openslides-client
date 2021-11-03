@@ -1,5 +1,4 @@
 import { Directive, ElementRef, Input, OnInit } from '@angular/core';
-
 import { ResizeSensor } from 'css-element-queries';
 import { Subject } from 'rxjs';
 
@@ -7,7 +6,7 @@ import { Subject } from 'rxjs';
  * Directive to check, if the `ScrollHeight` of the underlying element has changed.
  */
 @Directive({
-    selector: '[osHeightResizing]'
+    selector: `[osHeightResizing]`
 })
 export class HeightResizingDirective implements OnInit {
     /**

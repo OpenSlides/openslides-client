@@ -1,20 +1,19 @@
 import { Injectable } from '@angular/core';
-
 import { BehaviorSubject, Subject } from 'rxjs';
 
 import { ChangeRecoMode, LineNumberingMode } from '../../motions.constants';
 
 export enum ModifiedFinalVersionAction {
-    CANCEL = 'cancel',
-    EDIT = 'edit',
-    SAVE = 'save'
+    CANCEL = `cancel`,
+    EDIT = `edit`,
+    SAVE = `save`
 }
 
 /**
  * A service, that handles some view-related properties of motions.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MotionViewService {
     public get currentLineNumberingMode(): LineNumberingMode {

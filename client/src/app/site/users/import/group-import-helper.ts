@@ -1,15 +1,15 @@
+import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'app/core/definitions/key-types';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { CsvMapping } from 'app/core/ui-services/base-import.service';
 import { User } from 'app/shared/models/users/user';
-import { ImportResolveInformation } from 'app/shared/utils/import/import-resolve-information';
-import { TranslateService } from '@ngx-translate/core';
 import { BaseBeforeImportHandler } from 'app/shared/utils/import/base-before-import-handler';
+import { ImportResolveInformation } from 'app/shared/utils/import/import-resolve-information';
 
 export class GroupImportHelper extends BaseBeforeImportHandler<User> {
     public constructor(private repo: GroupRepositoryService, translate: TranslateService) {
         super({
-            idProperty: 'group_ids',
+            idProperty: `group_ids`,
             translateFn: translate.instant,
             repo
         });
@@ -21,7 +21,7 @@ export class GroupImportHelper extends BaseBeforeImportHandler<User> {
             return result;
         }
 
-        const groupArray = name.split(',');
+        const groupArray = name.split(`,`);
         for (let group of groupArray) {
             group = group.trim();
             const existingGroup = this.repo.getViewModelList().find(groupInRepo => groupInRepo.name === group);
@@ -41,7 +41,7 @@ export class GroupImportHelper extends BaseBeforeImportHandler<User> {
         const result: ImportResolveInformation<User> = {
             model: item,
             unresolvedModels: 0,
-            verboseName: 'Groups'
+            verboseName: `Groups`
         };
         const property = item[propertyName];
         const ids: Id[] = [];

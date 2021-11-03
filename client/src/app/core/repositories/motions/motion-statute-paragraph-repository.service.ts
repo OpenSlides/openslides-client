@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-
 import { MotionStatuteParagraphAction } from 'app/core/actions/motion-statue-paragraph-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Id } from 'app/core/definitions/key-types';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { MotionStatuteParagraph } from 'app/shared/models/motions/motion-statute-paragraph';
 import { ViewMotionStatuteParagraph } from 'app/site/motions/models/view-motion-statute-paragraph';
+
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
@@ -17,7 +17,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
  * them to the Server.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MotionStatuteParagraphRepositoryService extends BaseRepositoryWithActiveMeeting<
     ViewMotionStatuteParagraph,
@@ -29,7 +29,7 @@ export class MotionStatuteParagraphRepositoryService extends BaseRepositoryWithA
 
     public getFieldsets(): Fieldsets<MotionStatuteParagraph> {
         return {
-            [DEFAULT_FIELDSET]: ['title', 'text', 'weight']
+            [DEFAULT_FIELDSET]: [`title`, `text`, `weight`]
         };
     }
 
@@ -69,7 +69,7 @@ export class MotionStatuteParagraphRepositoryService extends BaseRepositoryWithA
     public getTitle = (viewMotionStatuteParagraph: ViewMotionStatuteParagraph) => viewMotionStatuteParagraph.title;
 
     public getVerboseName = (plural: boolean = false) =>
-        this.translate.instant(plural ? 'Statute paragraphs' : 'Statute paragraph');
+        this.translate.instant(plural ? `Statute paragraphs` : `Statute paragraph`);
 
     private getCreatePayload(
         partialStatuteParagraph: Partial<MotionStatuteParagraph>

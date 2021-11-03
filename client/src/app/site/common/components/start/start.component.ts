@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { TranslateService } from '@ngx-translate/core';
 import { MeetingAction } from 'app/core/actions/meeting-action';
 import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
@@ -15,9 +15,9 @@ import { BaseModelContextComponent } from 'app/site/base/components/base-model-c
  * The start component. Greeting page for OpenSlides
  */
 @Component({
-    selector: 'os-start',
-    templateUrl: './start.component.html',
-    styleUrls: ['./start.component.scss']
+    selector: `os-start`,
+    templateUrl: `./start.component.html`,
+    styleUrls: [`./start.component.scss`]
 })
 export class StartComponent extends BaseModelContextComponent implements OnInit {
     /**
@@ -36,30 +36,31 @@ export class StartComponent extends BaseModelContextComponent implements OnInit 
      * Holding the values for the content.
      */
     public startContent: Partial<MeetingAction.OptionalUpdatePayload> = {
-        welcome_title: '',
-        welcome_text: ''
+        welcome_title: ``,
+        welcome_text: ``
     };
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private meetingSettingsService: MeetingSettingsService,
         private activeMeetingService: ActiveMeetingService,
         private meetingRepositoryService: MeetingRepositoryService,
         private formBuilder: FormBuilder,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
         this.startForm = this.formBuilder.group({
-            welcome_title: ['', Validators.required],
-            welcome_text: ''
+            welcome_title: [``, Validators.required],
+            welcome_text: ``
         });
 
         // set the welcome title
         this.subscriptions.push(
-            this.meetingSettingsService.get('welcome_title').subscribe(welcomeTitle => {
+            this.meetingSettingsService.get(`welcome_title`).subscribe(welcomeTitle => {
                 this.startContent.welcome_title = welcomeTitle;
             }),
-            this.meetingSettingsService.get('welcome_text').subscribe(welcomeText => {
+            this.meetingSettingsService.get(`welcome_text`).subscribe(welcomeText => {
                 this.startContent.welcome_text = this.translate.instant(welcomeText);
             }),
             this.activeMeetingService.meetingObservable.subscribe(meeting => {
@@ -74,7 +75,7 @@ export class StartComponent extends BaseModelContextComponent implements OnInit 
      * Sets the welcomeTitle and welcomeText.
      */
     public ngOnInit(): void {
-        super.setTitle('Home');
+        super.setTitle(`Home`);
         this.requestUpdates();
     }
 
@@ -82,7 +83,7 @@ export class StartComponent extends BaseModelContextComponent implements OnInit 
         this.requestModels({
             viewModelCtor: ViewMeeting,
             ids: [this.activeMeetingService.meetingId],
-            fieldset: 'startPage'
+            fieldset: `startPage`
         });
     }
 

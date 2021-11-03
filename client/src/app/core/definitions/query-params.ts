@@ -16,12 +16,12 @@ export interface QueryParams {
 export function formatQueryParams(queryParams: QueryParams = {}): string {
     if (!queryParams) {
         // handle null
-        return '';
+        return ``;
     }
-    let params = '';
+    let params = ``;
     const keys: string[] = Object.keys(queryParams);
     if (keys.length > 0) {
-        params = '?' + keys.map(key => key + '=' + queryParams[key].toString()).join('&');
+        params = `?` + keys.map(key => key + `=` + queryParams[key].toString()).join(`&`);
     }
     return params;
 }

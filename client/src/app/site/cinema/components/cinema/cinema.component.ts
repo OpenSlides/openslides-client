@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import { TranslateService } from '@ngx-translate/core';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
@@ -14,14 +14,14 @@ import { HasProjectorTitle } from 'app/site/base/projectable';
 import { ViewProjection } from 'app/site/projector/models/view-projection';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 import {
-    CurrentListOfSpeakersService,
-    CURRENT_LIST_OF_SPEAKERS_FOLLOW
+    CURRENT_LIST_OF_SPEAKERS_FOLLOW,
+    CurrentListOfSpeakersService
 } from 'app/site/projector/services/current-list-of-speakers.service';
 
 @Component({
-    selector: 'os-cinema',
-    templateUrl: './cinema.component.html',
-    styleUrls: ['./cinema.component.scss']
+    selector: `os-cinema`,
+    templateUrl: `./cinema.component.html`,
+    styleUrls: [`./cinema.component.scss`]
 })
 export class CinemaComponent extends BaseModelContextComponent implements OnInit {
     public listOfSpeakers: ViewListOfSpeakers;
@@ -40,19 +40,19 @@ export class CinemaComponent extends BaseModelContextComponent implements OnInit
         } else if (this.currentProjection) {
             return this.currentProjection.getTitle();
         } else {
-            return '';
+            return ``;
         }
     }
 
     public get projectorTitle(): string {
-        return this.projector?.getTitle() || '';
+        return this.projector?.getTitle() || ``;
     }
 
     public get closUrl(): string {
         if (this.listOfSpeakers && this.operator.hasPerms(this.permission.listOfSpeakersCanManage)) {
             return this.listOfSpeakers?.listOfSpeakersUrl;
         } else {
-            return '';
+            return ``;
         }
     }
 
@@ -64,7 +64,7 @@ export class CinemaComponent extends BaseModelContextComponent implements OnInit
         if (this.projectedViewModel && isDetailNavigable(this.projectedViewModel)) {
             return (this.projectedViewModel as DetailNavigable).getDetailStateURL();
         } else {
-            return '';
+            return ``;
         }
     }
 
@@ -76,26 +76,27 @@ export class CinemaComponent extends BaseModelContextComponent implements OnInit
                 return `/projector/${this.projector.id}`;
             }
         } else {
-            return '';
+            return ``;
         }
     }
 
     public get projectionTarget(): '_blank' | '_self' {
         if (this.operator.hasPerms(this.permission.projectorCanManage)) {
-            return '_self';
+            return `_self`;
         } else {
-            return '_blank';
+            return `_blank`;
         }
     }
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private operator: OperatorService,
         projectorRepo: ProjectorRepositoryService,
         closService: CurrentListOfSpeakersService,
         private listOfSpeakersRepo: ListOfSpeakersRepositoryService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
 
         this.subscriptions.push(
             projectorRepo.getReferenceProjectorObservable().subscribe(refProjector => {
@@ -112,7 +113,7 @@ export class CinemaComponent extends BaseModelContextComponent implements OnInit
 
     public ngOnInit(): void {
         super.ngOnInit();
-        super.setTitle('Autopilot');
+        super.setTitle(`Autopilot`);
     }
 
     public async toggleListOfSpeakersOpen(): Promise<void> {
@@ -132,7 +133,7 @@ export class CinemaComponent extends BaseModelContextComponent implements OnInit
             viewModelCtor: ViewMeeting,
             ids: [this.activeMeetingId],
             follow: [CURRENT_LIST_OF_SPEAKERS_FOLLOW],
-            fieldset: ''
+            fieldset: ``
         };
     }
 }

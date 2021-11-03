@@ -1,33 +1,32 @@
 import { Injectable } from '@angular/core';
-
 import { TranslateService } from '@ngx-translate/core';
-
 import { HistoryService } from 'app/core/core-services/history.service';
 import { StorageService } from 'app/core/core-services/storage.service';
-import { BaseSortListService } from 'app/core/ui-services/base-sort-list.service';
 import { OsSortingDefinition, OsSortingOption } from 'app/core/ui-services/base-sort.service';
+import { BaseSortListService } from 'app/core/ui-services/base-sort-list.service';
+
 import { ViewAssignment } from '../models/view-assignment';
 
 /**
  * Sorting service for the assignment list
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AssignmentSortListService extends BaseSortListService<ViewAssignment> {
     /**
      * set the storage key name
      */
-    protected storageKey = 'AssignmentList';
+    protected storageKey = `AssignmentList`;
 
     /**
      * Define the sort options
      */
     private assignmentSortOptions: OsSortingOption<ViewAssignment>[] = [
-        { property: 'title', label: 'Name' },
-        { property: 'phase', label: 'Phase' },
-        { property: 'candidateAmount', label: 'Number of candidates' },
-        { property: 'id', label: 'Creation date' }
+        { property: `title`, label: `Name` },
+        { property: `phase`, label: `Phase` },
+        { property: `candidateAmount`, label: `Number of candidates` },
+        { property: `id`, label: `Creation date` }
     ];
 
     /**
@@ -54,7 +53,7 @@ export class AssignmentSortListService extends BaseSortListService<ViewAssignmen
      */
     public async getDefaultDefinition(): Promise<OsSortingDefinition<ViewAssignment>> {
         return {
-            sortProperty: 'title',
+            sortProperty: `title`,
             sortAscending: true
         };
     }

@@ -1,24 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-
-import { Subscription } from 'rxjs';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { LinenumberingService } from 'app/core/ui-services/linenumbering.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewUnifiedChange } from 'app/shared/models/motions/view-unified-change';
 import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
 import { ChangeRecoMode, LineNumberingMode, verboseChangeRecoMode } from 'app/site/motions/motions.constants';
-import { BaseMotionDetailChildComponent } from '../base/base-motion-detail-child.component';
+import { Subscription } from 'rxjs';
+
+import { ViewportService } from '../../../../../../core/ui-services/viewport.service';
 import { MotionServiceCollectorService } from '../../../services/motion-service-collector.service';
 import { ModifiedFinalVersionAction } from '../../../services/motion-view.service';
-import { ViewportService } from '../../../../../../core/ui-services/viewport.service';
+import { BaseMotionDetailChildComponent } from '../base/base-motion-detail-child.component';
 
 @Component({
-    selector: 'os-motion-highlight-form',
-    templateUrl: './motion-highlight-form.component.html',
-    styleUrls: ['./motion-highlight-form.component.scss']
+    selector: `os-motion-highlight-form`,
+    templateUrl: `./motion-highlight-form.component.html`,
+    styleUrls: [`./motion-highlight-form.component.scss`]
 })
 export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent implements OnInit {
     public readonly LineNumberingMode = LineNumberingMode;
@@ -98,19 +98,20 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         motionServiceCollector: MotionServiceCollectorService,
         private linenumberingService: LinenumberingService,
         private promptService: PromptService,
         private vpService: ViewportService
     ) {
-        super(componentServiceCollector, motionServiceCollector);
+        super(componentServiceCollector, translate, motionServiceCollector);
     }
 
     public ngOnInit(): void {
         const self = this;
         this.highlightedLineMatcher = new (class implements ErrorStateMatcher {
             public isErrorState(control: FormControl): boolean {
-                const value: string = control && control.value ? control.value + '' : '';
+                const value: string = control && control.value ? control.value + `` : ``;
                 const maxLineNumber = self.motionLineNumbering.getLastLineNumber(self.motion, self.lineLength);
                 return value.match(/[^\d]/) !== null || parseInt(value, 10) >= maxLineNumber;
             }
@@ -130,11 +131,11 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
         this.highlightedLine = line;
         // setTimeout necessary for DOM-operations to work
         window.setTimeout(() => {
-            const element = document.querySelector('mat-sidenav-content');
+            const element = document.querySelector(`mat-sidenav-content`);
 
             // We only scroll if it's not in the screen already
             const bounding = element
-                .querySelector('.os-line-number.line-number-' + line.toString(10))
+                .querySelector(`.os-line-number.line-number-` + line.toString(10))
                 .getBoundingClientRect();
             if (bounding.top >= 0 && bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight)) {
                 return;
@@ -144,11 +145,11 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
             // to make the selected line not stick at the very top of the screen, and to prevent it from being
             // conceiled from the header, we actually scroll to a element a little bit above.
             if (line > 4) {
-                target = element.querySelector('.os-line-number.line-number-' + (line - 4).toString(10));
+                target = element.querySelector(`.os-line-number.line-number-` + (line - 4).toString(10));
             } else {
-                target = element.querySelector('.title-line');
+                target = element.querySelector(`.title-line`);
             }
-            target.scrollIntoView({ behavior: 'smooth' });
+            target.scrollIntoView({ behavior: `smooth` });
         }, 1);
     }
 
@@ -157,7 +158,7 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
      */
     public async createModifiedFinalVersion(): Promise<void> {
         if (this.motion.isParagraphBasedAmendment()) {
-            throw new Error('Cannot create a final version of an amendment.');
+            throw new Error(`Cannot create a final version of an amendment.`);
         }
         // Get the final version and remove line numbers
         const changes: ViewUnifiedChange[] = this.getAllChangingObjectsSorted().filter(changingObject =>
@@ -185,10 +186,10 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
      * Deletes the modified final version
      */
     public async deleteModifiedFinalVersion(): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to delete the print template?');
+        const title = this.translate.instant(`Are you sure you want to delete the print template?`);
         if (await this.promptService.open(title)) {
             try {
-                await this.repo.update({ modified_final_version: '' }, this.motion);
+                await this.repo.update({ modified_final_version: `` }, this.motion);
                 this.setChangeRecoMode(this.determineCrMode(ChangeRecoMode.Diff));
             } catch (e) {
                 this.raiseError(e);
@@ -235,9 +236,9 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
     }
 
     public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === 'Enter') {
+        if (event.key === `Enter`) {
             this.gotoHighlightedLine(parseInt(this.highlightedLineTyping as string, 10));
-            this.highlightedLineTyping = '';
+            this.highlightedLineTyping = ``;
         }
     }
 
@@ -278,9 +279,9 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
     protected getSubscriptions(): Subscription[] {
         return [
             this.meetingSettingService
-                .get('motions_default_line_numbering')
+                .get(`motions_default_line_numbering`)
                 .subscribe(mode => this.setLineNumberingMode(mode)),
-            this.meetingSettingService.get('motions_recommendation_text_mode').subscribe(mode => {
+            this.meetingSettingService.get(`motions_recommendation_text_mode`).subscribe(mode => {
                 if (mode) {
                     this.setChangeRecoMode(this.determineCrMode(mode as ChangeRecoMode));
                 }

@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-
-import { AgendaItemRepositoryService } from '../agenda/agenda-item-repository.service';
 import { AssignmentAction } from 'app/core/actions/assignment-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Assignment } from 'app/shared/models/assignments/assignment';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { createAgendaItem } from 'app/shared/utils/create-agenda-item';
 import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
+
+import { AgendaItemRepositoryService } from '../agenda/agenda-item-repository.service';
 import { BaseIsAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-is-agenda-item-and-list-of-speakers-content-object-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
@@ -16,7 +16,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
  * Documentation partially provided in {@link BaseRepository}
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeakersContentObjectRepository<
     ViewAssignment,
@@ -30,14 +30,14 @@ export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeake
     }
 
     public getFieldsets(): Fieldsets<Assignment> {
-        const titleFields: (keyof Assignment)[] = ['title'];
-        const listFields: (keyof Assignment)[] = titleFields.concat(['open_posts', 'phase', 'candidate_ids']);
+        const titleFields: (keyof Assignment)[] = [`title`];
+        const listFields: (keyof Assignment)[] = titleFields.concat([`open_posts`, `phase`, `candidate_ids`]);
         return {
             [DEFAULT_FIELDSET]: listFields.concat([
-                'description',
-                'default_poll_description',
-                'number_poll_candidates',
-                'agenda_item_id'
+                `description`,
+                `default_poll_description`,
+                `number_poll_candidates`,
+                `agenda_item_id`
             ]),
             list: listFields,
             title: titleFields
@@ -69,7 +69,7 @@ export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeake
 
     public getTitle = (viewAssignment: ViewAssignment) => viewAssignment.title;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Elections' : 'Election');
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Elections` : `Election`);
 
     private getPartialPayload(model: Partial<ViewAssignment>): any {
         return {

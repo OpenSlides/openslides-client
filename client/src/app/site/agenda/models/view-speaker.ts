@@ -2,6 +2,7 @@ import { HasMeeting } from 'app/management/models/view-meeting';
 import { Speaker, SpeakerState } from 'app/shared/models/agenda/speaker';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { ViewUser } from 'app/site/users/models/view-user';
+
 import { ViewListOfSpeakers } from './view-list-of-speakers';
 
 /**
@@ -36,11 +37,11 @@ export class ViewSpeaker extends BaseViewModel<Speaker> {
     }
 
     public get name(): string {
-        return this.user ? this.user.full_name : '';
+        return this.user ? this.user.full_name : ``;
     }
 
     public get gender(): string {
-        return this.user ? this.user.gender : '';
+        return this.user ? this.user.gender : ``;
     }
 
     public getBeginTimeAsDate(): Date | null {

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { LineNumberingMode } from 'app/site/motions/motions.constants';
 
 /**
@@ -24,7 +23,7 @@ interface LineNumberObject {
  * ```
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class HtmlToPdfService {
     /**
@@ -52,22 +51,22 @@ export class HtmlToPdfService {
      */
     private elementStyles = {
         // should be the same for most HTML code
-        b: ['font-weight:bold'],
-        strong: ['font-weight:bold'],
-        u: ['text-decoration:underline'],
-        em: ['font-style:italic'],
-        i: ['font-style:italic'],
-        h1: ['font-size:14', 'font-weight:bold'],
-        h2: ['font-size:12', 'font-weight:bold'],
-        h3: ['font-size:10', 'font-weight:bold'],
-        h4: ['font-size:10', 'font-style:italic'],
-        h5: ['font-size:10'],
-        h6: ['font-size:10'],
-        a: ['color:blue', 'text-decoration:underline'],
-        strike: ['text-decoration:line-through'],
+        b: [`font-weight:bold`],
+        strong: [`font-weight:bold`],
+        u: [`text-decoration:underline`],
+        em: [`font-style:italic`],
+        i: [`font-style:italic`],
+        h1: [`font-size:14`, `font-weight:bold`],
+        h2: [`font-size:12`, `font-weight:bold`],
+        h3: [`font-size:10`, `font-weight:bold`],
+        h4: [`font-size:10`, `font-style:italic`],
+        h5: [`font-size:10`],
+        h6: [`font-size:10`],
+        a: [`color:blue`, `text-decoration:underline`],
+        strike: [`text-decoration:line-through`],
         // Pretty specific stuff that might be excluded for other projects than OpenSlides
-        del: ['color:red', 'text-decoration:line-through'],
-        ins: ['color:green', 'text-decoration:underline']
+        del: [`color:red`, `text-decoration:line-through`],
+        ins: [`color:green`, `text-decoration:underline`]
     };
 
     /**
@@ -75,9 +74,9 @@ export class HtmlToPdfService {
      * Checking CSS is not possible
      */
     private classStyles = {
-        delete: ['color:red', 'text-decoration:line-through'],
-        insert: ['color:green', 'text-decoration:underline'],
-        paragraphcontext: ['color:grey']
+        delete: [`color:red`, `text-decoration:line-through`],
+        insert: [`color:green`, `text-decoration:underline`],
+        paragraphcontext: [`color:grey`]
     };
 
     /**
@@ -93,12 +92,12 @@ export class HtmlToPdfService {
      */
     private getMarginTop(nodeName: string): number {
         switch (nodeName) {
-            case 'h1':
-            case 'h2':
-            case 'h3':
-            case 'h4':
-            case 'h5':
-            case 'h6': {
+            case `h1`:
+            case `h2`:
+            case `h3`:
+            case `h4`:
+            case `h5`:
+            case `h6`: {
                 return this.H_MARGIN_TOP;
             }
             default: {
@@ -115,15 +114,15 @@ export class HtmlToPdfService {
      */
     private getMarginBottom(nodeName: string): number {
         switch (nodeName) {
-            case 'h1':
-            case 'h2':
-            case 'h3':
-            case 'h4':
-            case 'h5':
-            case 'h6': {
+            case `h1`:
+            case `h2`:
+            case `h3`:
+            case `h4`:
+            case `h5`:
+            case `h6`: {
                 return this.P_MARGIN_BOTTOM;
             }
-            case 'li': {
+            case `li`: {
                 return this.P_MARGIN_BOTTOM;
             }
             default: {
@@ -161,7 +160,7 @@ export class HtmlToPdfService {
 
         // Create a HTML DOM tree out of html string
         const parser = new DOMParser();
-        const parsedHtml = parser.parseFromString(htmlText, 'text/html');
+        const parsedHtml = parser.parseFromString(htmlText, `text/html`);
         // Since the spread operator did not work for HTMLCollection, use Array.from
         const htmlArray = Array.from(parsedHtml.body.childNodes) as Element[];
 
@@ -197,20 +196,20 @@ export class HtmlToPdfService {
 
         // to leave out plain text elements
         if (element.getAttribute) {
-            const nodeStyle = element.getAttribute('style');
-            const nodeClass = element.getAttribute('class');
+            const nodeStyle = element.getAttribute(`style`);
+            const nodeClass = element.getAttribute(`class`);
 
             // add styles like `color:#ff00ff` content into styles array
             if (nodeStyle) {
                 styles = nodeStyle
-                    .split(';')
-                    .map(style => style.replace(/\s/g, ''))
+                    .split(`;`)
+                    .map(style => style.replace(/\s/g, ``))
                     .concat(styles);
             }
 
             // Handle CSS classes
             if (nodeClass) {
-                classes = nodeClass.toLowerCase().split(' ');
+                classes = nodeClass.toLowerCase().split(` `);
 
                 for (const cssClass of classes) {
                     if (this.classStyles[cssClass]) {
@@ -223,27 +222,27 @@ export class HtmlToPdfService {
         }
 
         switch (nodeName) {
-            case 'h1':
-            case 'h2':
-            case 'h3':
-            case 'h4':
-            case 'h5':
-            case 'h6':
-            case 'li':
-            case 'p':
-            case 'div': {
+            case `h1`:
+            case `h2`:
+            case `h3`:
+            case `h4`:
+            case `h5`:
+            case `h6`:
+            case `li`:
+            case `p`:
+            case `div`: {
                 const children = this.parseChildren(element, styles);
 
                 if (
                     this.lineNumberingMode === LineNumberingMode.Outside &&
-                    !classes.includes('insert') &&
-                    !(nodeName === 'li' && directChildIsCrNode)
+                    !classes.includes(`insert`) &&
+                    !(nodeName === `li` && directChildIsCrNode)
                 ) {
                     //
-                    newParagraph = this.create('stack');
+                    newParagraph = this.create(`stack`);
                     newParagraph.stack = children;
                 } else {
-                    newParagraph = this.create('text');
+                    newParagraph = this.create(`text`);
                     newParagraph.text = children;
                 }
 
@@ -256,19 +255,19 @@ export class HtmlToPdfService {
                 if (this.lineNumberingMode === LineNumberingMode.Outside) {
                     // that is usually the case for inserted change which should appear
                     // under a set of line numbers with correct alignment
-                    if (classes.includes('insert')) {
+                    if (classes.includes(`insert`)) {
                         newParagraph.margin[0] = 20;
                         newParagraph.margin[3] = this.P_MARGIN_BOTTOM;
                     }
                 }
 
                 // stop enumeration if the list was inserted
-                if (classes.includes('os-split-before')) {
-                    newParagraph.listType = 'none';
+                if (classes.includes(`os-split-before`)) {
+                    newParagraph.listType = `none`;
                 }
 
                 // if the list ends (usually due to a new insert cr) prevent margins
-                if (classes.includes('os-split-after') || this.withSublist(element)) {
+                if (classes.includes(`os-split-after`) || this.withSublist(element)) {
                     newParagraph.margin[3] = 0;
                 }
 
@@ -279,20 +278,20 @@ export class HtmlToPdfService {
                     ...this.computeStyle(this.elementStyles[nodeName])
                 };
                 // if the ol list has specific list type
-                if (nodeName === 'li' && element.parentNode.nodeName === 'OL') {
-                    const type = element.parentElement.getAttribute('type');
+                if (nodeName === `li` && element.parentNode.nodeName === `OL`) {
+                    const type = element.parentElement.getAttribute(`type`);
                     switch (type) {
-                        case 'a':
-                            newParagraph.listType = 'lower-alpha';
+                        case `a`:
+                            newParagraph.listType = `lower-alpha`;
                             break;
-                        case 'A':
-                            newParagraph.listType = 'upper-alpha';
+                        case `A`:
+                            newParagraph.listType = `upper-alpha`;
                             break;
-                        case 'i':
-                            newParagraph.listType = 'lower-roman';
+                        case `i`:
+                            newParagraph.listType = `lower-roman`;
                             break;
-                        case 'I':
-                            newParagraph.listType = 'upper-roman';
+                        case `I`:
+                            newParagraph.listType = `upper-roman`;
                             break;
                         default:
                             break;
@@ -300,27 +299,27 @@ export class HtmlToPdfService {
                 }
                 break;
             }
-            case 'a':
-            case 'b':
-            case 'strong':
-            case 'u':
-            case 'em':
-            case 'i':
-            case 'ins':
-            case 'del':
-            case 'strike': {
+            case `a`:
+            case `b`:
+            case `strong`:
+            case `u`:
+            case `em`:
+            case `i`:
+            case `ins`:
+            case `del`:
+            case `strike`: {
                 const children = this.parseChildren(element, styles.concat(this.elementStyles[nodeName]));
-                newParagraph = this.create('text');
+                newParagraph = this.create(`text`);
                 newParagraph.text = children;
                 break;
             }
-            case 'span': {
+            case `span`: {
                 // Line numbering feature, will prevent compatibility to most other projects
-                if (element.getAttribute('data-line-number') && !this.isInsideAList(element)) {
+                if (element.getAttribute(`data-line-number`) && !this.isInsideAList(element)) {
                     if (this.lineNumberingMode === LineNumberingMode.Inside) {
                         // TODO: algorithm for "inline" line numbers is not yet implemented
                     } else if (this.lineNumberingMode === LineNumberingMode.Outside) {
-                        const currentLineNumber = element.getAttribute('data-line-number');
+                        const currentLineNumber = element.getAttribute(`data-line-number`);
                         newParagraph = {
                             columns: [
                                 // the line number column
@@ -335,7 +334,7 @@ export class HtmlToPdfService {
                     const children = this.parseChildren(element, styles);
 
                     newParagraph = {
-                        ...this.create('text'),
+                        ...this.create(`text`),
                         ...this.computeStyle(styles)
                     };
 
@@ -343,27 +342,27 @@ export class HtmlToPdfService {
                 }
                 break;
             }
-            case 'br': {
+            case `br`: {
                 if (
-                    (this.lineNumberingMode === LineNumberingMode.None && classes.includes('os-line-break')) ||
+                    (this.lineNumberingMode === LineNumberingMode.None && classes.includes(`os-line-break`)) ||
                     (this.lineNumberingMode === LineNumberingMode.Outside && this.isInsideAList(element))
                 ) {
                     break;
                 } else {
-                    newParagraph = this.create('text');
+                    newParagraph = this.create(`text`);
                     // yep thats all
-                    newParagraph.text = '\n';
+                    newParagraph.text = `\n`;
                     newParagraph.lineHeight = this.LINE_HEIGHT;
                 }
                 break;
             }
-            case 'ul':
-            case 'ol': {
+            case `ul`:
+            case `ol`: {
                 const list = this.create(nodeName);
 
                 // keep the numbers of the ol list
-                if (nodeName === 'ol') {
-                    const start = element.getAttribute('start');
+                if (nodeName === `ol`) {
+                    const start = element.getAttribute(`start`);
                     if (start) {
                         list.start = parseInt(start, 10);
                     }
@@ -414,7 +413,7 @@ export class HtmlToPdfService {
             }
             default: {
                 newParagraph = {
-                    ...this.create('text', element.textContent.replace(/\n/g, '')),
+                    ...this.create(`text`, element.textContent.replace(/\n/g, ``)),
                     ...this.computeStyle(styles)
                 };
                 break;
@@ -437,7 +436,7 @@ export class HtmlToPdfService {
         if (childNodes.length > 0) {
             for (const child of childNodes) {
                 // skip empty child nodes
-                if (!(child.nodeName === '#text' && child.textContent.trim() === '')) {
+                if (!(child.nodeName === `#text` && child.textContent.trim() === ``)) {
                     const parsedElement = this.parseElement(child, styles);
                     const firstChild = element.firstChild as Element;
 
@@ -446,7 +445,7 @@ export class HtmlToPdfService {
                         this.lineNumberingMode === LineNumberingMode.Outside &&
                         child &&
                         child.classList &&
-                        child.classList.contains('os-line-number')
+                        child.classList.contains(`os-line-number`)
                     ) {
                         paragraph.push(parsedElement);
                     } else if (
@@ -454,7 +453,7 @@ export class HtmlToPdfService {
                         this.lineNumberingMode === LineNumberingMode.Outside &&
                         firstChild &&
                         firstChild.classList &&
-                        firstChild.classList.contains('os-line-number')
+                        firstChild.classList.contains(`os-line-number`)
                     ) {
                         const currentLine = paragraph.pop();
                         // push the parsed element into the "text" array
@@ -482,12 +481,12 @@ export class HtmlToPdfService {
                 {
                     // Add a blank with the normal font size here, so in rare cases the text
                     // is rendered on the next page and the line number on the previous page.
-                    text: ' ',
-                    decoration: ''
+                    text: ` `,
+                    decoration: ``
                 },
                 {
                     text: line.lineNumber,
-                    color: 'gray',
+                    color: `gray`,
                     fontSize: 8
                 }
             ],
@@ -500,8 +499,8 @@ export class HtmlToPdfService {
      * Checks if a given LI has a sublist
      */
     private withSublist(element: Element): boolean {
-        if (element.nodeName.toLowerCase() === 'li') {
-            const hasUl = Array.from(element.children).some(child => child.nodeName.toLowerCase() === 'ul');
+        if (element.nodeName.toLowerCase() === `li`) {
+            const hasUl = Array.from(element.children).some(child => child.nodeName.toLowerCase() === `ul`);
             return hasUl;
         }
         return false;
@@ -545,12 +544,12 @@ export class HtmlToPdfService {
         const lineNumber = this.getLineNumber(element);
         if (lineNumber) {
             foundLineNumbers.push({ lineNumber });
-        } else if (element.nodeName === 'BR') {
+        } else if (element.nodeName === `BR`) {
             // Check if there is a new line, but it does not get a line number.
             // If so, insert a dummy line, so the line numbers stays aligned with
             // the text.
             if (!this.getLineNumber(element.nextSibling as Element)) {
-                foundLineNumbers.push({ lineNumber: '' });
+                foundLineNumbers.push({ lineNumber: `` });
             }
         } else {
             const children = Array.from(element.childNodes) as Element[];
@@ -565,7 +564,7 @@ export class HtmlToPdfService {
             }
 
             // if the found element is a list item, add some spacing
-            if (childrenLineNumbers.length && (element.nodeName === 'LI' || element.parentNode.nodeName === 'LI')) {
+            if (childrenLineNumbers.length && (element.nodeName === `LI` || element.parentNode.nodeName === `LI`)) {
                 childrenLineNumbers[childrenLineNumbers.length - 1].marginBottom = this.P_MARGIN_BOTTOM;
             }
 
@@ -583,7 +582,7 @@ export class HtmlToPdfService {
     private isInsideAList(element: Element): boolean {
         let parent = element.parentNode;
         while (parent !== null) {
-            if (parent.nodeName === 'UL' || parent.nodeName === 'OL') {
+            if (parent.nodeName === `UL` || parent.nodeName === `OL`) {
                 return true;
             }
             parent = parent.parentNode;
@@ -602,12 +601,12 @@ export class HtmlToPdfService {
      * returns wether the list is fake or not
      */
     private isFakeList(element: Element): boolean {
-        if (element.firstElementChild && element.classList.contains('os-split-after')) {
+        if (element.firstElementChild && element.classList.contains(`os-split-after`)) {
             // either first child has split-before or last child has split-after
             const firstChild = element.firstElementChild;
             const lastChild = element.childNodes[element.childNodes.length - 1] as Element;
-            const splitBefore = firstChild.nodeName === 'LI' && firstChild.classList.contains('os-split-before');
-            const splitAfter = lastChild.nodeName === 'LI' && lastChild.classList.contains('os-split-after');
+            const splitBefore = firstChild.nodeName === `LI` && firstChild.classList.contains(`os-split-before`);
+            const splitAfter = lastChild.nodeName === `LI` && lastChild.classList.contains(`os-split-after`);
             return splitBefore || splitAfter;
         }
         return false;
@@ -622,11 +621,11 @@ export class HtmlToPdfService {
     private getLineNumber(element: Element): number {
         if (
             element &&
-            element.nodeName === 'SPAN' &&
-            element.getAttribute('class') &&
-            element.getAttribute('class').indexOf('os-line-number') > -1
+            element.nodeName === `SPAN` &&
+            element.getAttribute(`class`) &&
+            element.getAttribute(`class`).indexOf(`os-line-number`) > -1
         ) {
-            return parseInt(element.getAttribute('data-line-number'), 10);
+            return parseInt(element.getAttribute(`data-line-number`), 10);
         }
     }
 
@@ -640,67 +639,67 @@ export class HtmlToPdfService {
         const styleObject: any = {};
         if (styles && styles.length > 0) {
             for (const style of styles) {
-                const styleDefinition = style.trim().toLowerCase().split(':');
+                const styleDefinition = style.trim().toLowerCase().split(`:`);
                 const key = styleDefinition[0];
                 const value = styleDefinition[1];
 
                 if (styleDefinition.length === 2) {
                     switch (key) {
-                        case 'padding-left': {
+                        case `padding-left`: {
                             styleObject.margin = [parseInt(value, 10), 0, 0, 0];
                             break;
                         }
-                        case 'font-size': {
+                        case `font-size`: {
                             styleObject.fontSize = parseInt(value, 10);
                             break;
                         }
-                        case 'text-align': {
+                        case `text-align`: {
                             switch (value) {
-                                case 'right':
-                                case 'center':
-                                case 'justify': {
+                                case `right`:
+                                case `center`:
+                                case `justify`: {
                                     styleObject.alignment = value;
                                     break;
                                 }
                             }
                             break;
                         }
-                        case 'font-weight': {
+                        case `font-weight`: {
                             switch (value) {
-                                case 'bold': {
+                                case `bold`: {
                                     styleObject.bold = true;
                                     break;
                                 }
                             }
                             break;
                         }
-                        case 'text-decoration': {
+                        case `text-decoration`: {
                             switch (value) {
-                                case 'underline': {
-                                    styleObject.decoration = 'underline';
+                                case `underline`: {
+                                    styleObject.decoration = `underline`;
                                     break;
                                 }
-                                case 'line-through': {
-                                    styleObject.decoration = 'lineThrough';
+                                case `line-through`: {
+                                    styleObject.decoration = `lineThrough`;
                                     break;
                                 }
                             }
                             break;
                         }
-                        case 'font-style': {
+                        case `font-style`: {
                             switch (value) {
-                                case 'italic': {
+                                case `italic`: {
                                     styleObject.italics = true;
                                     break;
                                 }
                             }
                             break;
                         }
-                        case 'color': {
+                        case `color`: {
                             styleObject.color = this.parseColor(value);
                             break;
                         }
-                        case 'background-color': {
+                        case `background-color`: {
                             styleObject.background = this.parseColor(value);
                             break;
                         }
@@ -717,7 +716,7 @@ export class HtmlToPdfService {
      */
     private isCrElement(element: Element): boolean {
         const nodeName = element.nodeName.toLowerCase();
-        const crNodeNames = ['ins', 'del'];
+        const crNodeNames = [`ins`, `del`];
         return crNodeNames.includes(nodeName);
     }
 
@@ -729,13 +728,13 @@ export class HtmlToPdfService {
      * @returns color as hex values for pdfmake
      */
     private parseColor(color: string): string {
-        const haxRegex = new RegExp('^#([0-9a-f]{3}|[0-9a-f]{6})$');
+        const haxRegex = new RegExp(`^#([0-9a-f]{3}|[0-9a-f]{6})$`);
 
         // e.g. `#fff` or `#ff0048`
-        const rgbRegex = new RegExp('^rgb\\((\\d+),\\s*(\\d+),\\s*(\\d+)\\)$');
+        const rgbRegex = new RegExp(`^rgb\\((\\d+),\\s*(\\d+),\\s*(\\d+)\\)$`);
 
         // e.g. rgb(0,255,34) or rgb(22, 0, 0)
-        const nameRegex = new RegExp('^[a-z]+$');
+        const nameRegex = new RegExp(`^[a-z]+$`);
 
         if (haxRegex.test(color)) {
             return color;
@@ -746,15 +745,15 @@ export class HtmlToPdfService {
                 if (decimalValue > 255) {
                     decimalValue = 255;
                 }
-                let hexString = '0' + decimalValue.toString(16);
+                let hexString = `0` + decimalValue.toString(16);
                 hexString = hexString.slice(-2);
                 decimalColors[i] = hexString;
             }
-            return '#' + decimalColors.join('');
+            return `#` + decimalColors.join(``);
         } else if (nameRegex.test(color)) {
             return color;
         } else {
-            console.error('Could not parse color "' + color + '"');
+            console.error(`Could not parse color "` + color + `"`);
             return color;
         }
     }

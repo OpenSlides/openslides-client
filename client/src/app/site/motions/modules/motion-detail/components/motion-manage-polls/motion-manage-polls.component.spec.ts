@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { MotionManagePollsComponent } from './motion-manage-polls.component';
 
-describe('MotionManagePollsComponent', () => {
+describe(`MotionManagePollsComponent`, () => {
     let component: MotionManagePollsComponent;
     let fixture: ComponentFixture<MotionManagePollsComponent>;
 
@@ -21,7 +20,7 @@ describe('MotionManagePollsComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

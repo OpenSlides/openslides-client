@@ -1,4 +1,5 @@
 import { Id } from 'app/core/definitions/key-types';
+
 import { BaseModel } from '../base/base-model';
 import { HasMeetingId } from '../base/has-meeting-id';
 import { HasProjectionIds } from '../base/has-projectable-ids';
@@ -8,7 +9,7 @@ import { HasProjectionIds } from '../base/has-projectable-ids';
  * @ignore
  */
 export class ProjectorMessage extends BaseModel<ProjectorMessage> {
-    public static COLLECTION = 'projector_message';
+    public static COLLECTION = `projector_message`;
 
     public id: Id;
     public message: string;

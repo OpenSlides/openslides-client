@@ -6,13 +6,13 @@ const osTableLayout = {
     switchColorTableLayout: {
         hLineWidth: rowIndex => rowIndex === 1,
         vLineWidth: () => 0,
-        fillColor: rowIndex => (rowIndex % 2 === 0 ? '#EEEEEE' : null)
+        fillColor: rowIndex => (rowIndex % 2 === 0 ? `#EEEEEE` : null)
     },
     metaboxLayout: {
-        fillColor: () => '#dddddd',
+        fillColor: () => `#dddddd`,
         hLineWidth: (i, node) => (i === 0 || i === node.table.body.length ? 0 : 0.5),
         vLineWidth: () => 0,
-        hLineColor: () => 'white'
+        hLineColor: () => `white`
     }
 };
 
@@ -24,11 +24,11 @@ function applyLayout(content: any): void {
             if (section && section.layout) {
                 let layout: object;
                 switch (section.layout) {
-                    case 'switchColorTableLayout': {
+                    case `switchColorTableLayout`: {
                         layout = osTableLayout.switchColorTableLayout;
                         break;
                     }
-                    case 'metaboxLayout': {
+                    case `metaboxLayout`: {
                         layout = osTableLayout.metaboxLayout;
                         break;
                     }
@@ -68,7 +68,7 @@ function addPageNumbers(data: any): void {
         const pageNumberColIndex = !!footer.columns[0].image ? 1 : 0;
 
         // "%PAGENR% needs to be found once. After that, the same position should always update page numbers"
-        if (footer.columns[pageNumberColIndex]?.stack[0] === '%PAGENR%' || countPageNumbers) {
+        if (footer.columns[pageNumberColIndex]?.stack[0] === `%PAGENR%` || countPageNumbers) {
             countPageNumbers = true;
             footer.columns[pageNumberColIndex].stack[0] = `${currentPage} / ${pageCount}`;
         }
@@ -79,7 +79,7 @@ function addPageNumbers(data: any): void {
 /**
  * The actual web worker code
  */
-addEventListener('message', ({ data }) => {
+addEventListener(`message`, ({ data }) => {
     initPdfMake(data);
 
     applyLayout(data.doc.content);

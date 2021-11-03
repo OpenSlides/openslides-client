@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
-
 import { TranslateService } from '@ngx-translate/core';
-
 import { PdfDocumentService, PdfError } from 'app/core/pdf-services/pdf-document.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
-import { AssignmentPdfService } from './assignment-pdf.service';
+
 import { ViewAssignment } from '../models/view-assignment';
+import { AssignmentPdfService } from './assignment-pdf.service';
 
 /**
  * Controls PDF export for assignments
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AssignmentPdfExportService {
     /**
@@ -35,7 +34,7 @@ export class AssignmentPdfExportService {
      */
     public exportSingleAssignment(assignment: ViewAssignment): void {
         const doc = this.assignmentPdfService.assignmentToDocDef(assignment);
-        const filename = `${this.translate.instant('Election')}_${assignment.title}`;
+        const filename = `${this.translate.instant(`Election`)}_${assignment.title}`;
         const metadata = {
             title: filename
         };
@@ -50,7 +49,7 @@ export class AssignmentPdfExportService {
     public exportMultipleAssignments(assignments: ViewAssignment[]): void {
         const doc = this.createDocOfMultipleAssignments(assignments);
 
-        const filename = this.translate.instant('Elections');
+        const filename = this.translate.instant(`Elections`);
         const metaData = {
             title: filename
         };
@@ -74,7 +73,7 @@ export class AssignmentPdfExportService {
                     ? [assignmentDocDef, this.pdfDocumentService.getPageBreak()]
                     : [assignmentDocDef];
             } catch (error) {
-                const errorText = `${this.translate.instant('Error during PDF creation of election:')} ${
+                const errorText = `${this.translate.instant(`Error during PDF creation of election:`)} ${
                     assignment.title
                 }`;
                 console.error(`${errorText}\nDebugInfo:\n`, error);
@@ -84,9 +83,9 @@ export class AssignmentPdfExportService {
 
         if (assignments.length > 1) {
             doc.push(
-                this.pdfDocumentService.createTitle(this.meetingSettingsService.instant('assignments_export_title')),
+                this.pdfDocumentService.createTitle(this.meetingSettingsService.instant(`assignments_export_title`)),
                 this.pdfDocumentService.createPreamble(
-                    this.meetingSettingsService.instant('assignments_export_preamble')
+                    this.meetingSettingsService.instant(`assignments_export_preamble`)
                 ),
                 this.createToc(assignments)
             );
@@ -106,8 +105,8 @@ export class AssignmentPdfExportService {
     private createToc(assignments: ViewAssignment[]): Object {
         const toc = [];
         const tocTitle = {
-            text: this.translate.instant('Table of contents'),
-            style: 'heading2'
+            text: this.translate.instant(`Table of contents`),
+            style: `heading2`
         };
 
         const tocBody = assignments.map((assignment, index) =>

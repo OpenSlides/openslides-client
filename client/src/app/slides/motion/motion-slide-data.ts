@@ -2,6 +2,7 @@ import { ModificationType } from 'app/core/ui-services/diff.service';
 import { MotionFormattingRepresentation } from 'app/shared/models/motions/motion';
 import { MergeAmendment } from 'app/shared/models/motions/motion-state';
 import { LineNumberingMode } from 'app/site/motions/motions.constants';
+
 import { MotionTitleInformation, ReferencedMotions } from '../motion-base/base-motion-slide';
 
 /**

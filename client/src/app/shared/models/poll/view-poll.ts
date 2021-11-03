@@ -1,5 +1,3 @@
-import { Observable } from 'rxjs';
-
 import { HasMeeting } from 'app/management/models/view-meeting';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { BaseViewModel } from 'app/site/base/base-view-model';
@@ -7,7 +5,10 @@ import { DetailNavigable } from 'app/site/base/detail-navigable';
 import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
 import { ViewGroup } from 'app/site/users/models/view-group';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { Observable } from 'rxjs';
+
 import { BaseModel } from '../base/base-model';
+import { Projectiondefault } from '../projector/projector';
 import { PollData } from './generic-poll';
 import { Poll } from './poll';
 import {
@@ -20,7 +21,6 @@ import {
     PollStateVerbose,
     PollTypeVerbose
 } from './poll-constants';
-import { Projectiondefault } from '../projector/projector';
 import { ViewOption } from './view-option';
 
 export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
@@ -97,10 +97,10 @@ export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
 
     public getDetailStateURL(): string {
         if (this.content_object_id) {
-            const routeFragments = this.content_object_id.split('/');
+            const routeFragments = this.content_object_id.split(`/`);
             return `/${this.getActiveMeetingId()}/${routeFragments[0]}s/${routeFragments[1]}`;
         } else {
-            return '';
+            return ``;
         }
     }
 
@@ -108,7 +108,7 @@ export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
         if (this.content_object_id) {
             return this.getContentObject().getDetailStateURL();
         } else {
-            return '';
+            return ``;
         }
     }
 

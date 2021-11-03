@@ -1,9 +1,10 @@
 import { Fqid, HtmlColor, Id } from 'app/core/definitions/key-types';
+
 import { BaseModel } from '../base/base-model';
 import { HasColor } from '../base/has-color';
 
 export class OrganizationTag extends BaseModel<OrganizationTag> implements HasColor {
-    public static readonly COLLECTION = 'organization_tag';
+    public static readonly COLLECTION = `organization_tag`;
 
     public id: Id;
     public name: string;

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { TranslateService } from '@ngx-translate/core';
 
 import { BaseViewModel } from '../../site/base/base-view-model';
@@ -52,10 +51,10 @@ function isMapDefinition<T>(obj: any): obj is CsvColumnDefinitionMap<T> {
  */
 export type CsvColumnsDefinition<T> = (CsvColumnDefinitionProperty<T> | CsvColumnDefinitionMap<T>)[];
 
-const ISO_8859_15_ENCODING = 'iso-8859-15';
+const ISO_8859_15_ENCODING = `iso-8859-15`;
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class CsvExportService {
     /**
@@ -85,9 +84,9 @@ export class CsvExportService {
         columns: CsvColumnsDefinition<T>,
         filename: string,
         {
-            lineSeparator = '\r\n',
-            columnSeparator = this.meetingSettingsService.instant('export_csv_separator') ?? ',',
-            encoding = this.meetingSettingsService.instant('export_csv_encoding') ?? 'utf-8'
+            lineSeparator = `\r\n`,
+            columnSeparator = this.meetingSettingsService.instant(`export_csv_separator`) ?? `,`,
+            encoding = this.meetingSettingsService.instant(`export_csv_encoding`) ?? `utf-8`
         }: {
             lineSeparator?: string;
             columnSeparator?: string;
@@ -99,7 +98,7 @@ export class CsvExportService {
         // in any text data or as column separator will be used as text separator
 
         if (lineSeparator === columnSeparator) {
-            throw new Error('lineseparator and columnseparator must differ from each other');
+            throw new Error(`lineseparator and columnseparator must differ from each other`);
         }
 
         // create header data
@@ -123,15 +122,15 @@ export class CsvExportService {
 
                     if (isPropertyDefinition(column)) {
                         const property: any = model[column.property];
-                        if (typeof property === 'number') {
+                        if (typeof property === `number`) {
                             value = property.toString(10);
                         } else if (!property) {
-                            value = '';
+                            value = ``;
                         } else if (property === true) {
-                            value = '1';
+                            value = `1`;
                         } else if (property === false) {
-                            value = '0';
-                        } else if (typeof property === 'function') {
+                            value = `0`;
+                        } else if (typeof property === `function`) {
                             const bindedFn = property.bind(model); // bind model to access 'this'
                             value = bindedFn()?.toString();
                         } else {
@@ -165,9 +164,9 @@ export class CsvExportService {
      */
     public checkCsvTextSafety(input: string): string {
         if (!input) {
-            return '';
+            return ``;
         }
-        return '"' + input.replace(/"/g, '""').replace(/(\r\n\t|\n|\r\t)/gm, '') + '"';
+        return `"` + input.replace(/"/g, `""`).replace(/(\r\n\t|\n|\r\t)/gm, ``) + `"`;
     }
 
     /**
@@ -182,8 +181,8 @@ export class CsvExportService {
     }
 
     public dummyCSVExport<I>(headerAndVerboseNames: I, rows: I[], filename: string): void {
-        const separator = this.meetingSettingsService.instant('export_csv_separator') ?? ',';
-        const encoding = this.meetingSettingsService.instant('export_csv_encoding') ?? 'utf-8';
+        const separator = this.meetingSettingsService.instant(`export_csv_separator`) ?? `,`;
+        const encoding = this.meetingSettingsService.instant(`export_csv_encoding`) ?? `utf-8`;
         const headerRow = [
             Object.values(headerAndVerboseNames)
                 .map(label => this.translate.instant(label as string))
@@ -192,18 +191,18 @@ export class CsvExportService {
         const content = rows.map(row =>
             Object.keys(headerAndVerboseNames)
                 .map(key => {
-                    let value = row[key] || '';
-                    if (typeof value === 'number') {
+                    let value = row[key] || ``;
+                    if (typeof value === `number`) {
                         value = value.toString(10);
-                    } else if (typeof value === 'boolean') {
-                        value = value ? '1' : '0';
+                    } else if (typeof value === `boolean`) {
+                        value = value ? `1` : `0`;
                     }
                     return this.checkCsvTextSafety(value);
                 })
                 .join(separator)
         );
-        const csv = headerRow.concat(content).join('\r\n');
+        const csv = headerRow.concat(content).join(`\r\n`);
         const toExport = encoding === ISO_8859_15_ENCODING ? this.exporter.convertTo8859_15(csv) : csv;
-        this.exporter.saveFile(toExport, filename, 'text/csv');
+        this.exporter.saveFile(toExport, filename, `text/csv`);
     }
 }

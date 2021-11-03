@@ -1,6 +1,6 @@
 import { Collection, Field, Fqfield, Fqid, Id } from '../definitions/key-types';
 
-export const KEYSEPERATOR = '/';
+export const KEYSEPERATOR = `/`;
 
 export function fqidFromCollectionAndId(collection: string, id: number | string): string {
     return `${collection}${KEYSEPERATOR}${id}`;
@@ -41,5 +41,5 @@ export function collectionFromFqid(fqid: Fqid): Collection {
 
 // E.g. (group_$_ids, 4) -> group_$4_ids
 export function fillTemplateValueInTemplateField(field: Field, value: string): Field {
-    return field.replace('$', '$' + value);
+    return field.replace(`$`, `$` + value);
 }

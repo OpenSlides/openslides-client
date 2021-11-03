@@ -5,9 +5,9 @@ import { ActivatedRoute } from '@angular/router';
  * A component to show error states
  */
 @Component({
-    selector: 'os-error',
-    templateUrl: './error.component.html',
-    styleUrls: ['./error.component.scss']
+    selector: `os-error`,
+    templateUrl: `./error.component.html`,
+    styleUrls: [`./error.component.scss`]
 })
 export class ErrorComponent implements OnInit {
     /**

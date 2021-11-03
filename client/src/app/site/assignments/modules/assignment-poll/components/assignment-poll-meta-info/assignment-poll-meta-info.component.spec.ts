@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { AssignmentPollMetaInfoComponent } from './assignment-poll-meta-info.component';
 
-describe('AssignmentPollMetaInfoComponent', () => {
+describe(`AssignmentPollMetaInfoComponent`, () => {
     let component: AssignmentPollMetaInfoComponent;
     let fixture: ComponentFixture<AssignmentPollMetaInfoComponent>;
 
@@ -23,7 +22,7 @@ describe('AssignmentPollMetaInfoComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

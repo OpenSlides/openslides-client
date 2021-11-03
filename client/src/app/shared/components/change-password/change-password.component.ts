@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PasswordValidator } from 'app/shared/validators';
 import { BaseComponent } from 'app/site/base/components/base.component';
@@ -12,9 +12,9 @@ export interface PasswordForm {
 }
 
 @Component({
-    selector: 'os-change-password',
-    templateUrl: './change-password.component.html',
-    styleUrls: ['./change-password.component.scss']
+    selector: `os-change-password`,
+    templateUrl: `./change-password.component.html`,
+    styleUrls: [`./change-password.component.scss`]
 })
 export class ChangePasswordComponent extends BaseComponent implements OnInit {
     @Output()
@@ -30,16 +30,20 @@ export class ChangePasswordComponent extends BaseComponent implements OnInit {
     public hideNewPassword = true;
     public hideConfirmPassword = true;
 
-    public constructor(serviceCollector: ComponentServiceCollector, private fb: FormBuilder) {
-        super(serviceCollector);
+    public constructor(
+        componentServiceCollector: ComponentServiceCollector,
+        translate: TranslateService,
+        private fb: FormBuilder
+    ) {
+        super(componentServiceCollector, translate);
     }
 
     public ngOnInit(): void {
-        this.newPasswordForm = this.fb.control('', Validators.required);
+        this.newPasswordForm = this.fb.control(``, Validators.required);
         this.changePasswordForm = this.fb.group({
-            oldPassword: ['', Validators.required],
+            oldPassword: [``, Validators.required],
             newPassword: this.newPasswordForm,
-            confirmPassword: ['', [Validators.required, PasswordValidator.validation(this.newPasswordForm)]]
+            confirmPassword: [``, [Validators.required, PasswordValidator.validation(this.newPasswordForm)]]
         });
         this.subscriptions.push(
             this.changePasswordForm.valueChanges.subscribe(value => {

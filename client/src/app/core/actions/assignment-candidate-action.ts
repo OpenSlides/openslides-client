@@ -1,10 +1,11 @@
 import { Identifiable } from 'app/shared/models/base/identifiable';
+
 import { Id } from '../definitions/key-types';
 
 export namespace AssignmentCandidateAction {
-    export const ADD = 'assignment_candidate.create';
-    export const REMOVE = 'assignment_candidate.delete';
-    export const SORT = 'assignment_candidate.sort';
+    export const ADD = `assignment_candidate.create`;
+    export const REMOVE = `assignment_candidate.delete`;
+    export const SORT = `assignment_candidate.sort`;
 
     interface AssignmentIdentifiable {
         assignment_id: Id;

@@ -23,25 +23,25 @@ export interface SizeObject {
  * This component accepts several attributes, that define the size of it.
  */
 @Component({
-    selector: 'os-tile',
-    templateUrl: './tile.component.html',
-    styleUrls: ['./tile.component.scss']
+    selector: `os-tile`,
+    templateUrl: `./tile.component.html`,
+    styleUrls: [`./tile.component.scss`]
 })
 export class TileComponent implements OnInit {
     /**
      * HostBinding to add the necessary classes to the host element `os-tile`.
      */
-    @HostBinding('class')
+    @HostBinding(`class`)
     public get classes(): string {
         return (
-            'os-tile' +
-            ' os-tile--xs-' +
+            `os-tile` +
+            ` os-tile--xs-` +
             this.mobileSize +
-            ' os-tile--sm-' +
+            ` os-tile--sm-` +
             this.tabletSize +
-            ' os-tile--md-' +
+            ` os-tile--md-` +
             this.mediumSize +
-            ' os-tile--lg-' +
+            ` os-tile--lg-` +
             this.largeSize
         );
     }
@@ -100,7 +100,7 @@ export class TileComponent implements OnInit {
         if (!this.preferredSize) {
             this.preferredSize = 4;
         }
-        if (typeof this.preferredSize === 'number') {
+        if (typeof this.preferredSize === `number`) {
             this.setLargeSize(this.preferredSize);
             this.setMediumSize(this.preferredSize);
             this.setTabletSize(this.preferredSize);

@@ -7,6 +7,7 @@ import { Projectiondefault } from 'app/shared/models/projector/projector';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { DetailNavigable } from 'app/site/base/detail-navigable';
+
 import { ViewSpeaker } from './view-speaker';
 
 export function hasListOfSpeakers(obj: any): obj is HasListOfSpeakers {

@@ -2,6 +2,7 @@ import { HasMeeting } from 'app/management/models/view-meeting';
 import { HasPersonalNoteIds } from 'app/shared/models/base/has-personal-note-ids';
 import { PersonalNote } from 'app/shared/models/users/personal-note';
 import { BaseViewModel } from 'app/site/base/base-view-model';
+
 import { ViewUser } from './view-user';
 
 export interface HasPersonalNote extends HasPersonalNoteIds {

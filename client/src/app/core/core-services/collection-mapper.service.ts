@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-
 import { BaseRepository } from 'app/core/repositories/base-repository';
 import { BaseViewModel, ViewModelConstructor } from 'app/site/base/base-view-model';
+
 import { BaseModel, ModelConstructor } from '../../shared/models/base/base-model';
 import { BaseRepositoryWithActiveMeeting } from '../repositories/base-repository-with-active-meeting';
 
@@ -30,7 +30,7 @@ type CollectionMappedTypes = [
  * All models need to be registered!
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class CollectionMapperService {
     /**
@@ -60,7 +60,7 @@ export class CollectionMapperService {
      * @returns the collection
      */
     public getCollection(obj: CollectionType): string {
-        if (typeof obj === 'string') {
+        if (typeof obj === `string`) {
             return obj;
         } else {
             return obj.COLLECTION;

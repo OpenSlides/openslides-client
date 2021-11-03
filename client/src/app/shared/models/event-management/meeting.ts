@@ -1,7 +1,8 @@
-import { AgendaItemType } from '../agenda/agenda-item';
 import { Id } from 'app/core/definitions/key-types';
 import { ApplauseType } from 'app/site/interaction/services/applause.service';
 import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.constants';
+
+import { AgendaItemType } from '../agenda/agenda-item';
 import { BaseModel } from '../base/base-model';
 import { HasProjectionIds } from '../base/has-projectable-ids';
 import { PollMethod, PollPercentBase, PollType } from '../poll/poll-constants';
@@ -167,7 +168,7 @@ export interface Settings {
 }
 
 export class Meeting extends BaseModel<Meeting> {
-    public static COLLECTION = 'meeting';
+    public static COLLECTION = `meeting`;
 
     public id: Id;
 

@@ -3,7 +3,6 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Directive, ElementRef, HostBinding, Input, OnDestroy, Optional, Self } from '@angular/core';
 import { ControlValueAccessor, FormBuilder, FormControl, FormGroup, NgControl } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
-
 import { Subject, Subscription } from 'rxjs';
 
 /**
@@ -29,11 +28,11 @@ export abstract class BaseFormFieldControlComponent<T>
 
     @HostBinding() public id = `base-form-control-${BaseFormFieldControlComponent.nextId++}`;
 
-    @HostBinding('class.floating') public get shouldLabelFloat(): boolean {
+    @HostBinding(`class.floating`) public get shouldLabelFloat(): boolean {
         return (this.focused || !this.empty) && !this.disabled;
     }
 
-    @HostBinding('attr.aria-describedby') public describedBy = '';
+    @HostBinding(`attr.aria-describedby`) public describedBy = ``;
 
     @Input()
     public set value(value: T | null) {
@@ -114,7 +113,7 @@ export abstract class BaseFormFieldControlComponent<T>
 
         this.subscriptions.push(
             fm.monitor(element.nativeElement, true).subscribe(origin => {
-                this.focused = origin === 'mouse' || origin === 'touch';
+                this.focused = origin === `mouse` || origin === `touch`;
                 this.stateChanges.next();
             }),
             this.contentForm.valueChanges.subscribe(nextValue => this.push(nextValue))
@@ -148,7 +147,7 @@ export abstract class BaseFormFieldControlComponent<T>
     }
 
     public setDescribedByIds(ids: string[]): void {
-        this.describedBy = ids.join(' ');
+        this.describedBy = ids.join(` `);
     }
 
     public abstract onContainerClick(event: MouseEvent): void;

@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { MotionCommentComponent } from './motion-comment.component';
 
-describe('MotionCommentComponent', () => {
+describe(`MotionCommentComponent`, () => {
     let component: MotionCommentComponent;
     let fixture: ComponentFixture<MotionCommentComponent>;
 
@@ -23,7 +22,7 @@ describe('MotionCommentComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

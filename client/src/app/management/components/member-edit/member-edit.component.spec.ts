@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { MemberEditComponent } from './member-edit.component';
 
-describe('MemberEditComponent', () => {
+describe(`MemberEditComponent`, () => {
     let component: MemberEditComponent;
     let fixture: ComponentFixture<MemberEditComponent>;
 
@@ -21,7 +20,7 @@ describe('MemberEditComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

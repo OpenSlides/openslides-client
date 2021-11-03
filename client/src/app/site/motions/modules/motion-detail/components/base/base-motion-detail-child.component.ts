@@ -1,8 +1,6 @@
 import { Directive, Input } from '@angular/core';
-
-import { Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
-
+import { TranslateService } from '@ngx-translate/core';
+import { MotionService } from 'app/core/repositories/motions/motion.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { MotionChangeRecommendationRepositoryService } from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
@@ -10,7 +8,6 @@ import { MotionLineNumberingService } from 'app/core/repositories/motions/motion
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { MotionStatuteParagraphRepositoryService } from 'app/core/repositories/motions/motion-statute-paragraph-repository.service';
 import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/motion-workflow-repository.service';
-import { MotionService } from 'app/core/repositories/motions/motion.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -20,6 +17,9 @@ import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
 import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.constants';
 import { MotionFormatService } from 'app/site/motions/services/motion-format.service';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
+
 import { MotionServiceCollectorService } from '../../../services/motion-service-collector.service';
 import { MotionViewService } from '../../../services/motion-view.service';
 
@@ -142,7 +142,7 @@ export abstract class BaseMotionDetailChildComponent extends BaseComponent {
     public reasonRequired = false;
     public statutesEnabled = false;
     public minSupporters = 0;
-    public preamble = '';
+    public preamble = ``;
     public showReferringMotions = false;
     public showSequentialNumber = false;
     protected lineLength = 0;
@@ -166,10 +166,11 @@ export abstract class BaseMotionDetailChildComponent extends BaseComponent {
     private _motion: ViewMotion;
 
     public constructor(
-        serviceCollector: ComponentServiceCollector,
+        componentServiceCollector: ComponentServiceCollector,
+        translate: TranslateService,
         protected motionServiceCollector: MotionServiceCollectorService
     ) {
-        super(serviceCollector);
+        super(componentServiceCollector, translate);
     }
 
     /**
@@ -251,28 +252,28 @@ export abstract class BaseMotionDetailChildComponent extends BaseComponent {
 
     private getSharedSubscriptionsToSettings(): Subscription[] {
         return [
-            this.meetingSettingService.get('motions_line_length').subscribe(lineLength => {
+            this.meetingSettingService.get(`motions_line_length`).subscribe(lineLength => {
                 this.lineLength = lineLength;
                 this.sortedChangingObjects = null;
             }),
             this.meetingSettingService
-                .get('motions_reason_required')
+                .get(`motions_reason_required`)
                 .subscribe(required => (this.reasonRequired = required)),
             this.meetingSettingService
-                .get('motions_supporters_min_amount')
+                .get(`motions_supporters_min_amount`)
                 .subscribe(value => (this.minSupporters = value)),
-            this.meetingSettingService.get('motions_preamble').subscribe(value => (this.preamble = value)),
+            this.meetingSettingService.get(`motions_preamble`).subscribe(value => (this.preamble = value)),
             this.meetingSettingService
-                .get('motions_statutes_enabled')
+                .get(`motions_statutes_enabled`)
                 .subscribe(value => (this.statutesEnabled = value)),
-            this.meetingSettingService.get('motions_amendments_multiple_paragraphs').subscribe(allowed => {
+            this.meetingSettingService.get(`motions_amendments_multiple_paragraphs`).subscribe(allowed => {
                 this.multipleParagraphsAllowed = allowed;
             }),
             this.meetingSettingService
-                .get('motions_show_referring_motions')
+                .get(`motions_show_referring_motions`)
                 .subscribe(show => (this.showReferringMotions = show)),
             this.meetingSettingService
-                .get('motions_show_sequential_number')
+                .get(`motions_show_sequential_number`)
                 .subscribe(shown => (this.showSequentialNumber = shown))
         ];
     }

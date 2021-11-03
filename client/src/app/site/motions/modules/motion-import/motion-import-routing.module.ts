@@ -3,7 +3,7 @@ import { Route, RouterModule } from '@angular/router';
 
 import { MotionImportListComponent } from './motion-import-list.component';
 
-const routes: Route[] = [{ path: '', component: MotionImportListComponent, pathMatch: 'full' }];
+const routes: Route[] = [{ path: ``, component: MotionImportListComponent, pathMatch: `full` }];
 
 @NgModule({
     imports: [RouterModule.forChild(routes)],

@@ -15,7 +15,7 @@ import { AbstractControl, FormGroup, ValidationErrors, ValidatorFn } from '@angu
  */
 export const durationValidator: ValidatorFn = (control: FormGroup): ValidationErrors | null => {
     const regExp = /^\s*([0-9]+)(:)?([0-5][0-9]?)?\s*[h|m]?$/g;
-    return regExp.test(control.value) || control.value === '' ? null : { valid: false };
+    return regExp.test(control.value) || control.value === `` ? null : { valid: false };
 };
 
 export function isNumberRange(minCtrlName: string, maxCtrlName: string): ValidatorFn {

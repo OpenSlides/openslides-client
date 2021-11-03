@@ -1,8 +1,9 @@
 import { Id } from 'app/core/definitions/key-types';
+
 import { BaseModel } from '../base/base-model';
 
 export class Resource extends BaseModel<Resource> {
-    public static COLLECTION = 'resource';
+    public static COLLECTION = `resource`;
 
     public id: Id;
     public token: string;

@@ -1,8 +1,4 @@
 import { Injectable } from '@angular/core';
-
-import * as moment from 'moment';
-import { Moment } from 'moment';
-
 import { MeetingAction } from 'app/core/actions/meeting-action';
 import { UserAction } from 'app/core/actions/user-action';
 import { ActionRequest } from 'app/core/core-services/action.service';
@@ -14,13 +10,16 @@ import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Meeting } from 'app/shared/models/event-management/meeting';
 import { Projection } from 'app/shared/models/projector/projection';
 import { ViewUser } from 'app/site/users/models/view-user';
+import * as moment from 'moment';
+import { Moment } from 'moment';
+
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollectorWithoutActiveMeetingService } from '../repository-service-collector-without-active-meeting-service';
 
 export enum MeetingProjectionType {
-    CurrentListOfSpeakers = 'current_list_of_speakers',
-    CurrentSpeakerChyron = 'current_speaker_chyron',
-    AgendaItemList = 'agenda_item_list'
+    CurrentListOfSpeakers = `current_list_of_speakers`,
+    CurrentSpeakerChyron = `current_speaker_chyron`,
+    AgendaItemList = `agenda_item_list`
 }
 
 export interface ImportMeeting {
@@ -35,7 +34,7 @@ export interface MeetingUserModifiedFields {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meeting> {
     public constructor(
@@ -52,31 +51,31 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         const accessField: (keyof Meeting)[] = [ViewMeeting.ACCESSIBILITY_FIELD];
 
         const nameFields: (keyof Meeting)[] = accessField.concat([
-            'name',
-            'start_time',
-            'end_time',
-            'is_active_in_organization_id'
+            `name`,
+            `start_time`,
+            `end_time`,
+            `is_active_in_organization_id`
         ]);
-        const listFields: (keyof Meeting)[] = nameFields.concat('user_ids', 'organization_tag_ids');
+        const listFields: (keyof Meeting)[] = nameFields.concat(`user_ids`, `organization_tag_ids`);
         const editFields: (keyof Meeting)[] = listFields.concat([
-            'welcome_title',
-            'description',
-            'location',
-            'url_name',
-            'enable_anonymous',
-            'is_template',
-            'default_group_id', // needed for adding users
-            'jitsi_domain',
-            'jitsi_room_name',
-            'jitsi_room_password'
+            `welcome_title`,
+            `description`,
+            `location`,
+            `url_name`,
+            `enable_anonymous`,
+            `is_template`,
+            `default_group_id`, // needed for adding users
+            `jitsi_domain`,
+            `jitsi_room_name`,
+            `jitsi_room_password`
         ]);
-        const dashboardFields: (keyof Meeting)[] = listFields.concat('location');
-        const startPageFields: (keyof Meeting)[] = accessField.concat(['welcome_title', 'welcome_text']);
+        const dashboardFields: (keyof Meeting)[] = listFields.concat(`location`);
+        const startPageFields: (keyof Meeting)[] = accessField.concat([`welcome_title`, `welcome_text`]);
         const previewFields: (keyof Meeting)[] = nameFields.concat(
-            'user_ids',
-            'location',
-            'description',
-            'default_meeting_for_committee_id'
+            `user_ids`,
+            `location`,
+            `description`,
+            `default_meeting_for_committee_id`
         );
 
         return {
@@ -86,7 +85,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             dashboard: dashboardFields,
             settings: this.meetingSettingsDefinitionProvider
                 .getSettingsKeys()
-                .concat('jitsi_domain', 'jitsi_room_name', 'jitsi_room_password'),
+                .concat(`jitsi_domain`, `jitsi_room_name`, `jitsi_room_password`),
             startPage: startPageFields,
             preview: previewFields
         };
@@ -94,24 +93,24 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
 
     public getTitle = (viewMeeting: ViewMeeting) => viewMeeting.name;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Meetings' : 'Meeting');
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Meetings` : `Meeting`);
 
     public getProjectorTitle = (viewMeeting: ViewMeeting, projection: Projection) => {
         let title;
 
         switch (projection.type as MeetingProjectionType) {
             case MeetingProjectionType.CurrentListOfSpeakers:
-                title = 'Current list of speakers';
+                title = `Current list of speakers`;
                 break;
             case MeetingProjectionType.CurrentSpeakerChyron:
-                title = 'Current speaker chyron';
+                title = `Current speaker chyron`;
                 break;
             case MeetingProjectionType.AgendaItemList:
-                title = 'Agenda';
+                title = `Agenda`;
                 break;
             default:
-                console.warn('Unknown slide type for meeting:', projection.type);
-                title = '<unknown>';
+                console.warn(`Unknown slide type for meeting:`, projection.type);
+                title = `<unknown>`;
                 break;
         }
 
@@ -146,7 +145,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             update.organization_tag_ids = [];
         }
         if (!update.id && !meeting) {
-            throw new Error('Either a meeting or an update.id has to be given');
+            throw new Error(`Either a meeting or an update.id has to be given`);
         }
         const actions: ActionRequest[] = [
             {
@@ -167,14 +166,14 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         const { addedUsers, removedUsers, addedAdmins, removedAdmins }: MeetingUserModifiedFields = options;
         if (addedUsers?.length || removedUsers?.length) {
             if (!meeting.default_group_id) {
-                throw new Error('A default group is required');
+                throw new Error(`A default group is required`);
             }
             this.getNewGroupsForUsers(userUpdate, addedUsers, meeting.id, meeting.default_group_id);
             this.getNewGroupsForUsers(userUpdate, removedUsers, meeting.id, meeting.default_group_id);
         }
         if (addedAdmins?.length || removedAdmins?.length) {
             if (!meeting.admin_group_id) {
-                throw new Error('An admin group is required');
+                throw new Error(`An admin group is required`);
             }
             this.getNewGroupsForUsers(userUpdate, addedAdmins, meeting.id, meeting.admin_group_id);
             this.getNewGroupsForUsers(userUpdate, removedAdmins, meeting.id, meeting.admin_group_id);
@@ -212,7 +211,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
 
     public duplicateFrom(committeeId: Id, ...meetings: ViewMeeting[] | Id[]): Promise<Identifiable[]> {
         const payload: MeetingAction.ClonePayload[] = meetings.map((meeting: ViewMeeting | Id) => ({
-            meeting_id: typeof meeting === 'number' ? meeting : meeting.id,
+            meeting_id: typeof meeting === `number` ? meeting : meeting.id,
             committee_id: committeeId
         }));
         return this.sendBulkActionToBackend(MeetingAction.CLONE, payload);
@@ -230,7 +229,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
 
     public parseUnixToMeetingTime(time?: number): string {
         if (!time) {
-            return '';
+            return ``;
         }
         const date = new Date(time);
         const month = date.getMonth() + 1 > 9 ? `${date.getMonth() + 1}` : `0${date.getMonth() + 1}`;
@@ -255,7 +254,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
     private anyDateToUnix(date: Date | Moment | number | null): number | null {
         if (date instanceof Date) {
             return Math.round(date.getTime() / 1000);
-        } else if (typeof date === 'number') {
+        } else if (typeof date === `number`) {
             return date;
         } else if (moment.isMoment(date)) {
             return date.unix();

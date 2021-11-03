@@ -1,11 +1,9 @@
 import { Component, ContentChild, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
-
 import { columnFactory, createDS, PblColumnDefinition, PblDataSource, PblNgridColumnSet } from '@pebula/ngrid';
-import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
-import { BehaviorSubject } from 'rxjs';
-
 import { Id } from 'app/core/definitions/key-types';
 import { Identifiable } from 'app/shared/models/base/identifiable';
+import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
+import { BehaviorSubject } from 'rxjs';
 
 export interface FileData {
     mediafile: File;
@@ -16,9 +14,9 @@ export interface FileData {
 const PBL_ROW_HEIGHT = 70;
 
 @Component({
-    selector: 'os-file-upload',
-    templateUrl: './file-upload.component.html',
-    styleUrls: ['./file-upload.component.scss']
+    selector: `os-file-upload`,
+    templateUrl: `./file-upload.component.html`,
+    styleUrls: [`./file-upload.component.scss`]
 })
 export class FileUploadComponent implements OnInit {
     /**
@@ -72,15 +70,15 @@ export class FileUploadComponent implements OnInit {
 
     private endColumns: PblColumnDefinition[] = [
         {
-            prop: 'remove',
-            label: '',
-            width: '40px'
+            prop: `remove`,
+            label: ``,
+            width: `40px`
         }
     ];
 
     private filesSubject = new BehaviorSubject<FileData[]>([]);
 
-    private errorMessage = '';
+    private errorMessage = ``;
 
     private fileUploadedIds: Id[] = [];
 
@@ -127,7 +125,7 @@ export class FileUploadComponent implements OnInit {
 
     public async onUploadButton(): Promise<void> {
         const files = [...this.filesSubject.value];
-        this.errorMessage = '';
+        this.errorMessage = ``;
         this.showProgress = true;
 
         if (this.parallel) {
@@ -142,7 +140,7 @@ export class FileUploadComponent implements OnInit {
 
         this.showProgress = false;
 
-        if (this.errorMessage === '') {
+        if (this.errorMessage === ``) {
             this.uploadSucceeded.emit(this.fileUploadedIds);
         } else {
             const filenames = files.map(file => file.mediafile.name);

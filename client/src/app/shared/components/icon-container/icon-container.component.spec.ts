@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { IconContainerComponent } from './icon-container.component';
 
-describe('IconContainerComponent', () => {
+describe(`IconContainerComponent`, () => {
     let component: IconContainerComponent;
     let fixture: ComponentFixture<IconContainerComponent>;
 
@@ -22,7 +21,7 @@ describe('IconContainerComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

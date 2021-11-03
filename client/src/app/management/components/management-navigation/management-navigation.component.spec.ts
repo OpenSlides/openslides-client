@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { ManagementNavigationComponent } from './management-navigation.component';
 
-describe('ManagementNavigationComponent', () => {
+describe(`ManagementNavigationComponent`, () => {
     let component: ManagementNavigationComponent;
     let fixture: ComponentFixture<ManagementNavigationComponent>;
 
@@ -21,7 +20,7 @@ describe('ManagementNavigationComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

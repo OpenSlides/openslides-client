@@ -1,10 +1,11 @@
 import { Identifiable } from 'app/shared/models/base/identifiable';
+
 import { Fqid, UnsafeHtml } from '../definitions/key-types';
 
 export namespace PersonalNoteAction {
-    export const CREATE = 'personal_note.create';
-    export const UPDATE = 'personal_note.update';
-    export const DELETE = 'personal_note.delete';
+    export const CREATE = `personal_note.create`;
+    export const UPDATE = `personal_note.update`;
+    export const DELETE = `personal_note.delete`;
 
     export interface BasePayload {
         star?: boolean;

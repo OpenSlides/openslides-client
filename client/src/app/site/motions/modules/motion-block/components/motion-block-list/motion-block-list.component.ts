@@ -1,10 +1,8 @@
 import { Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-
+import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
-import { BehaviorSubject } from 'rxjs';
-
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
@@ -20,18 +18,19 @@ import { ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
 import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
 import { MotionBlockSortService } from 'app/site/motions/services/motion-block-sort.service';
+import { BehaviorSubject } from 'rxjs';
 
 /**
  * Table for the motion blocks
  */
 @Component({
-    selector: 'os-motion-block-list',
-    templateUrl: './motion-block-list.component.html',
-    styleUrls: ['./motion-block-list.component.scss'],
+    selector: `os-motion-block-list`,
+    templateUrl: `./motion-block-list.component.html`,
+    styleUrls: [`./motion-block-list.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
 export class MotionBlockListComponent extends BaseListViewComponent<ViewMotionBlock> implements OnInit {
-    @ViewChild('newMotionBlockDialog', { static: true })
+    @ViewChild(`newMotionBlockDialog`, { static: true })
     private newMotionBlockDialog: TemplateRef<string>;
 
     private dialogRef: MatDialogRef<any>;
@@ -54,7 +53,7 @@ export class MotionBlockListComponent extends BaseListViewComponent<ViewMotionBl
     /**
      * Defines the properties the `sort-filter-bar` can search for.
      */
-    public filterProps = ['title'];
+    public filterProps = [`title`];
 
     /**
      * helper for permission checks
@@ -70,14 +69,14 @@ export class MotionBlockListComponent extends BaseListViewComponent<ViewMotionBl
      */
     public tableColumnDefinition: PblColumnDefinition[] = [
         {
-            prop: 'title',
-            label: this.translate.instant('Title'),
-            width: '100%'
+            prop: `title`,
+            label: this.translate.instant(`Title`),
+            width: `100%`
         },
         {
-            prop: 'amount',
-            label: this.translate.instant('Motions'),
-            width: '40px'
+            prop: `amount`,
+            label: this.translate.instant(`Motions`),
+            width: `40px`
         }
     ];
 
@@ -98,6 +97,7 @@ export class MotionBlockListComponent extends BaseListViewComponent<ViewMotionBl
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private activeMeetingIdService: ActiveMeetingIdService,
         public repo: MotionBlockRepositoryService,
         private formBuilder: FormBuilder,
@@ -106,13 +106,13 @@ export class MotionBlockListComponent extends BaseListViewComponent<ViewMotionBl
         private dialog: MatDialog,
         public sortService: MotionBlockSortService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
 
         this.createBlockForm = this.formBuilder.group({
-            title: ['', Validators.required],
-            agenda_create: [''],
+            title: [``, Validators.required],
+            agenda_create: [``],
             agenda_parent_id: [],
-            agenda_type: [''],
+            agenda_type: [``],
             internal: [false]
         });
     }
@@ -122,7 +122,7 @@ export class MotionBlockListComponent extends BaseListViewComponent<ViewMotionBl
      */
     public ngOnInit(): void {
         super.ngOnInit();
-        super.setTitle('Motion blocks');
+        super.setTitle(`Motion blocks`);
         this.items = this.itemRepo.getViewModelListBehaviorSubject();
     }
 
@@ -132,16 +132,16 @@ export class MotionBlockListComponent extends BaseListViewComponent<ViewMotionBl
             ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
-                    idField: 'motion_block_ids',
+                    idField: `motion_block_ids`,
                     follow: [
                         {
-                            idField: 'motion_ids',
+                            idField: `motion_ids`,
                             // since effectively we do not need any info here
                             fieldset: [],
                             follow: [
                                 {
-                                    idField: 'state_id',
-                                    fieldset: 'hasNextState'
+                                    idField: `state_id`,
+                                    fieldset: `hasNextState`
                                 }
                             ]
                         },
@@ -157,7 +157,7 @@ export class MotionBlockListComponent extends BaseListViewComponent<ViewMotionBl
      */
     private resetForm(): void {
         this.createBlockForm.reset();
-        this.createBlockForm.get('agenda_type').setValue(this.defaultVisibility);
+        this.createBlockForm.get(`agenda_type`).setValue(this.defaultVisibility);
     }
 
     /**
@@ -191,11 +191,11 @@ export class MotionBlockListComponent extends BaseListViewComponent<ViewMotionBl
      * @param event has the code
      */
     public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === 'Enter' && event.shiftKey) {
+        if (event.key === `Enter` && event.shiftKey) {
             this.save();
             this.dialogRef.close();
         }
-        if (event.key === 'Escape') {
+        if (event.key === `Escape`) {
             this.resetForm();
             this.dialogRef.close();
         }
@@ -207,9 +207,9 @@ export class MotionBlockListComponent extends BaseListViewComponent<ViewMotionBl
 
     public getIndicatingIcon(block: ViewMotionBlock): string | null {
         if (block.isFinished) {
-            return 'check';
+            return `check`;
         } else if (block.internal) {
-            return 'lock';
+            return `lock`;
         } else {
             return null;
         }
@@ -217,11 +217,11 @@ export class MotionBlockListComponent extends BaseListViewComponent<ViewMotionBl
 
     public getIndicatingTooltip(block: ViewMotionBlock): string {
         if (block.isFinished) {
-            return 'Finished';
+            return `Finished`;
         } else if (block.internal) {
-            return 'Internal';
+            return `Internal`;
         } else {
-            return '';
+            return ``;
         }
     }
 }

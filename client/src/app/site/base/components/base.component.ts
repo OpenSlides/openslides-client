@@ -1,17 +1,16 @@
 import { Directive, OnDestroy } from '@angular/core';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material/snack-bar';
 import { Title } from '@angular/platform-browser';
-
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
-
 import { ModelRequestService } from 'app/core/core-services/model-request.service';
 import { Permission } from 'app/core/core-services/permission';
 import { Id } from 'app/core/definitions/key-types';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
-import { OML, CML } from '../../../core/core-services/organization-permission';
 import { BaseModel } from 'app/shared/models/base/base-model';
+import { Subscription } from 'rxjs';
+
+import { CML, OML } from '../../../core/core-services/organization-permission';
 
 /**
  * Provides functionalities that will be used by most components
@@ -42,7 +41,7 @@ export abstract class BaseComponent implements OnDestroy {
      *
      * Might be a config variable later at some point
      */
-    private titleSuffix = ' - OpenSlides';
+    private titleSuffix = ` - OpenSlides`;
 
     /**
      * Holds the coordinates where a swipe gesture was used
@@ -75,9 +74,9 @@ export abstract class BaseComponent implements OnDestroy {
      * Settings for the TinyMCE editor selector
      */
     public tinyMceSettings = {
-        base_url: '/tinymce', // Root for resources
-        suffix: '.min', // Suffix to use when loading resources
-        theme: 'silver',
+        base_url: `/tinymce`, // Root for resources
+        suffix: `.min`, // Suffix to use when loading resources
+        theme: `silver`,
         language: null,
         language_url: null,
         inline: false,
@@ -95,8 +94,8 @@ export abstract class BaseComponent implements OnDestroy {
             forecolor backcolor removeformat | bullist numlist |
             link image charmap | code fullscreen`,
         mobile: {
-            theme: 'mobile',
-            plugins: ['autosave', 'lists', 'autolink']
+            theme: `mobile`,
+            plugins: [`autosave`, `lists`, `autolink`]
         },
         paste_preprocess: this.onPastePreprocess
     };
@@ -107,10 +106,6 @@ export abstract class BaseComponent implements OnDestroy {
 
     protected get titleService(): Title {
         return this.componentServiceCollector.titleService;
-    }
-
-    protected get translate(): TranslateService {
-        return this.componentServiceCollector.translate;
     }
 
     protected get matSnackBar(): MatSnackBar {
@@ -125,8 +120,11 @@ export abstract class BaseComponent implements OnDestroy {
         return this.componentServiceCollector.modelRequestService;
     }
 
-    public constructor(protected componentServiceCollector: ComponentServiceCollector) {
-        this.tinyMceSettings.language_url = '/assets/tinymce/langs/' + this.translate.currentLang + '.js';
+    public constructor(
+        protected componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService
+    ) {
+        this.tinyMceSettings.language_url = `/assets/tinymce/langs/` + this.translate.currentLang + `.js`;
         this.tinyMceSettings.language = this.translate.currentLang;
     }
 
@@ -168,7 +166,7 @@ export abstract class BaseComponent implements OnDestroy {
      * This snack bar will only dismiss if the user clicks the 'OK'-button.
      */
     protected raiseWarning = (message: string): void => {
-        this.messageSnackBar = this.matSnackBar.open(message, this.translate.instant('OK'));
+        this.messageSnackBar = this.matSnackBar.open(message, this.translate.instant(`OK`));
     };
 
     /**
@@ -179,20 +177,20 @@ export abstract class BaseComponent implements OnDestroy {
      * @param message The message to show or an "real" error, which will be passed to the console.
      */
     protected raiseError = (message: string | Error): void => {
-        console.log('raiseError', message);
+        console.log(`raiseError`, message);
         let errorNotification: string;
         if (message instanceof Error) {
             if (message.message) {
                 errorNotification = message.message;
             } else {
                 errorNotification = this.translate.instant(
-                    'A client error occurred. Please contact your system administrator.'
+                    `A client error occurred. Please contact your system administrator.`
                 );
             }
         } else {
             errorNotification = message;
         }
-        this.messageSnackBar = this.matSnackBar.open(errorNotification, this.translate.instant('OK'), {
+        this.messageSnackBar = this.matSnackBar.open(errorNotification, this.translate.instant(`OK`), {
             duration: 0
         });
     };
@@ -253,7 +251,7 @@ export abstract class BaseComponent implements OnDestroy {
      * Helper for *ngFor => tracked items by their corresponding id.
      */
     public trackById(_index: number, item: Id | BaseModel): Id {
-        return typeof item === 'number' ? item : item.id;
+        return typeof item === `number` ? item : item.id;
     }
 
     /**
@@ -261,7 +259,7 @@ export abstract class BaseComponent implements OnDestroy {
      * @param event
      */
     protected onInitTinyMce(event: any): void {
-        if (event.event.target.settings.theme === 'mobile') {
+        if (event.event.target.settings.theme === `mobile`) {
             this.saveHint = true;
         } else {
             event.editor.focus();
@@ -285,13 +283,13 @@ export abstract class BaseComponent implements OnDestroy {
      * @param args
      */
     private onPastePreprocess(_: any, args: any): void {
-        const getClassesRe = new RegExp(/\s*class\=\"[\w\W]*?\"/, 'gi');
-        const getDataLineNumberRe = new RegExp(/\s*data-line-number\=\"\d+\"/, 'gi');
-        const getContentEditableRe = new RegExp(/\s*contenteditable\=\"\w+\"/, 'gi');
+        const getClassesRe = new RegExp(/\s*class\=\"[\w\W]*?\"/, `gi`);
+        const getDataLineNumberRe = new RegExp(/\s*data-line-number\=\"\d+\"/, `gi`);
+        const getContentEditableRe = new RegExp(/\s*contenteditable\=\"\w+\"/, `gi`);
         const cleanedContent = (args.content as string)
-            .replace(getClassesRe, '')
-            .replace(getDataLineNumberRe, '')
-            .replace(getContentEditableRe, '');
+            .replace(getClassesRe, ``)
+            .replace(getDataLineNumberRe, ``)
+            .replace(getContentEditableRe, ``);
         args.content = cleanedContent;
     }
 }

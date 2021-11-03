@@ -4,7 +4,7 @@ export function toBase64(data: File | Blob): Promise<string> {
         reader.readAsDataURL(data);
         reader.onload = () => {
             const resultStr: string = reader.result as string;
-            resolve(resultStr.split(',')[1]);
+            resolve(resultStr.split(`,`)[1]);
         };
         reader.onerror = error => {
             reject(error);

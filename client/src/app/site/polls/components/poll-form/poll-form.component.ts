@@ -1,10 +1,7 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-
-import { combineLatest } from 'rxjs';
-import { startWith } from 'rxjs/operators';
-
+import { TranslateService } from '@ngx-translate/core';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
@@ -18,12 +15,15 @@ import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { isNumberRange } from 'app/shared/validators/custom-validators';
 import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { combineLatest } from 'rxjs';
+import { startWith } from 'rxjs/operators';
+
 import { PollService } from '../../services/poll.service';
 
 @Component({
-    selector: 'os-poll-form',
-    templateUrl: './poll-form.component.html',
-    styleUrls: ['./poll-form.component.scss'],
+    selector: `os-poll-form`,
+    templateUrl: `./poll-form.component.html`,
+    styleUrls: [`./poll-form.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
 export class PollFormComponent extends BaseComponent implements OnInit {
@@ -91,27 +91,27 @@ export class PollFormComponent extends BaseComponent implements OnInit {
     }
 
     private get pollTypeControl(): AbstractControl {
-        return this.contentForm.get('type');
+        return this.contentForm.get(`type`);
     }
 
     private get pollMethodControl(): AbstractControl {
-        return this.contentForm.get('pollmethod');
+        return this.contentForm.get(`pollmethod`);
     }
 
     private get globalYesControl(): AbstractControl {
-        return this.contentForm.get('global_yes');
+        return this.contentForm.get(`global_yes`);
     }
 
     private get globalNoControl(): AbstractControl {
-        return this.contentForm.get('global_no');
+        return this.contentForm.get(`global_no`);
     }
 
     private get globalAbstainControl(): AbstractControl {
-        return this.contentForm.get('global_abstain');
+        return this.contentForm.get(`global_abstain`);
     }
 
     private get percentBaseControl(): AbstractControl {
-        return this.contentForm.get('onehundred_percent_base');
+        return this.contentForm.get(`onehundred_percent_base`);
     }
 
     /**
@@ -120,12 +120,13 @@ export class PollFormComponent extends BaseComponent implements OnInit {
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private fb: FormBuilder,
         public groupRepo: GroupRepositoryService,
         private dialog: MatDialog,
         private meetingSettingsService: MeetingSettingsService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
         this.initContentForm();
     }
 
@@ -145,7 +146,7 @@ export class PollFormComponent extends BaseComponent implements OnInit {
                     this.data.max_votes_amount = assignment.open_posts;
                 }
                 if (!this.data.pollmethod) {
-                    this.data.pollmethod = this.meetingSettingsService.instant('assignment_poll_default_method');
+                    this.data.pollmethod = this.meetingSettingsService.instant(`assignment_poll_default_method`);
                 }
             }
 
@@ -155,9 +156,9 @@ export class PollFormComponent extends BaseComponent implements OnInit {
 
         this.subscriptions.push(
             combineLatest([
-                this.contentForm.valueChanges.pipe(startWith('')),
-                this.pollMethodControl.valueChanges.pipe(startWith('')),
-                this.pollTypeControl.valueChanges.pipe(startWith(''))
+                this.contentForm.valueChanges.pipe(startWith(``)),
+                this.pollMethodControl.valueChanges.pipe(startWith(``)),
+                this.pollTypeControl.valueChanges.pipe(startWith(``))
             ]).subscribe(([contentFormCh]) => {
                 this.updatePollForm(contentFormCh);
             })
@@ -201,7 +202,7 @@ export class PollFormComponent extends BaseComponent implements OnInit {
 
     public showMinMaxVotes(data: any): boolean {
         const selectedPollMethod: PollMethod = this.pollMethodControl.value;
-        return (selectedPollMethod === 'Y' || selectedPollMethod === 'N') && (!data || !data.state || data.isCreated);
+        return (selectedPollMethod === `Y` || selectedPollMethod === `N`) && (!data || !data.state || data.isCreated);
     }
 
     /**
@@ -293,37 +294,37 @@ export class PollFormComponent extends BaseComponent implements OnInit {
             const pollType: PollType = data.type;
             this.pollValues = [
                 [
-                    this.pollService.getVerboseNameForKey('type'),
-                    this.pollService.getVerboseNameForValue('type', data.type)
+                    this.pollService.getVerboseNameForKey(`type`),
+                    this.pollService.getVerboseNameForValue(`type`, data.type)
                 ]
             ];
             // show pollmethod only for assignment polls
             if (this.isAssignmentPoll) {
                 this.pollValues.push([
-                    this.pollService.getVerboseNameForKey('pollmethod'),
-                    this.pollService.getVerboseNameForValue('pollmethod', data.pollmethod)
+                    this.pollService.getVerboseNameForKey(`pollmethod`),
+                    this.pollService.getVerboseNameForValue(`pollmethod`, data.pollmethod)
                 ]);
             }
             if (pollType !== PollType.Analog) {
                 this.pollValues.push([
-                    this.pollService.getVerboseNameForKey('groups'),
+                    this.pollService.getVerboseNameForKey(`groups`),
                     data && data.entitled_group_ids && data.entitled_group_ids.length
                         ? this.groupRepo.getNameForIds(...data.entitled_group_ids)
-                        : '---'
+                        : `---`
                 ]);
             }
 
             if (pollMethod === PollMethod.Y || pollMethod === PollMethod.N) {
-                this.pollValues.push([this.pollService.getVerboseNameForKey('global_yes'), data.global_yes]);
-                this.pollValues.push([this.pollService.getVerboseNameForKey('global_no'), data.global_no]);
-                this.pollValues.push([this.pollService.getVerboseNameForKey('global_abstain'), data.global_abstain]);
-                this.pollValues.push([this.pollService.getVerboseNameForKey('votes_amount'), data.votes_amount]);
+                this.pollValues.push([this.pollService.getVerboseNameForKey(`global_yes`), data.global_yes]);
+                this.pollValues.push([this.pollService.getVerboseNameForKey(`global_no`), data.global_no]);
+                this.pollValues.push([this.pollService.getVerboseNameForKey(`global_abstain`), data.global_abstain]);
+                this.pollValues.push([this.pollService.getVerboseNameForKey(`votes_amount`), data.votes_amount]);
                 this.pollValues.push([
-                    this.pollService.getVerboseNameForKey('max_votes_amount'),
+                    this.pollService.getVerboseNameForKey(`max_votes_amount`),
                     data.max_votes_amount
                 ]);
                 this.pollValues.push([
-                    this.pollService.getVerboseNameForKey('min_votes_amount'),
+                    this.pollService.getVerboseNameForKey(`min_votes_amount`),
                     data.min_votes_amount
                 ]);
             }
@@ -332,16 +333,16 @@ export class PollFormComponent extends BaseComponent implements OnInit {
 
     private initContentForm(): void {
         this.contentForm = this.fb.group({
-            title: ['', Validators.required],
-            type: ['', Validators.required],
-            pollmethod: ['', Validators.required],
-            onehundred_percent_base: ['', Validators.required],
+            title: [``, Validators.required],
+            type: [``, Validators.required],
+            pollmethod: [``, Validators.required],
+            onehundred_percent_base: [``, Validators.required],
             votes_amount: this.fb.group(
                 {
                     max_votes_amount: [1, [Validators.required, Validators.min(1)]],
                     min_votes_amount: [1, [Validators.required, Validators.min(1)]]
                 },
-                { validator: isNumberRange('min_votes_amount', 'max_votes_amount') }
+                { validator: isNumberRange(`min_votes_amount`, `max_votes_amount`) }
             ),
             entitled_group_ids: [],
             global_yes: [false],
@@ -374,7 +375,7 @@ export class PollFormComponent extends BaseComponent implements OnInit {
                 this.globalNoControl.disable(suppressEvent);
                 this.globalNoControl.setValue(false, suppressEvent);
             }
-            if (pollMethod.includes('A')) {
+            if (pollMethod.includes(`A`)) {
                 this.globalAbstainControl.disable(suppressEvent);
                 this.globalAbstainControl.setValue(false, suppressEvent);
             }

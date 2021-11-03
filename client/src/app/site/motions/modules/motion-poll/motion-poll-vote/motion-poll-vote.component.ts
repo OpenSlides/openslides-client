@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-
+import { TranslateService } from '@ngx-translate/core';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Id } from 'app/core/definitions/key-types';
 import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
@@ -11,42 +11,43 @@ import { BasePollVoteComponent, VoteOption } from 'app/site/polls/components/bas
 import { ViewUser } from 'app/site/users/models/view-user';
 
 @Component({
-    selector: 'os-motion-poll-vote',
-    templateUrl: './motion-poll-vote.component.html',
-    styleUrls: ['./motion-poll-vote.component.scss'],
+    selector: `os-motion-poll-vote`,
+    templateUrl: `./motion-poll-vote.component.html`,
+    styleUrls: [`./motion-poll-vote.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MotionPollVoteComponent extends BasePollVoteComponent implements OnInit {
     public voteOptions: VoteOption[] = [
         {
-            vote: 'Y',
-            css: 'voted-yes',
-            icon: 'thumb_up',
-            label: 'Yes'
+            vote: `Y`,
+            css: `voted-yes`,
+            icon: `thumb_up`,
+            label: `Yes`
         },
         {
-            vote: 'N',
-            css: 'voted-no',
-            icon: 'thumb_down',
-            label: 'No'
+            vote: `N`,
+            css: `voted-no`,
+            icon: `thumb_down`,
+            label: `No`
         },
         {
-            vote: 'A',
-            css: 'voted-abstain',
-            icon: 'trip_origin',
-            label: 'Abstain'
+            vote: `A`,
+            css: `voted-abstain`,
+            icon: `trip_origin`,
+            label: `Abstain`
         }
     ];
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         operator: OperatorService,
         public votingService: VotingService,
         private pollRepo: PollRepositoryService,
         private promptService: PromptService,
         protected cd: ChangeDetectorRef
     ) {
-        super(componentServiceCollector, operator, votingService, cd);
+        super(componentServiceCollector, translate, operator, votingService, cd);
     }
 
     public ngOnInit(): void {
@@ -58,7 +59,7 @@ export class MotionPollVoteComponent extends BasePollVoteComponent implements On
         if (this.voteRequestData[user.id]?.value === voteOption.vote) {
             return voteOption.css;
         }
-        return '';
+        return ``;
     }
 
     public async saveVote(vote: VoteValue, optionId: Id, user: ViewUser = this.user): Promise<void> {
@@ -67,8 +68,8 @@ export class MotionPollVoteComponent extends BasePollVoteComponent implements On
         }
         this.voteRequestData[user.id].value = vote;
 
-        const title = this.translate.instant('Submit selection now?');
-        const content = this.translate.instant('Your decision cannot be changed afterwards.');
+        const title = this.translate.instant(`Submit selection now?`);
+        const content = this.translate.instant(`Your decision cannot be changed afterwards.`);
         const confirmed = await this.promptService.open(title, content);
 
         if (confirmed) {

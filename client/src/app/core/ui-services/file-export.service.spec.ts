@@ -3,7 +3,7 @@ import { inject, TestBed } from '@angular/core/testing';
 import { E2EImportsModule } from '../../../e2e-imports.module';
 import { FileExportService } from './file-export.service';
 
-describe('FileExportService', () => {
+describe(`FileExportService`, () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [E2EImportsModule],
@@ -11,7 +11,7 @@ describe('FileExportService', () => {
         });
     });
 
-    it('should be created', inject([FileExportService], (service: FileExportService) => {
+    it(`should be created`, inject([FileExportService], (service: FileExportService) => {
         expect(service).toBeTruthy();
     }));
 });

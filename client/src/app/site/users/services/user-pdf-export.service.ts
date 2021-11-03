@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
-
 import { TranslateService } from '@ngx-translate/core';
-
 import { PdfDocumentService } from 'app/core/pdf-services/pdf-document.service';
-import { UserPdfService } from './user-pdf.service';
+
 import { ViewUser } from '../models/view-user';
+import { UserPdfService } from './user-pdf.service';
 
 /**
  * Export service to handle various kind of exporting necessities for participants.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class UserPdfExportService {
     /**
@@ -33,7 +32,7 @@ export class UserPdfExportService {
      */
     public exportSingleUserAccessPDF(user: ViewUser): void {
         const doc = this.userPdfService.userAccessToDocDef(user);
-        const filename = `${this.translate.instant('Access-data')} ${user.short_name}`;
+        const filename = `${this.translate.instant(`Access-data`)} ${user.short_name}`;
         const metadata = {
             title: filename
         };
@@ -49,9 +48,9 @@ export class UserPdfExportService {
         const doc: object[] = [];
         users.forEach(user => {
             doc.push(this.userPdfService.userAccessToDocDef(user));
-            doc.push({ text: '', pageBreak: 'after' });
+            doc.push({ text: ``, pageBreak: `after` });
         });
-        const filename = this.translate.instant('Access-data');
+        const filename = this.translate.instant(`Access-data`);
         const metadata = {
             title: filename
         };
@@ -64,7 +63,7 @@ export class UserPdfExportService {
      *
      */
     public exportUserList(users: ViewUser[]): void {
-        const filename = this.translate.instant('List of participants');
+        const filename = this.translate.instant(`List of participants`);
         const metadata = {
             title: filename
         };

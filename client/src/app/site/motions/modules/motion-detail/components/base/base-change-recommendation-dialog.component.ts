@@ -1,7 +1,7 @@
 import { Inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { MotionChangeRecommendationAction } from 'app/core/actions/motion-change-recommendation-action';
 import { MotionChangeRecommendationRepositoryService } from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -39,12 +39,13 @@ export abstract class BaseChangeRecommendationDialogComponent<
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         @Inject(MAT_DIALOG_DATA) public data: T,
         protected formBuilder: FormBuilder,
         protected repo: MotionChangeRecommendationRepositoryService,
         protected dialogRef: MatDialogRef<BaseChangeRecommendationDialogComponent<T>>
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
 
         this.initializeDialogData();
         this.createForm();

@@ -1,10 +1,6 @@
 import { ChangeDetectorRef, Directive, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
-import { Label } from 'ng2-charts';
-import { from, Observable, Subscription } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
-
+import { TranslateService } from '@ngx-translate/core';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Id } from 'app/core/definitions/key-types';
 import { Deferred } from 'app/core/promises/deferred';
@@ -21,8 +17,12 @@ import { BaseViewModel } from 'app/site/base/base-view-model';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewGroup } from 'app/site/users/models/view-group';
 import { ViewUser } from 'app/site/users/models/view-user';
-import { EntitledUsersTableEntry } from './entitled-users-table/entitled-users-table.component';
+import { Label } from 'ng2-charts';
+import { from, Observable, Subscription } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
+
 import { PollService } from '../services/poll.service';
+import { EntitledUsersTableEntry } from './entitled-users-table/entitled-users-table.component';
 
 export interface BaseVoteData {
     user?: ViewUser;
@@ -48,16 +48,16 @@ export abstract class BasePollDetailComponentDirective<V extends ViewPoll<BaseVi
      */
     public voteOptionStyle = {
         Y: {
-            css: 'yes',
-            icon: 'thumb_up'
+            css: `yes`,
+            icon: `thumb_up`
         },
         N: {
-            css: 'no',
-            icon: 'thumb_down'
+            css: `no`,
+            icon: `thumb_down`
         },
         A: {
-            css: 'abstain',
-            icon: 'trip_origin'
+            css: `abstain`,
+            icon: `trip_origin`
         }
     };
 
@@ -81,7 +81,7 @@ export abstract class BasePollDetailComponentDirective<V extends ViewPoll<BaseVi
 
     private entitledUsersSubscription: Subscription;
 
-    public voteWeightEnabled: Observable<boolean> = this.meetingSettingsService.get('users_enable_vote_weight');
+    public voteWeightEnabled: Observable<boolean> = this.meetingSettingsService.get(`users_enable_vote_weight`);
 
     private currentOperator: ViewUser;
 
@@ -110,6 +110,7 @@ export abstract class BasePollDetailComponentDirective<V extends ViewPoll<BaseVi
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         protected repo: PollRepositoryService,
         protected route: ActivatedRoute,
         protected groupRepo: GroupRepositoryService,
@@ -122,7 +123,7 @@ export abstract class BasePollDetailComponentDirective<V extends ViewPoll<BaseVi
         protected meetingSettingsService: MeetingSettingsService,
         protected userRepo: UserRepositoryService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
 
         this.subscriptions.push(
             this.operator.userObservable.subscribe(currentUser => {
@@ -144,14 +145,14 @@ export abstract class BasePollDetailComponentDirective<V extends ViewPoll<BaseVi
     }
 
     public async deletePoll(): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to delete this vote?');
+        const title = this.translate.instant(`Are you sure you want to delete this vote?`);
         if (await this.promptService.open(title)) {
             this.repo.delete(this.poll).then(() => this.onDeleted(), this.raiseError);
         }
     }
 
     public async pseudoanonymizePoll(): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to anonymize all votes? This cannot be undone.');
+        const title = this.translate.instant(`Are you sure you want to anonymize all votes? This cannot be undone.`);
         if (await this.promptService.open(title)) {
             this.repo.anonymize(this.poll).catch(this.raiseError);
         }
@@ -188,19 +189,19 @@ export abstract class BasePollDetailComponentDirective<V extends ViewPoll<BaseVi
             ids: [id],
             follow: [
                 {
-                    idField: 'content_object_id'
+                    idField: `content_object_id`
                 },
                 {
-                    idField: 'voted_ids',
-                    fieldset: 'singleVotes'
+                    idField: `voted_ids`,
+                    fieldset: `singleVotes`
                 },
                 {
-                    idField: 'option_ids',
-                    follow: [{ idField: 'vote_ids' }, { idField: 'content_object_id' }]
+                    idField: `option_ids`,
+                    follow: [{ idField: `vote_ids` }, { idField: `content_object_id` }]
                 },
                 {
-                    idField: 'global_option_id',
-                    follow: [{ idField: 'vote_ids' }]
+                    idField: `global_option_id`,
+                    follow: [{ idField: `vote_ids` }]
                 }
             ]
         });

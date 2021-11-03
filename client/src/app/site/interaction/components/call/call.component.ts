@@ -1,3 +1,4 @@
+import { KeyValue } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -9,28 +10,27 @@ import {
     OnInit,
     Output
 } from '@angular/core';
-
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { Observable } from 'rxjs';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { Observable } from 'rxjs';
+
 import { ApplauseService } from '../../services/applause.service';
 import { CallRestrictionService } from '../../services/call-restriction.service';
 import { InteractionService } from '../../services/interaction.service';
 import { ConferenceMember, ConferenceMemberCollection, RtcService } from '../../services/rtc.service';
 import { StreamService } from '../../services/stream.service';
-import { KeyValue } from '@angular/common';
 
-const helpDeskTitle = _('Help desk');
-const liveConferenceTitle = _('Conference room');
-const disconnectedTitle = _('disconnected');
-const connectingTitle = _('connecting ...');
+const helpDeskTitle = _(`Help desk`);
+const liveConferenceTitle = _(`Conference room`);
+const disconnectedTitle = _(`disconnected`);
+const connectingTitle = _(`connecting ...`);
 
 @Component({
-    selector: 'os-call',
-    templateUrl: './call.component.html',
-    styleUrls: ['./call.component.scss'],
+    selector: `os-call`,
+    templateUrl: `./call.component.html`,
+    styleUrls: [`./call.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CallComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -74,6 +74,7 @@ export class CallComponent extends BaseComponent implements OnInit, AfterViewIni
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private callRestrictionService: CallRestrictionService,
         private rtcService: RtcService,
         private applauseService: ApplauseService,
@@ -81,7 +82,7 @@ export class CallComponent extends BaseComponent implements OnInit, AfterViewIni
         private streamService: StreamService,
         private cd: ChangeDetectorRef
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
 
         this.subscriptions.push(
             this.rtcService.isJitsiActiveObservable.subscribe(active => {
@@ -119,7 +120,7 @@ export class CallComponent extends BaseComponent implements OnInit, AfterViewIni
 
     // closing the tab should also try to stop jitsi.
     // this will usually not be caught by ngOnDestroy
-    @HostListener('window:beforeunload', ['$event'])
+    @HostListener(`window:beforeunload`, [`$event`])
     public beforeunload($event: any): void {
         this.rtcService.stopJitsi();
     }
@@ -163,7 +164,7 @@ export class CallComponent extends BaseComponent implements OnInit, AfterViewIni
 
     private updateSubtitle(): void {
         if (this.isJitsiActive && this.isJoined) {
-            this.conferenceSubtitle.next(this.dominantSpeaker || '');
+            this.conferenceSubtitle.next(this.dominantSpeaker || ``);
         } else if (this.isJitsiActive && !this.isJoined) {
             this.conferenceSubtitle.next(connectingTitle);
         } else {

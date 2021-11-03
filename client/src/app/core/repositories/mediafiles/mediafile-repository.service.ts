@@ -1,10 +1,4 @@
 import { Injectable } from '@angular/core';
-
-import { saveAs } from 'file-saver';
-import * as JSZip from 'jszip';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-
 import { MediafileAction } from 'app/core/actions/mediafile-action';
 import { HttpService } from 'app/core/core-services/http.service';
 import { AdditionalField } from 'app/core/core-services/model-request-builder.service';
@@ -12,15 +6,20 @@ import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-reques
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Mediafile } from 'app/shared/models/mediafiles/mediafile';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
+import { saveAs } from 'file-saver';
+import * as JSZip from 'jszip';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { BaseIsListOfSpeakersContentObjectRepository } from '../base-is-list-of-speakers-content-object-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 export const LOGO_FONT_VALUES: AdditionalField[] = [
     {
-        templateField: 'used_as_font_$_in_meeting_id'
+        templateField: `used_as_font_$_in_meeting_id`
     },
     {
-        templateField: 'used_as_logo_$_in_meeting_id'
+        templateField: `used_as_logo_$_in_meeting_id`
     }
 ];
 
@@ -28,7 +27,7 @@ export const LOGO_FONT_VALUES: AdditionalField[] = [
  * Repository for MediaFiles
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjectRepository<ViewMediafile, Mediafile> {
     private directoryBehaviorSubject: BehaviorSubject<ViewMediafile[]>;
@@ -47,17 +46,17 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
 
     public getTitle = (viewMediafile: ViewMediafile) => viewMediafile.title;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Files' : 'File');
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Files` : `File`);
 
     public getFieldsets(): Fieldsets<Mediafile> {
-        const fileSelectionFields: (keyof Mediafile)[] = ['title', 'is_directory'];
-        const fileCreationFields: (keyof Mediafile)[] = fileSelectionFields.concat(['parent_id', 'child_ids']);
+        const fileSelectionFields: (keyof Mediafile)[] = [`title`, `is_directory`];
+        const fileCreationFields: (keyof Mediafile)[] = fileSelectionFields.concat([`parent_id`, `child_ids`]);
         const listFields: (keyof Mediafile)[] = fileCreationFields.concat([
-            'mimetype',
-            'filesize',
-            'create_timestamp',
-            'has_inherited_access_groups',
-            'pdf_information'
+            `mimetype`,
+            `filesize`,
+            `create_timestamp`,
+            `has_inherited_access_groups`,
+            `pdf_information`
         ]);
         return {
             [DEFAULT_FIELDSET]: listFields,
@@ -90,7 +89,7 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
                 zip.file(file.title, base64Data, { base64: true });
             }
         }
-        const archive = await zip.generateAsync({ type: 'blob' });
+        const archive = await zip.generateAsync({ type: `blob` });
         saveAs(archive, `${archiveName}.zip`);
     }
 

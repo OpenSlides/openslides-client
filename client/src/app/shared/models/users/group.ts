@@ -1,5 +1,6 @@
 import { Permission } from 'app/core/core-services/permission';
 import { Id } from 'app/core/definitions/key-types';
+
 import { BaseModel } from '../base/base-model';
 import { HasMeetingId } from '../base/has-meeting-id';
 
@@ -8,7 +9,7 @@ import { HasMeetingId } from '../base/has-meeting-id';
  * @ignore
  */
 export class Group extends BaseModel<Group> {
-    public static COLLECTION = 'group';
+    public static COLLECTION = `group`;
 
     public id: Id;
     public name: string;

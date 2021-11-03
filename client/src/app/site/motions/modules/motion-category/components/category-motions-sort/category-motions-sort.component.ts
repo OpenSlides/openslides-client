@@ -1,8 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
-import { BehaviorSubject, Observable } from 'rxjs';
-
+import { TranslateService } from '@ngx-translate/core';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { ChoiceService } from 'app/core/ui-services/choice.service';
@@ -13,6 +11,7 @@ import { CanComponentDeactivate } from 'app/shared/utils/watch-for-changes.guard
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 /**
  * View for rearranging and renumbering the motions of a category. The {@link onNumberMotions}
@@ -20,9 +19,9 @@ import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category
  * as displayed in this view
  */
 @Component({
-    selector: 'os-category-motions-sort',
-    templateUrl: './category-motions-sort.component.html',
-    styleUrls: ['./category-motions-sort.component.scss']
+    selector: `os-category-motions-sort`,
+    templateUrl: `./category-motions-sort.component.html`,
+    styleUrls: [`./category-motions-sort.component.scss`]
 })
 export class CategoryMotionsSortComponent extends BaseModelContextComponent implements OnInit, CanComponentDeactivate {
     /**
@@ -70,7 +69,7 @@ export class CategoryMotionsSortComponent extends BaseModelContextComponent impl
     /**
      * The Sort Component
      */
-    @ViewChild('sorter', { static: true })
+    @ViewChild(`sorter`, { static: true })
     public sortSelector: SortingListComponent;
 
     /**
@@ -87,13 +86,14 @@ export class CategoryMotionsSortComponent extends BaseModelContextComponent impl
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private promptService: PromptService,
         private repo: MotionCategoryRepositoryService,
         private route: ActivatedRoute,
         private motionRepo: MotionRepositoryService,
         private choiceService: ChoiceService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     /**
@@ -108,9 +108,9 @@ export class CategoryMotionsSortComponent extends BaseModelContextComponent impl
             ids: [categoryId],
             follow: [
                 {
-                    idField: 'motion_ids',
-                    fieldset: 'title',
-                    additionalFields: ['category_weight', 'category_id']
+                    idField: `motion_ids`,
+                    fieldset: `title`,
+                    additionalFields: [`category_weight`, `category_id`]
                 }
             ]
         });
@@ -167,7 +167,7 @@ export class CategoryMotionsSortComponent extends BaseModelContextComponent impl
      * Only an array containing ids from the motions will be sent.
      */
     public async sendUpdate(): Promise<void> {
-        const title = this.translate.instant('Do you really want to save your changes?');
+        const title = this.translate.instant(`Do you really want to save your changes?`);
         if (await this.promptService.open(title)) {
             const ids = this.motionsCopy.map(motion => motion.id);
             this.repo.sortMotionsInCategory(this.category.category, ids);
@@ -215,8 +215,8 @@ export class CategoryMotionsSortComponent extends BaseModelContextComponent impl
      */
     public async canDeactivate(): Promise<boolean> {
         if (this.hasChanged) {
-            const title = this.translate.instant('Do you really want to exit this page?');
-            const content = this.translate.instant('You made changes.');
+            const title = this.translate.instant(`Do you really want to exit this page?`);
+            const content = this.translate.instant(`You made changes.`);
             return await this.promptService.open(title, content);
         }
         return true;
@@ -224,11 +224,11 @@ export class CategoryMotionsSortComponent extends BaseModelContextComponent impl
 
     public async moveToPosition(): Promise<void> {
         if (this.sortSelector.multiSelectedIndex.length) {
-            const content = this.translate.instant('Move selected items ...');
+            const content = this.translate.instant(`Move selected items ...`);
             const choices = this.sortSelector.sortedItems.filter(
                 f => !this.sortSelector.multiSelectedIndex.includes(f.id)
             );
-            const actions = [this.translate.instant('Insert before'), this.translate.instant('Insert behind')];
+            const actions = [this.translate.instant(`Insert before`), this.translate.instant(`Insert behind`)];
             const selectedChoice = await this.choiceService.open(content, choices, false, actions);
             if (selectedChoice) {
                 const newIndex = selectedChoice.items as number;

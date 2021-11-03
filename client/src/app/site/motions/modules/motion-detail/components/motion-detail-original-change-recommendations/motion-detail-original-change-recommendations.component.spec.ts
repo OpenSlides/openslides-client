@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { MotionDetailOriginalChangeRecommendationsComponent } from './motion-detail-original-change-recommendations.component';
@@ -16,13 +15,13 @@ import { MotionDetailOriginalChangeRecommendationsComponent } from './motion-det
     `
 })
 class TestHostComponent {
-    public html = '<p>Test123</p>';
+    public html = `<p>Test123</p>`;
     public changeRecommendations = [];
     public createChangeRecommendation($event: Event): void {}
     public gotoChangeRecommendation($event: Event): void {}
 }
 
-describe('MotionDetailOriginalChangeRecommendationsComponent', () => {
+describe(`MotionDetailOriginalChangeRecommendationsComponent`, () => {
     let component: TestHostComponent;
     let fixture: ComponentFixture<TestHostComponent>;
 
@@ -41,7 +40,7 @@ describe('MotionDetailOriginalChangeRecommendationsComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

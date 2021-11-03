@@ -1,7 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
-
-import { Subscription } from 'rxjs';
-
+import { TranslateService } from '@ngx-translate/core';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PollData } from 'app/shared/models/poll/generic-poll';
@@ -9,12 +7,14 @@ import { PollState } from 'app/shared/models/poll/poll-constants';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { MotionPollService } from 'app/site/motions/services/motion-poll.service';
 import { PollTableData } from 'app/site/polls/services/poll.service';
+import { Subscription } from 'rxjs';
+
 import { ChartData } from '../charts/charts.component';
 
 @Component({
-    selector: 'os-motion-poll-detail-content',
-    templateUrl: './motion-poll-detail-content.component.html',
-    styleUrls: ['./motion-poll-detail-content.component.scss'],
+    selector: `os-motion-poll-detail-content`,
+    templateUrl: `./motion-poll-detail-content.component.html`,
+    styleUrls: [`./motion-poll-detail-content.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MotionPollDetailContentComponent extends BaseComponent implements OnDestroy {
@@ -35,7 +35,7 @@ export class MotionPollDetailContentComponent extends BaseComponent implements O
     }
 
     @Input()
-    public iconSize: 'large' | 'gigantic' = 'large';
+    public iconSize: 'large' | 'gigantic' = `large`;
 
     private get state(): PollState {
         return this.poll.state;
@@ -65,11 +65,12 @@ export class MotionPollDetailContentComponent extends BaseComponent implements O
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private pollService: MotionPollService,
         private cd: ChangeDetectorRef,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     public ngOnDestroy(): void {

@@ -1,9 +1,7 @@
 import { ChangeDetectorRef, Component, Input, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
-
 import { PblColumnDefinition } from '@pebula/ngrid';
 import { PblNgridRowContext } from '@pebula/ngrid/lib/grid';
-
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { StorageService } from 'app/core/core-services/storage.service';
@@ -14,6 +12,7 @@ import { HasListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers'
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { isProjectable } from 'app/site/base/projectable';
+
 import { BasicListViewTableComponent } from '../basic-list-view-table/basic-list-view-table.component';
 
 export interface CssClassDefinition {
@@ -70,9 +69,9 @@ export interface ColumnRestriction {
  * ```
  */
 @Component({
-    selector: 'os-list-view-table',
-    templateUrl: './list-view-table.component.html',
-    styleUrls: ['../basic-list-view-table/basic-list-view-table.component.scss'],
+    selector: `os-list-view-table`,
+    templateUrl: `./list-view-table.component.html`,
+    styleUrls: [`../basic-list-view-table/basic-list-view-table.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
 export class ListViewTableComponent<
@@ -109,13 +108,13 @@ export class ListViewTableComponent<
     @Input()
     public startColumnDefinitions: PblColumnDefinition[] = [
         {
-            prop: 'selection',
-            label: '',
-            width: '40px'
+            prop: `selection`,
+            label: ``,
+            width: `40px`
         },
         {
-            prop: 'projector',
-            label: '',
+            prop: `projector`,
+            label: ``,
             width: `${this.projectorColumnWidth}px`
         }
     ];
@@ -126,14 +125,14 @@ export class ListViewTableComponent<
     @Input()
     public endColumnDefinitions: PblColumnDefinition[] = [
         {
-            prop: 'speaker',
-            label: '',
-            width: '45px'
+            prop: `speaker`,
+            label: ``,
+            width: `45px`
         },
         {
-            prop: 'menu',
-            label: '',
-            width: '40px'
+            prop: `menu`,
+            label: ``,
+            width: `40px`
         }
     ];
 
@@ -156,7 +155,7 @@ export class ListViewTableComponent<
     public isElementProjected = (context: PblNgridRowContext<V>) => {
         const viewModel = context.$implicit as V;
         if (this.allowProjector && isProjectable(viewModel) && this.projectorService.isProjected(viewModel)) {
-            return 'projected';
+            return `projected`;
         }
     };
 
@@ -179,12 +178,12 @@ export class ListViewTableComponent<
 
         // hide the projector columns
         if (this.multiSelect || this.isMobile || !this.allowProjector) {
-            columnsToHide.push('projector');
+            columnsToHide.push(`projector`);
         }
 
         // hide the speakers in mobile
         if (this.isMobile || !this.showListOfSpeakers || !this.operator.hasPerms(Permission.listOfSpeakersCanSee)) {
-            columnsToHide.push('speaker');
+            columnsToHide.push(`speaker`);
         }
 
         return columnsToHide;

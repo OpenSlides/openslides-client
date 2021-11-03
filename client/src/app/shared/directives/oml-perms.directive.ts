@@ -1,10 +1,10 @@
 import { Directive, Input } from '@angular/core';
-
 import { OML } from 'app/core/core-services/organization-permission';
+
 import { BasePermsDirective } from './base-perms.directive';
 
 @Directive({
-    selector: '[osOmlPerms]'
+    selector: `[osOmlPerms]`
 })
 export class OmlPermsDirective extends BasePermsDirective<OML> {
     @Input()

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { BehaviorSubject, Observable } from 'rxjs';
 
 export interface AuthToken {
@@ -14,7 +13,7 @@ export interface AuthToken {
  * Authenticates an OpenSlides user with username and password
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AuthTokenService {
     private _rawAccessToken: string | null = null;
@@ -49,7 +48,7 @@ export class AuthTokenService {
         }
 
         try {
-            const payload = atob(rawToken.split('.')[1]);
+            const payload = atob(rawToken.split(`.`)[1]);
             return JSON.parse(payload) as AuthToken;
         } catch (e) {
             return null;

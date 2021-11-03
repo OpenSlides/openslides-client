@@ -1,11 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
-import { BehaviorSubject, Observable } from 'rxjs';
-
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
@@ -22,11 +20,13 @@ import { genders } from 'app/shared/models/users/user';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
 import { PollService } from 'app/site/polls/services/poll.service';
+import { BehaviorSubject, Observable } from 'rxjs';
+
+import { ViewGroup } from '../../models/view-group';
+import { ViewUser } from '../../models/view-user';
 import { UserFilterListService } from '../../services/user-filter-list.service';
 import { UserPdfExportService } from '../../services/user-pdf-export.service';
 import { UserSortListService } from '../../services/user-sort-list.service';
-import { ViewGroup } from '../../models/view-group';
-import { ViewUser } from '../../models/view-user';
 
 /**
  * Interface for the short editing dialog.
@@ -73,16 +73,16 @@ interface InfoDialog {
  * Component for the user list view.
  */
 @Component({
-    selector: 'os-user-list',
-    templateUrl: './user-list.component.html',
-    styleUrls: ['./user-list.component.scss'],
+    selector: `os-user-list`,
+    templateUrl: `./user-list.component.html`,
+    styleUrls: [`./user-list.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserListComponent extends BaseListViewComponent<ViewUser> implements OnInit {
     /**
      * The reference to the template.
      */
-    @ViewChild('userInfoDialog', { static: true })
+    @ViewChild(`userInfoDialog`, { static: true })
     private userInfoDialog: TemplateRef<string>;
 
     /**
@@ -146,32 +146,33 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
      */
     public tableColumnDefinition: PblColumnDefinition[] = [
         {
-            prop: 'short_name',
-            width: '85%'
+            prop: `short_name`,
+            width: `85%`
         },
         {
-            prop: 'group',
+            prop: `group`,
             minWidth: 200
         },
         {
-            prop: 'infos',
+            prop: `infos`,
             width: this.singleButtonWidth
         },
         {
-            prop: 'presence',
-            width: '100px'
+            prop: `presence`,
+            width: `100px`
         }
     ];
 
     /**
      * Define extra filter properties
      */
-    public filterProps = ['full_name', 'groups', 'structure_level', 'number', 'delegationName'];
+    public filterProps = [`full_name`, `groups`, `structure_level`, `number`, `delegationName`];
 
     private allowSelfSetPresent: boolean;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private route: ActivatedRoute,
         public repo: UserRepositoryService,
         private groupRepo: GroupRepositoryService,
@@ -188,18 +189,18 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         private pollService: PollService,
         private activeMeetingIdService: ActiveMeetingIdService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
 
         // enable multiSelect for this listView
         this.canMultiSelect = true;
         this.meetingSettingsService
-            .get('users_enable_presence_view')
+            .get(`users_enable_presence_view`)
             .subscribe(state => (this._presenceViewConfigured = state));
         this.meetingSettingsService
-            .get('users_enable_vote_weight')
+            .get(`users_enable_vote_weight`)
             .subscribe(enabled => (this.voteWeightEnabled = enabled));
         this.meetingSettingsService
-            .get('users_allow_self_set_present')
+            .get(`users_allow_self_set_present`)
             .subscribe(allowed => (this.allowSelfSetPresent = allowed));
     }
 
@@ -211,7 +212,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
      */
     public ngOnInit(): void {
         super.ngOnInit();
-        super.setTitle('Participants');
+        super.setTitle(`Participants`);
     }
 
     protected getModelRequest(): SimplifiedModelRequest {
@@ -220,26 +221,26 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
             ids: [this.activeMeetingId],
             follow: [
                 {
-                    idField: 'user_ids',
-                    fieldset: 'list',
-                    additionalFields: ['default_password'], // used for PDF
+                    idField: `user_ids`,
+                    fieldset: `list`,
+                    additionalFields: [`default_password`], // used for PDF
                     follow: [
                         {
                             idField: {
-                                templateIdField: 'group_$_ids',
+                                templateIdField: `group_$_ids`,
                                 templateValue: this.activeMeetingIdService.meetingId?.toString()
                             }
                         },
                         {
                             idField: {
-                                templateIdField: 'vote_delegated_$_to_id',
+                                templateIdField: `vote_delegated_$_to_id`,
                                 templateValue: this.activeMeetingIdService.meetingId?.toString()
                             }
                         }
                     ]
                 },
                 {
-                    idField: 'group_ids'
+                    idField: `group_ids`
                 }
             ],
             fieldset: []
@@ -250,7 +251,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
      * Handles the click on the plus button
      */
     public onPlusButton(): void {
-        this.router.navigate(['./new'], { relativeTo: this.route });
+        this.router.navigate([`./new`], { relativeTo: this.route });
     }
 
     public isUserPresent(user: ViewUser): boolean {
@@ -292,7 +293,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         const dialogRef = this.dialog.open(this.userInfoDialog, infoDialogSettings);
 
         dialogRef.keydownEvents().subscribe((event: KeyboardEvent) => {
-            if (event.key === 'Enter' && event.shiftKey) {
+            if (event.key === `Enter` && event.shiftKey) {
                 dialogRef.close(this.infoDialog);
             }
         });
@@ -312,30 +313,30 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         this.csvExport.export(
             this.dataSource.filteredData,
             [
-                { property: 'title' },
-                { property: 'first_name', label: 'Given name' },
-                { property: 'last_name', label: 'Surname' },
-                { property: 'structure_level', label: 'Structure level' },
-                { property: 'number', label: 'Participant number' },
+                { property: `title` },
+                { property: `first_name`, label: `Given name` },
+                { property: `last_name`, label: `Surname` },
+                { property: `structure_level`, label: `Structure level` },
+                { property: `number`, label: `Participant number` },
                 {
-                    label: 'groups',
+                    label: `groups`,
                     map: user =>
                         user
                             .groups()
                             .map(group => group.name)
-                            .join(',')
+                            .join(`,`)
                 },
-                { property: 'comment' },
-                { property: 'is_active', label: 'Is active' },
-                { property: 'is_present_in_meetings', label: 'Is present in meeting' },
-                { property: 'is_physical_person', label: 'Is a natural person' },
-                { property: 'default_password', label: 'Initial password' },
-                { property: 'email' },
-                { property: 'username' },
-                { property: 'gender' },
-                { property: 'vote_weight', label: 'Vote weight' }
+                { property: `comment` },
+                { property: `is_active`, label: `Is active` },
+                { property: `is_present_in_meetings`, label: `Is present in meeting` },
+                { property: `is_physical_person`, label: `Is a natural person` },
+                { property: `default_password`, label: `Initial password` },
+                { property: `email` },
+                { property: `username` },
+                { property: `gender` },
+                { property: `vote_weight`, label: `Vote weight` }
             ],
-            this.translate.instant('Participants') + '.csv'
+            this.translate.instant(`Participants`) + `.csv`
         );
     }
 
@@ -361,10 +362,10 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
      */
     public async setGroupSelected(): Promise<void> {
         const content = this.translate.instant(
-            'This will add or remove the following groups for all selected participants:'
+            `This will add or remove the following groups for all selected participants:`
         );
-        const ADD = _('add group(s)');
-        const REMOVE = _('remove group(s)');
+        const ADD = _(`add group(s)`);
+        const REMOVE = _(`remove group(s)`);
         const choices = [ADD, REMOVE];
         const selectedChoice = await this.choiceService.open(content, this.groupsObservable, true, choices);
         if (selectedChoice) {
@@ -377,15 +378,15 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
     }
 
     public async changeActiveStateOfSelectedUsers(): Promise<void> {
-        await this.setStateSelected('is_active');
+        await this.setStateSelected(`is_active`);
     }
 
     public async changePresentStateOfSelectedUsers(): Promise<void> {
-        await this.setStateSelected('is_present_in_meetings');
+        await this.setStateSelected(`is_present_in_meetings`);
     }
 
     public async changePhysicalStateOfSelectedUsers(): Promise<void> {
-        await this.setStateSelected('is_physical_person');
+        await this.setStateSelected(`is_physical_person`);
     }
 
     /**
@@ -393,8 +394,8 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
      * multiSelect mode.
      */
     public async sendInvitationEmailSelected(): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to send emails to all selected participants?');
-        const content = this.selectedRows.length + ' ' + this.translate.instant('emails');
+        const title = this.translate.instant(`Are you sure you want to send emails to all selected participants?`);
+        const content = this.selectedRows.length + ` ` + this.translate.instant(`emails`);
         if (await this.promptService.open(title, content)) {
             this.repo.sendInvitationEmails(this.selectedRows).then(this.raiseError, this.raiseError);
         }
@@ -408,7 +409,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
      */
     public getEmailSentTime(user: ViewUser): string {
         if (!user.isLastEmailSend) {
-            return this.translate.instant('No email sent');
+            return this.translate.instant(`No email sent`);
         }
         return this.repo.lastSentEmailTimeString(user);
     }
@@ -435,14 +436,14 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
     private async setStateSelected(field: UserStateField): Promise<void> {
         let options: [string, string];
         switch (field) {
-            case 'is_active':
-                options = [_('active'), _('inactive')];
+            case `is_active`:
+                options = [_(`active`), _(`inactive`)];
                 break;
-            case 'is_present_in_meetings':
-                options = [_('present'), _('absent')];
+            case `is_present_in_meetings`:
+                options = [_(`present`), _(`absent`)];
                 break;
-            case 'is_physical_person':
-                options = [_('natural person'), _('no natural person')];
+            case `is_physical_person`:
+                options = [_(`natural person`), _(`no natural person`)];
                 break;
         }
         const content = this.translate.instant(`Set status for selected participants:`);
@@ -450,7 +451,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         const selectedChoice = await this.choiceService.open(content, null, false, options);
         if (selectedChoice) {
             const value = selectedChoice.action === options[0];
-            if (field === 'is_present_in_meetings') {
+            if (field === `is_present_in_meetings`) {
                 await this.repo.setPresent(value, ...this.selectedRows);
             } else {
                 await this.repo.setState(field, value, ...this.selectedRows);

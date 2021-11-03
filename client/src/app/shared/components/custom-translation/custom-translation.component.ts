@@ -15,9 +15,9 @@ interface TranslationBox {
  * ```
  */
 @Component({
-    selector: 'os-custom-translation',
-    templateUrl: './custom-translation.component.html',
-    styleUrls: ['./custom-translation.component.scss'],
+    selector: `os-custom-translation`,
+    templateUrl: `./custom-translation.component.html`,
+    styleUrls: [`./custom-translation.component.scss`],
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
@@ -52,7 +52,7 @@ export class CustomTranslationComponent implements ControlValueAccessor, OnInit 
             translationBoxes: this.formBuilder.array([])
         });
 
-        this.translationBoxes = this.translationForm.get('translationBoxes') as FormArray;
+        this.translationBoxes = this.translationForm.get(`translationBoxes`) as FormArray;
         this.translationBoxes.valueChanges.subscribe((value: TranslationBox[]) => {
             if (this.translationBoxes.valid) {
                 this.propagateChange(value.mapToObject(entry => ({ [entry.original]: entry.translation })));
@@ -117,7 +117,7 @@ export class CustomTranslationComponent implements ControlValueAccessor, OnInit 
      * @param original The original string to translate.
      * @param translation The translation for the given string.
      */
-    public addNewTranslation(original: string = '', translation: string = ''): void {
+    public addNewTranslation(original: string = ``, translation: string = ``): void {
         this.translationBoxes.push(
             this.formBuilder.group({
                 original: [original, Validators.required],

@@ -1,23 +1,23 @@
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import {
+    ContentChild,
     Directive,
     ElementRef,
     EventEmitter,
     Input,
     Output,
-    ViewChild,
-    ContentChild,
-    TemplateRef
+    TemplateRef,
+    ViewChild
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatOption, MatOptionSelectionChange } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
-
 import { Id } from 'app/core/definitions/key-types';
 import { BaseFormFieldControlComponent } from 'app/shared/components/base-form-field-control';
 import { ParentErrorStateMatcher } from 'app/shared/parent-error-state-matcher';
-import { Selectable } from '../../selectable';
+
 import { NotFoundDescriptionDirective } from '../../../directives/not-found-description.directive';
+import { Selectable } from '../../selectable';
 
 export interface OsOptionSelectionChanged<T = Selectable> {
     value: T;
@@ -29,10 +29,10 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormFieldCont
     @ViewChild(CdkVirtualScrollViewport, { static: true })
     public cdkVirtualScrollViewPort: CdkVirtualScrollViewport;
 
-    @ViewChild('matSelect')
+    @ViewChild(`matSelect`)
     public matSelect: MatSelect;
 
-    @ViewChild('chipPlaceholder', { static: false })
+    @ViewChild(`chipPlaceholder`, { static: false })
     public chipPlaceholder: ElementRef<HTMLElement>;
 
     @ContentChild(NotFoundDescriptionDirective, { read: TemplateRef, static: false })
@@ -54,7 +54,7 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormFieldCont
     public showChips = true;
 
     @Input()
-    public noneTitle = '–';
+    public noneTitle = `–`;
 
     @Input()
     public errorStateMatcher: ParentErrorStateMatcher;
@@ -63,7 +63,7 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormFieldCont
      * Label showing, if there are no options for a specific search.
      */
     @Input()
-    public noOptionsFoundLabel = 'No options found';
+    public noOptionsFoundLabel = `No options found`;
 
     /**
      * A function can be passed to transform a value before it is set as value of the underlying form-control.
@@ -128,7 +128,7 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormFieldCont
     }
 
     public get width(): string {
-        return this.chipPlaceholder ? `${this.chipPlaceholder.nativeElement.clientWidth - 16}px` : '100%';
+        return this.chipPlaceholder ? `${this.chipPlaceholder.nativeElement.clientWidth - 16}px` : `100%`;
     }
 
     public selectedIds: Id[] = [];
@@ -170,7 +170,7 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormFieldCont
         }
         const searchValue: string = this.searchValueForm.value.trim().toLowerCase();
         const filteredItems = this.selectableItems.filter(item => {
-            const idString = '' + item.id;
+            const idString = `` + item.id;
             const foundId = idString.trim().toLowerCase().indexOf(searchValue) !== -1;
 
             if (foundId) {
@@ -215,7 +215,7 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormFieldCont
 
     public onContainerClick(): void {
         if (!this.matSelect) {
-            console.warn('Warning: No #matSelect was defined.');
+            console.warn(`Warning: No #matSelect was defined.`);
             return;
         }
         this.matSelect.open();
@@ -226,16 +226,16 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormFieldCont
      */
     public onNotFoundClick(): void {
         this.clickNotFound.emit(this.searchValueForm.value);
-        this.searchValueForm.setValue('');
+        this.searchValueForm.setValue(``);
     }
 
     protected initializeForm(): void {
         this.contentForm = this.fb.control([]);
-        this.searchValueForm = this.fb.control('');
+        this.searchValueForm = this.fb.control(``);
     }
 
     protected updateForm(value: Selectable[] | Selectable | null): void {
-        if (typeof value === 'function') {
+        if (typeof value === `function`) {
             throw new Error(`Warning: Trying to set a function as value: ${value}`);
         }
         const nextValue = this.transformSetFn ? this.transformSetFn(value) : value;

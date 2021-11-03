@@ -6,6 +6,7 @@ import { HasAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { HasListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { Searchable } from 'app/site/base/searchable';
+
 import { ViewMotion } from './view-motion';
 
 /**
@@ -33,7 +34,7 @@ export class ViewMotionBlock extends BaseProjectableViewModel {
      * @override
      */
     public formatForSearch(): SearchRepresentation {
-        return { properties: [{ key: 'Title', value: this.getTitle() }], searchValue: [this.getTitle()] };
+        return { properties: [{ key: `Title`, value: this.getTitle() }], searchValue: [this.getTitle()] };
     }
 
     /**

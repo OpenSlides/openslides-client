@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { MotionHighlightFormComponent } from './motion-highlight-form.component';
 
-describe('MotionHighlightFormComponent', () => {
+describe(`MotionHighlightFormComponent`, () => {
     let component: MotionHighlightFormComponent;
     let fixture: ComponentFixture<MotionHighlightFormComponent>;
 
@@ -23,7 +22,7 @@ describe('MotionHighlightFormComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

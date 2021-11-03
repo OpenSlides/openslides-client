@@ -1,7 +1,7 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { MotionStatuteParagraphRepositoryService } from 'app/core/repositories/motions/motion-statute-paragraph-repository.service';
@@ -18,12 +18,12 @@ import { StatuteCsvExportService } from 'app/site/motions/services/statute-csv-e
  * List view for the statute paragraphs.
  */
 @Component({
-    selector: 'os-statute-paragraph-list',
-    templateUrl: './statute-paragraph-list.component.html',
-    styleUrls: ['./statute-paragraph-list.component.scss']
+    selector: `os-statute-paragraph-list`,
+    templateUrl: `./statute-paragraph-list.component.html`,
+    styleUrls: [`./statute-paragraph-list.component.scss`]
 })
 export class StatuteParagraphListComponent extends BaseModelContextComponent implements OnInit {
-    @ViewChild('statuteParagraphDialog', { static: true })
+    @ViewChild(`statuteParagraphDialog`, { static: true })
     private statuteParagraphDialog: TemplateRef<string>;
 
     private dialogRef: MatDialogRef<any>;
@@ -53,6 +53,7 @@ export class StatuteParagraphListComponent extends BaseModelContextComponent imp
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private repo: MotionStatuteParagraphRepositoryService,
         private formBuilder: FormBuilder,
         private promptService: PromptService,
@@ -60,11 +61,11 @@ export class StatuteParagraphListComponent extends BaseModelContextComponent imp
         private csvExportService: StatuteCsvExportService,
         private activeMeetingIdService: ActiveMeetingIdService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
 
         const form = {
-            title: ['', Validators.required],
-            text: ['', Validators.required]
+            title: [``, Validators.required],
+            text: [``, Validators.required]
         };
         this.statuteParagraphForm = this.formBuilder.group(form);
     }
@@ -76,7 +77,7 @@ export class StatuteParagraphListComponent extends BaseModelContextComponent imp
      */
     public ngOnInit(): void {
         super.ngOnInit();
-        super.setTitle('Statute');
+        super.setTitle(`Statute`);
         this.repo.getViewModelListObservable().subscribe(newViewStatuteParagraphs => {
             this.statuteParagraphs = newViewStatuteParagraphs;
         });
@@ -86,7 +87,7 @@ export class StatuteParagraphListComponent extends BaseModelContextComponent imp
         return {
             viewModelCtor: ViewMeeting,
             ids: [this.activeMeetingIdService.meetingId], // TODO
-            follow: ['motion_statute_paragraph_ids'],
+            follow: [`motion_statute_paragraph_ids`],
             fieldset: []
         };
     }
@@ -132,7 +133,7 @@ export class StatuteParagraphListComponent extends BaseModelContextComponent imp
      * @param viewStatuteParagraph The statute paragraph to delete
      */
     public async onDeleteButton(viewStatuteParagraph: ViewMotionStatuteParagraph): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to delete this statute paragraph?');
+        const title = this.translate.instant(`Are you sure you want to delete this statute paragraph?`);
         const content = viewStatuteParagraph.title;
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(viewStatuteParagraph);
@@ -143,7 +144,7 @@ export class StatuteParagraphListComponent extends BaseModelContextComponent imp
      * TODO: navigate to a sorting view
      */
     public sortStatuteParagraphs(): void {
-        console.log('Not yet implemented. Depends on other Features');
+        console.log(`Not yet implemented. Depends on other Features`);
     }
 
     /**
@@ -153,11 +154,11 @@ export class StatuteParagraphListComponent extends BaseModelContextComponent imp
      * @param event has the code
      */
     public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === 'Enter' && event.shiftKey) {
+        if (event.key === `Enter` && event.shiftKey) {
             this.save();
             this.dialogRef.close();
         }
-        if (event.key === 'Escape') {
+        if (event.key === `Escape`) {
             this.dialogRef.close();
         }
     }

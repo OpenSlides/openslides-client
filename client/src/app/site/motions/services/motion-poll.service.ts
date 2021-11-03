@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
-
 import { TranslateService } from '@ngx-translate/core';
-import { merge, Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
-
 import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { OrganizationSettingsService } from 'app/core/ui-services/organization-settings.service';
@@ -14,12 +10,14 @@ import { PollMethod, PollPercentBase, PollType } from 'app/shared/models/poll/po
 import { ParsePollNumberPipe } from 'app/shared/pipes/parse-poll-number.pipe';
 import { PollKeyVerbosePipe } from 'app/shared/pipes/poll-key-verbose.pipe';
 import { PollService, PollTableData, VotingResult } from 'app/site/polls/services/poll.service';
+import { merge, Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 /**
  * Service class for motion polls.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MotionPollService extends PollService {
     public defaultPercentBase: PollPercentBase;
@@ -36,15 +34,15 @@ export class MotionPollService extends PollService {
     ) {
         super(organizationSettingsService, translate, pollKeyVerbose, parsePollNumber);
         this.meetingSettingsService
-            .get('motion_poll_default_100_percent_base')
+            .get(`motion_poll_default_100_percent_base`)
             .subscribe(base => (this.defaultPercentBase = base));
-        this.meetingSettingsService.get('motion_poll_default_type').subscribe(type => (this.defaultPollType = type));
-        this.meetingSettingsService.get('motion_poll_default_group_ids').subscribe(ids => (this.defaultGroupIds = ids));
+        this.meetingSettingsService.get(`motion_poll_default_type`).subscribe(type => (this.defaultPollType = type));
+        this.meetingSettingsService.get(`motion_poll_default_group_ids`).subscribe(ids => (this.defaultGroupIds = ids));
     }
 
     public getDefaultPollData(contentObject?: Motion): Partial<Poll> {
         const poll: Partial<Poll> = {
-            title: this.translate.instant('Vote'),
+            title: this.translate.instant(`Vote`),
             onehundred_percent_base: this.defaultPercentBase,
             entitled_group_ids: this.defaultGroupIds,
             type: this.isElectronicVotingEnabled ? this.defaultPollType : PollType.Analog,

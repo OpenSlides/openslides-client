@@ -1,21 +1,20 @@
 import { Injectable } from '@angular/core';
-
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
 
+import { MeetingRepositoryService } from '../repositories/management/meeting-repository.service';
+import { BannerDefinition, BannerService } from '../ui-services/banner.service';
 import { ActiveMeetingIdService } from './active-meeting-id.service';
-import { ViewMeeting } from 'app/management/models/view-meeting';
+import { ArchiveStatusService } from './archive-status.service';
 import { AutoupdateService, ModelSubscription } from './autoupdate.service';
 import { LifecycleService } from './lifecycle.service';
-import { MeetingRepositoryService } from '../repositories/management/meeting-repository.service';
 import { SimplifiedModelRequest } from './model-request-builder.service';
-import { BannerService, BannerDefinition } from '../ui-services/banner.service';
-import { ArchiveStatusService } from './archive-status.service';
 
 export class NoActiveMeeting extends Error {}
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ActiveMeetingService {
     public get guestsEnabled(): boolean {
@@ -80,7 +79,7 @@ export class ActiveMeetingService {
         if (id) {
             this.modelAutoupdateSubscription = await this.autoupdateService.subscribe(
                 this.getModelRequest(),
-                'ActiveMeetingService'
+                `ActiveMeetingService`
             );
             // Even inaccessible meetings will be observed so that one is on the login-mask available.
             this._meetingSubcription = this.repo.getGeneralViewModelObservable().subscribe(meeting => {
@@ -108,9 +107,9 @@ export class ActiveMeetingService {
 
     private createArchivedBanner(): BannerDefinition {
         return {
-            icon: 'archive',
-            class: 'background-warn',
-            text: 'Archived'
+            icon: `archive`,
+            class: `background-warn`,
+            text: `Archived`
         };
     }
 
@@ -119,30 +118,30 @@ export class ActiveMeetingService {
             viewModelCtor: ViewMeeting,
             ids: [this.meetingId],
             follow: [
-                { idField: 'default_group_id' }, // needed by the operator!
-                { idField: 'admin_group_id' },
+                { idField: `default_group_id` }, // needed by the operator!
+                { idField: `admin_group_id` },
                 {
-                    idField: 'projector_ids',
+                    idField: `projector_ids`,
                     follow: [
-                        { idField: 'current_projection_ids', follow: [{ idField: 'content_object_id' }] },
-                        { idField: 'preview_projection_ids', follow: [{ idField: 'content_object_id' }] }
+                        { idField: `current_projection_ids`, follow: [{ idField: `content_object_id` }] },
+                        { idField: `preview_projection_ids`, follow: [{ idField: `content_object_id` }] }
                     ]
                 },
                 {
                     // needed for the voting-banner
-                    idField: 'poll_ids',
-                    fieldset: 'list',
-                    additionalFields: ['voted_ids'],
-                    follow: [{ idField: 'content_object_id' }]
+                    idField: `poll_ids`,
+                    fieldset: `list`,
+                    additionalFields: [`voted_ids`],
+                    follow: [{ idField: `content_object_id` }]
                 },
-                { idField: 'default_projector_$_id' }
+                { idField: `default_projector_$_id` }
             ],
-            fieldset: 'settings',
+            fieldset: `settings`,
             additionalFields: [
-                { templateField: 'logo_$_id' }, // needed by the media manage service
-                { templateField: 'font_$_id' },
-                'reference_projector_id',
-                'is_active_in_organization_id'
+                { templateField: `logo_$_id` }, // needed by the media manage service
+                { templateField: `font_$_id` },
+                `reference_projector_id`,
+                `is_active_in_organization_id`
             ]
         };
     }

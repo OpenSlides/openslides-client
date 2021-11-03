@@ -1,64 +1,66 @@
 import { Component, OnInit } from '@angular/core';
-import { BaseImportListComponent } from '../../../site/base/components/base-import-list.component';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { TranslateService } from '@ngx-translate/core';
 import { Committee } from 'app/shared/models/event-management/committee';
+
+import { SimplifiedModelRequest } from '../../../core/core-services/model-request-builder.service';
+import { ORGANIZATION_ID } from '../../../core/core-services/organization.service';
+import { ImportStepPhase } from '../../../core/ui-services/base-import.service';
 import { ComponentServiceCollector } from '../../../core/ui-services/component-service-collector';
-import { CommitteeImportService } from '../../services/committee-import.service';
+import { ImportListViewHeaderDefinition } from '../../../shared/components/import-list-view/import-list-view.component';
 import {
     COMMITTEE_PORT_HEADERS_AND_VERBOSE_NAMES,
     CommitteeCsvPort
 } from '../../../shared/models/event-management/committee.constants';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { SimplifiedModelRequest } from '../../../core/core-services/model-request-builder.service';
+import { BaseImportListComponent } from '../../../site/base/components/base-import-list.component';
 import { ViewOrganization } from '../../models/view-organization';
-import { ORGANIZATION_ID } from '../../../core/core-services/organization.service';
-import { ImportListViewHeaderDefinition } from '../../../shared/components/import-list-view/import-list-view.component';
-import { ImportStepPhase } from '../../../core/ui-services/base-import.service';
+import { CommitteeImportService } from '../../services/committee-import.service';
 
 @Component({
-    selector: 'os-committee-import-list',
-    templateUrl: './committee-import-list.component.html',
-    styleUrls: ['./committee-import-list.component.scss']
+    selector: `os-committee-import-list`,
+    templateUrl: `./committee-import-list.component.html`,
+    styleUrls: [`./committee-import-list.component.scss`]
 })
 export class CommitteeImportListComponent extends BaseImportListComponent<CommitteeCsvPort> implements OnInit {
     public possibleFields = Object.values(COMMITTEE_PORT_HEADERS_AND_VERBOSE_NAMES);
 
     public columns: ImportListViewHeaderDefinition[] = [
         {
-            prop: 'newEntry.name',
+            prop: `newEntry.name`,
             minWidth: 250,
-            label: _('Title'),
+            label: _(`Title`),
             isRequired: true,
             isTableColumn: true
         },
         {
-            prop: 'newEntry.forward_to_committee_ids',
+            prop: `newEntry.forward_to_committee_ids`,
             minWidth: 250,
-            label: _('Can forward motions to committee'),
+            label: _(`Can forward motions to committee`),
             isTableColumn: true
         },
         {
-            prop: 'manager_ids',
+            prop: `manager_ids`,
             minWidth: 250,
-            label: _('Committee managers'),
+            label: _(`Committee managers`),
             isTableColumn: true
         },
         {
-            prop: 'meeting',
+            prop: `meeting`,
             minWidth: 250,
-            label: _('Meeting'),
+            label: _(`Meeting`),
             isTableColumn: true
         },
         {
-            prop: 'organization_tag_ids',
-            label: _('Tags')
+            prop: `organization_tag_ids`,
+            label: _(`Tags`)
         },
         {
-            prop: 'meeting_start_date',
-            label: _('Start date')
+            prop: `meeting_start_date`,
+            label: _(`Start date`)
         },
         {
-            prop: 'meeting_end_date',
-            label: _('End date')
+            prop: `meeting_end_date`,
+            label: _(`End date`)
         }
     ];
 
@@ -73,8 +75,12 @@ export class CommitteeImportListComponent extends BaseImportListComponent<Commit
     private _currentImportPhase: ImportStepPhase;
     private _isImportValid: boolean;
 
-    public constructor(componentServiceCollector: ComponentServiceCollector, public importer: CommitteeImportService) {
-        super(componentServiceCollector, importer);
+    public constructor(
+        componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
+        public importer: CommitteeImportService
+    ) {
+        super(componentServiceCollector, translate, importer);
     }
 
     public ngOnInit(): void {
@@ -86,7 +92,7 @@ export class CommitteeImportListComponent extends BaseImportListComponent<Commit
     }
 
     public getForwardingTooltip(committees: Committee[] = []): string {
-        return committees.map(committee => committee.name).join(', ');
+        return committees.map(committee => committee.name).join(`, `);
     }
 
     public getDate(dateString: string): number {
@@ -103,8 +109,8 @@ export class CommitteeImportListComponent extends BaseImportListComponent<Commit
         return {
             viewModelCtor: ViewOrganization,
             ids: [ORGANIZATION_ID],
-            fieldset: '',
-            follow: [{ idField: 'committee_ids' }, { idField: 'organization_tag_ids' }]
+            fieldset: ``,
+            follow: [{ idField: `committee_ids` }, { idField: `organization_tag_ids` }]
         };
     }
 }

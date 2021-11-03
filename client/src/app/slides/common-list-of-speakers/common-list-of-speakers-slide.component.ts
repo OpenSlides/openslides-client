@@ -1,17 +1,17 @@
 import { Component } from '@angular/core';
-
-import { modifyAgendaItemNumber } from '../agenda_item_number';
 import { CollectionMapperService } from 'app/core/core-services/collection-mapper.service';
 import { isBaseIsAgendaItemContentObjectRepository } from 'app/core/repositories/base-is-agenda-item-content-object-repository';
 import { SlideData } from 'app/core/ui-services/projector.service';
 import { SpeechState } from 'app/shared/models/agenda/speaker';
 import { BaseSlideComponent } from 'app/slides/base-slide-component';
+
+import { modifyAgendaItemNumber } from '../agenda_item_number';
 import { CommonListOfSpeakersSlideData } from './common-list-of-speakers-slide-data';
 
 @Component({
-    selector: 'os-common-list-of-speakers-slide',
-    templateUrl: './common-list-of-speakers-slide.component.html',
-    styleUrls: ['./common-list-of-speakers-slide.component.scss']
+    selector: `os-common-list-of-speakers-slide`,
+    templateUrl: `./common-list-of-speakers-slide.component.html`,
+    styleUrls: [`./common-list-of-speakers-slide.component.scss`]
 })
 export class CommonListOfSpeakersSlideComponent extends BaseSlideComponent<CommonListOfSpeakersSlideData> {
     public SpeechState = SpeechState;
@@ -40,11 +40,11 @@ export class CommonListOfSpeakersSlideComponent extends BaseSlideComponent<Commo
         if (hasData) {
             const repo = this.collectionMapperService.getRepository(this.data.data.title_information.collection);
             if (!isBaseIsAgendaItemContentObjectRepository(repo)) {
-                throw new Error('The content object has no agenda base repository!');
+                throw new Error(`The content object has no agenda base repository!`);
             }
             this.title = repo.getAgendaSlideTitle(this.data.data.title_information);
         } else {
-            this.title = '';
+            this.title = ``;
         }
     }
 }

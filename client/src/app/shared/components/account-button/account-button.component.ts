@@ -1,9 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
-
-import { Subscription, Observable } from 'rxjs';
-
+import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from 'app/core/core-services/auth.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Id } from 'app/core/definitions/key-types';
@@ -13,17 +12,18 @@ import { AccountDialogComponent } from 'app/management/components/account-dialog
 import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
-import { Router } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
+
 import { getOmlVerboseName } from '../../../core/core-services/organization-permission';
 import { ThemeService } from '../../../core/ui-services/theme.service';
 
 @Component({
-    selector: 'os-account-button',
-    templateUrl: './account-button.component.html',
-    styleUrls: ['./account-button.component.scss']
+    selector: `os-account-button`,
+    templateUrl: `./account-button.component.html`,
+    styleUrls: [`./account-button.component.scss`]
 })
 export class AccountButtonComponent extends BaseModelContextComponent implements OnInit {
-    @ViewChild('languageTrigger', { read: MatMenuTrigger })
+    @ViewChild(`languageTrigger`, { read: MatMenuTrigger })
     public set languageTrigger(trigger: MatMenuTrigger | undefined) {
         this._languageTrigger = trigger;
     }
@@ -49,7 +49,7 @@ export class AccountButtonComponent extends BaseModelContextComponent implements
     }
 
     public user: ViewUser | null = null;
-    public username = '';
+    public username = ``;
     public isLoggedIn = false;
 
     private _userId: Id | null = undefined; // to distinguish from null!
@@ -59,6 +59,7 @@ export class AccountButtonComponent extends BaseModelContextComponent implements
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private operator: OperatorService,
         private userRepo: UserRepositoryService,
         private authService: AuthService,
@@ -66,7 +67,7 @@ export class AccountButtonComponent extends BaseModelContextComponent implements
         private router: Router,
         private theme: ThemeService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     public ngOnInit(): void {
@@ -79,7 +80,7 @@ export class AccountButtonComponent extends BaseModelContextComponent implements
         // );
 
         this.meetingSettingService
-            .get('users_allow_self_set_present')
+            .get(`users_allow_self_set_present`)
             .subscribe(allowed => (this._isAllowedSelfSetPresent = allowed));
 
         this.onOperatorUpdate(); // initially trigger the update manually to set initial values
@@ -96,14 +97,14 @@ export class AccountButtonComponent extends BaseModelContextComponent implements
      * language should be used.
      */
     public getLanguageName(abbreviation: string): string {
-        if (abbreviation === 'en') {
-            return 'English';
-        } else if (abbreviation === 'de') {
-            return 'Deutsch';
-        } else if (abbreviation === 'cs') {
-            return 'Čeština';
-        } else if (abbreviation === 'ru') {
-            return 'русский';
+        if (abbreviation === `en`) {
+            return `English`;
+        } else if (abbreviation === `de`) {
+            return `Deutsch`;
+        } else if (abbreviation === `cs`) {
+            return `Čeština`;
+        } else if (abbreviation === `ru`) {
+            return `русский`;
         }
     }
 
@@ -118,12 +119,12 @@ export class AccountButtonComponent extends BaseModelContextComponent implements
     public openAccountDialog(): void {
         this.dialog.open(AccountDialogComponent, {
             ...largeDialogSettings,
-            height: '530px'
+            height: `530px`
         });
     }
 
     public async login(): Promise<void> {
-        this.router.navigate(['/', this.activeMeetingId, 'login']);
+        this.router.navigate([`/`, this.activeMeetingId, `login`]);
     }
 
     public async logout(): Promise<void> {
@@ -146,7 +147,7 @@ export class AccountButtonComponent extends BaseModelContextComponent implements
 
     private onOperatorUpdate(): void {
         this.isLoggedIn = !this.operator.isAnonymous;
-        this.username = this.isLoggedIn ? this.operator.shortName : this.translate.instant('Guest');
+        this.username = this.isLoggedIn ? this.operator.shortName : this.translate.instant(`Guest`);
         const userId = this.operator.operatorId;
         if (this._userId !== userId) {
             this._userId = userId;
@@ -163,13 +164,13 @@ export class AccountButtonComponent extends BaseModelContextComponent implements
         this.requestModels({
             viewModelCtor: ViewUser,
             ids: [this._userId],
-            fieldset: 'shortName',
+            fieldset: `shortName`,
             additionalFields: [
-                'is_present_in_meeting_ids',
-                'can_change_own_password',
-                'organization_management_level',
-                { templateField: 'structure_level_$' },
-                'default_structure_level'
+                `is_present_in_meeting_ids`,
+                `can_change_own_password`,
+                `organization_management_level`,
+                { templateField: `structure_level_$` },
+                `default_structure_level`
             ]
         });
 

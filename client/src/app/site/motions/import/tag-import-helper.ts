@@ -2,14 +2,15 @@ import { Id } from 'app/core/definitions/key-types';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { CsvMapping } from 'app/core/ui-services/base-import.service';
 import { Motion } from 'app/shared/models/motions/motion';
-import { ImportResolveInformation } from 'app/shared/utils/import/import-resolve-information';
-import { Tag } from '../../../shared/models/tag/tag';
 import { BaseBeforeImportHandler } from 'app/shared/utils/import/base-before-import-handler';
+import { ImportResolveInformation } from 'app/shared/utils/import/import-resolve-information';
+
+import { Tag } from '../../../shared/models/tag/tag';
 
 export class TagImportHelper extends BaseBeforeImportHandler<Motion, Tag> {
     public constructor(private repo: TagRepositoryService) {
         super({
-            idProperty: 'tag_ids',
+            idProperty: `tag_ids`,
             translateFn: value => value,
             repo
         });
@@ -21,7 +22,7 @@ export class TagImportHelper extends BaseBeforeImportHandler<Motion, Tag> {
             return result;
         }
 
-        const tagArray = name.split(',');
+        const tagArray = name.split(`,`);
         for (let tag of tagArray) {
             tag = tag.trim();
             const existingTag = this.repo.getViewModelList().find(tagInRepo => tagInRepo.name === tag);
@@ -43,7 +44,7 @@ export class TagImportHelper extends BaseBeforeImportHandler<Motion, Tag> {
         const result: ImportResolveInformation<Motion> = {
             model: item,
             unresolvedModels: 0,
-            verboseName: 'Tags'
+            verboseName: `Tags`
         };
         for (const tag of property) {
             if (tag.id) {

@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
-
 import { AuthGuard } from 'app/core/core-services/auth-guard.service';
 import { InfoComponent } from 'app/site/common/components/info/info.component';
+
 import { CommitteeDetailComponent } from './components/committee-detail/committee-detail.component';
 import { CommitteeEditComponent } from './components/committee-edit/committee-edit.component';
+import { CommitteeImportListComponent } from './components/committee-import-list/committee-import-list.component';
 import { CommitteeListComponent } from './components/committee-list/committee-list.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ManagementComponent } from './components/management/management.component';
@@ -16,40 +17,39 @@ import { MemberListComponent } from './components/member-list/member-list.compon
 import { MemberPasswordComponent } from './components/member-password/member-password.component';
 import { OrgaSettingsComponent } from './components/orga-settings/orga-settings.component';
 import { OrganizationTagListComponent } from './components/organization-tag-list/organization-tag-list.component';
-import { CommitteeImportListComponent } from './components/committee-import-list/committee-import-list.component';
 import { ThemeListComponent } from './components/theme-list/theme-list.component';
 
 const routes: Route[] = [
     {
-        path: '',
+        path: ``,
         component: ManagementComponent,
         children: [
-            { path: '', component: DashboardComponent, pathMatch: 'full' },
+            { path: ``, component: DashboardComponent, pathMatch: `full` },
             {
-                path: 'accounts',
+                path: `accounts`,
                 children: [
                     {
-                        path: '',
+                        path: ``,
                         component: MemberListComponent
                     },
                     {
-                        path: 'create',
+                        path: `create`,
                         component: MemberEditComponent
                     },
                     {
-                        path: 'import',
+                        path: `import`,
                         component: MemberImportListComponent
                     },
                     {
-                        path: ':id',
+                        path: `:id`,
                         children: [
-                            { path: '', component: MemberEditComponent },
+                            { path: ``, component: MemberEditComponent },
                             {
-                                path: 'edit',
+                                path: `edit`,
                                 component: MemberEditComponent
                             },
                             {
-                                path: 'password',
+                                path: `password`,
                                 component: MemberPasswordComponent
                             }
                         ]
@@ -57,41 +57,41 @@ const routes: Route[] = [
                 ]
             },
             {
-                path: 'committees',
+                path: `committees`,
                 children: [
                     {
-                        path: '',
+                        path: ``,
                         component: CommitteeListComponent
                     },
                     {
-                        path: 'create',
+                        path: `create`,
                         component: CommitteeEditComponent
                     },
                     {
-                        path: 'import',
+                        path: `import`,
                         component: CommitteeImportListComponent
                     },
                     {
-                        path: ':committeeId',
+                        path: `:committeeId`,
                         children: [
                             {
-                                path: '',
+                                path: ``,
                                 component: CommitteeDetailComponent
                             },
                             {
-                                path: 'edit-committee',
+                                path: `edit-committee`,
                                 component: CommitteeEditComponent
                             },
                             {
-                                path: 'create',
+                                path: `create`,
                                 component: MeetingEditComponent
                             },
                             {
-                                path: 'edit-meeting/:meetingId',
+                                path: `edit-meeting/:meetingId`,
                                 component: MeetingEditComponent
                             },
                             {
-                                path: 'import-meeting',
+                                path: `import-meeting`,
                                 component: MeetingImportComponent
                             }
                         ]
@@ -99,19 +99,19 @@ const routes: Route[] = [
                 ]
             },
             {
-                path: 'organization-tags',
+                path: `organization-tags`,
                 component: OrganizationTagListComponent
             },
             {
-                path: 'designs',
+                path: `designs`,
                 component: ThemeListComponent
             },
             {
-                path: 'settings',
+                path: `settings`,
                 component: OrgaSettingsComponent
             },
             {
-                path: 'info',
+                path: `info`,
                 component: InfoComponent
             }
         ],

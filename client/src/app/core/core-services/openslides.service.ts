@@ -9,7 +9,7 @@ import { OpenSlidesRouterService } from './openslides-router.service';
  * Handles the bootup/showdown of this application.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class OpenSlidesService {
     public constructor(

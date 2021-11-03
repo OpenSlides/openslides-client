@@ -29,7 +29,7 @@ import { Injectable } from '@angular/core';
  * ```
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class DurationService {
     /**
@@ -46,8 +46,8 @@ export class DurationService {
      * from the duration text.
      * @returns time in minutes or seconds or 0 if values are below 0 or no parsable numbers
      */
-    public stringToDuration(durationText: string, suffix: 'h' | 'm' = 'h'): number {
-        const splitDuration = durationText.replace(suffix, '').split(':');
+    public stringToDuration(durationText: string, suffix: 'h' | 'm' = `h`): number {
+        const splitDuration = durationText.replace(suffix, ``).split(`:`);
         let time: number;
         if (splitDuration.length > 1 && !isNaN(+splitDuration[0]) && !isNaN(+splitDuration[1])) {
             time = +splitDuration[0] * 60 + +splitDuration[1];
@@ -76,7 +76,7 @@ export class DurationService {
         if (!isNaN(+minutes) && !isNaN(+seconds)) {
             return `${hours}:${minutes}:${seconds} h`;
         } else {
-            return '';
+            return ``;
         }
     }
 
@@ -93,9 +93,9 @@ export class DurationService {
         const minor = `0${Math.abs(duration) % 60}`.slice(-2);
         if (!isNaN(+major) && !isNaN(+minor) && suffix) {
             // converting the number '-0' to string results in '0', depending on the browser.
-            return `${major === 0 && negative ? '-' + Math.abs(major) : major}:${minor} ${suffix}`;
+            return `${major === 0 && negative ? `-` + Math.abs(major) : major}:${minor} ${suffix}`;
         } else {
-            return '';
+            return ``;
         }
     }
 }

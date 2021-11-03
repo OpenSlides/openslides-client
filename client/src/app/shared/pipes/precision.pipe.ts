@@ -8,7 +8,7 @@ import { Pipe, PipeTransform } from '@angular/core';
  * may override this pipe to enable more precise votes.
  */
 @Pipe({
-    name: 'precisionPipe'
+    name: `precisionPipe`
 })
 export class PrecisionPipe implements PipeTransform {
     protected precision: number;

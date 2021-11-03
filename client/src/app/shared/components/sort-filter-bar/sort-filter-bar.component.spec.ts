@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { SortFilterBarComponent } from './sort-filter-bar.component';
 
-describe('OsSortFilterBarComponent', () => {
+describe(`OsSortFilterBarComponent`, () => {
     let component: SortFilterBarComponent<any>;
     let fixture: ComponentFixture<any>;
 
@@ -22,7 +21,7 @@ describe('OsSortFilterBarComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

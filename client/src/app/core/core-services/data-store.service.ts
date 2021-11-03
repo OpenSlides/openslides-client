@@ -1,10 +1,9 @@
 import { EventEmitter, Injectable } from '@angular/core';
-
 import { Observable, Subject } from 'rxjs';
 
 import { BaseModel, ModelConstructor } from '../../shared/models/base/base-model';
-import { CollectionMapperService } from './collection-mapper.service';
 import { Deferred } from '../promises/deferred';
+import { CollectionMapperService } from './collection-mapper.service';
 
 /**
  * Represents information about a deleted model.
@@ -148,7 +147,7 @@ interface ModelStorage {
  * `DataStoreService` and split them into two files
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class DataStoreUpdateManagerService {
     /**
@@ -201,7 +200,7 @@ export class DataStoreUpdateManagerService {
      */
     public commit(slot: UpdateSlot): void {
         if (!this.currentUpdateSlot || !this.currentUpdateSlot.equal(slot)) {
-            throw new Error('No or wrong update slot to be finished!');
+            throw new Error(`No or wrong update slot to be finished!`);
         }
         this.currentUpdateSlot = null;
 
@@ -234,7 +233,7 @@ export class DataStoreUpdateManagerService {
 
     private serveNextSlot(): void {
         if (this.updateSlotRequests.length > 0) {
-            console.log('Concurrent update slots');
+            console.log(`Concurrent update slots`);
             const request = this.updateSlotRequests.pop();
             request.resolve();
         }
@@ -248,7 +247,7 @@ export class DataStoreUpdateManagerService {
  * Changes can be observed
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class DataStoreService {
     private modelStore: ModelStorage = {};
@@ -340,7 +339,7 @@ export class DataStoreService {
      * @returns the collection string
      */
     private getCollection<T extends BaseModel<T>>(collectionType: ModelConstructor<T> | string): string {
-        if (typeof collectionType === 'string') {
+        if (typeof collectionType === `string`) {
             return collectionType;
         } else {
             return this.modelMapper.getCollection(collectionType);

@@ -1,14 +1,15 @@
-import { BehaviorSubject, Observable } from 'rxjs';
-import { ImportHandlerConfig } from './import-handler-config';
-import { Identifiable } from 'app/shared/models/base/identifiable';
 import {
-    ImportStep,
     CsvMapping,
-    ImportStepPhase,
+    ImportCleanup,
     ImportFind,
     ImportResolveHandler,
-    ImportCleanup
+    ImportStep,
+    ImportStepPhase
 } from 'app/core/ui-services/base-import.service';
+import { Identifiable } from 'app/shared/models/base/identifiable';
+import { BehaviorSubject, Observable } from 'rxjs';
+
+import { ImportHandlerConfig } from './import-handler-config';
 
 type CreateFn<E> = (entries: E[]) => Promise<Identifiable[]>;
 type FindFn<E, O> = (name: string, originalEntry: O, index: number) => E;
@@ -80,7 +81,7 @@ export abstract class BaseImportHandler<ToCreate, ToImport> implements ImportHan
         repo,
         verboseNameFn,
         additionalFields = [],
-        nameDelimiter = ',',
+        nameDelimiter = `,`,
         fixedChunkSize,
         transformFn = models => models,
         createFn,
@@ -98,7 +99,7 @@ export abstract class BaseImportHandler<ToCreate, ToImport> implements ImportHan
         this.setCreateFn(createFn, repo);
         this.setFindFn(findFn, repo);
 
-        if ((idProperty as string).slice(-3) === 'ids') {
+        if ((idProperty as string).slice(-3) === `ids`) {
             this._isArrayProperty = true;
         }
     }
@@ -111,7 +112,7 @@ export abstract class BaseImportHandler<ToCreate, ToImport> implements ImportHan
 
     public async doImport(originalEntries: ToCreate[]): Promise<void> {
         if (!this._createFn) {
-            throw new Error('No function to create models is defined');
+            throw new Error(`No function to create models is defined`);
         }
         this.nextStep(ImportStepPhase.PENDING);
         if (this.modelsToCreate.length) {
@@ -136,9 +137,9 @@ export abstract class BaseImportHandler<ToCreate, ToImport> implements ImportHan
 
     public getVerboseName(): string {
         if (!this.verboseNameFn) {
-            throw new Error('No verbose name is defined');
+            throw new Error(`No verbose name is defined`);
         }
-        if (typeof this.verboseNameFn === 'string') {
+        if (typeof this.verboseNameFn === `string`) {
             return this.verboseNameFn;
         }
         return this.verboseNameFn(this.modelsToCreate.length > 1);
@@ -150,7 +151,7 @@ export abstract class BaseImportHandler<ToCreate, ToImport> implements ImportHan
 
     public findByName(name: string, csvLine: CsvMapping, index: number): CsvMapping<ToImport> | CsvMapping<ToImport>[] {
         if (!this._findFn) {
-            throw new Error('No function to find any models is defined');
+            throw new Error(`No function to find any models is defined`);
         }
         if (!name) {
             return this.getReturnValue();
@@ -190,7 +191,7 @@ export abstract class BaseImportHandler<ToCreate, ToImport> implements ImportHan
     private async import(originalEntries: ToCreate[]): Promise<void> {
         const models = this.modelsToCreate.map(model => {
             this._additionalFields.forEach(
-                field => (model[field.key] = typeof field.value === 'function' ? field.value() : field.value)
+                field => (model[field.key] = typeof field.value === `function` ? field.value() : field.value)
             );
             return model;
         });

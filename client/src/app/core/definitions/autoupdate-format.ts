@@ -33,7 +33,7 @@ export function isAutoupdateFormat(obj: any): obj is AutoupdateFormat {
     const format = obj as AutoupdateFormat;
     return (
         obj &&
-        typeof obj === 'object' &&
+        typeof obj === `object` &&
         format.changed !== undefined &&
         format.deleted !== undefined &&
         format.from_change_id !== undefined &&

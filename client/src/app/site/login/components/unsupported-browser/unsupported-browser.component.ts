@@ -3,8 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { BrowserRecommendation, BrowserSupportService } from '../../services/browser-support.service';
 
 @Component({
-    selector: 'os-unsupported-browser',
-    templateUrl: './unsupported-browser.component.html'
+    selector: `os-unsupported-browser`,
+    templateUrl: `./unsupported-browser.component.html`
 })
 export class UnsupportedBrowserComponent implements OnInit {
     public supported: boolean;

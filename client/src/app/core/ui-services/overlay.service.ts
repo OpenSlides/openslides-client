@@ -1,10 +1,9 @@
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal, ComponentType, TemplatePortal } from '@angular/cdk/portal';
 import { ComponentRef, Injectable, InjectionToken, Injector, StaticProvider, TemplateRef } from '@angular/core';
-
 import { OverlayComponent } from 'app/shared/components/overlay/overlay.component';
 
-export const OVERLAY_COMPONENT_DATA = new InjectionToken<any>('overlay-component-data');
+export const OVERLAY_COMPONENT_DATA = new InjectionToken<any>(`overlay-component-data`);
 
 export type OverlayPosition = 'center' | 'left' | 'top' | 'right' | 'bottom';
 
@@ -77,7 +76,7 @@ export class OverlayInstance<T = any> {
  * Like `global-spinner.component` and `super-search.component`.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class OverlayService {
     public constructor(private overlay: Overlay, private injector: Injector) {}
@@ -110,7 +109,7 @@ export class OverlayService {
     public createOverlay<T = any>(config: CustomOverlayConfig = {}): OverlayInstance<T> {
         const overlayRef = this.overlay.create(this.getOverlayConfig(config));
         const componentRef = overlayRef.attach(new ComponentPortal(OverlayComponent));
-        componentRef.instance.position = config.position || 'center';
+        componentRef.instance.position = config.position || `center`;
         return new OverlayInstance(componentRef, componentRef.instance, { overlayRef, ...config });
     }
 
@@ -119,8 +118,8 @@ export class OverlayService {
             hasBackdrop: false,
             disposeOnNavigation: false,
             backdropClass: config.backdropClass,
-            height: '100%',
-            width: '100%'
+            height: `100%`,
+            width: `100%`
         };
     }
 

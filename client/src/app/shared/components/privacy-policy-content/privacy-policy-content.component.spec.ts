@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { E2EImportsModule } from '../../../../e2e-imports.module';
 import { PrivacyPolicyContentComponent } from './privacy-policy-content.component';
 
-describe('PrivacyPolicyComponent', () => {
+describe(`PrivacyPolicyComponent`, () => {
     let component: PrivacyPolicyContentComponent;
     let fixture: ComponentFixture<PrivacyPolicyContentComponent>;
 
@@ -21,7 +21,7 @@ describe('PrivacyPolicyComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

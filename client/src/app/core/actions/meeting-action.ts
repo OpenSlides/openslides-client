@@ -1,21 +1,22 @@
 import { Identifiable } from 'app/shared/models/base/identifiable';
+
 import { Id, UnsafeHtml } from '../definitions/key-types';
 import { ImportMeeting } from '../repositories/management/meeting-repository.service';
 
 export namespace MeetingAction {
-    export const CREATE = 'meeting.create';
-    export const UPDATE = 'meeting.update';
-    export const DELETE = 'meeting.delete';
-    export const CREATE_FROM_TEMPLATE = 'meeting.create_from_template';
-    export const DELETE_ALL_SPEAKERS_OF_ALL_LISTS = 'meeting.delete_all_speakers_of_all_lists';
-    export const SET_FONT = 'meeting.set_font';
-    export const SET_LOGO = 'meeting.set_logo';
-    export const UNSET_FONT = 'meeting.unset_font';
-    export const UNSET_LOGO = 'meeting.unset_logo';
-    export const IMPORT = 'meeting.import';
-    export const CLONE = 'meeting.clone';
-    export const ARCHIVE = 'meeting.archive';
-    export const UNARCHIVE = 'meeting.unarchive';
+    export const CREATE = `meeting.create`;
+    export const UPDATE = `meeting.update`;
+    export const DELETE = `meeting.delete`;
+    export const CREATE_FROM_TEMPLATE = `meeting.create_from_template`;
+    export const DELETE_ALL_SPEAKERS_OF_ALL_LISTS = `meeting.delete_all_speakers_of_all_lists`;
+    export const SET_FONT = `meeting.set_font`;
+    export const SET_LOGO = `meeting.set_logo`;
+    export const UNSET_FONT = `meeting.unset_font`;
+    export const UNSET_LOGO = `meeting.unset_logo`;
+    export const IMPORT = `meeting.import`;
+    export const CLONE = `meeting.clone`;
+    export const ARCHIVE = `meeting.archive`;
+    export const UNARCHIVE = `meeting.unarchive`;
 
     interface MetaPayload {
         description?: string;

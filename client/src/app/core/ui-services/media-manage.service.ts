@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
-
 import { BehaviorSubject, Observable } from 'rxjs';
 
+import { ViewMediafile } from '../../site/mediafiles/models/view-mediafile';
+import { MeetingAction } from '../actions/meeting-action';
 import { ActionService } from '../core-services/action.service';
 import { ActiveMeetingService } from '../core-services/active-meeting.service';
 import { Id } from '../definitions/key-types';
-import { MeetingAction } from '../actions/meeting-action';
-import { ViewMediafile } from '../../site/mediafiles/models/view-mediafile';
 
 export type LogoPlace =
     | 'projector_main'
@@ -18,32 +17,32 @@ export type LogoPlace =
     | 'pdf_footer_R'
     | 'pdf_ballot_paper';
 export const LogoDisplayNames: { [place in LogoPlace]: string } = {
-    projector_main: 'Projector logo',
-    projector_header: 'Projector header image',
-    web_header: 'Web interface header logo',
-    pdf_header_L: 'PDF header logo (left)',
-    pdf_header_R: 'PDF header logo (right)',
-    pdf_footer_L: 'PDF footer logo (left)',
-    pdf_footer_R: 'PDF footer logo (right)',
-    pdf_ballot_paper: 'PDF ballot paper logo'
+    projector_main: `Projector logo`,
+    projector_header: `Projector header image`,
+    web_header: `Web interface header logo`,
+    pdf_header_L: `PDF header logo (left)`,
+    pdf_header_R: `PDF header logo (right)`,
+    pdf_footer_L: `PDF footer logo (left)`,
+    pdf_footer_R: `PDF footer logo (right)`,
+    pdf_ballot_paper: `PDF ballot paper logo`
 };
 
 export type FontPlace = 'regular' | 'italic' | 'bold' | 'bold_italic' | 'monospace' | 'chyron_speaker_name';
 export const FontDisplayNames: { [place in FontPlace]: string } = {
-    regular: 'Font regular',
-    italic: 'Font italic',
-    bold: 'Font bold',
-    bold_italic: 'Font bold italic',
-    monospace: 'Font monospace',
-    chyron_speaker_name: 'Chyron speaker name'
+    regular: `Font regular`,
+    italic: `Font italic`,
+    bold: `Font bold`,
+    bold_italic: `Font bold italic`,
+    monospace: `Font monospace`,
+    chyron_speaker_name: `Chyron speaker name`
 };
 export const FontDefaults: { [place in FontPlace]: string } = {
-    regular: 'assets/fonts/fira-sans-latin-400.woff',
-    italic: 'assets/fonts/fira-sans-latin-400italic.woff',
-    bold: 'assets/fonts/fira-sans-latin-500.woff',
-    bold_italic: 'assets/fonts/fira-sans-latin-500italic.woff',
-    monospace: 'assets/fonts/roboto-condensed-bold.woff',
-    chyron_speaker_name: 'assets/fonts/fira-sans-latin-400.woff'
+    regular: `assets/fonts/fira-sans-latin-400.woff`,
+    italic: `assets/fonts/fira-sans-latin-400italic.woff`,
+    bold: `assets/fonts/fira-sans-latin-500.woff`,
+    bold_italic: `assets/fonts/fira-sans-latin-500italic.woff`,
+    monospace: `assets/fonts/roboto-condensed-bold.woff`,
+    chyron_speaker_name: `assets/fonts/fira-sans-latin-400.woff`
 };
 
 /**
@@ -52,24 +51,24 @@ export const FontDefaults: { [place in FontPlace]: string } = {
  * Declaring images as logos (web, projector, pdf, ...) is handles here.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MediaManageService {
     public get allLogoPlaces(): LogoPlace[] {
         return [
-            'projector_main',
-            'projector_header',
-            'web_header',
-            'pdf_header_L',
-            'pdf_header_R',
-            'pdf_footer_L',
-            'pdf_footer_R',
-            'pdf_ballot_paper'
+            `projector_main`,
+            `projector_header`,
+            `web_header`,
+            `pdf_header_L`,
+            `pdf_header_R`,
+            `pdf_footer_L`,
+            `pdf_footer_R`,
+            `pdf_ballot_paper`
         ];
     }
 
     public get allFontPlaces(): FontPlace[] {
-        return ['regular', 'italic', 'bold', 'bold_italic', 'monospace', 'chyron_speaker_name'];
+        return [`regular`, `italic`, `bold`, `bold_italic`, `monospace`, `chyron_speaker_name`];
     }
 
     private readonly logoUrlSubjects: { [place in LogoPlace]?: BehaviorSubject<string | null> } = {};

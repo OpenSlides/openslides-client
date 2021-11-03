@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-
-import { ActiveMeetingService } from '../core-services/active-meeting.service';
 import { isProjectable, Projectable } from 'app/site/base/projectable';
 import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
 import { ViewProjection } from 'app/site/projector/models/view-projection';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
+
+import { ActiveMeetingService } from '../core-services/active-meeting.service';
 import { Collection } from '../definitions/key-types';
 import { MeetingSettingsService } from './meeting-settings.service';
 
@@ -26,7 +26,7 @@ export interface SlideData<T = { error?: string }> {
  * We cannot access the ProjectorRepository here, so we will deal with plain projector objects.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ProjectorService {
     public constructor(

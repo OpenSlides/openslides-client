@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-
+import { TranslateService } from '@ngx-translate/core';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ORGANIZATION_ID } from 'app/core/core-services/organization.service';
 import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
@@ -10,13 +10,14 @@ import { ViewMeeting } from 'app/management/models/view-meeting';
 import { ViewOrganization } from 'app/management/models/view-organization';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
-import { ThemeService } from '../../../core/ui-services/theme.service';
 import { Observable } from 'rxjs';
 
+import { ThemeService } from '../../../core/ui-services/theme.service';
+
 @Component({
-    selector: 'os-dashboard',
-    templateUrl: './dashboard.component.html',
-    styleUrls: ['./dashboard.component.scss'],
+    selector: `os-dashboard`,
+    templateUrl: `./dashboard.component.html`,
+    styleUrls: [`./dashboard.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
 export class DashboardComponent extends BaseModelContextComponent implements OnInit {
@@ -30,11 +31,11 @@ export class DashboardComponent extends BaseModelContextComponent implements OnI
     }
 
     public get orgaName(): string {
-        return this.organization?.name || '';
+        return this.organization?.name || ``;
     }
 
     public get orgaDescription(): string {
-        return this.organization?.description || '';
+        return this.organization?.description || ``;
     }
 
     public get isPhone(): boolean {
@@ -54,14 +55,15 @@ export class DashboardComponent extends BaseModelContextComponent implements OnI
 
     public constructor(
         protected componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private organizationRepo: OrganizationRepositoryService,
         private meetingRepo: MeetingRepositoryService,
         private operator: OperatorService,
         private vp: ViewportService,
         private themeService: ThemeService
     ) {
-        super(componentServiceCollector);
-        super.setTitle('Calendar');
+        super(componentServiceCollector, translate);
+        super.setTitle(`Calendar`);
         this.loadMeetings();
     }
 
@@ -76,7 +78,7 @@ export class DashboardComponent extends BaseModelContextComponent implements OnI
     public getHeightByMeetings(meetings: ViewMeeting[]): string {
         let height = 0;
         if (meetings.length === 0) {
-            return '';
+            return ``;
         } else if (meetings.length > 3) {
             height = 240;
         } else {
@@ -92,13 +94,13 @@ export class DashboardComponent extends BaseModelContextComponent implements OnI
                 ids: [1],
                 follow: [
                     {
-                        idField: 'committee_ids',
-                        follow: [{ idField: 'meeting_ids', fieldset: 'dashboard' }]
+                        idField: `committee_ids`,
+                        follow: [{ idField: `meeting_ids`, fieldset: `dashboard` }]
                     }
                 ],
                 fieldset: []
             },
-            'loadAllMeetings'
+            `loadAllMeetings`
         );
 
         this.requestModels(
@@ -107,12 +109,12 @@ export class DashboardComponent extends BaseModelContextComponent implements OnI
                 ids: [this.operator.operatorId],
                 follow: [
                     {
-                        idField: 'is_present_in_meeting_ids'
+                        idField: `is_present_in_meeting_ids`
                     }
                 ],
-                fieldset: 'orgaList'
+                fieldset: `orgaList`
             },
-            'loadOperatorMeetings'
+            `loadOperatorMeetings`
         );
 
         this.subscriptions.push(

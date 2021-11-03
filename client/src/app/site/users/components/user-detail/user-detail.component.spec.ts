@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { E2EImportsModule } from '../../../../../e2e-imports.module';
 import { UserDetailComponent } from './user-detail.component';
 
-describe('UserDetailComponent', () => {
+describe(`UserDetailComponent`, () => {
     let component: UserDetailComponent;
     let fixture: ComponentFixture<UserDetailComponent>;
 
@@ -22,7 +22,7 @@ describe('UserDetailComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

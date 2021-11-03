@@ -1,10 +1,10 @@
+import { BaseModel } from 'app/shared/models/base/base-model';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
-import { BaseModel } from 'app/shared/models/base/base-model';
-import { BaseRepository } from '../repositories/base-repository';
 import { BaseViewModel } from '../../site/base/base-view-model';
 import { HistoryService } from '../core-services/history.service';
 import { StorageService } from '../core-services/storage.service';
+import { BaseRepository } from '../repositories/base-repository';
 
 /**
  * Describes the available filters for a listView.
@@ -167,7 +167,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
     public async initFilters(inputData: Observable<V[]>): Promise<void> {
         let storedFilter: OsFilter<V>[] = null;
         if (!this.historyService.isInHistoryMode) {
-            storedFilter = await this.store.get<OsFilter<V>[]>('filter_' + this.storageKey);
+            storedFilter = await this.store.get<OsFilter<V>[]>(`filter_` + this.storageKey);
         }
 
         if (storedFilter && this.isOsFilter(storedFilter)) {
@@ -217,7 +217,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
                 filter =>
                     // Interfaces do not exist at runtime. Manually check if the
                     // Required information of the interface are present
-                    filter.hasOwnProperty('options') && filter.hasOwnProperty('property') && !!filter.property
+                    filter.hasOwnProperty(`options`) && filter.hasOwnProperty(`property`) && !!filter.property
             );
         } else {
             return false;
@@ -239,7 +239,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
 
             let storedFilter = null;
             if (!this.historyService.isInHistoryMode) {
-                storedFilter = await this.store.get<OsFilter<V>[]>('filter_' + this.storageKey);
+                storedFilter = await this.store.get<OsFilter<V>[]>(`filter_` + this.storageKey);
             }
 
             if (storedFilter && storedFilter.length && newDefinitions && newDefinitions.length) {
@@ -249,11 +249,11 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
                         let count = 0;
                         const matchingExistingFilter = storedFilter.find(oldDef => oldDef.property === newDef.property);
                         for (const option of newDef.options) {
-                            if (typeof option === 'object') {
+                            if (typeof option === `object`) {
                                 if (matchingExistingFilter && matchingExistingFilter.options) {
                                     const existingOption = matchingExistingFilter.options.find(
                                         o =>
-                                            typeof o !== 'string' &&
+                                            typeof o !== `string` &&
                                             JSON.stringify(o.condition) === JSON.stringify(option.condition)
                                     ) as OsFilterOption;
                                     if (existingOption) {
@@ -308,7 +308,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
                     }));
 
                 if (noneOptionLabel) {
-                    filterProperties.push('-');
+                    filterProperties.push(`-`);
                     filterProperties.push({
                         condition: null,
                         label: noneOptionLabel
@@ -327,7 +327,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
     public storeActiveFilters(): void {
         this.updateFilteredData();
         if (!this.historyService.isInHistoryMode) {
-            this.store.set('filter_' + this.storageKey, this.filterDefinitions);
+            this.store.set(`filter_` + this.storageKey, this.filterDefinitions);
         }
     }
 
@@ -393,7 +393,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
 
         if (filter) {
             const filterOption = filter.options.find(
-                o => typeof o !== 'string' && o.condition === option.condition
+                o => typeof o !== `string` && o.condition === option.condition
             ) as OsFilterOption;
 
             if (filterOption && !filterOption.isActive) {
@@ -425,7 +425,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
         const filter = this.filterDefinitions.find(f => f.property === filterProperty);
         if (filter) {
             const filterOption = filter.options.find(
-                o => typeof o !== 'string' && o.condition === option.condition
+                o => typeof o !== `string` && o.condition === option.condition
             ) as OsFilterOption;
             if (filterOption && filterOption.isActive) {
                 filterOption.isActive = false;
@@ -461,12 +461,12 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
      */
     private isPassingFilter(item: V, filter: OsFilter<V>): boolean {
         const nullFilter = filter.options.find(
-            option => typeof option !== 'string' && option.isActive && option.condition === null
+            option => typeof option !== `string` && option.isActive && option.condition === null
         );
         let passesNullFilter = true;
         for (const option of filter.options) {
             // ignored options
-            if (typeof option === 'string') {
+            if (typeof option === `string`) {
                 continue;
             } else if (nullFilter && option === nullFilter) {
                 continue;
@@ -511,11 +511,11 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
             ) {
                 return true;
             }
-        } else if (typeof property === 'object' && 'id' in property) {
+        } else if (typeof property === `object` && `id` in property) {
             if ((property as any).id === option.condition) {
                 return true;
             }
-        } else if (typeof property === 'function') {
+        } else if (typeof property === `function`) {
             return property.bind(item)() === option.condition;
         } else if (property === option.condition) {
             return true;
@@ -529,7 +529,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
         const matchingFn = (currentValue: any) => {
             if (currentValue === condition) {
                 return true;
-            } else if (typeof value === 'object' && 'id' in value && value.id === condition) {
+            } else if (typeof value === `object` && `id` in value && value.id === condition) {
                 return true;
             }
             return false;
@@ -561,7 +561,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
      */
     public clearFilter(filter: OsFilter<V>, update: boolean = true): void {
         filter.options.forEach(option => {
-            if (typeof option === 'object' && option.isActive) {
+            if (typeof option === `object` && option.isActive) {
                 this.removeFilterOption(filter.property, option);
             }
         });

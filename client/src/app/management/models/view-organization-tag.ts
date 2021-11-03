@@ -1,6 +1,7 @@
 import { HasOrganizationTagIds } from 'app/shared/models/base/has-organization-tag-ids';
 import { OrganizationTag } from 'app/shared/models/event-management/organization-tag';
 import { BaseViewModel } from 'app/site/base/base-view-model';
+
 import { ViewOrganization } from './view-organization';
 
 export interface HasOrganizationTags extends HasOrganizationTagIds {

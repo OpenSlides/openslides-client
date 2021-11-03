@@ -1,8 +1,4 @@
 import { Injectable } from '@angular/core';
-
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-
 import { SpeakerAction } from 'app/core/actions/speaker-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Id, UnsafeHtml } from 'app/core/definitions/key-types';
@@ -10,11 +6,14 @@ import { ListOfSpeakers } from 'app/shared/models/agenda/list-of-speakers';
 import { Speaker, SpeechState } from 'app/shared/models/agenda/speaker';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { ViewSpeaker } from 'app/site/agenda/models/view-speaker';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class SpeakerRepositoryService extends BaseRepositoryWithActiveMeeting<ViewSpeaker, Speaker> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
@@ -24,15 +23,15 @@ export class SpeakerRepositoryService extends BaseRepositoryWithActiveMeeting<Vi
     }
 
     public getFieldsets(): Fieldsets<Speaker> {
-        const basicFields: (keyof Speaker)[] = ['begin_time', 'end_time', 'point_of_order', 'speech_state'];
-        const statisticsFieldset: (keyof Speaker)[] = basicFields.concat(['user_id']);
-        const defaultSet: (keyof Speaker)[] = basicFields.concat(['weight', 'note']);
+        const basicFields: (keyof Speaker)[] = [`begin_time`, `end_time`, `point_of_order`, `speech_state`];
+        const statisticsFieldset: (keyof Speaker)[] = basicFields.concat([`user_id`]);
+        const defaultSet: (keyof Speaker)[] = basicFields.concat([`weight`, `note`]);
         return { [DEFAULT_FIELDSET]: defaultSet, statistics: statisticsFieldset };
     }
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Speakers' : 'Speaker');
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Speakers` : `Speaker`);
 
-    public getTitle = (viewSpeaker: ViewSpeaker) => (viewSpeaker.user ? viewSpeaker.user.getShortName() : '');
+    public getTitle = (viewSpeaker: ViewSpeaker) => (viewSpeaker.user ? viewSpeaker.user.getShortName() : ``);
 
     public create(
         listOfSpeakers: ListOfSpeakers,

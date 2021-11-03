@@ -1,13 +1,14 @@
 import { HasMeetingId } from 'app/shared/models/base/has-meeting-id';
 import { Identifiable } from 'app/shared/models/base/identifiable';
+
 import { Base64Encoded, Id } from '../definitions/key-types';
 
 export namespace MediafileAction {
-    export const CREATE_FILE = 'mediafile.upload';
-    export const CREATE_DIRECTORY = 'mediafile.create_directory';
-    export const UPDATE = 'mediafile.update';
-    export const MOVE = 'mediafile.move';
-    export const DELETE = 'mediafile.delete';
+    export const CREATE_FILE = `mediafile.upload`;
+    export const CREATE_DIRECTORY = `mediafile.create_directory`;
+    export const UPDATE = `mediafile.update`;
+    export const MOVE = `mediafile.move`;
+    export const DELETE = `mediafile.delete`;
 
     interface HaveParent {
         parent_id?: Id;

@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { AmendmentCreateWizardComponent } from './amendment-create-wizard.component';
 
-describe('AmendmentCreateWizardComponent', () => {
+describe(`AmendmentCreateWizardComponent`, () => {
     let component: AmendmentCreateWizardComponent;
     let fixture: ComponentFixture<AmendmentCreateWizardComponent>;
 
@@ -23,7 +22,7 @@ describe('AmendmentCreateWizardComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

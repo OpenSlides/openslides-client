@@ -9,7 +9,7 @@ export interface CanComponentDeactivate {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class WatchForChangesGuard implements CanDeactivate<CanComponentDeactivate> {
     /**

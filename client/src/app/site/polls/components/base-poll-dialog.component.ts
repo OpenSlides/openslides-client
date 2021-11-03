@@ -1,7 +1,7 @@
 import { Directive, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { PollAction } from 'app/core/actions/poll-action';
 import { Fqid } from 'app/core/definitions/key-types';
 import { PollDialogData } from 'app/core/ui-services/base-poll-dialog.service';
@@ -13,13 +13,14 @@ import {
     PollClassType,
     PollMethod,
     PollType,
+    VOTE_UNDOCUMENTED,
     VoteValue,
-    VoteValueVerbose,
-    VOTE_UNDOCUMENTED
+    VoteValueVerbose
 } from 'app/shared/models/poll/poll-constants';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { OneOfValidator } from 'app/shared/validators/one-of-validator';
 import { BaseComponent } from 'app/site/base/components/base.component';
+
 import { PollFormComponent } from './poll-form/poll-form.component';
 
 export interface OptionsObject {
@@ -43,7 +44,7 @@ export abstract class BasePollDialogComponent extends BaseComponent implements O
     /**
      * The summary values that will have fields in the dialog
      */
-    public readonly sumValues: string[] = ['votesvalid', 'votesinvalid', 'votescast'];
+    public readonly sumValues: string[] = [`votesvalid`, `votesinvalid`, `votescast`];
 
     /**
      * vote entries for each option in this component. Is empty if method
@@ -52,10 +53,10 @@ export abstract class BasePollDialogComponent extends BaseComponent implements O
     public analogVoteFields: VoteValue[] = [];
 
     public get isAnalogPoll(): boolean {
-        return this.pollForm?.contentForm?.get('type').value === PollType.Analog || false;
+        return this.pollForm?.contentForm?.get(`type`).value === PollType.Analog || false;
     }
 
-    @ViewChild('pollForm', { static: true })
+    @ViewChild(`pollForm`, { static: true })
     protected pollForm: PollFormComponent;
 
     protected options: OptionsObject[] = [];
@@ -66,11 +67,12 @@ export abstract class BasePollDialogComponent extends BaseComponent implements O
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         public dialogRef: MatDialogRef<BasePollDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public pollData: PollDialogData | ViewPoll,
         protected formBuilder: FormBuilder
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
         this.addKeyListener();
     }
 
@@ -83,11 +85,11 @@ export abstract class BasePollDialogComponent extends BaseComponent implements O
     private addKeyListener(): void {
         if (this.dialogRef) {
             this.dialogRef.keydownEvents().subscribe((event: KeyboardEvent) => {
-                if (event.key === 'Enter' && event.shiftKey) {
+                if (event.key === `Enter` && event.shiftKey) {
                     this.submitPoll();
                 }
 
-                if (event.key === 'Escape') {
+                if (event.key === `Escape`) {
                     this.dialogRef.close();
                 }
             });
@@ -154,7 +156,7 @@ export abstract class BasePollDialogComponent extends BaseComponent implements O
      */
     private isVoteDataEmpty(voteData: object): boolean {
         return Object.values(voteData).every(
-            value => !value || (typeof value === 'object' && this.isVoteDataEmpty(value))
+            value => !value || (typeof value === `object` && this.isVoteDataEmpty(value))
         );
     }
 
@@ -166,7 +168,7 @@ export abstract class BasePollDialogComponent extends BaseComponent implements O
     private replaceEmptyValues(voteData: object, undo: boolean = false): object {
         const result = {};
         for (const key of Object.keys(voteData)) {
-            if (typeof voteData[key] === 'object' && voteData[key]) {
+            if (typeof voteData[key] === `object` && voteData[key]) {
                 result[key] = this.replaceEmptyValues(voteData[key], undo);
             } else {
                 if (undo) {
@@ -220,17 +222,17 @@ export abstract class BasePollDialogComponent extends BaseComponent implements O
                         [option.fqid]: this.formBuilder.group(
                             // for each user, create a form group with a control for each valid input (Y, N, A)
                             this.analogVoteFields?.mapToObject(value => ({
-                                [value]: ['', [Validators.min(LOWEST_VOTE_VALUE)]]
+                                [value]: [``, [Validators.min(LOWEST_VOTE_VALUE)]]
                             }))
                         )
                     }))
                 ),
-                amount_global_yes: ['', [Validators.min(LOWEST_VOTE_VALUE)]],
-                amount_global_no: ['', [Validators.min(LOWEST_VOTE_VALUE)]],
-                amount_global_abstain: ['', [Validators.min(LOWEST_VOTE_VALUE)]],
+                amount_global_yes: [``, [Validators.min(LOWEST_VOTE_VALUE)]],
+                amount_global_no: [``, [Validators.min(LOWEST_VOTE_VALUE)]],
+                amount_global_abstain: [``, [Validators.min(LOWEST_VOTE_VALUE)]],
                 // insert all used global fields
                 ...this.sumValues?.mapToObject(sumValue => ({
-                    [sumValue]: ['', [Validators.min(LOWEST_VOTE_VALUE)]]
+                    [sumValue]: [``, [Validators.min(LOWEST_VOTE_VALUE)]]
                 }))
             });
             setTimeout(() => {

@@ -4,12 +4,10 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-
-import { Subscription } from 'rxjs';
-
 import { NotifyResponse, NotifyService } from 'app/core/core-services/notify.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { mediumDialogSettings } from 'app/shared/utils/dialog-settings';
+import { Subscription } from 'rxjs';
 
 /**
  * All player types.
@@ -24,10 +22,10 @@ enum Player {
  * All states the game board can have.
  */
 enum BoardStatus {
-    Draw = 'draw',
-    thisPlayer = 'thisPlayer',
-    partner = 'partner',
-    NotDecided = 'not decided'
+    Draw = `draw`,
+    thisPlayer = `thisPlayer`,
+    partner = `partner`,
+    NotDecided = `not decided`
 }
 
 /**
@@ -61,7 +59,7 @@ interface SMAction {
 type StateMachine = { [state in State]?: { [event in StateEvent]?: SMAction } };
 
 @Component({
-    selector: 'os-c4dialog',
+    selector: `os-c4dialog`,
     template: `
         <h2 mat-dialog-title>{{ caption | translate }}</h2>
         <mat-dialog-content>
@@ -204,7 +202,7 @@ export class C4DialogComponent implements OnInit, OnDestroy {
                 handle: () => {
                     this.disableBoard = false;
                     this.resetBoard();
-                    return 'search';
+                    return `search`;
                 }
             }
         },
@@ -213,7 +211,7 @@ export class C4DialogComponent implements OnInit, OnDestroy {
                 handle: (notify: NotifyResponse<{ name: string }>) => {
                     this.replyChannel = notify.sender_channel_id;
                     this.partnerName = notify.message.name;
-                    return 'waitForResponse';
+                    return `waitForResponse`;
                 }
             },
             recievedSearchResponse: {
@@ -224,8 +222,8 @@ export class C4DialogComponent implements OnInit, OnDestroy {
                     const startPlayer = Math.random() < 0.5 ? Player.thisPlayer : Player.partner;
                     const startPartner: boolean = startPlayer === Player.partner;
                     // send ACK
-                    this.notifyService.sendToChannels('c4_ACK', startPartner, this.replyChannel);
-                    return startPlayer === Player.thisPlayer ? 'myTurn' : 'foreignTurn';
+                    this.notifyService.sendToChannels(`c4_ACK`, startPartner, this.replyChannel);
+                    return startPlayer === Player.thisPlayer ? `myTurn` : `foreignTurn`;
                 }
             }
         },
@@ -235,15 +233,15 @@ export class C4DialogComponent implements OnInit, OnDestroy {
                     if (notify.sender_channel_id !== this.replyChannel) {
                         return null;
                     }
-                    return notify.message ? 'myTurn' : 'foreignTurn';
+                    return notify.message ? `myTurn` : `foreignTurn`;
                 }
             },
             waitTimeout: {
-                handle: () => 'search'
+                handle: () => `search`
             },
             recievedRagequit: {
                 handle: (notify: NotifyResponse<{}>) =>
-                    notify.sender_channel_id === this.replyChannel ? 'search' : null
+                    notify.sender_channel_id === this.replyChannel ? `search` : null
             }
         },
         myTurn: {
@@ -251,9 +249,9 @@ export class C4DialogComponent implements OnInit, OnDestroy {
                 handle: (data: { col: number; row: number }) => {
                     if (this.colFree(data.col)) {
                         this.setCoin(data.col, Player.thisPlayer);
-                        this.notifyService.sendToChannels('c4_turn', { col: data.col }, this.replyChannel);
+                        this.notifyService.sendToChannels(`c4_turn`, { col: data.col }, this.replyChannel);
                         const nextState = this.getStateFromBoardStatus();
-                        return nextState === null ? 'foreignTurn' : nextState;
+                        return nextState === null ? `foreignTurn` : nextState;
                     } else {
                         return null;
                     }
@@ -261,8 +259,8 @@ export class C4DialogComponent implements OnInit, OnDestroy {
             },
             recievedRagequit: {
                 handle: () => {
-                    this.caption = "Your partner couldn't stand it anymore... You are the winner!";
-                    return 'start';
+                    this.caption = `Your partner couldn't stand it anymore... You are the winner!`;
+                    return `start`;
                 }
             }
         },
@@ -278,13 +276,13 @@ export class C4DialogComponent implements OnInit, OnDestroy {
                     }
                     this.setCoin(col, Player.partner);
                     const nextState = this.getStateFromBoardStatus();
-                    return nextState === null ? 'myTurn' : nextState;
+                    return nextState === null ? `myTurn` : nextState;
                 }
             },
             recievedRagequit: {
                 handle: () => {
-                    this.caption = "Your partner couldn't stand it anymore... You are the winner!";
-                    return 'start';
+                    this.caption = `Your partner couldn't stand it anymore... You are the winner!`;
+                    return `start`;
                 }
             }
         }
@@ -300,35 +298,35 @@ export class C4DialogComponent implements OnInit, OnDestroy {
 
     public ngOnInit(): void {
         // Setup initial values.
-        this.state = 'start';
-        this.caption = 'Connect 4';
+        this.state = `start`;
+        this.caption = `Connect 4`;
         this.disableBoard = true;
 
         // Setup all subscription for needed notify messages
         this.subscriptions = [
-            this.notifyService.getMessageObservable('c4_ACK').subscribe(notify => {
+            this.notifyService.getMessageObservable(`c4_ACK`).subscribe(notify => {
                 if (!notify.sendByThisUser) {
-                    this.handleEvent('recievedACK', notify);
+                    this.handleEvent(`recievedACK`, notify);
                 }
             }),
-            this.notifyService.getMessageObservable('c4_ragequit').subscribe(notify => {
+            this.notifyService.getMessageObservable(`c4_ragequit`).subscribe(notify => {
                 if (!notify.sendByThisUser) {
-                    this.handleEvent('recievedRagequit', notify);
+                    this.handleEvent(`recievedRagequit`, notify);
                 }
             }),
-            this.notifyService.getMessageObservable('c4_search_request').subscribe(notify => {
+            this.notifyService.getMessageObservable(`c4_search_request`).subscribe(notify => {
                 if (!notify.sendByThisUser) {
-                    this.handleEvent('recievedSearchRequest', notify);
+                    this.handleEvent(`recievedSearchRequest`, notify);
                 }
             }),
-            this.notifyService.getMessageObservable('c4_search_response').subscribe(notify => {
+            this.notifyService.getMessageObservable(`c4_search_response`).subscribe(notify => {
                 if (!notify.sendByThisUser) {
-                    this.handleEvent('recievedSearchResponse', notify);
+                    this.handleEvent(`recievedSearchResponse`, notify);
                 }
             }),
-            this.notifyService.getMessageObservable('c4_turn').subscribe(notify => {
+            this.notifyService.getMessageObservable(`c4_turn`).subscribe(notify => {
                 if (!notify.sendByThisUser) {
-                    this.handleEvent('recievedTurn', notify);
+                    this.handleEvent(`recievedTurn`, notify);
                 }
             })
         ];
@@ -337,7 +335,7 @@ export class C4DialogComponent implements OnInit, OnDestroy {
     public ngOnDestroy(): void {
         // send ragequit and unsubscribe all subscriptions.
         if (this.replyChannel) {
-            this.notifyService.sendToChannels('c4_ragequit', null, this.replyChannel);
+            this.notifyService.sendToChannels(`c4_ragequit`, null, this.replyChannel);
         }
         this.subscriptions.forEach(subscription => subscription.unsubscribe());
     }
@@ -364,11 +362,11 @@ export class C4DialogComponent implements OnInit, OnDestroy {
     public getCoinClass(row: number, col: number): string {
         switch (this.board[col][row]) {
             case Player.noPlayer:
-                return 'coin notSelected';
+                return `coin notSelected`;
             case Player.thisPlayer:
-                return 'coin thisPlayer';
+                return `coin thisPlayer`;
             case Player.partner:
-                return 'coin partner';
+                return `coin partner`;
         }
     }
 
@@ -385,14 +383,14 @@ export class C4DialogComponent implements OnInit, OnDestroy {
     private getStateFromBoardStatus(): State {
         switch (this.boardStatus()) {
             case BoardStatus.Draw:
-                this.caption = 'Game draw!';
-                return 'start';
+                this.caption = `Game draw!`;
+                return `start`;
             case BoardStatus.thisPlayer:
-                this.caption = 'You won!';
-                return 'start';
+                this.caption = `You won!`;
+                return `start`;
             case BoardStatus.partner:
-                this.caption = 'Your partner has won!';
-                return 'start';
+                this.caption = `Your partner has won!`;
+                return `start`;
             case BoardStatus.NotDecided:
                 return null;
         }
@@ -412,8 +410,8 @@ export class C4DialogComponent implements OnInit, OnDestroy {
             const nextState = action.handle(data);
             if (nextState !== null) {
                 this.state = nextState;
-                if (this['enter_' + nextState]) {
-                    this['enter_' + nextState]();
+                if (this[`enter_` + nextState]) {
+                    this[`enter_` + nextState]();
                 }
             }
         }
@@ -426,7 +424,7 @@ export class C4DialogComponent implements OnInit, OnDestroy {
      */
     public clickField(row: number, col: number): void {
         if (!this.disableBoard) {
-            this.handleEvent('fieldClicked', { row, col });
+            this.handleEvent(`fieldClicked`, { row, col });
         }
     }
 
@@ -444,8 +442,8 @@ export class C4DialogComponent implements OnInit, OnDestroy {
      * Sends a search request for other players.
      */
     public enter_search(): void {
-        this.caption = 'Searching for players...';
-        this.notifyService.sendToAllUsers('c4_search_request', { name: this.getPlayerName() });
+        this.caption = `Searching for players...`;
+        this.notifyService.sendToAllUsers(`c4_search_request`, { name: this.getPlayerName() });
     }
 
     /**
@@ -453,13 +451,13 @@ export class C4DialogComponent implements OnInit, OnDestroy {
      * Also sets up a timeout to go back into the search state.
      */
     public enter_waitForResponse(): void {
-        this.caption = 'Wait for response...';
-        this.notifyService.sendToChannels('c4_search_response', { name: this.getPlayerName() }, this.replyChannel);
+        this.caption = `Wait for response...`;
+        this.notifyService.sendToChannels(`c4_search_response`, { name: this.getPlayerName() }, this.replyChannel);
         if (this.waitTimout) {
             clearTimeout(<any>this.waitTimout);
         }
         this.waitTimout = <any>setTimeout(() => {
-            this.handleEvent('waitTimeout');
+            this.handleEvent(`waitTimeout`);
         }, 5000);
     }
 
@@ -467,14 +465,14 @@ export class C4DialogComponent implements OnInit, OnDestroy {
      * Sets the caption.
      */
     public enter_myTurn(): void {
-        this.caption = "It's your turn!";
+        this.caption = `It's your turn!`;
     }
 
     /**
      * Sets the caption.
      */
     public enter_foreignTurn(): void {
-        this.caption = "It's your partners turn";
+        this.caption = `It's your partners turn`;
     }
 
     // Board function
@@ -575,7 +573,7 @@ export class C4DialogComponent implements OnInit, OnDestroy {
 }
 
 @Component({
-    selector: 'os-copyright-sign',
+    selector: `os-copyright-sign`,
     template: `
         <span (click)="launchC4($event)">©</span>
     `

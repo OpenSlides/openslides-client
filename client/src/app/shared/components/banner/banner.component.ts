@@ -1,16 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-
 import { TranslateService } from '@ngx-translate/core';
-
 import { HistoryService } from 'app/core/core-services/history.service';
 import { TimeTravelService } from 'app/core/core-services/time-travel.service';
 import { BannerDefinition, BannerService } from 'app/core/ui-services/banner.service';
 import { langToLocale } from 'app/shared/utils/lang-to-locale';
 
 @Component({
-    selector: 'os-banner',
-    templateUrl: './banner.component.html',
-    styleUrls: ['./banner.component.scss']
+    selector: `os-banner`,
+    templateUrl: `./banner.component.html`,
+    styleUrls: [`./banner.component.scss`]
 })
 export class BannerComponent implements OnInit {
     public banners: BannerDefinition[] = [];

@@ -1,21 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-
-import { environment } from 'environments/environment';
-
+import { TranslateService } from '@ngx-translate/core';
 import { HttpService } from 'app/core/core-services/http.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { environment } from 'environments/environment';
 
 /**
  * Reset password component.
  *
  */
 @Component({
-    selector: 'os-reset-password',
-    templateUrl: './reset-password.component.html',
-    styleUrls: ['../../assets/reset-password-pages.scss']
+    selector: `os-reset-password`,
+    templateUrl: `./reset-password.component.html`,
+    styleUrls: [`../../assets/reset-password-pages.scss`]
 })
 export class ResetPasswordComponent extends BaseComponent implements OnInit {
     /**
@@ -28,13 +27,14 @@ export class ResetPasswordComponent extends BaseComponent implements OnInit {
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private http: HttpService,
         formBuilder: FormBuilder,
         private router: Router
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
         this.resetPasswordForm = formBuilder.group({
-            email: ['', [Validators.required, Validators.email]]
+            email: [``, [Validators.required, Validators.email]]
         });
     }
 
@@ -42,7 +42,7 @@ export class ResetPasswordComponent extends BaseComponent implements OnInit {
      * sets the title of the page
      */
     public ngOnInit(): void {
-        super.setTitle('Reset password');
+        super.setTitle(`Reset password`);
     }
 
     /**
@@ -54,17 +54,17 @@ export class ResetPasswordComponent extends BaseComponent implements OnInit {
         }
 
         try {
-            await this.http.post<void>(environment.urlPrefix + '/users/reset-password/', {
-                email: this.resetPasswordForm.get('email').value
+            await this.http.post<void>(environment.urlPrefix + `/users/reset-password/`, {
+                email: this.resetPasswordForm.get(`email`).value
             });
             this.matSnackBar.open(
-                this.translate.instant('An email with a password reset link was send!'),
-                this.translate.instant('OK'),
+                this.translate.instant(`An email with a password reset link was send!`),
+                this.translate.instant(`OK`),
                 {
                     duration: 0
                 }
             );
-            this.router.navigate(['..']);
+            this.router.navigate([`..`]);
         } catch (e) {
             this.raiseError(e);
         }

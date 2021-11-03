@@ -1,23 +1,23 @@
 import { TranslateService } from '@ngx-translate/core';
+import { Collection } from 'app/shared/models/base/collection';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { auditTime } from 'rxjs/operators';
 
-import { ActionRequest, ActionService } from '../core-services/action.service';
-import { Collection } from 'app/shared/models/base/collection';
 import { BaseModel, ModelConstructor } from '../../shared/models/base/base-model';
 import { BaseViewModel, ViewModelConstructor } from '../../site/base/base-view-model';
+import { ActionRequest, ActionService } from '../core-services/action.service';
 import { CollectionMapperService } from '../core-services/collection-mapper.service';
 import { DataStoreService } from '../core-services/data-store.service';
+import { Fieldsets } from '../core-services/model-request-builder.service';
+import { RelationManagerService } from '../core-services/relation-manager.service';
+import { ViewModelStoreService } from '../core-services/view-model-store.service';
 import { HasViewModelListObservable } from '../definitions/has-view-model-list-observable';
 import { Id } from '../definitions/key-types';
-import { Fieldsets } from '../core-services/model-request-builder.service';
 import { OnAfterAppsLoaded } from '../definitions/on-after-apps-loaded';
-import { RelationManagerService } from '../core-services/relation-manager.service';
 import { Relation } from '../definitions/relations';
 import { RepositoryServiceCollectorWithoutActiveMeetingService } from './repository-service-collector-without-active-meeting-service';
-import { ViewModelStoreService } from '../core-services/view-model-store.service';
 
-const RELATION_AS_OBSERVABLE_SUFFIX = '_as_observable';
+const RELATION_AS_OBSERVABLE_SUFFIX = `_as_observable`;
 
 /**
  * Base repo for all collections. An overview of all observables and the flow of data:
@@ -229,11 +229,11 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
                 // target is our viewModel and property the requested value: viewModel[property]
                 let result: any; // This is what we have to resolve: viewModel[property] -> result
                 const _model: M = target.getModel();
-                const relation = typeof property === 'string' ? this.relationsByKey[property] : null;
+                const relation = typeof property === `string` ? this.relationsByKey[property] : null;
 
                 let relationAsObservable = null;
                 if (
-                    typeof property === 'string' &&
+                    typeof property === `string` &&
                     property.substr(-RELATION_AS_OBSERVABLE_SUFFIX.length) === RELATION_AS_OBSERVABLE_SUFFIX
                 ) {
                     relationAsObservable =

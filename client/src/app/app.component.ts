@@ -2,35 +2,34 @@ import { ApplicationRef, Component, OnInit } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-
 import { TranslateService } from '@ngx-translate/core';
 import { first, tap } from 'rxjs/operators';
 
-import { ActiveMeetingIdService } from './core/core-services/active-meeting-id.service';
 import { ActiveMeetingService } from './core/core-services/active-meeting.service';
-import { CountUsersService } from './core/ui-services/count-users.service';
+import { ActiveMeetingIdService } from './core/core-services/active-meeting-id.service';
 import { DataStoreUpgradeService } from './core/core-services/data-store-upgrade.service';
-import { Deferred } from './core/promises/deferred';
 import { LifecycleService } from './core/core-services/lifecycle.service';
-import { LoadFontService } from './core/ui-services/load-font.service';
 import { OfflineService } from './core/core-services/offline.service';
-import { OpenSlidesStatusService } from './core/core-services/openslides-status.service';
 import { OpenSlidesService } from './core/core-services/openslides.service';
+import { OpenSlidesStatusService } from './core/core-services/openslides-status.service';
 import { OperatorService } from './core/core-services/operator.service';
-import { overloadJsFunctions } from './shared/overload-js-functions';
-import { RoutingStateService } from './core/ui-services/routing-state.service';
 import { ServertimeService } from './core/core-services/servertime.service';
+import { Deferred } from './core/promises/deferred';
+import { CountUsersService } from './core/ui-services/count-users.service';
+import { LoadFontService } from './core/ui-services/load-font.service';
+import { RoutingStateService } from './core/ui-services/routing-state.service';
 import { SpinnerService } from './core/ui-services/spinner.service';
 import { ThemeService } from './core/ui-services/theme.service';
 import { VotingBannerService } from './core/ui-services/voting-banner.service';
+import { overloadJsFunctions } from './shared/overload-js-functions';
 
 /**
  * Angular's global App Component
  */
 @Component({
-    selector: 'os-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss']
+    selector: `os-root`,
+    templateUrl: `./app.component.html`,
+    styleUrls: [`./app.component.scss`]
 })
 export class AppComponent implements OnInit {
     private onInitDone = new Deferred();
@@ -67,13 +66,13 @@ export class AppComponent implements OnInit {
     ) {
         spinnerService.show(null, { hideWhenStable: true });
         // manually add the supported languages
-        translate.addLangs(['en', 'de', 'cs', 'ru']);
+        translate.addLangs([`en`, `de`, `cs`, `ru`]);
         // this language will be used as a fallback when a translation isn't found in the current language
-        translate.setDefaultLang('en');
+        translate.setDefaultLang(`en`);
         // get the browsers default language
         const browserLang = translate.getBrowserLang();
         // try to use the browser language if it is available. If not, uses english.
-        translate.use(translate.getLangs().includes(browserLang) ? browserLang : 'en');
+        translate.use(translate.getLangs().includes(browserLang) ? browserLang : `en`);
 
         // change default JS functions
         overloadJsFunctions();
@@ -91,7 +90,7 @@ export class AppComponent implements OnInit {
                 // take only the stable state
                 first(stable => stable),
                 tap(() => {
-                    console.debug('App is stable now.');
+                    console.debug(`App is stable now.`);
                     this.openslidesStatus.setStable();
                 })
             )
@@ -106,7 +105,7 @@ export class AppComponent implements OnInit {
     private loadCustomIcons(): void {
         this.matIconRegistry.addSvgIcon(
             `clapping_hands`,
-            this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/svg/clapping_hands.svg')
+            this.domSanitizer.bypassSecurityTrustResourceUrl(`../assets/svg/clapping_hands.svg`)
         );
     }
 

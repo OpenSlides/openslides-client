@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { E2EImportsModule } from '../../../../../e2e-imports.module';
 import { MeetingSettingsOverviewComponent } from './meeting-settings-overview.component';
 
-describe('SettingsOverviewComponent', () => {
+describe(`SettingsOverviewComponent`, () => {
     let component: MeetingSettingsOverviewComponent;
     let fixture: ComponentFixture<MeetingSettingsOverviewComponent>;
 
@@ -22,7 +22,7 @@ describe('SettingsOverviewComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

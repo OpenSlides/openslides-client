@@ -1,12 +1,12 @@
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-
+import { TranslateService } from '@ngx-translate/core';
 import { MotionChangeRecommendationRepositoryService } from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { LineRange, ModificationType } from 'app/core/ui-services/diff.service';
+
 import {
     BaseChangeRecommendationData,
     BaseChangeRecommendationDialogComponent
@@ -39,9 +39,9 @@ export interface MotionChangeRecommendationDialogComponentData extends BaseChang
  *
  */
 @Component({
-    selector: 'os-motion-change-recommendation',
-    templateUrl: './motion-change-recommendation-dialog.component.html',
-    styleUrls: ['./motion-change-recommendation-dialog.component.scss']
+    selector: `os-motion-change-recommendation`,
+    templateUrl: `./motion-change-recommendation-dialog.component.html`,
+    styleUrls: [`./motion-change-recommendation-dialog.component.scss`]
 })
 export class MotionChangeRecommendationDialogComponent extends BaseChangeRecommendationDialogComponent<MotionChangeRecommendationDialogComponentData> {
     /**
@@ -56,26 +56,27 @@ export class MotionChangeRecommendationDialogComponent extends BaseChangeRecomme
     public replacementTypes = [
         {
             value: ModificationType.TYPE_REPLACEMENT,
-            title: _('Replacement')
+            title: _(`Replacement`)
         },
         {
             value: ModificationType.TYPE_INSERTION,
-            title: _('Insertion')
+            title: _(`Insertion`)
         },
         {
             value: ModificationType.TYPE_DELETION,
-            title: _('Deletion')
+            title: _(`Deletion`)
         }
     ];
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         @Inject(MAT_DIALOG_DATA) public data: MotionChangeRecommendationDialogComponentData,
         formBuilder: FormBuilder,
         repo: MotionChangeRecommendationRepositoryService,
         dialogRef: MatDialogRef<MotionChangeRecommendationDialogComponent>
     ) {
-        super(componentServiceCollector, data, formBuilder, repo, dialogRef);
+        super(componentServiceCollector, translate, data, formBuilder, repo, dialogRef);
     }
 
     /**

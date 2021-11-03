@@ -3,9 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-
-import { Subscription } from 'rxjs';
-
+import { TranslateService } from '@ngx-translate/core';
 import { MotionAction } from 'app/core/actions/motion-action';
 import { UnsafeHtml } from 'app/core/definitions/key-types';
 import { RawUser } from 'app/core/repositories/users/user-repository.service';
@@ -21,12 +19,14 @@ import { ViewMotionStatuteParagraph } from 'app/site/motions/models/view-motion-
 import { ViewMotionWorkflow } from 'app/site/motions/models/view-motion-workflow';
 import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.constants';
 import { PermissionsService } from 'app/site/motions/services/permissions.service';
+import { Subscription } from 'rxjs';
+
+import { MotionServiceCollectorService } from '../../../services/motion-service-collector.service';
 import { BaseMotionDetailChildComponent } from '../base/base-motion-detail-child.component';
 import {
     MotionChangeRecommendationDialogComponent,
     MotionChangeRecommendationDialogComponentData
 } from '../motion-change-recommendation-dialog/motion-change-recommendation-dialog.component';
-import { MotionServiceCollectorService } from '../../../services/motion-service-collector.service';
 
 /**
  * fields that are required for the motion form but are not part of any motion payload
@@ -43,9 +43,9 @@ interface MotionFormFields extends MotionAction.CreatePayload {
 type MotionFormControlsConfig = { [key in keyof Partial<MotionFormFields>]: any };
 
 @Component({
-    selector: 'os-motion-content',
-    templateUrl: './motion-content.component.html',
-    styleUrls: ['./motion-content.component.scss']
+    selector: `os-motion-content`,
+    templateUrl: `./motion-content.component.html`,
+    styleUrls: [`./motion-content.component.scss`]
 })
 export class MotionContentComponent extends BaseMotionDetailChildComponent {
     @Output()
@@ -64,11 +64,11 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     }
 
     public get canChangeMetadata(): boolean {
-        return this.perms.isAllowed('change_metadata', this.motion);
+        return this.perms.isAllowed(`change_metadata`, this.motion);
     }
 
     public get canManage(): boolean {
-        return this.perms.isAllowed('manage', this.motion);
+        return this.perms.isAllowed(`manage`, this.motion);
     }
 
     /**
@@ -99,7 +99,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     /**
      * Constant to identify the notification-message.
      */
-    public NOTIFICATION_EDIT_MOTION = 'notifyEditMotion';
+    public NOTIFICATION_EDIT_MOTION = `notifyEditMotion`;
 
     public readonly ChangeRecoMode = ChangeRecoMode;
 
@@ -141,6 +141,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         motionServiceCollector: MotionServiceCollectorService,
         private fb: FormBuilder,
         private dialogService: MatDialog,
@@ -149,7 +150,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         private cd: ChangeDetectorRef,
         private perms: PermissionsService
     ) {
-        super(componentServiceCollector, motionServiceCollector);
+        super(componentServiceCollector, translate, motionServiceCollector);
     }
 
     /**
@@ -158,7 +159,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
      * @param event has the code
      */
     public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === 'Enter' && event.shiftKey) {
+        if (event.key === `Enter` && event.shiftKey) {
             this.save.emit(this.contentForm.value);
         }
     }
@@ -170,7 +171,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         const newMotionValues: Partial<MotionAction.CreatePayload> = { ...this.contentForm.value };
         try {
             const response = await this.repo.create(newMotionValues);
-            this.router.navigate([this.activeMeetingId, 'motions' + response.id]);
+            this.router.navigate([this.activeMeetingId, `motions` + response.id]);
         } catch (e) {
             this.raiseError(e);
         }
@@ -196,7 +197,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     public onStatuteParagraphChange(newValue: number): void {
         const selectedParagraph = this.statuteParagraphs.find(par => par.id === newValue);
         this.contentForm.patchValue({
-            title: this.translate.instant('Statute amendment for') + ` ${selectedParagraph.title}`,
+            title: this.translate.instant(`Statute amendment for`) + ` ${selectedParagraph.title}`,
             text: selectedParagraph.text,
             workflow_id: this.getWorkflowIdForCreateFormByParagraph(newValue)
         });
@@ -302,20 +303,20 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
 
     public async createNewSubmitter(username: string): Promise<void> {
         const newUserObj = await this.createNewUser(username);
-        this.addNewUserToFormCtrl(newUserObj, 'submitters_id');
+        this.addNewUserToFormCtrl(newUserObj, `submitters_id`);
     }
 
     public async createNewSupporter(username: string): Promise<void> {
         const newUserObj = await this.createNewUser(username);
-        this.addNewUserToFormCtrl(newUserObj, 'supporters_id');
+        this.addNewUserToFormCtrl(newUserObj, `supporters_id`);
     }
 
     public getDefaultWorkflowKeyOfSettingsByParagraph(paragraph?: number): keyof Settings {
-        let configKey: keyof Settings = 'motions_default_workflow_id';
-        if (!!this.contentForm && !!this.contentForm.get('statute_amendment').value && !!paragraph) {
-            configKey = 'motions_default_statute_amendment_workflow_id';
+        let configKey: keyof Settings = `motions_default_workflow_id`;
+        if (!!this.contentForm && !!this.contentForm.get(`statute_amendment`).value && !!paragraph) {
+            configKey = `motions_default_statute_amendment_workflow_id`;
         } else if (!!this.route.snapshot.queryParams.parent) {
-            configKey = 'motions_default_amendment_workflow_id';
+            configKey = `motions_default_amendment_workflow_id`;
         }
         return configKey;
     }
@@ -340,10 +341,10 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
             });
 
             if (this.isParagraphBasedAmendment) {
-                this.contentForm.get('text').clearValidators(); // manually adjust validators
+                this.contentForm.get(`text`).clearValidators(); // manually adjust validators
             }
 
-            const statuteAmendmentFieldName = 'statute_amendment';
+            const statuteAmendmentFieldName = `statute_amendment`;
             contentPatch[statuteAmendmentFieldName] = this.isExisting && this.motion.isStatuteAmendment();
             this.contentForm.patchValue(contentPatch);
         }
@@ -406,9 +407,9 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
      */
     private createForm(): FormGroup {
         const motionFormControls: MotionFormControlsConfig = {
-            title: ['', Validators.required],
-            text: ['', this.isParagraphBasedAmendment ? null : Validators.required],
-            reason: ['', this.reasonRequired ? Validators.required : null],
+            title: [``, Validators.required],
+            text: [``, this.isParagraphBasedAmendment ? null : Validators.required],
+            reason: [``, this.reasonRequired ? Validators.required : null],
             category_id: [],
             attachment_ids: [[]],
             agenda_parent_id: [],
@@ -416,15 +417,15 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
             supporter_ids: [[]],
             workflow_id: [],
             tag_ids: [[]],
-            statute_amendment: [''], // Internal value for the checkbox, not saved to the model
+            statute_amendment: [``], // Internal value for the checkbox, not saved to the model
             statute_paragraph_id: [],
             block_id: [],
             parent_id: [],
-            modified_final_version: [''],
+            modified_final_version: [``],
             ...(this.canChangeMetadata && {
-                number: [''],
-                agenda_create: [''],
-                agenda_type: ['']
+                number: [``],
+                agenda_create: [``],
+                agenda_type: [``]
             })
         };
 

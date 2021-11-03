@@ -1,4 +1,5 @@
 import { Fqid, Id } from 'app/core/definitions/key-types';
+
 import { BaseModel } from '../base/base-model';
 import { HasListOfSpeakersId } from '../base/has-list-of-speakers-id';
 import { HasMeetingId } from '../base/has-meeting-id';
@@ -14,8 +15,8 @@ interface PdfInformation {
  * @ignore
  */
 export class Mediafile extends BaseModel<Mediafile> {
-    public static COLLECTION = 'mediafile';
-    public static MEDIA_URL_PREFIX = '/media/';
+    public static COLLECTION = `mediafile`;
+    public static MEDIA_URL_PREFIX = `/media/`;
 
     public id: Id;
     public title: string;

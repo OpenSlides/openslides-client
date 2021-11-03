@@ -1,10 +1,9 @@
 import { inject, TestBed } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { MotionCommentSectionRepositoryService } from './motion-comment-section-repository.service';
 
-describe('MotionCommentSectionRepositoryService', () => {
+describe(`MotionCommentSectionRepositoryService`, () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [E2EImportsModule],
@@ -12,7 +11,7 @@ describe('MotionCommentSectionRepositoryService', () => {
         });
     });
 
-    it('should be created', inject(
+    it(`should be created`, inject(
         [MotionCommentSectionRepositoryService],
         (service: MotionCommentSectionRepositoryService) => {
             expect(service).toBeTruthy();

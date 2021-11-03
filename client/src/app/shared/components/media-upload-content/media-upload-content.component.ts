@@ -1,10 +1,8 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
-
+import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
-import { BehaviorSubject } from 'rxjs';
-
 import { ModelSubscription } from 'app/core/core-services/autoupdate.service';
 import { MediafileRepositoryService } from 'app/core/repositories/mediafiles/mediafile-repository.service';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
@@ -15,6 +13,7 @@ import { Identifiable } from 'app/shared/models/base/identifiable';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { ViewGroup } from 'app/site/users/models/view-group';
+import { BehaviorSubject } from 'rxjs';
 
 /**
  * To hold the structure of files to upload
@@ -26,9 +25,9 @@ interface FileData {
 }
 
 @Component({
-    selector: 'os-media-upload-content',
-    templateUrl: './media-upload-content.component.html',
-    styleUrls: ['./media-upload-content.component.scss']
+    selector: `os-media-upload-content`,
+    templateUrl: `./media-upload-content.component.html`,
+    styleUrls: [`./media-upload-content.component.scss`]
 })
 export class MediaUploadContentComponent extends BaseModelContextComponent implements OnInit, OnDestroy {
     /**
@@ -36,20 +35,20 @@ export class MediaUploadContentComponent extends BaseModelContextComponent imple
      */
     public vScrollColumns: PblColumnDefinition[] = [
         {
-            prop: 'title',
-            label: this.translate.instant('Title')
+            prop: `title`,
+            label: this.translate.instant(`Title`)
         },
         {
-            prop: 'filename',
-            label: this.translate.instant('Filename')
+            prop: `filename`,
+            label: this.translate.instant(`Filename`)
         },
         {
-            prop: 'information',
-            label: this.translate.instant('Information')
+            prop: `information`,
+            label: this.translate.instant(`Information`)
         },
         {
-            prop: 'access_groups',
-            label: this.translate.instant('Access groups')
+            prop: `access_groups`,
+            label: this.translate.instant(`Access groups`)
         }
     ];
 
@@ -111,11 +110,12 @@ export class MediaUploadContentComponent extends BaseModelContextComponent imple
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private repo: MediafileRepositoryService,
         private formBuilder: FormBuilder,
         private groupRepo: GroupRepositoryService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
         this.directoryBehaviorSubject = this.repo.getDirectoryBehaviorSubject();
         this.groupsBehaviorSubject = this.groupRepo.getViewModelListBehaviorSubject();
     }
@@ -141,7 +141,7 @@ export class MediaUploadContentComponent extends BaseModelContextComponent imple
         this.requestModels({
             viewModelCtor: ViewMeeting,
             ids: [this.activeMeetingId],
-            follow: [{ idField: 'mediafile_ids', fieldset: 'fileCreation' }],
+            follow: [{ idField: `mediafile_ids`, fieldset: `fileCreation` }],
             fieldset: []
         });
     }
@@ -157,7 +157,7 @@ export class MediaUploadContentComponent extends BaseModelContextComponent imple
      * @param file The file to get the type from.
      */
     public getFiletype(file: File): string {
-        return file.type || 'File';
+        return file.type || `File`;
     }
 
     /**
@@ -168,11 +168,11 @@ export class MediaUploadContentComponent extends BaseModelContextComponent imple
      */
     public getReadableSize(bytes: number): string {
         if (bytes === 0) {
-            return '0 B';
+            return `0 B`;
         }
         const unitLevel = Math.floor(Math.log(bytes) / Math.log(1024));
         bytes = +(bytes / Math.pow(1024, unitLevel)).toFixed(2);
-        return `${bytes} ${['B', 'kB', 'MB', 'GB', 'TB'][unitLevel]}`;
+        return `${bytes} ${[`B`, `kB`, `MB`, `GB`, `TB`][unitLevel]}`;
     }
 
     /**

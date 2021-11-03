@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
@@ -7,39 +6,40 @@ import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { BaseImportService, ImportConfig } from 'app/core/ui-services/base-import.service';
 import { Motion } from 'app/shared/models/motions/motion';
-import { CategoryImportHelper } from '../import/category-import-helper';
-import { MotionBlockImportHelper } from '../import/motion-block-import-helper';
-import { MotionCsvExportService } from './motion-csv-export.service';
-import { getMotionExportHeadersAndVerboseNames } from '../motions.constants';
-import { TagImportHelper } from '../import/tag-import-helper';
-import { UserImportHelper } from '../import/user-import-helper';
-import { ImportServiceCollector } from '../../../core/ui-services/import-service-collector';
 import { BeforeImportHandler } from 'app/shared/utils/import/base-before-import-handler';
 
-const CATEGORY_PROPERTY = 'category';
-const MOTION_BLOCK_PROPERTY = 'motion_block';
-const TAG_PROPERTY = 'tags';
-const SUBMITTER_PROPERTY = 'submitters';
-const SUPPORTER_PROPERTY = 'supporters';
+import { ImportServiceCollector } from '../../../core/ui-services/import-service-collector';
+import { CategoryImportHelper } from '../import/category-import-helper';
+import { MotionBlockImportHelper } from '../import/motion-block-import-helper';
+import { TagImportHelper } from '../import/tag-import-helper';
+import { UserImportHelper } from '../import/user-import-helper';
+import { getMotionExportHeadersAndVerboseNames } from '../motions.constants';
+import { MotionCsvExportService } from './motion-csv-export.service';
+
+const CATEGORY_PROPERTY = `category`;
+const MOTION_BLOCK_PROPERTY = `motion_block`;
+const TAG_PROPERTY = `tags`;
+const SUBMITTER_PROPERTY = `submitters`;
+const SUPPORTER_PROPERTY = `supporters`;
 
 /**
  * Service for motion imports
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MotionImportService extends BaseImportService<Motion> {
     /**
      * List of possible errors and their verbose explanation
      */
     public errorList = {
-        MotionBlock: 'Could not resolve the motion block',
-        Category: 'Could not resolve the category',
-        Submitters: 'Could not resolve the submitters',
-        Tags: 'Could not resolve the tags',
-        Title: 'A title is required',
-        Text: "A content in the 'text' column is required",
-        Duplicates: 'A motion with this number already exists.'
+        MotionBlock: `Could not resolve the motion block`,
+        Category: `Could not resolve the category`,
+        Submitters: `Could not resolve the submitters`,
+        Tags: `Could not resolve the tags`,
+        Title: `A title is required`,
+        Text: `A content in the 'text' column is required`,
+        Duplicates: `A motion with this number already exists.`
     };
 
     /**
@@ -87,13 +87,13 @@ export class MotionImportService extends BaseImportService<Motion> {
             [TAG_PROPERTY]: new TagImportHelper(this.tagRepo),
             [SUBMITTER_PROPERTY]: new UserImportHelper({
                 repo: this.userRepo,
-                verboseName: 'Submitters',
-                property: 'submitter_ids'
+                verboseName: `Submitters`,
+                property: `submitter_ids`
             }),
             [SUPPORTER_PROPERTY]: new UserImportHelper({
                 repo: this.userRepo,
-                verboseName: 'Supporters',
-                property: 'supporter_ids'
+                verboseName: `Supporters`,
+                property: `supporter_ids`
             })
         };
     }

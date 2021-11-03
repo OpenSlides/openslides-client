@@ -2,25 +2,23 @@ import { ArrayDataSource } from '@angular/cdk/collections';
 import { CdkDragMove, CdkDragSortEvent, CdkDragStart } from '@angular/cdk/drag-drop';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { Component, ContentChild, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef } from '@angular/core';
-
-import { Observable, Subscription } from 'rxjs';
-import { auditTime } from 'rxjs/operators';
-
 import { SortDefinition } from 'app/core/ui-services/base-sort.service';
-import { TreeSortService } from 'app/core/ui-services/tree-sort.service';
 import { FlatNode, TreeIdNode, TreeService } from 'app/core/ui-services/tree.service';
+import { TreeSortService } from 'app/core/ui-services/tree-sort.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Displayable } from 'app/site/base/displayable';
+import { Observable, Subscription } from 'rxjs';
+import { auditTime } from 'rxjs/operators';
 
 /**
  * Enumaration to separate between the directions.
  */
 enum Direction {
-    UPWARDS = 'upwards',
-    DOWNWARDS = 'downwards',
-    RIGHT = 'right',
-    LEFT = 'left',
-    NOWAY = 'noway'
+    UPWARDS = `upwards`,
+    DOWNWARDS = `downwards`,
+    RIGHT = `right`,
+    LEFT = `left`,
+    NOWAY = `noway`
 }
 
 /**
@@ -50,9 +48,9 @@ class Movement {
 }
 
 @Component({
-    selector: 'os-sorting-tree',
-    templateUrl: './sorting-tree.component.html',
-    styleUrls: ['./sorting-tree.component.scss']
+    selector: `os-sorting-tree`,
+    templateUrl: `./sorting-tree.component.html`,
+    styleUrls: [`./sorting-tree.component.scss`]
 })
 export class SortingTreeComponent<T extends Identifiable & Displayable> implements OnInit, OnDestroy {
     /**
@@ -977,8 +975,8 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
      */
     private resolveSortingPredicate(event: SortDefinition<T>): void {
         this.removeSubscription();
-        const sortProperty = typeof event === 'object' ? event.sortProperty : event;
-        const sortAscending = typeof event === 'object' ? event.sortAscending : true;
+        const sortProperty = typeof event === `object` ? event.sortProperty : event;
+        const sortAscending = typeof event === `object` ? event.sortAscending : true;
 
         this.osTreeData = this.sortService.sortTree(this.osTreeData, sortProperty, sortAscending);
         this.checkActiveFilters();

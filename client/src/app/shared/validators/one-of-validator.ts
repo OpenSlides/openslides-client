@@ -15,7 +15,7 @@ export class OneOfValidator {
      */
     public static validation(
         keys: string[],
-        errorName: string = 'noOneSet'
+        errorName: string = `noOneSet`
     ): (control: AbstractControl) => ValidationErrors | null {
         return (control: AbstractControl): ValidationErrors | null => {
             const formControls = keys.map(key => control.get(key));

@@ -2,6 +2,7 @@ import { HasMeeting } from 'app/management/models/view-meeting';
 import { Projection } from 'app/shared/models/projector/projection';
 import { HasProjectorTitle, ProjectorTitle } from 'app/site/base/projectable';
 import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
+
 import { BaseViewModel } from '../../base/base-view-model';
 import { ViewProjector } from './view-projector';
 
@@ -31,7 +32,7 @@ export class ViewProjection extends BaseViewModel<Projection> {
     public getTitle = () => this.getProjectorTitle().title;
 
     public getSubtitle(): string {
-        return this.getProjectorTitle().subtitle || '';
+        return this.getProjectorTitle().subtitle || ``;
     }
 
     public getProjectionBuildDescriptor(): ProjectionBuildDescriptor {

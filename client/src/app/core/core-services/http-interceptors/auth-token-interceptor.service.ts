@@ -7,14 +7,13 @@ import {
     HttpResponse
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { AuthTokenService } from '../auth-token.service';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AuthTokenInterceptorService implements HttpInterceptor {
     public constructor(private authTokenService: AuthTokenService) {}
@@ -30,9 +29,9 @@ export class AuthTokenInterceptorService implements HttpInterceptor {
         return next.handle(request).pipe(
             tap(
                 httpEvent => {
-                    if (httpEvent instanceof HttpResponse && httpEvent.headers.get('Authentication')) {
+                    if (httpEvent instanceof HttpResponse && httpEvent.headers.get(`Authentication`)) {
                         // Successful request
-                        this.authTokenService.setRawAccessToken(httpEvent.headers.get('Authentication'));
+                        this.authTokenService.setRawAccessToken(httpEvent.headers.get(`Authentication`));
                     }
                 },
                 error => {

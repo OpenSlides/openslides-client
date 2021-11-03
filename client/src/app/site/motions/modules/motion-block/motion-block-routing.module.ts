@@ -5,8 +5,8 @@ import { MotionBlockDetailComponent } from './components/motion-block-detail/mot
 import { MotionBlockListComponent } from './components/motion-block-list/motion-block-list.component';
 
 const routes: Route[] = [
-    { path: '', component: MotionBlockListComponent, pathMatch: 'full' },
-    { path: ':id', component: MotionBlockDetailComponent }
+    { path: ``, component: MotionBlockListComponent, pathMatch: `full` },
+    { path: `:id`, component: MotionBlockDetailComponent }
 ];
 
 @NgModule({

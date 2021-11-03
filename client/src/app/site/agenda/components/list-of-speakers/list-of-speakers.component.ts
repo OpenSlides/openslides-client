@@ -1,8 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
-import { Subscription } from 'rxjs';
-
+import { TranslateService } from '@ngx-translate/core';
 import { CollectionMapperService } from 'app/core/core-services/collection-mapper.service';
 import { collectionFromFqid } from 'app/core/core-services/key-transforms';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
@@ -14,23 +12,25 @@ import { ListOfSpeakersContentComponent } from 'app/shared/components/list-of-sp
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
-import { CurrentListOfSpeakersSlideService } from 'app/site/projector/services/current-list-of-speakers-slide.service';
 import {
-    CurrentListOfSpeakersService,
-    CURRENT_LIST_OF_SPEAKERS_FOLLOW
+    CURRENT_LIST_OF_SPEAKERS_FOLLOW,
+    CurrentListOfSpeakersService
 } from 'app/site/projector/services/current-list-of-speakers.service';
+import { CurrentListOfSpeakersSlideService } from 'app/site/projector/services/current-list-of-speakers-slide.service';
+import { Subscription } from 'rxjs';
+
 import { ViewListOfSpeakers } from '../../models/view-list-of-speakers';
 
 /**
  * The list of speakers for agenda items.
  */
 @Component({
-    selector: 'os-list-of-speakers',
-    templateUrl: './list-of-speakers.component.html',
-    styleUrls: ['./list-of-speakers.component.scss']
+    selector: `os-list-of-speakers`,
+    templateUrl: `./list-of-speakers.component.html`,
+    styleUrls: [`./list-of-speakers.component.scss`]
 })
 export class ListOfSpeakersComponent extends BaseModelContextComponent implements OnInit, OnDestroy {
-    @ViewChild('content')
+    @ViewChild(`content`)
     private listOfSpeakersContentComponent: ListOfSpeakersContentComponent;
 
     /**
@@ -87,6 +87,7 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private route: ActivatedRoute,
         private listOfSpeakersRepo: ListOfSpeakersRepositoryService,
         private promptService: PromptService,
@@ -95,7 +96,7 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
         private viewport: ViewportService,
         private collectionMapper: CollectionMapperService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     public ngOnInit(): void {
@@ -103,7 +104,7 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
         // Check, if we are on the current list of speakers.
         this.isCurrentListOfSpeakers =
             this.route.snapshot.url.length > 0
-                ? this.route.snapshot.url[this.route.snapshot.url.length - 1].path === 'speakers'
+                ? this.route.snapshot.url[this.route.snapshot.url.length - 1].path === `speakers`
                 : true;
 
         if (this.isCurrentListOfSpeakers) {
@@ -111,7 +112,7 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
                 viewModelCtor: ViewMeeting,
                 ids: [this.activeMeetingId],
                 follow: [CURRENT_LIST_OF_SPEAKERS_FOLLOW],
-                fieldset: ''
+                fieldset: ``
             });
             this.subscriptions.push(
                 this.currentListOfSpeakersService.currentListOfSpeakersObservable.subscribe(clos => {
@@ -152,18 +153,18 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
             ids: [id],
             follow: [
                 {
-                    idField: 'speaker_ids',
-                    follow: [{ idField: 'user_id', fieldset: 'shortName' }]
+                    idField: `speaker_ids`,
+                    follow: [{ idField: `user_id`, fieldset: `shortName` }]
                 },
-                'content_object_id' // To retreive the title
+                `content_object_id` // To retreive the title
             ]
         });
     }
 
     private setListOfSpeakers(listOfSpeakers: ViewListOfSpeakers): void {
         const title = this.isCurrentListOfSpeakers
-            ? 'Current list of speakers'
-            : listOfSpeakers.getTitle() + ` - ${this.translate.instant('List of speakers')}`;
+            ? `Current list of speakers`
+            : listOfSpeakers.getTitle() + ` - ${this.translate.instant(`List of speakers`)}`;
         super.setTitle(title);
         this.viewListOfSpeakers = listOfSpeakers;
     }
@@ -213,7 +214,7 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
      */
     public async clearSpeakerList(): Promise<void> {
         const title = this.translate.instant(
-            'Are you sure you want to delete all speakers from this list of speakers?'
+            `Are you sure you want to delete all speakers from this list of speakers?`
         );
         if (await this.promptService.open(title)) {
             this.listOfSpeakersRepo.deleteAllSpeakers(this.viewListOfSpeakers);

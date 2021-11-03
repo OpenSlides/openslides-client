@@ -1,5 +1,6 @@
 import { fqidFromCollectionAndId } from 'app/core/core-services/key-transforms';
 import { Fqid, Id } from 'app/core/definitions/key-types';
+
 import { Collection } from './collection';
 import { Deserializer } from './deserializer';
 import { Identifiable } from './identifiable';

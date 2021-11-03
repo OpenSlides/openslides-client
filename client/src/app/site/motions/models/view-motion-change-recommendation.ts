@@ -1,9 +1,10 @@
 import { ModificationType } from 'app/core/ui-services/diff.service';
 import { HasMeeting } from 'app/management/models/view-meeting';
 import { MotionChangeRecommendation } from 'app/shared/models/motions/motion-change-recommendation';
+
+import { ViewUnifiedChange, ViewUnifiedChangeType } from '../../../shared/models/motions/view-unified-change';
 import { BaseViewModel } from '../../base/base-view-model';
 import { ViewMotion } from './view-motion';
-import { ViewUnifiedChange, ViewUnifiedChangeType } from '../../../shared/models/motions/view-unified-change';
 
 /**
  * Change recommendation class for the View
@@ -31,7 +32,7 @@ export class ViewMotionChangeRecommendation
     }
 
     public getChangeId(): string {
-        return 'recommendation-' + this.id.toString(10);
+        return `recommendation-` + this.id.toString(10);
     }
 
     public getIdentifier(): string {

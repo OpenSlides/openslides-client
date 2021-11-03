@@ -13,7 +13,6 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { NavigationStart, Router } from '@angular/router';
-
 import {
     columnFactory,
     createDS,
@@ -25,21 +24,21 @@ import {
     PblNgridComponent
 } from '@pebula/ngrid';
 import { PblNgridDataMatrixRow } from '@pebula/ngrid/target-events';
-import { Observable, Subscription } from 'rxjs';
-import { distinctUntilChanged, filter } from 'rxjs/operators';
-
 import { StorageService } from 'app/core/core-services/storage.service';
 import { HasViewModelListObservable } from 'app/core/definitions/has-view-model-list-observable';
 import { BaseFilterListService } from 'app/core/ui-services/base-filter-list.service';
 import { BaseSortListService } from 'app/core/ui-services/base-sort-list.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { BaseViewModel } from 'app/site/base/base-view-model';
+import { Observable, Subscription } from 'rxjs';
+import { distinctUntilChanged, filter } from 'rxjs/operators';
+
 import { ColumnRestriction } from '../list-view-table/list-view-table.component';
 
 @Component({
-    selector: 'os-basic-list-view-table',
-    templateUrl: './basic-list-view-table.component.html',
-    styleUrls: ['./basic-list-view-table.component.scss'],
+    selector: `os-basic-list-view-table`,
+    templateUrl: `./basic-list-view-table.component.html`,
+    styleUrls: [`./basic-list-view-table.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -50,10 +49,10 @@ export class BasicListViewTableComponent<V extends BaseViewModel> implements OnI
     @ViewChild(PblNgridComponent)
     protected ngrid!: PblNgridComponent;
 
-    @ContentChild('startColumnView', { read: TemplateRef, static: false })
+    @ContentChild(`startColumnView`, { read: TemplateRef, static: false })
     public startColumnView: TemplateRef<any>;
 
-    @ContentChild('endColumnView', { read: TemplateRef, static: false })
+    @ContentChild(`endColumnView`, { read: TemplateRef, static: false })
     public endColumnView: TemplateRef<any>;
 
     /**
@@ -161,9 +160,9 @@ export class BasicListViewTableComponent<V extends BaseViewModel> implements OnI
     @Input()
     public startColumnDefinitions: PblColumnDefinition[] = [
         {
-            prop: 'selection',
-            label: '',
-            width: '40px'
+            prop: `selection`,
+            label: ``,
+            width: `40px`
         }
     ];
 
@@ -173,9 +172,9 @@ export class BasicListViewTableComponent<V extends BaseViewModel> implements OnI
     @Input()
     public endColumnDefinitions: PblColumnDefinition[] = [
         {
-            prop: 'menu',
-            label: '',
-            width: '40px'
+            prop: `menu`,
+            label: ``,
+            width: `40px`
         }
     ];
 
@@ -251,11 +250,11 @@ export class BasicListViewTableComponent<V extends BaseViewModel> implements OnI
         let hidden: string[] = [];
 
         if (!this.multiSelect) {
-            hidden.push('selection');
+            hidden.push(`selection`);
         }
 
         if ((!this.alwaysShowMenu && !this.isMobile) || !this.showMenu) {
-            hidden.push('menu');
+            hidden.push(`menu`);
         }
 
         // hide all columns with restrictions
@@ -419,13 +418,13 @@ export class BasicListViewTableComponent<V extends BaseViewModel> implements OnI
     }
 
     public onKeyDown(keyEvent: KeyboardEvent): void {
-        if (keyEvent.key === 'Shift') {
+        if (keyEvent.key === `Shift`) {
             this.isHoldingShiftKey = true;
         }
     }
 
     public onKeyUp(keyEvent: KeyboardEvent): void {
-        if (keyEvent.key === 'Shift') {
+        if (keyEvent.key === `Shift`) {
             this.isHoldingShiftKey = false;
         }
     }
@@ -476,7 +475,7 @@ export class BasicListViewTableComponent<V extends BaseViewModel> implements OnI
         // Define the columns. Has to be in the OnInit cause "columns" is slower than
         // the constructor of this class
         this.columnSet = columnFactory()
-            .default({ width: '60px' })
+            .default({ width: `60px` })
             .table(...this.startColumnDefinitions, ...this.columns, ...this.endColumnDefinitions)
             .build();
 
@@ -539,9 +538,9 @@ export class BasicListViewTableComponent<V extends BaseViewModel> implements OnI
      */
     private changeRowHeight(): void {
         if (this.vScrollFixed > 0) {
-            document.documentElement.style.setProperty('--pbl-height', this.vScrollFixed + 'px');
+            document.documentElement.style.setProperty(`--pbl-height`, this.vScrollFixed + `px`);
         } else {
-            document.documentElement.style.removeProperty('--pbl-height');
+            document.documentElement.style.removeProperty(`--pbl-height`);
         }
     }
 
@@ -583,14 +582,14 @@ export class BasicListViewTableComponent<V extends BaseViewModel> implements OnI
                 return;
             }
 
-            let propertyAsString = '';
+            let propertyAsString = ``;
             // If the property is a function, call it.
-            if (typeof property === 'function') {
-                propertyAsString = '' + property.bind(originItem)();
+            if (typeof property === `function`) {
+                propertyAsString = `` + property.bind(originItem)();
             } else if (Array.isArray(property) || property.constructor === Array) {
-                propertyAsString = property.join('');
+                propertyAsString = property.join(``);
             } else {
-                propertyAsString = '' + property;
+                propertyAsString = `` + property;
             }
 
             if (propertyAsString) {
@@ -609,7 +608,7 @@ export class BasicListViewTableComponent<V extends BaseViewModel> implements OnI
 
             // filter by ID
             const trimmedInput = this.inputValue.trim().toLowerCase();
-            const idString = '' + item.id;
+            const idString = `` + item.id;
             const foundId = idString.trim().toLowerCase().indexOf(trimmedInput) !== -1;
             if (foundId) {
                 return true;
@@ -617,12 +616,12 @@ export class BasicListViewTableComponent<V extends BaseViewModel> implements OnI
 
             // custom filter predicates
             if (!(this.filterProps && this.filterProps.length)) {
-                console.warn('No filter props are given');
+                console.warn(`No filter props are given`);
                 return false;
             }
             for (const prop of this.filterProps) {
                 // find nested props
-                const split = prop.split('.');
+                const split = prop.split(`.`);
                 // let currValue: any = item;
                 const result = toFiltering(item, split, trimmedInput);
                 if (result) {

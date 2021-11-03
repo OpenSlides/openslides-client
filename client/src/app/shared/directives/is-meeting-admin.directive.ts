@@ -1,8 +1,6 @@
 import { Directive, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
-
-import { Subscription } from 'rxjs';
-
 import { OperatorService } from 'app/core/core-services/operator.service';
+import { Subscription } from 'rxjs';
 
 /**
  * Directive to check if the operator is a superadmin
@@ -10,7 +8,7 @@ import { OperatorService } from 'app/core/core-services/operator.service';
  * @example <div *osIsMeetingAdmin ..> ... < /div>
  */
 @Directive({
-    selector: '[osIsMeetingAdmin]'
+    selector: `[osIsMeetingAdmin]`
 })
 export class IsMeetingAdminDirective implements OnInit, OnDestroy {
     /**

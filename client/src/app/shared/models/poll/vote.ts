@@ -1,21 +1,22 @@
 import { Id } from 'app/core/definitions/key-types';
+
 import { BaseModel } from '../base/base-model';
 import { HasMeetingId } from '../base/has-meeting-id';
 
 export type VoteValue = 'Y' | 'N' | 'A';
 
 export const VoteValueVerbose = {
-    Y: 'Yes',
-    N: 'No',
-    A: 'Abstain'
+    Y: `Yes`,
+    N: `No`,
+    A: `Abstain`
 };
 
 export const GeneralValueVerbose = {
-    votesvalid: 'Valid votes',
-    votesinvalid: 'Invalid votes',
-    votescast: 'Total votes cast',
-    votesno: 'Votes No',
-    votesabstain: 'Votes abstain'
+    votesvalid: `Valid votes`,
+    votesinvalid: `Invalid votes`,
+    votescast: `Total votes cast`,
+    votesno: `Votes No`,
+    votesabstain: `Votes abstain`
 };
 
 export interface UserVote {
@@ -26,7 +27,7 @@ export interface UserVote {
 }
 
 export class Vote extends BaseModel<Vote> {
-    public static COLLECTION = 'vote';
+    public static COLLECTION = `vote`;
 
     public id: Id;
     public weight: number;
@@ -46,7 +47,7 @@ export class Vote extends BaseModel<Vote> {
     }
 
     protected getDecimalFields(): string[] {
-        return ['weight'];
+        return [`weight`];
     }
 }
 

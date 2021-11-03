@@ -1,5 +1,6 @@
 import { ModificationType } from 'app/core/ui-services/diff.service';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from 'app/shared/models/motions/view-unified-change';
+
 import { ChangeRecommendationData } from './motion-slide-data';
 
 /**
@@ -21,7 +22,7 @@ export class ChangeRecommendationUnifiedChange implements ChangeRecommendationDa
     }
 
     public getChangeId(): string {
-        return 'recommendation-' + this.id.toString(10);
+        return `recommendation-` + this.id.toString(10);
     }
 
     public getIdentifier(): string {

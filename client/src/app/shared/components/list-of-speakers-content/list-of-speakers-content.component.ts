@@ -11,9 +11,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-
-import { BehaviorSubject } from 'rxjs';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
@@ -32,14 +30,16 @@ import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers
 import { ViewSpeaker } from 'app/site/agenda/models/view-speaker';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { BehaviorSubject } from 'rxjs';
+
 import { PointOfOrderDialogComponent } from '../point-of-order-dialog/point-of-order-dialog.component';
 import { Selectable } from '../selectable';
 import { SortingListComponent } from '../sorting-list/sorting-list.component';
 
 @Component({
-    selector: 'os-list-of-speakers-content',
-    templateUrl: './list-of-speakers-content.component.html',
-    styleUrls: ['./list-of-speakers-content.component.scss'],
+    selector: `os-list-of-speakers-content`,
+    templateUrl: `./list-of-speakers-content.component.html`,
+    styleUrls: [`./list-of-speakers-content.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -98,7 +98,7 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
     }
 
     private get onlyPresentUsers(): boolean {
-        return this.meetingSettingService.instant('list_of_speakers_present_users_only');
+        return this.meetingSettingService.instant(`list_of_speakers_present_users_only`);
     }
 
     @Input()
@@ -134,6 +134,7 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private listOfSpeakersRepo: ListOfSpeakersRepositoryService,
         private activeMeetingService: ActiveMeetingService,
         private speakerRepo: SpeakerRepositoryService,
@@ -145,7 +146,7 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
         private cd: ChangeDetectorRef,
         private dialog: MatDialog
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
         this.addSpeakerForm = new FormGroup({ user_id: new FormControl() });
     }
 
@@ -204,7 +205,7 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
         return {
             viewModelCtor: ViewMeeting,
             ids: [this.activeMeetingService.meetingId],
-            follow: [{ idField: 'user_ids', fieldset: 'shortName' }],
+            follow: [{ idField: `user_ids`, fieldset: `shortName` }],
             fieldset: []
         };
     }
@@ -230,8 +231,8 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
      */
     public async removeSpeaker(speaker?: ViewSpeaker): Promise<void> {
         const title = speaker
-            ? this.translate.instant('Are you sure you want to remove this speaker from the list of speakers?')
-            : this.translate.instant('Are you sure you want to remove yourself from this list of speakers?');
+            ? this.translate.instant(`Are you sure you want to remove this speaker from the list of speakers?`)
+            : this.translate.instant(`Are you sure you want to remove yourself from this list of speakers?`);
         const speakerToDelete = speaker || this.findOperatorSpeaker();
         if (await this.promptService.open(title)) {
             await this.speakerRepo.delete(speakerToDelete.id);
@@ -434,7 +435,7 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
         const duration = Math.floor(
             (speaker.getEndTimeAsDate().valueOf() - speaker.getBeginTimeAsDate().valueOf()) / 1000
         );
-        return this.durationService.durationToString(duration, 'm');
+        return this.durationService.durationToString(duration, `m`);
     }
 
     /**
@@ -450,24 +451,24 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
     private subscribeToSettings(): void {
         this.subscriptions.push(
             // observe changes the agenda_present_speakers_only setting
-            this.meetingSettingService.get('list_of_speakers_present_users_only').subscribe(() => {
+            this.meetingSettingService.get(`list_of_speakers_present_users_only`).subscribe(() => {
                 this.filterUsers();
             }),
             // observe changes to the agenda_show_first_contribution setting
-            this.meetingSettingService.get('list_of_speakers_show_first_contribution').subscribe(show => {
+            this.meetingSettingService.get(`list_of_speakers_show_first_contribution`).subscribe(show => {
                 this.showFistContributionHint = show;
             }),
             // observe point of order settings
-            this.meetingSettingService.get('list_of_speakers_enable_point_of_order_speakers').subscribe(show => {
+            this.meetingSettingService.get(`list_of_speakers_enable_point_of_order_speakers`).subscribe(show => {
                 this.pointOfOrderEnabled = show;
             }),
-            this.meetingSettingService.get('list_of_speakers_enable_pro_contra_speech').subscribe(enabled => {
+            this.meetingSettingService.get(`list_of_speakers_enable_pro_contra_speech`).subscribe(enabled => {
                 this.enableProContraSpeech = enabled;
             }),
-            this.meetingSettingService.get('list_of_speakers_can_set_contribution_self').subscribe(canSet => {
+            this.meetingSettingService.get(`list_of_speakers_can_set_contribution_self`).subscribe(canSet => {
                 this.canSetMarkSelf = canSet;
             }),
-            this.meetingSettingService.get('list_of_speakers_speaker_note_for_everyone').subscribe(enabled => {
+            this.meetingSettingService.get(`list_of_speakers_speaker_note_for_everyone`).subscribe(enabled => {
                 this.noteForAll = enabled;
             })
         );

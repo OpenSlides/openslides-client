@@ -1,10 +1,9 @@
 import { Component, Input } from '@angular/core';
-
-import { ChartOptions } from 'chart.js';
-import { Label } from 'ng2-charts';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { ChartOptions } from 'chart.js';
+import { Label } from 'ng2-charts';
 
 /**
  * The different supported chart-types.
@@ -34,16 +33,16 @@ export type ChartData = ChartDate[];
  * It takes the passed data to fit the different types of the library.
  */
 @Component({
-    selector: 'os-charts',
-    templateUrl: './charts.component.html',
-    styleUrls: ['./charts.component.scss']
+    selector: `os-charts`,
+    templateUrl: `./charts.component.html`,
+    styleUrls: [`./charts.component.scss`]
 })
 export class ChartsComponent extends BaseComponent {
     /**
      * The type of the chart.
      */
     @Input()
-    public type: ChartType = 'horizontalBar';
+    public type: ChartType = `horizontalBar`;
 
     /**
      * The labels for the separated sections.
@@ -91,7 +90,7 @@ export class ChartsComponent extends BaseComponent {
                     enabled: false
                 },
                 legend: {
-                    position: 'left'
+                    position: `left`
                 }
             };
         } else {
@@ -131,14 +130,14 @@ export class ChartsComponent extends BaseComponent {
     }
 
     public get isCircle(): boolean {
-        return this.type === 'pie' || this.type === 'doughnut';
+        return this.type === `pie` || this.type === `doughnut`;
     }
 
     /**
      * Constructor.
      */
-    public constructor(componentServiceCollector: ComponentServiceCollector) {
-        super(componentServiceCollector);
+    public constructor(componentServiceCollector: ComponentServiceCollector, protected translate: TranslateService) {
+        super(componentServiceCollector, translate);
     }
 
     public calcBarChartHeight(): string | undefined {

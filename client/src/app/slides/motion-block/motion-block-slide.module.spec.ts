@@ -1,13 +1,13 @@
 import { MotionBlockSlideModule } from './motion-block-slide.module';
 
-describe('MotionBlockSlideModule', () => {
+describe(`MotionBlockSlideModule`, () => {
     let motionBlockSlideModule: MotionBlockSlideModule;
 
     beforeEach(() => {
         motionBlockSlideModule = new MotionBlockSlideModule();
     });
 
-    it('should create an instance', () => {
+    it(`should create an instance`, () => {
         expect(motionBlockSlideModule).toBeTruthy();
     });
 });

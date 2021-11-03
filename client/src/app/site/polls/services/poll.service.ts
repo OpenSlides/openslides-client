@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-
 import { OrganizationSettingsService } from 'app/core/ui-services/organization-settings.service';
 import { ChartData, ChartDate } from 'app/shared/components/charts/charts.component';
 import { PollData } from 'app/shared/models/poll/generic-poll';
@@ -40,9 +38,9 @@ export type CalculablePollKey =
 export type PollVoteValue = 'Yes' | 'No' | 'Abstain' | 'Votes';
 
 export const VoteValuesVerbose = {
-    Y: 'Yes',
-    N: 'No',
-    A: 'Abstain'
+    Y: `Yes`,
+    N: `No`,
+    A: `Abstain`
 };
 
 /**
@@ -79,7 +77,7 @@ const PollChartBarThickness = 20;
  * and {@link AssignmentPollService}
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class PollService {
     public isElectronicVotingEnabled: boolean;
@@ -89,7 +87,7 @@ export class PollService {
     /**
      * list of poll keys that are numbers and can be part of a quorum calculation
      */
-    public pollValues: CalculablePollKey[] = ['yes', 'no', 'abstain', 'votesvalid', 'votesinvalid', 'votescast'];
+    public pollValues: CalculablePollKey[] = [`yes`, `no`, `abstain`, `votesvalid`, `votesinvalid`, `votescast`];
 
     public constructor(
         organizationSettingsService: OrganizationSettingsService,
@@ -98,7 +96,7 @@ export class PollService {
         protected parsePollNumber: ParsePollNumberPipe
     ) {
         organizationSettingsService
-            .get('enable_electronic_voting')
+            .get(`enable_electronic_voting`)
             .subscribe(isEnabled => (this.isElectronicVotingEnabled = isEnabled));
     }
 
@@ -135,7 +133,7 @@ export class PollService {
             .map(option => {
                 const title = option.getOptionTitle();
                 const pollTableEntry: PollTableData = {
-                    class: 'user',
+                    class: `user`,
                     value: this.getVoteTableKeys(poll).map(
                         key =>
                             ({
@@ -177,14 +175,14 @@ export class PollService {
                 return resultLabel;
             });
             const optionName = option.getOptionTitle().title;
-            return `${optionName} · ${votingResults.join(' · ')}`;
+            return `${optionName} · ${votingResults.join(` · `)}`;
         });
     }
 
     private getGlobalVoteKeys(poll: PollData): VotingResult[] {
         return [
             {
-                vote: 'amount_global_yes',
+                vote: `amount_global_yes`,
                 showPercent: this.showPercentOfValidOrCast(poll),
                 hide:
                     poll.global_option?.yes === VOTE_UNDOCUMENTED ||
@@ -192,12 +190,12 @@ export class PollService {
                     poll.pollmethod === PollMethod.N
             },
             {
-                vote: 'amount_global_no',
+                vote: `amount_global_no`,
                 showPercent: this.showPercentOfValidOrCast(poll),
                 hide: poll.global_option?.no === VOTE_UNDOCUMENTED || !poll.global_option?.no
             },
             {
-                vote: 'amount_global_abstain',
+                vote: `amount_global_abstain`,
                 showPercent: this.showPercentOfValidOrCast(poll),
                 hide: poll.global_option?.abstain === VOTE_UNDOCUMENTED || !poll.global_option?.abstain
             }
@@ -209,7 +207,7 @@ export class PollService {
             .filter(key => !key.hide)
             .map(key => ({
                 votingOption: key.vote,
-                class: 'sums',
+                class: `sums`,
                 value: [
                     {
                         amount: poll[key.vote],
@@ -280,11 +278,11 @@ export class PollService {
 
     public getVerboseNameForValue(key: string, value: string): string {
         switch (key) {
-            case 'onehundred_percent_base':
+            case `onehundred_percent_base`:
                 return PollPercentBaseVerbose[value];
-            case 'pollmethod':
+            case `pollmethod`:
                 return AssignmentPollMethodVerbose[value];
-            case 'type':
+            case `type`:
                 return PollTypeVerbose[value];
         }
     }
@@ -296,18 +294,18 @@ export class PollService {
     public getVoteTableKeys(poll: PollData): VotingResult[] {
         return [
             {
-                vote: 'yes',
-                icon: 'thumb_up',
+                vote: `yes`,
+                icon: `thumb_up`,
                 showPercent: true
             },
             {
-                vote: 'no',
-                icon: 'thumb_down',
+                vote: `no`,
+                icon: `thumb_down`,
                 showPercent: true
             },
             {
-                vote: 'abstain',
-                icon: 'trip_origin',
+                vote: `abstain`,
+                icon: `trip_origin`,
                 showPercent: this.showAbstainPercent(poll)
             }
         ];
@@ -332,20 +330,20 @@ export class PollService {
     public getSumTableKeys(poll: PollData): VotingResult[] {
         return [
             {
-                vote: 'votesvalid',
-                icon: 'done',
+                vote: `votesvalid`,
+                icon: `done`,
                 hide: poll.votesvalid === VOTE_UNDOCUMENTED,
                 showPercent: this.showPercentOfValidOrCast(poll)
             },
             {
-                vote: 'votesinvalid',
-                icon: 'not_interested',
+                vote: `votesinvalid`,
+                icon: `not_interested`,
                 hide: poll.votesinvalid === VOTE_UNDOCUMENTED || poll.type !== PollType.Analog,
                 showPercent: poll.onehundred_percent_base === PollPercentBase.Cast
             },
             {
-                vote: 'votescast',
-                icon: 'label',
+                vote: `votescast`,
+                icon: `label`,
                 hide: poll.votescast === VOTE_UNDOCUMENTED || poll.type !== PollType.Analog,
                 showPercent: poll.onehundred_percent_base === PollPercentBase.Cast
             }
@@ -380,16 +378,16 @@ export class PollService {
     protected getPollDataFieldsByMethod(poll: PollData): CalculablePollKey[] {
         switch (poll.pollmethod) {
             case PollMethod.YNA: {
-                return ['yes', 'no', 'abstain'];
+                return [`yes`, `no`, `abstain`];
             }
             case PollMethod.YN: {
-                return ['yes', 'no'];
+                return [`yes`, `no`];
             }
             case PollMethod.N: {
-                return ['no'];
+                return [`no`];
             }
             default: {
-                return ['yes'];
+                return [`yes`];
             }
         }
     }

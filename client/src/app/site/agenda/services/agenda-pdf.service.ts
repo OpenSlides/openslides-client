@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-
 import { TranslateService } from '@ngx-translate/core';
-
 import { OSTreeNode, TreeService } from 'app/core/ui-services/tree.service';
+
 import { ViewAgendaItem } from '../models/view-agenda-item';
 
 /**
@@ -23,7 +22,7 @@ interface AgendaTreePdfEntry {
  * ```
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AgendaPdfService {
     /**
@@ -42,10 +41,10 @@ export class AgendaPdfService {
      * @returns definitions ready to be opened or exported via {@link PdfDocumentService}
      */
     public agendaListToDocDef(items: ViewAgendaItem[]): object {
-        const tree: OSTreeNode<ViewAgendaItem>[] = this.treeService.makeSortedTree(items, 'weight', 'parent_id');
+        const tree: OSTreeNode<ViewAgendaItem>[] = this.treeService.makeSortedTree(items, `weight`, `parent_id`);
         const title = {
-            text: this.translate.instant('Agenda'),
-            style: 'title'
+            text: this.translate.instant(`Agenda`),
+            style: `title`
         };
         const entries = this.createEntries(tree);
         return [title, entries];
@@ -76,15 +75,15 @@ export class AgendaPdfService {
         if (!nodeItem.item.item.is_hidden) {
             // don't include hidden items and their subitems
             const resultString: AgendaTreePdfEntry = {
-                style: level ? 'listChild' : 'listParent',
+                style: level ? `listChild` : `listParent`,
                 columns: [
                     {
                         width: level * 15,
-                        text: ''
+                        text: ``
                     },
                     {
                         width: 60,
-                        text: nodeItem.item.item_number || ''
+                        text: nodeItem.item.item_number || ``
                     },
                     {
                         text: nodeItem.item.content_object.getTitle()

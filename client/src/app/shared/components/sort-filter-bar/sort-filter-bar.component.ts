@@ -1,15 +1,14 @@
 import { Component, EventEmitter, HostListener, Input, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
-
 import { TranslateService } from '@ngx-translate/core';
-
 import { BaseFilterListService, OsFilterIndicator } from 'app/core/ui-services/base-filter-list.service';
-import { BaseSortListService } from 'app/core/ui-services/base-sort-list.service';
 import { OsSortingOption } from 'app/core/ui-services/base-sort.service';
+import { BaseSortListService } from 'app/core/ui-services/base-sort-list.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { BaseViewModel } from 'app/site/base/base-view-model';
-import { FilterMenuComponent } from './filter-menu/filter-menu.component';
+
 import { RoundedInputComponent } from '../rounded-input/rounded-input.component';
+import { FilterMenuComponent } from './filter-menu/filter-menu.component';
 import { SortBottomSheetComponent } from './sort-bottom-sheet/sort-bottom-sheet.component';
 
 /**
@@ -27,13 +26,13 @@ import { SortBottomSheetComponent } from './sort-bottom-sheet/sort-bottom-sheet.
  * ```
  */
 @Component({
-    selector: 'os-sort-filter-bar',
-    templateUrl: './sort-filter-bar.component.html',
-    styleUrls: ['./sort-filter-bar.component.scss'],
+    selector: `os-sort-filter-bar`,
+    templateUrl: `./sort-filter-bar.component.html`,
+    styleUrls: [`./sort-filter-bar.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
 export class SortFilterBarComponent<V extends BaseViewModel> {
-    @ViewChild('searchField', { static: true })
+    @ViewChild(`searchField`, { static: true })
     public searchField: RoundedInputComponent;
 
     /**
@@ -78,13 +77,13 @@ export class SortFilterBarComponent<V extends BaseViewModel> {
     /**
      * The filter side drawer
      */
-    @ViewChild('filterMenu', { static: true })
+    @ViewChild(`filterMenu`, { static: true })
     public filterMenu: FilterMenuComponent;
 
     /**
      * The bottom sheet used to alter sorting in mobile view
      */
-    @ViewChild('sortBottomSheet')
+    @ViewChild(`sortBottomSheet`)
     public sortBottomSheet: SortBottomSheetComponent<V>;
 
     /**
@@ -225,8 +224,8 @@ export class SortFilterBarComponent<V extends BaseViewModel> {
         return itemProperty.charAt(0).toUpperCase() + itemProperty.slice(1);
     }
 
-    @HostListener('document:keydown', ['$event']) public onKeyDown(event: KeyboardEvent): void {
-        if (event.ctrlKey && event.key === 'f') {
+    @HostListener(`document:keydown`, [`$event`]) public onKeyDown(event: KeyboardEvent): void {
+        if (event.ctrlKey && event.key === `f`) {
             event.preventDefault();
             event.stopPropagation();
             this.searchField.focus();

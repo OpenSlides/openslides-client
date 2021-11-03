@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-
-import { AgendaItemRepositoryService } from '../agenda/agenda-item-repository.service';
 import { MotionAction } from 'app/core/actions/motion-action';
 import { MotionBlockAction } from 'app/core/actions/motion-block-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
@@ -9,15 +7,17 @@ import { MotionBlock } from 'app/shared/models/motions/motion-block';
 import { createAgendaItem } from 'app/shared/utils/create-agenda-item';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionBlock } from 'app/site/motions/models/view-motion-block';
+
+import { AgendaItemRepositoryService } from '../agenda/agenda-item-repository.service';
 import { BaseIsAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-is-agenda-item-and-list-of-speakers-content-object-repository';
-import { MotionRepositoryService } from './motion-repository.service';
 import { RepositoryServiceCollector } from '../repository-service-collector';
+import { MotionRepositoryService } from './motion-repository.service';
 
 /**
  * Repository service for motion blocks
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MotionBlockRepositoryService extends BaseIsAgendaItemAndListOfSpeakersContentObjectRepository<
     ViewMotionBlock,
@@ -52,8 +52,8 @@ export class MotionBlockRepositoryService extends BaseIsAgendaItemAndListOfSpeak
     }
 
     public getFieldsets(): Fieldsets<MotionBlock> {
-        const titleFields: (keyof MotionBlock)[] = ['title'];
-        const listFields: (keyof MotionBlock)[] = titleFields.concat(['internal']);
+        const titleFields: (keyof MotionBlock)[] = [`title`];
+        const listFields: (keyof MotionBlock)[] = titleFields.concat([`internal`]);
         return {
             [DEFAULT_FIELDSET]: listFields,
             title: titleFields
@@ -63,7 +63,7 @@ export class MotionBlockRepositoryService extends BaseIsAgendaItemAndListOfSpeak
     public getTitle = (viewMotionBlock: ViewMotionBlock) => viewMotionBlock.title;
 
     public getVerboseName = (plural: boolean = false) =>
-        this.translate.instant(plural ? 'Motion blocks' : 'Motion block');
+        this.translate.instant(plural ? `Motion blocks` : `Motion block`);
 
     /**
      * Removes the motion block id from the given motion

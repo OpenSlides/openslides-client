@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 interface PromptDialogData {
     title: string;
@@ -10,8 +10,8 @@ interface PromptDialogData {
  * A simple prompt dialog. Takes a title and content.
  */
 @Component({
-    selector: 'os-prompt-dialog',
-    templateUrl: './prompt-dialog.component.html'
+    selector: `os-prompt-dialog`,
+    templateUrl: `./prompt-dialog.component.html`
 })
 export class PromptDialogComponent {
     public constructor(

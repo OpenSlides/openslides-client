@@ -1,11 +1,10 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material/dialog';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { MotionExportDialogComponent } from './motion-export-dialog.component';
 
-describe('MotionExportDialogComponent', () => {
+describe(`MotionExportDialogComponent`, () => {
     let component: MotionExportDialogComponent;
     let fixture: ComponentFixture<MotionExportDialogComponent>;
 
@@ -25,7 +24,7 @@ describe('MotionExportDialogComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

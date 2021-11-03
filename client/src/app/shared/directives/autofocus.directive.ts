@@ -10,7 +10,7 @@ import { Directive, ElementRef, OnInit } from '@angular/core';
  * ```
  */
 @Directive({
-    selector: '[osAutofocus]'
+    selector: `[osAutofocus]`
 })
 export class AutofocusDirective implements OnInit {
     /**

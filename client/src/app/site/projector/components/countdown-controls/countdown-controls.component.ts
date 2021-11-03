@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ProjectorCountdownRepositoryService } from 'app/core/repositories/projector/projector-countdown-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DurationService } from 'app/core/ui-services/duration.service';
@@ -10,17 +10,18 @@ import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ProjectorCountdown } from 'app/shared/models/projector/projector-countdown';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { CountdownDialogComponent, CountdownDialogData } from '../countdown-dialog/countdown-dialog.component';
+
 import { ViewProjector } from '../../models/view-projector';
 import { ViewProjectorCountdown } from '../../models/view-projector-countdown';
+import { CountdownDialogComponent, CountdownDialogData } from '../countdown-dialog/countdown-dialog.component';
 
 /**
  *
  */
 @Component({
-    selector: 'os-countdown-controls',
-    templateUrl: './countdown-controls.component.html',
-    styleUrls: ['./countdown-controls.component.scss']
+    selector: `os-countdown-controls`,
+    templateUrl: `./countdown-controls.component.html`,
+    styleUrls: [`./countdown-controls.component.scss`]
 })
 export class CountdownControlsComponent extends BaseComponent {
     /**
@@ -42,6 +43,7 @@ export class CountdownControlsComponent extends BaseComponent {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private repo: ProjectorCountdownRepositoryService,
         private meetingSettingsService: MeetingSettingsService,
         private promptService: PromptService,
@@ -49,10 +51,10 @@ export class CountdownControlsComponent extends BaseComponent {
         private durationService: DurationService,
         private dialog: MatDialog
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
 
         this.meetingSettingsService
-            .get('projector_countdown_warning_time')
+            .get(`projector_countdown_warning_time`)
             .subscribe(time => (this.warningTime = time));
     }
 
@@ -94,7 +96,7 @@ export class CountdownControlsComponent extends BaseComponent {
         const countdownData: CountdownDialogData = {
             title: this.countdown.title,
             description: this.countdown.description,
-            duration: this.durationService.durationToString(this.countdown.default_time, 'm')
+            duration: this.durationService.durationToString(this.countdown.default_time, `m`)
         };
 
         const dialogRef = this.dialog.open(CountdownDialogComponent, {
@@ -104,7 +106,7 @@ export class CountdownControlsComponent extends BaseComponent {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                const defaultTime = this.durationService.stringToDuration(result.duration, 'm');
+                const defaultTime = this.durationService.stringToDuration(result.duration, `m`);
 
                 const update: Partial<ProjectorCountdown> = {
                     title: result.title,
@@ -133,8 +135,8 @@ export class CountdownControlsComponent extends BaseComponent {
      */
     public async onDelete(): Promise<void> {
         const content =
-            this.translate.instant('Delete countdown') + ` ${this.translate.instant(this.countdown.title)}?`;
-        if (await this.promptService.open('Are you sure?', content)) {
+            this.translate.instant(`Delete countdown`) + ` ${this.translate.instant(this.countdown.title)}?`;
+        if (await this.promptService.open(`Are you sure?`, content)) {
             this.repo.delete(this.countdown);
         }
     }

@@ -2,24 +2,23 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { Component, ElementRef, Input, OnDestroy, OnInit, Optional, Self, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, NgControl } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
-
-import { OperatorFunction } from 'rxjs';
-import { map } from 'rxjs/operators';
-
 import { ModelSubscription } from 'app/core/core-services/autoupdate.service';
 import { ModelRequestService } from 'app/core/core-services/model-request.service';
 import { BaseRepository } from 'app/core/repositories/base-repository';
 import { ModelRequestRepository } from 'app/core/repositories/model-request-repository';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { Settings } from 'app/shared/models/event-management/meeting';
+import { OperatorFunction } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { BaseSearchValueSelectorComponent } from '../base-search-value-selector/base-search-value-selector.component';
 
 @Component({
-    selector: 'os-search-repo-selector',
-    templateUrl: '../base-search-value-selector/base-search-value-selector.component.html',
+    selector: `os-search-repo-selector`,
+    templateUrl: `../base-search-value-selector/base-search-value-selector.component.html`,
     styleUrls: [
-        '../base-search-value-selector/base-search-value-selector.component.scss',
-        './search-repo-selector.component.scss'
+        `../base-search-value-selector/base-search-value-selector.component.scss`,
+        `./search-repo-selector.component.scss`
     ],
     providers: [{ provide: MatFormFieldControl, useExisting: SearchRepoSelectorComponent }],
     encapsulation: ViewEncapsulation.None
@@ -41,7 +40,7 @@ export class SearchRepoSelectorComponent extends BaseSearchValueSelectorComponen
     public defaultDataConfigKey: keyof Settings;
 
     public get controlType(): string {
-        return 'search-repo-selector';
+        return `search-repo-selector`;
     }
 
     private modelSubscription: ModelSubscription;

@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-
 import { TranslateService } from '@ngx-translate/core';
-
 import { HistoryService } from 'app/core/core-services/history.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
@@ -20,8 +18,9 @@ import {
 } from 'app/core/ui-services/base-filter-list.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { Restriction } from 'app/shared/models/motions/motion-state';
-import { AmendmentType } from '../motions.constants';
+
 import { ViewMotion } from '../models/view-motion';
+import { AmendmentType } from '../motions.constants';
 
 /**
  * Filter description to easier parse dynamically occurring workflows
@@ -35,13 +34,13 @@ interface WorkflowFilterDesc {
  * Filter the motion list
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MotionFilterListService extends BaseFilterListService<ViewMotion> {
     /**
      * set the storage key name
      */
-    protected storageKey = 'MotionList';
+    protected storageKey = `MotionList`;
 
     /**
      * Listen to the configuration for change in defined/used workflows
@@ -58,86 +57,86 @@ export class MotionFilterListService extends BaseFilterListService<ViewMotion> {
      * getFilterOptions (as the workflows available may change)
      */
     public stateFilterOptions: OsFilter<ViewMotion> = {
-        property: 'state_id',
-        label: 'State',
+        property: `state_id`,
+        label: `State`,
         options: []
     };
 
     public categoryFilterOptions: OsFilter<ViewMotion> = {
-        property: 'category_id',
-        label: 'Category',
+        property: `category_id`,
+        label: `Category`,
         options: []
     };
 
     public motionBlockFilterOptions: OsFilter<ViewMotion> = {
-        property: 'block_id',
-        label: 'Motion block',
+        property: `block_id`,
+        label: `Motion block`,
         options: []
     };
 
     public motionCommentFilterOptions: OsFilter<ViewMotion> = {
-        property: 'usedCommentSectionIds',
-        label: 'Comment',
+        property: `usedCommentSectionIds`,
+        label: `Comment`,
         options: []
     };
 
     public recommendationFilterOptions: OsFilter<ViewMotion> = {
-        property: 'recommendation_id',
-        label: 'Recommendation',
+        property: `recommendation_id`,
+        label: `Recommendation`,
         options: []
     };
 
     public tagFilterOptions: OsFilter<ViewMotion> = {
-        property: 'tag_ids',
-        label: 'Tags',
+        property: `tag_ids`,
+        label: `Tags`,
         options: []
     };
 
     public hasSpeakerOptions: OsFilter<ViewMotion> = {
-        property: 'hasSpeakers',
-        label: 'Speakers',
+        property: `hasSpeakers`,
+        label: `Speakers`,
         options: [
-            { condition: true, label: this.translate.instant('Has speakers') },
-            { condition: false, label: this.translate.instant('Has no speakers') }
+            { condition: true, label: this.translate.instant(`Has speakers`) },
+            { condition: false, label: this.translate.instant(`Has no speakers`) }
         ]
     };
 
     public AmendmentFilterOption: OsFilter<ViewMotion> = {
-        property: 'amendmentType',
-        label: 'Amendment',
+        property: `amendmentType`,
+        label: `Amendment`,
         options: [
-            { condition: AmendmentType.Amendment, label: this.translate.instant('Is amendment') },
-            { condition: AmendmentType.Parent, label: this.translate.instant('Has amendments') },
-            { condition: AmendmentType.Lead, label: this.translate.instant('Is no amendment and has no amendments') }
+            { condition: AmendmentType.Amendment, label: this.translate.instant(`Is amendment`) },
+            { condition: AmendmentType.Parent, label: this.translate.instant(`Has amendments`) },
+            { condition: AmendmentType.Lead, label: this.translate.instant(`Is no amendment and has no amendments`) }
         ]
     };
 
     public personalNoteFilterOptions: any[] = [
         {
-            property: 'star',
-            label: this.translate.instant('Favorites'),
+            property: `star`,
+            label: this.translate.instant(`Favorites`),
             options: [
                 {
                     condition: true,
-                    label: this.translate.instant('Is favorite')
+                    label: this.translate.instant(`Is favorite`)
                 },
                 {
                     condition: false,
-                    label: this.translate.instant('Is not favorite')
+                    label: this.translate.instant(`Is not favorite`)
                 }
             ]
         },
         {
-            property: 'hasNotes',
-            label: this.translate.instant('Personal notes'),
+            property: `hasNotes`,
+            label: this.translate.instant(`Personal notes`),
             options: [
                 {
                     condition: true,
-                    label: this.translate.instant('Has notes')
+                    label: this.translate.instant(`Has notes`)
                 },
                 {
                     condition: false,
-                    label: this.translate.instant('Does not have notes')
+                    label: this.translate.instant(`Does not have notes`)
                 }
             ]
         }
@@ -172,17 +171,17 @@ export class MotionFilterListService extends BaseFilterListService<ViewMotion> {
         this.getWorkflowConfig();
         this.getShowAmendmentConfig();
 
-        this.updateFilterForRepo(categoryRepo, this.categoryFilterOptions, this.translate.instant('No category set'));
+        this.updateFilterForRepo(categoryRepo, this.categoryFilterOptions, this.translate.instant(`No category set`));
 
         this.updateFilterForRepo(
             motionBlockRepo,
             this.motionBlockFilterOptions,
-            this.translate.instant('No motion block set')
+            this.translate.instant(`No motion block set`)
         );
 
-        this.updateFilterForRepo(commentRepo, this.motionCommentFilterOptions, this.translate.instant('No comment'));
+        this.updateFilterForRepo(commentRepo, this.motionCommentFilterOptions, this.translate.instant(`No comment`));
 
-        this.updateFilterForRepo(tagRepo, this.tagFilterOptions, this.translate.instant('No tags'));
+        this.updateFilterForRepo(tagRepo, this.tagFilterOptions, this.translate.instant(`No tags`));
 
         this.subscribeWorkflows();
         this.operator.operatorUpdatedEvent.subscribe(() => {
@@ -204,21 +203,21 @@ export class MotionFilterListService extends BaseFilterListService<ViewMotion> {
      * Listen to changes for the 'motions_amendments_main_table' config value
      */
     private getShowAmendmentConfig(): void {
-        this.meetingSettingsService.get('motions_amendments_in_main_list').subscribe(show => {
+        this.meetingSettingsService.get(`motions_amendments_in_main_list`).subscribe(show => {
             this.showAmendmentsInMainTable = show;
         });
     }
 
     private getWorkflowConfig(): void {
-        this.meetingSettingsService.get('motions_default_statute_amendment_workflow_id').subscribe(id => {
+        this.meetingSettingsService.get(`motions_default_statute_amendment_workflow_id`).subscribe(id => {
             this.enabledWorkflows.statute = +id;
         });
 
-        this.meetingSettingsService.get('motions_default_workflow_id').subscribe(id => {
+        this.meetingSettingsService.get(`motions_default_workflow_id`).subscribe(id => {
             this.enabledWorkflows.motion = +id;
         });
 
-        this.meetingSettingsService.get('motions_statutes_enabled').subscribe(bool => {
+        this.meetingSettingsService.get(`motions_statutes_enabled`).subscribe(bool => {
             this.enabledWorkflows.statuteEnabled = bool;
         });
     }
@@ -323,14 +322,14 @@ export class MotionFilterListService extends BaseFilterListService<ViewMotion> {
         let workflowOptions: OsFilterOptions = [];
         // add "done" and "undone"
         workflowOptions.push({
-            label: 'Done',
+            label: `Done`,
             condition: finalStates
         });
         workflowOptions.push({
-            label: this.translate.instant('Undone'),
+            label: this.translate.instant(`Undone`),
             condition: nonFinalStates
         });
-        workflowOptions.push('-');
+        workflowOptions.push(`-`);
 
         for (const filterDef of workflowFilters) {
             workflowOptions.push(filterDef.name);
@@ -351,9 +350,9 @@ export class MotionFilterListService extends BaseFilterListService<ViewMotion> {
             recoOptions = recoOptions.concat(filterDef.filter);
         }
 
-        recoOptions.push('-');
+        recoOptions.push(`-`);
         recoOptions.push({
-            label: this.translate.instant('No recommendation'),
+            label: this.translate.instant(`No recommendation`),
             condition: null
         });
         this.recommendationFilterOptions.options = recoOptions;

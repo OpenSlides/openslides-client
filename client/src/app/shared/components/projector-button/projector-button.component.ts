@@ -1,8 +1,4 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-
-import { Subscription } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
-
 import { Permission } from 'app/core/core-services/permission';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { ProjectionDialogService } from 'app/core/ui-services/projection-dialog.service';
@@ -10,6 +6,8 @@ import { ProjectorService } from 'app/core/ui-services/projector.service';
 import { isProjectable, Projectable } from 'app/site/base/projectable';
 import { isProjectionBuildDescriptor, ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
+import { Subscription } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
 
 /**
  * The projector button to project something on the projector.
@@ -19,9 +17,9 @@ import { ViewProjector } from 'app/site/projector/models/view-projector';
  * For usage in menus set `menuItem=true`.
  */
 @Component({
-    selector: 'os-projector-button',
-    templateUrl: './projector-button.component.html',
-    styleUrls: ['./projector-button.component.scss']
+    selector: `os-projector-button`,
+    templateUrl: `./projector-button.component.html`,
+    styleUrls: [`./projector-button.component.scss`]
 })
 export class ProjectorButtonComponent implements OnInit, OnDestroy {
     public readonly permission = Permission;

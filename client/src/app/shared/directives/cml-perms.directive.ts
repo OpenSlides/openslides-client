@@ -1,11 +1,11 @@
 import { Directive, Input } from '@angular/core';
-
 import { CML } from 'app/core/core-services/organization-permission';
 import { Id } from 'app/core/definitions/key-types';
+
 import { BasePermsDirective } from './base-perms.directive';
 
 @Directive({
-    selector: '[osCmlPerms]'
+    selector: `[osCmlPerms]`
 })
 export class CmlPermsDirective extends BasePermsDirective<CML> {
     @Input()

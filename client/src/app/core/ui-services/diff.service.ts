@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-
 import { TranslateService } from '@ngx-translate/core';
 
-import { LineNumberedString, LinenumberingService, LineNumberRange } from './linenumbering.service';
 import { ViewUnifiedChange } from '../../shared/models/motions/view-unified-change';
+import { LineNumberedString, LinenumberingService, LineNumberRange } from './linenumbering.service';
 
 const ELEMENT_NODE = 1;
 const TEXT_NODE = 3;
@@ -21,9 +20,9 @@ const DOCUMENT_FRAGMENT_NODE = 11;
  * This enumeration is used when _automatically_ detecting the change type of an amendment / change recommendation.
  */
 export enum ModificationType {
-    TYPE_REPLACEMENT = 'replacement',
-    TYPE_INSERTION = 'insertion',
-    TYPE_DELETION = 'deletion'
+    TYPE_REPLACEMENT = `replacement`,
+    TYPE_INSERTION = `insertion`,
+    TYPE_DELETION = `deletion`
 }
 
 /**
@@ -223,7 +222,7 @@ export interface DiffLinesInParagraph {
  * ```
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class DiffService {
     // @TODO Decide on a more sophisticated implementation
@@ -254,7 +253,7 @@ export class DiffService {
      * @returns {Element}
      */
     public getLineNumberNode(fragment: DocumentFragment, lineNumber: number): Element {
-        return fragment?.querySelector('os-linebreak.os-line-number.line-number-' + lineNumber);
+        return fragment?.querySelector(`os-linebreak.os-line-number.line-number-` + lineNumber);
     }
 
     /**
@@ -269,10 +268,10 @@ export class DiffService {
             return null;
         }
         const element = <Element>node;
-        if (element.nodeName === 'OS-LINEBREAK') {
+        if (element.nodeName === `OS-LINEBREAK`) {
             return element;
         }
-        const found = element.querySelectorAll('OS-LINEBREAK');
+        const found = element.querySelectorAll(`OS-LINEBREAK`);
         if (found.length > 0) {
             return found.item(0);
         } else {
@@ -292,10 +291,10 @@ export class DiffService {
             return null;
         }
         const element = <Element>node;
-        if (element.nodeName === 'OS-LINEBREAK') {
+        if (element.nodeName === `OS-LINEBREAK`) {
             return element;
         }
-        const found = element.querySelectorAll('OS-LINEBREAK');
+        const found = element.querySelectorAll(`OS-LINEBREAK`);
         if (found.length > 0) {
             return found.item(found.length - 1);
         } else {
@@ -345,11 +344,11 @@ export class DiffService {
      * @param {DocumentFragment} fragment
      */
     public insertInternalLineMarkers(fragment: DocumentFragment): void {
-        if (fragment.querySelectorAll('OS-LINEBREAK').length > 0) {
+        if (fragment.querySelectorAll(`OS-LINEBREAK`).length > 0) {
             // Prevent duplicate calls
             return;
         }
-        const lineNumbers = fragment.querySelectorAll('span.os-line-number');
+        const lineNumbers = fragment.querySelectorAll(`span.os-line-number`);
         let lineMarker;
         let maxLineNumber = 0;
 
@@ -361,22 +360,22 @@ export class DiffService {
             ) {
                 insertBefore = insertBefore.parentNode;
             }
-            lineMarker = document.createElement('OS-LINEBREAK');
-            lineMarker.setAttribute('data-line-number', lineNumberElement.getAttribute('data-line-number'));
-            lineMarker.setAttribute('class', lineNumberElement.getAttribute('class'));
+            lineMarker = document.createElement(`OS-LINEBREAK`);
+            lineMarker.setAttribute(`data-line-number`, lineNumberElement.getAttribute(`data-line-number`));
+            lineMarker.setAttribute(`class`, lineNumberElement.getAttribute(`class`));
             insertBefore.parentNode.insertBefore(lineMarker, insertBefore);
-            maxLineNumber = parseInt(lineNumberElement.getAttribute('data-line-number'), 10);
+            maxLineNumber = parseInt(lineNumberElement.getAttribute(`data-line-number`), 10);
         });
 
         // Add one more "fake" line number at the end and beginning, so we can select the last line as well
-        lineMarker = document.createElement('OS-LINEBREAK');
-        lineMarker.setAttribute('data-line-number', (maxLineNumber + 1).toString(10));
-        lineMarker.setAttribute('class', 'os-line-number line-number-' + (maxLineNumber + 1).toString(10));
+        lineMarker = document.createElement(`OS-LINEBREAK`);
+        lineMarker.setAttribute(`data-line-number`, (maxLineNumber + 1).toString(10));
+        lineMarker.setAttribute(`class`, `os-line-number line-number-` + (maxLineNumber + 1).toString(10));
         fragment.appendChild(lineMarker);
 
-        lineMarker = document.createElement('OS-LINEBREAK');
-        lineMarker.setAttribute('data-line-number', '0');
-        lineMarker.setAttribute('class', 'os-line-number line-number-0');
+        lineMarker = document.createElement(`OS-LINEBREAK`);
+        lineMarker.setAttribute(`data-line-number`, `0`);
+        lineMarker.setAttribute(`class`, `os-line-number line-number-0`);
         fragment.insertBefore(lineMarker, fragment.firstChild);
     }
 
@@ -397,7 +396,7 @@ export class DiffService {
                 for (let i = 0; i < olNode.childNodes.length && !foundMe; i++) {
                     if (olNode.childNodes[i] === descendantNode) {
                         foundMe = true;
-                    } else if (olNode.childNodes[i].nodeName === 'LI') {
+                    } else if (olNode.childNodes[i].nodeName === `LI`) {
                         lisBeforeOl++;
                     }
                 }
@@ -452,17 +451,17 @@ export class DiffService {
     private serializeTag(node: Node): string {
         if (node.nodeType !== ELEMENT_NODE) {
             // Fragments are only placeholders and do not have an HTML representation
-            return '';
+            return ``;
         }
         const element = <Element>node;
-        let html = '<' + element.nodeName;
+        let html = `<` + element.nodeName;
         for (let i = 0; i < element.attributes.length; i++) {
             const attr = element.attributes[i];
-            if (attr.name !== 'os-li-number') {
-                html += ' ' + attr.name + '="' + attr.value + '"';
+            if (attr.name !== `os-li-number`) {
+                html += ` ` + attr.name + `="` + attr.value + `"`;
             }
         }
-        html += '>';
+        html += `>`;
         return html;
     }
 
@@ -473,7 +472,7 @@ export class DiffService {
      * @return {DocumentFragment}
      */
     public htmlToFragment(html: string): DocumentFragment {
-        const template = document.createElement('template');
+        const template = document.createElement(`template`);
         template.innerHTML = html;
         return template.content;
     }
@@ -498,7 +497,7 @@ export class DiffService {
             (_fullHtml: string, tag: string, attributes: string): string => {
                 const tagNormalized = tag.toUpperCase();
                 if (attributes === undefined) {
-                    attributes = '';
+                    attributes = ``;
                 }
                 const attributesList = [];
                 const attributesMatcher = /( [^"'=]*)(= *((["'])(.*?)\4))?/gi;
@@ -509,76 +508,76 @@ export class DiffService {
                         let attrNormalized = match[1].toUpperCase();
                         let attrValue = match[5];
                         if (match[2] !== undefined) {
-                            if (attrNormalized === ' CLASS') {
+                            if (attrNormalized === ` CLASS`) {
                                 attrValue = attrValue
-                                    .split(' ')
+                                    .split(` `)
                                     .sort()
-                                    .join(' ')
-                                    .replace(/^\s+/, '')
-                                    .replace(/\s+$/, '');
+                                    .join(` `)
+                                    .replace(/^\s+/, ``)
+                                    .replace(/\s+$/, ``);
                             }
-                            attrNormalized += '=' + match[4] + attrValue + match[4];
+                            attrNormalized += `=` + match[4] + attrValue + match[4];
                         }
-                        if (attrValue !== '') {
+                        if (attrValue !== ``) {
                             attributesList.push(attrNormalized);
                         }
                     }
                 } while (match);
-                attributes = attributesList.sort().join('');
-                return '<' + tagNormalized + attributes + '>';
+                attributes = attributesList.sort().join(``);
+                return `<` + tagNormalized + attributes + `>`;
             }
         );
 
         const entities = {
-            '&nbsp;': ' ',
-            '&ndash;': '-',
-            '&auml;': 'ä',
-            '&ouml;': 'ö',
-            '&uuml;': 'ü',
-            '&Auml;': 'Ä',
-            '&Ouml;': 'Ö',
-            '&Uuml;': 'Ü',
-            '&szlig;': 'ß',
-            '&bdquo;': '„',
-            '&ldquo;': '“',
-            '&bull;': '•',
-            '&sect;': '§',
-            '&eacute;': 'é',
-            '&rsquo;': '’',
-            '&euro;': '€',
-            '&reg;': '®',
-            '&trade;': '™',
-            '&raquo;': '»',
-            '&laquo;': '«',
-            '&Acirc;': 'Â',
-            '&acirc;': 'â',
-            '&Ccedil;': 'Ç',
-            '&ccedil;': 'ç',
-            '&Egrave;': 'È',
-            '&egrave;': 'è',
-            '&Ntilde;': 'Ñ',
-            '&ntilde;': 'ñ',
-            '&Euml;': 'Ë',
-            '&euml;': 'ë',
-            '&Prime;': '″',
-            '&rdquo;': '”'
+            '&nbsp;': ` `,
+            '&ndash;': `-`,
+            '&auml;': `ä`,
+            '&ouml;': `ö`,
+            '&uuml;': `ü`,
+            '&Auml;': `Ä`,
+            '&Ouml;': `Ö`,
+            '&Uuml;': `Ü`,
+            '&szlig;': `ß`,
+            '&bdquo;': `„`,
+            '&ldquo;': `“`,
+            '&bull;': `•`,
+            '&sect;': `§`,
+            '&eacute;': `é`,
+            '&rsquo;': `’`,
+            '&euro;': `€`,
+            '&reg;': `®`,
+            '&trade;': `™`,
+            '&raquo;': `»`,
+            '&laquo;': `«`,
+            '&Acirc;': `Â`,
+            '&acirc;': `â`,
+            '&Ccedil;': `Ç`,
+            '&ccedil;': `ç`,
+            '&Egrave;': `È`,
+            '&egrave;': `è`,
+            '&Ntilde;': `Ñ`,
+            '&ntilde;': `ñ`,
+            '&Euml;': `Ë`,
+            '&euml;': `ë`,
+            '&Prime;': `″`,
+            '&rdquo;': `”`
         };
 
         html = html
-            .replace(/\s+<\/P>/gi, '</P>')
-            .replace(/\s+<\/DIV>/gi, '</DIV>')
-            .replace(/\s+<\/LI>/gi, '</LI>');
-        html = html.replace(/\s+<LI>/gi, '<LI>').replace(/<\/LI>\s+/gi, '</LI>');
-        html = html.replace(/\u00A0/g, ' ');
-        html = html.replace(/\u2013/g, '-');
+            .replace(/\s+<\/P>/gi, `</P>`)
+            .replace(/\s+<\/DIV>/gi, `</DIV>`)
+            .replace(/\s+<\/LI>/gi, `</LI>`);
+        html = html.replace(/\s+<LI>/gi, `<LI>`).replace(/<\/LI>\s+/gi, `</LI>`);
+        html = html.replace(/\u00A0/g, ` `);
+        html = html.replace(/\u2013/g, `-`);
         Object.keys(entities).forEach(ent => {
-            html = html.replace(new RegExp(ent, 'g'), entities[ent]);
+            html = html.replace(new RegExp(ent, `g`), entities[ent]);
         });
 
         // Newline characters: after closing block-level-elements, but not after BR (which is inline)
-        html = html.replace(/(<br *\/?>)\n/gi, '$1');
-        html = html.replace(/[ \n\t]+/gi, ' ');
-        html = html.replace(/(<\/(div|p|ul|li|blockquote>)>) /gi, '$1\n');
+        html = html.replace(/(<br *\/?>)\n/gi, `$1`);
+        html = html.replace(/[ \n\t]+/gi, ` `);
+        html = html.replace(/(<\/(div|p|ul|li|blockquote>)>) /gi, `$1\n`);
 
         return html;
     }
@@ -666,12 +665,12 @@ export class DiffService {
             return;
         }
         const element = <Element>node;
-        const classesStr = element.getAttribute('class');
-        const classes = classesStr ? classesStr.split(' ') : [];
+        const classesStr = element.getAttribute(`class`);
+        const classes = classesStr ? classesStr.split(` `) : [];
         if (classes.indexOf(className) === -1) {
             classes.push(className);
         }
-        element.setAttribute('class', classes.join(' '));
+        element.setAttribute(`class`, classes.join(` `));
     }
 
     /**
@@ -685,18 +684,18 @@ export class DiffService {
             return;
         }
         const element = <Element>node;
-        const classesStr = element.getAttribute('class');
+        const classesStr = element.getAttribute(`class`);
         const newClasses = [];
-        const classes = classesStr ? classesStr.split(' ') : [];
+        const classes = classesStr ? classesStr.split(` `) : [];
         for (let i = 0; i < classes.length; i++) {
             if (classes[i] !== className) {
                 newClasses.push(classes[i]);
             }
         }
         if (newClasses.length === 0) {
-            element.removeAttribute('class');
+            element.removeAttribute(`class`);
         } else {
-            element.setAttribute('class', newClasses.join(' '));
+            element.setAttribute(`class`, newClasses.join(` `));
         }
     }
 
@@ -727,7 +726,7 @@ export class DiffService {
         }
 
         for (i in ns) {
-            if (ns[i].rows.length === 1 && typeof os[i] !== 'undefined' && os[i].rows.length === 1) {
+            if (ns[i].rows.length === 1 && typeof os[i] !== `undefined` && os[i].rows.length === 1) {
                 newArr[ns[i].rows[0]] = { text: newArr[ns[i].rows[0]], row: os[i].rows[0] };
                 oldArr[os[i].rows[0]] = { text: oldArr[os[i].rows[0]], row: ns[i].rows[0] };
             }
@@ -773,7 +772,7 @@ export class DiffService {
         const splitArrayEntriesEmbedSeparator = (strings: string[], by: string, prepend: boolean): string[] => {
             const newArr = [];
             for (let i = 0; i < strings.length; i++) {
-                if (strings[i][0] === '<' && (by === ' ' || by === '\n')) {
+                if (strings[i][0] === `<` && (by === ` ` || by === `\n`)) {
                     // Don't split HTML tags
                     newArr.push(strings[i]);
                     continue;
@@ -785,7 +784,7 @@ export class DiffService {
                 } else {
                     let j;
                     if (prepend) {
-                        if (parts[0] !== '') {
+                        if (parts[0] !== ``) {
                             newArr.push(parts[0]);
                         }
                         for (j = 1; j < parts.length; j++) {
@@ -795,7 +794,7 @@ export class DiffService {
                         for (j = 0; j < parts.length - 1; j++) {
                             newArr.push(parts[j] + by);
                         }
-                        if (parts[parts.length - 1] !== '') {
+                        if (parts[parts.length - 1] !== ``) {
                             newArr.push(parts[parts.length - 1]);
                         }
                     }
@@ -806,7 +805,7 @@ export class DiffService {
         const splitArrayEntriesSplitSeparator = (strings: string[], by: string): string[] => {
             const newArr = [];
             for (let i = 0; i < strings.length; i++) {
-                if (strings[i][0] === '<') {
+                if (strings[i][0] === `<`) {
                     newArr.push(strings[i]);
                     continue;
                 }
@@ -820,18 +819,18 @@ export class DiffService {
             }
             return newArr;
         };
-        let arr = splitArrayEntriesEmbedSeparator([str], '<', true);
-        arr = splitArrayEntriesEmbedSeparator(arr, '>', false);
-        arr = splitArrayEntriesSplitSeparator(arr, ' ');
-        arr = splitArrayEntriesSplitSeparator(arr, '.');
-        arr = splitArrayEntriesSplitSeparator(arr, ',');
-        arr = splitArrayEntriesSplitSeparator(arr, '!');
-        arr = splitArrayEntriesSplitSeparator(arr, '-');
-        arr = splitArrayEntriesEmbedSeparator(arr, '\n', false);
+        let arr = splitArrayEntriesEmbedSeparator([str], `<`, true);
+        arr = splitArrayEntriesEmbedSeparator(arr, `>`, false);
+        arr = splitArrayEntriesSplitSeparator(arr, ` `);
+        arr = splitArrayEntriesSplitSeparator(arr, `.`);
+        arr = splitArrayEntriesSplitSeparator(arr, `,`);
+        arr = splitArrayEntriesSplitSeparator(arr, `!`);
+        arr = splitArrayEntriesSplitSeparator(arr, `-`);
+        arr = splitArrayEntriesEmbedSeparator(arr, `\n`, false);
 
         const arrWithoutEmpties = [];
         for (let i = 0; i < arr.length; i++) {
-            if (arr[i] !== '') {
+            if (arr[i] !== ``) {
                 arrWithoutEmpties.push(arr[i]);
             }
         }
@@ -848,8 +847,8 @@ export class DiffService {
      * @returns {string}
      */
     private diffString(oldStr: string, newStr: string): string {
-        oldStr = this.normalizeHtmlForDiff(oldStr.replace(/\s+$/, '').replace(/^\s+/, ''));
-        newStr = this.normalizeHtmlForDiff(newStr.replace(/\s+$/, '').replace(/^\s+/, ''));
+        oldStr = this.normalizeHtmlForDiff(oldStr.replace(/\s+$/, ``).replace(/^\s+/, ``));
+        newStr = this.normalizeHtmlForDiff(newStr.replace(/\s+$/, ``).replace(/^\s+/, ``));
 
         const out = this.diffArrays(this.tokenizeHtml(oldStr), this.tokenizeHtml(newStr));
 
@@ -865,42 +864,42 @@ export class DiffService {
             }
         }
 
-        let str = '';
+        let str = ``;
         let i;
 
         if (out.n.length === 0) {
             for (i = 0; i < out.o.length; i++) {
-                str += '<del>' + out.o[i] + '</del>';
+                str += `<del>` + out.o[i] + `</del>`;
             }
         } else {
             if (out.n[0].text === undefined) {
                 for (let k = 0; k < out.o.length && out.o[k].text === undefined; k++) {
-                    str += '<del>' + out.o[k] + '</del>';
+                    str += `<del>` + out.o[k] + `</del>`;
                 }
             }
 
             let currOldRow = 0;
             for (i = 0; i < out.n.length; i++) {
                 if (out.n[i].text === undefined) {
-                    if (out.n[i] !== '') {
-                        str += '<ins>' + out.n[i] + '</ins>';
+                    if (out.n[i] !== ``) {
+                        str += `<ins>` + out.n[i] + `</ins>`;
                     }
                 } else if (out.n[i].row < currOldRow) {
-                    str += '<ins>' + out.n[i].text + '</ins>';
+                    str += `<ins>` + out.n[i].text + `</ins>`;
                 } else {
-                    let pre = '';
+                    let pre = ``;
 
                     if (i + 1 < out.n.length && out.n[i + 1].row !== undefined && out.n[i + 1].row > out.n[i].row + 1) {
                         for (let n = out.n[i].row + 1; n < out.n[i + 1].row; n++) {
                             if (out.o[n].text === undefined) {
-                                pre += '<del>' + out.o[n] + '</del>';
+                                pre += `<del>` + out.o[n] + `</del>`;
                             } else {
-                                pre += '<del>' + out.o[n].text + '</del>';
+                                pre += `<del>` + out.o[n].text + `</del>`;
                             }
                         }
                     } else {
                         for (let j = out.n[i].row + 1; j < out.o.length && out.o[j].text === undefined; j++) {
-                            pre += '<del>' + out.o[j] + '</del>';
+                            pre += `<del>` + out.o[j] + `</del>`;
                         }
                     }
                     str += out.n[i].text + pre;
@@ -910,7 +909,7 @@ export class DiffService {
             }
         }
 
-        return str.replace(/^\s+/g, '').replace(/\s+$/g, '').replace(/ {2,}/g, ' ');
+        return str.replace(/^\s+/g, ``).replace(/\s+$/g, ``).replace(/ {2,}/g, ` `);
     }
 
     /**
@@ -932,7 +931,7 @@ export class DiffService {
 
         // We check if this is a valid HTML that closes all its tags again using the innerHTML-Hack to correct
         // the string and check if the number of HTML tags changes by this
-        const doc = document.createElement('div');
+        const doc = document.createElement(`div`);
         doc.innerHTML = html;
         const tagsBefore = (html.match(/</g) || []).length;
         const tagsCorrected = (doc.innerHTML.match(/</g) || []).length;
@@ -966,13 +965,13 @@ export class DiffService {
         let found;
         let inner;
         while (!!(found = findDel.exec(html))) {
-            inner = found[1].replace(/<br[^>]*>/gi, '');
+            inner = found[1].replace(/<br[^>]*>/gi, ``);
             if (!this.isValidInlineHtml(inner)) {
                 return true;
             }
         }
         while (!!(found = findIns.exec(html))) {
-            inner = found[1].replace(/<br[^>]*>/gi, '');
+            inner = found[1].replace(/<br[^>]*>/gi, ``);
             if (!this.isValidInlineHtml(inner)) {
                 return true;
             }
@@ -995,10 +994,10 @@ export class DiffService {
                 return match.replace(
                     /class=["']([a-z0-9 _-]*)["']/i,
                     (match2: string, previousClasses: string): string =>
-                        'class="' + previousClasses + ' ' + className + '"'
+                        `class="` + previousClasses + ` ` + className + `"`
                 );
             } else {
-                return match.substring(0, match.length - 1) + ' class="' + className + '">';
+                return match.substring(0, match.length - 1) + ` class="` + className + `">`;
             }
         });
     }
@@ -1011,18 +1010,18 @@ export class DiffService {
      * @returns {string}
      */
     public addClassToLastNode(html: string, className: string): string {
-        const node = document.createElement('div');
+        const node = document.createElement(`div`);
         node.innerHTML = html;
         let foundLast = false;
         for (let i = node.childNodes.length - 1; i >= 0 && !foundLast; i--) {
             if (node.childNodes[i].nodeType === ELEMENT_NODE) {
                 const childElement = <Element>node.childNodes[i];
                 let classes = [];
-                if (childElement.getAttribute('class')) {
-                    classes = childElement.getAttribute('class').split(' ');
+                if (childElement.getAttribute(`class`)) {
+                    classes = childElement.getAttribute(`class`).split(` `);
                 }
                 classes.push(className);
-                childElement.setAttribute('class', classes.sort().join(' ').replace(/^\s+/, '').replace(/\s+$/, ''));
+                childElement.setAttribute(`class`, classes.sort().join(` `).replace(/^\s+/, ``).replace(/\s+$/, ``));
                 foundLast = true;
             }
         }
@@ -1040,18 +1039,18 @@ export class DiffService {
      * @private
      */
     private removeColorStyles(node: Element): void {
-        const styles = node.getAttribute('style');
-        if (styles && styles.indexOf('color') > -1) {
+        const styles = node.getAttribute(`style`);
+        if (styles && styles.indexOf(`color`) > -1) {
             const stylesNew = [];
-            styles.split(';').forEach((style: string): void => {
+            styles.split(`;`).forEach((style: string): void => {
                 if (!style.match(/^\s*color\s*:/i)) {
                     stylesNew.push(style);
                 }
             });
-            if (stylesNew.join(';') === '') {
-                node.removeAttribute('style');
+            if (stylesNew.join(`;`) === ``) {
+                node.removeAttribute(`style`);
             } else {
-                node.setAttribute('style', stylesNew.join(';'));
+                node.setAttribute(`style`, stylesNew.join(`;`));
             }
         }
         for (let i = 0; i < node.childNodes.length; i++) {
@@ -1071,18 +1070,18 @@ export class DiffService {
      */
     private addClassToHtmlTag(tagStr: string, className: string): string {
         return tagStr.replace(/<(\w+)( [^>]*)?>/gi, (whole: string, tag: string, tagArguments: string): string => {
-            tagArguments = tagArguments ? tagArguments : '';
+            tagArguments = tagArguments ? tagArguments : ``;
             if (tagArguments.match(/class="/gi)) {
                 // class="someclass" => class="someclass insert"
                 tagArguments = tagArguments.replace(
                     /(class\s*=\s*)(["'])([^\2]*)\2/gi,
                     (classWhole: string, attr: string, para: string, content: string): string =>
-                        attr + para + content + ' ' + className + para
+                        attr + para + content + ` ` + className + para
                 );
             } else {
-                tagArguments += ' class="' + className + '"';
+                tagArguments += ` class="` + className + `"`;
             }
-            return '<' + tag + tagArguments + '>';
+            return `<` + tag + tagArguments + `>`;
         });
     }
 
@@ -1094,7 +1093,7 @@ export class DiffService {
      * @return {string}
      */
     private fixWrongChangeDetection(diffStr: string): string {
-        if (diffStr.indexOf('<del>') === -1 || diffStr.indexOf('<ins>') === -1) {
+        if (diffStr.indexOf(`<del>`) === -1 || diffStr.indexOf(`<ins>`) === -1) {
             return diffStr;
         }
 
@@ -1114,17 +1113,17 @@ export class DiffService {
                 let delShortened = del
                     .replace(
                         /<del>((<BR CLASS="os-line-break"><\/del><del>)?(<span[^>]+os-line-number[^>]+?>)(\s|<\/?del>)*<\/span>)<\/del>/gi,
-                        ''
+                        ``
                     )
-                    .replace(/<\/del><del>/g, '');
+                    .replace(/<\/del><del>/g, ``);
                 const insConv = ins
-                    .replace(/<ins>/g, '<del>')
-                    .replace(/<\/ins>/g, '</del>')
-                    .replace(/<\/del><del>/g, '');
+                    .replace(/<ins>/g, `<del>`)
+                    .replace(/<\/ins>/g, `</del>`)
+                    .replace(/<\/del><del>/g, ``);
                 if (delShortened.indexOf(insConv) !== -1) {
-                    delShortened = delShortened.replace(insConv, '');
-                    if (delShortened === '') {
-                        returnStr = returnStr.replace(del + ins, del.replace(/<del>/g, '').replace(/<\/del>/g, ''));
+                    delShortened = delShortened.replace(insConv, ``);
+                    if (delShortened === ``) {
+                        returnStr = returnStr.replace(del + ins, del.replace(/<del>/g, ``).replace(/<\/del>/g, ``));
                     }
                 }
             }
@@ -1141,31 +1140,31 @@ export class DiffService {
      */
     private serializeDom(node: Node, stripLineNumbers: boolean): string {
         if (node.nodeType === TEXT_NODE) {
-            return node.nodeValue.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return node.nodeValue.replace(/</g, `&lt;`).replace(/>/g, `&gt;`);
         }
         if (
             stripLineNumbers &&
             (this.lineNumberingService.isOsLineNumberNode(node) || this.lineNumberingService.isOsLineBreakNode(node))
         ) {
-            return '';
+            return ``;
         }
-        if (node.nodeName === 'OS-LINEBREAK') {
-            return '';
+        if (node.nodeName === `OS-LINEBREAK`) {
+            return ``;
         }
-        if (node.nodeName === 'BR') {
+        if (node.nodeName === `BR`) {
             const element = <Element>node;
-            let br = '<BR';
+            let br = `<BR`;
             for (let i = 0; i < element.attributes.length; i++) {
                 const attr = element.attributes[i];
-                br += ' ' + attr.name + '="' + attr.value + '"';
+                br += ` ` + attr.name + `="` + attr.value + `"`;
             }
-            return br + '>';
+            return br + `>`;
         }
 
         let html = this.serializeTag(node);
         for (let i = 0; i < node.childNodes.length; i++) {
             if (node.childNodes[i].nodeType === TEXT_NODE) {
-                html += node.childNodes[i].nodeValue.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                html += node.childNodes[i].nodeValue.replace(/&/g, `&amp;`).replace(/</g, `&lt;`).replace(/>/g, `&gt;`);
             } else if (
                 !stripLineNumbers ||
                 (!this.lineNumberingService.isOsLineNumberNode(node.childNodes[i]) &&
@@ -1175,7 +1174,7 @@ export class DiffService {
             }
         }
         if (node.nodeType !== DOCUMENT_FRAGMENT_NODE) {
-            html += '</' + node.nodeName + '>';
+            html += `</` + node.nodeName + `>`;
         }
 
         return html;
@@ -1191,10 +1190,10 @@ export class DiffService {
      */
     public removeDuplicateClassesInsertedByCkeditor(html: string): string {
         const fragment = this.htmlToFragment(html);
-        const items = fragment.querySelectorAll('li.os-split-before');
+        const items = fragment.querySelectorAll(`li.os-split-before`);
         for (let i = 0; i < items.length; i++) {
             if (!this.isFirstNonemptyChild(items[i].parentNode, items[i])) {
-                this.removeCSSClass(items[i], 'os-split-before');
+                this.removeCSSClass(items[i], `os-split-before`);
             }
         }
         return this.serializeDom(fragment, false);
@@ -1214,10 +1213,10 @@ export class DiffService {
      */
     public serializePartialDomToChild(node: Node, toChildTrace: Node[], stripLineNumbers: boolean): string {
         if (this.lineNumberingService.isOsLineNumberNode(node) || this.lineNumberingService.isOsLineBreakNode(node)) {
-            return '';
+            return ``;
         }
-        if (node.nodeName === 'OS-LINEBREAK') {
-            return '';
+        if (node.nodeName === `OS-LINEBREAK`) {
+            return ``;
         }
 
         let html = this.serializeTag(node);
@@ -1246,7 +1245,7 @@ export class DiffService {
             }
         }
         if (!found) {
-            throw new Error('Inconsistency or invalid call of this function detected (to)');
+            throw new Error(`Inconsistency or invalid call of this function detected (to)`);
         }
         return html;
     }
@@ -1265,13 +1264,13 @@ export class DiffService {
      */
     public serializePartialDomFromChild(node: Node, fromChildTrace: Node[], stripLineNumbers: boolean): string {
         if (this.lineNumberingService.isOsLineNumberNode(node) || this.lineNumberingService.isOsLineBreakNode(node)) {
-            return '';
+            return ``;
         }
-        if (node.nodeName === 'OS-LINEBREAK') {
-            return '';
+        if (node.nodeName === `OS-LINEBREAK`) {
+            return ``;
         }
 
-        let html = '';
+        let html = ``;
         let found = false;
         for (let i = 0; i < node.childNodes.length; i++) {
             if (node.childNodes[i] === fromChildTrace[0]) {
@@ -1298,10 +1297,10 @@ export class DiffService {
             }
         }
         if (!found) {
-            throw new Error('Inconsistency or invalid call of this function detected (from)');
+            throw new Error(`Inconsistency or invalid call of this function detected (from)`);
         }
         if (node.nodeType !== DOCUMENT_FRAGMENT_NODE) {
-            html += '</' + node.nodeName + '>';
+            html += `</` + node.nodeName + `>`;
         }
         return html;
     }
@@ -1337,11 +1336,11 @@ export class DiffService {
      * @returns {ExtractedContent}
      */
     public extractRangeByLineNumbers(html: LineNumberedString, fromLine: number, toLine: number): ExtractedContent {
-        if (typeof html !== 'string') {
-            throw new Error('Invalid call - extractRangeByLineNumbers expects a string as first argument');
+        if (typeof html !== `string`) {
+            throw new Error(`Invalid call - extractRangeByLineNumbers expects a string as first argument`);
         }
 
-        const cacheKey = fromLine + '-' + toLine + '-' + this.lineNumberingService.djb2hash(html);
+        const cacheKey = fromLine + `-` + toLine + `-` + this.lineNumberingService.djb2hash(html);
         const cached = this.diffCache.get(cacheKey);
 
         if (cached) {
@@ -1351,9 +1350,9 @@ export class DiffService {
         const fragment = this.htmlToFragment(html);
         this.insertInternalLineMarkers(fragment);
         if (toLine === null) {
-            const internalLineMarkers = fragment.querySelectorAll('OS-LINEBREAK');
+            const internalLineMarkers = fragment.querySelectorAll(`OS-LINEBREAK`);
             const lastMarker = <Element>internalLineMarkers[internalLineMarkers.length - 1];
-            toLine = parseInt(lastMarker.getAttribute('data-line-number'), 10);
+            toLine = parseInt(lastMarker.getAttribute(`data-line-number`), 10);
         }
 
         const fromLineNode = this.getLineNumberNode(fragment, fromLine);
@@ -1365,13 +1364,13 @@ export class DiffService {
         const toChildTraceRel = ancestorData.trace2;
         const toChildTraceAbs = this.getNodeContextTrace(toLineNode);
         const ancestor = ancestorData.commonAncestor;
-        let htmlOut = '';
-        let outerContextStart = '';
-        let outerContextEnd = '';
-        let innerContextStart = '';
-        let innerContextEnd = '';
-        let previousHtmlEndSnippet = '';
-        let followingHtmlStartSnippet = '';
+        let htmlOut = ``;
+        let outerContextStart = ``;
+        let outerContextEnd = ``;
+        let innerContextStart = ``;
+        let innerContextEnd = ``;
+        let previousHtmlEndSnippet = ``;
+        let followingHtmlStartSnippet = ``;
         let fakeOl;
         let offset;
 
@@ -1388,10 +1387,10 @@ export class DiffService {
                 isSplit = true;
             }
             if (isSplit) {
-                this.addCSSClass(currNode.parentNode, 'os-split-before');
+                this.addCSSClass(currNode.parentNode, `os-split-before`);
             }
-            if (currNode.nodeName !== 'OS-LINEBREAK') {
-                previousHtmlEndSnippet += '</' + currNode.nodeName + '>';
+            if (currNode.nodeName !== `OS-LINEBREAK`) {
+                previousHtmlEndSnippet += `</` + currNode.nodeName + `>`;
             }
             currNode = currNode.parentNode;
         }
@@ -1403,15 +1402,15 @@ export class DiffService {
                 isSplit = true;
             }
             if (isSplit) {
-                this.addCSSClass(currNode.parentNode, 'os-split-after');
+                this.addCSSClass(currNode.parentNode, `os-split-after`);
             }
-            if (currNode.parentNode.nodeName === 'OL') {
+            if (currNode.parentNode.nodeName === `OL`) {
                 const parentElement = <Element>currNode.parentNode;
                 fakeOl = parentElement.cloneNode(false);
-                offset = parentElement.getAttribute('start')
-                    ? parseInt(parentElement.getAttribute('start'), 10) - 1
+                offset = parentElement.getAttribute(`start`)
+                    ? parseInt(parentElement.getAttribute(`start`), 10) - 1
                     : 0;
-                fakeOl.setAttribute('start', (this.isWithinNthLIOfOL(parentElement, toLineNode) + offset).toString());
+                fakeOl.setAttribute(`start`, (this.isWithinNthLIOfOL(parentElement, toLineNode) + offset).toString());
                 followingHtmlStartSnippet = this.serializeTag(fakeOl) + followingHtmlStartSnippet;
             } else {
                 followingHtmlStartSnippet = this.serializeTag(currNode.parentNode) + followingHtmlStartSnippet;
@@ -1422,21 +1421,21 @@ export class DiffService {
         let found = false;
         isSplit = false;
         for (let i = 0; i < fromChildTraceRel.length && !found; i++) {
-            if (fromChildTraceRel[i].nodeName === 'OS-LINEBREAK') {
+            if (fromChildTraceRel[i].nodeName === `OS-LINEBREAK`) {
                 found = true;
             } else {
                 if (!this.isFirstNonemptyChild(fromChildTraceRel[i], fromChildTraceRel[i + 1])) {
                     isSplit = true;
                 }
-                if (fromChildTraceRel[i].nodeName === 'OL') {
+                if (fromChildTraceRel[i].nodeName === `OL`) {
                     const element = <Element>fromChildTraceRel[i];
                     fakeOl = element.cloneNode(false);
-                    offset = element.getAttribute('start') ? parseInt(element.getAttribute('start'), 10) - 1 : 0;
-                    fakeOl.setAttribute('start', (offset + this.isWithinNthLIOfOL(element, fromLineNode)).toString());
+                    offset = element.getAttribute(`start`) ? parseInt(element.getAttribute(`start`), 10) - 1 : 0;
+                    fakeOl.setAttribute(`start`, (offset + this.isWithinNthLIOfOL(element, fromLineNode)).toString());
                     innerContextStart += this.serializeTag(fakeOl);
                 } else {
                     if (i < fromChildTraceRel.length - 1 && isSplit) {
-                        this.addCSSClass(fromChildTraceRel[i], 'os-split-before');
+                        this.addCSSClass(fromChildTraceRel[i], `os-split-before`);
                     }
                     innerContextStart += this.serializeTag(fromChildTraceRel[i]);
                 }
@@ -1444,10 +1443,10 @@ export class DiffService {
         }
         found = false;
         for (let i = 0; i < toChildTraceRel.length && !found; i++) {
-            if (toChildTraceRel[i].nodeName === 'OS-LINEBREAK') {
+            if (toChildTraceRel[i].nodeName === `OS-LINEBREAK`) {
                 found = true;
             } else {
-                innerContextEnd = '</' + toChildTraceRel[i].nodeName + '>' + innerContextEnd;
+                innerContextEnd = `</` + toChildTraceRel[i].nodeName + `>` + innerContextEnd;
             }
         }
 
@@ -1468,16 +1467,16 @@ export class DiffService {
 
         currNode = ancestor;
         while (currNode.parentNode) {
-            if (currNode.nodeName === 'OL') {
+            if (currNode.nodeName === `OL`) {
                 const currElement = <Element>currNode;
                 fakeOl = currElement.cloneNode(false);
-                offset = currElement.getAttribute('start') ? parseInt(currElement.getAttribute('start'), 10) - 1 : 0;
-                fakeOl.setAttribute('start', (this.isWithinNthLIOfOL(currElement, fromLineNode) + offset).toString());
+                offset = currElement.getAttribute(`start`) ? parseInt(currElement.getAttribute(`start`), 10) - 1 : 0;
+                fakeOl.setAttribute(`start`, (this.isWithinNthLIOfOL(currElement, fromLineNode) + offset).toString());
                 outerContextStart = this.serializeTag(fakeOl) + outerContextStart;
             } else {
                 outerContextStart = this.serializeTag(currNode) + outerContextStart;
             }
-            outerContextEnd += '</' + currNode.nodeName + '>';
+            outerContextEnd += `</` + currNode.nodeName + `>`;
             currNode = currNode.parentNode;
         }
 
@@ -1547,8 +1546,8 @@ export class DiffService {
                 lastChild = element.childNodes[element.childNodes.length - 2];
             }
             if (lastChild.nodeType === TEXT_NODE) {
-                if (lastChild.nodeValue === '' || lastChild.nodeValue.substr(-1) !== ' ') {
-                    lastChild.nodeValue += ' ';
+                if (lastChild.nodeValue === `` || lastChild.nodeValue.substr(-1) !== ` `) {
+                    lastChild.nodeValue += ` `;
                 }
             } else {
                 this.insertDanglingSpace(<Element>lastChild);
@@ -1589,7 +1588,7 @@ export class DiffService {
             // Remove #text nodes inside of List elements (OL/UL), as they are confusing
             let lastChildren: Node[];
             let firstChildren: Node[];
-            if (lastElement.nodeName === 'OL' || lastElement.nodeName === 'UL') {
+            if (lastElement.nodeName === `OL` || lastElement.nodeName === `UL`) {
                 lastChildren = Array.from(lastElement.childNodes).filter(child => child.nodeType === ELEMENT_NODE);
                 firstChildren = Array.from(firstNode.childNodes).filter(child => child.nodeType === ELEMENT_NODE);
             } else {
@@ -1604,10 +1603,10 @@ export class DiffService {
 
             out.push(newNode);
         } else {
-            if (lastNode.nodeName !== 'TEMPLATE') {
+            if (lastNode.nodeName !== `TEMPLATE`) {
                 out.push(lastNode);
             }
-            if (firstNode.nodeName !== 'TEMPLATE') {
+            if (firstNode.nodeName !== `TEMPLATE`) {
                 out.push(firstNode);
             }
         }
@@ -1634,7 +1633,7 @@ export class DiffService {
 
         this.insertInternalLineMarkers(fragment);
 
-        const changes = fragment.querySelectorAll('ins, del, .insert, .delete');
+        const changes = fragment.querySelectorAll(`ins, del, .insert, .delete`);
         const firstChange = changes.item(0);
         const lastChange = changes.item(changes.length - 1);
 
@@ -1662,8 +1661,8 @@ export class DiffService {
         }
 
         const range = {
-            from: parseInt(lastLineNumberBefore.getAttribute('data-line-number'), 10),
-            to: parseInt(firstLineNumberAfter.getAttribute('data-line-number'), 10)
+            from: parseInt(lastLineNumberBefore.getAttribute(`data-line-number`), 10),
+            to: parseInt(firstLineNumberAfter.getAttribute(`data-line-number`), 10)
         };
 
         this.diffCache.put(cacheKey, range);
@@ -1680,12 +1679,12 @@ export class DiffService {
     public diffHtmlToFinalText(html: string): string {
         const fragment = this.htmlToFragment(html);
 
-        const delNodes = fragment.querySelectorAll('.delete, del');
+        const delNodes = fragment.querySelectorAll(`.delete, del`);
         for (let i = 0; i < delNodes.length; i++) {
             delNodes[i].parentNode.removeChild(delNodes[i]);
         }
 
-        const insNodes = fragment.querySelectorAll('ins');
+        const insNodes = fragment.querySelectorAll(`ins`);
         for (let i = 0; i < insNodes.length; i++) {
             const ins = insNodes[i];
             while (ins.childNodes.length > 0) {
@@ -1696,9 +1695,9 @@ export class DiffService {
             ins.parentNode.removeChild(ins);
         }
 
-        const insertNodes = fragment.querySelectorAll('.insert');
+        const insertNodes = fragment.querySelectorAll(`.insert`);
         for (let i = 0; i < insertNodes.length; i++) {
-            this.removeCSSClass(insertNodes[i], 'insert');
+            this.removeCSSClass(insertNodes[i], `insert`);
         }
 
         return this.serializeDom(fragment, false);
@@ -1719,13 +1718,13 @@ export class DiffService {
      */
     public replaceLines(oldHtml: string, newHTML: string, fromLine: number, toLine: number): string {
         const data = this.extractRangeByLineNumbers(oldHtml, fromLine, toLine);
-        const previousHtml = data.previousHtml + '<TEMPLATE></TEMPLATE>' + data.previousHtmlEndSnippet;
+        const previousHtml = data.previousHtml + `<TEMPLATE></TEMPLATE>` + data.previousHtmlEndSnippet;
         const previousFragment = this.htmlToFragment(previousHtml);
-        const followingHtml = data.followingHtmlStartSnippet + '<TEMPLATE></TEMPLATE>' + data.followingHtml;
+        const followingHtml = data.followingHtmlStartSnippet + `<TEMPLATE></TEMPLATE>` + data.followingHtml;
         const followingFragment = this.htmlToFragment(followingHtml);
         const newFragment = this.htmlToFragment(newHTML);
 
-        if (data.html.length > 0 && data.html.substr(-1) === ' ') {
+        if (data.html.length > 0 && data.html.substr(-1) === ` `) {
             this.insertDanglingSpace(newFragment);
         }
 
@@ -1740,16 +1739,16 @@ export class DiffService {
             mergedFragment.appendChild(merged[i]);
         }
 
-        const forgottenTemplates = mergedFragment.querySelectorAll('TEMPLATE');
+        const forgottenTemplates = mergedFragment.querySelectorAll(`TEMPLATE`);
         for (let i = 0; i < forgottenTemplates.length; i++) {
             const el = forgottenTemplates[i];
             el.parentNode.removeChild(el);
         }
 
-        const forgottenSplitClasses = mergedFragment.querySelectorAll('.os-split-before, .os-split-after');
+        const forgottenSplitClasses = mergedFragment.querySelectorAll(`.os-split-before, .os-split-after`);
         for (let i = 0; i < forgottenSplitClasses.length; i++) {
-            this.removeCSSClass(forgottenSplitClasses[i], 'os-split-before');
-            this.removeCSSClass(forgottenSplitClasses[i], 'os-split-after');
+            this.removeCSSClass(forgottenSplitClasses[i], `os-split-before`);
+            this.removeCSSClass(forgottenSplitClasses[i], `os-split-after`);
         }
 
         const replacedHtml = this.serializeDom(mergedFragment, true);
@@ -1781,34 +1780,34 @@ export class DiffService {
             );
             newText = this.lineNumberingService.insertLineBreaksWithoutNumbers(newText, lineLength);
         } else {
-            oldTextWithBreaks = document.createElement('div');
+            oldTextWithBreaks = document.createElement(`div`);
             oldTextWithBreaks.innerHTML = oldText;
         }
-        newText = newText.replace(/^\s+/g, '').replace(/\s+$/g, '');
-        const newTextWithBreaks = document.createElement('div');
+        newText = newText.replace(/^\s+/g, ``).replace(/\s+$/g, ``);
+        const newTextWithBreaks = document.createElement(`div`);
         newTextWithBreaks.innerHTML = newText;
 
         for (let i = 0; i < oldTextWithBreaks.childNodes.length; i++) {
             currChild = oldTextWithBreaks.childNodes[i];
             if (currChild.nodeType === TEXT_NODE) {
-                const wrapDel = document.createElement('del');
+                const wrapDel = document.createElement(`del`);
                 oldTextWithBreaks.insertBefore(wrapDel, currChild);
                 oldTextWithBreaks.removeChild(currChild);
                 wrapDel.appendChild(currChild);
             } else {
-                this.addCSSClass(currChild, 'delete');
+                this.addCSSClass(currChild, `delete`);
                 this.removeColorStyles(currChild);
             }
         }
         for (let i = 0; i < newTextWithBreaks.childNodes.length; i++) {
             currChild = newTextWithBreaks.childNodes[i];
             if (currChild.nodeType === TEXT_NODE) {
-                const wrapIns = document.createElement('ins');
+                const wrapIns = document.createElement(`ins`);
                 newTextWithBreaks.insertBefore(wrapIns, currChild);
                 newTextWithBreaks.removeChild(currChild);
                 wrapIns.appendChild(currChild);
             } else {
-                this.addCSSClass(currChild, 'insert');
+                this.addCSSClass(currChild, `insert`);
                 this.removeColorStyles(currChild);
             }
         }
@@ -1842,9 +1841,9 @@ export class DiffService {
     public diff(htmlOld: string, htmlNew: string, lineLength: number = null, firstLineNumber: number = null): string {
         const cacheKey =
             lineLength +
-            ' ' +
+            ` ` +
             firstLineNumber +
-            ' ' +
+            ` ` +
             this.lineNumberingService.djb2hash(htmlOld) +
             this.lineNumberingService.djb2hash(htmlNew);
         const cached = this.diffCache.get(cacheKey);
@@ -1860,7 +1859,7 @@ export class DiffService {
         // Test case: "does not break when an insertion followes a beginning tag occuring twice"
         // The work around inserts to tags at the beginning and removes them afterwards again,
         // to make sure this situation does not happen (and uses invisible pseudo-tags in case something goes wrong)
-        const workaroundPrepend = '<DUMMY><PREPEND>';
+        const workaroundPrepend = `<DUMMY><PREPEND>`;
 
         // os-split-after should not be considered for detecting changes in paragraphs, so we strip it here
         // and add it afterwards.
@@ -1901,7 +1900,7 @@ export class DiffService {
 
         // Performing the actual diff
         const str = this.diffString(workaroundPrepend + htmlOld, workaroundPrepend + htmlNew);
-        let diffUnnormalized = str.replace(/^\s+/g, '').replace(/\s+$/g, '').replace(/ {2,}/g, ' ');
+        let diffUnnormalized = str.replace(/^\s+/g, ``).replace(/\s+$/g, ``).replace(/ {2,}/g, ` `);
 
         diffUnnormalized = this.fixWrongChangeDetection(diffUnnormalized);
 
@@ -1910,11 +1909,11 @@ export class DiffService {
         diffUnnormalized = diffUnnormalized.replace(
             /<del>(((<BR CLASS="os-line-break">)<\/del><del>)?(<span[^>]+os-line-number[^>]+?>)(\s|<\/?del>)*<\/span>)<\/del>/gi,
             (found: string, tag: string, brWithDel: string, plainBr: string, span: string): string =>
-                (plainBr !== undefined ? plainBr : '') + span + ' </span>'
+                (plainBr !== undefined ? plainBr : ``) + span + ` </span>`
         );
 
         // Merging individual insert/delete statements into bigger blocks
-        diffUnnormalized = diffUnnormalized.replace(/<\/ins><ins>/gi, '').replace(/<\/del><del>/gi, '');
+        diffUnnormalized = diffUnnormalized.replace(/<\/ins><ins>/gi, ``).replace(/<\/del><del>/gi, ``);
 
         // If we have a <del>deleted word</del>LINEBREAK<ins>new word</ins>, let's assume that the insertion
         // was actually done in the same line as the deletion.
@@ -1933,8 +1932,8 @@ export class DiffService {
             /<del>([a-z0-9,_-]* ?)<\/del><ins>([a-z0-9,_-]* ?)<\/ins>/gi,
             (found: string, oldText: string, newText: string): string => {
                 let foundDiff = false;
-                let commonStart = '';
-                let commonEnd = '';
+                let commonStart = ``;
+                let commonEnd = ``;
                 let remainderOld = oldText;
                 let remainderNew = newText;
 
@@ -1960,11 +1959,11 @@ export class DiffService {
                 }
 
                 let out = commonStart;
-                if (remainderOld !== '') {
-                    out += '<del>' + remainderOld + '</del>';
+                if (remainderOld !== ``) {
+                    out += `<del>` + remainderOld + `</del>`;
                 }
-                if (remainderNew !== '') {
-                    out += '<ins>' + remainderNew + '</ins>';
+                if (remainderNew !== ``) {
+                    out += `<ins>` + remainderNew + `</ins>`;
                 }
                 out += commonEnd;
 
@@ -1975,7 +1974,7 @@ export class DiffService {
         // Replace spaces in line numbers by &nbsp;
         diffUnnormalized = diffUnnormalized.replace(
             /<span[^>]+os-line-number[^>]+?>\s*<\/span>/gi,
-            (found: string): string => found.toLowerCase().replace(/> <\/span/gi, '>&nbsp;</span')
+            (found: string): string => found.toLowerCase().replace(/> <\/span/gi, `>&nbsp;</span`)
         );
 
         // <P><ins>NEUE ZEILE</P>\n<P></ins> => <ins><P>NEUE ZEILE</P>\n</ins><P>
@@ -1991,23 +1990,23 @@ export class DiffService {
                 block2: string,
                 att2: string
             ): string =>
-                '<' +
+                `<` +
                 insDel +
-                '><' +
+                `><` +
                 block1 +
                 att1 +
-                '>' +
+                `>` +
                 content +
-                '</' +
+                `</` +
                 block1 +
-                '>' +
+                `>` +
                 space +
-                '</' +
+                `</` +
                 insDel +
-                '><' +
+                `><` +
                 block2 +
                 att2 +
-                '>'
+                `>`
         );
 
         // If larger inserted HTML text contains block elements, we separate the inserted text into
@@ -2016,12 +2015,12 @@ export class DiffService {
         diffUnnormalized = diffUnnormalized.replace(
             /<(ins|del)>([\s\S]*?)<\/\1>/gi,
             (whole: string, insDel: string): string => {
-                const modificationClass = insDel.toLowerCase() === 'ins' ? 'insert' : 'delete';
+                const modificationClass = insDel.toLowerCase() === `ins` ? `insert` : `delete`;
                 return whole.replace(
                     /(<(p|div|blockquote|li)[^>]*>)([\s\S]*?)(<\/\2>)/gi,
                     (whole2: string, opening: string, blockTag: string, content: string, closing: string): string => {
                         const modifiedTag = this.addClassToHtmlTag(opening, modificationClass);
-                        return '</' + insDel + '>' + modifiedTag + content + closing + '<' + insDel + '>';
+                        return `</` + insDel + `>` + modifiedTag + content + closing + `<` + insDel + `>`;
                     }
                 );
             }
@@ -2031,7 +2030,7 @@ export class DiffService {
         diffUnnormalized = diffUnnormalized.replace(
             /<del>([^<]*)<\/(p|div|blockquote|li)><\/del><ins>([^<]*)<\/\2>(\s*)<\/ins>/gi,
             (whole: string, deleted: string, tag: string, inserted: string, white: string): string =>
-                '<del>' + deleted + '</del><ins>' + inserted + '</ins></' + tag + '>' + white
+                `<del>` + deleted + `</del><ins>` + inserted + `</ins></` + tag + `>` + white
         );
 
         // <ins>...</p><p>...</ins> => <ins>...</ins></p><p><ins>...</ins>
@@ -2048,25 +2047,25 @@ export class DiffService {
             ): string => {
                 if (this.isValidInlineHtml(content1) && this.isValidInlineHtml(content2)) {
                     return (
-                        '<' +
+                        `<` +
                         insDel +
-                        '>' +
+                        `>` +
                         content1 +
-                        '</' +
+                        `</` +
                         insDel +
-                        '></' +
+                        `></` +
                         blockEnd +
-                        '>' +
-                        '<' +
+                        `>` +
+                        `<` +
                         blockStart +
                         blockAttrs +
-                        '><' +
+                        `><` +
                         insDel +
-                        '>' +
+                        `>` +
                         content2 +
-                        '</' +
+                        `</` +
                         insDel +
-                        '>'
+                        `>`
                     );
                 } else {
                     return whole;
@@ -2085,48 +2084,48 @@ export class DiffService {
         diffUnnormalized = diffUnnormalized.replace(
             /<del><\/(p|div|blockquote|li)><\/del><ins>([\s\S]*?)<\/\1>(\s*)<\/ins>/gi,
             (whole: string, blockTag: string, content: string, space: string): string =>
-                '<ins>' + content + '</ins></' + blockTag + '>' + space
+                `<ins>` + content + `</ins></` + blockTag + `>` + space
         );
 
         // <ins><STRONG></ins>formatted<ins></STRONG></ins> => <del>formatted</del><ins><STRONG>formatted</STRONG></ins>
         diffUnnormalized = diffUnnormalized.replace(
             /<ins><(span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?><\/ins>([^<]*)<ins><\/\1><\/ins>/gi,
             (whole: string, inlineTag: string, tagAttributes: string, content: string): string =>
-                '<del>' +
+                `<del>` +
                 content +
-                '</del>' +
-                '<ins><' +
+                `</del>` +
+                `<ins><` +
                 inlineTag +
-                (tagAttributes ? tagAttributes : '') +
-                '>' +
+                (tagAttributes ? tagAttributes : ``) +
+                `>` +
                 content +
-                '</' +
+                `</` +
                 inlineTag +
-                '></ins>'
+                `></ins>`
         );
 
         // <del><STRONG></del>formatted<del></STRONG></del> => <del><STRONG>formatted</STRONG></del><ins>formatted</ins>
         diffUnnormalized = diffUnnormalized.replace(
             /<del><(span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?><\/del>([^<]*)<del><\/\1><\/del>/gi,
             (whole: string, inlineTag: string, tagAttributes: string, content: string): string =>
-                '<del><' +
+                `<del><` +
                 inlineTag +
-                (tagAttributes ? tagAttributes : '') +
-                '>' +
+                (tagAttributes ? tagAttributes : ``) +
+                `>` +
                 content +
-                '</' +
+                `</` +
                 inlineTag +
-                '></del>' +
-                '<ins>' +
+                `></del>` +
+                `<ins>` +
                 content +
-                '</ins>'
+                `</ins>`
         );
 
         // </p> </ins> -> </ins></p>
         diffUnnormalized = diffUnnormalized.replace(
             /(<\/(p|div|blockquote|li)>)(\s*)<\/(ins|del)>/gi,
             (whole: string, ending: string, blockTag: string, space: string, insdel: string): string =>
-                '</' + insdel + '>' + ending + space
+                `</` + insdel + `>` + ending + space
         );
 
         if (diffUnnormalized.substr(0, workaroundPrepend.length) === workaroundPrepend) {
@@ -2137,7 +2136,7 @@ export class DiffService {
         if (this.diffDetectBrokenDiffHtml(diffUnnormalized)) {
             diff = this.diffParagraphs(htmlOld, htmlNew, lineLength, firstLineNumber);
         } else {
-            let node: Element = document.createElement('div');
+            let node: Element = document.createElement(`div`);
             node.innerHTML = diffUnnormalized;
             diff = node.innerHTML;
 
@@ -2148,10 +2147,10 @@ export class DiffService {
         }
 
         if (oldIsSplitAfter || newIsSplitAfter) {
-            diff = this.addClassToLastNode(diff, 'os-split-after');
+            diff = this.addClassToLastNode(diff, `os-split-after`);
         }
         if (oldIsSplitBefore || newIsSplitBefore) {
-            diff = this.addClassToLastNode(diff, 'os-split-before');
+            diff = this.addClassToLastNode(diff, `os-split-before`);
         }
 
         this.diffCache.put(cacheKey, diff);
@@ -2226,8 +2225,8 @@ export class DiffService {
             return null;
         }
 
-        let textPre = '';
-        let textPost = '';
+        let textPre = ``;
+        let textPost = ``;
         if (affected_lines.from > paragraph_line_range.from) {
             textPre = this.formatDiffWithLineNumbers(
                 this.extractRangeByLineNumbers(diff, paragraph_line_range.from, affected_lines.from),
@@ -2293,16 +2292,16 @@ export class DiffService {
             // That's a pretty serious inconsistency that should not happen at all,
             // we're just doing some basic damage control here.
             const msg =
-                this.translate.instant('Inconsistent data.') +
-                ' ' +
+                this.translate.instant(`Inconsistent data.`) +
+                ` ` +
                 this.translate.instant(
-                    'A change recommendation or amendment is probably referring to a non-existant line number.'
+                    `A change recommendation or amendment is probably referring to a non-existant line number.`
                 ) +
-                ' ' +
+                ` ` +
                 this.translate.instant(
-                    'If it is an amendment, you can back up its content when editing it and delete it afterwards.'
+                    `If it is an amendment, you can back up its content when editing it and delete it afterwards.`
                 );
-            return '<em style="color: red; font-weight: bold;">' + msg + '</em>';
+            return `<em style="color: red; font-weight: bold;">` + msg + `</em>`;
         }
 
         oldText = this.lineNumberingService.insertLineNumbers(oldText, lineLength, null, null, change.getLineFrom());
@@ -2320,7 +2319,7 @@ export class DiffService {
         const origBeginning = data.outerContextStart + data.innerContextStart;
         if (diff.toLowerCase().indexOf(origBeginning.toLowerCase()) === 0) {
             // Add "merge-before"-css-class if the first line begins in the middle of a paragraph. Used for PDF.
-            diff = this.addCSSClassToFirstTag(origBeginning, 'merge-before') + diff.substring(origBeginning.length);
+            diff = this.addCSSClassToFirstTag(origBeginning, `merge-before`) + diff.substring(origBeginning.length);
         }
 
         return diff;
@@ -2362,26 +2361,26 @@ export class DiffService {
             // That's a pretty serious inconsistency that should not happen at all,
             // we're just doing some basic damage control here.
             const msg =
-                this.translate.instant('Inconsistent data.') +
-                ' ' +
+                this.translate.instant(`Inconsistent data.`) +
+                ` ` +
                 this.translate.instant(
-                    'A change recommendation or amendment is probably referring to a non-existant line number.'
+                    `A change recommendation or amendment is probably referring to a non-existant line number.`
                 );
-            return '<em style="color: red; font-weight: bold;">' + msg + '</em>';
+            return `<em style="color: red; font-weight: bold;">` + msg + `</em>`;
         }
 
         let html;
-        if (data.html !== '') {
+        if (data.html !== ``) {
             // Add "merge-before"-css-class if the first line begins in the middle of a paragraph. Used for PDF.
             html =
-                this.addCSSClassToFirstTag(data.outerContextStart + data.innerContextStart, 'merge-before') +
+                this.addCSSClassToFirstTag(data.outerContextStart + data.innerContextStart, `merge-before`) +
                 data.html +
                 data.innerContextEnd +
                 data.outerContextEnd;
             html = this.lineNumberingService.insertLineNumbers(html, lineLength, highlight, null, maxLine);
         } else {
             // Prevents empty lines at the end of the motion
-            html = '';
+            html = ``;
         }
         return html;
     }

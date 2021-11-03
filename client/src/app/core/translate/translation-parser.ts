@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { TranslateDefaultParser, TranslateStore } from '@ngx-translate/core';
 
 import { CustomTranslation, CustomTranslationService } from './custom-translation.service';

@@ -10,7 +10,7 @@ import { ViewVote } from 'app/shared/models/poll/view-vote';
 import { Vote } from 'app/shared/models/poll/vote';
 
 export const PollsAppConfig: AppConfig = {
-    name: 'poll',
+    name: `poll`,
     models: [
         {
             model: Poll,

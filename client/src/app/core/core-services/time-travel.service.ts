@@ -19,7 +19,7 @@ import { HistoryService, Position } from './history.service';
  *   This would break the capability of this user to freely navigate.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class TimeTravelService {
     public constructor(private historyService: HistoryService) {}

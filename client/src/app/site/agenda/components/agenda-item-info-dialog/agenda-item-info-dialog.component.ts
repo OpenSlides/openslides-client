@@ -1,21 +1,21 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { DurationService } from 'app/core/ui-services/duration.service';
 import { ItemTypeChoices } from 'app/shared/models/agenda/agenda-item';
 import { durationValidator } from 'app/shared/validators/custom-validators';
 import { ViewTag } from 'app/site/tags/models/view-tag';
+
 import { ViewAgendaItem } from '../../models/view-agenda-item';
 
 /**
  * Dialog component to change agenda item details
  */
 @Component({
-    selector: 'os-agenda-item-info-dialog',
-    templateUrl: './agenda-item-info-dialog.component.html',
-    styleUrls: ['./agenda-item-info-dialog.component.scss']
+    selector: `os-agenda-item-info-dialog`,
+    templateUrl: `./agenda-item-info-dialog.component.html`,
+    styleUrls: [`./agenda-item-info-dialog.component.scss`]
 })
 export class AgendaItemInfoDialogComponent implements OnInit {
     /**
@@ -47,23 +47,23 @@ export class AgendaItemInfoDialogComponent implements OnInit {
     ) {
         this.agendaInfoForm = this.formBuilder.group({
             tag_ids: [],
-            type: [''],
-            durationText: ['', durationValidator],
-            item_number: [''],
-            comment: ['']
+            type: [``],
+            durationText: [``, durationValidator],
+            item_number: [``],
+            comment: [``]
         });
     }
 
     public ngOnInit(): void {
         // load current values
         if (this.item) {
-            this.agendaInfoForm.get('tag_ids').setValue(this.item.tag_ids);
-            this.agendaInfoForm.get('type').setValue(this.item.type);
+            this.agendaInfoForm.get(`tag_ids`).setValue(this.item.tag_ids);
+            this.agendaInfoForm.get(`type`).setValue(this.item.type);
             this.agendaInfoForm
-                .get('durationText')
-                .setValue(this.durationService.durationToString(this.item.duration, 'h'));
-            this.agendaInfoForm.get('item_number').setValue(this.item.item_number);
-            this.agendaInfoForm.get('comment').setValue(this.item.comment);
+                .get(`durationText`)
+                .setValue(this.durationService.durationToString(this.item.duration, `h`));
+            this.agendaInfoForm.get(`item_number`).setValue(this.item.item_number);
+            this.agendaInfoForm.get(`comment`).setValue(this.item.comment);
         }
 
         this.tagRepo.getViewModelListObservable().subscribe(tags => {
@@ -100,7 +100,7 @@ export class AgendaItemInfoDialogComponent implements OnInit {
      * @param event the key that was clicked
      */
     public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === 'Enter' && event.shiftKey) {
+        if (event.key === `Enter` && event.shiftKey) {
             this.saveItemInfo();
         }
     }

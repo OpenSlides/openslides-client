@@ -1,12 +1,11 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
+import { PollProgressComponent } from 'app/site/polls/components/poll-progress/poll-progress.component';
 import { E2EImportsModule } from 'e2e-imports.module';
 
-import { PollProgressComponent } from 'app/site/polls/components/poll-progress/poll-progress.component';
 import { AssignmentPollVoteComponent } from '../assignment-poll-vote/assignment-poll-vote.component';
 import { AssignmentPollComponent } from './assignment-poll.component';
 
-describe('AssignmentPollComponent', () => {
+describe(`AssignmentPollComponent`, () => {
     let component: AssignmentPollComponent;
     let fixture: ComponentFixture<AssignmentPollComponent>;
 
@@ -25,7 +24,7 @@ describe('AssignmentPollComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

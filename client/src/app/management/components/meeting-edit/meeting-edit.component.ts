@@ -2,9 +2,8 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-
+import { TranslateService } from '@ngx-translate/core';
 import { MeetingAction } from 'app/core/actions/meeting-action';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { CML, OML } from 'app/core/core-services/organization-permission';
@@ -22,18 +21,19 @@ import { ViewMeeting } from 'app/management/models/view-meeting';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
-import { SimplifiedModelRequest } from '../../../core/core-services/model-request-builder.service';
-import { ViewOrganization } from '../../models/view-organization';
-import { ORGANIZATION_ID, OrganizationService } from '../../../core/core-services/organization.service';
 import { Observable } from 'rxjs';
 
-const AddMeetingLabel = _('New meeting');
-const EditMeetingLabel = _('Edit meeting');
+import { SimplifiedModelRequest } from '../../../core/core-services/model-request-builder.service';
+import { ORGANIZATION_ID, OrganizationService } from '../../../core/core-services/organization.service';
+import { ViewOrganization } from '../../models/view-organization';
+
+const AddMeetingLabel = _(`New meeting`);
+const EditMeetingLabel = _(`Edit meeting`);
 
 @Component({
-    selector: 'os-meeting-edit',
-    templateUrl: './meeting-edit.component.html',
-    styleUrls: ['./meeting-edit.component.scss']
+    selector: `os-meeting-edit`,
+    templateUrl: `./meeting-edit.component.html`,
+    styleUrls: [`./meeting-edit.component.scss`]
 })
 export class MeetingEditComponent extends BaseModelContextComponent {
     public readonly CML = CML;
@@ -67,6 +67,7 @@ export class MeetingEditComponent extends BaseModelContextComponent {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private route: ActivatedRoute,
         private location: Location,
         private formBuilder: FormBuilder,
@@ -77,7 +78,7 @@ export class MeetingEditComponent extends BaseModelContextComponent {
         private userRepo: UserRepositoryService,
         private orga: OrganizationService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
         this.createOrEdit();
         this.createForm();
         this.getRouteParams();
@@ -107,18 +108,18 @@ export class MeetingEditComponent extends BaseModelContextComponent {
                 name: orgaTagName
             })
         )[0];
-        const currentValue: Id[] = this.meetingForm.get('organization_tag_ids').value || [];
+        const currentValue: Id[] = this.meetingForm.get(`organization_tag_ids`).value || [];
         this.meetingForm.patchValue({ organization_tag_ids: currentValue.concat(id) });
     }
 
     public onUpdateDuplicateFrom(id: Id | null): void {
         this.theDuplicateFromId = id;
         if (id) {
-            this.meetingForm.get('user_ids').disable();
-            this.meetingForm.get('admin_ids').disable();
+            this.meetingForm.get(`user_ids`).disable();
+            this.meetingForm.get(`admin_ids`).disable();
         } else if (id === null) {
-            this.meetingForm.get('user_ids').enable();
-            this.meetingForm.get('admin_ids').enable();
+            this.meetingForm.get(`user_ids`).enable();
+            this.meetingForm.get(`admin_ids`).enable();
         }
     }
 
@@ -126,13 +127,13 @@ export class MeetingEditComponent extends BaseModelContextComponent {
         return {
             viewModelCtor: ViewOrganization,
             ids: [ORGANIZATION_ID],
-            follow: ['active_meeting_ids'],
-            fieldset: ''
+            follow: [`active_meeting_ids`],
+            fieldset: ``
         };
     }
 
     private createOrEdit(): void {
-        if (this.route.snapshot.url[0] && this.route.snapshot.url[0].path === 'create') {
+        if (this.route.snapshot.url[0] && this.route.snapshot.url[0].path === `create`) {
             this.isCreateView = true;
         } else {
             this.isCreateView = false;
@@ -161,19 +162,19 @@ export class MeetingEditComponent extends BaseModelContextComponent {
                 viewModelCtor: ViewMeeting,
                 ids: [this.meetingId],
                 follow: [
-                    { idField: 'user_ids', fieldset: 'shortName', follow: ['group_$_ids'] },
+                    { idField: `user_ids`, fieldset: `shortName`, follow: [`group_$_ids`] },
                     {
-                        idField: 'admin_group_id',
-                        follow: [{ idField: 'user_ids', fieldset: 'shortName', follow: ['group_$_ids'] }]
+                        idField: `admin_group_id`,
+                        follow: [{ idField: `user_ids`, fieldset: `shortName`, follow: [`group_$_ids`] }]
                     },
                     {
-                        idField: 'default_group_id',
-                        follow: [{ idField: 'user_ids', fieldset: 'shortName', follow: ['group_$_ids'] }]
+                        idField: `default_group_id`,
+                        follow: [{ idField: `user_ids`, fieldset: `shortName`, follow: [`group_$_ids`] }]
                     }
                 ],
-                fieldset: 'edit'
+                fieldset: `edit`
             },
-            'meeting'
+            `meeting`
         );
         this.subscriptions.push(
             this.meetingRepo.getViewModelObservable(this.meetingId).subscribe(meeting => {
@@ -190,10 +191,10 @@ export class MeetingEditComponent extends BaseModelContextComponent {
             {
                 viewModelCtor: ViewCommittee,
                 ids: [this.committeeId],
-                follow: [{ idField: 'user_ids', fieldset: 'shortName', follow: ['group_$_ids'] }],
-                fieldset: 'list'
+                follow: [{ idField: `user_ids`, fieldset: `shortName`, follow: [`group_$_ids`] }],
+                fieldset: `list`
             },
-            'committee'
+            `committee`
         );
         this.subscriptions.push(
             this.committeeRepo.getViewModelObservable(this.committeeId).subscribe(committee => {
@@ -210,11 +211,11 @@ export class MeetingEditComponent extends BaseModelContextComponent {
         currentDate.setHours(0, 0, 0, 0);
 
         const rawForm: { [key: string]: any } = {
-            name: ['', Validators.required],
+            name: [``, Validators.required],
             // server bug
             // set_as_template: [false],
-            description: [''],
-            location: [''],
+            description: [``],
+            location: [``],
             start_time: [currentDate],
             end_time: [currentDate],
             user_ids: [[]],
@@ -223,9 +224,9 @@ export class MeetingEditComponent extends BaseModelContextComponent {
         };
 
         if (this.isJitsiManipulationAllowed) {
-            rawForm.jitsi_domain = [''];
-            rawForm.jitsi_room_name = [''];
-            rawForm.jitsi_room_password = [''];
+            rawForm.jitsi_domain = [``];
+            rawForm.jitsi_room_name = [``];
+            rawForm.jitsi_room_password = [``];
         }
 
         this.meetingForm = this.formBuilder.group(rawForm);

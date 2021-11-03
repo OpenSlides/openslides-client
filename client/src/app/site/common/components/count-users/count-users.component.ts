@@ -1,5 +1,4 @@
 import { Component, OnDestroy } from '@angular/core';
-
 import { Observable } from 'rxjs';
 import { auditTime } from 'rxjs/operators';
 
@@ -9,8 +8,8 @@ import { CountUsersStatisticsService, CountUserStatistics } from '../../services
  * This component provides an interface to count users
  */
 @Component({
-    selector: 'os-count-users',
-    templateUrl: './count-users.component.html'
+    selector: `os-count-users`,
+    templateUrl: `./count-users.component.html`
 })
 export class CountUsersComponent implements OnDestroy {
     public token: string = null;

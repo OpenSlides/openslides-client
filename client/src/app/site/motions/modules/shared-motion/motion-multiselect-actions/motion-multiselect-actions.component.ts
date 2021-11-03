@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-
+import { TranslateService } from '@ngx-translate/core';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
@@ -14,12 +14,13 @@ import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category
 import { MotionExportInfo, MotionExportService } from 'app/site/motions/services/motion-export.service';
 import { MotionMultiselectService } from 'app/site/motions/services/motion-multiselect.service';
 import { ViewTag } from 'app/site/tags/models/view-tag';
+
 import { MotionExportDialogComponent } from '../motion-export-dialog/motion-export-dialog.component';
 
 @Component({
-    selector: 'os-motion-multiselect-actions',
-    templateUrl: './motion-multiselect-actions.component.html',
-    styleUrls: ['./motion-multiselect-actions.component.scss']
+    selector: `os-motion-multiselect-actions`,
+    templateUrl: `./motion-multiselect-actions.component.html`,
+    styleUrls: [`./motion-multiselect-actions.component.scss`]
 })
 export class MotionMultiselectActionsComponent extends BaseComponent implements OnInit {
     /**
@@ -56,6 +57,7 @@ export class MotionMultiselectActionsComponent extends BaseComponent implements 
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         public multiselectService: MotionMultiselectService,
         private categoryRepo: MotionCategoryRepositoryService,
         private motionBlockRepo: MotionBlockRepositoryService,
@@ -64,7 +66,7 @@ export class MotionMultiselectActionsComponent extends BaseComponent implements 
         private dialog: MatDialog,
         private motionExport: MotionExportService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     /**
@@ -77,7 +79,7 @@ export class MotionMultiselectActionsComponent extends BaseComponent implements 
             this.categoryRepo.getViewModelListObservable().subscribe(categories => (this.categories = categories)),
             this.motionBlockRepo.getViewModelListObservable().subscribe(blocks => (this.motionBlocks = blocks)),
             this.tagRepo.getViewModelListObservable().subscribe(tags => (this.tags = tags)),
-            this.meetingSettingsService.get('motions_recommendations_by').subscribe(recommender => {
+            this.meetingSettingsService.get(`motions_recommendations_by`).subscribe(recommender => {
                 this.recommendationEnabled = !!recommender;
             })
         );

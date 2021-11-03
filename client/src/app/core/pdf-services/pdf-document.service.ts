@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
 import { TranslateService } from '@ngx-translate/core';
-import { saveAs } from 'file-saver';
-
 import { ProgressSnackBarComponent } from 'app/shared/components/progress-snack-bar/progress-snack-bar.component';
 import { MotionExportInfo } from 'app/site/motions/services/motion-export.service';
+import { saveAs } from 'file-saver';
+
 import { HttpService } from '../core-services/http.service';
 import { FontPlace, MediaManageService } from '../ui-services/media-manage.service';
 import { MeetingSettingsService } from '../ui-services/meeting-settings.service';
@@ -15,19 +14,19 @@ import { ProgressService } from '../ui-services/progress.service';
  * Enumeration to define possible values for the styling.
  */
 export enum StyleType {
-    DEFAULT = 'tocEntry',
-    SUBTITLE = 'subtitle',
-    SUB_ENTRY = 'tocSubEntry',
-    CATEGORY_SECTION = 'tocCategorySection'
+    DEFAULT = `tocEntry`,
+    SUBTITLE = `subtitle`,
+    SUB_ENTRY = `tocSubEntry`,
+    CATEGORY_SECTION = `tocCategorySection`
 }
 
 /**
  * Enumeration to describe the type of borders.
  */
 export enum BorderType {
-    DEFAULT = 'noBorders',
-    LIGHT_HORIZONTAL_LINES = 'lightHorizontalLines',
-    HEADER_ONLY = 'headerLineOnly'
+    DEFAULT = `noBorders`,
+    LIGHT_HORIZONTAL_LINES = `lightHorizontalLines`,
+    HEADER_ONLY = `headerLineOnly`
 }
 
 /**
@@ -57,7 +56,7 @@ export class PdfError extends Error {
  * ```
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class PdfDocumentService {
     /**
@@ -90,7 +89,7 @@ export class PdfDocumentService {
 
         const promises = fontPathList.map(fontPath =>
             this.httpService.downloadAsBase64(fontPath).then(base64 => ({
-                [fontPath.split('/').pop()]: base64
+                [fontPath.split(`/`).pop()]: base64
             }))
         );
         const binaryDataUrls = await Promise.all(promises);
@@ -113,7 +112,7 @@ export class PdfDocumentService {
      */
     private getFontName(place: FontPlace): string {
         const url = this.mediaManageService.getFontUrl(place);
-        return url.split('/').pop();
+        return url.split(`/`).pop();
     }
 
     /**
@@ -135,15 +134,15 @@ export class PdfDocumentService {
         landscape?: boolean
     ): Promise<object> {
         this.imageUrls = imageUrls ? imageUrls : [];
-        const pageSize = this.meetingSettingsService.instant('export_pdf_pagesize');
-        const defaultMargins = pageSize === 'A5' ? [45, 30, 45, 45] : [75, 90, 75, 75];
+        const pageSize = this.meetingSettingsService.instant(`export_pdf_pagesize`);
+        const defaultMargins = pageSize === `A5` ? [45, 30, 45, 45] : [75, 90, 75, 75];
         const result = {
-            pageSize: pageSize || 'A4',
-            pageOrientation: landscape ? 'landscape' : 'portrait',
+            pageSize: pageSize || `A4`,
+            pageOrientation: landscape ? `landscape` : `portrait`,
             pageMargins: customMargins || defaultMargins,
             defaultStyle: {
-                font: 'PdfFont',
-                fontSize: this.meetingSettingsService.instant('export_pdf_fontsize')
+                font: `PdfFont`,
+                fontSize: this.meetingSettingsService.instant(`export_pdf_fontsize`)
             },
             header: this.getHeader(customMargins ? [customMargins[0], customMargins[2]] : null),
             // real footer gets created in the worker
@@ -166,10 +165,10 @@ export class PdfDocumentService {
     private async getBallotPaper(documentContent: object, imageUrl?: string): Promise<object> {
         this.imageUrls = imageUrl ? [imageUrl] : [];
         const result = {
-            pageSize: 'A4',
+            pageSize: `A4`,
             pageMargins: [0, 0, 0, 0],
             defaultStyle: {
-                font: 'PdfFont',
+                font: `PdfFont`,
                 fontSize: 10
             },
             content: documentContent,
@@ -183,10 +182,10 @@ export class PdfDocumentService {
      */
     private getPdfFonts(): object {
         return {
-            normal: this.getFontName('regular'),
-            bold: this.getFontName('bold'),
-            italics: this.getFontName('italic'),
-            bolditalics: this.getFontName('bold_italic')
+            normal: this.getFontName(`regular`),
+            bold: this.getFontName(`bold`),
+            italics: this.getFontName(`italic`),
+            bolditalics: this.getFontName(`bold_italic`)
         };
     }
 
@@ -198,55 +197,55 @@ export class PdfDocumentService {
      */
     private getHeader(lrMargin?: [number, number]): object {
         // check for the required logos
-        let logoHeaderLeftUrl = this.mediaManageService.getLogoUrl('pdf_header_L');
-        let logoHeaderRightUrl = this.mediaManageService.getLogoUrl('pdf_header_R');
+        let logoHeaderLeftUrl = this.mediaManageService.getLogoUrl(`pdf_header_L`);
+        let logoHeaderRightUrl = this.mediaManageService.getLogoUrl(`pdf_header_R`);
         let text;
         const columns = [];
 
         // add the left logo to the header column
         if (logoHeaderLeftUrl) {
-            if (logoHeaderLeftUrl.indexOf('/') === 0) {
+            if (logoHeaderLeftUrl.indexOf(`/`) === 0) {
                 logoHeaderLeftUrl = logoHeaderLeftUrl.substr(1); // remove trailing /
             }
             columns.push({
                 image: logoHeaderLeftUrl,
                 fit: [180, 40],
-                width: '20%'
+                width: `20%`
             });
             this.imageUrls.push(logoHeaderLeftUrl);
         }
 
         // add the header text if no logo on the right was specified
         if (logoHeaderLeftUrl && logoHeaderRightUrl) {
-            text = '';
+            text = ``;
         } else {
-            const name = this.translate.instant(this.meetingSettingsService.instant('name'));
-            const description = this.translate.instant(this.meetingSettingsService.instant('description'));
-            const line1 = [name, description].filter(Boolean).join(' - ');
+            const name = this.translate.instant(this.meetingSettingsService.instant(`name`));
+            const description = this.translate.instant(this.meetingSettingsService.instant(`description`));
+            const line1 = [name, description].filter(Boolean).join(` - `);
             const line2 = [
-                this.meetingSettingsService.instant('location'),
-                this.meetingSettingsService.instant('start_time')
+                this.meetingSettingsService.instant(`location`),
+                this.meetingSettingsService.instant(`start_time`)
             ]
                 .filter(Boolean)
-                .join(', ');
-            text = [line1, line2].join('\n');
+                .join(`, `);
+            text = [line1, line2].join(`\n`);
         }
         columns.push({
             text,
-            style: 'headerText',
-            alignment: logoHeaderRightUrl ? 'left' : 'right'
+            style: `headerText`,
+            alignment: logoHeaderRightUrl ? `left` : `right`
         });
 
         // add the logo to the right
         if (logoHeaderRightUrl) {
-            if (logoHeaderRightUrl.indexOf('/') === 0) {
+            if (logoHeaderRightUrl.indexOf(`/`) === 0) {
                 logoHeaderRightUrl = logoHeaderRightUrl.substr(1); // remove trailing /
             }
             columns.push({
                 image: logoHeaderRightUrl,
                 fit: [180, 40],
-                alignment: 'right',
-                width: '20%'
+                alignment: `right`,
+                width: `20%`
             });
             this.imageUrls.push(logoHeaderRightUrl);
         }
@@ -254,7 +253,7 @@ export class PdfDocumentService {
         // pdfmake order: [left, top, right, bottom]
 
         return {
-            color: '#555',
+            color: `#555`,
             fontSize: 9,
             margin,
             columns,
@@ -273,15 +272,15 @@ export class PdfDocumentService {
      */
     private getFooter(lrMargin?: [number, number], exportInfo?: MotionExportInfo): object {
         const columns = [];
-        const showPageNr = exportInfo && exportInfo.pdfOptions ? exportInfo.pdfOptions.includes('page') : true;
-        const showDate = exportInfo && exportInfo.pdfOptions ? exportInfo.pdfOptions.includes('date') : false;
+        const showPageNr = exportInfo && exportInfo.pdfOptions ? exportInfo.pdfOptions.includes(`page`) : true;
+        const showDate = exportInfo && exportInfo.pdfOptions ? exportInfo.pdfOptions.includes(`date`) : false;
         let logoContainerWidth: string;
         let pageNumberPosition: string;
         let logoContainerSize: number[];
-        const logoFooterLeftUrl = this.mediaManageService.getLogoUrl('pdf_footer_L');
-        const logoFooterRightUrl = this.mediaManageService.getLogoUrl('pdf_footer_R');
+        const logoFooterLeftUrl = this.mediaManageService.getLogoUrl(`pdf_footer_L`);
+        const logoFooterRightUrl = this.mediaManageService.getLogoUrl(`pdf_footer_R`);
 
-        let footerPageNumber = '';
+        let footerPageNumber = ``;
         if (showPageNr) {
             // footerPageNumber += `${currentPage} / ${pageCount}`;
             // replace with `${currentPage} / ${pageCount}` in worker
@@ -291,7 +290,7 @@ export class PdfDocumentService {
         let footerDate = {};
         if (showDate) {
             footerDate = {
-                text: `${this.translate.instant('As of')}: ${new Date().toLocaleDateString(
+                text: `${this.translate.instant(`As of`)}: ${new Date().toLocaleDateString(
                     this.translate.currentLang
                 )}`,
                 fontSize: 6
@@ -300,22 +299,22 @@ export class PdfDocumentService {
 
         // if there is a single logo, give it a lot of space
         if (logoFooterLeftUrl && logoFooterRightUrl) {
-            logoContainerWidth = '20%';
+            logoContainerWidth = `20%`;
             logoContainerSize = [180, 40];
         } else {
-            logoContainerWidth = '80%';
+            logoContainerWidth = `80%`;
             logoContainerSize = [400, 50];
         }
 
         // the position of the page number depends on the logos
         if (logoFooterLeftUrl && logoFooterRightUrl) {
-            pageNumberPosition = 'center';
+            pageNumberPosition = `center`;
         } else if (logoFooterLeftUrl && !logoFooterRightUrl) {
-            pageNumberPosition = 'right';
+            pageNumberPosition = `right`;
         } else if (logoFooterRightUrl && !logoFooterLeftUrl) {
-            pageNumberPosition = 'left';
+            pageNumberPosition = `left`;
         } else {
-            pageNumberPosition = this.meetingSettingsService.instant('export_pdf_pagenumber_alignment');
+            pageNumberPosition = this.meetingSettingsService.instant(`export_pdf_pagenumber_alignment`);
         }
 
         // add the left footer logo, if any
@@ -324,7 +323,7 @@ export class PdfDocumentService {
                 image: logoFooterLeftUrl,
                 fit: logoContainerSize,
                 width: logoContainerWidth,
-                alignment: 'left'
+                alignment: `left`
             });
             this.imageUrls.push(logoFooterLeftUrl);
         }
@@ -332,7 +331,7 @@ export class PdfDocumentService {
         // add the page number
         columns.push({
             stack: [footerPageNumber, footerDate],
-            style: 'footerPageNumber',
+            style: `footerPageNumber`,
             alignment: pageNumberPosition
         });
 
@@ -342,7 +341,7 @@ export class PdfDocumentService {
                 image: logoFooterRightUrl,
                 fit: logoContainerSize,
                 width: logoContainerWidth,
-                alignment: 'right'
+                alignment: `right`
             });
             this.imageUrls.push(logoFooterRightUrl);
         }
@@ -368,8 +367,8 @@ export class PdfDocumentService {
             this.cancelPdfCreation();
         });
 
-        this.progressService.message = this.translate.instant('Creating PDF file ...');
-        this.progressService.progressMode = 'determinate';
+        this.progressService.message = this.translate.instant(`Creating PDF file ...`);
+        this.progressService.progressMode = `determinate`;
     }
 
     /**
@@ -427,22 +426,22 @@ export class PdfDocumentService {
         await this.loadAllImages(vfs);
 
         const isIE = /msie\s|trident\//i.test(window.navigator.userAgent);
-        if (typeof Worker !== 'undefined' && !isIE) {
-            this.pdfWorker = new Worker(new URL('./pdf-worker.worker', import.meta.url), {
-                type: 'module'
+        if (typeof Worker !== `undefined` && !isIE) {
+            this.pdfWorker = new Worker(new URL(`./pdf-worker.worker`, import.meta.url), {
+                type: `module`
             });
 
             // the result of the worker
             this.pdfWorker.onmessage = ({ data }) => {
                 // if the worker returns a numbers, is always the progress
-                if (typeof data === 'number') {
+                if (typeof data === `number`) {
                     // update progress
                     const progress = Math.ceil(data * 100);
                     this.progressService.progressAmount = progress;
                 }
 
                 // if the worker returns an object, it's always the document
-                if (typeof data === 'object') {
+                if (typeof data === `object`) {
                     this.matSnackBar.dismiss();
                     saveAs(data, filename, { autoBom: true });
                     this.pdfWorker = null;
@@ -456,7 +455,7 @@ export class PdfDocumentService {
             });
         } else {
             this.matSnackBar.dismiss();
-            this.matSnackBar.open(this.translate.instant('Cannot create PDF files on this browser.'), '', {
+            this.matSnackBar.open(this.translate.instant(`Cannot create PDF files on this browser.`), ``, {
                 duration: 0
             });
         }
@@ -478,17 +477,17 @@ export class PdfDocumentService {
      * @returns an object that contains all pdf styles
      */
     private getStandardPaperStyles(): object {
-        const pageSize = this.meetingSettingsService.instant('export_pdf_pagesize');
+        const pageSize = this.meetingSettingsService.instant(`export_pdf_pagesize`);
         return {
             title: {
-                fontSize: pageSize === 'A5' ? 14 : 16,
+                fontSize: pageSize === `A5` ? 14 : 16,
                 margin: [0, 0, 0, 20],
                 bold: true
             },
             subtitle: {
                 fontSize: 9,
                 margin: [0, -20, 0, 20],
-                color: 'grey'
+                color: `grey`
             },
             preamble: {
                 margin: [0, 0, 0, 10]
@@ -500,7 +499,7 @@ export class PdfDocumentService {
             footerPageNumber: {
                 fontSize: 8,
                 margin: [0, 15, 0, 0],
-                color: '#555'
+                color: `#555`
             },
             boldText: {
                 bold: true
@@ -509,12 +508,12 @@ export class PdfDocumentService {
                 fontSize: 8
             },
             heading2: {
-                fontSize: pageSize === 'A5' ? 12 : 14,
+                fontSize: pageSize === `A5` ? 12 : 14,
                 margin: [0, 0, 0, 10],
                 bold: true
             },
             heading3: {
-                fontSize: pageSize === 'A5' ? 10 : 12,
+                fontSize: pageSize === `A5` ? 10 : 12,
                 margin: [0, 10, 0, 0],
                 bold: true
             },
@@ -532,7 +531,7 @@ export class PdfDocumentService {
                 margin: [15, 5]
             },
             tocEntry: {
-                fontSize: pageSize === 'A5' ? 10 : 11,
+                fontSize: pageSize === `A5` ? 10 : 11,
                 margin: [0, 0, 0, 0],
                 bold: false
             },
@@ -540,21 +539,21 @@ export class PdfDocumentService {
                 fontSize: 7
             },
             tocSubEntry: {
-                fontSize: pageSize === 'A5' ? 9 : 10,
-                color: '#404040'
+                fontSize: pageSize === `A5` ? 9 : 10,
+                color: `#404040`
             },
             tocCategoryEntry: {
-                fontSize: pageSize === 'A5' ? 10 : 11,
+                fontSize: pageSize === `A5` ? 10 : 11,
                 margin: [10, 0, 0, 0],
                 bold: false
             },
             tocCategoryTitle: {
-                fontSize: pageSize === 'A5' ? 10 : 11,
+                fontSize: pageSize === `A5` ? 10 : 11,
                 margin: [0, 0, 0, 4],
                 bold: true
             },
             tocSubcategoryTitle: {
-                fontSize: pageSize === 'A5' ? 9 : 10,
+                fontSize: pageSize === `A5` ? 9 : 10,
                 margin: [0, 0, 0, 4],
                 bold: true
             },
@@ -568,7 +567,7 @@ export class PdfDocumentService {
             },
             tableHeader: {
                 bold: true,
-                fillColor: 'white'
+                fillColor: `white`
             },
             listParent: {
                 fontSize: 14,
@@ -620,7 +619,7 @@ export class PdfDocumentService {
      * @param url
      */
     private async addImageToVfS(url: string, vfs: object): Promise<void> {
-        if (url.indexOf('/') === 0) {
+        if (url.indexOf(`/`) === 0) {
             url = url.substr(1);
         }
 
@@ -638,7 +637,7 @@ export class PdfDocumentService {
     public createTitle(title: string): object {
         return {
             text: this.translate.instant(title),
-            style: 'title'
+            style: `title`
         };
     }
 
@@ -651,7 +650,7 @@ export class PdfDocumentService {
         if (preamble) {
             return {
                 text: preamble,
-                style: 'preamble'
+                style: `preamble`
             };
         } else {
             return {};
@@ -660,14 +659,14 @@ export class PdfDocumentService {
 
     public getPageBreak(): Object {
         return {
-            text: '',
-            pageBreak: 'after'
+            text: ``,
+            pageBreak: `after`
         };
     }
 
     public getSpacer(): Object {
         return {
-            text: '',
+            text: ``,
             margin: [0, 10]
         };
     }
@@ -689,7 +688,7 @@ export class PdfDocumentService {
                 headerRows: header[0] ? header.length : 0,
                 keepWithHeaderRows: header[0] ? header.length : 0,
                 dontBreakRows: true,
-                widths: ['auto', '*', 'auto'],
+                widths: [`auto`, `*`, `auto`],
                 body: header[0] ? [...header, ...tocBody] : tocBody
             },
             layout: borderStyle,
@@ -721,12 +720,12 @@ export class PdfDocumentService {
             },
             {
                 text: [title, ...subTitle],
-                style: 'tocEntry'
+                style: `tocEntry`
             },
             {
                 pageReference,
-                style: 'tocEntry',
-                alignment: 'right'
+                style: `tocEntry`,
+                alignment: `right`
             }
         ];
     }
@@ -741,7 +740,7 @@ export class PdfDocumentService {
      */
     public createTocLineInline(text: string, italics: boolean = false): Object {
         return {
-            text: '\n' + text,
+            text: `\n` + text,
             style: StyleType.SUB_ENTRY,
             italics
         };
@@ -757,10 +756,10 @@ export class PdfDocumentService {
     public drawCircle(y: number, size: number): object[] {
         return [
             {
-                type: 'ellipse',
+                type: `ellipse`,
                 x: 0,
                 y,
-                lineColor: 'black',
+                lineColor: `black`,
                 r1: size,
                 r2: size
             }

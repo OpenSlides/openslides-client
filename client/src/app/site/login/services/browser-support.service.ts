@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
 
 const SmallestSupportedBrowserVersion = {
@@ -11,7 +10,7 @@ const SmallestSupportedBrowserVersion = {
     'MS-Edge-Chromium': 80
 };
 
-const BrowserBlacklist = ['IE'];
+const BrowserBlacklist = [`IE`];
 
 export interface BrowserRecommendation {
     name: string;
@@ -19,17 +18,17 @@ export interface BrowserRecommendation {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class BrowserSupportService {
     public readonly recommendedBrowsers: BrowserRecommendation[] = [
         {
-            name: 'Google Chrome',
-            url: 'https://www.google.com/chrome/'
+            name: `Google Chrome`,
+            url: `https://www.google.com/chrome/`
         },
         {
-            name: 'Mozilla Firefox',
-            url: 'https://www.mozilla.org/firefox/'
+            name: `Mozilla Firefox`,
+            url: `https://www.mozilla.org/firefox/`
         }
     ];
 

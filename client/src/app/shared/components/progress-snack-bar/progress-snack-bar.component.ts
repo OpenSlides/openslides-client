@@ -7,20 +7,18 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { MatSnackBarRef } from '@angular/material/snack-bar';
-
+import { ProgressMode, ProgressService } from 'app/core/ui-services/progress.service';
 import { Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
-
-import { ProgressMode, ProgressService } from 'app/core/ui-services/progress.service';
 
 /**
  * Component to show the progress announced in the progress service in a snack bar
  * component
  */
 @Component({
-    selector: 'os-progress-snack-bar',
-    templateUrl: './progress-snack-bar.component.html',
-    styleUrls: ['./progress-snack-bar.component.scss'],
+    selector: `os-progress-snack-bar`,
+    templateUrl: `./progress-snack-bar.component.html`,
+    styleUrls: [`./progress-snack-bar.component.scss`],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -28,12 +26,12 @@ export class ProgressSnackBarComponent implements OnInit, OnDestroy {
     /**
      * Private declaration of the mode
      */
-    private _mode: ProgressMode = 'indeterminate';
+    private _mode: ProgressMode = `indeterminate`;
 
     /**
      * Private declaration of the progress message
      */
-    private _message = '';
+    private _message = ``;
 
     /**
      * Private declaration of the value

@@ -1,5 +1,6 @@
-import { BaseModel } from '../base/base-model';
 import { HtmlColor, Id } from 'app/core/definitions/key-types';
+
+import { BaseModel } from '../base/base-model';
 
 export interface ThemeRequiredValues {
     // Required
@@ -20,10 +21,10 @@ export interface ThemeOptionalValues {
     primary_700?: HtmlColor;
     primary_800?: HtmlColor;
     primary_900?: HtmlColor;
-    primary_A100?: HtmlColor;
-    primary_A200?: HtmlColor;
-    primary_A400?: HtmlColor;
-    primary_A700?: HtmlColor;
+    primary_a100?: HtmlColor;
+    primary_a200?: HtmlColor;
+    primary_a400?: HtmlColor;
+    primary_a700?: HtmlColor;
     accent_50?: HtmlColor;
     accent_100?: HtmlColor;
     accent_200?: HtmlColor;
@@ -33,10 +34,10 @@ export interface ThemeOptionalValues {
     accent_700?: HtmlColor;
     accent_800?: HtmlColor;
     accent_900?: HtmlColor;
-    accent_A100?: HtmlColor;
-    accent_A200?: HtmlColor;
-    accent_A400?: HtmlColor;
-    accent_A700?: HtmlColor;
+    accent_a100?: HtmlColor;
+    accent_a200?: HtmlColor;
+    accent_a400?: HtmlColor;
+    accent_a700?: HtmlColor;
     warn_50?: HtmlColor;
     warn_100?: HtmlColor;
     warn_200?: HtmlColor;
@@ -46,14 +47,14 @@ export interface ThemeOptionalValues {
     warn_700?: HtmlColor;
     warn_800?: HtmlColor;
     warn_900?: HtmlColor;
-    warn_A100?: HtmlColor;
-    warn_A200?: HtmlColor;
-    warn_A400?: HtmlColor;
-    warn_A700?: HtmlColor;
+    warn_a100?: HtmlColor;
+    warn_a200?: HtmlColor;
+    warn_a400?: HtmlColor;
+    warn_a700?: HtmlColor;
 }
 
 export class Theme extends BaseModel {
-    public static readonly COLLECTION = 'theme';
+    public static readonly COLLECTION = `theme`;
 
     public id: Id;
 

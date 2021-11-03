@@ -1,8 +1,9 @@
 import { HasListOfSpeakersId } from 'app/shared/models/base/has-list-of-speakers-id';
 import { HasListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
+
 import { BaseModel, ModelConstructor } from '../../shared/models/base/base-model';
-import { BaseRepositoryWithActiveMeeting } from './base-repository-with-active-meeting';
 import { BaseViewModel } from '../../site/base/base-view-model';
+import { BaseRepositoryWithActiveMeeting } from './base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from './repository-service-collector';
 
 export function isBaseIsListOfSpeakersContentObjectRepository(
@@ -38,7 +39,7 @@ export abstract class BaseIsListOfSpeakersContentObjectRepository<
     }
 
     public getListOfSpeakersTitle(viewModel: V): string {
-        return this.getTitle(viewModel) + ' (' + this.getVerboseName() + ')';
+        return this.getTitle(viewModel) + ` (` + this.getVerboseName() + `)`;
     }
 
     public getListOfSpeakersSlideTitle(viewModel: V): string {

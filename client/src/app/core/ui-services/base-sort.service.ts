@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-
 import { TranslateService } from '@ngx-translate/core';
-
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Displayable } from 'app/site/base/displayable';
 
@@ -31,7 +29,7 @@ export interface OsSortingOption<T> {
  * Extends sorting services to sort with a consistent function.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export abstract class BaseSortService<T extends Identifiable & Displayable> {
     /**
@@ -52,7 +50,7 @@ export abstract class BaseSortService<T extends Identifiable & Displayable> {
         this.intl = new Intl.Collator(translate.currentLang, {
             numeric: true,
             ignorePunctuation: true,
-            sensitivity: 'base'
+            sensitivity: `base`
         });
     }
 
@@ -61,7 +59,7 @@ export abstract class BaseSortService<T extends Identifiable & Displayable> {
      * @param property
      */
     private isFalsy(property: any): boolean {
-        return property === null || property === undefined || property === 0 || property === '';
+        return property === null || property === undefined || property === 0 || property === ``;
     }
 
     /**
@@ -86,15 +84,15 @@ export abstract class BaseSortService<T extends Identifiable & Displayable> {
             return this.sortFn(itemA, itemB, ascending, this.intl);
         } else {
             switch (typeof firstProperty) {
-                case 'boolean':
+                case `boolean`:
                     if (!firstProperty && secondProperty) {
                         return -1;
                     } else {
                         return 1;
                     }
-                case 'number':
+                case `number`:
                     return firstProperty > secondProperty ? 1 : -1;
-                case 'string':
+                case `string`:
                     if (firstProperty && !secondProperty) {
                         return -1;
                     } else if (!firstProperty && !!secondProperty) {
@@ -104,17 +102,17 @@ export abstract class BaseSortService<T extends Identifiable & Displayable> {
                     } else {
                         return this.intl.compare(firstProperty, secondProperty);
                     }
-                case 'function':
+                case `function`:
                     const a = firstProperty.bind(itemA)();
                     const b = secondProperty.bind(itemB)();
                     return this.intl.compare(a, b);
-                case 'object':
+                case `object`:
                     if (firstProperty instanceof Date) {
                         return firstProperty > secondProperty ? 1 : -1;
                     } else {
                         return this.intl.compare(firstProperty.toString(), secondProperty.toString());
                     }
-                case 'undefined':
+                case `undefined`:
                     return 1;
                 default:
                     return -1;

@@ -1,7 +1,12 @@
 import { Injectable } from '@angular/core';
-
 import { BaseModel } from 'app/shared/models/base/base-model';
 import { BaseViewModel, ViewModelConstructor } from 'app/site/base/base-view-model';
+
+import { Collection, Field, Id } from '../definitions/key-types';
+import { ModelRequestObject } from '../definitions/model-request-object';
+import { OnAfterAppsLoaded } from '../definitions/on-after-apps-loaded';
+import { Relation } from '../definitions/relations';
+import { Deferred } from '../promises/deferred';
 import {
     FieldDescriptor,
     Fields,
@@ -10,13 +15,8 @@ import {
     StructuredFieldDecriptor
 } from './autoupdate.service';
 import { CollectionMapperService } from './collection-mapper.service';
-import { Deferred } from '../promises/deferred';
 import { fillTemplateValueInTemplateField } from './key-transforms';
-import { Collection, Field, Id } from '../definitions/key-types';
-import { OnAfterAppsLoaded } from '../definitions/on-after-apps-loaded';
 import { RelationManagerService } from './relation-manager.service';
-import { Relation } from '../definitions/relations';
-import { ModelRequestObject } from '../definitions/model-request-object';
 
 export type TypedFieldset<M> = (keyof M | { templateField: keyof M })[];
 
@@ -95,10 +95,10 @@ export interface Fieldsets<M extends BaseModel> {
 class UnknownRelationError extends Error {}
 class UnknownFieldsetError extends Error {}
 
-export const DEFAULT_FIELDSET = 'detail';
+export const DEFAULT_FIELDSET = `detail`;
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ModelRequestBuilderService implements OnAfterAppsLoaded {
     private fieldsets: {
@@ -148,7 +148,7 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
     private addDataFields(modelRequestObject: ModelRequestObject): void {
         const fieldset = modelRequestObject.simplifiedRequest.fieldset || DEFAULT_FIELDSET;
         let fieldsetFields: AdditionalField[];
-        if (typeof fieldset === 'string') {
+        if (typeof fieldset === `string`) {
             const registeredFieldsets = this.fieldsets[modelRequestObject.collection];
             if (!registeredFieldsets || !registeredFieldsets[fieldset]) {
                 throw new UnknownFieldsetError(
@@ -164,7 +164,7 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
             fieldsetFields = fieldset;
         }
 
-        fieldsetFields.push('id'); // Important: The id is used to detect, if a model was deleted, because this issues
+        fieldsetFields.push(`id`); // Important: The id is used to detect, if a model was deleted, because this issues
         // an autoupdate with id=null
 
         if (modelRequestObject.simplifiedRequest.additionalFields) {
@@ -173,11 +173,11 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
 
         // insert the fieldsetFields into fields
         for (const f of fieldsetFields) {
-            if (typeof f === 'string') {
+            if (typeof f === `string`) {
                 modelRequestObject.setFieldEntry(f, null);
             } else if (isAllStructuredFields(f)) {
                 const fieldValue: FieldDescriptor = {
-                    type: 'template'
+                    type: `template`
                     // no `values` here: Do not follow these, just resolve them.
                 };
                 modelRequestObject.setFieldEntry(f.templateField, fieldValue);
@@ -194,7 +194,7 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
     private addFollowedRelations(modelRequestObject: ModelRequestObject): void {
         for (const entry of modelRequestObject.simplifiedRequest.follow) {
             let follow: Follow;
-            if (typeof entry === 'string') {
+            if (typeof entry === `string`) {
                 follow = {
                     idField: entry
                 };
@@ -210,7 +210,7 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
         // it is the structured field, not template field, e.g. group_$1_ids instead of group_$_ids.
         let queryIdField: Field; // The field to query the relation for. For specific structured relations
         // it is the template field.
-        if (typeof follow.idField === 'string') {
+        if (typeof follow.idField === `string`) {
             effectiveIdField = queryIdField = follow.idField;
         } else {
             queryIdField = follow.idField.templateIdField;
@@ -265,7 +265,7 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
         this.addFields(modelRequestObject);
         return {
             descriptor: {
-                type: relation.many ? 'relation-list' : 'relation',
+                type: relation.many ? `relation-list` : `relation`,
                 collection: foreignCollection,
                 fields: modelRequestObject.getFields()
             },
@@ -278,7 +278,7 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
         follow: Follow
     ): DescriptorResponse<GenericRelationFieldDecriptor> {
         const descriptor: GenericRelationFieldDecriptor = {
-            type: relation.many ? 'generic-relation-list' : 'generic-relation',
+            type: relation.many ? `generic-relation-list` : `generic-relation`,
             fields: {}
         };
         this.addGenericRelation(relation.foreignViewModelPossibilities, descriptor.fields, follow);
@@ -290,7 +290,7 @@ export class ModelRequestBuilderService implements OnAfterAppsLoaded {
         follow: Follow
     ): DescriptorResponse<StructuredFieldDecriptor> {
         const descriptor: StructuredFieldDecriptor = {
-            type: 'template'
+            type: `template`
         };
 
         let response: DescriptorResponse<RelationFieldDescriptor | GenericRelationFieldDecriptor>;

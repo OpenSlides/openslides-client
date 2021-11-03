@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SidenavComponent } from './sidenav.component';
 
-describe('SidenavComponent', () => {
+describe(`SidenavComponent`, () => {
     let component: SidenavComponent;
     let fixture: ComponentFixture<SidenavComponent>;
 
@@ -18,7 +18,7 @@ describe('SidenavComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

@@ -1,4 +1,4 @@
 export const statuteHeadersAndVerboseNames = {
-    title: 'Title',
-    text: 'Text'
+    title: `Title`,
+    text: `Text`
 };

@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { StatuteParagraphListComponent } from './statute-paragraph-list.component';
 
-describe('StatuteParagraphListComponent', () => {
+describe(`StatuteParagraphListComponent`, () => {
     let component: StatuteParagraphListComponent;
     let fixture: ComponentFixture<StatuteParagraphListComponent>;
 
@@ -23,7 +22,7 @@ describe('StatuteParagraphListComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

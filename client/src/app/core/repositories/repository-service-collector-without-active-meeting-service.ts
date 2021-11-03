@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
-
 import { TranslateService } from '@ngx-translate/core';
 
 import { ActionService } from '../core-services/action.service';
 import { CollectionMapperService } from '../core-services/collection-mapper.service';
 import { DataStoreService } from '../core-services/data-store.service';
-import { ErrorService } from '../ui-services/error.service';
 import { RelationManagerService } from '../core-services/relation-manager.service';
 import { ViewModelStoreService } from '../core-services/view-model-store.service';
+import { ErrorService } from '../ui-services/error.service';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class RepositoryServiceCollectorWithoutActiveMeetingService {
     public constructor(

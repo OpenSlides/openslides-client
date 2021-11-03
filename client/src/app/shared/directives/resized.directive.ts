@@ -1,5 +1,4 @@
 import { Directive, ElementRef, Input, OnInit } from '@angular/core';
-
 import { ResizeSensor } from 'css-element-queries';
 import { Subject } from 'rxjs';
 
@@ -16,7 +15,7 @@ export interface ElementSize {
  * `<div [osRezised]="mySubject">...content...</div>`
  */
 @Directive({
-    selector: '[osResized]'
+    selector: `[osResized]`
 })
 export class ResizedDirective implements OnInit {
     @Input()

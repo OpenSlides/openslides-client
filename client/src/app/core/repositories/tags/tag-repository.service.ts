@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-
 import { TagAction } from 'app/core/actions/tag-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Tag } from 'app/shared/models/tag/tag';
 import { ViewTag } from 'app/site/tags/models/view-tag';
+
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
@@ -19,7 +19,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
  * them to the Server.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class TagRepositoryService extends BaseRepositoryWithActiveMeeting<ViewTag, Tag> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
@@ -46,13 +46,13 @@ export class TagRepositoryService extends BaseRepositoryWithActiveMeeting<ViewTa
 
     public getFieldsets(): Fieldsets<Tag> {
         return {
-            [DEFAULT_FIELDSET]: ['name']
+            [DEFAULT_FIELDSET]: [`name`]
         };
     }
 
     public getTitle = (viewTag: ViewTag) => viewTag.name;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Tags' : 'Tag');
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Tags` : `Tag`);
 
     /**
      * Sets the default sorting (e.g. in dropdowns and for new users) to 'name'

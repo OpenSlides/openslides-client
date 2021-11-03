@@ -2,7 +2,7 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { AppPermission, DisplayPermission, Permission, PERMISSIONS } from 'app/core/core-services/permission';
@@ -12,15 +12,16 @@ import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
+
 import { ViewGroup } from '../../models/view-group';
 
 /**
  * Component for the Group-List and permission matrix
  */
 @Component({
-    selector: 'os-group-list',
-    templateUrl: './group-list.component.html',
-    styleUrls: ['./group-list.component.scss']
+    selector: `os-group-list`,
+    templateUrl: `./group-list.component.html`,
+    styleUrls: [`./group-list.component.scss`]
 })
 export class GroupListComponent extends BaseModelContextComponent implements OnInit {
     /**
@@ -48,13 +49,13 @@ export class GroupListComponent extends BaseModelContextComponent implements OnI
      */
     public selectedGroup: ViewGroup;
 
-    @ViewChild('groupForm', { static: true })
+    @ViewChild(`groupForm`, { static: true })
     public groupForm: FormGroup;
 
     /**
      * Reference to the template
      */
-    @ViewChild('groupEditDialog', { static: true })
+    @ViewChild(`groupEditDialog`, { static: true })
     public groupEditDialog: TemplateRef<string>;
 
     private dialogRef: MatDialogRef<any>;
@@ -74,13 +75,14 @@ export class GroupListComponent extends BaseModelContextComponent implements OnI
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private dialog: MatDialog,
         private repo: GroupRepositoryService,
         private promptService: PromptService,
         private formBuilder: FormBuilder,
         private activeMeetingIdService: ActiveMeetingIdService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     /**
@@ -91,7 +93,7 @@ export class GroupListComponent extends BaseModelContextComponent implements OnI
     public ngOnInit(): void {
         super.ngOnInit();
 
-        super.setTitle('Groups');
+        super.setTitle(`Groups`);
 
         this.repo.getViewModelListObservable().subscribe(newViewGroups => {
             if (newViewGroups) {
@@ -107,7 +109,7 @@ export class GroupListComponent extends BaseModelContextComponent implements OnI
             ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
-                    idField: 'group_ids'
+                    idField: `group_ids`
                 }
             ]
         };
@@ -122,7 +124,7 @@ export class GroupListComponent extends BaseModelContextComponent implements OnI
         this.editGroup = editMode;
         this.newGroup = newGroup;
 
-        const name = this.selectedGroup ? this.selectedGroup.name : '';
+        const name = this.selectedGroup ? this.selectedGroup.name : ``;
 
         this.groupForm = this.formBuilder.group({
             name: [name, Validators.required]
@@ -131,7 +133,7 @@ export class GroupListComponent extends BaseModelContextComponent implements OnI
         this.dialogRef = this.dialog.open(this.groupEditDialog, infoDialogSettings);
 
         this.dialogRef.keydownEvents().subscribe((event: KeyboardEvent) => {
-            if (event.key === 'Enter' && event.shiftKey && this.groupForm.valid) {
+            if (event.key === `Enter` && event.shiftKey && this.groupForm.valid) {
                 this.saveGroup(this.groupForm.value);
             }
         });
@@ -165,7 +167,7 @@ export class GroupListComponent extends BaseModelContextComponent implements OnI
      * Deletes the selected Group
      */
     public async deleteSelectedGroup(): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to delete this group?');
+        const title = this.translate.instant(`Are you sure you want to delete this group?`);
         const content = this.translate.instant(this.selectedGroup.name);
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(this.selectedGroup);
@@ -197,9 +199,9 @@ export class GroupListComponent extends BaseModelContextComponent implements OnI
      */
     public updateRowDef(): void {
         // reset the rowDef list first
-        this.headerRowDef = ['perm'];
+        this.headerRowDef = [`perm`];
         this.groups.forEach(viewGroup => {
-            this.headerRowDef.push('' + viewGroup.name);
+            this.headerRowDef.push(`` + viewGroup.name);
         });
     }
 
@@ -234,7 +236,7 @@ export class GroupListComponent extends BaseModelContextComponent implements OnI
      * Clicking escape while in #newGroupForm should toggle newGroup.
      */
     public keyDownFunction(event: KeyboardEvent): void {
-        if (event.key === 'Escape') {
+        if (event.key === `Escape`) {
             this.newGroup = false;
         }
     }

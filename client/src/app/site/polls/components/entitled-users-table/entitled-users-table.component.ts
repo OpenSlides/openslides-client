@@ -1,12 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
-
+import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
-import { Observable } from 'rxjs';
-
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { EntitledUsersEntry } from 'app/shared/models/poll/poll-constants';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { Observable } from 'rxjs';
 
 export interface EntitledUsersTableEntry extends EntitledUsersEntry {
     user_id: number;
@@ -18,9 +17,9 @@ export interface EntitledUsersTableEntry extends EntitledUsersEntry {
 }
 
 @Component({
-    selector: 'os-entitled-users-table',
-    templateUrl: './entitled-users-table.component.html',
-    styleUrls: ['./entitled-users-table.component.scss'],
+    selector: `os-entitled-users-table`,
+    templateUrl: `./entitled-users-table.component.html`,
+    styleUrls: [`./entitled-users-table.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -33,25 +32,28 @@ export class EntitledUsersTableComponent extends BaseComponent {
 
     public columnDefinitionEntitledUsersTable: PblColumnDefinition[] = [
         {
-            prop: 'user_id',
-            width: '40%',
-            label: 'Participant'
+            prop: `user_id`,
+            width: `40%`,
+            label: `Participant`
         },
         {
-            prop: 'voted',
-            width: '30%',
-            label: 'Voted'
+            prop: `voted`,
+            width: `30%`,
+            label: `Voted`
         },
         {
-            prop: 'delegation',
-            width: '30%',
-            label: 'Delegated to'
+            prop: `delegation`,
+            width: `30%`,
+            label: `Delegated to`
         }
     ];
 
-    public filterPropsEntitledUsersTable = ['user.getFullName', 'vote_delegated_to.getFullName', 'voted_verbose'];
+    public filterPropsEntitledUsersTable = [`user.getFullName`, `vote_delegated_to.getFullName`, `voted_verbose`];
 
-    public constructor(protected componentServiceCollector: ComponentServiceCollector) {
-        super(componentServiceCollector);
+    public constructor(
+        protected componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService
+    ) {
+        super(componentServiceCollector, translate);
     }
 }

@@ -1,18 +1,17 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { CountdownDialogComponent, CountdownDialogData } from './countdown-dialog.component';
 
-describe('CountdownDialogComponent', () => {
+describe(`CountdownDialogComponent`, () => {
     let component: CountdownDialogComponent;
     let fixture: ComponentFixture<CountdownDialogComponent>;
 
     const dialogData: CountdownDialogData = {
-        title: '',
-        description: '',
-        duration: ''
+        title: ``,
+        description: ``,
+        duration: ``
     };
 
     beforeEach(
@@ -37,7 +36,7 @@ describe('CountdownDialogComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

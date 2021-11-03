@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-
 import { Settings } from 'app/shared/models/event-management/meeting';
+
 import { meetingSettingsDefaults } from '../repositories/management/meeting-settings-defaults';
 import { meetingSettings, SettingsGroup, SettingsItem } from '../repositories/management/meeting-settings-definition';
 
 type SettingsMap = { [key in keyof Settings]: SettingsItem };
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MeetingSettingsDefinitionProvider {
     private _settingsMap: SettingsMap;
@@ -28,7 +28,7 @@ export class MeetingSettingsDefinitionProvider {
     }
 
     private validateSetting(setting: SettingsItem): void {
-        if (setting.type === 'choice') {
+        if (setting.type === `choice`) {
             if (!setting.choices && !setting.choicesFunc) {
                 throw new Error(`You must provide choices for ${setting.key}`);
             }
@@ -38,13 +38,13 @@ export class MeetingSettingsDefinitionProvider {
     public validateDefault(settingKey: string, defaultValue: any): void {
         const setting = this.settingsMap[settingKey];
         if (
-            ((!setting.type || setting.type === 'text') && typeof defaultValue !== 'string') ||
-            (setting.type === 'integer' && typeof defaultValue !== 'number') ||
-            (setting.type === 'boolean' && typeof defaultValue !== 'boolean')
+            ((!setting.type || setting.type === `text`) && typeof defaultValue !== `string`) ||
+            (setting.type === `integer` && typeof defaultValue !== `number`) ||
+            (setting.type === `boolean` && typeof defaultValue !== `boolean`)
         ) {
             throw new Error(`Invalid default for ${setting.key}: ${defaultValue} (${typeof defaultValue})`);
         }
-        if (setting.type === 'choice' && setting.choices && !setting.choices.hasOwnProperty(defaultValue)) {
+        if (setting.type === `choice` && setting.choices && !setting.choices.hasOwnProperty(defaultValue)) {
             throw new Error(
                 `Invalid default for ${setting.key}: ${defaultValue} (valid choices: ${Object.keys(setting.choices)})`
             );
@@ -68,29 +68,29 @@ export class MeetingSettingsDefinitionProvider {
     }
 
     public getDefaultValue(setting: keyof Settings | SettingsItem): any {
-        const settingItem = typeof setting === 'string' ? this.settingsMap[setting] : setting;
+        const settingItem = typeof setting === `string` ? this.settingsMap[setting] : setting;
         return meetingSettingsDefaults[settingItem.key] ?? this.getDefaultValueForType(settingItem);
     }
 
     public getDefaultValueForType(setting: SettingsItem): any {
         switch (setting.type) {
-            case 'integer':
+            case `integer`:
                 return 0;
-            case 'boolean':
+            case `boolean`:
                 return false;
-            case 'choice':
+            case `choice`:
                 return null;
-            case 'groups':
-            case 'translations':
+            case `groups`:
+            case `translations`:
                 return [];
-            case 'datetime':
+            case `datetime`:
                 return null;
-            case 'string':
-            case 'text':
-            case 'markupText':
+            case `string`:
+            case `text`:
+            case `markupText`:
             default:
                 // default type is text
-                return '';
+                return ``;
         }
     }
 }

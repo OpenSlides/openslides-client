@@ -3,7 +3,7 @@ import { E2EImportsModule } from 'e2e-imports.module';
 
 import { UserSlideComponent } from './user-slide.component';
 
-describe('UserSlideComponent', () => {
+describe(`UserSlideComponent`, () => {
     let component: UserSlideComponent;
     let fixture: ComponentFixture<UserSlideComponent>;
 
@@ -22,7 +22,7 @@ describe('UserSlideComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

@@ -1,6 +1,4 @@
 import { Injectable, Injector } from '@angular/core';
-
-import { AppConfig, ModelEntry, SearchableModelEntry } from '../definitions/app-config';
 import { BaseRepository } from 'app/core/repositories/base-repository';
 import { ManagementAppConfig } from 'app/management/management.config';
 import { AgendaAppConfig } from 'app/site/agenda/agenda.config';
@@ -17,12 +15,14 @@ import { ProjectorAppConfig } from 'app/site/projector/projector.config';
 import { TagAppConfig } from 'app/site/tags/tag.config';
 import { TopicsAppConfig } from 'app/site/topics/topics.config';
 import { UsersAppConfig } from 'app/site/users/users.config';
-import { CollectionMapperService } from './collection-mapper.service';
+
 import { ServicesToLoadOnAppsLoaded } from '../core.module';
-import { FallbackRoutesService } from './fallback-routes.service';
-import { MainMenuService } from './main-menu.service';
+import { AppConfig, ModelEntry, SearchableModelEntry } from '../definitions/app-config';
 import { OnAfterAppsLoaded } from '../definitions/on-after-apps-loaded';
 import { SearchService } from '../ui-services/search.service';
+import { CollectionMapperService } from './collection-mapper.service';
+import { FallbackRoutesService } from './fallback-routes.service';
+import { MainMenuService } from './main-menu.service';
 
 /**
  * A list of all app configurations of all delivered apps.
@@ -48,7 +48,7 @@ const appConfigs: AppConfig[] = [
  * Handles loading of all apps during the bootup process.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AppLoadService {
     /**

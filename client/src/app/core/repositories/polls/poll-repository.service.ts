@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { PollAction } from 'app/core/actions/poll-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
@@ -10,6 +9,7 @@ import { PollMethod, PollState, PollType } from 'app/shared/models/poll/poll-con
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { User } from 'app/shared/models/users/user';
 import { toDecimal } from 'app/shared/utils/to-decimal';
+
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
@@ -26,39 +26,39 @@ interface AnalogPollGlobalValues {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class PollRepositoryService extends BaseRepositoryWithActiveMeeting<ViewPoll, Poll> {
     public constructor(repoServiceCollector: RepositoryServiceCollector, private operator: OperatorService) {
         super(repoServiceCollector, Poll);
     }
 
-    public getVerboseName = (plural?: boolean): string => (plural ? 'Polls' : 'Poll');
+    public getVerboseName = (plural?: boolean): string => (plural ? `Polls` : `Poll`);
     public getTitle = (viewModel: ViewPoll): string => viewModel.title;
 
     public getFieldsets(): Fieldsets<Poll> {
         const listFieldset: (keyof Poll)[] = [
-            'entitled_group_ids',
-            'state',
-            'title',
-            'type',
-            'pollmethod',
-            'content_object_id'
+            `entitled_group_ids`,
+            `state`,
+            `title`,
+            `type`,
+            `pollmethod`,
+            `content_object_id`
         ];
         const detailFieldset: (keyof Poll)[] = listFieldset.concat(
-            'voted_ids',
-            'votescast',
-            'votesinvalid',
-            'votesvalid',
-            'option_ids',
-            'onehundred_percent_base',
-            'global_option_id',
-            'global_yes',
-            'global_no',
-            'global_abstain',
-            'min_votes_amount',
-            'max_votes_amount',
-            'entitled_users_at_stop'
+            `voted_ids`,
+            `votescast`,
+            `votesinvalid`,
+            `votesvalid`,
+            `option_ids`,
+            `onehundred_percent_base`,
+            `global_option_id`,
+            `global_yes`,
+            `global_no`,
+            `global_abstain`,
+            `min_votes_amount`,
+            `max_votes_amount`,
+            `entitled_users_at_stop`
         );
         return {
             [DEFAULT_FIELDSET]: detailFieldset,
@@ -288,7 +288,7 @@ export class PollRepositoryService extends BaseRepositoryWithActiveMeeting<ViewP
 
     private validateOption(option: PollAction.AnalogOption | PollAction.ElectronicOption): void {
         if ((option.text && option.content_object_id) || (!option.text && !option.content_object_id)) {
-            throw new Error('Exactly one of text or content_object_id has to be given!');
+            throw new Error(`Exactly one of text or content_object_id has to be given!`);
         }
     }
 
@@ -319,7 +319,7 @@ export class PollRepositoryService extends BaseRepositoryWithActiveMeeting<ViewP
 
     public async updateOptionForPoll(poll: Poll, update: Partial<PollAction.OptionUpdatePayload>): Promise<void> {
         if (poll.type !== PollType.Analog) {
-            throw new Error('Cannot update an option for an electronic poll!');
+            throw new Error(`Cannot update an option for an electronic poll!`);
         }
         const payload: PollAction.OptionUpdatePayload = {
             id: poll.id,

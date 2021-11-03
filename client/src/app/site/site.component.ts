@@ -1,10 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NavigationEnd, Router } from '@angular/router';
-
-import { Subscription } from 'rxjs';
-
-import { navItemAnim } from '../shared/animations';
+import { TranslateService } from '@ngx-translate/core';
 import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { HistoryService } from 'app/core/core-services/history.service';
 import { OfflineBroadcastService } from 'app/core/core-services/offline-broadcast.service';
@@ -14,20 +11,23 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { SidenavComponent } from 'app/shared/components/sidenav/sidenav.component';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { Subscription } from 'rxjs';
+
 import { MainMenuEntry, MainMenuService } from '../core/core-services/main-menu.service';
 import { ViewportService } from '../core/ui-services/viewport.service';
+import { navItemAnim } from '../shared/animations';
 
 @Component({
-    selector: 'os-site',
+    selector: `os-site`,
     animations: [navItemAnim],
-    templateUrl: './site.component.html',
-    styleUrls: ['./site.component.scss']
+    templateUrl: `./site.component.html`,
+    styleUrls: [`./site.component.scss`]
 })
 export class SiteComponent extends BaseComponent implements OnInit {
     /**
      * HTML element of the side panel
      */
-    @ViewChild('sideNav', { static: true, read: SidenavComponent })
+    @ViewChild(`sideNav`, { static: true, read: SidenavComponent })
     public sideNav: SidenavComponent;
 
     /**
@@ -56,6 +56,7 @@ export class SiteComponent extends BaseComponent implements OnInit {
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         _offlineBroadcastService: OfflineBroadcastService,
         private activeMeeting: ActiveMeetingService,
         private router: Router,
@@ -66,7 +67,7 @@ export class SiteComponent extends BaseComponent implements OnInit {
         public timeTravel: TimeTravelService,
         public pollRepo: PollRepositoryService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     /**
@@ -95,7 +96,7 @@ export class SiteComponent extends BaseComponent implements OnInit {
     }
 
     public isRouteExact(route: string): boolean {
-        return route === '.' || route === '/';
+        return route === `.` || route === `/`;
     }
 
     private getRouterSubscriptions(): Subscription[] {
@@ -103,7 +104,7 @@ export class SiteComponent extends BaseComponent implements OnInit {
             this.router.events.subscribe(event => {
                 // Scroll to top if accessing a page, not via browser history stack
                 if (event instanceof NavigationEnd) {
-                    const contentContainer = document.querySelector('.mat-sidenav-content');
+                    const contentContainer = document.querySelector(`.mat-sidenav-content`);
                     if (contentContainer) {
                         contentContainer.scrollTo(0, 0);
                     }

@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-
+import { TranslateService } from '@ngx-translate/core';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
-import { ViewUser } from '../../models/view-user';
-import { BaseModelContextComponent } from '../../../base/components/base-model-context.component';
+
 import { ComponentServiceCollector } from '../../../../core/ui-services/component-service-collector';
+import { BaseModelContextComponent } from '../../../base/components/base-model-context.component';
+import { ViewUser } from '../../models/view-user';
 
 /**
  * This component offers an input field for user numbers, and sets/unsets the
@@ -16,8 +16,8 @@ import { ComponentServiceCollector } from '../../../../core/ui-services/componen
  * The component is typically directly accessed via the router link
  */
 @Component({
-    selector: 'os-presence-detail',
-    templateUrl: './presence-detail.component.html'
+    selector: `os-presence-detail`,
+    templateUrl: `./presence-detail.component.html`
 })
 export class PresenceDetailComponent extends BaseModelContextComponent implements OnInit {
     /**
@@ -47,10 +47,11 @@ export class PresenceDetailComponent extends BaseModelContextComponent implement
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private userRepo: UserRepositoryService,
         private formBuilder: FormBuilder
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     /**
@@ -59,7 +60,7 @@ export class PresenceDetailComponent extends BaseModelContextComponent implement
     public ngOnInit(): void {
         super.ngOnInit();
         this.userForm = this.formBuilder.group({
-            number: ''
+            number: ``
         });
     }
 
@@ -68,7 +69,7 @@ export class PresenceDetailComponent extends BaseModelContextComponent implement
      * Feedback will be relayed to the {@link errorMsg} and/or {@link lastChangedUser} variables
      */
     public async changePresence(): Promise<void> {
-        const number = this.userForm.get('number').value;
+        const number = this.userForm.get(`number`).value;
         this.userForm.reset();
         try {
             this.errorMsg = null;
@@ -76,8 +77,8 @@ export class PresenceDetailComponent extends BaseModelContextComponent implement
             await this.getModelChanges({
                 ids: [identifiable.id],
                 viewModelCtor: ViewUser,
-                fieldset: 'shortName',
-                additionalFields: ['is_present_in_meeting_ids']
+                fieldset: `shortName`,
+                additionalFields: [`is_present_in_meeting_ids`]
             });
             this.lastChangedUser = this.userRepo.getViewModel(identifiable.id);
         } catch (e) {
@@ -89,7 +90,7 @@ export class PresenceDetailComponent extends BaseModelContextComponent implement
      * triggers the submission on enter key
      */
     public onKeyUp(event: KeyboardEvent): void {
-        if (event.key === 'Enter') {
+        if (event.key === `Enter`) {
             this.changePresence();
         }
     }

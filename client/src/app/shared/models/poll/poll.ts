@@ -1,13 +1,14 @@
 import { Fqid, Id } from 'app/core/definitions/key-types';
 import { CalculablePollKey } from 'app/site/polls/services/poll.service';
+
 import { BaseDecimalModel } from '../base/base-decimal-model';
 import { HasMeetingId } from '../base/has-meeting-id';
 import { HasProjectionIds } from '../base/has-projectable-ids';
 import { EntitledUsersEntry, PollMethod, PollPercentBase, PollState, PollType } from './poll-constants';
 
 export class Poll extends BaseDecimalModel<Poll> {
-    public static readonly COLLECTION = 'poll';
-    public static readonly DECIMAL_FIELDS: (keyof Poll)[] = ['votesvalid', 'votesinvalid', 'votescast'];
+    public static readonly COLLECTION = `poll`;
+    public static readonly DECIMAL_FIELDS: (keyof Poll)[] = [`votesvalid`, `votesinvalid`, `votescast`];
 
     public id: Id;
     public content_object_id: Fqid;
@@ -127,11 +128,11 @@ export class Poll extends BaseDecimalModel<Poll> {
 
     public get pollmethodFields(): CalculablePollKey[] {
         if (this.pollmethod === PollMethod.YN) {
-            return ['yes', 'no'];
+            return [`yes`, `no`];
         } else if (this.pollmethod === PollMethod.YNA) {
-            return ['yes', 'no', 'abstain'];
+            return [`yes`, `no`, `abstain`];
         } else if (this.pollmethod === PollMethod.Y) {
-            return ['yes'];
+            return [`yes`];
         }
     }
 

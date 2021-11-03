@@ -1,15 +1,14 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
-import { E2EImportsModule } from 'e2e-imports.module';
-
 import { Motion } from 'app/shared/models/motions/motion';
 import { ViewUnifiedChange } from 'app/shared/models/motions/view-unified-change';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
 import { LineNumberingMode } from 'app/site/motions/motions.constants';
-import { MotionDetailDiffComponent } from './motion-detail-diff.component';
+import { E2EImportsModule } from 'e2e-imports.module';
+
 import { MotionDetailOriginalChangeRecommendationsComponent } from '../motion-detail-original-change-recommendations/motion-detail-original-change-recommendations.component';
+import { MotionDetailDiffComponent } from './motion-detail-diff.component';
 
 @Component({
     template: `
@@ -37,7 +36,7 @@ class TestHostComponent {
     public createChangeRecommendation($event: Event): void {}
 }
 
-describe('MotionDetailDiffComponent', () => {
+describe(`MotionDetailDiffComponent`, () => {
     let component: TestHostComponent;
     let fixture: ComponentFixture<TestHostComponent>;
 
@@ -60,7 +59,7 @@ describe('MotionDetailDiffComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

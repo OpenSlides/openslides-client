@@ -2,10 +2,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-
-import { Observable } from 'rxjs';
-import { map, mergeMap, switchMap } from 'rxjs/operators';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ScrollScaleDirection } from 'app/core/actions/projector-action';
 import { ProjectorMessageAction } from 'app/core/actions/projector-message-action';
 import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
@@ -26,21 +23,24 @@ import { infoDialogSettings, largeDialogSettings } from 'app/shared/utils/dialog
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewProjectorCountdown } from 'app/site/projector/models/view-projector-countdown';
 import { ViewProjectorMessage } from 'app/site/projector/models/view-projector-message';
-import { CountdownDialogComponent, CountdownDialogData } from '../countdown-dialog/countdown-dialog.component';
-import { CurrentListOfSpeakersSlideService } from '../../services/current-list-of-speakers-slide.service';
-import { CurrentSpeakerChyronSlideService } from '../../services/current-speaker-chyron-slide.service';
-import { MessageDialogComponent, MessageDialogData } from '../message-dialog/message-dialog.component';
-import { ProjectorEditDialogComponent } from '../projector-edit-dialog/projector-edit-dialog.component';
+import { Observable } from 'rxjs';
+import { map, mergeMap, switchMap } from 'rxjs/operators';
+
 import { ViewProjection } from '../../models/view-projection';
 import { ViewProjector } from '../../models/view-projector';
+import { CurrentListOfSpeakersSlideService } from '../../services/current-list-of-speakers-slide.service';
+import { CurrentSpeakerChyronSlideService } from '../../services/current-speaker-chyron-slide.service';
+import { CountdownDialogComponent, CountdownDialogData } from '../countdown-dialog/countdown-dialog.component';
+import { MessageDialogComponent, MessageDialogData } from '../message-dialog/message-dialog.component';
+import { ProjectorEditDialogComponent } from '../projector-edit-dialog/projector-edit-dialog.component';
 
 /**
  * The projector detail view.
  */
 @Component({
-    selector: 'os-projector-detail',
-    templateUrl: './projector-detail.component.html',
-    styleUrls: ['./projector-detail.component.scss']
+    selector: `os-projector-detail`,
+    templateUrl: `./projector-detail.component.html`,
+    styleUrls: [`./projector-detail.component.scss`]
 })
 export class ProjectorDetailComponent extends BaseModelContextComponent implements OnInit {
     /**
@@ -82,6 +82,7 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private dialog: MatDialog,
         private projectorRepo: ProjectorRepositoryService,
         private projectionRepo: ProjectionRepositoryService,
@@ -96,7 +97,7 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
         private activeMeetingService: ActiveMeetingService,
         private meetingRepo: MeetingRepositoryService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
 
         this.subscriptions.push(
             this.countdownRepo.getViewModelListObservable().subscribe(countdowns => (this.countdowns = countdowns)),
@@ -125,11 +126,11 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
                             ids: [projectorId],
                             follow: [
                                 {
-                                    idField: 'history_projection_ids',
+                                    idField: `history_projection_ids`,
                                     follow: [
                                         {
-                                            idField: 'content_object_id',
-                                            follow: [{ idField: 'content_object_id' }]
+                                            idField: `content_object_id`,
+                                            follow: [{ idField: `content_object_id` }]
                                             // e.g. list of speakers: For the title, we need the LOS's content object
                                         }
                                     ]
@@ -153,9 +154,9 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
             {
                 viewModelCtor: ViewMeeting,
                 ids: [this.activeMeetingId],
-                follow: ['projector_countdown_ids', 'projector_message_ids']
+                follow: [`projector_countdown_ids`, `projector_message_ids`]
             },
-            'messages and countdowns'
+            `messages and countdowns`
         );
     }
 
@@ -178,7 +179,7 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
      * TODO: same with projector list entry
      */
     public async onDeleteProjectorButton(): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to delete this projector?');
+        const title = this.translate.instant(`Are you sure you want to delete this projector?`);
         if (await this.promptService.open(title, this.projector.name)) {
             this.projectorRepo.delete(this.projector);
         }
@@ -255,9 +256,9 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
 
     public createProjectorCountdown(): void {
         const countdownData: CountdownDialogData = {
-            title: '',
-            description: '',
-            duration: '',
+            title: ``,
+            description: ``,
+            duration: ``,
             count: this.countdowns.length
         };
 
@@ -268,7 +269,7 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                const defaultTime = this.durationService.stringToDuration(result.duration, 'm');
+                const defaultTime = this.durationService.stringToDuration(result.duration, `m`);
                 const countdown = {
                     meeting_id: this.activeMeetingId,
                     title: result.title,
@@ -282,7 +283,7 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
 
     public createProjectorMessage(): void {
         const messageData: MessageDialogData = {
-            message: ''
+            message: ``
         };
 
         const dialogRef = this.dialog.open(MessageDialogComponent, {

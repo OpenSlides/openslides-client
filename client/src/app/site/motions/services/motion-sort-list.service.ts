@@ -1,27 +1,26 @@
 import { Injectable } from '@angular/core';
-
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-
 import { HistoryService } from 'app/core/core-services/history.service';
 import { StorageService } from 'app/core/core-services/storage.service';
 import { Deferred } from 'app/core/promises/deferred';
-import { BaseSortListService } from 'app/core/ui-services/base-sort-list.service';
 import { OsSortingDefinition, OsSortingOption } from 'app/core/ui-services/base-sort.service';
+import { BaseSortListService } from 'app/core/ui-services/base-sort-list.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
+
 import { ViewMotion } from '../models/view-motion';
 
 /**
  * Sorting service for the motion list
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MotionSortListService extends BaseSortListService<ViewMotion> {
     /**
      * set the storage key name
      */
-    protected storageKey = 'MotionList';
+    protected storageKey = `MotionList`;
 
     /**
      * Hold the default motion sorting
@@ -37,15 +36,15 @@ export class MotionSortListService extends BaseSortListService<ViewMotion> {
      * Define the sort options
      */
     protected motionSortOptions: OsSortingOption<ViewMotion>[] = [
-        { property: 'sort_weight', label: 'Call list' },
-        { property: 'number' },
-        { property: 'title' },
-        { property: 'submitters' },
-        { property: 'category', sortFn: this.categorySortFn },
-        { property: 'block_id', label: 'Motion block' },
-        { property: 'state' },
-        { property: 'creationDate', label: _('Creation date') },
-        { property: 'lastChangeDate', label: _('Last modified') }
+        { property: `sort_weight`, label: `Call list` },
+        { property: `number` },
+        { property: `title` },
+        { property: `submitters` },
+        { property: `category`, sortFn: this.categorySortFn },
+        { property: `block_id`, label: `Motion block` },
+        { property: `state` },
+        { property: `creationDate`, label: _(`Creation date`) },
+        { property: `lastChangeDate`, label: _(`Last modified`) }
     ];
 
     /**
@@ -63,10 +62,10 @@ export class MotionSortListService extends BaseSortListService<ViewMotion> {
     ) {
         super(translate, store, historyService);
 
-        this.defaultMotionSorting = 'number';
+        this.defaultMotionSorting = `number`;
         this.defaultSortingLoaded.resolve();
 
-        this.meetingSettingsService.get('motions_default_sorting').subscribe(defSortProp => {
+        this.meetingSettingsService.get(`motions_default_sorting`).subscribe(defSortProp => {
             if (defSortProp) {
                 this.defaultMotionSorting = defSortProp;
                 this.defaultSortingLoaded.resolve();

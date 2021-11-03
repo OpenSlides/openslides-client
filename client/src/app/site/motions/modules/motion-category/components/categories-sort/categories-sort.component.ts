@@ -1,7 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-
-import { Observable } from 'rxjs';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
@@ -12,20 +10,21 @@ import { SortingTreeComponent } from 'app/shared/components/sorting-tree/sorting
 import { CanComponentDeactivate } from 'app/shared/utils/watch-for-changes.guard';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
+import { Observable } from 'rxjs';
 
 /**
  * Sort view for the call list.
  */
 @Component({
-    selector: 'os-categories-sort',
-    templateUrl: './categories-sort.component.html',
-    styleUrls: ['./categories-sort.component.scss']
+    selector: `os-categories-sort`,
+    templateUrl: `./categories-sort.component.html`,
+    styleUrls: [`./categories-sort.component.scss`]
 })
 export class CategoriesSortComponent extends BaseModelContextComponent implements CanComponentDeactivate {
     /**
      * Reference to the sorting tree.
      */
-    @ViewChild('osSortedTree', { static: true })
+    @ViewChild(`osSortedTree`, { static: true })
     private osSortTree: SortingTreeComponent<ViewMotionCategory>;
 
     /**
@@ -48,11 +47,12 @@ export class CategoriesSortComponent extends BaseModelContextComponent implement
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private activeMeetingIdService: ActiveMeetingIdService,
         private categoryRepo: MotionCategoryRepositoryService,
         private promptService: PromptService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
         this.categoriesObservable = this.categoryRepo.getViewModelListObservable();
     }
 
@@ -62,8 +62,8 @@ export class CategoriesSortComponent extends BaseModelContextComponent implement
             ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
-                    idField: 'motion_category_ids',
-                    fieldset: 'sortList'
+                    idField: `motion_category_ids`,
+                    fieldset: `sortList`
                 }
             ]
         };
@@ -104,8 +104,8 @@ export class CategoriesSortComponent extends BaseModelContextComponent implement
      */
     public async canDeactivate(): Promise<boolean> {
         if (this.hasChanged) {
-            const title = this.translate.instant('Do you really want to exit this page?');
-            const content = this.translate.instant('You made changes.');
+            const title = this.translate.instant(`Do you really want to exit this page?`);
+            const content = this.translate.instant(`You made changes.`);
             return await this.promptService.open(title, content);
         }
         return true;

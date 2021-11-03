@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { E2EImportsModule } from '../../../../../e2e-imports.module';
-import { ProjectorListEntryComponent } from './projector-list-entry.component';
 import { ProjectorModule } from '../../projector.module';
+import { ProjectorListEntryComponent } from './projector-list-entry.component';
 
-describe('ProjectorListEntryComponent', () => {
+describe(`ProjectorListEntryComponent`, () => {
     let component: ProjectorListEntryComponent;
     let fixture: ComponentFixture<ProjectorListEntryComponent>;
 
@@ -22,7 +22,7 @@ describe('ProjectorListEntryComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-
 import { MotionStateAction } from 'app/core/actions/motion-state-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { MotionState } from 'app/shared/models/motions/motion-state';
 import { ViewMotionState } from 'app/site/motions/models/view-motion-state';
+
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
@@ -19,7 +19,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
  * them to the Server.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MotionStateRepositoryService extends BaseRepositoryWithActiveMeeting<ViewMotionState, MotionState> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
@@ -27,21 +27,21 @@ export class MotionStateRepositoryService extends BaseRepositoryWithActiveMeetin
     }
 
     public getFieldsets(): Fieldsets<MotionState> {
-        const titleFields: (keyof MotionState)[] = ['name'];
-        const listFields: (keyof MotionState)[] = titleFields.concat(['css_class']);
+        const titleFields: (keyof MotionState)[] = [`name`];
+        const listFields: (keyof MotionState)[] = titleFields.concat([`css_class`]);
         const detailFields: (keyof MotionState)[] = listFields.concat([
-            'recommendation_label',
-            'restrictions',
-            'allow_support',
-            'allow_create_poll',
-            'allow_submitter_edit',
-            'set_number',
-            'show_state_extension_field',
-            'merge_amendment_into_final',
-            'show_recommendation_extension_field',
-            'weight'
+            `recommendation_label`,
+            `restrictions`,
+            `allow_support`,
+            `allow_create_poll`,
+            `allow_submitter_edit`,
+            `set_number`,
+            `show_state_extension_field`,
+            `merge_amendment_into_final`,
+            `show_recommendation_extension_field`,
+            `weight`
         ]);
-        const hasNextStateFields: (keyof MotionState)[] = ['next_state_ids'];
+        const hasNextStateFields: (keyof MotionState)[] = [`next_state_ids`];
         const blockListFields: (keyof MotionState)[] = listFields.concat(hasNextStateFields);
         return {
             [DEFAULT_FIELDSET]: detailFields,
@@ -54,7 +54,7 @@ export class MotionStateRepositoryService extends BaseRepositoryWithActiveMeetin
 
     public getTitle = (viewMotionState: ViewMotionState) => viewMotionState.name;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Workflows' : 'Workflow');
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Workflows` : `Workflow`);
 
     public async create(model: Partial<ViewMotionState>): Promise<Identifiable> {
         const payload: MotionStateAction.CreatePayload = {

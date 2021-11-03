@@ -1,13 +1,13 @@
 import { AssignmentsModule } from './assignments.module';
 
-describe('AssignmentsModule', () => {
+describe(`AssignmentsModule`, () => {
     let assignmentsModule: AssignmentsModule;
 
     beforeEach(() => {
         assignmentsModule = new AssignmentsModule();
     });
 
-    it('should create an instance', () => {
+    it(`should create an instance`, () => {
         expect(assignmentsModule).toBeTruthy();
     });
 });

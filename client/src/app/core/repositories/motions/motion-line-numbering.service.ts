@@ -1,8 +1,5 @@
 import { Injectable } from '@angular/core';
-
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
-
 import { DiffLinesInParagraph, DiffService } from 'app/core/ui-services/diff.service';
 import { LineNumberedString, LinenumberingService, LineNumberRange } from 'app/core/ui-services/linenumbering.service';
 import { ViewUnifiedChange } from 'app/shared/models/motions/view-unified-change';
@@ -11,6 +8,8 @@ import { ViewMotionAmendedParagraph } from 'app/site/motions/models/view-motion-
 import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
 import { ViewMotionStatuteParagraph } from 'app/site/motions/models/view-motion-statute-paragraph';
 import { ChangeRecoMode } from 'app/site/motions/motions.constants';
+import { Subscription } from 'rxjs';
+
 import { MotionChangeRecommendationRepositoryService } from './motion-change-recommendation-repository.service';
 
 /**
@@ -39,7 +38,7 @@ export interface ParagraphToChoose {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MotionLineNumberingService {
     private amendmentChangeRecoMap: { [amendmentId: string]: ViewMotionChangeRecommendation[] } = {};
@@ -202,9 +201,9 @@ export class MotionLineNumberingService {
 
             if (baseParagraphs[paraNo] === undefined) {
                 const msg =
-                    'Inconsistent data. An amendment is probably referring to a non-existant line number. ' +
-                    'You can back up its content when editing it and delete it afterwards.';
-                return '<em style="color: red; font-weight: bold;">' + msg + '</em>';
+                    `Inconsistent data. An amendment is probably referring to a non-existant line number. ` +
+                    `You can back up its content when editing it and delete it afterwards.`;
+                return `<em style="color: red; font-weight: bold;">` + msg + `</em>`;
             }
 
             if (amendment.amendment_paragraph(paraNo)) {
@@ -273,7 +272,7 @@ export class MotionLineNumberingService {
             .map((newText: string, paraNo: number): DiffLinesInParagraph => {
                 if (baseParagraphs[paraNo] === undefined) {
                     throw new Error(
-                        'Inconsistent data. An amendment is probably referring to a non-existent line number.'
+                        `Inconsistent data. An amendment is probably referring to a non-existent line number.`
                     );
                 } else if (newText !== null) {
                     return this.diffService.getAmendmentParagraphsLines(
@@ -298,8 +297,8 @@ export class MotionLineNumberingService {
                         diffLineFrom: paragraph_line_range.to,
                         diffLineTo: paragraph_line_range.to,
                         textPre: baseParagraphs[paraNo],
-                        text: '',
-                        textPost: ''
+                        text: ``,
+                        textPost: ``
                     } as DiffLinesInParagraph;
                 } else {
                     return diffLines;
@@ -310,13 +309,13 @@ export class MotionLineNumberingService {
 
     public getAmendmentParagraphLinesTitle(paragraph: DiffLinesInParagraph): string {
         if (paragraph.diffLineTo === paragraph.diffLineFrom + 1) {
-            return this.translate.instant('Line') + ' ' + paragraph.diffLineFrom.toString(10);
+            return this.translate.instant(`Line`) + ` ` + paragraph.diffLineFrom.toString(10);
         } else {
             return (
-                this.translate.instant('Line') +
-                ' ' +
+                this.translate.instant(`Line`) +
+                ` ` +
                 paragraph.diffLineFrom.toString(10) +
-                ' - ' +
+                ` - ` +
                 (paragraph.diffLineTo - 1).toString(10)
             );
         }
@@ -350,7 +349,7 @@ export class MotionLineNumberingService {
 
                 if (baseParagraphs[paragraphNumber] === undefined) {
                     console.error(
-                        'Inconsistent data. An amendment is probably referring to a non-existent line number.'
+                        `Inconsistent data. An amendment is probably referring to a non-existent line number.`
                     );
                     return null;
                 }
@@ -393,7 +392,7 @@ export class MotionLineNumberingService {
 
         return baseParagraphs.map((origText: string, paraNo: number): string => {
             if (origText === undefined) {
-                throw new Error('Inconsistent data. An amendment is probably referring to a non-existent line number.');
+                throw new Error(`Inconsistent data. An amendment is probably referring to a non-existent line number.`);
             }
 
             const newText = amendment.amendment_paragraph(paraNo);
@@ -426,7 +425,7 @@ export class MotionLineNumberingService {
                 return this.extractAffectedParagraphs(diffedParagraph, index);
             });
         } else {
-            throw new Error('getDiffedParagraphToChoose: given amendment has no parent');
+            throw new Error(`getDiffedParagraphToChoose: given amendment has no parent`);
         }
     }
 

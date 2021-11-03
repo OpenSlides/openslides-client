@@ -1,24 +1,24 @@
 import { NgModule } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
-
 import { Permission } from 'app/core/core-services/permission';
+
 import { ErrorComponent } from './components/error/error.component';
 import { InfoComponent } from './components/info/info.component';
 import { StartComponent } from './components/start/start.component';
 
 const routes: Route[] = [
     {
-        path: '',
+        path: ``,
         component: StartComponent,
-        pathMatch: 'full',
+        pathMatch: `full`,
         data: { basePerm: Permission.meetingCanSeeFrontpage }
     },
     {
-        path: 'info',
+        path: `info`,
         component: InfoComponent
     },
     {
-        path: 'error',
+        path: `error`,
         component: ErrorComponent
     }
 ];

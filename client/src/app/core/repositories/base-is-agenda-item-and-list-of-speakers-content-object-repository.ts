@@ -1,10 +1,11 @@
-import { AgendaItemRepositoryService, AgendaListTitle } from './agenda/agenda-item-repository.service';
 import { BaseModel, ModelConstructor } from 'app/shared/models/base/base-model';
 import { HasAgendaItemId } from 'app/shared/models/base/has-agenda-item-id';
 import { HasListOfSpeakersId } from 'app/shared/models/base/has-list-of-speakers-id';
 import { HasAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { HasListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { BaseViewModel } from 'app/site/base/base-view-model';
+
+import { AgendaItemRepositoryService, AgendaListTitle } from './agenda/agenda-item-repository.service';
 import {
     IBaseIsAgendaItemContentObjectRepository,
     isBaseIsAgendaItemContentObjectRepository
@@ -45,13 +46,13 @@ export abstract class BaseIsAgendaItemAndListOfSpeakersContentObjectRepository<
     public getAgendaListTitle(viewModel: V): AgendaListTitle {
         // Return the agenda title with the model's verbose name appended
         const numberPrefix = this.agendaItemRepo.getItemNumberPrefix(viewModel);
-        const title = numberPrefix + this.getTitle(viewModel) + ' (' + this.getVerboseName() + ')';
+        const title = numberPrefix + this.getTitle(viewModel) + ` (` + this.getVerboseName() + `)`;
         return { title };
     }
 
     public getAgendaSlideTitle(viewModel: V): string {
         const numberPrefix =
-            viewModel.agenda_item && viewModel.agenda_item.item_number ? `${viewModel.agenda_item.item_number} · ` : '';
+            viewModel.agenda_item && viewModel.agenda_item.item_number ? `${viewModel.agenda_item.item_number} · ` : ``;
         return numberPrefix + this.getTitle(viewModel);
     }
 

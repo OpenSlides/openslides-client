@@ -1,11 +1,9 @@
 import { Component, Inject, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
-import { Observable } from 'rxjs';
-
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Displayable } from 'app/site/base/displayable';
+import { Observable } from 'rxjs';
 
 type Choice = Displayable & Identifiable;
 
@@ -58,9 +56,9 @@ export type ChoiceAnswer = undefined | ChoiceDialogResult;
  *
  */
 @Component({
-    selector: 'os-choice-dialog',
-    templateUrl: './choice-dialog.component.html',
-    styleUrls: ['./choice-dialog.component.scss'],
+    selector: `os-choice-dialog`,
+    templateUrl: `./choice-dialog.component.html`,
+    styleUrls: [`./choice-dialog.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
 export class ChoiceDialogComponent {
@@ -82,8 +80,8 @@ export class ChoiceDialogComponent {
      */
     public get hasSelection(): boolean {
         if (this.data && this.data.choices) {
-            if (this.selectForm.get('select').value) {
-                return !!this.selectForm.get('select').value || !!this.selectForm.get('select').value.length;
+            if (this.selectForm.get(`select`).value) {
+                return !!this.selectForm.get(`select`).value || !!this.selectForm.get(`select`).value.length;
             } else {
                 return false;
             }
@@ -115,7 +113,7 @@ export class ChoiceDialogComponent {
             action = this.data.clearChoiceOption;
         }
         if (ok) {
-            const resultValue = this.selectForm.get('select').value;
+            const resultValue = this.selectForm.get(`select`).value;
             this.dialogRef.close({
                 action: action ? action : null,
                 items: resultValue

@@ -39,6 +39,9 @@ msgstr ""
 msgid "A name is required"
 msgstr ""
 
+msgid "A new update is available!"
+msgstr ""
+
 msgid "A password is required"
 msgstr ""
 
@@ -164,10 +167,19 @@ msgstr ""
 msgid "All entitled users"
 msgstr ""
 
+msgid "All lists of speakers will be cleared."
+msgstr ""
+
 msgid "All other fields are optional and may be empty."
 msgstr ""
 
+msgid "All topics will be deleted and won't be accessible afterwards."
+msgstr ""
+
 msgid "All valid ballots"
+msgstr ""
+
+msgid "All votes will be lost."
 msgstr ""
 
 msgid "All your changes are saved immediately."
@@ -229,6 +241,9 @@ msgstr ""
 msgid "Amount of votes"
 msgstr ""
 
+msgid "An email with a password reset link was send!"
+msgstr ""
+
 msgid "An unknown error occurred."
 msgstr ""
 
@@ -268,19 +283,154 @@ msgstr ""
 msgid "Are you sure you want to activate this meeting?"
 msgstr ""
 
+msgid "Are you sure you want to anonymize all votes? This cannot be undone."
+msgstr ""
+
 msgid "Are you sure you want to archive this meeting?"
+msgstr ""
+
+msgid "Are you sure you want to clear all speakers of all lists?"
+msgstr ""
+
+msgid "Are you sure you want to delete all selected elections?"
+msgstr ""
+
+msgid "Are you sure you want to delete all selected files and folders?"
 msgstr ""
 
 msgid "Are you sure you want to delete all selected motions?"
 msgstr ""
 
+msgid "Are you sure you want to delete all selected participants?"
+msgstr ""
+
+msgid "Are you sure you want to delete all speakers from this list of speakers?"
+msgstr ""
+
+msgid "Are you sure you want to delete the print template?"
+msgstr ""
+
+msgid "Are you sure you want to delete these accounts?"
+msgstr ""
+
+msgid "Are you sure you want to delete this account?"
+msgstr ""
+
+msgid "Are you sure you want to delete this category and all subcategories?"
+msgstr ""
+
+msgid "Are you sure you want to delete this change recommendation?"
+msgstr ""
+
+msgid "Are you sure you want to delete this comment field?"
+msgstr ""
+
+msgid "Are you sure you want to delete this committee?"
+msgstr ""
+
+msgid "Are you sure you want to delete this election?"
+msgstr ""
+
+msgid "Are you sure you want to delete this entry?"
+msgstr ""
+
+msgid "Are you sure you want to delete this file?"
+msgstr ""
+
+msgid "Are you sure you want to delete this group?"
+msgstr ""
+
 msgid "Are you sure you want to delete this meeting?"
+msgstr ""
+
+msgid "Are you sure you want to delete this motion block?"
+msgstr ""
+
+msgid "Are you sure you want to delete this motion?"
+msgstr ""
+
+msgid "Are you sure you want to delete this projector?"
+msgstr ""
+
+msgid "Are you sure you want to delete this statute paragraph?"
+msgstr ""
+
+msgid "Are you sure you want to delete this tag?"
+msgstr ""
+
+msgid "Are you sure you want to delete this topic?"
+msgstr ""
+
+msgid "Are you sure you want to delete this vote?"
+msgstr ""
+
+msgid "Are you sure you want to delete this workflow?"
+msgstr ""
+
+msgid "Are you sure you want to discard this amendment?"
 msgstr ""
 
 msgid "Are you sure you want to duplicate this meeting?"
 msgstr ""
 
+msgid ""
+"Are you sure you want to generate new passwords for all selected "
+"participants?"
+msgstr ""
+
+msgid "Are you sure you want to number all agenda items?"
+msgstr ""
+
+msgid ""
+"Are you sure you want to override the state of all motions of this motion "
+"block?"
+msgstr ""
+
+msgid "Are you sure you want to remove all selected items from the agenda?"
+msgstr ""
+
+msgid "Are you sure you want to remove this entry from the agenda?"
+msgstr ""
+
+msgid "Are you sure you want to remove this motion from motion block?"
+msgstr ""
+
+msgid "Are you sure you want to remove this speaker from the list of speakers?"
+msgstr ""
+
+msgid "Are you sure you want to remove yourself from this list of speakers?"
+msgstr ""
+
+msgid "Are you sure you want to renumber all motions of this category?"
+msgstr ""
+
+msgid "Are you sure you want to reset all options to factory defaults?"
+msgstr ""
+
+msgid ""
+"Are you sure you want to reset all options to factory defaults? All changes "
+"of this settings group will be lost!"
+msgstr ""
+
+msgid "Are you sure you want to reset all passwords to the default ones?"
+msgstr ""
+
+msgid "Are you sure you want to reset this vote?"
+msgstr ""
+
+msgid "Are you sure you want to send an invitation email to the user?"
+msgstr ""
+
+msgid "Are you sure you want to send emails to all selected participants?"
+msgstr ""
+
+msgid "Are you sure you want to stop this voting?"
+msgstr ""
+
 msgid "Are you sure you want to submit a point of order?"
+msgstr ""
+
+msgid "Are you sure, you want to delete all selected committees?"
 msgstr ""
 
 msgid "As of"
@@ -837,7 +987,13 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
+msgid "Delete countdown"
+msgstr ""
+
 msgid "Delete final print template"
+msgstr ""
+
+msgid "Delete message"
 msgstr ""
 
 msgid "Delete projector"
@@ -894,6 +1050,15 @@ msgstr ""
 msgid "Do not set number"
 msgstr ""
 
+msgid "Do you really want to exit this page?"
+msgstr ""
+
+msgid "Do you really want to go ahead?"
+msgstr ""
+
+msgid "Do you really want to save your changes?"
+msgstr ""
+
 msgid "Does not have notes"
 msgstr ""
 
@@ -922,6 +1087,9 @@ msgid "Duration"
 msgstr ""
 
 msgid "Duration of all requests to speak"
+msgstr ""
+
+msgid "Duration of requests to speak"
 msgstr ""
 
 msgid ""
@@ -1072,6 +1240,9 @@ msgstr ""
 msgid "Error in form field."
 msgstr ""
 
+msgid "Estimated end"
+msgstr ""
+
 msgid "Event location"
 msgstr ""
 
@@ -1122,6 +1293,9 @@ msgstr ""
 msgid "Favorites"
 msgstr ""
 
+msgid "Filename"
+msgstr ""
+
 msgid "Files"
 msgstr ""
 
@@ -1147,6 +1321,9 @@ msgid "Follow recommendation"
 msgstr ""
 
 msgid "Follow recommendations for all motions"
+msgstr ""
+
+msgid "Following users are currently editing this motion:"
 msgstr ""
 
 msgid "Foreground color"
@@ -1337,10 +1514,19 @@ msgstr ""
 msgid "Inconsistent data."
 msgstr ""
 
+msgid "Information"
+msgstr ""
+
 msgid "Initial password"
 msgstr ""
 
 msgid "Insert after"
+msgstr ""
+
+msgid "Insert before"
+msgstr ""
+
+msgid "Insert behind"
 msgstr ""
 
 msgid "Insert participants here"
@@ -1373,7 +1559,13 @@ msgstr ""
 msgid "Is amendment"
 msgstr ""
 
+msgid "Is candidate"
+msgstr ""
+
 msgid "Is favorite"
+msgstr ""
+
+msgid "Is manager"
 msgstr ""
 
 msgid "Is no amendment and has no amendments"
@@ -1395,6 +1587,12 @@ msgid "Is not present"
 msgstr ""
 
 msgid "Is present"
+msgstr ""
+
+msgid "Is speaker"
+msgstr ""
+
+msgid "Is submitter"
 msgstr ""
 
 msgid "Item number"
@@ -1613,6 +1811,9 @@ msgstr ""
 msgid "Move into directory"
 msgstr ""
 
+msgid "Move selected items ..."
+msgstr ""
+
 msgid "Move to agenda item"
 msgstr ""
 
@@ -1620,6 +1821,9 @@ msgid "Multiselect"
 msgstr ""
 
 msgid "My account"
+msgstr ""
+
+msgid "My meetings"
 msgstr ""
 
 msgid "My profile"
@@ -1691,6 +1895,9 @@ msgstr ""
 msgid "New password"
 msgstr ""
 
+msgid "New state"
+msgstr ""
+
 msgid "New statute paragraph"
 msgstr ""
 
@@ -1745,6 +1952,9 @@ msgstr ""
 msgid "No delegation of vote"
 msgstr ""
 
+msgid "No email sent"
+msgstr ""
+
 msgid "No encryption"
 msgstr ""
 
@@ -1793,6 +2003,14 @@ msgstr ""
 msgid "Not allowed in demo mode"
 msgstr ""
 
+msgid "Note, that the default password will be changed to the new generated one."
+msgstr ""
+
+msgid ""
+"Note: Your own password was not changed. Please use the password change "
+"dialog instead."
+msgstr ""
+
 msgid "Notes"
 msgstr ""
 
@@ -1832,6 +2050,9 @@ msgstr ""
 msgid "Number of persons to be elected"
 msgstr ""
 
+msgid "Number of requests to speak"
+msgstr ""
+
 msgid "Number of the next speakers to be shown on the projector"
 msgstr ""
 
@@ -1854,6 +2075,9 @@ msgid "OK"
 msgstr ""
 
 msgid "Offline mode"
+msgstr ""
+
+msgid "Ok"
 msgstr ""
 
 msgid "Old password"
@@ -2330,6 +2554,9 @@ msgstr ""
 msgid "Sender name"
 msgstr ""
 
+msgid "Sending an invitation email"
+msgstr ""
+
 msgid "Separator used for all CSV exports and examples"
 msgstr ""
 
@@ -2381,6 +2608,9 @@ msgstr ""
 msgid "Set natural person ..."
 msgstr ""
 
+msgid "Set or remove motion forwarding from the selected committees to:"
+msgstr ""
+
 msgid "Set presence ..."
 msgstr ""
 
@@ -2391,6 +2621,9 @@ msgid "Set recommendation"
 msgstr ""
 
 msgid "Set status"
+msgstr ""
+
+msgid "Set status for selected participants:"
 msgstr ""
 
 msgid "Set workflow"
@@ -2603,6 +2836,12 @@ msgstr ""
 msgid "Statute paragraphs"
 msgstr ""
 
+msgid "Stop"
+msgstr ""
+
+msgid "Stop & publish"
+msgstr ""
+
 msgid "Stop counting"
 msgstr ""
 
@@ -2613,6 +2852,9 @@ msgid "Structure level"
 msgstr ""
 
 msgid "Subcategory"
+msgstr ""
+
+msgid "Submit selection now?"
 msgstr ""
 
 msgid "Submit vote now"
@@ -2690,6 +2932,9 @@ msgstr ""
 msgid "The file seems to have some ommitted columns. They will be considered empty."
 msgstr ""
 
+msgid "The link is broken. Please contact your system administrator."
+msgstr ""
+
 msgid "The list of speakers is closed."
 msgstr ""
 
@@ -2742,6 +2987,11 @@ msgstr ""
 msgid "Thereof point of orders"
 msgstr ""
 
+msgid ""
+"This account is not linked as candidate, submitter or speaker in any "
+"meeting and is not manager of any committee"
+msgstr ""
+
 msgid "This ballot contains deleted users."
 msgstr ""
 
@@ -2760,10 +3010,21 @@ msgstr ""
 msgid "This meeting is archived"
 msgstr ""
 
+msgid "This member has relations to meetings or committees"
+msgstr ""
+
 msgid "This paragraph does not exist in the main motion anymore:"
 msgstr ""
 
 msgid "This prefix will be set if you run the automatic agenda numbering."
+msgstr ""
+
+msgid ""
+"This will add or remove the following committees for all selected "
+"participants:"
+msgstr ""
+
+msgid "This will add or remove the following groups for all selected participants:"
 msgstr ""
 
 msgid "This will add or remove the following submitters for all selected motions:"
@@ -2778,6 +3039,9 @@ msgstr ""
 msgid ""
 "This will move all selected motions under or after the following motion in "
 "the call list:"
+msgstr ""
+
+msgid "This will reset all made changes and sort the call list."
 msgstr ""
 
 msgid "This will set the favorite status for all selected motions:"
@@ -2877,6 +3141,9 @@ msgstr ""
 msgid "Username or password is not correct."
 msgstr ""
 
+msgid "Using OpenSlides over HTTP is not supported. Enable HTTPS to continue."
+msgstr ""
+
 msgid "Valid votes"
 msgstr ""
 
@@ -2949,6 +3216,12 @@ msgstr ""
 msgid "WLAN password"
 msgstr ""
 
+msgid ""
+"Warning: Amendments exist for this motion. Editing this text will likely "
+"impact them negatively. Particularily, amendments might become unusable if "
+"the paragraph they affect is deleted."
+msgstr ""
+
 msgid "Web interface header logo"
 msgstr ""
 
@@ -2993,6 +3266,9 @@ msgid "Yes"
 msgstr ""
 
 msgid "Yes per candidate"
+msgstr ""
+
+msgid "Yes, delete"
 msgstr ""
 
 msgid "Yes/No"
@@ -3096,7 +3372,13 @@ msgstr ""
 msgid "You have to fill this field."
 msgstr ""
 
+msgid "You made changes."
+msgstr ""
+
 msgid "You override the personally set password!"
+msgstr ""
+
+msgid "You reached the maximum amount of votes. Deselect somebody first."
 msgstr ""
 
 msgid "Your browser"
@@ -3105,10 +3387,16 @@ msgstr ""
 msgid "Your browser is not supported by OpenSlides!"
 msgstr ""
 
+msgid "Your decision cannot be changed afterwards."
+msgstr ""
+
 msgid "Your device has no microphone"
 msgstr ""
 
 msgid "Your input does not match the following structure: \"hh:mm\""
+msgstr ""
+
+msgid "Your password was resetted successfully!"
 msgstr ""
 
 msgid "Your voting right was delegated to another person."
@@ -3189,6 +3477,9 @@ msgstr ""
 msgid "e.g. for online meetings"
 msgstr ""
 
+msgid "emails"
+msgstr ""
+
 msgid "ended"
 msgstr ""
 
@@ -3214,6 +3505,9 @@ msgid "green"
 msgstr ""
 
 msgid "grey"
+msgstr ""
+
+msgid "has saved his work on this motion."
 msgstr ""
 
 msgid "hidden"

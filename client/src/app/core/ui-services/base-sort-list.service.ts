@@ -1,10 +1,10 @@
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
-import { BaseSortService, OsSortingDefinition, OsSortingOption } from './base-sort.service';
 import { BaseViewModel } from '../../site/base/base-view-model';
 import { HistoryService } from '../core-services/history.service';
 import { StorageService } from '../core-services/storage.service';
+import { BaseSortService, OsSortingDefinition, OsSortingOption } from './base-sort.service';
 
 /**
  * Base class for generic sorting purposes
@@ -139,7 +139,7 @@ export abstract class BaseSortListService<V extends BaseViewModel> extends BaseS
             if (this.historyService.isInHistoryMode) {
                 this.sortDefinition = null;
             } else {
-                this.sortDefinition = await this.store.get<OsSortingDefinition<V> | null>('sorting_' + this.storageKey);
+                this.sortDefinition = await this.store.get<OsSortingDefinition<V> | null>(`sorting_` + this.storageKey);
             }
 
             if (this.sortDefinition && this.sortDefinition.sortProperty) {
@@ -177,9 +177,9 @@ export abstract class BaseSortListService<V extends BaseViewModel> extends BaseS
     public getSortIcon(option: OsSortingOption<V>): string | null {
         if (this.sortDefinition) {
             if (this.sortProperty && this.sortProperty !== option.property) {
-                return '';
+                return ``;
             }
-            return this.ascending ? 'arrow_upward' : 'arrow_downward';
+            return this.ascending ? `arrow_upward` : `arrow_downward`;
         } else {
             return null;
         }
@@ -205,7 +205,7 @@ export abstract class BaseSortListService<V extends BaseViewModel> extends BaseS
     private updateSortDefinitions(): void {
         this.updateSortedData();
         if (!this.historyService.isInHistoryMode) {
-            this.store.set('sorting_' + this.storageKey, this.sortDefinition);
+            this.store.set(`sorting_` + this.storageKey, this.sortDefinition);
         }
     }
 

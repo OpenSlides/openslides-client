@@ -8,15 +8,15 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
-import { auditTime } from 'rxjs/operators';
-
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ProjectorComponent } from 'app/shared/components/projector/projector.component';
 import { Projector } from 'app/shared/models/projector/projector';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { auditTime } from 'rxjs/operators';
+
 import { ViewProjector } from '../../models/view-projector';
 
 /**
@@ -24,9 +24,9 @@ import { ViewProjector } from '../../models/view-projector';
  * Shows a preview
  */
 @Component({
-    selector: 'os-projector-edit-dialog',
-    templateUrl: './projector-edit-dialog.component.html',
-    styleUrls: ['./projector-edit-dialog.component.scss'],
+    selector: `os-projector-edit-dialog`,
+    templateUrl: `./projector-edit-dialog.component.html`,
+    styleUrls: [`./projector-edit-dialog.component.scss`],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -35,13 +35,13 @@ export class ProjectorEditDialogComponent extends BaseComponent implements OnIni
      * import the projector as view child, to determine when to update
      * the preview.
      */
-    @ViewChild('preview')
+    @ViewChild(`preview`)
     public preview: ProjectorComponent;
 
     /**
      * aspect ratios
      */
-    public defaultAspectRatio: string[] = ['4:3', '16:9', '16:10'];
+    public defaultAspectRatio: string[] = [`4:3`, `16:9`, `16:10`];
 
     /**
      * The update form. Will be refreahed for each projector. Just one update
@@ -77,17 +77,18 @@ export class ProjectorEditDialogComponent extends BaseComponent implements OnIni
     /**
      * regular expression to check for aspect ratio strings
      */
-    private aspectRatioRe = RegExp('[1-9]+[0-9]*:[1-9]+[0-9]*');
+    private aspectRatioRe = RegExp(`[1-9]+[0-9]*:[1-9]+[0-9]*`);
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         formBuilder: FormBuilder,
         @Inject(MAT_DIALOG_DATA) public projector: ViewProjector,
         private dialogRef: MatDialogRef<ProjectorEditDialogComponent>,
         private repo: ProjectorRepositoryService,
         private cd: ChangeDetectorRef
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
 
         if (projector) {
             this.previewProjector = new Projector(projector.getModel());
@@ -98,16 +99,16 @@ export class ProjectorEditDialogComponent extends BaseComponent implements OnIni
         }
 
         this.updateForm = formBuilder.group({
-            name: ['', Validators.required],
-            aspectRatio: ['', [Validators.required, Validators.pattern(this.aspectRatioRe)]],
+            name: [``, Validators.required],
+            aspectRatio: [``, [Validators.required, Validators.pattern(this.aspectRatioRe)]],
             width: [0, Validators.required],
-            color: ['', Validators.required],
-            background_color: ['', Validators.required],
-            header_background_color: ['', Validators.required],
-            header_font_color: ['', Validators.required],
-            header_h1_color: ['', Validators.required],
-            chyron_background_color: ['', Validators.required],
-            chyron_font_color: ['', Validators.required],
+            color: [``, Validators.required],
+            background_color: [``, Validators.required],
+            header_background_color: [``, Validators.required],
+            header_font_color: [``, Validators.required],
+            header_h1_color: [``, Validators.required],
+            chyron_background_color: [``, Validators.required],
+            chyron_font_color: [``, Validators.required],
             show_header_footer: [],
             show_title: [],
             show_logo: [],
@@ -184,17 +185,17 @@ export class ProjectorEditDialogComponent extends BaseComponent implements OnIni
      * Sets and validates custom aspect ratio values
      */
     public setCustomAspectRatio(): void {
-        const formRatio = this.updateForm.get('aspectRatio').value;
+        const formRatio = this.updateForm.get(`aspectRatio`).value;
         const validatedRatio = formRatio.match(this.aspectRatioRe);
         if (validatedRatio && validatedRatio[0]) {
             const ratio = validatedRatio[0];
-            this.updateForm.get('aspectRatio').setValue(ratio);
+            this.updateForm.get(`aspectRatio`).setValue(ratio);
         }
     }
 
     private fitUpdatePayload(contentForm: any): Partial<Projector> {
         const payload: Partial<Projector> = { ...contentForm };
-        const aspectRatio = payload.aspectRatio.split(':');
+        const aspectRatio = payload.aspectRatio.split(`:`);
         payload.aspect_ratio_numerator = parseInt(aspectRatio[0], 10);
         payload.aspect_ratio_denominator = parseInt(aspectRatio[1], 10);
         return payload;

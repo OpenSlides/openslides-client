@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
 import { MainMenuService } from 'app/core/core-services/main-menu.service';
 import { RoutingStateService } from 'app/core/ui-services/routing-state.service';
 import { SuperSearchService } from 'app/core/ui-services/super-search.service';
@@ -54,9 +53,9 @@ export const HEAD_BAR_HEIGHT = 50; // height of the head-bar in px.
  * ```
  */
 @Component({
-    selector: 'os-head-bar',
-    templateUrl: './head-bar.component.html',
-    styleUrls: ['./head-bar.component.scss'],
+    selector: `os-head-bar`,
+    templateUrl: `./head-bar.component.html`,
+    styleUrls: [`./head-bar.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
 export class HeadBarComponent implements OnInit {
@@ -70,13 +69,13 @@ export class HeadBarComponent implements OnInit {
      * Custom icon if necessary
      */
     @Input()
-    public mainButtonIcon = 'add_circle';
+    public mainButtonIcon = `add_circle`;
 
     /**
      * Custom text to show as "save"
      */
     @Input()
-    public saveText = 'Save';
+    public saveText = `Save`;
 
     /**
      * Determine edit mode
@@ -128,7 +127,7 @@ export class HeadBarComponent implements OnInit {
      * Has only an effect if goBack is set to false
      */
     @Input()
-    public prevUrl = '..';
+    public prevUrl = `..`;
 
     /**
      * Optional tooltip for the main action

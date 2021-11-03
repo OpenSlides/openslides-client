@@ -1,4 +1,5 @@
 import { Id } from 'app/core/definitions/key-types';
+
 import { BaseModel } from './base-model';
 import { BaseModelWithAgendaItem, isBaseModelWithAgendaItem } from './base-model-with-agenda-item';
 import { BaseModelWithListOfSpeakers, isBaseModelWithListOfSpeakers } from './base-model-with-list-of-speakers';

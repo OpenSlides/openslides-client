@@ -1,9 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { OrganizationSettingsService } from 'app/core/ui-services/organization-settings.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
@@ -14,9 +13,9 @@ import { Observable } from 'rxjs';
  * Used in login and site container.
  */
 @Component({
-    selector: 'os-legal-notice-content',
-    templateUrl: './legal-notice-content.component.html',
-    styleUrls: ['./legal-notice-content.component.scss']
+    selector: `os-legal-notice-content`,
+    templateUrl: `./legal-notice-content.component.html`,
+    styleUrls: [`./legal-notice-content.component.scss`]
 })
 export class LegalNoticeContentComponent extends BaseComponent implements OnInit {
     /**
@@ -69,7 +68,7 @@ export class LegalNoticeContentComponent extends BaseComponent implements OnInit
     /**
      * Get an observable to the version info
      */
-    public versionInfo: Observable<string> = this.httpClient.get('/assets/version.txt', { responseType: 'text' });
+    public versionInfo: Observable<string> = this.httpClient.get(`/assets/version.txt`, { responseType: `text` });
 
     private _value: string;
 
@@ -81,13 +80,14 @@ export class LegalNoticeContentComponent extends BaseComponent implements OnInit
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private orgaSettings: OrganizationSettingsService,
         private httpClient: HttpClient,
         fb: FormBuilder
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
         this.formGroup = fb.group({
-            legalNotice: ''
+            legalNotice: ``
         });
     }
 
@@ -95,13 +95,13 @@ export class LegalNoticeContentComponent extends BaseComponent implements OnInit
      * Subscribes for the legal notice text.
      */
     public ngOnInit(): void {
-        this.orgaSettings.get('legal_notice').subscribe(legalNotice => {
+        this.orgaSettings.get(`legal_notice`).subscribe(legalNotice => {
             this.legalNotice = legalNotice;
         });
 
         if (this.isEditable) {
             this.subscriptions.push(
-                this.formGroup.get('legalNotice').valueChanges.subscribe(value => (this._value = value))
+                this.formGroup.get(`legalNotice`).valueChanges.subscribe(value => (this._value = value))
             );
         }
     }

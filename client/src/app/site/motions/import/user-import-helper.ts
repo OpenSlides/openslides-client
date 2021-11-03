@@ -1,10 +1,10 @@
 import { Id } from 'app/core/definitions/key-types';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { CsvMapping } from 'app/core/ui-services/base-import.service';
-import { ViewUser } from 'app/site/users/models/view-user';
 import { User } from 'app/shared/models/users/user';
-import { ImportResolveInformation } from 'app/shared/utils/import/import-resolve-information';
 import { BaseBeforeImportHandler } from 'app/shared/utils/import/base-before-import-handler';
+import { ImportResolveInformation } from 'app/shared/utils/import/import-resolve-information';
+import { ViewUser } from 'app/site/users/models/view-user';
 
 export class UserImportHelper<Model> extends BaseBeforeImportHandler<Model, User> {
     private repo: UserRepositoryService;
@@ -40,7 +40,7 @@ export class UserImportHelper<Model> extends BaseBeforeImportHandler<Model, User
         if (!name) {
             return result;
         }
-        const usersAsStrings = name.split(',');
+        const usersAsStrings = name.split(`,`);
         for (const user of usersAsStrings) {
             const nextUser = this.repo.parseStringIntoUser(user.trim());
             const existingUsers = this.repo

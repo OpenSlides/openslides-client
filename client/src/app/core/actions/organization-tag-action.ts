@@ -1,10 +1,11 @@
 import { Identifiable } from 'app/shared/models/base/identifiable';
+
 import { HtmlColor, Id } from '../definitions/key-types';
 
 export namespace OrganizationTagAction {
-    export const CREATE = 'organization_tag.create';
-    export const UPDATE = 'organization_tag.update';
-    export const DELETE = 'organization_tag.delete';
+    export const CREATE = `organization_tag.create`;
+    export const UPDATE = `organization_tag.update`;
+    export const DELETE = `organization_tag.delete`;
 
     export interface OrganizationTagPayload {
         name: string;

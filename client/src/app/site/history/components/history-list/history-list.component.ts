@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
-
-import { Observable, Subject } from 'rxjs';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { Position } from 'app/core/core-services/history.service';
 import { HttpService } from 'app/core/core-services/http.service';
@@ -19,6 +17,7 @@ import { Motion } from 'app/shared/models/motions/motion';
 import { langToLocale } from 'app/shared/utils/lang-to-locale';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
+import { Observable, Subject } from 'rxjs';
 
 const COLLECTION = Motion.COLLECTION;
 
@@ -28,9 +27,9 @@ const COLLECTION = Motion.COLLECTION;
  * Should display all changes that have been made in OpenSlides.
  */
 @Component({
-    selector: 'os-history-list',
-    templateUrl: './history-list.component.html',
-    styleUrls: ['./history-list.component.scss']
+    selector: `os-history-list`,
+    templateUrl: `./history-list.component.html`,
+    styleUrls: [`./history-list.component.scss`]
 })
 export class HistoryListComponent extends BaseModelContextComponent implements OnInit {
     /**
@@ -59,6 +58,7 @@ export class HistoryListComponent extends BaseModelContextComponent implements O
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private viewModelStore: ViewModelStoreService,
         private router: Router,
         private http: HttpService,
@@ -67,7 +67,7 @@ export class HistoryListComponent extends BaseModelContextComponent implements O
         private activatedRoute: ActivatedRoute,
         private activeMeetingIdService: ActiveMeetingIdService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
 
         this.motionSelectForm = this.formBuilder.group({
             motion: []
@@ -95,10 +95,10 @@ export class HistoryListComponent extends BaseModelContextComponent implements O
      */
     public ngOnInit(): void {
         super.ngOnInit();
-        super.setTitle('History');
+        super.setTitle(`History`);
 
         this.dataSource.filterPredicate = (position: Position, filter: string) => {
-            filter = filter ? filter.toLowerCase() : '';
+            filter = filter ? filter.toLowerCase() : ``;
 
             if (!position) {
                 return false;
@@ -151,7 +151,7 @@ export class HistoryListComponent extends BaseModelContextComponent implements O
             ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
-                    idField: 'motion_ids'
+                    idField: `motion_ids`
                 }
             ],
             fieldset: []
@@ -163,9 +163,9 @@ export class HistoryListComponent extends BaseModelContextComponent implements O
      */
     private async queryByFqid(fqid: Fqid): Promise<void> {
         try {
-            const response = await this.http.post<[Position[]]>('/system/presenter/handle_request', [
+            const response = await this.http.post<[Position[]]>(`/system/presenter/handle_request`, [
                 {
-                    presenter: 'get_history_information',
+                    presenter: `get_history_information`,
                     data: {
                         fqid
                     }
@@ -183,7 +183,7 @@ export class HistoryListComponent extends BaseModelContextComponent implements O
      * @returns an array of strings that contains the required row definition
      */
     public getRowDef(): string[] {
-        return ['time', 'info', 'user'];
+        return [`time`, `info`, `user`];
     }
 
     /**
@@ -191,7 +191,7 @@ export class HistoryListComponent extends BaseModelContextComponent implements O
      * Serves as an entry point for the time travel routine
      */
     public async onClickRow(position: Position): Promise<void> {
-        throw new Error('TODO');
+        throw new Error(`TODO`);
         /*if (!this.operator.isMeetingAdmin) {
             return;
         }
@@ -221,8 +221,8 @@ export class HistoryListComponent extends BaseModelContextComponent implements O
      */
     public parseInformation(position: Position): string {
         return Object.keys(position.information)
-            .map(key => `${key}: ${position.information[key].join(', ')}`)
-            .join('; ');
+            .map(key => `${key}: ${position.information[key].join(`, `)}`)
+            .join(`; `);
     }
 
     /**

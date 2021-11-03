@@ -22,7 +22,7 @@ interface FontDocument extends Document {
  * Browser support might not be perfect yet.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class LoadFontService {
     public constructor(private mediaManageService: MediaManageService) {
@@ -36,27 +36,27 @@ export class LoadFontService {
      * Falls back to the normal OSFont when no custom  font was set.
      */
     private loadCustomFont(): void {
-        this.mediaManageService.getFontUrlObservable('regular').subscribe(regular => {
+        this.mediaManageService.getFontUrlObservable(`regular`).subscribe(regular => {
             if (regular) {
                 this.setCustomProjectorFont(regular, 400);
             }
         });
 
-        this.mediaManageService.getFontUrlObservable('bold').subscribe(bold => {
+        this.mediaManageService.getFontUrlObservable(`bold`).subscribe(bold => {
             if (bold) {
                 this.setCustomProjectorFont(bold, 500);
             }
         });
 
-        this.mediaManageService.getFontUrlObservable('monospace').subscribe(mono => {
+        this.mediaManageService.getFontUrlObservable(`monospace`).subscribe(mono => {
             if (mono) {
-                this.setNewFontFace('OSFont Monospace', mono);
+                this.setNewFontFace(`OSFont Monospace`, mono);
             }
         });
 
-        this.mediaManageService.getFontUrlObservable('chyron_speaker_name').subscribe(chyronFont => {
+        this.mediaManageService.getFontUrlObservable(`chyron_speaker_name`).subscribe(chyronFont => {
             if (chyronFont) {
-                this.setNewFontFace('OSFont ChyronName', chyronFont);
+                this.setNewFontFace(`OSFont ChyronName`, chyronFont);
             }
         });
     }
@@ -72,7 +72,7 @@ export class LoadFontService {
         if (!fonturl) {
             return;
         }
-        this.setNewFontFace('customProjectorFont', fonturl, weight);
+        this.setNewFontFace(`customProjectorFont`, fonturl, weight);
     }
 
     private setNewFontFace(fontName: string, fontPath: string, weight: number = 400): void {

@@ -1,21 +1,20 @@
 import { Injectable } from '@angular/core';
-
+import { MatDialog } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
+import { Meeting } from 'app/shared/models/event-management/meeting';
+import { mediumDialogSettings } from 'app/shared/utils/dialog-settings';
+import { ViewUser } from 'app/site/users/models/view-user';
 import { Observable } from 'rxjs';
 
-import { ViewUser } from 'app/site/users/models/view-user';
-import { Id } from '../definitions/key-types';
-import { SimplifiedModelRequest } from './model-request-builder.service';
-import { UserRepositoryService } from '../repositories/users/user-repository.service';
-import { OperatorService } from './operator.service';
-import { OML, CML } from './organization-permission';
-import { Presenter, PresenterService } from './presenter.service';
-import { Meeting } from 'app/shared/models/event-management/meeting';
-import { MatDialog } from '@angular/material/dialog';
 import { MemberDeleteDialogComponent } from '../../management/components/member-delete-dialog/member-delete-dialog.component';
-import { mediumDialogSettings } from 'app/shared/utils/dialog-settings';
-import { ActiveMeetingService } from './active-meeting.service';
-import { TranslateService } from '@ngx-translate/core';
+import { Id } from '../definitions/key-types';
+import { UserRepositoryService } from '../repositories/users/user-repository.service';
 import { PromptService } from '../ui-services/prompt.service';
+import { ActiveMeetingService } from './active-meeting.service';
+import { SimplifiedModelRequest } from './model-request-builder.service';
+import { OperatorService } from './operator.service';
+import { CML, OML } from './organization-permission';
+import { Presenter, PresenterService } from './presenter.service';
 
 export interface GetUsersPresenterResult {
     users: Id[];
@@ -45,7 +44,7 @@ export interface GetUserRelatedModelsPresenterResult {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MemberService {
     public constructor(
@@ -104,8 +103,8 @@ export class MemberService {
         return {
             viewModelCtor: ViewUser,
             ids: userIds,
-            fieldset: 'orgaList',
-            follow: [{ idField: 'committee_ids' }, { idField: 'is_present_in_meeting_ids' }]
+            fieldset: `orgaList`,
+            follow: [{ idField: `committee_ids` }, { idField: `is_present_in_meeting_ids` }]
         };
     }
 
@@ -138,10 +137,10 @@ export class MemberService {
     private async doRemoveFromMeeting(users: ViewUser[], meeting: Meeting): Promise<boolean> {
         const title = this.translate.instant(
             `Are you sure you want to remove ${
-                users.length === 1 ? 'this participant' : 'these participants'
+                users.length === 1 ? `this participant` : `these participants`
             } from this meeting?`
         );
-        const content = users.map(user => user.getShortName()).join(', ');
+        const content = users.map(user => user.getShortName()).join(`, `);
         if (await this.prompt.open(title, content)) {
             await this.userRepo.bulkRemoveGroupsFromUsers(users, meeting.group_ids);
             return true;

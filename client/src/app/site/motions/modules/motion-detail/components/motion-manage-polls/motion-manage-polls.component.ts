@@ -1,16 +1,16 @@
 import { Component, Input } from '@angular/core';
-
+import { TranslateService } from '@ngx-translate/core';
 import { PollDialogData } from 'app/core/ui-services/base-poll-dialog.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
-import { MotionPollDialogService } from 'app/site/motions/services/motion-poll-dialog.service';
 import { MotionPollService } from 'app/site/motions/services/motion-poll.service';
+import { MotionPollDialogService } from 'app/site/motions/services/motion-poll-dialog.service';
 
 @Component({
-    selector: 'os-motion-manage-polls',
-    templateUrl: './motion-manage-polls.component.html',
-    styleUrls: ['./motion-manage-polls.component.scss']
+    selector: `os-motion-manage-polls`,
+    templateUrl: `./motion-manage-polls.component.html`,
+    styleUrls: [`./motion-manage-polls.component.scss`]
 })
 export class MotionManagePollsComponent extends BaseComponent {
     @Input()
@@ -18,10 +18,11 @@ export class MotionManagePollsComponent extends BaseComponent {
 
     public constructor(
         componentCollector: ComponentServiceCollector,
+        translate: TranslateService,
         private motionPollService: MotionPollService,
         private pollDialog: MotionPollDialogService
     ) {
-        super(componentCollector);
+        super(componentCollector, translate);
     }
 
     public openDialog(): void {

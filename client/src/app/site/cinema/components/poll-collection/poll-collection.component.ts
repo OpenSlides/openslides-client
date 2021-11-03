@@ -1,25 +1,24 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-
-import { map } from 'rxjs/operators';
-
+import { TranslateService } from '@ngx-translate/core';
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { PollClassType } from 'app/shared/models/poll/poll-constants';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
+import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { ViewMotion } from 'app/site/motions/models/view-motion';
-import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-model';
-import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
-import { ViewMeeting } from 'app/management/models/view-meeting';
+import { ViewMotion } from 'app/site/motions/models/view-motion';
+import { map } from 'rxjs/operators';
 
 @Component({
-    selector: 'os-poll-collection',
-    templateUrl: './poll-collection.component.html',
-    styleUrls: ['./poll-collection.component.scss'],
+    selector: `os-poll-collection`,
+    templateUrl: `./poll-collection.component.html`,
+    styleUrls: [`./poll-collection.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PollCollectionComponent extends BaseModelContextComponent implements OnInit {
@@ -64,11 +63,12 @@ export class PollCollectionComponent extends BaseModelContextComponent implement
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private repo: PollRepositoryService,
         private cd: ChangeDetectorRef,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     public ngOnInit(): void {
@@ -121,15 +121,15 @@ export class PollCollectionComponent extends BaseModelContextComponent implement
             ids: [this.activeMeetingId],
             follow: [
                 {
-                    idField: 'poll_ids',
+                    idField: `poll_ids`,
                     follow: [
                         {
-                            idField: 'option_ids',
-                            follow: [{ idField: 'vote_ids' }, { idField: 'content_object_id' }]
+                            idField: `option_ids`,
+                            follow: [{ idField: `vote_ids` }, { idField: `content_object_id` }]
                         },
                         {
-                            idField: 'global_option_id',
-                            follow: [{ idField: 'vote_ids' }]
+                            idField: `global_option_id`,
+                            follow: [{ idField: `vote_ids` }]
                         }
                     ]
                 }

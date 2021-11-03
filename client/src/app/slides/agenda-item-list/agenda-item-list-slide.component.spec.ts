@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { ItemListSlideComponent } from './agenda-item-list-slide.component';
 import { E2EImportsModule } from '../../../e2e-imports.module';
+import { ItemListSlideComponent } from './agenda-item-list-slide.component';
 
-describe('ItemListSlideComponent', () => {
+describe(`ItemListSlideComponent`, () => {
     let component: ItemListSlideComponent;
     let fixture: ComponentFixture<ItemListSlideComponent>;
 
@@ -22,7 +22,7 @@ describe('ItemListSlideComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

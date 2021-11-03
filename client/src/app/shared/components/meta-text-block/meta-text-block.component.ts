@@ -1,18 +1,17 @@
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
-
-import { Subject, Subscription } from 'rxjs';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { Subject, Subscription } from 'rxjs';
 
 /**
  * Component for the motion comments view
  */
 @Component({
-    selector: 'os-meta-text-block',
-    templateUrl: './meta-text-block.component.html',
-    styleUrls: ['./meta-text-block.component.scss']
+    selector: `os-meta-text-block`,
+    templateUrl: `./meta-text-block.component.html`,
+    styleUrls: [`./meta-text-block.component.scss`]
 })
 export class MetaTextBlockComponent extends BaseComponent implements OnInit, OnDestroy {
     /**
@@ -79,10 +78,11 @@ export class MetaTextBlockComponent extends BaseComponent implements OnInit, OnD
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         public vp: ViewportService,
         private cd: ChangeDetectorRef
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     /**
