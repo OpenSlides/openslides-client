@@ -20,6 +20,8 @@ import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-
 import { ModelRequestRepository } from '../model-request-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 import { Displayable } from '../../../site/base/displayable';
+import { PresenterService } from '../../core-services/presenter.service';
+import { Meeting } from '../../../shared/models/event-management/meeting';
 
 export interface MassImportResult {
     importedTrackIds: number[];
@@ -222,7 +224,7 @@ export class UserRepositoryService
                 vote_delegated_$_to_id: { [this.activeMeetingId]: partialUser.vote_delegated_to_id },
                 vote_delegations_$_from_ids: { [this.activeMeetingId]: partialUser.vote_delegations_from_ids },
                 group_$_ids: {
-                    [this.activeMeetingId]: partialUser.group_ids?.length ? partialUser.group_ids : [defaultGroupId]
+                    [this.activeMeetingId]: partialUser.group_ids ? partialUser.group_ids : [defaultGroupId]
                 }
             };
         }
@@ -414,6 +416,10 @@ export class UserRepositoryService
         this.preventInDemo();
         const payload: UserAction.DeletePayload[] = users.map(user => ({ id: user.id }));
         return this.sendBulkActionToBackend(UserAction.DELETE, payload);
+    }
+
+    public remove(meeting: Meeting, ...users: ViewUser[]): Promise<void> {
+        return this.bulkRemoveGroupsFromUsers(users, meeting.group_ids);
     }
 
     /**

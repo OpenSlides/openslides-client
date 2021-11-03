@@ -20,6 +20,7 @@ import { UserPdfExportService } from '../../services/user-pdf-export.service';
 import { ViewGroup } from '../../models/view-group';
 import { ViewUser } from '../../models/view-user';
 import { UserService } from '../../../../core/ui-services/user.service';
+import { MemberService } from '../../../../core/core-services/member.service';
 
 /**
  * Users detail component for both new and existing users
@@ -114,7 +115,8 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
         private pollService: PollService,
         private meetingSettingsService: MeetingSettingsService,
         private activeMeetingIdService: ActiveMeetingIdService,
-        private userService: UserService
+        private userService: UserService,
+        private memberService: MemberService
     ) {
         super(componentServiceCollector);
         this.getUserByUrl();
@@ -259,10 +261,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
      * click on the delete user button
      */
     public async deleteUserButton(): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to delete this participant?');
-        const content = this.user.full_name;
-        if (await this.promptService.open(title, content)) {
-            await this.repo.delete(this.user);
+        if (await this.memberService.delete([this.user])) {
             this.goToAllUsers();
         }
     }

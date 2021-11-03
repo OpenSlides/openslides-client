@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { HttpService } from './http.service';
 import { LifecycleService } from './lifecycle.service';
+import { Presenter, PresenterService } from './presenter.service';
 
 interface ServertimeResponse {
     server_time: number;
@@ -30,7 +30,7 @@ export class ServertimeService {
      */
     private serverOffsetSubject = new BehaviorSubject<number>(0);
 
-    public constructor(private http: HttpService, private lifecycleService: LifecycleService) {
+    public constructor(private lifecycleService: LifecycleService, private presenter: PresenterService) {
         this.lifecycleService.appLoaded.subscribe(() => this.startScheduler());
     }
 
@@ -70,20 +70,12 @@ export class ServertimeService {
      */
     private async refreshServertime(): Promise<void> {
         // servertime is the time in seconds.
-        const payload = [
-            {
-                presenter: 'server_time'
-            }
-        ];
-        const servertimeResponse = await this.http.post<ServertimeResponse[]>(
-            '/system/presenter/handle_request',
-            payload
-        );
-        if (servertimeResponse?.length !== 1 || typeof servertimeResponse[0]?.server_time !== 'number') {
+        const servertimeResponse = await this.presenter.call<ServertimeResponse>(Presenter.SERVERTIME);
+        if (typeof servertimeResponse?.server_time !== 'number') {
             console.error('The returned servertime has a wrong format:', servertimeResponse);
             throw new Error();
         }
-        const servertime = servertimeResponse[0].server_time;
+        const servertime = servertimeResponse.server_time;
         this.serverOffsetSubject.next(Math.floor(Date.now() - servertime * 1000));
     }
 

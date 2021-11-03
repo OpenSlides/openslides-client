@@ -97,7 +97,7 @@
                         placeholder="{{ 'Committee manager' | translate }}"
                         [repo]="committeeRepo"
                         [transformPropagateFn]="transformPropagateFn"
-                        [transformSetFn]="transformSetFn()"
+                        [transformSetFn]="getTransformSetFn()"
                     ></os-search-repo-selector>
                 </mat-form-field>
             </div>
@@ -137,7 +137,8 @@
         <div *ngIf="user.committee_ids?.length">
             <h4>{{ 'Committee member' | translate }}</h4>
             <span *ngFor="let committee of user.committees; let last = last">
-                {{ committee.getTitle() | translate }}<span *ngIf="!last">,&nbsp;</span>
+                {{ committee.getTitle() | translate }}
+                <span *ngIf="!last">,&nbsp;</span>
             </span>
         </div>
 

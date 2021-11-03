@@ -4,9 +4,9 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
-import { HttpService } from 'app/core/core-services/http.service';
 import { Id } from 'app/core/definitions/key-types';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { PresenterService, Presenter } from '../../../../../../core/core-services/presenter.service';
 
 interface PresenterMeeting {
     id: Id;
@@ -20,7 +20,7 @@ interface ForwardingPresenter {
     meetings?: PresenterMeeting[];
 }
 
-type ForwardingPresenterResult = ForwardingPresenter[][];
+type ForwardingPresenterResult = ForwardingPresenter[];
 
 @Component({
     selector: 'os-motion-forward-dialog',
@@ -39,21 +39,14 @@ export class MotionForwardDialogComponent implements OnInit {
 
     public constructor(
         private dialogRef: MatDialogRef<MotionForwardDialogComponent, Id[]>,
-        private http: HttpService,
+        private presenter: PresenterService,
         private activeMeeting: ActiveMeetingService
     ) {}
 
     public async ngOnInit(): Promise<void> {
-        const payload = [
-            {
-                presenter: 'get_forwarding_meetings',
-                data: {
-                    meeting_id: this.activeMeeting.meetingId
-                }
-            }
-        ];
-        const result = await this.http.post<ForwardingPresenterResult>('/system/presenter/handle_request', payload);
-        this.committeesSubject.next(result[0]);
+        const payload = { meeting_id: this.activeMeeting.meetingId };
+        const result = await this.presenter.call<ForwardingPresenterResult>(Presenter.GET_FORWARDING_MEETINGS, payload);
+        this.committeesSubject.next(result);
         this.selectedMeetings = new Set(this.getDefaultMeetingsIds());
         this.initStateMap();
     }

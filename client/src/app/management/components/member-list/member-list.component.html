@@ -61,6 +61,12 @@
             </os-icon-container>
         </div>
     </div>
+    <!-- Active or not active column -->
+    <div *pblNgridCellDef="'is_active'; row as user">
+        <div>
+            <mat-label class="inactive-label" *ngIf="!user.is_active">{{ 'Inactive' | translate }}</mat-label>
+        </div>
+    </div>
     <!-- Menu column -->
     <ng-container *osOmlPerms="OML.can_manage_users">
         <div *pblNgridCellDef="'menu'; row as user" class="cell-slot fill">

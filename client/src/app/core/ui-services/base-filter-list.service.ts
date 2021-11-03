@@ -270,7 +270,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
                 }
             }
 
-            this.filterDefinitions = newDefinitions;
+            this.filterDefinitions = newDefinitions ?? []; // Prevent being null or undefined
             this.storeActiveFilters();
         }
     }

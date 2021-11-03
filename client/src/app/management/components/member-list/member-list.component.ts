@@ -12,7 +12,6 @@ import { UserRepositoryService } from 'app/core/repositories/users/user-reposito
 import { ChoiceService } from 'app/core/ui-services/choice.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { CsvExportService } from 'app/core/ui-services/csv-export.service';
-import { PromptService } from 'app/core/ui-services/prompt.service';
 import { MemberFilterService } from 'app/management/services/member-filter.service';
 import { MemberSortService } from 'app/management/services/member-sort.service';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
@@ -38,6 +37,10 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
         {
             prop: 'info',
             width: '50%'
+        },
+        {
+            prop: 'is_active',
+            width: '100px'
         }
     ];
 
@@ -48,7 +51,6 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
         private memberService: MemberService,
         private router: Router,
         private route: ActivatedRoute,
-        private promptService: PromptService,
         private choiceService: ChoiceService,
         public readonly filterService: MemberFilterService,
         public readonly sortService: MemberSortService,
@@ -74,14 +76,7 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
     }
 
     public async deleteSelected(members: ViewUser[] = this.selectedRows): Promise<void> {
-        const title = this.translate.instant(
-            members.length === 1
-                ? 'Are you sure you want to delete this member?'
-                : 'Are you sure you want to delete all selected participants?'
-        );
-        if (await this.promptService.open(title)) {
-            this.repo.delete(...members).catch(this.raiseError);
-        }
+        await this.memberService.delete(members);
     }
 
     public async assignCommitteesToUsers(): Promise<void> {

@@ -38,6 +38,7 @@ $pbl-height: var(--pbl-height);
 
         .pbl-ngrid-row {
             height: $pbl-height;
+            user-select: none;
         }
 
         .pbl-ngrid-row:last-of-type {

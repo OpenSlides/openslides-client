@@ -7,10 +7,10 @@ import { Id } from 'app/core/definitions/key-types';
 import { CommitteeRepositoryService } from 'app/core/repositories/management/committee-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { PromptService } from 'app/core/ui-services/prompt.service';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { ViewCommittee } from '../../models/view-committee';
+import { MemberService } from '../../../core/core-services/member.service';
 
 @Component({
     selector: 'os-member-edit',
@@ -47,8 +47,8 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
         private router: Router,
         private route: ActivatedRoute,
         private repo: UserRepositoryService,
-        private promptService: PromptService,
-        private operator: OperatorService
+        private operator: OperatorService,
+        private memberService: MemberService
     ) {
         super(componentServiceCollector);
     }
@@ -62,7 +62,7 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
         return (value || []).mapToObject(id => ({ [id]: CML.can_manage }));
     }
 
-    public transformSetFn(): (value?: string[]) => any {
+    public getTransformSetFn(): (value?: string[]) => any {
         return (value?: string[]) => {
             const managementIds = [];
             for (const strId of value || []) {
@@ -113,10 +113,7 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
      * click on the delete user button
      */
     public async deleteUser(): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to delete this member?');
-        const content = this.user.full_name;
-        if (await this.promptService.open(title, content)) {
-            await this.repo.delete(this.user);
+        if (await this.memberService.delete([this.user])) {
             this.router.navigate(['./accounts/']);
         }
     }
