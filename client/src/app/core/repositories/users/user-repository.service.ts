@@ -47,6 +47,14 @@ export interface ShortNameInformation {
     first_name?: string;
     last_name?: string;
 }
+
+interface EmailSentResult {
+    sent: boolean;
+    recipient_user_id: Id;
+    recipient_meeting_id: Id;
+    recipient: string; // email-address
+}
+
 interface LevelAndNumberInformation {
     structure_level: (meetingId?: Id) => string;
     number: (meetingId?: Id) => string;
@@ -482,65 +490,55 @@ export class UserRepositoryService
      *
      * @param users All affected users
      */
-    public async bulkSendInvitationEmail(users: ViewUser[]): Promise<string> {
+    public async sendInvitationEmails(users: ViewUser[], meetingIds: Id[] = [this.activeMeetingId]): Promise<string> {
         this.preventInDemo();
-        /*const user_ids = users.map(user => user.id);
-        const users_email_subject = this.meetingSettingsService.instant('users_email_subject');
-        const users_email_body = this.meetingSettingsService.instant('users_email_body');
-        const subject = this.translate.instant(users_email_subject);
-        const message = this.translate.instant(users_email_body);*/
 
-        throw new Error('TODO');
-        /* const response = await this.httpService.post<{ count: number; no_email_ids: number[] }>(
-            '/rest/users/user/mass_invite_email/',
-            {
-                user_ids: user_ids,
-                subject: subject,
-                message: message
-            }
+        const payload: UserAction.SendInvitationEmailPayload[] = users.flatMap(user =>
+            meetingIds.map(meeting_id => ({ id: user.id, meeting_id }))
         );
+        const response = await this.actions.sendBulkRequest<EmailSentResult>(UserAction.SEND_INVITATION_EMAIL, payload);
 
-        const numEmails = response.count;
-        const noEmailIds = response.no_email_ids;
-        let msg;
+        const numEmails = response.filter(email => email.sent).length;
+        const noEmails = response.filter(email => !email.sent);
+        let responseMessage: string;
         if (numEmails === 0) {
-            msg = this.translate.instant('No emails were send.');
+            responseMessage = this.translate.instant('No emails were send.');
         } else if (numEmails === 1) {
-            msg = this.translate.instant('One email was send sucessfully.');
+            responseMessage = this.translate.instant('One email was send sucessfully.');
         } else {
-            msg = this.translate.instant('%num% emails were send sucessfully.');
-            msg = msg.replace('%num%', numEmails);
+            responseMessage = this.translate.instant('%num% emails were send sucessfully.');
+            responseMessage = responseMessage.replace('%num%', numEmails.toString());
         }
 
-        if (noEmailIds.length) {
-            msg += ' ';
+        if (noEmails.length) {
+            responseMessage += ' ';
 
-            if (noEmailIds.length === 1) {
-                msg += this.translate.instant(
+            if (noEmails.length === 1) {
+                responseMessage += this.translate.instant(
                     'The user %user% has no email, so the invitation email could not be send.'
                 );
             } else {
-                msg += this.translate.instant(
+                responseMessage += this.translate.instant(
                     'The users %user% have no email, so the invitation emails could not be send.'
                 );
             }
 
             // This one builds a username string like "user1, user2 and user3" with the full names.
-            const usernames = noEmailIds
-                .map(id => this.getViewModel(id))
+            const usernames = noEmails
+                .map(email => this.getViewModel(email.recipient_user_id))
                 .filter(user => !!user)
                 .map(user => user.short_name);
-            let userString;
+            let userString: string;
             if (usernames.length > 1) {
                 const lastUsername = usernames.pop();
                 userString = usernames.join(', ') + ' ' + this.translate.instant('and') + ' ' + lastUsername;
             } else {
                 userString = usernames.join(', ');
             }
-            msg = msg.replace('%user%', userString);
+            responseMessage = responseMessage.replace('%user%', userString);
         }
 
-        return msg; */
+        return responseMessage;
     }
 
     /**
@@ -685,7 +683,7 @@ export class UserRepositoryService
         if (!user.user || !user.user.last_email_send) {
             return '';
         }
-        return new Date(user.user.last_email_send).toLocaleString(this.translate.currentLang);
+        return new Date(user.user.last_email_send * 1000).toLocaleString(this.translate.currentLang);
     }
 
     private sanitizePayload(payload: any): any {

@@ -287,7 +287,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
         const title = this.translate.instant('Sending an invitation email');
         const content = this.translate.instant('Are you sure you want to send an invitation email to the user?');
         if (await this.promptService.open(title, content)) {
-            this.repo.bulkSendInvitationEmail([this.user]).then(this.raiseError, this.raiseError);
+            this.repo.sendInvitationEmails([this.user]).then(this.raiseError, this.raiseError);
         }
     }
 

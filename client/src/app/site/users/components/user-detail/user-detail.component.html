@@ -177,6 +177,13 @@
     </ng-template>
 
     <ng-template #showView let-user="user">
+        <div *ngIf="isAllowed('seePersonal') && user.isLastEmailSend">
+            <div>
+                <h4>{{ 'Last email sent' | translate }}</h4>
+                <span>{{ getEmailSentTime() }}</span>
+            </div>
+        </div>
+
         <!-- Structure Level -->
         <div *ngIf="user.structure_level()">
             <h4>{{ 'Structure level' | translate }}</h4>

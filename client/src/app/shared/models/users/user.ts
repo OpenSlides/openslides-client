@@ -35,7 +35,7 @@ export class User extends BaseDecimalModel<User> {
     public default_structure_level: string;
     public structure_level_$: string[];
     public email?: string;
-    public last_email_send?: string; // ISO datetime string
+    public last_email_send?: number; // comes in seconds
     public vote_weight_$: number[];
     public default_vote_weight: number;
     public is_demo_user: boolean;
