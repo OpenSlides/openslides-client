@@ -686,6 +686,15 @@ export class UserRepositoryService
         return new Date(user.user.last_email_send * 1000).toLocaleString(this.translate.currentLang);
     }
 
+    public forgetPassword(...emails: string[]): Promise<void> {
+        const payload: UserAction.ForgetPasswordPayload[] = emails.map(email => ({ email }));
+        return this.sendBulkActionToBackend(UserAction.FORGET_PASSWORD, payload);
+    }
+
+    public forgetPasswordConfirm(payload: UserAction.ForgetPasswordConfirmPayload): Promise<void> {
+        return this.sendActionToBackend(UserAction.FORGET_PASSWORD_CONFIRM, payload);
+    }
+
     private sanitizePayload(payload: any): any {
         const temp = { ...payload };
         for (const key of Object.keys(temp).filter(field => !this.isFieldAllowedToBeEmpty(field))) {

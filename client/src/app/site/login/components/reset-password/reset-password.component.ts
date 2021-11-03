@@ -5,7 +5,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { HttpService } from 'app/core/core-services/http.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { environment } from 'environments/environment';
+
+import { UserRepositoryService } from '../../../../core/repositories/users/user-repository.service';
 
 /**
  * Reset password component.
@@ -30,7 +31,8 @@ export class ResetPasswordComponent extends BaseComponent implements OnInit {
         protected translate: TranslateService,
         private http: HttpService,
         formBuilder: FormBuilder,
-        private router: Router
+        private router: Router,
+        private userRepo: UserRepositoryService
     ) {
         super(componentServiceCollector, translate);
         this.resetPasswordForm = formBuilder.group({
@@ -54,9 +56,7 @@ export class ResetPasswordComponent extends BaseComponent implements OnInit {
         }
 
         try {
-            await this.http.post<void>(environment.urlPrefix + `/users/reset-password/`, {
-                email: this.resetPasswordForm.get(`email`).value
-            });
+            await this.userRepo.forgetPassword(this.resetPasswordForm.get(`email`).value);
             this.matSnackBar.open(
                 this.translate.instant(`An email with a password reset link was send!`),
                 this.translate.instant(`OK`),

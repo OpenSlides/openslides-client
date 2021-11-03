@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { HttpService } from 'app/core/core-services/http.service';
+import { Id } from 'app/core/definitions/key-types';
+import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { environment } from 'environments/environment';
 
 /**
  * Reset password component.
@@ -25,7 +25,7 @@ export class ResetPasswordConfirmComponent extends BaseComponent implements OnIn
     /**
      * The user_id that should be provided in the queryparams.
      */
-    private user_id: string;
+    private user_id: Id;
 
     /**
      * The token that should be provided in the queryparams.
@@ -38,10 +38,10 @@ export class ResetPasswordConfirmComponent extends BaseComponent implements OnIn
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService,
-        private http: HttpService,
         formBuilder: FormBuilder,
         private activatedRoute: ActivatedRoute,
-        private router: Router
+        private router: Router,
+        private userRepo: UserRepositoryService
     ) {
         super(componentServiceCollector, translate);
         this.newPasswordForm = formBuilder.group({
@@ -69,7 +69,7 @@ export class ResetPasswordConfirmComponent extends BaseComponent implements OnIn
                         this.router.navigate([`..`]);
                     });
                 } else {
-                    this.user_id = params.user_id;
+                    this.user_id = Number(params.user_id);
                     this.token = params.token;
                 }
             }
@@ -85,10 +85,10 @@ export class ResetPasswordConfirmComponent extends BaseComponent implements OnIn
         }
 
         try {
-            await this.http.post<void>(environment.urlPrefix + `/users/reset-password-confirm/`, {
+            await this.userRepo.forgetPasswordConfirm({
                 user_id: this.user_id,
-                token: this.token,
-                password: this.newPasswordForm.get(`password`).value
+                authorization_token: this.token,
+                new_password: this.newPasswordForm.get(`password`).value
             });
             // TODO: Does we get a response for displaying?
             this.matSnackBar.open(

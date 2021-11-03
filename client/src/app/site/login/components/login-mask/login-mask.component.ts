@@ -194,7 +194,7 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
      * Go to the reset password view
      */
     public resetPassword(): void {
-        this.router.navigate([`./reset-password`], { relativeTo: this.route });
+        this.router.navigate([`./forget-password`], { relativeTo: this.route });
     }
 
     private checkForUnsecureConnection(): void {
