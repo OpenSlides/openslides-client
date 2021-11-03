@@ -95,10 +95,10 @@ export class MessageControlsComponent extends BaseComponent implements OnInit {
      * On delete button
      */
     public async onDelete(): Promise<void> {
-        const content =
-            this.translate.instant(`Delete message`) + ` ${this.translate.instant(this.message.getTitle())}?`;
-        if (await this.promptService.open(`Are you sure?`, content)) {
-            this.repo.delete(this.message);
+        const title = this.translate.instant(`Are you sure you want to delete this message?`);
+
+        if (await this.promptService.open(title)) {
+            await this.repo.delete(this.message);
         }
     }
 }

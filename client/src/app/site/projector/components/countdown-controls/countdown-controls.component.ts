@@ -134,10 +134,11 @@ export class CountdownControlsComponent extends BaseComponent {
      * On delete button
      */
     public async onDelete(): Promise<void> {
-        const content =
-            this.translate.instant(`Delete countdown`) + ` ${this.translate.instant(this.countdown.title)}?`;
-        if (await this.promptService.open(`Are you sure?`, content)) {
-            this.repo.delete(this.countdown);
+        const title = this.translate.instant(`Are you sure you want to delete this countdown?`);
+        const content = this.countdown.title;
+
+        if (await this.promptService.open(title, content)) {
+            await this.repo.delete(this.countdown);
         }
     }
 }

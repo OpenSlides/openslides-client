@@ -128,7 +128,7 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
     }
 
     public async deleteMultiple(): Promise<void> {
-        const title = this.translate.instant(`Are you sure, you want to delete all selected committees?`);
+        const title = this.translate.instant(`Are you sure you want to delete all selected committees?`);
 
         const confirmed = await this.promptService.open(title);
         if (confirmed) {
