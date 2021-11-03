@@ -1,8 +1,9 @@
 import { Directive, OnDestroy, OnInit } from '@angular/core';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ModelSubscription } from 'app/core/core-services/autoupdate.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+
 import { BaseComponent } from './base.component';
 
 /**
@@ -16,8 +17,11 @@ export abstract class BaseModelContextComponent extends BaseComponent implements
     protected localModelSubscriptions: { [name: string]: ModelSubscription };
     private destroyed = false;
 
-    public constructor(protected componentServiceCollector: ComponentServiceCollector) {
-        super(componentServiceCollector);
+    public constructor(
+        protected componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService
+    ) {
+        super(componentServiceCollector, translate);
         this.localModelSubscriptions = {};
     }
 
@@ -36,16 +40,16 @@ export abstract class BaseModelContextComponent extends BaseComponent implements
      */
     protected async requestModels(
         simplifiedModelRequest: SimplifiedModelRequest,
-        subscriptionName: string = 'default'
+        subscriptionName: string = `default`
     ): Promise<void> {
         if (this.destroyed) {
-            throw new Error('You have requested models for a component that was destroyed!');
+            throw new Error(`You have requested models for a component that was destroyed!`);
         }
 
         this.cleanCurrentModelSub(subscriptionName);
         this.localModelSubscriptions[subscriptionName] = await this.modelRequestService.subscribe(
             simplifiedModelRequest,
-            this.constructor.name + ' ' + subscriptionName // Note: This does not work for
+            this.constructor.name + ` ` + subscriptionName // Note: This does not work for
             // productive (minified) code, but it is just a dev thing.
         );
     }

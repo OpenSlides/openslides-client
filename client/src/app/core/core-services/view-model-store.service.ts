@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-
 import { BaseViewModel, ViewModelConstructor } from 'app/site/base/base-view-model';
+
 import { BaseRepository } from '../repositories/base-repository';
 import { CollectionMapperService } from './collection-mapper.service';
 
@@ -8,7 +8,7 @@ import { CollectionMapperService } from './collection-mapper.service';
  * This service takes care of handling view models.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ViewModelStoreService {
     /**

@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { E2EImportsModule } from '../../e2e-imports.module';
 import { SiteComponent } from './site.component';
 
-describe('SiteComponent', () => {
+describe(`SiteComponent`, () => {
     let component: SiteComponent;
     let fixture: ComponentFixture<SiteComponent>;
 
@@ -22,7 +22,7 @@ describe('SiteComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

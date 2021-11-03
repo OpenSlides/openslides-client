@@ -1,11 +1,10 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
-import { AmendmentListComponent } from './amendment-list.component';
 import { MotionMultiselectActionsComponent } from '../shared-motion/motion-multiselect-actions/motion-multiselect-actions.component';
+import { AmendmentListComponent } from './amendment-list.component';
 
-describe('AmendmentListComponent', () => {
+describe(`AmendmentListComponent`, () => {
     let component: AmendmentListComponent;
     let fixture: ComponentFixture<AmendmentListComponent>;
 
@@ -24,7 +23,7 @@ describe('AmendmentListComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

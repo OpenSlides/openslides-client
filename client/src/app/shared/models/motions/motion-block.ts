@@ -1,4 +1,5 @@
 import { Id } from 'app/core/definitions/key-types';
+
 import { BaseModel } from '../base/base-model';
 import { HasAgendaItemId } from '../base/has-agenda-item-id';
 import { HasListOfSpeakersId } from '../base/has-list-of-speakers-id';
@@ -10,7 +11,7 @@ import { HasProjectionIds } from '../base/has-projectable-ids';
  * @ignore
  */
 export class MotionBlock extends BaseModel<MotionBlock> {
-    public static COLLECTION = 'motion_block';
+    public static COLLECTION = `motion_block`;
 
     public id: Id;
     public title: string;

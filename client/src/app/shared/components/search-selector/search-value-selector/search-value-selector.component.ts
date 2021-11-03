@@ -10,13 +10,12 @@ import {
 } from '@angular/core';
 import { FormBuilder, NgControl } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
-
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { auditTime } from 'rxjs/operators';
 
-import { BaseSearchValueSelectorComponent } from '../base-search-value-selector/base-search-value-selector.component';
 import { Selectable } from '../../selectable';
+import { BaseSearchValueSelectorComponent } from '../base-search-value-selector/base-search-value-selector.component';
 
 /**
  * Searchable Value Selector
@@ -40,11 +39,11 @@ import { Selectable } from '../../selectable';
  */
 
 @Component({
-    selector: 'os-search-value-selector',
-    templateUrl: '../base-search-value-selector/base-search-value-selector.component.html',
+    selector: `os-search-value-selector`,
+    templateUrl: `../base-search-value-selector/base-search-value-selector.component.html`,
     styleUrls: [
-        '../base-search-value-selector/base-search-value-selector.component.scss',
-        './search-value-selector.component.scss'
+        `../base-search-value-selector/base-search-value-selector.component.scss`,
+        `./search-value-selector.component.scss`
     ],
     providers: [{ provide: MatFormFieldControl, useExisting: SearchValueSelectorComponent }],
     encapsulation: ViewEncapsulation.None,
@@ -74,7 +73,7 @@ export class SearchValueSelectorComponent extends BaseSearchValueSelectorCompone
         }
     }
 
-    public controlType = 'search-value-selector';
+    public controlType = `search-value-selector`;
 
     public constructor(
         protected translate: TranslateService,

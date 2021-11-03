@@ -6,20 +6,19 @@ import {
     ElementRef,
     ViewChild
 } from '@angular/core';
-
+import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { Observable } from 'rxjs';
 
-import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { RtcService } from '../../services/rtc.service';
 
 @Component({
-    selector: 'os-call-dialog',
-    templateUrl: './call-dialog.component.html',
-    styleUrls: ['./call-dialog.component.scss'],
+    selector: `os-call-dialog`,
+    templateUrl: `./call-dialog.component.html`,
+    styleUrls: [`./call-dialog.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CallDialogComponent implements AfterViewInit {
-    @ViewChild('jitsi')
+    @ViewChild(`jitsi`)
     private jitsiNode: ElementRef;
 
     public jitsiMeetUrl: Observable<string> = this.rtcService.jitsiMeetUrl;

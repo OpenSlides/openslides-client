@@ -1,5 +1,4 @@
 import { Component, Input, OnDestroy } from '@angular/core';
-
 import { ServertimeService } from 'app/core/core-services/servertime.service';
 
 declare let FontFace: any;
@@ -13,9 +12,9 @@ interface CountdownData {
  * Displays the countdown time.
  */
 @Component({
-    selector: 'os-countdown-time',
-    templateUrl: './countdown-time.component.html',
-    styleUrls: ['./countdown-time.component.scss']
+    selector: `os-countdown-time`,
+    templateUrl: `./countdown-time.component.html`,
+    styleUrls: [`./countdown-time.component.scss`]
 })
 export class CountdownTimeComponent implements OnDestroy {
     /**
@@ -39,10 +38,10 @@ export class CountdownTimeComponent implements OnDestroy {
     @Input()
     public set displayType(displayType: string) {
         if (!displayType) {
-            displayType = 'onlyCountdown';
+            displayType = `onlyCountdown`;
         }
-        this.showTimeIndicator = displayType === 'countdownAndTimeIndicator' || displayType === 'onlyTimeIndicator';
-        this.showCountdown = displayType === 'onlyCountdown' || displayType === 'countdownAndTimeIndicator';
+        this.showTimeIndicator = displayType === `countdownAndTimeIndicator` || displayType === `onlyTimeIndicator`;
+        this.showCountdown = displayType === `onlyCountdown` || displayType === `countdownAndTimeIndicator`;
     }
 
     /**
@@ -113,13 +112,13 @@ export class CountdownTimeComponent implements OnDestroy {
         }
 
         const time = new Date(seconds * 1000);
-        const m = '0' + time.getMinutes();
-        const s = '0' + time.getSeconds();
+        const m = `0` + time.getMinutes();
+        const s = `0` + time.getSeconds();
 
-        this.time = m.slice(-2) + ':' + s.slice(-2);
+        this.time = m.slice(-2) + `:` + s.slice(-2);
 
         if (negative) {
-            this.time = '-' + this.time;
+            this.time = `-` + this.time;
         }
     }
 

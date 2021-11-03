@@ -1,21 +1,21 @@
 import { Injectable } from '@angular/core';
-
 import { ProjectionAction } from 'app/core/actions/projection-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Projection } from 'app/shared/models/projector/projection';
 import { ViewProjection } from 'app/site/projector/models/view-projection';
+
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ProjectionRepositoryService extends BaseRepositoryWithActiveMeeting<ViewProjection, Projection> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, Projection);
     }
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Projections' : 'Projection');
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Projections` : `Projection`);
 
     public getTitle = (viewProjection: ViewProjection) =>
         viewProjection.content_object?.getProjectorTitle(viewProjection.projection).title;
@@ -30,10 +30,10 @@ export class ProjectionRepositoryService extends BaseRepositoryWithActiveMeeting
     }
 
     public getFieldsets(): Fieldsets<Projection> {
-        const defaultKeys: (keyof Projection)[] = ['stable', 'type', 'options', 'weight'];
+        const defaultKeys: (keyof Projection)[] = [`stable`, `type`, `options`, `weight`];
         return {
             [DEFAULT_FIELDSET]: defaultKeys,
-            content: defaultKeys.concat(['content', 'current_projector_id']) // the current_projector_id is
+            content: defaultKeys.concat([`content`, `current_projector_id`]) // the current_projector_id is
             // needed by the projector component to map projections to projectors.
         };
     }

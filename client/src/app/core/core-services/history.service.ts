@@ -34,7 +34,7 @@ export class Position {
  * avoid circular dependencies.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class HistoryService {
     /**
@@ -42,7 +42,7 @@ export class HistoryService {
      */
     private position: Position = null;
     private bannerDefinition: BannerDefinition = {
-        type: 'history'
+        type: `history`
     };
 
     /**
@@ -72,7 +72,7 @@ export class HistoryService {
      * Enters the history mode
      */
     public enterHistoryMode(position: Position): void {
-        throw new Error('The history mode is currently not supported');
+        throw new Error(`The history mode is currently not supported`);
         // this.position = position;
         // this.banner.addBanner(this.bannerDefinition);
     }
@@ -81,7 +81,7 @@ export class HistoryService {
      * Leaves the history mode
      */
     public leaveHistoryMode(): void {
-        throw new Error('The history mode is currently not supported');
+        throw new Error(`The history mode is currently not supported`);
         // this.position = null;
         // this.banner.removeBanner(this.bannerDefinition);
     }

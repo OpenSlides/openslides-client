@@ -11,7 +11,7 @@ import { OfflineBroadcastService, OfflineReason, OfflineReasonValue } from './of
  * of this service. We'll see what happens here..
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class OfflineService {
     private reason: OfflineReason | null = null;
@@ -34,11 +34,11 @@ export class OfflineService {
         this.reason = reason;
 
         if (reason.type === OfflineReasonValue.ConnectionLost) {
-            console.log('offline because connection lost to', reason.endpoint);
+            console.log(`offline because connection lost to`, reason.endpoint);
         } else if (reason.type === OfflineReasonValue.WhoAmIFailed) {
-            console.log('offline because whoami failed.');
+            console.log(`offline because whoami failed.`);
         } else {
-            throw new Error('Offline and no reason....');
+            throw new Error(`Offline and no reason....`);
         }
 
         this.offlineBroadcastService.goOffline(reason);
@@ -54,10 +54,10 @@ export class OfflineService {
 
             if (this.reason.type === OfflineReasonValue.ConnectionLost) {
                 online = await this.httpEnpointService.isEndpointHealthy(this.reason.endpoint);
-                console.log('is communication online to', this.reason.endpoint, '->', online);
+                console.log(`is communication online to`, this.reason.endpoint, `->`, online);
             } else if (this.reason.type === OfflineReasonValue.WhoAmIFailed) {
                 online = await this.authService.doWhoAmIRequest();
-                console.log('is whoami reachable?', online);
+                console.log(`is whoami reachable?`, online);
             }
 
             if (online) {

@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-
 import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { OrganizationSettingsService } from 'app/core/ui-services/organization-settings.service';
@@ -13,7 +11,7 @@ import { ParsePollNumberPipe } from 'app/shared/pipes/parse-poll-number.pipe';
 import { PollKeyVerbosePipe } from 'app/shared/pipes/poll-key-verbose.pipe';
 import { PollService } from 'app/site/polls/services/poll.service';
 
-export const UnknownUserLabel = _('Deleted user');
+export const UnknownUserLabel = _(`Deleted user`);
 
 /**
  * The assignment poll service should not have too much content since the poll system in OS4
@@ -21,7 +19,7 @@ export const UnknownUserLabel = _('Deleted user');
  * be the default case.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AssignmentPollService extends PollService {
     public defaultPollMethod: PollMethod;
@@ -39,25 +37,25 @@ export class AssignmentPollService extends PollService {
     ) {
         super(organizationSettingsService, translate, pollKeyVerbose, parsePollNumber);
         this.meetingSettingsService
-            .get('assignment_poll_default_100_percent_base')
+            .get(`assignment_poll_default_100_percent_base`)
             .subscribe(base => (this.defaultPercentBase = base));
         this.meetingSettingsService
-            .get('assignment_poll_default_group_ids')
+            .get(`assignment_poll_default_group_ids`)
             .subscribe(ids => (this.defaultGroupIds = ids));
         this.meetingSettingsService
-            .get('assignment_poll_default_method')
+            .get(`assignment_poll_default_method`)
             .subscribe(method => (this.defaultPollMethod = method));
         this.meetingSettingsService
-            .get('assignment_poll_default_type')
+            .get(`assignment_poll_default_type`)
             .subscribe(type => (this.defaultPollType = type));
         this.meetingSettingsService
-            .get('assignment_poll_sort_poll_result_by_votes')
+            .get(`assignment_poll_sort_poll_result_by_votes`)
             .subscribe(sort => (this.sortByVote = sort));
     }
 
     public getDefaultPollData(contentObject?: Assignment): Partial<Poll> {
         const poll: Partial<Poll> = {
-            title: this.translate.instant('Ballot'),
+            title: this.translate.instant(`Ballot`),
             onehundred_percent_base: this.defaultPercentBase,
             entitled_group_ids: this.defaultGroupIds,
             pollmethod: this.defaultPollMethod,

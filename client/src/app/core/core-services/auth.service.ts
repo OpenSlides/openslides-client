@@ -1,14 +1,13 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-
 import { environment } from 'environments/environment';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
+import { ProcessError } from '../errors/process-error';
 import { AuthToken, AuthTokenService } from './auth-token.service';
 import { DataStoreService } from './data-store.service';
 import { HttpService } from './http.service';
 import { LifecycleService } from './lifecycle.service';
-import { ProcessError } from '../errors/process-error';
 
 /**
  * Response from a login request.
@@ -23,7 +22,7 @@ export interface LoginResponse {
  * Authenticates an OpenSlides user with username and password
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AuthService {
     // This is a wrapper around authTokenService.accessTokenObservable
@@ -88,7 +87,7 @@ export class AuthService {
     }
 
     public redirectUser(meetingId?: number): void {
-        const baseRoute = meetingId ? `${meetingId}/` : '/';
+        const baseRoute = meetingId ? `${meetingId}/` : `/`;
         this.router.navigate([baseRoute]);
     }
 
@@ -115,7 +114,7 @@ export class AuthService {
      * @returns true, if the request was successful (=online)
      */
     public async doWhoAmIRequest(): Promise<boolean> {
-        console.log('auth: Do WhoAmI');
+        console.log(`auth: Do WhoAmI`);
         let online: boolean;
         try {
             await this.http.post<LoginResponse>(`${environment.authUrlPrefix}/who-am-i/`);
@@ -127,13 +126,13 @@ export class AuthService {
                 online = false;
             }
         }
-        console.log('auth: WhoAmI done, online:', online, 'authenticated:', !!this.authTokenService.accessToken);
+        console.log(`auth: WhoAmI done, online:`, online, `authenticated:`, !!this.authTokenService.accessToken);
         return online;
     }
 
     private resumeTokenSubscription(): void {
         if (this.authTokenSubscription) {
-            console.error('The token subscription is already running');
+            console.error(`The token subscription is already running`);
             return;
         }
         this.authTokenSubscription = this.authTokenService.accessTokenObservable.subscribe(token =>
@@ -143,7 +142,7 @@ export class AuthService {
 
     private holdBackTokenSubscription(): void {
         if (!this.authTokenSubscription) {
-            console.error('The token subscription is already stopped');
+            console.error(`The token subscription is already stopped`);
             return;
         }
         this.authTokenSubscription.unsubscribe();

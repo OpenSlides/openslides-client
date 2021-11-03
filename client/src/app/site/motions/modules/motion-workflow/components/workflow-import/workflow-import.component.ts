@@ -1,21 +1,21 @@
-import { Component } from '@angular/core';
-import { PblColumnDefinition } from '@pebula/ngrid';
-
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { MotionWorkflowRepositoryService } from '../../../../../../core/repositories/motions/motion-workflow-repository.service';
-import { FileData } from '../../../../../../shared/components/file-upload/file-upload.component';
 import { Location } from '@angular/common';
+import { Component } from '@angular/core';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { PblColumnDefinition } from '@pebula/ngrid';
 import { MotionWorkflowAction } from 'app/core/actions/motion-workflow-action';
 
+import { MotionWorkflowRepositoryService } from '../../../../../../core/repositories/motions/motion-workflow-repository.service';
+import { FileData } from '../../../../../../shared/components/file-upload/file-upload.component';
+
 @Component({
-    templateUrl: './workflow-import.component.html',
-    styleUrls: ['./workflow-import.component.scss']
+    templateUrl: `./workflow-import.component.html`,
+    styleUrls: [`./workflow-import.component.scss`]
 })
 export class WorkflowImportComponent {
     public columns: PblColumnDefinition[] = [
         {
-            prop: 'title',
-            label: _('Title')
+            prop: `title`,
+            label: _(`Title`)
         }
     ];
 
@@ -29,7 +29,7 @@ export class WorkflowImportComponent {
         return async file => {
             const workflowJson = await new Promise<MotionWorkflowAction.ImportPayload[]>(resolve => {
                 const reader = new FileReader();
-                reader.addEventListener('load', progress => {
+                reader.addEventListener(`load`, progress => {
                     const result = JSON.parse(progress.target.result as string);
                     resolve(result);
                 });

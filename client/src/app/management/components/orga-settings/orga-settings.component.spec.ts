@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OrgaSettingsComponent } from './orga-settings.component';
 
-describe('OrgaSettingsComponent', () => {
+describe(`OrgaSettingsComponent`, () => {
     let component: OrgaSettingsComponent;
     let fixture: ComponentFixture<OrgaSettingsComponent>;
 
@@ -18,7 +18,7 @@ describe('OrgaSettingsComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

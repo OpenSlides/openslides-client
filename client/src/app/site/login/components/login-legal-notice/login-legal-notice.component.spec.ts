@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { E2EImportsModule } from '../../../../../e2e-imports.module';
 import { LoginLegalNoticeComponent } from './login-legal-notice.component';
 
-describe('LoginLegalNoticeComponent', () => {
+describe(`LoginLegalNoticeComponent`, () => {
     let component: LoginLegalNoticeComponent;
     let fixture: ComponentFixture<LoginLegalNoticeComponent>;
 
@@ -21,7 +21,7 @@ describe('LoginLegalNoticeComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

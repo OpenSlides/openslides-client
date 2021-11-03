@@ -1,16 +1,15 @@
 import { ElementRef, Injectable } from '@angular/core';
-
 import { StorageMap } from '@ngx-pwa/local-storage';
-import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
-
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
+import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
+
 import { CallRestrictionService } from './call-restriction.service';
 import { UserMediaPermService } from './user-media-perm.service';
 
-export const RTC_LOGGED_STORAGE_KEY = 'rtcIsLoggedIn';
+export const RTC_LOGGED_STORAGE_KEY = `rtcIsLoggedIn`;
 
 interface JitsiMember {
     id: string;
@@ -80,28 +79,28 @@ const interfaceConfigOverwrite = {
     TOOLBAR_ALWAYS_VISIBLE: true,
     TOOLBAR_TIMEOUT: 10000000,
     TOOLBAR_BUTTONS: [
-        'microphone',
-        'camera',
-        'desktop',
-        'fullscreen',
-        'fodeviceselection',
-        'profile',
-        'chat',
-        'recording',
-        'livestreaming',
-        'etherpad',
-        'sharedvideo',
-        'settings',
-        'videoquality',
-        'filmstrip',
-        'feedback',
-        'stats',
-        'shortcuts',
-        'tileview',
-        'download',
-        'help',
-        'mute-everyone',
-        'hangup'
+        `microphone`,
+        `camera`,
+        `desktop`,
+        `fullscreen`,
+        `fodeviceselection`,
+        `profile`,
+        `chat`,
+        `recording`,
+        `livestreaming`,
+        `etherpad`,
+        `sharedvideo`,
+        `settings`,
+        `videoquality`,
+        `filmstrip`,
+        `feedback`,
+        `stats`,
+        `shortcuts`,
+        `tileview`,
+        `download`,
+        `help`,
+        `mute-everyone`,
+        `hangup`
     ]
 };
 
@@ -112,7 +111,7 @@ export interface JitsiConfig {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class RtcService {
     private jitsiConfig: JitsiConfig;
@@ -180,21 +179,21 @@ export class RtcService {
         private operator: OperatorService,
         private userRepo: UserRepositoryService
     ) {
-        this.isSupportEnabled = settingService.get('conference_enable_helpdesk');
-        this.autoConnect = settingService.get('conference_auto_connect');
+        this.isSupportEnabled = settingService.get(`conference_enable_helpdesk`);
+        this.autoConnect = settingService.get(`conference_auto_connect`);
 
         combineLatest([
-            settingService.get('jitsi_domain'),
-            settingService.get('jitsi_room_name'),
-            settingService.get('jitsi_room_password')
+            settingService.get(`jitsi_domain`),
+            settingService.get(`jitsi_room_name`),
+            settingService.get(`jitsi_room_password`)
         ]).subscribe(([domain, roomName, roomPassword]) => {
             this.jitsiConfig = { JITSI_DOMAIN: domain, JITSI_ROOM_NAME: roomName, JITSI_ROOM_PASSWORD: roomPassword };
             this.isJitsiEnabledSubject.next(!!domain && !!roomName);
         });
-        settingService.get('conference_open_microphone').subscribe(open => {
+        settingService.get(`conference_open_microphone`).subscribe(open => {
             configOverwrite.startWithAudioMuted = !open;
         });
-        settingService.get('conference_open_video').subscribe(open => {
+        settingService.get(`conference_open_video`).subscribe(open => {
             configOverwrite.startWithVideoMuted = !open;
         });
         callRestrictionService.canEnterCallObservable.subscribe(canEnter => {
@@ -202,7 +201,7 @@ export class RtcService {
         });
 
         this.inOtherTab = this.storageMap
-            .watch(RTC_LOGGED_STORAGE_KEY, { type: 'boolean' })
+            .watch(RTC_LOGGED_STORAGE_KEY, { type: `boolean` })
             .pipe(distinctUntilChanged());
     }
 
@@ -212,7 +211,7 @@ export class RtcService {
 
     public toggleMute(): void {
         if (this.isJitsiActive) {
-            this.api.executeCommand('toggleAudio');
+            this.api.executeCommand(`toggleAudio`);
         }
     }
 
@@ -239,7 +238,7 @@ export class RtcService {
             // You can only set the password after the server has recognized that you are
             // the moderator. There is no event listener for that.
             setTimeout(() => {
-                this.api.executeCommand('password', this.jitsiConfig?.JITSI_ROOM_PASSWORD);
+                this.api.executeCommand(`password`, this.jitsiConfig?.JITSI_ROOM_PASSWORD);
                 this.isPasswordSet = true;
             }, 1000);
         }
@@ -257,46 +256,46 @@ export class RtcService {
         this.api = new JitsiMeetExternalAPI(this.jitsiConfig?.JITSI_DOMAIN, this.options);
         this.isJitsiActiveSubject.next(true);
         const jitsiName = this.userRepo.getViewModel(this.operator.operatorId).getShortName();
-        this.api.executeCommand('displayName', jitsiName);
+        this.api.executeCommand(`displayName`, jitsiName);
         this.loadApiCallbacks();
     }
 
     private loadApiCallbacks(): void {
         this.isMutedSubject.next(configOverwrite.startWithAudioMuted);
 
-        this.api.on('videoConferenceJoined', (info: ConferenceJoinedResult) => {
+        this.api.on(`videoConferenceJoined`, (info: ConferenceJoinedResult) => {
             this.onEnterConference(info);
         });
 
-        this.api.on('participantJoined', (newMember: JitsiMember) => {
+        this.api.on(`participantJoined`, (newMember: JitsiMember) => {
             this.addMember(newMember);
         });
 
-        this.api.on('participantLeft', (oldMember: { id: string }) => {
+        this.api.on(`participantLeft`, (oldMember: { id: string }) => {
             this.removeMember(oldMember);
         });
 
-        this.api.on('displayNameChange', (member: DisplayNameChangeResult) => {
+        this.api.on(`displayNameChange`, (member: DisplayNameChangeResult) => {
             this.renameMember(member);
         });
 
-        this.api.on('audioMuteStatusChanged', (isMuted: { muted: boolean }) => {
+        this.api.on(`audioMuteStatusChanged`, (isMuted: { muted: boolean }) => {
             this.isMutedSubject.next(isMuted.muted);
         });
 
-        this.api.on('readyToClose', () => {
+        this.api.on(`readyToClose`, () => {
             this.stopJitsi();
         });
 
-        this.api.on('dominantSpeakerChanged', (newSpeaker: { id: string }) => {
+        this.api.on(`dominantSpeakerChanged`, (newSpeaker: { id: string }) => {
             this.newDominantSpeaker(newSpeaker.id);
         });
 
-        this.api.on('passwordRequired', () => {
+        this.api.on(`passwordRequired`, () => {
             this.setRoomPassword();
         });
 
-        this.api.on('participantKickedOut', (kicked: MemberKicked) => {
+        this.api.on(`participantKickedOut`, (kicked: MemberKicked) => {
             this.onMemberKicked(kicked);
         });
     }
@@ -368,7 +367,7 @@ export class RtcService {
 
     private disconnect(): void {
         if (this.isJitsiActive) {
-            this.api?.executeCommand('hangup');
+            this.api?.executeCommand(`hangup`);
             this.api?.dispose();
             this.api = undefined;
         }

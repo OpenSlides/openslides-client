@@ -1,7 +1,7 @@
 export enum ErrorType {
-    CLIENT = 'Client',
-    SERVER = 'Server', // or network errors, they are the same.
-    UNKNOWN = 'Unknown'
+    CLIENT = `Client`,
+    SERVER = `Server`, // or network errors, they are the same.
+    UNKNOWN = `Unknown`
 }
 
 export interface CommunicationError {
@@ -15,9 +15,9 @@ export interface CommunicationErrorWrapper {
 
 export function isCommunicationError(obj: any): obj is CommunicationError {
     const _obj = obj as CommunicationError;
-    return typeof obj === 'object' && typeof _obj.msg === 'string' && typeof _obj.type === 'string';
+    return typeof obj === `object` && typeof _obj.msg === `string` && typeof _obj.type === `string`;
 }
 
 export function isCommunicationErrorWrapper(obj: any): obj is CommunicationErrorWrapper {
-    return typeof obj === 'object' && isCommunicationError(obj.error);
+    return typeof obj === `object` && isCommunicationError(obj.error);
 }

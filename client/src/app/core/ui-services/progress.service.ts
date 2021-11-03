@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { Subject } from 'rxjs';
 
 /**
@@ -11,7 +10,7 @@ export type ProgressMode = 'determinate' | 'indeterminate' | 'buffer' | 'query';
  * Helper service to announce some sort of progress, determinate or indeterminate.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ProgressService {
     /**

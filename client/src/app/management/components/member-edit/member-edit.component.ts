@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { TranslateService } from '@ngx-translate/core';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { CML, getOmlVerboseName, OML, OMLMapping } from 'app/core/core-services/organization-permission';
 import { Id } from 'app/core/definitions/key-types';
@@ -9,13 +9,14 @@ import { UserRepositoryService } from 'app/core/repositories/users/user-reposito
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
-import { ViewCommittee } from '../../models/view-committee';
+
 import { MemberService } from '../../../core/core-services/member.service';
+import { ViewCommittee } from '../../models/view-committee';
 
 @Component({
-    selector: 'os-member-edit',
-    templateUrl: './member-edit.component.html',
-    styleUrls: ['./member-edit.component.scss']
+    selector: `os-member-edit`,
+    templateUrl: `./member-edit.component.html`,
+    styleUrls: [`./member-edit.component.scss`]
 })
 export class MemberEditComponent extends BaseModelContextComponent implements OnInit {
     public readonly OML = OML;
@@ -26,9 +27,9 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
 
     public readonly additionalFormControls = {
         committee_ids: [[]],
-        default_structure_level: [''],
-        default_number: [''],
-        default_vote_weight: [''],
+        default_structure_level: [``],
+        default_number: [``],
+        default_vote_weight: [``],
         organization_management_level: [],
         committee_$_management_level: []
     };
@@ -43,6 +44,7 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         public committeeRepo: CommitteeRepositoryService,
         private router: Router,
         private route: ActivatedRoute,
@@ -50,7 +52,7 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
         private operator: OperatorService,
         private memberService: MemberService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     public ngOnInit(): void {
@@ -88,7 +90,7 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
     }
 
     public onCancel(): void {
-        this.router.navigate(['..'], { relativeTo: this.route });
+        this.router.navigate([`..`], { relativeTo: this.route });
         if (!this.isNewUser) {
             this.isEditingUser = false;
         }
@@ -106,7 +108,7 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
     }
 
     public editMember(): void {
-        this.router.navigate(['edit'], { relativeTo: this.route });
+        this.router.navigate([`edit`], { relativeTo: this.route });
     }
 
     /**
@@ -114,7 +116,7 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
      */
     public async deleteUser(): Promise<void> {
         if (await this.memberService.delete([this.user])) {
-            this.router.navigate(['./accounts/']);
+            this.router.navigate([`./accounts/`]);
         }
     }
 
@@ -128,7 +130,7 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
         return committeesToManage
             .filter(committee => !!committee)
             .map(committee => committee.getTitle())
-            .join(', ');
+            .join(`, `);
     }
 
     private getUserByUrl(): void {
@@ -137,13 +139,13 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
                 if (params.id) {
                     this.loadUserById(+params.id);
                 } else {
-                    super.setTitle('New member');
+                    super.setTitle(`New member`);
                     this.isNewUser = true;
                     this.isEditingUser = true;
                 }
             }),
             this.route.url.subscribe(segments => {
-                if (segments[0]?.path === 'edit') {
+                if (segments[0]?.path === `edit`) {
                     this.isEditingUser = true;
                 }
             })
@@ -155,8 +157,8 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
             this.requestModels({
                 viewModelCtor: ViewUser,
                 ids: [userId],
-                follow: ['committee_ids'],
-                fieldset: 'orgaEdit'
+                follow: [`committee_ids`],
+                fieldset: `orgaEdit`
             });
 
             this.subscriptions.push(
@@ -182,13 +184,13 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
     private async createUser(): Promise<void> {
         const payload = this.getPartialUserPayload();
         const identifiable = (await this.repo.create(payload))[0];
-        this.router.navigate(['..', identifiable.id], { relativeTo: this.route });
+        this.router.navigate([`..`, identifiable.id], { relativeTo: this.route });
     }
 
     private async updateUser(): Promise<void> {
         const payload = this.getPartialUserPayload();
         await this.repo.update(payload, this.user);
-        this.router.navigate(['..'], { relativeTo: this.route });
+        this.router.navigate([`..`], { relativeTo: this.route });
     }
 
     private getPartialUserPayload(): any {
@@ -230,23 +232,23 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
     }
 
     private checkFormForErrors(): void {
-        let hint = '';
+        let hint = ``;
         if (Object.keys(this.formErrors).length) {
             hint = Object.keys(this.formErrors)
                 .map(error => this.getErrorHint(error))
-                .join('\n');
+                .join(`\n`);
         }
         this.raiseError(hint);
     }
 
     private getErrorHint(error: string): string {
-        let hint = '';
+        let hint = ``;
         switch (error) {
-            case 'name':
-                hint = 'At least one of username, first name or last name has to be set.';
+            case `name`:
+                hint = `At least one of username, first name or last name has to be set.`;
                 break;
-            case 'management_level':
-                hint = 'At least one committee or an organization management-level has to be set.';
+            case `management_level`:
+                hint = `At least one committee or an organization management-level has to be set.`;
                 break;
         }
         return this.translate.instant(hint);

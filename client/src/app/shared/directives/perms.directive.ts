@@ -1,6 +1,6 @@
 import { Directive, Input } from '@angular/core';
-
 import { Permission } from 'app/core/core-services/permission';
+
 import { BasePermsDirective } from './base-perms.directive';
 
 /**
@@ -10,7 +10,7 @@ import { BasePermsDirective } from './base-perms.directive';
  * @example <div *osPerms="['perm1', 'perm2']" ..> ... < /div>
  */
 @Directive({
-    selector: '[osPerms]'
+    selector: `[osPerms]`
 })
 export class PermsDirective extends BasePermsDirective<Permission> {
     /**

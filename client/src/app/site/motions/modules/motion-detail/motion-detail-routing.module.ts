@@ -5,8 +5,8 @@ import { AmendmentCreateWizardComponent } from './components/amendment-create-wi
 import { MotionDetailComponent } from './components/motion-detail/motion-detail.component';
 
 const routes: Route[] = [
-    { path: '', component: MotionDetailComponent, pathMatch: 'full', runGuardsAndResolvers: 'paramsChange' },
-    { path: 'create-amendment', component: AmendmentCreateWizardComponent }
+    { path: ``, component: MotionDetailComponent, pathMatch: `full`, runGuardsAndResolvers: `paramsChange` },
+    { path: `create-amendment`, component: AmendmentCreateWizardComponent }
 ];
 
 @NgModule({

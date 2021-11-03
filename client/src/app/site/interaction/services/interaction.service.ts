@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 
-import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { CallRestrictionService } from './call-restriction.service';
 import { RtcService } from './rtc.service';
 import { StreamService } from './stream.service';
@@ -15,13 +14,13 @@ export enum ConferenceState {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class InteractionService {
     private conferenceStateSubject = new BehaviorSubject<ConferenceState>(ConferenceState.none);
     public conferenceStateObservable = this.conferenceStateSubject.asObservable();
 
-    public showLiveConfObservable: Observable<boolean> = this.settingService.get('conference_show');
+    public showLiveConfObservable: Observable<boolean> = this.settingService.get(`conference_show`);
     private get conferenceState(): ConferenceState {
         return this.conferenceStateSubject.value;
     }

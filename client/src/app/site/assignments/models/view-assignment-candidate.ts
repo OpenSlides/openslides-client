@@ -2,6 +2,7 @@ import { HasMeeting } from 'app/management/models/view-meeting';
 import { AssignmentCandidate } from 'app/shared/models/assignments/assignment-candidate';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { ViewUser } from 'app/site/users/models/view-user';
+
 import { ViewAssignment } from './view-assignment';
 
 export class ViewAssignmentCandidate extends BaseViewModel<AssignmentCandidate> {

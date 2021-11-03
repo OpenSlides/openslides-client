@@ -1,13 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
-
 import { SearchProperty } from 'app/core/ui-services/search.service';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { Searchable } from 'app/site/base/searchable';
 
 @Component({
-    selector: 'os-preview',
-    templateUrl: './preview.component.html',
-    styleUrls: ['./preview.component.scss'],
+    selector: `os-preview`,
+    templateUrl: `./preview.component.html`,
+    styleUrls: [`./preview.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PreviewComponent implements OnDestroy {

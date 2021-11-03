@@ -1,22 +1,23 @@
 import { Component } from '@angular/core';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MotionStatuteParagraph } from 'app/shared/models/motions/motion-statute-paragraph';
 import { BaseImportListComponent } from 'app/site/base/components/base-import-list.component';
 import { StatuteImportService } from 'app/site/motions/services/statute-import.service';
+
 import { ImportListViewHeaderDefinition } from '../../../../../../shared/components/import-list-view/import-list-view.component';
 
 const statuteParagraphHeadersAndVerboseNames = {
-    title: 'Title',
-    text: 'Text'
+    title: `Title`,
+    text: `Text`
 };
 
 /**
  * Component for the statute paragraphs import list view.
  */
 @Component({
-    selector: 'os-statute-paragraph-import-list',
-    templateUrl: './statute-paragraph-import-list.component.html'
+    selector: `os-statute-paragraph-import-list`,
+    templateUrl: `./statute-paragraph-import-list.component.html`
 })
 export class StatuteParagraphImportListComponent extends BaseImportListComponent<MotionStatuteParagraph> {
     public possibleFields = Object.values(statuteParagraphHeadersAndVerboseNames);
@@ -39,7 +40,11 @@ export class StatuteParagraphImportListComponent extends BaseImportListComponent
      * @param importer: The statute csv import service
      * @param statuteCSVExport: service for exporting example data
      */
-    public constructor(componentServiceCollector: ComponentServiceCollector, public importer: StatuteImportService) {
-        super(componentServiceCollector, importer);
+    public constructor(
+        componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
+        public importer: StatuteImportService
+    ) {
+        super(componentServiceCollector, translate, importer);
     }
 }

@@ -1,12 +1,12 @@
 import { Directive, Input, OnDestroy } from '@angular/core';
-
-import { Subscription } from 'rxjs';
-
+import { TranslateService } from '@ngx-translate/core';
 import { NotifyService } from 'app/core/core-services/notify.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Fqid } from 'app/core/definitions/key-types';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { Subscription } from 'rxjs';
+
 import { BaseModel } from '../models/base/base-model';
 
 /**
@@ -16,22 +16,22 @@ enum EditNotificationType {
     /**
      * Type to declare editing a base-model.
      */
-    TYPE_BEGIN_EDITING = 'typeBeginEditing',
+    TYPE_BEGIN_EDITING = `typeBeginEditing`,
 
     /**
      * Type if the edit-view is closing.
      */
-    TYPE_CLOSING_EDITING = 'typeClosingEditing',
+    TYPE_CLOSING_EDITING = `typeClosingEditing`,
 
     /**
      * Type if changes are saved.
      */
-    TYPE_SAVING_EDITING = 'typeSavingEditing',
+    TYPE_SAVING_EDITING = `typeSavingEditing`,
 
     /**
      * Type to declare if another person is also editing the same base-model.
      */
-    TYPE_ALSO_EDITING = 'typeAlsoEditing'
+    TYPE_ALSO_EDITING = `typeAlsoEditing`
 }
 
 /**
@@ -69,7 +69,7 @@ interface EditObject {
 }
 
 @Directive({
-    selector: '[osListenEditing]'
+    selector: `[osListenEditing]`
 })
 export class ListenEditingDirective extends BaseComponent implements OnDestroy {
     @Input()
@@ -100,16 +100,17 @@ export class ListenEditingDirective extends BaseComponent implements OnDestroy {
     /**
      * Constant to identify the notification-message.
      */
-    private EDIT_NOTIFICATION_NAME = 'editNotificationName';
+    private EDIT_NOTIFICATION_NAME = `editNotificationName`;
 
     private isEditing = false;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private notifyService: NotifyService,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     public ngOnDestroy(): void {
@@ -162,7 +163,7 @@ export class ListenEditingDirective extends BaseComponent implements OnDestroy {
                 const content = <EditNotification>message.message;
                 const isSameFqid = !!this.baseModel.fqid && content.baseModelFqid === this.baseModel.fqid;
                 if (this.operator.operatorId !== content.senderId && isSameFqid) {
-                    let warning = '';
+                    let warning = ``;
 
                     switch (content.type) {
                         case EditNotificationType.TYPE_BEGIN_EDITING:
@@ -172,7 +173,7 @@ export class ListenEditingDirective extends BaseComponent implements OnDestroy {
                             }
 
                             warning = `${this.translate.instant(
-                                'Following users are currently editing this motion:'
+                                `Following users are currently editing this motion:`
                             )} ${this.otherWorkOnBaseModel}`;
                             if (content.type === EditNotificationType.TYPE_BEGIN_EDITING) {
                                 this.sendEditNotification(
@@ -188,7 +189,7 @@ export class ListenEditingDirective extends BaseComponent implements OnDestroy {
                         }
                         case EditNotificationType.TYPE_SAVING_EDITING: {
                             warning = `${content.senderName} ${this.translate.instant(
-                                'has saved his work on this motion.'
+                                `has saved his work on this motion.`
                             )}`;
                             // Wait, to prevent overlapping snack bars
                             setTimeout(() => this.recognizeOtherWorkerOnMotion(content.senderName), 2000);
@@ -196,7 +197,7 @@ export class ListenEditingDirective extends BaseComponent implements OnDestroy {
                         }
                     }
 
-                    if (warning !== '') {
+                    if (warning !== ``) {
                         this.raiseWarning(warning);
                     }
                 }

@@ -10,7 +10,7 @@ const ZERO_COORDINATE: Coordinate = { x: 0, y: 0 };
 type Constraint = 'left' | 'right';
 
 @Directive({
-    selector: '[osSwipe]'
+    selector: `[osSwipe]`
 })
 export class SwipeDirective implements OnInit {
     /**
@@ -44,8 +44,8 @@ export class SwipeDirective implements OnInit {
     public constructor(private element: ElementRef<HTMLElement>) {}
 
     public ngOnInit(): void {
-        this.element.nativeElement.addEventListener('touchstart', event => this.onTouchStart(event));
-        this.element.nativeElement.addEventListener('touchend', event => this.onTouchEnd(event));
+        this.element.nativeElement.addEventListener(`touchstart`, event => this.onTouchStart(event));
+        this.element.nativeElement.addEventListener(`touchend`, event => this.onTouchEnd(event));
         this.initializeConstraints();
     }
 
@@ -84,10 +84,10 @@ export class SwipeDirective implements OnInit {
     private initializeConstraints(): void {
         this.xStartConstraintLeft = this.element.nativeElement.getBoundingClientRect().width;
         this.xStartConstraintRight = 0;
-        if (this.constraints.includes('left')) {
+        if (this.constraints.includes(`left`)) {
             this.xStartConstraintLeft = 20;
         }
-        if (this.constraints.includes('right')) {
+        if (this.constraints.includes(`right`)) {
             this.xStartConstraintRight = this.element.nativeElement.getBoundingClientRect().width - 20;
         }
     }

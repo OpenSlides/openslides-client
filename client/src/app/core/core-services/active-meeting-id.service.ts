@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Router, RouterEvent, RoutesRecognized } from '@angular/router';
-
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
@@ -9,7 +8,7 @@ import { DataStoreService } from './data-store.service';
 export class NoActiveMeeting extends Error {}
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ActiveMeetingIdService {
     public get meetingIdObservable(): Observable<number | null> {
@@ -27,7 +26,7 @@ export class ActiveMeetingIdService {
         this.router.events
             .pipe(filter((event: RouterEvent): boolean => event instanceof RoutesRecognized))
             .subscribe((event: RoutesRecognized) => {
-                const parts = event.url.split('/');
+                const parts = event.url.split(`/`);
                 let meetingId = null;
                 if (parts.length >= 2) {
                     meetingId = parts[1];

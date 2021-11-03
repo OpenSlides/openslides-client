@@ -1,4 +1,5 @@
 import { Id } from 'app/core/definitions/key-types';
+
 import { BaseModel } from '../base/base-model';
 import { HasAgendaItemId } from '../base/has-agenda-item-id';
 import { HasAttachmentIds } from '../base/has-attachment-ids';
@@ -8,9 +9,9 @@ import { HasProjectionIds } from '../base/has-projectable-ids';
 import { HasTagIds } from '../base/has-tag-ids';
 
 export enum AssignmentPhase {
-    Search = 'search',
-    Voting = 'voting',
-    Finished = 'finished'
+    Search = `search`,
+    Voting = `voting`,
+    Finished = `finished`
 }
 
 /**
@@ -18,7 +19,7 @@ export enum AssignmentPhase {
  * @ignore
  */
 export class Assignment extends BaseModel<Assignment> {
-    public static COLLECTION = 'assignment';
+    public static COLLECTION = `assignment`;
 
     public id: Id;
     public title: string;

@@ -1,11 +1,12 @@
 import { fillTemplateValueInTemplateField } from 'app/core/core-services/key-transforms';
+
 import { BaseModel } from './base-model';
 
 export abstract class BaseDecimalModel<T = any> extends BaseModel<T> {
     protected abstract getDecimalFields(): (keyof T)[];
 
     public deserialize(input: any): void {
-        if (!input || typeof input !== 'object') {
+        if (!input || typeof input !== `object`) {
             return;
         }
         for (const field of this.getDecimalFields()) {

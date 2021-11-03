@@ -1,24 +1,24 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { Router } from '@angular/router';
-
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { combineLatest, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { fadeInAnim, fadeInOutAnim } from 'app/shared/animations';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { combineLatest, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { ApplauseService } from '../../services/applause.service';
 import { CallRestrictionService } from '../../services/call-restriction.service';
 import { InteractionService } from '../../services/interaction.service';
 import { RtcService } from '../../services/rtc.service';
 
-const canEnterTooltip = _('Enter conference room');
-const cannotEnterTooltip = _('Add yourself to the current list of speakers to join the conference');
+const canEnterTooltip = _(`Enter conference room`);
+const cannotEnterTooltip = _(`Add yourself to the current list of speakers to join the conference`);
 @Component({
-    selector: 'os-action-bar',
-    templateUrl: './action-bar.component.html',
-    styleUrls: ['./action-bar.component.scss'],
+    selector: `os-action-bar`,
+    templateUrl: `./action-bar.component.html`,
+    styleUrls: [`./action-bar.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: [fadeInAnim, fadeInOutAnim]
 })
@@ -70,6 +70,7 @@ export class ActionBarComponent extends BaseComponent {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private router: Router,
         private callRestrictionService: CallRestrictionService,
         private interactionService: InteractionService,
@@ -77,7 +78,7 @@ export class ActionBarComponent extends BaseComponent {
         private applauseService: ApplauseService,
         private cd: ChangeDetectorRef
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
         this.subscriptions.push(
             this.canEnterCallObservable.subscribe(canEnter => {
                 this.canEnterCall = canEnter;
@@ -93,7 +94,7 @@ export class ActionBarComponent extends BaseComponent {
                 .then(() => this.rtcService.enterConferenceRoom())
                 .catch(this.raiseError);
         } else {
-            const navUrl = '/autopilot';
+            const navUrl = `/autopilot`;
             this.router.navigate([navUrl]);
         }
     }

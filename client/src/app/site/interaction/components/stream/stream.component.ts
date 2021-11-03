@@ -8,18 +8,18 @@ import {
     OnDestroy,
     Output
 } from '@angular/core';
-
-import { Observable } from 'rxjs';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { Observable } from 'rxjs';
+
 import { ApplauseService } from '../../services/applause.service';
 import { StreamService } from '../../services/stream.service';
 
 @Component({
-    selector: 'os-stream',
-    templateUrl: './stream.component.html',
-    styleUrls: ['./stream.component.scss'],
+    selector: `os-stream`,
+    templateUrl: `./stream.component.html`,
+    styleUrls: [`./stream.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StreamComponent extends BaseComponent implements AfterViewInit, OnDestroy {
@@ -48,11 +48,12 @@ export class StreamComponent extends BaseComponent implements AfterViewInit, OnD
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private streamService: StreamService,
         private applauseService: ApplauseService,
         private cd: ChangeDetectorRef
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
 
         this.subscriptions.push(
             this.streamService.liveStreamUrlObservable.subscribe(url => {
@@ -71,14 +72,14 @@ export class StreamComponent extends BaseComponent implements AfterViewInit, OnD
     }
 
     public ngAfterViewInit(): void {
-        this.streamTitle.next('Livestream');
-        this.streamSubtitle.next('');
+        this.streamTitle.next(`Livestream`);
+        this.streamSubtitle.next(``);
         this.cd.detectChanges();
     }
 
     // closing the tab should also try to stop jitsi.
     // this will usually not be caught by ngOnDestroy
-    @HostListener('window:beforeunload', ['$event'])
+    @HostListener(`window:beforeunload`, [`$event`])
     public async beforeunload($event: any): Promise<void> {
         this.beforeViewCloses();
     }

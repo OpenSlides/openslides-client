@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
-
 import { OrganizationAction } from 'app/core/actions/organization-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { ViewOrganization } from 'app/management/models/view-organization';
 import { Organization, OrganizationSetting } from 'app/shared/models/event-management/organization';
+
+import { ORGANIZATION_ID } from '../../core-services/organization.service';
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
-import { ORGANIZATION_ID } from '../../core-services/organization.service';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class OrganizationRepositoryService extends BaseRepository<ViewOrganization, Organization> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
@@ -19,21 +19,21 @@ export class OrganizationRepositoryService extends BaseRepository<ViewOrganizati
     public getTitle = (viewOrganization: ViewOrganization) => viewOrganization.name;
 
     public getVerboseName = (plural: boolean = false) =>
-        this.translate.instant(plural ? 'Organizations' : 'Organization');
+        this.translate.instant(plural ? `Organizations` : `Organization`);
 
     public getFieldsets(): Fieldsets<Organization> {
-        const coreFieldset: (keyof Organization)[] = ['name', 'description', 'active_meeting_ids'];
+        const coreFieldset: (keyof Organization)[] = [`name`, `description`, `active_meeting_ids`];
         const settingsFieldset: (keyof (OrganizationSetting & Organization))[] = coreFieldset.concat(
-            'legal_notice',
-            'privacy_policy',
-            'login_text',
-            'theme_id',
-            'enable_electronic_voting',
-            'reset_password_verbose_errors',
-            'limit_of_meetings',
-            'limit_of_users'
+            `legal_notice`,
+            `privacy_policy`,
+            `login_text`,
+            `theme_id`,
+            `enable_electronic_voting`,
+            `reset_password_verbose_errors`,
+            `limit_of_meetings`,
+            `limit_of_users`
         );
-        const detailFieldset: (keyof Organization)[] = coreFieldset.concat('committee_ids', 'organization_tag_ids');
+        const detailFieldset: (keyof Organization)[] = coreFieldset.concat(`committee_ids`, `organization_tag_ids`);
         return {
             [DEFAULT_FIELDSET]: detailFieldset,
             title: coreFieldset,

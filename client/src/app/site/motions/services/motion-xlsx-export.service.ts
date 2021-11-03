@@ -1,22 +1,21 @@
 import { Injectable } from '@angular/core';
-
 import { TranslateService } from '@ngx-translate/core';
-import { Workbook } from 'exceljs/dist/exceljs.min.js';
-
-import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
 import { MotionService } from 'app/core/repositories/motions/motion.service';
+import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
 import { CellFillingDefinition, XlsxExportServiceService } from 'app/core/ui-services/xlsx-export-service.service';
 import { reconvertChars } from 'app/shared/utils/reconvert-chars';
 import { stripHtmlTags } from 'app/shared/utils/strip-html-tags';
+import { Workbook } from 'exceljs/dist/exceljs.min.js';
+
+import { ViewMotion } from '../models/view-motion';
 import { sortMotionPropertyList } from '../motions.constants';
 import { InfoToExport } from '../motions.constants';
-import { ViewMotion } from '../models/view-motion';
 
 /**
  * Service to export motion elements to XLSX
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MotionXlsxExportService {
     /**
@@ -27,19 +26,19 @@ export class MotionXlsxExportService {
     /**
      * The defa
      */
-    private fontName = 'Arial';
+    private fontName = `Arial`;
 
     /**
      * Defines the head row style
      */
     private headRowFilling: CellFillingDefinition = {
-        type: 'pattern',
-        pattern: 'solid',
+        type: `pattern`,
+        pattern: `solid`,
         fgColor: {
-            argb: 'FFFFE699'
+            argb: `FFFFE699`
         },
         bgColor: {
-            argb: 'FFFFE699'
+            argb: `FFFFE699`
         }
     };
 
@@ -47,13 +46,13 @@ export class MotionXlsxExportService {
      * Filling Style of odd rows
      */
     private oddFilling: CellFillingDefinition = {
-        type: 'pattern',
-        pattern: 'solid',
+        type: `pattern`,
+        pattern: `solid`,
         fgColor: {
-            argb: 'FFDDDDDD'
+            argb: `FFDDDDDD`
         },
         bgColor: {
-            argb: 'FFDDDDDD'
+            argb: `FFDDDDDD`
         }
     };
 
@@ -81,18 +80,18 @@ export class MotionXlsxExportService {
      */
     public exportMotionList(motions: ViewMotion[], infoToExport: InfoToExport[], comments: number[]): void {
         const workbook = new Workbook();
-        const properties = infoToExport.includes('speakers')
-            ? sortMotionPropertyList(['number', 'title'].concat(infoToExport)).concat('speakers')
-            : sortMotionPropertyList(['number', 'title'].concat(infoToExport));
+        const properties = infoToExport.includes(`speakers`)
+            ? sortMotionPropertyList([`number`, `title`].concat(infoToExport)).concat(`speakers`)
+            : sortMotionPropertyList([`number`, `title`].concat(infoToExport));
 
-        const worksheet = workbook.addWorksheet(this.translate.instant('Motions'), {
+        const worksheet = workbook.addWorksheet(this.translate.instant(`Motions`), {
             pageSetup: {
                 paperSize: 9,
-                orientation: 'landscape',
+                orientation: `landscape`,
                 fitToPage: true,
                 fitToHeight: 5,
                 fitToWidth: properties.length,
-                printTitlesRow: '1:1',
+                printTitlesRow: `1:1`,
                 margins: {
                     left: 0.4,
                     right: 0.4,
@@ -107,13 +106,13 @@ export class MotionXlsxExportService {
         const columns = [];
         columns.push(
             ...properties.map(property => {
-                let propertyHeader = '';
+                let propertyHeader = ``;
                 switch (property) {
-                    case 'block':
-                        propertyHeader = 'Motion block';
+                    case `block`:
+                        propertyHeader = `Motion block`;
                         break;
-                    case 'speakers':
-                        propertyHeader = 'Open requests to speak';
+                    case `speakers`:
+                        propertyHeader = `Open requests to speak`;
                         break;
                     default:
                         propertyHeader = property.charAt(0).toUpperCase() + property.slice(1);
@@ -153,12 +152,12 @@ export class MotionXlsxExportService {
                             : '';
                     }*/
                     if (!motionProp) {
-                        return '';
+                        return ``;
                     }
                     switch (property) {
-                        case 'state':
+                        case `state`:
                             return this.motionService.getExtendedStateLabel(motion);
-                        case 'recommendation':
+                        case `recommendation`:
                             return this.motionService.getExtendedRecommendationLabel(motion);
                         default:
                             return this.translate.instant(motionProp.toString());
@@ -172,7 +171,7 @@ export class MotionXlsxExportService {
                         const motionComment = motion.getCommentForSection(section);
                         return motionComment && motionComment.comment
                             ? reconvertChars(stripHtmlTags(motionComment.comment))
-                            : '';
+                            : ``;
                     })
                 );
             }
@@ -183,7 +182,7 @@ export class MotionXlsxExportService {
         for (let i = 0; i < motionData.length; i++) {
             const row = worksheet.addRow(motionData[i]);
             row.eachCell(cell => {
-                cell.alignment = { vertical: 'middle', horizontal: 'left', wrapText: true };
+                cell.alignment = { vertical: `middle`, horizontal: `left`, wrapText: true };
                 cell.font = {
                     name: this.fontName,
                     size: this.fontSize
@@ -196,6 +195,6 @@ export class MotionXlsxExportService {
         }
 
         this.xlsx.autoSize(worksheet, 0);
-        this.xlsx.saveXlsx(workbook, this.translate.instant('Motions'));
+        this.xlsx.saveXlsx(workbook, this.translate.instant(`Motions`));
     }
 }

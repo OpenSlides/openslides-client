@@ -1,19 +1,19 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-
-import { BehaviorSubject, Observable } from 'rxjs';
-
+import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'app/core/definitions/key-types';
 import { MotionSubmitterRepositoryService } from 'app/core/repositories/motions/motion-submitter-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionSubmitter } from 'app/site/motions/models/view-motion-submitter';
 import { PermissionsService } from 'app/site/motions/services/permissions.service';
 import { ViewUser } from 'app/site/users/models/view-user';
-import { Selectable } from '../../../../../../shared/components/selectable';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { BaseComponent } from 'app/site/base/components/base.component';
+
+import { Selectable } from '../../../../../../shared/components/selectable';
 
 type Submitter = Selectable & { user_id?: Id };
 
@@ -25,9 +25,9 @@ interface IdMap {
  * Component for the motion comments view
  */
 @Component({
-    selector: 'os-manage-submitters',
-    templateUrl: './manage-submitters.component.html',
-    styleUrls: ['./manage-submitters.component.scss']
+    selector: `os-manage-submitters`,
+    templateUrl: `./manage-submitters.component.html`,
+    styleUrls: [`./manage-submitters.component.scss`]
 })
 export class ManageSubmittersComponent extends BaseComponent implements OnInit {
     /**
@@ -91,11 +91,12 @@ export class ManageSubmittersComponent extends BaseComponent implements OnInit {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private userRepository: UserRepositoryService,
         private motionSubmitterRepository: MotionSubmitterRepositoryService,
         public perms: PermissionsService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
 
         this.addSubmitterForm = new FormControl([]);
         this.editSubmitterObservable = this.editSubmitterSubject.asObservable();

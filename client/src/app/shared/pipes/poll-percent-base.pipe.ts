@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-
 import { PollService } from 'app/site/polls/services/poll.service';
+
 import { PollData } from '../models/poll/generic-poll';
 
 /**
@@ -17,7 +17,7 @@ import { PollData } from '../models/poll/generic-poll';
  * ```
  */
 @Pipe({
-    name: 'pollPercentBase'
+    name: `pollPercentBase`
 })
 export class PollPercentBasePipe implements PipeTransform {
     public constructor(private pollService: PollService) {}

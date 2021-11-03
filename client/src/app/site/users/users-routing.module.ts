@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
-
 import { Permission } from 'app/core/core-services/permission';
+
 import { GroupListComponent } from './components/group-list/group-list.component';
 import { PasswordComponent } from './components/password/password.component';
 import { PresenceDetailComponent } from './components/presence-detail/presence-detail.component';
@@ -11,42 +11,42 @@ import { UserListComponent } from './components/user-list/user-list.component';
 
 const routes: Route[] = [
     {
-        path: '',
+        path: ``,
         component: UserListComponent,
-        pathMatch: 'full',
+        pathMatch: `full`,
         data: { basePerm: Permission.userCanSee }
     },
     {
-        path: 'password',
+        path: `password`,
         component: PasswordComponent
     },
     {
-        path: 'password/:id',
+        path: `password/:id`,
         component: PasswordComponent,
         data: { basePerm: Permission.userCanManage }
     },
     {
-        path: 'new',
+        path: `new`,
         component: UserDetailComponent,
         data: { basePerm: Permission.userCanManage }
     },
     {
-        path: 'import',
+        path: `import`,
         component: UserImportListComponent,
         data: { basePerm: Permission.userCanManage }
     },
     {
-        path: 'presence',
+        path: `presence`,
         component: PresenceDetailComponent,
-        data: { basePerm: Permission.userCanManage, meetingSetting: 'users_enable_presence_view' }
+        data: { basePerm: Permission.userCanManage, meetingSetting: `users_enable_presence_view` }
     },
     {
-        path: 'groups',
+        path: `groups`,
         component: GroupListComponent,
         data: { basePerm: Permission.userCanManage }
     },
     {
-        path: ':id',
+        path: `:id`,
         component: UserDetailComponent
         // No basePerm, because user is allowed to see the own profile page.
         // Other user detail pages are empty if user does not have user.can_see_name.

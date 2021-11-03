@@ -1,8 +1,7 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-
+import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
-
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/motion-workflow-repository.service';
@@ -13,21 +12,22 @@ import { MotionWorkflow } from 'app/shared/models/motions/motion-workflow';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
 import { ViewMotionWorkflow } from 'app/site/motions/models/view-motion-workflow';
+
 import { Id } from '../../../../../../core/definitions/key-types';
 
 const getAllWorkflowStates = (id: Id): SimplifiedModelRequest => ({
     viewModelCtor: ViewMeeting,
     ids: [id],
-    follow: [{ idField: 'motion_workflow_ids', follow: ['state_ids'], additionalFields: ['first_state_id'] }]
+    follow: [{ idField: `motion_workflow_ids`, follow: [`state_ids`], additionalFields: [`first_state_id`] }]
 });
 
 /**
  * List view for workflows
  */
 @Component({
-    selector: 'os-workflow-list',
-    templateUrl: './workflow-list.component.html',
-    styleUrls: ['./workflow-list.component.scss']
+    selector: `os-workflow-list`,
+    templateUrl: `./workflow-list.component.html`,
+    styleUrls: [`./workflow-list.component.scss`]
 })
 export class WorkflowListComponent extends BaseListViewComponent<ViewMotionWorkflow> implements OnInit {
     /**
@@ -40,18 +40,18 @@ export class WorkflowListComponent extends BaseListViewComponent<ViewMotionWorkf
      */
     public tableColumnDefinition: PblColumnDefinition[] = [
         {
-            prop: 'name',
-            width: '100%'
+            prop: `name`,
+            width: `100%`
         },
         {
-            prop: 'delete'
+            prop: `delete`
         }
     ];
 
     /**
      * Define extra filter properties
      */
-    public filterProps = ['name', 'states'];
+    public filterProps = [`name`, `states`];
 
     /**
      * Constructor
@@ -65,12 +65,13 @@ export class WorkflowListComponent extends BaseListViewComponent<ViewMotionWorkf
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private dialog: MatDialog,
         public workflowRepo: MotionWorkflowRepositoryService,
         private promptService: PromptService,
         private activeMeetingIdService: ActiveMeetingIdService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
         this.canMultiSelect = true;
     }
 
@@ -79,14 +80,14 @@ export class WorkflowListComponent extends BaseListViewComponent<ViewMotionWorkf
      */
     public ngOnInit(): void {
         super.ngOnInit();
-        super.setTitle('Workflows');
+        super.setTitle(`Workflows`);
     }
 
     protected getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
             ids: [this.activeMeetingIdService.meetingId],
-            follow: [{ idField: 'motion_workflow_ids' }]
+            follow: [{ idField: `motion_workflow_ids` }]
         };
     }
 
@@ -96,7 +97,7 @@ export class WorkflowListComponent extends BaseListViewComponent<ViewMotionWorkf
      * @param templateRef The reference to the dialog
      */
     public onNewButton(templateRef: TemplateRef<string>): void {
-        this.newWorkflowTitle = '';
+        this.newWorkflowTitle = ``;
         const dialogRef = this.dialog.open(templateRef, infoDialogSettings);
 
         dialogRef.afterClosed().subscribe(result => {
@@ -112,7 +113,7 @@ export class WorkflowListComponent extends BaseListViewComponent<ViewMotionWorkf
      * @param selected the selected workflow
      */
     public async onDeleteWorkflow(selected: ViewMotionWorkflow): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to delete this workflow?');
+        const title = this.translate.instant(`Are you sure you want to delete this workflow?`);
         const content = selected.getTitle();
         if (await this.promptService.open(title, content)) {
             this.workflowRepo.delete(selected);
@@ -120,7 +121,7 @@ export class WorkflowListComponent extends BaseListViewComponent<ViewMotionWorkf
     }
 
     public async exportWorkflows(): Promise<void> {
-        await this.getModelChanges(getAllWorkflowStates(this.activeMeetingId), 'all_workflow_states');
+        await this.getModelChanges(getAllWorkflowStates(this.activeMeetingId), `all_workflow_states`);
         this.workflowRepo.exportWorkflows(...this.selectedRows.map(entry => this.workflowRepo.getViewModel(entry.id)));
     }
 }

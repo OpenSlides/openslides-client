@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-
-import { Observable, Subscription } from 'rxjs';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { Settings } from 'app/shared/models/event-management/meeting';
 import { MotionBlock } from 'app/shared/models/motions/motion-block';
@@ -11,13 +9,15 @@ import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category
 import { ViewMotionState } from 'app/site/motions/models/view-motion-state';
 import { ChangeRecoMode } from 'app/site/motions/motions.constants';
 import { PermissionsService } from 'app/site/motions/services/permissions.service';
-import { BaseMotionDetailChildComponent } from '../base/base-motion-detail-child.component';
+import { Observable, Subscription } from 'rxjs';
+
 import { MotionServiceCollectorService } from '../../../services/motion-service-collector.service';
+import { BaseMotionDetailChildComponent } from '../base/base-motion-detail-child.component';
 
 @Component({
-    selector: 'os-motion-meta-data',
-    templateUrl: './motion-meta-data.component.html',
-    styleUrls: ['./motion-meta-data.component.scss']
+    selector: `os-motion-meta-data`,
+    templateUrl: `./motion-meta-data.component.html`,
+    styleUrls: [`./motion-meta-data.component.scss`]
 })
 export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
     public motionBlocks: MotionBlock[] = [];
@@ -36,12 +36,12 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
     /**
      * new state extension label to be submitted, if state extensions can be set
      */
-    public newStateExtension = '';
+    public newStateExtension = ``;
 
     /**
      * State extension label for the recommendation.
      */
-    public recommendationStateExtension = '';
+    public recommendationStateExtension = ``;
 
     /**
      * @returns the current recommendation label (with extension)
@@ -52,7 +52,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
 
     public get isRecommendationEnabled(): boolean {
         return (
-            (this.perms.isAllowed('change_metadata') || this.motion.recommendation) &&
+            (this.perms.isAllowed(`change_metadata`) || this.motion.recommendation) &&
             this.recommender &&
             !!this.getPossibleRecommendations().length
         );
@@ -92,10 +92,11 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         motionServiceCollector: MotionServiceCollectorService,
         public perms: PermissionsService
     ) {
-        super(componentServiceCollector, motionServiceCollector);
+        super(componentServiceCollector, translate, motionServiceCollector);
     }
 
     /**
@@ -202,7 +203,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
      */
     public canFollowRecommendation(): boolean {
         return (
-            this.perms.isAllowed('createpoll', this.motion) &&
+            this.perms.isAllowed(`createpoll`, this.motion) &&
             this.motion.recommendation &&
             !!this.motion.recommendation.recommendation_label
         );
@@ -248,8 +249,8 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
     private setupRecommender(): void {
         if (this.motion) {
             const configKey: keyof Settings = this.motion.isStatuteAmendment()
-                ? 'motions_statute_recommendations_by'
-                : 'motions_recommendations_by';
+                ? `motions_statute_recommendations_by`
+                : `motions_recommendations_by`;
             if (this.recommenderSubscription) {
                 this.recommenderSubscription.unsubscribe();
             }

@@ -1,9 +1,8 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-
+import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
-
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
@@ -19,12 +18,12 @@ import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category
  * Table for categories
  */
 @Component({
-    selector: 'os-category-list',
-    templateUrl: './category-list.component.html',
-    styleUrls: ['./category-list.component.scss']
+    selector: `os-category-list`,
+    templateUrl: `./category-list.component.html`,
+    styleUrls: [`./category-list.component.scss`]
 })
 export class CategoryListComponent extends BaseListViewComponent<ViewMotionCategory> implements OnInit {
-    @ViewChild('newCategoryDialog', { static: true })
+    @ViewChild(`newCategoryDialog`, { static: true })
     private newCategoryDialog: TemplateRef<string>;
 
     private dialogRef: MatDialogRef<any>;
@@ -39,11 +38,11 @@ export class CategoryListComponent extends BaseListViewComponent<ViewMotionCateg
      */
     public tableColumnDefinition: PblColumnDefinition[] = [
         {
-            prop: 'title',
-            width: '100%'
+            prop: `title`,
+            width: `100%`
         },
         {
-            prop: 'amount',
+            prop: `amount`,
             width: this.singleButtonWidth
         }
     ];
@@ -51,7 +50,7 @@ export class CategoryListComponent extends BaseListViewComponent<ViewMotionCateg
     /**
      * Define extra filter properties
      */
-    public filterProps = ['prefixedName'];
+    public filterProps = [`prefixedName`];
 
     /**
      * helper for permission checks
@@ -75,18 +74,19 @@ export class CategoryListComponent extends BaseListViewComponent<ViewMotionCateg
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         public repo: MotionCategoryRepositoryService,
         private formBuilder: FormBuilder,
         private dialog: MatDialog,
         private operator: OperatorService,
         private activeMeetingIdService: ActiveMeetingIdService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
 
         this.createForm = this.formBuilder.group({
-            prefix: [''],
-            name: ['', Validators.required],
-            parent_id: ['']
+            prefix: [``],
+            name: [``, Validators.required],
+            parent_id: [``]
         });
     }
 
@@ -95,7 +95,7 @@ export class CategoryListComponent extends BaseListViewComponent<ViewMotionCateg
      */
     public ngOnInit(): void {
         super.ngOnInit();
-        super.setTitle('Categories');
+        super.setTitle(`Categories`);
     }
 
     protected getModelRequest(): SimplifiedModelRequest {
@@ -104,8 +104,8 @@ export class CategoryListComponent extends BaseListViewComponent<ViewMotionCateg
             ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
-                    idField: 'motion_category_ids',
-                    fieldset: 'list'
+                    idField: `motion_category_ids`,
+                    fieldset: `list`
                 }
             ]
         };
@@ -144,11 +144,11 @@ export class CategoryListComponent extends BaseListViewComponent<ViewMotionCateg
      * @param event has the code
      */
     public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === 'Enter') {
+        if (event.key === `Enter`) {
             this.save();
             this.dialogRef.close();
         }
-        if (event.key === 'Escape') {
+        if (event.key === `Escape`) {
             this.dialogRef.close();
         }
     }

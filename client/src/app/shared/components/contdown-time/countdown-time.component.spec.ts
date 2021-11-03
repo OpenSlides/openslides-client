@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { CountdownTimeComponent } from './countdown-time.component';
 import { E2EImportsModule } from '../../../../e2e-imports.module';
+import { CountdownTimeComponent } from './countdown-time.component';
 
-describe('CountdownTimeComponent', () => {
+describe(`CountdownTimeComponent`, () => {
     let component: CountdownTimeComponent;
     let fixture: ComponentFixture<CountdownTimeComponent>;
 
@@ -21,7 +21,7 @@ describe('CountdownTimeComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
-
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
+import { MotionService } from 'app/core/repositories/motions/motion.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import {
@@ -15,7 +15,6 @@ import {
     SUBMITTER_FOLLOW
 } from 'app/core/repositories/motions/motion-repository.service';
 import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/motion-workflow-repository.service';
-import { MotionService } from 'app/core/repositories/motions/motion.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { OsFilterOptionCondition } from 'app/core/ui-services/base-filter-list.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -36,6 +35,7 @@ import { MotionMultiselectService } from 'app/site/motions/services/motion-multi
 import { MotionSortListService } from 'app/site/motions/services/motion-sort-list.service';
 import { PermissionsService } from 'app/site/motions/services/permissions.service';
 import { ViewTag } from 'app/site/tags/models/view-tag';
+
 import { MotionExportDialogComponent } from '../../../shared-motion/motion-export-dialog/motion-export-dialog.component';
 
 /**
@@ -96,16 +96,16 @@ interface InfoDialog {
  * Component that displays all the motions in a Table using DataSource.
  */
 @Component({
-    selector: 'os-motion-list',
-    templateUrl: './motion-list.component.html',
-    styleUrls: ['./motion-list.component.scss'],
+    selector: `os-motion-list`,
+    templateUrl: `./motion-list.component.html`,
+    styleUrls: [`./motion-list.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MotionListComponent extends BaseListViewComponent<ViewMotion> implements OnInit {
     /**
      * Reference to the dialog for quick editing meta information.
      */
-    @ViewChild('motionInfoDialog', { static: true })
+    @ViewChild(`motionInfoDialog`, { static: true })
     private motionInfoDialog: TemplateRef<string>;
 
     /**
@@ -129,15 +129,15 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
      */
     public tableColumnDefinition: PblColumnDefinition[] = [
         {
-            prop: 'number'
+            prop: `number`
         },
         {
-            prop: 'title',
-            width: '80%'
+            prop: `title`,
+            width: `80%`
         },
         {
-            prop: 'state',
-            width: '20%',
+            prop: `state`,
+            width: `20%`,
             minWidth: 160
         }
     ];
@@ -170,7 +170,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
      *
      * TODO: repo.getExtendedStateLabel(), repo.getExtendedRecommendationLabel()
      */
-    public filterProps = ['submitters', 'block', 'title', 'number'];
+    public filterProps = [`submitters`, `block`, `title`, `number`];
 
     /**
      * List of `TileCategoryInformation`.
@@ -218,6 +218,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private route: ActivatedRoute,
         public filterService: MotionFilterListService,
         public sortService: MotionSortListService,
@@ -237,7 +238,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
         public operator: OperatorService,
         private activeMeetingIdService: ActiveMeetingIdService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
         this.canMultiSelect = true;
     }
 
@@ -249,21 +250,21 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
      */
     public async ngOnInit(): Promise<void> {
         super.ngOnInit();
-        super.setTitle('Motions');
+        super.setTitle(`Motions`);
 
         this.subscriptions.push(
             this.meetingSettingsService
-                .get('motions_statutes_enabled')
+                .get(`motions_statutes_enabled`)
                 .subscribe(enabled => (this.statutesEnabled = enabled)),
             this.meetingSettingsService
-                .get('motions_amendments_enabled')
+                .get(`motions_amendments_enabled`)
                 .subscribe(enabled => (this.amendmentsEnabled = enabled)),
 
-            this.meetingSettingsService.get('motions_recommendations_by').subscribe(recommender => {
+            this.meetingSettingsService.get(`motions_recommendations_by`).subscribe(recommender => {
                 this.recommender = recommender;
             }),
             this.meetingSettingsService
-                .get('motions_show_sequential_number')
+                .get(`motions_show_sequential_number`)
                 .subscribe(show => (this.showSequential = show)),
             this.motionBlockRepo.getViewModelListObservable().subscribe(mBs => {
                 this.motionBlocks = mBs;
@@ -271,11 +272,11 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
             this.categoryRepo.getViewModelListObservable().subscribe(cats => {
                 this.categories = cats;
                 if (cats.length > 0) {
-                    this.storage.get<string>('motionListView').then((savedView: MotionListviewType) => {
-                        this.selectedView = savedView ? savedView : 'tiles';
+                    this.storage.get<string>(`motionListView`).then((savedView: MotionListviewType) => {
+                        this.selectedView = savedView ? savedView : `tiles`;
                     });
                 } else {
-                    this.selectedView = 'list';
+                    this.selectedView = `list`;
                 }
             }),
             this.tagRepo.getViewModelListObservable().subscribe(tags => {
@@ -303,43 +304,43 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
             viewModelCtor: ViewMeeting,
             ids: [this.activeMeetingIdService.meetingId],
             follow: [
-                { idField: 'agenda_item_ids', follow: ['content_object_id'] },
+                { idField: `agenda_item_ids`, follow: [`content_object_id`] },
                 {
-                    idField: 'motion_ids',
+                    idField: `motion_ids`,
                     follow: [
-                        'category_id',
-                        'block_id',
-                        'tag_ids',
-                        'personal_note_ids',
-                        { idField: 'comment_ids', follow: [{ idField: 'section_id' }] }, // Necessary for PDf
+                        `category_id`,
+                        `block_id`,
+                        `tag_ids`,
+                        `personal_note_ids`,
+                        { idField: `comment_ids`, follow: [{ idField: `section_id` }] }, // Necessary for PDf
                         {
-                            idField: 'state_id',
-                            follow: ['next_state_ids', GET_POSSIBLE_RECOMMENDATIONS],
-                            fieldset: 'list'
+                            idField: `state_id`,
+                            follow: [`next_state_ids`, GET_POSSIBLE_RECOMMENDATIONS],
+                            fieldset: `list`
                         },
                         {
-                            idField: 'recommendation_id',
-                            fieldset: 'list'
+                            idField: `recommendation_id`,
+                            fieldset: `list`
                         },
                         SUBMITTER_FOLLOW,
                         SPEAKER_BUTTON_FOLLOW
                     ],
-                    fieldset: 'list',
-                    additionalFields: ['text', 'reason']
+                    fieldset: `list`,
+                    additionalFields: [`text`, `reason`]
                 },
                 {
-                    idField: 'motion_category_ids',
-                    fieldset: 'list',
-                    additionalFields: ['parent_id', 'child_ids']
+                    idField: `motion_category_ids`,
+                    fieldset: `list`,
+                    additionalFields: [`parent_id`, `child_ids`]
                 },
                 {
-                    idField: 'user_ids',
-                    fieldset: 'shortName'
+                    idField: `user_ids`,
+                    fieldset: `shortName`
                 },
                 //// This is used to get all workflows available in the motion-list
                 //// This can be removed after OpenSlides/openslides-autoupdate-service#260 is resolved
                 {
-                    idField: 'motion_workflow_ids'
+                    idField: `motion_workflow_ids`
                 }
                 //// End of block
             ],
@@ -359,10 +360,10 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
      * current permissions
      */
     public getColumnsHiddenInMobile(): string[] {
-        const hiddenColumns = ['number', 'state'];
+        const hiddenColumns = [`number`, `state`];
 
         if (!this.perms.canAccessMobileDotMenu()) {
-            hiddenColumns.push('menu');
+            hiddenColumns.push(`menu`);
         }
 
         return hiddenColumns;
@@ -378,7 +379,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
             .filter(category => !category.parent_id && !!category.totalAmountOfMotions)
             .sort((a, b) => a.weight - b.weight)
             .map(category => ({
-                filter: 'category_id',
+                filter: `category_id`,
                 name: category.name,
                 condition: category.id,
                 amountOfMotions: category.totalAmountOfMotions,
@@ -403,13 +404,13 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
             } else {
                 localCategories.add(motion.category.oldestParent);
             }
-            favoriteMotions += +this.motionHasProp(motion, 'star');
-            motionsWithNotes += +this.motionHasProp(motion, 'hasNotes');
+            favoriteMotions += +this.motionHasProp(motion, `star`);
+            motionsWithNotes += +this.motionHasProp(motion, `hasNotes`);
         }
 
-        this.addToTileInfo('Favorites', 'star', true, favoriteMotions);
-        this.addToTileInfo('Personal notes', 'hasNotes', true, motionsWithNotes);
-        this.addToTileInfo('No category', 'category_id', null, motionsWithoutCategory);
+        this.addToTileInfo(`Favorites`, `star`, true, favoriteMotions);
+        this.addToTileInfo(`Personal notes`, `hasNotes`, true, motionsWithNotes);
+        this.addToTileInfo(`No category`, `category_id`, null, motionsWithoutCategory);
 
         this.createCategoryTiles(Array.from(localCategories));
 
@@ -446,7 +447,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
      * Handler for the plus button
      */
     public onPlusButton(): void {
-        this.router.navigate(['./new'], { relativeTo: this.route });
+        this.router.navigate([`./new`], { relativeTo: this.route });
     }
 
     /**
@@ -477,7 +478,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
      */
     public onChangeView(value: MotionListviewType): void {
         this.selectedView = value;
-        this.storage.set('motionListView', value);
+        this.storage.set(`motionListView`, value);
     }
 
     /**
@@ -486,7 +487,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
      * @param tileCategory information about filter and condition.
      */
     public changeToViewWithTileCategory(tileCategory: TileCategoryInformation): void {
-        this.onChangeView('list');
+        this.onChangeView(`list`);
         this.filterService.clearAllFilters();
         this.filterService.toggleFilterOption(tileCategory.filter as any, {
             label: tileCategory.name,
@@ -497,7 +498,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
 
     public isRecommendationEnabled(motion: ViewMotion): boolean {
         return (
-            (this.perms.isAllowed('change_metadata') || motion.recommendation) &&
+            (this.perms.isAllowed(`change_metadata`) || motion.recommendation) &&
             this.recommender &&
             !!this.getPossibleRecommendations(motion).length
         );
@@ -509,7 +510,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
      * @param motion the ViewMotion whose content is edited.
      */
     public async openEditInfo(motion: ViewMotion): Promise<void> {
-        if (this.isMultiSelect || !this.perms.isAllowed('change_metadata')) {
+        if (this.isMultiSelect || !this.perms.isAllowed(`change_metadata`)) {
             return;
         }
 
@@ -524,7 +525,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
 
         const dialogRef = this.dialog.open(this.motionInfoDialog, infoDialogSettings);
         dialogRef.keydownEvents().subscribe((event: KeyboardEvent) => {
-            if (event.key === 'Enter' && event.shiftKey) {
+            if (event.key === `Enter` && event.shiftKey) {
                 dialogRef.close(this.infoDialog);
             }
         });

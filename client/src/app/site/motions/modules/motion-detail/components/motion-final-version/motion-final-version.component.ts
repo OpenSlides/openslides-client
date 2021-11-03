@@ -1,22 +1,22 @@
 import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
-import { Subscription } from 'rxjs';
-
+import { TranslateService } from '@ngx-translate/core';
 import { UnsafeHtml } from 'app/core/definitions/key-types';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { BaseMotionDetailChildComponent } from '../base/base-motion-detail-child.component';
+import { Subscription } from 'rxjs';
+
 import { MotionServiceCollectorService } from '../../../services/motion-service-collector.service';
 import { ModifiedFinalVersionAction } from '../../../services/motion-view.service';
+import { BaseMotionDetailChildComponent } from '../base/base-motion-detail-child.component';
 
 @Component({
-    selector: 'os-motion-final-version',
-    templateUrl: './motion-final-version.component.html',
-    styleUrls: ['./motion-final-version.component.scss']
+    selector: `os-motion-final-version`,
+    templateUrl: `./motion-final-version.component.html`,
+    styleUrls: [`./motion-final-version.component.scss`]
 })
 export class MotionFinalVersionComponent extends BaseMotionDetailChildComponent {
     @Input()
-    public formattedText: UnsafeHtml = '';
+    public formattedText: UnsafeHtml = ``;
 
     public contentForm: FormGroup;
 
@@ -24,10 +24,11 @@ export class MotionFinalVersionComponent extends BaseMotionDetailChildComponent 
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         motionServiceCollector: MotionServiceCollectorService,
         private fb: FormBuilder
     ) {
-        super(componentServiceCollector, motionServiceCollector);
+        super(componentServiceCollector, translate, motionServiceCollector);
     }
 
     protected getSubscriptions(): Subscription[] {
@@ -66,7 +67,7 @@ export class MotionFinalVersionComponent extends BaseMotionDetailChildComponent 
 
     private createForm(): FormGroup {
         return this.fb.group({
-            modified_final_version: ['', Validators.required]
+            modified_final_version: [``, Validators.required]
         });
     }
 

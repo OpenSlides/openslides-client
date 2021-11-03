@@ -13,6 +13,7 @@ import { BaseProjectableViewModel } from 'app/site/base/base-projectable-view-mo
 import { Searchable } from 'app/site/base/searchable';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionSubmitter } from 'app/site/motions/models/view-motion-submitter';
+
 import { ViewGroup } from './view-group';
 import { ViewPersonalNote } from './view-personal-note';
 
@@ -37,7 +38,7 @@ export class ViewUser extends BaseProjectableViewModel<User> implements Searchab
         if (this.user && this.getShortName) {
             return this.getShortName();
         } else {
-            return '';
+            return ``;
         }
     }
 
@@ -45,7 +46,7 @@ export class ViewUser extends BaseProjectableViewModel<User> implements Searchab
         if (this.user && this.getFullName) {
             return this.getFullName();
         } else {
-            return '';
+            return ``;
         }
     }
 
@@ -156,7 +157,7 @@ export class ViewUser extends BaseProjectableViewModel<User> implements Searchab
     }
 
     public structure_level(meeting_id?: Id): string {
-        return this ? this.user.structure_level(meeting_id || this.getEnsuredActiveMeetingId()) : '';
+        return this ? this.user.structure_level(meeting_id || this.getEnsuredActiveMeetingId()) : ``;
     }
 
     public comment(meetingId?: Id): string {
@@ -183,12 +184,12 @@ export class ViewUser extends BaseProjectableViewModel<User> implements Searchab
      */
     public formatForSearch(): SearchRepresentation {
         const properties = [
-            { key: 'Title', value: this.getTitle() },
-            { key: 'First name', value: this.first_name },
-            { key: 'Last name', value: this.last_name },
-            { key: 'Structure level', value: this.structure_level() },
-            { key: 'Number', value: this.number() },
-            { key: 'Delegation of vote', value: this.delegationName() }
+            { key: `Title`, value: this.getTitle() },
+            { key: `First name`, value: this.first_name },
+            { key: `Last name`, value: this.last_name },
+            { key: `Structure level`, value: this.structure_level() },
+            { key: `Number`, value: this.number() },
+            { key: `Delegation of vote`, value: this.delegationName() }
         ];
         return { properties, searchValue: properties.map(property => property.value) };
     }

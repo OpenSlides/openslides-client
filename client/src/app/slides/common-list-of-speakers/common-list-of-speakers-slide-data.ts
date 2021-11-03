@@ -1,5 +1,6 @@
-import { TitleInformationWithAgendaItem } from '../agenda_item_number';
 import { SpeechState } from 'app/shared/models/agenda/speaker';
+
+import { TitleInformationWithAgendaItem } from '../agenda_item_number';
 
 export interface SlideSpeaker {
     user: string;

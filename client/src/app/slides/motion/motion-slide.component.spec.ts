@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { E2EImportsModule } from '../../../e2e-imports.module';
 import { MotionSlideComponent } from './motion-slide.component';
 
-describe('MotionsMotionSlideComponent', () => {
+describe(`MotionsMotionSlideComponent`, () => {
     let component: MotionSlideComponent;
     let fixture: ComponentFixture<MotionSlideComponent>;
 
@@ -22,7 +22,7 @@ describe('MotionsMotionSlideComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

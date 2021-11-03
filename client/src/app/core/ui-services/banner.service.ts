@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { BehaviorSubject } from 'rxjs';
 
@@ -20,12 +19,12 @@ export interface BannerDefinition {
  * and are removed by reference so the service adding a banner has to store the reference to remove it later
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class BannerService {
     private offlineBannerDefinition: BannerDefinition = {
-        text: _('Offline mode'),
-        icon: 'cloud_off'
+        text: _(`Offline mode`),
+        icon: `cloud_off`
     };
 
     public activeBanners: BehaviorSubject<BannerDefinition[]> = new BehaviorSubject<BannerDefinition[]>([]);
@@ -64,7 +63,7 @@ export class BannerService {
             const newArray = Array.from(this.activeBanners.value);
             const idx = newArray.findIndex(banner => banner === toRemove);
             if (idx === -1) {
-                throw new Error("The given banner couldn't be found.");
+                throw new Error(`The given banner couldn't be found.`);
             } else {
                 newArray[idx] = toAdd;
                 this.activeBanners.next(newArray); // no need for this.update since the length doesn't change

@@ -1,16 +1,15 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
-import { E2EImportsModule } from 'e2e-imports.module';
-
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ModificationType } from 'app/core/ui-services/diff.service';
 import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
+import { E2EImportsModule } from 'e2e-imports.module';
+
 import {
     MotionChangeRecommendationDialogComponent,
     MotionChangeRecommendationDialogComponentData
 } from './motion-change-recommendation-dialog.component';
 
-describe('MotionChangeRecommendationComponent', () => {
+describe(`MotionChangeRecommendationComponent`, () => {
     let component: MotionChangeRecommendationDialogComponent;
     let fixture: ComponentFixture<MotionChangeRecommendationDialogComponent>;
 
@@ -18,7 +17,7 @@ describe('MotionChangeRecommendationComponent', () => {
         line_from: 1,
         line_to: 2,
         type: ModificationType.TYPE_REPLACEMENT,
-        text: '<p>',
+        text: `<p>`,
         rejected: false,
         motion_id: 1
     };
@@ -51,7 +50,7 @@ describe('MotionChangeRecommendationComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

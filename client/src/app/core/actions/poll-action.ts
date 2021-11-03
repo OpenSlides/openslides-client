@@ -1,19 +1,20 @@
 import { HasMeetingId } from 'app/shared/models/base/has-meeting-id';
 import { Identifiable } from 'app/shared/models/base/identifiable';
+
 import { Decimal, Fqid, Id } from '../definitions/key-types';
 
 export namespace PollAction {
-    export const CREATE = 'poll.create';
-    export const UPDATE = 'poll.update';
-    export const DELETE = 'poll.delete';
+    export const CREATE = `poll.create`;
+    export const UPDATE = `poll.update`;
+    export const DELETE = `poll.delete`;
 
-    export const PUBLISH = 'poll.publish';
-    export const RESET = 'poll.reset';
-    export const START = 'poll.start';
-    export const STOP = 'poll.stop';
-    export const ANONYMIZE = 'poll.anonymize';
-    export const VOTE = 'poll.vote';
-    export const UPDATE_OPTION = 'option.update';
+    export const PUBLISH = `poll.publish`;
+    export const RESET = `poll.reset`;
+    export const START = `poll.start`;
+    export const STOP = `poll.stop`;
+    export const ANONYMIZE = `poll.anonymize`;
+    export const VOTE = `poll.vote`;
+    export const UPDATE_OPTION = `option.update`;
 
     interface UserIdentifiable {
         user_id: Id;

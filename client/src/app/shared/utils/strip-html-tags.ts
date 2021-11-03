@@ -7,5 +7,5 @@
  */
 export function stripHtmlTags(inputString: string): string {
     const regexp = new RegExp(/<[^ ][^<>]*(>|$)/g);
-    return inputString.replace(regexp, '').trim();
+    return inputString.replace(regexp, ``).trim();
 }

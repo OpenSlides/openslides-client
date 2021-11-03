@@ -1,11 +1,10 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 import { E2EImportsModule } from '../../../e2e-imports.module';
 import { MediafileSlideComponent } from './mediafile-slide.component';
 
-describe('MediafileSlideComponent', () => {
+describe(`MediafileSlideComponent`, () => {
     let component: MediafileSlideComponent;
     let fixture: ComponentFixture<MediafileSlideComponent>;
 
@@ -24,7 +23,7 @@ describe('MediafileSlideComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
-
-import { Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
-
-import { ActiveMeetingIdService } from './active-meeting-id.service';
 import { RELATIONS } from 'app/core/repositories/relations';
 import { BaseModel } from 'app/shared/models/base/base-model';
 import { BaseViewModel } from 'app/site/base/base-view-model';
-import { CollectionMapperService } from './collection-mapper.service';
-import { collectionIdFromFqid } from './key-transforms';
+import { Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
+
 import { Fqid } from '../definitions/key-types';
 import { Relation } from '../definitions/relations';
+import { ActiveMeetingIdService } from './active-meeting-id.service';
+import { CollectionMapperService } from './collection-mapper.service';
+import { collectionIdFromFqid } from './key-transforms';
 import { ViewModelStoreService } from './view-model-store.service';
 
 /**
@@ -18,7 +17,7 @@ import { ViewModelStoreService } from './view-model-store.service';
  * base repository to offload managing relations between view models.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class RelationManagerService {
     private relationsByCollection: {
@@ -59,19 +58,19 @@ export class RelationManagerService {
         }
 
         if (many) {
-            return field.slice(0, -1) + '_ids';
+            return field.slice(0, -1) + `_ids`;
         } else {
-            return field + '_id';
+            return field + `_id`;
         }
     }
 
     // 'prefix_$_suffix' -> ['prefix_$', '_suffix']
     private getPrefixSuffix(idField: string): [string, string] {
-        const parts = idField.split('$');
+        const parts = idField.split(`$`);
         if (parts.length !== 2) {
-            throw new Error('The id field of a structured field must include exactly one $');
+            throw new Error(`The id field of a structured field must include exactly one $`);
         }
-        parts[0] += '$';
+        parts[0] += `$`;
         return parts as [string, string];
     }
 
@@ -91,7 +90,7 @@ export class RelationManagerService {
         } else if (!relation.generic && relation.structured) {
             return this.handleStructuredRelation(model, relation);
         } else {
-            throw new Error('Generic and structured relations are not yet implemented.');
+            throw new Error(`Generic and structured relations are not yet implemented.`);
         }
     }
 
@@ -114,7 +113,7 @@ export class RelationManagerService {
             );
         } else {
             throw new Error(
-                'Generic and/or structured relations are not yet implemented for detection of changing relations.'
+                `Generic and/or structured relations are not yet implemented for detection of changing relations.`
             );
         }
     }
@@ -149,16 +148,16 @@ export class RelationManagerService {
     private handleStructuredRelation<M extends BaseModel>(model: M, relation: Relation): (attr: string) => any {
         return (attr: string) => {
             if (!attr) {
-                if (relation.ownIdFieldDefaultAttribute === 'active-meeting') {
+                if (relation.ownIdFieldDefaultAttribute === `active-meeting`) {
                     const meetingId = this.activeMeetingIdService.meetingId;
                     if (!meetingId) {
                         console.error(model, attr, relation);
-                        throw new Error('No active meeting to query the structured relation!');
+                        throw new Error(`No active meeting to query the structured relation!`);
                     }
                     attr = meetingId.toString();
                 } else {
                     console.error(model, attr, relation);
-                    throw new Error('You must give a non-empty attribute for this structured relation');
+                    throw new Error(`You must give a non-empty attribute for this structured relation`);
                 }
             }
             const idField = relation.ownIdFieldPrefix + attr + relation.ownIdFieldSuffix;

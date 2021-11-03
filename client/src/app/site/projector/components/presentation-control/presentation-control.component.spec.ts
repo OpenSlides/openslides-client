@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { E2EImportsModule } from '../../../../../e2e-imports.module';
-import { PresentationControlComponent } from './presentation-control.component';
 import { ProjectorModule } from '../../projector.module';
+import { PresentationControlComponent } from './presentation-control.component';
 
-describe('PresentationControlComponent', () => {
+describe(`PresentationControlComponent`, () => {
     let component: PresentationControlComponent;
     let fixture: ComponentFixture<PresentationControlComponent>;
 
@@ -22,7 +22,7 @@ describe('PresentationControlComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

@@ -1,7 +1,6 @@
 import { Location } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { Router, RoutesRecognized } from '@angular/router';
-
 import { filter, pairwise } from 'rxjs/operators';
 
 /**
@@ -9,7 +8,7 @@ import { filter, pairwise } from 'rxjs/operators';
  * Can be enhanced using locale storage to support back-navigation even after reload
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class RoutingStateService {
     /**
@@ -26,7 +25,7 @@ export class RoutingStateService {
      * Unsafe paths that the user should not go "back" to
      * TODO: Might also work using Routing parameters
      */
-    private unsafeUrls: string[] = ['/login', '/privacypolicy', '/legalnotice', '/new', '/create'];
+    private unsafeUrls: string[] = [`/login`, `/privacypolicy`, `/legalnotice`, `/new`, `/create`];
 
     /**
      * Checks if the previous URL is safe to navigate to.
@@ -84,10 +83,10 @@ export class RoutingStateService {
      * Analyse the URL to check if you were navigating using the same components
      */
     private isSameComponent(urlA: string, urlB: string): boolean {
-        const pathA = urlA.slice(0, urlA.lastIndexOf('/'));
-        const pathB = urlB.slice(0, urlB.lastIndexOf('/'));
-        const paramA = urlA.slice(urlA.lastIndexOf('/') + 1);
-        const paramB = urlB.slice(urlA.lastIndexOf('/') + 1);
+        const pathA = urlA.slice(0, urlA.lastIndexOf(`/`));
+        const pathB = urlB.slice(0, urlB.lastIndexOf(`/`));
+        const paramA = urlA.slice(urlA.lastIndexOf(`/`) + 1);
+        const paramB = urlB.slice(urlA.lastIndexOf(`/`) + 1);
         return pathA === pathB && !isNaN(+paramA) && !isNaN(+paramB);
     }
 }

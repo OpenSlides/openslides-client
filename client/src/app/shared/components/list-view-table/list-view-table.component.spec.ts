@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { ListViewTableComponent } from './list-view-table.component';
 
-describe('ListViewTableComponent', () => {
+describe(`ListViewTableComponent`, () => {
     let component: ListViewTableComponent<any>;
     let fixture: ComponentFixture<ListViewTableComponent<any>>;
 
@@ -22,7 +21,7 @@ describe('ListViewTableComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
-
-import { BehaviorSubject, Observable } from 'rxjs';
-
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { ViewResource } from 'app/management/models/view-resource';
 import { Resource } from 'app/shared/models/event-management/resource';
+import { BehaviorSubject, Observable } from 'rxjs';
+
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ResourceRepositoryService extends BaseRepository<ViewResource, Resource> {
     /**
@@ -28,10 +27,10 @@ export class ResourceRepositoryService extends BaseRepository<ViewResource, Reso
 
     public getTitle = (viewResource: ViewResource) => viewResource.token;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Resources' : 'Resource');
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Resources` : `Resource`);
 
     public getFieldsets(): Fieldsets<Resource> {
-        const detailFieldset: (keyof Resource)[] = ['id', 'mimetype', 'token', 'organization_id'];
+        const detailFieldset: (keyof Resource)[] = [`id`, `mimetype`, `token`, `organization_id`];
         return {
             [DEFAULT_FIELDSET]: detailFieldset
         };

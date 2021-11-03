@@ -11,19 +11,17 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-
+import { OpenSlidesStatusService } from 'app/core/core-services/openslides-status.service';
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { of } from 'rxjs';
 import { ajax, AjaxResponse } from 'rxjs/ajax';
 import { catchError, map } from 'rxjs/operators';
 import videojs from 'video.js';
 
-import { OpenSlidesStatusService } from 'app/core/core-services/openslides-status.service';
-import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
-
 enum MimeType {
-    mp4 = 'video/mp4',
-    mpd = 'application/dash+xml',
-    m3u8 = 'application/x-mpegURL'
+    mp4 = `video/mp4`,
+    mpd = `application/dash+xml`,
+    m3u8 = `application/x-mpegURL`
 }
 
 enum Player {
@@ -32,14 +30,14 @@ enum Player {
 }
 
 @Component({
-    selector: 'os-video-player',
-    templateUrl: './video-player.component.html',
-    styleUrls: ['./video-player.component.scss'],
+    selector: `os-video-player`,
+    templateUrl: `./video-player.component.html`,
+    styleUrls: [`./video-player.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
 export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
-    @ViewChild('vjs', { static: false })
+    @ViewChild(`vjs`, { static: false })
     private vjsPlayerElementRef: ElementRef;
 
     private _videoUrl: string;
@@ -47,7 +45,7 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
     public isStable = false;
     private afterViewInitDone = false;
 
-    private youtubeQuerryParams = '?rel=0&iv_load_policy=3&modestbranding=1&autoplay=1';
+    private youtubeQuerryParams = `?rel=0&iv_load_policy=3&modestbranding=1&autoplay=1`;
 
     @Input()
     public set videoUrl(value: string) {
@@ -101,7 +99,7 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
         private cd: ChangeDetectorRef,
         private osStatus: OpenSlidesStatusService
     ) {
-        settingService.get('conference_stream_poster_url').subscribe(posterUrl => {
+        settingService.get(`conference_stream_poster_url`).subscribe(posterUrl => {
             this.posterUrl = posterUrl?.trim();
         });
 
@@ -179,7 +177,7 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
             this.vjsPlayer = videojs(this.vjsPlayerElementRef.nativeElement, {
                 textTrackSettings: false,
                 fluid: true,
-                autoplay: 'any',
+                autoplay: `any`,
                 liveui: true,
                 poster: this.posterUrl
             });
@@ -201,7 +199,7 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
     }
 
     private determinePlayer(videoUrl: string): Player {
-        if (videoUrl.includes('youtu.be') || videoUrl.includes('youtube.')) {
+        if (videoUrl.includes(`youtu.be`) || videoUrl.includes(`youtube.`)) {
             return Player.youtube;
         } else {
             return Player.vjs;
@@ -218,10 +216,10 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
 
     private determineContentTypeByUrl(url: string): MimeType {
         if (url) {
-            if (url.startsWith('rtmp')) {
+            if (url.startsWith(`rtmp`)) {
                 throw new Error(`$rtmp (flash) streams cannot be supported`);
             } else {
-                const extension = url?.split('.')?.pop();
+                const extension = url?.split(`.`)?.pop();
                 const mimeType = MimeType[extension];
                 if (mimeType) {
                     return mimeType;

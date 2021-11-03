@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Router, RoutesRecognized } from '@angular/router';
-
+import { GlobalSpinnerComponent } from 'app/shared/components/global-spinner/global-spinner.component';
 import { combineLatest, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
 
-import { GlobalSpinnerComponent } from 'app/shared/components/global-spinner/global-spinner.component';
 import { DataStoreUpgradeService } from '../core-services/data-store-upgrade.service';
 import { OfflineBroadcastService } from '../core-services/offline-broadcast.service';
 import { OperatorService } from '../core-services/operator.service';
@@ -24,7 +23,7 @@ export interface SpinnerConfig extends CustomOverlayConfig {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class SpinnerService {
     private overlayInstance: OverlayInstance<GlobalSpinnerComponent> | null = null;
@@ -100,7 +99,7 @@ export class SpinnerService {
             this.isOperatorReady = isReady;
             this.isOffline = isOffline;
             this.hasUpgradeChecked = hasUpgradeChecked;
-            this.isOnLoginMask = (event as RoutesRecognized).url.includes('login');
+            this.isOnLoginMask = (event as RoutesRecognized).url.includes(`login`);
             this.checkConnection();
         });
     }

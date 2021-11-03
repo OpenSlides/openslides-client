@@ -1,4 +1,5 @@
 import { Fqid, Id } from 'app/core/definitions/key-types';
+
 import { BaseModel } from '../base/base-model';
 import { HasAgendaItemId } from '../base/has-agenda-item-id';
 import { HasAttachmentIds } from '../base/has-attachment-ids';
@@ -29,7 +30,7 @@ export interface AmendmentParagraphs {
  * @ignore
  */
 export class Motion extends BaseModel<Motion> implements MotionFormattingRepresentation {
-    public static COLLECTION = 'motion';
+    public static COLLECTION = `motion`;
 
     public id: Id;
     public number: string;

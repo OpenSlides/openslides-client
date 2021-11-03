@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { OperatorService } from '../core-services/operator.service';
-import { Permission } from '../core-services/permission';
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
+
+import { OperatorService } from '../core-services/operator.service';
 import { OML } from '../core-services/organization-permission';
+import { Permission } from '../core-services/permission';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class UserService {
     public constructor(private operator: OperatorService, private activeMeetingId: ActiveMeetingIdService) {}
@@ -27,28 +28,28 @@ export class UserService {
      * @param action the action the user tries to perform
      */
     public isAllowed(action: string, isOwnPage: boolean): boolean {
-        if (['seePersonal', 'seeName', 'changePersonal'].includes(action)) {
+        if ([`seePersonal`, `seeName`, `changePersonal`].includes(action)) {
             return isOwnPage;
         }
         if (!this.activeMeetingId.meetingId) {
             return this.operator.hasOrganizationPermissions(OML.can_manage_users);
         }
         switch (action) {
-            case 'delete':
+            case `delete`:
                 return this.operator.hasPerms(Permission.userCanManage) && !isOwnPage;
-            case 'manage':
+            case `manage`:
                 return this.operator.hasPerms(Permission.userCanManage);
-            case 'seeName':
+            case `seeName`:
                 return this.operator.hasPerms(Permission.userCanSee, Permission.userCanManage);
-            case 'seeOtherUsers':
+            case `seeOtherUsers`:
                 return this.operator.hasPerms(Permission.userCanSee, Permission.userCanManage);
-            case 'seeExtra':
+            case `seeExtra`:
                 return this.operator.hasPerms(Permission.userCanSeeExtraData, Permission.userCanManage);
-            case 'seePersonal':
+            case `seePersonal`:
                 return this.operator.hasPerms(Permission.userCanSeeExtraData, Permission.userCanManage);
-            case 'changePersonal':
+            case `changePersonal`:
                 return this.operator.hasPerms(Permission.userCanManage);
-            case 'changePassword':
+            case `changePassword`:
                 return (
                     (isOwnPage && this.operator.canChangeOwnPassword) ||
                     this.operator.hasPerms(Permission.userCanManage)

@@ -1,11 +1,10 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
-import { FullscreenProjectorComponent } from './fullscreen-projector.component';
 import { FullscreenProjectorModule } from '../fullscreen-projector.module';
+import { FullscreenProjectorComponent } from './fullscreen-projector.component';
 
-describe('FullscreenProjectorComponent', () => {
+describe(`FullscreenProjectorComponent`, () => {
     let component: FullscreenProjectorComponent;
     let fixture: ComponentFixture<FullscreenProjectorComponent>;
 
@@ -23,7 +22,7 @@ describe('FullscreenProjectorComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

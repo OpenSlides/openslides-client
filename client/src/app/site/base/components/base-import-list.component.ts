@@ -1,12 +1,12 @@
 import { Directive, OnInit } from '@angular/core';
-
-import { auditTime, distinctUntilChanged } from 'rxjs/operators';
-
+import { TranslateService } from '@ngx-translate/core';
 import { BaseImportService } from 'app/core/ui-services/base-import.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { getLongPreview, getShortPreview } from 'app/shared/utils/previewStrings';
-import { BaseModelContextComponent } from './base-model-context.component';
+import { auditTime, distinctUntilChanged } from 'rxjs/operators';
+
 import { Identifiable } from '../../../shared/models/base/identifiable';
+import { BaseModelContextComponent } from './base-model-context.component';
 
 @Directive()
 export abstract class BaseImportListComponent<M extends Identifiable>
@@ -41,8 +41,12 @@ export abstract class BaseImportListComponent<M extends Identifiable>
      * @param importer The import service, depending on the implementation
      */
 
-    public constructor(componentServiceCollector: ComponentServiceCollector, protected importer: BaseImportService<M>) {
-        super(componentServiceCollector);
+    public constructor(
+        componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
+        protected importer: BaseImportService<M>
+    ) {
+        super(componentServiceCollector, translate);
         this.initTable();
     }
 

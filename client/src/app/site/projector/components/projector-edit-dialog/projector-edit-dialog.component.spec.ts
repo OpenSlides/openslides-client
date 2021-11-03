@@ -1,11 +1,10 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { ProjectorEditDialogComponent } from './projector-edit-dialog.component';
 
-describe('ProjectorEditDialogComponent', () => {
+describe(`ProjectorEditDialogComponent`, () => {
     let component: ProjectorEditDialogComponent;
     let fixture: ComponentFixture<ProjectorEditDialogComponent>;
 
@@ -37,7 +36,7 @@ describe('ProjectorEditDialogComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

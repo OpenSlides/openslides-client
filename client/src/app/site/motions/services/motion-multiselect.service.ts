@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-
-import { TranslateService } from '@ngx-translate/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-
+import { TranslateService } from '@ngx-translate/core';
 import { AgendaItemAction } from 'app/core/actions/agenda-item-action';
 import { MotionAction } from 'app/core/actions/motion-action';
 import { MotionSubmitterAction } from 'app/core/actions/motion-submitter-action';
@@ -24,13 +22,14 @@ import { SpinnerService } from 'app/core/ui-services/spinner.service';
 import { TreeService } from 'app/core/ui-services/tree.service';
 import { AgendaItemType } from 'app/shared/models/agenda/agenda-item';
 import { Displayable } from 'app/site/base/displayable';
+
 import { ViewMotion } from '../models/view-motion';
 
 /**
  * Contains all multiselect actions for the motion list view.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MotionMultiselectService {
     private get activeMeetingId(): ActiveMeetingIdService {
@@ -41,7 +40,7 @@ export class MotionMultiselectService {
         return this.serviceCollector.actionService;
     }
 
-    private messageForSpinner = this.translate.instant('Motions are in process. Please wait ...');
+    private messageForSpinner = this.translate.instant(`Motions are in process. Please wait ...`);
 
     /**
      * Does nothing.
@@ -83,7 +82,7 @@ export class MotionMultiselectService {
      * @param motions The motions to delete
      */
     public async delete(motions: ViewMotion[]): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to delete all selected motions?');
+        const title = this.translate.instant(`Are you sure you want to delete all selected motions?`);
         if (await this.promptService.open(title)) {
             const message = `${motions.length} ${this.translate.instant(this.messageForSpinner)}`;
             this.spinnerService.show(message, { hideAfterPromiseResolved: () => this.repo.delete(...motions) });
@@ -91,7 +90,7 @@ export class MotionMultiselectService {
     }
 
     public async setWorkflow(motions: ViewMotion[]): Promise<void> {
-        const title = _('This will set the workflow for all selected motions:');
+        const title = _(`This will set the workflow for all selected motions:`);
         const choices = this.workflowRepo.getViewModelList();
         const selectedChoice = await this.choiceService.open(title, choices);
         if (selectedChoice) {
@@ -110,9 +109,9 @@ export class MotionMultiselectService {
      */
     public async setStateOfMultiple(motions: ViewMotion[]): Promise<void> {
         if (motions.some(motion => motion.state.workflow_id !== motions[0].state.workflow_id)) {
-            throw new Error(this.translate.instant('You cannot change the state of motions in different workflows!'));
+            throw new Error(this.translate.instant(`You cannot change the state of motions in different workflows!`));
         }
-        const title = this.translate.instant('This will set the following state for all selected motions:');
+        const title = this.translate.instant(`This will set the following state for all selected motions:`);
         const choices = this.workflowRepo.getWorkflowStatesForMotions(motions);
         const selectedChoice = await this.choiceService.open(title, choices);
         if (selectedChoice) {
@@ -131,10 +130,10 @@ export class MotionMultiselectService {
     public async setRecommendation(motions: ViewMotion[]): Promise<void> {
         if (motions.some(motion => motion.state.workflow_id !== motions[0].state.workflow_id)) {
             throw new Error(
-                this.translate.instant('You cannot change the recommendation of motions in different workflows!')
+                this.translate.instant(`You cannot change the recommendation of motions in different workflows!`)
             );
         }
-        const title = this.translate.instant('This will set the following recommendation for all selected motions:');
+        const title = this.translate.instant(`This will set the following recommendation for all selected motions:`);
 
         // hacks custom Displayables from recommendations
         // TODO: Recommendations should be an own class
@@ -146,7 +145,7 @@ export class MotionMultiselectService {
                 getTitle: () => workflowState.recommendation_label,
                 getListTitle: () => workflowState.recommendation_label
             }));
-        const clearChoice = this.translate.instant('Delete recommendation');
+        const clearChoice = this.translate.instant(`Delete recommendation`);
         const selectedChoice = await this.choiceService.open(title, choices, false, null, clearChoice);
         if (selectedChoice) {
             const message = `${motions.length} ` + this.translate.instant(this.messageForSpinner);
@@ -165,8 +164,8 @@ export class MotionMultiselectService {
      * @param motions The motions to change
      */
     public async setCategory(motions: ViewMotion[]): Promise<void> {
-        const title = this.translate.instant('This will set the following category for all selected motions:');
-        const clearChoice = this.translate.instant('No category');
+        const title = this.translate.instant(`This will set the following category for all selected motions:`);
+        const clearChoice = this.translate.instant(`No category`);
         const selectedChoice = await this.choiceService.open(
             title,
             this.categoryRepo.getViewModelListObservable(),
@@ -190,10 +189,10 @@ export class MotionMultiselectService {
      */
     public async changeSubmitters(motions: ViewMotion[]): Promise<void> {
         const title = this.translate.instant(
-            'This will add or remove the following submitters for all selected motions:'
+            `This will add or remove the following submitters for all selected motions:`
         );
-        const ADD = this.translate.instant('Add');
-        const REMOVE = this.translate.instant('Remove');
+        const ADD = this.translate.instant(`Add`);
+        const REMOVE = this.translate.instant(`Remove`);
         const choices = [ADD, REMOVE];
         const selectedChoice = await this.choiceService.open(
             title,
@@ -227,16 +226,16 @@ export class MotionMultiselectService {
      * @param motions The motions to add the tags to
      */
     public async changeTags(motions: ViewMotion[]): Promise<void> {
-        const title = this.translate.instant('This will add or remove the following tags for all selected motions:');
-        const ADD = this.translate.instant('Add');
-        const REMOVE = this.translate.instant('Remove');
+        const title = this.translate.instant(`This will add or remove the following tags for all selected motions:`);
+        const ADD = this.translate.instant(`Add`);
+        const REMOVE = this.translate.instant(`Remove`);
         const choices = [ADD, REMOVE];
         const selectedChoice = await this.choiceService.open(
             title,
             this.tagRepo.getViewModelListObservable(),
             true,
             choices,
-            this.translate.instant('Clear tags')
+            this.translate.instant(`Clear tags`)
         );
         if (selectedChoice) {
             let requestData: MotionAction.UpdatePayload[] = null;
@@ -276,8 +275,8 @@ export class MotionMultiselectService {
      * @param motions The motions for which to change the motionBlock
      */
     public async setMotionBlock(motions: ViewMotion[]): Promise<void> {
-        const title = this.translate.instant('This will set the following motion block for all selected motions:');
-        const clearChoice = this.translate.instant('Clear motion block');
+        const title = this.translate.instant(`This will set the following motion block for all selected motions:`);
+        const clearChoice = this.translate.instant(`Clear motion block`);
         const selectedChoice = await this.choiceService.open(
             title,
             this.motionBlockRepo.getViewModelListObservable(),
@@ -298,7 +297,7 @@ export class MotionMultiselectService {
      * Moves the related agenda items from the motions as childs under a selected (parent) agenda item.
      */
     public async moveInAgenda(motions: ViewMotion[]): Promise<void> {
-        const title = this.translate.instant('This will move all selected motions as childs to:');
+        const title = this.translate.instant(`This will move all selected motions as childs to:`);
         const choices = this.agendaRepo.getViewModelListObservable();
         const selectedChoice = await this.choiceService.open(title, choices);
         if (selectedChoice) {
@@ -342,25 +341,25 @@ export class MotionMultiselectService {
      */
     public async moveInCallList(motions: ViewMotion[]): Promise<void> {
         const title = this.translate.instant(
-            'This will move all selected motions under or after the following motion in the call list:'
+            `This will move all selected motions under or after the following motion in the call list:`
         );
-        const TO_PARENT = this.translate.instant('Set as parent');
-        const INSERT_AFTER = this.translate.instant('Insert after');
+        const TO_PARENT = this.translate.instant(`Set as parent`);
+        const INSERT_AFTER = this.translate.instant(`Insert after`);
         const options = [TO_PARENT, INSERT_AFTER];
         const allMotions = this.repo.getViewModelList();
-        const tree = this.treeService.makeSortedTree(allMotions, 'sort_weight', 'sort_parent_id');
+        const tree = this.treeService.makeSortedTree(allMotions, `sort_weight`, `sort_parent_id`);
         const itemsToMove = this.treeService.getBranchesFromTree(tree, motions);
         const partialTree = this.treeService.getTreeWithoutSelection(tree, motions);
         const availableMotions = this.treeService.getFlatItemsFromTree(partialTree);
         if (!availableMotions.length) {
-            throw new Error(this.translate.instant('There are no items left to chose from'));
+            throw new Error(this.translate.instant(`There are no items left to chose from`));
         } else {
             const selectedChoice = await this.choiceService.open(title, availableMotions, false, options);
             if (!selectedChoice) {
                 return;
             }
             if (!selectedChoice.items) {
-                throw new Error(this.translate.instant('No items selected'));
+                throw new Error(this.translate.instant(`No items selected`));
             }
             const parentId =
                 selectedChoice.action === TO_PARENT
@@ -386,8 +385,8 @@ export class MotionMultiselectService {
      * @param motions The motions to set/unset the favorite status for
      */
     public async bulkSetFavorite(motions: ViewMotion[]): Promise<void> {
-        const title = this.translate.instant('This will set the favorite status for all selected motions:');
-        const options = [this.translate.instant('Set as favorite'), this.translate.instant('Set as not favorite')];
+        const title = this.translate.instant(`This will set the favorite status for all selected motions:`);
+        const options = [this.translate.instant(`Set as favorite`), this.translate.instant(`Set as not favorite`)];
         const selectedChoice = await this.choiceService.open(title, null, false, options);
         if (selectedChoice && motions.length) {
             // `bulkSetStar` does imply that "true" sets favorites while "false" unsets favorites

@@ -1,11 +1,10 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
+import { PollProgressComponent } from 'app/site/polls/components/poll-progress/poll-progress.component';
 import { E2EImportsModule } from 'e2e-imports.module';
 
-import { PollProgressComponent } from 'app/site/polls/components/poll-progress/poll-progress.component';
 import { MotionPollVoteComponent } from './motion-poll-vote.component';
 
-describe('MotionPollVoteComponent', () => {
+describe(`MotionPollVoteComponent`, () => {
     let component: MotionPollVoteComponent;
     let fixture: ComponentFixture<MotionPollVoteComponent>;
 
@@ -24,7 +23,7 @@ describe('MotionPollVoteComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

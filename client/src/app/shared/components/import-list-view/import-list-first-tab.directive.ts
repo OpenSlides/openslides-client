@@ -1,7 +1,7 @@
 import { Directive, Input } from '@angular/core';
 
 @Directive({
-    selector: '[osImportListFirstTab]'
+    selector: `[osImportListFirstTab]`
 })
 export class ImportListFirstTabDirective {
     @Input()

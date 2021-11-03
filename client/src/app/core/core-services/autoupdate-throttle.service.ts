@@ -1,10 +1,9 @@
 import { EventEmitter, Injectable } from '@angular/core';
-
-import { Observable, Subject } from 'rxjs';
-
 import { AutoupdateFormat } from 'app/core/definitions/autoupdate-format';
 import { trailingThrottleTime } from 'app/core/rxjs/trailing-throttle-time';
 import { Identifiable } from 'app/shared/models/base/identifiable';
+import { Observable, Subject } from 'rxjs';
+
 import { ConstantsService } from './constants.service';
 import { HttpService } from './http.service';
 
@@ -13,7 +12,7 @@ interface ThrottleSettings {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AutoupdateThrottleService {
     private readonly _autoupdatesToInject = new Subject<AutoupdateFormat>();
@@ -37,7 +36,7 @@ export class AutoupdateThrottleService {
     }
 
     public constructor(private constantsService: ConstantsService, private httpService: HttpService) {
-        this.constantsService.get<ThrottleSettings>('Settings').subscribe(settings => {
+        this.constantsService.get<ThrottleSettings>(`Settings`).subscribe(settings => {
             // This is a one-shot. If the delay was set one time >0, it cannot be changed afterwards.
             // A change is more complicated since you have to unsubscribe, clean pending autoupdates,
             // subscribe again and make sure, that no autoupdate is missed.
@@ -48,7 +47,7 @@ export class AutoupdateThrottleService {
                     .pipe(trailingThrottleTime(this.delay))
                     .subscribe(() => this.processPendingAutoupdates());
             } else if (this.delay === 0) {
-                console.log('No autoupdate delay');
+                console.log(`No autoupdate delay`);
             }
         });
 
@@ -66,7 +65,7 @@ export class AutoupdateThrottleService {
             this._autoupdatesToInject.next(autoupdate);
             if (autoupdate.to_change_id >= this.disabledUntil) {
                 this.disabledUntil = null;
-                console.log('Throttling autoupdates again');
+                console.log(`Throttling autoupdates again`);
             }
         } else if (autoupdate.all_data) {
             // all_data=true (aka initial data) should be processed immediatly
@@ -93,7 +92,7 @@ export class AutoupdateThrottleService {
         if (changeId <= this.maxSeenChangeId) {
             return;
         }
-        console.log('Disable autoupdate until change id', changeId);
+        console.log(`Disable autoupdate until change id`, changeId);
         this.disabledUntil = changeId;
     }
 
@@ -128,7 +127,7 @@ export class AutoupdateThrottleService {
                 lastToChangeId = au.to_change_id;
             } else {
                 if (au.from_change_id !== lastToChangeId) {
-                    console.warn('!!!', autoupdates, au);
+                    console.warn(`!!!`, autoupdates, au);
                 }
                 lastToChangeId = au.to_change_id;
             }

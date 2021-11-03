@@ -1,14 +1,15 @@
 import { SpeechState } from 'app/shared/models/agenda/speaker';
 import { Identifiable } from 'app/shared/models/base/identifiable';
+
 import { Id, UnsafeHtml } from '../definitions/key-types';
 
 export namespace SpeakerAction {
-    export const CREATE = 'speaker.create';
-    export const UPDATE = 'speaker.update';
-    export const DELETE = 'speaker.delete';
-    export const START_SPEAK = 'speaker.speak';
-    export const END_SPEAK = 'speaker.end_speech';
-    export const SORT_SPEAKERS = 'speaker.sort';
+    export const CREATE = `speaker.create`;
+    export const UPDATE = `speaker.update`;
+    export const DELETE = `speaker.delete`;
+    export const START_SPEAK = `speaker.speak`;
+    export const END_SPEAK = `speaker.end_speech`;
+    export const SORT_SPEAKERS = `speaker.sort`;
 
     interface BasePayload {
         speech_state: SpeechState;

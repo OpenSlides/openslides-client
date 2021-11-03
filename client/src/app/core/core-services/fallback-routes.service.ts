@@ -13,7 +13,7 @@ export interface AuthGuardFallbackEntry {
  * Classical Auth-Guard. Checks if the user has to correct permissions to enter a page, and forwards to login if not.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class FallbackRoutesService {
     private fallbackEntries: AuthGuardFallbackEntry[] = [];

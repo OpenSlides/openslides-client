@@ -1,9 +1,10 @@
-import { Subscription, Observable } from 'rxjs';
-import { HttpEvent, HttpHeaderResponse, HttpDownloadProgressEvent } from '@angular/common/http';
-import { CommunicationError, ErrorType, isCommunicationError, isCommunicationErrorWrapper } from './stream-utils';
+import { HttpDownloadProgressEvent, HttpEvent, HttpHeaderResponse } from '@angular/common/http';
+import { Observable, Subscription } from 'rxjs';
+
 import { Deferred } from '../promises/deferred';
 import { SleepPromise } from '../promises/sleep';
 import { EndpointConfiguration } from './http-stream-endpoint.service';
+import { CommunicationError, ErrorType, isCommunicationError, isCommunicationErrorWrapper } from './stream-utils';
 
 export class ErrorDescription {
     public constructor(
@@ -122,7 +123,7 @@ class StreamMessageParser<T> {
 
     private handleProgressEvent(event: HttpDownloadProgressEvent): void {
         while (this._lastLfIndex < event.loaded) {
-            const LF_INDEX = event.partialText.indexOf('\n', this._lastLfIndex);
+            const LF_INDEX = event.partialText.indexOf(`\n`, this._lastLfIndex);
             if (LF_INDEX > 0) {
                 const content = event.partialText.substring(this._contentStartIndex, LF_INDEX);
                 this._lastLfIndex = LF_INDEX + 1;
@@ -148,12 +149,12 @@ class StreamMessageParser<T> {
             const parsedContent = JSON.parse(content) as T;
             this.propagateMessage(parsedContent, content);
         } catch (e) {
-            this.propagateError(content, 'JSON is malformed', ErrorType.UNKNOWN);
+            this.propagateError(content, `JSON is malformed`, ErrorType.UNKNOWN);
         }
     }
 
     private handleProgressError(event: HttpDownloadProgressEvent): void {
-        this.propagateError(event.partialText, 'An error occurred');
+        this.propagateError(event.partialText, `An error occurred`);
     }
 
     private getErrorTypeFromStatusCode(): ErrorType {
@@ -168,7 +169,7 @@ class StreamMessageParser<T> {
 
     private propagateMessage(parsedContent: T, originalText?: string): void {
         if (isCommunicationError(parsedContent)) {
-            this.propagateError(originalText, 'Reported error by server');
+            this.propagateError(originalText, `Reported error by server`);
         } else {
             this.onMessage(parsedContent);
         }
@@ -306,9 +307,9 @@ export class HttpStream<T> {
     }
 
     private handleStreamError(error: unknown): void {
-        console.log('handleError', error);
+        console.log(`handleError`, error);
         const shouldReconnect =
-            typeof this._shouldReconnectOnFailure === 'function'
+            typeof this._shouldReconnectOnFailure === `function`
                 ? this._shouldReconnectOnFailure()
                 : this._shouldReconnectOnFailure;
         const reconnectLimitNotReached =
@@ -320,14 +321,14 @@ export class HttpStream<T> {
             if (error instanceof ErrorDescription) {
                 this.propagateError(error);
             } else {
-                this.propagateError(ErrorType.SERVER, this.parseCommunicationError(error as string), 'Network error');
+                this.propagateError(ErrorType.SERVER, this.parseCommunicationError(error as string), `Network error`);
             }
         }
     }
 
     private async handleReconnect(): Promise<void> {
         const timeout =
-            typeof this._reconnectTimeout === 'function' ? this._reconnectTimeout() : this._reconnectTimeout;
+            typeof this._reconnectTimeout === `function` ? this._reconnectTimeout() : this._reconnectTimeout;
         await SleepPromise(Math.abs(timeout));
         ++this._reconnectAttempts;
         this.reconnect();
@@ -365,7 +366,7 @@ export class HttpStream<T> {
             }
         } catch (e) {
             return {
-                type: 'Invalid message',
+                type: `Invalid message`,
                 msg: text
             };
         }

@@ -1,16 +1,16 @@
 import { Component, ContentChild, Input, TemplateRef, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
-
 import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
+
 import { SidenavContentDirective } from './sidenav-content.directive';
 import { SidenavDrawerContentDirective } from './sidenav-drawer-content.directive';
 
 @Component({
-    selector: 'os-sidenav',
-    templateUrl: './sidenav.component.html',
-    styleUrls: ['./sidenav.component.scss']
+    selector: `os-sidenav`,
+    templateUrl: `./sidenav.component.html`,
+    styleUrls: [`./sidenav.component.scss`]
 })
 export class SidenavComponent {
     @ContentChild(SidenavContentDirective, { read: TemplateRef, static: true })
@@ -19,7 +19,7 @@ export class SidenavComponent {
     @ContentChild(SidenavDrawerContentDirective, { read: TemplateRef, static: true })
     public drawerContent: TemplateRef<any>;
 
-    @ViewChild('sideNav', { static: true, read: MatSidenav })
+    @ViewChild(`sideNav`, { static: true, read: MatSidenav })
     private sideNav: MatSidenav | undefined;
 
     public get isMobile(): boolean {
@@ -47,6 +47,6 @@ export class SidenavComponent {
     }
 
     public getLinkToMainPage(): (string | number)[] {
-        return this.meeting ? ['/', this.meeting.id] : [''];
+        return this.meeting ? [`/`, this.meeting.id] : [``];
     }
 }

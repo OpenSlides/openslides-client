@@ -1,21 +1,21 @@
 import { Injectable } from '@angular/core';
-
 import { HistoryService } from 'app/core/core-services/history.service';
 import { StorageService } from 'app/core/core-services/storage.service';
 import { BaseFilterListService, OsFilter, OsFilterOption } from 'app/core/ui-services/base-filter-list.service';
+
 import { AssignmentPhases, ViewAssignment } from '../models/view-assignment';
 
 /**
  * Filter service for the assignment list
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AssignmentFilterListService extends BaseFilterListService<ViewAssignment> {
     /**
      * set the storage key name
      */
-    protected storageKey = 'AssignmentList';
+    protected storageKey = `AssignmentList`;
 
     /**
      * Constructor. Activates the phase options subscription
@@ -33,8 +33,8 @@ export class AssignmentFilterListService extends BaseFilterListService<ViewAssig
     protected getFilterDefinitions(): OsFilter<ViewAssignment>[] {
         return [
             {
-                label: 'Phase',
-                property: 'phase',
+                label: `Phase`,
+                property: `phase`,
                 options: this.createPhaseOptions()
             }
         ];

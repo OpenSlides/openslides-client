@@ -1,5 +1,6 @@
 import { HasMeeting } from 'app/management/models/view-meeting';
 import { MotionComment } from 'app/shared/models/motions/motion-comment';
+
 import { BaseViewModel } from '../../base/base-view-model';
 import { ViewMotion } from './view-motion';
 import { ViewMotionCommentSection } from './view-motion-comment-section';

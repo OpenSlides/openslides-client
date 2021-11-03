@@ -4,8 +4,8 @@ import { Route, RouterModule } from '@angular/router';
 import { MotionPollDetailComponent } from './motion-poll-detail/motion-poll-detail.component';
 
 const routes: Route[] = [
-    { path: 'new', component: MotionPollDetailComponent },
-    { path: ':id', component: MotionPollDetailComponent }
+    { path: `new`, component: MotionPollDetailComponent },
+    { path: `:id`, component: MotionPollDetailComponent }
 ];
 
 @NgModule({

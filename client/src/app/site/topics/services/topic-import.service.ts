@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { AgendaItemCreationPayload } from 'app/core/actions/common/agenda-item-creation-payload';
 import { TopicRepositoryService } from 'app/core/repositories/topics/topic-repository.service';
 import { BaseImportService, ImportConfig, NewEntry } from 'app/core/ui-services/base-import.service';
@@ -7,8 +6,9 @@ import { CsvExportService } from 'app/core/ui-services/csv-export.service';
 import { DurationService } from 'app/core/ui-services/duration.service';
 import { AgendaItemType, ItemTypeChoices } from 'app/shared/models/agenda/agenda-item';
 import { Topic } from 'app/shared/models/topics/topic';
-import { topicHeadersAndVerboseNames } from '../topics.constants';
+
 import { ImportServiceCollector } from '../../../core/ui-services/import-service-collector';
+import { topicHeadersAndVerboseNames } from '../topics.constants';
 
 interface TopicExport {
     title?: string;
@@ -19,7 +19,7 @@ interface TopicExport {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class TopicImportService extends BaseImportService<Topic> {
     /**
@@ -31,8 +31,8 @@ export class TopicImportService extends BaseImportService<Topic> {
      * List of possible errors and their verbose explanation
      */
     public errorList = {
-        NoTitle: 'A Topic needs a title',
-        ParsingErrors: 'Some csv values could not be read correctly.'
+        NoTitle: `A Topic needs a title`,
+        ParsingErrors: `Some csv values could not be read correctly.`
     };
 
     /**
@@ -52,15 +52,15 @@ export class TopicImportService extends BaseImportService<Topic> {
 
     public downloadCsvExample(): void {
         const rows: TopicExport[] = [
-            { title: 'Demo 1', text: 'Demo text 1', agenda_duration: '1:00', agenda_comment: 'Test comment' },
-            { title: 'Break', agenda_duration: '0:10', agenda_type: 'internal' },
-            { title: 'Demo 2', text: 'Demo text 2', agenda_duration: '1:30', agenda_type: 'hidden' }
+            { title: `Demo 1`, text: `Demo text 1`, agenda_duration: `1:00`, agenda_comment: `Test comment` },
+            { title: `Break`, agenda_duration: `0:10`, agenda_type: `internal` },
+            { title: `Demo 2`, text: `Demo text 2`, agenda_duration: `1:30`, agenda_type: `hidden` }
         ];
 
         this.exporter.dummyCSVExport<TopicExport>(
             topicHeadersAndVerboseNames,
             rows,
-            `${this.translate.instant('Agenda')}-${this.translate.instant('example')}.csv`
+            `${this.translate.instant(`Agenda`)}-${this.translate.instant(`example`)}.csv`
         );
     }
 
@@ -75,10 +75,10 @@ export class TopicImportService extends BaseImportService<Topic> {
     }
 
     protected pipeParseValue(value: string, header: keyof (Topic & AgendaItemCreationPayload)): any {
-        if (header === 'agenda_duration') {
+        if (header === `agenda_duration`) {
             return this.parseDuration(value);
         }
-        if (header === 'agenda_type') {
+        if (header === `agenda_type`) {
             return this.parseType(value);
         }
     }
@@ -105,19 +105,19 @@ export class TopicImportService extends BaseImportService<Topic> {
     public parseType(input: string | number): AgendaItemType {
         if (!input) {
             return AgendaItemType.common; // default, public item
-        } else if (typeof input === 'string') {
+        } else if (typeof input === `string`) {
             const visibility = ItemTypeChoices.find(choice => choice.csvName === input);
             if (visibility) {
                 return visibility.key;
             }
         } else if (input === 1) {
             // Compatibility with the old client's isInternal column
-            const visibility = ItemTypeChoices.find(choice => choice.name === 'Internal item');
+            const visibility = ItemTypeChoices.find(choice => choice.name === `Internal item`);
             if (visibility) {
                 return visibility.key;
             }
         } else {
-            throw new TypeError('type could not be matched');
+            throw new TypeError(`type could not be matched`);
         }
     }
 
@@ -128,7 +128,7 @@ export class TopicImportService extends BaseImportService<Topic> {
      */
     public parseTextArea(data: string): void {
         const newEntries: NewEntry<any>[] = [];
-        const lines = data.split('\n');
+        const lines = data.split(`\n`);
         for (const line of lines) {
             if (!line.length) {
                 continue;
@@ -139,7 +139,7 @@ export class TopicImportService extends BaseImportService<Topic> {
             };
             newEntries.push({
                 newEntry: topic,
-                status: 'new',
+                status: `new`,
                 errors: []
             });
         }

@@ -1,15 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
-import { Observable } from 'rxjs';
-
-import { AgendaCsvExportService } from '../../services/agenda-csv-export.service';
-import { AgendaFilterListService } from '../../services/agenda-filter-list.service';
-import { AgendaItemInfoDialogComponent } from '../agenda-item-info-dialog/agenda-item-info-dialog.component';
-import { AgendaPdfService } from '../../services/agenda-pdf.service';
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
@@ -36,17 +30,23 @@ import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
 import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
 import { ViewTopic } from 'app/site/topics/models/view-topic';
+import { Observable } from 'rxjs';
+
 import { ViewAgendaItem } from '../../models/view-agenda-item';
 import { hasListOfSpeakers } from '../../models/view-list-of-speakers';
+import { AgendaCsvExportService } from '../../services/agenda-csv-export.service';
+import { AgendaFilterListService } from '../../services/agenda-filter-list.service';
+import { AgendaPdfService } from '../../services/agenda-pdf.service';
+import { AgendaItemInfoDialogComponent } from '../agenda-item-info-dialog/agenda-item-info-dialog.component';
 
 /**
  * List view for the agenda.
  */
 @Component({
-    selector: 'os-agenda-item-list',
-    templateUrl: './agenda-item-list.component.html',
+    selector: `os-agenda-item-list`,
+    templateUrl: `./agenda-item-list.component.html`,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    styleUrls: ['./agenda-item-list.component.scss']
+    styleUrls: [`./agenda-item-list.component.scss`]
 })
 export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaItem> implements OnInit {
     public readonly AGENDA_TYPE_PUBLIC = 1;
@@ -58,7 +58,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
      */
     public isNumberingAllowed: boolean;
 
-    public showSubtitles: Observable<boolean> = this.meetingsSettingsService.get('agenda_show_subtitles');
+    public showSubtitles: Observable<boolean> = this.meetingsSettingsService.get(`agenda_show_subtitles`);
 
     /**
      * Helper to check main button permissions
@@ -76,18 +76,18 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
      */
     public tableColumnDefinition: PblColumnDefinition[] = [
         {
-            prop: 'title',
-            width: '100%'
+            prop: `title`,
+            width: `100%`
         },
         {
-            prop: 'info',
+            prop: `info`,
             minWidth: 120
         }
     ];
 
     public restrictedColumns: ColumnRestriction[] = [
         {
-            columnName: 'menu',
+            columnName: `menu`,
             permission: Permission.agendaItemCanManage
         }
     ];
@@ -95,7 +95,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
     /**
      * Define extra filter properties
      */
-    public filterProps = ['item_number', 'comment', 'getListTitle'];
+    public filterProps = [`item_number`, `comment`, `getListTitle`];
 
     /**
      * The usual constructor for components
@@ -117,6 +117,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private operator: OperatorService,
         private router: Router,
         private route: ActivatedRoute,
@@ -134,7 +135,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
         private topicRepo: TopicRepositoryService,
         private meetingRepo: MeetingRepositoryService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
         this.canMultiSelect = true;
     }
 
@@ -144,11 +145,11 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
      */
     public ngOnInit(): void {
         super.ngOnInit();
-        super.setTitle('Agenda');
+        super.setTitle(`Agenda`);
 
         this.subscriptions.push(
             this.meetingsSettingsService
-                .get('agenda_enable_numbering')
+                .get(`agenda_enable_numbering`)
                 .subscribe(autoNumbering => (this.isNumberingAllowed = autoNumbering)),
             this.activeMeetingIdService.meetingIdObservable.subscribe(id => {
                 if (id) {
@@ -157,13 +158,13 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
                         type: MeetingProjectionType.AgendaItemList,
                         slideOptions: [
                             {
-                                key: 'only_main_items',
-                                displayName: _('Only main agenda items'),
+                                key: `only_main_items`,
+                                displayName: _(`Only main agenda items`),
                                 default: false
                             }
                         ],
                         projectionDefault: Projectiondefault.agendaAllItems,
-                        getDialogTitle: () => this.translate.instant('Agenda')
+                        getDialogTitle: () => this.translate.instant(`Agenda`)
                     };
                 } else {
                     this.itemListSlide = null;
@@ -178,16 +179,16 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
             ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
-                    idField: 'agenda_item_ids',
+                    idField: `agenda_item_ids`,
                     follow: [
                         {
-                            idField: 'content_object_id',
+                            idField: `content_object_id`,
                             follow: [SPEAKER_BUTTON_FOLLOW, SUBMITTER_FOLLOW],
-                            fieldset: 'title',
+                            fieldset: `title`,
 
                             // To enable the reverse relation from content_object->agenda_item.
                             // Needed for getItemNumberPrefix
-                            additionalFields: ['agenda_item_id']
+                            additionalFields: [`agenda_item_id`]
                         }
                     ]
                 }
@@ -245,7 +246,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
      * Click handler for the numbering button to enable auto numbering
      */
     public async onAutoNumbering(): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to number all agenda items?');
+        const title = this.translate.instant(`Are you sure you want to number all agenda items?`);
         if (await this.promptService.open(title)) {
             await this.repo.autoNumbering();
         }
@@ -263,7 +264,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
      * Comes from the HeadBar Component
      */
     public onPlusButton(): void {
-        this.router.navigate(['../topics/new'], { relativeTo: this.route.parent });
+        this.router.navigate([`../topics/new`], { relativeTo: this.route.parent });
     }
 
     /**
@@ -272,7 +273,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
      * @param item The item to remove from the agenda
      */
     public async removeFromAgenda(item: ViewAgendaItem): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to remove this entry from the agenda?');
+        const title = this.translate.instant(`Are you sure you want to remove this entry from the agenda?`);
         const content = item.content_object.getTitle();
         if (await this.promptService.open(title, content)) {
             await this.repo.removeFromAgenda(item);
@@ -283,7 +284,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
         if (!(item.content_object instanceof ViewTopic)) {
             return;
         }
-        const title = this.translate.instant('Are you sure you want to delete this topic?');
+        const title = this.translate.instant(`Are you sure you want to delete this topic?`);
         const content = item.content_object.getTitle();
         if (await this.promptService.open(title, content)) {
             await this.topicRepo.delete(item.content_object);
@@ -295,8 +296,8 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
      * is only filled with any data in multiSelect mode
      */
     public async removeSelected(): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to remove all selected items from the agenda?');
-        const content = this.translate.instant("All topics will be deleted and won't be accessible afterwards.");
+        const title = this.translate.instant(`Are you sure you want to remove all selected items from the agenda?`);
+        const content = this.translate.instant(`All topics will be deleted and won't be accessible afterwards.`);
         if (await this.promptService.open(title, content)) {
             try {
                 await this.repo.removeFromAgenda(...this.selectedRows);
@@ -354,7 +355,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
      * items will not be exported
      */
     public onDownloadPdf(): void {
-        const filename = this.translate.instant('Agenda');
+        const filename = this.translate.instant(`Agenda`);
         this.pdfService.download(this.agendaPdfService.agendaListToDocDef(this.dataSource.filteredData), filename);
     }
 
@@ -366,16 +367,16 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
     public getDurationEndString(): string {
         const duration = this.repo.calculateDuration();
         if (!duration) {
-            return '';
+            return ``;
         }
-        const durationString = this.durationService.durationToString(duration, 'h');
+        const durationString = this.durationService.durationToString(duration, `h`);
         const endTime = this.repo.calculateEndTime();
-        const result = `${this.translate.instant('Duration')}: ${durationString}`;
+        const result = `${this.translate.instant(`Duration`)}: ${durationString}`;
         if (endTime) {
             return (
                 result +
-                ` (${this.translate.instant('Estimated end')}:
-            ${endTime.toLocaleTimeString(this.translate.currentLang, { hour: 'numeric', minute: 'numeric' })} h)`
+                ` (${this.translate.instant(`Estimated end`)}:
+            ${endTime.toLocaleTimeString(this.translate.currentLang, { hour: `numeric`, minute: `numeric` })} h)`
             );
         } else {
             return result;
@@ -383,8 +384,8 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
     }
 
     public async deleteAllSpeakersOfAllListsOfSpeakers(): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to clear all speakers of all lists?');
-        const content = this.translate.instant('All lists of speakers will be cleared.');
+        const title = this.translate.instant(`Are you sure you want to clear all speakers of all lists?`);
+        const content = this.translate.instant(`All lists of speakers will be cleared.`);
         if (await this.promptService.open(title, content)) {
             this.meetingRepo.deleteAllSpeakersOfAllListsOfSpeakersInAMeeting(this.activeMeetingIdService.meetingId);
         }

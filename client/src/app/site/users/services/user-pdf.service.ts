@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-
 import { TranslateService } from '@ngx-translate/core';
-
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
+
 import { ViewUser } from '../models/view-user';
 
 /**
@@ -16,7 +15,7 @@ import { ViewUser } from '../models/view-user';
  * ```
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class UserPdfService {
     /**
@@ -37,13 +36,13 @@ export class UserPdfService {
         const userHeadline = [
             {
                 text: user.short_name,
-                style: 'userDataTitle'
+                style: `userDataTitle`
             }
         ];
         if (user.structure_level()) {
             userHeadline.push({
                 text: user.structure_level(),
-                style: 'userDataHeading'
+                style: `userDataHeading`
             });
         }
         return [userHeadline, this.createAccessDataContent(user), this.createWelcomeText()];
@@ -57,8 +56,8 @@ export class UserPdfService {
      */
     public createUserListDocDef(users: ViewUser[]): object {
         const title = {
-            text: this.translate.instant('List of participants'),
-            style: 'title'
+            text: this.translate.instant(`List of participants`),
+            style: `title`
         };
         return [title, this.createUserList(users)];
     }
@@ -84,49 +83,49 @@ export class UserPdfService {
     private createWifiAccessContent(): object {
         const wifiColumn: object[] = [
             {
-                text: this.translate.instant('WLAN access data'),
-                style: 'userDataHeading'
+                text: this.translate.instant(`WLAN access data`),
+                style: `userDataHeading`
             },
             {
-                text: this.translate.instant('WLAN name (SSID)') + ':',
-                style: 'userDataTopic'
+                text: this.translate.instant(`WLAN name (SSID)`) + `:`,
+                style: `userDataTopic`
             },
             {
-                text: this.meetingSettingsService.instant('users_pdf_wlan_ssid') || '-',
-                style: 'userDataValue'
+                text: this.meetingSettingsService.instant(`users_pdf_wlan_ssid`) || `-`,
+                style: `userDataValue`
             },
             {
-                text: this.translate.instant('WLAN password') + ':',
-                style: 'userDataTopic'
+                text: this.translate.instant(`WLAN password`) + `:`,
+                style: `userDataTopic`
             },
             {
-                text: this.meetingSettingsService.instant('users_pdf_wlan_password') || '-',
-                style: 'userDataValue'
+                text: this.meetingSettingsService.instant(`users_pdf_wlan_password`) || `-`,
+                style: `userDataValue`
             },
             {
-                text: this.translate.instant('WLAN encryption') + ':',
-                style: 'userDataTopic'
+                text: this.translate.instant(`WLAN encryption`) + `:`,
+                style: `userDataTopic`
             },
             {
-                text: this.meetingSettingsService.instant('users_pdf_wlan_encryption') || '-',
-                style: 'userDataValue'
+                text: this.meetingSettingsService.instant(`users_pdf_wlan_encryption`) || `-`,
+                style: `userDataValue`
             },
             {
-                text: '\n'
+                text: `\n`
             }
         ];
         if (
-            this.meetingSettingsService.instant('users_pdf_wlan_ssid') &&
-            this.meetingSettingsService.instant('users_pdf_wlan_encryption')
+            this.meetingSettingsService.instant(`users_pdf_wlan_ssid`) &&
+            this.meetingSettingsService.instant(`users_pdf_wlan_encryption`)
         ) {
             const wifiQrCode =
-                'WIFI:S:' +
-                this.meetingSettingsService.instant('users_pdf_wlan_ssid') +
-                ';T:' +
-                this.meetingSettingsService.instant('users_pdf_wlan_encryption') +
-                ';P:' +
-                this.meetingSettingsService.instant('users_pdf_wlan_password') +
-                ';;';
+                `WIFI:S:` +
+                this.meetingSettingsService.instant(`users_pdf_wlan_ssid`) +
+                `;T:` +
+                this.meetingSettingsService.instant(`users_pdf_wlan_encryption`) +
+                `;P:` +
+                this.meetingSettingsService.instant(`users_pdf_wlan_password`) +
+                `;;`;
             wifiColumn.push(
                 {
                     qr: wifiQrCode,
@@ -134,8 +133,8 @@ export class UserPdfService {
                     margin: [0, 0, 0, 8]
                 },
                 {
-                    text: this.translate.instant('Scan this QR code to connect to WLAN.'),
-                    style: 'small'
+                    text: this.translate.instant(`Scan this QR code to connect to WLAN.`),
+                    style: `small`
                 }
             );
         }
@@ -152,49 +151,49 @@ export class UserPdfService {
     private createUserAccessContent(user: ViewUser): object {
         const columnOpenSlides: object[] = [
             {
-                text: this.translate.instant('OpenSlides access data'),
-                style: 'userDataHeading'
+                text: this.translate.instant(`OpenSlides access data`),
+                style: `userDataHeading`
             },
             {
-                text: this.translate.instant('Username') + ':',
-                style: 'userDataTopic'
+                text: this.translate.instant(`Username`) + `:`,
+                style: `userDataTopic`
             },
             {
                 text: user.username,
-                style: 'userDataValue'
+                style: `userDataValue`
             },
             {
-                text: this.translate.instant('Initial password') + ':',
-                style: 'userDataTopic'
+                text: this.translate.instant(`Initial password`) + `:`,
+                style: `userDataTopic`
             },
             {
-                text: user.default_password || '-',
-                style: 'userDataValue'
+                text: user.default_password || `-`,
+                style: `userDataValue`
             },
             {
-                text: 'URL:',
-                style: 'userDataTopic'
+                text: `URL:`,
+                style: `userDataTopic`
             },
             {
-                text: this.meetingSettingsService.instant('users_pdf_url') || '-',
-                link: this.meetingSettingsService.instant('users_pdf_url'),
-                style: 'userDataValue'
+                text: this.meetingSettingsService.instant(`users_pdf_url`) || `-`,
+                link: this.meetingSettingsService.instant(`users_pdf_url`),
+                style: `userDataValue`
             },
             {
-                text: '\n'
+                text: `\n`
             }
         ];
         // url qr code
-        if (this.meetingSettingsService.instant('users_pdf_url')) {
+        if (this.meetingSettingsService.instant(`users_pdf_url`)) {
             columnOpenSlides.push(
                 {
-                    qr: this.meetingSettingsService.instant('users_pdf_url'),
+                    qr: this.meetingSettingsService.instant(`users_pdf_url`),
                     fit: 120,
                     margin: [0, 0, 0, 8]
                 },
                 {
-                    text: this.translate.instant('Scan this QR code to open URL.'),
-                    style: 'small'
+                    text: this.translate.instant(`Scan this QR code to open URL.`),
+                    style: `small`
                 }
             );
         }
@@ -207,16 +206,16 @@ export class UserPdfService {
      * @returns pdfMake definitions
      */
     private createWelcomeText(): object {
-        const users_pdf_welcometitle = this.meetingSettingsService.instant('users_pdf_welcometitle');
-        const users_pdf_welcometext = this.meetingSettingsService.instant('users_pdf_welcometext');
+        const users_pdf_welcometitle = this.meetingSettingsService.instant(`users_pdf_welcometitle`);
+        const users_pdf_welcometext = this.meetingSettingsService.instant(`users_pdf_welcometext`);
         return [
             {
                 text: this.translate.instant(users_pdf_welcometitle),
-                style: 'userDataHeading'
+                style: `userDataHeading`
             },
             {
                 text: this.translate.instant(users_pdf_welcometext),
-                style: 'userDataTopic'
+                style: `userDataTopic`
             }
         ];
     }
@@ -231,26 +230,26 @@ export class UserPdfService {
         const userTableBody: object[] = [
             [
                 {
-                    text: '#',
-                    style: 'tableHeader'
+                    text: `#`,
+                    style: `tableHeader`
                 },
                 {
-                    text: this.translate.instant('Name'),
-                    style: 'tableHeader'
+                    text: this.translate.instant(`Name`),
+                    style: `tableHeader`
                 },
                 {
-                    text: this.translate.instant('Groups'),
-                    style: 'tableHeader'
+                    text: this.translate.instant(`Groups`),
+                    style: `tableHeader`
                 }
             ]
         ];
         return {
             table: {
-                widths: ['auto', '*', 'auto'],
+                widths: [`auto`, `*`, `auto`],
                 headerRows: 1,
                 body: userTableBody.concat(this.getListUsers(users))
             },
-            layout: 'switchColorTableLayout'
+            layout: `switchColorTableLayout`
         };
     }
 
@@ -266,7 +265,7 @@ export class UserPdfService {
         let counter = 1;
         users.forEach(user => {
             const groupList = user.groups().map(grp => this.translate.instant(grp.name));
-            result.push([{ text: '' + counter }, { text: user.full_name }, { text: groupList.join(', ') }]);
+            result.push([{ text: `` + counter }, { text: user.full_name }, { text: groupList.join(`, `) }]);
             counter += 1;
         });
         return result;

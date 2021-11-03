@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
-
 import { TranslateService } from '@ngx-translate/core';
-
 import { Motion } from 'app/shared/models/motions/motion';
 import { BaseViewModel } from 'app/site/base/base-view-model';
-import { BaseRepository } from '../repositories/base-repository';
+
 import { Searchable } from '../../site/base/searchable';
 import { ViewModelStoreService } from '../core-services/view-model-store.service';
+import { BaseRepository } from '../repositories/base-repository';
 
 /**
  * Defines, how the properties look like
@@ -124,7 +123,7 @@ export interface TranslatedCollection {
  * This service cares about searching the DataStore and managing models, that are searchable.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class SearchService {
     /**
@@ -250,7 +249,7 @@ export class SearchService {
                 nextCollections.push({ value: translatedValue, collection: entry.collection });
             }
         }
-        const sequentialNumber = 'Sequential number';
+        const sequentialNumber = `Sequential number`;
         nextCollections.push(
             { value: sequentialNumber, collection: Motion.COLLECTION },
             { value: this.translate.instant(sequentialNumber), collection: Motion.COLLECTION }

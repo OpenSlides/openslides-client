@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { CommonListOfSpeakersSlideComponent } from './common-list-of-speakers-slide.component';
 import { E2EImportsModule } from '../../../e2e-imports.module';
+import { CommonListOfSpeakersSlideComponent } from './common-list-of-speakers-slide.component';
 
-describe('ListOfSpeakersSlideComponent', () => {
+describe(`ListOfSpeakersSlideComponent`, () => {
     let component: CommonListOfSpeakersSlideComponent;
     let fixture: ComponentFixture<CommonListOfSpeakersSlideComponent>;
 
@@ -22,7 +22,7 @@ describe('ListOfSpeakersSlideComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

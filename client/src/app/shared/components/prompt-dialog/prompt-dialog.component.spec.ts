@@ -1,11 +1,10 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { PromptDialogComponent } from './prompt-dialog.component';
 
-describe('PromptDialogComponent', () => {
+describe(`PromptDialogComponent`, () => {
     let component: PromptDialogComponent;
     let fixture: ComponentFixture<PromptDialogComponent>;
 
@@ -30,7 +29,7 @@ describe('PromptDialogComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

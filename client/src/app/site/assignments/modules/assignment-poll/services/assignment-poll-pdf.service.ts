@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-
 import { TranslateService } from '@ngx-translate/core';
-
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { AbstractPollData, PollPdfService } from 'app/core/pdf-services/base-poll-pdf-service';
 import { PdfDocumentService } from 'app/core/pdf-services/pdf-document.service';
@@ -22,7 +20,7 @@ import { ViewPoll } from 'app/shared/models/poll/view-poll';
  * ```
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AssignmentPollPdfService extends PollPdfService {
     public constructor(
@@ -36,10 +34,10 @@ export class AssignmentPollPdfService extends PollPdfService {
     ) {
         super(meetingSettingService, userRepo, activeMeetingIdService, mediaManageService);
         this.meetingSettingService
-            .get('assignment_poll_ballot_paper_number')
+            .get(`assignment_poll_ballot_paper_number`)
             .subscribe(count => (this.ballotCustomCount = count));
         this.meetingSettingService
-            .get('assignment_poll_ballot_paper_selection')
+            .get(`assignment_poll_ballot_paper_selection`)
             .subscribe(selection => (this.ballotCountSelection = selection));
     }
 
@@ -55,20 +53,20 @@ export class AssignmentPollPdfService extends PollPdfService {
      */
     public printBallots(poll: ViewPoll, title?: string, subtitle?: string): void {
         const assignment = this.assignmentRepo.getViewModel(poll.content_object?.id);
-        const fileName = `${this.translate.instant('Election')} - ${assignment.getTitle()} - ${this.translate.instant(
-            'ballot-paper' // TODO proper title (second election?)
+        const fileName = `${this.translate.instant(`Election`)} - ${assignment.getTitle()} - ${this.translate.instant(
+            `ballot-paper` // TODO proper title (second election?)
         )}`;
         if (!title) {
             title = assignment.getTitle();
         }
         if (!subtitle) {
-            subtitle = '';
+            subtitle = ``;
         }
         if (assignment.polls.length > 1) {
-            subtitle = `${this.translate.instant('Ballot')} ${assignment.polls.length} ${subtitle}`;
+            subtitle = `${this.translate.instant(`Ballot`)} ${assignment.polls.length} ${subtitle}`;
         }
         if (subtitle.length > 90) {
-            subtitle = subtitle.substring(0, 90) + '...';
+            subtitle = subtitle.substring(0, 90) + `...`;
         }
         let rowsPerPage = 1;
         if (poll.pollmethod === PollMethod.Y) {
@@ -114,10 +112,10 @@ export class AssignmentPollPdfService extends PollPdfService {
                 {
                     width: 1,
                     margin: [0, data.sheetend],
-                    text: ''
+                    text: ``
                 },
                 {
-                    width: '*',
+                    width: `*`,
                     stack: [
                         this.getHeader(),
                         this.getTitle(data.title),
@@ -140,25 +138,25 @@ export class AssignmentPollPdfService extends PollPdfService {
                     ? this.createBallotOption(candidateName)
                     : this.createYNBallotEntry(candidateName, poll.pollmethod);
             } else {
-                throw new Error(this.translate.instant('This ballot contains deleted users.'));
+                throw new Error(this.translate.instant(`This ballot contains deleted users.`));
             }
         });
 
         if (poll.pollmethod === PollMethod.Y) {
             if (poll.global_yes) {
-                const yesEntry = this.createBallotOption(this.translate.instant('Yes'));
+                const yesEntry = this.createBallotOption(this.translate.instant(`Yes`));
                 yesEntry.margin[1] = 25;
                 resultObject.push(yesEntry);
             }
 
             if (poll.global_no) {
-                const noEntry = this.createBallotOption(this.translate.instant('No'));
+                const noEntry = this.createBallotOption(this.translate.instant(`No`));
                 noEntry.margin[1] = 25;
                 resultObject.push(noEntry);
             }
 
             if (poll.global_abstain) {
-                const abstainEntry = this.createBallotOption(this.translate.instant('Abstain'));
+                const abstainEntry = this.createBallotOption(this.translate.instant(`Abstain`));
                 abstainEntry.margin[1] = 25;
                 resultObject.push(abstainEntry);
             }
@@ -167,9 +165,9 @@ export class AssignmentPollPdfService extends PollPdfService {
     }
 
     private createYNBallotEntry(option: string, method: PollMethod): object {
-        const choices = method === 'YNA' ? ['Yes', 'No', 'Abstain'] : ['Yes', 'No'];
+        const choices = method === `YNA` ? [`Yes`, `No`, `Abstain`] : [`Yes`, `No`];
         const columnstack = choices.map(choice => ({
-            width: 'auto',
+            width: `auto`,
             stack: [this.createBallotOption(this.translate.instant(choice))]
         }));
         return [
@@ -178,7 +176,7 @@ export class AssignmentPollPdfService extends PollPdfService {
                 margin: [40, 10, 0, 0]
             },
             {
-                width: 'auto',
+                width: `auto`,
                 columns: columnstack
             }
         ];
@@ -192,8 +190,8 @@ export class AssignmentPollPdfService extends PollPdfService {
      */
     private createPollHint(poll: ViewPoll): object {
         return {
-            text: poll.content_object?.default_poll_description || '',
-            style: 'description'
+            text: poll.content_object?.default_poll_description || ``,
+            style: `description`
         };
     }
 }

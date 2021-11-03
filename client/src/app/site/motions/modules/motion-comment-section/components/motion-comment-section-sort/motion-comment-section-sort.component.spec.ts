@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { MotionCommentSectionSortComponent } from './motion-comment-section-sort.component';
 
-describe('MotionCommentSectionSortComponent', () => {
+describe(`MotionCommentSectionSortComponent`, () => {
     let component: MotionCommentSectionSortComponent;
     let fixture: ComponentFixture<MotionCommentSectionSortComponent>;
 
@@ -23,7 +22,7 @@ describe('MotionCommentSectionSortComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

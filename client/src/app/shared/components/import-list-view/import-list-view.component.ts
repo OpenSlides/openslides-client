@@ -5,25 +5,25 @@ import {
     Input,
     OnInit,
     QueryList,
-    ViewEncapsulation,
-    TemplateRef
+    TemplateRef,
+    ViewEncapsulation
 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { MatTab } from '@angular/material/tabs';
-
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { TranslateService } from '@ngx-translate/core';
 import { columnFactory, createDS, PblColumnDefinition, PblDataSource, PblNgridColumnSet } from '@pebula/ngrid';
-import { Observable } from 'rxjs';
-import { auditTime, distinctUntilChanged, map } from 'rxjs/operators';
-
 import { BaseImportService, NewEntry, ValueLabelCombination } from 'app/core/ui-services/base-import.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseModel } from 'app/shared/models/base/base-model';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { Observable } from 'rxjs';
+import { auditTime, distinctUntilChanged, map } from 'rxjs/operators';
+
+import { CsvMapping, ImportStepPhase } from '../../../core/ui-services/base-import.service';
 import { ImportListFirstTabDirective } from './import-list-first-tab.directive';
 import { ImportListLastTabDirective } from './import-list-last-tab.directive';
-import { CsvMapping, ImportStepPhase } from '../../../core/ui-services/base-import.service';
-import { MatDialog } from '@angular/material/dialog';
 
 export type ImportListViewHeaderDefinition = PblColumnDefinition & HeaderDefinition;
 
@@ -35,9 +35,9 @@ interface HeaderDefinition {
 }
 
 @Component({
-    selector: 'os-import-list-view',
-    templateUrl: './import-list-view.component.html',
-    styleUrls: ['./import-list-view.component.scss'],
+    selector: `os-import-list-view`,
+    templateUrl: `./import-list-view.component.html`,
+    styleUrls: [`./import-list-view.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
 export class ImportListViewComponent<M extends BaseModel> extends BaseComponent implements OnInit {
@@ -57,7 +57,7 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
     public rowHeight = 50;
 
     @Input()
-    public modelName = '';
+    public modelName = ``;
 
     @Input()
     public set importer(importer: BaseImportService<M>) {
@@ -81,15 +81,15 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
     public get defaultColumns(): PblColumnDefinition[] {
         return [
             {
-                label: '',
-                prop: 'status',
+                label: ``,
+                prop: `status`,
                 minWidth: 25,
-                width: '25px',
+                width: `25px`,
                 maxWidth: 25
             },
             {
-                label: '#',
-                prop: 'importTrackId',
+                label: `#`,
+                prop: `importTrackId`,
                 minWidth: 25,
                 maxWidth: 25
             }
@@ -116,12 +116,12 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
      * Currently selected encoding. Is set and changed by the config's available
      * encodings and user mat-select input
      */
-    public selectedEncoding = 'utf-8';
+    public selectedEncoding = `utf-8`;
 
     /**
      * indicator on which elements to display
      */
-    public shown: 'all' | 'error' | 'noerror' = 'all';
+    public shown: 'all' | 'error' | 'noerror' = `all`;
 
     public get leftReceivedHeaders(): string[] {
         return this.importer.leftReceivedHeaders;
@@ -184,11 +184,11 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
     }
 
     public get importPreviewLabel(): string {
-        return `${this.modelName || 'Models'} will be imported.`;
+        return `${this.modelName || `Models`} will be imported.`;
     }
 
     public get importDoneLabel(): string {
-        return `${this.modelName || 'Models'} have been imported.`;
+        return `${this.modelName || `Models`} have been imported.`;
     }
 
     public get importingStepsObservable(): Observable<any> {
@@ -207,10 +207,11 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private host: ElementRef<HTMLElement>,
         private dialog: MatDialog
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     /**
@@ -275,15 +276,15 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
      * (changed from default mat-table filter)
      */
     public setFilter(): void {
-        if (this.shown === 'all') {
+        if (this.shown === `all`) {
             this.vScrollDataSource.setFilter();
-        } else if (this.shown === 'noerror') {
-            const noErrorFilter = (data: NewEntry<any>) => data.status === 'done' || data.status !== 'error';
+        } else if (this.shown === `noerror`) {
+            const noErrorFilter = (data: NewEntry<any>) => data.status === `done` || data.status !== `error`;
 
             this.vScrollDataSource.setFilter(noErrorFilter);
-        } else if (this.shown === 'error') {
+        } else if (this.shown === `error`) {
             const hasErrorFilter = (data: NewEntry<any>) =>
-                data.status === 'error' || !!data.errors.length || data.hasDuplicates;
+                data.status === `error` || !!data.errors.length || data.hasDuplicates;
 
             this.vScrollDataSource.setFilter(hasErrorFilter);
         }
@@ -297,12 +298,12 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
      */
     public getStateClass(row: NewEntry<M>): string {
         switch (row.status) {
-            case 'done':
-                return 'import-done import-decided';
-            case 'error':
-                return 'import-error';
+            case `done`:
+                return `import-done import-decided`;
+            case `error`:
+                return `import-error`;
             default:
-                return '';
+                return ``;
         }
     }
 
@@ -313,26 +314,26 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
      */
     public getActionIcon(entry: NewEntry<M>): string {
         switch (entry.status) {
-            case 'error': // no import possible
-                return 'block';
-            case 'new':
-                return '';
-            case 'done': // item has been imported
-                return 'done';
+            case `error`: // no import possible
+                return `block`;
+            case `new`:
+                return ``;
+            case `done`: // item has been imported
+                return `done`;
             default:
-                return 'block'; // fallback: Error
+                return `block`; // fallback: Error
         }
     }
 
     public getTooltip(value: string | CsvMapping[]): string {
         if (Array.isArray(value)) {
-            return value.map(entry => entry.name).join(', ');
+            return value.map(entry => entry.name).join(`, `);
         }
         return value;
     }
 
     public getErrorDescription(entry: NewEntry<M>): string {
-        return entry.errors.map(error => _(this.getVerboseError(error))).join(', ');
+        return entry.errors.map(error => _(this.getVerboseError(error))).join(`, `);
     }
 
     public isUnknown(headerKey: string): boolean {
@@ -403,7 +404,7 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
     }
 
     public async enterFullscreen(dialogTemplate: TemplateRef<any>): Promise<void> {
-        const ref = this.dialog.open(dialogTemplate, { width: '80vw' });
+        const ref = this.dialog.open(dialogTemplate, { width: `80vw` });
         await ref.afterClosed().toPromise();
     }
 
@@ -412,17 +413,17 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
     }
 
     public isObject(data: any): boolean {
-        return typeof data === 'object';
+        return typeof data === `object`;
     }
 
     public getLabelByStepPhase(phase: ImportStepPhase): string {
         switch (phase) {
             case ImportStepPhase.FINISHED:
-                return 'have been created';
+                return `have been created`;
             case ImportStepPhase.ERROR:
-                return 'could not be created';
+                return `could not be created`;
             default:
-                return 'will be created';
+                return `will be created`;
         }
     }
 
@@ -435,11 +436,11 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
 
     private createColumns(): PblColumnDefinition[] {
         const getHeaderProp = (prop: string) => {
-            return prop.startsWith('newEntry.') ? prop : `newEntry.${prop}`;
+            return prop.startsWith(`newEntry.`) ? prop : `newEntry.${prop}`;
         };
         const definitions = this.columns ?? this.headerDefinition;
         if (!definitions) {
-            throw new Error('You have to specify the columns to show');
+            throw new Error(`You have to specify the columns to show`);
         }
         if (Array.isArray(definitions) && definitions.length > 0) {
             return definitions
@@ -447,7 +448,7 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
                 .map(column => ({
                     ...column,
                     prop: getHeaderProp(column.prop),
-                    type: this.getTypeByProperty(getHeaderProp(column.prop).slice('newEntry.'.length))
+                    type: this.getTypeByProperty(getHeaderProp(column.prop).slice(`newEntry.`.length))
                 }));
         }
     }
@@ -467,7 +468,7 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
      * Resets the height of the displayed rows to the passed `rowHeight`-property.
      */
     private resetRowHeight(): void {
-        const styleProperty = '--os-row-height';
+        const styleProperty = `--os-row-height`;
         if (this.rowHeight > 0) {
             this._root.style.setProperty(styleProperty, `${this.rowHeight}px`);
         } else {
@@ -476,10 +477,10 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
     }
 
     private getTypeByProperty(property: string): 'boolean' | 'string' {
-        if (property.startsWith('is') || property.startsWith('has')) {
-            return 'boolean';
+        if (property.startsWith(`is`) || property.startsWith(`has`)) {
+            return `boolean`;
         } else {
-            return 'string';
+            return `string`;
         }
     }
 }

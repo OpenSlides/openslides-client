@@ -1,6 +1,7 @@
 import { HasMeeting } from 'app/management/models/view-meeting';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { ViewUser } from 'app/site/users/models/view-user';
+
 import { OptionData, OptionTitle } from './generic-poll';
 import { Option } from './option';
 import { ViewPoll } from './view-poll';

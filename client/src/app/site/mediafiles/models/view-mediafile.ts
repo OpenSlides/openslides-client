@@ -10,21 +10,21 @@ import { BaseViewModel } from 'app/site/base/base-view-model';
 import { Searchable } from 'app/site/base/searchable';
 import { ViewGroup } from 'app/site/users/models/view-group';
 
-export const IMAGE_MIMETYPES = ['image/png', 'image/jpeg', 'image/gif'];
-export const FONT_MIMETYPES = ['font/ttf', 'font/woff', 'font/woff2'];
-export const PDF_MIMETYPES = ['application/pdf'];
+export const IMAGE_MIMETYPES = [`image/png`, `image/jpeg`, `image/gif`];
+export const FONT_MIMETYPES = [`font/ttf`, `font/woff`, `font/woff2`];
+export const PDF_MIMETYPES = [`application/pdf`];
 export const VIDEO_MIMETYPES = [
-    'video/quicktime',
-    'video/mp4',
-    'video/webm',
-    'video/ogg',
-    'video/x-flv',
-    'application/x-mpegURL',
-    'video/MP2T',
-    'video/3gpp',
-    'video/x-msvideo',
-    'video/x-ms-wmv',
-    'video/x-matroska'
+    `video/quicktime`,
+    `video/mp4`,
+    `video/webm`,
+    `video/ogg`,
+    `video/x-flv`,
+    `application/x-mpegURL`,
+    `video/MP2T`,
+    `video/3gpp`,
+    `video/x-msvideo`,
+    `video/x-ms-wmv`,
+    `video/x-matroska`
 ];
 
 export interface HasAttachment extends HasAttachmentIds {
@@ -48,12 +48,12 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
     }
 
     public formatForSearch(): SearchRepresentation {
-        const type = this.is_directory ? 'directory' : this.mimetype;
+        const type = this.is_directory ? `directory` : this.mimetype;
         const properties = [
-            { key: 'Title', value: this.getTitle() },
-            { key: 'Type', value: type },
-            { key: 'Timestamp', value: this.timestamp },
-            { key: 'Size', value: this.filesize ? this.filesize : '0' }
+            { key: `Title`, value: this.getTitle() },
+            { key: `Type`, value: type },
+            { key: `Timestamp`, value: this.timestamp },
+            { key: `Size`, value: this.filesize ? this.filesize : `0` }
         ];
         return {
             properties,
@@ -118,17 +118,17 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
 
     public getIcon(): string {
         if (this.is_directory) {
-            return 'folder';
+            return `folder`;
         } else if (this.isPdf()) {
-            return 'picture_as_pdf';
+            return `picture_as_pdf`;
         } else if (this.isImage()) {
-            return 'insert_photo';
+            return `insert_photo`;
         } else if (this.isFont()) {
-            return 'text_fields';
+            return `text_fields`;
         } else if (this.isVideo()) {
-            return 'movie';
+            return `movie`;
         } else {
-            return 'insert_drive_file';
+            return `insert_drive_file`;
         }
     }
 }

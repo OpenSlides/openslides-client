@@ -1,5 +1,6 @@
 import { Id } from 'app/core/definitions/key-types';
 import { ModificationType } from 'app/core/ui-services/diff.service';
+
 import { BaseModel } from '../base/base-model';
 import { HasMeetingId } from '../base/has-meeting-id';
 
@@ -8,7 +9,7 @@ import { HasMeetingId } from '../base/has-meeting-id';
  * @ignore
  */
 export class MotionChangeRecommendation extends BaseModel<MotionChangeRecommendation> {
-    public static COLLECTION = 'motion_change_recommendation';
+    public static COLLECTION = `motion_change_recommendation`;
 
     public id: Id;
     public rejected: boolean;

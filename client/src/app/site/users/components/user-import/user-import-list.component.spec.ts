@@ -8,7 +8,7 @@
  * FIXME
  * unclear Issue with translate
  */
-describe('UserImportListComponent', () => {
+describe(`UserImportListComponent`, () => {
     // let component: UserImportListComponent;
     // let fixture: ComponentFixture<UserImportListComponent>;
     // beforeEach(async(() => {

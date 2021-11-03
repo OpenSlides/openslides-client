@@ -1,19 +1,20 @@
 import { HasMeetingId } from 'app/shared/models/base/has-meeting-id';
 import { Identifiable } from 'app/shared/models/base/identifiable';
+
 import { Decimal, Id, UnsafeHtml } from '../definitions/key-types';
 
 export namespace UserAction {
-    export const CREATE = 'user.create';
-    export const DELETE = 'user.delete';
-    export const GENERATE_NEW_PASSWORD = 'user.generate_new_password';
-    export const RESET_PASSWORD_TO_DEFAULT = 'user.reset_password_to_default';
-    export const SEND_INVITATION_EMAIL = 'user.send_invitation_email';
-    export const SET_PASSWORD = 'user.set_password';
-    export const SET_PASSWORD_SELF = 'user.set_password_self';
-    export const SET_PRESENT = 'user.set_present';
-    export const UPDATE = 'user.update';
-    export const UPDATE_SELF = 'user.update_self';
-    export const TOGGLE_PRESENCE_BY_NUMBER = 'user.toggle_presence_by_number';
+    export const CREATE = `user.create`;
+    export const DELETE = `user.delete`;
+    export const GENERATE_NEW_PASSWORD = `user.generate_new_password`;
+    export const RESET_PASSWORD_TO_DEFAULT = `user.reset_password_to_default`;
+    export const SEND_INVITATION_EMAIL = `user.send_invitation_email`;
+    export const SET_PASSWORD = `user.set_password`;
+    export const SET_PASSWORD_SELF = `user.set_password_self`;
+    export const SET_PRESENT = `user.set_present`;
+    export const UPDATE = `user.update`;
+    export const UPDATE_SELF = `user.update_self`;
+    export const TOGGLE_PRESENCE_BY_NUMBER = `user.toggle_presence_by_number`;
 
     export interface BaseUserPayload {
         title: string;

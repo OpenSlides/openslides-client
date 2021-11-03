@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { CurrentSpeakerChyronSlideComponent } from './current-speaker-chyron-slide.component';
 import { E2EImportsModule } from '../../../e2e-imports.module';
+import { CurrentSpeakerChyronSlideComponent } from './current-speaker-chyron-slide.component';
 
-describe('CurrentSpeakerChyronSlideComponent', () => {
+describe(`CurrentSpeakerChyronSlideComponent`, () => {
     let component: CurrentSpeakerChyronSlideComponent;
     let fixture: ComponentFixture<CurrentSpeakerChyronSlideComponent>;
 
@@ -22,7 +22,7 @@ describe('CurrentSpeakerChyronSlideComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

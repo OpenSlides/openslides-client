@@ -1,16 +1,17 @@
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+
 import {
+    GetUserRelatedModelsCommittee,
     GetUserRelatedModelsPresenterResult,
-    GetUserRelatedModelsUser,
-    GetUserRelatedModelsCommittee
+    GetUserRelatedModelsUser
 } from '../../../core/core-services/member.service';
 import { CML } from '../../../core/core-services/organization-permission';
 
 @Component({
-    selector: 'os-member-delete-dialog',
-    templateUrl: './member-delete-dialog.component.html',
-    styleUrls: ['./member-delete-dialog.component.scss'],
+    selector: `os-member-delete-dialog`,
+    templateUrl: `./member-delete-dialog.component.html`,
+    styleUrls: [`./member-delete-dialog.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
 export class MemberDeleteDialogComponent implements OnInit {

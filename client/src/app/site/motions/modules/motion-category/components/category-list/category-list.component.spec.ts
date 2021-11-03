@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { CategoryListComponent } from './category-list.component';
 
-describe('CategoryListComponent', () => {
+describe(`CategoryListComponent`, () => {
     let component: CategoryListComponent;
     let fixture: ComponentFixture<CategoryListComponent>;
 
@@ -23,7 +22,7 @@ describe('CategoryListComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

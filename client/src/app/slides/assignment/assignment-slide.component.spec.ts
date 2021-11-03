@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { AssignmentSlideComponent } from './assignment-slide.component';
 import { E2EImportsModule } from '../../../e2e-imports.module';
+import { AssignmentSlideComponent } from './assignment-slide.component';
 
-describe('AssignmentSlideComponent', () => {
+describe(`AssignmentSlideComponent`, () => {
     let component: AssignmentSlideComponent;
     let fixture: ComponentFixture<AssignmentSlideComponent>;
 
@@ -22,7 +22,7 @@ describe('AssignmentSlideComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

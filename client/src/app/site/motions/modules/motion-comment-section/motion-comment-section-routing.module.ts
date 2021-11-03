@@ -5,8 +5,8 @@ import { MotionCommentSectionListComponent } from './components/motion-comment-s
 import { MotionCommentSectionSortComponent } from './components/motion-comment-section-sort/motion-comment-section-sort.component';
 
 const routes: Route[] = [
-    { path: '', component: MotionCommentSectionListComponent, pathMatch: 'full' },
-    { path: 'sort', component: MotionCommentSectionSortComponent }
+    { path: ``, component: MotionCommentSectionListComponent, pathMatch: `full` },
+    { path: `sort`, component: MotionCommentSectionSortComponent }
 ];
 
 @NgModule({

@@ -1,6 +1,5 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, ContentChild, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef } from '@angular/core';
-
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 
@@ -26,9 +25,9 @@ import { Selectable } from '../selectable';
  *
  */
 @Component({
-    selector: 'os-sorting-list',
-    templateUrl: './sorting-list.component.html',
-    styleUrls: ['./sorting-list.component.scss']
+    selector: `os-sorting-list`,
+    templateUrl: `./sorting-list.component.html`,
+    styleUrls: [`./sorting-list.component.scss`]
 })
 export class SortingListComponent implements OnInit, OnDestroy {
     /**

@@ -30,9 +30,10 @@ import { ViewTopic } from 'app/site/topics/models/view-topic';
 import { ViewGroup } from 'app/site/users/models/view-group';
 import { ViewPersonalNote } from 'app/site/users/models/view-personal-note';
 import { ViewUser } from 'app/site/users/models/view-user';
+
 import { ViewCommittee } from './view-committee';
-import { HasOrganizationTags } from './view-organization-tag';
 import { ViewOrganization } from './view-organization';
+import { HasOrganizationTags } from './view-organization-tag';
 
 export interface HasMeeting {
     meeting: ViewMeeting;
@@ -65,7 +66,7 @@ export class ViewMeeting extends BaseViewModel<Meeting> {
 
     public static COLLECTION = Meeting.COLLECTION;
 
-    public static ACCESSIBILITY_FIELD: keyof Meeting = 'description';
+    public static ACCESSIBILITY_FIELD: keyof Meeting = `description`;
     protected _collection = Meeting.COLLECTION;
 
     public getUrl(): string {

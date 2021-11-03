@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { ModuleWithProviders, NgModule } from '@angular/core';
-
 import {
     FakeMissingTranslationHandler,
     MissingTranslationHandler,

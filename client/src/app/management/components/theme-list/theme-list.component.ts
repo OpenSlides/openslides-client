@@ -1,48 +1,51 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
+import { PblColumnDefinition } from '@pebula/ngrid';
 import { ViewTheme } from 'app/management/models/view-theme';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
-import { PblColumnDefinition } from '@pebula/ngrid';
-import { ComponentServiceCollector } from '../../../core/ui-services/component-service-collector';
-import { ThemeRepositoryService } from '../../../core/repositories/themes/theme-repository.service';
+
 import { SimplifiedModelRequest } from '../../../core/core-services/model-request-builder.service';
-import { ViewOrganization } from '../../models/view-organization';
 import { ORGANIZATION_ID } from '../../../core/core-services/organization.service';
-import { MatDialog } from '@angular/material/dialog';
-import { ThemeBuilderDialogComponent } from '../theme-builder-dialog/theme-builder-dialog.component';
-import { mediumDialogSettings } from '../../../shared/utils/dialog-settings';
 import { OrganizationRepositoryService } from '../../../core/repositories/management/organization-repository.service';
+import { ThemeRepositoryService } from '../../../core/repositories/themes/theme-repository.service';
+import { ComponentServiceCollector } from '../../../core/ui-services/component-service-collector';
 import { PromptService } from '../../../core/ui-services/prompt.service';
+import { mediumDialogSettings } from '../../../shared/utils/dialog-settings';
+import { ViewOrganization } from '../../models/view-organization';
+import { ThemeBuilderDialogComponent } from '../theme-builder-dialog/theme-builder-dialog.component';
 
 @Component({
-    selector: 'os-theme-list',
-    templateUrl: './theme-list.component.html',
-    styleUrls: ['./theme-list.component.scss']
+    selector: `os-theme-list`,
+    templateUrl: `./theme-list.component.html`,
+    styleUrls: [`./theme-list.component.scss`]
 })
 export class ThemeListComponent extends BaseListViewComponent<ViewTheme> {
     public tableColumnDefinition: PblColumnDefinition[] = [
         {
-            prop: 'name',
-            width: '100%'
+            prop: `name`,
+            width: `100%`
         },
         {
-            prop: 'colors',
+            prop: `colors`,
             minWidth: 120
         },
         {
-            prop: 'is_active',
+            prop: `is_active`,
             width: this.singleButtonWidth
         }
     ];
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         public readonly repo: ThemeRepositoryService,
         private dialogService: MatDialog,
         private orgaRepo: OrganizationRepositoryService,
         private prompt: PromptService
     ) {
-        super(componentServiceCollector);
-        super.setTitle('Design');
+        super(componentServiceCollector, translate);
+        super.setTitle(`Design`);
         this.canMultiSelect = true;
     }
 
@@ -69,8 +72,8 @@ export class ThemeListComponent extends BaseListViewComponent<ViewTheme> {
     }
 
     public async deleteTheme(theme: ViewTheme): Promise<void> {
-        const promptDialogTitle = 'Delete theme';
-        const subtitle = 'Do you really want to delete this theme?';
+        const promptDialogTitle = `Delete theme`;
+        const subtitle = `Do you really want to delete this theme?`;
         if (await this.prompt.open(promptDialogTitle, subtitle)) {
             await this.repo.delete(theme.id);
         }
@@ -84,8 +87,8 @@ export class ThemeListComponent extends BaseListViewComponent<ViewTheme> {
         return {
             viewModelCtor: ViewOrganization,
             ids: [ORGANIZATION_ID],
-            fieldset: '',
-            follow: [{ idField: 'theme_ids' }]
+            fieldset: ``,
+            follow: [{ idField: `theme_ids` }]
         };
     }
 }

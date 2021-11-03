@@ -1,6 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
-
+import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { BaseSortListService } from 'app/core/ui-services/base-sort-list.service';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 
@@ -15,9 +14,9 @@ import { BaseViewModel } from 'app/site/base/base-view-model';
  * ```
  */
 @Component({
-    selector: 'os-sort-bottom-sheet',
-    templateUrl: './sort-bottom-sheet.component.html',
-    styleUrls: ['./sort-bottom-sheet.component.scss']
+    selector: `os-sort-bottom-sheet`,
+    templateUrl: `./sort-bottom-sheet.component.html`,
+    styleUrls: [`./sort-bottom-sheet.component.scss`]
 })
 export class SortBottomSheetComponent<V extends BaseViewModel> implements OnInit {
     /**
@@ -35,7 +34,7 @@ export class SortBottomSheetComponent<V extends BaseViewModel> implements OnInit
      */
     public ngOnInit(): void {
         if (!this.data || !this.data.sortOptions || !this.data.sortOptions.length) {
-            throw new Error('No sorting available for a sorting list');
+            throw new Error(`No sorting available for a sorting list`);
         }
     }
 

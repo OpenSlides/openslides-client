@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Displayable } from 'app/site/base/displayable';
 
@@ -57,7 +56,7 @@ export type FlatNode<T> = T & {
  * and parentId property) and traverse the trees in pre-order.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class TreeService {
     /**
@@ -338,7 +337,7 @@ export class TreeService {
             }
             return tree;
         } else {
-            throw new Error('This should not happen. Invalid sorting items given');
+            throw new Error(`This should not happen. Invalid sorting items given`);
         }
     }
 
@@ -400,7 +399,7 @@ export class TreeService {
                     return target[property];
                 }
                 if (model[property]) {
-                    if (typeof model[property] === 'function') {
+                    if (typeof model[property] === `function`) {
                         return model[property].bind(model);
                     }
                     return model[property];
@@ -410,7 +409,7 @@ export class TreeService {
             set: (target: FlatNode<T>, property: string | symbol, value: any) => {
                 const model = target.item;
                 if (model[property]) {
-                    if (typeof value === 'function') {
+                    if (typeof value === `function`) {
                         model[property] = value.bind(model);
                     } else {
                         model[property] = value;

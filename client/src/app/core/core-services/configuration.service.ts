@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { environment } from 'environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -12,7 +11,7 @@ interface Configuration {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ConfigurationService {
     /**
@@ -26,7 +25,7 @@ export class ConfigurationService {
     private subjects: { [key: string]: BehaviorSubject<any> } = {};
 
     public constructor(lifecycleService: LifecycleService, http: HttpService) {
-        console.warn('TODO: Settingsservice server-side service');
+        console.warn(`TODO: Settingsservice server-side service`);
 
         // TODO: this is some presenter....
         /*lifecycleService.openslidesBooted.subscribe(async () => {

@@ -9,7 +9,7 @@ import { SimplifiedModelRequest } from './model-request-builder.service';
  * (any export service) and hides the autoupdate service from all components
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ModelRequestService {
     public constructor(private autoupdateService: AutoupdateService) {}

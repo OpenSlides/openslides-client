@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-
 import { saveAs } from 'file-saver';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class FileExportService {
     /**

@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-
+import { TranslateService } from '@ngx-translate/core';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Id } from 'app/core/definitions/key-types';
 import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
@@ -13,6 +13,7 @@ import { VotingPrivacyWarningComponent } from 'app/shared/components/voting-priv
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { BasePollComponent } from 'app/site/polls/components/base-poll.component';
+
 import { AssignmentPollDialogService } from '../../services/assignment-poll-dialog.service';
 import { AssignmentPollPdfService } from '../../services/assignment-poll-pdf.service';
 
@@ -20,9 +21,9 @@ import { AssignmentPollPdfService } from '../../services/assignment-poll-pdf.ser
  * Component for a single assignment poll. Used in assignment detail view
  */
 @Component({
-    selector: 'os-assignment-poll',
-    templateUrl: './assignment-poll.component.html',
-    styleUrls: ['./assignment-poll.component.scss']
+    selector: `os-assignment-poll`,
+    templateUrl: `./assignment-poll.component.html`,
+    styleUrls: [`./assignment-poll.component.scss`]
 })
 export class AssignmentPollComponent extends BasePollComponent<ViewAssignment> implements OnInit {
     @Input()
@@ -45,7 +46,7 @@ export class AssignmentPollComponent extends BasePollComponent<ViewAssignment> i
      * @returns true if the description on the form differs from the poll's description
      */
     public get dirtyDescription(): boolean {
-        return this.descriptionForm.get('description').value !== this.poll.description;
+        return this.descriptionForm.get(`description`).value !== this.poll.description;
     }
 
     public get showPoll(): boolean {
@@ -71,6 +72,7 @@ export class AssignmentPollComponent extends BasePollComponent<ViewAssignment> i
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         dialog: MatDialog,
         promptService: PromptService,
         choiceService: ChoiceService,
@@ -81,12 +83,12 @@ export class AssignmentPollComponent extends BasePollComponent<ViewAssignment> i
         private operator: OperatorService,
         private votingService: VotingService
     ) {
-        super(componentServiceCollector, dialog, promptService, choiceService, repo, pollDialog);
+        super(componentServiceCollector, translate, dialog, promptService, choiceService, repo, pollDialog);
     }
 
     public ngOnInit(): void {
         this.descriptionForm = this.formBuilder.group({
-            description: this.poll ? this.poll.description : ''
+            description: this.poll ? this.poll.description : ``
         });
     }
 

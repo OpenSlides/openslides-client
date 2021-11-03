@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-
-import { BehaviorSubject } from 'rxjs';
-
+import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'app/core/definitions/key-types';
 import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
 import { BasePollDialogService } from 'app/core/ui-services/base-poll-dialog.service';
@@ -13,9 +11,10 @@ import { PollState, PollType } from 'app/shared/models/poll/poll-constants';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
-    template: ''
+    template: ``
 })
 export abstract class BasePollComponent<C extends BaseViewModel = any> extends BaseModelContextComponent {
     private stateChangePendingSubject = new BehaviorSubject<boolean>(false);
@@ -30,16 +29,16 @@ export abstract class BasePollComponent<C extends BaseViewModel = any> extends B
 
     public pollStateActions = {
         [PollState.Created]: {
-            icon: 'play_arrow',
-            css: 'start-poll-button'
+            icon: `play_arrow`,
+            css: `start-poll-button`
         },
         [PollState.Started]: {
-            icon: 'stop',
-            css: 'stop-poll-button'
+            icon: `stop`,
+            css: `stop-poll-button`
         },
         [PollState.Finished]: {
-            icon: 'public',
-            css: 'publish-poll-button'
+            icon: `public`,
+            css: `publish-poll-button`
         }
     };
 
@@ -52,13 +51,14 @@ export abstract class BasePollComponent<C extends BaseViewModel = any> extends B
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         protected dialog: MatDialog,
         protected promptService: PromptService,
         protected choiceService: ChoiceService,
         protected repo: PollRepositoryService,
         protected pollDialog: BasePollDialogService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     public async nextPollState(): Promise<void> {
@@ -66,13 +66,13 @@ export abstract class BasePollComponent<C extends BaseViewModel = any> extends B
         if (currentState === PollState.Created || currentState === PollState.Finished) {
             await this.changeState(this._poll.nextState);
         } else if (currentState === PollState.Started) {
-            const title = this.translate.instant('Are you sure you want to stop this voting?');
-            const actions = [this.translate.instant('Stop'), this.translate.instant('Stop & publish')];
+            const title = this.translate.instant(`Are you sure you want to stop this voting?`);
+            const actions = [this.translate.instant(`Stop`), this.translate.instant(`Stop & publish`)];
             const choice = await this.choiceService.open(title, null, false, actions);
 
-            if (choice?.action === 'Stop') {
+            if (choice?.action === `Stop`) {
                 await this.changeState(PollState.Finished);
-            } else if (choice?.action === 'Stop & publish') {
+            } else if (choice?.action === `Stop & publish`) {
                 await this.changeState(PollState.Published);
             }
         }
@@ -85,8 +85,8 @@ export abstract class BasePollComponent<C extends BaseViewModel = any> extends B
     }
 
     public async resetState(): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to reset this vote?');
-        const content = this.translate.instant('All votes will be lost.');
+        const title = this.translate.instant(`Are you sure you want to reset this vote?`);
+        const content = this.translate.instant(`All votes will be lost.`);
         if (await this.promptService.open(title, content)) {
             this.changeState(PollState.Created);
         }
@@ -96,7 +96,7 @@ export abstract class BasePollComponent<C extends BaseViewModel = any> extends B
      * Handler for the 'delete poll' button
      */
     public async deletePoll(): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to delete this vote?');
+        const title = this.translate.instant(`Are you sure you want to delete this vote?`);
         const content = this._poll.getTitle();
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(this._poll);
@@ -126,12 +126,12 @@ export abstract class BasePollComponent<C extends BaseViewModel = any> extends B
             ids: [id],
             follow: [
                 {
-                    idField: 'option_ids',
-                    follow: [{ idField: 'vote_ids' }, { idField: 'content_object_id' }]
+                    idField: `option_ids`,
+                    follow: [{ idField: `vote_ids` }, { idField: `content_object_id` }]
                 },
                 {
-                    idField: 'global_option_id',
-                    follow: [{ idField: 'vote_ids' }]
+                    idField: `global_option_id`,
+                    follow: [{ idField: `vote_ids` }]
                 }
             ]
         });

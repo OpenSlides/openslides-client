@@ -1,9 +1,8 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
+import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
-
 import { Id } from 'app/core/definitions/key-types';
 import { ImportMeeting, MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -12,15 +11,15 @@ import { Identifiable } from 'app/shared/models/base/identifiable';
 import { BaseComponent } from 'app/site/base/components/base.component';
 
 @Component({
-    selector: 'os-meeting-import',
-    templateUrl: './meeting-import.component.html',
-    styleUrls: ['./meeting-import.component.scss']
+    selector: `os-meeting-import`,
+    templateUrl: `./meeting-import.component.html`,
+    styleUrls: [`./meeting-import.component.scss`]
 })
 export class MeetingImportComponent extends BaseComponent implements OnInit {
     public columns: PblColumnDefinition[] = [
         {
-            prop: 'title',
-            label: this.translate.instant('Title')
+            prop: `title`,
+            label: this.translate.instant(`Title`)
         }
     ];
 
@@ -28,11 +27,12 @@ export class MeetingImportComponent extends BaseComponent implements OnInit {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private repo: MeetingRepositoryService,
         private route: ActivatedRoute,
         private location: Location
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     public ngOnInit(): void {
@@ -53,7 +53,7 @@ export class MeetingImportComponent extends BaseComponent implements OnInit {
         return async file => {
             const meeting = await new Promise<ImportMeeting>(resolve => {
                 const reader = new FileReader();
-                reader.addEventListener('load', progress => {
+                reader.addEventListener(`load`, progress => {
                     const result = JSON.parse(progress.target.result as string);
                     resolve(result);
                 });

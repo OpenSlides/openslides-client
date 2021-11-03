@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-
 import { TranslateService } from '@ngx-translate/core';
-
 import { HistoryService } from 'app/core/core-services/history.service';
 import { StorageService } from 'app/core/core-services/storage.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
@@ -11,23 +9,24 @@ import { Assignment } from 'app/shared/models/assignments/assignment';
 import { Motion } from 'app/shared/models/motions/motion';
 import { MotionBlock } from 'app/shared/models/motions/motion-block';
 import { Topic } from 'app/shared/models/topics/topic';
+
 import { ViewAgendaItem } from '../models/view-agenda-item';
 
 /**
  * Filter the agenda list
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AgendaFilterListService extends BaseFilterListService<ViewAgendaItem> {
     /**
      * set the storage key name
      */
-    protected storageKey = 'AgendaList';
+    protected storageKey = `AgendaList`;
 
     public tagFilterOptions: OsFilter<ViewAgendaItem> = {
-        property: 'tag_ids',
-        label: 'Tags',
+        property: `tag_ids`,
+        label: `Tags`,
         options: []
     };
 
@@ -45,7 +44,7 @@ export class AgendaFilterListService extends BaseFilterListService<ViewAgendaIte
     ) {
         super(store, historyService);
 
-        this.updateFilterForRepo(tagRepo, this.tagFilterOptions, this.translate.instant('No tags'));
+        this.updateFilterForRepo(tagRepo, this.tagFilterOptions, this.translate.instant(`No tags`));
     }
 
     /**
@@ -54,27 +53,27 @@ export class AgendaFilterListService extends BaseFilterListService<ViewAgendaIte
     protected getFilterDefinitions(): OsFilter<ViewAgendaItem>[] {
         return [
             {
-                label: 'Status',
-                property: 'closed',
+                label: `Status`,
+                property: `closed`,
                 options: [
-                    { label: this.translate.instant('Open items'), condition: false },
-                    { label: this.translate.instant('Closed items'), condition: true }
+                    { label: this.translate.instant(`Open items`), condition: false },
+                    { label: this.translate.instant(`Closed items`), condition: true }
                 ]
             },
             this.tagFilterOptions,
             {
-                label: 'Visibility',
-                property: 'type',
+                label: `Visibility`,
+                property: `type`,
                 options: this.createVisibilityFilterOptions()
             },
             {
-                label: 'Type',
-                property: 'collection',
+                label: `Type`,
+                property: `collection`,
                 options: [
-                    { label: this.translate.instant('Motions'), condition: Motion.COLLECTION },
-                    { label: this.translate.instant('Topics'), condition: Topic.COLLECTION },
-                    { label: this.translate.instant('Motion blocks'), condition: MotionBlock.COLLECTION },
-                    { label: this.translate.instant('Elections'), condition: Assignment.COLLECTION }
+                    { label: this.translate.instant(`Motions`), condition: Motion.COLLECTION },
+                    { label: this.translate.instant(`Topics`), condition: Topic.COLLECTION },
+                    { label: this.translate.instant(`Motion blocks`), condition: MotionBlock.COLLECTION },
+                    { label: this.translate.instant(`Elections`), condition: Assignment.COLLECTION }
                 ]
             }
         ];

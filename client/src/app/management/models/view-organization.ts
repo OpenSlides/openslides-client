@@ -1,10 +1,11 @@
 import { Organization } from 'app/shared/models/event-management/organization';
 import { BaseViewModel } from 'app/site/base/base-view-model';
+import { Observable } from 'rxjs';
+
 import { ViewCommittee } from './view-committee';
+import { ViewMeeting } from './view-meeting';
 import { ViewOrganizationTag } from './view-organization-tag';
 import { ViewResource } from './view-resource';
-import { ViewMeeting } from './view-meeting';
-import { Observable } from 'rxjs';
 import { ViewTheme } from './view-theme';
 
 export class ViewOrganization extends BaseViewModel<Organization> {

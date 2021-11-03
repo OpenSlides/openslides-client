@@ -6,7 +6,7 @@ import { Deferred } from '../promises/deferred';
  * Provides fundamental hooks into the openslides lifecycle.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class LifecycleService {
     /**
@@ -48,7 +48,7 @@ export class LifecycleService {
     public bootup(): void {
         this._isBooted = true;
         this._booted.resolve();
-        console.debug('Lifecycle: booted.');
+        console.debug(`Lifecycle: booted.`);
         this.openslidesBooted.next();
     }
 
@@ -58,7 +58,7 @@ export class LifecycleService {
     public shutdown(): void {
         this._isBooted = false;
         this._booted = new Deferred();
-        console.debug('Lifecycle: shutdown.');
+        console.debug(`Lifecycle: shutdown.`);
         this.openslidesShutdowned.next();
     }
 

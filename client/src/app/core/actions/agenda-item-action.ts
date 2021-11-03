@@ -1,16 +1,17 @@
 import { AgendaItemType } from 'app/shared/models/agenda/agenda-item';
 import { HasMeetingId } from 'app/shared/models/base/has-meeting-id';
 import { Identifiable } from 'app/shared/models/base/identifiable';
-import { BaseSortPayload } from './common/base-sort-payload';
+
 import { Fqid, Id } from '../definitions/key-types';
+import { BaseSortPayload } from './common/base-sort-payload';
 
 export namespace AgendaItemAction {
-    export const CREATE = 'agenda_item.create';
-    export const UPDATE = 'agenda_item.update';
-    export const DELETE = 'agenda_item.delete';
-    export const SORT = 'agenda_item.sort';
-    export const NUMBERING = 'agenda_item.numbering';
-    export const ASSIGN = 'agenda_item.assign';
+    export const CREATE = `agenda_item.create`;
+    export const UPDATE = `agenda_item.update`;
+    export const DELETE = `agenda_item.delete`;
+    export const SORT = `agenda_item.sort`;
+    export const NUMBERING = `agenda_item.numbering`;
+    export const ASSIGN = `agenda_item.assign`;
 
     interface OptionalPayload {
         item_number?: string;

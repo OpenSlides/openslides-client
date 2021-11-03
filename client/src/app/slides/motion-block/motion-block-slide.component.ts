@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-
 import { TranslateService } from '@ngx-translate/core';
-
-import { modifyAgendaItemNumber } from '../agenda_item_number';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
 import { SlideData } from 'app/core/ui-services/projector.service';
+
+import { modifyAgendaItemNumber } from '../agenda_item_number';
 import { BaseMotionSlideComponent } from '../motion-base/base-motion-slide';
 import { MotionBlockSlideData, MotionBlockSlideMotionRepresentation } from './motion-block-slide-data';
 
@@ -24,9 +23,9 @@ const SHORT_LAYOUT_THRESHOLD = 8;
 const MAX_COLUMNS = 3;
 
 @Component({
-    selector: 'os-motion-block-slide',
-    templateUrl: './motion-block-slide.component.html',
-    styleUrls: ['./motion-block-slide.component.scss']
+    selector: `os-motion-block-slide`,
+    templateUrl: `./motion-block-slide.component.html`,
+    styleUrls: [`./motion-block-slide.component.scss`]
 })
 export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBlockSlideData> {
     /**
@@ -111,7 +110,7 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
                     let recommendation = this.translate.instant(motion.recommendation.recommendation_label);
                     if (motion.recommendation_extension) {
                         recommendation +=
-                            ' ' + this.replaceReferencedMotions(motion.recommendation_extension, value.data.referenced);
+                            ` ` + this.replaceReferencedMotions(motion.recommendation_extension, value.data.referenced);
                     }
                     motion.recommendationLabel = recommendation;
                 } else {
@@ -184,6 +183,6 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
      * @returns the css color for the state of the motion in cell i and j
      */
     public getStateCssColor(i: number, j: number): string {
-        return this.getMotion(i, j).recommendation.css_class || '';
+        return this.getMotion(i, j).recommendation.css_class || ``;
     }
 }

@@ -1,4 +1,5 @@
 import { Id } from 'app/core/definitions/key-types';
+
 import { BaseModel } from '../base/base-model';
 import { HasAgendaItemId } from '../base/has-agenda-item-id';
 import { HasAttachmentIds } from '../base/has-attachment-ids';
@@ -11,7 +12,7 @@ import { HasTagIds } from '../base/has-tag-ids';
  * @ignore
  */
 export class Topic extends BaseModel<Topic> {
-    public static COLLECTION = 'topic';
+    public static COLLECTION = `topic`;
 
     public id: Id;
     public title: string;

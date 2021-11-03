@@ -33,6 +33,7 @@ import { ViewTopic } from 'app/site/topics/models/view-topic';
 import { ViewGroup } from 'app/site/users/models/view-group';
 import { ViewPersonalNote } from 'app/site/users/models/view-personal-note';
 import { ViewUser } from 'app/site/users/models/view-user';
+
 import { ViewTheme } from '../../management/models/view-theme';
 import {
     makeGenericM2M,
@@ -78,7 +79,7 @@ function _makeStructuredUserRelation<V extends BaseViewModel>(
             many: true,
             generic: false,
             structured: true,
-            ownIdFieldDefaultAttribute: 'active-meeting'
+            ownIdFieldDefaultAttribute: `active-meeting`
         },
         // other -> structured
         {
@@ -117,106 +118,106 @@ export const RELATIONS: Relation[] = [
     ...makeM2O({
         OViewModel: ViewOrganization,
         MViewModel: ViewCommittee,
-        OField: 'committees',
-        MField: 'organization',
+        OField: `committees`,
+        MField: `organization`,
         isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewOrganization,
         MViewModel: ViewResource,
-        OField: 'resources',
-        MField: 'organization',
+        OField: `resources`,
+        MField: `organization`,
         isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewOrganization,
         MViewModel: ViewOrganizationTag,
-        OField: 'organization_tags',
-        MField: 'organization',
+        OField: `organization_tags`,
+        MField: `organization`,
         isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewOrganization,
         MViewModel: ViewMeeting,
-        OField: 'active_meetings',
-        MField: 'is_active_in_organization'
+        OField: `active_meetings`,
+        MField: `is_active_in_organization`
     }),
     ...makeM2O({
         OViewModel: ViewOrganization,
         MViewModel: ViewTheme,
-        OField: 'themes',
-        MField: 'organization',
+        OField: `themes`,
+        MField: `organization`,
         isFullList: true
     }),
     ...makeO2O({
         AViewModel: ViewOrganization,
         BViewModel: ViewTheme,
-        AField: 'theme',
-        BField: 'theme_for_organization'
+        AField: `theme`,
+        BField: `theme_for_organization`
     }),
     // ########## Organization tags
     ...makeGenericM2M<ViewOrganizationTag, HasOrganizationTags>({
         viewModel: ViewOrganizationTag,
         possibleViewModels: [ViewCommittee, ViewMeeting],
-        possibleViewModelsField: 'organization_tags',
-        viewModelField: 'tagged',
-        viewModelIdField: 'tagged_ids'
+        possibleViewModelsField: `organization_tags`,
+        viewModelField: `tagged`,
+        viewModelIdField: `tagged_ids`
     }),
     // ########## User
     ...makeManyStructuredUsers2MRelation({
         otherViewModel: ViewGroup,
-        structuredField: 'groups',
-        structuredIdField: 'group_$_ids',
-        otherViewModelField: 'users'
+        structuredField: `groups`,
+        structuredIdField: `group_$_ids`,
+        otherViewModelField: `users`
     }),
     ...makeOneStructuredUser2MRelation({
         otherViewModel: ViewSpeaker,
-        structuredField: 'speakers',
-        structuredIdField: 'speaker_$_ids',
-        otherViewModelField: 'user'
+        structuredField: `speakers`,
+        structuredIdField: `speaker_$_ids`,
+        otherViewModelField: `user`
     }),
     ...makeOneStructuredUser2MRelation({
         otherViewModel: ViewPersonalNote,
-        structuredField: 'personal_notes',
-        structuredIdField: 'personal_note_$_ids',
-        otherViewModelField: 'user'
+        structuredField: `personal_notes`,
+        structuredIdField: `personal_note_$_ids`,
+        otherViewModelField: `user`
     }),
     ...makeManyStructuredUsers2MRelation({
         otherViewModel: ViewMotion,
-        structuredField: 'supported_motions',
-        structuredIdField: 'supported_motion_$_ids',
-        otherViewModelField: 'supporters'
+        structuredField: `supported_motions`,
+        structuredIdField: `supported_motion_$_ids`,
+        otherViewModelField: `supporters`
     }),
     ...makeOneStructuredUser2MRelation({
         otherViewModel: ViewMotionSubmitter,
-        structuredField: 'submitted_motions',
-        structuredIdField: 'submitted_motion_$_ids',
-        otherViewModelField: 'user'
+        structuredField: `submitted_motions`,
+        structuredIdField: `submitted_motion_$_ids`,
+        otherViewModelField: `user`
     }),
     ...makeManyStructuredUsers2MRelation({
         otherViewModel: ViewPoll,
-        structuredField: 'poll_voted',
-        structuredIdField: 'poll_voted_$_ids',
-        otherViewModelField: 'voted',
-        otherViewModelIdField: 'voted_ids'
+        structuredField: `poll_voted`,
+        structuredIdField: `poll_voted_$_ids`,
+        otherViewModelField: `voted`,
+        otherViewModelIdField: `voted_ids`
     }),
     ...makeOneStructuredUser2MRelation({
         otherViewModel: ViewVote,
-        structuredField: 'votes',
-        structuredIdField: 'vote_$_ids',
-        otherViewModelField: 'user'
+        structuredField: `votes`,
+        structuredIdField: `vote_$_ids`,
+        otherViewModelField: `user`
     }),
     ...makeOneStructuredUser2MRelation({
         otherViewModel: ViewVote,
-        structuredField: 'votes',
-        structuredIdField: 'delegated_vote_$_ids',
-        otherViewModelField: 'delegated_user'
+        structuredField: `votes`,
+        structuredIdField: `delegated_vote_$_ids`,
+        otherViewModelField: `delegated_user`
     }),
     ...makeOneStructuredUser2MRelation({
         otherViewModel: ViewAssignmentCandidate,
-        structuredField: 'assignment_candidates',
-        structuredIdField: 'assignment_candidate_$_ids',
-        otherViewModelField: 'user'
+        structuredField: `assignment_candidates`,
+        structuredIdField: `assignment_candidate_$_ids`,
+        otherViewModelField: `user`
     }),
     // ...makeOneStructuredGenericUser2MRelation({
     //     otherViewModel: ViewOption,
@@ -229,293 +230,293 @@ export const RELATIONS: Relation[] = [
     {
         ownViewModels: [ViewUser],
         foreignViewModel: ViewUser,
-        ownField: 'vote_delegated_to',
-        ownIdField: 'vote_delegated_$_to_id',
+        ownField: `vote_delegated_to`,
+        ownIdField: `vote_delegated_$_to_id`,
         many: false,
         generic: false,
         structured: true,
-        ownIdFieldDefaultAttribute: 'active-meeting'
+        ownIdFieldDefaultAttribute: `active-meeting`
     },
     // vote_delegations_$_from_ids -> vote_delegated_$_to_id
     {
         ownViewModels: [ViewUser],
         foreignViewModel: ViewUser,
-        ownField: 'vote_delegations_from',
-        ownIdField: 'vote_delegations_$_from_ids',
+        ownField: `vote_delegations_from`,
+        ownIdField: `vote_delegations_$_from_ids`,
         many: true,
         generic: false,
         structured: true,
-        ownIdFieldDefaultAttribute: 'active-meeting'
+        ownIdFieldDefaultAttribute: `active-meeting`
     },
     // ########## Committees
     ...makeM2O({
         OViewModel: ViewCommittee,
         MViewModel: ViewMeeting,
-        OField: 'meetings',
-        MField: 'committee'
+        OField: `meetings`,
+        MField: `committee`
     }),
     ...makeO2O({
         AViewModel: ViewCommittee,
         BViewModel: ViewMeeting,
-        AField: 'default_meeting',
-        BField: 'default_meeting_for_committee'
+        AField: `default_meeting`,
+        BField: `default_meeting_for_committee`
     }),
     ...makeO2O({
         AViewModel: ViewCommittee,
         BViewModel: ViewMeeting,
-        AField: 'template_meeting_id',
-        BField: 'template_meeting_for_committee_id'
+        AField: `template_meeting_id`,
+        BField: `template_meeting_for_committee_id`
     }),
     ...makeM2M({
         AViewModel: ViewCommittee,
         BViewModel: ViewUser,
-        AField: 'users',
-        BField: 'committees',
-        BIdField: 'committee_ids'
+        AField: `users`,
+        BField: `committees`,
+        BIdField: `committee_ids`
     }),
     ...makeM2M({
         AViewModel: ViewCommittee,
         BViewModel: ViewCommittee,
-        AField: 'forward_to_committees',
-        BField: 'receive_forwardings_from_committees'
+        AField: `forward_to_committees`,
+        BField: `receive_forwardings_from_committees`
     }),
     // ########## Meetings
     ...makeO2O({
         AViewModel: ViewMeeting,
         BViewModel: ViewMotionWorkflow,
-        AField: 'motions_default_workflow',
-        BField: 'default_workflow_meeting'
+        AField: `motions_default_workflow`,
+        BField: `default_workflow_meeting`
     }),
     ...makeO2O({
         AViewModel: ViewMeeting,
         BViewModel: ViewMotionWorkflow,
-        AField: 'motions_default_amendment_workflow',
-        BField: 'default_amendment_workflow_meeting'
+        AField: `motions_default_amendment_workflow`,
+        BField: `default_amendment_workflow_meeting`
     }),
     ...makeO2O({
         AViewModel: ViewMeeting,
         BViewModel: ViewMotionWorkflow,
-        AField: 'motions_default_statute_amendment_workflow',
-        BField: 'default_statute_amendment_workflow_meeting'
+        AField: `motions_default_statute_amendment_workflow`,
+        BField: `default_statute_amendment_workflow_meeting`
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewGroup,
-        OField: 'motion_poll_default_groups',
-        MField: 'used_as_motion_poll_default'
+        OField: `motion_poll_default_groups`,
+        MField: `used_as_motion_poll_default`
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewGroup,
-        OField: 'assignment_poll_default_groups',
-        MField: 'used_as_assignment_poll_default'
+        OField: `assignment_poll_default_groups`,
+        MField: `used_as_assignment_poll_default`
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewProjector,
-        OField: 'projectors',
-        MField: 'meeting'
+        OField: `projectors`,
+        MField: `meeting`
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewProjection,
-        OField: 'projections',
-        MField: 'meeting'
+        OField: `projections`,
+        MField: `meeting`
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewProjectorMessage,
-        OField: 'projector_messages',
-        MField: 'meeting'
+        OField: `projector_messages`,
+        MField: `meeting`
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewProjectorCountdown,
-        OField: 'projector_countdowns',
-        MField: 'meeting'
+        OField: `projector_countdowns`,
+        MField: `meeting`
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewTag,
-        OField: 'tags',
-        MField: 'meeting',
+        OField: `tags`,
+        MField: `meeting`,
         isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewAgendaItem,
-        OField: 'agenda_items',
-        MField: 'meeting',
-        order: 'weight',
+        OField: `agenda_items`,
+        MField: `meeting`,
+        order: `weight`,
         isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewListOfSpeakers,
-        OField: 'lists_of_speakers',
-        OIdField: 'list_of_speakers_ids',
-        MField: 'meeting',
+        OField: `lists_of_speakers`,
+        OIdField: `list_of_speakers_ids`,
+        MField: `meeting`,
         isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewSpeaker,
-        OField: 'speakers',
-        MField: 'meeting'
+        OField: `speakers`,
+        MField: `meeting`
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewTopic,
-        OField: 'topics',
-        MField: 'meeting',
+        OField: `topics`,
+        MField: `meeting`,
         isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewGroup,
-        OField: 'groups',
-        MField: 'meeting',
+        OField: `groups`,
+        MField: `meeting`,
         isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewPersonalNote,
-        OField: 'personal_notes',
-        MField: 'meeting',
+        OField: `personal_notes`,
+        MField: `meeting`,
         isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewMediafile,
-        OField: 'mediafiles',
-        MField: 'meeting',
+        OField: `mediafiles`,
+        MField: `meeting`,
         isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewMotion,
-        OField: 'motions',
-        MField: 'meeting',
+        OField: `motions`,
+        MField: `meeting`,
         isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewMotionCommentSection,
-        OField: 'motion_comment_sections',
-        MField: 'meeting',
+        OField: `motion_comment_sections`,
+        MField: `meeting`,
         isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewMotionComment,
-        OField: 'motion_comments',
-        MField: 'meeting',
+        OField: `motion_comments`,
+        MField: `meeting`,
         isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewMotionCategory,
-        OField: 'motion_categories',
-        OIdField: 'motion_category_ids',
-        MField: 'meeting',
-        order: 'weight',
+        OField: `motion_categories`,
+        OIdField: `motion_category_ids`,
+        MField: `meeting`,
+        order: `weight`,
         isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewMotionBlock,
-        OField: 'motion_blocks',
-        MField: 'meeting',
+        OField: `motion_blocks`,
+        MField: `meeting`,
         isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewMotionSubmitter,
-        OField: 'motion_submitters',
-        MField: 'meeting',
+        OField: `motion_submitters`,
+        MField: `meeting`,
         isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewMotionChangeRecommendation,
-        OField: 'motion_change_recommendations',
-        MField: 'meeting',
+        OField: `motion_change_recommendations`,
+        MField: `meeting`,
         isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewMotionWorkflow,
-        OField: 'motion_workflows',
-        MField: 'meeting',
+        OField: `motion_workflows`,
+        MField: `meeting`,
         isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewMotionState,
-        OField: 'motion_states',
-        MField: 'meeting',
+        OField: `motion_states`,
+        MField: `meeting`,
         isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewMotionStatuteParagraph,
-        OField: 'motion_statute_paragraphs',
-        MField: 'meeting',
+        OField: `motion_statute_paragraphs`,
+        MField: `meeting`,
         isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewPoll,
-        OField: 'polls',
-        MField: 'meeting',
+        OField: `polls`,
+        MField: `meeting`,
         isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewOption,
-        OField: 'options',
-        MField: 'meeting',
+        OField: `options`,
+        MField: `meeting`,
         isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewVote,
-        OField: 'votes',
-        MField: 'meeting',
+        OField: `votes`,
+        MField: `meeting`,
         isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewAssignment,
-        OField: 'assignments',
-        MField: 'meeting',
+        OField: `assignments`,
+        MField: `meeting`,
         isFullList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewAssignmentCandidate,
-        OField: 'assignment_candidates',
-        MField: 'meeting',
+        OField: `assignment_candidates`,
+        MField: `meeting`,
         isFullList: true
     }),
     ...makeM2M({
         AViewModel: ViewMeeting,
         BViewModel: ViewUser,
-        AField: 'present_users',
-        BField: 'is_present_in_meetings'
+        AField: `present_users`,
+        BField: `is_present_in_meetings`
     }),
     ...makeO2O({
         AViewModel: ViewMeeting,
         BViewModel: ViewProjector,
-        AField: 'reference_projector',
-        BField: 'used_as_reference_projector_in_meeting'
+        AField: `reference_projector`,
+        BField: `used_as_reference_projector_in_meeting`
     }),
     // Projector -> Meeting
     {
         ownViewModels: [ViewProjector],
         foreignViewModel: ViewMeeting,
-        ownField: 'used_as_default_in_meeting',
-        ownIdField: 'used_as_default_$_in_meeting_id',
+        ownField: `used_as_default_in_meeting`,
+        ownIdField: `used_as_default_$_in_meeting_id`,
         many: false,
         generic: false,
         structured: true
@@ -524,8 +525,8 @@ export const RELATIONS: Relation[] = [
     {
         ownViewModels: [ViewMeeting],
         foreignViewModel: ViewProjector,
-        ownField: 'default_projector',
-        ownIdField: 'default_projector_$_id',
+        ownField: `default_projector`,
+        ownIdField: `default_projector_$_id`,
         many: false,
         generic: false,
         structured: true
@@ -533,21 +534,21 @@ export const RELATIONS: Relation[] = [
     ...makeO2O({
         AViewModel: ViewMeeting,
         BViewModel: ViewGroup,
-        AField: 'default_group',
-        BField: 'default_group_for_meeting'
+        AField: `default_group`,
+        BField: `default_group_for_meeting`
     }),
     ...makeO2O({
         AViewModel: ViewMeeting,
         BViewModel: ViewGroup,
-        AField: 'admin_group',
-        BField: 'admin_group_for_meeting'
+        AField: `admin_group`,
+        BField: `admin_group_for_meeting`
     }),
     // Logo -> meeting
     {
         ownViewModels: [ViewMediafile],
         foreignViewModel: ViewMeeting,
-        ownField: 'used_as_logo_in_meeting',
-        ownIdField: 'used_as_logo_$_in_meeting_id',
+        ownField: `used_as_logo_in_meeting`,
+        ownIdField: `used_as_logo_$_in_meeting_id`,
         many: false,
         generic: false,
         structured: true
@@ -556,8 +557,8 @@ export const RELATIONS: Relation[] = [
     {
         ownViewModels: [ViewMeeting],
         foreignViewModel: ViewMediafile,
-        ownField: 'logo',
-        ownIdField: 'logo_$_id',
+        ownField: `logo`,
+        ownIdField: `logo_$_id`,
         many: false,
         generic: false,
         structured: true
@@ -566,8 +567,8 @@ export const RELATIONS: Relation[] = [
     {
         ownViewModels: [ViewMediafile],
         foreignViewModel: ViewMeeting,
-        ownField: 'used_as_font_in_meeting',
-        ownIdField: 'used_as_font_$_in_meeting_id',
+        ownField: `used_as_font_in_meeting`,
+        ownIdField: `used_as_font_$_in_meeting_id`,
         many: false,
         generic: false,
         structured: true
@@ -576,8 +577,8 @@ export const RELATIONS: Relation[] = [
     {
         ownViewModels: [ViewMeeting],
         foreignViewModel: ViewMediafile,
-        ownField: 'font',
-        ownIdField: 'font_$_id',
+        ownField: `font`,
+        ownIdField: `font_$_id`,
         many: false,
         generic: false,
         structured: true
@@ -586,8 +587,8 @@ export const RELATIONS: Relation[] = [
     {
         ownViewModels: [ViewMeeting],
         foreignViewModel: ViewUser,
-        ownField: 'users',
-        ownIdField: 'user_ids',
+        ownField: `users`,
+        ownIdField: `user_ids`,
         many: true,
         generic: false,
         structured: false,
@@ -597,269 +598,269 @@ export const RELATIONS: Relation[] = [
     ...makeGenericO2M<ViewPersonalNote>({
         OViewModel: ViewPersonalNote,
         MPossibleViewModels: [ViewMotion],
-        OViewModelField: 'content_object',
-        MPossibleViewModelsField: 'personal_notes'
+        OViewModelField: `content_object`,
+        MPossibleViewModelsField: `personal_notes`
     }),
     // ########## Tags
     ...makeGenericM2M<ViewTag, HasTags>({
         viewModel: ViewTag,
         possibleViewModels: [ViewAgendaItem, ViewAssignment, ViewMotion, ViewTopic],
-        viewModelField: 'tagged',
-        viewModelIdField: 'tagged_ids',
-        possibleViewModelsField: 'tags'
+        viewModelField: `tagged`,
+        viewModelIdField: `tagged_ids`,
+        possibleViewModelsField: `tags`
     }),
     // ########## Agenda items
     ...makeGenericO2O<ViewAgendaItem, HasAgendaItem>({
         viewModel: ViewAgendaItem,
         possibleViewModels: [ViewMotion, ViewMotionBlock, ViewAssignment, ViewTopic],
-        viewModelField: 'content_object',
-        possibleViewModelsField: 'agenda_item'
+        viewModelField: `content_object`,
+        possibleViewModelsField: `agenda_item`
     }),
     ...makeM2O({
         MViewModel: ViewAgendaItem,
         OViewModel: ViewAgendaItem,
-        MField: 'parent',
-        OField: 'children',
-        OIdField: 'child_ids'
+        MField: `parent`,
+        OField: `children`,
+        OIdField: `child_ids`
     }),
     // ########## Lists of speakers
     ...makeGenericO2O<ViewListOfSpeakers, HasListOfSpeakers>({
         viewModel: ViewListOfSpeakers,
         possibleViewModels: [ViewMotion, ViewMotionBlock, ViewAssignment, ViewTopic, ViewMediafile],
-        viewModelField: 'content_object',
-        possibleViewModelsField: 'list_of_speakers'
+        viewModelField: `content_object`,
+        possibleViewModelsField: `list_of_speakers`
     }),
     ...makeM2O({
         MViewModel: ViewSpeaker,
         OViewModel: ViewListOfSpeakers,
-        MField: 'list_of_speakers',
-        OField: 'speakers'
+        MField: `list_of_speakers`,
+        OField: `speakers`
     }),
     // ########## Motions
     ...makeM2O({
         MViewModel: ViewMotion,
         OViewModel: ViewMotion,
-        MField: 'lead_motion',
-        OField: 'amendments'
+        MField: `lead_motion`,
+        OField: `amendments`
     }),
     ...makeM2O({
         MViewModel: ViewMotion,
         OViewModel: ViewMotion,
-        MField: 'sort_parent',
-        OField: 'sort_children',
-        OIdField: 'sort_child_ids'
+        MField: `sort_parent`,
+        OField: `sort_children`,
+        OIdField: `sort_child_ids`
     }),
     ...makeM2O({
         MViewModel: ViewMotion,
         OViewModel: ViewMotion,
-        MField: 'origin',
-        OField: 'all_derived_motions'
+        MField: `origin`,
+        OField: `all_derived_motions`
     }),
     // motion/all_origin_ids -> motion/derived_motion_ids
     ...makeM2M({
         AViewModel: ViewMotion,
         BViewModel: ViewMotion,
-        AField: 'all_origins',
-        AIdField: 'all_origin_ids',
-        BField: 'derived_motions',
-        BIdField: 'derived_motion_ids'
+        AField: `all_origins`,
+        AIdField: `all_origin_ids`,
+        BField: `derived_motions`,
+        BIdField: `derived_motion_ids`
     }),
     ...makeM2O({
         MViewModel: ViewMotion,
         OViewModel: ViewMotionState,
-        MField: 'state',
-        OField: 'motions'
+        MField: `state`,
+        OField: `motions`
     }),
     ...makeM2O({
         MViewModel: ViewMotion,
         OViewModel: ViewMotionState,
-        MField: 'recommendation',
-        OField: 'motions'
+        MField: `recommendation`,
+        OField: `motions`
     }),
     ...makeGenericM2M<ViewMotion, HasReferencedMotionsInRecommendationExtension>({
         viewModel: ViewMotion,
         possibleViewModels: [ViewMotion],
-        viewModelField: 'recommendation_extension_reference_ids',
-        possibleViewModelsField: 'referenced_in_motion_recommendation_extension'
+        viewModelField: `recommendation_extension_reference_ids`,
+        possibleViewModelsField: `referenced_in_motion_recommendation_extension`
     }),
     ...makeM2O({
         MViewModel: ViewMotion,
         OViewModel: ViewMotionCategory,
-        MField: 'category',
-        OField: 'motions',
-        order: 'category_weight'
+        MField: `category`,
+        OField: `motions`,
+        order: `category_weight`
     }),
     ...makeM2O({
         MViewModel: ViewMotion,
         OViewModel: ViewMotionBlock,
-        MField: 'block',
-        OField: 'motions'
+        MField: `block`,
+        OField: `motions`
     }),
     ...makeM2O({
         MViewModel: ViewMotionSubmitter,
         OViewModel: ViewMotion,
-        MField: 'motion',
-        OField: 'submitters',
-        order: 'weight'
+        MField: `motion`,
+        OField: `submitters`,
+        order: `weight`
     }),
     ...makeM2O({
         MViewModel: ViewMotionChangeRecommendation,
         OViewModel: ViewMotion,
-        MField: 'motion',
-        OField: 'change_recommendations'
+        MField: `motion`,
+        OField: `change_recommendations`
     }),
     ...makeM2O({
         MViewModel: ViewMotion,
         OViewModel: ViewMotionStatuteParagraph,
-        MField: 'statute_paragraph',
-        OField: 'motions'
+        MField: `statute_paragraph`,
+        OField: `motions`
     }),
     ...makeM2O({
         MViewModel: ViewMotionComment,
         OViewModel: ViewMotion,
-        MField: 'motion',
-        OField: 'comments'
+        MField: `motion`,
+        OField: `comments`
     }),
     // ########## Motion comment sections
     ...makeM2O({
         MViewModel: ViewMotionComment,
         OViewModel: ViewMotionCommentSection,
-        MField: 'section',
-        OField: 'comments'
+        MField: `section`,
+        OField: `comments`
     }),
     ...makeM2M({
         AViewModel: ViewMotionCommentSection,
         BViewModel: ViewGroup,
-        AField: 'read_groups',
-        BField: 'read_comment_sections'
+        AField: `read_groups`,
+        BField: `read_comment_sections`
     }),
     ...makeM2M({
         AViewModel: ViewMotionCommentSection,
         BViewModel: ViewGroup,
-        AField: 'write_groups',
-        BField: 'write_comment_sections'
+        AField: `write_groups`,
+        BField: `write_comment_sections`
     }),
     // ########## Motion category
     ...makeM2O({
         MViewModel: ViewMotionCategory,
         OViewModel: ViewMotionCategory,
-        MField: 'parent',
-        OField: 'children',
-        OIdField: 'child_ids',
-        order: 'weight'
+        MField: `parent`,
+        OField: `children`,
+        OIdField: `child_ids`,
+        order: `weight`
     }),
     // ########## Motion states
     ...makeM2M({
         AViewModel: ViewMotionState,
         BViewModel: ViewMotionState,
-        AField: 'next_states',
-        BField: 'previous_states'
+        AField: `next_states`,
+        BField: `previous_states`
     }),
     // ########## Motion workflow
     ...makeM2O({
         MViewModel: ViewMotionState,
         OViewModel: ViewMotionWorkflow,
-        MField: 'workflow',
-        OField: 'states'
+        MField: `workflow`,
+        OField: `states`
     }),
     ...makeO2O({
         AViewModel: ViewMotionWorkflow,
         BViewModel: ViewMotionState,
-        AField: 'first_state',
-        BField: 'first_state_of_workflow'
+        AField: `first_state`,
+        BField: `first_state_of_workflow`
     }),
     // ########## Polls
     ...makeGenericO2M({
         OViewModel: ViewPoll,
         MPossibleViewModels: [ViewMotion, ViewAssignment],
-        OViewModelField: 'content_object',
-        MPossibleViewModelsField: 'polls'
+        OViewModelField: `content_object`,
+        MPossibleViewModelsField: `polls`
     }),
     ...makeM2M({
         AViewModel: ViewPoll,
         BViewModel: ViewGroup,
-        AField: 'entitled_groups',
-        BField: 'polls'
+        AField: `entitled_groups`,
+        BField: `polls`
     }),
     ...makeM2O({
         MViewModel: ViewOption,
         OViewModel: ViewPoll,
-        MField: 'poll',
-        OField: 'options'
+        MField: `poll`,
+        OField: `options`
     }),
     ...makeO2O({
         AViewModel: ViewOption,
         BViewModel: ViewPoll,
-        AField: 'poll',
-        BField: 'global_option'
+        AField: `poll`,
+        BField: `global_option`
     }),
     ...makeGenericO2M({
         OViewModel: ViewOption,
         MPossibleViewModels: [ViewUser],
-        OViewModelField: 'content_object',
-        MPossibleViewModelsField: 'options'
+        OViewModelField: `content_object`,
+        MPossibleViewModelsField: `options`
     }),
     ...makeM2O({
         MViewModel: ViewVote,
         OViewModel: ViewOption,
-        MField: 'option',
-        OField: 'votes'
+        MField: `option`,
+        OField: `votes`
     }),
     // ########## Assignments
     ...makeM2O({
         MViewModel: ViewAssignmentCandidate,
         OViewModel: ViewAssignment,
-        MField: 'assignment',
-        OField: 'candidates',
-        order: 'weight'
+        MField: `assignment`,
+        OField: `candidates`,
+        order: `weight`
     }),
     // ########## Mediafile
     ...makeM2M({
         AViewModel: ViewMediafile,
         BViewModel: ViewGroup,
-        AField: 'access_groups',
-        BField: 'mediafile_access_groups'
+        AField: `access_groups`,
+        BField: `mediafile_access_groups`
     }),
     ...makeM2M({
         AViewModel: ViewMediafile,
         BViewModel: ViewGroup,
-        AField: 'inherited_access_groups',
-        BField: 'mediafile_inherited_access_groups'
+        AField: `inherited_access_groups`,
+        BField: `mediafile_inherited_access_groups`
     }),
     ...makeGenericM2M<ViewMediafile, HasAttachment>({
         viewModel: ViewMediafile,
         possibleViewModels: [ViewTopic, ViewMotion, ViewAssignment],
-        viewModelField: 'attachment_ids',
-        possibleViewModelsField: 'attachments'
+        viewModelField: `attachment_ids`,
+        possibleViewModelsField: `attachments`
     }),
     ...makeM2O({
         MViewModel: ViewMediafile,
         OViewModel: ViewMediafile,
-        MField: 'parent',
-        OField: 'children',
-        OIdField: 'child_ids'
+        MField: `parent`,
+        OField: `children`,
+        OIdField: `child_ids`
     }),
     // ########## Projector
     ...makeM2O({
         MViewModel: ViewProjection,
         OViewModel: ViewProjector,
-        MField: 'current_projector',
-        OField: 'current_projections',
-        order: 'weight'
+        MField: `current_projector`,
+        OField: `current_projections`,
+        order: `weight`
     }),
     ...makeM2O({
         MViewModel: ViewProjection,
         OViewModel: ViewProjector,
-        MField: 'preview_projector',
-        OField: 'preview_projections',
-        order: 'weight'
+        MField: `preview_projector`,
+        OField: `preview_projections`,
+        order: `weight`
     }),
     ...makeM2O({
         MViewModel: ViewProjection,
         OViewModel: ViewProjector,
-        MField: 'history_projector',
-        OField: 'history_projections',
-        order: 'weight'
+        MField: `history_projector`,
+        OField: `history_projections`,
+        order: `weight`
     }),
     // ########## Projections
     // This is a generic O2M: projection <M---1> content_object
@@ -867,8 +868,8 @@ export const RELATIONS: Relation[] = [
     {
         ownViewModels: [ViewProjection],
         foreignViewModelPossibilities: PROJECTABLE_VIEW_MODELS,
-        ownField: 'content_object',
-        ownIdField: 'content_object_id',
+        ownField: `content_object`,
+        ownIdField: `content_object_id`,
         many: false,
         generic: true,
         structured: false
@@ -877,8 +878,8 @@ export const RELATIONS: Relation[] = [
     {
         ownViewModels: PROJECTABLE_VIEW_MODELS,
         foreignViewModel: ViewProjection,
-        ownField: 'projections',
-        ownIdField: 'projection_ids',
+        ownField: `projections`,
+        ownIdField: `projection_ids`,
         many: true,
         generic: false,
         structured: false

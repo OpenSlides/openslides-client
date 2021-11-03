@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-
 import { TranslateService } from '@ngx-translate/core';
-
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Displayable } from 'app/site/base/displayable';
+
 import { BaseSortService } from './base-sort.service';
 import { FlatNode } from './tree.service';
 
@@ -13,7 +12,7 @@ import { FlatNode } from './tree.service';
  * Contains base functions to sort a tree by different properties.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class TreeSortService<T extends Identifiable & Displayable> extends BaseSortService<T> {
     /**

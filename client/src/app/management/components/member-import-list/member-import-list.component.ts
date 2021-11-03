@@ -1,26 +1,34 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-
+import { TranslateService } from '@ngx-translate/core';
 import { MemberService } from 'app/core/core-services/member.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MemberImportService } from 'app/management/services/member-import.service';
 import { User } from 'app/shared/models/users/user';
-import { BaseUserImportListComponent } from 'app/site/users/base/base-user-import-list.component';
 import { BaseUserHeaders, BaseUserHeadersAndVerboseNames } from 'app/site/users/base/base-user.constants';
+import { BaseUserImportListComponent } from 'app/site/users/base/base-user-import-list.component';
 
 @Component({
-    selector: 'os-member-import-list',
-    templateUrl: './member-import-list.component.html',
-    styleUrls: ['./member-import-list.component.scss']
+    selector: `os-member-import-list`,
+    templateUrl: `./member-import-list.component.html`,
+    styleUrls: [`./member-import-list.component.scss`]
 })
 export class MemberImportListComponent extends BaseUserImportListComponent implements OnInit {
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         formBuilder: FormBuilder,
         public importer: MemberImportService,
         private memberService: MemberService
     ) {
-        super(componentServiceCollector, importer, formBuilder, BaseUserHeadersAndVerboseNames, BaseUserHeaders);
+        super(
+            componentServiceCollector,
+            translate,
+            importer,
+            formBuilder,
+            BaseUserHeadersAndVerboseNames,
+            BaseUserHeaders
+        );
     }
 
     public ngOnInit(): void {
@@ -31,9 +39,9 @@ export class MemberImportListComponent extends BaseUserImportListComponent imple
     private async loadUsers(): Promise<void> {
         try {
             const request = await this.memberService.getAllOrgaUsersModelRequest();
-            this.requestModels(request, 'load_users');
+            this.requestModels(request, `load_users`);
         } catch (e) {
-            console.log('Error', e);
+            console.log(`Error`, e);
         }
     }
 
@@ -43,14 +51,14 @@ export class MemberImportListComponent extends BaseUserImportListComponent imple
      * always returns undefined
      */
     protected guessType(userProperty: keyof User): 'string' | 'number' | 'boolean' {
-        const numberProperties: (keyof User)[] = ['id', 'vote_weight'];
-        const booleanProperties: (keyof User)[] = ['is_physical_person', 'is_active'];
+        const numberProperties: (keyof User)[] = [`id`, `vote_weight`];
+        const booleanProperties: (keyof User)[] = [`is_physical_person`, `is_active`];
         if (numberProperties.includes(userProperty)) {
-            return 'number';
+            return `number`;
         } else if (booleanProperties.includes(userProperty)) {
-            return 'boolean';
+            return `boolean`;
         } else {
-            return 'string';
+            return `string`;
         }
     }
 }

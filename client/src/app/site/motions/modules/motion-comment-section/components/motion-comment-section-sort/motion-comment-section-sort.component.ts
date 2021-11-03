@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
@@ -12,9 +12,9 @@ import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-co
  * Sorting view for motion comments
  */
 @Component({
-    selector: 'os-motion-comment-section-sort',
-    templateUrl: './motion-comment-section-sort.component.html',
-    styleUrls: ['./motion-comment-section-sort.component.scss']
+    selector: `os-motion-comment-section-sort`,
+    templateUrl: `./motion-comment-section-sort.component.html`,
+    styleUrls: [`./motion-comment-section-sort.component.scss`]
 })
 export class MotionCommentSectionSortComponent extends BaseModelContextComponent implements OnInit {
     /**
@@ -32,11 +32,12 @@ export class MotionCommentSectionSortComponent extends BaseModelContextComponent
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private repo: MotionCommentSectionRepositoryService,
         private activeMeetingIdService: ActiveMeetingIdService
     ) {
-        super(componentServiceCollector);
-        super.setTitle('Sort comments');
+        super(componentServiceCollector, translate);
+        super.setTitle(`Sort comments`);
     }
 
     /**
@@ -51,7 +52,7 @@ export class MotionCommentSectionSortComponent extends BaseModelContextComponent
         return {
             viewModelCtor: ViewMeeting,
             ids: [this.activeMeetingIdService.meetingId],
-            follow: ['motion_comment_section_ids']
+            follow: [`motion_comment_section_ids`]
         };
     }
 

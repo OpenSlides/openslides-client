@@ -1,9 +1,10 @@
+import { Id } from 'app/core/definitions/key-types';
 import { CsvMapping } from 'app/core/ui-services/base-import.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
-import { Id } from 'app/core/definitions/key-types';
-import { StaticBeforeImportConfig } from './static-before-import-config';
+
 import { BaseBeforeImportHandler } from './base-before-import-handler';
 import { ImportResolveInformation } from './import-resolve-information';
+import { StaticBeforeImportConfig } from './static-before-import-config';
 
 export class StaticBeforeImportHandler<ToImport, ToCreate extends Identifiable = any> extends BaseBeforeImportHandler<
     ToCreate,

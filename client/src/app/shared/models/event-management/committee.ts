@@ -1,8 +1,9 @@
 import { Id } from 'app/core/definitions/key-types';
+
 import { BaseModel } from '../base/base-model';
 
 export class Committee extends BaseModel<Committee> {
-    public static COLLECTION = 'committee';
+    public static COLLECTION = `committee`;
 
     public id: Id;
     public name: string;

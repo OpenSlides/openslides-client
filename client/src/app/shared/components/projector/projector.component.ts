@@ -1,8 +1,5 @@
 import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
-
-import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
-
+import { TranslateService } from '@ngx-translate/core';
 import { collectionFromFqid } from 'app/core/core-services/key-transforms';
 import { Follow } from 'app/core/core-services/model-request-builder.service';
 import { OfflineBroadcastService } from 'app/core/core-services/offline-broadcast.service';
@@ -13,11 +10,13 @@ import { SlideData } from 'app/core/ui-services/projector.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { Size } from 'app/site/projector/size';
+import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
 
 export const PROJECTOR_CONTENT_FOLLOW: Follow = {
-    idField: 'current_projection_ids',
-    follow: [{ idField: 'content_object_id' }],
-    fieldset: 'content'
+    idField: `current_projection_ids`,
+    follow: [{ idField: `content_object_id` }],
+    fieldset: `content`
 };
 
 /**
@@ -25,9 +24,9 @@ export const PROJECTOR_CONTENT_FOLLOW: Follow = {
  * Watches the given projector and creates slide-containers for each projectorelement.
  */
 @Component({
-    selector: 'os-projector',
-    templateUrl: './projector.component.html',
-    styleUrls: ['./projector.component.scss']
+    selector: `os-projector`,
+    templateUrl: `./projector.component.html`,
+    styleUrls: [`./projector.component.scss`]
 })
 export class ProjectorComponent extends BaseComponent implements OnDestroy {
     private readonly projectorSubject = new BehaviorSubject<ViewProjector | null>(null);
@@ -51,7 +50,7 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
      * The container element. THis is neede to get the size of the element,
      * in which the projector must fit and be scaled to.
      */
-    @ViewChild('container', { static: true })
+    @ViewChild(`container`, { static: true })
     private containerElement: ElementRef;
 
     /**
@@ -86,20 +85,20 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
         };
     } = {
         container: {
-            height: '0px'
+            height: `0px`
         },
         projector: {
-            transform: 'none',
-            width: '0px',
-            height: '0px',
-            color: 'black',
-            backgroundColor: 'white',
-            H1Color: '#317796'
+            transform: `none`,
+            width: `0px`,
+            height: `0px`,
+            color: `black`,
+            backgroundColor: `white`,
+            H1Color: `#317796`
         },
         headerFooter: {
-            color: 'white',
-            backgroundColor: '#317796',
-            backgroundImage: 'none'
+            color: `white`,
+            backgroundColor: `#317796`,
+            backgroundImage: `none`
         }
     };
 
@@ -129,33 +128,34 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private meetingSettingsService: MeetingSettingsService,
         private offlineBroadcastService: OfflineBroadcastService,
         private elementRef: ElementRef,
         private mediaManageService: MediaManageService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
 
-        this.projectorClass = 'projector-' + Math.random().toString(36).substring(4);
+        this.projectorClass = `projector-` + Math.random().toString(36).substring(4);
         this.elementRef.nativeElement.classList.add(this.projectorClass);
-        this.styleElement = document.createElement('style');
-        this.styleElement.appendChild(document.createTextNode('')); // Hack for WebKit to trigger update
+        this.styleElement = document.createElement(`style`);
+        this.styleElement.appendChild(document.createTextNode(``)); // Hack for WebKit to trigger update
         document.head.appendChild(this.styleElement);
 
         // projector logo / background-image
-        this.mediaManageService.getLogoUrlObservable('projector_main').subscribe(url => {
-            this.projectorLogo = url ? url : '';
+        this.mediaManageService.getLogoUrlObservable(`projector_main`).subscribe(url => {
+            this.projectorLogo = url ? url : ``;
         });
-        this.mediaManageService.getLogoUrlObservable('projector_header').subscribe(url => {
-            this.css.headerFooter.backgroundImage = url ? `url('${url}')` : 'none';
+        this.mediaManageService.getLogoUrlObservable(`projector_header`).subscribe(url => {
+            this.css.headerFooter.backgroundImage = url ? `url('${url}')` : `none`;
             this.updateCSS();
         });
 
         // event data
-        this.meetingSettingsService.get('name').subscribe(val => (this.eventName = val));
-        this.meetingSettingsService.get('description').subscribe(val => (this.eventDescription = val));
-        this.meetingSettingsService.get('start_time').subscribe(val => (this.eventDate = val));
-        this.meetingSettingsService.get('location').subscribe(val => (this.eventLocation = val));
+        this.meetingSettingsService.get(`name`).subscribe(val => (this.eventName = val));
+        this.meetingSettingsService.get(`description`).subscribe(val => (this.eventDescription = val));
+        this.meetingSettingsService.get(`start_time`).subscribe(val => (this.eventDate = val));
+        this.meetingSettingsService.get(`location`).subscribe(val => (this.eventLocation = val));
 
         // Watches for resizing of the container.
         this.resizeSubject.subscribe(() => {
@@ -181,7 +181,7 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
                             collection: collectionFromFqid(projection.content_object_id),
                             data: projection.content,
                             stable: !!projection.stable,
-                            type: projection.type || '',
+                            type: projection.type || ``,
                             options: projection.options || {},
                             ...(!!projection.content?.error && { error: projection.content.error })
                         } as SlideData)
@@ -229,10 +229,10 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
         if (isNaN(scale)) {
             return;
         }
-        this.css.projector.transform = 'scale(' + scale + ')';
-        this.css.projector.width = this.currentProjectorSize.width + 'px';
-        this.css.projector.height = this.currentProjectorSize.height + 'px';
-        this.css.container.height = Math.round(scale * this.currentProjectorSize.height) + 'px';
+        this.css.projector.transform = `scale(` + scale + `)`;
+        this.css.projector.width = this.currentProjectorSize.width + `px`;
+        this.css.projector.height = this.currentProjectorSize.height + `px`;
+        this.css.container.height = Math.round(scale * this.currentProjectorSize.height) + `px`;
         this.updateCSS();
     }
 

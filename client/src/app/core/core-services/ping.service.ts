@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class PingService {
     /**
@@ -16,7 +16,7 @@ export class PingService {
     private lastLatency: number | null = null;*/
 
     public constructor() {
-        console.warn('TODO: Enable Ping service');
+        console.warn(`TODO: Enable Ping service`);
         // this.setup();
     }
 

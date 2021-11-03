@@ -7,7 +7,7 @@
 /**
  * Some errors with material moment. not sure whats wrong
  */
-describe('MeetingEditComponent', () => {
+describe(`MeetingEditComponent`, () => {
     // let component: MeetingEditComponent;
     // let fixture: ComponentFixture<MeetingEditComponent>;
     // beforeEach(async () => {

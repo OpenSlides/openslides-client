@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-
 import { TranslateService } from '@ngx-translate/core';
-
 import { HistoryService } from 'app/core/core-services/history.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { StorageService } from 'app/core/core-services/storage.service';
@@ -13,14 +11,15 @@ import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/m
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { OsFilter } from 'app/core/ui-services/base-filter-list.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
-import { MotionFilterListService } from './motion-filter-list.service';
+
 import { ViewMotion } from '../models/view-motion';
+import { MotionFilterListService } from './motion-filter-list.service';
 
 /**
  * Filter the list of Amendments
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AmendmentFilterListService extends MotionFilterListService {
     /**
@@ -36,14 +35,14 @@ export class AmendmentFilterListService extends MotionFilterListService {
     /**
      * The sorage key prefix to identify the parent id
      */
-    private keyPrefix = 'AmendmentList';
+    private keyPrefix = `AmendmentList`;
 
     /**
      * Filters by motion parent id
      */
     private motionFilterOptions: OsFilter<ViewMotion> = {
-        property: 'lead_motion_id',
-        label: 'Motion',
+        property: `lead_motion_id`,
+        label: `Motion`,
         options: []
     };
 

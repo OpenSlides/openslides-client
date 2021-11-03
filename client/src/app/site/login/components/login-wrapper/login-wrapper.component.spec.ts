@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { LoginWrapperComponent } from './login-wrapper.component';
 
-describe('LoginComponent', () => {
+describe(`LoginComponent`, () => {
     let component: LoginWrapperComponent;
     let fixture: ComponentFixture<LoginWrapperComponent>;
 
@@ -22,7 +21,7 @@ describe('LoginComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

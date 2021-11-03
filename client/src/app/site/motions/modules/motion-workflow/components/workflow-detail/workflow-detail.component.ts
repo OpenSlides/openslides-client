@@ -3,9 +3,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
-
-import { Observable } from 'rxjs';
-
+import { TranslateService } from '@ngx-translate/core';
 import { MotionStateRepositoryService } from 'app/core/repositories/motions/motion-state-repository.service';
 import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/motion-workflow-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -15,6 +13,7 @@ import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewMotionState } from 'app/site/motions/models/view-motion-state';
 import { ViewMotionWorkflow } from 'app/site/motions/models/view-motion-workflow';
+import { Observable } from 'rxjs';
 
 /**
  * Declares data for the workflow dialog
@@ -65,16 +64,16 @@ interface RestrictionShape {
  * Motion workflow detail view to manage corresponding motion states.
  */
 @Component({
-    selector: 'os-workflow-detail',
-    templateUrl: './workflow-detail.component.html',
-    styleUrls: ['./workflow-detail.component.scss'],
+    selector: `os-workflow-detail`,
+    templateUrl: `./workflow-detail.component.html`,
+    styleUrls: [`./workflow-detail.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WorkflowDetailComponent extends BaseModelContextComponent implements OnInit {
     /**
      * Reference to the workflow dialog
      */
-    @ViewChild('workflowDialog', { static: true })
+    @ViewChild(`workflowDialog`, { static: true })
     private workflowDialog: TemplateRef<string>;
 
     /**
@@ -102,46 +101,46 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
     /**
      * Determine label colors. Where they should come from is currently now know
      */
-    public labelColors: string[] = ['grey', 'red', 'green', 'lightblue', 'yellow'];
+    public labelColors: string[] = [`grey`, `red`, `green`, `lightblue`, `yellow`];
 
     /**
      * Holds state permissions
      */
     private statePermissionsList = [
-        { name: 'Recommendation label', selector: 'recommendation_label', type: 'input' },
-        { name: 'Allow support', selector: 'allow_support', type: 'check' },
-        { name: 'Allow create poll', selector: 'allow_create_poll', type: 'check' },
-        { name: 'Allow submitter edit', selector: 'allow_submitter_edit', type: 'check' },
-        { name: 'Set number', selector: 'set_number', type: 'check' },
-        { name: 'Show state extension field', selector: 'show_state_extension_field', type: 'check' },
+        { name: `Recommendation label`, selector: `recommendation_label`, type: `input` },
+        { name: `Allow support`, selector: `allow_support`, type: `check` },
+        { name: `Allow create poll`, selector: `allow_create_poll`, type: `check` },
+        { name: `Allow submitter edit`, selector: `allow_submitter_edit`, type: `check` },
+        { name: `Set number`, selector: `set_number`, type: `check` },
+        { name: `Show state extension field`, selector: `show_state_extension_field`, type: `check` },
         {
-            name: 'Show recommendation extension field',
-            selector: 'show_recommendation_extension_field',
-            type: 'check'
+            name: `Show recommendation extension field`,
+            selector: `show_recommendation_extension_field`,
+            type: `check`
         },
-        { name: 'Show amendment in parent motion', selector: 'merge_amendment_into_final', type: 'amendment' },
-        { name: 'Restrictions', selector: 'restrictions', type: 'restrictions' },
-        { name: 'Label color', selector: 'css_class', type: 'color' },
-        { name: 'Next states', selector: 'next_states_id', type: 'state' }
+        { name: `Show amendment in parent motion`, selector: `merge_amendment_into_final`, type: `amendment` },
+        { name: `Restrictions`, selector: `restrictions`, type: `restrictions` },
+        { name: `Label color`, selector: `css_class`, type: `color` },
+        { name: `Next states`, selector: `next_states_id`, type: `state` }
     ] as StatePerm[];
 
     /**
      * Determines possible restrictions
      */
     public restrictions = [
-        { key: Restriction.motionsCanManage, label: 'Can manage motions' },
-        { key: Restriction.motionsCanSeeInternal, label: 'Can see motions in internal state' },
-        { key: Restriction.motionsCanManageMetadata, label: 'Can manage motion metadata' },
-        { key: Restriction.motionsIsSubmitter, label: 'Submitters' }
+        { key: Restriction.motionsCanManage, label: `Can manage motions` },
+        { key: Restriction.motionsCanSeeInternal, label: `Can see motions in internal state` },
+        { key: Restriction.motionsCanManageMetadata, label: `Can manage motion metadata` },
+        { key: Restriction.motionsIsSubmitter, label: `Submitters` }
     ] as RestrictionShape[];
 
     /**
      * Determines possible "Merge amendments into final"
      */
     public amendmentIntoFinal = [
-        { merge: MergeAmendment.NO, label: 'No' },
-        { merge: MergeAmendment.UNDEFINED, label: '-' },
-        { merge: MergeAmendment.YES, label: 'Yes' }
+        { merge: MergeAmendment.NO, label: `No` },
+        { merge: MergeAmendment.UNDEFINED, label: `-` },
+        { merge: MergeAmendment.YES, label: `Yes` }
     ] as AmendmentIntoFinal[];
 
     private set workflow(workflow: ViewMotionWorkflow) {
@@ -165,6 +164,7 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private promptService: PromptService,
         private dialog: MatDialog,
         private workflowRepo: MotionWorkflowRepositoryService,
@@ -172,7 +172,7 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
         private route: ActivatedRoute,
         private cd: ChangeDetectorRef
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     /**
@@ -183,26 +183,26 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
     public ngOnInit(): void {
         super.ngOnInit();
 
-        const workflowId = Number(this.route.snapshot.paramMap.get('id'));
+        const workflowId = Number(this.route.snapshot.paramMap.get(`id`));
 
         this.requestModels({
             viewModelCtor: ViewMotionWorkflow,
             ids: [workflowId],
             follow: [
                 {
-                    idField: 'first_state_id',
-                    fieldset: 'title'
+                    idField: `first_state_id`,
+                    fieldset: `title`
                 },
                 {
-                    idField: 'state_ids',
+                    idField: `state_ids`,
                     follow: [
                         {
-                            idField: 'next_state_ids',
-                            fieldset: 'title'
+                            idField: `next_state_ids`,
+                            fieldset: `title`
                         },
                         {
-                            idField: 'previous_state_ids',
-                            fieldset: 'title'
+                            idField: `previous_state_ids`,
+                            fieldset: `title`
                         }
                     ]
                 }
@@ -226,11 +226,11 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
      * @param state the selected workflow state
      */
     public onClickStateName(state: ViewMotionState): void {
-        this.openEditDialog(state.name, 'Rename state', '', true).subscribe(result => {
+        this.openEditDialog(state.name, `Rename state`, ``, true).subscribe(result => {
             if (result) {
-                if (result.action === 'update') {
+                if (result.action === `update`) {
                     this.updateWorkflowStateName(result.value, state);
-                } else if (result.action === 'delete') {
+                } else if (result.action === `delete`) {
                     this.deleteWorkflowState(state);
                 }
             }
@@ -242,9 +242,9 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
      * Opens a dialog to enter the workflow name
      */
     public onNewStateButton(): void {
-        this.openEditDialog('', this.translate.instant('New state'), this.translate.instant('Name')).subscribe(
+        this.openEditDialog(``, this.translate.instant(`New state`), this.translate.instant(`Name`)).subscribe(
             result => {
-                if (result && result.action === 'update') {
+                if (result && result.action === `update`) {
                     const state = new MotionState({
                         name: result.value,
                         workflow_id: this.workflow.id
@@ -260,8 +260,8 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
      * Opens a dialog to rename the workflow
      */
     public onEditWorkflowButton(): void {
-        this.openEditDialog(this.workflow.name, 'Edit name', 'Please enter a new workflow name:').subscribe(result => {
-            if (result && result.action === 'update') {
+        this.openEditDialog(this.workflow.name, `Edit name`, `Please enter a new workflow name:`).subscribe(result => {
+            if (result && result.action === `update`) {
                 this.handleRequest(this.workflowRepo.update({ name: result.value }, this.workflow));
             }
         });
@@ -275,14 +275,14 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
      * @param state The selected workflow state
      */
     public onClickInputPerm(perm: StatePerm, state: ViewMotionState): void {
-        this.openEditDialog(state[perm.selector], 'Edit', perm.name, false, true).subscribe(result => {
+        this.openEditDialog(state[perm.selector], `Edit`, perm.name, false, true).subscribe(result => {
             if (!result) {
                 return;
             }
-            if (result.value === '') {
+            if (result.value === ``) {
                 result.value = null;
             }
-            if (result && result.action === 'update') {
+            if (result && result.action === `update`) {
                 this.handleRequest(this.stateRepo.update({ [perm.selector]: result.value }, state));
             }
         });
@@ -351,7 +351,7 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
      */
     public getRestrictionLabel(restriction: string): string {
         const entry = this.restrictions.find(r => r.key === restriction);
-        return entry ? entry.label : '';
+        return entry ? entry.label : ``;
     }
 
     /**
@@ -386,8 +386,8 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
         allowEmpty?: boolean
     ): Observable<DialogResult> {
         this.dialogData = {
-            title: title || '',
-            description: description || '',
+            title: title || ``,
+            description: description || ``,
             value,
             deletable,
             allowEmpty
@@ -402,7 +402,7 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
      * Returns a merge amendment label from state
      */
     public getMergeAmendmentLabel(mergeAmendment: MergeAmendment): string {
-        return this.amendmentIntoFinal.find(amendment => amendment.merge === mergeAmendment)?.label || '-';
+        return this.amendmentIntoFinal.find(amendment => amendment.merge === mergeAmendment)?.label || `-`;
     }
 
     /**
@@ -430,7 +430,7 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
      */
     public updateRowDef(): void {
         // reset the rowDef list first
-        this.headerRowDef = ['perm'];
+        this.headerRowDef = [`perm`];
         if (this.workflow) {
             /**
              * FIXME:
@@ -453,9 +453,9 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
     }
 
     private deleteWorkflowState(state: ViewMotionState): void {
-        const content = this.translate.instant('Delete') + ` ${state.name}?`;
+        const content = this.translate.instant(`Delete`) + ` ${state.name}?`;
 
-        this.promptService.open('Are you sure', content).then(promptResult => {
+        this.promptService.open(`Are you sure`, content).then(promptResult => {
             if (promptResult) {
                 this.handleRequest(this.stateRepo.delete(state));
             }

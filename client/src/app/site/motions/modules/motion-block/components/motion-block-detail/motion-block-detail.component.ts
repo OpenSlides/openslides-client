@@ -2,15 +2,14 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
-
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { Permission } from 'app/core/core-services/permission';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
+import { MotionService } from 'app/core/repositories/motions/motion.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
 import { MotionRepositoryService, SUBMITTER_FOLLOW } from 'app/core/repositories/motions/motion-repository.service';
-import { MotionService } from 'app/core/repositories/motions/motion.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
@@ -28,9 +27,9 @@ import { BlockDetailFilterListService } from 'app/site/motions/services/block-de
  * Detail component to display one motion block
  */
 @Component({
-    selector: 'os-motion-block-detail',
-    templateUrl: './motion-block-detail.component.html',
-    styleUrls: ['./motion-block-detail.component.scss']
+    selector: `os-motion-block-detail`,
+    templateUrl: `./motion-block-detail.component.html`,
+    styleUrls: [`./motion-block-detail.component.scss`]
 })
 export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion> implements OnInit {
     /**
@@ -46,7 +45,7 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
     /**
      * To quick-filter the list
      */
-    public filterProps = ['submitters', 'title', 'number'];
+    public filterProps = [`submitters`, `title`, `number`];
 
     /**
      * Columns to display in table when desktop view is available
@@ -54,19 +53,19 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
      */
     public tableColumnDefinition: PblColumnDefinition[] = [
         {
-            prop: 'title',
-            width: '70%'
+            prop: `title`,
+            width: `70%`
         },
         {
-            prop: 'recommendation',
-            label: this.translate.instant('Recommendation'),
-            width: '30%',
+            prop: `recommendation`,
+            label: this.translate.instant(`Recommendation`),
+            width: `30%`,
             minWidth: 60
         },
         {
-            prop: 'remove',
-            label: '',
-            width: '40px'
+            prop: `remove`,
+            label: ``,
+            width: `40px`
         }
     ];
     /**
@@ -74,7 +73,7 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
      */
     public restrictedColumns: ColumnRestriction[] = [
         {
-            columnName: 'remove',
+            columnName: `remove`,
             permission: Permission.motionCanManage
         }
     ];
@@ -87,13 +86,13 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
     /**
      * The form to edit blocks
      */
-    @ViewChild('blockEditForm', { static: true })
+    @ViewChild(`blockEditForm`, { static: true })
     public blockEditForm: FormGroup;
 
     /**
      * Reference to the template for edit-dialog
      */
-    @ViewChild('editDialog', { static: true })
+    @ViewChild(`editDialog`, { static: true })
     private editDialog: TemplateRef<string>;
 
     private dialogRef: MatDialogRef<any>;
@@ -113,6 +112,7 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private meetingSettingsService: MeetingSettingsService,
         private route: ActivatedRoute,
         private router: Router,
@@ -126,7 +126,7 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
         public filterService: BlockDetailFilterListService,
         public vp: ViewportService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
         this.blockId = Number(this.route.snapshot.params.id);
 
         /**
@@ -146,14 +146,14 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
         this.subscriptions.push(
             this.repo.getViewModelObservable(this.blockId).subscribe(newBlock => {
                 if (newBlock) {
-                    super.setTitle(`${this.translate.instant('Motion block')} - ${newBlock.getTitle()}`);
+                    super.setTitle(`${this.translate.instant(`Motion block`)} - ${newBlock.getTitle()}`);
                     this.block = newBlock;
                 }
             })
         );
         // load config variables
         this.meetingSettingsService
-            .get('motions_show_sequential_number')
+            .get(`motions_show_sequential_number`)
             .subscribe(show => (this.showSequential = show));
         (<any>window).comp = this;
     }
@@ -164,22 +164,22 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
             ids: [this.blockId],
             follow: [
                 {
-                    idField: 'motion_ids',
-                    fieldset: 'blockList',
+                    idField: `motion_ids`,
+                    fieldset: `blockList`,
                     follow: [
                         {
-                            idField: 'state_id',
-                            fieldset: 'blockList'
+                            idField: `state_id`,
+                            fieldset: `blockList`
                         },
                         {
-                            idField: 'recommendation_id',
-                            fieldset: 'list'
+                            idField: `recommendation_id`,
+                            fieldset: `list`
                         },
                         SUBMITTER_FOLLOW,
                         SPEAKER_BUTTON_FOLLOW
                     ]
                 },
-                'agenda_item_id'
+                `agenda_item_id`
             ]
         };
     }
@@ -189,7 +189,7 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
      */
     public async onFollowRecButton(): Promise<void> {
         const title = this.translate.instant(
-            'Are you sure you want to override the state of all motions of this motion block?'
+            `Are you sure you want to override the state of all motions of this motion block?`
         );
         const content = this.block.title;
         if (await this.promptService.open(title, content)) {
@@ -201,11 +201,11 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
      * Click handler to delete motion blocks
      */
     public async onDeleteBlockButton(): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to delete this motion block?');
+        const title = this.translate.instant(`Are you sure you want to delete this motion block?`);
         const content = this.block.title;
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(this.block);
-            this.router.navigate(['../'], { relativeTo: this.route });
+            this.router.navigate([`../`], { relativeTo: this.route });
         }
     }
 
@@ -215,7 +215,7 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
      * @param motion the corresponding motion
      */
     public async onRemoveMotionButton(motion: ViewMotion): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to remove this motion from motion block?');
+        const title = this.translate.instant(`Are you sure you want to remove this motion from motion block?`);
         const content = motion.getTitle();
         if (await this.promptService.open(title, content)) {
             this.repo.removeMotionFromBlock(motion);
@@ -228,7 +228,7 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
      * @param event The key that was pressed
      */
     public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === 'Escape') {
+        if (event.key === `Escape`) {
             this.dialogRef.close();
         }
     }
@@ -267,7 +267,7 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
         this.dialogRef = this.dialog.open(this.editDialog, infoDialogSettings);
 
         this.dialogRef.keydownEvents().subscribe((event: KeyboardEvent) => {
-            if (event.key === 'Enter' && event.shiftKey) {
+            if (event.key === `Enter` && event.shiftKey) {
                 this.saveBlock();
             }
         });

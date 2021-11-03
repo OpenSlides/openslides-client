@@ -1,20 +1,19 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
-
 import { TranslateService } from '@ngx-translate/core';
-
 import { CML } from 'app/core/core-services/organization-permission';
 import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
+
+import { OML } from '../../../core/core-services/organization-permission';
 import { CommitteeRepositoryService } from '../../../core/repositories/management/committee-repository.service';
 import { ViewCommittee } from '../../models/view-committee';
-import { OML } from '../../../core/core-services/organization-permission';
 import { MeetingService } from '../../services/meeting.service';
 
 @Component({
-    selector: 'os-meeting-preview',
-    templateUrl: './meeting-preview.component.html',
-    styleUrls: ['./meeting-preview.component.scss'],
+    selector: `os-meeting-preview`,
+    templateUrl: `./meeting-preview.component.html`,
+    styleUrls: [`./meeting-preview.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
 export class MeetingPreviewComponent {
@@ -25,15 +24,15 @@ export class MeetingPreviewComponent {
     @Input() public committee: ViewCommittee | null = null;
 
     public get title(): string {
-        return this.meeting?.name || '';
+        return this.meeting?.name || ``;
     }
 
     public get location(): string {
-        return this.meeting?.location || '';
+        return this.meeting?.location || ``;
     }
 
     public get description(): string {
-        return this.meeting?.description || '';
+        return this.meeting?.description || ``;
     }
 
     public get userAmount(): number {
@@ -49,7 +48,7 @@ export class MeetingPreviewComponent {
     }
 
     public constructor(
-        private translate: TranslateService,
+        protected translate: TranslateService,
         private meetingRepo: MeetingRepositoryService,
         private committeeRepo: CommitteeRepositoryService,
         private promptService: PromptService,
@@ -57,7 +56,7 @@ export class MeetingPreviewComponent {
     ) {}
 
     public async onArchive(): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to archive this meeting?');
+        const title = this.translate.instant(`Are you sure you want to archive this meeting?`);
         const content = this.title;
 
         const confirmed = await this.promptService.open(title, content);
@@ -67,7 +66,7 @@ export class MeetingPreviewComponent {
     }
 
     public async onUnarchive(): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to activate this meeting?');
+        const title = this.translate.instant(`Are you sure you want to activate this meeting?`);
         const content = this.title;
 
         const confirmed = await this.promptService.open(title, content);
@@ -77,7 +76,7 @@ export class MeetingPreviewComponent {
     }
 
     public async onDuplicate(): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to duplicate this meeting?');
+        const title = this.translate.instant(`Are you sure you want to duplicate this meeting?`);
         const content = this.title;
 
         const confirmed = await this.promptService.open(title, content);
@@ -87,7 +86,7 @@ export class MeetingPreviewComponent {
     }
 
     public async onDeleteMeeting(): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to delete this meeting?');
+        const title = this.translate.instant(`Are you sure you want to delete this meeting?`);
         const content = this.title;
 
         const confirmed = await this.promptService.open(title, content);

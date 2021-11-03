@@ -1,25 +1,25 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-
-import { Subscription } from 'rxjs';
-
+import { TranslateService } from '@ngx-translate/core';
 import { PersonalNoteRepositoryService } from 'app/core/repositories/users/personal-note-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PersonalNote } from 'app/shared/models/users/personal-note';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
 import { ChangeRecoMode } from 'app/site/motions/motions.constants';
-import { BaseMotionDetailChildComponent } from '../base/base-motion-detail-child.component';
+import { Subscription } from 'rxjs';
+
 import { MotionServiceCollectorService } from '../../../services/motion-service-collector.service';
+import { BaseMotionDetailChildComponent } from '../base/base-motion-detail-child.component';
 import {
     MotionTitleChangeRecommendationDialogComponent,
     MotionTitleChangeRecommendationDialogComponentData
 } from '../motion-title-change-recommendation-dialog/motion-title-change-recommendation-dialog.component';
 
 @Component({
-    selector: 'os-motion-manage-title',
-    templateUrl: './motion-manage-title.component.html',
-    styleUrls: ['./motion-manage-title.component.scss']
+    selector: `os-motion-manage-title`,
+    templateUrl: `./motion-manage-title.component.html`,
+    styleUrls: [`./motion-manage-title.component.scss`]
 })
 export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
     public titleChangeRecommendation: ViewMotionChangeRecommendation = null;
@@ -30,11 +30,12 @@ export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         motionServiceCollector: MotionServiceCollectorService,
         private personalNoteRepo: PersonalNoteRepositoryService,
         private dialogService: MatDialog
     ) {
-        super(componentServiceCollector, motionServiceCollector);
+        super(componentServiceCollector, translate, motionServiceCollector);
     }
 
     /**

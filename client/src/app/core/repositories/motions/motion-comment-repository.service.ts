@@ -1,27 +1,27 @@
 import { Injectable } from '@angular/core';
-
 import { MotionCommentAction } from 'app/core/actions/motion-comment-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { MotionComment } from 'app/shared/models/motions/motion-comment';
 import { ViewMotionComment } from 'app/site/motions/models/view-motion-comment';
+
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MotionCommentRepositoryService extends BaseRepositoryWithActiveMeeting<ViewMotionComment, MotionComment> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
         super(repositoryServiceCollector, MotionComment);
     }
 
-    public getTitle = (viewMotionComment: ViewMotionComment) => 'Comment';
+    public getTitle = (viewMotionComment: ViewMotionComment) => `Comment`;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Comments' : 'Comment');
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Comments` : `Comment`);
 
     public getFieldsets(): Fieldsets<ViewMotionComment> {
-        const commentFields: (keyof ViewMotionComment)[] = ['motion_id', 'section_id', 'comment'];
+        const commentFields: (keyof ViewMotionComment)[] = [`motion_id`, `section_id`, `comment`];
         return {
             [DEFAULT_FIELDSET]: commentFields
         };

@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-
 import { PollPropertyVerbose } from 'app/shared/models/poll/poll-constants';
 import { ViewOption } from 'app/shared/models/poll/view-option';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
@@ -7,9 +6,9 @@ import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { UnknownUserLabel } from 'app/site/assignments/modules/assignment-poll/services/assignment-poll.service';
 
 @Component({
-    selector: 'os-assignment-poll-meta-info',
-    templateUrl: './assignment-poll-meta-info.component.html',
-    styleUrls: ['./assignment-poll-meta-info.component.scss']
+    selector: `os-assignment-poll-meta-info`,
+    templateUrl: `./assignment-poll-meta-info.component.html`,
+    styleUrls: [`./assignment-poll-meta-info.component.scss`]
 })
 export class AssignmentPollMetaInfoComponent {
     public pollPropertyVerbose = PollPropertyVerbose;

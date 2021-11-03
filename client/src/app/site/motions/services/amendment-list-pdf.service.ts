@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
-
 import { TranslateService } from '@ngx-translate/core';
-
 import { HtmlToPdfService } from 'app/core/pdf-services/html-to-pdf.service';
 import { MotionService } from 'app/core/repositories/motions/motion.service';
+
 import { ViewMotion } from '../models/view-motion';
 
 /**
  * Creates a PDF list for amendments
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AmendmentListPdfService {
     public constructor(
@@ -26,7 +25,7 @@ export class AmendmentListPdfService {
      */
     private renderDiffLines(amendment: ViewMotion): object {
         if (amendment.diffLines && amendment.diffLines.length) {
-            const linesHtml = amendment.diffLines.map(line => line.text).join('<br />[...]<br />');
+            const linesHtml = amendment.diffLines.map(line => line.text).join(`<br />[...]<br />`);
             return this.htmlToPdfService.convertHtml(linesHtml);
         }
     }
@@ -37,7 +36,7 @@ export class AmendmentListPdfService {
      * @returns a line in the row as PDF doc definition
      */
     private amendmentToTableRow(amendment: ViewMotion): object {
-        let recommendationText = '';
+        let recommendationText = ``;
         if (amendment.recommendation) {
             if (amendment.recommendation.show_recommendation_extension_field && amendment.recommendationExtension) {
                 recommendationText += ` ${this.motionService.getExtendedRecommendationLabel(amendment)}`;
@@ -74,30 +73,30 @@ export class AmendmentListPdfService {
     public overviewToDocDef(docTitle: string, amendments: ViewMotion[]): object {
         const title = {
             text: docTitle,
-            style: 'title'
+            style: `title`
         };
 
         const amendmentTableBody: object[] = [
             [
                 {
-                    text: this.translate.instant('Motion'),
-                    style: 'tableHeader'
+                    text: this.translate.instant(`Motion`),
+                    style: `tableHeader`
                 },
                 {
-                    text: this.translate.instant('Line'),
-                    style: 'tableHeader'
+                    text: this.translate.instant(`Line`),
+                    style: `tableHeader`
                 },
                 {
-                    text: this.translate.instant('Submitters'),
-                    style: 'tableHeader'
+                    text: this.translate.instant(`Submitters`),
+                    style: `tableHeader`
                 },
                 {
-                    text: this.translate.instant('Changes'),
-                    style: 'tableHeader'
+                    text: this.translate.instant(`Changes`),
+                    style: `tableHeader`
                 },
                 {
-                    text: this.translate.instant('Recommendation'),
-                    style: 'tableHeader'
+                    text: this.translate.instant(`Recommendation`),
+                    style: `tableHeader`
                 }
             ]
         ];
@@ -109,12 +108,12 @@ export class AmendmentListPdfService {
 
         const table: object = {
             table: {
-                widths: ['auto', 'auto', 'auto', '*', 'auto'],
+                widths: [`auto`, `auto`, `auto`, `*`, `auto`],
                 headerRows: 1,
                 dontBreakRows: true,
                 body: amendmentTableBody.concat(amendmentRows)
             },
-            layout: 'switchColorTableLayout'
+            layout: `switchColorTableLayout`
         };
 
         return [title, table];

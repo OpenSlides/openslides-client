@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { SlideContainerComponent } from './slide-container.component';
 
-describe('SlideContainerComponent', () => {
+describe(`SlideContainerComponent`, () => {
     let component: SlideContainerComponent;
     let fixture: ComponentFixture<SlideContainerComponent>;
 
@@ -22,7 +21,7 @@ describe('SlideContainerComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

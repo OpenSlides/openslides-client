@@ -1,20 +1,19 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
-
 import { Observable, Subscription } from 'rxjs';
 
 @Component({
-    selector: 'os-extension-field',
-    templateUrl: './extension-field.component.html',
-    styleUrls: ['./extension-field.component.scss']
+    selector: `os-extension-field`,
+    templateUrl: `./extension-field.component.html`,
+    styleUrls: [`./extension-field.component.scss`]
 })
 export class ExtensionFieldComponent implements OnInit, OnDestroy {
     /**
      * Optional additional classes for the `mat-chip`.
      */
     @Input()
-    public classes: string | string[] | object = 'bluegrey';
+    public classes: string | string[] | object = `bluegrey`;
 
     /**
      * Title for this component.
@@ -74,13 +73,13 @@ export class ExtensionFieldComponent implements OnInit, OnDestroy {
      * Prefix, if the value from list should be appended to the input.
      */
     @Input()
-    public listValuePrefix = '';
+    public listValuePrefix = ``;
 
     /**
      * Suffix, if the value from list should be appended to the input.
      */
     @Input()
-    public listValueSuffix = '';
+    public listValueSuffix = ``;
 
     /**
      * Initial value of the input-field.
@@ -103,7 +102,7 @@ export class ExtensionFieldComponent implements OnInit, OnDestroy {
     /**
      * Model for the input-field.
      */
-    public inputControl = '';
+    public inputControl = ``;
 
     /**
      * FormGroup for the search-list.
@@ -153,14 +152,14 @@ export class ExtensionFieldComponent implements OnInit, OnDestroy {
                 list: [[]]
             });
 
-            this.searchValueSubscription = this.extensionFieldForm.get('list').valueChanges.subscribe((value: any) => {
-                if (value && typeof value === 'number') {
+            this.searchValueSubscription = this.extensionFieldForm.get(`list`).valueChanges.subscribe((value: any) => {
+                if (value && typeof value === `number`) {
                     if (this.listSubmitOnChange) {
                         this.listChange.emit(value);
                     }
                     if (this.appendValueToInput) {
                         if (!this.inputControl) {
-                            this.inputControl = '';
+                            this.inputControl = ``;
                         }
                         this.inputControl += `[${this.listValuePrefix}${value}${this.listValueSuffix}]`;
                     }
@@ -184,7 +183,7 @@ export class ExtensionFieldComponent implements OnInit, OnDestroy {
      * Hitting enter on the input field should save the content
      */
     public keyDownFunction(event: any): void {
-        if (event.key === 'Enter') {
+        if (event.key === `Enter`) {
             this.changeEditMode(true);
         }
     }
@@ -218,7 +217,7 @@ export class ExtensionFieldComponent implements OnInit, OnDestroy {
             const submitMessage =
                 this.listSubmitOnChange || this.appendValueToInput || !this.searchList
                     ? this.inputControl
-                    : { extensionInput: this.inputControl, extensionList: this.extensionFieldForm.get('list').value };
+                    : { extensionInput: this.inputControl, extensionList: this.extensionFieldForm.get(`list`).value };
             this.success.emit(submitMessage);
         }
     }

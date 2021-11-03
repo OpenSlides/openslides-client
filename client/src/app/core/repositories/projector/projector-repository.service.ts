@@ -1,8 +1,4 @@
 import { Injectable } from '@angular/core';
-
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-
 import { ProjectorAction, ScrollScaleDirection } from 'app/core/actions/projector-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Id } from 'app/core/definitions/key-types';
@@ -11,6 +7,9 @@ import { Projector } from 'app/shared/models/projector/projector';
 import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
 import { ViewProjection } from 'app/site/projector/models/view-projection';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
@@ -18,7 +17,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
  * Manages all projector instances.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ProjectorRepositoryService extends BaseRepositoryWithActiveMeeting<ViewProjector, Projector> {
     public constructor(repositoryServiceCollector: RepositoryServiceCollector) {
@@ -27,29 +26,29 @@ export class ProjectorRepositoryService extends BaseRepositoryWithActiveMeeting<
 
     public getTitle = (viewProjector: ViewProjector) => viewProjector.name;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Projectors' : 'Projector');
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Projectors` : `Projector`);
 
     public getFieldsets(): Fieldsets<Projector> {
         return {
             [DEFAULT_FIELDSET]: [
-                'name',
-                'scale',
-                'scroll',
-                'width',
-                'aspect_ratio_numerator',
-                'aspect_ratio_denominator',
-                'color',
-                'background_color',
-                'header_background_color',
-                'header_font_color',
-                'header_h1_color',
-                'chyron_background_color',
-                'chyron_font_color',
-                'show_header_footer',
-                'show_title',
-                'show_logo',
-                'show_clock',
-                'used_as_reference_projector_meeting_id'
+                `name`,
+                `scale`,
+                `scroll`,
+                `width`,
+                `aspect_ratio_numerator`,
+                `aspect_ratio_denominator`,
+                `color`,
+                `background_color`,
+                `header_background_color`,
+                `header_font_color`,
+                `header_h1_color`,
+                `chyron_background_color`,
+                `chyron_font_color`,
+                `show_header_footer`,
+                `show_title`,
+                `show_logo`,
+                `show_clock`,
+                `used_as_reference_projector_meeting_id`
             ]
         };
     }
@@ -103,7 +102,7 @@ export class ProjectorRepositoryService extends BaseRepositoryWithActiveMeeting<
      * @param step (default 1) The amount of scroll-steps
      */
     public async scroll(projector: ViewProjector, direction: ScrollScaleDirection, step: number = 1): Promise<void> {
-        return await this.controlView(projector, direction, 'scroll', step);
+        return await this.controlView(projector, direction, `scroll`, step);
     }
 
     /**
@@ -114,7 +113,7 @@ export class ProjectorRepositoryService extends BaseRepositoryWithActiveMeeting<
      * @param step (default 1) The amount of scale-steps
      */
     public async scale(projector: ViewProjector, direction: ScrollScaleDirection, step: number = 1): Promise<void> {
-        return await this.controlView(projector, direction, 'scale', step);
+        return await this.controlView(projector, direction, `scale`, step);
     }
 
     /**

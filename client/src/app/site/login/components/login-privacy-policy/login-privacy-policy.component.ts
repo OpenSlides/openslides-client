@@ -5,9 +5,9 @@ import { Component, OnInit } from '@angular/core';
  * Uses the corresponding shared component
  */
 @Component({
-    selector: 'os-login-privacy-policy',
-    templateUrl: './login-privacy-policy.component.html',
-    styleUrls: ['../../assets/login-info-pages.scss']
+    selector: `os-login-privacy-policy`,
+    templateUrl: `./login-privacy-policy.component.html`,
+    styleUrls: [`../../assets/login-info-pages.scss`]
 })
 export class LoginPrivacyPolicyComponent implements OnInit {
     /**

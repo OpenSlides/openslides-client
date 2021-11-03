@@ -1,8 +1,4 @@
 import { Injectable } from '@angular/core';
-
-import { Observable, OperatorFunction } from 'rxjs';
-import { map } from 'rxjs/operators';
-
 import { GroupAction } from 'app/core/actions/group-action';
 import {
     DEFAULT_FIELDSET,
@@ -14,6 +10,9 @@ import { ViewMeeting } from 'app/management/models/view-meeting';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Group } from 'app/shared/models/users/group';
 import { ViewGroup } from 'app/site/users/models/view-group';
+import { Observable, OperatorFunction } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { ModelRequestRepository } from '../model-request-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
@@ -29,7 +28,7 @@ export const DEFAULT_GROUP_INDEX = 1;
  * Documentation partially provided in {@link BaseRepository}
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class GroupRepositoryService
     extends BaseRepositoryWithActiveMeeting<ViewGroup, Group>
@@ -40,11 +39,11 @@ export class GroupRepositoryService
     }
 
     public getFieldsets(): Fieldsets<Group> {
-        const titleFields: (keyof Group)[] = ['name'];
-        const listFields: (keyof Group)[] = titleFields.concat(['permissions']);
+        const titleFields: (keyof Group)[] = [`name`];
+        const listFields: (keyof Group)[] = titleFields.concat([`permissions`]);
         const detailFields: (keyof Group)[] = listFields.concat([
-            'admin_group_for_meeting_id',
-            'default_group_for_meeting_id'
+            `admin_group_for_meeting_id`,
+            `default_group_for_meeting_id`
         ]);
         return {
             title: titleFields,
@@ -55,13 +54,13 @@ export class GroupRepositoryService
 
     public getTitle = (viewGroup: ViewGroup) => viewGroup.name;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Groups' : 'Group');
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Groups` : `Group`);
 
     public getNameForIds(...ids: number[]): string {
         return this.getSortedViewModelList()
             .filter(group => ids.includes(group.id))
             .map(group => this.translate.instant(group.getTitle()))
-            .join(', ');
+            .join(`, `);
     }
 
     public create(...groups: GroupAction.CreateParameters[]): Promise<Identifiable[]> {
@@ -111,7 +110,7 @@ export class GroupRepositoryService
         return {
             viewModelCtor: ViewMeeting,
             ids: [this.activeMeetingId],
-            follow: [{ idField: 'group_ids', fieldset: 'title' }]
+            follow: [{ idField: `group_ids`, fieldset: `title` }]
         };
     }
 

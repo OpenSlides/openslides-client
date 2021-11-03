@@ -1,10 +1,10 @@
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-
 import { CML } from 'app/core/core-services/organization-permission';
 import { Committee } from 'app/shared/models/event-management/committee';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { ViewMeeting } from './view-meeting';
 import { ViewOrganization } from './view-organization';
 import { HasOrganizationTags } from './view-organization-tag';

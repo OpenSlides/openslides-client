@@ -3,17 +3,16 @@ import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
-
 import { StorageModule } from '@ngx-pwa/local-storage';
 
-import { AppLoadService } from './core/core-services/app-load.service';
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { CoreModule } from './core/core.module';
 import { environment } from '../environments/environment';
+import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
+import { CoreModule } from './core/core.module';
+import { AppLoadService } from './core/core-services/app-load.service';
 import { httpInterceptorProviders } from './core/core-services/http-interceptors';
-import { LoginModule } from './site/login/login.module';
 import { OpenSlidesTranslateModule } from './core/translate/openslides-translate-module';
+import { LoginModule } from './site/login/login.module';
 import { SlidesModule } from './slides/slides.module';
 
 /**
@@ -33,15 +32,15 @@ export function AppLoaderFactory(appLoadService: AppLoadService): () => Promise<
         BrowserModule,
         HttpClientModule,
         HttpClientXsrfModule.withOptions({
-            cookieName: 'OpenSlidesCsrfToken',
-            headerName: 'X-CSRFToken'
+            cookieName: `OpenSlidesCsrfToken`,
+            headerName: `X-CSRFToken`
         }),
         BrowserAnimationsModule,
         OpenSlidesTranslateModule.forRoot(),
         AppRoutingModule,
         CoreModule,
         LoginModule,
-        ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+        ServiceWorkerModule.register(`ngsw-worker.js`, { enabled: environment.production }),
         SlidesModule.forRoot(),
         StorageModule.forRoot({ IDBNoWrap: false })
     ],

@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
-import { BehaviorSubject, Observable } from 'rxjs';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
@@ -16,16 +14,17 @@ import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { MotionCsvExportService } from 'app/site/motions/services/motion-csv-export.service';
 import { MotionPdfExportService } from 'app/site/motions/services/motion-pdf-export.service';
 import { ViewTag } from 'app/site/tags/models/view-tag';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 /**
  * Sort view for the call list.
  */
 @Component({
-    selector: 'os-call-list',
-    templateUrl: './call-list.component.html',
+    selector: `os-call-list`,
+    templateUrl: `./call-list.component.html`,
     styleUrls: [
-        './call-list.component.scss',
-        '../../../../shared/components/sort-filter-bar/sort-filter-bar.component.scss'
+        `./call-list.component.scss`,
+        `../../../../shared/components/sort-filter-bar/sort-filter-bar.component.scss`
     ]
 })
 export class CallListComponent extends BaseSortTreeComponent<ViewMotion> implements OnInit {
@@ -89,6 +88,7 @@ export class CallListComponent extends BaseSortTreeComponent<ViewMotion> impleme
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         promptService: PromptService,
         private motionRepo: MotionRepositoryService,
         private motionCsvExport: MotionCsvExportService,
@@ -97,7 +97,7 @@ export class CallListComponent extends BaseSortTreeComponent<ViewMotion> impleme
         private categoryRepo: MotionCategoryRepositoryService,
         private activeMeetingIdService: ActiveMeetingIdService
     ) {
-        super(componentServiceCollector, promptService);
+        super(componentServiceCollector, translate, promptService);
 
         this.motionsObservable = this.motionRepo.getViewModelListObservable();
         this.motionsObservable.subscribe(motions => {
@@ -112,10 +112,10 @@ export class CallListComponent extends BaseSortTreeComponent<ViewMotion> impleme
     public ngOnInit(): void {
         super.ngOnInit();
         this.subscriptions.push(
-            this.activeTagFilters.subscribe((value: number[]) => this.onSubscribedFilterChange('tag', value))
+            this.activeTagFilters.subscribe((value: number[]) => this.onSubscribedFilterChange(`tag`, value))
         );
         this.subscriptions.push(
-            this.activeCatFilters.subscribe((value: number[]) => this.onSubscribedFilterChange('category', value))
+            this.activeCatFilters.subscribe((value: number[]) => this.onSubscribedFilterChange(`category`, value))
         );
         this.subscriptions.push(
             this.tagRepo.getViewModelListBehaviorSubject().subscribe(tags => {
@@ -128,7 +128,7 @@ export class CallListComponent extends BaseSortTreeComponent<ViewMotion> impleme
                             this.tagFilterOptions.some(tagfilter => tagfilter.id === tag.id && tagfilter.state === true)
                     }));
                     this.tagFilterOptions.push({
-                        label: this.translate.instant('No tags'),
+                        label: this.translate.instant(`No tags`),
                         id: 0,
                         state:
                             this.tagFilterOptions &&
@@ -153,7 +153,7 @@ export class CallListComponent extends BaseSortTreeComponent<ViewMotion> impleme
                             )
                     }));
                     this.categoryFilterOptions.push({
-                        label: this.translate.instant('No category'),
+                        label: this.translate.instant(`No category`),
                         id: 0,
                         state:
                             this.categoryFilterOptions &&
@@ -172,8 +172,8 @@ export class CallListComponent extends BaseSortTreeComponent<ViewMotion> impleme
             ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
-                    idField: 'motion_ids',
-                    fieldset: 'callList'
+                    idField: `motion_ids`,
+                    fieldset: `callList`
                 }
             ]
         };
@@ -239,13 +239,13 @@ export class CallListComponent extends BaseSortTreeComponent<ViewMotion> impleme
      * @param filter the filter that is supposed to be toggled.
      */
     public onFilterChange(model: 'tag' | 'category', filter: number): void {
-        const value = model === 'tag' ? this.activeTagFilters.value : this.activeCatFilters.value;
+        const value = model === `tag` ? this.activeTagFilters.value : this.activeCatFilters.value;
         if (!value.includes(filter)) {
             value.push(filter);
         } else {
             value.splice(value.indexOf(filter), 1);
         }
-        if (model === 'tag') {
+        if (model === `tag`) {
             this.activeTagFilters.next(value);
         } else {
             this.activeCatFilters.next(value);
@@ -266,10 +266,10 @@ export class CallListComponent extends BaseSortTreeComponent<ViewMotion> impleme
      * in case of `true`.
      */
     public async sortMotionsByNumber(): Promise<void> {
-        const title = this.translate.instant('Do you really want to go ahead?');
-        const text = this.translate.instant('This will reset all made changes and sort the call list.');
+        const title = this.translate.instant(`Do you really want to go ahead?`);
+        const text = this.translate.instant(`This will reset all made changes and sort the call list.`);
         if (await this.promptService.open(title, text)) {
-            this.forceSort.emit('number');
+            this.forceSort.emit(`number`);
         }
     }
 
@@ -281,7 +281,7 @@ export class CallListComponent extends BaseSortTreeComponent<ViewMotion> impleme
      * @param value
      */
     private onSubscribedFilterChange(model: 'tag' | 'category', value: number[]): void {
-        if (model === 'tag') {
+        if (model === `tag`) {
             this.activeTagFilterCount = value.length;
             this.tagFilterOptions.forEach(filterOption => {
                 filterOption.state = value && value.some(v => v === filterOption.id);

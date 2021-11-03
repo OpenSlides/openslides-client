@@ -1,4 +1,5 @@
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+
 import { Id } from '../../../core/definitions/key-types';
 
 export interface CommitteeCsvPort {
@@ -14,12 +15,12 @@ export interface CommitteeCsvPort {
 }
 
 export const COMMITTEE_PORT_HEADERS_AND_VERBOSE_NAMES: Partial<CommitteeCsvPort> = {
-    name: _('Title'),
-    description: _('Description'),
-    forward_to_committee_ids: _('Can forward motions to committee'),
-    organization_tag_ids: _('Tags'),
-    manager_ids: _('Administrators'),
-    meeting: _('Meeting'),
-    meeting_start_date: _('Start date'),
-    meeting_end_date: _('End date')
+    name: _(`Title`),
+    description: _(`Description`),
+    forward_to_committee_ids: _(`Can forward motions to committee`),
+    organization_tag_ids: _(`Tags`),
+    manager_ids: _(`Administrators`),
+    meeting: _(`Meeting`),
+    meeting_start_date: _(`Start date`),
+    meeting_end_date: _(`End date`)
 };

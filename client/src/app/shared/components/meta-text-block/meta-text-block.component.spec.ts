@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { MetaTextBlockComponent } from './meta-text-block.component';
 
-describe('MetaTextBlockComponent', () => {
+describe(`MetaTextBlockComponent`, () => {
     let component: MetaTextBlockComponent;
     let fixture: ComponentFixture<MetaTextBlockComponent>;
 
@@ -22,7 +21,7 @@ describe('MetaTextBlockComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

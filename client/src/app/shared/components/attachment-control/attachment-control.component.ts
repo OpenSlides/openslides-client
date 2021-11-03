@@ -13,20 +13,18 @@ import {
 import { FormBuilder, NgControl } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldControl } from '@angular/material/form-field';
-
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-
 import { Permission } from 'app/core/core-services/permission';
 import { MediafileRepositoryService } from 'app/core/repositories/mediafiles/mediafile-repository.service';
 import { BaseFormFieldControlComponent } from 'app/shared/components/base-form-field-control';
 import { mediumDialogSettings } from 'app/shared/utils/dialog-settings';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
-    selector: 'os-attachment-control',
-    templateUrl: './attachment-control.component.html',
-    styleUrls: ['./attachment-control.component.scss'],
+    selector: `os-attachment-control`,
+    templateUrl: `./attachment-control.component.html`,
+    styleUrls: [`./attachment-control.component.scss`],
     providers: [{ provide: MatFormFieldControl, useExisting: AttachmentControlComponent }],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -50,7 +48,7 @@ export class AttachmentControlComponent extends BaseFormFieldControlComponent<Vi
         return !this.contentForm.value.length;
     }
     public get controlType(): string {
-        return 'attachment-control';
+        return `attachment-control`;
     }
 
     public constructor(

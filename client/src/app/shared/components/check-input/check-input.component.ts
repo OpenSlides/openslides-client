@@ -1,13 +1,13 @@
 import { Component, forwardRef, Input, OnInit } from '@angular/core';
 import { ControlValueAccessor, FormBuilder, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';
 
 @Component({
-    selector: 'os-check-input',
-    templateUrl: './check-input.component.html',
-    styleUrls: ['./check-input.component.scss'],
+    selector: `os-check-input`,
+    templateUrl: `./check-input.component.html`,
+    styleUrls: [`./check-input.component.scss`],
     providers: [{ provide: NG_VALUE_ACCESSOR, multi: true, useExisting: forwardRef(() => CheckInputComponent) }]
 })
 export class CheckInputComponent extends BaseComponent implements OnInit, ControlValueAccessor {
@@ -15,7 +15,7 @@ export class CheckInputComponent extends BaseComponent implements OnInit, Contro
      * Type of the used input.
      */
     @Input()
-    public inputType = 'text';
+    public inputType = `text`;
 
     /**
      * The placeholder for the form-field.
@@ -48,8 +48,12 @@ export class CheckInputComponent extends BaseComponent implements OnInit, Contro
     /**
      * Default constructor.
      */
-    public constructor(componentServiceCollector: ComponentServiceCollector, private formBuilder: FormBuilder) {
-        super(componentServiceCollector);
+    public constructor(
+        componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
+        private formBuilder: FormBuilder
+    ) {
+        super(componentServiceCollector, translate);
         this.initForm();
     }
 
@@ -84,7 +88,7 @@ export class CheckInputComponent extends BaseComponent implements OnInit, Contro
      * @param obj the value from the parent form. Type "any" is required by the interface
      */
     public writeValue(obj: string | number): void {
-        if (obj || typeof obj === 'number') {
+        if (obj || typeof obj === `number`) {
             if (obj === this.checkboxValue) {
                 this.checkboxStateChanged(true);
             } else {
@@ -125,7 +129,7 @@ export class CheckInputComponent extends BaseComponent implements OnInit, Contro
      * Initially build the form-control.
      */
     private initForm(): void {
-        this.contentForm = this.formBuilder.control('');
+        this.contentForm = this.formBuilder.control(``);
     }
 
     /**

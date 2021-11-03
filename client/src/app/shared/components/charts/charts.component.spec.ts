@@ -1,8 +1,7 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
-describe('ChartsComponent', () => {
+describe(`ChartsComponent`, () => {
     // let component: ChartsComponent;
     // let fixture: ComponentFixture<ChartsComponent>;
 
@@ -20,7 +19,7 @@ describe('ChartsComponent', () => {
         // fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         // expect(component).toBeTruthy();
     });
 });

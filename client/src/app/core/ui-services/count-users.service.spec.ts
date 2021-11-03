@@ -1,9 +1,9 @@
 import { inject, TestBed } from '@angular/core/testing';
 
-import { CountUsersService } from './count-users.service';
 import { E2EImportsModule } from '../../../e2e-imports.module';
+import { CountUsersService } from './count-users.service';
 
-describe('CountUsersService', () => {
+describe(`CountUsersService`, () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [E2EImportsModule],
@@ -11,7 +11,7 @@ describe('CountUsersService', () => {
         });
     });
 
-    it('should be created', inject([CountUsersService], (service: CountUsersService) => {
+    it(`should be created`, inject([CountUsersService], (service: CountUsersService) => {
         expect(service).toBeTruthy();
     }));
 });

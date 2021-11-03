@@ -1,8 +1,8 @@
-import { Observable } from 'rxjs';
-
 import { StructuredRelation } from 'app/core/definitions/relations';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { Projectiondefault, Projector } from 'app/shared/models/projector/projector';
+import { Observable } from 'rxjs';
+
 import { BaseViewModel } from '../../base/base-view-model';
 import { ViewProjection } from './view-projection';
 

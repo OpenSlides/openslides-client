@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { DurationService } from 'app/core/ui-services/duration.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
@@ -21,9 +21,9 @@ export interface CountdownDialogData {
  * Dialog component for countdowns
  */
 @Component({
-    selector: 'os-countdown-dialog',
-    templateUrl: './countdown-dialog.component.html',
-    styleUrls: ['./countdown-dialog.component.scss']
+    selector: `os-countdown-dialog`,
+    templateUrl: `./countdown-dialog.component.html`,
+    styleUrls: [`./countdown-dialog.component.scss`]
 })
 export class CountdownDialogComponent extends BaseComponent implements OnInit {
     /**
@@ -38,21 +38,22 @@ export class CountdownDialogComponent extends BaseComponent implements OnInit {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         meetingSettingsService: MeetingSettingsService,
         private formBuilder: FormBuilder,
         private durationService: DurationService,
         @Inject(MAT_DIALOG_DATA) public data: CountdownDialogData
     ) {
-        super(componentServiceCollector);
-        this.defaultTime = meetingSettingsService.instant('projector_countdown_warning_time');
+        super(componentServiceCollector, translate);
+        this.defaultTime = meetingSettingsService.instant(`projector_countdown_warning_time`);
     }
 
     /**
      * Init. Creates the form
      */
     public ngOnInit(): void {
-        const time = this.data.duration || this.durationService.durationToString(this.defaultTime, 'm');
-        const title = this.data.title || `${this.translate.instant('Countdown')} ${this.data.count + 1}`;
+        const time = this.data.duration || this.durationService.durationToString(this.defaultTime, `m`);
+        const title = this.data.title || `${this.translate.instant(`Countdown`)} ${this.data.count + 1}`;
 
         this.countdownForm = this.formBuilder.group({
             title: [title, Validators.required],

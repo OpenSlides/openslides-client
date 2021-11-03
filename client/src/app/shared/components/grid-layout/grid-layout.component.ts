@@ -5,9 +5,9 @@ import { Component, Input } from '@angular/core';
  * Aligns items in a flex display.
  */
 @Component({
-    selector: 'os-grid-layout',
-    templateUrl: './grid-layout.component.html',
-    styleUrls: ['./grid-layout.component.scss']
+    selector: `os-grid-layout`,
+    templateUrl: `./grid-layout.component.html`,
+    styleUrls: [`./grid-layout.component.scss`]
 })
 export class GridLayoutComponent {
     /**

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { UserAction } from 'app/core/actions/user-action';
 import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import {
@@ -16,12 +15,13 @@ import { UserSortProperty } from 'app/shared/models/event-management/meeting';
 import { User } from 'app/shared/models/users/user';
 import { toDecimal } from 'app/shared/utils/to-decimal';
 import { ViewUser } from 'app/site/users/models/view-user';
+
+import { Meeting } from '../../../shared/models/event-management/meeting';
+import { Displayable } from '../../../site/base/displayable';
+import { PresenterService } from '../../core-services/presenter.service';
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { ModelRequestRepository } from '../model-request-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
-import { Displayable } from '../../../site/base/displayable';
-import { PresenterService } from '../../core-services/presenter.service';
-import { Meeting } from '../../../shared/models/event-management/meeting';
 
 export interface MassImportResult {
     importedTrackIds: number[];
@@ -67,7 +67,7 @@ type FullNameInformation = ShortNameInformation & LevelAndNumberInformation;
  * Documentation partially provided in {@link BaseRepository}
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class UserRepositoryService
     extends BaseRepositoryWithActiveMeeting<ViewUser, User>
@@ -86,8 +86,8 @@ export class UserRepositoryService
         private activeMeeting: ActiveMeetingService
     ) {
         super(repositoryServiceCollector, User);
-        this.sortProperty = this.meetingSettingsService.instant('users_sort_by');
-        this.meetingSettingsService.get('users_sort_by').subscribe(conf => {
+        this.sortProperty = this.meetingSettingsService.instant(`users_sort_by`);
+        this.meetingSettingsService.get(`users_sort_by`).subscribe(conf => {
             this.sortProperty = conf;
             this.setConfigSortFn();
         });
@@ -101,50 +101,50 @@ export class UserRepositoryService
 
     public getFieldsets(): Fieldsets<User> {
         const shortNameFields: (keyof User | { templateField: keyof User })[] = [
-            'title',
-            'first_name',
-            'last_name',
-            'username' /* Required! To getShortName */
+            `title`,
+            `first_name`,
+            `last_name`,
+            `username` /* Required! To getShortName */
         ];
         const singleVotesFields = shortNameFields.concat([
-            { templateField: 'vote_weight_$' },
-            { templateField: 'structure_level_$' },
-            { templateField: 'number_$' }
+            { templateField: `vote_weight_$` },
+            { templateField: `structure_level_$` },
+            { templateField: `number_$` }
         ]);
         /**
          * TODO: Some of thouse are not needed in the lists
          */
         const listFields = shortNameFields.concat(singleVotesFields, [
-            'email',
-            'gender',
-            'is_active',
-            'is_physical_person',
-            'is_present_in_meeting_ids',
-            'last_email_send',
-            'default_number',
-            'default_structure_level',
-            'default_vote_weight',
-            { templateField: 'comment_$' }
+            `email`,
+            `gender`,
+            `is_active`,
+            `is_physical_person`,
+            `is_present_in_meeting_ids`,
+            `last_email_send`,
+            `default_number`,
+            `default_structure_level`,
+            `default_vote_weight`,
+            { templateField: `comment_$` }
         ]);
         const committeeEditFields = shortNameFields.concat([
-            'committee_ids',
-            { templateField: 'committee_$_management_level' }
+            `committee_ids`,
+            { templateField: `committee_$_management_level` }
         ]);
-        const committeeListFields = [{ templateField: 'committee_$_management_level' }];
+        const committeeListFields = [{ templateField: `committee_$_management_level` }];
         const detailFields = listFields.concat([
-            'username',
-            { templateField: 'about_me_$' },
-            'comment',
-            'default_password'
+            `username`,
+            { templateField: `about_me_$` },
+            `comment`,
+            `default_password`
         ]);
-        const orgaListFields = listFields.concat(['committee_ids', 'organization_management_level']);
+        const orgaListFields = listFields.concat([`committee_ids`, `organization_management_level`]);
         const orgaEditFields = orgaListFields.concat([
-            'default_password',
-            { templateField: 'committee_$_management_level' }
+            `default_password`,
+            { templateField: `committee_$_management_level` }
         ]);
         const voteProgressFields: (keyof User | { templateField: keyof User })[] = [
-            'is_present_in_meeting_ids',
-            'group_$_ids'
+            `is_present_in_meeting_ids`,
+            `group_$_ids`
         ];
 
         return {
@@ -180,7 +180,7 @@ export class UserRepositoryService
         ...users: ViewUser[]
     ): Promise<void> {
         const updatePayload = users.map(user => {
-            const update = typeof patch === 'function' ? patch(user) : patch;
+            const update = typeof patch === `function` ? patch(user) : patch;
             return {
                 id: user.id,
                 ...this.sanitizePayload(this.getBaseUserPayload(update))
@@ -190,7 +190,7 @@ export class UserRepositoryService
     }
 
     public updateSelf(patch: any | ((user: ViewUser) => any), user: ViewUser): Promise<void> {
-        const update = typeof patch === 'function' ? patch(user) : patch;
+        const update = typeof patch === `function` ? patch(user) : patch;
         const payload: UserAction.UpdateSelfPayload = {
             email: update.email,
             about_me_$: {
@@ -245,7 +245,7 @@ export class UserRepositoryService
         return {
             viewModelCtor: ViewMeeting,
             ids: [this.activeMeetingId],
-            follow: [{ idField: 'user_ids', fieldset: 'shortName' }]
+            follow: [{ idField: `user_ids`, fieldset: `shortName` }]
         };
     }
 
@@ -255,11 +255,11 @@ export class UserRepositoryService
      * @returns a non-empty string
      */
     public getShortName(user: ShortNameInformation): string {
-        const title = user.title ? user.title.trim() : '';
-        const firstName = user.first_name ? user.first_name.trim() : '';
-        const lastName = user.last_name ? user.last_name.trim() : '';
+        const title = user.title ? user.title.trim() : ``;
+        const firstName = user.first_name ? user.first_name.trim() : ``;
+        const lastName = user.last_name ? user.last_name.trim() : ``;
 
-        let shortName = '';
+        let shortName = ``;
         if (firstName || lastName) {
             shortName = `${firstName} ${lastName}`;
         } else {
@@ -285,29 +285,29 @@ export class UserRepositoryService
 
         const number = user.number ? user.number() : null;
         if (number) {
-            additions.push(`${this.translate.instant('No.')} ${number}`);
+            additions.push(`${this.translate.instant(`No.`)} ${number}`);
         }
 
         if (additions.length > 0) {
-            fullName += ' (' + additions.join(' · ') + ')';
+            fullName += ` (` + additions.join(` · `) + `)`;
         }
         return fullName;
     }
 
     public getLevelAndNumber(user: LevelAndNumberInformation): string {
         if (user.structure_level() && user.number()) {
-            return `${user.structure_level()} · ${this.translate.instant('No.')} ${user.number()}`;
+            return `${user.structure_level()} · ${this.translate.instant(`No.`)} ${user.number()}`;
         } else if (user.structure_level()) {
             return user.structure_level();
         } else if (user.number()) {
-            return `${this.translate.instant('No.')} ${user.number()}`;
+            return `${this.translate.instant(`No.`)} ${user.number()}`;
         } else {
-            return '';
+            return ``;
         }
     }
 
     public getVerboseName = (plural: boolean = false) =>
-        this.translate.instant(plural ? 'Participants' : 'Participant');
+        this.translate.instant(plural ? `Participants` : `Participant`);
 
     /**
      * Generates a random password
@@ -316,8 +316,8 @@ export class UserRepositoryService
      * @returns a random password
      */
     public getRandomPassword(length: number = 10): string {
-        let pw = '';
-        const characters = 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        let pw = ``;
+        const characters = `abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789`;
         // set charactersLengthPower2 to characters.length rounded up to the next power of two
         let charactersLengthPower2 = 1;
         while (characters.length > charactersLengthPower2) {
@@ -502,24 +502,24 @@ export class UserRepositoryService
         const noEmails = response.filter(email => !email.sent);
         let responseMessage: string;
         if (numEmails === 0) {
-            responseMessage = this.translate.instant('No emails were send.');
+            responseMessage = this.translate.instant(`No emails were send.`);
         } else if (numEmails === 1) {
-            responseMessage = this.translate.instant('One email was send sucessfully.');
+            responseMessage = this.translate.instant(`One email was send sucessfully.`);
         } else {
-            responseMessage = this.translate.instant('%num% emails were send sucessfully.');
-            responseMessage = responseMessage.replace('%num%', numEmails.toString());
+            responseMessage = this.translate.instant(`%num% emails were send sucessfully.`);
+            responseMessage = responseMessage.replace(`%num%`, numEmails.toString());
         }
 
         if (noEmails.length) {
-            responseMessage += ' ';
+            responseMessage += ` `;
 
             if (noEmails.length === 1) {
                 responseMessage += this.translate.instant(
-                    'The user %user% has no email, so the invitation email could not be send.'
+                    `The user %user% has no email, so the invitation email could not be send.`
                 );
             } else {
                 responseMessage += this.translate.instant(
-                    'The users %user% have no email, so the invitation emails could not be send.'
+                    `The users %user% have no email, so the invitation emails could not be send.`
                 );
             }
 
@@ -531,11 +531,11 @@ export class UserRepositoryService
             let userString: string;
             if (usernames.length > 1) {
                 const lastUsername = usernames.pop();
-                userString = usernames.join(', ') + ' ' + this.translate.instant('and') + ' ' + lastUsername;
+                userString = usernames.join(`, `) + ` ` + this.translate.instant(`and`) + ` ` + lastUsername;
             } else {
-                userString = usernames.join(', ');
+                userString = usernames.join(`, `);
             }
-            responseMessage = responseMessage.replace('%user%', userString);
+            responseMessage = responseMessage.replace(`%user%`, userString);
         }
 
         return responseMessage;
@@ -598,14 +598,14 @@ export class UserRepositoryService
      * @param schema optional hint on how to handle the strings.
      * @returns A `FullNameInformation`-object.
      */
-    public parseStringIntoUser(inputUser: string, schema: StringNamingSchema = 'firstSpaceLast'): FullNameInformation {
+    public parseStringIntoUser(inputUser: string, schema: StringNamingSchema = `firstSpaceLast`): FullNameInformation {
         const newUser: FullNameInformation = {
-            username: '',
-            structure_level: () => '',
-            number: () => ''
+            username: ``,
+            structure_level: () => ``,
+            number: () => ``
         };
-        if (schema === 'lastCommaFirst') {
-            const commaSeparated = inputUser.split(',');
+        if (schema === `lastCommaFirst`) {
+            const commaSeparated = inputUser.split(`,`);
             switch (commaSeparated.length) {
                 case 1:
                     newUser.first_name = commaSeparated[0];
@@ -617,8 +617,8 @@ export class UserRepositoryService
                 default:
                     newUser.first_name = inputUser;
             }
-        } else if (schema === 'firstSpaceLast') {
-            const splitUser = inputUser.split(' ');
+        } else if (schema === `firstSpaceLast`) {
+            const splitUser = inputUser.split(` `);
             switch (splitUser.length) {
                 case 1:
                     newUser.first_name = splitUser[0];
@@ -649,7 +649,7 @@ export class UserRepositoryService
     public setConfigSortFn(): void {
         this.setSortFunction((a: ViewUser, b: ViewUser) => {
             if (a[this.sortProperty] && b[this.sortProperty]) {
-                if (typeof a[this.sortProperty] === 'function') {
+                if (typeof a[this.sortProperty] === `function`) {
                     const fnA = a[this.sortProperty] as () => string;
                     const fnB = b[this.sortProperty] as () => string;
                     return this.languageCollator.compare(fnA(), fnB());
@@ -681,7 +681,7 @@ export class UserRepositoryService
      */
     public lastSentEmailTimeString(user: ViewUser): string {
         if (!user.user || !user.user.last_email_send) {
-            return '';
+            return ``;
         }
         return new Date(user.user.last_email_send * 1000).toLocaleString(this.translate.currentLang);
     }
@@ -689,11 +689,11 @@ export class UserRepositoryService
     private sanitizePayload(payload: any): any {
         const temp = { ...payload };
         for (const key of Object.keys(temp).filter(field => !this.isFieldAllowedToBeEmpty(field))) {
-            if (typeof temp[key] === 'string' && !temp[key].trim().length) {
+            if (typeof temp[key] === `string` && !temp[key].trim().length) {
                 payload[key] = undefined;
             } else if (Array.isArray(temp[key])) {
                 continue;
-            } else if (typeof temp[key] === 'object' && !!temp[key]) {
+            } else if (typeof temp[key] === `object` && !!temp[key]) {
                 this.sanitizePayload(payload[key]);
                 if (!Object.keys(payload[key]).length) {
                     delete payload[key];
@@ -705,16 +705,16 @@ export class UserRepositoryService
 
     private isFieldAllowedToBeEmpty(field: string): boolean {
         const fields: string[] = [
-            'title',
-            'email',
-            'first_name',
-            'last_name',
-            'comment_$',
-            'about_me_$',
-            'number_$',
-            'structure_level_$',
-            'default_number',
-            'default_structure_level'
+            `title`,
+            `email`,
+            `first_name`,
+            `last_name`,
+            `comment_$`,
+            `about_me_$`,
+            `number_$`,
+            `structure_level_$`,
+            `default_number`,
+            `default_structure_level`
         ];
         return fields.includes(field);
     }

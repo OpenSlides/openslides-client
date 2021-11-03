@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { AgendaItemAction } from 'app/core/actions/agenda-item-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Id } from 'app/core/definitions/key-types';
@@ -9,6 +8,7 @@ import { AgendaItem, AgendaItemType } from 'app/shared/models/agenda/agenda-item
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { HasAgendaItem, ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { BaseViewModel } from 'app/site/base/base-view-model';
+
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
@@ -23,7 +23,7 @@ export interface AgendaListTitle {
  * Documentation partially provided in {@link BaseRepository}
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AgendaItemRepositoryService extends BaseRepositoryWithActiveMeeting<ViewAgendaItem, AgendaItem> {
     public constructor(
@@ -39,29 +39,29 @@ export class AgendaItemRepositoryService extends BaseRepositoryWithActiveMeeting
     public getFieldsets(): Fieldsets<AgendaItem> {
         return {
             [DEFAULT_FIELDSET]: [
-                'item_number',
-                'comment',
-                'closed',
-                'type',
-                'is_hidden',
-                'is_internal',
-                'duration',
-                'weight',
-                'level',
-                'parent_id',
-                'child_ids',
-                'meeting_id'
+                `item_number`,
+                `comment`,
+                `closed`,
+                `type`,
+                `is_hidden`,
+                `is_internal`,
+                `duration`,
+                `weight`,
+                `level`,
+                `parent_id`,
+                `child_ids`,
+                `meeting_id`
             ]
         };
     }
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Items' : 'Item');
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Items` : `Item`);
 
     private getAgendaTitle(viewAgendaItem: ViewAgendaItem): AgendaListTitle {
         if (viewAgendaItem.content_object) {
             return viewAgendaItem.content_object.getAgendaListTitle();
         } else {
-            return { title: '<missing content object>' };
+            return { title: `<missing content object>` };
         }
     }
 
@@ -72,7 +72,7 @@ export class AgendaItemRepositoryService extends BaseRepositoryWithActiveMeeting
     public getItemNumberPrefix(viewModel: HasAgendaItem): string {
         return viewModel.agenda_item && viewModel.agenda_item.item_number
             ? `${viewModel.agenda_item.item_number} · `
-            : '';
+            : ``;
     }
 
     /**
@@ -157,7 +157,7 @@ export class AgendaItemRepositoryService extends BaseRepositoryWithActiveMeeting
      * @returns a Date object or null
      */
     public calculateEndTime(): Date {
-        const startTime = this.meetingSettingsService.instant('start_time'); // a timestamp
+        const startTime = this.meetingSettingsService.instant(`start_time`); // a timestamp
         const duration = this.calculateDuration();
         if (!startTime || !duration) {
             return null;
@@ -197,6 +197,6 @@ export class AgendaItemRepositoryService extends BaseRepositoryWithActiveMeeting
     }
 
     protected tapViewModels(viewModels: ViewAgendaItem[]): void {
-        this.treeService.injectFlatNodeInformation(viewModels, 'weight', 'parent_id');
+        this.treeService.injectFlatNodeInformation(viewModels, `weight`, `parent_id`);
     }
 }

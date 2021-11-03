@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { UserStatisticsComponent } from './user-statistics.component';
 
-describe('UserStatisticsComponent', () => {
+describe(`UserStatisticsComponent`, () => {
     let component: UserStatisticsComponent;
     let fixture: ComponentFixture<UserStatisticsComponent>;
 
@@ -22,7 +21,7 @@ describe('UserStatisticsComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

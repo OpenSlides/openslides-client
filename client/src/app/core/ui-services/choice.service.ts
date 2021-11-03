@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-
-import { Observable } from 'rxjs';
-
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { Displayable } from 'app/site/base/displayable';
+import { Observable } from 'rxjs';
+
 import { ChoiceAnswer, ChoiceDialogComponent } from '../../shared/components/choice-dialog/choice-dialog.component';
 
 /**
  * A service for prompting the user to select a choice.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ChoiceService {
     /**

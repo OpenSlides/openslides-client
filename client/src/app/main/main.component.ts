@@ -1,6 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivationEnd, Event, Router } from '@angular/router';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { SuperSearchService } from 'app/core/ui-services/super-search.service';
 import { UpdateService } from 'app/core/ui-services/update.service';
@@ -15,9 +15,9 @@ interface RoutingData {
 }
 
 @Component({
-    selector: 'os-main',
-    templateUrl: './main.component.html',
-    styleUrls: ['./main.component.scss']
+    selector: `os-main`,
+    templateUrl: `./main.component.html`,
+    styleUrls: [`./main.component.scss`]
 })
 export class MainComponent extends BaseComponent implements OnInit {
     /**
@@ -32,11 +32,12 @@ export class MainComponent extends BaseComponent implements OnInit {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private updateService: UpdateService,
         private router: Router,
         private searchService: SuperSearchService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     public ngOnInit(): void {
@@ -67,8 +68,8 @@ export class MainComponent extends BaseComponent implements OnInit {
 
     private showUpdateNotification(): void {
         const ref = this.matSnackBar.open(
-            this.translate.instant('A new update is available!'),
-            this.translate.instant('Refresh'),
+            this.translate.instant(`A new update is available!`),
+            this.translate.instant(`Refresh`),
             {
                 duration: 0
             }
@@ -85,8 +86,8 @@ export class MainComponent extends BaseComponent implements OnInit {
      *
      * @param event KeyboardEvent to listen to keyboard-inputs.
      */
-    @HostListener('document:keydown', ['$event']) public onKeyNavigation(event: KeyboardEvent): void {
-        if (event.altKey && event.shiftKey && event.code === 'KeyF') {
+    @HostListener(`document:keydown`, [`$event`]) public onKeyNavigation(event: KeyboardEvent): void {
+        if (event.altKey && event.shiftKey && event.code === `KeyF`) {
             event.preventDefault();
             event.stopPropagation();
             this.searchService.open();

@@ -1,8 +1,8 @@
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { Provider } from '@angular/core';
 
-import { AuthTokenInterceptorService } from './auth-token-interceptor.service';
 import { AuthTokenService } from '../auth-token.service';
+import { AuthTokenInterceptorService } from './auth-token-interceptor.service';
 import { StableInterceptorService } from './stable-interceptor.service';
 
 export const httpInterceptorProviders: Provider[] = [

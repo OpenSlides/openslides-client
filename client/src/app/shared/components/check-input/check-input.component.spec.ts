@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { CheckInputComponent } from './check-input.component';
 
-describe('CheckInputComponent', () => {
+describe(`CheckInputComponent`, () => {
     let component: CheckInputComponent;
     let fixture: ComponentFixture<CheckInputComponent>;
 
@@ -22,7 +21,7 @@ describe('CheckInputComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

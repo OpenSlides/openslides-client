@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { E2EImportsModule } from '../../../e2e-imports.module';
 import { ProjectorMessageSlideComponent } from './projector-message-slide.component';
 
-describe('ProjectorMessageSlideComponent', () => {
+describe(`ProjectorMessageSlideComponent`, () => {
     let component: ProjectorMessageSlideComponent;
     let fixture: ComponentFixture<ProjectorMessageSlideComponent>;
 
@@ -22,7 +22,7 @@ describe('ProjectorMessageSlideComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

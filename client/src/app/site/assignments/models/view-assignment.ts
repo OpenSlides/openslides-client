@@ -10,6 +10,7 @@ import { HasAttachment } from 'app/site/mediafiles/models/view-mediafile';
 import { HasViewPolls } from 'app/site/polls/models/has-view-polls';
 import { HasTags } from 'app/site/tags/models/view-tag';
 import { ViewUser } from 'app/site/users/models/view-user';
+
 import { ViewAssignmentCandidate } from './view-assignment-candidate';
 
 /**
@@ -19,19 +20,19 @@ import { ViewAssignmentCandidate } from './view-assignment-candidate';
  */
 export const AssignmentPhases: { name: string; value: AssignmentPhase; display_name: string }[] = [
     {
-        name: 'PHASE_SEARCH',
+        name: `PHASE_SEARCH`,
         value: AssignmentPhase.Search,
-        display_name: 'Searching for candidates'
+        display_name: `Searching for candidates`
     },
     {
-        name: 'PHASE_VOTING',
+        name: `PHASE_VOTING`,
         value: AssignmentPhase.Voting,
-        display_name: 'In the election process'
+        display_name: `In the election process`
     },
     {
-        name: 'PHASE_FINISHED',
+        name: `PHASE_FINISHED`,
         value: AssignmentPhase.Finished,
-        display_name: 'Finished'
+        display_name: `Finished`
     }
 ];
 
@@ -49,7 +50,7 @@ export class ViewAssignment extends BaseProjectableViewModel<Assignment> {
 
     public get phaseString(): string {
         const phase = AssignmentPhases.find(ap => ap.value === this.phase);
-        return phase ? phase.display_name : '';
+        return phase ? phase.display_name : ``;
     }
 
     /**
@@ -57,7 +58,7 @@ export class ViewAssignment extends BaseProjectableViewModel<Assignment> {
      * (not accepting votes or candidates anymore)
      */
     public get isFinished(): boolean {
-        const finishedState = AssignmentPhases.find(ap => ap.name === 'PHASE_FINISHED');
+        const finishedState = AssignmentPhases.find(ap => ap.name === `PHASE_FINISHED`);
         return this.phase === finishedState.value;
     }
 
@@ -65,7 +66,7 @@ export class ViewAssignment extends BaseProjectableViewModel<Assignment> {
      * @returns true if the assignment is in the 'searching' state
      */
     public get isSearchingForCandidates(): boolean {
-        const searchState = AssignmentPhases.find(ap => ap.name === 'PHASE_SEARCH');
+        const searchState = AssignmentPhases.find(ap => ap.name === `PHASE_SEARCH`);
         return this.phase === searchState.value;
     }
 
@@ -77,7 +78,7 @@ export class ViewAssignment extends BaseProjectableViewModel<Assignment> {
     }
 
     public formatForSearch(): SearchRepresentation {
-        return { properties: [{ key: 'Title', value: this.getTitle() }], searchValue: [this.getTitle()] };
+        return { properties: [{ key: `Title`, value: this.getTitle() }], searchValue: [this.getTitle()] };
     }
 
     public getDetailStateURL(): string {

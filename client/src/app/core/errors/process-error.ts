@@ -1,5 +1,5 @@
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { HttpErrorResponse } from '@angular/common/http';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 interface ErrorMessageResponse {
     message: string;
@@ -8,8 +8,8 @@ interface ErrorMessageResponse {
 
 const isErrorMessageResponse = (obj: any): obj is ErrorMessageResponse =>
     obj &&
-    typeof obj === 'object' &&
-    typeof obj.message === 'string' &&
+    typeof obj === `object` &&
+    typeof obj.message === `string` &&
     (obj as ErrorMessageResponse).success === false;
 
 export class ProcessError extends Error {
@@ -23,23 +23,23 @@ export class ProcessError extends Error {
             let errorMessage: string;
             const getReturnValue = () => ({ message: errorMessage, status: errorStatus });
             // If the error is a string already, return it.
-            if (typeof description === 'string') {
+            if (typeof description === `string`) {
                 errorMessage = _(description);
                 return getReturnValue();
             }
 
             // If the error is no HttpErrorResponse, it's not clear what is wrong.
             if (!(description instanceof HttpErrorResponse)) {
-                console.error('Unknown error thrown by the http client: ', description);
-                errorMessage = _('An unknown error occurred.');
+                console.error(`Unknown error thrown by the http client: `, description);
+                errorMessage = _(`An unknown error occurred.`);
                 return getReturnValue();
             }
 
             errorStatus = description.status;
 
             if (!description.error) {
-                errorMessage = _("The server didn't respond.");
-            } else if (typeof description.error === 'object') {
+                errorMessage = _(`The server didn't respond.`);
+            } else if (typeof description.error === `object`) {
                 if (isErrorMessageResponse(description.error)) {
                     errorMessage = description.error.message;
                 } else {
@@ -48,14 +48,14 @@ export class ProcessError extends Error {
                         const errorValue = description.error[key];
                         return `${_(capitalizedKey)}: ${errorValue}`;
                     });
-                    errorMessage = errorList.join(', ');
+                    errorMessage = errorList.join(`, `);
                 }
-            } else if (typeof description.error === 'string') {
+            } else if (typeof description.error === `string`) {
                 errorMessage = _(description.error);
             } else if (description.status === 500) {
-                errorMessage = _('A server error occured. Please contact your system administrator.');
+                errorMessage = _(`A server error occured. Please contact your system administrator.`);
             } else if (description.status > 500) {
-                errorMessage = _('The server could not be reached.') + ` (${description.status})`;
+                errorMessage = _(`The server could not be reached.`) + ` (${description.status})`;
             } else {
                 errorMessage = description.message;
             }
@@ -63,7 +63,7 @@ export class ProcessError extends Error {
             return getReturnValue();
         };
         const { message, status } = handleErrorDescription();
-        super(`${_('Error')}: ${message}`);
+        super(`${_(`Error`)}: ${message}`);
         this.message = message;
         this.status = status;
     }

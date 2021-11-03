@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { LocalStorage } from '@ngx-pwa/local-storage';
 import { Observable } from 'rxjs';
 
@@ -10,7 +9,7 @@ import { HistoryService } from './history.service';
  * using IndexedDB or localStorage as a fallback.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class StorageService {
     private noClearKeys: string[] = [];
@@ -36,7 +35,7 @@ export class StorageService {
             await this.remove(key); // You cannot do a setItem with null or undefined...
         } else {
             if (!(await this.localStorage.setItem(key, item).toPromise())) {
-                throw new Error('Could not set the item.');
+                throw new Error(`Could not set the item.`);
             }
         }
     }
@@ -58,7 +57,7 @@ export class StorageService {
     public async remove(key: string): Promise<void> {
         this.assertNotHistoryMode();
         if (!(await this.localStorage.removeItem(key).toPromise())) {
-            throw new Error('Could not delete the item.');
+            throw new Error(`Could not delete the item.`);
         }
     }
 
@@ -72,7 +71,7 @@ export class StorageService {
             savedData[key] = await this.get(key);
         }
         if (!(await this.localStorage.clear().toPromise())) {
-            throw new Error('Could not clear the storage.');
+            throw new Error(`Could not clear the storage.`);
         }
         for (const key of this.noClearKeys) {
             await this.set(key, savedData[key]);
@@ -84,7 +83,7 @@ export class StorageService {
      */
     private assertNotHistoryMode(): void {
         if (this.historyService.isInHistoryMode) {
-            throw new Error('You cannot use the storageService in histroy mode.');
+            throw new Error(`You cannot use the storageService in histroy mode.`);
         }
     }
 }

@@ -1,43 +1,42 @@
 import { Component, ContentChild, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-
-import { Subscription } from 'rxjs';
-
+import { TranslateService } from '@ngx-translate/core';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { genders } from 'app/shared/models/users/user';
 import { OneOfValidator } from 'app/shared/validators/one-of-validator';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { Subscription } from 'rxjs';
 
 @Component({
-    selector: 'os-user-detail-view',
-    templateUrl: './user-detail-view.component.html',
-    styleUrls: ['./user-detail-view.component.scss']
+    selector: `os-user-detail-view`,
+    templateUrl: `./user-detail-view.component.html`,
+    styleUrls: [`./user-detail-view.component.scss`]
 })
 export class UserDetailViewComponent extends BaseComponent {
     /**
      * Reference to the edit template content.
      */
-    @ContentChild('editView', { read: TemplateRef, static: true })
+    @ContentChild(`editView`, { read: TemplateRef, static: true })
     public editView: TemplateRef<any>;
 
     /**
      * Reference to the show template content.
      */
-    @ContentChild('showView', { read: TemplateRef, static: true })
+    @ContentChild(`showView`, { read: TemplateRef, static: true })
     public showView: TemplateRef<any>;
 
     /**
      * Reference to the edit template for checks.
      */
-    @ContentChild('moreChecks', { read: TemplateRef, static: true })
+    @ContentChild(`moreChecks`, { read: TemplateRef, static: true })
     public moreChecks: TemplateRef<any>;
 
     /**
      * Reference to the show template for icons.
      */
-    @ContentChild('moreIcons', { read: TemplateRef, static: true })
+    @ContentChild(`moreIcons`, { read: TemplateRef, static: true })
     public moreIcons: TemplateRef<any>;
 
     @Input()
@@ -125,11 +124,12 @@ export class UserDetailViewComponent extends BaseComponent {
     private _formValueChangeSubscription: Subscription | null = null;
 
     public constructor(
-        serviceCollector: ComponentServiceCollector,
+        componentServiceCollector: ComponentServiceCollector,
+        translate: TranslateService,
         operator: OperatorService,
         private fb: FormBuilder
     ) {
-        super(serviceCollector);
+        super(componentServiceCollector, translate);
         this.subscriptions.push(operator.operatorUpdatedEvent.subscribe(() => this.updateFormControlsAccessibility()));
     }
 
@@ -146,7 +146,7 @@ export class UserDetailViewComponent extends BaseComponent {
     }
 
     public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === 'Enter' && event.shiftKey) {
+        if (event.key === `Enter` && event.shiftKey) {
             this.submitEvent.emit();
         }
     }
@@ -183,7 +183,7 @@ export class UserDetailViewComponent extends BaseComponent {
         }
         const personalInfoPatch = {};
         Object.keys(this.personalInfoForm.controls).forEach(ctrl => {
-            if (typeof this.user[ctrl] === 'function') {
+            if (typeof this.user[ctrl] === `function`) {
                 personalInfoPatch[ctrl] = this.user[ctrl]();
             } else {
                 personalInfoPatch[ctrl] = this.user[ctrl];
@@ -204,9 +204,9 @@ export class UserDetailViewComponent extends BaseComponent {
         });
 
         // Disable not permitted controls
-        if (!this.isAllowed('manage')) {
+        if (!this.isAllowed(`manage`)) {
             formControlNames.forEach(formControlName => {
-                if (!['username', 'email', ...this._additionalAllowedPersonalForms].includes(formControlName)) {
+                if (![`username`, `email`, ...this._additionalAllowedPersonalForms].includes(formControlName)) {
                     this.personalInfoForm.get(formControlName).disable();
                 }
             });
@@ -219,21 +219,21 @@ export class UserDetailViewComponent extends BaseComponent {
     private createForm(): void {
         this.personalInfoForm = this.fb.group(
             {
-                username: ['', this.isNewUser ? [] : [Validators.required]],
-                title: [''],
-                first_name: [''],
-                last_name: [''],
-                gender: [''],
-                email: [''],
-                last_email_send: [''],
-                default_password: [''],
+                username: [``, this.isNewUser ? [] : [Validators.required]],
+                title: [``],
+                first_name: [``],
+                last_name: [``],
+                gender: [``],
+                email: [``],
+                last_email_send: [``],
+                default_password: [``],
                 is_active: [true],
                 is_physical_person: [true],
                 ...this._additionalFormControls
             },
             {
                 validators: [
-                    OneOfValidator.validation(['username', 'first_name', 'last_name'], 'name'),
+                    OneOfValidator.validation([`username`, `first_name`, `last_name`], `name`),
                     ...this._additionalValidators
                 ]
             }

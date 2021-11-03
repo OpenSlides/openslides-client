@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs';
  * Necessary, because there is a circular dependency if the `ActionService` injects the `ActiveMeetingService`.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ArchiveStatusService {
     public get isArchived(): boolean {

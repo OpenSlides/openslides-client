@@ -5,11 +5,11 @@ import { AmendmentListComponent } from './amendment-list.component';
 
 const routes: Route[] = [
     {
-        path: '',
+        path: ``,
         component: AmendmentListComponent,
-        pathMatch: 'full'
+        pathMatch: `full`
     },
-    { path: ':id', component: AmendmentListComponent }
+    { path: `:id`, component: AmendmentListComponent }
 ];
 
 @NgModule({

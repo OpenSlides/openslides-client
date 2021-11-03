@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
-
 import { ProjectorCountdownAction } from 'app/core/actions/projector-countdown-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { ServertimeService } from 'app/core/core-services/servertime.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { ProjectorCountdown } from 'app/shared/models/projector/projector-countdown';
 import { ViewProjectorCountdown } from 'app/site/projector/models/view-projector-countdown';
+
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ProjectorCountdownRepositoryService extends BaseRepositoryWithActiveMeeting<
     ViewProjectorCountdown,
@@ -28,11 +28,11 @@ export class ProjectorCountdownRepositoryService extends BaseRepositoryWithActiv
             ? `${viewProjectorCountdown.title} (${viewProjectorCountdown.description})`
             : viewProjectorCountdown.title;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Countdowns' : 'Countdown');
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Countdowns` : `Countdown`);
 
     public getFieldsets(): Fieldsets<ProjectorCountdown> {
         return {
-            [DEFAULT_FIELDSET]: ['title', 'description', 'default_time', 'countdown_time', 'running']
+            [DEFAULT_FIELDSET]: [`title`, `description`, `default_time`, `countdown_time`, `running`]
         };
     }
 

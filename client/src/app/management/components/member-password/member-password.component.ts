@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { TranslateService } from '@ngx-translate/core';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { OML } from 'app/core/core-services/organization-permission';
 import { Id } from 'app/core/definitions/key-types';
@@ -11,13 +11,13 @@ import { BaseModelContextComponent } from 'app/site/base/components/base-model-c
 import { ViewUser } from 'app/site/users/models/view-user';
 
 @Component({
-    selector: 'os-member-password',
-    templateUrl: './member-password.component.html',
-    styleUrls: ['./member-password.component.scss']
+    selector: `os-member-password`,
+    templateUrl: `./member-password.component.html`,
+    styleUrls: [`./member-password.component.scss`]
 })
 export class MemberPasswordComponent extends BaseModelContextComponent implements OnInit {
     public isValid = false;
-    public passwordForm: PasswordForm | string = '';
+    public passwordForm: PasswordForm | string = ``;
     public user?: ViewUser;
     public canManage = false;
     public isOwnPage = false;
@@ -26,12 +26,13 @@ export class MemberPasswordComponent extends BaseModelContextComponent implement
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private route: ActivatedRoute,
         private router: Router,
         private operator: OperatorService,
         public repo: UserRepositoryService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     public ngOnInit(): void {
@@ -50,7 +51,7 @@ export class MemberPasswordComponent extends BaseModelContextComponent implement
      * Triggered by the "x" Button of the Form
      */
     public goBack(): void {
-        this.router.navigate(['accounts', this.user.id]);
+        this.router.navigate([`accounts`, this.user.id]);
     }
 
     /**
@@ -69,7 +70,7 @@ export class MemberPasswordComponent extends BaseModelContextComponent implement
                 const { oldPassword, newPassword }: PasswordForm = this.passwordForm as PasswordForm;
                 await this.repo.setPasswordSelf(this.user, oldPassword, newPassword);
             }
-            this.router.navigate(['accounts', this.user.id]);
+            this.router.navigate([`accounts`, this.user.id]);
         } catch (e) {
             this.raiseError(e);
         }

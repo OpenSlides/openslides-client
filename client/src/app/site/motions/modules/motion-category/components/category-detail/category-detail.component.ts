@@ -3,13 +3,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
-import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { MotionService } from 'app/core/repositories/motions/motion.service';
+import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
@@ -22,9 +22,9 @@ import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category
  * Detail component to display one motion block
  */
 @Component({
-    selector: 'os-category-detail',
-    templateUrl: './category-detail.component.html',
-    styleUrls: ['./category-detail.component.scss']
+    selector: `os-category-detail`,
+    templateUrl: `./category-detail.component.html`,
+    styleUrls: [`./category-detail.component.scss`]
 })
 export class CategoryDetailComponent extends BaseModelContextComponent implements OnInit {
     /**
@@ -45,13 +45,13 @@ export class CategoryDetailComponent extends BaseModelContextComponent implement
     /**
      * The form to edit the selected category
      */
-    @ViewChild('editForm', { static: true })
+    @ViewChild(`editForm`, { static: true })
     public editForm: FormGroup;
 
     /**
      * Reference to the template for edit-dialog
      */
-    @ViewChild('editDialog', { static: true })
+    @ViewChild(`editDialog`, { static: true })
     private editDialog: TemplateRef<string>;
 
     private dialogRef: MatDialogRef<any>;
@@ -76,6 +76,7 @@ export class CategoryDetailComponent extends BaseModelContextComponent implement
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private activeMeetingIdService: ActiveMeetingIdService,
         private route: ActivatedRoute,
         private operator: OperatorService,
@@ -86,7 +87,7 @@ export class CategoryDetailComponent extends BaseModelContextComponent implement
         private formBuilder: FormBuilder,
         private dialog: MatDialog
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     /**
@@ -105,16 +106,16 @@ export class CategoryDetailComponent extends BaseModelContextComponent implement
             ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
-                    idField: 'motion_category_ids',
+                    idField: `motion_category_ids`,
                     follow: [
                         {
-                            idField: 'motion_ids',
-                            fieldset: 'title',
-                            follow: ['state_id', 'recommendation_id'],
-                            additionalFields: ['category_weight']
+                            idField: `motion_ids`,
+                            fieldset: `title`,
+                            follow: [`state_id`, `recommendation_id`],
+                            additionalFields: [`category_weight`]
                         }
                     ],
-                    fieldset: 'sortList'
+                    fieldset: `sortList`
                 }
             ],
             fieldset: []
@@ -161,18 +162,18 @@ export class CategoryDetailComponent extends BaseModelContextComponent implement
      * @returns an array of strings building the column definition
      */
     public getColumnDefinition(): string[] {
-        return ['title', 'state', 'recommendation', 'anchor'];
+        return [`title`, `state`, `recommendation`, `anchor`];
     }
 
     /**
      * Click handler to delete a category
      */
     public async onDeleteButton(): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to delete this category and all subcategories?');
+        const title = this.translate.instant(`Are you sure you want to delete this category and all subcategories?`);
         const content = this.selectedCategory.prefixedName;
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(this.selectedCategory);
-            this.router.navigate(['../'], { relativeTo: this.route });
+            this.router.navigate([`../`], { relativeTo: this.route });
         }
     }
 
@@ -182,10 +183,10 @@ export class CategoryDetailComponent extends BaseModelContextComponent implement
      * @param event The key that was pressed
      */
     public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === 'Escape') {
+        if (event.key === `Escape`) {
             this.dialogRef.close();
         }
-        if (event.key === 'Enter') {
+        if (event.key === `Enter`) {
             this.save();
         }
     }
@@ -234,14 +235,14 @@ export class CategoryDetailComponent extends BaseModelContextComponent implement
 
     public getLevelDashes(category: ViewMotionCategory): string {
         const relativeLevel = category.level - this.selectedCategory.level;
-        return '–'.repeat(relativeLevel);
+        return `–`.repeat(relativeLevel);
     }
 
     /**
      * Triggers a numbering of the motions
      */
     public async numberMotions(): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to renumber all motions of this category?');
+        const title = this.translate.instant(`Are you sure you want to renumber all motions of this category?`);
         const content = this.selectedCategory.getTitle();
         if (await this.promptService.open(title, content)) {
             await this.repo.numberMotionsInCategory(this.selectedCategory).catch(this.raiseError);

@@ -10,20 +10,18 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-
-import { Observable } from 'rxjs';
-
+import { TranslateService } from '@ngx-translate/core';
 import { MotionAction } from 'app/core/actions/motion-action';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Id } from 'app/core/definitions/key-types';
 import { Deferred } from 'app/core/promises/deferred';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
+import { MotionService } from 'app/core/repositories/motions/motion.service';
 import {
     GET_POSSIBLE_RECOMMENDATIONS,
     MotionRepositoryService,
     SUBMITTER_FOLLOW
 } from 'app/core/repositories/motions/motion-repository.service';
-import { MotionService } from 'app/core/repositories/motions/motion.service';
 import { AmendmentService } from 'app/core/ui-services/amendment.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
@@ -40,21 +38,23 @@ import { MotionFilterListService } from 'app/site/motions/services/motion-filter
 import { MotionPdfExportService } from 'app/site/motions/services/motion-pdf-export.service';
 import { MotionSortListService } from 'app/site/motions/services/motion-sort-list.service';
 import { PermissionsService } from 'app/site/motions/services/permissions.service';
-import { MotionContentComponent } from '../motion-content/motion-content.component';
+import { Observable } from 'rxjs';
+
 import { MotionViewService } from '../../../services/motion-view.service';
+import { MotionContentComponent } from '../motion-content/motion-content.component';
 
 /**
  * Component for the motion detail view
  */
 @Component({
-    selector: 'os-motion-detail',
-    templateUrl: './motion-detail.component.html',
-    styleUrls: ['./motion-detail.component.scss'],
+    selector: `os-motion-detail`,
+    templateUrl: `./motion-detail.component.html`,
+    styleUrls: [`./motion-detail.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
 export class MotionDetailComponent extends BaseModelContextComponent implements OnInit, OnDestroy {
-    @ViewChild('content', { static: true })
+    @ViewChild(`content`, { static: true })
     public motionContent: TemplateRef<MotionContentComponent>;
 
     /**
@@ -115,6 +115,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         public vp: ViewportService,
         public operator: OperatorService,
         public perms: PermissionsService,
@@ -133,7 +134,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         private cd: ChangeDetectorRef,
         private pdfExport: MotionPdfExportService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     /**
@@ -172,11 +173,11 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
      * Trigger to delete the motion.
      */
     public async deleteMotionButton(): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to delete this motion?');
+        const title = this.translate.instant(`Are you sure you want to delete this motion?`);
         const content = this.motion.getTitle();
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(this.motion);
-            this.router.navigate([this.activeMeetingId, 'motions']);
+            this.router.navigate([this.activeMeetingId, `motions`]);
         }
     }
 
@@ -184,11 +185,11 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
      * Goes to the amendment creation wizard. Executed via click.
      */
     public createAmendment(): void {
-        const amendmentTextMode = this.meetingSettingService.instant('motions_amendments_text_mode');
-        if (amendmentTextMode === 'paragraph') {
-            this.router.navigate(['create-amendment'], { relativeTo: this.route });
+        const amendmentTextMode = this.meetingSettingService.instant(`motions_amendments_text_mode`);
+        if (amendmentTextMode === `paragraph`) {
+            this.router.navigate([`create-amendment`], { relativeTo: this.route });
         } else {
-            this.router.navigate([this.activeMeetingId, 'motions', 'new-amendment'], {
+            this.router.navigate([this.activeMeetingId, `motions`, `new-amendment`], {
                 relativeTo: this.route.snapshot.params.relativeTo,
                 queryParams: { parent: this.motion.id || null }
             });
@@ -202,7 +203,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
 
     public leaveEditMotion(): void {
         if (this.newMotion) {
-            this.router.navigate([this.activeMeetingId, 'motions']);
+            this.router.navigate([this.activeMeetingId, `motions`]);
         } else {
             this.editMotion = false;
         }
@@ -272,7 +273,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
      *
      * @param event The event object from 'onUnbeforeUnload'.
      */
-    @HostListener('window:beforeunload', ['$event'])
+    @HostListener(`window:beforeunload`, [`$event`])
     public stopClosing(event: Event): void {
         if (this.editMotion) {
             event.returnValue = null;
@@ -334,42 +335,42 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
                 ids: [this.activeMeetingId],
                 follow: [
                     {
-                        idField: 'motion_ids',
-                        fieldset: 'title'
+                        idField: `motion_ids`,
+                        fieldset: `title`
                     },
                     {
-                        idField: 'user_ids',
-                        fieldset: 'shortName'
+                        idField: `user_ids`,
+                        fieldset: `shortName`
                     },
                     {
-                        idField: 'motion_block_ids',
-                        fieldset: 'title'
+                        idField: `motion_block_ids`,
+                        fieldset: `title`
                     },
                     {
-                        idField: 'motion_category_ids'
+                        idField: `motion_category_ids`
                     },
                     {
-                        idField: 'motion_workflow_ids'
+                        idField: `motion_workflow_ids`
                     },
                     {
-                        idField: 'mediafile_ids',
-                        fieldset: 'fileSelection'
+                        idField: `mediafile_ids`,
+                        fieldset: `fileSelection`
                     },
                     {
-                        idField: 'tag_ids'
+                        idField: `tag_ids`
                     },
                     {
-                        idField: 'personal_note_ids'
+                        idField: `personal_note_ids`
                     }
                 ]
             },
-            'motion:additional_models'
+            `motion:additional_models`
         );
     }
 
     private initNewMotion(): void {
         // new motion
-        super.setTitle('New motion');
+        super.setTitle(`New motion`);
         this.newMotion = true;
         this.editMotion = true;
         this.motion = {} as any;
@@ -404,58 +405,58 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
                 ids: [motionId],
                 follow: [
                     {
-                        idField: 'all_origin_ids',
-                        fieldset: 'title',
-                        follow: ['meeting_id']
+                        idField: `all_origin_ids`,
+                        fieldset: `title`,
+                        follow: [`meeting_id`]
                     },
                     {
-                        idField: 'derived_motion_ids',
-                        fieldset: 'title',
-                        follow: ['meeting_id']
+                        idField: `derived_motion_ids`,
+                        fieldset: `title`,
+                        follow: [`meeting_id`]
                     },
                     {
-                        idField: 'change_recommendation_ids'
+                        idField: `change_recommendation_ids`
                     },
                     {
-                        idField: 'lead_motion_id'
+                        idField: `lead_motion_id`
                     },
                     {
-                        idField: 'amendment_ids',
+                        idField: `amendment_ids`,
                         follow: [
                             {
-                                idField: 'lead_motion_id',
-                                fieldset: 'amendment'
+                                idField: `lead_motion_id`,
+                                fieldset: `amendment`
                             },
                             {
-                                idField: 'state_id',
-                                fieldset: 'list'
+                                idField: `state_id`,
+                                fieldset: `list`
                             }
                         ]
                     },
                     SUBMITTER_FOLLOW,
                     {
-                        idField: 'supporter_ids',
-                        fieldset: 'shortName'
+                        idField: `supporter_ids`,
+                        fieldset: `shortName`
                     },
                     {
-                        idField: 'state_id',
+                        idField: `state_id`,
                         follow: [
                             {
-                                idField: 'next_state_ids'
+                                idField: `next_state_ids`
                             },
                             GET_POSSIBLE_RECOMMENDATIONS
                         ]
                     },
                     {
-                        idField: 'origin_id',
-                        fieldset: 'title',
-                        follow: ['meeting_id']
+                        idField: `origin_id`,
+                        fieldset: `title`,
+                        follow: [`meeting_id`]
                     },
-                    'attachment_ids',
+                    `attachment_ids`,
                     SPEAKER_BUTTON_FOLLOW
                 ]
             },
-            'motion:detail'
+            `motion:detail`
         );
     }
 
@@ -464,12 +465,12 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
      *
      * @param event has the key code
      */
-    @HostListener('document:keydown', ['$event'])
+    @HostListener(`document:keydown`, [`$event`])
     public onKeyNavigation(event: KeyboardEvent): void {
-        if (event.key === 'ArrowLeft' && event.altKey && event.shiftKey) {
+        if (event.key === `ArrowLeft` && event.altKey && event.shiftKey) {
             this.navigateToMotion(this.previousMotion);
         }
-        if (event.key === 'ArrowRight' && event.altKey && event.shiftKey) {
+        if (event.key === `ArrowRight` && event.altKey && event.shiftKey) {
             this.navigateToMotion(this.nextMotion);
         }
     }
@@ -488,7 +489,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
             } else {
                 response = await this.repo.create(newMotionValues);
             }
-            this.router.navigate([this.activeMeetingId, 'motions', response.id]);
+            this.router.navigate([this.activeMeetingId, `motions`, response.id]);
         } catch (e) {
             this.raiseError(e);
         }
@@ -527,13 +528,13 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         await this.ensureParentIsAvailable(this.parentId);
         const parentMotion = this.repo.getViewModel(this.parentId);
         motion.lead_motion_id = this.parentId;
-        const defaultTitle = `${this.translate.instant('Amendment to')} ${parentMotion.numberOrTitle}`;
+        const defaultTitle = `${this.translate.instant(`Amendment to`)} ${parentMotion.numberOrTitle}`;
         motion.title = defaultTitle;
         motion.category_id = parentMotion.category_id;
         motion.tag_ids = parentMotion.tag_ids;
         motion.block_id = parentMotion.block_id;
-        const amendmentTextMode = this.meetingSettingService.instant('motions_amendments_text_mode');
-        if (amendmentTextMode === 'fulltext') {
+        const amendmentTextMode = this.meetingSettingService.instant(`motions_amendments_text_mode`);
+        if (amendmentTextMode === `fulltext`) {
             motion.text = parentMotion.text;
         }
         this.motion = motion;
@@ -551,7 +552,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
 
         // use the filter and the search service to get the current sorting
         // TODO: the `instant` can fail, if the page reloads.
-        if (this.meetingSettingService.instant('motions_amendments_in_main_list')) {
+        if (this.meetingSettingService.instant(`motions_amendments_in_main_list`)) {
             this.motionFilterService.initFilters(this.motionObserver);
             this.motionSortService.initSorting(this.motionFilterService.outputObservable);
             this.sortedMotionsObservable = this.motionSortService.outputObservable;
@@ -590,7 +591,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
     private showMotionEditConflictWarningIfNecessary(): void {
         if (this.motion.amendments?.filter(amend => amend.isParagraphBasedAmendment()).length > 0) {
             const msg = this.translate.instant(
-                'Warning: Amendments exist for this motion. Editing this text will likely impact them negatively. Particularily, amendments might become unusable if the paragraph they affect is deleted.'
+                `Warning: Amendments exist for this motion. Editing this text will likely impact them negatively. Particularily, amendments might become unusable if the paragraph they affect is deleted.`
             );
             this.raiseWarning(msg);
         }

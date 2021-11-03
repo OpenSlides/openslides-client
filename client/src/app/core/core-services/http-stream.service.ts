@@ -2,10 +2,10 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { HttpOptions } from '../definitions/http-options';
-import { EndpointConfiguration, HttpStreamEndpointService } from './http-stream-endpoint.service';
-import { ErrorDescription, HttpStream, HttpStreamOptions } from './http-stream';
-import { HttpBodyGetter, HttpParamsGetter } from './communication-manager.service';
 import { AuthService } from './auth.service';
+import { HttpBodyGetter, HttpParamsGetter } from './communication-manager.service';
+import { ErrorDescription, HttpStream, HttpStreamOptions } from './http-stream';
+import { EndpointConfiguration, HttpStreamEndpointService } from './http-stream-endpoint.service';
 import { OfflineBroadcastService, OfflineReasonValue } from './offline-broadcast.service';
 
 export type Params = HttpParams | { [param: string]: string | string[] };
@@ -16,7 +16,7 @@ export interface RequestOptions {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class HttpStreamService {
     public constructor(
@@ -51,9 +51,9 @@ export class HttpStreamService {
 
     private getOptions(bodyFn: HttpBodyGetter, paramsFn: HttpParamsGetter): HttpOptions {
         const options: HttpOptions = {
-            headers: { 'Content-Type': 'application/json' },
-            responseType: 'text',
-            observe: 'events',
+            headers: { 'Content-Type': `application/json` },
+            responseType: `text`,
+            observe: `events`,
             reportProgress: true
         };
 
@@ -71,7 +71,7 @@ export class HttpStreamService {
     }
 
     private onError(endpoint: EndpointConfiguration, description?: ErrorDescription): void {
-        console.log('ERROR', description);
+        console.log(`ERROR`, description);
         this.offlineService.goOffline({
             endpoint,
             type: OfflineReasonValue.ConnectionLost
@@ -81,13 +81,13 @@ export class HttpStreamService {
     private shouldReconnect(): boolean {
         // do not continue, if we are offline!
         if (this.offlineService.isOffline()) {
-            console.log('we are offline?');
+            console.log(`we are offline?`);
             return false;
         }
 
         // do not continue, if the operator changed!
         if (!this.auth.isAuthenticated()) {
-            console.log('operator changed, do not retry');
+            console.log(`operator changed, do not retry`);
             return false;
         }
 
@@ -95,7 +95,7 @@ export class HttpStreamService {
     }
 
     private getEndpointConfiguration(endpoint: string | EndpointConfiguration): EndpointConfiguration {
-        if (typeof endpoint === 'string') {
+        if (typeof endpoint === `string`) {
             return this.endpointService.getEndpoint(endpoint);
         } else {
             return endpoint;

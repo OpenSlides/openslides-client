@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-
+import { TranslateService } from '@ngx-translate/core';
 import { OrganizationAction } from 'app/core/actions/organization-action';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { OML } from 'app/core/core-services/organization-permission';
@@ -12,14 +11,14 @@ import { ViewOrganization } from 'app/management/models/view-organization';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 
 @Component({
-    selector: 'os-orga-settings',
-    templateUrl: './orga-settings.component.html',
-    styleUrls: ['./orga-settings.component.scss']
+    selector: `os-orga-settings`,
+    templateUrl: `./orga-settings.component.html`,
+    styleUrls: [`./orga-settings.component.scss`]
 })
 export class OrgaSettingsComponent extends BaseModelContextComponent implements OnInit {
     public readonly OML = OML;
 
-    public pageTitle = _('Settings');
+    public pageTitle = _(`Settings`);
     private currentOrgaSettings: ViewOrganization;
 
     public orgaSettingsForm: FormGroup;
@@ -30,18 +29,19 @@ export class OrgaSettingsComponent extends BaseModelContextComponent implements 
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private orgaRepo: OrganizationRepositoryService,
         private formBuilder: FormBuilder,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
         super.setTitle(this.pageTitle);
         this.createForm();
 
         this.requestModels({
             viewModelCtor: ViewOrganization,
             ids: [1],
-            fieldset: 'settings'
+            fieldset: `settings`
         });
 
         this.subscriptions.push(
@@ -78,7 +78,7 @@ export class OrgaSettingsComponent extends BaseModelContextComponent implements 
             }
             this.orgaSettingsForm = this.formBuilder.group(rawSettingsForm);
         } else {
-            console.warn('no Organization loaded');
+            console.warn(`no Organization loaded`);
         }
     }
 

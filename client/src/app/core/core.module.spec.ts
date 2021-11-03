@@ -1,13 +1,13 @@
 import { CoreModule } from './core.module';
 
-describe('CoreModule', () => {
+describe(`CoreModule`, () => {
     let coreModule: CoreModule;
 
     beforeEach(() => {
         coreModule = new CoreModule(null);
     });
 
-    it('should create an instance', () => {
+    it(`should create an instance`, () => {
         expect(coreModule).toBeTruthy();
     });
 });

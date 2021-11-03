@@ -1,5 +1,4 @@
 import { HttpClient } from '@angular/common/http';
-
 import { TranslateLoader } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators/';
@@ -16,12 +15,12 @@ export class PruningTranslationLoader implements TranslateLoader {
     /**
      * Path to the language files. Can be adjusted of needed
      */
-    private prefix = '/assets/i18n/';
+    private prefix = `/assets/i18n/`;
 
     /**
      * Suffix of the translation files. Usually '.json'.
      */
-    private suffix = '.json';
+    private suffix = `.json`;
 
     /**
      * Constructor to load the HttpClient
@@ -47,9 +46,9 @@ export class PruningTranslationLoader implements TranslateLoader {
         const newObject = {};
         for (const key in object) {
             if (object.hasOwnProperty(key)) {
-                if (typeof object[key] === 'object') {
+                if (typeof object[key] === `object`) {
                     newObject[key] = this.process(object[key]);
-                } else if (typeof object[key] === 'string' && object[key] === '') {
+                } else if (typeof object[key] === `string` && object[key] === ``) {
                     // do not copy empty strings
                 } else {
                     newObject[key] = object[key];

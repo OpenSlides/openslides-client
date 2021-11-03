@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-
 import { PollState, PollType } from 'app/shared/models/poll/poll-constants';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { ViewUser } from 'app/site/users/models/view-user';
+
 import { OperatorService } from '../core-services/operator.service';
 
 export enum VotingError {
@@ -20,17 +19,17 @@ export enum VotingError {
  * TODO: It appears that the only message that makes sense for the user to see it the last one.
  */
 const VotingErrorVerbose = {
-    1: _('You can not vote right now because the voting has not yet started.'),
-    2: _('You can not vote because this is an analog voting.'),
-    3: _('You do not have the permission to vote.'),
-    4: _('You have to be logged in to be able to vote.'),
-    5: _('You have to be present to vote.'),
-    6: _('Your voting right was delegated to another person.'),
-    7: _('You have already voted.')
+    1: _(`You can not vote right now because the voting has not yet started.`),
+    2: _(`You can not vote because this is an analog voting.`),
+    3: _(`You do not have the permission to vote.`),
+    4: _(`You have to be logged in to be able to vote.`),
+    5: _(`You have to be present to vote.`),
+    6: _(`Your voting right was delegated to another person.`),
+    7: _(`You have already voted.`)
 };
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class VotingService {
     private currentUser?: ViewUser;

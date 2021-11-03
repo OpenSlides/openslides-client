@@ -1,14 +1,14 @@
 import { ComponentType } from '@angular/cdk/portal';
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-
 import { BaseModel } from 'app/shared/models/base/base-model';
 import { Poll } from 'app/shared/models/poll/poll';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { mediumDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BasePollDialogComponent } from 'app/site/polls/components/base-poll-dialog.component';
-import { Fqid } from '../definitions/key-types';
+
 import { PollAction } from '../actions/poll-action';
+import { Fqid } from '../definitions/key-types';
 import { PollRepositoryService } from '../repositories/polls/poll-repository.service';
 
 export interface PollDialogData {
@@ -38,7 +38,7 @@ export interface PollDialogResult {
  * Abstract class for showing a poll dialog. Has to be subclassed to provide the right `PollService`
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export abstract class BasePollDialogService {
     protected abstract dialogComponent: ComponentType<BasePollDialogComponent>;
@@ -52,7 +52,7 @@ export abstract class BasePollDialogService {
      */
     public async openDialog(viewPoll: any): Promise<void> {
         if (!this.dialogComponent) {
-            throw new Error('TODO: No dialog-component is given!');
+            throw new Error(`TODO: No dialog-component is given!`);
         }
         const dialogRef = this.dialog.open(this.dialogComponent, {
             data: viewPoll,

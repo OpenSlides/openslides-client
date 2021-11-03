@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
-
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
@@ -20,13 +19,14 @@ import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { BasePollDetailComponentDirective } from 'app/site/polls/components/base-poll-detail.component';
 import { ViewUser } from 'app/site/users/models/view-user';
-import { AssignmentPollDialogService } from '../../services/assignment-poll-dialog.service';
+
 import { AssignmentPollService } from '../../services/assignment-poll.service';
+import { AssignmentPollDialogService } from '../../services/assignment-poll-dialog.service';
 
 @Component({
-    selector: 'os-assignment-poll-detail',
-    templateUrl: './assignment-poll-detail.component.html',
-    styleUrls: ['./assignment-poll-detail.component.scss'],
+    selector: `os-assignment-poll-detail`,
+    templateUrl: `./assignment-poll-detail.component.html`,
+    styleUrls: [`./assignment-poll-detail.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -36,20 +36,20 @@ export class AssignmentPollDetailComponent extends BasePollDetailComponentDirect
 > {
     public columnDefinitionSingleVotes: PblColumnDefinition[] = [
         {
-            prop: 'user',
-            label: 'Participant',
-            width: '40%',
+            prop: `user`,
+            label: `Participant`,
+            width: `40%`,
             minWidth: 300
         },
         {
-            prop: 'votes',
-            label: 'Votes',
-            width: '60%',
+            prop: `votes`,
+            label: `Votes`,
+            width: `60%`,
             minWidth: 300
         }
     ];
 
-    public filterProps = ['user.getFullName'];
+    public filterProps = [`user.getFullName`];
 
     public isReady = false;
 
@@ -65,6 +65,7 @@ export class AssignmentPollDetailComponent extends BasePollDetailComponentDirect
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         protected repo: PollRepositoryService,
         protected route: ActivatedRoute,
         protected groupRepo: GroupRepositoryService,
@@ -80,6 +81,7 @@ export class AssignmentPollDetailComponent extends BasePollDetailComponentDirect
     ) {
         super(
             componentServiceCollector,
+            translate,
             repo,
             route,
             groupRepo,
@@ -113,13 +115,13 @@ export class AssignmentPollDetailComponent extends BasePollDetailComponentDirect
                 if (vote.weight > 0) {
                     const optionContent: ViewUser = option.content_object;
                     if (this.poll.isMethodY) {
-                        if (vote.value === 'Y') {
+                        if (vote.value === `Y`) {
                             votes[token].votes.push(optionContent.getFullName());
                         } else {
                             votes[token].votes.push(this.voteValueToLabel(vote.value));
                         }
                     } else {
-                        const candidate_name = optionContent?.getShortName() ?? this.translate.instant('Deleted user');
+                        const candidate_name = optionContent?.getShortName() ?? this.translate.instant(`Deleted user`);
                         votes[token].votes.push(`${candidate_name}: ${this.voteValueToLabel(vote.value)}`);
                     }
                 }
@@ -132,12 +134,12 @@ export class AssignmentPollDetailComponent extends BasePollDetailComponentDirect
     }
 
     private voteValueToLabel(vote: VoteValue): string {
-        if (vote === 'Y') {
-            return this.translate.instant('Yes');
-        } else if (vote === 'N') {
-            return this.translate.instant('No');
-        } else if (vote === 'A') {
-            return this.translate.instant('Abstain');
+        if (vote === `Y`) {
+            return this.translate.instant(`Yes`);
+        } else if (vote === `N`) {
+            return this.translate.instant(`No`);
+        } else if (vote === `A`) {
+            return this.translate.instant(`Abstain`);
         } else {
             throw new Error(`voteValueToLabel received illegal arguments: ${vote}`);
         }

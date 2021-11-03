@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
-
 import { BaseFilterListService, OsFilterOption } from 'app/core/ui-services/base-filter-list.service';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 
@@ -15,9 +14,9 @@ import { BaseViewModel } from 'app/site/base/base-view-model';
  * ```
  */
 @Component({
-    selector: 'os-filter-menu',
-    templateUrl: './filter-menu.component.html',
-    styleUrls: ['./filter-menu.component.scss'],
+    selector: `os-filter-menu`,
+    templateUrl: `./filter-menu.component.html`,
+    styleUrls: [`./filter-menu.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
 export class FilterMenuComponent implements OnInit, OnDestroy {
@@ -62,12 +61,12 @@ export class FilterMenuComponent implements OnInit, OnDestroy {
      * @param event
      */
     public checkKeyEvent(event: KeyboardEvent): void {
-        if (event.key === 'Escape') {
+        if (event.key === `Escape`) {
             this.dismissed.next(true);
         }
     }
 
     public isFilter(option: OsFilterOption): boolean {
-        return typeof option === 'string' ? false : true;
+        return typeof option === `string` ? false : true;
     }
 }

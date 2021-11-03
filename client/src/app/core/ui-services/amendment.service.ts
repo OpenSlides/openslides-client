@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
-
-import { ActionService } from '../core-services/action.service';
-import { ActiveMeetingIdService } from '../core-services/active-meeting-id.service';
 import { AmendmentAction } from 'app/core/actions/amendment-action';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { createAgendaItem } from 'app/shared/utils/create-agenda-item';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
+
+import { ActionService } from '../core-services/action.service';
+import { ActiveMeetingIdService } from '../core-services/active-meeting-id.service';
 import { MotionRepositoryService } from '../repositories/motions/motion-repository.service';
 import { RepositoryServiceCollector } from '../repositories/repository-service-collector';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AmendmentService {
     private get activeMeetingIdService(): ActiveMeetingIdService {

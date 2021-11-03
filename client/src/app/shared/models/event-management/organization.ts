@@ -1,4 +1,5 @@
 import { Id } from 'app/core/definitions/key-types';
+
 import { BaseModel } from '../base/base-model';
 
 export interface OrganizationSetting {
@@ -16,7 +17,7 @@ export interface OrganizationSetting {
 }
 
 export class Organization extends BaseModel<Organization> {
-    public static COLLECTION = 'organization';
+    public static COLLECTION = `organization`;
 
     public id: Id;
     public name: string;

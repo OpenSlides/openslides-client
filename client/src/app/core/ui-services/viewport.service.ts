@@ -1,6 +1,5 @@
 import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
 import { Injectable } from '@angular/core';
-
 import { BehaviorSubject } from 'rxjs';
 
 /**
@@ -22,7 +21,7 @@ import { BehaviorSubject } from 'rxjs';
  * ```
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ViewportService {
     /**
@@ -57,7 +56,7 @@ export class ViewportService {
      */
     public checkForChange(): void {
         this.breakpointObserver
-            .observe([Breakpoints.Handset, '(min-width: 600px) and (max-width: 899.99px)'])
+            .observe([Breakpoints.Handset, `(min-width: 600px) and (max-width: 899.99px)`])
             .subscribe((state: BreakpointState) => {
                 this._isMobileSubject.next(state.matches);
             });

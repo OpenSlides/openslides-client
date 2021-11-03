@@ -1,26 +1,26 @@
 import { Component } from '@angular/core';
-
-import { modifyAgendaItemNumber } from '../agenda_item_number';
 import { CollectionMapperService } from 'app/core/core-services/collection-mapper.service';
 import { collectionFromFqid } from 'app/core/core-services/key-transforms';
 import { SlideData } from 'app/core/ui-services/projector.service';
 import { OptionData, OptionTitle, PollData } from 'app/shared/models/poll/generic-poll';
 import { PollState } from 'app/shared/models/poll/poll-constants';
 import { PollService } from 'app/site/polls/services/poll.service';
-import { BaseSlideComponent } from '../base-slide-component';
-import { PollSlideData, SlideOption } from './poll-slide-data';
 import { of } from 'rxjs';
 
+import { modifyAgendaItemNumber } from '../agenda_item_number';
+import { BaseSlideComponent } from '../base-slide-component';
+import { PollSlideData, SlideOption } from './poll-slide-data';
+
 export enum PollContentObjectType {
-    Standalone = 'standalone',
-    Motion = 'motion',
-    Assignment = 'assignment'
+    Standalone = `standalone`,
+    Motion = `motion`,
+    Assignment = `assignment`
 }
 
 @Component({
-    selector: 'os-poll-slide',
-    templateUrl: './poll-slide.component.html',
-    styleUrls: ['./poll-slide.component.scss']
+    selector: `os-poll-slide`,
+    templateUrl: `./poll-slide.component.html`,
+    styleUrls: [`./poll-slide.component.scss`]
 })
 export class PollSlideComponent extends BaseSlideComponent<PollSlideData> {
     public PollState = PollState;
@@ -41,20 +41,20 @@ export class PollSlideComponent extends BaseSlideComponent<PollSlideData> {
         super.setData(value);
 
         // Convert every decimal(string) to a float
-        ['votesvalid', 'votesinvalid', 'votescast'].forEach((field: keyof PollSlideData) => {
+        [`votesvalid`, `votesinvalid`, `votescast`].forEach((field: keyof PollSlideData) => {
             if (value.data[field] !== undefined) {
                 (value.data[field] as any) = parseFloat(value.data[field] as any);
             }
         });
         if (value.data.global_option) {
-            ['yes', 'no', 'abstain'].forEach((field: keyof SlideOption) => {
+            [`yes`, `no`, `abstain`].forEach((field: keyof SlideOption) => {
                 if (value.data.global_option[field] !== undefined) {
                     (value.data.global_option[field] as any) = parseFloat(value.data.global_option[field] as any);
                 }
             });
         }
         value.data.options.forEach(option => {
-            ['yes', 'no', 'abstain'].forEach((field: keyof SlideOption) => {
+            [`yes`, `no`, `abstain`].forEach((field: keyof SlideOption) => {
                 if (option[field] !== undefined) {
                     (option[field] as any) = parseFloat(option[field] as any);
                 }
@@ -107,7 +107,7 @@ export class PollSlideComponent extends BaseSlideComponent<PollSlideData> {
             options_as_observable: of(options),
             global_option: data.global_option
                 ? this.createOptionData(data.global_option)
-                : ({ getOptionTitle: () => ({ title: '' }) } as OptionData)
+                : ({ getOptionTitle: () => ({ title: `` }) } as OptionData)
         };
         return poll;
     }

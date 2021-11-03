@@ -1,10 +1,7 @@
 import { Component, HostListener, Inject, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-
-import { auditTime, debounceTime } from 'rxjs/operators';
-
 import { DataStoreService } from 'app/core/core-services/data-store.service';
 import { StorageService } from 'app/core/core-services/storage.service';
 import { SearchModel, SearchResult, SearchService, TranslatedCollection } from 'app/core/ui-services/search.service';
@@ -12,27 +9,28 @@ import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { Searchable } from 'app/site/base/searchable';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
+import { auditTime, debounceTime } from 'rxjs/operators';
 
 @Component({
-    selector: 'os-super-search',
-    templateUrl: './super-search.component.html',
-    styleUrls: ['./super-search.component.scss']
+    selector: `os-super-search`,
+    templateUrl: `./super-search.component.html`,
+    styleUrls: [`./super-search.component.scss`]
 })
 export class SuperSearchComponent implements OnInit {
     /**
      * The reference to the form-control used for the `rounded-input.component`.
      */
-    public searchForm = new FormControl('');
+    public searchForm = new FormControl(``);
 
     /**
      * The user's input as query: `string`.
      */
-    public searchString = '';
+    public searchString = ``;
 
     /**
      * Variable to hold the verbose name of a specific collection.
      */
-    public searchCollection = '';
+    public searchCollection = ``;
 
     /**
      * Holds the collection of the specific collection.
@@ -96,7 +94,7 @@ export class SuperSearchComponent implements OnInit {
     /**
      * Key to store the query in the local-storage.
      */
-    private storageKey = 'SuperSearchQuery';
+    private storageKey = `SuperSearchQuery`;
 
     /**
      * Constructor
@@ -132,7 +130,7 @@ export class SuperSearchComponent implements OnInit {
         this.translatedCollections = this.searchService.getTranslatedCollections();
 
         this.searchForm.valueChanges.pipe(debounceTime(250)).subscribe((value: string) => {
-            if (value.trim() === '') {
+            if (value.trim() === ``) {
                 this.clearResults();
             } else {
                 this.prepareForSearch(value.trim());
@@ -147,7 +145,7 @@ export class SuperSearchComponent implements OnInit {
      * The main function to search through all collections.
      */
     private search(): void {
-        if (this.searchString !== '' || this.specificCollection) {
+        if (this.searchString !== `` || this.specificCollection) {
             this.searchResults = this.searchService.search(
                 this.searchString,
                 this.specificCollection ? [this.specificCollection] : this.collections,
@@ -192,7 +190,7 @@ export class SuperSearchComponent implements OnInit {
         }
 
         // The rest will be joined to one string.
-        this.searchString = splittedQuery.join(' ');
+        this.searchString = splittedQuery.join(` `);
     }
 
     /**
@@ -205,8 +203,8 @@ export class SuperSearchComponent implements OnInit {
      */
     private splitQuery(query: string): string[] {
         let splittedQuery: string[] = [];
-        if (query.includes(':')) {
-            splittedQuery = query.split(':', 2);
+        if (query.includes(`:`)) {
+            splittedQuery = query.split(`:`, 2);
             splittedQuery.push(
                 // Get the second part of the query and split it into single words.
                 ...splittedQuery.pop().trim().split(/\s/g)
@@ -231,7 +229,7 @@ export class SuperSearchComponent implements OnInit {
             // characters (useful for splitted words in the query).
             // This will look, if the user searches in a specific collection.
             // Flag 'i' tells, that cases are ignored.
-            new RegExp(`\\b${query}\\b`, 'i').test(item.value)
+            new RegExp(`\\b${query}\\b`, `i`).test(item.value)
         );
         return !!nextCollection ? nextCollection.collection : null;
     }
@@ -243,7 +241,7 @@ export class SuperSearchComponent implements OnInit {
      *
      * @returns {boolean} If the given string matches any kind of the test-string.
      */
-    private searchSpecificId(query: string = ''): boolean {
+    private searchSpecificId(query: string = ``): boolean {
         // Looks, if the query matches variations of 'nr.' or 'id'
         // If so, the user searches for a specific id in some collections.
         // Everything not case-sensitive.
@@ -282,10 +280,10 @@ export class SuperSearchComponent implements OnInit {
      * Function to scroll with the current selected model, if the user uses the keyboard to navigate.
      */
     private scrollToSelected(): void {
-        const selectedElement = document.getElementsByClassName('selected')[0];
+        const selectedElement = document.getElementsByClassName(`selected`)[0];
         selectedElement.scrollIntoView({
-            behavior: 'smooth',
-            block: 'center'
+            behavior: `smooth`,
+            block: `center`
         });
     }
 
@@ -296,7 +294,7 @@ export class SuperSearchComponent implements OnInit {
      */
     public setCollection(collectionName: string): void {
         this.searchCollection =
-            this.searchCollection.toLowerCase() === collectionName.toLowerCase() ? '' : collectionName;
+            this.searchCollection.toLowerCase() === collectionName.toLowerCase() ? `` : collectionName;
         this.setSearch();
     }
 
@@ -304,7 +302,7 @@ export class SuperSearchComponent implements OnInit {
      * This function sets the string for id or clears the variable, if already existing.
      */
     public setSearchStringForId(): void {
-        this.searchStringForId = !!this.searchStringForId ? null : 'id';
+        this.searchStringForId = !!this.searchStringForId ? null : `id`;
         this.setSearch();
     }
 
@@ -313,7 +311,7 @@ export class SuperSearchComponent implements OnInit {
      */
     private setSearch(): void {
         this.searchForm.setValue(
-            [this.searchCollection, this.searchStringForId].map(value => (value ? value + ': ' : '')).join('') +
+            [this.searchCollection, this.searchStringForId].map(value => (value ? value + `: ` : ``)).join(``) +
                 this.searchString
         );
     }
@@ -336,8 +334,8 @@ export class SuperSearchComponent implements OnInit {
      * @param model The model, the user selected.
      */
     public viewResult(model: BaseViewModel & Searchable): void {
-        if (model.collection === 'mediafiles/mediafile' && !(<ViewMediafile>model).is_directory) {
-            window.open(model.getDetailStateURL(), '_blank');
+        if (model.collection === `mediafiles/mediafile` && !(<ViewMediafile>model).is_directory) {
+            window.open(model.getDetailStateURL(), `_blank`);
         } else {
             this.router.navigate([model.getDetailStateURL()]);
         }
@@ -359,9 +357,9 @@ export class SuperSearchComponent implements OnInit {
     private clearResults(): void {
         this.searchResults = [];
         this.selectedModel = null;
-        this.searchCollection = '';
+        this.searchCollection = ``;
         this.specificCollection = null;
-        this.searchString = '';
+        this.searchString = ``;
         this.searchStringForId = null;
         this.specificId = null;
         this.saveQueryToStorage(null);
@@ -393,23 +391,23 @@ export class SuperSearchComponent implements OnInit {
      *
      * @param event KeyboardEvent to listen to keyboard-inputs.
      */
-    @HostListener('document:keydown', ['$event']) public onKeyNavigation(event: KeyboardEvent): void {
-        if (event.ctrlKey && event.key === 'f') {
+    @HostListener(`document:keydown`, [`$event`]) public onKeyNavigation(event: KeyboardEvent): void {
+        if (event.ctrlKey && event.key === `f`) {
             event.preventDefault();
             event.stopPropagation();
         }
         if (this.selectedModel) {
-            if (event.key === 'Enter') {
+            if (event.key === `Enter`) {
                 this.viewResult(this.selectedModel);
             }
-            if (event.key === 'ArrowUp') {
+            if (event.key === `ArrowUp`) {
                 this.selectNextResult(true);
             }
-            if (event.key === 'ArrowDown') {
+            if (event.key === `ArrowDown`) {
                 this.selectNextResult(false);
             }
         }
-        if (event.altKey && event.shiftKey && event.key === 'V') {
+        if (event.altKey && event.shiftKey && event.key === `V`) {
             this.showPreview = !this.showPreview;
         }
     }

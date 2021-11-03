@@ -48,10 +48,10 @@ export class ViewAgendaItem extends BaseProjectableViewModel<AgendaItem> {
      */
     public get verboseType(): string {
         if (!this.type) {
-            return '';
+            return ``;
         }
         const type = ItemTypeChoices.find(choice => choice.key === this.type);
-        return type ? type.name : '';
+        return type ? type.name : ``;
     }
 
     public getProjectorTitle = (projection: Projection) => {
@@ -64,7 +64,7 @@ export class ViewAgendaItem extends BaseProjectableViewModel<AgendaItem> {
             return null;
         }
         if (!isProjectable(this.content_object)) {
-            throw new Error('Content object must be projectable');
+            throw new Error(`Content object must be projectable`);
         }
         return this.content_object.getProjectionBuildDescriptor(meetingSettingsService);
     }
@@ -79,10 +79,10 @@ export class ViewAgendaItem extends BaseProjectableViewModel<AgendaItem> {
      */
     public get verboseCsvType(): string {
         if (!this.type) {
-            return '';
+            return ``;
         }
         const type = ItemTypeChoices.find(choice => choice.key === this.type);
-        return type ? type.csvName : '';
+        return type ? type.csvName : ``;
     }
 }
 interface IAgendaItemRelations {

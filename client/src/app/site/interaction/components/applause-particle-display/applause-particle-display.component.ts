@@ -1,21 +1,21 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-
-import { Subject } from 'rxjs';
-import { auditTime } from 'rxjs/operators';
-import { Container } from 'tsparticles';
-
+import { TranslateService } from '@ngx-translate/core';
 import { OpenSlidesStatusService } from 'app/core/core-services/openslides-status.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { ElementSize } from 'app/shared/directives/resized.directive';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ApplauseService } from 'app/site/interaction/services/applause.service';
+import { Subject } from 'rxjs';
+import { auditTime } from 'rxjs/operators';
+import { Container } from 'tsparticles';
+
 import { particleConfig, particleOptions } from './particle-options';
 
 @Component({
-    selector: 'os-applause-particle-display',
-    templateUrl: './applause-particle-display.component.html',
-    styleUrls: ['./applause-particle-display.component.scss'],
+    selector: `os-applause-particle-display`,
+    templateUrl: `./applause-particle-display.component.html`,
+    styleUrls: [`./applause-particle-display.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
 export class ApplauseParticleDisplayComponent extends BaseComponent {
@@ -35,11 +35,12 @@ export class ApplauseParticleDisplayComponent extends BaseComponent {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         settingService: MeetingSettingsService,
         private applauseService: ApplauseService,
         private osStatus: OpenSlidesStatusService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
         this.subscriptions.push(
             this.resizeSubject.pipe(auditTime(this.resizeAuditTime)).subscribe(size => {
                 this.updateParticleContainer(size);
@@ -47,7 +48,7 @@ export class ApplauseParticleDisplayComponent extends BaseComponent {
             applauseService.applauseLevelObservable.subscribe(applauseLevel => {
                 this.particleLevel = this.calcEmitterLevel(applauseLevel || 0);
             }),
-            settingService.get('applause_particle_image_url').subscribe(particleImage => {
+            settingService.get(`applause_particle_image_url`).subscribe(particleImage => {
                 this.particleImage = particleImage || undefined;
             })
         );
@@ -77,7 +78,7 @@ export class ApplauseParticleDisplayComponent extends BaseComponent {
 
     private setParticleLevel(level: number): void {
         if (this.particleContainer) {
-            const emitters = this.particleContainer.plugins.get('emitters') as any;
+            const emitters = this.particleContainer.plugins.get(`emitters`) as any;
             if (emitters) {
                 emitters.array[0].emitterOptions.rate.quantity = level;
             }

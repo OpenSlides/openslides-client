@@ -1,9 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-
-import { Subscription } from 'rxjs';
-
+import { TranslateService } from '@ngx-translate/core';
 import { AmendmentAction } from 'app/core/actions/amendment-action';
 import { Id } from 'app/core/definitions/key-types';
 import {
@@ -18,14 +16,15 @@ import { PromptService } from 'app/core/ui-services/prompt.service';
 import { AmendmentParagraphs } from 'app/shared/models/motions/motion';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
+import { Subscription } from 'rxjs';
 
 /**
  * The wizard used to create a new amendment based on a motion.
  */
 @Component({
-    selector: 'os-amendment-create-wizard',
-    templateUrl: './amendment-create-wizard.component.html',
-    styleUrls: ['./amendment-create-wizard.component.scss'],
+    selector: `os-amendment-create-wizard`,
+    templateUrl: `./amendment-create-wizard.component.html`,
+    styleUrls: [`./amendment-create-wizard.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
 export class AmendmentCreateWizardComponent extends BaseModelContextComponent implements OnInit {
@@ -72,6 +71,7 @@ export class AmendmentCreateWizardComponent extends BaseModelContextComponent im
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private meetingSettingsService: MeetingSettingsService,
         private formBuilder: FormBuilder,
         private repo: AmendmentService,
@@ -81,7 +81,7 @@ export class AmendmentCreateWizardComponent extends BaseModelContextComponent im
         private router: Router,
         private promptService: PromptService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
         this.createForm();
     }
 
@@ -103,12 +103,12 @@ export class AmendmentCreateWizardComponent extends BaseModelContextComponent im
      */
     public async cancelCreation(): Promise<void> {
         if (this.contentForm.dirty || this.contentForm.value.selectedParagraphs.length > 0) {
-            const title = this.translate.instant('Are you sure you want to discard this amendment?');
+            const title = this.translate.instant(`Are you sure you want to discard this amendment?`);
             if (await this.promptService.open(title)) {
-                this.router.navigate(['..'], { relativeTo: this.route });
+                this.router.navigate([`..`], { relativeTo: this.route });
             }
         } else {
-            this.router.navigate(['..'], { relativeTo: this.route });
+            this.router.navigate([`..`], { relativeTo: this.route });
         }
     }
 
@@ -146,23 +146,23 @@ export class AmendmentCreateWizardComponent extends BaseModelContextComponent im
         const amendmentParagraphs: AmendmentParagraphs = {};
         this.paragraphs.forEach((paragraph: ParagraphToChoose, paraNo: number) => {
             if (this.contentForm.value.selectedParagraphs.find(para => para.paragraphNo === paraNo)) {
-                amendmentParagraphs[paraNo] = this.contentForm.value['text_' + paraNo];
+                amendmentParagraphs[paraNo] = this.contentForm.value[`text_` + paraNo];
             }
         });
         const motionCreate: AmendmentAction.CreateParagraphbasedPayload = {
             ...this.contentForm.value,
-            title: this.translate.instant('Amendment to') + ' ' + this.motion.getNumberOrTitle(),
+            title: this.translate.instant(`Amendment to`) + ` ` + this.motion.getNumberOrTitle(),
             parent_id: this.motion.id,
             category_id: this.motion.category_id,
             tag_ids: this.motion.tag_ids,
             motion_block_id: this.motion.block_id,
             lead_motion_id: this.motion.id,
             amendment_paragraph_$: amendmentParagraphs,
-            workflow_id: this.meetingSettingsService.instant('motions_default_workflow_id')
+            workflow_id: this.meetingSettingsService.instant(`motions_default_workflow_id`)
         };
 
         const response = await this.repo.createParagraphBased(motionCreate);
-        this.router.navigate([this.activeMeetingId, 'motions', response.id]);
+        this.router.navigate([this.activeMeetingId, `motions`, response.id]);
     }
 
     private requestUpdatesForMotion(id: Id): void {
@@ -170,9 +170,9 @@ export class AmendmentCreateWizardComponent extends BaseModelContextComponent im
             {
                 ids: [id],
                 viewModelCtor: ViewMotion,
-                fieldset: 'amendment'
+                fieldset: `amendment`
             },
-            'amendment:parent_motion'
+            `amendment:parent_motion`
         );
     }
 
@@ -215,7 +215,7 @@ export class AmendmentCreateWizardComponent extends BaseModelContextComponent im
     private createForm(): void {
         this.contentForm = this.formBuilder.group({
             selectedParagraphs: [[], Validators.required],
-            reason: ['', this.reasonRequired ? Validators.required : []]
+            reason: [``, this.reasonRequired ? Validators.required : []]
         });
     }
 
@@ -227,10 +227,10 @@ export class AmendmentCreateWizardComponent extends BaseModelContextComponent im
      */
     private setParagraph(paragraph: ParagraphToChoose): void {
         this.contentForm.value.selectedParagraphs.forEach(para => {
-            this.contentForm.removeControl('text_' + para.paragraphNo);
+            this.contentForm.removeControl(`text_` + para.paragraphNo);
         });
         this.contentForm.addControl(
-            'text_' + paragraph.paragraphNo,
+            `text_` + paragraph.paragraphNo,
             new FormControl(paragraph.html, Validators.required)
         );
         this.contentForm.patchValue({
@@ -252,7 +252,7 @@ export class AmendmentCreateWizardComponent extends BaseModelContextComponent im
             this.contentForm.patchValue({
                 selectedParagraphs: newParagraphs
             });
-            this.contentForm.removeControl('text_' + paragraph.paragraphNo);
+            this.contentForm.removeControl(`text_` + paragraph.paragraphNo);
         } else {
             newParagraphs = Object.assign([], oldSelected);
             newParagraphs.push(paragraph);
@@ -261,7 +261,7 @@ export class AmendmentCreateWizardComponent extends BaseModelContextComponent im
             );
 
             this.contentForm.addControl(
-                'text_' + paragraph.paragraphNo,
+                `text_` + paragraph.paragraphNo,
                 new FormControl(paragraph.html, Validators.required)
             );
             this.contentForm.patchValue({
@@ -272,15 +272,15 @@ export class AmendmentCreateWizardComponent extends BaseModelContextComponent im
 
     private getSubscriptionsToSettings(): Subscription[] {
         return [
-            this.meetingSettingsService.get('motions_line_length').subscribe(lineLength => {
+            this.meetingSettingsService.get(`motions_line_length`).subscribe(lineLength => {
                 this.lineLength = lineLength;
                 this.loadMotionByUrl();
             }),
 
-            this.meetingSettingsService.get('motions_reason_required').subscribe(required => {
+            this.meetingSettingsService.get(`motions_reason_required`).subscribe(required => {
                 this.reasonRequired = required;
             }),
-            this.meetingSettingsService.get('motions_amendments_multiple_paragraphs').subscribe(allowed => {
+            this.meetingSettingsService.get(`motions_amendments_multiple_paragraphs`).subscribe(allowed => {
                 this.multipleParagraphsAllowed = allowed;
             })
         ];

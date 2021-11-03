@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-
 import { TranslateService } from '@ngx-translate/core';
-
 import { HtmlToPdfService } from 'app/core/pdf-services/html-to-pdf.service';
 import { AssignmentPhase } from 'app/shared/models/assignments/assignment';
 import { PollMethod } from 'app/shared/models/poll/poll-constants';
@@ -10,14 +8,15 @@ import { ParsePollNumberPipe } from 'app/shared/pipes/parse-poll-number.pipe';
 import { PollKeyVerbosePipe } from 'app/shared/pipes/poll-key-verbose.pipe';
 import { PollPercentBasePipe } from 'app/shared/pipes/poll-percent-base.pipe';
 import { PollTableData, VotingResult } from 'app/site/polls/services/poll.service';
-import { AssignmentPollService } from '../modules/assignment-poll/services/assignment-poll.service';
+
 import { ViewAssignment } from '../models/view-assignment';
+import { AssignmentPollService } from '../modules/assignment-poll/services/assignment-poll.service';
 
 /**
  * Creates a PDF document from a single assignment
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AssignmentPdfService {
     /**
@@ -64,7 +63,7 @@ export class AssignmentPdfService {
     private createTitle(assignment: ViewAssignment): object {
         return {
             text: assignment.title,
-            style: 'title'
+            style: `title`
         };
     }
 
@@ -75,18 +74,18 @@ export class AssignmentPdfService {
      * @returns the preamble part of the pdf document
      */
     private createPreamble(assignment: ViewAssignment): object {
-        const preambleText = `${this.translate.instant('Number of persons to be elected')}: `;
-        const memberNumber = '' + assignment.open_posts;
+        const preambleText = `${this.translate.instant(`Number of persons to be elected`)}: `;
+        const memberNumber = `` + assignment.open_posts;
         const preamble = {
             text: [
                 {
                     text: preambleText,
                     bold: true,
-                    style: 'textItem'
+                    style: `textItem`
                 },
                 {
                     text: memberNumber,
-                    style: 'textItem'
+                    style: `textItem`
                 }
             ]
         };
@@ -103,12 +102,12 @@ export class AssignmentPdfService {
         if (assignment.description) {
             const descriptionDocDef = this.htmlToPdfService.addPlainText(assignment.description);
 
-            const descriptionText = `${this.translate.instant('Description')}: `;
+            const descriptionText = `${this.translate.instant(`Description`)}: `;
             const description = [
                 {
                     text: descriptionText,
                     bold: true,
-                    style: 'textItem'
+                    style: `textItem`
                 },
                 descriptionDocDef
             ];
@@ -126,24 +125,24 @@ export class AssignmentPdfService {
      */
     private createCandidateList(assignment: ViewAssignment): object {
         if (assignment.phase !== AssignmentPhase.Finished) {
-            const candidatesText = `${this.translate.instant('Candidates')}: `;
+            const candidatesText = `${this.translate.instant(`Candidates`)}: `;
             const userList = assignment.candidates.map(candidate => ({
                 text: candidate.user.full_name,
                 margin: [0, 0, 0, 10]
             }));
-            const listType = assignment.number_poll_candidates ? 'ol' : 'ul';
+            const listType = assignment.number_poll_candidates ? `ol` : `ul`;
 
             return {
                 columns: [
                     {
                         text: candidatesText,
                         bold: true,
-                        width: '25%',
-                        style: 'textItem'
+                        width: `25%`,
+                        style: `textItem`
                     },
                     {
                         [listType]: userList,
-                        style: 'textItem'
+                        style: `textItem`
                     }
                 ]
             };
@@ -167,28 +166,28 @@ export class AssignmentPdfService {
                 resultBody.push({
                     text: poll.title,
                     bold: true,
-                    style: 'textItem',
+                    style: `textItem`,
                     margin: [0, 15, 0, 0]
                 });
 
                 pollTableBody.push([
                     {
-                        text: '',
-                        style: 'tableHeader'
+                        text: ``,
+                        style: `tableHeader`
                     },
                     {
-                        text: this.translate.instant('Candidates'),
-                        style: 'tableHeader'
+                        text: this.translate.instant(`Candidates`),
+                        style: `tableHeader`
                     },
                     {
-                        text: this.translate.instant('Votes'),
-                        style: 'tableHeader'
+                        text: this.translate.instant(`Votes`),
+                        style: `tableHeader`
                     }
                 ]);
 
                 const tableData = this.assignmentPollService.generateTableData(poll);
                 for (const [index, pollResult] of tableData.entries()) {
-                    const rank = pollResult.class === 'user' ? index + 1 : '';
+                    const rank = pollResult.class === `user` ? index + 1 : ``;
                     const voteOption = this.translate.instant(this.pollKeyVerbose.transform(pollResult.votingOption));
                     const resultLine = this.getPollResult(pollResult, poll);
                     const tableLine = [
@@ -208,11 +207,11 @@ export class AssignmentPdfService {
 
                 resultBody.push({
                     table: {
-                        widths: ['3%', '61%', '33%'],
+                        widths: [`3%`, `61%`, `33%`],
                         headerRows: 1,
                         body: pollTableBody
                     },
-                    layout: 'switchColorTableLayout'
+                    layout: `switchColorTableLayout`
                 });
             }
         }
@@ -227,9 +226,9 @@ export class AssignmentPdfService {
         const resultList = votingResult.value
             .filter((singleResult: VotingResult) => {
                 if (poll.pollmethod === PollMethod.Y) {
-                    return singleResult.vote !== 'no' && singleResult.vote !== 'abstain';
+                    return singleResult.vote !== `no` && singleResult.vote !== `abstain`;
                 } else if (poll.pollmethod === PollMethod.YN) {
-                    return singleResult.vote !== 'abstain';
+                    return singleResult.vote !== `abstain`;
                 } else {
                     return true;
                 }
@@ -238,10 +237,10 @@ export class AssignmentPdfService {
                 const votingKey = this.translate.instant(this.pollKeyVerbose.transform(singleResult.vote));
                 const resultValue = this.parsePollNumber.transform(singleResult.amount);
                 const resultInPercent = this.pollPercentBase.transform(singleResult.amount, poll);
-                return `${votingKey}${!!votingKey ? ': ' : ''}${resultValue} ${
-                    singleResult.showPercent && resultInPercent ? resultInPercent : ''
+                return `${votingKey}${!!votingKey ? `: ` : ``}${resultValue} ${
+                    singleResult.showPercent && resultInPercent ? resultInPercent : ``
                 }`;
             });
-        return resultList.join('\n');
+        return resultList.join(`\n`);
     }
 }

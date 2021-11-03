@@ -1,38 +1,38 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-
+import { TranslateService } from '@ngx-translate/core';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { ChangePasswordComponent, PasswordForm } from 'app/shared/components/change-password/change-password.component';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
-import { ViewUser } from 'app/site/users/models/view-user';
-import { UserService } from '../../../core/ui-services/user.service';
-import { MeetingRepositoryService } from '../../../core/repositories/management/meeting-repository.service';
-import { ViewMeeting } from 'app/management/models/view-meeting';
 import { ViewGroup } from 'app/site/users/models/view-group';
+import { ViewUser } from 'app/site/users/models/view-user';
+
+import { MeetingRepositoryService } from '../../../core/repositories/management/meeting-repository.service';
+import { UserService } from '../../../core/ui-services/user.service';
 
 interface MenuItem {
     name: string;
 }
 
 enum MenuItems {
-    CHANGE_PASSWORD = 'Change password',
-    SHOW_PROFILE = 'My profile',
-    SHOW_MEETINGS = 'My meetings'
+    CHANGE_PASSWORD = `Change password`,
+    SHOW_PROFILE = `My profile`,
+    SHOW_MEETINGS = `My meetings`
 }
 
 @Component({
-    selector: 'os-account-dialog',
-    templateUrl: './account-dialog.component.html',
-    styleUrls: ['./account-dialog.component.scss']
+    selector: `os-account-dialog`,
+    templateUrl: `./account-dialog.component.html`,
+    styleUrls: [`./account-dialog.component.scss`]
 })
 export class AccountDialogComponent extends BaseModelContextComponent implements OnInit {
-    @ViewChild('changePasswordComponent', { static: false })
+    @ViewChild(`changePasswordComponent`, { static: false })
     public changePasswordComponent: ChangePasswordComponent;
 
     public readonly menuItems: MenuItem[] = [
@@ -64,14 +64,15 @@ export class AccountDialogComponent extends BaseModelContextComponent implements
     private _self: ViewUser;
 
     public constructor(
-        serviceCollector: ComponentServiceCollector,
+        componentServiceCollector: ComponentServiceCollector,
+        translate: TranslateService,
         public dialogRef: MatDialogRef<AccountDialogComponent>,
         private operator: OperatorService,
         private userRepo: UserRepositoryService,
         private userService: UserService,
         private meetingRepo: MeetingRepositoryService
     ) {
-        super(serviceCollector);
+        super(componentServiceCollector, translate);
     }
 
     public ngOnInit(): void {
@@ -114,8 +115,8 @@ export class AccountDialogComponent extends BaseModelContextComponent implements
         return {
             viewModelCtor: ViewUser,
             ids: [this.operator.operatorId],
-            fieldset: 'orgaEdit',
-            follow: [{ idField: 'group_$_ids', fieldset: 'title', follow: [{ idField: 'meeting_id' }] }]
+            fieldset: `orgaEdit`,
+            follow: [{ idField: `group_$_ids`, fieldset: `title`, follow: [{ idField: `meeting_id` }] }]
         };
     }
 }

@@ -1,4 +1,5 @@
 import { Id } from 'app/core/definitions/key-types';
+
 import { BaseModel } from '../base/base-model';
 import { HasMeetingId } from '../base/has-meeting-id';
 
@@ -8,7 +9,7 @@ import { HasMeetingId } from '../base/has-meeting-id';
  * @ignore
  */
 export class MotionSubmitter extends BaseModel<MotionSubmitter> {
-    public static COLLECTION = 'motion_submitter';
+    public static COLLECTION = `motion_submitter`;
 
     public id: Id;
     public weight: number;

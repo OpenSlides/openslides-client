@@ -1,5 +1,6 @@
 import { Fqid } from 'app/core/definitions/key-types';
 import { Projectiondefault } from 'app/shared/models/projector/projector';
+
 import { SlideOptions } from './slide-options';
 
 export function isProjectionBuildDescriptor(obj: any): obj is ProjectionBuildDescriptor {

@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
-
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
@@ -14,14 +13,14 @@ import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.se
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
-import { MotionPollDialogService } from 'app/site/motions/services/motion-poll-dialog.service';
 import { MotionPollService } from 'app/site/motions/services/motion-poll.service';
+import { MotionPollDialogService } from 'app/site/motions/services/motion-poll-dialog.service';
 import { BasePollDetailComponentDirective } from 'app/site/polls/components/base-poll-detail.component';
 
 @Component({
-    selector: 'os-motion-poll-detail',
-    templateUrl: './motion-poll-detail.component.html',
-    styleUrls: ['./motion-poll-detail.component.scss'],
+    selector: `os-motion-poll-detail`,
+    templateUrl: `./motion-poll-detail.component.html`,
+    styleUrls: [`./motion-poll-detail.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -32,18 +31,18 @@ export class MotionPollDetailComponent extends BasePollDetailComponentDirective<
     public motion: ViewMotion;
     public columnDefinitionSingleVotesTable: PblColumnDefinition[] = [
         {
-            prop: 'user',
-            width: '50%',
-            label: 'Participant'
+            prop: `user`,
+            width: `50%`,
+            label: `Participant`
         },
         {
-            prop: 'vote',
-            width: '50%',
-            label: 'Vote'
+            prop: `vote`,
+            width: `50%`,
+            label: `Vote`
         }
     ];
 
-    public filterPropsSingleVotesTable = ['user.getFullName', 'valueVerbose'];
+    public filterPropsSingleVotesTable = [`user.getFullName`, `valueVerbose`];
 
     public get showResults(): boolean {
         return this.hasPerms() || this.poll.isPublished;
@@ -51,6 +50,7 @@ export class MotionPollDetailComponent extends BasePollDetailComponentDirective<
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         repo: PollRepositoryService,
         route: ActivatedRoute,
         groupRepo: GroupRepositoryService,
@@ -66,6 +66,7 @@ export class MotionPollDetailComponent extends BasePollDetailComponentDirective<
     ) {
         super(
             componentServiceCollector,
+            translate,
             repo,
             route,
             groupRepo,

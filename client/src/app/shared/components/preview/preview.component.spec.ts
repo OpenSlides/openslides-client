@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { PreviewComponent } from './preview.component';
 
-describe('PreviewComponent', () => {
+describe(`PreviewComponent`, () => {
     let component: PreviewComponent;
     let fixture: ComponentFixture<PreviewComponent>;
 
@@ -22,7 +21,7 @@ describe('PreviewComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

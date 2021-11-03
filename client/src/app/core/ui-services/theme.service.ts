@@ -1,32 +1,31 @@
 import { Injectable } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
-
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-
-import { OrganizationSettingsService } from './organization-settings.service';
-import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { ColorService, ColorDefinition } from './color.service';
-import { HtmlColor } from '../definitions/key-types';
 import { Id } from 'app/core/definitions/key-types';
-import { ThemeRepositoryService } from '../repositories/themes/theme-repository.service';
-import { StorageService } from '../core-services/storage.service';
-import { ViewTheme } from '../../management/models/view-theme';
 import { ThemeRequiredValues } from 'app/shared/models/theme/theme';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
-const DARK_MODE_STORAGE_KEY = 'theme_dark_mode';
-const DARK_MODE_CSS_CLASS = 'openslides-dark-theme';
-const LIGHT_MODE_CSS_CLASS = 'openslides-light-theme';
+import { ViewTheme } from '../../management/models/view-theme';
+import { StorageService } from '../core-services/storage.service';
+import { HtmlColor } from '../definitions/key-types';
+import { ThemeRepositoryService } from '../repositories/themes/theme-repository.service';
+import { ColorDefinition, ColorService } from './color.service';
+import { OrganizationSettingsService } from './organization-settings.service';
+
+const DARK_MODE_STORAGE_KEY = `theme_dark_mode`;
+const DARK_MODE_CSS_CLASS = `openslides-dark-theme`;
+const LIGHT_MODE_CSS_CLASS = `openslides-light-theme`;
 
 /**
  * Service to set the theme for OpenSlides.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ThemeService {
-    public static readonly DEFAULT_PRIMARY_COLOR = '#317796';
-    public static readonly DEFAULT_ACCENT_COLOR = '#2196f3';
-    public static readonly DEFAULT_WARN_COLOR = '#f06400';
+    public static readonly DEFAULT_PRIMARY_COLOR = `#317796`;
+    public static readonly DEFAULT_ACCENT_COLOR = `#2196f3`;
+    public static readonly DEFAULT_WARN_COLOR = `#f06400`;
 
     public get isDarkModeObservable(): Observable<boolean> {
         return this._isDarkModeSubject.asObservable();
@@ -68,7 +67,7 @@ export class ThemeService {
         private themeRepo: ThemeRepositoryService,
         private storage: StorageService
     ) {
-        orgaSettings.get('theme_id').subscribe(themeId => {
+        orgaSettings.get(`theme_id`).subscribe(themeId => {
             if (themeId) {
                 this.changeThemeById(themeId);
             }
@@ -79,13 +78,13 @@ export class ThemeService {
     }
 
     public getDefaultColorByPalette(palette: ThemePalette): HtmlColor {
-        if (palette === 'primary') {
+        if (palette === `primary`) {
             return ThemeService.DEFAULT_PRIMARY_COLOR;
         }
-        if (palette === 'accent') {
+        if (palette === `accent`) {
             return ThemeService.DEFAULT_ACCENT_COLOR;
         }
-        if (palette === 'warn') {
+        if (palette === `warn`) {
             return ThemeService.DEFAULT_WARN_COLOR;
         }
     }
@@ -108,16 +107,16 @@ export class ThemeService {
     }
 
     private setInitialTheme(useDarkMode?: boolean): void {
-        if (typeof useDarkMode === 'boolean') {
+        if (typeof useDarkMode === `boolean`) {
             this.isDarkMode = useDarkMode;
         } else {
-            this.isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            this.isDarkMode = window.matchMedia && window.matchMedia(`(prefers-color-scheme: dark)`).matches;
         }
     }
 
     private changeThemeClass(nextThemeCssClass: string): void {
-        const classList = document.getElementsByTagName('body')[0].classList;
-        const toRemove = Array.from(classList).filter(className => className.includes('-theme'));
+        const classList = document.getElementsByTagName(`body`)[0].classList;
+        const toRemove = Array.from(classList).filter(className => className.includes(`-theme`));
         if (toRemove.length) {
             classList.remove(...toRemove);
         }
@@ -132,9 +131,9 @@ export class ThemeService {
         const primaryColorPalette = this.colorService.generateColorPaletteByHex(primary);
         const accentColorPalette = this.colorService.generateColorPaletteByHex(accent);
         const warnColorPalette = this.colorService.generateColorPaletteByHex(warn);
-        this.setThemeByColorPalette(primaryColorPalette, 'primary');
-        this.setThemeByColorPalette(accentColorPalette, 'accent');
-        this.setThemeByColorPalette(warnColorPalette, 'warn');
+        this.setThemeByColorPalette(primaryColorPalette, `primary`);
+        this.setThemeByColorPalette(accentColorPalette, `accent`);
+        this.setThemeByColorPalette(warnColorPalette, `warn`);
     }
 
     private setThemeByColorPalette(colorPalette: ColorDefinition[], usage: ThemePalette): void {
@@ -147,7 +146,7 @@ export class ThemeService {
         const key = `--theme-${usage}-${color.name}`;
         const value = color.hex;
         const keyContrast = `--theme-${usage}-contrast-${color.name}`;
-        const valueContrast = color.darkContrast ? 'rgba(black, 0.87)' : 'white';
+        const valueContrast = color.darkContrast ? `rgba(black, 0.87)` : `white`;
         document.documentElement.style.setProperty(key, value);
         document.documentElement.style.setProperty(keyContrast, valueContrast);
     }

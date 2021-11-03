@@ -1,22 +1,23 @@
 import { Fqid, Id } from 'app/core/definitions/key-types';
+
 import { BaseModel } from '../base/base-model';
 import { HasMeetingId } from '../base/has-meeting-id';
 import { HasProjectionIds } from '../base/has-projectable-ids';
 import { HasTagIds } from '../base/has-tag-ids';
 
 export enum AgendaItemType {
-    common = 'common',
-    internal = 'internal',
-    hidden = 'hidden'
+    common = `common`,
+    internal = `internal`,
+    hidden = `hidden`
 }
 
 /**
  * Determine type for agenda items
  */
 export const ItemTypeChoices = [
-    { key: AgendaItemType.common, name: 'public', csvName: '' },
-    { key: AgendaItemType.internal, name: 'internal', csvName: 'internal' },
-    { key: AgendaItemType.hidden, name: 'hidden', csvName: 'hidden' }
+    { key: AgendaItemType.common, name: `public`, csvName: `` },
+    { key: AgendaItemType.internal, name: `internal`, csvName: `internal` },
+    { key: AgendaItemType.hidden, name: `hidden`, csvName: `hidden` }
 ];
 
 /**
@@ -24,7 +25,7 @@ export const ItemTypeChoices = [
  * @ignore
  */
 export class AgendaItem extends BaseModel<AgendaItem> {
-    public static COLLECTION = 'agenda_item';
+    public static COLLECTION = `agenda_item`;
 
     public id: Id;
     public item_number: string;

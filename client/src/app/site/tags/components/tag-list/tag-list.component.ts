@@ -1,9 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-
+import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
-
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
@@ -13,24 +12,25 @@ import { ViewMeeting } from 'app/management/models/view-meeting';
 import { Tag } from 'app/shared/models/tag/tag';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
+
 import { ViewTag } from '../../models/view-tag';
 
 /**
  * Listview for the complete list of available Tags
  */
 @Component({
-    selector: 'os-tag-list',
-    templateUrl: './tag-list.component.html',
-    styleUrls: ['./tag-list.component.scss']
+    selector: `os-tag-list`,
+    templateUrl: `./tag-list.component.html`,
+    styleUrls: [`./tag-list.component.scss`]
 })
 export class TagListComponent extends BaseListViewComponent<ViewTag> implements OnInit {
-    @ViewChild('tagDialog', { static: true })
+    @ViewChild(`tagDialog`, { static: true })
     private tagDialog: TemplateRef<string>;
 
     private dialogRef: MatDialogRef<any>;
 
     public tagForm: FormGroup = this.formBuilder.group({
-        name: ['', [Validators.required]]
+        name: [``, [Validators.required]]
     });
 
     /**
@@ -43,21 +43,22 @@ export class TagListComponent extends BaseListViewComponent<ViewTag> implements 
      */
     public tableColumnDefinition: PblColumnDefinition[] = [
         {
-            prop: 'name',
-            width: '100%'
+            prop: `name`,
+            width: `100%`
         },
         {
-            prop: 'edit',
+            prop: `edit`,
             width: this.singleButtonWidth
         },
         {
-            prop: 'delete',
+            prop: `delete`,
             width: this.singleButtonWidth
         }
     ];
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         public repo: TagRepositoryService,
         private dialog: MatDialog,
         private formBuilder: FormBuilder,
@@ -65,7 +66,7 @@ export class TagListComponent extends BaseListViewComponent<ViewTag> implements 
         private cd: ChangeDetectorRef,
         private activeMeetingIdService: ActiveMeetingIdService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     /**
@@ -74,7 +75,7 @@ export class TagListComponent extends BaseListViewComponent<ViewTag> implements 
      */
     public ngOnInit(): void {
         super.ngOnInit();
-        super.setTitle('Tags');
+        super.setTitle(`Tags`);
     }
 
     protected getModelRequest(): SimplifiedModelRequest {
@@ -83,7 +84,7 @@ export class TagListComponent extends BaseListViewComponent<ViewTag> implements 
             ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
-                    idField: 'tag_ids'
+                    idField: `tag_ids`
                 }
             ],
             fieldset: []
@@ -97,7 +98,7 @@ export class TagListComponent extends BaseListViewComponent<ViewTag> implements 
     public openTagDialog(tag?: ViewTag): void {
         this.currentTag = tag;
         this.tagForm.reset();
-        this.tagForm.get('name').setValue(this.currentTag ? this.currentTag.name : '');
+        this.tagForm.get(`name`).setValue(this.currentTag ? this.currentTag.name : ``);
         this.dialogRef = this.dialog.open(this.tagDialog, infoDialogSettings);
         this.dialogRef.afterClosed().subscribe(res => {
             if (res) {
@@ -110,7 +111,7 @@ export class TagListComponent extends BaseListViewComponent<ViewTag> implements 
      * Deletes the given Tag after a successful confirmation.
      */
     public async onDeleteButton(tag: ViewTag): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to delete this tag?');
+        const title = this.translate.instant(`Are you sure you want to delete this tag?`);
         const content = tag.name;
         if (await this.promptService.open(title, content)) {
             this.deleteTag(tag);
@@ -124,11 +125,11 @@ export class TagListComponent extends BaseListViewComponent<ViewTag> implements 
      * @param event has the code
      */
     public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === 'Enter' && event.shiftKey) {
+        if (event.key === `Enter` && event.shiftKey) {
             this.save();
             this.dialogRef.close();
         }
-        if (event.key === 'Escape') {
+        if (event.key === `Escape`) {
             this.dialogRef.close();
         }
     }

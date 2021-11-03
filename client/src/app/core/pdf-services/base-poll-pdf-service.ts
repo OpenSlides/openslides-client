@@ -1,7 +1,8 @@
-import { ActiveMeetingIdService } from '../core-services/active-meeting-id.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { BallotPaperSelection } from 'app/shared/models/event-management/meeting';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
+
+import { ActiveMeetingIdService } from '../core-services/active-meeting-id.service';
 import { MediaManageService } from '../ui-services/media-manage.service';
 import { MeetingSettingsService } from '../ui-services/meeting-settings.service';
 
@@ -47,8 +48,8 @@ export abstract class PollPdfService {
         protected activeMeetingIdService: ActiveMeetingIdService,
         protected mediaManageService: MediaManageService
     ) {
-        this.meetingSettingsService.get('name').subscribe(name => (this.eventName = name));
-        this.mediaManageService.getLogoUrlObservable('pdf_ballot_paper').subscribe(url => (this.logoUrl = url));
+        this.meetingSettingsService.get(`name`).subscribe(name => (this.eventName = name));
+        this.mediaManageService.getLogoUrlObservable(`pdf_ballot_paper`).subscribe(url => (this.logoUrl = url));
     }
 
     /**
@@ -58,10 +59,10 @@ export abstract class PollPdfService {
      */
     protected getBallotCount(): number {
         switch (this.ballotCountSelection) {
-            case 'NUMBER_OF_ALL_PARTICIPANTS':
+            case `NUMBER_OF_ALL_PARTICIPANTS`:
                 return this.userRepo.getViewModelList().length;
-            case 'NUMBER_OF_DELEGATES':
-                throw new Error('TODO');
+            case `NUMBER_OF_DELEGATES`:
+                throw new Error(`TODO`);
             // TODO: the hard-coded 2 is not correct.
             /*return this.userRepo
                     .getViewModelList()
@@ -70,10 +71,10 @@ export abstract class PollPdfService {
                             user.group_ids(this.activeMeetingIdService.meetingId) &&
                             user.group_ids(this.activeMeetingIdService.meetingId).includes(2)
                     ).length;*/
-            case 'CUSTOM_NUMBER':
+            case `CUSTOM_NUMBER`:
                 return this.ballotCustomCount;
             default:
-                throw new Error('Amount of ballots cannot be computed');
+                throw new Error(`Amount of ballots cannot be computed`);
         }
     }
 
@@ -92,7 +93,7 @@ export abstract class PollPdfService {
                     canvas: this.drawCircle(BallotCircleDimensions.yDistance, BallotCircleDimensions.size)
                 },
                 {
-                    width: 'auto',
+                    width: `auto`,
                     text: decision
                 }
             ]
@@ -109,10 +110,10 @@ export abstract class PollPdfService {
     private drawCircle(y: number, size: number): object[] {
         return [
             {
-                type: 'ellipse',
+                type: `ellipse`,
                 x: 0,
                 y,
-                lineColor: 'black',
+                lineColor: `black`,
                 r1: size,
                 r2: size
             }
@@ -148,9 +149,9 @@ export abstract class PollPdfService {
             content.push({
                 table: {
                     headerRows: 1,
-                    widths: ['*', '*'],
+                    widths: [`*`, `*`],
                     body,
-                    pageBreak: 'after'
+                    pageBreak: `after`
                 },
                 rowsperpage: rowsPerPage
             });
@@ -162,12 +163,12 @@ export abstract class PollPdfService {
                 partialpageEntries -= 2;
             }
             if (partialpageEntries === 1) {
-                partialPageBody.push([this.createBallot(data), '']);
+                partialPageBody.push([this.createBallot(data), ``]);
             }
             content.push({
                 table: {
                     headerRows: 1,
-                    widths: ['50%', '50%'],
+                    widths: [`50%`, `50%`],
                     body: partialPageBody
                 },
                 rowsperpage: rowsPerPage
@@ -186,20 +187,20 @@ export abstract class PollPdfService {
         columns.push({
             text: this.eventName,
             fontSize: 8,
-            alignment: 'left',
-            width: '60%'
+            alignment: `left`,
+            width: `60%`
         });
 
         if (this.logoUrl) {
             columns.push({
                 image: this.logoUrl,
                 fit: [90, 25],
-                alignment: 'right',
-                width: '40%'
+                alignment: `right`,
+                width: `40%`
             });
         }
         return {
-            color: '#555',
+            color: `#555`,
             fontSize: 10,
             margin: [30, 10, 10, -10], // [left, top, right, bottom]
             columns,
@@ -216,7 +217,7 @@ export abstract class PollPdfService {
     protected getTitle(title: string): object {
         return {
             text: title,
-            style: 'title'
+            style: `title`
         };
     }
 
@@ -229,7 +230,7 @@ export abstract class PollPdfService {
     protected getSubtitle(subtitle: string): object {
         return {
             text: subtitle,
-            style: 'description'
+            style: `description`
         };
     }
 }

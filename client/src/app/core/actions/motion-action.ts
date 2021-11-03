@@ -1,20 +1,21 @@
-import { AgendaItemCreationPayload } from './common/agenda-item-creation-payload';
 import { HasMeetingId } from 'app/shared/models/base/has-meeting-id';
 import { Identifiable } from 'app/shared/models/base/identifiable';
-import { BaseSortPayload } from './common/base-sort-payload';
+
 import { Id, UnsafeHtml } from '../definitions/key-types';
+import { AgendaItemCreationPayload } from './common/agenda-item-creation-payload';
+import { BaseSortPayload } from './common/base-sort-payload';
 
 export namespace MotionAction {
-    export const CREATE = 'motion.create';
-    export const UPDATE = 'motion.update';
-    export const DELETE = 'motion.delete';
-    export const CREATE_FORWARDED = 'motion.create_forwarded';
-    export const SORT = 'motion.sort';
-    export const SET_STATE = 'motion.set_state';
-    export const RESET_STATE = 'motion.reset_state';
-    export const SET_RECOMMENDATION = 'motion.set_recommendation';
-    export const RESET_RECOMMENDATION = 'motion.reset_recommendation';
-    export const FOLLOW_RECOMMENDATION = 'motion.follow_recommendation';
+    export const CREATE = `motion.create`;
+    export const UPDATE = `motion.update`;
+    export const DELETE = `motion.delete`;
+    export const CREATE_FORWARDED = `motion.create_forwarded`;
+    export const SORT = `motion.sort`;
+    export const SET_STATE = `motion.set_state`;
+    export const RESET_STATE = `motion.reset_state`;
+    export const SET_RECOMMENDATION = `motion.set_recommendation`;
+    export const RESET_RECOMMENDATION = `motion.reset_recommendation`;
+    export const FOLLOW_RECOMMENDATION = `motion.follow_recommendation`;
 
     interface OptionalPayload {
         number?: string;

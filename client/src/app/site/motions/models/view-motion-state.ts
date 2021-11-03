@@ -1,5 +1,6 @@
 import { HasMeeting } from 'app/management/models/view-meeting';
 import { MotionState } from 'app/shared/models/motions/motion-state';
+
 import { BaseViewModel } from '../../base/base-view-model';
 import { ViewMotion } from './view-motion';
 import { ViewMotionWorkflow } from './view-motion-workflow';

@@ -1,5 +1,5 @@
-import { BaseViewModel } from '../../site/base/base-view-model';
 import { Theme } from '../../shared/models/theme/theme';
+import { BaseViewModel } from '../../site/base/base-view-model';
 import { ViewOrganization } from './view-organization';
 
 interface ThemeRelations {

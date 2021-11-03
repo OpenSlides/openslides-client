@@ -9,13 +9,13 @@ export interface CMLMapping {
 }
 
 export enum CML {
-    can_manage = 'can_manage'
+    can_manage = `can_manage`
 }
 
 export enum OML {
-    superadmin = 'superadmin',
-    can_manage_organization = 'can_manage_organization',
-    can_manage_users = 'can_manage_users'
+    superadmin = `superadmin`,
+    can_manage_organization = `can_manage_organization`,
+    can_manage_users = `can_manage_users`
 }
 
 export const omlNameMapping: OMLMapping = {
@@ -29,13 +29,13 @@ export const cmlNameMapping = {
 };
 
 export const cmlVerbose = {
-    can_manage: 'Can manage'
+    can_manage: `Can manage`
 };
 
 export const omlVerbose = {
-    superadmin: 'Superadmin',
-    can_manage_organization: 'Administrator',
-    can_manage_users: 'Account management'
+    superadmin: `Superadmin`,
+    can_manage_organization: `Administrator`,
+    can_manage_users: `Account management`
 };
 
 export function getOmlVerboseName(omlKey: keyof OMLMapping): string {

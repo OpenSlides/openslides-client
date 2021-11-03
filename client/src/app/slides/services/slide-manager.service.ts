@@ -88,7 +88,7 @@ export class SlideManager {
             dynamicComponentType = moduleRef.injector.get(SlideToken.token);
         } catch (e) {
             console.error(
-                'The module for Slide "' + slideName + '" is not configured right: Cannot file the slide token.'
+                `The module for Slide "` + slideName + `" is not configured right: Cannot file the slide token.`
             );
             throw e;
         }

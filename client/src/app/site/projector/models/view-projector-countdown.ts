@@ -1,5 +1,4 @@
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { Projectiondefault } from 'app/shared/models/projector/projector';
 import { ProjectorCountdown } from 'app/shared/models/projector/projector-countdown';
@@ -20,19 +19,19 @@ export class ViewProjectorCountdown extends BaseProjectableViewModel<ProjectorCo
             stable: true,
             slideOptions: [
                 {
-                    key: 'fullscreen',
-                    displayName: _('Fullscreen'),
+                    key: `fullscreen`,
+                    displayName: _(`Fullscreen`),
                     default: false
                 },
                 {
-                    key: 'displayType',
-                    displayName: _('Display type'),
+                    key: `displayType`,
+                    displayName: _(`Display type`),
                     choices: [
-                        { value: 'onlyCountdown', displayName: _('Only countdown') },
-                        { value: 'countdownAndTimeIndicator', displayName: _('Countdown and traffic light') },
-                        { value: 'onlyTimeIndicator', displayName: _('Only traffic light') }
+                        { value: `onlyCountdown`, displayName: _(`Only countdown`) },
+                        { value: `countdownAndTimeIndicator`, displayName: _(`Countdown and traffic light`) },
+                        { value: `onlyTimeIndicator`, displayName: _(`Only traffic light`) }
                     ],
-                    default: 'onlyCountdown'
+                    default: `onlyCountdown`
                 }
             ],
             projectionDefault: this.getProjectiondefault(),

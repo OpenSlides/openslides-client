@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-
 import { MotionCommentSectionAction } from 'app/core/actions/motion-comment-section-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { MotionCommentSection } from 'app/shared/models/motions/motion-comment-section';
 import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-comment-section';
+
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
@@ -19,7 +19,7 @@ import { RepositoryServiceCollector } from '../repository-service-collector';
  * them to the Server.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MotionCommentSectionRepositoryService extends BaseRepositoryWithActiveMeeting<
     ViewMotionCommentSection,
@@ -38,8 +38,8 @@ export class MotionCommentSectionRepositoryService extends BaseRepositoryWithAct
     }
 
     public getFieldsets(): Fieldsets<ViewMotionCommentSection> {
-        const listFields: (keyof ViewMotionCommentSection)[] = ['name', 'weight'];
-        const commentFields: (keyof ViewMotionCommentSection)[] = ['name', 'read_group_ids', 'write_group_ids'];
+        const listFields: (keyof ViewMotionCommentSection)[] = [`name`, `weight`];
+        const commentFields: (keyof ViewMotionCommentSection)[] = [`name`, `read_group_ids`, `write_group_ids`];
         return {
             [DEFAULT_FIELDSET]: listFields,
             comment: commentFields
@@ -49,7 +49,7 @@ export class MotionCommentSectionRepositoryService extends BaseRepositoryWithAct
     public getTitle = (viewMotionCommentSection: ViewMotionCommentSection) => viewMotionCommentSection.name;
 
     public getVerboseName = (plural: boolean = false) =>
-        this.translate.instant(plural ? 'Comment sections' : 'Comment section');
+        this.translate.instant(plural ? `Comment sections` : `Comment section`);
 
     public async create(partialModel: Partial<MotionCommentSection>): Promise<Identifiable> {
         const payload: MotionCommentSectionAction.CreatePayload = {

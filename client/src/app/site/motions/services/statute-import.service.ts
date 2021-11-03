@@ -1,24 +1,24 @@
 import { Injectable } from '@angular/core';
-
 import { MotionStatuteParagraphRepositoryService } from 'app/core/repositories/motions/motion-statute-paragraph-repository.service';
 import { BaseImportService, ImportConfig } from 'app/core/ui-services/base-import.service';
 import { MotionStatuteParagraph } from 'app/shared/models/motions/motion-statute-paragraph';
-import { StatuteCsvExportService } from './statute-csv-export.service';
-import { statuteHeadersAndVerboseNames } from '../modules/statute-paragraph/statute-paragraph.constants';
+
 import { ImportServiceCollector } from '../../../core/ui-services/import-service-collector';
+import { statuteHeadersAndVerboseNames } from '../modules/statute-paragraph/statute-paragraph.constants';
+import { StatuteCsvExportService } from './statute-csv-export.service';
 
 /**
  * Service for motion imports
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class StatuteImportService extends BaseImportService<MotionStatuteParagraph> {
     /**
      * List of possible errors and their verbose explanation
      */
     public errorList = {
-        Duplicates: 'A statute with this title already exists.'
+        Duplicates: `A statute with this title already exists.`
     };
 
     /**

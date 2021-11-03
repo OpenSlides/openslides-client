@@ -1,4 +1,5 @@
 import { Id } from 'app/core/definitions/key-types';
+
 import { BaseModel } from '../base/base-model';
 import { HasMeetingId } from '../base/has-meeting-id';
 
@@ -6,19 +7,19 @@ import { HasMeetingId } from '../base/has-meeting-id';
  * Specifies if an amendment of this state/recommendation should be merged into the motion
  */
 export enum MergeAmendment {
-    NO = 'do_not_merge',
-    UNDEFINED = 'undefined',
-    YES = 'do_merge'
+    NO = `do_not_merge`,
+    UNDEFINED = `undefined`,
+    YES = `do_merge`
 }
 
 /**
  * Restrictions are usually processed in the motion workflow
  */
 export enum Restriction {
-    motionsCanManage = 'motion.can_manage',
-    motionsCanSeeInternal = 'motion.can_see_internal',
-    motionsCanManageMetadata = 'motion.can_manage_metadata',
-    motionsIsSubmitter = 'is_submitter'
+    motionsCanManage = `motion.can_manage`,
+    motionsCanSeeInternal = `motion.can_see_internal`,
+    motionsCanManageMetadata = `motion.can_manage_metadata`,
+    motionsIsSubmitter = `is_submitter`
 }
 
 /**
@@ -27,7 +28,7 @@ export enum Restriction {
  * @ignore
  */
 export class MotionState extends BaseModel<MotionState> {
-    public static COLLECTION = 'motion_state';
+    public static COLLECTION = `motion_state`;
 
     public id: Id;
     public name: string;

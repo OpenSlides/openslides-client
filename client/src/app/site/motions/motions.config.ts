@@ -1,4 +1,3 @@
-import { AppConfig } from '../../core/definitions/app-config';
 import { Permission } from 'app/core/core-services/permission';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
@@ -13,6 +12,8 @@ import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/m
 import { MotionComment } from 'app/shared/models/motions/motion-comment';
 import { MotionState } from 'app/shared/models/motions/motion-state';
 import { MotionSubmitter } from 'app/shared/models/motions/motion-submitter';
+
+import { AppConfig } from '../../core/definitions/app-config';
 import { Motion } from '../../shared/models/motions/motion';
 import { MotionBlock } from '../../shared/models/motions/motion-block';
 import { MotionCategory } from '../../shared/models/motions/motion-category';
@@ -32,7 +33,7 @@ import { ViewMotionSubmitter } from './models/view-motion-submitter';
 import { ViewMotionWorkflow } from './models/view-motion-workflow';
 
 export const MotionsAppConfig: AppConfig = {
-    name: 'motions',
+    name: `motions`,
     models: [
         {
             model: Motion,
@@ -91,9 +92,9 @@ export const MotionsAppConfig: AppConfig = {
     ],
     mainMenuEntries: [
         {
-            route: 'motions',
-            displayName: 'Motions',
-            icon: 'assignment',
+            route: `motions`,
+            displayName: `Motions`,
+            icon: `assignment`,
             weight: 300,
             permission: Permission.motionCanSee
         }

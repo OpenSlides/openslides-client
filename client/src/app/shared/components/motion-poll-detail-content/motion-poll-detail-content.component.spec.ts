@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { MotionPollDetailContentComponent } from './motion-poll-detail-content.component';
 
-describe('MotionPollDetailContentComponent', () => {
+describe(`MotionPollDetailContentComponent`, () => {
     let component: MotionPollDetailContentComponent;
     let fixture: ComponentFixture<MotionPollDetailContentComponent>;
 
@@ -22,7 +21,7 @@ describe('MotionPollDetailContentComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

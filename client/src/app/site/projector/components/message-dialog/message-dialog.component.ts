@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';
 
@@ -16,9 +16,9 @@ export interface MessageDialogData {
  * Dialog component to edit projector messages
  */
 @Component({
-    selector: 'os-message-dialog',
-    templateUrl: './message-dialog.component.html',
-    styleUrls: ['./message-dialog.component.scss']
+    selector: `os-message-dialog`,
+    templateUrl: `./message-dialog.component.html`,
+    styleUrls: [`./message-dialog.component.scss`]
 })
 export class MessageDialogComponent extends BaseComponent implements OnInit {
     /**
@@ -37,10 +37,11 @@ export class MessageDialogComponent extends BaseComponent implements OnInit {
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private formBuilder: FormBuilder,
         @Inject(MAT_DIALOG_DATA) public data: MessageDialogData
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     /**

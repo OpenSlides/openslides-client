@@ -1,22 +1,21 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-
-import { map } from 'rxjs/operators';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { PollClassType } from 'app/shared/models/poll/poll-constants';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
-import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
-import { ViewMeeting } from 'app/management/models/view-meeting';
+import { map } from 'rxjs/operators';
 
 @Component({
-    selector: 'os-poll-progress',
-    templateUrl: './poll-progress.component.html',
-    styleUrls: ['./poll-progress.component.scss'],
+    selector: `os-poll-progress`,
+    templateUrl: `./poll-progress.component.html`,
+    styleUrls: [`./poll-progress.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PollProgressComponent extends BaseModelContextComponent implements OnInit {
@@ -58,12 +57,13 @@ export class PollProgressComponent extends BaseModelContextComponent implements 
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private userRepo: UserRepositoryService,
         private operator: OperatorService,
         private activeMeetingIdService: ActiveMeetingIdService,
         private cd: ChangeDetectorRef
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     public ngOnInit(): void {
@@ -110,11 +110,11 @@ export class PollProgressComponent extends BaseModelContextComponent implements 
             ids: [this.activeMeetingId],
             follow: [
                 {
-                    idField: 'user_ids',
-                    fieldset: 'voteProgress',
+                    idField: `user_ids`,
+                    fieldset: `voteProgress`,
                     follow: [
                         {
-                            idField: 'group_$_ids'
+                            idField: `group_$_ids`
                         }
                     ]
                 }

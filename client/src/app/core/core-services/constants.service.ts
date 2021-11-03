@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { environment } from 'environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -25,7 +24,7 @@ interface Constants {
  * ```
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ConstantsService {
     /**

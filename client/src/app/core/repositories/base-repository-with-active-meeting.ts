@@ -1,8 +1,8 @@
-import { ActiveMeetingIdService } from '../core-services/active-meeting-id.service';
 import { BaseModel, ModelConstructor } from '../../shared/models/base/base-model';
-import { BaseRepository } from './base-repository';
 import { BaseViewModel } from '../../site/base/base-view-model';
+import { ActiveMeetingIdService } from '../core-services/active-meeting-id.service';
 import { Id } from '../definitions/key-types';
+import { BaseRepository } from './base-repository';
 import { RepositoryServiceCollector } from './repository-service-collector';
 
 /**

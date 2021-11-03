@@ -1,4 +1,5 @@
 import { Id } from 'app/core/definitions/key-types';
+
 import { BaseModel } from '../base/base-model';
 import { HasMeetingId } from '../base/has-meeting-id';
 
@@ -7,7 +8,7 @@ import { HasMeetingId } from '../base/has-meeting-id';
  * @ignore
  */
 export class MotionCommentSection extends BaseModel<MotionCommentSection> {
-    public static COLLECTION = 'motion_comment_section';
+    public static COLLECTION = `motion_comment_section`;
 
     public id: Id;
     public name: string;

@@ -2,6 +2,7 @@ import { SearchRepresentation } from 'app/core/ui-services/search.service';
 import { HasMeeting } from 'app/management/models/view-meeting';
 import { MotionStatuteParagraph } from 'app/shared/models/motions/motion-statute-paragraph';
 import { Searchable } from 'app/site/base/searchable';
+
 import { BaseViewModel } from '../../base/base-view-model';
 import { ViewMotion } from './view-motion';
 
@@ -21,7 +22,7 @@ export class ViewMotionStatuteParagraph extends BaseViewModel<MotionStatuteParag
     }
 
     public formatForSearch(): SearchRepresentation {
-        return { properties: [{ key: 'Title', value: this.getTitle() }], searchValue: [this.getTitle()] };
+        return { properties: [{ key: `Title`, value: this.getTitle() }], searchValue: [this.getTitle()] };
     }
 
     public getDetailStateURL(): string {

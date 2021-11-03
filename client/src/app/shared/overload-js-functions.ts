@@ -51,9 +51,9 @@ export function overloadJsFunctions(): void {
 }
 
 function overloadArrayFunctions(): void {
-    Object.defineProperty(Array.prototype, 'toString', {
+    Object.defineProperty(Array.prototype, `toString`, {
         value(): string {
-            let string = '';
+            let string = ``;
             const iterations = Math.min(this.length, 3);
 
             for (let i = 0; i <= iterations; i++) {
@@ -62,9 +62,9 @@ function overloadArrayFunctions(): void {
                 }
 
                 if (i < iterations - 1) {
-                    string += ', ';
+                    string += `, `;
                 } else if (i === iterations && this.length > iterations) {
-                    string += ', ...';
+                    string += `, ...`;
                 }
             }
             return string;
@@ -72,7 +72,7 @@ function overloadArrayFunctions(): void {
         enumerable: false
     });
 
-    Object.defineProperty(Array.prototype, 'flatMap', {
+    Object.defineProperty(Array.prototype, `flatMap`, {
         value(o: any): any[] {
             const concatFunction = (x: any, y: any[]) => x.concat(y);
             const flatMapLogic = (f: any, xs: any) => xs.map(f).reduce(concatFunction, []);
@@ -81,7 +81,7 @@ function overloadArrayFunctions(): void {
         enumerable: false
     });
 
-    Object.defineProperty(Array.prototype, 'intersect', {
+    Object.defineProperty(Array.prototype, `intersect`, {
         value<T>(other: T[] = []): T[] {
             let a = this;
             let b = other;
@@ -94,7 +94,7 @@ function overloadArrayFunctions(): void {
         enumerable: false
     });
 
-    Object.defineProperty(Array.prototype, 'difference', {
+    Object.defineProperty(Array.prototype, `difference`, {
         value<T>(other: T[], symmetric: boolean = false): T[] {
             const difference = new Set<T>(this);
             for (const entry of other ?? []) {
@@ -109,7 +109,7 @@ function overloadArrayFunctions(): void {
         enumerable: false
     });
 
-    Object.defineProperty(Array.prototype, 'mapToObject', {
+    Object.defineProperty(Array.prototype, `mapToObject`, {
         value<T>(f: (item: T) => { [key: string]: any }): { [key: string]: any } {
             return this.reduce((aggr, item) => {
                 const res = f(item);
@@ -124,7 +124,7 @@ function overloadArrayFunctions(): void {
         enumerable: false
     });
 
-    Object.defineProperty(Array.prototype, 'tap', {
+    Object.defineProperty(Array.prototype, `tap`, {
         value<T>(callbackFn: (self: T[]) => void): T[] {
             callbackFn(this);
             return this;
@@ -137,7 +137,7 @@ function overloadArrayFunctions(): void {
  * Adds some functions to Set.
  */
 function overloadSetFunctions(): void {
-    Object.defineProperty(Set.prototype, 'equals', {
+    Object.defineProperty(Set.prototype, `equals`, {
         value<T>(other: Set<T>): boolean {
             const difference = new Set(this);
             for (const elem of other) {
@@ -158,7 +158,7 @@ function overloadSetFunctions(): void {
  * TODO: Remove this, if the remainder operation is changed to modulo.
  */
 function overloadModulo(): void {
-    Object.defineProperty(Number.prototype, 'modulo', {
+    Object.defineProperty(Number.prototype, `modulo`, {
         value(n: number): number {
             return ((this % n) + n) % n;
         },

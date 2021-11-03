@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { CommitteeAction } from 'app/core/actions/committee-action';
 import {
     DEFAULT_FIELDSET,
@@ -7,19 +6,20 @@ import {
     SimplifiedModelRequest
 } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { CML, OML } from 'app/core/core-services/organization-permission';
 import { ORGANIZATION_ID } from 'app/core/core-services/organization.service';
+import { CML, OML } from 'app/core/core-services/organization-permission';
 import { Id } from 'app/core/definitions/key-types';
 import { ViewCommittee } from 'app/management/models/view-committee';
 import { ViewOrganization } from 'app/management/models/view-organization';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Committee } from 'app/shared/models/event-management/committee';
+
 import { BaseRepository } from '../base-repository';
 import { ModelRequestRepository } from '../model-request-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class CommitteeRepositoryService
     extends BaseRepository<ViewCommittee, Committee>
@@ -31,18 +31,18 @@ export class CommitteeRepositoryService
 
     public getTitle = (viewCommittee: ViewCommittee) => viewCommittee.name;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? 'Committees' : 'Committee');
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Committees` : `Committee`);
 
     public getFieldsets(): Fieldsets<Committee> {
-        const titleFields: (keyof Committee)[] = ['name', 'description'];
+        const titleFields: (keyof Committee)[] = [`name`, `description`];
         const listFields: (keyof Committee)[] = titleFields.concat([
-            'meeting_ids',
-            'forward_to_committee_ids',
-            'receive_forwardings_from_committee_ids',
-            'organization_tag_ids',
-            'user_ids'
+            `meeting_ids`,
+            `forward_to_committee_ids`,
+            `receive_forwardings_from_committee_ids`,
+            `organization_tag_ids`,
+            `user_ids`
         ]);
-        const editFields: (keyof Committee)[] = titleFields.concat(['default_meeting_id', 'template_meeting_id']);
+        const editFields: (keyof Committee)[] = titleFields.concat([`default_meeting_id`, `template_meeting_id`]);
         return {
             [DEFAULT_FIELDSET]: titleFields,
             list: listFields,
@@ -104,7 +104,7 @@ export class CommitteeRepositoryService
             ids: [1],
             follow: [
                 {
-                    idField: 'committee_ids'
+                    idField: `committee_ids`
                 }
             ],
             fieldset: []

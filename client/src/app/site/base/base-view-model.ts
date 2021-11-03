@@ -1,8 +1,9 @@
 import { Fqid, Id } from 'app/core/definitions/key-types';
 import { BaseModel } from 'app/shared/models/base/base-model';
 import { Collection } from 'app/shared/models/base/collection';
-import { Displayable } from './displayable';
+
 import { Identifiable } from '../../shared/models/base/identifiable';
+import { Displayable } from './displayable';
 
 export interface ViewModelConstructor<T extends BaseViewModel> {
     COLLECTION: string;
@@ -45,7 +46,7 @@ export abstract class BaseViewModel<M extends BaseModel = any> {
      * Override in children
      */
     public getDetailStateURL(): string | null {
-        return '';
+        return ``;
     }
 }
 export interface BaseViewModel<M extends BaseModel = any> extends Displayable, Identifiable, Collection {

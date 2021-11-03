@@ -1,9 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-
-import { BehaviorSubject, Subscription } from 'rxjs';
-
+import { TranslateService } from '@ngx-translate/core';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { Id } from 'app/core/definitions/key-types';
@@ -26,19 +24,21 @@ import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { PermissionsService } from 'app/site/motions/services/permissions.service';
 import { ViewTag } from 'app/site/tags/models/view-tag';
 import { ViewUser } from 'app/site/users/models/view-user';
-import { AssignmentPdfExportService } from '../../services/assignment-pdf-export.service';
-import { AssignmentPollDialogService } from '../../modules/assignment-poll/services/assignment-poll-dialog.service';
-import { AssignmentPollService } from '../../modules/assignment-poll/services/assignment-poll.service';
+import { BehaviorSubject, Subscription } from 'rxjs';
+
 import { AssignmentPhases, ViewAssignment } from '../../models/view-assignment';
 import { ViewAssignmentCandidate } from '../../models/view-assignment-candidate';
+import { AssignmentPollService } from '../../modules/assignment-poll/services/assignment-poll.service';
+import { AssignmentPollDialogService } from '../../modules/assignment-poll/services/assignment-poll-dialog.service';
+import { AssignmentPdfExportService } from '../../services/assignment-pdf-export.service';
 
 /**
  * Component for the assignment detail view
  */
 @Component({
-    selector: 'os-assignment-detail',
-    templateUrl: './assignment-detail.component.html',
-    styleUrls: ['./assignment-detail.component.scss']
+    selector: `os-assignment-detail`,
+    templateUrl: `./assignment-detail.component.html`,
+    styleUrls: [`./assignment-detail.component.scss`]
 })
 export class AssignmentDetailComponent extends BaseModelContextComponent implements OnInit, OnDestroy {
     /**
@@ -181,6 +181,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private operator: OperatorService,
         public perms: PermissionsService,
         private router: Router,
@@ -197,9 +198,9 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
         private pollDialog: AssignmentPollDialogService,
         private assignmentPollService: AssignmentPollService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
         this.updateSubscription(
-            'allUsers',
+            `allUsers`,
             this.userRepo.getViewModelListObservable().subscribe(users => {
                 this.allUsers.next(users);
                 this.filterCandidates();
@@ -209,13 +210,13 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
             phase: null,
             tag_ids: [[]],
             attachment_ids: [[]],
-            title: ['', Validators.required],
-            description: [''],
-            default_poll_description: [''],
+            title: [``, Validators.required],
+            description: [``],
+            default_poll_description: [``],
             open_posts: [1, [Validators.required, Validators.min(1)]],
-            agenda_create: [''],
+            agenda_create: [``],
             agenda_parent_id: [],
-            agenda_type: [''],
+            agenda_type: [``],
             number_poll_candidates: [false]
         });
         this.candidatesForm = formBuilder.group({
@@ -240,9 +241,9 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
                 // Get all available groups in an active meeting.
                 viewModelCtor: ViewMeeting,
                 ids: [this.activeMeetingId],
-                follow: [{ idField: 'group_ids' }, { idField: 'user_ids', fieldset: 'shortName' }]
+                follow: [{ idField: `group_ids` }, { idField: `user_ids`, fieldset: `shortName` }]
             },
-            'groups'
+            `groups`
         );
     }
 
@@ -277,14 +278,14 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
      * Determine the assignment to display using the URL
      */
     public getAssignmentByUrl(): void {
-        if (this.route.snapshot.url[0] && this.route.snapshot.url[0].path === 'new') {
-            super.setTitle('New election');
+        if (this.route.snapshot.url[0] && this.route.snapshot.url[0].path === `new`) {
+            super.setTitle(`New election`);
             this.newAssignment = true;
             this.editAssignment = true;
             this.assignment = new ViewAssignment(new Assignment());
         } else {
             this.updateSubscription(
-                'route',
+                `route`,
                 this.route.params.subscribe(params => {
                     this.loadAssignmentById(+params.id);
                 })
@@ -302,11 +303,11 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
             ids: [assignmentId],
             follow: [
                 {
-                    idField: 'candidate_ids',
+                    idField: `candidate_ids`,
                     follow: [
                         {
-                            idField: 'user_id',
-                            fieldset: 'shortName'
+                            idField: `user_id`,
+                            fieldset: `shortName`
                         }
                     ]
                 },
@@ -315,7 +316,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
         });
 
         this.updateSubscription(
-            'assignment',
+            `assignment`,
             this.assignmentRepo.getViewModelObservable(assignmentId).subscribe(assignment => {
                 if (assignment) {
                     const title = assignment.getTitle();
@@ -328,7 +329,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
             })
         );
         this.updateSubscription(
-            'candidates',
+            `candidates`,
             this.candidatesForm.valueChanges.subscribe(async formResult => {
                 // resetting a form triggers a form.next(null) - check if data is present
                 if (formResult && formResult.userId) {
@@ -355,7 +356,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
     public hasPerms(operation: 'addSelf' | 'addOthers' | 'createPoll' | 'manage'): boolean {
         const isManager = this.operator.hasPerms(Permission.assignmentCanManage);
         switch (operation) {
-            case 'addSelf':
+            case `addSelf`:
                 if (isManager && !this.assignment.isFinished) {
                     return true;
                 } else {
@@ -365,7 +366,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
                         !this.assignment.isFinished
                     );
                 }
-            case 'addOthers':
+            case `addOthers`:
                 if (isManager && !this.assignment?.isFinished) {
                     return true;
                 } else {
@@ -375,11 +376,11 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
                         !this.assignment.isFinished
                     );
                 }
-            case 'createPoll':
+            case `createPoll`:
                 return (
                     isManager && this.assignment && !this.assignment.isFinished && this.assignment.candidateAmount > 0
                 );
-            case 'manage':
+            case `manage`:
                 return isManager;
         }
     }
@@ -390,12 +391,12 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
      * @param newMode
      */
     public setEditMode(newMode: boolean): void {
-        if (newMode && this.hasPerms('manage')) {
+        if (newMode && this.hasPerms(`manage`)) {
             this.patchForm(this.assignment);
             this.editAssignment = true;
         }
         if (!newMode && this.newAssignment) {
-            this.router.navigate([this.activeMeetingId, 'assignments']);
+            this.router.navigate([this.activeMeetingId, `assignments`]);
         }
         if (!newMode) {
             this.editAssignment = false;
@@ -409,10 +410,10 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
      * @param event has the code
      */
     public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === 'Enter' && event.shiftKey) {
+        if (event.key === `Enter` && event.shiftKey) {
             this.saveAssignment();
         }
-        if (event.key === 'Escape') {
+        if (event.key === `Escape`) {
             this.setEditMode(false);
         }
     }
@@ -511,11 +512,11 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
      * Handler for deleting the assignment
      */
     public async onDeleteAssignmentButton(): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to delete this election?');
+        const title = this.translate.instant(`Are you sure you want to delete this election?`);
         if (await this.promptService.open(title, this.assignment.getTitle())) {
             this.assignmentRepo
                 .delete(this.assignment)
-                .then(() => this.router.navigate([this.activeMeetingId, 'assignments']));
+                .then(() => this.router.navigate([this.activeMeetingId, `assignments`]));
         }
     }
 
@@ -540,7 +541,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
     public async createAssignment(): Promise<void> {
         try {
             const response = await this.assignmentRepo.create(this.assignmentForm.value);
-            this.router.navigate([this.activeMeetingId, 'assignments', response.id]);
+            this.router.navigate([this.activeMeetingId, `assignments`, response.id]);
         } catch (e) {
             this.raiseError(e);
         }

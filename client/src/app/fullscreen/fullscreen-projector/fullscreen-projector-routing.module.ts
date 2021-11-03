@@ -5,12 +5,12 @@ import { FullscreenProjectorComponent } from './fullscreen-projector/fullscreen-
 
 const routes: Route[] = [
     {
-        path: '',
+        path: ``,
         component: FullscreenProjectorComponent,
-        pathMatch: 'full'
+        pathMatch: `full`
     },
     {
-        path: ':id',
+        path: `:id`,
         component: FullscreenProjectorComponent
     }
 ];

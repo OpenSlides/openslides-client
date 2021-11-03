@@ -1,16 +1,16 @@
 import { TranslateService } from '@ngx-translate/core';
-
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
 import { CsvMapping } from 'app/core/ui-services/base-import.service';
 import { Motion } from 'app/shared/models/motions/motion';
-import { ImportResolveInformation } from 'app/shared/utils/import/import-resolve-information';
-import { MotionBlock } from '../../../shared/models/motions/motion-block';
 import { BaseBeforeImportHandler } from 'app/shared/utils/import/base-before-import-handler';
+import { ImportResolveInformation } from 'app/shared/utils/import/import-resolve-information';
+
+import { MotionBlock } from '../../../shared/models/motions/motion-block';
 
 export class MotionBlockImportHelper extends BaseBeforeImportHandler<Motion, MotionBlock> {
     public constructor(private repo: MotionBlockRepositoryService, private translate: TranslateService) {
         super({
-            idProperty: 'block_id',
+            idProperty: `block_id`,
             translateFn: translate.instant,
             repo
         });
@@ -20,7 +20,7 @@ export class MotionBlockImportHelper extends BaseBeforeImportHandler<Motion, Mot
         const result: ImportResolveInformation<Motion> = {
             model: item,
             unresolvedModels: 0,
-            verboseName: 'Motion block'
+            verboseName: `Motion block`
         };
         let property = item[propertyName];
         if (!property) {

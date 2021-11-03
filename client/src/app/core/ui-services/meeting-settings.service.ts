@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-
+import { Settings } from 'app/shared/models/event-management/meeting';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { ActiveMeetingService } from '../core-services/active-meeting.service';
-import { Settings } from 'app/shared/models/event-management/meeting';
 import { CustomTranslationService } from '../translate/custom-translation.service';
 
 /**
@@ -22,7 +21,7 @@ import { CustomTranslationService } from '../translate/custom-translation.servic
  * ```
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MeetingSettingsService {
     /**
@@ -44,7 +43,7 @@ export class MeetingSettingsService {
                 }
             }
         });
-        this.get('custom_translations').subscribe(customTranslations =>
+        this.get(`custom_translations`).subscribe(customTranslations =>
             customTranslationService.customTranslationSubject.next(customTranslations)
         );
     }

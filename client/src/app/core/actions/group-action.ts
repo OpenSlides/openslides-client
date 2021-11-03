@@ -2,10 +2,10 @@ import { HasMeetingId } from 'app/shared/models/base/has-meeting-id';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 
 export namespace GroupAction {
-    export const CREATE = 'group.create';
-    export const UPDATE = 'group.update';
-    export const DELETE = 'group.delete';
-    export const SET_PERMISSION = 'group.set_permission';
+    export const CREATE = `group.create`;
+    export const UPDATE = `group.update`;
+    export const DELETE = `group.delete`;
+    export const SET_PERMISSION = `group.set_permission`;
 
     export interface CreateParameters {
         name: string;

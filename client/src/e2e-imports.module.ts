@@ -2,9 +2,8 @@ import { APP_BASE_HREF, CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
-import { AppRoutingModule } from 'app/app-routing.module';
 import { AppModule } from 'app/app.module';
+import { AppRoutingModule } from 'app/app-routing.module';
 import { OpenSlidesTranslateModule } from 'app/core/translate/openslides-translate-module';
 import { SharedModule } from 'app/shared/shared.module';
 import { LoginModule } from 'app/site/login/login.module';
@@ -31,6 +30,6 @@ import { LoginModule } from 'app/site/login/login.module';
         AppRoutingModule
     ],
     exports: [CommonModule, SharedModule, HttpClientModule, OpenSlidesTranslateModule, AppRoutingModule],
-    providers: [{ provide: APP_BASE_HREF, useValue: '/' }]
+    providers: [{ provide: APP_BASE_HREF, useValue: `/` }]
 })
 export class E2EImportsModule {}

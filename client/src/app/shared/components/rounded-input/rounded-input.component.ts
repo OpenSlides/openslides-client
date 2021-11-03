@@ -10,7 +10,6 @@ import {
     ViewChild
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
-
 import { Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
@@ -20,23 +19,23 @@ import { debounceTime } from 'rxjs/operators';
 export type Size = 'small' | 'medium' | 'large';
 
 @Component({
-    selector: 'os-rounded-input',
-    templateUrl: './rounded-input.component.html',
-    styleUrls: ['./rounded-input.component.scss']
+    selector: `os-rounded-input`,
+    templateUrl: `./rounded-input.component.html`,
+    styleUrls: [`./rounded-input.component.scss`]
 })
 export class RoundedInputComponent implements OnInit, OnDestroy {
     /**
      * Binds the class to the parent-element.
      */
-    @HostBinding('class')
+    @HostBinding(`class`)
     public get classes(): string {
-        return this.fullWidth ? 'full-width' : '';
+        return this.fullWidth ? `full-width` : ``;
     }
 
     /**
      * Reference to the `<input />`-element.
      */
-    @ViewChild('osInput', { static: true })
+    @ViewChild(`osInput`, { static: true })
     public osInput: ElementRef;
 
     /**
@@ -58,7 +57,7 @@ export class RoundedInputComponent implements OnInit, OnDestroy {
      * @returns {string} The value of the FormControl. If this is undefined or null, it returns an empty string.
      */
     public get model(): string {
-        return this.modelForm ? this.modelForm.value : '';
+        return this.modelForm ? this.modelForm.value : ``;
     }
 
     /**
@@ -68,7 +67,7 @@ export class RoundedInputComponent implements OnInit, OnDestroy {
      * Defaults to `'medium'`.
      */
     @Input()
-    public size: Size = 'medium';
+    public size: Size = `medium`;
 
     /**
      * Whether this component should render over the full width.
@@ -104,7 +103,7 @@ export class RoundedInputComponent implements OnInit, OnDestroy {
      * Placeholder for the input. Defaults to `Search...`.
      */
     @Input()
-    public placeholder = 'Search...';
+    public placeholder = `Search...`;
 
     /**
      * Boolean, whether the input will be cleared, if the user presses `Escape`.
@@ -123,7 +122,7 @@ export class RoundedInputComponent implements OnInit, OnDestroy {
      */
     @Input()
     public set typeBorderRadius(radius: Size) {
-        this._borderRadius = radius + '-border-radius';
+        this._borderRadius = radius + `-border-radius`;
     }
 
     /**
@@ -154,7 +153,7 @@ export class RoundedInputComponent implements OnInit, OnDestroy {
     /**
      * Variable for the border-radius as class.
      */
-    private _borderRadius = 'large-border-radius';
+    private _borderRadius = `large-border-radius`;
 
     /**
      * Default constructor
@@ -194,7 +193,7 @@ export class RoundedInputComponent implements OnInit, OnDestroy {
      */
     public clear(): void {
         this.focus();
-        this.modelForm.setValue('');
+        this.modelForm.setValue(``);
     }
 
     /**
@@ -220,7 +219,7 @@ export class RoundedInputComponent implements OnInit, OnDestroy {
      * @param event The `KeyboardEvent`.
      */
     public keyPressed(event: KeyboardEvent): void {
-        if (this.clearOnEscape && event.key === 'Escape') {
+        if (this.clearOnEscape && event.key === `Escape`) {
             this.clear();
         }
         this.onkeyup.emit(event);

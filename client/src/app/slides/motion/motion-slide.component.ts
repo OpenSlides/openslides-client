@@ -1,8 +1,5 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
-
 import { TranslateService } from '@ngx-translate/core';
-
-import { AmendmentParagraphUnifiedChange } from './amendment-paragraph-unified-change';
 import { MotionChangeRecommendationRepositoryService } from 'app/core/repositories/motions/motion-change-recommendation-repository.service';
 import { MotionLineNumberingService } from 'app/core/repositories/motions/motion-line-numbering.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
@@ -13,14 +10,16 @@ import { ViewUnifiedChange, ViewUnifiedChangeType } from 'app/shared/models/moti
 import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.constants';
 import { MotionFormatService } from 'app/site/motions/services/motion-format.service';
 import { IBaseScaleScrollSlideComponent } from 'app/slides/base-scale-scroll-slide-component';
+
 import { BaseMotionSlideComponent } from '../motion-base/base-motion-slide';
+import { AmendmentParagraphUnifiedChange } from './amendment-paragraph-unified-change';
 import { ChangeRecommendationUnifiedChange } from './change-recommendation-unified-change';
 import { AmendmentData, MotionSlideData } from './motion-slide-data';
 
 @Component({
-    selector: 'os-motion-slide',
-    templateUrl: './motion-slide.component.html',
-    styleUrls: ['./motion-slide.component.scss'],
+    selector: `os-motion-slide`,
+    templateUrl: `./motion-slide.component.html`,
+    styleUrls: [`./motion-slide.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
 export class MotionSlideComponent
@@ -85,7 +84,7 @@ export class MotionSlideComponent
 
         value *= -100;
         value += 40;
-        this.textDivStyles['margin-top'] = `${value}px`;
+        this.textDivStyles[`margin-top`] = `${value}px`;
     }
 
     public get scroll(): number {
@@ -100,7 +99,7 @@ export class MotionSlideComponent
 
         value *= 10;
         value += 100;
-        this.textDivStyles['font-size'] = `${value}%`;
+        this.textDivStyles[`font-size`] = `${value}%`;
     }
 
     public get scale(): number {
@@ -130,9 +129,9 @@ export class MotionSlideComponent
         this.lnMode = value.data.line_numbering;
         this.lineLength = value.data.line_length;
         this.preamble = value.data.preamble;
-        this.crMode = value.options.mode || 'original';
+        this.crMode = value.options.mode || `original`;
 
-        this.textDivStyles.width = value.data.show_sidebox ? 'calc(100% - 250px)' : '100%';
+        this.textDivStyles.width = value.data.show_sidebox ? `calc(100% - 250px)` : `100%`;
 
         if (value.data.recommendation_referencing_motions) {
             this.referencingMotions = value.data.recommendation_referencing_motions.sort((a, b) =>
@@ -148,7 +147,7 @@ export class MotionSlideComponent
         let recommendation = this.translate.instant(this.data.data.recommendation_label);
         if (this.data.data.recommendation_extension) {
             recommendation +=
-                ' ' +
+                ` ` +
                 this.replaceReferencedMotions(
                     this.data.data.recommendation_extension,
                     this.data.data.recommendation_referenced_motions

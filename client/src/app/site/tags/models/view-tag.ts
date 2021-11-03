@@ -3,6 +3,7 @@ import { HasMeeting } from 'app/management/models/view-meeting';
 import { HasTagIds } from 'app/shared/models/base/has-tag-ids';
 import { Tag } from 'app/shared/models/tag/tag';
 import { Searchable } from 'app/site/base/searchable';
+
 import { BaseViewModel } from '../../base/base-view-model';
 
 export interface HasTags extends HasTagIds {
@@ -25,7 +26,7 @@ export class ViewTag extends BaseViewModel<Tag> implements Searchable {
     }
 
     public formatForSearch(): SearchRepresentation {
-        return { properties: [{ key: 'Name', value: this.name }], searchValue: [this.name] };
+        return { properties: [{ key: `Name`, value: this.name }], searchValue: [this.name] };
     }
 
     public getDetailStateURL(): string {

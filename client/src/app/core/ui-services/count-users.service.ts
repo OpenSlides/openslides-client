@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { Observable, Subject } from 'rxjs';
 
 import { NotifyService } from '../core-services/notify.service';
@@ -17,8 +16,8 @@ interface CountUserResponse extends CountUserRequest {
     data: CountUserData;
 }
 
-const REQUEST_NAME = 'count-user-request';
-const RESPONSE_NAME = 'count-user-response';
+const REQUEST_NAME = `count-user-request`;
+const RESPONSE_NAME = `count-user-response`;
 
 /**
  * Provides functionality to count users with notify.
@@ -26,7 +25,7 @@ const RESPONSE_NAME = 'count-user-response';
  * Here, the answers will be collected and aggegated.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class CountUsersService {
     private activeCounts: { [token: string]: Subject<CountUserData> } = {};
@@ -71,8 +70,8 @@ export class CountUsersService {
      * @returns a generated track token to keep track of the counting.
      */
     private generateTrackToken(): string {
-        let token = '';
-        const characters = '0123456789abcdef';
+        let token = ``;
+        const characters = `0123456789abcdef`;
         for (let i = 0; i < 32; i++) {
             token += characters.charAt(Math.floor(Math.random() * characters.length));
         }

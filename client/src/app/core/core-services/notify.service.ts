@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
-
 import { combineLatest, Observable, Subject } from 'rxjs';
 
+import { HTTPMethod } from '../definitions/http-methods';
 import { ActiveMeetingIdService } from './active-meeting-id.service';
 import { CommunicationManagerService } from './communication-manager.service';
-import { HTTPMethod } from '../definitions/http-methods';
 import { HttpService } from './http.service';
+import { HttpStreamService } from './http-stream.service';
+import { HttpStreamEndpointService } from './http-stream-endpoint.service';
 import { LifecycleService } from './lifecycle.service';
 import { OperatorService } from './operator.service';
-import { HttpStreamEndpointService } from './http-stream-endpoint.service';
-import { HttpStreamService } from './http-stream.service';
 
 /**
  * Encapslates the name and content of every message regardless of being a request or response.
@@ -77,9 +76,9 @@ interface ChannelIdResponse {
     channel_id: string;
 }
 
-const ICC_ENDPOINT = 'icc';
+const ICC_ENDPOINT = `icc`;
 
-const iccPath = '/system/icc';
+const iccPath = `/system/icc`;
 const notifyPath = `${iccPath}/notify`;
 const publishPath = `${notifyPath}/publish`;
 const iccHealthPath = `${iccPath}/health`;
@@ -88,7 +87,7 @@ const iccHealthPath = `${iccPath}/health`;
  * Handles all incoming and outgoing notify messages via {@link WebsocketService}.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class NotifyService {
     /**
@@ -138,7 +137,7 @@ export class NotifyService {
 
     private async connect(meetingId: number): Promise<void> {
         if (!meetingId) {
-            throw new Error('Cannot connect to ICC, no meeting ID was provided');
+            throw new Error(`Cannot connect to ICC, no meeting ID was provided`);
         }
 
         this.disconnect();
@@ -153,7 +152,7 @@ export class NotifyService {
                     this.handleNotifyResponse(notify as NotifyResponse<any>);
                 }
             },
-            description: 'NotifyService'
+            description: `NotifyService`
         });
         this.commCloseFn = this.commManager.registerStream(httpStream);
     }
@@ -163,7 +162,7 @@ export class NotifyService {
             try {
                 this.commCloseFn();
             } catch (e) {
-                console.warn('Was not able to properly close previous ICC connection: ', e);
+                console.warn(`Was not able to properly close previous ICC connection: `, e);
             }
             this.commCloseFn = undefined;
         }
@@ -200,7 +199,7 @@ export class NotifyService {
      */
     public async sendToUsers<T>(name: string, content: T, ...users: number[]): Promise<void> {
         if (users.length < 1) {
-            throw new Error('You have to provide at least one user');
+            throw new Error(`You have to provide at least one user`);
         }
         await this.send(name, content, false, users);
     }
@@ -213,7 +212,7 @@ export class NotifyService {
      */
     public async sendToChannels<T>(name: string, content: T, ...channels: string[]): Promise<void> {
         if (channels.length < 1) {
-            throw new Error('You have to provide at least one channel');
+            throw new Error(`You have to provide at least one channel`);
         }
         await this.send(name, content, false, null, channels);
     }
@@ -233,7 +232,7 @@ export class NotifyService {
         channels?: string[]
     ): Promise<void> {
         if (!this.channelId) {
-            throw new Error('No channel id!');
+            throw new Error(`No channel id!`);
         }
 
         const notify: NotifyRequest<T> = {

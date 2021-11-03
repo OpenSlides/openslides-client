@@ -1,16 +1,15 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
-import { Subscription } from 'rxjs';
-
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { Subscription } from 'rxjs';
+
 import { PasswordForm } from '../change-password/change-password.component';
 
 @Component({
-    selector: 'os-user-change-password',
-    templateUrl: './user-change-password.component.html',
-    styleUrls: ['./user-change-password.component.scss']
+    selector: `os-user-change-password`,
+    templateUrl: `./user-change-password.component.html`,
+    styleUrls: [`./user-change-password.component.scss`]
 })
 export class UserChangePasswordComponent implements OnInit, OnDestroy {
     @Input()
@@ -70,7 +69,7 @@ export class UserChangePasswordComponent implements OnInit, OnDestroy {
 
     public ngOnInit(): void {
         this.adminPasswordForm = this.fb.group({
-            newPassword: ['', Validators.required]
+            newPassword: [``, Validators.required]
         });
         this.passwordFormSubscription = this.adminPasswordForm.valueChanges.subscribe(value => {
             this.valueChanged.emit(value.newPassword);
@@ -91,7 +90,7 @@ export class UserChangePasswordComponent implements OnInit, OnDestroy {
      * @param event has the code
      */
     public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === 'Enter' && event.shiftKey) {
+        if (event.key === `Enter` && event.shiftKey) {
             this.save.emit();
         }
     }
@@ -101,7 +100,7 @@ export class UserChangePasswordComponent implements OnInit, OnDestroy {
      * and displays it
      */
     public generatePassword(): void {
-        const randomPassword = this.generatePasswordFn ? this.generatePasswordFn() : '';
+        const randomPassword = this.generatePasswordFn ? this.generatePasswordFn() : ``;
         this.adminPasswordForm.patchValue({
             newPassword: randomPassword
         });

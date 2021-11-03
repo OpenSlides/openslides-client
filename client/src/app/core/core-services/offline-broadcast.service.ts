@@ -1,5 +1,4 @@
 import { EventEmitter, Injectable } from '@angular/core';
-
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { EndpointConfiguration } from './http-stream-endpoint.service';
@@ -25,7 +24,7 @@ export interface ConnectionLostOfflineReason extends BaseOfflineReason {
 export type OfflineReason = WhoAmIFailedOfflineReason | ConnectionLostOfflineReason;
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class OfflineBroadcastService {
     private readonly _isOfflineSubject = new BehaviorSubject<boolean>(false);

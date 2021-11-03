@@ -1,15 +1,13 @@
 import { Injectable } from '@angular/core';
-
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-
 import { SpinnerService } from 'app/core/ui-services/spinner.service';
 
-const givePermsMessage = _('Please allow OpenSlides to access your microphone and/or camera');
-const accessDeniedMessage = _('Media access is denied');
-const noMicMessage = _('Your device has no microphone');
+const givePermsMessage = _(`Please allow OpenSlides to access your microphone and/or camera`);
+const accessDeniedMessage = _(`Media access is denied`);
+const noMicMessage = _(`Your device has no microphone`);
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class UserMediaPermService {
     private hasAudioDevice: boolean;
@@ -24,9 +22,9 @@ export class UserMediaPermService {
             throw new Error(noMicMessage);
         }
         const hasMediaAccess: PermissionState | null = await this.detectPermStatus();
-        if (!hasMediaAccess || hasMediaAccess === 'prompt') {
+        if (!hasMediaAccess || hasMediaAccess === `prompt`) {
             await this.tryMediaAccess();
-        } else if (hasMediaAccess === 'denied') {
+        } else if (hasMediaAccess === `denied`) {
             this.throwPermError();
         }
     }
@@ -43,13 +41,13 @@ export class UserMediaPermService {
      */
     private async detectPermStatus(): Promise<PermissionState | null> {
         try {
-            const micPermStatus = await navigator.permissions.query({ name: 'microphone' });
-            const camPermStatus = await navigator.permissions.query({ name: 'camera' });
+            const micPermStatus = await navigator.permissions.query({ name: `microphone` });
+            const camPermStatus = await navigator.permissions.query({ name: `camera` });
 
             if (!this.hasVideoDevice || micPermStatus.state === camPermStatus.state) {
                 return micPermStatus.state;
-            } else if (micPermStatus.state === 'denied' || camPermStatus.state === 'denied') {
-                return 'denied';
+            } else if (micPermStatus.state === `denied` || camPermStatus.state === `denied`) {
+                return `denied`;
             } else {
                 return null;
             }
@@ -60,8 +58,8 @@ export class UserMediaPermService {
 
     private async detectAvailableDevices(): Promise<void> {
         const mediaDevices = await navigator.mediaDevices.enumerateDevices();
-        this.hasAudioDevice = !!mediaDevices.find(device => device.kind === 'audioinput');
-        this.hasVideoDevice = !!mediaDevices.find(device => device.kind === 'videoinput');
+        this.hasAudioDevice = !!mediaDevices.find(device => device.kind === `audioinput`);
+        this.hasVideoDevice = !!mediaDevices.find(device => device.kind === `videoinput`);
     }
 
     private async tryMediaAccess(): Promise<void> {
@@ -80,7 +78,7 @@ export class UserMediaPermService {
             }
         } catch (e) {
             if (e instanceof DOMException) {
-                if (e.message === 'Permission denied') {
+                if (e.message === `Permission denied`) {
                     this.throwPermError();
                 }
             } else {

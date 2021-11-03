@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
-
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
+import { Id } from 'app/core/definitions/key-types';
 import { AssignmentRepositoryService } from 'app/core/repositories/assignments/assignment-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
@@ -14,29 +14,29 @@ import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/speaker-button.component';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
+
+import { AssignmentPhases, ViewAssignment } from '../../models/view-assignment';
 import { AssignmentFilterListService } from '../../services/assignment-filter-list.service';
 import { AssignmentPdfExportService } from '../../services/assignment-pdf-export.service';
 import { AssignmentSortListService } from '../../services/assignment-sort-list.service';
-import { AssignmentPhases, ViewAssignment } from '../../models/view-assignment';
-import { Id } from 'app/core/definitions/key-types';
 
 const ASSIGNMENT_TO_PDF_REQUEST = (meetingId: Id): SimplifiedModelRequest => ({
     viewModelCtor: ViewMeeting,
     ids: [meetingId],
     follow: [
         {
-            idField: 'assignment_ids',
+            idField: `assignment_ids`,
             follow: [
                 SPEAKER_BUTTON_FOLLOW,
                 {
-                    idField: 'candidate_ids',
-                    follow: [{ idField: 'user_id', fieldset: 'shortName' }]
+                    idField: `candidate_ids`,
+                    follow: [{ idField: `user_id`, fieldset: `shortName` }]
                 },
                 {
-                    idField: 'poll_ids'
+                    idField: `poll_ids`
                 }
             ],
-            fieldset: 'list'
+            fieldset: `list`
         }
     ],
     fieldset: []
@@ -46,10 +46,10 @@ const ASSIGNMENT_TO_PDF_REQUEST = (meetingId: Id): SimplifiedModelRequest => ({
  * List view for the assignments
  */
 @Component({
-    selector: 'os-assignment-list',
-    templateUrl: './assignment-list.component.html',
+    selector: `os-assignment-list`,
+    templateUrl: `./assignment-list.component.html`,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    styleUrls: ['./assignment-list.component.scss']
+    styleUrls: [`./assignment-list.component.scss`]
 })
 export class AssignmentListComponent extends BaseListViewComponent<ViewAssignment> implements OnInit {
     /**
@@ -62,15 +62,15 @@ export class AssignmentListComponent extends BaseListViewComponent<ViewAssignmen
      */
     public tableColumnDefinition: PblColumnDefinition[] = [
         {
-            prop: 'title',
-            width: '100%'
+            prop: `title`,
+            width: `100%`
         },
         {
-            prop: 'phase',
+            prop: `phase`,
             minWidth: 180
         },
         {
-            prop: 'candidates',
+            prop: `candidates`,
             width: this.singleButtonWidth
         }
     ];
@@ -78,7 +78,7 @@ export class AssignmentListComponent extends BaseListViewComponent<ViewAssignmen
     /**
      * Define extra filter properties
      */
-    public filterProps = ['title', 'candidates', 'assignment_related_users', 'tags', 'candidateAmount'];
+    public filterProps = [`title`, `candidates`, `assignment_related_users`, `tags`, `candidateAmount`];
 
     public get canManageAssignments(): boolean {
         return this.operator.hasPerms(Permission.assignmentCanManage);
@@ -101,6 +101,7 @@ export class AssignmentListComponent extends BaseListViewComponent<ViewAssignmen
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         public repo: AssignmentRepositoryService,
         private promptService: PromptService,
         public filterService: AssignmentFilterListService,
@@ -112,7 +113,7 @@ export class AssignmentListComponent extends BaseListViewComponent<ViewAssignmen
         public vp: ViewportService,
         private activeMeetingIdService: ActiveMeetingIdService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
         this.canMultiSelect = true;
     }
 
@@ -122,7 +123,7 @@ export class AssignmentListComponent extends BaseListViewComponent<ViewAssignmen
      */
     public ngOnInit(): void {
         super.ngOnInit();
-        super.setTitle('Elections');
+        super.setTitle(`Elections`);
     }
 
     protected getModelRequest(): SimplifiedModelRequest {
@@ -131,9 +132,9 @@ export class AssignmentListComponent extends BaseListViewComponent<ViewAssignmen
             ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
-                    idField: 'assignment_ids',
+                    idField: `assignment_ids`,
                     follow: [SPEAKER_BUTTON_FOLLOW],
-                    fieldset: 'list'
+                    fieldset: `list`
                 }
             ],
             fieldset: []
@@ -145,17 +146,17 @@ export class AssignmentListComponent extends BaseListViewComponent<ViewAssignmen
      * Creates a new assignment
      */
     public onPlusButton(): void {
-        this.router.navigate(['./new'], { relativeTo: this.route });
+        this.router.navigate([`./new`], { relativeTo: this.route });
     }
 
     /**
      * @returns all the number of the columns that should be hidden in mobile
      */
     public getColumnsHiddenInMobile(): string[] {
-        const hiddenInMobile = ['phase', 'candidates'];
+        const hiddenInMobile = [`phase`, `candidates`];
 
         if (!this.operator.hasPerms(Permission.listOfSpeakersCanSee, Permission.projectorCanManage)) {
-            hiddenInMobile.push('menu');
+            hiddenInMobile.push(`menu`);
         }
 
         return hiddenInMobile;
@@ -168,7 +169,7 @@ export class AssignmentListComponent extends BaseListViewComponent<ViewAssignmen
      * otherwise the whole list of assignments is exported.
      */
     public async downloadAssignmentButton(assignments?: ViewAssignment[]): Promise<void> {
-        await this.modelRequestService.instant(ASSIGNMENT_TO_PDF_REQUEST(this.activeMeetingId), 'assignment-to-pdf');
+        await this.modelRequestService.instant(ASSIGNMENT_TO_PDF_REQUEST(this.activeMeetingId), `assignment-to-pdf`);
         this.pdfService.exportMultipleAssignments(assignments ?? this.repo.getViewModelList());
     }
 
@@ -181,7 +182,7 @@ export class AssignmentListComponent extends BaseListViewComponent<ViewAssignmen
      * is only filled with any data in multiSelect mode
      */
     public async deleteSelected(): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to delete all selected elections?');
+        const title = this.translate.instant(`Are you sure you want to delete all selected elections?`);
         if (await this.promptService.open(title)) {
             await this.repo.delete(...this.selectedRows);
         }

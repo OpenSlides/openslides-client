@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { PasswordComponent } from './password.component';
 
-describe('PasswordComponent', () => {
+describe(`PasswordComponent`, () => {
     let component: PasswordComponent;
     let fixture: ComponentFixture<PasswordComponent>;
 
@@ -23,7 +22,7 @@ describe('PasswordComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

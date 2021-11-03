@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MeetingImportComponent } from './meeting-import.component';
 
-describe('MeetingImportComponent', () => {
+describe(`MeetingImportComponent`, () => {
     let component: MeetingImportComponent;
     let fixture: ComponentFixture<MeetingImportComponent>;
 
@@ -18,7 +18,7 @@ describe('MeetingImportComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

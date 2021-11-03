@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-
-import { BehaviorSubject } from 'rxjs';
-
+import { TranslateService } from '@ngx-translate/core';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
@@ -15,15 +13,17 @@ import { AgendaItemType, ItemTypeChoices } from 'app/shared/models/agenda/agenda
 import { Topic } from 'app/shared/models/topics/topic';
 import { ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
+import { BehaviorSubject } from 'rxjs';
+
 import { ViewTopic } from '../../models/view-topic';
 
 /**
  * Detail page for topics.
  */
 @Component({
-    selector: 'os-topic-detail',
-    templateUrl: './topic-detail.component.html',
-    styleUrls: ['./topic-detail.component.scss']
+    selector: `os-topic-detail`,
+    templateUrl: `./topic-detail.component.html`,
+    styleUrls: [`./topic-detail.component.scss`]
 })
 export class TopicDetailComponent extends BaseModelContextComponent {
     /**
@@ -72,6 +72,7 @@ export class TopicDetailComponent extends BaseModelContextComponent {
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private route: ActivatedRoute,
         private router: Router,
         private formBuilder: FormBuilder,
@@ -80,7 +81,7 @@ export class TopicDetailComponent extends BaseModelContextComponent {
         private operator: OperatorService,
         private itemRepo: AgendaItemRepositoryService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
         this.getTopicByUrl();
         this.createForm();
 
@@ -98,7 +99,7 @@ export class TopicDetailComponent extends BaseModelContextComponent {
             this.patchForm();
         }
         if (!mode && this.newTopic) {
-            this.router.navigate([this.activeMeetingId, 'agenda']);
+            this.router.navigate([this.activeMeetingId, `agenda`]);
         }
     }
 
@@ -129,11 +130,11 @@ export class TopicDetailComponent extends BaseModelContextComponent {
             agenda_type: [],
             agenda_parent_id: [],
             attachment_ids: [[]],
-            text: [''],
-            title: ['', Validators.required]
+            text: [``],
+            title: [``, Validators.required]
         });
 
-        this.topicForm.get('agenda_type').setValue(AgendaItemType.common);
+        this.topicForm.get(`agenda_type`).setValue(AgendaItemType.common);
     }
 
     /**
@@ -153,12 +154,12 @@ export class TopicDetailComponent extends BaseModelContextComponent {
      * be loaded using the ID from the URL
      */
     public getTopicByUrl(): void {
-        if (this.route.snapshot.url[0] && this.route.snapshot.url[0].path === 'new') {
+        if (this.route.snapshot.url[0] && this.route.snapshot.url[0].path === `new`) {
             // creates a new topic
             this.newTopic = true;
             this.editTopic = true;
             this.topic = new ViewTopic(new Topic());
-            super.setTitle('New topic');
+            super.setTitle(`New topic`);
         } else {
             // load existing topic
             this.route.params.subscribe(params => {
@@ -176,7 +177,7 @@ export class TopicDetailComponent extends BaseModelContextComponent {
         this.requestModels({
             viewModelCtor: ViewTopic,
             ids: [id],
-            follow: [SPEAKER_BUTTON_FOLLOW, { idField: 'attachment_ids' }, 'tag_ids']
+            follow: [SPEAKER_BUTTON_FOLLOW, { idField: `attachment_ids` }, `tag_ids`]
         });
 
         this.repo.getViewModelObservable(id).subscribe(newViewTopic => {
@@ -198,11 +199,11 @@ export class TopicDetailComponent extends BaseModelContextComponent {
      * Handler for the delete button. Uses the PromptService
      */
     public async onDeleteButton(): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to delete this entry?');
+        const title = this.translate.instant(`Are you sure you want to delete this entry?`);
         const content = this.topic.title;
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(this.topic).catch(this.raiseError);
-            this.router.navigate([this.activeMeetingId, 'agenda']);
+            this.router.navigate([this.activeMeetingId, `agenda`]);
         }
     }
 
@@ -214,11 +215,11 @@ export class TopicDetailComponent extends BaseModelContextComponent {
      */
     public isAllowed(action: string): boolean {
         switch (action) {
-            case 'see':
+            case `see`:
                 return this.operator.hasPerms(Permission.agendaItemCanSee);
-            case 'edit':
+            case `edit`:
                 return this.operator.hasPerms(Permission.agendaItemCanManage);
-            case 'default':
+            case `default`:
                 return false;
         }
     }
@@ -230,18 +231,18 @@ export class TopicDetailComponent extends BaseModelContextComponent {
      * @param event has the code
      */
     public onKeyDown(event: KeyboardEvent): void {
-        if (event.key === 'Enter' && event.shiftKey) {
+        if (event.key === `Enter` && event.shiftKey) {
             this.saveTopic();
         }
 
-        if (event.key === 'Escape') {
+        if (event.key === `Escape`) {
             this.setEditMode(false);
         }
     }
 
     private async createTopic(): Promise<void> {
         await this.repo.create(this.topicForm.value);
-        this.router.navigate([this.activeMeetingId, 'agenda']);
+        this.router.navigate([this.activeMeetingId, `agenda`]);
     }
 
     public async updateTopic(): Promise<void> {

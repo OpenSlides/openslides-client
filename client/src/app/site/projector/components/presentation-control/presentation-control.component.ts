@@ -1,12 +1,12 @@
 import { Component, Input } from '@angular/core';
-
-import { combineLatest, merge, Observable } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ProjectionRepositoryService } from 'app/core/repositories/projector/projection-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
+import { combineLatest, merge, Observable } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
+
 import { ViewProjection } from '../../models/view-projection';
 import { ViewProjector } from '../../models/view-projector';
 
@@ -14,9 +14,9 @@ import { ViewProjector } from '../../models/view-projector';
  * The presentation controls.
  */
 @Component({
-    selector: 'os-presentation-control',
-    templateUrl: './presentation-control.component.html',
-    styleUrls: ['./presentation-control.component.scss']
+    selector: `os-presentation-control`,
+    templateUrl: `./presentation-control.component.html`,
+    styleUrls: [`./presentation-control.component.scss`]
 })
 export class PresentationControlComponent extends BaseComponent {
     @Input()
@@ -39,9 +39,10 @@ export class PresentationControlComponent extends BaseComponent {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private projectionRepo: ProjectionRepositoryService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
     }
 
     public getMediafile(projection: ViewProjection): ViewMediafile | null {
@@ -94,11 +95,11 @@ export class PresentationControlComponent extends BaseComponent {
     }
 
     public zoom(projection: ViewProjection, direction: 'in' | 'out' | 'reset'): void {
-        if (direction === 'reset') {
+        if (direction === `reset`) {
             projection.options.zoom = 0;
-        } else if (direction === 'in') {
+        } else if (direction === `in`) {
             projection.options.zoom = (projection.options.zoom || 0) + 1;
-        } else if (direction === 'out') {
+        } else if (direction === `out`) {
             projection.options.zoom = (projection.options.zoom || 0) - 1;
         }
         this.updateProjectionOptions(projection);

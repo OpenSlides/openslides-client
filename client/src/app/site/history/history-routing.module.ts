@@ -6,7 +6,7 @@ import { HistoryListComponent } from './components/history-list/history-list.com
 /**
  * Define the routes for the history module
  */
-const routes: Route[] = [{ path: '', component: HistoryListComponent, pathMatch: 'full' }];
+const routes: Route[] = [{ path: ``, component: HistoryListComponent, pathMatch: `full` }];
 
 /**
  * Define the routing component and setup the routes

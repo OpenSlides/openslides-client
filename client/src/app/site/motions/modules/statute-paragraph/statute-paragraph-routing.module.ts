@@ -5,8 +5,8 @@ import { StatuteParagraphImportListComponent } from './components/statute-paragr
 import { StatuteParagraphListComponent } from './components/statute-paragraph-list/statute-paragraph-list.component';
 
 const routes: Route[] = [
-    { path: '', component: StatuteParagraphListComponent, pathMatch: 'full' },
-    { path: 'import', component: StatuteParagraphImportListComponent }
+    { path: ``, component: StatuteParagraphListComponent, pathMatch: `full` },
+    { path: `import`, component: StatuteParagraphImportListComponent }
 ];
 
 @NgModule({

@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { AssignmentPollVoteComponent } from './assignment-poll-vote.component';
 
-describe('AssignmentPollVoteComponent', () => {
+describe(`AssignmentPollVoteComponent`, () => {
     let component: AssignmentPollVoteComponent;
     let fixture: ComponentFixture<AssignmentPollVoteComponent>;
 
@@ -23,7 +22,7 @@ describe('AssignmentPollVoteComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

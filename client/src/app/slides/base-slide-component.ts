@@ -1,5 +1,4 @@
 import { Directive, Input } from '@angular/core';
-
 import { SlideData } from 'app/core/ui-services/projector.service';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 

@@ -22,4 +22,4 @@ export interface SlideManifest extends SlideConfiguration {
     verboseName: string;
 }
 
-export const SLIDE_MANIFESTS = new InjectionToken<SlideManifest[]>('SLIDE_MANIFEST');
+export const SLIDE_MANIFESTS = new InjectionToken<SlideManifest[]>(`SLIDE_MANIFEST`);

@@ -1,11 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { AuthService } from 'app/core/core-services/auth.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
@@ -18,9 +15,12 @@ import { ViewOrganization } from 'app/management/models/view-organization';
 import { fadeInAnim } from 'app/shared/animations';
 import { ParentErrorStateMatcher } from 'app/shared/parent-error-state-matcher';
 import { BaseComponent } from 'app/site/base/components/base.component';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
+
 import { BrowserSupportService } from '../../services/browser-support.service';
 
-const HttpWarning = _('Using OpenSlides over HTTP is not supported. Enable HTTPS to continue.');
+const HttpWarning = _(`Using OpenSlides over HTTP is not supported. Enable HTTPS to continue.`);
 
 /**
  * Login mask component.
@@ -28,9 +28,9 @@ const HttpWarning = _('Using OpenSlides over HTTP is not supported. Enable HTTPS
  * Handles user and guest login
  */
 @Component({
-    selector: 'os-login-mask',
-    templateUrl: './login-mask.component.html',
-    styleUrls: ['./login-mask.component.scss'],
+    selector: `os-login-mask`,
+    templateUrl: `./login-mask.component.html`,
+    styleUrls: [`./login-mask.component.scss`],
     animations: [fadeInAnim]
 })
 export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestroy {
@@ -57,7 +57,7 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
     /**
      * Login Error Message if any
      */
-    public loginErrorMsg = '';
+    public loginErrorMsg = ``;
 
     /**
      * Form group for the login form
@@ -78,7 +78,7 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
     /**
      * The message, that should appear, when the user logs in.
      */
-    private loginMessage = 'Loading data. Please wait ...';
+    private loginMessage = `Loading data. Please wait ...`;
 
     private currentMeetingId: number | null = null;
 
@@ -100,6 +100,7 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private authService: AuthService,
         private operator: OperatorService,
         private router: Router,
@@ -111,7 +112,7 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
         private activeMeeting: ActiveMeetingService,
         private spinnerService: SpinnerService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
         // Hide the spinner if the user is at `login-mask`
         this.createForm();
     }
@@ -124,7 +125,7 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
      */
     public ngOnInit(): void {
         this.subscriptions.push(
-            this.orgaSettings.get('login_text').subscribe(notice => (this.installationNotice = notice)),
+            this.orgaSettings.get(`login_text`).subscribe(notice => (this.installationNotice = notice)),
             this.activeMeeting.meetingObservable.subscribe(meeting => (this._meeting = meeting)),
             this.orgaService.organizationObservable.subscribe(organization => (this._organization = organization))
         );
@@ -143,7 +144,7 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
         });
 
         this.route.queryParams.pipe(filter(params => params.checkBrowser)).subscribe(params => {
-            this.checkBrowser = params.checkBrowser === 'true';
+            this.checkBrowser = params.checkBrowser === `true`;
         });
         this.route.params.subscribe(params => {
             if (params.meetingId) {
@@ -172,14 +173,14 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
      * Send username and password to the {@link AuthService}
      */
     public async formLogin(): Promise<void> {
-        this.loginErrorMsg = '';
+        this.loginErrorMsg = ``;
         try {
             this.spinnerService.show(this.loginMessage, { hideWhenStable: true });
             const { username, password }: { username: string; password: string } = this.loginForm.value;
             await this.authService.login(username, password, this.currentMeetingId);
         } catch (e) {
             this.spinnerService.hide();
-            this.loginForm.get('password').setErrors({ notFound: true });
+            this.loginForm.get(`password`).setErrors({ notFound: true });
             this.loginErrorMsg = e;
         }
         // throw new Error('TODO'); // Ingore SAML for now...
@@ -193,23 +194,23 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
      * Go to the reset password view
      */
     public resetPassword(): void {
-        this.router.navigate(['./reset-password'], { relativeTo: this.route });
+        this.router.navigate([`./reset-password`], { relativeTo: this.route });
     }
 
     private checkForUnsecureConnection(): void {
-        if (location.protocol === 'http:') {
+        if (location.protocol === `http:`) {
             this.raiseWarning(this.translate.instant(HttpWarning));
         }
     }
 
     private checkIfGuestsEnabled(meetingId: string): void {
         this.currentMeetingId = Number(meetingId);
-        this.meetingSettingService.get('enable_anonymous').subscribe(isEnabled => (this.guestsEnabled = isEnabled));
+        this.meetingSettingService.get(`enable_anonymous`).subscribe(isEnabled => (this.guestsEnabled = isEnabled));
     }
 
     private checkDevice(): void {
         if (!this.browserSupport.isBrowserSupported()) {
-            this.router.navigate(['./unsupported-browser'], { relativeTo: this.route });
+            this.router.navigate([`./unsupported-browser`], { relativeTo: this.route });
         }
     }
 
@@ -228,8 +229,8 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
      */
     private createForm(): void {
         this.loginForm = this.formBuilder.group({
-            username: ['', [Validators.required, Validators.maxLength(128)]],
-            password: ['', [Validators.required, Validators.maxLength(128)]]
+            username: [``, [Validators.required, Validators.maxLength(128)]],
+            password: [``, [Validators.required, Validators.maxLength(128)]]
         });
     }
 }

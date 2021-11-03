@@ -1,4 +1,5 @@
 import { Collection, Id } from 'app/core/definitions/key-types';
+
 import { FieldDescriptor, Fields, ModelRequest } from '../core-services/autoupdate.service';
 import { BaseSimplifiedModelRequest } from '../core-services/model-request-builder.service';
 

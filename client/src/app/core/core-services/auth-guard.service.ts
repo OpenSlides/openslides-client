@@ -1,20 +1,20 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, UrlTree } from '@angular/router';
 
+import { Settings } from '../../shared/models/event-management/meeting';
+import { MeetingSettingsService } from '../ui-services/meeting-settings.service';
 import { ActiveMeetingService } from './active-meeting.service';
 import { AuthService } from './auth.service';
 import { FallbackRoutesService } from './fallback-routes.service';
+import { OpenSlidesRouterService } from './openslides-router.service';
 import { OperatorService } from './operator.service';
 import { Permission } from './permission';
-import { MeetingSettingsService } from '../ui-services/meeting-settings.service';
-import { Settings } from '../../shared/models/event-management/meeting';
-import { OpenSlidesRouterService } from './openslides-router.service';
 
 /**
  * Classical Auth-Guard. Checks if the user has to correct permissions to enter a page, and forwards to login if not.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AuthGuard implements CanActivate, CanActivateChild {
     /**
@@ -104,9 +104,9 @@ export class AuthGuard implements CanActivate, CanActivateChild {
         }
         // Fall-through: If the url is the start page, but no other fallback was found,
         // navigate to the error page.
-        this.router.navigate(['/error'], {
+        this.router.navigate([`/error`], {
             queryParams: {
-                error: 'Authentication Error',
+                error: `Authentication Error`,
                 msg: route.data.basePerm
             }
         });

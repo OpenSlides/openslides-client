@@ -1,6 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { ProjectorService } from 'app/core/ui-services/projector.service';
@@ -23,9 +22,9 @@ export type ProjectionDialogReturnType = [
 ];
 
 @Component({
-    selector: 'os-projection-dialog',
-    templateUrl: './projection-dialog.component.html',
-    styleUrls: ['./projection-dialog.component.scss']
+    selector: `os-projection-dialog`,
+    templateUrl: `./projection-dialog.component.html`,
+    styleUrls: [`./projection-dialog.component.scss`]
 })
 export class ProjectionDialogComponent {
     public projectors: ViewProjector[];
@@ -89,11 +88,11 @@ export class ProjectionDialogComponent {
     }
 
     public onProject(): void {
-        this.dialogRef.close(['project', this.descriptor, this.selectedProjectors, this.optionValues]);
+        this.dialogRef.close([`project`, this.descriptor, this.selectedProjectors, this.optionValues]);
     }
 
     public onAddToPreview(): void {
-        this.dialogRef.close(['addToPreview', this.descriptor, this.selectedProjectors, this.optionValues]);
+        this.dialogRef.close([`addToPreview`, this.descriptor, this.selectedProjectors, this.optionValues]);
     }
 
     public onCancel(): void {

@@ -2,6 +2,7 @@ import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.se
 import { BaseModel } from 'app/shared/models/base/base-model';
 import { Projection } from 'app/shared/models/projector/projection';
 import { Projectiondefault } from 'app/shared/models/projector/projector';
+
 import { BaseViewModel } from './base-view-model';
 import { Projectable, ProjectorTitle } from './projectable';
 import { ProjectionBuildDescriptor } from './projection-build-descriptor';

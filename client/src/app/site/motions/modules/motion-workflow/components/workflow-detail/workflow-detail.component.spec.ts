@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { WorkflowDetailComponent } from './workflow-detail.component';
 
-describe('WorkflowDetailComponent', () => {
+describe(`WorkflowDetailComponent`, () => {
     let component: WorkflowDetailComponent;
     let fixture: ComponentFixture<WorkflowDetailComponent>;
 
@@ -23,7 +22,7 @@ describe('WorkflowDetailComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

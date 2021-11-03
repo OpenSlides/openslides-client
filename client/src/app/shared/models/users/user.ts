@@ -1,22 +1,22 @@
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-
 import { CML } from 'app/core/core-services/organization-permission';
 import { Id } from 'app/core/definitions/key-types';
+
+import { OMLMapping } from '../../../core/core-services/organization-permission';
 import { BaseDecimalModel } from '../base/base-decimal-model';
 import { HasProjectionIds } from '../base/has-projectable-ids';
-import { OMLMapping } from '../../../core/core-services/organization-permission';
 
 /**
  * Iterable pre selection of genders (sexes)
  */
-export const genders = [_('female'), _('male'), _('diverse')];
+export const genders = [_(`female`), _(`male`), _(`diverse`)];
 
 /**
  * Representation of a user in contrast to the operator.
  * @ignore
  */
 export class User extends BaseDecimalModel<User> {
-    public static COLLECTION = 'user';
+    public static COLLECTION = `user`;
 
     public id: Id;
     public username: string;
@@ -65,13 +65,13 @@ export class User extends BaseDecimalModel<User> {
     public committee_$_management_level: Id[];
 
     public get isVoteWeightOne(): boolean {
-        throw new Error('TODO');
+        throw new Error(`TODO`);
         // TODO: this is meeting dependend (check for vote_weight_$!) -> must be answered in the view-user
         // return this.default_vote_weight === 1;
     }
 
     public get isVoteRightDelegated(): boolean {
-        throw new Error('TODO');
+        throw new Error(`TODO`);
         // TODO: this is meeting dependend -> must be answered in the view-user
         // return !!this.vote_delegated_to_id(this.meeting_id);
     }
@@ -169,7 +169,7 @@ export class User extends BaseDecimalModel<User> {
     }
 
     protected getDecimalFields(): (keyof User)[] {
-        return ['vote_weight_$', 'default_vote_weight'];
+        return [`vote_weight_$`, `default_vote_weight`];
     }
 }
 export interface User extends HasProjectionIds {}

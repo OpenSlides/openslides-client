@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { LifecycleService } from './lifecycle.service';
@@ -17,7 +16,7 @@ interface ServertimeResponse {
  * the servertime frequently.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ServertimeService {
     // TODO: couple this with the offlineService: Just retry often, if we are online.
@@ -71,8 +70,8 @@ export class ServertimeService {
     private async refreshServertime(): Promise<void> {
         // servertime is the time in seconds.
         const servertimeResponse = await this.presenter.call<ServertimeResponse>(Presenter.SERVERTIME);
-        if (typeof servertimeResponse?.server_time !== 'number') {
-            console.error('The returned servertime has a wrong format:', servertimeResponse);
+        if (typeof servertimeResponse?.server_time !== `number`) {
+            console.error(`The returned servertime has a wrong format:`, servertimeResponse);
             throw new Error();
         }
         const servertime = servertimeResponse.server_time;

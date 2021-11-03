@@ -9,14 +9,14 @@ import { stripHtmlTags } from './strip-html-tags';
  */
 export function getLongPreview(input: string): string {
     if (!input || !input.length) {
-        return '';
+        return ``;
     }
     if (input.length < 300) {
         return stripHtmlTags(input);
     }
     return (
         stripHtmlTags(input.substring(0, 147)) +
-        ' [...] ' +
+        ` [...] ` +
         stripHtmlTags(input.substring(input.length - 150, input.length))
     );
 }
@@ -29,10 +29,10 @@ export function getLongPreview(input: string): string {
  */
 export function getShortPreview(input: string): string {
     if (!input || !input.length) {
-        return '';
+        return ``;
     }
     if (input.length > 50) {
-        return stripHtmlTags(input.substring(0, 47)) + '...';
+        return stripHtmlTags(input.substring(0, 47)) + `...`;
     }
     return stripHtmlTags(input);
 }

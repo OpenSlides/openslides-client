@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-
 import { Follow } from 'app/core/core-services/model-request-builder.service';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { hasListOfSpeakers, ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+
 import { ViewProjector } from '../models/view-projector';
 
 /**
@@ -13,24 +12,24 @@ import { ViewProjector } from '../models/view-projector';
  * and depending on it the content-object's list of speakers.
  */
 export const CURRENT_LIST_OF_SPEAKERS_FOLLOW: Follow = {
-    idField: 'reference_projector_id',
+    idField: `reference_projector_id`,
     follow: [
         {
-            idField: 'current_projection_ids',
+            idField: `current_projection_ids`,
             follow: [
                 {
-                    idField: 'content_object_id',
+                    idField: `content_object_id`,
                     follow: [
                         {
-                            idField: 'list_of_speakers_id',
+                            idField: `list_of_speakers_id`,
                             follow: [
-                                { idField: 'speaker_ids', follow: [{ idField: 'user_id', fieldset: 'shortName' }] }
+                                { idField: `speaker_ids`, follow: [{ idField: `user_id`, fieldset: `shortName` }] }
                             ]
                         }
                     ]
                 }
             ],
-            fieldset: 'content'
+            fieldset: `content`
         }
     ]
 };
@@ -40,7 +39,7 @@ export const CURRENT_LIST_OF_SPEAKERS_FOLLOW: Follow = {
  * current view list of speakers displayed on the projector.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class CurrentListOfSpeakersService {
     /**

@@ -1,8 +1,9 @@
-import { AgendaItemRepositoryService, AgendaListTitle } from './agenda/agenda-item-repository.service';
 import { HasAgendaItemId } from 'app/shared/models/base/has-agenda-item-id';
 import { HasAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { BaseViewModel } from 'app/site/base/base-view-model';
+
 import { BaseModel, ModelConstructor } from '../../shared/models/base/base-model';
+import { AgendaItemRepositoryService, AgendaListTitle } from './agenda/agenda-item-repository.service';
 import { BaseRepositoryWithActiveMeeting } from './base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from './repository-service-collector';
 
@@ -49,7 +50,7 @@ export abstract class BaseIsAgendaItemContentObjectRepository<
     public getAgendaListTitle(viewModel: V): AgendaListTitle {
         // Return the agenda title with the model's verbose name appended
         const numberPrefix = this.agendaItemRepo.getItemNumberPrefix(viewModel);
-        const title = numberPrefix + this.getTitle(viewModel) + ' (' + this.getVerboseName() + ')';
+        const title = numberPrefix + this.getTitle(viewModel) + ` (` + this.getVerboseName() + `)`;
         return { title };
     }
 

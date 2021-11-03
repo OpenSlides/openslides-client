@@ -1,18 +1,18 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
-import { Subject } from 'rxjs';
-
+import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from 'app/core/core-services/auth.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
+import { Id } from 'app/core/definitions/key-types';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { Size } from 'app/site/projector/size';
-import { BaseModelContextComponent } from '../../../site/base/components/base-model-context.component';
+import { Subject } from 'rxjs';
+
 import { ComponentServiceCollector } from '../../../core/ui-services/component-service-collector';
-import { Id } from 'app/core/definitions/key-types';
 import { PROJECTOR_CONTENT_FOLLOW } from '../../../shared/components/projector/projector.component';
+import { BaseModelContextComponent } from '../../../site/base/components/base-model-context.component';
 
 /**
  * The fullscreen projector. Bootstraps OpenSlides, gets the requested projector,
@@ -21,9 +21,9 @@ import { PROJECTOR_CONTENT_FOLLOW } from '../../../shared/components/projector/p
  * DO NOT use this component in the site!
  */
 @Component({
-    selector: 'os-fullscreen-projector',
-    templateUrl: './fullscreen-projector.component.html',
-    styleUrls: ['./fullscreen-projector.component.scss']
+    selector: `os-fullscreen-projector`,
+    templateUrl: `./fullscreen-projector.component.html`,
+    styleUrls: [`./fullscreen-projector.component.scss`]
 })
 export class FullscreenProjectorComponent extends BaseModelContextComponent implements OnInit {
     // TODO: isLoading, canSeeProjector and other issues must be displayed!
@@ -55,13 +55,13 @@ export class FullscreenProjectorComponent extends BaseModelContextComponent impl
      * Used to give the projector the right size.
      */
     public projectorStyle = {
-        width: '100px' // Some default. Will be overwritten soon.
+        width: `100px` // Some default. Will be overwritten soon.
     };
 
     /**
      * The container to get the window size.
      */
-    @ViewChild('container', { static: true })
+    @ViewChild(`container`, { static: true })
     private containerElement: ElementRef;
 
     /**
@@ -74,12 +74,13 @@ export class FullscreenProjectorComponent extends BaseModelContextComponent impl
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         auth: AuthService, // Needed tro trigger loading of OpenSlides. Starts the Bootup process.
         private route: ActivatedRoute,
         private operator: OperatorService,
         private repo: ProjectorRepositoryService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
         this.resizeSubject.subscribe(() => {
             this.updateProjectorDimensions();
         });

@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { Observable } from 'rxjs';
-
+import { TranslateService } from '@ngx-translate/core';
 import { MemberService } from 'app/core/core-services/member.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
@@ -15,13 +13,14 @@ import { ViewCommittee } from 'app/management/models/view-committee';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { Observable } from 'rxjs';
 
-const ForwardLabel = _('Forward motions to');
-const ReceiveLabel = _('Receive motions from');
+const ForwardLabel = _(`Forward motions to`);
+const ReceiveLabel = _(`Receive motions from`);
 @Component({
-    selector: 'os-committee-detail',
-    templateUrl: './committee-detail.component.html',
-    styleUrls: ['./committee-detail.component.scss']
+    selector: `os-committee-detail`,
+    templateUrl: `./committee-detail.component.html`,
+    styleUrls: [`./committee-detail.component.scss`]
 })
 export class CommitteeDetailComponent extends BaseModelContextComponent implements OnInit {
     public forwardLabel = ForwardLabel;
@@ -45,6 +44,7 @@ export class CommitteeDetailComponent extends BaseModelContextComponent implemen
 
     public constructor(
         protected componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private route: ActivatedRoute,
         private router: Router,
         private operator: OperatorService,
@@ -52,7 +52,7 @@ export class CommitteeDetailComponent extends BaseModelContextComponent implemen
         private promptService: PromptService,
         private memberService: MemberService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
         this.subscriptions.push(
             this.route.params.subscribe(async params => {
                 if (params) {
@@ -68,17 +68,17 @@ export class CommitteeDetailComponent extends BaseModelContextComponent implemen
     }
 
     public onCreateMeeting(): void {
-        this.router.navigate(['create'], { relativeTo: this.route });
+        this.router.navigate([`create`], { relativeTo: this.route });
     }
 
     public async onDeleteCommittee(committee: ViewCommittee): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to delete this committee?');
+        const title = this.translate.instant(`Are you sure you want to delete this committee?`);
         const content = committee.name;
 
         const confirmed = await this.promptService.open(title, content);
         if (confirmed) {
             await this.committeeRepo.delete(committee);
-            this.router.navigate(['./committees/']);
+            this.router.navigate([`./committees/`]);
         }
     }
 
@@ -96,20 +96,20 @@ export class CommitteeDetailComponent extends BaseModelContextComponent implemen
             viewModelCtor: ViewCommittee,
             ids: [this.committeeId],
             follow: [
-                { idField: 'forward_to_committee_ids' },
-                { idField: 'receive_forwardings_from_committee_ids' },
+                { idField: `forward_to_committee_ids` },
+                { idField: `receive_forwardings_from_committee_ids` },
                 {
-                    idField: 'meeting_ids',
-                    fieldset: 'preview',
+                    idField: `meeting_ids`,
+                    fieldset: `preview`,
                     follow: [
                         {
-                            idField: 'organization_tag_ids'
+                            idField: `organization_tag_ids`
                         }
                     ]
                 }
             ],
-            fieldset: 'list',
-            additionalFields: ['default_meeting_id']
+            fieldset: `list`,
+            additionalFields: [`default_meeting_id`]
         };
     }
 
@@ -119,9 +119,9 @@ export class CommitteeDetailComponent extends BaseModelContextComponent implemen
             {
                 viewModelCtor: ViewUser,
                 ids: userIds,
-                fieldset: 'committeeEdit'
+                fieldset: `committeeEdit`
             },
-            'loadUsers'
+            `loadUsers`
         );
     }
 }

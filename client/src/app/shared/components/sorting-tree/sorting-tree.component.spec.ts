@@ -1,11 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
+import { Identifiable } from 'app/shared/models/base/identifiable';
+import { Displayable } from 'app/site/base/displayable';
 import { E2EImportsModule } from 'e2e-imports.module';
 import { BehaviorSubject } from 'rxjs';
 
-import { Identifiable } from 'app/shared/models/base/identifiable';
-import { Displayable } from 'app/site/base/displayable';
 import { SortingTreeComponent } from './sorting-tree.component';
 
 /**
@@ -24,10 +23,12 @@ class TestModel implements Identifiable, Displayable {
     public getListTitle = () => this.getTitle();
 }
 
-describe('SortingTreeComponent', () => {
+describe(`SortingTreeComponent`, () => {
     @Component({
-        selector: 'os-host-component',
-        template: '<os-sorting-tree><os-sorting-tree>'
+        selector: `os-host-component`,
+        template: `
+            <os-sorting-tree><os-sorting-tree></os-sorting-tree></os-sorting-tree>
+        `
     })
     class TestHostComponent {
         @ViewChild(SortingTreeComponent, { static: true })
@@ -51,7 +52,7 @@ describe('SortingTreeComponent', () => {
         hostComponent = hostFixture.componentInstance;
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         const models: TestModel[] = [];
         for (let i = 0; i < 10; i++) {
             models.push(new TestModel(i, `TOP${i}`, i, null));

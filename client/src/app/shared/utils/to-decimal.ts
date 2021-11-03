@@ -14,7 +14,7 @@ export function toDecimal(input: string | number): Decimal | undefined {
     if (!input) {
         return undefined;
     }
-    if (typeof input === 'number') {
+    if (typeof input === `number`) {
         return input.toFixed(AMOUNT_DECIMAL_PLACES);
     }
     return parseStringToDecimal(input);
@@ -23,15 +23,15 @@ export function toDecimal(input: string | number): Decimal | undefined {
 function parseStringToDecimal(input: string): Decimal {
     const appending = (value: string, commaIndex: number): string => {
         while (value.length - commaIndex <= AMOUNT_DECIMAL_PLACES) {
-            value += '0';
+            value += `0`;
         }
         return value;
     };
-    const index = input.indexOf('.');
+    const index = input.indexOf(`.`);
     if (index > -1) {
         return appending(input, index);
     } else {
-        input += '.';
+        input += `.`;
         return appending(input, input.length - 1);
     }
 }

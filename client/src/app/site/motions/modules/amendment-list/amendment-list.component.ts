@@ -1,21 +1,16 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-
+import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
-import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-
-import { AmendmentFilterListService } from '../../services/amendment-filter-list.service';
-import { AmendmentSortListService } from '../../services/amendment-sort-list.service';
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
+import { MotionService } from 'app/core/repositories/motions/motion.service';
 import {
     GET_POSSIBLE_RECOMMENDATIONS,
     MotionRepositoryService,
     SUBMITTER_FOLLOW
 } from 'app/core/repositories/motions/motion-repository.service';
-import { MotionService } from 'app/core/repositories/motions/motion.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { LinenumberingService } from 'app/core/ui-services/linenumbering.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
@@ -23,20 +18,25 @@ import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/spea
 import { ItemTypeChoices } from 'app/shared/models/agenda/agenda-item';
 import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
-import { MotionExportDialogComponent } from '../shared-motion/motion-export-dialog/motion-export-dialog.component';
+import { Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+
+import { ViewMotion } from '../../models/view-motion';
+import { AmendmentFilterListService } from '../../services/amendment-filter-list.service';
+import { AmendmentSortListService } from '../../services/amendment-sort-list.service';
 import { MotionExportInfo, MotionExportService } from '../../services/motion-export.service';
 import { MotionMultiselectService } from '../../services/motion-multiselect.service';
 import { MotionPdfExportService } from '../../services/motion-pdf-export.service';
 import { MotionSortListService } from '../../services/motion-sort-list.service';
-import { ViewMotion } from '../../models/view-motion';
+import { MotionExportDialogComponent } from '../shared-motion/motion-export-dialog/motion-export-dialog.component';
 
 /**
  * Shows all the amendments in the NGrid table
  */
 @Component({
-    selector: 'os-amendment-list',
-    templateUrl: './amendment-list.component.html',
-    styleUrls: ['./amendment-list.component.scss'],
+    selector: `os-amendment-list`,
+    templateUrl: `./amendment-list.component.html`,
+    styleUrls: [`./amendment-list.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -63,17 +63,17 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
      */
     public tableColumnDefinition: PblColumnDefinition[] = [
         {
-            prop: 'meta',
+            prop: `meta`,
             minWidth: 250,
-            width: '50%'
+            width: `50%`
         },
         {
-            prop: 'summary',
+            prop: `summary`,
             minWidth: 280,
-            width: '50%'
+            width: `50%`
         },
         {
-            prop: 'speakers',
+            prop: `speakers`,
             width: this.singleButtonWidth
         }
     ];
@@ -81,10 +81,11 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
     /**
      * To filter stuff
      */
-    public filterProps = ['submitters', 'title', 'number'];
+    public filterProps = [`submitters`, `title`, `number`];
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private route: ActivatedRoute,
         public motionRepo: MotionRepositoryService,
         public motionService: MotionService,
@@ -98,20 +99,20 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
         private pdfExport: MotionPdfExportService,
         private activeMeetingIdService: ActiveMeetingIdService
     ) {
-        super(componentServiceCollector);
-        super.setTitle('Amendments');
+        super(componentServiceCollector, translate);
+        super.setTitle(`Amendments`);
         this.canMultiSelect = true;
     }
 
     public ngOnInit(): void {
         super.ngOnInit();
         // determine if a paramter exists.
-        if (this.route.snapshot.paramMap.get('id')) {
+        if (this.route.snapshot.paramMap.get(`id`)) {
             // set the parentMotion observable. This will "only" fire
             // if there is a subscription to the parent motion
             this.parentMotion = this.route.paramMap.pipe(
                 switchMap((params: ParamMap) => {
-                    this.parentMotionId = +params.get('id');
+                    this.parentMotionId = +params.get(`id`);
                     this.amendmentFilterService.parentMotionId = this.parentMotionId;
                     return this.motionRepo.getViewModelObservable(this.parentMotionId);
                 })
@@ -121,7 +122,7 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
         }
 
         this.meetingSettingService
-            .get('motions_show_sequential_number')
+            .get(`motions_show_sequential_number`)
             .subscribe(show => (this.showSequentialNumber = show));
     }
 
@@ -131,25 +132,25 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
             ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
-                    idField: 'motion_ids',
+                    idField: `motion_ids`,
                     follow: [
-                        'category_id',
-                        'block_id',
-                        'tag_ids',
-                        'personal_note_ids',
+                        `category_id`,
+                        `block_id`,
+                        `tag_ids`,
+                        `personal_note_ids`,
                         {
-                            idField: 'state_id',
-                            follow: ['next_state_ids', GET_POSSIBLE_RECOMMENDATIONS],
-                            fieldset: 'list'
+                            idField: `state_id`,
+                            follow: [`next_state_ids`, GET_POSSIBLE_RECOMMENDATIONS],
+                            fieldset: `list`
                         },
                         {
-                            idField: 'recommendation_id',
-                            fieldset: 'list'
+                            idField: `recommendation_id`,
+                            fieldset: `list`
                         },
                         SPEAKER_BUTTON_FOLLOW,
                         SUBMITTER_FOLLOW
                     ],
-                    fieldset: 'amendment'
+                    fieldset: `amendment`
                 }
             ],
             fieldset: []
@@ -165,7 +166,7 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
     public getAmendmentSummary(amendment: ViewMotion): string {
         const diffLines = amendment.diffLines;
         if (diffLines.length) {
-            return diffLines.map(diffLine => this.linenumberingService.stripLineNumbers(diffLine.text)).join('[...]');
+            return diffLines.map(diffLine => this.linenumberingService.stripLineNumbers(diffLine.text)).join(`[...]`);
         } else {
             return amendment.text;
         }

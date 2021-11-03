@@ -1,9 +1,7 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-
-import { BehaviorSubject } from 'rxjs';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
@@ -17,17 +15,18 @@ import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-comment-section';
 import { ViewGroup } from 'app/site/users/models/view-group';
+import { BehaviorSubject } from 'rxjs';
 
 /**
  * List view for the comment sections.
  */
 @Component({
-    selector: 'os-motion-comment-section-list',
-    templateUrl: './motion-comment-section-list.component.html',
-    styleUrls: ['./motion-comment-section-list.component.scss']
+    selector: `os-motion-comment-section-list`,
+    templateUrl: `./motion-comment-section-list.component.html`,
+    styleUrls: [`./motion-comment-section-list.component.scss`]
 })
 export class MotionCommentSectionListComponent extends BaseModelContextComponent implements OnInit {
-    @ViewChild('motionCommentDialog', { static: true })
+    @ViewChild(`motionCommentDialog`, { static: true })
     private motionCommentDialog: TemplateRef<string>;
 
     private dialogRef: MatDialogRef<any>;
@@ -58,6 +57,7 @@ export class MotionCommentSectionListComponent extends BaseModelContextComponent
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
         private repo: MotionCommentSectionRepositoryService,
         private formBuilder: FormBuilder,
         private promptService: PromptService,
@@ -65,10 +65,10 @@ export class MotionCommentSectionListComponent extends BaseModelContextComponent
         private groupRepo: GroupRepositoryService,
         private activeMeetingIdService: ActiveMeetingIdService
     ) {
-        super(componentServiceCollector);
+        super(componentServiceCollector, translate);
 
         const form = {
-            name: ['', Validators.required],
+            name: [``, Validators.required],
             read_group_ids: [[]],
             write_group_ids: [[]]
         };
@@ -80,7 +80,7 @@ export class MotionCommentSectionListComponent extends BaseModelContextComponent
      */
     public ngOnInit(): void {
         super.ngOnInit();
-        super.setTitle('Comment fields');
+        super.setTitle(`Comment fields`);
 
         this.groups = this.groupRepo.getViewModelListBehaviorSubject();
         this.subscriptions.push(
@@ -96,11 +96,11 @@ export class MotionCommentSectionListComponent extends BaseModelContextComponent
             ids: [this.activeMeetingIdService.meetingId],
             follow: [
                 {
-                    idField: 'motion_comment_section_ids',
-                    follow: ['comment_ids', 'read_group_ids', 'write_group_ids']
+                    idField: `motion_comment_section_ids`,
+                    follow: [`comment_ids`, `read_group_ids`, `write_group_ids`]
                 },
                 {
-                    idField: 'group_ids'
+                    idField: `group_ids`
                 }
             ]
         };
@@ -113,11 +113,11 @@ export class MotionCommentSectionListComponent extends BaseModelContextComponent
      * @param the current view in scope
      */
     public onKeyDown(event: KeyboardEvent, viewSection?: ViewMotionCommentSection): void {
-        if (event.key === 'Enter' && event.shiftKey) {
+        if (event.key === `Enter` && event.shiftKey) {
             this.save();
             this.dialogRef.close();
         }
-        if (event.key === 'Escape') {
+        if (event.key === `Escape`) {
             this.dialogRef.close();
         }
     }
@@ -128,7 +128,7 @@ export class MotionCommentSectionListComponent extends BaseModelContextComponent
     public openDialog(commentSection?: ViewMotionCommentSection): void {
         this.currentComment = commentSection;
         this.commentFieldForm.reset({
-            name: commentSection ? commentSection.name : '',
+            name: commentSection ? commentSection.name : ``,
             read_group_ids: commentSection ? commentSection.read_group_ids : [],
             write_group_ids: commentSection ? commentSection.write_group_ids : []
         });
@@ -161,7 +161,7 @@ export class MotionCommentSectionListComponent extends BaseModelContextComponent
      * @param viewSection The section to delete
      */
     public async onDeleteButton(viewSection: ViewMotionCommentSection): Promise<void> {
-        const title = this.translate.instant('Are you sure you want to delete this comment field?');
+        const title = this.translate.instant(`Are you sure you want to delete this comment field?`);
         const content = viewSection.name;
         if (await this.promptService.open(title, content)) {
             this.handleRequest(this.deleteSection(viewSection));

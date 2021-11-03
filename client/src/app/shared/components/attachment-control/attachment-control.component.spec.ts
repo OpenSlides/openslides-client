@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { AttachmentControlComponent } from './attachment-control.component';
 
-describe('AttachmentControlComponent', () => {
+describe(`AttachmentControlComponent`, () => {
     let component: AttachmentControlComponent;
     let fixture: ComponentFixture<AttachmentControlComponent>;
 
@@ -22,7 +21,7 @@ describe('AttachmentControlComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

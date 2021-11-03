@@ -1,12 +1,13 @@
 import { Directive, EventEmitter, ViewChild } from '@angular/core';
-
+import { TranslateService } from '@ngx-translate/core';
 import { SortDefinition } from 'app/core/ui-services/base-sort.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { SortingTreeComponent } from 'app/shared/components/sorting-tree/sorting-tree.component';
 import { CanComponentDeactivate } from 'app/shared/utils/watch-for-changes.guard';
-import { BaseModelContextComponent } from './base-model-context.component';
+
 import { BaseViewModel } from '../base-view-model';
+import { BaseModelContextComponent } from './base-model-context.component';
 
 export type SortTreeFilterId = string | number;
 
@@ -27,7 +28,7 @@ export abstract class BaseSortTreeComponent<V extends BaseViewModel>
     /**
      * Reference to the view child
      */
-    @ViewChild('osSortedTree', { static: true })
+    @ViewChild(`osSortedTree`, { static: true })
     public osSortTree: SortingTreeComponent<V>;
 
     /**
@@ -70,8 +71,12 @@ export abstract class BaseSortTreeComponent<V extends BaseViewModel>
      * @param matSnackBar
      * @param promptService
      */
-    public constructor(componentServiceCollector: ComponentServiceCollector, protected promptService: PromptService) {
-        super(componentServiceCollector);
+    public constructor(
+        componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
+        protected promptService: PromptService
+    ) {
+        super(componentServiceCollector, translate);
     }
 
     /**
@@ -120,8 +125,8 @@ export abstract class BaseSortTreeComponent<V extends BaseViewModel>
      */
     public async canDeactivate(): Promise<boolean> {
         if (this.hasChanged) {
-            const title = this.translate.instant('Do you really want to exit this page?');
-            const content = this.translate.instant('You made changes.');
+            const title = this.translate.instant(`Do you really want to exit this page?`);
+            const content = this.translate.instant(`You made changes.`);
             return await this.promptService.open(title, content);
         }
         return true;

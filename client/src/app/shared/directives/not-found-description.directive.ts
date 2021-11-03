@@ -1,4 +1,4 @@
 import { Directive } from '@angular/core';
 
-@Directive({ selector: '[osNotFoundDescription]' })
+@Directive({ selector: `[osNotFoundDescription]` })
 export class NotFoundDescriptionDirective {}

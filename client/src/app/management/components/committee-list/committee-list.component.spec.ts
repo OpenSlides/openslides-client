@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { CommitteeListComponent } from './committee-list.component';
 
-describe('CommitteeListComponent', () => {
+describe(`CommitteeListComponent`, () => {
     let component: CommitteeListComponent;
     let fixture: ComponentFixture<CommitteeListComponent>;
 
@@ -21,7 +20,7 @@ describe('CommitteeListComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

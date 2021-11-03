@@ -1,11 +1,12 @@
 import { Identifiable } from 'app/shared/models/base/identifiable';
-import { ModificationType } from '../ui-services/diff.service';
+
 import { Id, UnsafeHtml } from '../definitions/key-types';
+import { ModificationType } from '../ui-services/diff.service';
 
 export namespace MotionChangeRecommendationAction {
-    export const CREATE = 'motion_change_recommendation.create';
-    export const UPDATE = 'motion_change_recommendation.update';
-    export const DELETE = 'motion_change_recommendation.delete';
+    export const CREATE = `motion_change_recommendation.create`;
+    export const UPDATE = `motion_change_recommendation.update`;
+    export const DELETE = `motion_change_recommendation.delete`;
 
     interface MotionChangeRecommendationAttributes {
         rejected?: boolean;

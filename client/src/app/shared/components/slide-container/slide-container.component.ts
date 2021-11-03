@@ -1,5 +1,5 @@
 import { Component, ComponentRef, Input, ViewChild, ViewContainerRef } from '@angular/core';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { SlideData } from 'app/core/ui-services/projector.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
@@ -16,14 +16,14 @@ function hasError(obj: object): obj is { error: string } {
  * and loading of slides.
  */
 @Component({
-    selector: 'os-slide-container',
-    templateUrl: './slide-container.component.html',
-    styleUrls: ['./slide-container.component.scss']
+    selector: `os-slide-container`,
+    templateUrl: `./slide-container.component.html`,
+    styleUrls: [`./slide-container.component.scss`]
 })
 export class SlideContainerComponent extends BaseComponent {
     private previousSlideName: string;
 
-    @ViewChild('slide', { read: ViewContainerRef, static: true })
+    @ViewChild(`slide`, { read: ViewContainerRef, static: true })
     private slide: ViewContainerRef;
     private slideRef: ComponentRef<BaseSlideComponent<object>>;
 
@@ -56,7 +56,7 @@ export class SlideContainerComponent extends BaseComponent {
             }
 
             if (error) {
-                console.error('slide error: ', error, '\nSlide was: ', slideData);
+                console.error(`slide error: `, error, `\nSlide was: `, slideData);
             }
             return;
         }
@@ -137,12 +137,16 @@ export class SlideContainerComponent extends BaseComponent {
      * Styles for scaling and scrolling.
      */
     public slideStyle: { 'font-size': string; 'margin-top': string } = {
-        'font-size': '100%',
-        'margin-top': '50px'
+        'font-size': `100%`,
+        'margin-top': `50px`
     };
 
-    public constructor(componentServiceCollector: ComponentServiceCollector, private slideManager: SlideManager) {
-        super(componentServiceCollector);
+    public constructor(
+        componentServiceCollector: ComponentServiceCollector,
+        protected translate: TranslateService,
+        private slideManager: SlideManager
+    ) {
+        super(componentServiceCollector, translate);
     }
 
     /**
@@ -156,9 +160,9 @@ export class SlideContainerComponent extends BaseComponent {
             if (this.projector && this.projector.show_header_footer) {
                 value += 50; // Default offset for the header
             }
-            this.slideStyle['margin-top'] = `${value}px`;
+            this.slideStyle[`margin-top`] = `${value}px`;
         } else {
-            this.slideStyle['margin-top'] = '0px';
+            this.slideStyle[`margin-top`] = `0px`;
 
             if (this.slideIsAutonomic && isBaseScaleScrollSlideComponent(this.slideRef.instance)) {
                 this.slideRef.instance.scroll = this.scroll;
@@ -174,9 +178,9 @@ export class SlideContainerComponent extends BaseComponent {
             let scale = this.scale;
             scale *= 10;
             scale += 100;
-            this.slideStyle['font-size'] = `${scale}%`;
+            this.slideStyle[`font-size`] = `${scale}%`;
         } else {
-            this.slideStyle['font-size'] = '100%';
+            this.slideStyle[`font-size`] = `100%`;
 
             if (this.slideIsAutonomic && isBaseScaleScrollSlideComponent(this.slideRef.instance)) {
                 this.slideRef.instance.scale = this.scale;

@@ -1,4 +1,5 @@
 import { Fqid, Id } from 'app/core/definitions/key-types';
+
 import { BaseModel } from '../base/base-model';
 import { HasMeetingId } from '../base/has-meeting-id';
 
@@ -7,7 +8,7 @@ import { HasMeetingId } from '../base/has-meeting-id';
  * @ignore
  */
 export class PersonalNote extends BaseModel<PersonalNote> {
-    public static COLLECTION = 'personal_note';
+    public static COLLECTION = `personal_note`;
 
     public id: Id;
     public note: string;

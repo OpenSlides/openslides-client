@@ -5,8 +5,8 @@ import { LoginLegalNoticeComponent } from './site/login/components/login-legal-n
 import { LoginMaskComponent } from './site/login/components/login-mask/login-mask.component';
 import { LoginPrivacyPolicyComponent } from './site/login/components/login-privacy-policy/login-privacy-policy.component';
 import { LoginWrapperComponent } from './site/login/components/login-wrapper/login-wrapper.component';
-import { ResetPasswordConfirmComponent } from './site/login/components/reset-password-confirm/reset-password-confirm.component';
 import { ResetPasswordComponent } from './site/login/components/reset-password/reset-password.component';
+import { ResetPasswordConfirmComponent } from './site/login/components/reset-password-confirm/reset-password-confirm.component';
 import { UnsupportedBrowserComponent } from './site/login/components/unsupported-browser/unsupported-browser.component';
 
 /**
@@ -14,22 +14,22 @@ import { UnsupportedBrowserComponent } from './site/login/components/unsupported
  */
 const routes: Route[] = [
     {
-        path: 'login',
+        path: `login`,
         component: LoginWrapperComponent,
         children: [
-            { path: '', component: LoginMaskComponent, pathMatch: 'full' },
-            { path: 'reset-password', component: ResetPasswordComponent },
-            { path: 'reset-password-confirm', component: ResetPasswordConfirmComponent },
-            { path: 'legalnotice', component: LoginLegalNoticeComponent },
-            { path: 'privacypolicy', component: LoginPrivacyPolicyComponent },
-            { path: 'unsupported-browser', component: UnsupportedBrowserComponent }
+            { path: ``, component: LoginMaskComponent, pathMatch: `full` },
+            { path: `reset-password`, component: ResetPasswordComponent },
+            { path: `reset-password-confirm`, component: ResetPasswordConfirmComponent },
+            { path: `legalnotice`, component: LoginLegalNoticeComponent },
+            { path: `privacypolicy`, component: LoginPrivacyPolicyComponent },
+            { path: `unsupported-browser`, component: UnsupportedBrowserComponent }
         ]
     },
     {
-        path: '',
-        loadChildren: () => import('./main/main.module').then(m => m.MainModule)
+        path: ``,
+        loadChildren: () => import(`./main/main.module`).then(m => m.MainModule)
     },
-    { path: '**', redirectTo: '' }
+    { path: `**`, redirectTo: `` }
 ];
 
 @Injectable()
@@ -50,7 +50,7 @@ export class MyStrategy extends RouteReuseStrategy {
 }
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload', relativeLinkResolution: 'legacy' })],
+    imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: `reload`, relativeLinkResolution: `legacy` })],
     exports: [RouterModule],
     providers: [{ provide: RouteReuseStrategy, useClass: MyStrategy }]
 })

@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-
-import { BehaviorSubject, Observable } from 'rxjs';
-
-import { ProjectorService } from 'app/core/ui-services/projector.service';
 import { ProjectorRepositoryService } from 'app/core/repositories/projector/projector-repository.service';
+import { ProjectorService } from 'app/core/ui-services/projector.service';
 import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { SlideManager } from 'app/slides/services/slide-manager.service';
+import { BehaviorSubject, Observable } from 'rxjs';
+
 import { ViewProjector } from '../models/view-projector';
 
 /**
@@ -13,7 +12,7 @@ import { ViewProjector } from '../models/view-projector';
  * current view list of speakers displayed on the projector.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class CurrentListOfSpeakersService {
     private currentListOfSpeakersIds: { [projectorId: number]: BehaviorSubject<ViewListOfSpeakers | null> } = {};
@@ -69,7 +68,7 @@ export class CurrentListOfSpeakersService {
                 // make TypeScript silent.
             }
         }*/
-        throw new Error('TODO');
+        throw new Error(`TODO`);
         return null;
     }
 }

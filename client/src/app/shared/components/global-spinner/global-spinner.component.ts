@@ -1,17 +1,15 @@
 // External imports
 import { Component, Inject } from '@angular/core';
-
 import { TranslateService } from '@ngx-translate/core';
-
 import { OVERLAY_COMPONENT_DATA } from 'app/core/ui-services/overlay.service';
 
 /**
  * Component for the global spinner.
  */
 @Component({
-    selector: 'os-global-spinner',
-    templateUrl: './global-spinner.component.html',
-    styleUrls: ['./global-spinner.component.scss']
+    selector: `os-global-spinner`,
+    templateUrl: `./global-spinner.component.html`,
+    styleUrls: [`./global-spinner.component.scss`]
 })
 export class GlobalSpinnerComponent {
     /**
@@ -27,6 +25,6 @@ export class GlobalSpinnerComponent {
      * @param cd Service to manual initiate a change of the UI.
      */
     public constructor(protected translate: TranslateService, @Inject(OVERLAY_COMPONENT_DATA) data: { text: string }) {
-        this.text = data?.text || 'Loading data. Please wait ...';
+        this.text = data?.text || `Loading data. Please wait ...`;
     }
 }

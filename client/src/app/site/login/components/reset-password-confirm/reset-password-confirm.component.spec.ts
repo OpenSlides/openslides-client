@@ -1,19 +1,18 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { ResetPasswordConfirmComponent } from './reset-password-confirm.component';
 
 let matSnackBarSpy: MatSnackBar;
 
-describe('ResetPasswordConfirmComponent', () => {
+describe(`ResetPasswordConfirmComponent`, () => {
     let component: ResetPasswordConfirmComponent;
     let fixture: ComponentFixture<ResetPasswordConfirmComponent>;
 
     beforeEach(
         waitForAsync(() => {
-            const spy = jasmine.createSpyObj('MatSnackBar', ['open']);
+            const spy = jasmine.createSpyObj(`MatSnackBar`, [`open`]);
 
             TestBed.configureTestingModule({
                 imports: [E2EImportsModule],
@@ -28,7 +27,7 @@ describe('ResetPasswordConfirmComponent', () => {
         component = fixture.componentInstance;
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 

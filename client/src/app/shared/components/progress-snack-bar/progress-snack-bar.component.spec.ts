@@ -1,11 +1,10 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatSnackBarRef } from '@angular/material/snack-bar';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { ProgressSnackBarComponent } from './progress-snack-bar.component';
 
-describe('ProgressSnackBarComponent', () => {
+describe(`ProgressSnackBarComponent`, () => {
     let component: ProgressSnackBarComponent;
     let fixture: ComponentFixture<ProgressSnackBarComponent>;
 
@@ -24,7 +23,7 @@ describe('ProgressSnackBarComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

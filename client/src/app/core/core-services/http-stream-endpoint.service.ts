@@ -8,7 +8,7 @@ export class EndpointConfiguration {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class HttpStreamEndpointService {
     private endpointConfigurations: { [endpoint: string]: EndpointConfiguration } = {};

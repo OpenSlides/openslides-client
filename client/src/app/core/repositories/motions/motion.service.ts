@@ -1,20 +1,19 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-
 import { Id } from 'app/core/definitions/key-types';
 import { mediumDialogSettings } from 'app/shared/utils/dialog-settings';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { MotionForwardDialogComponent } from 'app/site/motions/modules/motion-detail/components/motion-forward-dialog/motion-forward-dialog.component';
 import { MotionFormatService } from 'app/site/motions/services/motion-format.service';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { MotionRepositoryService } from './motion-repository.service';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MotionService {
     public constructor(
@@ -34,11 +33,11 @@ export class MotionService {
             try {
                 const forwardMotions = motions.map(motion => this.motionFormatService.formatMotionForForward(motion));
                 await this.repo.createForwarded(toMeetingIds, ...forwardMotions);
-                const verboseName = motions.length === 1 ? 'motion' : 'motions';
+                const verboseName = motions.length === 1 ? `motion` : `motions`;
                 const message = `${motions.length} ${this.translate.instant(`${verboseName} successfully forwarded`)}`;
-                this.snackbar.open(message, 'Ok');
+                this.snackbar.open(message, `Ok`);
             } catch (e) {
-                this.snackbar.open(e.toString(), 'Ok');
+                this.snackbar.open(e.toString(), `Ok`);
             }
         }
     }
@@ -57,7 +56,7 @@ export class MotionService {
         }
         let state = this.translate.instant(motion.state.name);
         if (motion.stateExtension && motion.state.show_state_extension_field) {
-            state += ' ' + this.parseMotionPlaceholders(motion.stateExtension);
+            state += ` ` + this.parseMotionPlaceholders(motion.stateExtension);
         }
         return state;
     }
@@ -73,11 +72,11 @@ export class MotionService {
         if (motion.recommendation) {
             let rec = this.translate.instant(motion.recommendation.recommendation_label);
             if (motion.recommendationExtension && motion.recommendation.show_recommendation_extension_field) {
-                rec += ' ' + this.parseMotionPlaceholders(motion.recommendationExtension);
+                rec += ` ` + this.parseMotionPlaceholders(motion.recommendationExtension);
             }
             return rec;
         }
-        return '';
+        return ``;
     }
 
     /**
@@ -119,7 +118,7 @@ export class MotionService {
             if (motion) {
                 return motion.getNumberOrTitle();
             } else {
-                return this.translate.instant('<unknown motion>');
+                return this.translate.instant(`<unknown motion>`);
             }
         });
     }

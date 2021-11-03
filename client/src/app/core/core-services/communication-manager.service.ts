@@ -1,9 +1,9 @@
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
+import { HttpStream } from './http-stream';
 import { LifecycleService } from './lifecycle.service';
 import { OfflineBroadcastService } from './offline-broadcast.service';
-import { HttpStream } from './http-stream';
 
 export type HttpParamsGetter = () => HttpParams | { [param: string]: string | string[] };
 export type HttpBodyGetter = () => any;
@@ -24,7 +24,7 @@ const LOG = true;
  *   -> Make sure that the streams are build in a way, that it handles reconnects.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class CommunicationManagerService {
     private isRunning = false;
@@ -47,7 +47,7 @@ export class CommunicationManagerService {
             stream.open();
         }
         if (LOG) {
-            console.log('OPENED', stream.id, stream.description, stream);
+            console.log(`OPENED`, stream.id, stream.description, stream);
             this.printActiveStreams();
         }
         return () => this.closeHttpStream(stream);
@@ -80,7 +80,7 @@ export class CommunicationManagerService {
         stream.close();
         delete this.activeStreams[stream.id];
         if (LOG) {
-            console.log('Closed', stream.id);
+            console.log(`Closed`, stream.id);
             this.printActiveStreams();
         }
     }
@@ -94,6 +94,6 @@ export class CommunicationManagerService {
             const stream = this.activeStreams[id];
             openStreamsMap[id] = { id, stream, description: stream.description };
         }
-        console.log(streamIds.length, 'open streams:', openStreamsMap);
+        console.log(streamIds.length, `open streams:`, openStreamsMap);
     }
 }

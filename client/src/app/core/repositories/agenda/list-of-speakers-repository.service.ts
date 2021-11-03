@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-
 import { ListOfSpeakersAction } from 'app/core/actions/list-of-speakers-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { ListOfSpeakers } from 'app/shared/models/agenda/list-of-speakers';
 import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { ViewSpeaker } from 'app/site/agenda/models/view-speaker';
+
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
@@ -25,7 +25,7 @@ export interface SpeakingTimeStructureLevelObject {
  * Documentation partially provided in {@link BaseRepository}
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ListOfSpeakersRepositoryService extends BaseRepositoryWithActiveMeeting<
     ViewListOfSpeakers,
@@ -36,14 +36,14 @@ export class ListOfSpeakersRepositoryService extends BaseRepositoryWithActiveMee
     }
 
     public getFieldsets(): Fieldsets<ListOfSpeakers> {
-        const defaultFieldset: (keyof ListOfSpeakers)[] = ['closed', 'content_object_id', 'speaker_ids'];
+        const defaultFieldset: (keyof ListOfSpeakers)[] = [`closed`, `content_object_id`, `speaker_ids`];
         return {
             [DEFAULT_FIELDSET]: defaultFieldset
         };
     }
 
     public getVerboseName = (plural: boolean = false) =>
-        this.translate.instant(plural ? 'Lists of speakers' : 'List of speakers');
+        this.translate.instant(plural ? `Lists of speakers` : `List of speakers`);
 
     public getTitle = (viewListOfSpeakers: ViewListOfSpeakers) => {
         if (viewListOfSpeakers.content_object) {
@@ -119,7 +119,7 @@ export class ListOfSpeakersRepositoryService extends BaseRepositoryWithActiveMee
         return {
             structureLevel:
                 !speaker.user || (speaker.user && !speaker.user.structure_level())
-                    ? '–'
+                    ? `–`
                     : speaker.user.structure_level(),
             finishedSpeakers: [speaker],
             speakingTime: this.getSpeakingTimeAsNumber(speaker)

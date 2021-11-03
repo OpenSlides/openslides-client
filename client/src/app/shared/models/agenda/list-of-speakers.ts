@@ -1,4 +1,5 @@
 import { Fqid, Id } from 'app/core/definitions/key-types';
+
 import { BaseModel } from '../base/base-model';
 import { HasMeetingId } from '../base/has-meeting-id';
 import { HasProjectionIds } from '../base/has-projectable-ids';
@@ -8,7 +9,7 @@ import { HasProjectionIds } from '../base/has-projectable-ids';
  * @ignore
  */
 export class ListOfSpeakers extends BaseModel<ListOfSpeakers> {
-    public static COLLECTION = 'list_of_speakers';
+    public static COLLECTION = `list_of_speakers`;
 
     public id: Id;
     public closed: boolean;

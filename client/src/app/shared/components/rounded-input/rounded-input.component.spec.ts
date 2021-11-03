@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { RoundedInputComponent } from './rounded-input.component';
 
-describe('RoundedInputComponent', () => {
+describe(`RoundedInputComponent`, () => {
     let component: RoundedInputComponent;
     let fixture: ComponentFixture<RoundedInputComponent>;
 
@@ -22,7 +21,7 @@ describe('RoundedInputComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

@@ -2,10 +2,6 @@ import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatButtonToggle } from '@angular/material/button-toggle';
 import { MatDialogRef } from '@angular/material/dialog';
-
-import { BehaviorSubject } from 'rxjs';
-import { auditTime } from 'rxjs/operators';
-
 import { Permission } from 'app/core/core-services/permission';
 import { StorageService } from 'app/core/core-services/storage.service';
 import { MotionCommentSectionRepositoryService } from 'app/core/repositories/motions/motion-comment-section-repository.service';
@@ -19,14 +15,16 @@ import {
 } from 'app/site/motions/motions.constants';
 import { motionImportExportHeaderOrder, noMetaData } from 'app/site/motions/motions.constants';
 import { MotionExportInfo } from 'app/site/motions/services/motion-export.service';
+import { BehaviorSubject } from 'rxjs';
+import { auditTime } from 'rxjs/operators';
 
 /**
  * Dialog component to determine exporting.
  */
 @Component({
-    selector: 'os-motion-export-dialog',
-    templateUrl: './motion-export-dialog.component.html',
-    styleUrls: ['./motion-export-dialog.component.scss'],
+    selector: `os-motion-export-dialog`,
+    templateUrl: `./motion-export-dialog.component.html`,
+    styleUrls: [`./motion-export-dialog.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
 export class MotionExportDialogComponent implements OnInit {
@@ -67,9 +65,9 @@ export class MotionExportDialogComponent implements OnInit {
      */
     private defaults: MotionExportInfo = {
         format: ExportFileFormat.PDF,
-        content: ['text', 'reason'],
-        pdfOptions: ['toc', 'page', 'addBreaks'],
-        metaInfo: ['submitters', 'state', 'recommendation', 'category', 'origin', 'tags', 'block', 'polls']
+        content: [`text`, `reason`],
+        pdfOptions: [`toc`, `page`, `addBreaks`],
+        metaInfo: [`submitters`, `state`, `recommendation`, `category`, `origin`, `tags`, `block`, `polls`]
     };
 
     /**
@@ -87,19 +85,19 @@ export class MotionExportDialogComponent implements OnInit {
     /**
      * To deactivate the export-as-diff button
      */
-    @ViewChild('diffVersionButton', { static: true })
+    @ViewChild(`diffVersionButton`, { static: true })
     public diffVersionButton: MatButtonToggle;
 
     /**
      * To deactivate the voting result button
      */
-    @ViewChild('votingResultButton', { static: true })
+    @ViewChild(`votingResultButton`, { static: true })
     public votingResultButton: MatButtonToggle;
 
     /**
      * To deactivate the speakers button.
      */
-    @ViewChild('speakersButton')
+    @ViewChild(`speakersButton`)
     public speakersButton: MatButtonToggle;
 
     /**
@@ -120,11 +118,11 @@ export class MotionExportDialogComponent implements OnInit {
         public commentRepo: MotionCommentSectionRepositoryService,
         private store: StorageService
     ) {
-        this.defaults.lnMode = this.meetingSettingsService.instant('motions_default_line_numbering');
-        this.defaults.crMode = this.meetingSettingsService.instant('motions_recommendation_text_mode');
+        this.defaults.lnMode = this.meetingSettingsService.instant(`motions_default_line_numbering`);
+        this.defaults.crMode = this.meetingSettingsService.instant(`motions_recommendation_text_mode`);
         this.commentsSubject = this.commentRepo.getViewModelListBehaviorSubject();
-        if (this.meetingSettingsService.instant('motions_show_sequential_number')) {
-            this.defaults.metaInfo.push('id');
+        if (this.meetingSettingsService.instant(`motions_show_sequential_number`)) {
+            this.defaults.metaInfo.push(`id`);
         }
         // Get the export order, exclude everything that does not count as meta-data
         this.metaInfoExportOrder = motionImportExportHeaderOrder.filter(
@@ -139,10 +137,10 @@ export class MotionExportDialogComponent implements OnInit {
      */
     public ngOnInit(): void {
         this.exportForm.valueChanges.pipe(auditTime(500)).subscribe((value: MotionExportInfo) => {
-            this.store.set('motion_export_selection', value);
+            this.store.set(`motion_export_selection`, value);
         });
 
-        this.exportForm.get('format').valueChanges.subscribe((value: ExportFileFormat) => this.onFormatChange(value));
+        this.exportForm.get(`format`).valueChanges.subscribe((value: ExportFileFormat) => this.onFormatChange(value));
     }
 
     /**
@@ -152,31 +150,31 @@ export class MotionExportDialogComponent implements OnInit {
     private onFormatChange(format: ExportFileFormat): void {
         // XLSX cannot have "content"
         if (format === ExportFileFormat.XLSX) {
-            this.disableControl('content');
+            this.disableControl(`content`);
             this.changeStateOfButton(this.speakersButton, false);
         } else {
-            this.enableControl('content');
+            this.enableControl(`content`);
             this.changeStateOfButton(this.speakersButton, true);
         }
 
         if (format === ExportFileFormat.CSV || format === ExportFileFormat.XLSX) {
-            this.disableControl('lnMode');
-            this.disableControl('crMode');
-            this.disableControl('pdfOptions');
+            this.disableControl(`lnMode`);
+            this.disableControl(`crMode`);
+            this.disableControl(`pdfOptions`);
 
             // remove the selection of "votingResult"
             if (format === ExportFileFormat.CSV) {
-                this.disableMetaInfoControl('polls', 'speakers');
+                this.disableMetaInfoControl(`polls`, `speakers`);
             } else {
-                this.disableMetaInfoControl('polls');
+                this.disableMetaInfoControl(`polls`);
             }
             this.votingResultButton.disabled = true;
         }
 
         if (format === ExportFileFormat.PDF) {
-            this.enableControl('lnMode');
-            this.enableControl('crMode');
-            this.enableControl('pdfOptions');
+            this.enableControl(`lnMode`);
+            this.enableControl(`crMode`);
+            this.enableControl(`pdfOptions`);
             this.votingResultButton.disabled = false;
         }
     }
@@ -220,9 +218,9 @@ export class MotionExportDialogComponent implements OnInit {
      */
     private getOffState(control: string): string | null {
         switch (control) {
-            case 'lnMode':
+            case `lnMode`:
                 return this.lnMode.None;
-            case 'crMode':
+            case `crMode`:
                 return this.crMode.Original;
             default:
                 return null;
@@ -235,10 +233,10 @@ export class MotionExportDialogComponent implements OnInit {
      * @param fields All fields to deactivate.
      */
     private disableMetaInfoControl(...fields: string[]): void {
-        let metaInfoVal: string[] = this.exportForm.get('metaInfo').value;
+        let metaInfoVal: string[] = this.exportForm.get(`metaInfo`).value;
         if (metaInfoVal) {
             metaInfoVal = metaInfoVal.filter(info => !fields.includes(info));
-            this.exportForm.get('metaInfo').setValue(metaInfoVal);
+            this.exportForm.get(`metaInfo`).setValue(metaInfoVal);
         }
     }
 
@@ -257,7 +255,7 @@ export class MotionExportDialogComponent implements OnInit {
         });
 
         // restore selection or set default
-        this.store.get<MotionExportInfo>('motion_export_selection').then(restored => {
+        this.store.get<MotionExportInfo>(`motion_export_selection`).then(restored => {
             if (restored) {
                 this.exportForm.patchValue(restored);
             } else {
@@ -278,14 +276,14 @@ export class MotionExportDialogComponent implements OnInit {
      */
     public getLabelForMetadata(metaDataName: string): string {
         switch (metaDataName) {
-            case 'polls': {
-                return 'Voting result';
+            case `polls`: {
+                return `Voting result`;
             }
-            case 'id': {
-                return 'Sequential number';
+            case `id`: {
+                return `Sequential number`;
             }
-            case 'block': {
-                return 'Motion block';
+            case `block`: {
+                return `Motion block`;
             }
             default: {
                 return metaDataName.charAt(0).toUpperCase() + metaDataName.slice(1);

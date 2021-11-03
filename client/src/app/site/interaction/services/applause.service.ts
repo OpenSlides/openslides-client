@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-
+import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 
-import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { HttpService } from '../../../core/core-services/http.service';
 import { NotifyService } from '../../../core/core-services/notify.service';
 
@@ -13,15 +12,15 @@ export interface Applause {
 }
 
 export enum ApplauseType {
-    particles = 'applause-type-particles',
-    bar = 'applause-type-bar'
+    particles = `applause-type-particles`,
+    bar = `applause-type-bar`
 }
 
-const applausePath = '/system/applause'; // TODO
-const applauseNotifyMessageName = 'applause'; // TODO
+const applausePath = `/system/applause`; // TODO
+const applauseNotifyMessageName = `applause`; // TODO
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ApplauseService {
     private minApplauseLevel: number;
@@ -63,20 +62,20 @@ export class ApplauseService {
         private httpService: HttpService,
         private notifyService: NotifyService
     ) {
-        this.showApplauseObservable = settingService.get('applause_enable');
-        this.applauseTypeObservable = settingService.get('applause_type');
-        this.showApplauseLevelConfigObservable = settingService.get('applause_show_level');
+        this.showApplauseObservable = settingService.get(`applause_enable`);
+        this.applauseTypeObservable = settingService.get(`applause_type`);
+        this.showApplauseLevelConfigObservable = settingService.get(`applause_show_level`);
 
-        this.applauseTimeoutObservable = settingService.get('applause_timeout').pipe(map(timeout => timeout * 1000));
+        this.applauseTimeoutObservable = settingService.get(`applause_timeout`).pipe(map(timeout => timeout * 1000));
 
         this.applauseTimeoutObservable.subscribe(timeout => {
             this.applauseTimeout = timeout;
         });
 
-        settingService.get('applause_min_amount').subscribe(minLevel => {
+        settingService.get(`applause_min_amount`).subscribe(minLevel => {
             this.minApplauseLevel = minLevel;
         });
-        settingService.get('applause_max_amount').subscribe(maxLevel => {
+        settingService.get(`applause_max_amount`).subscribe(maxLevel => {
             this.maxApplauseLevel = maxLevel;
         });
 

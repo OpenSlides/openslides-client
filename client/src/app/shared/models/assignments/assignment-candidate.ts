@@ -1,4 +1,5 @@
 import { Id } from 'app/core/definitions/key-types';
+
 import { BaseModel } from '../base/base-model';
 import { HasMeetingId } from '../base/has-meeting-id';
 
@@ -6,7 +7,7 @@ import { HasMeetingId } from '../base/has-meeting-id';
  * Content of the 'assignment_related_users' property.
  */
 export class AssignmentCandidate extends BaseModel<AssignmentCandidate> {
-    public static COLLECTION = 'assignment_candidate';
+    public static COLLECTION = `assignment_candidate`;
 
     public id: Id;
     public weight: number;

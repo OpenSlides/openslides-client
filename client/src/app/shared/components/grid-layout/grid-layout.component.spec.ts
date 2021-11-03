@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { E2EImportsModule } from 'e2e-imports.module';
 
 import { GridLayoutComponent } from './grid-layout.component';
 
-describe('GridLayoutComponent', () => {
+describe(`GridLayoutComponent`, () => {
     let component: GridLayoutComponent;
     let fixture: ComponentFixture<GridLayoutComponent>;
 
@@ -23,7 +22,7 @@ describe('GridLayoutComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

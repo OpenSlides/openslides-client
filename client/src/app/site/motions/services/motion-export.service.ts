@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-
 import { PdfError } from 'app/core/pdf-services/pdf-document.service';
+
+import { ViewMotion } from '../models/view-motion';
+import { ChangeRecoMode, ExportFileFormat, InfoToExport, LineNumberingMode } from '../motions.constants';
 import { MotionCsvExportService } from './motion-csv-export.service';
 import { MotionPdfExportService } from './motion-pdf-export.service';
 import { MotionXlsxExportService } from './motion-xlsx-export.service';
-import { ChangeRecoMode, ExportFileFormat, InfoToExport, LineNumberingMode } from '../motions.constants';
-import { ViewMotion } from '../models/view-motion';
 
 /**
  * Shape the structure of the dialog data
@@ -24,7 +24,7 @@ export interface MotionExportInfo {
  * Generic layer to unify any motion export
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MotionExportService {
     public constructor(
@@ -43,7 +43,7 @@ export class MotionExportService {
                     this.pdfExport.exportMotionCatalog(data, exportInfo);
                 } catch (err) {
                     if (err instanceof PdfError) {
-                        console.error('PDFError: ', err);
+                        console.error(`PDFError: `, err);
                         /**
                          * TODO: Has been this.raiseError(err.message) before. Central error treatment
                          */
@@ -68,7 +68,7 @@ export class MotionExportService {
                 this.xlsxExport.exportMotionList(data, exportInfo.metaInfo, exportInfo.comments);
             }
         } else {
-            throw new Error('No export format was provided');
+            throw new Error(`No export format was provided`);
         }
     }
 }
