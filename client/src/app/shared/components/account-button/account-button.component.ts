@@ -117,7 +117,8 @@ export class AccountButtonComponent extends BaseModelContextComponent implements
 
     public openAccountDialog(): void {
         this.dialog.open(AccountDialogComponent, {
-            ...largeDialogSettings
+            ...largeDialogSettings,
+            height: '530px'
         });
     }
 

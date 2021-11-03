@@ -53,8 +53,6 @@ export class UserDetailViewComponent extends BaseComponent {
         return this._user;
     }
 
-    private _user: ViewUser;
-
     @Input()
     public isNewUser = false;
 
@@ -71,9 +69,20 @@ export class UserDetailViewComponent extends BaseComponent {
     }
 
     @Input()
+    public useMatcard = true;
+
+    @Input()
     public set additionalFormControls(controls: any) {
         this._additionalFormControls = controls;
         this.prepareForm();
+    }
+
+    @Input()
+    public set additionalAllowedPersonalForms(formNames: string[]) {
+        if (formNames) {
+            this._additionalAllowedPersonalForms = formNames;
+            this.prepareForm();
+        }
     }
 
     @Input()
@@ -109,8 +118,10 @@ export class UserDetailViewComponent extends BaseComponent {
 
     private _isEditing = false;
 
+    private _user: ViewUser;
     private _additionalValidators: ValidatorFn[] = [];
     private _additionalFormControls: any = {};
+    private _additionalAllowedPersonalForms: string[] = [];
     private _formValueChangeSubscription: Subscription | null = null;
 
     public constructor(
@@ -195,7 +206,7 @@ export class UserDetailViewComponent extends BaseComponent {
         // Disable not permitted controls
         if (!this.isAllowed('manage')) {
             formControlNames.forEach(formControlName => {
-                if (!['username', 'email'].includes(formControlName)) {
+                if (!['username', 'email', ...this._additionalAllowedPersonalForms].includes(formControlName)) {
                     this.personalInfoForm.get(formControlName).disable();
                 }
             });

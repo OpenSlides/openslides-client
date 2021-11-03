@@ -208,8 +208,6 @@ export class ViewUser extends BaseProjectableViewModel<User> implements Searchab
 type UserManyStructuredRelation<Result> = (arg?: Id) => Result[];
 interface IUserRelations {
     is_present_in_meetings: ViewMeeting[];
-    meeting?: ViewMeeting;
-    guest_meetings: ViewMeeting[];
     committees: ViewCommittee[];
     groups: UserManyStructuredRelation<ViewGroup>;
     speakers: UserManyStructuredRelation<ViewSpeaker>;

@@ -19,6 +19,7 @@ import { PollService } from 'app/site/polls/services/poll.service';
 import { UserPdfExportService } from '../../services/user-pdf-export.service';
 import { ViewGroup } from '../../models/view-group';
 import { ViewUser } from '../../models/view-user';
+import { UserService } from '../../../../core/ui-services/user.service';
 
 /**
  * Users detail component for both new and existing users
@@ -112,7 +113,8 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
         private groupRepo: GroupRepositoryService,
         private pollService: PollService,
         private meetingSettingsService: MeetingSettingsService,
-        private activeMeetingIdService: ActiveMeetingIdService
+        private activeMeetingIdService: ActiveMeetingIdService,
+        private userService: UserService
     ) {
         super(componentServiceCollector);
         this.getUserByUrl();
@@ -123,6 +125,10 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
 
         this.groupRepo.getViewModelListObservableWithoutDefaultGroup().subscribe(this.groups);
         this.users = this.repo.getViewModelListBehaviorSubject();
+    }
+
+    public isAllowed(action: string): boolean {
+        return this.userService.isAllowed(action, this.ownPage);
     }
 
     private getUserByUrl(): void {
@@ -182,53 +188,8 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
                     super.setTitle(title);
                     this.user = user;
                 }
-            }),
-            this.operator.operatorUpdatedEvent.subscribe(() => {
-                this.ownPage = this.operator.operatorId === this.userId;
             })
         );
-    }
-
-    /**
-     * Should determine if the user (Operator) has the
-     * correct permission to perform the given action.
-     *
-     * actions might be:
-     * - delete         (deleting the user) (users.can_manage and not ownPage)
-     * - seeName        (title, first, last, gender, about) (user.can_see_name or ownPage)
-     * - seeOtherUsers  (title, first, last, gender, about) (user.can_see_name)
-     * - seeExtra       (email, comment, is_active, last_email_send) (user.can_see_extra_data)
-     * - seePersonal    (mail, username, structure level) (user.can_see_extra_data or ownPage)
-     * - manage         (everything) (user.can_manage)
-     * - changePersonal (mail, username, about) (user.can_manage or ownPage)
-     * - changePassword (user.can_change_password)
-     *
-     * @param action the action the user tries to perform
-     */
-    public isAllowed(action: string): boolean {
-        switch (action) {
-            case 'delete':
-                return this.operator.hasPerms(Permission.userCanManage) && !this.ownPage;
-            case 'manage':
-                return this.operator.hasPerms(Permission.userCanManage);
-            case 'seeName':
-                return this.operator.hasPerms(Permission.userCanSee, Permission.userCanManage) || this.ownPage;
-            case 'seeOtherUsers':
-                return this.operator.hasPerms(Permission.userCanSee, Permission.userCanManage);
-            case 'seeExtra':
-                return this.operator.hasPerms(Permission.userCanSeeExtraData, Permission.userCanManage);
-            case 'seePersonal':
-                return this.operator.hasPerms(Permission.userCanSeeExtraData, Permission.userCanManage) || this.ownPage;
-            case 'changePersonal':
-                return this.operator.hasPerms(Permission.userCanManage) || this.ownPage;
-            case 'changePassword':
-                return (
-                    (this.ownPage && this.operator.canChangeOwnPassword) ||
-                    this.operator.hasPerms(Permission.userCanManage)
-                );
-            default:
-                return false;
-        }
     }
 
     public getRandomPassword(): string {
@@ -353,7 +314,11 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
     }
 
     private async updateUser(): Promise<void> {
-        await this.repo.update(this.personalInfoFormValue, this.user);
+        if (this.operator.hasPerms(Permission.userCanManage)) {
+            await this.repo.update(this.personalInfoFormValue, this.user);
+        } else {
+            await this.repo.updateSelf(this.personalInfoFormValue, this.user);
+        }
         this.setEditMode(false);
     }
 

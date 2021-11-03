@@ -179,6 +179,18 @@ export class UserRepositoryService
         return this.sendBulkActionToBackend(UserAction.UPDATE, updatePayload);
     }
 
+    public updateSelf(patch: any | ((user: ViewUser) => any), user: ViewUser): Promise<void> {
+        const update = typeof patch === 'function' ? patch(user) : patch;
+        const payload: UserAction.UpdateSelfPayload = {
+            email: update.email,
+            about_me_$: {
+                [this.activeMeetingId]: update.about_me
+            },
+            username: update.username
+        };
+        return this.sendActionToBackend(UserAction.UPDATE_SELF, payload);
+    }
+
     private getBaseUserPayload(partialUser: any): Partial<UserAction.BaseUserPayload> {
         let partialPayload: Partial<UserAction.BaseUserPayload> = {
             title: partialUser.title,

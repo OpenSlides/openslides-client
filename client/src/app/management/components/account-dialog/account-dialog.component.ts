@@ -1,13 +1,20 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
+import { Permission } from 'app/core/core-services/permission';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ChangePasswordComponent, PasswordForm } from 'app/shared/components/change-password/change-password.component';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { UserService } from '../../../core/ui-services/user.service';
+import { MeetingRepositoryService } from '../../../core/repositories/management/meeting-repository.service';
+import { ViewMeeting } from 'app/management/models/view-meeting';
+import { ViewGroup } from 'app/site/users/models/view-group';
 
 interface MenuItem {
     name: string;
@@ -15,7 +22,8 @@ interface MenuItem {
 
 enum MenuItems {
     CHANGE_PASSWORD = 'Change password',
-    SHOW_PROFILE = 'My profile'
+    SHOW_PROFILE = 'My profile',
+    SHOW_MEETINGS = 'My meetings'
 }
 
 @Component({
@@ -30,6 +38,9 @@ export class AccountDialogComponent extends BaseModelContextComponent implements
     public readonly menuItems: MenuItem[] = [
         {
             name: MenuItems.SHOW_PROFILE
+        },
+        {
+            name: MenuItems.SHOW_MEETINGS
         },
         {
             name: MenuItems.CHANGE_PASSWORD
@@ -56,7 +67,9 @@ export class AccountDialogComponent extends BaseModelContextComponent implements
         serviceCollector: ComponentServiceCollector,
         public dialogRef: MatDialogRef<AccountDialogComponent>,
         private operator: OperatorService,
-        private userRepo: UserRepositoryService
+        private userRepo: UserRepositoryService,
+        private userService: UserService,
+        private meetingRepo: MeetingRepositoryService
     ) {
         super(serviceCollector);
     }
@@ -68,6 +81,15 @@ export class AccountDialogComponent extends BaseModelContextComponent implements
         );
     }
 
+    public getAllMeetings(): ViewMeeting[] {
+        const meetingIds = this.self.group_$_ids.map(groupId => parseInt(groupId, 10));
+        return meetingIds.map(id => this.meetingRepo.getViewModel(id));
+    }
+
+    public getGroupsForMeeting(meeting: ViewMeeting): ViewGroup[] {
+        return this.self.groups(meeting.id);
+    }
+
     public async changePassword(): Promise<void> {
         const { oldPassword, newPassword }: PasswordForm = this.userPasswordForm;
         await this.userRepo.setPasswordSelf(this.self, oldPassword, newPassword);
@@ -75,16 +97,25 @@ export class AccountDialogComponent extends BaseModelContextComponent implements
     }
 
     public async saveUserChanges(): Promise<void> {
-        await this.userRepo.update(this.userPersonalForm, this.self);
+        if (this.operator.hasPerms(Permission.userCanManage)) {
+            await this.userRepo.update(this.userPersonalForm, this.self);
+        } else {
+            await this.userRepo.updateSelf(this.userPersonalForm, this.self);
+        }
         this.isUserFormValid = false;
         this.editSelf = false;
     }
 
-    public getModelRequest(): SimplifiedModelRequest | null {
+    public getIsAllowedFn(): (permission: string) => boolean {
+        return permission => this.userService.isAllowed(permission, true);
+    }
+
+    protected getModelRequest(): SimplifiedModelRequest | null {
         return {
             viewModelCtor: ViewUser,
             ids: [this.operator.operatorId],
-            fieldset: 'orgaEdit'
+            fieldset: 'orgaEdit',
+            follow: [{ idField: 'group_$_ids', fieldset: 'title', follow: [{ idField: 'meeting_id' }] }]
         };
     }
 }

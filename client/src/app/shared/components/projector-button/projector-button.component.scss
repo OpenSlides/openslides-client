@@ -1,13 +1,4 @@
-@use '~@angular/material' as mat;
-
-@mixin os-projector-button-style($theme) {
-    $primary: map-get($theme, primary);
-    $accent: map-get($theme, accent);
-    $warn: map-get($theme, warn);
-    $contrast: map-get($primary, contrast);
-
-    .mat-mini-fab.projector-inactive {
-        color: mat.get-color-from-palette($contrast, A200) !important;
-        background-color: mat.get-color-from-palette($contrast, 500) !important;
-    }
+.projector-inactive {
+    background: #fff !important;
+    color: #303030 !important;
 }
