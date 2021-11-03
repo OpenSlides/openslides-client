@@ -13,16 +13,30 @@
     }
 }
 
-.nav-toolbar {
-    margin-bottom: 10px;
+.nav-toolbar-flex-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .nav-toolbar-logo {
+        margin-bottom: 10px;
+    }
+
+    .nav-toolbar-content {
+        flex: 1;
+    }
 }
 
-.copyright-link {
-    position: absolute;
-    bottom: 20px;
-    left: 0;
-    right: 0;
-    text-decoration: none;
+.copyright-sign-container {
+    position: relative;
+
+    .copyright-link {
+        position: absolute;
+        bottom: 20px;
+        left: 0;
+        right: 0;
+        text-decoration: none;
+    }
 }
 
 /* The top logo container can contain any logo with any size.
