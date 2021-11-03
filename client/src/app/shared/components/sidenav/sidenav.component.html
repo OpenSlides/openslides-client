@@ -13,32 +13,38 @@
         disableClose="!isMobile"
         class="side-panel"
     >
-        <div class="nav-toolbar">
-            <!-- logo -->
-            <a [routerLink]="getLinkToMainPage()" (click)="mobileAutoCloseNav()">
-                <os-logo class="os-logo-container"></os-logo>
-            </a>
+        <div class="nav-toolbar-flex-container">
+            <div class="nav-toolbar-logo">
+                <!-- logo -->
+                <a [routerLink]="getLinkToMainPage()" (click)="mobileAutoCloseNav()">
+                    <os-logo class="os-logo-container"></os-logo>
+                </a>
+            </div>
+            <div class="nav-toolbar-content">
+                <ng-container *ngTemplateOutlet="drawerContent"></ng-container>
+            </div>
+            <div class="copyright-sign-container padding-bottom-20">
+                <a
+                    mat-menu-item
+                    href="https://openslides.com"
+                    target="_blank"
+                    class="copyright-link"
+                    (click)="mobileAutoCloseNav()"
+                >
+                    <span>
+                        <small>
+                            <os-copyright-sign></os-copyright-sign>
+                            &nbsp;Copyright by OpenSlides
+                        </small>
+                    </span>
+                </a>
+            </div>
+            <ng-container
+                *ngIf="sideNav.opened"
+                [ngTemplateOutlet]="sideNavToggleButton"
+                [ngTemplateOutletContext]="{ isOpen: sideNav.opened }"
+            ></ng-container>
         </div>
-        <ng-container *ngTemplateOutlet="drawerContent"></ng-container>
-        <a
-            mat-menu-item
-            href="https://openslides.com"
-            target="_blank"
-            class="copyright-link"
-            (click)="mobileAutoCloseNav()"
-        >
-            <span>
-                <small>
-                    <os-copyright-sign></os-copyright-sign>
-                    &nbsp;Copyright by OpenSlides
-                </small>
-            </span>
-        </a>
-        <ng-container
-            *ngIf="sideNav.opened"
-            [ngTemplateOutlet]="sideNavToggleButton"
-            [ngTemplateOutletContext]="{ isOpen: sideNav.opened }"
-        ></ng-container>
     </mat-sidenav>
     <mat-sidenav-content>
         <ng-container
