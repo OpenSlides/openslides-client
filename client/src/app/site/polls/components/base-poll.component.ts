@@ -67,12 +67,14 @@ export abstract class BasePollComponent<C extends BaseViewModel = any> extends B
             await this.changeState(this._poll.nextState);
         } else if (currentState === PollState.Started) {
             const title = this.translate.instant(`Are you sure you want to stop this voting?`);
-            const actions = [this.translate.instant(`Stop`), this.translate.instant(`Stop & publish`)];
+            const STOP_LABEL = this.translate.instant(`Stop`);
+            const STOP_PUBLISH_LABEL = this.translate.instant(`Stop & publish`);
+            const actions = [STOP_LABEL, STOP_PUBLISH_LABEL];
             const choice = await this.choiceService.open(title, null, false, actions);
 
-            if (choice?.action === `Stop`) {
+            if (choice?.action === STOP_LABEL) {
                 await this.changeState(PollState.Finished);
-            } else if (choice?.action === `Stop & publish`) {
+            } else if (choice?.action === STOP_PUBLISH_LABEL) {
                 await this.changeState(PollState.Published);
             }
         }

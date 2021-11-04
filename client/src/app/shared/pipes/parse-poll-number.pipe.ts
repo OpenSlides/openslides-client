@@ -22,6 +22,7 @@ export class ParsePollNumberPipe implements PipeTransform {
                 return this.translate.instant(`majority`);
             case undefined:
             case null:
+                return this.formatter.format(0);
             case VOTE_UNDOCUMENTED:
                 return this.translate.instant(`undocumented`);
             default:
