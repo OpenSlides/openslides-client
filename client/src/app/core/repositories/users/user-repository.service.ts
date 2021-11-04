@@ -18,7 +18,6 @@ import { ViewUser } from 'app/site/users/models/view-user';
 
 import { Meeting } from '../../../shared/models/event-management/meeting';
 import { Displayable } from '../../../site/base/displayable';
-import { PresenterService } from '../../core-services/presenter.service';
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { ModelRequestRepository } from '../model-request-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
@@ -571,7 +570,7 @@ export class UserRepositoryService
      */
     public async createFromString(name: string): Promise<RawUser> {
         const newUser = this.parseStringIntoUser(name);
-        const identifiable = (await this.create(newUser))[0];
+        const identifiable = (await this.create({ ...newUser, is_active: true }))[0];
         const getNameFn = () => this.getShortName(newUser);
         return { id: identifiable.id, ...newUser, getTitle: getNameFn, getListTitle: getNameFn };
     }

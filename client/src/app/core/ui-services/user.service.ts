@@ -28,8 +28,8 @@ export class UserService {
      * @param action the action the user tries to perform
      */
     public isAllowed(action: string, isOwnPage: boolean): boolean {
-        if ([`seePersonal`, `seeName`, `changePersonal`].includes(action)) {
-            return isOwnPage;
+        if ([`seePersonal`, `seeName`, `changePersonal`].includes(action) && isOwnPage === true) {
+            return true;
         }
         if (!this.activeMeetingId.meetingId) {
             return this.operator.hasOrganizationPermissions(OML.can_manage_users);
