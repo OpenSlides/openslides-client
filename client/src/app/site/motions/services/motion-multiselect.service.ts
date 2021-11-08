@@ -307,7 +307,7 @@ export class MotionMultiselectService {
                 const createAgendaItemPayload: AgendaItemAction.CreatePayload[] = motionsNotInAgenda.map(motion => ({
                     content_object_id: motion.fqid,
                     parent_id: selectedChoice.items as number,
-                    type: AgendaItemType.hidden
+                    type: AgendaItemType.HIDDEN
                 }));
                 requests.push({
                     action: AgendaItemAction.CREATE,

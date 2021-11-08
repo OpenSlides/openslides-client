@@ -156,11 +156,11 @@ export class AgendaSortComponent extends BaseSortTreeComponent<ViewAgendaItem> i
      */
     public getIcon(type: string): string {
         switch (type) {
-            case AgendaItemType.common:
+            case AgendaItemType.COMMON:
                 return `public`;
-            case AgendaItemType.internal:
+            case AgendaItemType.INTERNAL:
                 return `visibility`;
-            case AgendaItemType.hidden:
+            case AgendaItemType.HIDDEN:
                 return `visibility_off`;
         }
     }

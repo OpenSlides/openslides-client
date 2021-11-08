@@ -134,7 +134,7 @@ export class TopicDetailComponent extends BaseModelContextComponent {
             title: [``, Validators.required]
         });
 
-        this.topicForm.get(`agenda_type`).setValue(AgendaItemType.common);
+        this.topicForm.get(`agenda_type`).setValue(AgendaItemType.COMMON);
     }
 
     /**

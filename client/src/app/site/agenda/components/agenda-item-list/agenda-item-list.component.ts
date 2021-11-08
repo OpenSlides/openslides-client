@@ -49,9 +49,9 @@ import { AgendaItemInfoDialogComponent } from '../agenda-item-info-dialog/agenda
     styleUrls: [`./agenda-item-list.component.scss`]
 })
 export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaItem> implements OnInit {
-    public readonly AGENDA_TYPE_PUBLIC = 1;
-    public readonly AGENDA_TYPE_INTERNAL = 2;
-    public readonly AGENDA_TYPE_HIDDEN = 3;
+    public readonly AGENDA_TYPE_PUBLIC = AgendaItemType.COMMON;
+    public readonly AGENDA_TYPE_INTERNAL = AgendaItemType.INTERNAL;
+    public readonly AGENDA_TYPE_HIDDEN = AgendaItemType.HIDDEN;
 
     /**
      * Show or hide the numbering button
