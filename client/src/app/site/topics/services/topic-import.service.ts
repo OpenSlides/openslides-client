@@ -104,7 +104,7 @@ export class TopicImportService extends BaseImportService<Topic> {
      */
     public parseType(input: string | number): AgendaItemType {
         if (!input) {
-            return AgendaItemType.common; // default, public item
+            return AgendaItemType.COMMON; // default, public item
         } else if (typeof input === `string`) {
             const visibility = ItemTypeChoices.find(choice => choice.csvName === input);
             if (visibility) {
@@ -135,7 +135,7 @@ export class TopicImportService extends BaseImportService<Topic> {
             }
             const topic = {
                 title: line,
-                agenda_type: AgendaItemType.common
+                agenda_type: AgendaItemType.COMMON
             };
             newEntries.push({
                 newEntry: topic,

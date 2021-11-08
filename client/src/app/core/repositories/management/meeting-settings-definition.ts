@@ -317,9 +317,9 @@ export const meetingSettings: SettingsGroup[] = [
                         label: _(`Default visibility for new agenda items (except topics)`),
                         type: `choice`,
                         choices: {
-                            [AgendaItemType.common]: _(`Public item`),
-                            [AgendaItemType.internal]: _(`Internal item`),
-                            [AgendaItemType.hidden]: _(`Hidden item`)
+                            [AgendaItemType.COMMON]: _(`Public item`),
+                            [AgendaItemType.INTERNAL]: _(`Internal item`),
+                            [AgendaItemType.HIDDEN]: _(`Hidden item`)
                         }
                     },
                     {

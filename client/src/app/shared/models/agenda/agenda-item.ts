@@ -6,18 +6,18 @@ import { HasProjectionIds } from '../base/has-projectable-ids';
 import { HasTagIds } from '../base/has-tag-ids';
 
 export enum AgendaItemType {
-    common = `common`,
-    internal = `internal`,
-    hidden = `hidden`
+    COMMON = `common`,
+    INTERNAL = `internal`,
+    HIDDEN = `hidden`
 }
 
 /**
  * Determine type for agenda items
  */
 export const ItemTypeChoices = [
-    { key: AgendaItemType.common, name: `public`, csvName: `` },
-    { key: AgendaItemType.internal, name: `internal`, csvName: `internal` },
-    { key: AgendaItemType.hidden, name: `hidden`, csvName: `hidden` }
+    { key: AgendaItemType.COMMON, name: `public`, csvName: `` },
+    { key: AgendaItemType.INTERNAL, name: `internal`, csvName: `internal` },
+    { key: AgendaItemType.HIDDEN, name: `hidden`, csvName: `hidden` }
 ];
 
 /**

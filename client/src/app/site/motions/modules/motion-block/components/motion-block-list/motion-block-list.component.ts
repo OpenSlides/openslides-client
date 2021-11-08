@@ -48,7 +48,7 @@ export class MotionBlockListComponent extends BaseListViewComponent<ViewMotionBl
     /**
      * Determine the default agenda visibility
      */
-    public defaultVisibility = AgendaItemType.internal;
+    public defaultVisibility = AgendaItemType.INTERNAL;
 
     /**
      * Defines the properties the `sort-filter-bar` can search for.
