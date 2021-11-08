@@ -78,8 +78,7 @@ export class CategoryListComponent extends BaseListViewComponent<ViewMotionCateg
         public repo: MotionCategoryRepositoryService,
         private formBuilder: FormBuilder,
         private dialog: MatDialog,
-        private operator: OperatorService,
-        private activeMeetingIdService: ActiveMeetingIdService
+        private operator: OperatorService
     ) {
         super(componentServiceCollector, translate);
 

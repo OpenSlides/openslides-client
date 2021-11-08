@@ -33,8 +33,7 @@ export class MotionCommentSectionSortComponent extends BaseModelContextComponent
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService,
-        private repo: MotionCommentSectionRepositoryService,
-        private activeMeetingIdService: ActiveMeetingIdService
+        private repo: MotionCommentSectionRepositoryService
     ) {
         super(componentServiceCollector, translate);
         super.setTitle(`Sort comments`);

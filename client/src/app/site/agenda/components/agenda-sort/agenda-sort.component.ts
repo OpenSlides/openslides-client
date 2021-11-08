@@ -59,8 +59,7 @@ export class AgendaSortComponent extends BaseSortTreeComponent<ViewAgendaItem> i
         componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService,
         promptService: PromptService,
-        private agendaRepo: AgendaItemRepositoryService,
-        private activeMeetingIdService: ActiveMeetingIdService
+        private agendaRepo: AgendaItemRepositoryService
     ) {
         super(componentServiceCollector, translate, promptService);
         this.itemsObservable = this.agendaRepo.getViewModelListObservable();

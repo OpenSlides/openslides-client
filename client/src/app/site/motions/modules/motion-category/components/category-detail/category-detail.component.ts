@@ -77,7 +77,6 @@ export class CategoryDetailComponent extends BaseModelContextComponent implement
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService,
-        private activeMeetingIdService: ActiveMeetingIdService,
         private route: ActivatedRoute,
         private operator: OperatorService,
         private router: Router,

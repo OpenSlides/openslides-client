@@ -119,7 +119,7 @@ export class AutoupdateService {
             { bodyFn: () => [request] }
         );
         const { data, stream } = await httpStream.toPromise();
-        await this.handleAutoupdateWithStupidFormat(data, stream.id);
+        await this.handleAutoupdate(data, stream.id);
     }
 
     /**
@@ -144,10 +144,7 @@ export class AutoupdateService {
     private async request(request: ModelRequest, description: string): Promise<ModelSubscription> {
         const httpStream = this.httpStreamService.create(
             AUTOUPDATE_DEFAULT_ENDPOINT,
-            {
-                onMessage: (data, _, stream) => this.handleAutoupdateWithStupidFormat(data, stream.id),
-                description
-            },
+            { onMessage: (data, stream) => this.handleAutoupdate(data, stream.id), description },
             { bodyFn: () => [request] }
         );
         const closeFn = this.communicationManager.registerStream(httpStream);
@@ -160,7 +157,7 @@ export class AutoupdateService {
         };
     }
 
-    private async handleAutoupdateWithStupidFormat(autoupdateData: AutoupdateModelData, id: number): Promise<void> {
+    private async handleAutoupdate(autoupdateData: AutoupdateModelData, id: number): Promise<void> {
         const modelData = autoupdateFormatToModelData(autoupdateData);
         console.log(`autoupdate: from stream`, id, modelData, `raw data:`, autoupdateData);
         const fullListUpdateCollections = {};
@@ -173,10 +170,10 @@ export class AutoupdateService {
                 ] = autoupdateData[key];
             }
         }
-        await this.handleAutoupdate(modelData, fullListUpdateCollections);
+        await this.prepareCollectionUpdates(modelData, fullListUpdateCollections);
     }
 
-    private async handleAutoupdate(
+    private async prepareCollectionUpdates(
         modelData: ModelData,
         fullListUpdateCollections: { [collection: string]: Id[] }
     ): Promise<void> {
@@ -207,12 +204,12 @@ export class AutoupdateService {
                 }
             }
         }
-        await this.handleChangedAndDeletedModels(changedModels, deletedModels, fullListUpdateCollections);
+        await this.doCollectionUpdates(changedModels, deletedModels, fullListUpdateCollections);
 
         unlock();
     }
 
-    private async handleChangedAndDeletedModels(
+    private async doCollectionUpdates(
         changedModels: ChangedModels,
         deletedModels: DeletedModels,
         fullListUpdateCollections: { [collection: string]: Id[] }

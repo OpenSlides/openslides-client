@@ -10,6 +10,7 @@ import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.se
 import { BaseModel } from 'app/shared/models/base/base-model';
 import { Subscription } from 'rxjs';
 
+import { ActiveMeetingIdService } from '../../../core/core-services/active-meeting-id.service';
 import { CML, OML } from '../../../core/core-services/organization-permission';
 
 /**
@@ -118,6 +119,10 @@ export abstract class BaseComponent implements OnDestroy {
 
     protected get modelRequestService(): ModelRequestService {
         return this.componentServiceCollector.modelRequestService;
+    }
+
+    protected get activeMeetingIdService(): ActiveMeetingIdService {
+        return this.componentServiceCollector.activeMeetingId;
     }
 
     public constructor(

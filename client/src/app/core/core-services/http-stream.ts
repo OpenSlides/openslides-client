@@ -14,7 +14,7 @@ export class ErrorDescription {
     ) {}
 }
 
-type MessageHandler<T> = (data: T, isFirstResponse: boolean, stream: HttpStream<T>) => void;
+type MessageHandler<T> = (data: T, stream: HttpStream<T>) => void;
 type ErrorHandler<T> = (stream: HttpStream<T>, description: ErrorDescription) => void;
 
 const emptyFn = () => {};
@@ -25,7 +25,6 @@ const FINISH_EVENT_TYPE = 4;
 
 interface StreamData<T> {
     data: T;
-    isFirstResponse: boolean;
     stream: HttpStream<T>;
 }
 
@@ -100,11 +99,7 @@ class StreamMessageParser<T> {
         private readonly description: string
     ) {}
 
-    public read(incomingMessage: HttpEvent<string>): void {
-        this.handleMessage(incomingMessage);
-    }
-
-    private handleMessage(event: HttpEvent<string>): void {
+    public read(event: HttpEvent<string>): void {
         if (event.type === HEADER_EVENT_TYPE) {
             this._statusCode = (event as HttpHeaderResponse).status;
             if (this._statusCode > 400) {
@@ -128,7 +123,7 @@ class StreamMessageParser<T> {
                 const content = event.partialText.substring(this._contentStartIndex, LF_INDEX);
                 this._lastLfIndex = LF_INDEX + 1;
                 this._contentStartIndex = LF_INDEX + 1;
-                this.handleContent(content);
+                this.handleContent(content, `Error while reading progress event`);
             } else {
                 this._lastLfIndex = event.loaded;
             }
@@ -136,20 +131,26 @@ class StreamMessageParser<T> {
     }
 
     private handleFinishEvent(content: string): void {
-        if (this.isSingleAction) {
-            this.handleContent(content);
+        const errorReason = !this.isSingleAction ? `The stream ${this.description} was closed` : undefined;
+        this.handleContent(content, errorReason);
+    }
+
+    private handleContent(content: string, errorReason: string = `Reported by server`): void {
+        const parsedContent = this.parse(content);
+        if (parsedContent instanceof ErrorDescription) {
+            this.propagateError(content, parsedContent.reason, parsedContent.type);
+        } else if (isCommunicationError(parsedContent) || isCommunicationErrorWrapper(parsedContent)) {
+            this.propagateError(content, errorReason);
         } else {
-            this.handleContent(content); // Receive last valid data from stream
-            this.propagateError(content, `The stream ${this.description} was closed`);
+            this.propagateMessage(parsedContent);
         }
     }
 
-    private handleContent(content: string): void {
+    private parse(content: string): T | ErrorDescription {
         try {
-            const parsedContent = JSON.parse(content) as T;
-            this.propagateMessage(parsedContent, content);
+            return JSON.parse(content) as T;
         } catch (e) {
-            this.propagateError(content, `JSON is malformed`, ErrorType.UNKNOWN);
+            return { reason: `JSON is malformed`, type: ErrorType.UNKNOWN, error: e };
         }
     }
 
@@ -167,12 +168,8 @@ class StreamMessageParser<T> {
         return ErrorType.UNKNOWN;
     }
 
-    private propagateMessage(parsedContent: T, originalText?: string): void {
-        if (isCommunicationError(parsedContent)) {
-            this.propagateError(originalText, `Reported error by server`);
-        } else {
-            this.onMessage(parsedContent);
-        }
+    private propagateMessage(parsedContent: T): void {
+        this.onMessage(parsedContent);
     }
 
     private propagateError(text: string, reason: string, type: ErrorType = this.getErrorTypeFromStatusCode()): void {
@@ -182,7 +179,6 @@ class StreamMessageParser<T> {
 
 export class HttpStream<T> {
     public readonly id = Math.floor(Math.random() * (900000 - 1) + 100000); // [100000, 999999]
-    public readonly firstResponse = new Deferred<void>();
     public readonly description: string;
     public readonly endpoint: EndpointConfiguration;
 
@@ -190,12 +186,12 @@ export class HttpStream<T> {
     public onError: ErrorHandler<T>;
     public onComplete: () => void;
 
-    public get hasFirstResponse(): boolean {
-        return this.firstResponse.wasResolved;
-    }
-
     public get isClosed(): boolean {
         return this._isClosed;
+    }
+
+    private get hasReachedReconnectLimit(): boolean {
+        return this._reconnectsBeforeClose > 0 && this._reconnectAttempts >= this._reconnectsBeforeClose;
     }
 
     private _subscription: Subscription | null = null;
@@ -260,7 +256,7 @@ export class HttpStream<T> {
      */
     public async toPromise(): Promise<StreamData<T>> {
         return new Promise(async (resolve, reject) => {
-            this.onMessage = (data, isFirstResponse, stream) => resolve({ data, isFirstResponse, stream });
+            this.onMessage = (data, stream) => resolve({ data, stream });
             this.onError = (stream, description) => reject({ stream, description });
             await this.instant();
         });
@@ -307,21 +303,22 @@ export class HttpStream<T> {
     }
 
     private handleStreamError(error: unknown): void {
-        console.log(`handleError`, error);
         const shouldReconnect =
             typeof this._shouldReconnectOnFailure === `function`
                 ? this._shouldReconnectOnFailure()
                 : this._shouldReconnectOnFailure;
-        const reconnectLimitNotReached =
-            this._reconnectsBeforeClose === 0 || this._reconnectAttempts < this._reconnectsBeforeClose;
-        if (shouldReconnect && reconnectLimitNotReached) {
+        if (shouldReconnect && !this.hasReachedReconnectLimit) {
             this.handleReconnect();
-        } else if (shouldReconnect && !reconnectLimitNotReached) {
+        } else if (shouldReconnect && this.hasReachedReconnectLimit) {
             // If the stream should reconnect while it reached its reconnection limit propagate the error
             if (error instanceof ErrorDescription) {
                 this.propagateError(error);
             } else {
-                this.propagateError(ErrorType.SERVER, this.parseCommunicationError(error as string), `Network error`);
+                this.propagateError(
+                    ErrorType.SERVER,
+                    this.parseCommunicationError(error[0] as string),
+                    `Network error`
+                );
             }
         }
     }
@@ -337,20 +334,17 @@ export class HttpStream<T> {
     private handleParsedContent(data: T): void {
         if (this._reconnectAttempts > 0) {
             console.log(
-                `Resetting reconnection attempts (${this.endpoint.url}:${this.id}), because there is a message`
+                `Resetting reconnection attempts (${this.endpoint.url}:${this.id}), because there is a message:`,
+                data
             );
             this._reconnectAttempts = 0;
         }
-        const isFirstResponse = !this.hasFirstResponse;
-        this.onMessage(data, isFirstResponse, this);
-        this.firstResponse.resolve();
+        this.onMessage(data, this);
     }
 
     private handleCommunicationError(type: ErrorType, errorContent: string, reason: string): void {
         if (!this._hasErrorReported) {
-            if (!this.hasFirstResponse) {
-                this.firstResponse.resolve();
-            }
+            this._hasErrorReported = true;
             this.handleStreamError(new ErrorDescription(type, this.parseCommunicationError(errorContent), reason));
         }
     }

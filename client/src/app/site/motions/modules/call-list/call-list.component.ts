@@ -94,8 +94,7 @@ export class CallListComponent extends BaseSortTreeComponent<ViewMotion> impleme
         private motionCsvExport: MotionCsvExportService,
         private motionPdfExport: MotionPdfExportService,
         private tagRepo: TagRepositoryService,
-        private categoryRepo: MotionCategoryRepositoryService,
-        private activeMeetingIdService: ActiveMeetingIdService
+        private categoryRepo: MotionCategoryRepositoryService
     ) {
         super(componentServiceCollector, translate, promptService);
 

@@ -82,7 +82,6 @@ export class ProjectorListComponent extends BaseModelContextComponent implements
         private operator: OperatorService,
         private dialogService: MatDialog,
         private cd: ChangeDetectorRef,
-        private activeMeetingIdService: ActiveMeetingIdService,
         private openslidesStatus: OpenSlidesStatusService
     ) {
         super(componentServiceCollector, translate);

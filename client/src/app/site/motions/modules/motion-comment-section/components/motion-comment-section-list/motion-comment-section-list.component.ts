@@ -62,8 +62,7 @@ export class MotionCommentSectionListComponent extends BaseModelContextComponent
         private formBuilder: FormBuilder,
         private promptService: PromptService,
         private dialog: MatDialog,
-        private groupRepo: GroupRepositoryService,
-        private activeMeetingIdService: ActiveMeetingIdService
+        private groupRepo: GroupRepositoryService
     ) {
         super(componentServiceCollector, translate);
 

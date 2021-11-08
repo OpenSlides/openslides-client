@@ -1,52 +1,40 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { EndpointConfiguration } from './http-stream-endpoint.service';
-
-export enum OfflineReasonValue {
-    WhoAmIFailed,
-    ConnectionLost
+export interface OfflineReasonConfig {
+    /**
+     * The reason why we are offline
+     */
+    reason: string;
+    /**
+     * A function to check if we are online again. This has to return a boolean.
+     */
+    isOnlineFn: () => boolean | Promise<boolean>;
 }
-
-interface BaseOfflineReason {
-    type: OfflineReasonValue;
-}
-
-export interface WhoAmIFailedOfflineReason extends BaseOfflineReason {
-    type: OfflineReasonValue.WhoAmIFailed;
-}
-
-export interface ConnectionLostOfflineReason extends BaseOfflineReason {
-    type: OfflineReasonValue.ConnectionLost;
-    endpoint: EndpointConfiguration;
-}
-
-export type OfflineReason = WhoAmIFailedOfflineReason | ConnectionLostOfflineReason;
 
 @Injectable({
     providedIn: `root`
 })
 export class OfflineBroadcastService {
-    private readonly _isOfflineSubject = new BehaviorSubject<boolean>(false);
     public get isOfflineObservable(): Observable<boolean> {
         return this._isOfflineSubject.asObservable();
     }
 
-    private readonly _goOffline = new EventEmitter<OfflineReason>();
-    public get goOfflineObservable(): Observable<OfflineReason> {
+    public get goOfflineObservable(): Observable<OfflineReasonConfig> {
         return this._goOffline.asObservable();
     }
 
-    private readonly _goOnline = new EventEmitter<void>();
     public get goOnlineObservable(): Observable<void> {
         return this._goOnline.asObservable();
     }
 
-    public constructor() {}
+    private readonly _isOfflineSubject = new BehaviorSubject<boolean>(false);
+    private readonly _goOnline = new EventEmitter<void>();
+    private readonly _goOffline = new EventEmitter<OfflineReasonConfig>();
 
-    public goOffline(reason: OfflineReason): void {
+    public goOffline(config: OfflineReasonConfig): void {
         this._isOfflineSubject.next(true);
-        this._goOffline.emit(reason);
+        this._goOffline.emit(config);
     }
 
     public goOnline(): void {

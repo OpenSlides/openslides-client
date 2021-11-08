@@ -220,7 +220,6 @@ export class UserRepositoryService
         };
 
         if (this.activeMeetingId) {
-            const defaultGroupId = this.activeMeeting.meeting.default_group_id;
             partialPayload = {
                 ...partialPayload,
                 number_$: { [this.activeMeetingId]: partialUser.number as string },
@@ -231,7 +230,7 @@ export class UserRepositoryService
                 vote_delegated_$_to_id: { [this.activeMeetingId]: partialUser.vote_delegated_to_id },
                 vote_delegations_$_from_ids: { [this.activeMeetingId]: partialUser.vote_delegations_from_ids },
                 group_$_ids: {
-                    [this.activeMeetingId]: partialUser.group_ids ? partialUser.group_ids : [defaultGroupId]
+                    [this.activeMeetingId]: partialUser.group_ids
                 }
             };
         }

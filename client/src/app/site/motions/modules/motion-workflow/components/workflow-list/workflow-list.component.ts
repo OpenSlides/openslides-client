@@ -68,8 +68,7 @@ export class WorkflowListComponent extends BaseListViewComponent<ViewMotionWorkf
         protected translate: TranslateService,
         private dialog: MatDialog,
         public workflowRepo: MotionWorkflowRepositoryService,
-        private promptService: PromptService,
-        private activeMeetingIdService: ActiveMeetingIdService
+        private promptService: PromptService
     ) {
         super(componentServiceCollector, translate);
         this.canMultiSelect = true;

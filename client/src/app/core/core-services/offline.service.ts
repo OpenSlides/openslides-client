@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { AuthService } from './auth.service';
-import { HttpStreamEndpointService } from './http-stream-endpoint.service';
-import { OfflineBroadcastService, OfflineReason, OfflineReasonValue } from './offline-broadcast.service';
+import { OfflineBroadcastService, OfflineReasonConfig } from './offline-broadcast.service';
 
 /**
  * This service handles everything connected with being offline.
@@ -14,34 +12,23 @@ import { OfflineBroadcastService, OfflineReason, OfflineReasonValue } from './of
     providedIn: `root`
 })
 export class OfflineService {
-    private reason: OfflineReason | null = null;
+    private config: OfflineReasonConfig | null = null;
 
-    public constructor(
-        private offlineBroadcastService: OfflineBroadcastService,
-        private authService: AuthService,
-        private httpEnpointService: HttpStreamEndpointService
-    ) {
-        this.offlineBroadcastService.goOfflineObservable.subscribe((reason: OfflineReason) => this.goOffline(reason));
+    public constructor(private offlineBroadcastService: OfflineBroadcastService) {
+        this.offlineBroadcastService.goOfflineObservable.subscribe(reason => this.goOffline(reason));
     }
 
     /**
      * Helper function to set offline status
      */
-    public goOffline(reason: OfflineReason): void {
-        if (null !== this.reason) {
+    private goOffline(config: OfflineReasonConfig): void {
+        if (null !== this.config) {
             return;
         }
-        this.reason = reason;
+        this.config = config;
 
-        if (reason.type === OfflineReasonValue.ConnectionLost) {
-            console.log(`offline because connection lost to`, reason.endpoint);
-        } else if (reason.type === OfflineReasonValue.WhoAmIFailed) {
-            console.log(`offline because whoami failed.`);
-        } else {
-            throw new Error(`Offline and no reason....`);
-        }
+        console.log(`Offline because: ${config.reason}`);
 
-        this.offlineBroadcastService.goOffline(reason);
         this.deferCheckStillOffline();
     }
 
@@ -50,19 +37,12 @@ export class OfflineService {
         console.log(`Try to go online in ${timeout} ms`);
 
         setTimeout(async () => {
-            let online: boolean;
+            const isOnline = await this.config.isOnlineFn();
+            console.log(`Is online again? ->`, isOnline);
 
-            if (this.reason.type === OfflineReasonValue.ConnectionLost) {
-                online = await this.httpEnpointService.isEndpointHealthy(this.reason.endpoint);
-                console.log(`is communication online to`, this.reason.endpoint, `->`, online);
-            } else if (this.reason.type === OfflineReasonValue.WhoAmIFailed) {
-                online = await this.authService.doWhoAmIRequest();
-                console.log(`is whoami reachable?`, online);
-            }
-
-            if (online) {
+            if (isOnline) {
                 // stop trying.
-                this.reason = null;
+                this.config = null;
                 this.offlineBroadcastService.goOnline();
             } else {
                 // continue trying.

@@ -58,8 +58,7 @@ export class StatuteParagraphListComponent extends BaseModelContextComponent imp
         private formBuilder: FormBuilder,
         private promptService: PromptService,
         private dialog: MatDialog,
-        private csvExportService: StatuteCsvExportService,
-        private activeMeetingIdService: ActiveMeetingIdService
+        private csvExportService: StatuteCsvExportService
     ) {
         super(componentServiceCollector, translate);
 

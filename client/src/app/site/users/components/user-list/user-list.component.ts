@@ -186,8 +186,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         private meetingSettingsService: MeetingSettingsService,
         private userPdf: UserPdfExportService,
         private dialog: MatDialog,
-        private pollService: PollService,
-        private activeMeetingIdService: ActiveMeetingIdService
+        private pollService: PollService
     ) {
         super(componentServiceCollector, translate);
 

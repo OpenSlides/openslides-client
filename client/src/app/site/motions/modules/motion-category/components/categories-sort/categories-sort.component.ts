@@ -48,7 +48,6 @@ export class CategoriesSortComponent extends BaseModelContextComponent implement
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService,
-        private activeMeetingIdService: ActiveMeetingIdService,
         private categoryRepo: MotionCategoryRepositoryService,
         private promptService: PromptService
     ) {

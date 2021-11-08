@@ -49,8 +49,7 @@ export class MotionCommentsComponent extends BaseModelContextComponent implement
         protected translate: TranslateService,
         private commentSectionRepo: MotionCommentSectionRepositoryService,
         private operator: OperatorService,
-        private cd: ChangeDetectorRef,
-        private activeMeetingIdService: ActiveMeetingIdService
+        private cd: ChangeDetectorRef
     ) {
         super(componentServiceCollector, translate);
     }
