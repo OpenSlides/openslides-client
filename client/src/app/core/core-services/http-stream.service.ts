@@ -6,7 +6,7 @@ import { AuthService } from './auth.service';
 import { HttpBodyGetter, HttpParamsGetter } from './communication-manager.service';
 import { ErrorDescription, HttpStream, HttpStreamOptions } from './http-stream';
 import { EndpointConfiguration, HttpStreamEndpointService } from './http-stream-endpoint.service';
-import { OfflineBroadcastService, OfflineReasonValue } from './offline-broadcast.service';
+import { OfflineBroadcastService } from './offline-broadcast.service';
 
 export type Params = HttpParams | { [param: string]: string | string[] };
 
@@ -14,6 +14,10 @@ export interface RequestOptions {
     bodyFn?: HttpBodyGetter;
     paramsFn?: HttpParamsGetter;
 }
+
+const lostConnectionToFn = (endpoint: EndpointConfiguration) => {
+    return `Connection lost to ${endpoint.url}`;
+};
 
 @Injectable({
     providedIn: `root`
@@ -73,8 +77,8 @@ export class HttpStreamService {
     private onError(endpoint: EndpointConfiguration, description?: ErrorDescription): void {
         console.log(`ERROR`, description);
         this.offlineService.goOffline({
-            endpoint,
-            type: OfflineReasonValue.ConnectionLost
+            reason: lostConnectionToFn(endpoint),
+            isOnlineFn: async () => this.endpointService.isEndpointHealthy(endpoint)
         });
     }
 

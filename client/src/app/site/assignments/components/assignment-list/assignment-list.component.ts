@@ -110,8 +110,7 @@ export class AssignmentListComponent extends BaseListViewComponent<ViewAssignmen
         protected route: ActivatedRoute,
         private router: Router,
         private operator: OperatorService,
-        public vp: ViewportService,
-        private activeMeetingIdService: ActiveMeetingIdService
+        public vp: ViewportService
     ) {
         super(componentServiceCollector, translate);
         this.canMultiSelect = true;

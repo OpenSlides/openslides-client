@@ -48,7 +48,7 @@ export class SlideContainerComponent extends BaseComponent {
                 this.slide.clear();
             }
 
-            let error;
+            let error: string;
             if (hasError(slideData)) {
                 error = slideData.error;
             } else if (hasError(slideData?.data)) {

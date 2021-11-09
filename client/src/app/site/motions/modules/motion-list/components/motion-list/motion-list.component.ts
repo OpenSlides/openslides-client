@@ -235,8 +235,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
         public perms: PermissionsService,
         private motionExport: MotionExportService,
         public vp: ViewportService,
-        public operator: OperatorService,
-        private activeMeetingIdService: ActiveMeetingIdService
+        public operator: OperatorService
     ) {
         super(componentServiceCollector, translate);
         this.canMultiSelect = true;

@@ -189,7 +189,6 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService,
-        private activeMeetingIdService: ActiveMeetingIdService,
         private route: ActivatedRoute,
         private router: Router,
         public repo: MediafileRepositoryService,

@@ -125,7 +125,6 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
         private promptService: PromptService,
         private dialog: MatDialog,
         private meetingsSettingsService: MeetingSettingsService,
-        private activeMeetingIdService: ActiveMeetingIdService,
         public vp: ViewportService,
         public durationService: DurationService,
         private csvExport: AgendaCsvExportService,

@@ -96,8 +96,7 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
         private dialog: MatDialog,
         private motionExport: MotionExportService,
         private linenumberingService: LinenumberingService,
-        private pdfExport: MotionPdfExportService,
-        private activeMeetingIdService: ActiveMeetingIdService
+        private pdfExport: MotionPdfExportService
     ) {
         super(componentServiceCollector, translate);
         super.setTitle(`Amendments`);

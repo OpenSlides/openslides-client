@@ -79,8 +79,7 @@ export class GroupListComponent extends BaseModelContextComponent implements OnI
         private dialog: MatDialog,
         private repo: GroupRepositoryService,
         private promptService: PromptService,
-        private formBuilder: FormBuilder,
-        private activeMeetingIdService: ActiveMeetingIdService
+        private formBuilder: FormBuilder
     ) {
         super(componentServiceCollector, translate);
     }

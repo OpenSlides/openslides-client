@@ -8,7 +8,6 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { PollClassType } from 'app/shared/models/poll/poll-constants';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
-import { BaseComponent } from 'app/site/base/components/base.component';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { map } from 'rxjs/operators';
 
@@ -60,7 +59,6 @@ export class PollProgressComponent extends BaseModelContextComponent implements 
         protected translate: TranslateService,
         private userRepo: UserRepositoryService,
         private operator: OperatorService,
-        private activeMeetingIdService: ActiveMeetingIdService,
         private cd: ChangeDetectorRef
     ) {
         super(componentServiceCollector, translate);

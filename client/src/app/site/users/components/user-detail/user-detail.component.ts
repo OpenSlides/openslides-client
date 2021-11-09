@@ -16,6 +16,7 @@ import { BaseModelContextComponent } from 'app/site/base/components/base-model-c
 import { PollService } from 'app/site/polls/services/poll.service';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 
+import { ActiveMeetingService } from '../../../../core/core-services/active-meeting.service';
 import { MemberService } from '../../../../core/core-services/member.service';
 import { UserService } from '../../../../core/ui-services/user.service';
 import { ViewGroup } from '../../models/view-group';
@@ -115,7 +116,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
         private groupRepo: GroupRepositoryService,
         private pollService: PollService,
         private meetingSettingsService: MeetingSettingsService,
-        private activeMeetingIdService: ActiveMeetingIdService,
+        private activeMeetingService: ActiveMeetingService,
         private userService: UserService,
         private memberService: MemberService
     ) {
@@ -306,9 +307,15 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
 
     private async createUser(): Promise<void> {
         const partialUser = { ...this.personalInfoFormValue };
+
         if (partialUser.is_present) {
             partialUser.is_present_in_meeting_ids = [this.activeMeetingId];
         }
+        if (!partialUser.group_ids?.length) {
+            const defaultGroupId = this.activeMeetingService.meeting.default_group_id;
+            partialUser.group_ids = [defaultGroupId];
+        }
+
         await this.repo.create(partialUser);
         this.goToAllUsers();
     }

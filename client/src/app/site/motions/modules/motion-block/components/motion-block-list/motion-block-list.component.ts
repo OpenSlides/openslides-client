@@ -98,7 +98,6 @@ export class MotionBlockListComponent extends BaseListViewComponent<ViewMotionBl
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService,
-        private activeMeetingIdService: ActiveMeetingIdService,
         public repo: MotionBlockRepositoryService,
         private formBuilder: FormBuilder,
         private itemRepo: AgendaItemRepositoryService,

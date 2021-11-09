@@ -63,8 +63,7 @@ export class TagListComponent extends BaseListViewComponent<ViewTag> implements 
         private dialog: MatDialog,
         private formBuilder: FormBuilder,
         private promptService: PromptService,
-        private cd: ChangeDetectorRef,
-        private activeMeetingIdService: ActiveMeetingIdService
+        private cd: ChangeDetectorRef
     ) {
         super(componentServiceCollector, translate);
     }
