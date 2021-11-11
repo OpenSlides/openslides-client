@@ -197,8 +197,8 @@ export class PdfDocumentService {
      */
     private getHeader(lrMargin?: [number, number]): object {
         // check for the required logos
-        let logoHeaderLeftUrl = this.mediaManageService.getLogoUrl(`pdf_header_L`);
-        let logoHeaderRightUrl = this.mediaManageService.getLogoUrl(`pdf_header_R`);
+        let logoHeaderLeftUrl = this.mediaManageService.getLogoUrl(`pdf_header_l`);
+        let logoHeaderRightUrl = this.mediaManageService.getLogoUrl(`pdf_header_r`);
         let text;
         const columns = [];
 
@@ -277,8 +277,8 @@ export class PdfDocumentService {
         let logoContainerWidth: string;
         let pageNumberPosition: string;
         let logoContainerSize: number[];
-        const logoFooterLeftUrl = this.mediaManageService.getLogoUrl(`pdf_footer_L`);
-        const logoFooterRightUrl = this.mediaManageService.getLogoUrl(`pdf_footer_R`);
+        const logoFooterLeftUrl = this.mediaManageService.getLogoUrl(`pdf_footer_l`);
+        const logoFooterRightUrl = this.mediaManageService.getLogoUrl(`pdf_footer_r`);
 
         let footerPageNumber = ``;
         if (showPageNr) {
