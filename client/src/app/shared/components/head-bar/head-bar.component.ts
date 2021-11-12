@@ -143,6 +143,13 @@ export class HeadBarComponent implements OnInit {
     public customMenu = false;
 
     /**
+     * An action can be provided, which should be executed when clicking the "save" button.
+     * This has the effect, that the "save"-button is automatically exchanged with a pending spinner.
+     */
+    @Input()
+    public saveAction: () => Promise<void>;
+
+    /**
      * Emit a signal to the parent component if the main button was clicked
      */
     @Output()
@@ -163,11 +170,17 @@ export class HeadBarComponent implements OnInit {
      * Sends a signal if a detail view should be saved
      */
     @Output()
-    public saveEvent = new EventEmitter<boolean>();
+    public saveEvent = new EventEmitter<void>();
 
     public get showBackButton(): boolean {
         return !this.nav && !this.multiSelectMode && (this.routingState.isSafePrevUrl || !this.goBack);
     }
+
+    public get isSaving(): boolean {
+        return this._isSaving;
+    }
+
+    private _isSaving = false;
 
     /**
      * Empty constructor
@@ -212,8 +225,17 @@ export class HeadBarComponent implements OnInit {
     /**
      * Send a save signal and set edit mode
      */
-    public save(): void {
-        this.saveEvent.next(true);
+    public async save(): Promise<void> {
+        if (this.saveAction) {
+            this._isSaving = true;
+            try {
+                await this.saveAction();
+            } finally {
+                this._isSaving = false;
+            }
+        } else {
+            this.saveEvent.emit();
+        }
     }
 
     /**

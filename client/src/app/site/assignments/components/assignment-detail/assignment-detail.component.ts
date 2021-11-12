@@ -431,10 +431,14 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
         this.assignmentForm.patchValue(contentPatch);
     }
 
+    public getSaveAction(): () => Promise<void> {
+        return () => this.saveAssignment();
+    }
+
     /**
      * Save the current state of the assignment
      */
-    public async saveAssignment(): Promise<void> {
+    private async saveAssignment(): Promise<void> {
         if (this.newAssignment) {
             this.createAssignment();
         } else {

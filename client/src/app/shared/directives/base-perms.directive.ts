@@ -1,4 +1,4 @@
-import { Directive, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Directive, EmbeddedViewRef, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Subscription } from 'rxjs';
 
@@ -13,7 +13,7 @@ export abstract class BasePermsDirective<P> implements OnInit, OnDestroy {
      * Holds the value of the last permission check. Therefore one can check, if the
      * permission has changes, to save unnecessary view updates, if not.
      */
-    private lastPermissionCheckResult: boolean | null = null; // take null to also catch a first "false" update
+    private _lastPermissionCheckResult: boolean | null = null; // take null to also catch a first "false" update
 
     /**
      * Alternative to the permissions. Used in special case where a combination
@@ -27,22 +27,29 @@ export abstract class BasePermsDirective<P> implements OnInit, OnDestroy {
      * <div *osPerms="'users.can_manage';or:ownPage"> something </div>
      * ```
      */
-    private alternative: boolean;
+    private _alternative: boolean;
 
     /**
      * Switch, to invert the result of checkPermission. Usefull for using osPerms as if-else:
      * For one element you can use `*osPerms="'perm'"` and for the else-element use
      * `*osPerms="'perm';complement: true"`.
      */
-    private complement: boolean;
+    private _complement: boolean;
 
     /**
      * Add a true-false-condition additional to osPerms
      * `*osPerms="permission.mediafileCanManage; and: !isMultiSelect"`
      */
-    private and = true;
+    private _and = true;
 
-    private operatorSubscription: Subscription | null = null;
+    private _thenTemplate: TemplateRef<unknown>;
+    private _thenViewRef: EmbeddedViewRef<unknown> | null;
+    private _elseTemplate: TemplateRef<unknown>;
+    private _elseViewRef: EmbeddedViewRef<unknown> | null;
+
+    private _operatorSubscription: Subscription | null = null;
+
+    private _hasPerms = false;
 
     /**
      * Constructs the directive once. Observes the operator for it's groups so the
@@ -50,25 +57,26 @@ export abstract class BasePermsDirective<P> implements OnInit, OnDestroy {
      *
      * @param template inner part of the HTML container
      * @param viewContainer outer part of the HTML container (for example a `<div>`)
-     * @param operator OperatorService
      */
     public constructor(
-        protected template: TemplateRef<any>,
+        template: TemplateRef<any>,
         protected viewContainer: ViewContainerRef,
         protected operator: OperatorService
-    ) {}
+    ) {
+        this._thenTemplate = template;
+    }
 
     public ngOnInit(): void {
         // observe groups of operator, so the directive can actively react to changes
-        this.operatorSubscription = this.operator.operatorUpdatedEvent.subscribe(() => {
-            this.updateView();
+        this._operatorSubscription = this.operator.operatorUpdatedEvent.subscribe(() => {
+            this.updatePermission();
         });
     }
 
     public ngOnDestroy(): void {
-        if (this.operatorSubscription) {
-            this.operatorSubscription.unsubscribe();
-            this.operatorSubscription = null;
+        if (this._operatorSubscription) {
+            this._operatorSubscription.unsubscribe();
+            this._operatorSubscription = null;
         }
     }
 
@@ -79,51 +87,91 @@ export abstract class BasePermsDirective<P> implements OnInit, OnDestroy {
             value = [value];
         }
         this.permissions = value;
-        this.updateView();
+        this.updatePermission();
     }
 
     protected setOrCondition(value: boolean): void {
-        this.alternative = value;
-        this.updateView();
+        this._alternative = value;
+        this.updatePermission();
     }
 
     protected setComplementCondition(value: boolean): void {
-        this.complement = value;
-        this.updateView();
+        this._complement = value;
+        this.updatePermission();
     }
 
     protected setAndCondition(value: boolean): void {
-        this.and = value;
-        this.updateView();
+        this._and = value;
+        this.updatePermission();
+    }
+
+    protected setThenTemplate(template: TemplateRef<unknown>): void {
+        if (template) {
+            this._thenTemplate = template;
+            this.updateView(true);
+        }
+    }
+
+    protected setElseTemplate(template: TemplateRef<unknown>): void {
+        if (template) {
+            this._elseTemplate = template;
+            this.updateView(true);
+        }
     }
 
     /**
      * Triggers to check, if the operator has still the required permissions.
      */
-    protected updateView(): void {
-        const hasPerms = this._hasPermissions();
-        const permsChanged = hasPerms !== this.lastPermissionCheckResult;
-
-        if ((hasPerms && permsChanged) || this.alternative) {
-            // clean up and add the template
-            this.viewContainer.clear();
-            this.viewContainer.createEmbeddedView(this.template);
-        } else if (!hasPerms) {
-            // will remove the content of the container
-            this.viewContainer.clear();
+    protected updatePermission(): void {
+        this._hasPerms = this._hasPermissions() || this._alternative;
+        const permsChanged = this._hasPerms !== this._lastPermissionCheckResult;
+        if (permsChanged) {
+            this.updateView();
         }
-        this.lastPermissionCheckResult = hasPerms;
+        this._lastPermissionCheckResult = this._hasPerms;
     }
 
-    protected abstract hasPermissions(): boolean;
+    /**
+     * This clears the parent container's content and adds optionally a template as next content.
+     *
+     * @param forceUpdate Whether the view should be updated in any case. This is necessary, if the templates changed
+     * but a view was already initiated.
+     */
+    private updateView(forceUpdate: boolean = false): void {
+        if (this._hasPerms && (!this._thenViewRef || forceUpdate)) {
+            // clean up and add the template,
+            this.viewContainer.clear();
+            this._elseViewRef = null;
+            this.initThenView();
+        } else if (!this._hasPerms && (!this._elseViewRef || forceUpdate)) {
+            // will remove the content of the container
+            this.viewContainer.clear();
+            this._thenViewRef = null;
+            this.initElseView();
+        }
+    }
+
+    private initThenView(): void {
+        if (this._thenTemplate) {
+            this._thenViewRef = this.viewContainer.createEmbeddedView(this._thenTemplate);
+        }
+    }
+
+    private initElseView(): void {
+        if (this._elseTemplate) {
+            this._elseViewRef = this.viewContainer.createEmbeddedView(this._elseTemplate);
+        }
+    }
 
     private _hasPermissions(): boolean {
-        const hasPerms = this.and ? !this.permissions.length || this.hasPermissions() : false;
+        const hasPerms = this._and ? !this.permissions.length || this.hasPermissions() : false;
 
-        if (this.complement) {
+        if (this._complement) {
             return !hasPerms;
         } else {
             return hasPerms;
         }
     }
+
+    protected abstract hasPermissions(): boolean;
 }

@@ -96,6 +96,10 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         return this.contentForm.value;
     }
 
+    public get hasCategories(): boolean {
+        return this.categoryRepo.getViewModelList().length > 0;
+    }
+
     /**
      * Constant to identify the notification-message.
      */

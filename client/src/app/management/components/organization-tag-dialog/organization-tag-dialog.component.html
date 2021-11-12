@@ -33,6 +33,8 @@
     </form>
 </div>
 <div mat-dialog-actions>
-    <button mat-button color="primary" (click)="onSaveClicked()">{{ 'Save' | translate }}</button>
+    <button mat-button [disabled]="organizationTagForm.invalid" color="primary" (click)="onSaveClicked()">
+        {{ 'Save' | translate }}
+    </button>
     <button mat-button [mat-dialog-close]="null">{{ 'Cancel' | translate }}</button>
 </div>

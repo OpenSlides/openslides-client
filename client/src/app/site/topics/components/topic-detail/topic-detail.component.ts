@@ -103,23 +103,8 @@ export class TopicDetailComponent extends BaseModelContextComponent {
         }
     }
 
-    /**
-     * Save a new topic as agenda item
-     */
-    public async saveTopic(): Promise<void> {
-        if (!this.topicForm.valid) {
-            return;
-        }
-
-        try {
-            if (this.newTopic) {
-                await this.createTopic();
-            } else {
-                await this.updateTopic();
-            }
-        } catch (e) {
-            this.raiseError(e);
-        }
+    public getSaveAction(): () => Promise<void> {
+        return () => this.saveTopic();
     }
 
     /**
@@ -237,6 +222,25 @@ export class TopicDetailComponent extends BaseModelContextComponent {
 
         if (event.key === `Escape`) {
             this.setEditMode(false);
+        }
+    }
+
+    /**
+     * Save a new topic as agenda item
+     */
+    private async saveTopic(): Promise<void> {
+        if (!this.topicForm.valid) {
+            return;
+        }
+
+        try {
+            if (this.newTopic) {
+                await this.createTopic();
+            } else {
+                await this.updateTopic();
+            }
+        } catch (e) {
+            this.raiseError(e);
         }
     }
 

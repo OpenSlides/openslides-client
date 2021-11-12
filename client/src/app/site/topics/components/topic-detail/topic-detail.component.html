@@ -5,8 +5,8 @@
     [goBack]="true"
     [editMode]="editTopic"
     [isSaveButtonEnabled]="topicForm.valid"
+    [saveAction]="getSaveAction()"
     (mainEvent)="setEditMode(!editTopic)"
-    (saveEvent)="saveTopic()"
 >
     <!-- Title -->
     <div class="title-slot">
@@ -38,8 +38,8 @@
 
     <div *ngIf="topic.hasAttachments() && !editTopic">
         <h3>
-            <span>{{ 'Attachments' | translate }}</span
-            >:
+            <span>{{ 'Attachments' | translate }}</span>
+            :
             <mat-list dense>
                 <mat-list-item *ngFor="let file of topic.attachments">
                     <a [routerLink]="file.url" target="_blank">{{ file.getTitle() }}</a>

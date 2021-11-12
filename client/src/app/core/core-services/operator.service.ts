@@ -477,7 +477,7 @@ export class OperatorService {
         if (!this.currentCommitteeIds.includes(committeeId)) {
             return false;
         }
-        const currentCommitteePermission = cmlNameMapping[this.CML[committeeId]] || 0;
+        const currentCommitteePermission = cmlNameMapping[(this.CML || {})[committeeId]] || 0;
         return permissionsToCheck.some(permission => currentCommitteePermission >= cmlNameMapping[permission]);
     }
 

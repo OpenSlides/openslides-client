@@ -1,7 +1,6 @@
-import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { MemberService } from 'app/core/core-services/member.service';
@@ -63,7 +62,7 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
         public orgaTagRepo: OrganizationTagRepositoryService,
         private meetingRepo: MeetingRepositoryService,
         private route: ActivatedRoute,
-        private location: Location,
+        private router: Router,
         private operator: OperatorService
     ) {
         super(componentServiceCollector, translate);
@@ -120,28 +119,23 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
         };
     }
 
-    public onSubmit(): void {
+    public getSaveAction(): () => Promise<void> {
+        return () => this.onSubmit();
+    }
+
+    public async onSubmit(): Promise<void> {
         const value = this.committeeForm.value as Committee;
 
         if (this.isCreateView) {
-            this.committeeRepo
-                .create(value)
-                .then(() => {
-                    this.location.back();
-                })
-                .catch(this.raiseError);
+            await this.committeeRepo.create(value);
         } else {
-            this.committeeRepo
-                .update(value, this.editCommittee)
-                .then(() => {
-                    this.location.back();
-                })
-                .catch(this.raiseError);
+            await this.committeeRepo.update(value, this.editCommittee);
         }
+        this.navigateBack();
     }
 
     public onCancel(): void {
-        this.location.back();
+        this.navigateBack();
     }
 
     /**
@@ -190,6 +184,10 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
         )[0];
         const currentValue: Id[] = this.committeeForm.get(`organization_tag_ids`).value || [];
         this.committeeForm.patchValue({ organization_tag_ids: currentValue.concat(id) });
+    }
+
+    private navigateBack(): void {
+        this.router.navigate([`..`, `committees`]);
     }
 
     private getCommitteeByUrl(): void {

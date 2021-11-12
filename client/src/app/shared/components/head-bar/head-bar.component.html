@@ -53,9 +53,16 @@
         </button>
 
         <!-- Save button -->
-        <button mat-button *ngIf="editMode" [disabled]="!isSaveButtonEnabled" (click)="save()">
-            <strong class="upper">{{ saveText | translate }}</strong>
-        </button>
+        <ng-container *ngIf="isSaving">
+            <div>
+                <os-spinner [width]="30" [height]="30" [showText]="false"></os-spinner>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="!isSaving">
+            <button mat-button *ngIf="editMode" [disabled]="!isSaveButtonEnabled" (click)="save()">
+                <strong class="upper">{{ saveText | translate }}</strong>
+            </button>
+        </ng-container>
 
         <!-- Menu button slot -->
         <ng-content *ngIf="!editMode" select=".menu-slot"></ng-content>

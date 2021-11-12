@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { OperatorService } from 'app/core/core-services/operator.service';
@@ -11,6 +11,7 @@ import { BaseModelContextComponent } from 'app/site/base/components/base-model-c
 import { ViewUser } from 'app/site/users/models/view-user';
 
 import { MemberService } from '../../../core/core-services/member.service';
+import { UserDetailViewComponent } from '../../../shared/components/user-detail-view/user-detail-view.component';
 import { ViewCommittee } from '../../models/view-committee';
 
 @Component({
@@ -23,6 +24,11 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
 
     public get organizationManagementLevels(): string[] {
         return Object.values(OML).filter(level => this.operator.hasOrganizationPermissions(level));
+    }
+
+    @ViewChild(UserDetailViewComponent, { static: false })
+    public set userDetailView(userDetailView: UserDetailViewComponent) {
+        userDetailView.markAsPristine();
     }
 
     public readonly additionalFormControls = {
@@ -61,7 +67,10 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
     }
 
     public transformPropagateFn(value?: Id[]): any {
-        return (value || []).mapToObject(id => ({ [id]: CML.can_manage }));
+        if (!value?.length) {
+            return value;
+        }
+        return value.mapToObject(id => ({ [id]: CML.can_manage }));
     }
 
     public getTransformSetFn(): (value?: string[]) => any {
@@ -76,17 +85,19 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
         };
     }
 
-    public async onSubmit(): Promise<void> {
-        if (!this.isFormValid) {
-            this.checkFormForErrors();
-            return;
-        }
+    public getSaveAction(): () => Promise<void> {
+        return async () => {
+            if (!this.isFormValid) {
+                this.checkFormForErrors();
+                return;
+            }
 
-        try {
-            await this.createOrUpdateUser();
-        } catch (e) {
-            this.raiseError(e);
-        }
+            try {
+                await this.createOrUpdateUser();
+            } catch (e) {
+                this.raiseError(e);
+            }
+        };
     }
 
     public onCancel(): void {
@@ -120,17 +131,14 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
         }
     }
 
-    public getUserCommitteeManagementLevels(): string {
+    public getUserCommitteeManagementLevels(): ViewCommittee[] {
         const committeesToManage: ViewCommittee[] = [];
         for (const id of this.user.committee_$_management_level) {
             if (this.user.committee_management_level(id) === CML.can_manage) {
                 committeesToManage.push(this.committeeRepo.getViewModel(id));
             }
         }
-        return committeesToManage
-            .filter(committee => !!committee)
-            .map(committee => committee.getTitle())
-            .join(`, `);
+        return committeesToManage.filter(committee => !!committee);
     }
 
     private getUserByUrl(): void {

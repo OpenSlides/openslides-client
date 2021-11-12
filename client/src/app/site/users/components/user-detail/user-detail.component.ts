@@ -53,6 +53,14 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
         return permission => this.isAllowed(permission);
     }
 
+    public get patchFormValueFn(): (controlName: string, user?: ViewUser) => any | null {
+        return (controlName, user) => {
+            if (controlName === `is_present`) {
+                return user ? user.isPresentInMeeting() : true;
+            }
+        };
+    }
+
     public isFormValid = false;
     public personalInfoFormValue: any = {};
     public formErrors: { [name: string]: boolean } | null = null;
@@ -80,7 +88,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
     /**
      * ViewUser model
      */
-    public user: ViewUser;
+    public user: ViewUser | null = null;
 
     public get usersGroups(): ViewGroup[] {
         return this.user.groups();
@@ -211,6 +219,10 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
         }
     }
 
+    public getSaveAction(): () => Promise<void> {
+        return () => this.saveUser();
+    }
+
     /**
      * Save / Submit a user
      */
@@ -221,7 +233,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
         }
 
         try {
-            this.createOrUpdateUser();
+            await this.createOrUpdateUser();
         } catch (e) {
             this.raiseError(e);
         }

@@ -2,8 +2,8 @@
     [nav]="false"
     [editMode]="true"
     [isSaveButtonEnabled]="committeeForm.valid"
+    [saveAction]="getSaveAction()"
     (cancelEditEvent)="onCancel()"
-    (saveEvent)="onSubmit()"
 >
     <!-- Title -->
     <div class="title-slot">

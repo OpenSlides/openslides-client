@@ -90,11 +90,15 @@ export class MeetingEditComponent extends BaseModelContextComponent {
         }
     }
 
-    public onSubmit(): void {
+    public getSaveAction(): () => Promise<void> {
+        return () => this.onSubmit();
+    }
+
+    public async onSubmit(): Promise<void> {
         if (this.isCreateView) {
-            this.doCreateMeeting();
+            await this.doCreateMeeting();
         } else {
-            this.doUpdateMeeting();
+            await this.doUpdateMeeting();
         }
     }
 
