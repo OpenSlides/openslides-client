@@ -1,7 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SpecificStructuredField } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
@@ -18,10 +17,22 @@ import { BehaviorSubject, combineLatest } from 'rxjs';
 
 import { ActiveMeetingService } from '../../../../core/core-services/active-meeting.service';
 import { MemberService } from '../../../../core/core-services/member.service';
-import { UserService } from '../../../../core/ui-services/user.service';
+import { PERSONAL_FORM_CONTROLS, UserService } from '../../../../core/ui-services/user.service';
 import { ViewGroup } from '../../models/view-group';
 import { ViewUser } from '../../models/view-user';
 import { UserPdfExportService } from '../../services/user-pdf-export.service';
+
+const MEETING_RELATED_FORM_CONTROLS = [
+    `structure_level`,
+    `number`,
+    `vote_weight`,
+    `about_me`,
+    `comment`,
+    `group_ids`,
+    `vote_delegations_from_ids`,
+    `vote_delegated_to_id`,
+    `is_present`
+];
 
 /**
  * Users detail component for both new and existing users
@@ -33,17 +44,9 @@ import { UserPdfExportService } from '../../services/user-pdf-export.service';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserDetailComponent extends BaseModelContextComponent implements OnDestroy {
-    public readonly additionalFormControls = {
-        structure_level: [``],
-        number: [``],
-        vote_weight: [],
-        about_me: [``],
-        comment: [``],
-        group_ids: [[]],
-        vote_delegations_from_ids: [[]],
-        vote_delegated_to_id: [``],
-        is_present: [true]
-    };
+    public readonly additionalFormControls = MEETING_RELATED_FORM_CONTROLS.mapToObject(controlName => ({
+        [controlName]: [``]
+    }));
 
     public get randomPasswordFn(): () => string {
         return () => this.getRandomPassword();
@@ -61,6 +64,21 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
         };
     }
 
+    public get shouldEnableFormControlFn(): (controlName: string) => boolean {
+        return controlName => {
+            const canManageUsers = this.isAllowed(`manage`);
+            if (canManageUsers) {
+                if (this._isUserInScope || this.newUser) {
+                    return true;
+                } else {
+                    return MEETING_RELATED_FORM_CONTROLS.includes(controlName);
+                }
+            } else {
+                return PERSONAL_FORM_CONTROLS.includes(controlName);
+            }
+        };
+    }
+
     public isFormValid = false;
     public personalInfoFormValue: any = {};
     public formErrors: { [name: string]: boolean } | null = null;
@@ -73,17 +91,12 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
     /**
      * Editing a user
      */
-    public editUser = false;
+    public readonly isEditingSubject = new BehaviorSubject<boolean>(false);
 
     /**
      * True if a new user is created
      */
     public newUser = false;
-
-    /**
-     * True if the operator has manage permissions
-     */
-    public canManage = false;
 
     /**
      * ViewUser model
@@ -101,13 +114,13 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
 
     public readonly users: BehaviorSubject<ViewUser[]> = new BehaviorSubject<ViewUser[]>([]);
 
-    private voteWeightEnabled: boolean;
-
     public get showVoteWeight(): boolean {
-        return this.pollService.isElectronicVotingEnabled && this.voteWeightEnabled;
+        return this.pollService.isElectronicVotingEnabled && this._voteWeightEnabled;
     }
 
-    private userId: Id = undefined; // Not initialized
+    private _userId: Id = undefined; // Not initialized
+    private _voteWeightEnabled: boolean;
+    private _isUserInScope: boolean;
 
     /**
      * Constructor for user
@@ -126,14 +139,15 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
         private meetingSettingsService: MeetingSettingsService,
         private activeMeetingService: ActiveMeetingService,
         private userService: UserService,
-        private memberService: MemberService
+        private memberService: MemberService,
+        private cd: ChangeDetectorRef
     ) {
         super(componentServiceCollector, translate);
         this.getUserByUrl();
 
         this.meetingSettingsService
             .get(`users_enable_vote_weight`)
-            .subscribe(enabled => (this.voteWeightEnabled = enabled));
+            .subscribe(enabled => (this._voteWeightEnabled = enabled));
 
         this.groupRepo.getViewModelListObservableWithoutDefaultGroup().subscribe(this.groups);
         this.users = this.repo.getViewModelListBehaviorSubject();
@@ -153,9 +167,9 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
                 combineLatest([this.route.params, this.activeMeetingIdService.meetingIdObservable]).subscribe(
                     async ([params, _]) => {
                         if (params.id) {
-                            this.userId = +params.id;
+                            this._userId = +params.id;
                         }
-                        if (this.userId) {
+                        if (this._userId) {
                             await this.loadUserById();
                         }
                     }
@@ -169,7 +183,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
         if (meetingId) {
             await this.requestModels({
                 viewModelCtor: ViewUser,
-                ids: [this.userId],
+                ids: [this._userId],
                 follow: [
                     {
                         idField: SpecificStructuredField(
@@ -194,13 +208,17 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
         }
 
         this.subscriptions.push(
-            this.repo.getViewModelObservable(this.userId).subscribe(user => {
+            this.repo.getViewModelObservable(this._userId).subscribe(user => {
                 if (user) {
                     const title = user.getTitle();
                     super.setTitle(title);
                     this.user = user;
+                    this.cd.markForCheck();
                 }
-            })
+            }),
+            this.operator.operatorUpdatedEvent.subscribe(
+                async () => (this._isUserInScope = await this.userService.isUserInScope(this._userId))
+            )
         );
     }
 
@@ -263,7 +281,11 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
             );
         }
 
-        this.editUser = edit;
+        if (!this.newUser && edit) {
+            this._isUserInScope = await this.userService.isUserInScope(this._userId);
+        }
+
+        this.isEditingSubject.next(edit);
 
         // case: abort creation of a new user
         if (this.newUser && !edit) {

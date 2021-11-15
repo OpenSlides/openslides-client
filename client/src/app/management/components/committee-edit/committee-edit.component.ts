@@ -22,6 +22,7 @@ import { ViewUser } from 'app/site/users/models/view-user';
 import { Observable, OperatorFunction } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { UserRepositoryService } from '../../../core/repositories/users/user-repository.service';
 import { OsOptionSelectionChanged } from '../../../shared/components/search-selector/base-search-value-selector/base-search-value-selector.component';
 
 const ADD_COMMITTEE_LABEL = _(`New committee`);
@@ -55,6 +56,7 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
+        userRepo: UserRepositoryService,
         protected translate: TranslateService,
         private formBuilder: FormBuilder,
         private memberService: MemberService,
@@ -74,7 +76,7 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
         } else {
             super.setTitle(EDIT_COMMITTEE_LABEL);
         }
-        this.organizationMembers = this.memberService.getMemberListObservable();
+        this.organizationMembers = userRepo.getViewModelListObservable();
         this.meetingsObservable = this.meetingRepo.getViewModelListObservable();
     }
 

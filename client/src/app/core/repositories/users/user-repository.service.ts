@@ -123,7 +123,9 @@ export class UserRepositoryService
             `default_number`,
             `default_structure_level`,
             `default_vote_weight`,
-            { templateField: `comment_$` }
+            { templateField: `comment_$` },
+            { templateField: `structure_level_$` },
+            { templateField: `number_$` }
         ]);
         const committeeEditFields = shortNameFields.concat([
             `committee_ids`,

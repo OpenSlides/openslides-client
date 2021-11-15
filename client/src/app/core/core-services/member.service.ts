@@ -4,7 +4,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { Meeting } from 'app/shared/models/event-management/meeting';
 import { mediumDialogSettings } from 'app/shared/utils/dialog-settings';
 import { ViewUser } from 'app/site/users/models/view-user';
-import { Observable } from 'rxjs';
 
 import { MemberDeleteDialogComponent } from '../../management/components/member-delete-dialog/member-delete-dialog.component';
 import { Id } from '../definitions/key-types';
@@ -56,10 +55,6 @@ export class MemberService {
         private translate: TranslateService,
         private prompt: PromptService
     ) {}
-
-    public getMemberListObservable(): Observable<ViewUser[]> {
-        return this.userRepo.getViewModelListObservable();
-    }
 
     public async delete(users: ViewUser[], meeting: Meeting = this.activeMeeting.meeting): Promise<boolean> {
         try {
