@@ -8,6 +8,7 @@ import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 export interface VoteOption {
     vote?: VoteValue;
@@ -35,6 +36,10 @@ export abstract class BasePollVoteComponent<C extends BaseViewModel = any> exten
 
     public PollPropertyVerbose = PollPropertyVerbose;
 
+    public get isUserPresent(): boolean {
+        return this.user.isPresentInMeeting();
+    }
+
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService,
@@ -44,10 +49,11 @@ export abstract class BasePollVoteComponent<C extends BaseViewModel = any> exten
     ) {
         super(componentServiceCollector, translate);
         this.subscriptions.push(
-            operator.userObservable.subscribe(user => {
+            operator.userObservable.pipe(debounceTime(50)).subscribe(user => {
                 if (user) {
                     this.user = user;
                     this.delegations = user.vote_delegations_from();
+                    this.createVotingDataObjects();
                     this.cd.markForCheck();
                 }
             })
@@ -59,17 +65,19 @@ export abstract class BasePollVoteComponent<C extends BaseViewModel = any> exten
             this.voteRequestData[this.user.id] = {
                 value: {}
             } as VotingData;
-            this.alreadyVoted[this.user.id] = this.poll.user_has_voted;
+            this.alreadyVoted[this.user.id] = this.poll.hasVoted;
             this.deliveringVote[this.user.id] = false;
         }
 
         if (this.delegations) {
             for (const delegation of this.delegations) {
-                this.voteRequestData[delegation.id] = {
-                    value: {}
-                } as VotingData;
-                this.alreadyVoted[delegation.id] = this.poll.hasVotedForDelegations(delegation.id);
-                this.deliveringVote[delegation.id] = false;
+                if (!this.voteRequestData[delegation.id]) {
+                    this.voteRequestData[delegation.id] = {
+                        value: {}
+                    } as VotingData;
+                    this.alreadyVoted[delegation.id] = this.poll.hasVotedForDelegations(delegation.id);
+                    this.deliveringVote[delegation.id] = false;
+                }
             }
         }
     }
@@ -89,7 +97,7 @@ export abstract class BasePollVoteComponent<C extends BaseViewModel = any> exten
     }
 
     public getVotingError(user: ViewUser = this.user): string | void {
-        console.log(`Cannot vote because:`, this.votingService.getVotePermissionErrorVerbose(this.poll, user));
+        console.info(`Cannot vote because:`, this.votingService.getVotePermissionErrorVerbose(this.poll, user));
         return this.votingService.getVotePermissionErrorVerbose(this.poll, user);
     }
 }

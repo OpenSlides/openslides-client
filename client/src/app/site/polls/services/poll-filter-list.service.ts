@@ -43,7 +43,7 @@ export class PollFilterListService extends BaseFilterListService<ViewPoll> {
                 ]
             },
             {
-                property: `wasVoted`,
+                property: `hasVoted`,
                 label: this.translate.instant(`Votings`),
                 options: [
                     { condition: false, label: this.translate.instant(`Voting is currently in progress.`) },

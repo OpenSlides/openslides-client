@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { PollAction } from 'app/core/actions/poll-action';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Id } from 'app/core/definitions/key-types';
 import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
@@ -51,7 +52,6 @@ export class MotionPollVoteComponent extends BasePollVoteComponent implements On
     }
 
     public ngOnInit(): void {
-        this.createVotingDataObjects();
         this.cd.markForCheck();
     }
 
@@ -76,8 +76,13 @@ export class MotionPollVoteComponent extends BasePollVoteComponent implements On
             this.deliveringVote[user.id] = true;
             this.cd.markForCheck();
 
+            const votePayload: PollAction.YNVotePayload | PollAction.YNAVotePayload = {
+                value: { [optionId]: vote },
+                user_id: user.id
+            };
+
             this.pollRepo
-                .vote(this.poll, user, { value: { [optionId]: vote } })
+                .vote(this.poll, votePayload)
                 .then(() => {
                     this.alreadyVoted[user.id] = true;
                 })
