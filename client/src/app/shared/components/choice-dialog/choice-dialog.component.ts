@@ -1,43 +1,8 @@
 import { Component, Inject, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Identifiable } from 'app/shared/models/base/identifiable';
-import { Displayable } from 'app/site/base/displayable';
-import { Observable } from 'rxjs';
 
-type Choice = Displayable & Identifiable;
-
-/**
- * All data needed for this dialog
- */
-interface ChoiceDialogData {
-    /**
-     * A title to display
-     */
-    title: string;
-
-    /**
-     * Select if this should be a multiselect choice
-     */
-    multiSelect: boolean;
-
-    /**
-     * The choices to display
-     */
-    choices?: Observable<Choice[]> | Choice[];
-
-    /**
-     * Additional action buttons which will add their value to the
-     * {@link closeDialog} feedback if chosen
-     */
-    actionButtons?: string[];
-
-    /**
-     * An optional string for 'explicitly select none of the options'. Only
-     * displayed in the single-select variation
-     */
-    clearChoiceOption?: string;
-}
+import { ChoiceDialogConfig } from '../../../core/ui-services/choice.service';
 
 interface ChoiceDialogResult {
     action?: string;
@@ -98,7 +63,7 @@ export class ChoiceDialogComponent {
     public constructor(
         public dialogRef: MatDialogRef<ChoiceDialogComponent, ChoiceAnswer>,
         private formBuilder: FormBuilder,
-        @Inject(MAT_DIALOG_DATA) public data: ChoiceDialogData
+        @Inject(MAT_DIALOG_DATA) public data: ChoiceDialogConfig
     ) {
         this.selectForm = this.formBuilder.group({
             select: []

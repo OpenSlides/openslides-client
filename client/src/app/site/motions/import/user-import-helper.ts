@@ -72,7 +72,7 @@ export class UserImportHelper<Model> extends BaseBeforeImportHandler<Model, User
                 ++result.unresolvedModels;
                 continue;
             }
-            const mapped = this.modelsToCreate.find(newUser => newUser.name === newUser.name);
+            const mapped = this.modelsToCreate.find(newUser => newUser.name === user.name);
             if (mapped) {
                 user.id = mapped.id;
                 ids.push(mapped.id);

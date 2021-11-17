@@ -96,20 +96,20 @@ export class StaticBeforeImportHandler<ToImport, ToCreate extends Identifiable =
      * @returns An array which contains all ids of the linked models
      */
     private findIds(source: any[], target: any[]): Id[] {
-        const hasIds = new Set<number>();
+        const existingIds = new Set<number>();
         const needIds = [];
         for (const entry of target) {
             if (entry.id) {
-                hasIds.add(entry.id);
+                existingIds.add(entry.id);
             } else {
                 needIds.push(entry);
             }
         }
         for (const entry of source) {
             if (needIds.find(model => model.name === entry.name)) {
-                hasIds.add(entry.id);
+                existingIds.add(entry.id);
             }
         }
-        return Array.from(hasIds);
+        return Array.from(existingIds);
     }
 }

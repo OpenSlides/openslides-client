@@ -123,7 +123,7 @@
             </span>
         </button>
 
-        <button mat-menu-item type="button" class="red-warning-text" (click)="deleteSingle(committee)">
+        <button mat-menu-item type="button" class="red-warning-text" (click)="doDelete(committee)">
             <mat-icon>delete</mat-icon>
             <span>
                 {{ 'Delete' | translate }}
@@ -176,7 +176,7 @@
             </button>
             <mat-divider></mat-divider>
 
-            <button mat-menu-item [disabled]="!selectedRows.length" class="red-warning-text" (click)="deleteMultiple()">
+            <button mat-menu-item [disabled]="!selectedRows.length" class="red-warning-text" (click)="doDelete()">
                 <mat-icon>delete</mat-icon>
                 <span>{{ 'Delete' | translate }}</span>
             </button>

@@ -40,18 +40,6 @@
             </div>
         </div>
     </div>
-    <div
-        *pblNgridCellDef="'newEntry.forward_to_committee_ids'; value as committees"
-        class="one-line"
-        [matTooltip]="getForwardingTooltip(committees)"
-    >
-        <span *ngFor="let committee of committees; let last = last">
-            {{ committee.name }}
-            <mat-icon class="newBadge" color="accent" inline *ngIf="!committee.id">add</mat-icon>
-            &nbsp;
-            <span *ngIf="!last">,&nbsp;</span>
-        </span>
-    </div>
     <div *pblNgridCellDef="'newEntry.meeting'; row as row; value as meetings" class="one-line">
         <div class="one-line">
             <span *ngFor="let meeting of meetings; let last = last">

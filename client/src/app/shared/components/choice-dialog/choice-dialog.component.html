@@ -1,5 +1,6 @@
 <!-- Title -->
 <h2 mat-dialog-title *ngIf="data">{{ data.title | translate }}</h2>
+<div mat-dialog-content>{{ data.content }}</div>
 
 <form [formGroup]="selectForm" *ngIf="data">
     <!-- Content -->
@@ -9,16 +10,15 @@
             [multiple]="data.multiSelect"
             [formControl]="selectForm.get('select')"
             [inputListValues]="data.choices"
-        >
-        </os-search-value-selector>
+        ></os-search-value-selector>
     </div>
 
     <!-- Actions -->
     <div mat-dialog-actions>
         <!-- Custom Actions -->
-        <div *ngIf="data.actionButtons">
+        <div *ngIf="data.actions as actions">
             <button
-                *ngFor="let button of data.actionButtons"
+                *ngFor="let button of actions"
                 mat-button
                 (click)="closeDialog(true, button)"
                 [disabled]="!hasSelection"
@@ -28,7 +28,7 @@
         </div>
 
         <!-- Normal okay button -->
-        <div *ngIf="!data?.actionButtons">
+        <div *ngIf="!data?.actions">
             <button
                 *ngIf="!data.multiSelect || data?.choices"
                 mat-button
