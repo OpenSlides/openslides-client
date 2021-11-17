@@ -54,6 +54,6 @@ export class PollListComponent extends BaseListViewComponent<ViewPoll> {
         if (poll.state === PollState.Finished || poll.state === PollState.Published) {
             return false;
         }
-        return poll.canBeVotedFor() && !poll.operatorHasVoted();
+        return poll.canBeVotedFor() && !poll.hasVoted;
     }
 }

@@ -32,6 +32,7 @@ export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
     }
     public static COLLECTION = Poll.COLLECTION;
     protected _collection = Poll.COLLECTION;
+    public hasVoted = false;
 
     public get pollClassType(): PollClassType | undefined {
         return this.content_object?.collection as PollClassType;
@@ -72,16 +73,6 @@ export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
     public get typeVerbose(): string {
         return PollTypeVerbose[this.type];
     }
-
-    public get wasVoted(): boolean {
-        return this.user_has_voted;
-    }
-
-    /**
-     * Is injected by the poll-repo
-     * TODO: Can be removed, when OpenSlides/openslides-autoupdate-service#262 is resolved.
-     */
-    public operatorHasVoted: () => boolean;
 
     public getContentObjectTitle(): string | null {
         return this.content_object?.getTitle();

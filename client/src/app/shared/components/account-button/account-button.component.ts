@@ -10,7 +10,7 @@ import { UserRepositoryService } from 'app/core/repositories/users/user-reposito
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { AccountDialogComponent } from 'app/management/components/account-dialog/account-dialog.component';
 import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
-import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
+import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { Observable, Subscription } from 'rxjs';
 
@@ -22,7 +22,7 @@ import { ThemeService } from '../../../core/ui-services/theme.service';
     templateUrl: `./account-button.component.html`,
     styleUrls: [`./account-button.component.scss`]
 })
-export class AccountButtonComponent extends BaseModelContextComponent implements OnInit {
+export class AccountButtonComponent extends BaseComponent implements OnInit {
     @ViewChild(`languageTrigger`, { read: MatMenuTrigger })
     public set languageTrigger(trigger: MatMenuTrigger | undefined) {
         this._languageTrigger = trigger;
@@ -71,7 +71,6 @@ export class AccountButtonComponent extends BaseModelContextComponent implements
     }
 
     public ngOnInit(): void {
-        super.ngOnInit();
         this.operator.operatorUpdatedEvent.subscribe(() => this.onOperatorUpdate());
 
         // TODO: SAML
@@ -160,19 +159,6 @@ export class AccountButtonComponent extends BaseModelContextComponent implements
             this.user = null;
             return;
         }
-
-        this.requestModels({
-            viewModelCtor: ViewUser,
-            ids: [this._userId],
-            fieldset: `shortName`,
-            additionalFields: [
-                `is_present_in_meeting_ids`,
-                `can_change_own_password`,
-                `organization_management_level`,
-                { templateField: `structure_level_$` },
-                `default_structure_level`
-            ]
-        });
 
         if (this._userSubscription) {
             this._userSubscription.unsubscribe();

@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { PollAction } from 'app/core/actions/poll-action';
+import { HttpService } from 'app/core/core-services/http.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
+import { SendVotesService } from 'app/core/core-services/send-votes.service';
 import { Collection, Decimal, Id } from 'app/core/definitions/key-types';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Poll } from 'app/shared/models/poll/poll';
@@ -29,7 +31,7 @@ interface AnalogPollGlobalValues {
     providedIn: `root`
 })
 export class PollRepositoryService extends BaseRepositoryWithActiveMeeting<ViewPoll, Poll> {
-    public constructor(repoServiceCollector: RepositoryServiceCollector, private operator: OperatorService) {
+    public constructor(repoServiceCollector: RepositoryServiceCollector, private sendVotesService: SendVotesService) {
         super(repoServiceCollector, Poll);
     }
 
@@ -332,32 +334,9 @@ export class PollRepositoryService extends BaseRepositoryWithActiveMeeting<ViewP
 
     public async vote(
         poll: Poll,
-        user: User,
         options: Partial<PollAction.YNVotePayload | PollAction.YNAVotePayload>
     ): Promise<void> {
-        if (poll.pollmethod === PollMethod.YN) {
-            return this.ynVoteForPoll(poll, user, options as PollAction.YNVotePayload);
-        } else {
-            return this.ynaVoteForPoll(poll, user, options as PollAction.YNAVotePayload);
-        }
-    }
-
-    private async ynVoteForPoll(poll: Poll, user: User, options: Partial<PollAction.YNVotePayload>): Promise<void> {
-        const payload: PollAction.YNVotePayload = {
-            id: poll.id,
-            user_id: user.id,
-            value: options.value
-        };
-        return this.sendActionToBackend(PollAction.VOTE, payload);
-    }
-
-    private async ynaVoteForPoll(poll: Poll, user: User, options: Partial<PollAction.YNAVotePayload>): Promise<void> {
-        const payload: PollAction.YNAVotePayload = {
-            id: poll.id,
-            user_id: user.id,
-            value: options.value
-        };
-        return this.sendActionToBackend(PollAction.VOTE, payload);
+        return this.sendVotesService.sendVote(poll.id, options);
     }
 
     public async changePollState(poll: Poll, targetState: PollState): Promise<void> {
@@ -379,7 +358,9 @@ export class PollRepositoryService extends BaseRepositoryWithActiveMeeting<ViewP
 
     protected createViewModel(model: Poll): ViewPoll {
         const viewPoll = super.createViewModel(model);
-        viewPoll.operatorHasVoted = (): boolean => (viewPoll.voted_ids || []).includes(this.operator.operatorId);
+
+        this.sendVotesService.setHasVotedOnPoll(viewPoll).then(() => {});
+
         return viewPoll;
     }
 }

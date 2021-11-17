@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { PollAction } from 'app/core/actions/poll-action';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -67,7 +68,6 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
     }
 
     public ngOnInit(): void {
-        this.createVotingDataObjects();
         this.defineVoteOptions();
         this.cd.markForCheck();
     }
@@ -145,14 +145,21 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
         if (confirmed) {
             this.deliveringVote[user.id] = true;
             this.cd.markForCheck();
+
+            const votePayload: PollAction.YNVotePayload | PollAction.YNAVotePayload = {
+                value: this.voteRequestData[user.id].value,
+                user_id: user.id
+            };
+
             this.pollRepo
-                .vote(this.poll, user, { value: this.voteRequestData[user.id].value })
+                .vote(this.poll, votePayload)
                 .then(() => {
                     this.alreadyVoted[user.id] = true;
                 })
                 .catch(this.raiseError)
                 .finally(() => {
                     this.deliveringVote[user.id] = false;
+                    this.cd.markForCheck();
                 });
         }
     }

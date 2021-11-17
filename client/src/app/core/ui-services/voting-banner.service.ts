@@ -4,9 +4,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { ActiveMeetingService } from '../core-services/active-meeting.service';
 import { HistoryService } from '../core-services/history.service';
+import { SendVotesService } from '../core-services/send-votes.service';
 import { PollRepositoryService } from '../repositories/polls/poll-repository.service';
 import { BannerDefinition, BannerService } from './banner.service';
 import { VotingService } from './voting.service';
@@ -25,18 +27,24 @@ export class VotingBannerService {
         private translate: TranslateService,
         private historyService: HistoryService,
         private votingService: VotingService,
-        private activeMeeting: ActiveMeetingService
+        private activeMeeting: ActiveMeetingService,
+        private sendVotesService: SendVotesService
     ) {
-        pollRepo.getViewModelListObservable().subscribe(polls => this.checkForVotablePolls(polls));
+        pollRepo
+            .getViewModelListObservable()
+            .pipe(distinctUntilChanged(), debounceTime(500))
+            .subscribe(polls => this.checkForVotablePolls(polls));
     }
 
     /**
      * checks all polls for votable ones and displays a banner for them
      * @param polls the updated poll list
      */
-    private checkForVotablePolls(polls: ViewPoll[]): void {
+    private async checkForVotablePolls(polls: ViewPoll[]): Promise<void> {
+        // refresh the voting info on all polls. This is a single request to the vote service
+        await this.sendVotesService.setHasVotedOnPoll(...polls);
         // display no banner if in history mode or there are no polls to vote
-        const pollsToVote = polls.filter(poll => this.votingService.canVote(poll) && !poll.operatorHasVoted());
+        const pollsToVote = polls.filter(poll => this.votingService.canVote(poll) && !poll.hasVoted);
         if ((this.historyService.isInHistoryMode && this.currentBanner) || !pollsToVote.length) {
             this.sliceBanner();
             return;

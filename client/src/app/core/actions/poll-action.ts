@@ -138,14 +138,14 @@ export namespace PollAction {
     /**
      * Only for non-analog polls
      */
-    export interface YNVotePayload extends Identifiable, UserIdentifiable {
+    export interface YNVotePayload extends UserIdentifiable {
         value: { [option_id: number]: number } | YNA;
     }
 
     /**
      * Only for non-analog polls
      */
-    export interface YNAVotePayload extends Identifiable, UserIdentifiable {
+    export interface YNAVotePayload extends UserIdentifiable {
         value: { [option_id: number]: YNA } | YNA;
     }
 

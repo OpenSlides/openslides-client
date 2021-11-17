@@ -30,7 +30,8 @@ const OPERATOR_FIELDS: (keyof User)[] = [
     `committee_$_management_level`,
     `committee_ids`,
     `can_change_own_password`,
-    `is_present_in_meeting_ids`
+    `is_present_in_meeting_ids`,
+    `default_structure_level`
 ];
 
 function getUserCML(user: ViewUser): { [id: number]: string } | null {
@@ -575,12 +576,18 @@ export class OperatorService {
      */
     private getOperatorRequestWithActiveMeeting(): SimplifiedModelRequest | null {
         let operatorRequest: SimplifiedModelRequest | null = null;
+
         if (this.isAuthenticated) {
             operatorRequest = {
                 ids: [this.operatorId],
                 viewModelCtor: ViewUser,
                 fieldset: `shortName`,
-                additionalFields: OPERATOR_FIELDS,
+                additionalFields: [
+                    ...OPERATOR_FIELDS,
+                    { templateField: `structure_level_$` },
+                    { templateField: `vote_delegated_$_to_id` },
+                    { templateField: `vote_delegations_$_from_ids` }
+                ],
                 follow: [
                     {
                         idField: SpecificStructuredField(`group_$_ids`, this.activeMeetingId),

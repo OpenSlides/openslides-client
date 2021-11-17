@@ -21,14 +21,10 @@ export class Poll extends BaseDecimalModel<Poll> {
     public onehundred_percent_base: PollPercentBase;
 
     /**
-     * TODO: these fields has to be autocalculated by the AU-service: OpenSlides/openslides-autoupdate-service#262
+     * TODO:
+     * Not sure how vote delegations are handled now
      */
-    public voted_id: number[];
-    public user_has_voted: boolean;
     public user_has_voted_for_delegations: Id[];
-    /**
-     * END
-     */
 
     public pollmethod: PollMethod;
 
