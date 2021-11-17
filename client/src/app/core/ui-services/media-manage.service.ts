@@ -11,19 +11,19 @@ export type LogoPlace =
     | 'projector_main'
     | 'projector_header'
     | 'web_header'
-    | 'pdf_header_L'
-    | 'pdf_header_R'
-    | 'pdf_footer_L'
-    | 'pdf_footer_R'
+    | 'pdf_header_l'
+    | 'pdf_header_r'
+    | 'pdf_footer_l'
+    | 'pdf_footer_r'
     | 'pdf_ballot_paper';
 export const LogoDisplayNames: { [place in LogoPlace]: string } = {
     projector_main: `Projector logo`,
     projector_header: `Projector header image`,
     web_header: `Web interface header logo`,
-    pdf_header_L: `PDF header logo (left)`,
-    pdf_header_R: `PDF header logo (right)`,
-    pdf_footer_L: `PDF footer logo (left)`,
-    pdf_footer_R: `PDF footer logo (right)`,
+    pdf_header_l: `PDF header logo (left)`,
+    pdf_header_r: `PDF header logo (right)`,
+    pdf_footer_l: `PDF footer logo (left)`,
+    pdf_footer_r: `PDF footer logo (right)`,
     pdf_ballot_paper: `PDF ballot paper logo`
 };
 
@@ -59,10 +59,10 @@ export class MediaManageService {
             `projector_main`,
             `projector_header`,
             `web_header`,
-            `pdf_header_L`,
-            `pdf_header_R`,
-            `pdf_footer_L`,
-            `pdf_footer_R`,
+            `pdf_header_l`,
+            `pdf_header_r`,
+            `pdf_footer_l`,
+            `pdf_footer_r`,
             `pdf_ballot_paper`
         ];
     }
