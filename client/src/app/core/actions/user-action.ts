@@ -15,6 +15,8 @@ export namespace UserAction {
     export const UPDATE = `user.update`;
     export const UPDATE_SELF = `user.update_self`;
     export const TOGGLE_PRESENCE_BY_NUMBER = `user.toggle_presence_by_number`;
+    export const FORGET_PASSWORD = `user.forget_password`;
+    export const FORGET_PASSWORD_CONFIRM = `user.forget_password_confirm`;
 
     export interface BaseUserPayload {
         title: string;
@@ -100,5 +102,15 @@ export namespace UserAction {
     export interface TogglePresenceByNumberPayload {
         number: string;
         meeting_id: Id;
+    }
+
+    export interface ForgetPasswordPayload {
+        email: string;
+    }
+
+    export interface ForgetPasswordConfirmPayload {
+        new_password: string;
+        user_id: Id;
+        authorization_token: string;
     }
 }

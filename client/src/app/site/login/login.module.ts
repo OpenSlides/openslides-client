@@ -7,16 +7,13 @@ import { LoginLegalNoticeComponent } from './components/login-legal-notice/login
 import { LoginMaskComponent } from './components/login-mask/login-mask.component';
 import { LoginPrivacyPolicyComponent } from './components/login-privacy-policy/login-privacy-policy.component';
 import { LoginWrapperComponent } from './components/login-wrapper/login-wrapper.component';
-import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
-import { ResetPasswordConfirmComponent } from './components/reset-password-confirm/reset-password-confirm.component';
 import { UnsupportedBrowserComponent } from './components/unsupported-browser/unsupported-browser.component';
+import { LoginRoutingModule } from './login-routing.module';
 
 @NgModule({
-    imports: [CommonModule, RouterModule, SharedModule],
+    imports: [CommonModule, RouterModule, SharedModule, LoginRoutingModule],
     declarations: [
         LoginWrapperComponent,
-        ResetPasswordComponent,
-        ResetPasswordConfirmComponent,
         LoginMaskComponent,
         LoginLegalNoticeComponent,
         LoginPrivacyPolicyComponent,
