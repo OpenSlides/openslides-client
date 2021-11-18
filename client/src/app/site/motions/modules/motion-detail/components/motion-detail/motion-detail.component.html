@@ -4,9 +4,9 @@
     [nav]="false"
     [editMode]="editMotion"
     [isSaveButtonEnabled]="canSave"
+    [saveAction]="getSaveAction()"
     (mainEvent)="createAmendment()"
     (cancelEditEvent)="leaveEditMotion()"
-    (saveEvent)="saveMotion()"
 >
     <!-- Title -->
     <div class="title-slot">

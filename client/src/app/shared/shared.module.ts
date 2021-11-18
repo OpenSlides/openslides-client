@@ -44,7 +44,6 @@ import { CustomTranslationComponent } from './components/custom-translation/cust
 import { ExtensionFieldComponent } from './components/extension-field/extension-field.component';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
 import { GlobalHeadbarComponent } from './components/global-headbar/global-headbar.component';
-import { GlobalSpinnerComponent } from './components/global-spinner/global-spinner.component';
 import { GridLayoutComponent } from './components/grid-layout/grid-layout.component';
 // components
 import { HeadBarComponent } from './components/head-bar/head-bar.component';
@@ -84,6 +83,7 @@ import { SortFilterBarComponent } from './components/sort-filter-bar/sort-filter
 import { SortingListComponent } from './components/sorting-list/sorting-list.component';
 import { SortingTreeComponent } from './components/sorting-tree/sorting-tree.component';
 import { SpeakerButtonComponent } from './components/speaker-button/speaker-button.component';
+import { SpinnerComponent } from './components/spinner/spinner.component';
 import { SuperSearchComponent } from './components/super-search/super-search.component';
 import { TileComponent } from './components/tile/tile.component';
 import { UserChangePasswordComponent } from './components/user-change-password/user-change-password.component';
@@ -154,7 +154,7 @@ const declarations = [
     AttachmentControlComponent,
     RoundedInputComponent,
     ProgressSnackBarComponent,
-    GlobalSpinnerComponent,
+    SpinnerComponent,
     SuperSearchComponent,
     OverlayComponent,
     PreviewComponent,

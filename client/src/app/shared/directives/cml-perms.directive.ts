@@ -16,7 +16,7 @@ export class CmlPermsDirective extends BasePermsDirective<CML> {
     @Input()
     public set osCmlPermsCommitteeId(id: Id) {
         this._committeeId = id;
-        this.updateView();
+        this.updatePermission();
     }
 
     @Input()
@@ -37,7 +37,7 @@ export class CmlPermsDirective extends BasePermsDirective<CML> {
     @Input()
     public set osCmlPermsNonAdminCheck(value: boolean) {
         this._checkNonAdmin = value;
-        this.updateView();
+        this.updatePermission();
     }
 
     private _committeeId: Id | undefined = undefined;

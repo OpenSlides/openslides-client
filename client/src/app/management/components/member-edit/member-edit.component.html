@@ -6,8 +6,8 @@
     [nav]="false"
     [editMode]="isEditingUser"
     [isSaveButtonEnabled]="isFormValid"
+    [saveAction]="getSaveAction()"
     (cancelEditEvent)="onCancel()"
-    (saveEvent)="onSubmit()"
 >
     <!-- Title -->
     <div class="title-slot">
@@ -32,7 +32,6 @@
     (changeEvent)="personalInfoFormValue = $event"
     (validEvent)="isFormValid = $event"
     (errorEvent)="formErrors = $event"
-    (submitEvent)="onSubmit()"
 >
     <ng-template #editView let-form="form">
         <div [formGroup]="form">
@@ -136,16 +135,15 @@
         <!-- Committees -->
         <div *ngIf="user.committee_ids?.length">
             <h4>{{ 'Committee member' | translate }}</h4>
-            <span *ngFor="let committee of user.committees; let last = last">
-                {{ committee.getTitle() | translate }}
-                <span *ngIf="!last">,&nbsp;</span>
-            </span>
+            <ng-container *ngTemplateOutlet="modelListTemplate; context: { models: user.committees }"></ng-container>
         </div>
 
         <!-- Committee management -->
         <div *ngIf="user.committee_$_management_level?.length">
             <h4>{{ 'Committee manager' | translate }}</h4>
-            <div>{{ getUserCommitteeManagementLevels() }}</div>
+            <ng-container
+                *ngTemplateOutlet="modelListTemplate; context: { models: getUserCommitteeManagementLevels() }"
+            ></ng-container>
         </div>
 
         <!-- Organization management level -->
@@ -155,6 +153,15 @@
         </div>
     </ng-template>
 </os-user-detail-view>
+
+<ng-template #modelListTemplate let-models="models">
+    <div class="flex-vertical-center">
+        <span *ngFor="let model of models; let last = last" class="flex-vertical-center">
+            {{ model.getTitle() | translate }}
+            <span *ngIf="!last">,&nbsp;</span>
+        </span>
+    </div>
+</ng-template>
 
 <mat-menu #userExtraMenu="matMenu">
     <button mat-menu-item [routerLink]="['/', 'accounts', user?.id, 'password']">

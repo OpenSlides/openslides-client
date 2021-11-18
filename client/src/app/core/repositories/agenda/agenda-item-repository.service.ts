@@ -60,8 +60,8 @@ export class AgendaItemRepositoryService extends BaseRepositoryWithActiveMeeting
     private getAgendaTitle(viewAgendaItem: ViewAgendaItem): AgendaListTitle {
         if (viewAgendaItem.content_object) {
             return viewAgendaItem.content_object.getAgendaListTitle();
-        } else {
-            return { title: `<missing content object>` };
+        } else if (viewAgendaItem.child_ids?.length) {
+            return { title: `-` };
         }
     }
 

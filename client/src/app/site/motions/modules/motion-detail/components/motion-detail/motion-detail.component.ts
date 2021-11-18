@@ -156,6 +156,10 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         this.destroy();
     }
 
+    public getSaveAction(): () => Promise<void> {
+        return () => this.saveMotion();
+    }
+
     /**
      * In the ui are no distinct buttons for update or create. This is decided here.
      */

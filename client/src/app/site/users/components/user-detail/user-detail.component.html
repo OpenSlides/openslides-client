@@ -5,8 +5,8 @@
     [goBack]="!isAllowed('seeOtherUsers')"
     [editMode]="editUser"
     [isSaveButtonEnabled]="isFormValid"
+    [saveAction]="getSaveAction()"
     (mainEvent)="setEditMode(!editUser)"
-    (saveEvent)="saveUser()"
 >
     <!-- Title -->
     <div class="title-slot">
@@ -62,6 +62,7 @@
     [additionalAllowedPersonalForms]="['about_me']"
     [isAllowedFn]="isAllowedFn"
     [generatePasswordFn]="randomPasswordFn"
+    [patchFormValueFn]="patchFormValueFn"
     (changeEvent)="personalInfoFormValue = $event"
     (validEvent)="isFormValid = $event"
     (errorEvent)="formErrors = $event"

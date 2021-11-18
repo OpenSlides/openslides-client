@@ -1,4 +1,4 @@
-import { Directive, Input } from '@angular/core';
+import { Directive, Input, TemplateRef } from '@angular/core';
 import { OML } from 'app/core/core-services/organization-permission';
 
 import { BasePermsDirective } from './base-perms.directive';
@@ -25,6 +25,16 @@ export class OmlPermsDirective extends BasePermsDirective<OML> {
     @Input()
     public set osOmlPermsComplement(value: boolean) {
         this.setComplementCondition(value);
+    }
+
+    @Input()
+    public set osOmlPermsThen(template: TemplateRef<any>) {
+        this.setThenTemplate(template);
+    }
+
+    @Input()
+    public set osOmlPermsElse(template: TemplateRef<any>) {
+        this.setElseTemplate(template);
     }
 
     protected hasPermissions(): boolean {

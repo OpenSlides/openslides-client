@@ -94,6 +94,9 @@ export class UserDetailViewComponent extends BaseComponent {
     }
 
     @Input()
+    public patchFormValueFn: (controlName: string, user?: ViewUser) => any | null = () => {};
+
+    @Input()
     public isAllowedFn: (permission: string) => boolean;
 
     @Input()
@@ -115,7 +118,17 @@ export class UserDetailViewComponent extends BaseComponent {
 
     public genders = genders;
 
+    private set _initialState(state: any | null) {
+        this._initialStateString = JSON.stringify(state);
+    }
+
+    private get _initialState(): string | null {
+        return this._initialStateString;
+    }
+
     private _isEditing = false;
+    private _hasChanges = false;
+    private _initialStateString: string | null = null;
 
     private _user: ViewUser;
     private _additionalValidators: ValidatorFn[] = [];
@@ -151,6 +164,11 @@ export class UserDetailViewComponent extends BaseComponent {
         }
     }
 
+    public markAsPristine(): void {
+        this._initialState = this.personalInfoForm.value;
+        this._hasChanges = false;
+    }
+
     private enterEditMode(): void {
         this.prepareForm();
         this.updateFormControlsAccessibility();
@@ -170,7 +188,10 @@ export class UserDetailViewComponent extends BaseComponent {
             this._formValueChangeSubscription.unsubscribe();
             this._formValueChangeSubscription = null;
         }
-        this._formValueChangeSubscription = this.personalInfoForm.valueChanges.subscribe(() => this.propagateValues());
+        this._formValueChangeSubscription = this.personalInfoForm.valueChanges.subscribe(nextValue => {
+            this._hasChanges = JSON.stringify(nextValue) !== this._initialState;
+            this.propagateValues();
+        });
         this.propagateValues();
     }
 
@@ -183,13 +204,19 @@ export class UserDetailViewComponent extends BaseComponent {
         }
         const personalInfoPatch = {};
         Object.keys(this.personalInfoForm.controls).forEach(ctrl => {
-            if (typeof this.user[ctrl] === `function`) {
-                personalInfoPatch[ctrl] = this.user[ctrl]();
-            } else {
-                personalInfoPatch[ctrl] = this.user[ctrl];
-            }
+            personalInfoPatch[ctrl] = this.getFormValuePatch(ctrl);
         });
-        this.personalInfoForm.patchValue(personalInfoPatch);
+        this.personalInfoForm.patchValue(personalInfoPatch, { emitEvent: false });
+        this._initialState = personalInfoPatch;
+    }
+
+    private getFormValuePatch(controlName: string): any {
+        let patchValue = this.patchFormValueFn(controlName, this.user);
+        if (!patchValue) {
+            const userValue = this.user[controlName];
+            patchValue = typeof userValue === `function` ? userValue.call(this.user) : userValue;
+        }
+        return patchValue;
     }
 
     /**
@@ -244,7 +271,7 @@ export class UserDetailViewComponent extends BaseComponent {
         setTimeout(() => {
             // setTimeout prevents 'ExpressionChangedAfterItHasBeenChecked'-error
             this.changeEvent.emit(this.personalInfoForm.value);
-            this.validEvent.emit(this.personalInfoForm.valid);
+            this.validEvent.emit(this.personalInfoForm.valid && this._hasChanges);
             this.errorEvent.emit(this.personalInfoForm.errors);
         });
     }

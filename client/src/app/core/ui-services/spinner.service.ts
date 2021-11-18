@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router, RoutesRecognized } from '@angular/router';
-import { GlobalSpinnerComponent } from 'app/shared/components/global-spinner/global-spinner.component';
+import { SpinnerComponent } from 'app/shared/components/spinner/spinner.component';
 import { combineLatest, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
 
@@ -26,7 +26,7 @@ export interface SpinnerConfig extends CustomOverlayConfig {
     providedIn: `root`
 })
 export class SpinnerService {
-    private overlayInstance: OverlayInstance<GlobalSpinnerComponent> | null = null;
+    private overlayInstance: OverlayInstance<SpinnerComponent> | null = null;
 
     private isOperatorReady = false;
     private hasUpgradeChecked = false;
@@ -43,11 +43,11 @@ export class SpinnerService {
         private router: Router
     ) {}
 
-    public show(text?: string, config: SpinnerConfig = {}): OverlayInstance<GlobalSpinnerComponent> {
+    public show(text?: string, config: SpinnerConfig = {}): OverlayInstance<SpinnerComponent> {
         if (this.overlayInstance) {
             return this.overlayInstance; // Prevent multiple instances at the same time.
         }
-        this.overlayInstance = this.overlay.open(GlobalSpinnerComponent, {
+        this.overlayInstance = this.overlay.open(SpinnerComponent, {
             ...config,
             onCloseFn: () => (this.overlayInstance = null),
             data: {

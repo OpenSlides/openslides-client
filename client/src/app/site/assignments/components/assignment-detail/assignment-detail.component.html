@@ -4,8 +4,8 @@
     [nav]="false"
     [editMode]="editAssignment"
     [isSaveButtonEnabled]="assignmentForm.valid"
+    [saveAction]="getSaveAction()"
     (mainEvent)="setEditMode(!editAssignment)"
-    (saveEvent)="saveAssignment()"
 >
     <!-- Title -->
     <div class="title-slot">

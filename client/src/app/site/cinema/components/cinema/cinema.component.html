@@ -5,7 +5,7 @@
 </os-head-bar>
 <div class="content-container">
     <!-- Title Card -->
-    <mat-card class="os-card">
+    <mat-card class="os-card" *ngIf="!!title">
         <a [routerLink]="viewModelUrl || null" [state]="{ back: 'true' }">
             <h1 class="line-and-icon">
                 {{ title }}
@@ -48,7 +48,7 @@
                     matTooltip="{{ 'Re-add last speaker' | translate }}"
                     [disabled]="!canReaddLastSpeaker"
                 >
-                    <mat-icon> undo </mat-icon>
+                    <mat-icon>undo</mat-icon>
                 </button>
             </ng-container>
         </p>

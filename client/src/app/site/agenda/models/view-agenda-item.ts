@@ -84,6 +84,10 @@ export class ViewAgendaItem extends BaseProjectableViewModel<AgendaItem> {
         const type = ItemTypeChoices.find(choice => choice.key === this.type);
         return type ? type.csvName : ``;
     }
+
+    public canAccess(): boolean {
+        return !!this.content_object || this.child_ids?.length > 0;
+    }
 }
 interface IAgendaItemRelations {
     content_object?: BaseViewModel & HasAgendaItem;

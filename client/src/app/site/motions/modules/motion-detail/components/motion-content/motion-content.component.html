@@ -165,7 +165,7 @@
     </div>
 
     <!-- Category form -->
-    <div class="content-field" *ngIf="newMotion">
+    <div class="content-field" *ngIf="newMotion && hasCategories">
         <mat-form-field>
             <os-search-repo-selector
                 formControlName="category_id"
