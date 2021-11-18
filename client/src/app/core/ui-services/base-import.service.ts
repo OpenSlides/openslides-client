@@ -654,24 +654,25 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
      */
     private mapData(line: CsvJsonMapping, importTrackId: number): NewEntry<ToCreate> {
         const newEntry: ToCreate = {} as ToCreate;
-        let hasError = false;
+        let hasError = ``;
         const csvEntry = Object.keys(this._headerValueMap).mapToObject(expectedHeader => {
             const originalHeader = this._headerValueMap[expectedHeader];
             return { [expectedHeader]: line[originalHeader] };
         });
         for (const expectedHeader of Object.keys(this._headerValueMap)) {
             const helper = this._beforeImportHelper[expectedHeader] || this._afterImportHelper[expectedHeader];
+            const csvValue = csvEntry[expectedHeader];
             try {
                 const value = this.parseValue(
-                    csvEntry[expectedHeader],
+                    csvValue,
                     { header: expectedHeader as keyof ToCreate, line: csvEntry, index: importTrackId },
                     helper
                 );
                 newEntry[expectedHeader] = value;
             } catch (e) {
-                console.log(`Error while parsing ${expectedHeader}`, e);
-                hasError = true;
-                continue;
+                console.debug(`Error while parsing ${expectedHeader}\n`, e);
+                hasError = e;
+                newEntry[expectedHeader] = csvValue;
             }
         }
         const hasDuplicates = this._hasDuplicatesFn(newEntry);
@@ -683,7 +684,7 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
             errors: hasDuplicates ? [`Duplicates`] : []
         };
         if (hasError) {
-            this.setError(entry, `ParsingErrors`);
+            this.setError(entry, hasError);
         }
         return entry;
     }

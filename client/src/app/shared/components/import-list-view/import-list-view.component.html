@@ -202,23 +202,30 @@
     </div>
 </ng-template>
 
+<ng-template #modelNameTemplate let-model="model">
+    {{ model.name | translate }}
+    <mat-icon class="newBadge" color="accent" inline *ngIf="!model.id">add</mat-icon>
+</ng-template>
+
 <ng-template #entryTemplate let-row="row" let-entry="entry" let-def="def">
     <div *ngIf="entry[def]">
         <mat-icon color="warn" *ngIf="hasError(row, def)" matTooltip="{{ getVerboseError(def) | translate }}">
             warning
         </mat-icon>
         <ng-container *ngIf="isArray(entry[def])">
-            <div *ngFor="let subentry of entry[def]">
-                {{ subentry.name | translate }}
-                <mat-icon class="newBadge" color="accent" inline *ngIf="!subentry.id">add</mat-icon>
-                &nbsp;
-            </div>
+            <ng-container
+                *ngIf="entry[def][0]"
+                [ngTemplateOutlet]="modelNameTemplate"
+                [ngTemplateOutletContext]="{ model: entry[def][0] }"
+            ></ng-container>
+            <ng-container *ngIf="entry[def].length > 1">
+                <div class="fake-button-no-touch">+{{ entry[def].length - 1 }}</div>
+            </ng-container>
         </ng-container>
         <ng-container *ngIf="!isArray(entry[def])">
             <ng-container *ngIf="!isObject(entry[def])">{{ entry[def] | translate }}</ng-container>
             <ng-container *ngIf="isObject(entry[def])">
-                {{ entry[def].name | translate }}
-                <mat-icon class="newBadge" color="accent" inline *ngIf="!entry[def].id">add</mat-icon>
+                <ng-container *ngTemplateOutlet="modelNameTemplate; context: { model: entry[def] }"></ng-container>
             </ng-container>
             &nbsp;
         </ng-container>

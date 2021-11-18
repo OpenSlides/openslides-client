@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { toBoolean } from 'app/shared/utils/parser';
 
 import { OperatorService } from '../../core/core-services/operator.service';
 import { CommitteeRepositoryService } from '../../core/repositories/management/committee-repository.service';
@@ -11,15 +12,17 @@ import { CsvExportService } from '../../core/ui-services/csv-export.service';
 import { ImportServiceCollector } from '../../core/ui-services/import-service-collector';
 import {
     COMMITTEE_PORT_HEADERS_AND_VERBOSE_NAMES,
-    CommitteeCsvPort
+    CommitteeCsvPort,
+    FORWARD_TO_COMMITTEE_IDS,
+    MANAGER_IDS,
+    MEETING,
+    MEETING_END_DATE,
+    MEETING_START_DATE,
+    NAME,
+    ORGANIZATION_TAG_IDS
 } from '../../shared/models/event-management/committee.constants';
 import { UserImportHelper } from '../../site/motions/import/user-import-helper';
 import { COMMITTEE_CSV_EXPORT_EXAMPLE } from '../export/committee-csv-export-example';
-
-const ORGANIZATION_TAG_PROPERTY = `organization_tag_ids`;
-const CAN_FORWARD_MOTIONS_TO_COMMITTEE_PROPERTY = `forward_to_committee_ids`;
-const MANAGER_PROPERTY = `manager_ids`;
-const MEETING_PROPERTY = `meeting`;
 
 @Injectable({
     providedIn: `root`
@@ -41,14 +44,14 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
         operator: OperatorService
     ) {
         super(serviceCollector);
-        this.registerBeforeImportHelper(ORGANIZATION_TAG_PROPERTY, {
+        this.registerBeforeImportHelper(ORGANIZATION_TAG_IDS, {
             repo: organizationTagRepo,
-            idProperty: `organization_tag_ids`,
+            idProperty: ORGANIZATION_TAG_IDS,
             verboseNameFn: plural => (plural ? `Tags` : `Tag`)
         });
-        this.registerBeforeImportHelper(CAN_FORWARD_MOTIONS_TO_COMMITTEE_PROPERTY, {
+        this.registerBeforeImportHelper(FORWARD_TO_COMMITTEE_IDS, {
             repo,
-            idProperty: `forward_to_committee_ids`,
+            idProperty: FORWARD_TO_COMMITTEE_IDS,
             verboseNameFn: plural => (plural ? `Forwardings` : `Forwarding`),
             nameDelimiter: `;`,
             afterCreateUnresolvedEntriesFn: (modelsCreated, originalEntries) => {
@@ -61,15 +64,15 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
             }
         });
         this.registerBeforeImportHelper(
-            MANAGER_PROPERTY,
+            MANAGER_IDS,
             new UserImportHelper({
                 repo: userRepo,
                 verboseName: `Committee managers`,
-                property: `manager_ids`,
+                property: MANAGER_IDS,
                 useDefault: [operator.operatorId]
             })
         );
-        this.registerAfterImportHandler(MEETING_PROPERTY, {
+        this.registerAfterImportHandler(MEETING, {
             repo: meetingRepo,
             useArray: true,
             fixedChunkSize: 1,
@@ -80,7 +83,7 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
                     if (committee.meeting && committee.meeting.length > 0) {
                         meetingPayload = meetingPayload.concat(
                             committee.meeting.map((meeting: CsvMapping) => ({
-                                name: meeting.name === `1` ? `${committee.name}` : meeting.name,
+                                name: toBoolean(meeting.name) ? `${committee.name}` : meeting.name,
                                 committee_id: committee.id,
                                 start_time: committee.meeting_start_date,
                                 end_time: committee.meeting_end_date
@@ -102,7 +105,10 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
     }
 
     protected pipeParseValue(value: string, header: keyof CommitteeCsvPort): any {
-        if (header === `meeting_start_date` || header === `meeting_end_date`) {
+        if (header === NAME && value.length >= 256) {
+            throw new Error(`Name exceeds 256 characters`);
+        }
+        if (header === MEETING_START_DATE || header === MEETING_END_DATE) {
             return this.getDate(value);
         }
     }
@@ -115,7 +121,7 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
                 this.repo.getViewModelList().some(committee => committee.name === entry.name),
             createFn: entries => this.repo.create(...(entries as any)),
             updateFn: entries => this.repo.update(null, ...(entries as any)),
-            requiredFields: [`name`]
+            requiredFields: [NAME]
         };
     }
 

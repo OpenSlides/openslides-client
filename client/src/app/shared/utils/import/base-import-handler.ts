@@ -14,6 +14,64 @@ import { ImportHandlerConfig } from './import-handler-config';
 type CreateFn<E> = (entries: E[]) => Promise<Identifiable[]>;
 type FindFn<E, O> = (name: string, originalEntry: O, index: number) => E;
 
+class ImportProcess<ToImport> {
+    public readonly modelsImportedSubject = new BehaviorSubject<CsvMapping<ToImport>[]>([]);
+
+    private _importFailCounter = 0;
+
+    public constructor(
+        private readonly _createFn: (models: CsvMapping<ToImport>[]) => Promise<Identifiable[]>,
+        private readonly _chunkSize: number,
+        private readonly _models: CsvMapping<ToImport>[]
+    ) {}
+
+    public async doImport(models: CsvMapping<ToImport>[] = this._models): Promise<Identifiable[]> {
+        const identifiables: Identifiable[] = [];
+        let sliceIndex = 0;
+        do {
+            const modelsChunk =
+                this._chunkSize === 0
+                    ? models
+                    : models.slice(sliceIndex * this._chunkSize, (sliceIndex + 1) * this._chunkSize);
+            const ids = await this.doCreateModels(modelsChunk);
+            identifiables.push(...ids);
+            const previousValue = this.modelsImportedSubject.value;
+            this.modelsImportedSubject.next(previousValue.concat(modelsChunk.filter((_, index) => !!ids[index].id)));
+            sliceIndex += 1;
+        } while (sliceIndex < Math.ceil(models.length / this._chunkSize));
+        return identifiables;
+    }
+
+    private async doCreateModels(models: CsvMapping<ToImport>[]): Promise<Identifiable[]> {
+        try {
+            return await this.doCreateModelsHelper(models);
+        } catch (e) {
+            const identifiables: Identifiable[] = [];
+            for (const model of models) {
+                identifiables.push(...(await this.handleCreateError(model)));
+            }
+            return identifiables;
+        }
+    }
+
+    private async doCreateModelsHelper(models: CsvMapping<ToImport>[]): Promise<Identifiable[]> {
+        if (this._importFailCounter >= 3) {
+            return models.map(() => ({ id: null }));
+        } else {
+            return await this._createFn(models);
+        }
+    }
+
+    private async handleCreateError(model: CsvMapping<ToImport>): Promise<Identifiable[]> {
+        try {
+            return await this.doCreateModelsHelper([model]);
+        } catch (_) {
+            ++this._importFailCounter;
+            return [{ id: null }];
+        }
+    }
+}
+
 export interface ImportHandler<ToCreate, ToImport = any>
     extends ImportStep,
         ImportFind<ToImport>,
@@ -60,7 +118,6 @@ export abstract class BaseImportHandler<ToCreate, ToImport> implements ImportHan
     protected readonly idProperty: keyof ToCreate;
 
     private readonly _modelsToCreateSubject = new BehaviorSubject<CsvMapping<ToImport>[]>([]);
-    private readonly _modelsImportedSubject = new BehaviorSubject<CsvMapping<ToImport>[]>([]);
     private readonly _importingStepPhaseSubject = new BehaviorSubject<ImportStepPhase>(ImportStepPhase.ENQUEUED);
 
     private _transformFn: (entries: CsvMapping<ToImport>[], originalEntries: ToCreate[]) => CsvMapping[];
@@ -73,6 +130,7 @@ export abstract class BaseImportHandler<ToCreate, ToImport> implements ImportHan
 
     private _chunkSize = 100;
     private _isArrayProperty = false;
+    private _importProcess: ImportProcess<ToImport>;
 
     public constructor({
         idProperty,
@@ -106,8 +164,10 @@ export abstract class BaseImportHandler<ToCreate, ToImport> implements ImportHan
 
     public doCleanup(): void {
         this.modelsToCreate = [];
-        this._modelsImportedSubject.next([]);
         this.nextStep(ImportStepPhase.ENQUEUED);
+        if (this._importProcess) {
+            this._importProcess.modelsImportedSubject.next([]);
+        }
     }
 
     public async doImport(originalEntries: ToCreate[]): Promise<void> {
@@ -115,6 +175,7 @@ export abstract class BaseImportHandler<ToCreate, ToImport> implements ImportHan
             throw new Error(`No function to create models is defined`);
         }
         this.nextStep(ImportStepPhase.PENDING);
+        this._importProcess = this.createImportProcess(originalEntries);
         if (this.modelsToCreate.length) {
             await this.import(originalEntries);
         }
@@ -128,7 +189,7 @@ export abstract class BaseImportHandler<ToCreate, ToImport> implements ImportHan
     }
 
     public getModelsImported(): CsvMapping<ToImport>[] {
-        return this._modelsImportedSubject.value;
+        return this._importProcess ? this._importProcess.modelsImportedSubject.value : [];
     }
 
     public getModelsToCreate(): CsvMapping<ToImport>[] {
@@ -188,52 +249,23 @@ export abstract class BaseImportHandler<ToCreate, ToImport> implements ImportHan
         }
     }
 
-    private async import(originalEntries: ToCreate[]): Promise<void> {
+    private createImportProcess(originalEntries: ToCreate[]): ImportProcess<ToImport> {
         const models = this.modelsToCreate.map(model => {
             this._additionalFields.forEach(
                 field => (model[field.key] = typeof field.value === `function` ? field.value() : field.value)
             );
             return model;
         });
-        const ids = await this.importHelper(this.doTransformModels(models, originalEntries));
+        return new ImportProcess(this._createFn, this.chunkSize, this.doTransformModels(models, originalEntries));
+    }
+
+    private async import(originalEntries: ToCreate[]): Promise<void> {
+        const ids = await this._importProcess.doImport();
         this.modelsToCreate = this.modelsToCreate.map((model, index) => ({
             name: model.name,
             id: ids[index]?.id
         })) as CsvMapping<ToImport>[];
         this.onAfterCreateUnresolvedEntries(this.modelsToCreate, originalEntries);
-    }
-
-    private async importHelper(models: CsvMapping[]): Promise<Identifiable[]> {
-        const identifiables: Identifiable[] = [];
-        let sliceIndex = 0;
-        do {
-            const chunkModels =
-                this.chunkSize === 0
-                    ? models
-                    : models.slice(sliceIndex * this.chunkSize, (sliceIndex + 1) * this.chunkSize);
-            const ids = await this.create(chunkModels);
-            identifiables.push(...ids);
-            const previousValue = this._modelsImportedSubject.value;
-            this._modelsImportedSubject.next(previousValue.concat(chunkModels.filter((_, index) => !!ids[index].id)));
-            sliceIndex += 1;
-        } while (sliceIndex < Math.ceil(models.length / this.chunkSize));
-        return identifiables;
-    }
-
-    private async create(models: CsvMapping<ToImport>[]): Promise<Identifiable[]> {
-        try {
-            return await this._createFn(models);
-        } catch (e) {
-            const identifiables: Identifiable[] = [];
-            for (const model of models) {
-                try {
-                    identifiables.push(...(await this._createFn([model])));
-                } catch (_) {
-                    identifiables.push({ id: null });
-                }
-            }
-            return identifiables;
-        }
     }
 
     private setFindFn(findFn?: FindFn<ToImport, ToCreate>, fallbackRepo?: any): void {

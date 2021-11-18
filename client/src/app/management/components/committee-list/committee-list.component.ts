@@ -9,7 +9,6 @@ import { CML, OML } from 'app/core/core-services/organization-permission';
 import { CommitteeRepositoryService } from 'app/core/repositories/management/committee-repository.service';
 import { ChoiceService } from 'app/core/ui-services/choice.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewCommittee } from 'app/management/models/view-committee';
 import { ViewOrganization } from 'app/management/models/view-organization';
 import { CommitteeFilterService } from 'app/management/services/committee-filter.service';
@@ -17,6 +16,7 @@ import { CommitteeSortService } from 'app/management/services/committee-sort.ser
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
 
 import { Follow } from '../../../core/core-services/model-request-builder.service';
+import { MeetingRepositoryService } from '../../../core/repositories/management/meeting-repository.service';
 import { CommitteeExportService } from '../../services/committee-export.service';
 
 const getCommitteesModelRequest = (fellowship?: Follow) => {
@@ -82,8 +82,8 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
         private csvService: CommitteeExportService,
         private router: Router,
         private route: ActivatedRoute,
-        private promptService: PromptService,
-        private choiceService: ChoiceService
+        private choiceService: ChoiceService,
+        private meetingRepo: MeetingRepositoryService
     ) {
         super(componentServiceCollector, translate);
         super.setTitle(`Committees`);
@@ -117,22 +117,28 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
         }
     }
 
-    public async deleteSingle(committee: ViewCommittee): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to delete this committee?`);
-        const content = committee.name;
+    public async doDelete(committee?: ViewCommittee): Promise<void> {
+        const toTranslate = committee
+            ? `Are you sure you want to delete this committee?`
+            : `Are you sure you want to delete all selected committees?`;
+        const title = this.translate.instant(toTranslate);
+        const content = committee?.name ?? ``;
 
-        const confirmed = await this.promptService.open(title, content);
-        if (confirmed) {
-            await this.repo.delete(committee);
-        }
-    }
+        const YES_WITH_MEETINGS = _(`Yes, inclusive meetings`);
+        const YES = _(`Yes`);
+        const actions = [YES_WITH_MEETINGS, YES];
 
-    public async deleteMultiple(): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to delete all selected committees?`);
-
-        const confirmed = await this.promptService.open(title);
-        if (confirmed) {
-            await this.repo.delete(...this.selectedRows);
+        const answer = await this.choiceService.open({ title, content, actions });
+        if (answer) {
+            const toDelete = committee ? [committee] : this.selectedRows;
+            if (answer.action === YES_WITH_MEETINGS) {
+                const meetingIdsToDelete = toDelete
+                    .flatMap(committeeToDelete => committeeToDelete.meeting_ids)
+                    .filter(id => !!id)
+                    .map(id => ({ id }));
+                await this.meetingRepo.delete(...meetingIdsToDelete);
+            }
+            await this.repo.delete(...toDelete);
         }
     }
 

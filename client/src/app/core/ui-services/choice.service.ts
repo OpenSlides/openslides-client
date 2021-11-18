@@ -6,6 +6,15 @@ import { Observable } from 'rxjs';
 
 import { ChoiceAnswer, ChoiceDialogComponent } from '../../shared/components/choice-dialog/choice-dialog.component';
 
+export class ChoiceDialogConfig {
+    public readonly title: string;
+    public readonly content?: string;
+    public readonly choices?: Observable<Displayable[]> | Displayable[];
+    public readonly actions?: string[];
+    public readonly clearChoiceOption?: string;
+    public readonly multiSelect?: boolean;
+}
+
 /**
  * A service for prompting the user to select a choice.
  */
@@ -33,22 +42,28 @@ export class ChoiceService {
      * have this string's value
      * @returns an answer {@link ChoiceAnswer}
      */
+    public async open(config: ChoiceDialogConfig): Promise<ChoiceAnswer>;
     public async open(
         title: string,
+        choices?: Observable<Displayable[]> | Displayable[],
+        multiSelect?: boolean,
+        actions?: string[],
+        clearChoiceOption?: string
+    ): Promise<ChoiceAnswer>;
+    public async open(
+        titleOrConfig: string | ChoiceDialogConfig,
         choices?: Observable<Displayable[]> | Displayable[],
         multiSelect: boolean = false,
         actions?: string[],
         clearChoiceOption?: string
     ): Promise<ChoiceAnswer> {
+        const data =
+            typeof titleOrConfig !== `string`
+                ? titleOrConfig
+                : { title: titleOrConfig, choices, multiSelect, actions, clearChoiceOption };
         const dialogRef = this.dialog.open(ChoiceDialogComponent, {
             ...infoDialogSettings,
-            data: {
-                title,
-                choices,
-                multiSelect,
-                actionButtons: actions,
-                clearChoiceOption
-            }
+            data
         });
         return dialogRef.afterClosed().toPromise();
     }
