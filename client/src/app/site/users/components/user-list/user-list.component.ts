@@ -20,7 +20,8 @@ import { genders } from 'app/shared/models/users/user';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
 import { PollService } from 'app/site/polls/services/poll.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { ViewGroup } from '../../models/view-group';
 import { ViewUser } from '../../models/view-user';
@@ -94,8 +95,6 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
      * All available groups, where the user can be in.
      */
     public groupsObservable: Observable<ViewGroup[]> = this.groupRepo.getViewModelListObservableWithoutDefaultGroup();
-
-    public readonly users: BehaviorSubject<ViewUser[]> = new BehaviorSubject<ViewUser[]>([]);
 
     /**
      * The list of all genders.
@@ -232,6 +231,12 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
                         },
                         {
                             idField: {
+                                templateIdField: `vote_delegations_$_from_ids`,
+                                templateValue: this.activeMeetingId.toString()
+                            }
+                        },
+                        {
+                            idField: {
                                 templateIdField: `vote_delegated_$_to_id`,
                                 templateValue: this.activeMeetingIdService.meetingId?.toString()
                             }
@@ -289,7 +294,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
             vote_delegated_to_id: user.vote_delegated_to_id()
         };
 
-        const dialogRef = this.dialog.open(this.userInfoDialog, infoDialogSettings);
+        const dialogRef = this.dialog.open(this.userInfoDialog, { ...infoDialogSettings, data: { user } });
 
         dialogRef.keydownEvents().subscribe((event: KeyboardEvent) => {
             if (event.key === `Enter` && event.shiftKey) {
@@ -302,6 +307,10 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
                 this.repo.update(result, user);
             }
         });
+    }
+
+    public getOtherUsersObservable(user: ViewUser): Observable<ViewUser[]> {
+        return this.repo.getViewModelListObservable().pipe(map(users => users.filter(_user => _user.id !== user.id)));
     }
 
     /**
