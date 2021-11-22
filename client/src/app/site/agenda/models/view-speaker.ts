@@ -23,9 +23,9 @@ export class ViewSpeaker extends BaseViewModel<Speaker> {
      *  - finished if there are both begin and end time
      */
     public get state(): SpeakerState {
-        if (!this.begin_time && !this.end_time) {
+        if (!this.speaker.begin_time && !this.speaker.end_time) {
             return SpeakerState.WAITING;
-        } else if (this.begin_time && !this.end_time) {
+        } else if (this.speaker.begin_time && !this.speaker.end_time) {
             return SpeakerState.CURRENT;
         } else {
             return SpeakerState.FINISHED;
@@ -45,11 +45,11 @@ export class ViewSpeaker extends BaseViewModel<Speaker> {
     }
 
     public getBeginTimeAsDate(): Date | null {
-        return this.begin_time ? new Date(this.begin_time * 1000) : null;
+        return this.speaker.begin_time ? new Date(this.speaker.begin_time * 1000) : null;
     }
 
     public getEndTimeAsDate(): Date | null {
-        return this.end_time ? new Date(this.end_time * 1000) : null;
+        return this.speaker.end_time ? new Date(this.speaker.end_time * 1000) : null;
     }
 }
 interface ISpeakerRelations {

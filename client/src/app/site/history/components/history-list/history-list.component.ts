@@ -64,8 +64,7 @@ export class HistoryListComponent extends BaseModelContextComponent implements O
         private http: HttpService,
         private formBuilder: FormBuilder,
         private motionRepo: MotionRepositoryService,
-        private activatedRoute: ActivatedRoute,
-        private activeMeetingIdService: ActiveMeetingIdService
+        private activatedRoute: ActivatedRoute
     ) {
         super(componentServiceCollector, translate);
 

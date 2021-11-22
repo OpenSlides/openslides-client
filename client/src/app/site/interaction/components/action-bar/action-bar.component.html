@@ -20,20 +20,28 @@
         </ng-container>
     </ng-container>
 
-    <ng-container *ngIf="(showLiveConf | async) && (isConfStateStream | async)">
+    <div *ngIf="(showLiveConf | async) && (isConfStateStream | async)" @fadeIn>
         <!-- Enter conference from stream -->
         <button
+            (click)="enterConferenceRoom()"
             mat-mini-fab
-            class="action-bar-shadow"
-            [class.background-default]="canEnterCall"
-            [class.fake-disabled]="!canEnterCall"
-            matTooltip="{{ enterRoomTooltip | translate }}"
-            (click)="enterConferenceRoom(canEnterCall)"
-            @fadeIn
+            class="action-bar-shadow background-default"
+            matTooltip="{{ canEnterTooltip | translate }}"
+            *ngIf="canEnterCall | async"
         >
-            <mat-icon color="primary"> phone </mat-icon>
+            <mat-icon color="primary">phone</mat-icon>
         </button>
-    </ng-container>
+
+        <a
+            [routerLink]="['/', activeMeetingId, 'autopilot']"
+            mat-mini-fab
+            class="action-bar-shadow fake-disabled"
+            matTooltip="{{ cannotEnterTooltip | translate }}"
+            *ngIf="(canEnterCall | async) === false"
+        >
+            <mat-icon color="primary">phone</mat-icon>
+        </a>
+    </div>
 
     <!-- Call support button -->
     <button

@@ -6,10 +6,8 @@ import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.se
 import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
-import { CallRestrictionService } from './call-restriction.service';
+import { CallRestrictionService, RTC_LOGGED_STORAGE_KEY } from './call-restriction.service';
 import { UserMediaPermService } from './user-media-perm.service';
-
-export const RTC_LOGGED_STORAGE_KEY = `rtcIsLoggedIn`;
 
 interface JitsiMember {
     id: string;
@@ -135,7 +133,6 @@ export class RtcService {
     private connectedToHelpDeskSubject = new BehaviorSubject<boolean>(false);
     public connectedToHelpDesk = this.connectedToHelpDeskSubject.asObservable();
 
-    public isJitsiActiveInAnotherTab = false;
     private isJoinedSubject = new BehaviorSubject<boolean>(false);
     public isJoinedObservable = this.isJoinedSubject.asObservable();
 
@@ -163,7 +160,6 @@ export class RtcService {
     public isMuted = this.isMutedSubject.asObservable();
 
     private canEnterCall: boolean;
-    public inOtherTab: Observable<boolean>;
 
     private showCallDialogSubject = new BehaviorSubject<boolean>(false);
     public showCallDialogObservable = this.showCallDialogSubject.asObservable();
@@ -199,10 +195,6 @@ export class RtcService {
         callRestrictionService.canEnterCallObservable.subscribe(canEnter => {
             this.canEnterCall = canEnter;
         });
-
-        this.inOtherTab = this.storageMap
-            .watch(RTC_LOGGED_STORAGE_KEY, { type: `boolean` })
-            .pipe(distinctUntilChanged());
     }
 
     public setJitsiNode(jitsiNode: ElementRef): void {
@@ -232,6 +224,17 @@ export class RtcService {
         this.actualRoomName = this.defaultRoomName;
         await this.enterConversation();
     }
+
+    public stopJitsi(): void {
+        this.disconnect();
+        this.connectedToHelpDeskSubject.next(false);
+        this.isJitsiActiveSubject.next(false);
+    }
+
+    /**
+     * https://github.com/jitsi/jitsi-meet/issues/8244
+     */
+    public enterFullScreen(): void {}
 
     private setRoomPassword(): void {
         if (this.jitsiConfig?.JITSI_ROOM_PASSWORD && !this.isPasswordSet) {
@@ -360,30 +363,19 @@ export class RtcService {
         this.memberSubject.next(this.members);
     }
 
-    /**
-     * https://github.com/jitsi/jitsi-meet/issues/8244
-     */
-    public enterFullScreen(): void {}
-
     private disconnect(): void {
         if (this.isJitsiActive) {
             this.api?.executeCommand(`hangup`);
             this.api?.dispose();
             this.api = undefined;
+            this.deleteJitsiLock();
         }
         this.clearMembers();
-        this.deleteJitsiLock();
         this.dominantSpeaker = null;
         this.dominantSpeakerSubject.next(this.dominantSpeaker);
         this.isJoinedSubject.next(false);
         this.showCallDialogSubject.next(false);
         this.isPasswordSet = false;
-    }
-
-    public stopJitsi(): void {
-        this.disconnect();
-        this.connectedToHelpDeskSubject.next(false);
-        this.isJitsiActiveSubject.next(false);
     }
 
     private setOptions(): void {
@@ -401,6 +393,6 @@ export class RtcService {
     }
 
     private deleteJitsiLock(): void {
-        this.storageMap.delete(RTC_LOGGED_STORAGE_KEY).subscribe();
+        this.storageMap.set(RTC_LOGGED_STORAGE_KEY, false).subscribe(() => {});
     }
 }

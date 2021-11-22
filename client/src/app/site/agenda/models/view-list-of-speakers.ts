@@ -62,31 +62,30 @@ export class ViewListOfSpeakers extends BaseProjectableViewModel<ListOfSpeakers>
     }
 
     public hasSpeakerSpoken(checkSpeaker: ViewSpeaker): boolean {
-        return this.finishedSpeakers.findIndex(speaker => speaker.user_id === checkSpeaker.user_id) !== -1;
+        return checkSpeaker.state === SpeakerState.FINISHED;
     }
 
     public findUserIndexOnList(userId: number): number {
-        if (this.activeSpeaker?.user.id === userId) {
+        const viewSpeaker: ViewSpeaker = this.getSpeakerByUserId(userId);
+        if (!viewSpeaker) {
+            return UserListIndexType.NotOnList;
+        } else if (viewSpeaker.state === SpeakerState.CURRENT) {
             return UserListIndexType.Active;
+        } else if (viewSpeaker.state === SpeakerState.FINISHED) {
+            return UserListIndexType.Finished;
         } else {
-            const waitingSpeakersIndex = this.waitingSpeakers.findIndex(speaker => speaker.user_id === userId);
-            const finishedSpeakersIndex = this.finishedSpeakers.findIndex(speaker => speaker.user_id === userId);
-            if (waitingSpeakersIndex !== -1) {
-                return waitingSpeakersIndex + 1;
-            } else if (finishedSpeakersIndex !== -1) {
-                return UserListIndexType.Finished;
-            } else {
-                return UserListIndexType.NotOnList;
-            }
+            return viewSpeaker.speaker.weight;
         }
     }
 
-    public getSpeakerByUserId(userId: Id): ViewSpeaker {
-        return this.speakers.find(speaker => speaker.user_id === userId);
+    public getSpeakerByUserId(userId: Id): ViewSpeaker | null {
+        return this.speakers.find(speaker => speaker.speaker.user_id === userId);
     }
 
     public isUserOnList(userId: number): boolean {
-        return !!this.speakers.find(speaker => speaker.user_id === userId);
+        return !!this.speakers.find(speaker => {
+            return speaker.speaker.user_id === userId;
+        });
     }
 }
 interface IListOfSpeakersRelations {

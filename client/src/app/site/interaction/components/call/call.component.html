@@ -5,13 +5,15 @@
     <div class="content">
         <!-- The "somewhere else active" warning -->
         <div class="disconnected" *ngIf="(isJitsiActiveInAnotherTab | async) && !isJitsiActive">
-            <span>{{ 'A conference is already running in your OpenSlides session.' | translate }}</span>
-            <button mat-button color="warn" (click)="forceStart()">
-                <span>{{ 'Reenter to conference room' | translate }}</span>
-            </button>
+            <div>
+                <div>{{ 'A conference is already running in your OpenSlides session.' | translate }}</div>
+                <button mat-button color="warn" (click)="forceStart()">
+                    <span>{{ 'Reenter to conference room' | translate }}</span>
+                </button>
+            </div>
         </div>
 
-        <div class="disconnected" *ngIf="isDisconnected">
+        <div class="disconnected" *ngIf="isDisconnected && (isJitsiActiveInAnotherTab | async) === false">
             <mat-icon>cloud_off</mat-icon>
         </div>
 
