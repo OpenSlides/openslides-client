@@ -31,9 +31,9 @@
 
         <div id="footer" class="headerFooter" *ngIf="projector && projector.show_header_footer">
             <div class="footertext">
-                <span *ngIf="eventDate"> {{ eventDate }} </span>
-                <span *ngIf="eventDate && eventLocation"> | </span>
-                <span *ngIf="eventLocation"> {{ eventLocation }} </span>
+                <span *ngIf="eventDate">{{ eventDate | localizedDate: 'll' }}</span>
+                <span *ngIf="eventDate && eventLocation">&nbsp;|&nbsp;</span>
+                <span *ngIf="eventLocation">{{ eventLocation }}</span>
             </div>
         </div>
     </div>
