@@ -49,7 +49,7 @@ export class AccountDialogComponent extends BaseModelContextComponent implements
 
     public readonly menuItemsRef = MenuItems;
 
-    public get self(): ViewUser {
+    public get self(): ViewUser | null {
         return this._self;
     }
 
@@ -82,9 +82,21 @@ export class AccountDialogComponent extends BaseModelContextComponent implements
         );
     }
 
+    /**
+     * Closes the account dialog programmatically
+     */
+    public closeDialog(): void {
+        this.dialogRef.close();
+    }
+
     public getAllMeetings(): ViewMeeting[] {
+        if (!this.self) {
+            return [];
+        }
         const meetingIds = this.self.group_$_ids.map(groupId => parseInt(groupId, 10));
-        return meetingIds.map(id => this.meetingRepo.getViewModel(id));
+        return meetingIds
+            .map(id => this.meetingRepo.getViewModel(id))
+            .sort((meetingA, meetingB) => meetingA.name.localeCompare(meetingB.name));
     }
 
     public getGroupsForMeeting(meeting: ViewMeeting): ViewGroup[] {
