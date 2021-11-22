@@ -1,0 +1,20 @@
+mat-card.os-card.chat-group-list-card {
+    padding: 0;
+    max-width: 1000px;
+    max-height: calc(100vh - 160px); // 160px is almost the summary of top bar and livestream header
+    height: 90vh;
+    margin-bottom: 350px !important;
+
+    &.fit-height {
+        height: fit-content;
+    }
+
+    .cdk-virtual-scroll-content-wrapper {
+        width: 100%;
+    }
+}
+
+.tab-label-notification-wrapper {
+    top: -16px;
+    left: -14px;
+}

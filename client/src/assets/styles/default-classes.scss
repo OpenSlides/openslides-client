@@ -36,6 +36,9 @@
         height: $size !important;
         line-height: $size;
     }
+    .flex-#{$i} {
+        flex: $i;
+    }
 }
 
 .align-right {

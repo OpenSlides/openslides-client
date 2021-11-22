@@ -11,11 +11,13 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { SidenavComponent } from 'app/shared/components/sidenav/sidenav.component';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 import { MainMenuEntry, MainMenuService } from '../core/core-services/main-menu.service';
 import { ViewportService } from '../core/ui-services/viewport.service';
 import { navItemAnim } from '../shared/animations';
+import { ChatService } from './chat/services/chat.service';
+import { ChatNotificationService } from './chat/services/chat-notification.service';
 
 @Component({
     selector: `os-site`,
@@ -43,6 +45,14 @@ export class SiteComponent extends BaseComponent implements OnInit {
         return this.activeMeeting.meeting;
     }
 
+    public get canSeeChatObservable(): Observable<boolean> {
+        return this.chatService.canSeeChatObservable;
+    }
+
+    public get chatNotificationsObservable(): Observable<number> {
+        return this.chatNotificationService.allChatGroupsNotificationsObservable;
+    }
+
     /**
      * Constructor
      * @param route
@@ -65,7 +75,9 @@ export class SiteComponent extends BaseComponent implements OnInit {
         private mainMenuService: MainMenuService,
         public historyService: HistoryService,
         public timeTravel: TimeTravelService,
-        public pollRepo: PollRepositoryService
+        public pollRepo: PollRepositoryService,
+        private chatNotificationService: ChatNotificationService,
+        private chatService: ChatService
     ) {
         super(componentServiceCollector, translate);
     }

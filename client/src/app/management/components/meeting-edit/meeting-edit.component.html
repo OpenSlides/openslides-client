@@ -95,6 +95,7 @@
         </mat-form-field>
 
         <ng-container *osOmlPerms="OML.superadmin; and: !isCreateView">
+            <h3>Jitsi</h3>
             <mat-form-field>
                 <mat-label>{{ 'Jitsi domain' | translate }}</mat-label>
                 <input matInput formControlName="jitsi_domain" />
@@ -107,6 +108,9 @@
                 <mat-label>{{ 'Jitsi room password' | translate }}</mat-label>
                 <input matInput formControlName="jitsi_room_password" />
             </mat-form-field>
+
+            <h3>Chat</h3>
+            <mat-checkbox formControlName="enable_chat">{{'Enable chat' | translate}}</mat-checkbox>
         </ng-container>
     </form>
 </mat-card>

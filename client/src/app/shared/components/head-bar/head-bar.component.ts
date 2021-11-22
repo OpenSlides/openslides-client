@@ -4,6 +4,7 @@ import { MainMenuService } from 'app/core/core-services/main-menu.service';
 import { RoutingStateService } from 'app/core/ui-services/routing-state.service';
 import { SuperSearchService } from 'app/core/ui-services/super-search.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 export const HEAD_BAR_HEIGHT = 50; // height of the head-bar in px.
 
@@ -176,11 +177,11 @@ export class HeadBarComponent implements OnInit {
         return !this.nav && !this.multiSelectMode && (this.routingState.isSafePrevUrl || !this.goBack);
     }
 
-    public get isSaving(): boolean {
-        return this._isSaving;
+    public get isSavingObservable(): Observable<boolean> {
+        return this._isSavingSubject.asObservable();
     }
 
-    private _isSaving = false;
+    private _isSavingSubject = new BehaviorSubject(false);
 
     /**
      * Empty constructor
@@ -227,11 +228,11 @@ export class HeadBarComponent implements OnInit {
      */
     public async save(): Promise<void> {
         if (this.saveAction) {
-            this._isSaving = true;
+            this._isSavingSubject.next(true);
             try {
                 await this.saveAction();
             } finally {
-                this._isSaving = false;
+                this._isSavingSubject.next(false);
             }
         } else {
             this.saveEvent.emit();

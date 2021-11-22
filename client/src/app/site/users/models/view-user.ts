@@ -14,6 +14,7 @@ import { Searchable } from 'app/site/base/searchable';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionSubmitter } from 'app/site/motions/models/view-motion-submitter';
 
+import { ViewChatMessage } from '../../../shared/models/chat/chat-messages/view-chat-message';
 import { ViewGroup } from './view-group';
 import { ViewPersonalNote } from './view-personal-note';
 
@@ -133,6 +134,10 @@ export class ViewUser extends BaseProjectableViewModel<User> implements Searchab
         return this.user.assignment_candidate_ids(meetingId || this.getEnsuredActiveMeetingId());
     }
 
+    public chat_message_ids(meetingId?: Id): Id[] {
+        return this.user.chat_message_ids(meetingId || this.getEnsuredActiveMeetingId());
+    }
+
     public assignment_poll_voted_ids(meetingId?: Id): Id[] {
         return this.user.assignment_poll_voted_ids(meetingId || this.getEnsuredActiveMeetingId());
     }
@@ -225,6 +230,7 @@ interface IUserRelations {
     supported_motions: UserManyStructuredRelation<ViewMotion>;
     submitted_motions: UserManyStructuredRelation<ViewMotionSubmitter>;
     assignment_candidates: UserManyStructuredRelation<ViewAssignmentCandidate>;
+    chat_messages: UserManyStructuredRelation<ViewChatMessage>;
     poll_voted: UserManyStructuredRelation<ViewPoll>;
     options: UserManyStructuredRelation<ViewOption>;
     votes: UserManyStructuredRelation<ViewVote>;

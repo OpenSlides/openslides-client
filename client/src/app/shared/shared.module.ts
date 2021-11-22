@@ -91,6 +91,8 @@ import { TileComponent } from './components/tile/tile.component';
 import { UserChangePasswordComponent } from './components/user-change-password/user-change-password.component';
 import { UserDetailViewComponent } from './components/user-detail-view/user-detail-view.component';
 import { UserMultiselectActionsComponent } from './components/user-multiselect-actions/user-multiselect-actions.component';
+import { VerticalTabGroupComponent } from './components/vertical-tab-group/vertical-tab-group.component';
+import { VerticalTabGroupLabelHeaderDirective } from './components/vertical-tab-group/vertical-tab-group-label-header.directive';
 import { VideoPlayerComponent } from './components/video-player/video-player.component';
 import { VotingPrivacyWarningComponent } from './components/voting-privacy-warning/voting-privacy-warning.component';
 import { OpenSlidesDateAdapter } from './date-adapter';
@@ -205,7 +207,9 @@ const declarations = [
     MeetingTimeComponent,
     ColorFormFieldComponent,
     ListOfSpeakersContentTitleDirective,
-    NotFoundComponent
+    NotFoundComponent,
+    VerticalTabGroupComponent,
+    VerticalTabGroupLabelHeaderDirective
 ];
 
 const sharedModules = [

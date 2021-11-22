@@ -22,6 +22,8 @@ export class Group extends BaseModel<Group> {
     public mediafile_inherited_access_group_ids: Id[]; // (mediafile/inherited_access_group_ids)[];
     public read_comment_section_ids: Id[]; // (motion_comment_section/read_group_ids)[];
     public write_comment_section_ids: Id[]; // (motion_comment_section/write_group_ids)[];
+    public read_chat_group_ids: Id[]; // (chat_group/read_group_ids)[];
+    public write_chat_group_ids: Id[]; // (chat_group/write_group_ids)[];
     public motion_poll_ids: Id[]; // (motion_poll/entitled_group_ids)[];
     public assignment_poll_ids: Id[]; // (assignment_poll/entitled_group_ids)[];
     public used_as_motion_poll_default_id: Id; // meeting/motion_poll_default_group_ids;

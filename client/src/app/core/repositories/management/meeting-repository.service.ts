@@ -63,6 +63,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             `location`,
             `url_name`,
             `enable_anonymous`,
+            `enable_chat`,
             `is_template`,
             `default_group_id`, // needed for adding users
             `jitsi_domain`,
@@ -85,7 +86,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             dashboard: dashboardFields,
             settings: this.meetingSettingsDefinitionProvider
                 .getSettingsKeys()
-                .concat(`jitsi_domain`, `jitsi_room_name`, `jitsi_room_password`),
+                .concat(`jitsi_domain`, `jitsi_room_name`, `jitsi_room_password`, `enable_chat`),
             startPage: startPageFields,
             preview: previewFields
         };

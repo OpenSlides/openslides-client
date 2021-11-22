@@ -27,8 +27,8 @@ import { SimplifiedModelRequest } from '../../../core/core-services/model-reques
 import { ORGANIZATION_ID, OrganizationService } from '../../../core/core-services/organization.service';
 import { ViewOrganization } from '../../models/view-organization';
 
-const AddMeetingLabel = _(`New meeting`);
-const EditMeetingLabel = _(`Edit meeting`);
+const ADD_MEETING_LABEL = _(`New meeting`);
+const EDIT_MEETING_LABEL = _(`Edit meeting`);
 
 const ORGA_ADMIN_ALLOWED_CONTROLNAMES = [`user_ids`, `admin_ids`];
 const USER_GROUPS_FOLLOW_FN = (meetingId: Id) => ({
@@ -61,8 +61,8 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
         return this.operatingUser?.group_ids(this.meetingId).includes(this.editMeeting?.admin_group_id);
     }
 
-    public addMeetingLabel = AddMeetingLabel;
-    public editMeetingLabel = EditMeetingLabel;
+    public addMeetingLabel = ADD_MEETING_LABEL;
+    public editMeetingLabel = EDIT_MEETING_LABEL;
 
     public isCreateView: boolean;
 
@@ -100,9 +100,9 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
         this.getRouteParams();
 
         if (this.isCreateView) {
-            super.setTitle(AddMeetingLabel);
+            super.setTitle(ADD_MEETING_LABEL);
         } else {
-            super.setTitle(EditMeetingLabel);
+            super.setTitle(EDIT_MEETING_LABEL);
         }
     }
 
@@ -261,6 +261,7 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
             rawForm.jitsi_domain = [``];
             rawForm.jitsi_room_name = [``];
             rawForm.jitsi_room_password = [``];
+            rawForm.enable_chat = [false];
         }
 
         this.meetingForm = this.formBuilder.group(rawForm);

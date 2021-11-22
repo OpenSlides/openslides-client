@@ -57,6 +57,7 @@ export class User extends BaseDecimalModel<User> {
     public vote_delegated_$_vote_ids: string[];
     public vote_delegated_$_to_id: string[]; // user/vote_delegated_$<meeting_id>_from_ids;
     public vote_delegations_$_from_ids: string[]; // user/vote_delegated_$<meeting_id>_to_id;
+    public chat_message_$_ids: Id[]; // (chat_message/user_id)[];
 
     public projection_$_ids: any[];
     public current_projector_$_ids: any[];
@@ -138,6 +139,10 @@ export class User extends BaseDecimalModel<User> {
 
     public assignment_candidate_ids(meetingId: Id): Id[] {
         return this[`assignment_candidate_$${meetingId}_ids`] || [];
+    }
+
+    public chat_message_ids(meetingId: Id): Id[] {
+        return this[`chat_message_$${meetingId}_ids`];
     }
 
     public assignment_poll_voted_ids(meetingId: Id): Id[] {
