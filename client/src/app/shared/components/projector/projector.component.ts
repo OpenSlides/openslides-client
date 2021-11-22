@@ -178,7 +178,7 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
                 (data[0]?.current_projections || []).map(
                     projection =>
                         ({
-                            collection: collectionFromFqid(projection.content_object_id),
+                            collection: projection.content?.collection,
                             data: projection.content,
                             stable: !!projection.stable,
                             type: projection.type || ``,

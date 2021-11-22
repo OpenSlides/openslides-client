@@ -1,7 +1,10 @@
 import { Fqid, Id } from 'app/core/definitions/key-types';
 
 import { BaseModel } from '../base/base-model';
+import { HasCollection } from '../base/collection';
 import { HasMeetingId } from '../base/has-meeting-id';
+
+type ProjectionContent = HasCollection & { [key: string]: any };
 
 export class Projection extends BaseModel<Projection> {
     public static COLLECTION = `projection`;
@@ -15,7 +18,7 @@ export class Projection extends BaseModel<Projection> {
     public weight: number;
 
     // Calculated field
-    public content: any;
+    public content: ProjectionContent;
 
     public content_object_id: Fqid; // */projection_ids
     public current_projector_id: Id; // projector/current_projection_ids;

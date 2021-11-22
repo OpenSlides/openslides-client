@@ -1,6 +1,6 @@
 import { Fqid, Id } from 'app/core/definitions/key-types';
 import { BaseModel } from 'app/shared/models/base/base-model';
-import { Collection } from 'app/shared/models/base/collection';
+import { HasCollection } from 'app/shared/models/base/collection';
 
 import { Identifiable } from '../../shared/models/base/identifiable';
 import { Displayable } from './displayable';
@@ -49,7 +49,7 @@ export abstract class BaseViewModel<M extends BaseModel = any> {
         return ``;
     }
 }
-export interface BaseViewModel<M extends BaseModel = any> extends Displayable, Identifiable, Collection {
+export interface BaseViewModel<M extends BaseModel = any> extends Displayable, Identifiable, HasCollection {
     getTitle: () => string;
     getListTitle: () => string;
 

@@ -1,7 +1,7 @@
 import { fqidFromCollectionAndId } from 'app/core/core-services/key-transforms';
 import { Fqid, Id } from 'app/core/definitions/key-types';
 
-import { Collection } from './collection';
+import { HasCollection } from './collection';
 import { Deserializer } from './deserializer';
 import { Identifiable } from './identifiable';
 
@@ -14,7 +14,7 @@ export interface ModelConstructor<T extends BaseModel<T>> {
  * Abstract parent class to set rules and functions for all models.
  * When inherit from this class, give the subclass as the type. E.g. `class Motion extends BaseModel<Motion>`
  */
-export abstract class BaseModel<T = any> extends Deserializer implements Identifiable, Collection {
+export abstract class BaseModel<T = any> extends Deserializer implements Identifiable, HasCollection {
     /**
      * @returns The full-qualified id of an object.
      */
