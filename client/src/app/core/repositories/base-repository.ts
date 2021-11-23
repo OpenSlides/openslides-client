@@ -1,5 +1,5 @@
 import { TranslateService } from '@ngx-translate/core';
-import { Collection } from 'app/shared/models/base/collection';
+import { HasCollection } from 'app/shared/models/base/collection';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { auditTime } from 'rxjs/operators';
 
@@ -38,7 +38,7 @@ const RELATION_AS_OBSERVABLE_SUFFIX = `_as_observable`;
  *
  */
 export abstract class BaseRepository<V extends BaseViewModel, M extends BaseModel>
-    implements OnAfterAppsLoaded, Collection, HasViewModelListObservable<V>
+    implements OnAfterAppsLoaded, HasCollection, HasViewModelListObservable<V>
 {
     /**
      * Stores all the viewModel in an object
