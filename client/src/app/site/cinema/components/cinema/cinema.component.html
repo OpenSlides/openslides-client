@@ -15,43 +15,44 @@
 
     <!-- List of speakers -->
     <os-list-of-speakers-content
-        [customTitle]="true"
-        [listOfSpeakers]="listOfSpeakers"
         *osPerms="permission.listOfSpeakersCanSee; and: listOfSpeakers"
+        [listOfSpeakers]="listOfSpeakers"
         (canReaddLastSpeakerEvent)="canReaddLastSpeaker = $event"
     >
-        <p class="line-and-icon subtitle-text">
-            <a [routerLink]="closUrl" [class.disabled]="!closUrl">
-                {{ 'List of speakers' | translate }}
-            </a>
+        <ng-template osListOfSpeakersContentTitle>
+            <p class="line-and-icon subtitle-text">
+                <a [routerLink]="closUrl" [class.disabled]="!closUrl">
+                    {{ 'List of speakers' | translate }}
+                </a>
 
-            <ng-container *osPerms="permission.agendaCanManageListOfSpeakers; complement: true">
-                <mat-icon *ngIf="isLosClosed" matTooltip="{{ 'The list of speakers is closed.' | translate }}">
-                    lock
-                </mat-icon>
-            </ng-container>
-
-            <ng-container *osPerms="permission.agendaCanManageListOfSpeakers">
-                <button mat-icon-button (click)="toggleListOfSpeakersOpen()">
+                <ng-container *osPerms="permission.agendaCanManageListOfSpeakers; complement: true">
                     <mat-icon *ngIf="isLosClosed" matTooltip="{{ 'The list of speakers is closed.' | translate }}">
                         lock
                     </mat-icon>
+                </ng-container>
 
-                    <mat-icon *ngIf="!isLosClosed" matTooltip="{{ 'The list of speakers is open.' | translate }}">
-                        lock_open
-                    </mat-icon>
-                </button>
+                <ng-container *osPerms="permission.agendaCanManageListOfSpeakers">
+                    <button mat-icon-button (click)="toggleListOfSpeakersOpen()">
+                        <mat-icon *ngIf="isLosClosed" matTooltip="{{ 'The list of speakers is closed.' | translate }}">
+                            lock
+                        </mat-icon>
 
-                <button
-                    mat-icon-button
-                    (click)="readdLastSpeaker()"
-                    matTooltip="{{ 'Re-add last speaker' | translate }}"
-                    [disabled]="!canReaddLastSpeaker"
-                >
-                    <mat-icon>undo</mat-icon>
-                </button>
-            </ng-container>
-        </p>
+                        <mat-icon *ngIf="!isLosClosed" matTooltip="{{ 'The list of speakers is open.' | translate }}">
+                            lock_open
+                        </mat-icon>
+                    </button>
+
+                    <button
+                        mat-icon-button
+                        (click)="readdLastSpeaker()"
+                        matTooltip="{{ 'Re-add last speaker' | translate }}"
+                        [disabled]="!canReaddLastSpeaker"
+                    >
+                        <mat-icon>undo</mat-icon>
+                    </button>
+                </ng-container>
+            </p>
+        </ng-template>
     </os-list-of-speakers-content>
 
     <os-poll-collection [currentProjection]="projectedViewModel"></os-poll-collection>

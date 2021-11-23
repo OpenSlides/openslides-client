@@ -112,7 +112,7 @@ export class ProjectorListComponent extends BaseModelContextComponent implements
                     follow: [PROJECTOR_CONTENT_FOLLOW]
                 }
             ],
-            fieldset: ``
+            fieldset: `preview`
         };
     }
 

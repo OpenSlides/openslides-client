@@ -54,6 +54,7 @@ import { ImportListLastTabDirective } from './components/import-list-view/import
 import { ImportListViewComponent } from './components/import-list-view/import-list-view.component';
 import { LegalNoticeContentComponent } from './components/legal-notice-content/legal-notice-content.component';
 import { ListOfSpeakersContentComponent } from './components/list-of-speakers-content/list-of-speakers-content.component';
+import { ListOfSpeakersContentTitleDirective } from './components/list-of-speakers-content/list-of-speakers-content-title.directive';
 import { ListViewTableComponent } from './components/list-view-table/list-view-table.component';
 import { LogoComponent } from './components/logo/logo.component';
 import { MediaUploadContentComponent } from './components/media-upload-content/media-upload-content.component';
@@ -203,7 +204,8 @@ const declarations = [
     AccountButtonComponent,
     NotFoundDescriptionDirective,
     MeetingTimeComponent,
-    ColorFormFieldComponent
+    ColorFormFieldComponent,
+    ListOfSpeakersContentTitleDirective
 ];
 
 const sharedModules = [

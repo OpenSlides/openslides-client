@@ -1,13 +1,13 @@
 <mat-card class="os-card speaker-card">
     <!-- Title -->
-    <h1 class="los-title" *ngIf="!customTitle">
+    <h1 class="los-title" *ngIf="!explicitTitleContent">
         <span>
             {{ title }}
         </span>
         <mat-icon *ngIf="closed" matTooltip="{{ 'The list of speakers is closed.' | translate }}">lock</mat-icon>
     </h1>
-    <span *ngIf="customTitle">
-        <ng-content></ng-content>
+    <span *ngIf="explicitTitleContent">
+        <ng-container *ngTemplateOutlet="explicitTitleContent"></ng-container>
     </span>
 
     <!-- List of finished speakers -->
@@ -77,9 +77,9 @@
             </button>
             <!-- Stop speaker button -->
             <button
+                *ngIf="canManage"
                 mat-icon-button
                 matTooltip="{{ 'End speech' | translate }}"
-                *osPerms="permission.listOfSpeakersCanManage"
                 (click)="onStopButton()"
             >
                 <mat-icon>stop</mat-icon>
@@ -112,7 +112,7 @@
                     </div>
                     <div class="speaker-controls one-line">
                         <!-- Extra stuff: Spoken Count, Gender, 1st Contribution -->
-                        <span *osPerms="permission.agendaCanManageListOfSpeakers; and: !speaker.point_of_order">
+                        <span *ngIf="canManage && !speaker.point_of_order">
                             <!-- Speaker count -->
                             <span *ngIf="hasSpokenCount(speaker)" class="red-warning-text speaker-warning">
                                 {{ hasSpokenCount(speaker) + 1 }}.
@@ -132,8 +132,8 @@
                         </span>
 
                         <!-- For normal users -->
-                        <span *osPerms="permission.agendaCanManageListOfSpeakers; complement: true">
-                            <ng-container *ngIf="speakerIsOperator(speaker)">
+                        <span *ngIf="!canManage">
+                            <ng-container *ngIf="isSpeakerOperator(speaker)">
                                 <!-- pro -->
                                 <button
                                     mat-icon-button
@@ -141,10 +141,10 @@
                                     matTooltip="{{ 'Forspeech' | translate }}"
                                     *ngIf="enableProContraSpeech && !speaker.point_of_order"
                                 >
-                                    <mat-icon class="user-subtitle" *ngIf="speaker.pro_speech !== true">
+                                    <mat-icon class="user-subtitle" *ngIf="speaker.speech_state !== SpeechState.PRO">
                                         add_circle_outline
                                     </mat-icon>
-                                    <mat-icon class="green-text" *ngIf="speaker.pro_speech === true">
+                                    <mat-icon class="green-text" *ngIf="speaker.speech_state === SpeechState.PRO">
                                         add_circle
                                     </mat-icon>
                                 </button>
@@ -156,10 +156,13 @@
                                     matTooltip="{{ 'Counter speech' | translate }}"
                                     *ngIf="enableProContraSpeech && !speaker.point_of_order"
                                 >
-                                    <mat-icon class="user-subtitle" *ngIf="speaker.pro_speech !== false">
+                                    <mat-icon class="user-subtitle" *ngIf="speaker.speech_state !== SpeechState.CONTRA">
                                         remove_circle_outline
                                     </mat-icon>
-                                    <mat-icon class="red-warning-text" *ngIf="speaker.pro_speech === false">
+                                    <mat-icon
+                                        class="red-warning-text"
+                                        *ngIf="speaker.speech_state === SpeechState.CONTRA"
+                                    >
                                         remove_circle
                                     </mat-icon>
                                 </button>
@@ -169,16 +172,21 @@
                                     mat-icon-button
                                     (click)="onMarkButton(speaker)"
                                     matTooltip="{{ 'Contribution' | translate }}"
-                                    *ngIf="canMark(speaker) && !speaker.point_of_order"
+                                    *ngIf="canMarkSpeaker(speaker) && !speaker.point_of_order"
                                 >
-                                    <mat-icon *ngIf="speaker.marked">star</mat-icon>
-                                    <mat-icon class="user-subtitle" *ngIf="!speaker.marked">star_border</mat-icon>
+                                    <mat-icon *ngIf="speaker.speech_state === SpeechState.CONTRIBUTION">star</mat-icon>
+                                    <mat-icon
+                                        class="user-subtitle"
+                                        *ngIf="speaker.speech_state !== SpeechState.CONTRIBUTION"
+                                    >
+                                        star_border
+                                    </mat-icon>
                                 </button>
                             </ng-container>
                         </span>
 
                         <!-- Start and more button -->
-                        <span *osPerms="permission.agendaCanManageListOfSpeakers">
+                        <span *ngIf="canManage">
                             <!-- start button -->
                             <button
                                 mat-icon-button
@@ -204,7 +212,7 @@
     </div>
 
     <!-- Search for speakers -->
-    <div *osPerms="permission.listOfSpeakersCanManage">
+    <div *ngIf="canManage">
         <form *ngIf="filteredUsers.length" [formGroup]="addSpeakerForm" class="search-new-speaker-form">
             <mat-form-field class="search-users-field">
                 <os-search-value-selector
@@ -268,7 +276,7 @@
 <!-- admin menu for managing single speakers -->
 <mat-menu #manageSpeakerMenu>
     <ng-template let-speaker="speaker" matMenuContent>
-        <ng-container *osPerms="permission.agendaCanManageListOfSpeakers">
+        <ng-container *ngIf="canManage">
             <!-- pro button -->
             <button mat-menu-item (click)="onProContraButtons(speaker, true)" *ngIf="enableProContraSpeech">
                 <mat-icon *ngIf="speaker.speech_state !== SpeechState.PRO">add_circle_outline</mat-icon>

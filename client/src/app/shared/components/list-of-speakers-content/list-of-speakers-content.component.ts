@@ -2,6 +2,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    ContentChild,
     EventEmitter,
     Input,
     OnInit,
@@ -9,6 +10,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { TemplateRef } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
@@ -35,6 +37,7 @@ import { BehaviorSubject } from 'rxjs';
 import { PointOfOrderDialogComponent } from '../point-of-order-dialog/point-of-order-dialog.component';
 import { Selectable } from '../selectable';
 import { SortingListComponent } from '../sorting-list/sorting-list.component';
+import { ListOfSpeakersContentTitleDirective } from './list-of-speakers-content-title.directive';
 
 @Component({
     selector: `os-list-of-speakers-content`,
@@ -74,7 +77,7 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
 
     public enableProContraSpeech: boolean;
     private pointOfOrderEnabled: boolean;
-    private canSetMarkSelf: boolean;
+    private canMarkSelf: boolean;
     public noteForAll: boolean;
 
     public get title(): string {
@@ -89,7 +92,7 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
         return this._listOfSpeakers?.closed;
     }
 
-    public get opCanManage(): boolean {
+    public get canManage(): boolean {
         return this.operator.hasPerms(this.permission.listOfSpeakersCanManage);
     }
 
@@ -113,8 +116,8 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
         return this._listOfSpeakers;
     }
 
-    @Input()
-    public customTitle: boolean;
+    @ContentChild(ListOfSpeakersContentTitleDirective, { read: TemplateRef })
+    public explicitTitleContent: TemplateRef<any>;
 
     @Input()
     public set sortMode(isActive: boolean) {
@@ -301,8 +304,8 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
         return this.operator.operatorId === speaker.user_id;
     }
 
-    public canSpeakerMark(speaker: ViewSpeaker): boolean {
-        return this.opCanManage || (this.canSetMarkSelf && this.isSpeakerOperator(speaker));
+    public canMarkSpeaker(speaker: ViewSpeaker): boolean {
+        return this.canManage || (this.canMarkSelf && this.isSpeakerOperator(speaker));
     }
 
     /**
@@ -466,7 +469,7 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
                 this.enableProContraSpeech = enabled;
             }),
             this.meetingSettingService.get(`list_of_speakers_can_set_contribution_self`).subscribe(canSet => {
-                this.canSetMarkSelf = canSet;
+                this.canMarkSelf = canSet;
             }),
             this.meetingSettingService.get(`list_of_speakers_speaker_note_for_everyone`).subscribe(enabled => {
                 this.noteForAll = enabled;
