@@ -20,13 +20,13 @@ export class OneOfValidator {
         return (control: AbstractControl): ValidationErrors | null => {
             const formControls = keys.map(key => control.get(key));
 
-            const noOneSet = formControls.every(formControl => !this.isValidControl(formControl));
+            const noOneSet = formControls.every(formControl => !this.isControlValid(formControl));
 
             return noOneSet ? { [errorName]: true } : null;
         };
     }
 
-    private static isValidControl(control: AbstractControl): boolean {
+    private static isControlValid(control: AbstractControl): boolean {
         if (!control?.value) {
             return false;
         }

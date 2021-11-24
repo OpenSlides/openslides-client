@@ -42,17 +42,6 @@
         </mat-form-field>
 
         <mat-form-field *osOmlPerms="OML.can_manage_users">
-            <mat-label>{{ 'Committee members' | translate }}</mat-label>
-            <os-search-value-selector
-                formControlName="user_ids"
-                [multiple]="true"
-                placeholder="{{ 'Committee members' | translate }}"
-                [inputListValues]="organizationMembers"
-                (selectionChanged)="onUserSelectionChanged($event)"
-            ></os-search-value-selector>
-        </mat-form-field>
-
-        <mat-form-field *osOmlPerms="OML.can_manage_users">
             <mat-label>{{ 'Committee managers' | translate }}</mat-label>
             <os-search-value-selector
                 formControlName="manager_ids"
@@ -87,18 +76,6 @@
                     [tooltipFn]="getTooltipFn()"
                 ></os-search-repo-selector>
             </mat-form-field>
-        </ng-container>
-
-        <ng-container *ngIf="!isCreateView">
-            <!-- TODO: Not yet -->
-            <!-- <mat-form-field>
-                <mat-label>{{ 'Meeting as template' | translate }}</mat-label>
-                <os-search-value-selector
-                    formControlName="template_meeting_id"
-                    [multiple]="false"
-                    [inputListValues]="meetingsObservable"
-                ></os-search-value-selector>
-            </mat-form-field> -->
         </ng-container>
     </form>
 </mat-card>

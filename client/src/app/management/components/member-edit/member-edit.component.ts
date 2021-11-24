@@ -32,7 +32,6 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
     }
 
     public readonly additionalFormControls = {
-        committee_ids: [[]],
         default_structure_level: [``],
         default_number: [``],
         default_vote_weight: [``],

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { UserAction } from 'app/core/actions/user-action';
-import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import {
     DEFAULT_FIELDSET,
     Fieldsets,
@@ -81,8 +80,7 @@ export class UserRepositoryService
 
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
-        private meetingSettingsService: MeetingSettingsService,
-        private activeMeeting: ActiveMeetingService
+        private meetingSettingsService: MeetingSettingsService
     ) {
         super(repositoryServiceCollector, User);
         this.sortProperty = this.meetingSettingsService.instant(`users_sort_by`);
@@ -214,7 +212,6 @@ export class UserRepositoryService
             default_structure_level: partialUser.default_structure_level,
             default_number: partialUser.default_number,
             default_vote_weight: toDecimal(partialUser.default_vote_weight),
-            committee_ids: partialUser.committee_ids,
             committee_$_management_level: partialUser.committee_$_management_level,
             organization_management_level: partialUser.organization_management_level
         };

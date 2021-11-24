@@ -77,9 +77,6 @@
             ></os-search-value-selector>
         </mat-form-field>
 
-        <!-- server bug -->
-        <!-- <mat-checkbox disabled formControlName="set_as_template">Set as template</mat-checkbox> -->
-
         <!-- Permission: CML.can_manage (implicit or OML.can_manage_organization or higher) -->
         <!-- Only check for CML.can_manage -> this includes check for OML.can_manage_organization or higher -->
         <mat-form-field *osCmlPerms="CML.can_manage; committeeId: committee?.id">
