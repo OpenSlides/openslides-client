@@ -61,6 +61,7 @@ import { MediaUploadContentComponent } from './components/media-upload-content/m
 import { MeetingTimeComponent } from './components/meeting-time/meeting-time.component';
 import { MetaTextBlockComponent } from './components/meta-text-block/meta-text-block.component';
 import { MotionPollDetailContentComponent } from './components/motion-poll-detail-content/motion-poll-detail-content.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 import { PointOfOrderDialogComponent } from './components/point-of-order-dialog/point-of-order-dialog.component';
 import { PreviewComponent } from './components/preview/preview.component';
 import { PrivacyPolicyContentComponent } from './components/privacy-policy-content/privacy-policy-content.component';
@@ -205,7 +206,8 @@ const declarations = [
     NotFoundDescriptionDirective,
     MeetingTimeComponent,
     ColorFormFieldComponent,
-    ListOfSpeakersContentTitleDirective
+    ListOfSpeakersContentTitleDirective,
+    NotFoundComponent
 ];
 
 const sharedModules = [

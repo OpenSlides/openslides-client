@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router } from '@angular/router';
 
 import { Settings } from '../../shared/models/event-management/meeting';
 import { MeetingSettingsService } from '../ui-services/meeting-settings.service';
 import { ActiveMeetingService } from './active-meeting.service';
-import { AuthService } from './auth.service';
 import { FallbackRoutesService } from './fallback-routes.service';
 import { OpenSlidesRouterService } from './openslides-router.service';
 import { OperatorService } from './operator.service';
@@ -27,7 +26,6 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     public constructor(
         private router: Router,
         private operator: OperatorService,
-        private authService: AuthService,
         private activeMeeting: ActiveMeetingService,
         private meetingSettingService: MeetingSettingsService,
         private fallbackRoutesService: FallbackRoutesService,
@@ -43,12 +41,17 @@ export class AuthGuard implements CanActivate, CanActivateChild {
      *
      * @param route the route the user wants to navigate to
      */
-    public async canActivate(route: ActivatedRouteSnapshot): Promise<boolean | UrlTree> {
+    public async canActivate(route: ActivatedRouteSnapshot): Promise<boolean> {
         const basePerm: Permission | Permission[] = route.data.basePerm;
+        if (!basePerm) {
+            return true;
+        }
         const meetingSetting: keyof Settings = route.data.meetingSetting;
         await this.operator.ready;
         if ((this.operator.isAnonymous && this.activeMeeting.guestsEnabled) || this.operator.isAuthenticated) {
-            return this.hasPerms(basePerm) && this.isMeetingSettingEnabled(meetingSetting);
+            const hasPerm = !!this.activeMeeting.meetingId ? this.hasPerms(basePerm) : true;
+            const hasSetting = this.isMeetingSettingEnabled(meetingSetting);
+            return hasPerm && hasSetting;
         } else {
             this.osRouter.navigateToLogin();
             return false;
@@ -62,8 +65,8 @@ export class AuthGuard implements CanActivate, CanActivateChild {
      */
     public async canActivateChild(route: ActivatedRouteSnapshot): Promise<boolean> {
         await this.operator.ready;
-
-        if (this.canActivate(route)) {
+        const canActivateRoute = await this.canActivate(route);
+        if (canActivateRoute) {
             return true;
         } else {
             this.handleForbiddenRoute(route);
@@ -102,13 +105,17 @@ export class AuthGuard implements CanActivate, CanActivateChild {
                 return;
             }
         }
-        // Fall-through: If the url is the start page, but no other fallback was found,
-        // navigate to the error page.
-        this.router.navigate([`/error`], {
-            queryParams: {
-                error: `Authentication Error`,
-                msg: route.data.basePerm
-            }
-        });
+        const meetingId = this.activeMeeting.meetingId;
+
+        if (meetingId) {
+            this.router.navigate([meetingId, `error`], {
+                queryParams: {
+                    error: `Authentication Error`,
+                    msg: route.data.basePerm
+                }
+            });
+        } else {
+            this.router.navigate([`/`]);
+        }
     }
 }

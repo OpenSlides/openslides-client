@@ -369,3 +369,7 @@
         </div>
     </os-tile>
 </os-grid-layout>
+
+<os-not-found *ngIf="!projector">
+    {{ 'The projector you requested is not accesible' | translate }}
+</os-not-found>

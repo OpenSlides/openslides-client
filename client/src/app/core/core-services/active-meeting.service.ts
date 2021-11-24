@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { first } from 'rxjs/operators';
+import { distinctUntilChanged, first } from 'rxjs/operators';
 
 import { MeetingRepositoryService } from '../repositories/management/meeting-repository.service';
 import { BannerDefinition, BannerService } from '../ui-services/banner.service';
@@ -82,11 +82,18 @@ export class ActiveMeetingService {
                 `ActiveMeetingService`
             );
             // Even inaccessible meetings will be observed so that one is on the login-mask available.
-            this._meetingSubcription = this.repo.getGeneralViewModelObservable().subscribe(meeting => {
-                if (meeting !== undefined && meeting.id === this.meetingId) {
-                    this.setupActiveMeeting(meeting);
-                }
-            });
+            this._meetingSubcription = this.repo
+                .getGeneralViewModelObservable()
+                .pipe(
+                    distinctUntilChanged((prev, curr) => {
+                        return JSON.stringify(prev.meeting) === JSON.stringify(curr.meeting);
+                    })
+                )
+                .subscribe(meeting => {
+                    if (meeting?.id === this.meetingId) {
+                        this.setupActiveMeeting(meeting);
+                    }
+                });
         } else {
             this.setupActiveMeeting(null);
         }
