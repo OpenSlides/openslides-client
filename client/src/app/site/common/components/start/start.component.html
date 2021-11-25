@@ -15,8 +15,10 @@
 <mat-card class="spacer-bottom-60" [ngClass]="isEditing ? 'os-form-card' : 'os-card'">
     <ng-container *ngIf="!isEditing">
         <div class="app-content">
-            <h1>{{ startContent.welcome_title | translate }}</h1>
-            <div [innerHTML]="startContent.welcome_text | trust: 'html'"></div>
+            <h1>{{ welcomeTitleObservable | async | translate }}</h1>
+            <ng-container *ngIf="welcomeTextObservable | async as welcomeText">
+                <div [innerHTML]="welcomeText | translate | trust: 'html'"></div>
+            </ng-container>
         </div>
     </ng-container>
 

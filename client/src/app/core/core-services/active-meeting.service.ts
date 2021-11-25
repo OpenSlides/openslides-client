@@ -11,8 +11,6 @@ import { AutoupdateService, ModelSubscription } from './autoupdate.service';
 import { LifecycleService } from './lifecycle.service';
 import { SimplifiedModelRequest } from './model-request-builder.service';
 
-export class NoActiveMeeting extends Error {}
-
 @Injectable({
     providedIn: `root`
 })
