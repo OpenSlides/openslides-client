@@ -225,21 +225,14 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
     }
 
     private createForm(): void {
-        let partialForm: any = {
+        const partialForm: any = {
             name: [``, Validators.required],
             description: [``],
             organization_tag_ids: [[]],
-            user_ids: [[]],
             manager_ids: [[]],
             forward_to_committee_ids: [[]],
             receive_forwardings_from_committee_ids: [[]]
         };
-        if (!this.isCreateView) {
-            partialForm = {
-                ...partialForm
-                // template_meeting_id: [null], // TODO: Not yet
-            };
-        }
         this.committeeForm = this.formBuilder.group(partialForm);
     }
 

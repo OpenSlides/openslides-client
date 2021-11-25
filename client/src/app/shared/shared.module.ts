@@ -97,7 +97,6 @@ import { AutofocusDirective } from './directives/autofocus.directive';
 import { CmlPermsDirective } from './directives/cml-perms.directive';
 import { DomChangeDirective } from './directives/dom-change.directive';
 import { HeightResizingDirective } from './directives/height-resizing.directive';
-import { IsMeetingAdminDirective } from './directives/is-meeting-admin.directive';
 import { ListenEditingDirective } from './directives/listen-editing.directive';
 import { NotFoundDescriptionDirective } from './directives/not-found-description.directive';
 import { OmlPermsDirective } from './directives/oml-perms.directive';
@@ -117,7 +116,6 @@ import { TrustPipe } from './pipes/trust.pipe';
 
 const declarations = [
     PermsDirective,
-    IsMeetingAdminDirective,
     DomChangeDirective,
     AutofocusDirective,
     HeadBarComponent,

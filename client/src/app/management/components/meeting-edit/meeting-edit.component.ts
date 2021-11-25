@@ -1,7 +1,6 @@
-import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { MeetingAction } from 'app/core/actions/meeting-action';
@@ -23,6 +22,7 @@ import { BaseModelContextComponent } from 'app/site/base/components/base-model-c
 import { ViewUser } from 'app/site/users/models/view-user';
 import { Observable } from 'rxjs';
 
+import { MemberService } from '../../../core/core-services/member.service';
 import { SimplifiedModelRequest } from '../../../core/core-services/model-request-builder.service';
 import { ORGANIZATION_ID, OrganizationService } from '../../../core/core-services/organization.service';
 import { ViewOrganization } from '../../models/view-organization';
@@ -39,8 +39,8 @@ export class MeetingEditComponent extends BaseModelContextComponent {
     public readonly CML = CML;
     public readonly OML = OML;
 
-    public get availableUsers(): ViewUser[] {
-        return Array.from(new Set((this.committee?.users || []).concat(this.editMeeting?.users || [])));
+    public get availableUsers(): Observable<ViewUser[]> {
+        return this.userRepo.getViewModelListObservable();
     }
 
     public get availableMeetingsObservable(): Observable<ViewMeeting[]> {
@@ -69,14 +69,15 @@ export class MeetingEditComponent extends BaseModelContextComponent {
         componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService,
         private route: ActivatedRoute,
-        private location: Location,
+        private router: Router,
         private formBuilder: FormBuilder,
         private meetingRepo: MeetingRepositoryService,
         private committeeRepo: CommitteeRepositoryService,
         public orgaTagRepo: OrganizationTagRepositoryService,
         private operator: OperatorService,
         private userRepo: UserRepositoryService,
-        private orga: OrganizationService
+        private orga: OrganizationService,
+        private memberService: MemberService
     ) {
         super(componentServiceCollector, translate);
         this.createOrEdit();
@@ -103,7 +104,7 @@ export class MeetingEditComponent extends BaseModelContextComponent {
     }
 
     public onCancel(): void {
-        this.location.back();
+        this.goBack();
     }
 
     public async onOrgaTagNotFound(orgaTagName: string): Promise<void> {
@@ -156,6 +157,7 @@ export class MeetingEditComponent extends BaseModelContextComponent {
                 if (this.committeeId) {
                     this.loadCommittee();
                 }
+                this.loadUsers();
             })
         );
     }
@@ -210,14 +212,17 @@ export class MeetingEditComponent extends BaseModelContextComponent {
         );
     }
 
+    private async loadUsers(): Promise<void> {
+        const simplifiedRequest = await this.memberService.getAllOrgaUsersModelRequest();
+        this.requestModels(simplifiedRequest);
+    }
+
     private createForm(): void {
         const currentDate = new Date();
         currentDate.setHours(0, 0, 0, 0);
 
         const rawForm: { [key: string]: any } = {
             name: [``, Validators.required],
-            // server bug
-            // set_as_template: [false],
             description: [``],
             location: [``],
             start_time: [currentDate],
@@ -274,7 +279,7 @@ export class MeetingEditComponent extends BaseModelContextComponent {
 
             await this.meetingRepo.create(payload);
         }
-        this.location.back();
+        this.goBack();
     }
 
     private async doUpdateMeeting(): Promise<void> {
@@ -284,7 +289,7 @@ export class MeetingEditComponent extends BaseModelContextComponent {
             this.editMeeting,
             this.getUsersToUpdateForMeetingObject()
         );
-        this.location.back();
+        this.goBack();
     }
 
     /**
@@ -319,5 +324,9 @@ export class MeetingEditComponent extends BaseModelContextComponent {
         delete payload.user_ids; // This must not be sent
         delete payload.admin_ids; // This must not be sent
         return payload;
+    }
+
+    private goBack(): void {
+        this.router.navigate([`committees`, this.committeeId]);
     }
 }

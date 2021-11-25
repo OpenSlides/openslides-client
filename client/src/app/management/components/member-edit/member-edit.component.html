@@ -78,16 +78,6 @@
         </div>
 
         <div [formGroup]="form">
-            <div *osOmlPerms="OML.can_manage_users">
-                <mat-form-field>
-                    <os-search-repo-selector
-                        formControlName="committee_ids"
-                        [multiple]="true"
-                        placeholder="{{ 'Committee member' | translate }}"
-                        [repo]="committeeRepo"
-                    ></os-search-repo-selector>
-                </mat-form-field>
-            </div>
             <div *osOmlPerms="OML.can_manage_organization">
                 <mat-form-field>
                     <os-search-repo-selector
@@ -130,12 +120,6 @@
         <div *ngIf="user.default_vote_weight">
             <h4>{{ 'Default vote weight' | translate }}</h4>
             <span>{{ user.default_vote_weight }}</span>
-        </div>
-
-        <!-- Committees -->
-        <div *ngIf="user.committee_ids?.length">
-            <h4>{{ 'Committee member' | translate }}</h4>
-            <ng-container *ngTemplateOutlet="modelListTemplate; context: { models: user.committees }"></ng-container>
         </div>
 
         <!-- Committee management -->
