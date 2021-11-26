@@ -100,17 +100,40 @@
             </div>
         </ng-container>
 
-        <!-- 100 Percent Base -->
-        <mat-form-field>
-            <mat-select
-                placeholder="{{ PollPropertyVerbose.onehundred_percent_base | translate }}"
-                formControlName="onehundred_percent_base"
-                required
-            >
-                <ng-container *ngFor="let option of validPercentBases | keyvalue: keepEntryOrder">
-                    <mat-option [value]="option.key">{{ option.value | translate }}</mat-option>
-                </ng-container>
-            </mat-select>
-        </mat-form-field>
+        <div class="info-grid">
+            <!-- 100 Percent Base -->
+            <mat-form-field>
+                <mat-select
+                    placeholder="{{ PollPropertyVerbose.onehundred_percent_base | translate }}"
+                    formControlName="onehundred_percent_base"
+                    required
+                >
+                    <ng-container *ngFor="let option of validPercentBases | keyvalue: keepEntryOrder">
+                        <mat-option [value]="option.key">{{ option.value | translate }}</mat-option>
+                    </ng-container>
+                </mat-select>
+            </mat-form-field>
+            <ng-container *ngIf="isEVotingSelected">
+                <mat-form-field>
+                    <mat-select
+                        placeholder="{{ 'Time period to evaluate a poll' | translate }}"
+                        formControlName="backend"
+                        required
+                    >
+                        <ng-container *ngFor="let option of pollBackendDurationChoices | keyvalue">
+                            <mat-option [value]="option.key">
+                                {{ option.value | translate }}
+                            </mat-option>
+                        </ng-container>
+                    </mat-select>
+                    <mat-hint>
+                        {{
+                            'The option short poll should be used, if polls are intended to end after a few minutes.'
+                                | translate
+                        }}
+                    </mat-hint>
+                </mat-form-field>
+            </ng-container>
+        </div>
     </form>
 </div>

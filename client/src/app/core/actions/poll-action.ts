@@ -1,6 +1,7 @@
 import { HasMeetingId } from 'app/shared/models/base/has-meeting-id';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 
+import { PollBackendDurationType } from '../../shared/models/poll/poll-constants';
 import { Decimal, Fqid, Id } from '../definitions/key-types';
 
 export namespace PollAction {
@@ -101,6 +102,7 @@ export namespace PollAction {
         options: ElectronicOption[];
         // Only for non analog types
         entitled_group_ids?: Id[];
+        backend?: PollBackendDurationType;
     }
 
     export interface UpdateAnalogPollPayload
@@ -118,6 +120,7 @@ export namespace PollAction {
             PartialUpdateCreatedPollPayload {
         // Optional, only if state == created, only for non analog types
         entitled_group_ids: Id[];
+        backend?: PollBackendDurationType;
     }
 
     export interface UpdateOtherStateAnalogPollPayload

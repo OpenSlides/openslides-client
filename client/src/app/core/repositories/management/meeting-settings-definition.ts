@@ -10,6 +10,8 @@ import {
     PollTypeVerbose
 } from 'app/shared/models/poll/poll-constants';
 
+import { PollBackendDurationChoices } from '../../../shared/models/poll/poll-constants';
+
 export type SettingsType =
     | 'string'
     | 'text'
@@ -661,6 +663,13 @@ export const meetingSettings: SettingsGroup[] = [
                         label: _(`Custom number of ballot papers`),
                         type: `integer`,
                         validators: [Validators.min(1)]
+                    },
+                    {
+                        key: `motion_poll_default_backend`,
+                        label: _(`Default time period to evaluate a poll`),
+                        type: `choice`,
+                        choices: PollBackendDurationChoices,
+                        helpText: `The option short poll should be used, if polls are intended to end after a few minutes.`
                     }
                 ]
             },
@@ -735,6 +744,13 @@ export const meetingSettings: SettingsGroup[] = [
                         key: `assignment_poll_sort_poll_result_by_votes`,
                         label: _(`Sort election results by amount of votes`),
                         type: `boolean`
+                    },
+                    {
+                        key: `assignment_poll_default_backend`,
+                        label: _(`Default time period to evaluate a poll`),
+                        type: `choice`,
+                        choices: PollBackendDurationChoices,
+                        helpText: `The option short poll should be used, if polls are intended to end after a few minutes.`
                     }
                 ]
             },

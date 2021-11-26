@@ -1,21 +1,19 @@
 import { Component, Input } from '@angular/core';
 import { PollPropertyVerbose } from 'app/shared/models/poll/poll-constants';
 import { ViewOption } from 'app/shared/models/poll/view-option';
-import { ViewPoll } from 'app/shared/models/poll/view-poll';
 import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { UnknownUserLabel } from 'app/site/assignments/modules/assignment-poll/services/assignment-poll.service';
+
+import { BasePollMetaInformationComponent } from '../../../../../polls/components/base-poll-meta-information.component';
 
 @Component({
     selector: `os-assignment-poll-meta-info`,
     templateUrl: `./assignment-poll-meta-info.component.html`,
     styleUrls: [`./assignment-poll-meta-info.component.scss`]
 })
-export class AssignmentPollMetaInfoComponent {
+export class AssignmentPollMetaInfoComponent extends BasePollMetaInformationComponent {
     public pollPropertyVerbose = PollPropertyVerbose;
     private unknownUserLabel = UnknownUserLabel;
-
-    @Input()
-    public poll: ViewPoll;
 
     @Input()
     public showCandidates = true;
@@ -31,8 +29,6 @@ export class AssignmentPollMetaInfoComponent {
     public get hasGlobalOptionEnabled(): boolean {
         return this.poll.hasGlobalOptionEnabled;
     }
-
-    public constructor() {}
 
     public userCanVote(): boolean {
         return this.poll.canBeVotedFor();
