@@ -23,6 +23,7 @@ import { Observable, OperatorFunction } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { OsOptionSelectionChanged } from '../../../shared/components/search-selector/base-search-value-selector/base-search-value-selector.component';
+import { NAVIGATION_FROM_LIST } from '../committee-list/committee-list.component';
 
 const ADD_COMMITTEE_LABEL = _(`New committee`);
 const EDIT_COMMITTEE_LABEL = _(`Edit committee`);
@@ -52,6 +53,8 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
     private get managerIdCtrl(): AbstractControl {
         return this.committeeForm.get(`manager_ids`);
     }
+
+    private navigatedFrom: string | undefined;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -125,13 +128,16 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
 
     public async onSubmit(): Promise<void> {
         const value = this.committeeForm.value as Committee;
+        let id: Id | null = null;
 
         if (this.isCreateView) {
-            await this.committeeRepo.create(value);
+            const identifiable = (await this.committeeRepo.create(value))[0];
+            id = identifiable.id;
         } else {
             await this.committeeRepo.update(value, this.editCommittee);
+            id = this.committeeId;
         }
-        this.navigateBack();
+        this.navigateBack(id);
     }
 
     public onCancel(): void {
@@ -186,8 +192,12 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
         this.committeeForm.patchValue({ organization_tag_ids: currentValue.concat(id) });
     }
 
-    private navigateBack(): void {
-        this.router.navigate([`..`, `committees`]);
+    private navigateBack(id?: Id): void {
+        const navigationCommands = [`..`, `committees`];
+        if (this.navigatedFrom !== NAVIGATION_FROM_LIST) {
+            navigationCommands.push(id?.toString() ?? ``);
+        }
+        this.router.navigate(navigationCommands);
     }
 
     private getCommitteeByUrl(): void {
@@ -196,6 +206,9 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
         } else {
             this.isCreateView = false;
             this.subscriptions.push(
+                this.route.queryParams.subscribe(queryParams => {
+                    this.navigatedFrom = queryParams.from;
+                }),
                 this.route.params.subscribe(async params => {
                     this.committeeId = Number(params.committeeId);
                     this.loadCommittee(this.committeeId);
