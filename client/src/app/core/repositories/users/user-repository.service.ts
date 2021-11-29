@@ -566,7 +566,12 @@ export class UserRepositoryService
      */
     public async createFromString(name: string): Promise<RawUser> {
         const newUser = this.parseStringIntoUser(name);
-        const identifiable = (await this.create({ ...newUser, is_active: true }))[0];
+        const newUserPayload = {
+            ...newUser,
+            is_active: true,
+            group_ids: [this.currentDefaultGroupId]
+        };
+        const identifiable = (await this.create(newUserPayload))[0];
         const getNameFn = () => this.getShortName(newUser);
         return { id: identifiable.id, ...newUser, getTitle: getNameFn, getListTitle: getNameFn };
     }

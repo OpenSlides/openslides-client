@@ -121,7 +121,7 @@
 
                             <!-- First contribution -->
                             <span
-                                *ngIf="showFistContributionHint && isFirstContribution(speaker)"
+                                *ngIf="(showFistContributionHint | async) && isFirstContribution(speaker)"
                                 class="red-warning-text speaker-warning"
                             >
                                 {{ 'First speech' | translate }}
@@ -344,7 +344,7 @@
         >
             warning
         </mat-icon>
-        <i [class.red-warning-text]="!!showcolor">
+        <i [class.red-warning-text]="!!showcolor" *ngIf="(showSpeakerNoteForEveryoneObservable | async) || canManage">
             {{ speaker.note }}
         </i>
     </ng-container>

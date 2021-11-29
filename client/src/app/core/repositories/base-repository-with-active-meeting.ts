@@ -1,5 +1,7 @@
+import { ViewMeeting } from '../../management/models/view-meeting';
 import { BaseModel, ModelConstructor } from '../../shared/models/base/base-model';
 import { BaseViewModel } from '../../site/base/base-view-model';
+import { ActiveMeetingService } from '../core-services/active-meeting.service';
 import { ActiveMeetingIdService } from '../core-services/active-meeting-id.service';
 import { Id } from '../definitions/key-types';
 import { BaseRepository } from './base-repository';
@@ -19,6 +21,22 @@ export abstract class BaseRepositoryWithActiveMeeting<
 
     protected get activeMeetingIdService(): ActiveMeetingIdService {
         return this.fullRepositoryServiceCollector.activeMeetingIdService;
+    }
+
+    protected get activeMeeting(): ViewMeeting | undefined {
+        return this.activeMeetingService.meeting;
+    }
+
+    protected get activeMeetingService(): ActiveMeetingService {
+        return this.fullRepositoryServiceCollector.activeMeetingService;
+    }
+
+    protected get currentDefaultGroupId(): Id | null {
+        return this.activeMeeting?.default_group_id;
+    }
+
+    protected get currentAdminGroupId(): Id | null {
+        return this.activeMeeting?.admin_group_id;
     }
 
     public constructor(

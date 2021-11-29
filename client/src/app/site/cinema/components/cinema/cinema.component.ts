@@ -35,9 +35,7 @@ export class CinemaComponent extends BaseModelContextComponent implements OnInit
     public canReaddLastSpeaker: boolean;
 
     public get title(): string {
-        if (this.projectedViewModel) {
-            return this.projectedViewModel.getListTitle();
-        } else if (this.currentProjection) {
+        if (this.currentProjection) {
             return this.currentProjection.getTitle();
         } else {
             return ``;

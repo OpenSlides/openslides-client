@@ -1,11 +1,10 @@
 import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { collectionFromFqid } from 'app/core/core-services/key-transforms';
 import { Follow } from 'app/core/core-services/model-request-builder.service';
 import { OfflineBroadcastService } from 'app/core/core-services/offline-broadcast.service';
+import { UnsafeHtml } from 'app/core/definitions/key-types';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MediaManageService } from 'app/core/ui-services/media-manage.service';
-import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { SlideData } from 'app/core/ui-services/projector.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewProjector } from 'app/site/projector/models/view-projector';
@@ -117,19 +116,25 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
      */
     public resizeSubject = new Subject<void>();
 
+    public get eventNameObservable(): Observable<UnsafeHtml> {
+        return this.meetingSettingService.get(`name`);
+    }
+
+    public get eventDescriptionObservable(): Observable<UnsafeHtml> {
+        return this.meetingSettingService.get(`description`);
+    }
+
+    public get projectorLogoObservable(): Observable<string> {
+        return this.mediaManageService.getLogoUrlObservable(`projector_main`);
+    }
+
     // Some settings for the view from the config.
     public enableHeaderAndFooter = true;
     public enableTitle = true;
-    public projectorLogo;
-    public eventName;
-    public eventDescription;
-    public eventDate;
-    public eventLocation;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService,
-        private meetingSettingsService: MeetingSettingsService,
         private offlineBroadcastService: OfflineBroadcastService,
         private elementRef: ElementRef,
         private mediaManageService: MediaManageService
@@ -143,19 +148,10 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
         document.head.appendChild(this.styleElement);
 
         // projector logo / background-image
-        this.mediaManageService.getLogoUrlObservable(`projector_main`).subscribe(url => {
-            this.projectorLogo = url ? url : ``;
-        });
         this.mediaManageService.getLogoUrlObservable(`projector_header`).subscribe(url => {
             this.css.headerFooter.backgroundImage = url ? `url('${url}')` : `none`;
             this.updateCSS();
         });
-
-        // event data
-        this.meetingSettingsService.get(`name`).subscribe(val => (this.eventName = val));
-        this.meetingSettingsService.get(`description`).subscribe(val => (this.eventDescription = val));
-        this.meetingSettingsService.get(`start_time`).subscribe(val => (this.eventDate = val));
-        this.meetingSettingsService.get(`location`).subscribe(val => (this.eventLocation = val));
 
         // Watches for resizing of the container.
         this.resizeSubject.subscribe(() => {

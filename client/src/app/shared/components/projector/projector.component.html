@@ -5,16 +5,29 @@
         </div>
         <div id="header" class="headerFooter" *ngIf="projector && projector.show_header_footer">
             <!-- projector logo -->
-            <img *ngIf="projector.show_logo && projectorLogo" src="{{ projectorLogo }}" class="projector-logo-main" />
+            <ng-container *ngIf="projectorLogoObservable | async as projectorLogo">
+                <img *ngIf="projector.show_logo" src="{{ projectorLogo }}" class="projector-logo-main" />
+            </ng-container>
 
             <div *ngIf="projector.show_title" id="eventdata">
-                <div
-                    *ngIf="eventName"
-                    class="event-name"
-                    [ngClass]="!eventDescription ? 'titleonly' : ''"
-                    [innerHTML]="eventName"
-                ></div>
-                <div *ngIf="eventDescription" class="event-description" [innerHTML]="eventDescription"></div>
+                <ng-container
+                    *ngIf="{
+                        eventName: eventNameObservable | async,
+                        eventDescription: eventDescriptionObservable | async
+                    } as eventData"
+                >
+                    <div
+                        *ngIf="eventData.eventName"
+                        class="event-name"
+                        [ngClass]="{ titleonly: !eventData.eventDescription }"
+                        [innerHTML]="eventData.eventName"
+                    ></div>
+                    <div
+                        *ngIf="eventData.eventDescription"
+                        class="event-description"
+                        [innerHTML]="eventData.eventDescription"
+                    ></div>
+                </ng-container>
             </div>
         </div>
 
@@ -30,11 +43,7 @@
         </div>
 
         <div id="footer" class="headerFooter" *ngIf="projector && projector.show_header_footer">
-            <div class="footertext">
-                <span *ngIf="eventDate">{{ eventDate | localizedDate: 'll' }}</span>
-                <span *ngIf="eventDate && eventLocation">&nbsp;|&nbsp;</span>
-                <span *ngIf="eventLocation">{{ eventLocation }}</span>
-            </div>
+            <div class="footertext"></div>
         </div>
     </div>
 </div>

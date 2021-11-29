@@ -32,7 +32,7 @@ import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers
 import { ViewSpeaker } from 'app/site/agenda/models/view-speaker';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { PointOfOrderDialogComponent } from '../point-of-order-dialog/point-of-order-dialog.component';
 import { Selectable } from '../selectable';
@@ -69,16 +69,21 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
 
     public isMobile: boolean;
 
-    public showFistContributionHint: boolean;
+    public get showFirstContributionHintObservable(): Observable<boolean> {
+        return this.meetingSettingService.get(`list_of_speakers_show_first_contribution`);
+    }
 
     public get showPointOfOrders(): boolean {
         return this.pointOfOrderEnabled && this.canAddDueToPresence;
     }
 
+    public get showSpeakerNoteForEveryoneObservable(): Observable<boolean> {
+        return this.meetingSettingService.get(`list_of_speakers_speaker_note_for_everyone`);
+    }
+
     public enableProContraSpeech: boolean;
     private pointOfOrderEnabled: boolean;
     private canMarkSelf: boolean;
-    public noteForAll: boolean;
 
     public get title(): string {
         return this._listOfSpeakers?.getTitle();
@@ -458,9 +463,6 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
                 this.filterUsers();
             }),
             // observe changes to the agenda_show_first_contribution setting
-            this.meetingSettingService.get(`list_of_speakers_show_first_contribution`).subscribe(show => {
-                this.showFistContributionHint = show;
-            }),
             // observe point of order settings
             this.meetingSettingService.get(`list_of_speakers_enable_point_of_order_speakers`).subscribe(show => {
                 this.pointOfOrderEnabled = show;
@@ -470,9 +472,6 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
             }),
             this.meetingSettingService.get(`list_of_speakers_can_set_contribution_self`).subscribe(canSet => {
                 this.canMarkSelf = canSet;
-            }),
-            this.meetingSettingService.get(`list_of_speakers_speaker_note_for_everyone`).subscribe(enabled => {
-                this.noteForAll = enabled;
             })
         );
     }

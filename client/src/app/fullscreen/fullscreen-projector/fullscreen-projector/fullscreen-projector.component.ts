@@ -150,7 +150,11 @@ export class FullscreenProjectorComponent extends BaseModelContextComponent impl
         this.requestModels({
             viewModelCtor: ViewProjector,
             ids: [projectorId],
-            follow: [PROJECTOR_CONTENT_FOLLOW]
+            follow: [
+                PROJECTOR_CONTENT_FOLLOW,
+                // This is a workaround (See OpenSlides/openslides-autoupdate-service#376)
+                { idField: `meeting_id`, fieldset: `preview` }
+            ]
         });
     }
 }
