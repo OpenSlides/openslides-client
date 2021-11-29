@@ -1,16 +1,19 @@
 import {
+    ChangeDetectionStrategy,
     Component,
     ContentChildren,
     ElementRef,
+    EventEmitter,
     Input,
     OnInit,
+    Output,
     QueryList,
     TemplateRef,
     ViewEncapsulation
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
-import { MatTab } from '@angular/material/tabs';
+import { MatTab, MatTabChangeEvent } from '@angular/material/tabs';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { columnFactory, createDS, PblColumnDefinition, PblDataSource, PblNgridColumnSet } from '@pebula/ngrid';
@@ -77,6 +80,12 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
      */
     @Input()
     public possibleFields: string[] = [];
+
+    @Input()
+    public showUnknownHeaders = true;
+
+    @Output()
+    public selectedTabChanged = new EventEmitter<number>();
 
     public get defaultColumns(): PblColumnDefinition[] {
         return [
@@ -227,8 +236,9 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
     /**
      * Triggers a change in the tab group: Clearing the preview selection
      */
-    public onTabChange(): void {
+    public onTabChange({ index }: MatTabChangeEvent): void {
         this.importer.clearPreview();
+        this.selectedTabChanged.emit(index);
     }
 
     /**

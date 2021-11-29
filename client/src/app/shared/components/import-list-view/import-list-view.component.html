@@ -1,5 +1,5 @@
 <mat-card class="os-form-card import-table spacer-bottom-60">
-    <mat-tab-group *ngIf="hasSeveralTabs()" (selectedTabChange)="onTabChange()">
+    <mat-tab-group *ngIf="hasSeveralTabs()" (selectedTabChange)="onTabChange($event)">
         <!-- Tabs before CSV import tab -->
         <mat-tab *ngFor="let tab of importListFirstTabs">
             <ng-template matTabLabel>
@@ -246,7 +246,7 @@
                 {{ col.label | translate }}
             </div>
             <div class="small-text" *ngIf="col.prop !== 'status' && col.prop !== 'importTrackId'">
-                <mat-form-field *ngIf="isUnknown(col.prop)">
+                <mat-form-field *ngIf="isUnknown(col.prop) && showUnknownHeaders">
                     <mat-label>{{ 'Choose a header' | translate }}</mat-label>
                     <mat-select [ngModel]="headerValueMap" (ngModelChange)="onChangeUnknownHeaderKey(col.prop, $event)">
                         <mat-option *ngFor="let option of leftReceivedHeaders" [value]="option">

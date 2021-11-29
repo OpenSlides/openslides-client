@@ -11,37 +11,8 @@
     </div>
 </os-head-bar>
 
-<os-import-list-view [columns]="generateImportColumns" [importer]="importer" [possibleFields]="possibleFields">
-    <!-- textarea import tab -->
-    <mat-tab osImportListFirstTab>
-        <ng-template matTabLabel>{{ 'Text import' | translate }}</ng-template>
-        <ng-template matTabContent>
-            <br />
-            <div>
-                <div>
-                    <span>{{ 'Copy and paste your account names in this textbox.' | translate }}</span>
-                    <br />
-                    <span>{{ 'Keep each person in a single line.' | translate }}</span>
-                    <br />
-                    <span>{{ 'Comma separated names will be read as "Surname, given name(s)".' | translate }}</span>
-                </div>
-                <mat-form-field>
-                    <textarea
-                        matInput
-                        osAutofocus
-                        [formControl]="textAreaForm"
-                        placeholder="{{ 'Insert participants here' | translate }}"
-                        cdkTextareaAutosize
-                        cdkAutosizeMinRows="3"
-                        cdkAutosizeMaxRows="10"
-                    ></textarea>
-                </mat-form-field>
-            </div>
-            <div>
-                <button mat-button color="accent" (click)="parseTextArea()">
-                    <span>{{ 'Preview' | translate }}</span>
-                </button>
-            </div>
-        </ng-template>
-    </mat-tab>
-</os-import-list-view>
+<os-import-list-view
+    [columns]="generateImportColumns"
+    [importer]="importer"
+    [possibleFields]="possibleFields"
+></os-import-list-view>

@@ -11,14 +11,20 @@
     </div>
 </os-head-bar>
 
-<os-import-list-view [importer]="importer" [columns]="columns" [possibleFields]="possibleFields">
+<os-import-list-view
+    [importer]="importer"
+    [columns]="columns"
+    [possibleFields]="possibleFields"
+    [showUnknownHeaders]="!isTextImportSelected"
+    (selectedTabChanged)="selectedTabIndex = $event"
+>
     <mat-tab label="{{ 'Text import' | translate }}" osImportListFirstTab>
         <ng-template matTabLabel>{{ 'Text import' | translate }}</ng-template>
         <ng-template matTabContent>
             <div [formGroup]="textAreaForm">
                 <div>
-                    <span>{{ 'Paste/write your topics in this textbox.' | translate }}</span>
-                    <span>{{ 'Keep each item in a single line.' | translate }}</span>
+                    <div>{{ 'Paste/write your topics in this textbox.' | translate }}</div>
+                    <div>{{ 'Keep each item in a single line.' | translate }}</div>
                 </div>
                 <mat-form-field>
                     <textarea
