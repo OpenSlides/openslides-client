@@ -19,6 +19,8 @@ import { Follow } from '../../../core/core-services/model-request-builder.servic
 import { MeetingRepositoryService } from '../../../core/repositories/management/meeting-repository.service';
 import { CommitteeExportService } from '../../services/committee-export.service';
 
+export const NAVIGATION_FROM_LIST = `list`;
+
 const getCommitteesModelRequest = (fellowship?: Follow) => {
     const FOLLOW: Follow[] = [
         {
@@ -95,7 +97,10 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
     }
 
     public editSingle(committee: ViewCommittee): void {
-        this.router.navigate([committee.id, `edit-committee`], { relativeTo: this.route });
+        this.router.navigate([committee.id, `edit-committee`], {
+            relativeTo: this.route,
+            queryParams: { from: NAVIGATION_FROM_LIST }
+        });
     }
 
     public createNewCommittee(): void {
