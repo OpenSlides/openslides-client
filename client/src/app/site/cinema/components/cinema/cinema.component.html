@@ -8,7 +8,7 @@
     <mat-card class="os-card" *ngIf="!!title">
         <a [routerLink]="viewModelUrl || null" [state]="{ back: 'true' }">
             <h1 class="line-and-icon">
-                {{ title }}
+                {{ title | translate }}
             </h1>
         </a>
     </mat-card>

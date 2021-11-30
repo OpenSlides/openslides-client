@@ -95,8 +95,8 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
 
     public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Meetings` : `Meeting`);
 
-    public getProjectorTitle = (viewMeeting: ViewMeeting, projection: Projection) => {
-        let title;
+    public getProjectorTitle = (_: ViewMeeting, projection: Projection) => {
+        let title: string;
 
         switch (projection.type as MeetingProjectionType) {
             case MeetingProjectionType.CurrentListOfSpeakers:

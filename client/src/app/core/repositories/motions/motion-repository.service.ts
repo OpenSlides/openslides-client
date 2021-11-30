@@ -285,14 +285,14 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
     public getProjectorTitle = (viewMotion: ViewMotion) => {
         const subtitle =
             viewMotion.agenda_item && viewMotion.agenda_item.comment ? viewMotion.agenda_item.comment : null;
-        return { title: this.getAgendaSlideTitle(viewMotion), subtitle };
+        return { title: this.getTitle(viewMotion), subtitle };
     };
 
     protected createViewModel(model: Motion): ViewMotion {
         const viewModel = super.createViewModel(model);
 
         viewModel.getNumberOrTitle = () => this.getNumberOrTitle(viewModel);
-        viewModel.getProjectorTitle = (projection: Projection) => this.getProjectorTitle(viewModel);
+        viewModel.getProjectorTitle = () => this.getProjectorTitle(viewModel);
         viewModel.getParagraphTitleByParagraph = (paragraph: DiffLinesInParagraph) =>
             this.motionLineNumbering.getAmendmentParagraphLinesTitle(paragraph);
 
