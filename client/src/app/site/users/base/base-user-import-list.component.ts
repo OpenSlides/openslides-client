@@ -53,12 +53,5 @@ export abstract class BaseUserImportListComponent extends BaseImportListComponen
         return ``;
     }
 
-    /**
-     * Sends the data in the text field input area to the importer
-     */
-    public parseTextArea(): void {
-        this.importer.parseTextArea(this.textAreaForm.value);
-    }
-
     protected abstract guessType(property: keyof User): 'string' | 'number' | 'boolean';
 }

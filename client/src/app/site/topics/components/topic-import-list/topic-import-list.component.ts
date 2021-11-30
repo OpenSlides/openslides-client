@@ -11,6 +11,8 @@ import { ImportListViewHeaderDefinition } from '../../../../shared/components/im
 import { TopicImportService } from '../../../topics/services/topic-import.service';
 import { topicHeadersAndVerboseNames } from '../../topics.constants';
 
+const TEXT_IMPORT_TAB_INDEX = 0;
+
 /**
  * Component for the agenda import list view.
  */
@@ -32,6 +34,12 @@ export class TopicImportListComponent extends BaseImportListComponent<Topic> {
         isTableColumn: true,
         isRequired: header === `title`
     }));
+
+    public get isTextImportSelected(): boolean {
+        return this.selectedTabIndex === TEXT_IMPORT_TAB_INDEX;
+    }
+
+    public selectedTabIndex = 0;
 
     /**
      * Constructor for list view bases
