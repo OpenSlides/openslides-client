@@ -37,7 +37,7 @@ export abstract class BasePollVoteComponent<C extends BaseViewModel = any> exten
     public PollPropertyVerbose = PollPropertyVerbose;
 
     public get isUserPresent(): boolean {
-        return this.user.isPresentInMeeting();
+        return this.user?.isPresentInMeeting();
     }
 
     public constructor(
@@ -83,11 +83,11 @@ export abstract class BasePollVoteComponent<C extends BaseViewModel = any> exten
     }
 
     public isDeliveringVote(user: ViewUser = this.user): boolean {
-        return this.deliveringVote[user.id] === true;
+        return this.deliveringVote[user?.id] === true;
     }
 
     public hasAlreadyVoted(user: ViewUser = this.user): boolean {
-        return this.alreadyVoted[user.id] === true;
+        return this.alreadyVoted[user?.id] === true;
     }
 
     public canVote(user: ViewUser = this.user): boolean {

@@ -18,6 +18,7 @@ export class Poll extends BaseDecimalModel<Poll> {
     public votesvalid: number;
     public votesinvalid: number;
     public votescast: number;
+    public vote_count: number;
     public onehundred_percent_base: PollPercentBase;
 
     /**
