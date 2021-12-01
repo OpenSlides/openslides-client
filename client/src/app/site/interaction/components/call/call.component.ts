@@ -40,7 +40,7 @@ export class CallComponent extends BaseComponent implements OnInit, AfterViewIni
     @Output()
     public conferenceSubtitle: EventEmitter<string> = new EventEmitter();
 
-    public isJitsiActiveInAnotherTab: Observable<boolean> = this.rtcService.inOtherTab;
+    public isJitsiActiveInAnotherTab: Observable<boolean> = this.callRestrictionService.isJitsiActiveInAnotherTab;
     public canEnterCall: Observable<boolean> = this.callRestrictionService.canEnterCallObservable;
     public isJitsiDialogOpen: Observable<boolean> = this.rtcService.showCallDialogObservable;
     public showParticles: Observable<boolean> = this.applauseService.showParticles;

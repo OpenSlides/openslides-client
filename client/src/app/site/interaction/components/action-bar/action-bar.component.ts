@@ -2,9 +2,12 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/
 import { Router } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
+import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { fadeInAnim, fadeInOutAnim } from 'app/shared/animations';
-import { BaseComponent } from 'app/site/base/components/base.component';
+import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
+import { CURRENT_LIST_OF_SPEAKERS_FOLLOW } from 'app/site/projector/services/current-list-of-speakers.service';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -13,8 +16,6 @@ import { CallRestrictionService } from '../../services/call-restriction.service'
 import { InteractionService } from '../../services/interaction.service';
 import { RtcService } from '../../services/rtc.service';
 
-const canEnterTooltip = _(`Enter conference room`);
-const cannotEnterTooltip = _(`Add yourself to the current list of speakers to join the conference`);
 @Component({
     selector: `os-action-bar`,
     templateUrl: `./action-bar.component.html`,
@@ -22,7 +23,10 @@ const cannotEnterTooltip = _(`Add yourself to the current list of speakers to jo
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: [fadeInAnim, fadeInOutAnim]
 })
-export class ActionBarComponent extends BaseComponent {
+export class ActionBarComponent extends BaseModelContextComponent {
+    public canEnterTooltip = _(`Enter conference room`);
+    public cannotEnterTooltip = _(`Add yourself to the current list of speakers to join the conference`);
+
     public showApplause: Observable<boolean> = this.applauseService.showApplauseObservable;
 
     public showApplauseLevel = this.applauseService.showApplauseLevelObservable;
@@ -33,8 +37,7 @@ export class ActionBarComponent extends BaseComponent {
     public showCallDialog: Observable<boolean> = this.rtcService.showCallDialogObservable;
     public showLiveConf: Observable<boolean> = this.interactionService.showLiveConfObservable;
 
-    private canEnterCallObservable: Observable<boolean> = this.callRestrictionService.canEnterCallObservable;
-    public canEnterCall = false;
+    private canEnterCall: Observable<boolean> = this.callRestrictionService.canEnterCallObservable;
 
     /**
      * for the pulse animation
@@ -54,14 +57,6 @@ export class ActionBarComponent extends BaseComponent {
         return this.interactionService.isConfStateNone;
     }
 
-    public get enterRoomTooltip(): string {
-        if (this.canEnterCall) {
-            return _(canEnterTooltip);
-        } else {
-            return _(cannotEnterTooltip);
-        }
-    }
-
     public get showHelpDesk(): Observable<boolean> {
         return combineLatest([this.rtcService.isSupportEnabled, this.isJoined]).pipe(
             map(([isSupportEnabled, isJoined]) => isSupportEnabled && !isJoined)
@@ -71,32 +66,28 @@ export class ActionBarComponent extends BaseComponent {
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService,
-        private router: Router,
         private callRestrictionService: CallRestrictionService,
         private interactionService: InteractionService,
         private rtcService: RtcService,
-        private applauseService: ApplauseService,
-        private cd: ChangeDetectorRef
+        private applauseService: ApplauseService
     ) {
         super(componentServiceCollector, translate);
-        this.subscriptions.push(
-            this.canEnterCallObservable.subscribe(canEnter => {
-                this.canEnterCall = canEnter;
-                this.cd.markForCheck();
-            })
-        );
     }
 
-    public async enterConferenceRoom(canEnter: boolean): Promise<void> {
-        if (canEnter) {
-            this.interactionService
-                .enterCall()
-                .then(() => this.rtcService.enterConferenceRoom())
-                .catch(this.raiseError);
-        } else {
-            const navUrl = `/autopilot`;
-            this.router.navigate([navUrl]);
-        }
+    public getModelRequest(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [this.activeMeetingId],
+            follow: [CURRENT_LIST_OF_SPEAKERS_FOLLOW],
+            fieldset: ``
+        };
+    }
+
+    public async enterConferenceRoom(): Promise<void> {
+        this.interactionService
+            .enterCall()
+            .then(() => this.rtcService.enterConferenceRoom())
+            .catch(this.raiseError);
     }
 
     public enterSupportRoom(): void {

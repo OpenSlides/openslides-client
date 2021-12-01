@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { NgParticlesModule } from 'ng-particles';
 
 import { SharedModule } from '../../shared/shared.module';
@@ -21,7 +22,7 @@ import { StreamComponent } from './components/stream/stream.component';
         CallComponent,
         CallDialogComponent
     ],
-    imports: [CommonModule, SharedModule, NgParticlesModule],
+    imports: [CommonModule, SharedModule, NgParticlesModule, RouterModule],
     exports: [ActionBarComponent, InteractionContainerComponent]
 })
 export class InteractionModule {}
