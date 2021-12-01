@@ -310,12 +310,8 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     }
 
     public getProjectionBuildDescriptor(meetingSettingsService: MeetingSettingsService): ProjectionBuildDescriptor {
-        const slideOptions = [];
-        if (
-            (this.change_recommendations && this.change_recommendations.length) ||
-            (this.amendments && this.amendments.length)
-        ) {
-            slideOptions.push({
+        const slideOptions = [
+            {
                 key: `mode`,
                 displayName: _(`Which version?`),
                 default: meetingSettingsService.instant(`motions_recommendation_text_mode`),
@@ -325,8 +321,8 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
                     { value: `diff`, displayName: `Diff version` },
                     { value: `agreed`, displayName: `Final version` }
                 ]
-            });
-        }
+            }
+        ];
 
         return {
             content_object_id: this.fqid,

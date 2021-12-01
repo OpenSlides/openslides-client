@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
@@ -24,7 +23,7 @@ export class PollProgressComponent extends BaseModelContextComponent implements 
     public max: number;
 
     public get votescast(): number {
-        return this.poll?.votescast || 0;
+        return this.poll?.vote_count || 0;
     }
 
     private get canSeeNames(): boolean {

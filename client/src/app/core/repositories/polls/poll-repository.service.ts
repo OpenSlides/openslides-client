@@ -60,7 +60,8 @@ export class PollRepositoryService extends BaseRepositoryWithActiveMeeting<ViewP
             `global_abstain`,
             `min_votes_amount`,
             `max_votes_amount`,
-            `entitled_users_at_stop`
+            `entitled_users_at_stop`,
+            `vote_count`
         );
         return {
             [DEFAULT_FIELDSET]: detailFieldset,

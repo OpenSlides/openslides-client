@@ -56,14 +56,14 @@ export class MotionPollVoteComponent extends BasePollVoteComponent implements On
     }
 
     public getActionButtonClass(voteOption: VoteOption, user: ViewUser = this.user): string {
-        if (this.voteRequestData[user.id]?.value === voteOption.vote) {
+        if (this.voteRequestData[user?.id]?.value === voteOption.vote) {
             return voteOption.css;
         }
         return ``;
     }
 
     public async saveVote(vote: VoteValue, optionId: Id, user: ViewUser = this.user): Promise<void> {
-        if (!this.voteRequestData[user.id]) {
+        if (!this.voteRequestData[user?.id]) {
             return;
         }
         this.voteRequestData[user.id].value = vote;

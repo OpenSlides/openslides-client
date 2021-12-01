@@ -74,8 +74,8 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
 
     public getActionButtonClass(actions: VoteOption, option: ViewOption, user: ViewUser = this.user): string {
         if (
-            this.voteRequestData[user.id]?.value[option.id] === actions.vote ||
-            this.voteRequestData[user.id]?.value[option.id] === 1
+            this.voteRequestData[user?.id]?.value[option.id] === actions.vote ||
+            this.voteRequestData[user?.id]?.value[option.id] === 1
         ) {
             return actions.css;
         }
@@ -122,7 +122,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
     }
 
     public getVotesCount(user: ViewUser = this.user): number {
-        if (this.voteRequestData[user.id]) {
+        if (this.voteRequestData[user?.id]) {
             return Object.keys(this.voteRequestData[user.id].value).filter(
                 key => this.voteRequestData[user.id].value[key]
             ).length;
