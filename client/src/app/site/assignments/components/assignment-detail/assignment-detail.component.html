@@ -1,5 +1,5 @@
 <os-head-bar
-    [hasMainButton]="hasPerms('manage')"
+    [hasMainButton]="hasPerms('manage') && assignment"
     mainButtonIcon="edit"
     [nav]="false"
     [editMode]="editAssignment"
@@ -9,27 +9,27 @@
 >
     <!-- Title -->
     <div class="title-slot">
-        <h2 *ngIf="!newAssignment">{{ 'Election' | translate }}</h2>
+        <h2 *ngIf="assignment && !newAssignment">{{ 'Election' | translate }}</h2>
         <h2 *ngIf="newAssignment">{{ 'New election' | translate }}</h2>
     </div>
 
     <!-- Menu -->
     <div class="menu-slot">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="assignmentDetailMenu">
+        <button type="button" mat-icon-button [matMenuTriggerFor]="assignmentDetailMenu" *ngIf="assignment">
             <mat-icon>more_vert</mat-icon>
         </button>
     </div>
 
     <mat-menu #assignmentDetailMenu="matMenu">
-        <div *ngIf="assignment">
-            <!-- PDF -->
-            <button mat-menu-item (click)="onDownloadPdf()">
-                <mat-icon>picture_as_pdf</mat-icon>
-                <span>{{ 'PDF' | translate }}</span>
-            </button>
-            <!-- List of speakers -->
-            <os-speaker-button [object]="assignment" [menuItem]="true"></os-speaker-button>
-        </div>
+        <!-- PDF -->
+        <button mat-menu-item (click)="onDownloadPdf()">
+            <mat-icon>picture_as_pdf</mat-icon>
+            <span>{{ 'PDF' | translate }}</span>
+        </button>
+
+        <!-- List of speakers -->
+        <os-speaker-button [object]="assignment" [menuItem]="true"></os-speaker-button>
+
         <!-- Project -->
         <os-projector-button [object]="assignment" [menuItem]="true"></os-projector-button>
 
@@ -46,7 +46,7 @@
         </div>
 
         <!-- Delete -->
-        <div *ngIf="assignment && hasPerms('manage')">
+        <div *ngIf="hasPerms('manage')">
             <!-- Delete -->
             <mat-divider></mat-divider>
             <button mat-menu-item class="red-warning-text" (click)="onDeleteAssignmentButton()">
@@ -299,3 +299,7 @@
         </form>
     </mat-card>
 </ng-template>
+
+<os-not-found *ngIf="!assignment">
+    {{ 'The assignment you requested is not accesible' | translate }}
+</os-not-found>

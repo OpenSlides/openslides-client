@@ -1,5 +1,5 @@
 <os-head-bar
-    [hasMainButton]="isAllowed('edit')"
+    [hasMainButton]="isAllowed('edit') && topic"
     mainButtonIcon="edit"
     [nav]="false"
     [goBack]="true"
@@ -13,13 +13,13 @@
         <h2>
             <span *ngIf="newTopic">{{ 'New topic' | translate }}</span>
             <span *ngIf="editTopic && !newTopic">{{ 'Edit topic' | translate }}</span>
-            <span *ngIf="!newTopic && !editTopic">{{ 'Topic' | translate }}</span>
+            <span *ngIf="!newTopic && !editTopic && topic">{{ 'Topic' | translate }}</span>
         </h2>
     </div>
 
     <!-- Menu -->
     <div class="menu-slot" *osPerms="[permission.agendaItemCanManage, permission.listOfSpeakersCanSee]">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="topicExtraMenu">
+        <button type="button" mat-icon-button [matMenuTriggerFor]="topicExtraMenu" *ngIf="topic">
             <mat-icon>more_vert</mat-icon>
         </button>
     </div>
@@ -113,3 +113,7 @@
         </button>
     </div>
 </mat-menu>
+
+<os-not-found *ngIf="!topic">
+    {{ 'The topic you requested is not accesible' | translate }}
+</os-not-found>

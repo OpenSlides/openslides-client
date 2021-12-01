@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router, RouterEvent, RoutesRecognized } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { distinctUntilChanged, filter } from 'rxjs/operators';
 
 import { DataStoreService } from './data-store.service';
 
@@ -24,7 +24,10 @@ export class ActiveMeetingIdService {
 
     public constructor(private router: Router, private DS: DataStoreService) {
         this.router.events
-            .pipe(filter((event: RouterEvent): boolean => event instanceof RoutesRecognized))
+            .pipe(
+                filter((event: RouterEvent): boolean => event instanceof RoutesRecognized),
+                distinctUntilChanged()
+            )
             .subscribe((event: RoutesRecognized) => {
                 const parts = event.url.split(`/`);
                 let meetingId = null;
@@ -43,5 +46,12 @@ export class ActiveMeetingIdService {
         }
         this.DS.clearMeetingModels();
         this.meetingIdSubject.next(newMeetingId);
+
+        /**
+         * If the user types in an illegal meeting id, naviagte to /
+         */
+        if (!newMeetingId) {
+            this.router.navigate([`/`]);
+        }
     }
 }

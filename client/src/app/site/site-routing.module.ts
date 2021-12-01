@@ -52,9 +52,8 @@ const routes: Route[] = [
             },
             {
                 path: `users`,
-                loadChildren: () => import(`./users/users.module`).then(m => m.UsersModule)
-                // No baseperm, because change own password is ok, even if the
-                // user does not have users.can_see_name
+                loadChildren: () => import(`./users/users.module`).then(m => m.UsersModule),
+                data: { basePerm: Permission.userCanSee }
             },
             {
                 path: `tags`,

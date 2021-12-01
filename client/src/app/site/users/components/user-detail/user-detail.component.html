@@ -1,5 +1,5 @@
 <os-head-bar
-    [hasMainButton]="isAllowed('changePersonal')"
+    [hasMainButton]="isAllowed('changePersonal') && user"
     mainButtonIcon="edit"
     [nav]="false"
     [goBack]="!isAllowed('seeOtherUsers')"
@@ -21,7 +21,7 @@
         <button
             type="button"
             mat-icon-button
-            *ngIf="isAllowed('changePersonal') && isAllowed('changePassword')"
+            *ngIf="isAllowed('changePersonal') && isAllowed('changePassword') && user"
             [matMenuTriggerFor]="userExtraMenu"
         >
             <mat-icon>more_vert</mat-icon>
@@ -67,6 +67,7 @@
     (validEvent)="isFormValid = $event"
     (errorEvent)="formErrors = $event"
     (submitEvent)="saveUser()"
+    *ngIf="user"
 >
     <ng-template #editView let-form="form">
         <div [formGroup]="form">
@@ -254,3 +255,7 @@
         </mat-icon>
     </ng-template>
 </os-user-detail-view>
+
+<os-not-found *ngIf="!user">
+    {{ 'The user you requested is not accesible' | translate }}
+</os-not-found>
