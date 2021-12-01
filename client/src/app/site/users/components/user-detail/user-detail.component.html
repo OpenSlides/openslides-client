@@ -3,10 +3,10 @@
     mainButtonIcon="edit"
     [nav]="false"
     [goBack]="!isAllowed('seeOtherUsers')"
-    [editMode]="editUser"
+    [editMode]="isEditingSubject.value"
     [isSaveButtonEnabled]="isFormValid"
     [saveAction]="getSaveAction()"
-    (mainEvent)="setEditMode(!editUser)"
+    (mainEvent)="setEditMode(!isEditingSubject.value)"
 >
     <!-- Title -->
     <div class="title-slot">
@@ -57,12 +57,12 @@
 <os-user-detail-view
     [user]="user"
     [isNewUser]="newUser"
-    [isEditing]="editUser"
+    [isEditing]="isEditingSubject | async"
     [additionalFormControls]="additionalFormControls"
-    [additionalAllowedPersonalForms]="['about_me']"
     [isAllowedFn]="isAllowedFn"
     [generatePasswordFn]="randomPasswordFn"
     [patchFormValueFn]="patchFormValueFn"
+    [shouldEnableFormControlFn]="shouldEnableFormControlFn"
     (changeEvent)="personalInfoFormValue = $event"
     (validEvent)="isFormValid = $event"
     (errorEvent)="formErrors = $event"
@@ -177,7 +177,7 @@
         </span>
     </ng-template>
 
-    <ng-template #showView let-user="user">
+    <ng-template #showView>
         <div *ngIf="isAllowed('seePersonal') && user.isLastEmailSend">
             <div>
                 <h4>{{ 'Last email sent' | translate }}</h4>
@@ -248,7 +248,7 @@
         </div>
     </ng-template>
 
-    <ng-template #moreIcons let-user="user">
+    <ng-template #moreIcons>
         <mat-icon *ngIf="user.isPresentInMeeting() && isAllowed('seeName')" matTooltip="{{ 'Is present' | translate }}">
             check_box
         </mat-icon>

@@ -464,18 +464,19 @@ export class OperatorService {
     public hasCommitteePermissions(committeeId: Id | undefined, ...permissionsToCheck: CML[]): boolean {
         // If a user can manage an entire organization, they can also manage every committee.
         // Regardless, if they have no CML.
-        if (this.isSuperAdmin || this.isOrgaManager) {
+        if (this.isOrgaManager) {
             return true;
-        }
-        if (!this.CML) {
-            return false;
         }
         return this.hasCommitteePermissionsNonAdminCheck(committeeId, ...permissionsToCheck);
     }
 
     public hasCommitteePermissionsNonAdminCheck(committeeId: Id | undefined, ...permissionsToCheck: CML[]): boolean {
+        // A superadmin can still do everything
+        if (this.isSuperAdmin) {
+            return true;
+        }
         // A user can have a CML for any committee but they could be not present in some of them.
-        if (!this.currentCommitteeIds.includes(committeeId)) {
+        if (!this.CML || !this.currentCommitteeIds.includes(committeeId)) {
             return false;
         }
         const currentCommitteePermission = cmlNameMapping[(this.CML || {})[committeeId]] || 0;

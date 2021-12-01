@@ -77,14 +77,6 @@ export class UserDetailViewComponent extends BaseComponent {
     }
 
     @Input()
-    public set additionalAllowedPersonalForms(formNames: string[]) {
-        if (formNames) {
-            this._additionalAllowedPersonalForms = formNames;
-            this.prepareForm();
-        }
-    }
-
-    @Input()
     public set additionalValidators(validators: ValidatorFn | ValidatorFn[]) {
         if (!Array.isArray(validators)) {
             validators = [validators];
@@ -101,6 +93,9 @@ export class UserDetailViewComponent extends BaseComponent {
 
     @Input()
     public generatePasswordFn: () => string;
+
+    @Input()
+    public shouldEnableFormControlFn: (controlName: string) => boolean = () => true;
 
     @Output()
     public changeEvent = new EventEmitter();
@@ -133,7 +128,6 @@ export class UserDetailViewComponent extends BaseComponent {
     private _user: ViewUser;
     private _additionalValidators: ValidatorFn[] = [];
     private _additionalFormControls: any = {};
-    private _additionalAllowedPersonalForms: string[] = [];
     private _formValueChangeSubscription: Subscription | null = null;
 
     public constructor(
@@ -231,13 +225,11 @@ export class UserDetailViewComponent extends BaseComponent {
         });
 
         // Disable not permitted controls
-        if (!this.isAllowed(`manage`)) {
-            formControlNames.forEach(formControlName => {
-                if (![`username`, `email`, ...this._additionalAllowedPersonalForms].includes(formControlName)) {
-                    this.personalInfoForm.get(formControlName).disable();
-                }
-            });
-        }
+        formControlNames.forEach(formControlName => {
+            if (!this.shouldEnableFormControlFn(formControlName)) {
+                this.personalInfoForm.get(formControlName).disable();
+            }
+        });
     }
 
     /**

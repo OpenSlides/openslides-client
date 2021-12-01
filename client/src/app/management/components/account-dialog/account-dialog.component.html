@@ -44,19 +44,20 @@
 <ng-template #showProfileView>
     <div class="flex-container">
         <h2 class="left-align">{{ 'My profile' | translate }}</h2>
-        <button mat-icon-button (click)="editSelf = !editSelf">
-            <mat-icon>{{ editSelf ? 'close' : 'edit' }}</mat-icon>
+        <button mat-icon-button (click)="isEditing = !isEditing">
+            <mat-icon>{{ isEditing ? 'close' : 'edit' }}</mat-icon>
         </button>
     </div>
     <os-user-detail-view
         [user]="self"
-        [isEditing]="editSelf"
-        [isAllowedFn]="getIsAllowedFn()"
+        [isEditing]="isEditing"
+        [isAllowedFn]="isAllowedFn"
+        [shouldEnableFormControlFn]="shouldEnableFormControlFn"
         [useMatcard]="false"
         (validEvent)="isUserFormValid = $event"
         (changeEvent)="userPersonalForm = $event"
     ></os-user-detail-view>
-    <div *ngIf="editSelf" class="margin-top-16">
+    <div *ngIf="isEditing" class="margin-top-16">
         <button mat-button [disabled]="!isUserFormValid" (click)="saveUserChanges()">
             {{ 'Save' | translate }}
         </button>

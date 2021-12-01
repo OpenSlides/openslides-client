@@ -4,12 +4,23 @@ import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id
 import { OperatorService } from '../core-services/operator.service';
 import { OML } from '../core-services/organization-permission';
 import { Permission } from '../core-services/permission';
+import { Presenter, PresenterService } from '../core-services/presenter.service';
+import { Id } from '../definitions/key-types';
+
+/**
+ * Form control names that are editable for all users even if they have no permissions to manage users.
+ */
+export const PERSONAL_FORM_CONTROLS = [`username`, `email`, `about_me`];
 
 @Injectable({
     providedIn: `root`
 })
 export class UserService {
-    public constructor(private operator: OperatorService, private activeMeetingId: ActiveMeetingIdService) {}
+    public constructor(
+        private operator: OperatorService,
+        private activeMeetingId: ActiveMeetingIdService,
+        private presenter: PresenterService
+    ) {}
 
     /**
      * Should determine if the user (Operator) has the
@@ -56,6 +67,15 @@ export class UserService {
                 );
             default:
                 return false;
+        }
+    }
+
+    public async isUserInScope(...userIds: Id[]): Promise<boolean> {
+        try {
+            await this.presenter.call(Presenter.GET_USER_RELATED_MODELS, { user_ids: userIds });
+            return true;
+        } catch (e) {
+            return false;
         }
     }
 }

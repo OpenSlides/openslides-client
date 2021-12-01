@@ -37,3 +37,16 @@
         line-height: $size;
     }
 }
+
+.align-right {
+    margin-left: auto;
+}
+
+.align-left {
+    margin-right: auto;
+}
+
+.align-center {
+    margin-top: auto;
+    margin-bottom: auto;
+}

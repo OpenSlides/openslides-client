@@ -4,7 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
-import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
@@ -13,7 +12,6 @@ import { UserRepositoryService, UserStateField } from 'app/core/repositories/use
 import { ChoiceService } from 'app/core/ui-services/choice.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { CsvExportService } from 'app/core/ui-services/csv-export.service';
-import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { genders } from 'app/shared/models/users/user';
@@ -23,6 +21,7 @@ import { PollService } from 'app/site/polls/services/poll.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { UserService } from '../../../../core/ui-services/user.service';
 import { ViewGroup } from '../../models/view-group';
 import { ViewUser } from '../../models/view-user';
 import { UserFilterListService } from '../../services/user-filter-list.service';
@@ -140,6 +139,10 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         return votes ?? 0;
     }
 
+    public get isUserInScope(): boolean {
+        return this._isUserInScope;
+    }
+
     /**
      * Define the columns to show
      */
@@ -167,7 +170,8 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
      */
     public filterProps = [`full_name`, `groups`, `structure_level`, `number`, `delegationName`];
 
-    private allowSelfSetPresent: boolean;
+    private _allowSelfSetPresent: boolean;
+    private _isUserInScope = true;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -182,7 +186,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         private promptService: PromptService,
         public filterService: UserFilterListService,
         public sortService: UserSortListService,
-        private meetingSettingsService: MeetingSettingsService,
+        private userService: UserService,
         private userPdf: UserPdfExportService,
         private dialog: MatDialog,
         private pollService: PollService
@@ -191,15 +195,15 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
 
         // enable multiSelect for this listView
         this.canMultiSelect = true;
-        this.meetingSettingsService
+        this.meetingSettingService
             .get(`users_enable_presence_view`)
             .subscribe(state => (this._presenceViewConfigured = state));
-        this.meetingSettingsService
+        this.meetingSettingService
             .get(`users_enable_vote_weight`)
             .subscribe(enabled => (this.voteWeightEnabled = enabled));
-        this.meetingSettingsService
+        this.meetingSettingService
             .get(`users_allow_self_set_present`)
-            .subscribe(allowed => (this.allowSelfSetPresent = allowed));
+            .subscribe(allowed => (this._allowSelfSetPresent = allowed));
     }
 
     /**
@@ -265,7 +269,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
     public isPresentToggleDisabled(user: ViewUser): boolean {
         if (this.isMultiSelect) {
             return true;
-        } else if (this.allowSelfSetPresent && this.operator.operatorId === user.id) {
+        } else if (this._allowSelfSetPresent && this.operator.operatorId === user.id) {
             return false;
         } else {
             return !this.operator.hasPerms(Permission.userCanManage);
@@ -279,10 +283,11 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
      *
      * @param user is an instance of ViewUser. This is the given user, who will be modified.
      */
-    public openEditInfo(user: ViewUser, ev: MouseEvent): void {
+    public async openEditInfo(user: ViewUser, ev: MouseEvent): Promise<void> {
         if (this.isMultiSelect || !this.operator.hasPerms(Permission.userCanManage)) {
             return;
         }
+        this._isUserInScope = await this.userService.isUserInScope(user.id);
         ev.stopPropagation();
         this.infoDialog = {
             name: user.username,
@@ -431,7 +436,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
     public setPresent(viewUser: ViewUser): void {
         const isAllowed =
             this.operator.hasPerms(Permission.userCanManage) ||
-            (this.allowSelfSetPresent && this.operator.operatorId === viewUser.id);
+            (this._allowSelfSetPresent && this.operator.operatorId === viewUser.id);
         if (isAllowed) {
             this.repo.setPresent(!this.isUserPresent(viewUser), viewUser);
         }

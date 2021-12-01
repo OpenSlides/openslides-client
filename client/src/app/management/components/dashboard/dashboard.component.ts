@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { OperatorService } from 'app/core/core-services/operator.service';
 import { ORGANIZATION_ID } from 'app/core/core-services/organization.service';
 import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
 import { OrganizationRepositoryService } from 'app/core/repositories/management/organization-repository.service';
@@ -9,9 +8,9 @@ import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { ViewOrganization } from 'app/management/models/view-organization';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
-import { ViewUser } from 'app/site/users/models/view-user';
 import { Observable } from 'rxjs';
 
+import { SimplifiedModelRequest } from '../../../core/core-services/model-request-builder.service';
 import { ThemeService } from '../../../core/ui-services/theme.service';
 
 @Component({
@@ -58,7 +57,6 @@ export class DashboardComponent extends BaseModelContextComponent implements OnI
         protected translate: TranslateService,
         private organizationRepo: OrganizationRepositoryService,
         private meetingRepo: MeetingRepositoryService,
-        private operator: OperatorService,
         private vp: ViewportService,
         private themeService: ThemeService
     ) {
@@ -68,6 +66,7 @@ export class DashboardComponent extends BaseModelContextComponent implements OnI
     }
 
     public ngOnInit(): void {
+        super.ngOnInit();
         this.subscriptions.push(
             this.organizationRepo.getViewModelObservable(ORGANIZATION_ID).subscribe(organization => {
                 this.organization = organization;
@@ -88,35 +87,6 @@ export class DashboardComponent extends BaseModelContextComponent implements OnI
     }
 
     private loadMeetings(): void {
-        this.requestModels(
-            {
-                viewModelCtor: ViewOrganization,
-                ids: [1],
-                follow: [
-                    {
-                        idField: `committee_ids`,
-                        follow: [{ idField: `meeting_ids`, fieldset: `dashboard` }]
-                    }
-                ],
-                fieldset: []
-            },
-            `loadAllMeetings`
-        );
-
-        this.requestModels(
-            {
-                viewModelCtor: ViewUser,
-                ids: [this.operator.operatorId],
-                follow: [
-                    {
-                        idField: `is_present_in_meeting_ids`
-                    }
-                ],
-                fieldset: `orgaList`
-            },
-            `loadOperatorMeetings`
-        );
-
         this.subscriptions.push(
             this.meetingRepo.getViewModelListObservable().subscribe(meetings => {
                 const currentDate = new Date();
@@ -133,5 +103,20 @@ export class DashboardComponent extends BaseModelContextComponent implements OnI
                 );
             })
         );
+    }
+
+    protected getModelRequest(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewOrganization,
+            ids: [ORGANIZATION_ID],
+            follow: [
+                { idField: `active_meeting_ids`, fieldset: `dashboard`, follow: [`user_ids`] },
+                {
+                    idField: `committee_ids`,
+                    follow: [{ idField: `meeting_ids`, fieldset: `dashboard`, follow: [`user_ids`] }]
+                }
+            ],
+            fieldset: []
+        };
     }
 }

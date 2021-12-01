@@ -187,6 +187,9 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormFieldCont
     }
 
     public addOrRemoveId(id: Id): void {
+        if (!Array.isArray(this.selectedIds)) {
+            this.selectedIds = [];
+        }
         const index = this.selectedIds.indexOf(id);
         const value = this._selectableItemsIdMap[id];
         let selected = false;

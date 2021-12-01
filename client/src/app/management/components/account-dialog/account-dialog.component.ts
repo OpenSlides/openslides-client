@@ -14,7 +14,7 @@ import { ViewGroup } from 'app/site/users/models/view-group';
 import { ViewUser } from 'app/site/users/models/view-user';
 
 import { MeetingRepositoryService } from '../../../core/repositories/management/meeting-repository.service';
-import { UserService } from '../../../core/ui-services/user.service';
+import { PERSONAL_FORM_CONTROLS, UserService } from '../../../core/ui-services/user.service';
 
 interface MenuItem {
     name: string;
@@ -55,13 +55,40 @@ export class AccountDialogComponent extends BaseModelContextComponent implements
 
     public activeMenuItem = this.menuItems[0].name;
 
-    public editSelf = false;
+    public get isAllowedFn(): (permission: string) => boolean {
+        return permission => this.userService.isAllowed(permission, true);
+    }
+
+    public get shouldEnableFormControlFn(): (controlName: string) => boolean {
+        return controlName => {
+            const canManageUsers = this.userService.isAllowed(`manage`, true);
+            if (canManageUsers && this._isUserInScope) {
+                return true;
+            } else {
+                return PERSONAL_FORM_CONTROLS.includes(controlName);
+            }
+        };
+    }
+
+    public set isEditing(is: boolean) {
+        this._isEditing = is;
+        if (is) {
+            this.updateIsUserInScope();
+        }
+    }
+
+    public get isEditing(): boolean {
+        return this._isEditing;
+    }
+
     public isUserFormValid = false;
     public isUserPasswordValid = false;
     public userPersonalForm: any;
     public userPasswordForm: PasswordForm;
 
     private _self: ViewUser;
+    private _isUserInScope: boolean;
+    private _isEditing = false;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -78,7 +105,8 @@ export class AccountDialogComponent extends BaseModelContextComponent implements
     public ngOnInit(): void {
         super.ngOnInit();
         this.subscriptions.push(
-            this.userRepo.getViewModelObservable(this.operator.operatorId).subscribe(user => (this._self = user))
+            this.userRepo.getViewModelObservable(this.operator.operatorId).subscribe(user => (this._self = user)),
+            this.operator.operatorUpdatedEvent.subscribe(() => this.updateIsUserInScope())
         );
     }
 
@@ -110,17 +138,13 @@ export class AccountDialogComponent extends BaseModelContextComponent implements
     }
 
     public async saveUserChanges(): Promise<void> {
-        if (this.operator.hasPerms(Permission.userCanManage)) {
+        if (this.operator.hasPerms(Permission.userCanManage) && this._isUserInScope) {
             await this.userRepo.update(this.userPersonalForm, this.self);
         } else {
             await this.userRepo.updateSelf(this.userPersonalForm, this.self);
         }
         this.isUserFormValid = false;
-        this.editSelf = false;
-    }
-
-    public getIsAllowedFn(): (permission: string) => boolean {
-        return permission => this.userService.isAllowed(permission, true);
+        this.isEditing = false;
     }
 
     protected getModelRequest(): SimplifiedModelRequest | null {
@@ -130,5 +154,9 @@ export class AccountDialogComponent extends BaseModelContextComponent implements
             fieldset: `orgaEdit`,
             follow: [{ idField: `group_$_ids`, fieldset: `title`, follow: [{ idField: `meeting_id` }] }]
         };
+    }
+
+    private async updateIsUserInScope(): Promise<void> {
+        this._isUserInScope = await this.userService.isUserInScope(this.operator.operatorId);
     }
 }
