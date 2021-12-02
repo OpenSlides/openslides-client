@@ -44,28 +44,35 @@ export class CallRestrictionService {
             this.isAccessRestricted,
             this.userClosPosition,
             this.amountNextSpeakerAutoConnect,
-            this.isJitsiActiveInAnotherTab,
-            operator.userObservable
+            operator.userObservable,
+            this.isJitsiActiveInAnotherTab
         ])
             .pipe(
                 distinctUntilChanged(
                     (
-                        [prevRestriction, prevClosPos, prevNextSpeakerAuto],
-                        [currRestiction, currClosPos, currNextSpeakerAuto]
+                        [prevRestriction, prevClosPos, prevNextSpeakerAuto, prevUser],
+                        [currRestiction, currClosPos, currNextSpeakerAuto, currUser]
                     ) => {
                         return (
                             prevRestriction === currRestiction &&
                             prevClosPos === currClosPos &&
-                            prevNextSpeakerAuto === currNextSpeakerAuto
+                            prevNextSpeakerAuto === currNextSpeakerAuto &&
+                            JSON.stringify(prevUser.user) === JSON.stringify(currUser.user)
                         );
                     }
                 )
             )
-            .subscribe(([restricted, userClosPos, autoConnectorsAmount, openInotherTab]) => {
-                const canManageSpeaker = this.operator.hasPerms(Permission.listOfSpeakersCanManage);
+            .subscribe(([restricted, userClosPos, autoConnectorsAmount, currentViewUser, openInotherTab]) => {
+                /**
+                 * "unmoderated" users come, stay and leave the call as they please
+                 * This applies to LOS-Manager and every non natural person
+                 */
+                const isUnmoderated: boolean =
+                    this.operator.hasPerms(Permission.listOfSpeakersCanManage) ||
+                    currentViewUser.user.is_physical_person === false;
                 const isOnClos = userClosPos !== UserListIndexType.NotOnList;
 
-                this.canEnterCallSubject.next(!restricted || canManageSpeaker || isOnClos);
+                this.canEnterCallSubject.next(!restricted || isUnmoderated || isOnClos);
 
                 if (!openInotherTab && isOnClos) {
                     if (
@@ -76,7 +83,7 @@ export class CallRestrictionService {
                     ) {
                         this.hasToEnterCallSubject.next();
                     }
-                } else if (!isOnClos && restricted && !canManageSpeaker) {
+                } else if (!isOnClos && restricted && !isUnmoderated) {
                     this.hasToLeaveCallSubject.next();
                 }
             });

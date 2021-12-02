@@ -31,7 +31,8 @@ const OPERATOR_FIELDS: (keyof User)[] = [
     `committee_ids`,
     `can_change_own_password`,
     `is_present_in_meeting_ids`,
-    `default_structure_level`
+    `default_structure_level`,
+    `is_physical_person`
 ];
 
 function getUserCML(user: ViewUser): { [id: number]: string } | null {
