@@ -39,11 +39,13 @@ export type UserStateField = 'is_active' | 'is_present_in_meetings' | 'is_physic
  */
 type StringNamingSchema = 'lastCommaFirst' | 'firstSpaceLast';
 
-export interface ShortNameInformation {
-    title?: string;
+interface NameInformation {
     username: string;
     first_name?: string;
     last_name?: string;
+}
+interface ShortNameInformation extends NameInformation {
+    title?: string;
 }
 
 interface EmailSentResult {
@@ -247,27 +249,25 @@ export class UserRepositoryService
     }
 
     /**
+     * getter for the name
+     */
+    public getName(user: NameInformation): string {
+        const firstName = user.first_name?.trim() || ``;
+        const lastName = user.last_name?.trim() || ``;
+        const userName = user.username?.trim() || ``;
+        const name = firstName || lastName ? `${firstName} ${lastName}` : userName;
+        return name?.trim() || ``;
+    }
+
+    /**
      * Getter for the short name (Title, given name, surname)
      *
      * @returns a non-empty string
      */
     public getShortName(user: ShortNameInformation): string {
-        const title = user.title ? user.title.trim() : ``;
-        const firstName = user.first_name ? user.first_name.trim() : ``;
-        const lastName = user.last_name ? user.last_name.trim() : ``;
-
-        let shortName = ``;
-        if (firstName || lastName) {
-            shortName = `${firstName} ${lastName}`;
-        } else {
-            shortName = user.username;
-        }
-
-        if (title) {
-            shortName = `${title} ${shortName}`;
-        }
-
-        return shortName?.trim(); // Prevent errors if username is not already loaded
+        const title = user.title?.trim() || ``;
+        const name = this.getName(user);
+        return `${title} ${name}`.trim();
     }
 
     public getFullName(user: FullNameInformation): string {
@@ -338,8 +338,9 @@ export class UserRepositoryService
      */
     protected createViewModel(model: User): ViewUser {
         const viewModel = super.createViewModel(model);
-        viewModel.getFullName = () => this.getFullName(viewModel);
+        viewModel.getName = () => this.getName(viewModel);
         viewModel.getShortName = () => this.getShortName(viewModel);
+        viewModel.getFullName = () => this.getFullName(viewModel);
         viewModel.getLevelAndNumber = () => this.getLevelAndNumber(viewModel);
         viewModel.getEnsuredActiveMeetingId = () => {
             const meetingId = this.activeMeetingIdService.meetingId;

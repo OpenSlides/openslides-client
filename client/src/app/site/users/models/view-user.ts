@@ -34,6 +34,14 @@ export class ViewUser extends BaseProjectableViewModel<User> implements Searchab
         return !!this.user.last_email_send;
     }
 
+    public get name(): string {
+        if (this.user && this.getName) {
+            return this.getName();
+        } else {
+            return ``;
+        }
+    }
+
     public get short_name(): string {
         if (this.user && this.getShortName) {
             return this.getShortName();
@@ -60,8 +68,9 @@ export class ViewUser extends BaseProjectableViewModel<User> implements Searchab
     }
 
     // Will be set by the repository
-    public getFullName: () => string;
+    public getName: () => string;
     public getShortName: () => string;
+    public getFullName: () => string;
     public getLevelAndNumber: () => string;
 
     // Will be injected by the repository.
