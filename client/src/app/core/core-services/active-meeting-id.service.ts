@@ -46,12 +46,5 @@ export class ActiveMeetingIdService {
         }
         this.DS.clearMeetingModels();
         this.meetingIdSubject.next(newMeetingId);
-
-        /**
-         * If the user types in an illegal meeting id, naviagte to /
-         */
-        if (!newMeetingId) {
-            this.router.navigate([`/`]);
-        }
     }
 }
