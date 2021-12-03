@@ -1,10 +1,8 @@
 import { ElementRef, Injectable } from '@angular/core';
 import { StorageMap } from '@ngx-pwa/local-storage';
 import { OperatorService } from 'app/core/core-services/operator.service';
-import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
 
 import { CallRestrictionService, RTC_LOGGED_STORAGE_KEY } from './call-restriction.service';
 import { UserMediaPermService } from './user-media-perm.service';
@@ -172,8 +170,7 @@ export class RtcService {
         callRestrictionService: CallRestrictionService,
         private userMediaPermService: UserMediaPermService,
         private storageMap: StorageMap,
-        private operator: OperatorService,
-        private userRepo: UserRepositoryService
+        private operator: OperatorService
     ) {
         this.isSupportEnabled = settingService.get(`conference_enable_helpdesk`);
         this.autoConnect = settingService.get(`conference_auto_connect`);
@@ -258,7 +255,7 @@ export class RtcService {
         }
         this.api = new JitsiMeetExternalAPI(this.jitsiConfig?.JITSI_DOMAIN, this.options);
         this.isJitsiActiveSubject.next(true);
-        const jitsiName = this.userRepo.getViewModel(this.operator.operatorId).getShortName();
+        const jitsiName = this.operator.user.getName();
         this.api.executeCommand(`displayName`, jitsiName);
         this.loadApiCallbacks();
     }

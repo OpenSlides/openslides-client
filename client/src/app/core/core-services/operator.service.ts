@@ -123,6 +123,13 @@ export class OperatorService {
         return this.operatorShortNameSubject.asObservable();
     }
 
+    public get user(): ViewUser {
+        if (!this.userSubject.value) {
+            throw new Error(`Operator has not fully loaded yet.`);
+        }
+        return this.userSubject.value;
+    }
+
     public get userObservable(): Observable<ViewUser | null> {
         return this.userSubject.asObservable();
     }
