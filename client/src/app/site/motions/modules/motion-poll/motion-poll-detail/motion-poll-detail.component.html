@@ -21,7 +21,7 @@
 
         <div>
             <!-- Voting type -->
-            <span *ngIf="poll.type !== 'analog'"> {{ poll.typeVerbose | translate }} &middot; </span>
+            <span *ngIf="poll.type !== 'analog'">{{ poll.typeVerbose | translate }} &middot;</span>
 
             <!-- State -->
             <span>
@@ -97,16 +97,7 @@
             </mat-tab>
         </mat-tab-group>
 
-        <div class="poll-content">
-            <small *ngIf="poll.entitled_groups && poll.type && poll.type !== 'analog'">
-                {{ 'Groups' | translate }}:
-
-                <span *ngFor="let group of poll.entitled_groups; let last = last">
-                    {{ group.getTitle() | translate }}<span *ngIf="!last">, </span>
-                </span>
-            </small>
-            <small>{{ '100% base' | translate }}: {{ poll.percentBaseVerbose | translate }}</small>
-        </div>
+        <os-motion-poll-meta-information [poll]="poll"></os-motion-poll-meta-information>
     </ng-container>
 </ng-template>
 

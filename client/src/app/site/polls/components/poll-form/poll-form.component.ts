@@ -4,9 +4,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
-import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { VotingPrivacyWarningComponent } from 'app/shared/components/voting-privacy-warning/voting-privacy-warning.component';
-import { PollType } from 'app/shared/models/poll/poll-constants';
+import { PollBackendDurationChoices, PollType } from 'app/shared/models/poll/poll-constants';
 import { PollMethod, PollPercentBase } from 'app/shared/models/poll/poll-constants';
 import { PollClassType, PollPropertyVerbose, PollTypeVerbose } from 'app/shared/models/poll/poll-constants';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
@@ -35,6 +34,7 @@ export class PollFormComponent extends BaseComponent implements OnInit {
 
     public PollType = PollType;
     public PollPropertyVerbose = PollPropertyVerbose;
+    public readonly pollBackendDurationChoices = PollBackendDurationChoices;
 
     /**
      * The different methods for this poll.
@@ -123,8 +123,7 @@ export class PollFormComponent extends BaseComponent implements OnInit {
         protected translate: TranslateService,
         private fb: FormBuilder,
         public groupRepo: GroupRepositoryService,
-        private dialog: MatDialog,
-        private meetingSettingsService: MeetingSettingsService
+        private dialog: MatDialog
     ) {
         super(componentServiceCollector, translate);
         this.initContentForm();
@@ -136,9 +135,8 @@ export class PollFormComponent extends BaseComponent implements OnInit {
      */
     public ngOnInit(): void {
         if (this.data) {
-            if (this.data.state) {
-                this.disablePollType();
-            }
+            this.checkPollState();
+            this.checkPollBackend();
 
             if (this.data.isAssignmentPoll) {
                 if (!!this.data.getContentObject() && !this.data.max_votes_amount) {
@@ -146,12 +144,12 @@ export class PollFormComponent extends BaseComponent implements OnInit {
                     this.data.max_votes_amount = assignment.open_posts;
                 }
                 if (!this.data.pollmethod) {
-                    this.data.pollmethod = this.meetingSettingsService.instant(`assignment_poll_default_method`);
+                    this.data.pollmethod = this.meetingSettingService.instant(`assignment_poll_default_method`);
                 }
             }
 
-            this.patchForm(this.contentForm);
-            this.updatePollForm(this.data);
+            this.patchFormValues(this.contentForm);
+            this.updateFormControls(this.data);
         }
 
         this.subscriptions.push(
@@ -160,7 +158,7 @@ export class PollFormComponent extends BaseComponent implements OnInit {
                 this.pollMethodControl.valueChanges.pipe(startWith(``)),
                 this.pollTypeControl.valueChanges.pipe(startWith(``))
             ]).subscribe(([contentFormCh]) => {
-                this.updatePollForm(contentFormCh);
+                this.updateFormControls(contentFormCh);
             })
         );
     }
@@ -170,7 +168,7 @@ export class PollFormComponent extends BaseComponent implements OnInit {
      *
      * @param update New data to pass into form-fields.
      */
-    private updatePollForm(update: Partial<ViewPoll>): void {
+    private updateFormControls(update: Partial<ViewPoll>): void {
         this.updatePollValues(update);
         this.updateGlobalVoteControls(update);
         this.updatePercentBases();
@@ -183,7 +181,7 @@ export class PollFormComponent extends BaseComponent implements OnInit {
      * form.votes_amount.min_votes_amount/max_votes_amount
      * @param formGroup
      */
-    private patchForm(formGroup: FormGroup): void {
+    private patchFormValues(formGroup: FormGroup): void {
         for (const key of Object.keys(formGroup.controls)) {
             const currentControl = formGroup.controls[key];
             if (currentControl instanceof FormControl) {
@@ -191,8 +189,21 @@ export class PollFormComponent extends BaseComponent implements OnInit {
                     currentControl.patchValue(this.data[key]);
                 }
             } else if (currentControl instanceof FormGroup) {
-                this.patchForm(currentControl);
+                this.patchFormValues(currentControl);
             }
+        }
+    }
+
+    private checkPollBackend(): void {
+        if (!this.data.backend) {
+            const pollType = this.data.content_object?.collection as PollClassType;
+            this.data.backend = this.meetingSettingService.instant(`${pollType}_poll_default_backend`);
+        }
+    }
+
+    private checkPollState(): void {
+        if (this.data.state) {
+            this.disablePollType();
         }
     }
 
@@ -342,9 +353,10 @@ export class PollFormComponent extends BaseComponent implements OnInit {
                     max_votes_amount: [1, [Validators.required, Validators.min(1)]],
                     min_votes_amount: [1, [Validators.required, Validators.min(1)]]
                 },
-                { validator: isNumberRange(`min_votes_amount`, `max_votes_amount`) }
+                { validators: isNumberRange(`min_votes_amount`, `max_votes_amount`) }
             ),
             entitled_group_ids: [],
+            backend: [],
             global_yes: [false],
             global_no: [false],
             global_abstain: [false]

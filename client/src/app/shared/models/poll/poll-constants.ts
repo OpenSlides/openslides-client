@@ -1,5 +1,15 @@
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
+export enum PollBackendDurationType {
+    LONG = `long`,
+    FAST = `fast`
+}
+
+export const PollBackendDurationChoices = {
+    [PollBackendDurationType.FAST]: _(`Short poll`),
+    [PollBackendDurationType.LONG]: _(`Long poll`)
+};
+
 export interface AssignmentAnalogVoteData {
     options: {
         [key: number]: {

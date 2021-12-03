@@ -1,0 +1,16 @@
+<div class="poll-content" *ngIf="poll">
+    <small *ngIf="poll.entitled_groups && poll.type && poll.type !== 'analog'">
+        {{ 'Groups' | translate }}:
+
+        <span *ngFor="let group of poll.entitled_groups; let last = last">
+            {{ group.getTitle() | translate }}
+            <span *ngIf="!last">,</span>
+        </span>
+    </small>
+    <small>{{ '100% base' | translate }}: {{ poll.percentBaseVerbose | translate }}</small>
+
+    <!-- Poll backend duration type -->
+    <small *ngIf="poll.backend">
+        {{ 'Poll duration' | translate }}: {{ POLL_BACKEND_DURATION_LABEL[poll.backend] | translate }}
+    </small>
+</div>

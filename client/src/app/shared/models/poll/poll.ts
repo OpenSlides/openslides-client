@@ -4,7 +4,14 @@ import { CalculablePollKey } from 'app/site/polls/services/poll.service';
 import { BaseDecimalModel } from '../base/base-decimal-model';
 import { HasMeetingId } from '../base/has-meeting-id';
 import { HasProjectionIds } from '../base/has-projectable-ids';
-import { EntitledUsersEntry, PollMethod, PollPercentBase, PollState, PollType } from './poll-constants';
+import {
+    EntitledUsersEntry,
+    PollBackendDurationType,
+    PollMethod,
+    PollPercentBase,
+    PollState,
+    PollType
+} from './poll-constants';
 
 export class Poll extends BaseDecimalModel<Poll> {
     public static readonly COLLECTION = `poll`;
@@ -33,6 +40,7 @@ export class Poll extends BaseDecimalModel<Poll> {
     public entitled_group_ids: Id[]; // (group/(assignment|motion)_poll_ids)[];
     public option_ids: Id[]; // ((assignment|motion)_option/poll_id)[];
     public global_option_id: Id; // (motion_option/poll_id)
+    public backend: PollBackendDurationType;
 
     public description: string;
     public min_votes_amount: number;

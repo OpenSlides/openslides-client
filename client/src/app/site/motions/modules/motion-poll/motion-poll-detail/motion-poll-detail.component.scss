@@ -1,11 +1,5 @@
 @import '~assets/styles/poll-styles-common.scss';
 
-.poll-content {
-    text-align: right;
-    display: grid;
-    padding-top: 20px;
-}
-
 .named-result-table {
     grid-area: names;
     .mat-form-field {

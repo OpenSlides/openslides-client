@@ -5,7 +5,7 @@ import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.cons
 import { AgendaItemType } from '../agenda/agenda-item';
 import { BaseModel } from '../base/base-model';
 import { HasProjectionIds } from '../base/has-projectable-ids';
-import { PollMethod, PollPercentBase, PollType } from '../poll/poll-constants';
+import { PollBackendDurationType, PollMethod, PollPercentBase, PollType } from '../poll/poll-constants';
 
 export type UserSortProperty = 'first_name' | 'last_name' | 'number';
 export type ExportCsvEncoding = 'utf-8' | 'iso-8859-15';
@@ -136,6 +136,7 @@ export interface Settings {
     motion_poll_default_type: PollType;
     motion_poll_default_100_percent_base: PollPercentBase;
     motion_poll_default_group_ids: Id[]; // (group/used_as_motion_poll_default_id)[];
+    motion_poll_default_backend: PollBackendDurationType;
 
     // Users
     users_sort_by: UserSortProperty;
@@ -165,6 +166,7 @@ export interface Settings {
     assignment_poll_default_method: PollMethod;
     assignment_poll_default_100_percent_base: PollPercentBase;
     assignment_poll_default_group_ids: Id[]; // (group/used_as_assignment_poll_default_id)[];
+    assignment_poll_default_backend: PollBackendDurationType;
 }
 
 export class Meeting extends BaseModel<Meeting> {

@@ -134,6 +134,9 @@ export abstract class BasePollComponent<C extends BaseViewModel = any> extends B
                 {
                     idField: `global_option_id`,
                     follow: [{ idField: `vote_ids` }]
+                },
+                {
+                    idField: `entitled_group_ids`
                 }
             ]
         });

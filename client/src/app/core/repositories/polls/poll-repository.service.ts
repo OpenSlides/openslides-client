@@ -1,15 +1,12 @@
 import { Injectable } from '@angular/core';
 import { PollAction } from 'app/core/actions/poll-action';
-import { HttpService } from 'app/core/core-services/http.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
-import { OperatorService } from 'app/core/core-services/operator.service';
 import { SendVotesService } from 'app/core/core-services/send-votes.service';
 import { Collection, Decimal, Id } from 'app/core/definitions/key-types';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Poll } from 'app/shared/models/poll/poll';
-import { PollMethod, PollState, PollType } from 'app/shared/models/poll/poll-constants';
+import { PollState, PollType } from 'app/shared/models/poll/poll-constants';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
-import { User } from 'app/shared/models/users/user';
 import { toDecimal } from 'app/shared/utils/to-decimal';
 
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
@@ -61,7 +58,8 @@ export class PollRepositoryService extends BaseRepositoryWithActiveMeeting<ViewP
             `min_votes_amount`,
             `max_votes_amount`,
             `entitled_users_at_stop`,
-            `vote_count`
+            `vote_count`,
+            `backend`
         );
         return {
             [DEFAULT_FIELDSET]: detailFieldset,
@@ -132,7 +130,8 @@ export class PollRepositoryService extends BaseRepositoryWithActiveMeeting<ViewP
             description: poll.description,
             options: this.getElectronicOptions(poll.options),
             content_object_id: poll.content_object_id,
-            entitled_group_ids: poll.entitled_group_ids
+            entitled_group_ids: poll.entitled_group_ids,
+            backend: poll.backend
         };
         return this.sendActionToBackend(PollAction.CREATE, payload);
     }
@@ -232,7 +231,8 @@ export class PollRepositoryService extends BaseRepositoryWithActiveMeeting<ViewP
             min_votes_amount: update.min_votes_amount,
             onehundred_percent_base: update.onehundred_percent_base,
             pollmethod: update.pollmethod,
-            title: update.title
+            title: update.title,
+            backend: update.backend
         };
         return this.sendActionToBackend(PollAction.UPDATE, payload);
     }
