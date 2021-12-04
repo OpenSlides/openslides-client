@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
@@ -30,12 +30,18 @@ import { ViewOrganization } from '../../models/view-organization';
 const AddMeetingLabel = _(`New meeting`);
 const EditMeetingLabel = _(`Edit meeting`);
 
+const ORGA_ADMIN_ALLOWED_CONTROLNAMES = [`user_ids`, `admin_ids`];
+const USER_GROUPS_FOLLOW_FN = (meetingId: Id) => ({
+    idField: `user_ids`,
+    fieldset: `shortName`,
+    follow: [{ idField: { templateIdField: `group_$_ids`, templateValue: meetingId.toString() } }]
+});
 @Component({
     selector: `os-meeting-edit`,
     templateUrl: `./meeting-edit.component.html`,
     styleUrls: [`./meeting-edit.component.scss`]
 })
-export class MeetingEditComponent extends BaseModelContextComponent {
+export class MeetingEditComponent extends BaseModelContextComponent implements OnInit {
     public readonly CML = CML;
     public readonly OML = OML;
 
@@ -51,6 +57,10 @@ export class MeetingEditComponent extends BaseModelContextComponent {
         return !this.isCreateView && this.operator.isSuperAdmin;
     }
 
+    private get isMeetingAdmin(): boolean {
+        return this.operatingUser?.group_ids(this.meetingId).includes(this.editMeeting?.admin_group_id);
+    }
+
     public addMeetingLabel = AddMeetingLabel;
     public editMeetingLabel = EditMeetingLabel;
 
@@ -64,6 +74,11 @@ export class MeetingEditComponent extends BaseModelContextComponent {
     private meetingId: number;
     private editMeeting: ViewMeeting;
     private committeeId: number;
+
+    /**
+     * The operating user received from the OperatorService
+     */
+    private operatingUser: ViewUser;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -89,6 +104,16 @@ export class MeetingEditComponent extends BaseModelContextComponent {
         } else {
             super.setTitle(EditMeetingLabel);
         }
+    }
+
+    public ngOnInit(): void {
+        this.subscriptions.push(
+            this.operator.userObservable.subscribe(user => {
+                // We need here the user from the operator, because the operator holds not all groups in all meetings they are
+                this.operatingUser = user;
+                this.onAfterCreateForm();
+            })
+        );
     }
 
     public getSaveAction(): () => Promise<void> {
@@ -168,14 +193,14 @@ export class MeetingEditComponent extends BaseModelContextComponent {
                 viewModelCtor: ViewMeeting,
                 ids: [this.meetingId],
                 follow: [
-                    { idField: `user_ids`, fieldset: `shortName`, follow: [`group_$_ids`] },
+                    USER_GROUPS_FOLLOW_FN(this.meetingId),
                     {
                         idField: `admin_group_id`,
-                        follow: [{ idField: `user_ids`, fieldset: `shortName`, follow: [`group_$_ids`] }]
+                        follow: [USER_GROUPS_FOLLOW_FN(this.meetingId)]
                     },
                     {
                         idField: `default_group_id`,
-                        follow: [{ idField: `user_ids`, fieldset: `shortName`, follow: [`group_$_ids`] }]
+                        follow: [USER_GROUPS_FOLLOW_FN(this.meetingId)]
                     }
                 ],
                 fieldset: `edit`
@@ -197,7 +222,7 @@ export class MeetingEditComponent extends BaseModelContextComponent {
             {
                 viewModelCtor: ViewCommittee,
                 ids: [this.committeeId],
-                follow: [{ idField: `user_ids`, fieldset: `shortName`, follow: [`group_$_ids`] }],
+                follow: [USER_GROUPS_FOLLOW_FN(this.meetingId)],
                 fieldset: `list`
             },
             `committee`
@@ -239,6 +264,18 @@ export class MeetingEditComponent extends BaseModelContextComponent {
         }
 
         this.meetingForm = this.formBuilder.group(rawForm);
+        this.onAfterCreateForm();
+    }
+
+    private onAfterCreateForm(): void {
+        this.enableFormControls();
+        if (!this.isMeetingAdmin) {
+            Object.keys(this.meetingForm.controls).forEach(controlName => {
+                if (!ORGA_ADMIN_ALLOWED_CONTROLNAMES.includes(controlName)) {
+                    this.meetingForm.get(controlName).disable();
+                }
+            });
+        }
     }
 
     private updateForm(meeting: ViewMeeting): void {
@@ -249,6 +286,7 @@ export class MeetingEditComponent extends BaseModelContextComponent {
             admin_ids: [...(meeting.admin_group?.user_ids || [])]
         } as any);
         this.meetingForm.patchValue(patchMeeting);
+        this.onAfterCreateForm();
     }
 
     private updateFormByCommittee(): void {
@@ -324,6 +362,10 @@ export class MeetingEditComponent extends BaseModelContextComponent {
         delete payload.user_ids; // This must not be sent
         delete payload.admin_ids; // This must not be sent
         return payload;
+    }
+
+    private enableFormControls(): void {
+        Object.keys(this.meetingForm.controls).forEach(controlName => this.meetingForm.get(controlName).enable());
     }
 
     private goBack(): void {
