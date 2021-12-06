@@ -193,7 +193,7 @@ export class NotifyService {
 
     /**
      * Sends a notify message to all open clients with the given users logged in.
-     * @param name The name of th enotify message
+     * @param name The name of the enotify message
      * @param content The payload to send.
      * @param users Multiple user ids.
      */

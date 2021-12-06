@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 import { PromptDialogComponent } from '../../shared/components/prompt-dialog/prompt-dialog.component';
 
@@ -10,6 +10,8 @@ import { PromptDialogComponent } from '../../shared/components/prompt-dialog/pro
     providedIn: `root`
 })
 export class PromptService {
+    private dialogRef: MatDialogRef<PromptDialogComponent>;
+
     public constructor(private dialog: MatDialog) {}
 
     /**
@@ -18,11 +20,15 @@ export class PromptService {
      * @param content The content in the dialog
      */
     public async open(title: string, content: string = ``): Promise<any> {
-        const dialogRef = this.dialog.open(PromptDialogComponent, {
+        this.dialogRef = this.dialog.open(PromptDialogComponent, {
             width: `290px`,
             data: { title, content }
         });
 
-        return dialogRef.afterClosed().toPromise();
+        return this.dialogRef.afterClosed().toPromise();
+    }
+
+    public close(): void {
+        this.dialogRef.close();
     }
 }
