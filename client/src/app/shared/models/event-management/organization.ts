@@ -12,6 +12,7 @@ export interface OrganizationSetting {
     theme_ids: Id[]; // (theme/organization_id);
     reset_password_verbose_errors: boolean;
     enable_electronic_voting: boolean;
+    enable_chat: boolean;
     limit_of_meetings: number;
     limit_of_users: number;
 }

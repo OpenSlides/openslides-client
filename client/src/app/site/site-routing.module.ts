@@ -80,6 +80,10 @@ const routes: Route[] = [
                 path: `autopilot`,
                 loadChildren: () => import(`./cinema/cinema.module`).then(m => m.CinemaModule),
                 data: { basePerm: Permission.meetingCanSeeAutopilot }
+            },
+            {
+                path: `chat`,
+                loadChildren: () => import(`./chat/chat.module`).then(m => m.ChatModule)
             }
         ],
         canActivate: [AuthGuard],

@@ -139,7 +139,12 @@ export class ActiveMeetingService {
                     additionalFields: [`voted_ids`],
                     follow: [{ idField: `content_object_id` }]
                 },
-                { idField: `default_projector_$_id` }
+                { idField: `default_projector_$_id` },
+                {
+                    // To retrieve chat notifications even if the operator is not at the chat site
+                    idField: `chat_group_ids`,
+                    follow: [{ idField: `chat_message_ids`, follow: [`user_id`] }, `read_group_ids`, `write_group_ids`]
+                }
             ],
             fieldset: `settings`,
             additionalFields: [

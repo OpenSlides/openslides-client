@@ -241,7 +241,10 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormFieldCont
         if (typeof value === `function`) {
             throw new Error(`Warning: Trying to set a function as value: ${value}`);
         }
-        const nextValue = this.transformSetFn ? this.transformSetFn(value) : value;
+        let nextValue = this.transformSetFn ? this.transformSetFn(value) : value;
+        if (nextValue && this.multiple && !Array.isArray(nextValue)) {
+            nextValue = [nextValue];
+        }
         this.setNextValue(nextValue);
         this.selectedIds = (nextValue as []) ?? [];
         this.triggerUpdate();

@@ -21,6 +21,33 @@
                 </span>
                 <mat-divider *ngIf="entry.hasDividerBelow"></mat-divider>
             </ng-container>
+            <ng-container
+                *ngIf="{
+                    canSee: canSeeChatObservable | async,
+                    notifications: chatNotificationsObservable | async
+                } as chat"
+            >
+                <a
+                    [@navItemAnim]
+                    *ngIf="chat.canSee"
+                    mat-list-item
+                    (click)="mobileAutoCloseNav()"
+                    routerLink="chat"
+                    routerLinkActive="active"
+                >
+                    <mat-icon
+                        [matBadgeHidden]="chat.notifications === 0"
+                        [matBadge]="chat.notifications"
+                        matBadgeColor="accent"
+                        matBadgeOverlap="false"
+                    >
+                        sms
+                    </mat-icon>
+                    <span>
+                        {{ 'Chat' | translate }}
+                    </span>
+                </a>
+            </ng-container>
             <div class="os-footer-logo-container">
                 <os-logo [footer]="true"></os-logo>
             </div>

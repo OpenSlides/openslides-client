@@ -6,6 +6,7 @@ import { Group } from 'app/shared/models/users/group';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { ViewMotionCommentSection } from 'app/site/motions/models/view-motion-comment-section';
 
+import { ViewChatGroup } from '../../../shared/models/chat/chat-groups/view-chat-group';
 import { BaseViewModel } from '../../base/base-view-model';
 import { ViewUser } from './view-user';
 
@@ -32,6 +33,8 @@ interface IGroupRelations {
     mediafile_inherited_access_groups: ViewMediafile[];
     read_comment_sections: ViewMotionCommentSection[];
     write_comment_sections: ViewMotionCommentSection[];
+    read_chat_groups: ViewChatGroup[];
+    write_chat_groups: ViewChatGroup[];
     polls: ViewPoll[];
     used_as_motion_poll_default?: ViewMeeting;
     used_as_assignment_poll_default?: ViewMeeting;

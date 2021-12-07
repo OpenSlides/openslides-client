@@ -35,6 +35,8 @@ import { ViewPersonalNote } from 'app/site/users/models/view-personal-note';
 import { ViewUser } from 'app/site/users/models/view-user';
 
 import { ViewTheme } from '../../management/models/view-theme';
+import { ViewChatGroup } from '../../shared/models/chat/chat-groups/view-chat-group';
+import { ViewChatMessage } from '../../shared/models/chat/chat-messages/view-chat-message';
 import {
     makeGenericM2M,
     makeGenericO2M,
@@ -218,6 +220,13 @@ export const RELATIONS: Relation[] = [
         structuredField: `assignment_candidates`,
         structuredIdField: `assignment_candidate_$_ids`,
         otherViewModelField: `user`
+    }),
+    ...makeOneStructuredUser2MRelation({
+        otherViewModel: ViewChatMessage,
+        structuredField: `chat_messages`,
+        structuredIdField: `chat_message_$_ids`,
+        otherViewModelField: `user`,
+        otherViewModelIdField: `user_id`
     }),
     // ...makeOneStructuredGenericUser2MRelation({
     //     otherViewModel: ViewOption,
@@ -512,6 +521,20 @@ export const RELATIONS: Relation[] = [
         BViewModel: ViewProjector,
         AField: `reference_projector`,
         BField: `used_as_reference_projector_in_meeting`
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewChatGroup,
+        OField: `chat_groups`,
+        MField: `meeting`,
+        isFullList: true
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewChatMessage,
+        OField: `chat_messages`,
+        MField: `meeting`,
+        isFullList: true
     }),
     // Projector -> Meeting
     {
@@ -841,6 +864,25 @@ export const RELATIONS: Relation[] = [
         MField: `parent`,
         OField: `children`,
         OIdField: `child_ids`
+    }),
+    // ########## Chat
+    ...makeM2O({
+        OViewModel: ViewChatGroup,
+        MViewModel: ViewChatMessage,
+        OField: `chat_messages`,
+        MField: `chat_group`
+    }),
+    ...makeM2M({
+        AViewModel: ViewChatGroup,
+        BViewModel: ViewGroup,
+        AField: `read_groups`,
+        BField: `read_chat_groups`
+    }),
+    ...makeM2M({
+        AViewModel: ViewChatGroup,
+        BViewModel: ViewGroup,
+        AField: `write_groups`,
+        BField: `write_chat_groups`
     }),
     // ########## Projector
     ...makeM2O({

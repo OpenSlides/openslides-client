@@ -163,7 +163,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
                 (Array.isArray(removedCollections) && removedCollections.includes(this.collection))
             ) {
                 // "removedCollections" is available if collections to be cleared are specified.
-                this.clear();
+                this.clearViewModelStore();
             }
         });
         this.translate.onLangChange.subscribe(change => {
@@ -276,7 +276,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     /**
      * Clears the repository.
      */
-    protected clear(): void {
+    protected clearViewModelStore(): void {
         this.viewModelStore = {};
     }
     /**

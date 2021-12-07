@@ -1,0 +1,12 @@
+.vertical-tab-group-wrapper {
+    display: flex;
+    height: 100%;
+
+    .vertical-tab-group-label-wrapper {
+        position: relative;
+
+        .vertical-tab-label {
+            position: relative;
+        }
+    }
+}

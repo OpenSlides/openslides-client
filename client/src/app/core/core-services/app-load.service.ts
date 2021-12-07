@@ -4,6 +4,7 @@ import { ManagementAppConfig } from 'app/management/management.config';
 import { AgendaAppConfig } from 'app/site/agenda/agenda.config';
 import { AssignmentsAppConfig } from 'app/site/assignments/assignments.config';
 import { isSearchable } from 'app/site/base/searchable';
+import { CHAT_CONFIG } from 'app/site/chat/chat.config';
 import { CinemaAppConfig } from 'app/site/cinema/cinema.config';
 import { CommonAppConfig } from 'app/site/common/common.config';
 // import { HistoryAppConfig } from 'app/site/history/history.config';
@@ -41,7 +42,8 @@ const appConfigs: AppConfig[] = [
     ProjectorAppConfig,
     TopicsAppConfig,
     CinemaAppConfig,
-    SettingsAppConfig
+    SettingsAppConfig,
+    CHAT_CONFIG
 ];
 
 /**

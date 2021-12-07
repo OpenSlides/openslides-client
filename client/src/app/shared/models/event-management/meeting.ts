@@ -45,6 +45,9 @@ export interface Settings {
     jitsi_room_name: string;
     jitsi_room_password: string;
 
+    // Chat
+    enable_chat: boolean;
+
     conference_show: boolean;
     conference_auto_connect: boolean;
     conference_los_restriction: boolean;
@@ -203,6 +206,8 @@ export class Meeting extends BaseModel<Meeting> {
     public vote_ids: Id[]; // (vote/meeting_id)[];
     public assignment_ids: Id[]; // (assignment/meeting_id)[];
     public assignment_candidate_ids: Id[]; // (assignment_candidate/meeting_id)[];
+    public chat_group_ids: Id[]; // (chat_group/meeting_id)[];
+    public chat_message_ids: Id[]; // (chat_message/meeting_id)[];
 
     // Logos and Fonts
     public logo_$_id: string[]; // mediafile/used_as_logo_$<place>_in_meeting_id;

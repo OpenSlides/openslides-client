@@ -31,6 +31,8 @@ import { ViewGroup } from 'app/site/users/models/view-group';
 import { ViewPersonalNote } from 'app/site/users/models/view-personal-note';
 import { ViewUser } from 'app/site/users/models/view-user';
 
+import { ViewChatGroup } from '../../shared/models/chat/chat-groups/view-chat-group';
+import { ViewChatMessage } from '../../shared/models/chat/chat-messages/view-chat-message';
 import { ViewCommittee } from './view-committee';
 import { ViewOrganization } from './view-organization';
 import { HasOrganizationTags } from './view-organization-tag';
@@ -111,6 +113,8 @@ interface IMeetingRelations {
     votes: ViewVote[];
     assignments: ViewAssignment[];
     assignment_candidates: ViewAssignmentCandidate[];
+    chat_groups: ViewChatGroup[];
+    chat_messages: ViewChatMessage[];
     logo: StructuredRelation<string, ViewMediafile | null>;
     font: StructuredRelation<string, ViewMediafile | null>;
     committee: ViewCommittee;

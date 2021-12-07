@@ -72,8 +72,8 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
         return value.mapToObject(id => ({ [id]: CML.can_manage }));
     }
 
-    public getTransformSetFn(): (value?: string[]) => any {
-        return (value?: string[]) => {
+    public getTransformSetFn(): (value?: string[]) => Id[] {
+        return (value?: string[]): Id[] => {
             const managementIds = [];
             for (const strId of value || []) {
                 if (this.user.committee_management_level(parseInt(strId, 10)) === CML.can_manage) {
