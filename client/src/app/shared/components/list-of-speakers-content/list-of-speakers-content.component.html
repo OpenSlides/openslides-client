@@ -114,7 +114,7 @@
                         <!-- Extra stuff: Spoken Count, Gender, 1st Contribution -->
                         <span *ngIf="canManage && !speaker.point_of_order">
                             <!-- Speaker count -->
-                            <span *ngIf="hasSpokenCount(speaker)" class="red-warning-text speaker-warning">
+                            <span *ngIf="hasSpokenCount(speaker)" class="foreground-warn speaker-warning">
                                 {{ hasSpokenCount(speaker) + 1 }}.
                                 <span>{{ 'contribution' | translate }}</span>
                             </span>
@@ -122,7 +122,7 @@
                             <!-- First contribution -->
                             <span
                                 *ngIf="(showFistContributionHint | async) && isFirstContribution(speaker)"
-                                class="red-warning-text speaker-warning"
+                                class="foreground-warn speaker-warning"
                             >
                                 {{ 'First speech' | translate }}
                             </span>
@@ -344,7 +344,7 @@
         >
             warning
         </mat-icon>
-        <i [class.red-warning-text]="!!showcolor" *ngIf="(showSpeakerNoteForEveryoneObservable | async) || canManage">
+        <i [class.foreground-warn]="!!showcolor" *ngIf="(showSpeakerNoteForEveryoneObservable | async) || canManage">
             {{ speaker.note }}
         </i>
     </ng-container>

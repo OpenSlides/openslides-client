@@ -67,7 +67,7 @@
     (validEvent)="isFormValid = $event"
     (errorEvent)="formErrors = $event"
     (submitEvent)="saveUser()"
-    *ngIf="user"
+    *ngIf="user || newUser"
 >
     <ng-template #editView let-form="form">
         <div [formGroup]="form">
@@ -256,6 +256,6 @@
     </ng-template>
 </os-user-detail-view>
 
-<os-not-found *ngIf="!user">
-    {{ 'The user you requested is not accesible' | translate }}
+<os-not-found *ngIf="!user && !newUser">
+    {{ 'The user you requested is not accessible' | translate }}
 </os-not-found>

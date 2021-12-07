@@ -8,11 +8,14 @@ import { ViewMeeting } from '../../../management/models/view-meeting';
 })
 export class MeetingTimeComponent {
     @Input()
-    public meeting: ViewMeeting;
+    public meeting?: ViewMeeting;
 
     @Input()
     public startTime?: string | number;
 
     @Input()
     public endTime?: string | number;
+
+    @Input()
+    public cssClass: string | string[];
 }

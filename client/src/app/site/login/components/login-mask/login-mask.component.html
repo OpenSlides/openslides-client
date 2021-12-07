@@ -31,12 +31,11 @@
                 formControlName="password"
                 [type]="!hide ? 'password' : 'text'"
             />
-            <mat-icon color="primary" matSuffix (click)="hide = !hide">{{
-                hide ? 'visibility_off' : 'visibility_on'
-            }}</mat-icon>
-
-            <mat-error>{{ loginErrorMsg | translate }}</mat-error>
+            <mat-icon color="primary" matSuffix (click)="hide = !hide">
+                {{ hide ? 'visibility_off' : 'visibility_on' }}
+            </mat-icon>
         </mat-form-field>
+        <mat-error>{{ loginErrorMsg | translate }}</mat-error>
 
         <!-- forgot password button -->
         <br />
