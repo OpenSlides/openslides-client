@@ -76,7 +76,7 @@ export class HttpStreamService {
 
     private onError(endpoint: EndpointConfiguration, description?: ErrorDescription): void {
         console.log(`ERROR`, description);
-        this.offlineService.goOffline({
+        this.offlineService.goOfflineEvent.emit({
             reason: lostConnectionToFn(endpoint),
             isOnlineFn: async () => this.endpointService.isEndpointHealthy(endpoint)
         });

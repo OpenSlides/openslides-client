@@ -303,6 +303,10 @@ export class HttpStream<T> {
     }
 
     private handleStreamError(error: unknown): void {
+        console.log(`Handle stream error:`, error);
+        console.log(
+            `${this.id}:${this.description}: Retry counter ${this._reconnectAttempts} of ${this._reconnectsBeforeClose}`
+        );
         const shouldReconnect =
             typeof this._shouldReconnectOnFailure === `function`
                 ? this._shouldReconnectOnFailure()
