@@ -143,7 +143,7 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
     }
 
     public onCancel(): void {
-        this.navigateBack();
+        this.navigateBack(this.committeeId);
     }
 
     /**
