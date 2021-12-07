@@ -35,8 +35,8 @@ export class CommunicationManagerService {
         private offlineBroadcastService: OfflineBroadcastService,
         private lifecycleService: LifecycleService
     ) {
-        this.offlineBroadcastService.goOfflineObservable.subscribe(() => this.stopCommunication());
-        this.offlineBroadcastService.goOnlineObservable.subscribe(() => this.startCommunication());
+        this.offlineBroadcastService.goOfflineEvent.subscribe(() => this.stopCommunication());
+        this.offlineBroadcastService.goOnlineEvent.subscribe(() => this.startCommunication());
         this.lifecycleService.openslidesBooted.subscribe(() => this.startCommunication());
         this.lifecycleService.openslidesShutdowned.subscribe(() => this.stopCommunication());
     }

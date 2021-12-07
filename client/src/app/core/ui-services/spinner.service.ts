@@ -92,7 +92,7 @@ export class SpinnerService {
     private initStableSubscription(): void {
         this.isStableSubscription = combineLatest([
             this.operator.isReadyObservable,
-            this.offlineBroadcastService.isOfflineObservable,
+            this.offlineBroadcastService.isOfflineSubject,
             this.upgradeService.upgradeChecked.pipe(distinctUntilChanged()),
             this.router.events.pipe(filter(event => event instanceof RoutesRecognized))
         ]).subscribe(([isReady, isOffline, hasUpgradeChecked, event]) => {

@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 export interface OfflineReasonConfig {
     /**
@@ -16,34 +16,12 @@ export interface OfflineReasonConfig {
     providedIn: `root`
 })
 export class OfflineBroadcastService {
-    public get isOfflineObservable(): Observable<boolean> {
-        return this._isOfflineSubject.asObservable();
-    }
-
-    public get goOfflineObservable(): Observable<OfflineReasonConfig> {
-        return this._goOffline.asObservable();
-    }
-
-    public get goOnlineObservable(): Observable<void> {
-        return this._goOnline.asObservable();
-    }
-
-    private readonly _isOfflineSubject = new BehaviorSubject<boolean>(false);
-    private readonly _goOnline = new EventEmitter<void>();
-    private readonly _goOffline = new EventEmitter<OfflineReasonConfig>();
-
-    public goOffline(config: OfflineReasonConfig): void {
-        this._isOfflineSubject.next(true);
-        this._goOffline.emit(config);
-    }
-
-    public goOnline(): void {
-        this._isOfflineSubject.next(false);
-        this._goOnline.emit();
-    }
+    public readonly isOfflineSubject = new BehaviorSubject<boolean>(false);
+    public readonly goOnlineEvent = new EventEmitter<void>();
+    public readonly goOfflineEvent = new EventEmitter<OfflineReasonConfig>();
 
     public isOffline(): boolean {
-        return this._isOfflineSubject.getValue();
+        return this.isOfflineSubject.getValue();
     }
 
     public isOnline(): boolean {

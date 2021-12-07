@@ -15,7 +15,7 @@ export class OfflineService {
     private config: OfflineReasonConfig | null = null;
 
     public constructor(private offlineBroadcastService: OfflineBroadcastService) {
-        this.offlineBroadcastService.goOfflineObservable.subscribe(reason => this.goOffline(reason));
+        this.offlineBroadcastService.goOfflineEvent.subscribe(reason => this.goOffline(reason));
     }
 
     /**
@@ -37,16 +37,18 @@ export class OfflineService {
         console.log(`Try to go online in ${timeout} ms`);
 
         setTimeout(async () => {
+            // Verifies that we are (still) offline
             const isOnline = await this.config.isOnlineFn();
             console.log(`Is online again? ->`, isOnline);
 
             if (isOnline) {
                 // stop trying.
                 this.config = null;
-                this.offlineBroadcastService.goOnline();
+                this.offlineBroadcastService.isOfflineSubject.next(false);
             } else {
                 // continue trying.
                 this.deferCheckStillOffline();
+                this.offlineBroadcastService.isOfflineSubject.next(true);
             }
         }, timeout);
     }

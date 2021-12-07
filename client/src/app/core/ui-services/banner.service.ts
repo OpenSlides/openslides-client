@@ -29,11 +29,8 @@ export class BannerService {
 
     public activeBanners: BehaviorSubject<BannerDefinition[]> = new BehaviorSubject<BannerDefinition[]>([]);
 
-    public constructor(/*translate: TranslateService, */ offlineBroadcastService: OfflineBroadcastService) {
-        /*translate.onLangChange.subscribe(() => {
-            this.offlineBannerDefinition.text = translate.instant(this.offlineBannerDefinition.text);
-        });*/
-        offlineBroadcastService.isOfflineObservable.subscribe(offline => {
+    public constructor(offlineBroadcastService: OfflineBroadcastService) {
+        offlineBroadcastService.isOfflineSubject.subscribe(offline => {
             if (offline) {
                 this.addBanner(this.offlineBannerDefinition);
             } else {

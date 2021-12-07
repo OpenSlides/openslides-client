@@ -161,7 +161,7 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
         });
 
         this.subscriptions.push(
-            this.offlineBroadcastService.isOfflineObservable.subscribe(isOffline => (this.isOffline = isOffline))
+            this.offlineBroadcastService.isOfflineSubject.subscribe(isOffline => (this.isOffline = isOffline))
         );
 
         const trigger$ = merge(

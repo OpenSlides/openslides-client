@@ -30,7 +30,7 @@ export class OpenSlidesService {
     public async bootup(): Promise<void> {
         const online = await this.authService.doWhoAmIRequest();
         if (!online) {
-            this.offlineBroadcastService.goOffline({
+            this.offlineBroadcastService.goOfflineEvent.emit({
                 reason: WHOAMI_FAILED,
                 isOnlineFn: async () => this.authService.doWhoAmIRequest()
             });
