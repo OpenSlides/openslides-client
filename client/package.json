@@ -107,7 +107,7 @@
         "@types/yargs": "^15.0.4",
         "@typescript-eslint/eslint-plugin": "4.28.2",
         "@typescript-eslint/parser": "4.28.2",
-        "axios": "^0.21.1",
+        "axios": "^0.21.2",
         "eslint": "^7.26.0",
         "eslint-plugin-import": "latest",
         "eslint-plugin-jsdoc": "latest",
