@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
@@ -39,7 +39,8 @@ const USER_GROUPS_FOLLOW_FN = (meetingId: Id) => ({
 @Component({
     selector: `os-meeting-edit`,
     templateUrl: `./meeting-edit.component.html`,
-    styleUrls: [`./meeting-edit.component.scss`]
+    styleUrls: [`./meeting-edit.component.scss`],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MeetingEditComponent extends BaseModelContextComponent implements OnInit {
     public readonly CML = CML;
@@ -270,7 +271,7 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
 
     private onAfterCreateForm(): void {
         this.enableFormControls();
-        if (!this.isMeetingAdmin) {
+        if (!this.isMeetingAdmin && !this.isCreateView) {
             Object.keys(this.meetingForm.controls).forEach(controlName => {
                 if (!ORGA_ADMIN_ALLOWED_CONTROLNAMES.includes(controlName)) {
                     this.meetingForm.get(controlName).disable();

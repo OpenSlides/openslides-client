@@ -180,10 +180,8 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
             await this.authService.login(username, password, this.currentMeetingId);
         } catch (e) {
             this.spinnerService.hide();
-            this.loginForm.get(`password`).setErrors({ notFound: true });
             this.loginErrorMsg = e;
         }
-        // throw new Error('TODO'); // Ingore SAML for now...
     }
 
     public async guestLogin(): Promise<void> {

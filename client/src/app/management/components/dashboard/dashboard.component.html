@@ -14,67 +14,89 @@
 </mat-card>
 
 <ng-container *ngIf="!noMeetingsToShow">
-    <!-- active meetings -->
-    <div id="active-meetings" class="meeting-list-container">
-        <div class="meeting-icon-wrapper foreground-accent">
-            <mat-icon color="accent">access_alarm</mat-icon>
-            <span>{{ 'active' | translate }}</span>
+    <div class="padding-right-8">
+        <!-- active meetings -->
+        <div id="active-meetings" class="meeting-list-container">
+            <div class="meeting-icon-wrapper foreground-accent">
+                <mat-icon color="accent">access_alarm</mat-icon>
+                <span>{{ 'active' | translate }}</span>
+            </div>
+            <div class="meeting-list background-card">
+                <mat-card class="no-meetings-card" *ngIf="!currentMeetings.length">
+                    {{ 'No meetings available' | translate }}
+                </mat-card>
+                <ng-container *ngFor="let meeting of currentMeetings; let last = last">
+                    <ng-container
+                        [ngTemplateOutlet]="meetingTemplate"
+                        [ngTemplateOutletContext]="{
+                            meeting: meeting,
+                            context: {
+                                wrapperCssClass: 'background-accent',
+                                cssClass: 'foreground-accent-contrast'
+                            }
+                        }"
+                    ></ng-container>
+                    <mat-divider *ngIf="!last"></mat-divider>
+                </ng-container>
+            </div>
         </div>
-        <div class="meeting-list background-card">
-            <mat-card class="no-meetings-card" *ngIf="!currentMeetings.length">
-                {{ 'No meetings available' | translate }}
-            </mat-card>
-            <ng-container *ngFor="let meeting of currentMeetings; let last = last">
-                <ng-container
-                    [ngTemplateOutlet]="meetingTemplate"
-                    [ngTemplateOutletContext]="{
-                        meeting: meeting,
-                        cssClass: 'background-accent foreground-accent-contrast'
-                    }"
-                ></ng-container>
-                <mat-divider *ngIf="!last"></mat-divider>
-            </ng-container>
-        </div>
-    </div>
 
-    <!-- future meetings -->
-    <div id="future-meetings" class="meeting-list-container">
-        <div class="meeting-icon-wrapper foreground-primary">
-            <mat-icon color="primary">update</mat-icon>
-            <span>{{ 'future' | translate }}</span>
+        <!-- future meetings -->
+        <div id="future-meetings" class="meeting-list-container">
+            <div class="meeting-icon-wrapper foreground-primary">
+                <mat-icon color="primary">update</mat-icon>
+                <span>{{ 'future' | translate }}</span>
+            </div>
+            <ng-container
+                [ngTemplateOutlet]="meetingListTemplate"
+                [ngTemplateOutletContext]="{
+                    meetingList: futureMeetings,
+                    context: {
+                        cssClass: 'anchor-button',
+                        wrapperCssClass: 'subtitle',
+                        subtitleCssClass: 'light-gray-by-theme'
+                    }
+                }"
+            ></ng-container>
         </div>
-        <ng-container
-            [ngTemplateOutlet]="meetingListTemplate"
-            [ngTemplateOutletContext]="{ meetingList: futureMeetings }"
-        ></ng-container>
-    </div>
 
-    <!-- previous meetings -->
-    <div id="previous-meetings" class="meeting-list-container">
-        <div class="meeting-icon-wrapper">
-            <mat-icon aria-hidden="true">history</mat-icon>
-            <span>{{ 'ended' | translate }}</span>
+        <!-- previous meetings -->
+        <div id="previous-meetings" class="meeting-list-container">
+            <div class="meeting-icon-wrapper">
+                <mat-icon aria-hidden="true">history</mat-icon>
+                <span>{{ 'ended' | translate }}</span>
+            </div>
+            <ng-container
+                [ngTemplateOutlet]="meetingListTemplate"
+                [ngTemplateOutletContext]="{
+                    meetingList: previousMeetings,
+                    context: {
+                        cssClass: 'light-gray-by-theme',
+                        wrapperCssClass: 'subtitle',
+                        subtitleCssClass: 'subtitle'
+                    }
+                }"
+            ></ng-container>
         </div>
-        <ng-container
-            [ngTemplateOutlet]="meetingListTemplate"
-            [ngTemplateOutletContext]="{ meetingList: previousMeetings, cssClass: 'light-gray-by-theme' }"
-        ></ng-container>
-    </div>
 
-    <!-- meetings with no date -->
-    <div id="no-date-meetings" class="meeting-list-container">
-        <div class="meeting-icon-wrapper">
-            <mat-icon aria-hidden="true">watch_later</mat-icon>
-            <span>{{ 'dateless' | translate }}</span>
+        <!-- meetings with no date -->
+        <div id="no-date-meetings" class="meeting-list-container">
+            <div class="meeting-icon-wrapper">
+                <mat-icon aria-hidden="true">watch_later</mat-icon>
+                <span>{{ 'dateless' | translate }}</span>
+            </div>
+            <ng-container
+                [ngTemplateOutlet]="meetingListTemplate"
+                [ngTemplateOutletContext]="{
+                    meetingList: noDateMeetings,
+                    context: { cssClass: 'light-gray-by-theme', wrapperCssClass: 'subtitle' }
+                }"
+            ></ng-container>
         </div>
-        <ng-container
-            [ngTemplateOutlet]="meetingListTemplate"
-            [ngTemplateOutletContext]="{ meetingList: noDateMeetings, cssClass: 'light-gray-by-theme' }"
-        ></ng-container>
     </div>
 </ng-container>
 
-<ng-template let-meetingList="meetingList" let-cssClass="cssClass" #meetingListTemplate>
+<ng-template let-meetingList="meetingList" let-context="context" #meetingListTemplate>
     <div
         class="meeting-list"
         [ngClass]="{ 'no-meetings': !meetingList.length }"
@@ -94,7 +116,7 @@
                 >
                     <ng-container
                         [ngTemplateOutlet]="meetingTemplate"
-                        [ngTemplateOutletContext]="{ meeting: meeting, cssClass: cssClass }"
+                        [ngTemplateOutletContext]="{ meeting: meeting, context: context }"
                     ></ng-container>
                 </div>
             </ng-container>
@@ -102,26 +124,36 @@
     </div>
 </ng-template>
 
-<ng-template let-meeting="meeting" let-cssClass="cssClass" #meetingTemplate>
-    <div matRipple class="meeting-box" [ngClass]="cssClass" [routerLink]="meeting.id">
-        <div class="one-line">
-            <div class="meeting-box--mid one-line" [matTooltip]="meeting.name">
-                {{ meeting.name }}
+<ng-template let-meeting="meeting" let-context="context" #meetingTemplate>
+    <div class="meeting-box" [ngClass]="context?.wrapperCssClass">
+        <a [routerLink]="meeting.id" [ngClass]="context?.cssClass" class="full-width flex-vertical-center" matRipple>
+            <div class="one-line">
+                <div class="meeting-box--mid one-line" [matTooltip]="meeting.name">
+                    {{ meeting.name }}
+                </div>
+                <div>
+                    <span [ngClass]="context?.subtitleCssClass" *ngIf="meeting.location">{{ meeting.location }}</span>
+                    <span
+                        [ngClass]="context?.subtitleCssClass"
+                        *ngIf="meeting.location && (meeting.start_time || meeting.end_time)"
+                    >
+                        &nbsp;&middot;&nbsp;
+                    </span>
+                    <span *ngIf="meeting.start_time || meeting.end_time">
+                        <os-meeting-time [meeting]="meeting" [cssClass]="context?.subtitleCssClass"></os-meeting-time>
+                    </span>
+                </div>
             </div>
-            <div>
-                <span *ngIf="meeting.location">{{ meeting.location }}</span>
-                <span *ngIf="meeting.location && (meeting.start_time || meeting.end_time)">&nbsp;&middot;&nbsp;</span>
-                <span *ngIf="meeting.start_time || meeting.end_time">
-                    <ng-container *ngTemplateOutlet="meetingTime; context: { meeting: meeting }"></ng-container>
-                </span>
-            </div>
-        </div>
+        </a>
+        <a
+            mat-icon-button
+            [routerLink]="['/', 'committees', meeting.committee_id]"
+            matTooltip="{{ 'Go to its committee' | translate }}"
+        >
+            <mat-icon>auto_awesome_mosaic</mat-icon>
+        </a>
         <mat-icon *ngIf="meeting.isArchived" matTooltip="{{ 'This meeting is archived' | translate }}">
             archive
         </mat-icon>
     </div>
-</ng-template>
-
-<ng-template let-meeting="meeting" #meetingTime>
-    <os-meeting-time [meeting]="meeting"></os-meeting-time>
 </ng-template>
