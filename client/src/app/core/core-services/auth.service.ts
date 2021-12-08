@@ -10,9 +10,9 @@ import { HttpService } from './http.service';
 import { LifecycleService } from './lifecycle.service';
 
 /**
- * Response from a login request.
+ * Response from a request to the auth service.
  */
-export interface LoginResponse {
+export interface AuthServiceResponse {
     message: string;
     success: boolean;
     token?: string;
@@ -67,7 +67,7 @@ export class AuthService {
         const user = { username, password };
         this.holdBackTokenSubscription();
         try {
-            const response = await this.http.post<LoginResponse>(`${environment.authUrlPrefix}/login/`, user);
+            const response = await this.http.post<AuthServiceResponse>(`${environment.authUrlPrefix}/login/`, user);
             if (response.success) {
                 // Shutdowning kills all connections. The operator is listening for token changes, so
                 // we must hold them back to this point.
@@ -87,13 +87,15 @@ export class AuthService {
     }
 
     public redirectUser(meetingId?: number): void {
-        const baseRoute = meetingId ? `${meetingId}/` : `/`;
-        this.router.navigate([baseRoute]);
+        if (this.isAuthenticated()) {
+            const baseRoute = meetingId ? `${meetingId}/` : `/`;
+            this.router.navigate([baseRoute]);
+        }
     }
 
     public async logout(): Promise<void> {
         this.lifecycleService.shutdown();
-        const response = await this.http.post<LoginResponse>(
+        const response = await this.http.post<AuthServiceResponse>(
             `${environment.authUrlPrefix}${environment.authSecurePrefix}/logout/`
         );
         if (response.success) {
@@ -117,7 +119,7 @@ export class AuthService {
         console.log(`auth: Do WhoAmI`);
         let online: boolean;
         try {
-            await this.http.post<LoginResponse>(`${environment.authUrlPrefix}/who-am-i/`);
+            await this.http.post<AuthServiceResponse>(`${environment.authUrlPrefix}/who-am-i/`);
             online = true;
         } catch (e) {
             if (e instanceof ProcessError && e.status >= 400 && e.status < 500) {

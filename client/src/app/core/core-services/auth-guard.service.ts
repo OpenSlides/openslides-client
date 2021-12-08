@@ -105,7 +105,8 @@ export class AuthGuard implements CanActivate, CanActivateChild {
                 return;
             }
         }
-        const meetingId = this.activeMeeting.meetingId;
+        const routeParams = route.parent?.params;
+        const meetingId = routeParams?.meetingId;
 
         if (meetingId) {
             this.router.navigate([meetingId, `error`], {
@@ -115,7 +116,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
                 }
             });
         } else {
-            this.router.navigate([`/`]);
+            this.osRouter.navigateToLogin();
         }
     }
 }
