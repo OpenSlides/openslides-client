@@ -16,6 +16,8 @@ import { PollPercentBaseVerbose, PollPropertyVerbose, PollTypeVerbose } from 'ap
 import { ParsePollNumberPipe } from 'app/shared/pipes/parse-poll-number.pipe';
 import { PollKeyVerbosePipe } from 'app/shared/pipes/poll-key-verbose.pipe';
 
+import { OptionData } from '../../../shared/models/poll/generic-poll';
+
 const PERCENT_DECIMAL_PLACES = 3;
 /**
  * The possible keys of a poll object that represent numbers.
@@ -51,6 +53,13 @@ export interface PollTableData {
     votingOptionSubtitle?: string;
     class?: string;
     value: VotingResult[];
+}
+
+export function isPollTableData(value: any): value is PollTableData {
+    if (!value) {
+        return false;
+    }
+    return !!value.votingOption && !!value.value;
 }
 
 export interface VotingResult {
@@ -165,7 +174,7 @@ export class PollService {
                 const voteValue = option[field];
                 const votingKey = this.translate.instant(this.pollKeyVerbose.transform(field));
                 const resultValue = this.parsePollNumber.transform(voteValue);
-                const resultInPercent = this.getVoteValueInPercent(voteValue, poll);
+                const resultInPercent = this.getVoteValueInPercent(voteValue, { poll, row: option });
                 let resultLabel = `${votingKey}: ${resultValue}`;
 
                 // 0 is a valid number in this case
@@ -219,20 +228,20 @@ export class PollService {
     }
 
     /**
-     * return the total number of votes depending on the selected percent base
+     * returns the total number of votes depending on the selected percent base
      */
-    public getPercentBase(poll: PollData): number {
+    private getPercentBase(poll: PollData, row: OptionData): number {
         const base: PollPercentBase = poll.onehundred_percent_base as PollPercentBase;
         let totalByBase: number;
         switch (base) {
             case PollPercentBase.YN:
-                totalByBase = this.sumOptionsYN(poll);
+                totalByBase = this.sumOptionsYN(row);
                 break;
             case PollPercentBase.YNA:
-                totalByBase = this.sumOptionsYNA(poll);
+                totalByBase = this.sumOptionsYNA(row);
                 break;
             case PollPercentBase.Y:
-                totalByBase = this.sumOptionsYNA(poll);
+                totalByBase = this.sumOptionsYNA(row);
                 break;
             case PollPercentBase.Valid:
                 totalByBase = poll.votesvalid;
@@ -249,23 +258,20 @@ export class PollService {
         return totalByBase;
     }
 
-    private sumOptionsYN(poll: PollData): number {
-        return poll.options.reduce((o, n) => {
-            o += n.yes > 0 ? n.yes : 0;
-            o += n.no > 0 ? n.no : 0;
-            return o;
-        }, 0);
+    private sumOptionsYN(option: OptionData): number {
+        return (option?.yes ?? 0) + (option?.no ?? 0);
     }
 
-    private sumOptionsYNA(poll: PollData): number {
-        return poll.options.reduce((o, n) => {
-            o += n.abstain > 0 ? n.abstain : 0;
-            return o;
-        }, this.sumOptionsYN(poll));
+    private sumOptionsYNA(option: OptionData): number {
+        return this.sumOptionsYN(option) + (option?.abstain ?? 0);
     }
 
-    public getVoteValueInPercent(value: number, poll: PollData): string | null {
-        const totalByBase = this.getPercentBase(poll);
+    public getVoteValueInPercent(
+        value: number,
+        { poll, row }: { poll: PollData; row: OptionData | PollTableData }
+    ): string | null {
+        const option = isPollTableData(row) ? this.transformToOptionData(row) : row;
+        const totalByBase = this.getPercentBase(poll, option);
         if (totalByBase && totalByBase > 0) {
             const percentNumber = (value / totalByBase) * 100;
             if (percentNumber >= 0) {
@@ -394,5 +400,17 @@ export class PollService {
 
     public isVoteDocumented(vote: number): boolean {
         return vote !== null && vote !== undefined && vote !== VOTE_UNDOCUMENTED;
+    }
+
+    private transformToOptionData(data: PollTableData): OptionData {
+        const yes = data.value.find(vote => vote.vote === `yes`);
+        const no = data.value.find(vote => vote.vote === `no`);
+        const abstain = data.value.find(vote => vote.vote === `abstain`);
+        return {
+            getOptionTitle: () => ({ title: data.votingOption, subtitle: data.votingOptionSubtitle }),
+            yes: yes?.amount,
+            no: no?.amount,
+            abstain: abstain?.amount
+        };
     }
 }

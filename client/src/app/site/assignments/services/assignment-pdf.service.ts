@@ -236,7 +236,7 @@ export class AssignmentPdfService {
             .map((singleResult: VotingResult) => {
                 const votingKey = this.translate.instant(this.pollKeyVerbose.transform(singleResult.vote));
                 const resultValue = this.parsePollNumber.transform(singleResult.amount);
-                const resultInPercent = this.pollPercentBase.transform(singleResult.amount, poll);
+                const resultInPercent = this.pollPercentBase.transform(singleResult.amount, poll, votingResult);
                 return `${votingKey}${!!votingKey ? `: ` : ``}${resultValue} ${
                     singleResult.showPercent && resultInPercent ? resultInPercent : ``
                 }`;
