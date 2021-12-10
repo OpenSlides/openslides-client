@@ -1,5 +1,4 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { Committee } from 'app/shared/models/event-management/committee';
 import { Group } from 'app/shared/models/users/group';
@@ -189,9 +188,8 @@ export class OperatorService {
         private activeMeetingService: ActiveMeetingService,
         private userRepo: UserRepositoryService,
         private groupRepo: GroupRepositoryService,
-        private router: Router,
         private lifecycle: LifecycleService,
-        osRouter: OpenSlidesRouterService
+        private osRouter: OpenSlidesRouterService
     ) {
         this.setNotReady();
 
@@ -619,7 +617,7 @@ export class OperatorService {
         } else {
             // has active meeting without the anonymous enabled *and* not authenticated. This is
             // forbidden and can happen, if someone enters a URL of the meeting.
-            this.router.navigate([this.activeMeetingId, `login`]);
+            this.osRouter.navigateToLogin(this.activeMeetingId);
         }
         return operatorRequest;
     }

@@ -23,14 +23,14 @@ export class OpenSlidesRouterService {
         const urlFragments = url.split(`/`);
 
         // First, check if a user is already at the login page
-        if (url.startsWith(URL_LOGIN_PREFIX) && url.length > URL_LOGIN_PREFIX.length) {
+        if (url.startsWith(URL_LOGIN_PREFIX) && url.length >= URL_LOGIN_PREFIX.length) {
             return;
         }
 
         // Then, check if a user is at any orga-specific route
         // if the first fragment is a number, we are in a meeting
         if (!/\d+/g.test(urlFragments[1]) || !meetingId) {
-            this.router.navigate([`login`]);
+            this.router.navigate([`/`, `login`]);
             return;
         }
         if (this.isAnonymousEnabled) {

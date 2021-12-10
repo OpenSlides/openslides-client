@@ -130,13 +130,6 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
             this.orgaService.organizationObservable.subscribe(organization => (this._organization = organization))
         );
 
-        this.subscriptions
-            .push // TODO: SAML
-            // this.orgaSettings.get('saml').subscribe(
-            //     samlSettings => (this.samlLoginButtonText = samlSettings ? samlSettings.loginButtonText : null)
-            // )
-            ();
-
         // Maybe the operator changes and the user is logged in. If so, redirect him and boot OpenSlides.
         this.operatorSubscription = this.operator.operatorUpdatedEvent.subscribe(() => {
             this.clearOperatorSubscription();
