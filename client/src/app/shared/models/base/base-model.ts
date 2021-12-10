@@ -1,4 +1,8 @@
-import { fqidFromCollectionAndId } from 'app/core/core-services/key-transforms';
+import {
+    fillTemplateValueInTemplateField,
+    fqidFromCollectionAndId,
+    isTemplateField
+} from 'app/core/core-services/key-transforms';
 import { Fqid, Id } from 'app/core/definitions/key-types';
 
 import { HasCollection } from './collection';
@@ -32,7 +36,28 @@ export abstract class BaseModel<T = any> extends Deserializer implements Identif
     }
 
     public getUpdatedData(update: Partial<T>): object {
-        const copy: object = Object.assign({}, this);
-        return Object.assign(copy, update);
+        const origin: object = Object.assign({}, this);
+        const updateCopy = { ...update }; // To not modifying the original update
+        for (const key of Object.keys(update)) {
+            if (isTemplateField(key) && Array.isArray(update[key]) && update[key].length === 0) {
+                this.handleRemovedTemplateFields({ origin, update: updateCopy, key });
+            }
+        }
+        return { ...origin, ...updateCopy };
+    }
+
+    private handleRemovedTemplateFields({
+        origin,
+        update,
+        key
+    }: {
+        origin: object;
+        update: Partial<T>;
+        key: any;
+    }): void {
+        for (const difference of (origin[key] || []).difference(update[key])) {
+            const templateField = fillTemplateValueInTemplateField(key, difference);
+            update[templateField] = null;
+        }
     }
 }

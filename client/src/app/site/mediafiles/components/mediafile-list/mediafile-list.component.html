@@ -22,7 +22,8 @@
     <!-- Multiselect info -->
     <div *ngIf="isMultiSelect" class="central-info-slot">
         <button mat-icon-button (click)="toggleMultiSelect()"><mat-icon>arrow_back</mat-icon></button>
-        <span>{{ selectedRows.length }}&nbsp;</span><span>{{ 'selected' | translate }}</span>
+        <span>{{ selectedRows.length }}&nbsp;</span>
+        <span>{{ 'selected' | translate }}</span>
     </div>
 </os-head-bar>
 
@@ -32,7 +33,7 @@
         <!-- Scrollable folder bar -->
         <span class="folder-nav-bar h-scroller">
             <button class="folder" mat-button (click)="changeDirectory(null)" [disabled]="isMultiSelect">
-                <mat-icon class="file-icon">home</mat-icon>
+                <mat-icon class="foreground-icon">home</mat-icon>
             </button>
             <span class="folder-section" *ngFor="let directory of directoryChain; let last = last">
                 <span class="arrow">
@@ -76,7 +77,7 @@
                 >
                     <span *ngFor="let group of directory.inherited_access_groups | slice: 0:3; let last = last">
                         <span>{{ group.getTitle() | translate }}</span>
-                        <span *ngIf="!last">, </span>
+                        <span *ngIf="!last">,</span>
                         <span *ngIf="last && directory.inherited_access_groups.length > 3">...</span>
                     </span>
                 </os-icon-container>
@@ -103,11 +104,13 @@
             target="_blank"
             [routerLink]="getMediaUrl(mediafile)"
             *ngIf="!mediafile.is_directory && !isMultiSelect"
-        >
-        </a>
-        <a class="detail-link" (click)="changeDirectory(mediafile.id)" *ngIf="mediafile.is_directory && !isMultiSelect">
-        </a>
-        <mat-icon class="file-icon">{{ mediafile.getIcon() }}</mat-icon>
+        ></a>
+        <a
+            class="detail-link"
+            (click)="changeDirectory(mediafile.id)"
+            *ngIf="mediafile.is_directory && !isMultiSelect"
+        ></a>
+        <mat-icon class="foreground-icon">{{ mediafile.getIcon() }}</mat-icon>
     </div>
 
     <!-- Title column -->
@@ -117,16 +120,18 @@
             target="_blank"
             [routerLink]="['/system', 'media', 'get', mediafile.id]"
             *ngIf="!mediafile.is_directory && !isMultiSelect"
-        >
-        </a>
-        <a class="detail-link" (click)="changeDirectory(mediafile.id)" *ngIf="mediafile.is_directory && !isMultiSelect">
-        </a>
+        ></a>
+        <a
+            class="detail-link"
+            (click)="changeDirectory(mediafile.id)"
+            *ngIf="mediafile.is_directory && !isMultiSelect"
+        ></a>
         <div class="innerTable">
             <div class="file-title ellipsis-overflow">
                 {{ mediafile.title }}
             </div>
-            <div class="info-text" *ngIf="!mediafile.is_directory">
-                <span> {{ getDateFromTimestamp(mediafile.create_timestamp) }} · {{ mediafile.filesize }} </span>
+            <div class="foreground-icon" *ngIf="!mediafile.is_directory">
+                <span>{{ getDateFromTimestamp(mediafile.create_timestamp) }} · {{ mediafile.filesize }}</span>
             </div>
         </div>
     </div>
@@ -141,7 +146,7 @@
         <os-icon-container *ngIf="mediafile.access_groups.length" icon="group">
             <span *ngFor="let group of mediafile.access_groups | slice: 0:3; let last = last">
                 <span>{{ group.getTitle() | translate }}</span>
-                <span *ngIf="!last">, </span>
+                <span *ngIf="!last">,</span>
                 <span *ngIf="last && mediafile.access_groups.length > 3">...</span>
             </span>
         </os-icon-container>
@@ -154,8 +159,8 @@
             [matMenuTriggerData]="{ mediafile: mediafile }"
             [matTooltip]="formatIndicatorTooltip(mediafile)"
         >
-            <mat-icon class="file-icon" *ngIf="mediafile.isFont()">text_fields</mat-icon>
-            <mat-icon class="file-icon" *ngIf="mediafile.isImage()">insert_photo</mat-icon>
+            <mat-icon class="foreground-icon" *ngIf="mediafile.isFont()">text_fields</mat-icon>
+            <mat-icon class="foreground-icon" *ngIf="mediafile.isImage()">insert_photo</mat-icon>
         </div>
     </div>
 

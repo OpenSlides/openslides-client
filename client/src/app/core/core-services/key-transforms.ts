@@ -1,6 +1,7 @@
 import { Collection, Field, Fqfield, Fqid, Id } from '../definitions/key-types';
 
 export const KEYSEPERATOR = `/`;
+export const TEMPLATE_FIELD_INDICATOR = `$`;
 
 export function fqidFromCollectionAndId(collection: string, id: number | string): string {
     return `${collection}${KEYSEPERATOR}${id}`;
@@ -39,7 +40,11 @@ export function collectionFromFqid(fqid: Fqid): Collection {
     return collectionIdFromFqid(fqid)[0];
 }
 
+export function isTemplateField(field: string): boolean {
+    return new RegExp(`.*${TEMPLATE_FIELD_INDICATOR}.*`).test(field);
+}
+
 // E.g. (group_$_ids, 4) -> group_$4_ids
 export function fillTemplateValueInTemplateField(field: Field, value: string): Field {
-    return field.replace(`$`, `$` + value);
+    return field.replace(TEMPLATE_FIELD_INDICATOR, TEMPLATE_FIELD_INDICATOR + value);
 }

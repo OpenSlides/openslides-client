@@ -182,45 +182,34 @@ export class AutoupdateService {
         const deletedModels: DeletedModels = {};
         const changedModels: ChangedModels = {};
 
-        for (const collection of Object.keys(modelData)) {
-            for (const id of Object.keys(modelData[collection])) {
-                const model = modelData[collection][id];
-                const isDeleted = model.id === null;
-                if (isDeleted) {
-                    if (deletedModels[collection] === undefined) {
-                        deletedModels[collection] = [];
-                    }
-                    deletedModels[collection].push(+id);
-                } else {
-                    if (changedModels[collection] === undefined) {
-                        changedModels[collection] = [];
-                    }
-                    // Important: our model system needs to have an id in the model, even if it is partial
-                    model.id = +id;
-                    const basemodel = this.mapObjectToBaseModel(collection, model);
-                    if (basemodel) {
-                        changedModels[collection].push(basemodel);
-                    }
-                }
-            }
-        }
-        await this.doCollectionUpdates(changedModels, deletedModels, fullListUpdateCollections);
-
-        unlock();
-    }
-
-    private async doCollectionUpdates(
-        changedModels: ChangedModels,
-        deletedModels: DeletedModels,
-        fullListUpdateCollections: { [collection: string]: Id[] }
-    ): Promise<void> {
-        const updateSlot = await this.DSUpdateManager.getNewUpdateSlot(this.DS);
-
         for (const collection of Object.keys(fullListUpdateCollections)) {
             const models = this.DS.getAll(collection);
             const ids = models.map(model => model.id).difference(fullListUpdateCollections[collection]);
             deletedModels[collection] = (deletedModels[collection] || []).concat(ids);
         }
+
+        for (const collection of Object.keys(modelData)) {
+            for (const id of Object.keys(modelData[collection])) {
+                const model = modelData[collection][id];
+                if (changedModels[collection] === undefined) {
+                    changedModels[collection] = [];
+                }
+                // Important: our model system needs to have an id in the model, even if it is partial
+                model.id = +id;
+                const basemodel = this.mapObjectToBaseModel(collection, model);
+                if (basemodel) {
+                    changedModels[collection].push(basemodel);
+                }
+            }
+        }
+
+        await this.doCollectionUpdates(changedModels, deletedModels);
+
+        unlock();
+    }
+
+    private async doCollectionUpdates(changedModels: ChangedModels, deletedModels: DeletedModels): Promise<void> {
+        const updateSlot = await this.DSUpdateManager.getNewUpdateSlot(this.DS);
 
         // Delete the removed objects from the DataStore
         for (const collection of Object.keys(deletedModels)) {
