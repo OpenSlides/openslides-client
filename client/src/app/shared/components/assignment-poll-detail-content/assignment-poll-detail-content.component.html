@@ -41,7 +41,7 @@
                     <div class="single-result" [ngClass]="getVoteClass(vote)">
                         <span>
                             <span *ngIf="vote.showPercent">
-                                {{ getVoteAmount(vote, row) | pollPercentBase: poll }}
+                                {{ getVoteAmount(vote, row) | pollPercentBase: poll:row }}
                             </span>
                             <span *ngIf="row.class === 'user'">
                                 {{ getVoteAmount(vote, row) | parsePollNumber }}

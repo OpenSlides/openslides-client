@@ -65,9 +65,9 @@
         (click)="openEditInfo(user, $event)"
     >
         <div class="groupsCell">
-            <div *ngIf="user.groups() && user.groups().length">
+            <div *ngIf="getUserGroups(user)?.length">
                 <os-icon-container icon="people" noWrap="true">
-                    <span *ngFor="let group of user.groups(); let last = last">
+                    <span *ngFor="let group of getUserGroups(user); let last = last">
                         {{ group.getTitle() | translate }}
                         <span *ngIf="!last">,</span>
                     </span>

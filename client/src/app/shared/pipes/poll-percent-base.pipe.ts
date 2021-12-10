@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { PollService } from 'app/site/polls/services/poll.service';
+import { PollService, PollTableData } from 'app/site/polls/services/poll.service';
 
-import { PollData } from '../models/poll/generic-poll';
+import { OptionData, PollData } from '../models/poll/generic-poll';
 
 /**
  * Uses a number and a ViewPoll-object.
@@ -22,9 +22,9 @@ import { PollData } from '../models/poll/generic-poll';
 export class PollPercentBasePipe implements PipeTransform {
     public constructor(private pollService: PollService) {}
 
-    public transform(value: number, poll: PollData): string | null {
+    public transform(value: number, poll: PollData, row: OptionData | PollTableData): string | null {
         // logic handles over the pollService to avoid circular dependencies
-        const voteValueInPercent: string = this.pollService.getVoteValueInPercent(value, poll);
+        const voteValueInPercent: string = this.pollService.getVoteValueInPercent(value, { poll, row });
 
         if (voteValueInPercent) {
             return `(${voteValueInPercent})`;

@@ -79,7 +79,7 @@ export class PollProgressComponent extends BaseModelContextComponent implements 
                              */
                             return users.filter(
                                 user =>
-                                    user.isPresentInMeeting &&
+                                    user.isPresentInMeeting() &&
                                     this.poll.entitled_group_ids.intersect(
                                         user.group_ids(this.activeMeetingIdService.meetingId)
                                     ).length
