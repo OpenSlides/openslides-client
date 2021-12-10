@@ -26,7 +26,6 @@
 @import '~app/shared/components/block-tile/block-tile.component.scss';
 @import '~app/shared/components/icon-container/icon-container.component.scss';
 @import '~app/site/common/components/start/start.component.scss';
-@import '~app/site/mediafiles/components/mediafile-list/mediafile-list.component.scss-theme.scss';
 @import '~app/shared/components/rounded-input/rounded-input.component.scss';
 @import '~app/shared/components/meta-text-block/meta-text-block.component.scss';
 @import '~app/site/meeting-settings/components/meeting-settings-field/meeting-settings-field.component.scss-theme.scss';
@@ -51,7 +50,6 @@
     @include os-list-of-speakers-style($theme);
     @include os-sorting-tree-style($theme);
     @include os-tile-style($theme);
-    @include os-mediafile-list-theme($theme);
     @include os-rounded-input-style($theme);
     @include os-meta-text-block-style($theme);
     @include os-settings-field-style($theme);
