@@ -40,7 +40,7 @@ export class UserImportHelper<Model> extends BaseBeforeImportHandler<Model, User
         if (!name) {
             return result;
         }
-        const usersAsStrings = name.split(`,`);
+        const usersAsStrings = name.split(`;`);
         for (const user of usersAsStrings) {
             const nextUser = this.repo.parseStringIntoUser(user.trim());
             const existingUsers = this.repo

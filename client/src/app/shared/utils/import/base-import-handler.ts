@@ -218,10 +218,7 @@ export abstract class BaseImportHandler<ToCreate, ToImport> implements ImportHan
             return this.getReturnValue();
         }
         if (this.isArray) {
-            const names = name
-                .split(this._nameDelimiter)
-                .map(n => n.trim())
-                .filter(n => !!n);
+            const names = this.parseName(name);
             const existingModels = names.map(n => this.find(n, csvLine, index));
             return this.getReturnValue(existingModels);
         } else {
@@ -266,6 +263,22 @@ export abstract class BaseImportHandler<ToCreate, ToImport> implements ImportHan
             id: ids[index]?.id
         })) as CsvMapping<ToImport>[];
         this.onAfterCreateUnresolvedEntries(this.modelsToCreate, originalEntries);
+    }
+
+    /**
+     * Parses an input by the given name-delimiter if `isArray` is true
+     *
+     * @param name The input of a single csv entry
+     */
+    private parseName(name: string): string[] {
+        const names = name
+            .split(this._nameDelimiter)
+            .map(n => n.trim())
+            .filter(n => !!n);
+        if (names.some(n => n.length > 256)) {
+            throw new Error(`Name exceeds 256 characters`);
+        }
+        return names;
     }
 
     private setFindFn(findFn?: FindFn<ToImport, ToCreate>, fallbackRepo?: any): void {
