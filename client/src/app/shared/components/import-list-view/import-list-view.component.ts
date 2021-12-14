@@ -337,7 +337,7 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
 
     public getTooltip(value: string | CsvMapping[]): string {
         if (Array.isArray(value)) {
-            return value.map(entry => entry.name).join(`, `);
+            return value.map(entry => entry.name).join(`;\n\r`);
         }
         return value;
     }

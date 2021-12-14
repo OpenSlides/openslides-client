@@ -428,15 +428,8 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
     /**
      * set a list of short names for error, indicating which column failed
      */
-    public setError(entry: NewEntry<Partial<ToCreate>>, error: string): void {
-        if (this.errorList[error]) {
-            if (!entry.errors) {
-                entry.errors = [error];
-            } else if (!entry.errors.includes(error)) {
-                entry.errors.push(error);
-                entry.status = `error`;
-            }
-        }
+    public getVerboseError(error: string): string {
+        return this.errorList[error] ?? error;
     }
 
     /**
@@ -654,7 +647,7 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
      */
     private mapData(line: CsvJsonMapping, importTrackId: number): NewEntry<ToCreate> {
         const newEntry: ToCreate = {} as ToCreate;
-        let hasError = ``;
+        const errors = [];
         const csvEntry = Object.keys(this._headerValueMap).mapToObject(expectedHeader => {
             const originalHeader = this._headerValueMap[expectedHeader];
             return { [expectedHeader]: line[originalHeader] };
@@ -671,7 +664,7 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
                 newEntry[expectedHeader] = value;
             } catch (e) {
                 console.debug(`Error while parsing ${expectedHeader}\n`, e);
-                hasError = e;
+                errors.push(e.message);
                 newEntry[expectedHeader] = csvValue;
             }
         }
@@ -680,11 +673,15 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
             newEntry,
             hasDuplicates,
             importTrackId,
-            status: hasDuplicates ? `error` : `new`,
-            errors: hasDuplicates ? [`Duplicates`] : []
+            status: `new`,
+            errors: []
         };
-        if (hasError) {
-            this.setError(entry, hasError);
+        if (hasDuplicates) {
+            errors.push(`Duplicates`);
+        }
+        if (errors.length) {
+            entry.errors = errors.map(error => this.getVerboseError(error));
+            entry.status = `error`;
         }
         return entry;
     }
@@ -717,7 +714,7 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
             const result = helper.doResolve(model, key);
             model = result.model;
             if (result.unresolvedModels) {
-                this.setError(entry, result.verboseName);
+                entry.errors = (entry.errors ?? []).concat(this.getVerboseError(result.verboseName));
                 this.updatePreview();
                 break;
             }

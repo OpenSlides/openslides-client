@@ -208,7 +208,7 @@
 </ng-template>
 
 <ng-template #entryTemplate let-row="row" let-entry="entry" let-def="def">
-    <div *ngIf="entry[def]">
+    <div *ngIf="entry[def]" class="flex-vertical-center">
         <mat-icon color="warn" *ngIf="hasError(row, def)" matTooltip="{{ getVerboseError(def) | translate }}">
             warning
         </mat-icon>
