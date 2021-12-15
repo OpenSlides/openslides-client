@@ -68,6 +68,10 @@ export class ViewUser extends BaseProjectableViewModel<User> implements Searchab
         return DelegationType.Neither;
     }
 
+    public get meeting_ids(): Id[] {
+        return this.user.meeting_ids;
+    }
+
     // Will be set by the repository
     public getName: () => string;
     public getShortName: () => string;
@@ -87,6 +91,21 @@ export class ViewUser extends BaseProjectableViewModel<User> implements Searchab
             meetingId = this.getEnsuredActiveMeetingId();
         }
         return this.is_present_in_meeting_ids?.includes(meetingId);
+    }
+
+    public get hasMultipleMeetings(): boolean {
+        return this.meeting_ids.length !== 1;
+    }
+
+    public get onlyMeeting(): Id {
+        const meetingAmount = this.meeting_ids?.length || 0;
+        if (meetingAmount === 1) {
+            return this.meeting_ids[0];
+        } else if (meetingAmount > 1) {
+            throw new Error(`User has multiple meetings`);
+        } else if (meetingAmount === 0) {
+            throw new Error(`User has no meetings at all`);
+        }
     }
 
     public hasVoteRightFromOthers(meetingId?: Id): boolean {
@@ -224,6 +243,7 @@ type UserManyStructuredRelation<Result> = (arg?: Id) => Result[];
 interface IUserRelations {
     is_present_in_meetings: ViewMeeting[];
     committees: ViewCommittee[];
+    meetings: ViewMeeting[];
     groups: UserManyStructuredRelation<ViewGroup>;
     speakers: UserManyStructuredRelation<ViewSpeaker>;
     personal_notes: UserManyStructuredRelation<ViewPersonalNote>;

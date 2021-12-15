@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot } from '@angular/router';
 
 import { Settings } from '../../shared/models/event-management/meeting';
 import { MeetingSettingsService } from '../ui-services/meeting-settings.service';
@@ -9,6 +9,11 @@ import { OpenSlidesRouterService } from './openslides-router.service';
 import { OperatorService } from './operator.service';
 import { Permission } from './permission';
 
+enum CannotAccessReason {
+    NO_MEANING = 1,
+    NO_PERM,
+    NO_SETTING
+}
 /**
  * Classical Auth-Guard. Checks if the user has to correct permissions to enter a page, and forwards to login if not.
  */
@@ -16,6 +21,7 @@ import { Permission } from './permission';
     providedIn: `root`
 })
 export class AuthGuard implements CanActivate, CanActivateChild {
+    private cannotAccessReason: CannotAccessReason;
     /**
      * Constructor
      *
@@ -41,7 +47,11 @@ export class AuthGuard implements CanActivate, CanActivateChild {
      *
      * @param route the route the user wants to navigate to
      */
-    public async canActivate(route: ActivatedRouteSnapshot): Promise<boolean> {
+    public async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
+        if (!(await this.hasStateMeaning(state))) {
+            this.cannotAccessReason = CannotAccessReason.NO_MEANING;
+            return false;
+        }
         const basePerm: Permission | Permission[] = route.data.basePerm;
         if (!basePerm) {
             return true;
@@ -51,6 +61,11 @@ export class AuthGuard implements CanActivate, CanActivateChild {
         if ((this.operator.isAnonymous && this.activeMeeting.guestsEnabled) || this.operator.isAuthenticated) {
             const hasPerm = !!this.activeMeeting.meetingId ? this.hasPerms(basePerm) : true;
             const hasSetting = this.isMeetingSettingEnabled(meetingSetting);
+            if (!hasSetting) {
+                this.cannotAccessReason = CannotAccessReason.NO_SETTING;
+            } else if (hasPerm) {
+                this.cannotAccessReason = CannotAccessReason.NO_PERM;
+            }
             return hasPerm && hasSetting;
         } else {
             this.osRouter.navigateToLogin();
@@ -63,14 +78,30 @@ export class AuthGuard implements CanActivate, CanActivateChild {
      *
      * @param route the route the user wants to navigate to
      */
-    public async canActivateChild(route: ActivatedRouteSnapshot): Promise<boolean> {
+    public async canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
         await this.operator.ready;
-        const canActivateRoute = await this.canActivate(route);
+        const canActivateRoute = await this.canActivate(route, state);
+
         if (canActivateRoute) {
             return true;
         } else {
-            this.handleForbiddenRoute(route);
+            if (this.cannotAccessReason === CannotAccessReason.NO_MEANING) {
+                this.forwardToOnlyMeeting();
+            } else {
+                this.handleForbiddenRoute(route);
+            }
         }
+    }
+
+    /**
+     * Determine if the route has any (real) meaning for the user
+     */
+    private async hasStateMeaning(state: RouterStateSnapshot): Promise<boolean> {
+        if (state.url === `/`) {
+            await this.operator.ready;
+            return this.operator.knowsMultipleMeetings;
+        }
+        return true;
     }
 
     private hasPerms(basePerm: Permission | Permission[]): boolean {
@@ -118,5 +149,13 @@ export class AuthGuard implements CanActivate, CanActivateChild {
         } else {
             this.osRouter.navigateToLogin();
         }
+    }
+
+    /**
+     * If the user requested a route without direct meaning, forward to their meaningful meeting
+     */
+    private forwardToOnlyMeeting(): void {
+        const meetingId = this.operator.onlyMeeting;
+        this.router.navigate([meetingId]);
     }
 }

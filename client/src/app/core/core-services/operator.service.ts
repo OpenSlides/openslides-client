@@ -31,7 +31,8 @@ const OPERATOR_FIELDS: (keyof User)[] = [
     `can_change_own_password`,
     `is_present_in_meeting_ids`,
     `default_structure_level`,
-    `is_physical_person`
+    `is_physical_person`,
+    `meeting_ids`
 ];
 
 function getUserCML(user: ViewUser): { [id: number]: string } | null {
@@ -95,6 +96,18 @@ export class OperatorService {
 
     public get isOrgaManager(): boolean {
         return this.hasOrganizationPermissions(OML.can_manage_organization);
+    }
+
+    public get isAnyManager(): boolean {
+        return this.isSuperAdmin || this.isOrgaManager;
+    }
+
+    public get knowsMultipleMeetings(): boolean {
+        return this.isAnyManager || this.user.hasMultipleMeetings;
+    }
+
+    public get onlyMeeting(): Id {
+        return this.user.onlyMeeting;
     }
 
     public get canChangeOwnPassword(): boolean {

@@ -41,6 +41,7 @@ export class User extends BaseDecimalModel<User> {
     public is_demo_user: boolean;
 
     // Meeting and committee
+    public meeting_ids: Id[]; // (meeting/user_ids)[];
     public is_present_in_meeting_ids: Id[]; // (meeting/present_user_ids)[];
     public committee_ids: Id[]; // (committee/user_ids)[];
 
