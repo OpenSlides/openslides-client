@@ -73,142 +73,9 @@ export interface SettingsGroup {
 
 export const meetingSettings: SettingsGroup[] = [
     {
-        label: `General`,
+        label: _(`General`),
         icon: `home`,
         subgroups: [
-            {
-                label: `Live conference`,
-                settings: [
-                    {
-                        key: `conference_show`,
-                        label: _(`Show live conference window`),
-                        type: `boolean`,
-                        helpText: _(`Server settings required to activate Jitsi Meet integration.`)
-                    },
-                    {
-                        key: `conference_auto_connect`,
-                        label: _(`Connect all users to live conference automatically.`),
-                        type: `boolean`,
-                        helpText: _(`Server settings required to activate Jitsi Meet integration.`)
-                    },
-                    {
-                        key: `conference_los_restriction`,
-                        label: _(
-                            `Allow only current speakers and list of speakers managers to enter the live conference`
-                        ),
-                        type: `boolean`,
-                        helpText: _(`Server settings required to activate Jitsi Meet integration.`)
-                    },
-                    {
-                        key: `conference_stream_url`,
-                        label: _(`Livestream URL`),
-                        helpText: _(
-                            `Remove URL to deactivate livestream. Check extra group permission to see livestream.`
-                        )
-                    },
-                    {
-                        key: `conference_open_microphone`,
-                        label: _(`Automatically open the microphone for new conference speakers`),
-                        helpText: _(`Server settings required to activate Jitsi Meet integration.`),
-                        type: `boolean`
-                    },
-                    {
-                        key: `conference_open_video`,
-                        label: _(`Automatically open the web cam for new conference speakers`),
-                        helpText: _(`Server settings required to activate Jitsi Meet integration.`),
-                        type: `boolean`
-                    },
-                    {
-                        key: `conference_auto_connect_next_speakers`,
-                        label: _(`Number of next speakers automatically connecting to the live conference`),
-                        helpText: _(`Live conference has to be active. Choose 0 to disable auto connect.`),
-                        type: `integer`
-                    },
-                    {
-                        key: `conference_stream_poster_url`,
-                        label: _(`Livestream poster image url`),
-                        helpText: _(
-                            `Shows if livestream is not started. Recommended image format: 500x200px, PNG or JPG`
-                        )
-                    },
-                    {
-                        key: `conference_enable_helpdesk`,
-                        label: _(`Enable virtual help desk room`),
-                        helpText: _(
-                            `Shows a button with help icon to connect to an extra Jitsi conference room for technical audio/video tests.`
-                        ),
-                        type: `boolean`
-                    }
-                ]
-            },
-            {
-                label: _(`Applause`),
-                settings: [
-                    {
-                        key: `applause_enable`,
-                        label: _(`Enable virtual applause`),
-                        type: `boolean`
-                    },
-                    {
-                        key: `applause_type`,
-                        label: _(`Applause visualization`),
-                        type: `choice`,
-                        choices: {
-                            'applause-type-bar': _(`Level indicator`),
-                            'applause-type-particles': _(`Particles`)
-                        }
-                    },
-                    {
-                        key: `applause_show_level`,
-                        label: _(`Show applause amount`),
-                        type: `boolean`
-                    },
-                    {
-                        key: `applause_min_amount`,
-                        label: _(`Lowest applause amount`),
-                        helpText: _(`Defines the minimum deflection which is required to recognize applause.`),
-                        type: `integer`
-                    },
-                    {
-                        key: `applause_max_amount`,
-                        label: _(`Highest applause amount`),
-                        helpText: _(
-                            `Defines the maximum deflection. Entering zero will use the amount of present participants instead.`
-                        ),
-                        type: `integer`
-                    },
-                    {
-                        key: `applause_timeout`,
-                        label: _(`Applause interval in seconds`),
-                        helpText: _(`Defines the time in which applause amounts are add up.`),
-                        type: `integer`
-                    },
-                    {
-                        key: `applause_particle_image_url`,
-                        label: _(`Applause particle image URL`),
-                        helpText: _(
-                            `Shows the given image as applause particle. Recommended image format: 24x24px, PNG, JPG or SVG`
-                        )
-                    }
-                ]
-            },
-            {
-                label: _(`Projector`),
-                settings: [
-                    {
-                        key: `projector_countdown_warning_time`,
-                        label: _(`Show orange countdown in the last x seconds of speaking time`),
-                        type: `integer`,
-                        helpText: _(`Enter duration in seconds. Choose 0 to disable warning color.`),
-                        validators: [Validators.min(0)]
-                    },
-                    {
-                        key: `projector_countdown_default_time`,
-                        label: _(`Predefined seconds of new countdowns`),
-                        type: `integer`
-                    }
-                ]
-            },
             {
                 label: _(`System`),
                 settings: [
@@ -220,7 +87,7 @@ export const meetingSettings: SettingsGroup[] = [
                 ]
             },
             {
-                label: _(`Export`),
+                label: _(`Export options`),
                 settings: [
                     {
                         key: `export_csv_separator`,
@@ -335,10 +202,69 @@ export const meetingSettings: SettingsGroup[] = [
                         type: `boolean`
                     }
                 ]
+            }
+        ]
+    },
+    {
+        label: _(`List of speakers`),
+        icon: `record_voice_over`,
+        subgroups: [
+            {
+                label: _(`General`),
+                settings: [
+                    {
+                        key: `list_of_speakers_enable_point_of_order_speakers`,
+                        label: _(`Enable point of order`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `list_of_speakers_enable_pro_contra_speech`,
+                        label: _(`Enable forspeech / counter speech`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `list_of_speakers_can_set_contribution_self`,
+                        label: _(`Enable star icon to mark speaker (e.g. for contribution)`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `list_of_speakers_present_users_only`,
+                        label: _(`Only present participants can be added to the list of speakers`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `list_of_speakers_speaker_note_for_everyone`,
+                        label: _(
+                            `Everyone can see the request of a point of order (instead of managers for list of speakers only)`
+                        ),
+                        type: `boolean`
+                    },
+                    {
+                        key: `list_of_speakers_initially_closed`,
+                        label: _(`List of speakers is initially closed`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `list_of_speakers_show_first_contribution`,
+                        label: _(`Show hint »first speech« in the list of speakers management view`),
+                        type: `boolean`
+                    }
+                ]
             },
             {
-                label: _(`List of speakers`),
+                label: _(`Projector and countdown`),
                 settings: [
+                    {
+                        key: `list_of_speakers_couple_countdown`,
+                        label: _(`Couple countdown with the list of speakers`),
+                        type: `boolean`,
+                        helpText: _(`[Begin speech] starts the countdown, [End speech] stops the countdown.`)
+                    },
+                    {
+                        key: `list_of_speakers_show_amount_of_speakers_on_slide`,
+                        label: _(`Show the amount of speakers in subtitle of list of speakers slide`),
+                        type: `boolean`
+                    },
                     {
                         key: `list_of_speakers_amount_last_on_projector`,
                         label: _(`Number of last speakers to be shown on the projector`),
@@ -353,52 +279,16 @@ export const meetingSettings: SettingsGroup[] = [
                         validators: [Validators.min(-1)]
                     },
                     {
-                        key: `list_of_speakers_couple_countdown`,
-                        label: _(`Couple countdown with the list of speakers`),
-                        type: `boolean`,
-                        helpText: _(`[Begin speech] starts the countdown, [End speech] stops the countdown.`)
+                        key: `projector_countdown_warning_time`,
+                        label: _(`Show orange countdown in the last x seconds of speaking time`),
+                        type: `integer`,
+                        helpText: _(`Enter duration in seconds. Choose 0 to disable warning color.`),
+                        validators: [Validators.min(0)]
                     },
                     {
-                        key: `list_of_speakers_enable_point_of_order_speakers`,
-                        label: _(`Enable point of order`),
-                        type: `boolean`
-                    },
-                    {
-                        key: `list_of_speakers_speaker_note_for_everyone`,
-                        label: _(
-                            `Everyone can see the request of a point of order (instead of managers for list of speakers only)`
-                        ),
-                        type: `boolean`
-                    },
-                    {
-                        key: `list_of_speakers_show_amount_of_speakers_on_slide`,
-                        label: _(`Show the amount of speakers in subtitle of list of speakers slide`),
-                        type: `boolean`
-                    },
-                    {
-                        key: `list_of_speakers_present_users_only`,
-                        label: _(`Only present participants can be added to the list of speakers`),
-                        type: `boolean`
-                    },
-                    {
-                        key: `list_of_speakers_show_first_contribution`,
-                        label: _(`Show hint »first speech« in the list of speakers management view`),
-                        type: `boolean`
-                    },
-                    {
-                        key: `list_of_speakers_initially_closed`,
-                        label: _(`List of speakers is initially closed`),
-                        type: `boolean`
-                    },
-                    {
-                        key: `list_of_speakers_enable_pro_contra_speech`,
-                        label: _(`Enable forspeech / counter speech`),
-                        type: `boolean`
-                    },
-                    {
-                        key: `list_of_speakers_can_set_contribution_self`,
-                        label: _(`Enable star icon to mark speaker (e.g. for contribution)`),
-                        type: `boolean`
+                        key: `projector_countdown_default_time`,
+                        label: _(`Predefined seconds of new countdowns`),
+                        type: `integer`
                     }
                 ]
             }
@@ -554,14 +444,14 @@ export const meetingSettings: SettingsGroup[] = [
                         key: `motions_number_min_digits`,
                         label: _(`Minimum number of digits for motion number`),
                         type: `integer`,
-                        helpText: `Uses leading zeros to sort motions correctly by number.`,
+                        helpText: _(`Uses leading zeros to sort motions correctly by number.`),
                         validators: [Validators.min(1)]
                     },
                     {
                         key: `motions_number_with_blank`,
-                        label: `Allow blank in number`,
+                        label: _(`Allow blank in number`),
                         type: `boolean`,
-                        helpText: `Blank between prefix and number, e.g. 'A 001'.`
+                        helpText: _(`Blank between prefix and number, e.g. 'A 001'.`)
                     }
                 ]
             },
@@ -736,13 +626,13 @@ export const meetingSettings: SettingsGroup[] = [
                         type: `groups`
                     },
                     {
-                        key: `assignment_poll_add_candidates_to_list_of_speakers`,
-                        label: _(`Put all candidates on the list of speakers`),
+                        key: `assignment_poll_sort_poll_result_by_votes`,
+                        label: _(`Sort election results by amount of votes`),
                         type: `boolean`
                     },
                     {
-                        key: `assignment_poll_sort_poll_result_by_votes`,
-                        label: _(`Sort election results by amount of votes`),
+                        key: `assignment_poll_add_candidates_to_list_of_speakers`,
+                        label: _(`Put all candidates on the list of speakers`),
                         type: `boolean`
                     },
                     {
@@ -894,6 +784,128 @@ export const meetingSettings: SettingsGroup[] = [
                         helpText: _(
                             `Use these placeholders: {name}, {event_name}, {url}, {username}, {password}. The url referrs to the system url.`
                         )
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        label: _(`Livestream`),
+        icon: `phone`,
+        subgroups: [
+            {
+                label: _(`Livestream`),
+                settings: [
+                    {
+                        key: `conference_stream_url`,
+                        label: _(`Livestream URL`),
+                        helpText: _(
+                            `Remove URL to deactivate livestream. Check extra group permission to see livestream.`
+                        )
+                    },
+                    {
+                        key: `conference_stream_poster_url`,
+                        label: _(`Livestream poster image url`),
+                        helpText: _(
+                            `Shows if livestream is not started. Recommended image format: 500x200px, PNG or JPG`
+                        )
+                    }
+                ]
+            },
+            {
+                label: _(`Live conference`),
+                settings: [
+                    {
+                        key: `conference_show`,
+                        label: _(`Show live conference window`),
+                        type: `boolean`,
+                        helpText: _(`Server settings required to activate Jitsi Meet integration.`)
+                    },
+                    {
+                        key: `conference_los_restriction`,
+                        label: _(
+                            `Allow only current speakers and list of speakers managers to enter the live conference`
+                        ),
+                        type: `boolean`
+                    },
+                    {
+                        key: `conference_auto_connect`,
+                        label: _(`Connect all users to live conference automatically.`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `conference_open_microphone`,
+                        label: _(`Automatically open the microphone for new conference speakers`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `conference_open_video`,
+                        label: _(`Automatically open the web cam for new conference speakers`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `conference_auto_connect_next_speakers`,
+                        label: _(`Number of next speakers automatically connecting to the live conference`),
+                        type: `integer`
+                    },
+                    {
+                        key: `conference_enable_helpdesk`,
+                        label: _(`Enable virtual help desk room`),
+                        helpText: _(
+                            `Shows a button with help icon to connect to an extra Jitsi conference room for technical audio/video tests.`
+                        ),
+                        type: `boolean`
+                    }
+                ]
+            },
+            {
+                label: _(`Virtual applause`),
+                settings: [
+                    {
+                        key: `applause_enable`,
+                        label: _(`Enable virtual applause`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `applause_show_level`,
+                        label: _(`Show applause amount`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `applause_type`,
+                        label: _(`Applause visualization`),
+                        type: `choice`,
+                        choices: {
+                            'applause-type-bar': _(`Level indicator`),
+                            'applause-type-particles': _(`Particles`)
+                        }
+                    },
+                    {
+                        key: `applause_particle_image_url`,
+                        label: _(`Applause particle image URL`),
+                        helpText: _(
+                            `Shows the given image as applause particle. Recommended image format: 24x24px, PNG, JPG or SVG`
+                        )
+                    },
+                    {
+                        key: `applause_min_amount`,
+                        label: _(`Lowest applause amount`),
+                        helpText: _(`Defines the minimum deflection which is required to recognize applause.`),
+                        type: `integer`
+                    },
+                    {
+                        key: `applause_max_amount`,
+                        label: _(`Highest applause amount`),
+                        helpText: _(
+                            `Defines the maximum deflection. Entering zero will use the amount of present participants instead.`
+                        ),
+                        type: `integer`
+                    },
+                    {
+                        key: `applause_timeout`,
+                        label: _(`Applause interval in seconds`),
+                        helpText: _(`Defines the time in which applause amounts are add up.`),
+                        type: `integer`
                     }
                 ]
             }
