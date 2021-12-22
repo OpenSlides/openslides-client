@@ -84,6 +84,15 @@
             >
                 <mat-icon>stop</mat-icon>
             </button>
+
+            <!-- Extra menu with call controls -->
+            <button
+                mat-icon-button
+                [matMenuTriggerFor]="manageSpeakerMenu"
+                [matMenuTriggerData]="{ speaker: activeSpeaker }"
+            >
+                <mat-icon>more_vert</mat-icon>
+            </button>
         </span>
     </div>
 
@@ -93,7 +102,7 @@
             [live]="true"
             [input]="waitingSpeakers"
             [count]="true"
-            [enable]="opCanManage && (isSortMode || !isMobile)"
+            [enable]="canManage && (isSortMode || !isMobile)"
             (sortEvent)="onSortingChanged($event)"
         >
             <!-- implicit speaker references into the component using ng-template slot -->
@@ -299,6 +308,15 @@
                 <span>{{ 'Contribution' | translate }}</span>
             </button>
 
+            <!-- Call controls -->
+            <ng-container
+                [ngTemplateOutlet]="callControls"
+                [ngTemplateOutletContext]="{ speaker: speaker }"
+                *ngIf="canManage && (isCallEnabled | async)"
+            >
+                <mat-divider></mat-divider>
+            </ng-container>
+
             <mat-divider></mat-divider>
             <!-- remove speaker from list -->
             <button mat-menu-item (click)="removeSpeaker(speaker)">
@@ -348,4 +366,18 @@
             {{ speaker.note }}
         </i>
     </ng-container>
+</ng-template>
+
+<!-- Invite and kick from Call -->
+<ng-template #callControls let-speaker="speaker">
+    <button mat-menu-item (click)="inviteToVoice(speaker)">
+        <mat-icon>add_call</mat-icon>
+        <span>{{ 'Invite to voice channel' | translate }}</span>
+    </button>
+
+    <button mat-menu-item (click)="kickFromVoice(speaker)">
+        <mat-icon>call_end</mat-icon>
+        <span>{{ 'Remove from voice channel' | translate }}</span>
+    </button>
+    <ng-container></ng-container>
 </ng-template>

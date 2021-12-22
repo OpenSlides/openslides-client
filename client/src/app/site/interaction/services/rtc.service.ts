@@ -166,8 +166,8 @@ export class RtcService {
     }
 
     public constructor(
-        settingService: MeetingSettingsService,
         callRestrictionService: CallRestrictionService,
+        settingService: MeetingSettingsService,
         private userMediaPermService: UserMediaPermService,
         private storageMap: StorageMap,
         private operator: OperatorService
@@ -176,12 +176,13 @@ export class RtcService {
         this.autoConnect = settingService.get(`conference_auto_connect`);
 
         combineLatest([
+            settingService.get(`conference_show`),
             settingService.get(`jitsi_domain`),
             settingService.get(`jitsi_room_name`),
             settingService.get(`jitsi_room_password`)
-        ]).subscribe(([domain, roomName, roomPassword]) => {
+        ]).subscribe(([showLiveConf, domain, roomName, roomPassword]) => {
             this.jitsiConfig = { JITSI_DOMAIN: domain, JITSI_ROOM_NAME: roomName, JITSI_ROOM_PASSWORD: roomPassword };
-            this.isJitsiEnabledSubject.next(!!domain && !!roomName);
+            this.isJitsiEnabledSubject.next(showLiveConf && !!domain && !!roomName);
         });
         settingService.get(`conference_open_microphone`).subscribe(open => {
             configOverwrite.startWithAudioMuted = !open;

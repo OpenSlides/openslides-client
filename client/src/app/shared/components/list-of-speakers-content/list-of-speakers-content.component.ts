@@ -31,6 +31,8 @@ import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { ViewSpeaker } from 'app/site/agenda/models/view-speaker';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
+import { InteractionService } from 'app/site/interaction/services/interaction.service';
+import { RtcService } from 'app/site/interaction/services/rtc.service';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { BehaviorSubject, Observable } from 'rxjs';
 
@@ -140,6 +142,8 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
 
     private currentUser: ViewUser = null;
 
+    public isCallEnabled: Observable<boolean> = this.interactionService.showLiveConfObservable;
+
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService,
@@ -152,7 +156,8 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
         private userRepository: UserRepositoryService,
         private viewport: ViewportService,
         private cd: ChangeDetectorRef,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private interactionService: InteractionService
     ) {
         super(componentServiceCollector, translate);
         this.addSpeakerForm = new FormGroup({ user_id: new FormControl() });
@@ -353,6 +358,14 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
                 sortedSpeakerList.map(el => el.id)
             )
             .catch(this.raiseError);
+    }
+
+    public inviteToVoice(speaker: ViewSpeaker): void {
+        this.interactionService.inviteToCall(speaker.userId);
+    }
+
+    public kickFromVoice(speaker: ViewSpeaker): void {
+        this.interactionService.kickFromCall(speaker.userId);
     }
 
     private updateSpeakers(): void {

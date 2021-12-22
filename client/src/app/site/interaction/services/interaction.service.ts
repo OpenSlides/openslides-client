@@ -1,7 +1,14 @@
 import { Injectable } from '@angular/core';
-import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
-import { distinctUntilChanged, map } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { TranslateService } from '@ngx-translate/core';
+import { NotifyService } from 'app/core/core-services/notify.service';
+import { OperatorService } from 'app/core/core-services/operator.service';
+import { Id } from 'app/core/definitions/key-types';
+import { BroadcastService } from 'app/core/services/broadcast.service';
+import { PromptService } from 'app/core/ui-services/prompt.service';
+import { BehaviorSubject, combineLatest, merge, Observable } from 'rxjs';
+import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 
 import { CallRestrictionService } from './call-restriction.service';
 import { RtcService } from './rtc.service';
@@ -13,6 +20,18 @@ export enum ConferenceState {
     jitsi = 3
 }
 
+interface senderMessage {
+    inviter: string;
+}
+
+const BroadcastMessageType = `callInteraction`;
+const InviteMessage = `invitationToCall`;
+const KickMessage = `kickFromCall`;
+const KickedInfo = _(`You are disconnected from the voice conference.`);
+const CallInviteTitle = _(`Invite to voice conference.`);
+const CallInviteWithSender = _(`%user% invites you to join the voice conference.`);
+const CallInviteAuto = _(`You were asked to join the voice conference.`);
+
 @Injectable({
     providedIn: `root`
 })
@@ -20,7 +39,7 @@ export class InteractionService {
     private conferenceStateSubject = new BehaviorSubject<ConferenceState>(ConferenceState.none);
     public conferenceStateObservable = this.conferenceStateSubject.asObservable();
 
-    public showLiveConfObservable: Observable<boolean> = this.settingService.get(`conference_show`);
+    public showLiveConfObservable: Observable<boolean> = this.rtcService.isJitsiEnabledObservable;
     private get conferenceState(): ConferenceState {
         return this.conferenceStateSubject.value;
     }
@@ -40,22 +59,26 @@ export class InteractionService {
     }
 
     public constructor(
-        private settingService: MeetingSettingsService,
         private streamService: StreamService,
         private rtcService: RtcService,
-        private callRestrictionService: CallRestrictionService
+        private callRestrictionService: CallRestrictionService,
+        private notifyService: NotifyService,
+        private operator: OperatorService,
+        private promptService: PromptService,
+        private translate: TranslateService,
+        private matSnackBar: MatSnackBar,
+        private broadcast: BroadcastService
     ) {
         combineLatest([
             this.showLiveConfObservable,
             this.streamService.hasLiveStreamUrlObservable,
             this.streamService.canSeeLiveStreamObservable,
-            this.rtcService.isJitsiEnabledObservable,
             this.rtcService.isJoinedObservable,
             this.rtcService.isJitsiActiveObservable,
             this.callRestrictionService.canEnterCallObservable
         ])
             .pipe(
-                map(([showConf, hasStreamUrl, canSeeStream, jitsiEnabled, inCall, jitsiActive, canEnterCall]) => {
+                map(([showConf, hasStreamUrl, canSeeStream, inCall, jitsiActive, canEnterCall]) => {
                     this.isInCall = inCall;
 
                     /**
@@ -66,7 +89,7 @@ export class InteractionService {
                     }
                     if (hasStreamUrl && canSeeStream) {
                         return ConferenceState.stream;
-                    } else if (showConf && jitsiEnabled && canEnterCall && (!hasStreamUrl || !canSeeStream)) {
+                    } else if (showConf && canEnterCall && (!hasStreamUrl || !canSeeStream)) {
                         return ConferenceState.jitsi;
                     } else {
                         return ConferenceState.none;
@@ -80,15 +103,27 @@ export class InteractionService {
                 }
             });
 
-        this.callRestrictionService.hasToEnterCallObservable.subscribe(() => {
-            if (!this.isInCall) {
-                this.enterCall();
-                this.rtcService.enterConferenceRoom();
-            }
+        merge(
+            this.callRestrictionService.hasToLeaveCallObservable,
+            this.notifyService
+                .getMessageObservable<senderMessage>(KickMessage)
+                .pipe(filter(message => message.sendByThisUser === false))
+        ).subscribe(() => {
+            this.onKick();
         });
 
-        this.callRestrictionService.hasToLeaveCallObservable.subscribe(() => {
-            this.viewStream();
+        merge(
+            this.callRestrictionService.hasToEnterCallObservable,
+            this.notifyService.getMessageObservable<senderMessage>(InviteMessage).pipe(
+                filter(message => message.sendByThisUser === false),
+                map(message => message.message)
+            )
+        ).subscribe(message => {
+            this.onCallInvite(message);
+        });
+
+        broadcast.get(BroadcastMessageType).subscribe(message => {
+            this.promptService.close();
         });
     }
 
@@ -96,6 +131,17 @@ export class InteractionService {
         if (this.conferenceState !== ConferenceState.jitsi) {
             this.setConferenceState(ConferenceState.jitsi);
         }
+    }
+
+    public inviteToCall(userId: Id): void {
+        const content: senderMessage = {
+            inviter: this.operator.user.getShortName()
+        };
+        this.notifyService.sendToUsers(InviteMessage, content, userId);
+    }
+
+    public kickFromCall(userId: Id): void {
+        this.notifyService.sendToUsers(KickMessage, null, userId);
     }
 
     public viewStream(): void {
@@ -107,6 +153,35 @@ export class InteractionService {
     private setConferenceState(newState: ConferenceState): void {
         if (newState !== this.conferenceState) {
             this.conferenceStateSubject.next(newState);
+        }
+    }
+
+    private async onCallInvite(message?: senderMessage | void): Promise<void> {
+        if (!this.isInCall) {
+            let accept: boolean;
+            if (message) {
+                let dialogMessage: string = this.translate.instant(CallInviteWithSender);
+                dialogMessage = dialogMessage.replace(`%user%`, message.inviter);
+                accept = await this.promptService.open(CallInviteTitle, dialogMessage);
+            } else {
+                accept = await this.promptService.open(CallInviteTitle, CallInviteAuto);
+            }
+            if (accept) {
+                this.enterCall();
+                this.rtcService.enterConferenceRoom();
+            }
+
+            this.broadcast.send({
+                type: BroadcastMessageType,
+                payload: null
+            });
+        }
+    }
+
+    private onKick(): void {
+        if (this.isInCall) {
+            this.rtcService.stopJitsi();
+            this.matSnackBar.open(this.translate.instant(KickedInfo), this.translate.instant(`OK`));
         }
     }
 }

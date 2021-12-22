@@ -1,3 +1,4 @@
+import { Id } from 'app/core/definitions/key-types';
 import { HasMeeting } from 'app/management/models/view-meeting';
 import { Speaker, SpeakerState } from 'app/shared/models/agenda/speaker';
 import { BaseViewModel } from 'app/site/base/base-view-model';
@@ -38,6 +39,10 @@ export class ViewSpeaker extends BaseViewModel<Speaker> {
 
     public get name(): string {
         return this.user ? this.user.full_name : ``;
+    }
+
+    public get userId(): Id {
+        return this.user.user.id;
     }
 
     public get gender(): string {
