@@ -7,14 +7,24 @@
 <os-legal-notice-content [isEditable]="true" (update)="updateLegalNotice($event)"></os-legal-notice-content>
 <os-privacy-policy-content [isEditable]="true" (update)="updatePrivacyPolicy($event)"></os-privacy-policy-content>
 
-<mat-card class="os-card" *osPerms="permission.userCanManage">
+<mat-card class="os-card" *ngIf="canSeeStatistics">
     <h2>{{ 'Statistics' | translate }}</h2>
-    <div>
-        <h3>{{ 'Active users' | translate }}</h3>
-        <os-count-users></os-count-users>
-    </div>
-    <div>
-        <h3>{{ 'Requests to speak' | translate }}</h3>
-        <os-user-statistics></os-user-statistics>
-    </div>
+
+    <ng-container *ngIf="osIsManager">
+        <div>
+            <h3>{{ 'Organization statistics' | translate }}</h3>
+            <os-organization-statistics></os-organization-statistics>
+        </div>
+    </ng-container>
+
+    <ng-container *osPerms="permission.userCanManage">
+        <div>
+            <h3>{{ 'Active users' | translate }}</h3>
+            <os-count-users></os-count-users>
+        </div>
+        <div>
+            <h3>{{ 'Requests to speak' | translate }}</h3>
+            <os-user-statistics></os-user-statistics>
+        </div>
+    </ng-container>
 </mat-card>

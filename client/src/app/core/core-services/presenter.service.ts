@@ -7,6 +7,7 @@ const PRESENTER_URL = `/system/presenter/handle_request`;
 export enum Presenter {
     SERVERTIME = `server_time`,
     GET_USERS = `get_users`,
+    GET_ACTIVE_USER_AMOUNT = `get_active_users_amount`,
     GET_USER_RELATED_MODELS = `get_user_related_models`,
     GET_FORWARDING_MEETINGS = `get_forwarding_meetings`
 }

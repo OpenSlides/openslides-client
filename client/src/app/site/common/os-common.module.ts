@@ -6,11 +6,19 @@ import { CommonRoutingModule } from './common-routing.module';
 import { CountUsersComponent } from './components/count-users/count-users.component';
 import { ErrorComponent } from './components/error/error.component';
 import { InfoComponent } from './components/info/info.component';
+import { OrganizationStatisticsComponent } from './components/organization-statistics/organization-statistics.component';
 import { StartComponent } from './components/start/start.component';
 import { UserStatisticsComponent } from './components/user-statistics/user-statistics.component';
 
 @NgModule({
     imports: [CommonModule, CommonRoutingModule, SharedModule],
-    declarations: [StartComponent, CountUsersComponent, ErrorComponent, UserStatisticsComponent, InfoComponent]
+    declarations: [
+        StartComponent,
+        CountUsersComponent,
+        ErrorComponent,
+        UserStatisticsComponent,
+        InfoComponent,
+        OrganizationStatisticsComponent
+    ]
 })
 export class OsCommonModule {}

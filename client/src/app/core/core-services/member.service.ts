@@ -15,8 +15,12 @@ import { OperatorService } from './operator.service';
 import { CML, OML } from './organization-permission';
 import { Presenter, PresenterService } from './presenter.service';
 
-export interface GetUsersPresenterResult {
+interface GetUsersPresenterResult {
     users: Id[];
+}
+
+interface GetActiveUsersPresenterResult {
+    active_users_amount: number;
 }
 
 export interface GetUserRelatedModelsUser {
@@ -79,6 +83,20 @@ export class MemberService {
         const payload = { start_index, entries };
         const response = await this.presenter.call<GetUsersPresenterResult>(Presenter.GET_USERS, payload);
         return response.users;
+    }
+
+    /**
+     * Fetches the amount of all active users from backend
+     *
+     * TODO: Waits for backend
+     * @returns the number of active users
+     */
+    public async fetchAllActiveUsers(): Promise<number> {
+        if (!this.operator.hasOrganizationPermissions(OML.can_manage_users)) {
+            return -1;
+        }
+        const response = await this.presenter.call<GetActiveUsersPresenterResult>(Presenter.GET_ACTIVE_USER_AMOUNT, {});
+        return response.active_users_amount;
     }
 
     /**
