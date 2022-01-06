@@ -620,6 +620,16 @@ export const RELATIONS: Relation[] = [
         structured: false,
         isFullList: true
     },
+    // user/meeting_ids -> meeting
+    {
+        ownViewModels: [ViewUser],
+        foreignViewModel: ViewMeeting,
+        ownField: `meetings`,
+        ownIdField: `meeting_ids`,
+        many: true,
+        generic: false,
+        structured: false
+    },
     // ########## Personal notes
     ...makeGenericO2M<ViewPersonalNote>({
         OViewModel: ViewPersonalNote,

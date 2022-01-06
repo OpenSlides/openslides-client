@@ -28,9 +28,4 @@ export interface BaseMenuEntry<P = any> {
      * The permission to see the entry.
      */
     permission?: P;
-
-    /**
-     * A string passed as css class to the related html tag.
-     */
-    cssClass?: string;
 }

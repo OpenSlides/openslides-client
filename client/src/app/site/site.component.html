@@ -2,6 +2,13 @@
     <ng-template osSidenavDrawerContent>
         <!-- navigation -->
         <mat-nav-list class="main-nav">
+            <ng-container *ngIf="showMeetingNav">
+                <a [@navItemAnim] class="foreground-warn" mat-list-item (click)="mobileAutoCloseNav()" [routerLink]="['/']">
+                    <mat-icon>apps</mat-icon>
+                    <span>{{ 'Meetings' | translate }}</span>
+                </a>
+                <mat-divider></mat-divider>
+            </ng-container>
             <ng-container *ngFor="let entry of mainMenuEntries">
                 <span>
                     <a
@@ -19,7 +26,6 @@
                         <span>{{ entry.displayName | translate }}</span>
                     </a>
                 </span>
-                <mat-divider *ngIf="entry.hasDividerBelow"></mat-divider>
             </ng-container>
             <ng-container
                 *ngIf="{
