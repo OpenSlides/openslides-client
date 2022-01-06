@@ -208,6 +208,14 @@ export class ViewUser extends BaseProjectableViewModel<User> implements Searchab
     public get isVoteRightDelegated(): boolean {
         return !!this.vote_delegated_to_id(this.getEnsuredActiveMeetingId());
     }
+
+    public get isVoteCountable(): boolean {
+        const delegate = this.vote_delegated_to(this.getEnsuredActiveMeetingId());
+        if (!delegate) {
+            return this.isPresentInMeeting();
+        }
+        return delegate.isPresentInMeeting();
+    }
     // ### block end.
 
     /**
