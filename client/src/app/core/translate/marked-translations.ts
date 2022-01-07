@@ -149,6 +149,7 @@ _(`Can see list of speakers`);
 _(`Can manage list of speakers`);
 _(`Can see internal items and time scheduling of agenda`);
 _(`Can put oneself on the list of speakers`);
+_(`Can manage polls`);
 // assignments
 _(`Can see elections`);
 _(`Can nominate another participant`);
@@ -164,10 +165,11 @@ _(`Can manage the projector`);
 _(`Can see the autopilot`);
 _(`Can see the front page`);
 _(`Can manage tags`);
-_(`Can manage configuration`);
+_(`Can manage settings`);
 _(`Can manage logos and fonts`);
 _(`Can see history`);
 _(`Can see the live stream`);
+_(`Can manage the chat`);
 // mediafiles
 _(`Can see the list of files`);
 _(`Can upload files`);
