@@ -2,6 +2,7 @@ import { Collection, Field, Fqfield, Fqid, Id } from '../definitions/key-types';
 
 export const KEYSEPERATOR = `/`;
 export const TEMPLATE_FIELD_INDICATOR = `$`;
+export const DECIMAL_RADIX = 10;
 
 export function fqidFromCollectionAndId(collection: string, id: number | string): string {
     return `${collection}${KEYSEPERATOR}${id}`;
