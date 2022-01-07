@@ -15,8 +15,7 @@
 
 <ng-template #singleStatistik let-label="label" let-current="current" let-max="max">
     <div>
-        <span>{{ label | translate }}</span>
-        <span>{{ current }}/{{ max }}</span>
+        {{ label | translate }}: {{ current }}/{{ max }}
     </div>
     <mat-progress-bar mode="determinate" [value]="(current / max) * 100"></mat-progress-bar>
 </ng-template>

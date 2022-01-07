@@ -14,8 +14,8 @@ import { Observable } from 'rxjs';
     styleUrls: [`./organization-statistics.component.scss`]
 })
 export class OrganizationStatisticsComponent extends BaseComponent implements OnInit {
-    public activeMeetingsText = _(`Active Meetings:`);
-    public activeUsersText = _(`Active Users:`);
+    public activeMeetingsText = _(`Active meetings`);
+    public activeUsersText = _(`Active accounts`);
 
     public activeMeetings: number = this.orgaService.currentActiveMeetings;
     public maxMeetingsObservable: Observable<number> = this.orgaSettings.get(`limit_of_meetings`);

@@ -10,6 +10,9 @@ msgstr ""
 msgid "\"0\" means an unlimited number of active meetings"
 msgstr ""
 
+msgid "%user% invites you to join the voice conference."
+msgstr ""
+
 msgid "100% base"
 msgstr ""
 
@@ -93,7 +96,13 @@ msgstr ""
 msgid "Active"
 msgstr ""
 
+msgid "Active accounts"
+msgstr ""
+
 msgid "Active filters"
+msgstr ""
+
+msgid "Active meetings"
 msgstr ""
 
 msgid "Active users"
@@ -191,6 +200,9 @@ msgstr ""
 msgid "Allow amendments of amendments"
 msgstr ""
 
+msgid "Allow blank in number"
+msgstr ""
+
 msgid "Allow create poll"
 msgstr ""
 
@@ -256,9 +268,6 @@ msgstr ""
 msgid "Anonymous"
 msgstr ""
 
-msgid "Applause"
-msgstr ""
-
 msgid "Applause interval in seconds"
 msgstr ""
 
@@ -290,9 +299,6 @@ msgid "Are you sure you want to archive this meeting?"
 msgstr ""
 
 msgid "Are you sure you want to clear all speakers of all lists?"
-msgstr ""
-
-msgid "Are you sure you want to delete all selected committees?"
 msgstr ""
 
 msgid "Are you sure you want to delete all selected elections?"
@@ -496,6 +502,9 @@ msgstr ""
 msgid "Begin speech"
 msgstr ""
 
+msgid "Blank between prefix and number, e.g. 'A 001'."
+msgstr ""
+
 msgid "CSV import"
 msgstr ""
 
@@ -535,9 +544,6 @@ msgstr ""
 msgid "Can manage comments"
 msgstr ""
 
-msgid "Can manage configuration"
-msgstr ""
-
 msgid "Can manage elections"
 msgstr ""
 
@@ -559,7 +565,16 @@ msgstr ""
 msgid "Can manage motions"
 msgstr ""
 
+msgid "Can manage polls"
+msgstr ""
+
+msgid "Can manage settings"
+msgstr ""
+
 msgid "Can manage tags"
+msgstr ""
+
+msgid "Can manage the chat"
 msgstr ""
 
 msgid "Can manage the projector"
@@ -703,6 +718,12 @@ msgstr ""
 msgid "Changes"
 msgstr ""
 
+msgid "Chat"
+msgstr ""
+
+msgid "Chat groups"
+msgstr ""
+
 msgid "Check in or check out participants based on their participant numbers:"
 msgstr ""
 
@@ -719,6 +740,9 @@ msgid "Chyron background color"
 msgstr ""
 
 msgid "Chyron font color"
+msgstr ""
+
+msgid "Clear"
 msgstr ""
 
 msgid "Clear all"
@@ -760,9 +784,6 @@ msgstr ""
 msgid "Column separator"
 msgstr ""
 
-msgid "Comma separated names will be read as \"Surname, given name(s)\"."
-msgstr ""
-
 msgid "Comment"
 msgstr ""
 
@@ -782,12 +803,6 @@ msgid "Committee manager"
 msgstr ""
 
 msgid "Committee managers"
-msgstr ""
-
-msgid "Committee member"
-msgstr ""
-
-msgid "Committee members"
 msgstr ""
 
 msgid "Committees"
@@ -818,12 +833,6 @@ msgid "Contra speech"
 msgstr ""
 
 msgid "Contribution"
-msgstr ""
-
-msgid "Copy and paste your account names in this textbox."
-msgstr ""
-
-msgid "Copy and paste your participant names in this textbox."
 msgstr ""
 
 msgid "Count active users"
@@ -863,6 +872,9 @@ msgid "Create"
 msgstr ""
 
 msgid "Create final print template"
+msgstr ""
+
+msgid "Create new chat group"
 msgstr ""
 
 msgid "Create new tag"
@@ -962,6 +974,9 @@ msgid "Default structure level"
 msgstr ""
 
 msgid "Default text version for change recommendations"
+msgstr ""
+
+msgid "Default time period to evaluate a poll"
 msgstr ""
 
 msgid "Default visibility for new agenda items (except topics)"
@@ -1145,6 +1160,9 @@ msgstr ""
 msgid "Election documents"
 msgstr ""
 
+msgid "Election not found"
+msgstr ""
+
 msgid "Elections"
 msgstr ""
 
@@ -1164,6 +1182,12 @@ msgid "Email subject"
 msgstr ""
 
 msgid "Empty text field"
+msgstr ""
+
+msgid "Enable chat"
+msgstr ""
+
+msgid "Enable chat globally"
 msgstr ""
 
 msgid "Enable electronic voting"
@@ -1276,6 +1300,9 @@ msgid "Export comment"
 msgstr ""
 
 msgid "Export motions"
+msgstr ""
+
+msgid "Export options"
 msgstr ""
 
 msgid "Export personal note only"
@@ -1529,9 +1556,6 @@ msgstr ""
 msgid "Insert behind"
 msgstr ""
 
-msgid "Insert participants here"
-msgstr ""
-
 msgid "Insert topics here"
 msgstr ""
 
@@ -1548,6 +1572,12 @@ msgid "Invalid line number"
 msgstr ""
 
 msgid "Invalid votes"
+msgstr ""
+
+msgid "Invite to voice channel"
+msgstr ""
+
+msgid "Invite to voice conference."
 msgstr ""
 
 msgid "Is active"
@@ -1608,9 +1638,6 @@ msgid "Jitsi room password"
 msgstr ""
 
 msgid "Keep each item in a single line."
-msgstr ""
-
-msgid "Keep each person in a single line."
 msgstr ""
 
 msgid "Label color"
@@ -1676,7 +1703,13 @@ msgstr ""
 msgid "List view"
 msgstr ""
 
+msgid "Live conference"
+msgstr ""
+
 msgid "Live conference has to be active. Choose 0 to disable auto connect."
+msgstr ""
+
+msgid "Livestream"
 msgstr ""
 
 msgid "Livestream URL"
@@ -1695,6 +1728,9 @@ msgid "Login as guest"
 msgstr ""
 
 msgid "Logout"
+msgstr ""
+
+msgid "Long poll"
 msgstr ""
 
 msgid "Lowest applause amount"
@@ -1782,6 +1818,9 @@ msgid "Motion forwarded to"
 msgstr ""
 
 msgid "Motion forwarding"
+msgstr ""
+
+msgid "Motion not found"
 msgstr ""
 
 msgid "Motion number"
@@ -1934,6 +1973,9 @@ msgstr ""
 msgid "No changes at the text."
 msgstr ""
 
+msgid "No chat groups available"
+msgstr ""
+
 msgid "No comment"
 msgstr ""
 
@@ -2001,6 +2043,9 @@ msgid "None"
 msgstr ""
 
 msgid "Not allowed in demo mode"
+msgstr ""
+
+msgid "Not found"
 msgstr ""
 
 msgid "Note, that the default password will be changed to the new generated one."
@@ -2131,6 +2176,9 @@ msgstr ""
 msgid "Options"
 msgstr ""
 
+msgid "Organization"
+msgstr ""
+
 msgid "Origin"
 msgstr ""
 
@@ -2192,6 +2240,9 @@ msgid "Parent directory"
 msgstr ""
 
 msgid "Participant"
+msgstr ""
+
+msgid "Participant not found"
 msgstr ""
 
 msgid "Participant number"
@@ -2271,6 +2322,9 @@ msgstr ""
 msgid "Poll deleted"
 msgstr ""
 
+msgid "Poll duration"
+msgstr ""
+
 msgid "Poll updated"
 msgstr ""
 
@@ -2322,13 +2376,16 @@ msgstr ""
 msgid "Projection defaults"
 msgstr ""
 
-msgid "Projector"
+msgid "Projector and countdown"
 msgstr ""
 
 msgid "Projector header image"
 msgstr ""
 
 msgid "Projector logo"
+msgstr ""
+
+msgid "Projector not found"
 msgstr ""
 
 msgid "Projectors"
@@ -2433,6 +2490,9 @@ msgid "Remove from agenda"
 msgstr ""
 
 msgid "Remove from motion block"
+msgstr ""
+
+msgid "Remove from voice channel"
 msgstr ""
 
 msgid "Remove me"
@@ -2548,6 +2608,9 @@ msgstr ""
 msgid "Select paragraphs"
 msgstr ""
 
+msgid "Send"
+msgstr ""
+
 msgid "Send invitation email"
 msgstr ""
 
@@ -2638,6 +2701,9 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
+msgid "Short poll"
+msgstr ""
+
 msgid "Show all"
 msgstr ""
 
@@ -2660,6 +2726,9 @@ msgid "Show checkbox to record decision"
 msgstr ""
 
 msgid "Show clock"
+msgstr ""
+
+msgid "Show committee"
 msgstr ""
 
 msgid "Show conference room"
@@ -2952,6 +3021,11 @@ msgstr ""
 msgid "The number has to be greater than 0."
 msgstr ""
 
+msgid ""
+"The option short poll should be used, if polls are intended to end after a "
+"few minutes."
+msgstr ""
+
 msgid "The parent motion was deleted."
 msgstr ""
 
@@ -3065,6 +3139,9 @@ msgstr ""
 msgid "Tile view"
 msgstr ""
 
+msgid "Time period to evaluate a poll"
+msgstr ""
+
 msgid "Timestamp"
 msgstr ""
 
@@ -3081,6 +3158,9 @@ msgid "Title for access data and welcome PDF"
 msgstr ""
 
 msgid "Topic"
+msgstr ""
+
+msgid "Topic not found"
 msgstr ""
 
 msgid "Topics"
@@ -3141,6 +3221,9 @@ msgstr ""
 msgid "Username or password is not correct."
 msgstr ""
 
+msgid "Uses leading zeros to sort motions correctly by number."
+msgstr ""
+
 msgid "Using OpenSlides over HTTP is not supported. Enable HTTPS to continue."
 msgstr ""
 
@@ -3148,6 +3231,9 @@ msgid "Valid votes"
 msgstr ""
 
 msgid "View"
+msgstr ""
+
+msgid "Virtual applause"
 msgstr ""
 
 msgid "Visibility"
@@ -3271,6 +3357,9 @@ msgstr ""
 msgid "Yes, delete"
 msgstr ""
 
+msgid "Yes, inclusive meetings"
+msgstr ""
+
 msgid "Yes/No"
 msgstr ""
 
@@ -3281,6 +3370,9 @@ msgid "Yes/No/Abstain"
 msgstr ""
 
 msgid "Yes/No/Abstain per candidate"
+msgstr ""
+
+msgid "You are disconnected from the voice conference."
 msgstr ""
 
 msgid "You are not allowed to see all entitled users."
@@ -3379,6 +3471,9 @@ msgid "You override the personally set password!"
 msgstr ""
 
 msgid "You reached the maximum amount of votes. Deselect somebody first."
+msgstr ""
+
+msgid "You were asked to join the voice conference."
 msgstr ""
 
 msgid "Your browser"
