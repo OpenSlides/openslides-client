@@ -11,7 +11,8 @@
     <!-- Multiselect info -->
     <div class="central-info-slot">
         <button mat-icon-button (click)="toggleMultiSelect()"><mat-icon>arrow_back</mat-icon></button>
-        <span>{{ selectedRows.length }}&nbsp;</span><span>{{ 'selected' | translate }}</span>
+        <span>{{ selectedRows.length }}&nbsp;</span>
+        <span>{{ 'selected' | translate }}</span>
     </div>
 </os-head-bar>
 
@@ -127,12 +128,6 @@
         <!-- Project agenda -->
         <os-projector-button [object]="itemListSlide" [menuItem]="true"></os-projector-button>
 
-        <!-- Current list of speakers -->
-        <button mat-menu-item *osPerms="permission.listOfSpeakersCanSee" [routerLink]="createUrl('speakers')">
-            <mat-icon>mic</mat-icon>
-            <span>{{ 'Current list of speakers' | translate }}</span>
-        </button>
-
         <!-- Tags -->
         <button mat-menu-item [routerLink]="['/', activeMeetingId, 'tags']" *osPerms="permission.tagCanManage">
             <mat-icon>local_offer</mat-icon>
@@ -152,7 +147,11 @@
             <span>{{ 'Export as PDF' | translate }}</span>
         </button>
         <!-- Import -->
-        <button mat-menu-item *osPerms="permission.agendaItemCanManage" [routerLink]="createUrl('import')">
+        <button
+            mat-menu-item
+            *osPerms="permission.agendaItemCanManage"
+            [routerLink]="['/', activeMeetingId, 'agenda', 'import']"
+        >
             <mat-icon>cloud_upload</mat-icon>
             <span>{{ 'Import' | translate }}</span>
         </button>
@@ -247,7 +246,7 @@
         <div *osPerms="permission.agendaItemCanManage">
             <!-- Done check -->
             <button mat-menu-item (click)="onDoneSingleButton(item)">
-                <mat-icon color="accent"> {{ item.closed ? 'check_box' : 'check_box_outline_blank' }} </mat-icon>
+                <mat-icon color="accent">{{ item.closed ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
                 <span>{{ 'Done' | translate }}</span>
             </button>
 

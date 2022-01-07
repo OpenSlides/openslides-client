@@ -4,7 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
-import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
@@ -194,10 +193,6 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
             ],
             fieldset: []
         };
-    }
-
-    public createUrl(path: string): string {
-        return `/${this.activeMeetingId}/agenda/${path}`;
     }
 
     /**

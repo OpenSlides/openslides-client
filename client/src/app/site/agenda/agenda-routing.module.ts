@@ -17,7 +17,6 @@ const routes: Route[] = [
         canDeactivate: [WatchForChangesGuard],
         data: { basePerm: Permission.agendaItemCanManage }
     },
-    { path: `speakers`, component: ListOfSpeakersComponent, data: { basePerm: Permission.listOfSpeakersCanSee } },
     {
         path: `speakers/:id`,
         component: ListOfSpeakersComponent,
