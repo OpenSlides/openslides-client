@@ -265,22 +265,13 @@ export abstract class BasePollDetailComponentDirective<V extends ViewPoll<BaseVi
     }
 
     protected userHasVoteDelegation(user: ViewUser): boolean {
-        /**
-         * This will be false if the operator does not have "can_see_extra_data"
-         */
-        if (user.isVoteRightDelegated) {
-            return true;
-        } else if (this.currentOperator.canVoteFor(user)) {
+        if (user.isVoteRightDelegated || this.currentOperator.canVoteFor(user)) {
             return true;
         }
-
         return false;
     }
 
     protected getUsersVoteDelegation(user: ViewUser): ViewUser {
-        /**
-         * This will be false if the operator does not have "can_see_extra_data"
-         */
         if (user.isVoteRightDelegated) {
             return user.vote_delegated_to(this.activeMeetingId);
         }
