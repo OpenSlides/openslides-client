@@ -123,19 +123,20 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
     }
 
     public async doDelete(committee?: ViewCommittee): Promise<void> {
+        const toDelete = committee ? [committee] : this.selectedRows;
         const toTranslate = committee
             ? `Are you sure you want to delete this committee?`
             : `Are you sure you want to delete all selected committees?`;
         const title = this.translate.instant(toTranslate);
         const content = committee?.name ?? ``;
 
+        const haveMeetings = toDelete.some(committee => !!committee.meeting_ids?.length);
         const YES_WITH_MEETINGS = _(`Yes, inclusive meetings`);
         const YES = _(`Yes`);
-        const actions = [YES_WITH_MEETINGS, YES];
+        const actions = haveMeetings ? [YES_WITH_MEETINGS] : [YES];
 
         const answer = await this.choiceService.open({ title, content, actions });
         if (answer) {
-            const toDelete = committee ? [committee] : this.selectedRows;
             if (answer.action === YES_WITH_MEETINGS) {
                 const meetingIdsToDelete = toDelete
                     .flatMap(committeeToDelete => committeeToDelete.meeting_ids)
