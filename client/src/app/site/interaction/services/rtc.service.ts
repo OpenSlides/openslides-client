@@ -80,8 +80,6 @@ const interfaceConfigOverwrite = {
         `desktop`,
         `fullscreen`,
         `fodeviceselection`,
-        `profile`,
-        `chat`,
         `recording`,
         `livestreaming`,
         `etherpad`,
