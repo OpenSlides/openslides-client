@@ -3,11 +3,11 @@
     "version": "4.0.0",
     "repository": {
         "type": "git",
-        "url": "git://github.com/OpenSlides/OpenSlides.git"
+        "url": "git://github.com:OpenSlides/openslides-client.git"
     },
     "license": "MIT",
-    "description": "OpenSlides 3.0 (Client)",
-    "README": "https://github.com/OpenSlides/OpenSlides/blob/main/client/README.md",
+    "description": "OpenSlides 4 Client",
+    "README": "https://github.com/OpenSlides/openslides-client/blob/main/README.md",
     "scripts": {
         "ng": "ng",
         "ng-high-memory": "node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng",

@@ -35,7 +35,7 @@ export class AppComponent implements OnInit {
     private onInitDone = new Deferred();
 
     /**
-     * Master-component of all apps.
+     * Main-component of all apps.
      *
      * Inits the translation service, the operator, the login data and the constants.
      *

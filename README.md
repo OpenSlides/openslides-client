@@ -115,7 +115,7 @@ The app will automatically reload if you change any of the source files.
 
 # For contributors
 
-Generally, please work in your own fork, make branches and make a pull request if you want to see your changes in the OpenSlides Client. A pull requests should have exactly one commit. Contributors should add themselves to the [AUTHORS](https://github.com/OpenSlides/OpenSlides/blob/master/AUTHORS) file on the [OpenSlides main repository](https://github.com/OpenSlides/OpenSlides).
+Generally, please work in your own fork, make branches and make a pull request if you want to see your changes in the OpenSlides Client. A pull requests should have exactly one commit. Contributors should add themselves to the [AUTHORS](https://github.com/OpenSlides/OpenSlides/blob/main/AUTHORS) file on the [OpenSlides main repository](https://github.com/OpenSlides/OpenSlides).
 
 ## Commit messages
 
