@@ -130,7 +130,7 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
         const title = this.translate.instant(toTranslate);
         const content = committee?.name ?? ``;
 
-        const haveMeetings = toDelete.some(committee => !!committee.meeting_ids?.length);
+        const haveMeetings = toDelete.some(committeeDel => !!committeeDel.meeting_ids?.length);
         const YES_WITH_MEETINGS = _(`Yes, inclusive meetings`);
         const YES = _(`Yes`);
         const actions = haveMeetings ? [YES_WITH_MEETINGS] : [YES];
