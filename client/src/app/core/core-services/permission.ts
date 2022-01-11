@@ -46,7 +46,7 @@ export enum Permission {
     tagCanManage = `tag.can_manage`,
 
     userCanManage = `user.can_manage`,
-    userCanSeeExtraData = `user.can_see_extra_data`,
+    userCanManagePresence = `user.can_manage_presence`,
     userCanSee = `user.can_see`
 }
 
@@ -78,10 +78,11 @@ export const PERMISSIONS: AppPermission[] = [
                 display_name: `Can see internal items and time scheduling of agenda`,
                 value: Permission.agendaItemCanSeeInternal
             },
-            { display_name: `Can see list of speakers`, value: Permission.listOfSpeakersCanSee },
             { display_name: `Can manage agenda`, value: Permission.agendaItemCanManage },
+            { display_name: `Can see list of speakers`, value: Permission.listOfSpeakersCanSee },
             { display_name: `Can manage list of speakers`, value: Permission.listOfSpeakersCanManage },
-            { display_name: `Can put oneself on the list of speakers`, value: Permission.listOfSpeakersCanBeSpeaker }
+            { display_name: `Can put oneself on the list of speakers`, value: Permission.listOfSpeakersCanBeSpeaker },
+            { display_name: `Can manage polls`, value: Permission.pollCanManage }
         ]
     },
     {
@@ -122,19 +123,11 @@ export const PERMISSIONS: AppPermission[] = [
         permissions: [
             { display_name: `Can see names of users`, value: Permission.userCanSee },
             {
-                display_name: `Can see extra data of users (e.g. email and comment)`,
-                value: Permission.userCanSeeExtraData
+                display_name: `Can manage other users presence state`,
+                value: Permission.userCanManagePresence
             },
             { display_name: `Can manage users`, value: Permission.userCanManage }
         ]
-    },
-    {
-        name: `Chat`,
-        permissions: [{ display_name: `Can manage the chat`, value: Permission.chatCanManage }]
-    },
-    {
-        name: `Poll`,
-        permissions: [{ display_name: `Can manage polls`, value: Permission.pollCanManage }]
     },
     {
         name: `General`,
@@ -142,10 +135,11 @@ export const PERMISSIONS: AppPermission[] = [
             { display_name: `Can see the front page`, value: Permission.meetingCanSeeFrontpage },
             { display_name: `Can see the autopilot`, value: Permission.meetingCanSeeAutopilot },
             { display_name: `Can see the live stream`, value: Permission.meetingCanSeeLiveStream },
-            { display_name: `Can see history`, value: Permission.meetingCanSeeHistory },
+            // { display_name: `Can see history`, value: Permission.meetingCanSeeHistory },
             { display_name: `Can manage settings`, value: Permission.meetingCanManageSettings },
             { display_name: `Can manage logos and fonts`, value: Permission.meetingCanManageLogosAndFonts },
-            { display_name: `Can manage tags`, value: Permission.tagCanManage }
+            { display_name: `Can manage tags`, value: Permission.tagCanManage },
+            { display_name: `Can manage the chat`, value: Permission.chatCanManage }
         ]
     }
 ];

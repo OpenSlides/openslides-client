@@ -44,6 +44,6 @@ export const childPermissions: PermissionsMap = {
     'projector.can_manage': [Permission.projectorCanSee],
     'tag.can_manage': [],
     'user.can_see': [],
-    'user.can_see_extra_data': [Permission.userCanSee],
-    'user.can_manage': [Permission.userCanSeeExtraData, Permission.userCanSee]
+    'user.can_manage_presence': [Permission.userCanSee],
+    'user.can_manage': [Permission.userCanManagePresence, Permission.userCanSee]
 };

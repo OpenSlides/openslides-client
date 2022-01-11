@@ -123,10 +123,6 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         return this.operator.hasPerms(Permission.userCanManage);
     }
 
-    public get canSeeExtra(): boolean {
-        return this.operator.hasPerms(Permission.userCanSeeExtraData);
-    }
-
     public get showVoteWeight(): boolean {
         return this.pollService.isElectronicVotingEnabled && this.voteWeightEnabled;
     }
@@ -283,7 +279,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         } else if (this._allowSelfSetPresent && this.operator.operatorId === user.id) {
             return false;
         } else {
-            return !this.operator.hasPerms(Permission.userCanManage);
+            return !this.operator.hasPerms(Permission.userCanManage, Permission.userCanManagePresence);
         }
     }
 

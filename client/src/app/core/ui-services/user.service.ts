@@ -30,8 +30,7 @@ export class UserService {
      * - delete         (deleting the user) (users.can_manage and not ownPage)
      * - seeName        (title, first, last, gender, about) (user.can_see_name or ownPage)
      * - seeOtherUsers  (title, first, last, gender, about) (user.can_see_name)
-     * - seeExtra       (email, comment, is_active, last_email_send) (user.can_see_extra_data)
-     * - seePersonal    (mail, username, structure level) (user.can_see_extra_data or ownPage)
+     * - seePersonal    (mail, username, structure level) (ownPage)
      * - manage         (everything) (user.can_manage)
      * - changePersonal (mail, username, about) (user.can_manage or ownPage)
      * - changePassword (user.can_change_password)
@@ -54,10 +53,8 @@ export class UserService {
                 return this.operator.hasPerms(Permission.userCanSee, Permission.userCanManage);
             case `seeOtherUsers`:
                 return this.operator.hasPerms(Permission.userCanSee, Permission.userCanManage);
-            case `seeExtra`:
-                return this.operator.hasPerms(Permission.userCanSeeExtraData, Permission.userCanManage);
             case `seePersonal`:
-                return this.operator.hasPerms(Permission.userCanSeeExtraData, Permission.userCanManage);
+                return this.operator.hasPerms(Permission.userCanManage);
             case `changePersonal`:
                 return this.operator.hasPerms(Permission.userCanManage);
             case `changePassword`:

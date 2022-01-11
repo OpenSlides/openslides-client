@@ -50,7 +50,7 @@
                 <mat-icon matTooltip="{{ 'Is no natural person' | translate }}" *ngIf="!user.is_physical_person">
                     auto_awesome_mosaic
                 </mat-icon>
-                <mat-icon matTooltip="{{ 'Inactive' | translate }}" *ngIf="!user.is_active && canSeeExtra">
+                <mat-icon matTooltip="{{ 'Inactive' | translate }}" *ngIf="!user.is_active && canManage">
                     block
                 </mat-icon>
             </div>
