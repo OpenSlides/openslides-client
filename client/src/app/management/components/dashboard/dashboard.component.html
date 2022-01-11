@@ -145,6 +145,9 @@
                 </div>
             </div>
         </a>
+        <mat-icon *ngIf="meeting.isArchived" matTooltip="{{ 'This meeting is archived' | translate }}">
+            archive
+        </mat-icon>
         <a
             mat-icon-button
             [routerLink]="['/', 'committees', meeting.committee_id]"
@@ -152,8 +155,5 @@
         >
             <mat-icon>auto_awesome_mosaic</mat-icon>
         </a>
-        <mat-icon *ngIf="meeting.isArchived" matTooltip="{{ 'This meeting is archived' | translate }}">
-            archive
-        </mat-icon>
     </div>
 </ng-template>
