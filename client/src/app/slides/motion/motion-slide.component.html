@@ -11,9 +11,9 @@
         </span>
 
         <!-- Recommendation -->
-        <div *ngIf="data.data.recommendation && data.data.recommender">
-            <h3>{{ data.data.recommender }}</h3>
-            {{ getRecommendationLabel() }}
+        <div *ngIf="recommender && recommendationLabel">
+            <h3>{{ recommender }}</h3>
+            {{ recommendationLabel }}
         </div>
     </div>
 
@@ -48,12 +48,12 @@
                     </td>
                 </tr>
                 <!-- Recommendation -->
-                <tr *ngIf="data.data.recommendation && data.data.recommender">
+                <tr *ngIf="recommender && recommendationLabel">
                     <td class="min">
-                        <b>{{ data.data.recommender }}:</b>
+                        <b>{{ recommender }}:</b>
                     </td>
                     <td>
-                        {{ getRecommendationLabel() }}
+                        {{ recommendationLabel }}
                     </td>
                 </tr>
                 <!-- recommendation referencing motions -->
