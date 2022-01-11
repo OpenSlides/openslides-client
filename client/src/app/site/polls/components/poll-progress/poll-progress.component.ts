@@ -77,13 +77,14 @@ export class PollProgressComponent extends BaseModelContextComponent implements 
                              * or the have their vote delegated to a user who is present.
                              * They are in one of the voting groups
                              */
-                            return users.filter(
-                                user =>
-                                    user.isPresentInMeeting() &&
-                                    this.poll.entitled_group_ids.intersect(
-                                        user.group_ids(this.activeMeetingIdService.meetingId)
-                                    ).length
-                            );
+                            return users.filter(user => {
+                                const countable = user.isVoteCountable;
+                                const inVoteGroup = this.poll.entitled_group_ids.intersect(
+                                    user.group_ids(this.activeMeetingIdService.meetingId)
+                                ).length;
+
+                                return countable && inVoteGroup;
+                            });
                         })
                     )
                     .subscribe(users => {

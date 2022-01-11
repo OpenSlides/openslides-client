@@ -89,11 +89,11 @@
             </div>
 
             <div
-                *ngIf="user.vote_delegated_from_users_id?.length"
+                *ngIf="user.vote_delegations_from_ids()?.length"
                 class="spacer-top-5"
                 matTooltip="{{ 'Voting right received from (principals)' | translate }}"
             >
-                <os-icon-container icon="work" noWrap="true">{{ user.voteDelegationsFrom }}</os-icon-container>
+                <os-icon-container icon="work" noWrap="true">{{ user.vote_delegations_from() }}</os-icon-container>
             </div>
         </div>
     </div>

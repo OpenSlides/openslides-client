@@ -145,7 +145,8 @@ export class UserRepositoryService
         ]);
         const voteProgressFields: (keyof User | { templateField: keyof User })[] = [
             `is_present_in_meeting_ids`,
-            `group_$_ids`
+            `group_$_ids`,
+            { templateField: `vote_delegated_$_to_id` }
         ];
 
         return {

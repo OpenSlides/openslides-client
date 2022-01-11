@@ -106,6 +106,23 @@ export class MotionSlideComponent
         return this._scale;
     }
 
+    public get recommender(): string {
+        return this.data.data.recommender;
+    }
+
+    public get recommendationLabel(): string {
+        let recommendation = this.translate.instant(this.data.data.recommendation_label);
+        if (this.data.data.recommendation_extension) {
+            recommendation +=
+                ` ` +
+                this.replaceReferencedMotions(
+                    this.data.data.recommendation_extension,
+                    this.data.data.recommendation_referenced_motions
+                );
+        }
+        return recommendation;
+    }
+
     public textDivStyles: {
         width?: string;
         'margin-top'?: string;
@@ -141,19 +158,6 @@ export class MotionSlideComponent
 
         this.recalcUnifiedChanges();
         this.recalcMotionText();
-    }
-
-    public getRecommendationLabel(): string {
-        let recommendation = this.translate.instant(this.data.data.recommendation_label);
-        if (this.data.data.recommendation_extension) {
-            recommendation +=
-                ` ` +
-                this.replaceReferencedMotions(
-                    this.data.data.recommendation_extension,
-                    this.data.data.recommendation_referenced_motions
-                );
-        }
-        return recommendation;
     }
 
     /**
