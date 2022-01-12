@@ -13,8 +13,7 @@ import { MotionPdfExportService } from 'app/site/motions/services/motion-pdf-exp
 
 @Component({
     selector: `os-motion-comment`,
-    templateUrl: `./motion-comment.component.html`,
-    styleUrls: [`./motion-comment.component.scss`]
+    templateUrl: `./motion-comment.component.html`
 })
 export class MotionCommentComponent extends BaseComponent implements OnInit {
     @Input()
