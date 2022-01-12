@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ProgressSnackBarComponent } from 'app/shared/components/progress-snack-bar/progress-snack-bar.component';
 import { MotionExportInfo } from 'app/site/motions/services/motion-export.service';
 import { saveAs } from 'file-saver';
+import * as moment from 'moment';
 
 import { HttpService } from '../core-services/http.service';
 import { FontPlace, MediaManageService } from '../ui-services/media-manage.service';
@@ -190,6 +191,19 @@ export class PdfDocumentService {
     }
 
     /**
+     * use moment to get the start time.
+     * Still no real service to do this for us.
+     */
+    private getStartTime(): string {
+        const dateFormat = `l`;
+        const unixStartTime = this.meetingSettingsService.instant(`start_time`);
+        const lang = this.translate.currentLang ? this.translate.currentLang : this.translate.defaultLang;
+        moment.locale(lang);
+        const dateLocale = moment.unix(unixStartTime).local();
+        return dateLocale.format(dateFormat);
+    }
+
+    /**
      * Creates the header doc definition for normal PDF documents
      *
      * @param lrMargin optional margin overrides
@@ -221,13 +235,9 @@ export class PdfDocumentService {
         } else {
             const name = this.translate.instant(this.meetingSettingsService.instant(`name`));
             const description = this.translate.instant(this.meetingSettingsService.instant(`description`));
+            const location = this.meetingSettingsService.instant(`location`);
             const line1 = [name, description].filter(Boolean).join(` - `);
-            const line2 = [
-                this.meetingSettingsService.instant(`location`),
-                this.meetingSettingsService.instant(`start_time`)
-            ]
-                .filter(Boolean)
-                .join(`, `);
+            const line2 = [location, this.getStartTime()].filter(Boolean).join(`, `);
             text = [line1, line2].join(`\n`);
         }
         columns.push({

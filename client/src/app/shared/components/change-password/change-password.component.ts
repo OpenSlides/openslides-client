@@ -11,6 +11,20 @@ export interface PasswordForm {
     confirmPassword: string;
 }
 
+const UndesiredPasswords = [
+    `123456`,
+    `123456789`,
+    `password`,
+    `passwort`,
+    `adobe 123`,
+    `12345678`,
+    `qwerty`,
+    `qwertz`,
+    `111111`,
+    `123123`
+];
+const UndesiredPasswordFeedback = `ಠ_ಠ`;
+
 @Component({
     selector: `os-change-password`,
     templateUrl: `./change-password.component.html`,
@@ -46,14 +60,20 @@ export class ChangePasswordComponent extends BaseComponent implements OnInit {
             confirmPassword: [``, [Validators.required, PasswordValidator.validation(this.newPasswordForm)]]
         });
         this.subscriptions.push(
-            this.changePasswordForm.valueChanges.subscribe(value => {
-                this.changeEvent.emit(value);
-                this.validEvent.emit(this.changePasswordForm.valid);
-            })
+            this.changePasswordForm.valueChanges.subscribe(value => this.evaluatePasswordField(value))
         );
     }
 
     public reset(): void {
         this.changePasswordForm.reset();
+    }
+
+    private evaluatePasswordField(value: PasswordForm): void {
+        this.changeEvent.emit(value);
+        this.validEvent.emit(this.changePasswordForm.valid);
+
+        if (value.confirmPassword === value.newPassword && UndesiredPasswords.includes(value.newPassword)) {
+            this.raiseWarning(UndesiredPasswordFeedback);
+        }
     }
 }
