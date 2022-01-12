@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
@@ -11,7 +11,8 @@ import { Subject, Subscription } from 'rxjs';
 @Component({
     selector: `os-meta-text-block`,
     templateUrl: `./meta-text-block.component.html`,
-    styleUrls: [`./meta-text-block.component.scss`]
+    styleUrls: [`./meta-text-block.component.scss`],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MetaTextBlockComponent extends BaseComponent implements OnInit, OnDestroy {
     /**
@@ -111,6 +112,7 @@ export class MetaTextBlockComponent extends BaseComponent implements OnInit, OnD
      * @param height The new height as `number` of the linked element.
      */
     private resizesContentBox(height: number): void {
-        this.canExpand = height > 200;
+        this.canExpand = height > 75;
+        this.cd.detectChanges();
     }
 }
