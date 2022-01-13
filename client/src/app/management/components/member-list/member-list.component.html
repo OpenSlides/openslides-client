@@ -121,9 +121,9 @@
             <span>{{ 'Deselect all' | translate }}</span>
         </button>
         <mat-divider></mat-divider>
-        <button mat-menu-item [disabled]="!selectedRows.length" (click)="assignCommitteesToUsers()">
+        <button mat-menu-item [disabled]="!selectedRows.length" (click)="assignMeetingToUsers()">
             <mat-icon>auto_awesome_mosaic</mat-icon>
-            <span>{{ 'Set/remove committees' | translate }} ...</span>
+            <span>{{ 'Set/remove meeting' | translate }} ...</span>
         </button>
         <mat-divider></mat-divider>
         <button mat-menu-item class="red-warning-text" [disabled]="!selectedRows.length" (click)="deleteSelected()">
