@@ -177,9 +177,9 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     public updateViewModelListSubject(viewModels: V[]): void {
         this.viewModelListSubject.next(
             viewModels
-                .filter(m => m.canAccess())
-                .tap(models => this.tapViewModels(models))
-                .sort(this.viewModelSortFn)
+                ?.filter(m => m.canAccess())
+                ?.tap(models => this.tapViewModels(models))
+                ?.sort(this.viewModelSortFn)
         );
     }
 

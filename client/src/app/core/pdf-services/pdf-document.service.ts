@@ -190,17 +190,32 @@ export class PdfDocumentService {
         };
     }
 
+    private formatDate(unixTimestamp: number, momentFormat: string): string | null {
+        if (!unixTimestamp) {
+            return null;
+        }
+        return moment.unix(unixTimestamp).local().format(momentFormat);
+    }
+
+    /**
+     * formats the meeting time with start and end date to a range.
+     * Same dates and missing dates will be filtered
+     */
+    private formatTimeRange(start?: string, end?: string): string {
+        return [start, end].filter((item, pos, self) => item && self.indexOf(item) === pos).join(` - `);
+    }
+
     /**
      * use moment to get the start time.
      * Still no real service to do this for us.
      */
-    private getStartTime(): string {
+    private getMeetingTime(): string {
         const dateFormat = `l`;
-        const unixStartTime = this.meetingSettingsService.instant(`start_time`);
         const lang = this.translate.currentLang ? this.translate.currentLang : this.translate.defaultLang;
         moment.locale(lang);
-        const dateLocale = moment.unix(unixStartTime).local();
-        return dateLocale.format(dateFormat);
+        const startTimeString = this.formatDate(this.meetingSettingsService.instant(`start_time`), dateFormat);
+        const endTimeString = this.formatDate(this.meetingSettingsService.instant(`end_time`), dateFormat);
+        return this.formatTimeRange(startTimeString, endTimeString);
     }
 
     /**
@@ -237,7 +252,7 @@ export class PdfDocumentService {
             const description = this.translate.instant(this.meetingSettingsService.instant(`description`));
             const location = this.meetingSettingsService.instant(`location`);
             const line1 = [name, description].filter(Boolean).join(` - `);
-            const line2 = [location, this.getStartTime()].filter(Boolean).join(`, `);
+            const line2 = [location, this.getMeetingTime()].filter(Boolean).join(`, `);
             text = [line1, line2].join(`\n`);
         }
         columns.push({
