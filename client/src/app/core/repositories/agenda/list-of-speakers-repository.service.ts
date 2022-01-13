@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { ListOfSpeakersAction } from 'app/core/actions/list-of-speakers-action';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { ListOfSpeakers } from 'app/shared/models/agenda/list-of-speakers';
-import { ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
+import { hasListOfSpeakers, ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { ViewSpeaker } from 'app/site/agenda/models/view-speaker';
+import { BaseViewModel } from 'app/site/base/base-view-model';
 
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { RepositoryServiceCollector } from '../repository-service-collector';
@@ -51,14 +52,28 @@ export class ListOfSpeakersRepositoryService extends BaseRepositoryWithActiveMee
         }
     };
 
-    public async closeListOfSpeakers(listOfSpeakers: ViewListOfSpeakers): Promise<void> {
-        const payload: ListOfSpeakersAction.UpdatePayload = { id: listOfSpeakers.id, closed: true };
-        return await this.sendActionToBackend(ListOfSpeakersAction.UPDATE, payload);
-    }
+    /**
+     * Sets the closed attribute for one or many List Of Speakers
+     * Extracts the ViewListOfSpeakers from BaseViewModel automatically if they contain any.
+     * Offers a lot of convinience since closing the a List Of Speakers is required in many differnent
+     * contexts
+     *
+     * @param closed Open or close the ListOfSpeakers
+     * @param modelObjects Can be either ViewListOfSpeakers or BaseViewModels with list of speakers
+     * @returns void
+     */
+    public async setClosed(closed: boolean, ...modelObjects: ViewListOfSpeakers[] | BaseViewModel[]): Promise<void> {
+        const payload = modelObjects.map((model: ViewListOfSpeakers | BaseViewModel) => {
+            let los: ViewListOfSpeakers;
+            if (model instanceof ViewListOfSpeakers) {
+                los = model;
+            } else if (hasListOfSpeakers(model)) {
+                los = model.list_of_speakers;
+            }
+            return { id: los.id, closed: closed };
+        });
 
-    public async reopenListOfSpeakers(listOfSpeakers: ViewListOfSpeakers): Promise<void> {
-        const payload: ListOfSpeakersAction.UpdatePayload = { id: listOfSpeakers.id, closed: false };
-        return await this.sendActionToBackend(ListOfSpeakersAction.UPDATE, payload);
+        return await this.sendBulkActionToBackend(ListOfSpeakersAction.UPDATE, payload);
     }
 
     /**

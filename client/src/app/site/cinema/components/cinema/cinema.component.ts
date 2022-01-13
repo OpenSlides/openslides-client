@@ -115,11 +115,7 @@ export class CinemaComponent extends BaseModelContextComponent implements OnInit
     }
 
     public async toggleListOfSpeakersOpen(): Promise<void> {
-        if (this.isLosClosed) {
-            await this.listOfSpeakersRepo.reopenListOfSpeakers(this.listOfSpeakers);
-        } else {
-            await this.listOfSpeakersRepo.closeListOfSpeakers(this.listOfSpeakers);
-        }
+        await this.listOfSpeakersRepo.setClosed(!this.isLosClosed, this.listOfSpeakers);
     }
 
     public async readdLastSpeaker(): Promise<void> {

@@ -1,3 +1,25 @@
+<!-- Open selected list of speakers -->
+<button
+    mat-menu-item
+    [disabled]="!selectedMotions.length"
+    (click)="action.emit(multiselectService.bulkSetLosClosed(false, selectedMotions))"
+>
+    <mat-icon>record_voice_over</mat-icon>
+    <span>{{ 'Open list of speakers' | translate }}</span>
+</button>
+
+<!-- Close selected list of speakers -->
+<button
+    mat-menu-item
+    [disabled]="!selectedMotions.length"
+    (click)="action.emit(multiselectService.bulkSetLosClosed(true, selectedMotions))"
+>
+    <mat-icon>voice_over_off</mat-icon>
+    <span>{{ 'Close list of speakers' | translate }}</span>
+</button>
+
+<mat-divider></mat-divider>
+
 <button
     mat-menu-item
     [disabled]="!selectedMotions.length"

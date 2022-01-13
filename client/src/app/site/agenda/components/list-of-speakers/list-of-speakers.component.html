@@ -61,7 +61,7 @@
         [text]="getContentObjectProjectorButtonText()"
     ></os-projector-button>
 
-    <button mat-menu-item (click)="setOpenness(isListOfSpeakersClosed)">
+    <button mat-menu-item (click)="setLosClosed(!isListOfSpeakersClosed)">
         <ng-container *ngIf="isListOfSpeakersClosed">
             <mat-icon>lock_open</mat-icon>
             <span>{{ 'Open list of speakers' | translate }}</span>

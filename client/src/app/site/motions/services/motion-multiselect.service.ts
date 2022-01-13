@@ -8,6 +8,7 @@ import { ActionRequest, ActionService } from 'app/core/core-services/action.serv
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { Id } from 'app/core/definitions/key-types';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
+import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { MotionRepositoryService } from 'app/core/repositories/motions/motion-repository.service';
@@ -73,7 +74,8 @@ export class MotionMultiselectService {
         private motionBlockRepo: MotionBlockRepositoryService,
         private treeService: TreeService,
         private spinnerService: SpinnerService,
-        private serviceCollector: RepositoryServiceCollector
+        private serviceCollector: RepositoryServiceCollector,
+        private listOfSpeakersRepo: ListOfSpeakersRepositoryService
     ) {}
 
     /**
@@ -396,6 +398,10 @@ export class MotionMultiselectService {
                 hideAfterPromiseResolved: () => this.personalNoteRepo.setPersonalNote({ star: isFavorite }, ...motions)
             });
         }
+    }
+
+    public async bulkSetLosClosed(closed: boolean, motions: ViewMotion[]): Promise<void> {
+        return await this.listOfSpeakersRepo.setClosed(closed, ...motions);
     }
 
     private getSubmitterIds(userIds: Id[], motions: ViewMotion[]): Id[] {

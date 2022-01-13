@@ -200,12 +200,8 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
         this.listOfSpeakersRepo.readdLastSpeaker(this.viewListOfSpeakers);
     }
 
-    public async setOpenness(open: boolean): Promise<void> {
-        if (open) {
-            await this.listOfSpeakersRepo.reopenListOfSpeakers(this.viewListOfSpeakers);
-        } else {
-            await this.listOfSpeakersRepo.closeListOfSpeakers(this.viewListOfSpeakers);
-        }
+    public async setLosClosed(closed: boolean): Promise<void> {
+        await this.listOfSpeakersRepo.setClosed(closed, this.viewListOfSpeakers);
     }
 
     /**
