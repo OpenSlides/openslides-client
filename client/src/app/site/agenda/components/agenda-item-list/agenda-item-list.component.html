@@ -189,13 +189,27 @@
             <!-- Close selected -->
             <button mat-menu-item [disabled]="!selectedRows.length" (click)="closeSelectedItems()">
                 <mat-icon>done</mat-icon>
-                <span>{{ 'Close' | translate }}</span>
+                <span>{{ 'Done' | translate }}</span>
             </button>
 
             <!-- Open selected -->
             <button mat-menu-item [disabled]="!selectedRows.length" (click)="openSelectedItems()">
                 <mat-icon>redo</mat-icon>
-                <span>{{ 'Open' | translate }}</span>
+                <span>{{ 'Reopen' | translate }}</span>
+            </button>
+
+            <mat-divider></mat-divider>
+
+            <!-- Open selected list of speakers -->
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="setLosClosed(false)">
+                <mat-icon>record_voice_over</mat-icon>
+                <span>{{ 'Open list of speakers' | translate }}</span>
+            </button>
+
+            <!-- Close selected list of speakers -->
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="setLosClosed(true)">
+                <mat-icon>voice_over_off</mat-icon>
+                <span>{{ 'Close list of speakers' | translate }}</span>
             </button>
 
             <mat-divider></mat-divider>

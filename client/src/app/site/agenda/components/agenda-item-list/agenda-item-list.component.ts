@@ -9,6 +9,7 @@ import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { PdfDocumentService } from 'app/core/pdf-services/pdf-document.service';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
+import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
 import {
     MeetingProjectionType,
     MeetingRepositoryService
@@ -26,6 +27,7 @@ import { SPEAKER_BUTTON_FOLLOW } from 'app/shared/components/speaker-button/spea
 import { AgendaItemType } from 'app/shared/models/agenda/agenda-item';
 import { Projectiondefault } from 'app/shared/models/projector/projector';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
+import { BaseViewModel } from 'app/site/base/base-view-model';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
 import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
 import { ViewTopic } from 'app/site/topics/models/view-topic';
@@ -131,7 +133,8 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
         private agendaPdfService: AgendaPdfService,
         private pdfService: PdfDocumentService,
         private topicRepo: TopicRepositoryService,
-        private meetingRepo: MeetingRepositoryService
+        private meetingRepo: MeetingRepositoryService,
+        private listOfSpeakersRepo: ListOfSpeakersRepositoryService
     ) {
         super(componentServiceCollector, translate);
         this.canMultiSelect = true;
@@ -308,6 +311,15 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
     public async openSelectedItems(): Promise<void> {
         try {
             await this.repo.bulkOpenItems(this.selectedRows);
+        } catch (e) {
+            this.raiseError(e);
+        }
+    }
+
+    public async setLosClosed(closed: boolean): Promise<void> {
+        try {
+            const contentObjects: BaseViewModel[] = this.selectedRows.map(item => item.content_object);
+            return await this.listOfSpeakersRepo.setClosed(closed, ...contentObjects);
         } catch (e) {
             this.raiseError(e);
         }
