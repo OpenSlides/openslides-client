@@ -16,7 +16,7 @@
         <!-- Content -->
         <div *pblNgridCellDef="'user_id'; row as entry">
             <span *ngIf="entry.user">{{ entry.user.getFullName() }}</span>
-            <i *ngIf="!entry.user">{{ 'Deleted user' | translate }}</i>
+            <i *ngIf="!entry.user">{{ 'Anonymous' | translate }}</i>
         </div>
         <div *pblNgridCellDef="'voted'; row as entry">
             <mat-icon *ngIf="entry.voted">check_box</mat-icon>
@@ -25,7 +25,7 @@
             <div *ngIf="entry.vote_delegated_to_id">
                 <span class="repr-prefix">represented by</span>&nbsp;
                 <span *ngIf="entry.vote_delegated_to">{{ entry.vote_delegated_to.getFullName() }}</span>
-                <i *ngIf="!entry.vote_delegated_to">{{ 'Deleted user' | translate }}</i>
+                <i *ngIf="!entry.vote_delegated_to">{{ 'Anonymous' | translate }}</i>
             </div>
         </div>
     </os-list-view-table>

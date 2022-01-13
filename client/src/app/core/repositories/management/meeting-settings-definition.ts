@@ -556,10 +556,12 @@ export const meetingSettings: SettingsGroup[] = [
                     },
                     {
                         key: `motion_poll_default_backend`,
-                        label: _(`Default time period to evaluate a poll`),
+                        label: _(`Default voting duration`),
                         type: `choice`,
                         choices: PollBackendDurationChoices,
-                        helpText: `The option short poll should be used, if polls are intended to end after a few minutes.`
+                        helpText: _(
+                            `Voting ends after short (some seconds/minutes) or long (some days/weeks) time period.`
+                        )
                     }
                 ]
             },
@@ -637,10 +639,12 @@ export const meetingSettings: SettingsGroup[] = [
                     },
                     {
                         key: `assignment_poll_default_backend`,
-                        label: _(`Default time period to evaluate a poll`),
+                        label: _(`Default voting duration`),
                         type: `choice`,
                         choices: PollBackendDurationChoices,
-                        helpText: `The option short poll should be used, if polls are intended to end after a few minutes.`
+                        helpText: _(
+                            `Voting ends after short (some seconds/minutes) or long (some days/weeks) time period.`
+                        )
                     }
                 ]
             },
@@ -688,6 +692,22 @@ export const meetingSettings: SettingsGroup[] = [
                 label: _(`General`),
                 settings: [
                     {
+                        key: `users_allow_self_set_present`,
+                        label: _(`Allow users to set themselves as present`),
+                        type: `boolean`,
+                        helpText: _(`e.g. for online meetings`)
+                    },
+                    {
+                        key: `users_enable_presence_view`,
+                        label: _(`Enable participant presence view`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `users_enable_vote_weight`,
+                        label: _(`Activate vote weight`),
+                        type: `boolean`
+                    },
+                    {
                         key: `users_sort_by`,
                         label: _(`Sort name of participants by`),
                         type: `choice`,
@@ -697,22 +717,6 @@ export const meetingSettings: SettingsGroup[] = [
                             last_name: _(`Surname`),
                             number: _(`Participant number`)
                         }
-                    },
-                    {
-                        key: `users_enable_presence_view`,
-                        label: _(`Enable participant presence view`),
-                        type: `boolean`
-                    },
-                    {
-                        key: `users_allow_self_set_present`,
-                        label: _(`Allow users to set themselves as present`),
-                        type: `boolean`,
-                        helpText: _(`e.g. for online meetings`)
-                    },
-                    {
-                        key: `users_enable_vote_weight`,
-                        label: _(`Activate vote weight`),
-                        type: `boolean`
                     }
                 ]
             },
@@ -729,8 +733,8 @@ export const meetingSettings: SettingsGroup[] = [
                     },
                     {
                         key: `users_pdf_url`,
-                        label: _(`Meeting URL`),
-                        helpText: _(`Used for QRCode in PDF of access data.`),
+                        label: _(`OpenSlides URL`),
+                        helpText: _(`Used for invitation email and QRCode in PDF of access data.`),
                         dontTranslateDefault: true
                     },
                     {

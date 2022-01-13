@@ -429,11 +429,11 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
     public getLabelByStepPhase(phase: ImportStepPhase): string {
         switch (phase) {
             case ImportStepPhase.FINISHED:
-                return `have been created`;
+                return _(`have been created`);
             case ImportStepPhase.ERROR:
-                return `could not be created`;
+                return _(`could not be created`);
             default:
-                return `will be created`;
+                return _(`will be created`);
         }
     }
 

@@ -121,12 +121,12 @@ export const PERMISSIONS: AppPermission[] = [
     {
         name: `Participants`,
         permissions: [
-            { display_name: `Can see names of users`, value: Permission.userCanSee },
+            { display_name: `Can see participants`, value: Permission.userCanSee },
             {
-                display_name: `Can manage other users presence state`,
+                display_name: `Can manage presence of others`,
                 value: Permission.userCanManagePresence
             },
-            { display_name: `Can manage users`, value: Permission.userCanManage }
+            { display_name: `Can manage participants`, value: Permission.userCanManage }
         ]
     },
     {

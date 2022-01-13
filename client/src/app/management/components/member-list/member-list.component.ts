@@ -81,7 +81,7 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
 
     public async assignMeetingToUsers(): Promise<void> {
         const content = this.translate.instant(
-            `This will add or remove the selected participants to the selected meeting:`
+            `This will add or remove the selected accounts to the following meeting:`
         );
         const ADD = _(`Add`);
         const REMOVE = _(`Remove`);

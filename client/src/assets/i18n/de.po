@@ -18,9 +18,6 @@ msgstr "\"0\" bedeutet eine unbegrenzte Anzahl an aktiven Accounts"
 msgid "\"0\" means an unlimited number of active meetings"
 msgstr "\"0\" bedeutet eine unbegrenzte Anzahl an aktiven Veranstaltungen"
 
-msgid "%user% invites you to join the voice conference."
-msgstr ""
-
 msgid "100% base"
 msgstr "100-%-Basis"
 
@@ -564,9 +561,6 @@ msgstr "Aufgerufen wird"
 msgid "Called with"
 msgstr "Mit aufgerufen werden"
 
-msgid "Can change its own password"
-msgstr "Darf eigenes Passwort ändern"
-
 msgid "Can create amendments"
 msgstr "Darf Änderungsanträge stellen"
 
@@ -609,8 +603,14 @@ msgstr "Darf Antragsabstimmungen verwalten"
 msgid "Can manage motions"
 msgstr "Darf Anträge verwalten"
 
+msgid "Can manage participants"
+msgstr "Darf Teilnehmende verwalten"
+
 msgid "Can manage polls"
 msgstr "Darf Umfragen verwalten"
+
+msgid "Can manage presence of others"
+msgstr "Darf die Anwesenheit anderer verwalten"
 
 msgid "Can manage settings"
 msgstr "Darf Einstellungen verwalten"
@@ -623,9 +623,6 @@ msgstr "Darf den Chat verwalten"
 
 msgid "Can manage the projector"
 msgstr "Darf den Projektor steuern"
-
-msgid "Can manage users"
-msgstr "Darf Benutzer verwalten"
 
 msgid "Can nominate another participant"
 msgstr "Darf andere Teilnehmende für Wahlen vorschlagen"
@@ -651,10 +648,6 @@ msgstr "Darf Kommentare sehen"
 msgid "Can see elections"
 msgstr "Darf Wahlen sehen"
 
-msgid "Can see extra data of users (e.g. email and comment)"
-msgstr ""
-"Darf die zusätzlichen Daten der Benutzer sehen (z. B. E-Mail und Kommentar)"
-
 msgid "Can see hidden files"
 msgstr "Darf versteckte Dateien sehen"
 
@@ -673,8 +666,8 @@ msgstr "Darf Anträge sehen"
 msgid "Can see motions in internal state"
 msgstr "Darf Anträge im internen Status sehen"
 
-msgid "Can see names of users"
-msgstr "Darf die Namen der Benutzer sehen"
+msgid "Can see participants"
+msgstr "Darf Teilnehmende sehen"
 
 msgid "Can see the autopilot"
 msgstr "Darf den Autopilot sehen"
@@ -1031,15 +1024,15 @@ msgstr "Standard-Gliederungsebene"
 msgid "Default text version for change recommendations"
 msgstr "Voreingestellte Fassung für Änderungsempfehlungen"
 
-msgid "Default time period to evaluate a poll"
-msgstr ""
-
 msgid "Default visibility for new agenda items (except topics)"
 msgstr ""
 "Voreingestellte Sichtbarkeit für neue Tagesordnungspunkte (außer Themen)"
 
 msgid "Default vote weight"
 msgstr "Standard-Stimmgewicht"
+
+msgid "Default voting duration"
+msgstr "Voreingestellte Dauer der Stimmabgabe"
 
 msgid "Default voting type"
 msgstr "Voreingestellte Art der Stimmabgabe"
@@ -1454,6 +1447,12 @@ msgstr "Anträge weiterleiten"
 msgid "Forward motions to"
 msgstr "Anträge weiterleiten an"
 
+msgid "Forwarding"
+msgstr "Weiterleitung"
+
+msgid "Forwardings"
+msgstr "Weiterleitungen"
+
 msgid "Front page text"
 msgstr "Text der Startseite"
 
@@ -1656,11 +1655,8 @@ msgstr "Ungültige Zeilennummer"
 msgid "Invalid votes"
 msgstr "Ungültige Stimmen"
 
-msgid "Invite to voice channel"
-msgstr ""
-
-msgid "Invite to voice conference."
-msgstr ""
+msgid "Invite to conference room"
+msgstr "In den Konferenzraum einladen"
 
 msgid "Is active"
 msgstr "Ist aktiv"
@@ -1814,9 +1810,6 @@ msgstr "Als Gast anmelden"
 msgid "Logout"
 msgstr "Abmelden"
 
-msgid "Long poll"
-msgstr ""
-
 msgid "Lowest applause amount"
 msgstr "Niedrigster Applauswert"
 
@@ -1837,9 +1830,6 @@ msgstr "Mediendatei"
 
 msgid "Meeting"
 msgstr "Veranstaltung"
-
-msgid "Meeting URL"
-msgstr "Veranstaltungs-URL"
 
 msgid "Meetings"
 msgstr "Veranstaltungen"
@@ -1956,6 +1946,9 @@ msgstr "Mein Profil"
 
 msgid "Name"
 msgstr "Name"
+
+msgid "Name exceeds 256 characters"
+msgstr "Der Name überschreitet 256 Zeichen"
 
 msgid "Name of recommender"
 msgstr "Name des Empfehlungsgebers"
@@ -2237,9 +2230,6 @@ msgstr "Nur anwesende Teilnehmende können zur Redeliste hinzugefügt werden"
 msgid "Only traffic light"
 msgstr "Nur Ampel"
 
-msgid "Open"
-msgstr "Öffnen"
-
 msgid "Open Jitsi in new tab"
 msgstr "Jitsi im neuen Tab öffnen"
 
@@ -2257,6 +2247,9 @@ msgstr "Projektionsdialog öffnen"
 
 msgid "Open requests to speak"
 msgstr "Offene Wortmeldungen"
+
+msgid "OpenSlides URL"
+msgstr "OpenSlides-URL"
 
 msgid "OpenSlides access data"
 msgstr "OpenSlides-Zugangsdaten"
@@ -2401,6 +2394,9 @@ msgstr "Bitte geben Sie eine gültige E-Mail-Adresse ein!"
 msgid "Please enter your new password"
 msgstr "Bitte geben Sie Ihr neues Passwort ein"
 
+msgid "Please join the conference room now!"
+msgstr "Bitte kommen Sie jetzt in den Konferenzraum!"
+
 msgid "Please login via your identity provider"
 msgstr "Bitte melden Sie sich über Ihren Identity Provider an"
 
@@ -2420,9 +2416,6 @@ msgstr "Abstimmung erstellt"
 
 msgid "Poll deleted"
 msgstr "Abstimmung gelöscht"
-
-msgid "Poll duration"
-msgstr ""
 
 msgid "Poll updated"
 msgstr "Abstimmung aktualisiert"
@@ -2474,6 +2467,9 @@ msgstr "Auswahl projizieren?"
 
 msgid "Projection defaults"
 msgstr "Projektionsvorgaben"
+
+msgid "Projector"
+msgstr "Projektor"
 
 msgid "Projector and countdown"
 msgstr "Projektor und Countdown"
@@ -2593,11 +2589,11 @@ msgstr "Aus Tagesordnung entfernen"
 msgid "Remove from motion block"
 msgstr "Vom Antragsblock entfernen "
 
-msgid "Remove from voice channel"
-msgstr ""
-
 msgid "Remove me"
 msgstr "Entferne mich"
+
+msgid "Reopen"
+msgstr "wieder öffnen"
 
 msgid "Replacement"
 msgstr "Ersetzung"
@@ -2796,17 +2792,14 @@ msgstr "Status für ausgewählte Teilnehmende setzen:"
 msgid "Set workflow"
 msgstr "Arbeitsablauf setzen"
 
-msgid "Set/remove committees"
-msgstr "Gremien hinzufügen/entfernen"
+msgid "Set/remove meeting"
+msgstr "Veranstaltung setzen/entfernen"
 
 msgid "Sets this projector as the reference for the current list of speakers"
 msgstr "Diesen Projektor als Referenz für die aktuelle Redeliste setzen."
 
 msgid "Settings"
 msgstr "Einstellungen"
-
-msgid "Short poll"
-msgstr ""
 
 msgid "Show all"
 msgstr "Alle anzeigen"
@@ -3142,11 +3135,6 @@ msgstr "Der Name enthält ein ungültiges Zeichen: \"/\""
 msgid "The number has to be greater than 0."
 msgstr "Die Anzahl muss größer als 0 sein."
 
-msgid ""
-"The option short poll should be used, if polls are intended to end after a "
-"few minutes."
-msgstr ""
-
 msgid "The parent motion was deleted."
 msgstr "Der Eltern-Antrag wurde gelöscht."
 
@@ -3223,13 +3211,6 @@ msgstr ""
 "Tagesordnung durchgeführt wird."
 
 msgid ""
-"This will add or remove the following committees for all selected "
-"participants:"
-msgstr ""
-"Folgende Gremien werden für die ausgewählten Teilnehmenden hinzugefügt oder "
-"entfernt:"
-
-msgid ""
 "This will add or remove the following groups for all selected participants:"
 msgstr ""
 "Folgende Gruppen werden für die ausgewählten Teilnehmenden hinzugefügt oder "
@@ -3245,6 +3226,12 @@ msgid "This will add or remove the following tags for all selected motions:"
 msgstr ""
 "Folgende Schlagwörter werden für die ausgewählten Anträge hinzugefügt oder "
 "entfernt:"
+
+msgid ""
+"This will add or remove the selected accounts to the following meeting:"
+msgstr ""
+"Die ausgewählten Accounts werden in die folgende Veranstaltung hinzugefügt "
+"oder entfernt:"
 
 msgid "This will move all selected motions as childs to:"
 msgstr ""
@@ -3283,9 +3270,6 @@ msgstr "Folgender Arbeitsablauf wird für alle ausgewählten Anträge gesetzt:"
 
 msgid "Tile view"
 msgstr "Kachelansicht"
-
-msgid "Time period to evaluate a poll"
-msgstr ""
 
 msgid "Timestamp"
 msgstr "Zeitstempel"
@@ -3356,11 +3340,13 @@ msgstr ""
 "Verwendbare Platzhalter: {name}, {event_name}, {url}, {username}, "
 "{password}. Die URL bezieht sich auf die System-URL."
 
-msgid "Used for QRCode in PDF of access data."
-msgstr "Wird für QR-Code im Zugangsdaten-PDF verwendet."
-
 msgid "Used for WLAN QRCode in PDF of access data."
 msgstr "Wird für WLAN-QR-Code im Zugangsdaten-PDF verwendet."
+
+msgid "Used for invitation email and QRCode in PDF of access data."
+msgstr ""
+"Wird für die Einladungs-E-Mail sowie WLAN-QR-Code im Zugangsdaten-PDF "
+"verwendet."
 
 msgid "User permission"
 msgstr "Benutzerberechtigung"
@@ -3412,6 +3398,16 @@ msgstr "Stimmen"
 
 msgid "Voting and ballot papers"
 msgstr "Abstimmung und Stimmzettel"
+
+msgid "Voting duration"
+msgstr "Dauer der Stimmabgabe"
+
+msgid ""
+"Voting ends after short (some seconds/minutes) or long (some days/weeks) "
+"time period."
+msgstr ""
+"Die Stimmabgabe endet nach kurzer (einige Sekunden/Minuten) oder langer "
+"(einige Tage/Wochen) Zeitspanne."
 
 msgid "Voting is currently in progress."
 msgstr "Stimmabgabe läuft aktuell "
@@ -3533,9 +3529,6 @@ msgstr "Ja/Nein/Enthaltung"
 msgid "Yes/No/Abstain per candidate"
 msgstr "Ja/Nein/Enthaltung pro Kandidat"
 
-msgid "You are disconnected from the voice conference."
-msgstr ""
-
 msgid "You are not allowed to see all entitled users."
 msgstr "Sie sind nicht berechtigt alle Stimmberechtigte zu sehen."
 
@@ -3651,9 +3644,6 @@ msgstr ""
 "Sie haben die maximale Anzahl von Stimmen erreicht. Deselektieren Sie zuerst"
 " eine Auswahl."
 
-msgid "You were asked to join the voice conference."
-msgstr ""
-
 msgid "Your browser"
 msgstr "Ihr Browser"
 
@@ -3721,6 +3711,9 @@ msgstr "stimmzettel"
 msgid "by"
 msgstr "von"
 
+msgid "committee-example"
+msgstr "gremien-beispiel"
+
 msgid "connecting ..."
 msgstr "Verbindungsaufbau ..."
 
@@ -3729,6 +3722,9 @@ msgstr "Verbindungen"
 
 msgid "contribution"
 msgstr "Wortmeldung"
+
+msgid "could not be created"
+msgstr "konnten nicht erstellt werden"
 
 msgid "created"
 msgstr "erstellt"
@@ -3784,6 +3780,9 @@ msgstr "grau"
 msgid "has saved his work on this motion."
 msgstr "hat die Arbeit an diesem Antrag gespeichert."
 
+msgid "have been created"
+msgstr "wurden erstellt"
+
 msgid "hidden"
 msgstr "versteckt"
 
@@ -3816,6 +3815,9 @@ msgstr "Einträge ausgewählt"
 
 msgid "lightblue"
 msgstr "hellblau"
+
+msgid "long running"
+msgstr "langlaufend"
 
 msgid "majority"
 msgstr "Mehrheit"
@@ -3904,6 +3906,9 @@ msgstr "Ergebnisse"
 msgid "selected"
 msgstr "ausgewählt"
 
+msgid "short running"
+msgstr "kurzlaufend"
+
 msgid "started"
 msgstr "gestartet"
 
@@ -3921,6 +3926,9 @@ msgstr "nicht erfasst"
 
 msgid "version"
 msgstr "Version"
+
+msgid "will be created"
+msgstr "werden erstellt"
 
 msgid "with filter"
 msgstr "mit Filter"
