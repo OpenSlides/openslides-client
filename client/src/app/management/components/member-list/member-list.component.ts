@@ -5,8 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
 import { MemberService } from 'app/core/core-services/member.service';
 import { getOmlVerboseName, OML } from 'app/core/core-services/organization-permission';
-import { Id } from 'app/core/definitions/key-types';
-import { CommitteeRepositoryService } from 'app/core/repositories/management/committee-repository.service';
+import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ChoiceService } from 'app/core/ui-services/choice.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -46,7 +45,7 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
 
     public constructor(
         public repo: UserRepositoryService,
-        private committeeRepo: CommitteeRepositoryService,
+        private meetingRepo: MeetingRepositoryService,
         protected componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService,
         private memberService: MemberService,
@@ -80,24 +79,27 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
         await this.memberService.delete(members);
     }
 
-    public async assignCommitteesToUsers(): Promise<void> {
+    public async assignMeetingToUsers(): Promise<void> {
         const content = this.translate.instant(
-            `This will add or remove the following committees for all selected participants:`
+            `This will add or remove the selected participants to the selected meeting:`
         );
         const ADD = _(`Add`);
         const REMOVE = _(`Remove`);
         const choices = [ADD, REMOVE];
-        const selectedChoice = await this.choiceService.open(
-            content,
-            this.committeeRepo.getViewModelList(),
-            true,
-            choices
-        );
+        const meetingList = this.meetingRepo.getViewModelList();
+        const selectedChoice = await this.choiceService.open(content, meetingList, false, choices);
         if (selectedChoice) {
+            /**
+             * TODO: would be nice if the couce service could return the
+             * selected view models and not just the numbers
+             */
+            const selectedMeeting = meetingList.find(meeting => {
+                return (selectedChoice.items as number) === meeting.id;
+            });
             if (selectedChoice.action === ADD) {
-                this.repo.bulkAssignUsersToCommitteesAsMembers(this.selectedRows, selectedChoice.items as Id[]);
+                this.repo.bulkAddUserToMeeting(this.selectedRows, selectedMeeting);
             } else {
-                this.repo.bulkUnassignUsersFromCommitteesAsMembers(this.selectedRows, selectedChoice.items as Id[]);
+                this.repo.bulkRemoveUserFromMeeting(this.selectedRows, selectedMeeting);
             }
         }
     }
@@ -130,7 +132,10 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
                             {
                                 idField: `meeting_ids`,
                                 fieldset: ``,
-                                follow: [{ idField: `user_ids`, fieldset: `shortName` }]
+                                follow: [
+                                    { idField: `user_ids`, fieldset: `shortName` },
+                                    { idField: `default_group_id` }
+                                ]
                             }
                         ]
                     }

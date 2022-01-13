@@ -482,6 +482,42 @@ export class UserRepositoryService
         return this.update(patchFn, ...users);
     }
 
+    public bulkAddUserToMeeting(users: ViewUser[], meeting: ViewMeeting): Promise<void> {
+        /**
+         * This should work but does not.
+         * Somehow "group_$_ids" was excluded in the parsing process
+         */
+        // const patchFn = (user: ViewUser) => {
+        //     return {
+        //         id: user.id,
+        //         group_$_ids: {
+        //             [meeting.id]: [meeting.default_group_id]
+        //         }
+        //     };
+        // };
+        const userPatch = users.map(user => {
+            return {
+                id: user.id,
+                group_$_ids: {
+                    [meeting.id]: [meeting.default_group_id]
+                }
+            };
+        });
+        return this.sendBulkActionToBackend(UserAction.UPDATE, userPatch);
+    }
+
+    public bulkRemoveUserFromMeeting(users: ViewUser[], meeting: ViewMeeting): Promise<void> {
+        const userPatch = users.map(user => {
+            return {
+                id: user.id,
+                group_$_ids: {
+                    [meeting.id]: []
+                }
+            };
+        });
+        return this.sendBulkActionToBackend(UserAction.UPDATE, userPatch);
+    }
+
     /**
      * Sends invitation emails to all given users. Returns a prepared string to show the user.
      * This string should always be shown, becuase even in success cases, some users may not get
