@@ -10,9 +10,6 @@ msgstr ""
 msgid "\"0\" means an unlimited number of active meetings"
 msgstr ""
 
-msgid "%user% invites you to join the voice conference."
-msgstr ""
-
 msgid "100% base"
 msgstr ""
 
@@ -520,9 +517,6 @@ msgstr ""
 msgid "Called with"
 msgstr ""
 
-msgid "Can change its own password"
-msgstr ""
-
 msgid "Can create amendments"
 msgstr ""
 
@@ -565,7 +559,13 @@ msgstr ""
 msgid "Can manage motions"
 msgstr ""
 
+msgid "Can manage participants"
+msgstr ""
+
 msgid "Can manage polls"
+msgstr ""
+
+msgid "Can manage presence of others"
 msgstr ""
 
 msgid "Can manage settings"
@@ -578,9 +578,6 @@ msgid "Can manage the chat"
 msgstr ""
 
 msgid "Can manage the projector"
-msgstr ""
-
-msgid "Can manage users"
 msgstr ""
 
 msgid "Can nominate another participant"
@@ -607,9 +604,6 @@ msgstr ""
 msgid "Can see elections"
 msgstr ""
 
-msgid "Can see extra data of users (e.g. email and comment)"
-msgstr ""
-
 msgid "Can see hidden files"
 msgstr ""
 
@@ -628,7 +622,7 @@ msgstr ""
 msgid "Can see motions in internal state"
 msgstr ""
 
-msgid "Can see names of users"
+msgid "Can see participants"
 msgstr ""
 
 msgid "Can see the autopilot"
@@ -976,13 +970,13 @@ msgstr ""
 msgid "Default text version for change recommendations"
 msgstr ""
 
-msgid "Default time period to evaluate a poll"
-msgstr ""
-
 msgid "Default visibility for new agenda items (except topics)"
 msgstr ""
 
 msgid "Default vote weight"
+msgstr ""
+
+msgid "Default voting duration"
 msgstr ""
 
 msgid "Default voting type"
@@ -1374,6 +1368,12 @@ msgstr ""
 msgid "Forward motions to"
 msgstr ""
 
+msgid "Forwarding"
+msgstr ""
+
+msgid "Forwardings"
+msgstr ""
+
 msgid "Front page text"
 msgstr ""
 
@@ -1574,10 +1574,7 @@ msgstr ""
 msgid "Invalid votes"
 msgstr ""
 
-msgid "Invite to voice channel"
-msgstr ""
-
-msgid "Invite to voice conference."
+msgid "Invite to conference room"
 msgstr ""
 
 msgid "Is active"
@@ -1730,9 +1727,6 @@ msgstr ""
 msgid "Logout"
 msgstr ""
 
-msgid "Long poll"
-msgstr ""
-
 msgid "Lowest applause amount"
 msgstr ""
 
@@ -1752,9 +1746,6 @@ msgid "Media file"
 msgstr ""
 
 msgid "Meeting"
-msgstr ""
-
-msgid "Meeting URL"
 msgstr ""
 
 msgid "Meetings"
@@ -1869,6 +1860,9 @@ msgid "My profile"
 msgstr ""
 
 msgid "Name"
+msgstr ""
+
+msgid "Name exceeds 256 characters"
 msgstr ""
 
 msgid "Name of recommender"
@@ -2143,9 +2137,6 @@ msgstr ""
 msgid "Only traffic light"
 msgstr ""
 
-msgid "Open"
-msgstr ""
-
 msgid "Open Jitsi in new tab"
 msgstr ""
 
@@ -2162,6 +2153,9 @@ msgid "Open projection dialog"
 msgstr ""
 
 msgid "Open requests to speak"
+msgstr ""
+
+msgid "OpenSlides URL"
 msgstr ""
 
 msgid "OpenSlides access data"
@@ -2304,6 +2298,9 @@ msgstr ""
 msgid "Please enter your new password"
 msgstr ""
 
+msgid "Please join the conference room now!"
+msgstr ""
+
 msgid "Please login via your identity provider"
 msgstr ""
 
@@ -2320,9 +2317,6 @@ msgid "Poll created"
 msgstr ""
 
 msgid "Poll deleted"
-msgstr ""
-
-msgid "Poll duration"
 msgstr ""
 
 msgid "Poll updated"
@@ -2374,6 +2368,9 @@ msgid "Project selection?"
 msgstr ""
 
 msgid "Projection defaults"
+msgstr ""
+
+msgid "Projector"
 msgstr ""
 
 msgid "Projector and countdown"
@@ -2492,10 +2489,10 @@ msgstr ""
 msgid "Remove from motion block"
 msgstr ""
 
-msgid "Remove from voice channel"
+msgid "Remove me"
 msgstr ""
 
-msgid "Remove me"
+msgid "Reopen"
 msgstr ""
 
 msgid "Replacement"
@@ -2692,16 +2689,13 @@ msgstr ""
 msgid "Set workflow"
 msgstr ""
 
-msgid "Set/remove committees"
+msgid "Set/remove meeting"
 msgstr ""
 
 msgid "Sets this projector as the reference for the current list of speakers"
 msgstr ""
 
 msgid "Settings"
-msgstr ""
-
-msgid "Short poll"
 msgstr ""
 
 msgid "Show all"
@@ -3021,11 +3015,6 @@ msgstr ""
 msgid "The number has to be greater than 0."
 msgstr ""
 
-msgid ""
-"The option short poll should be used, if polls are intended to end after a "
-"few minutes."
-msgstr ""
-
 msgid "The parent motion was deleted."
 msgstr ""
 
@@ -3093,11 +3082,6 @@ msgstr ""
 msgid "This prefix will be set if you run the automatic agenda numbering."
 msgstr ""
 
-msgid ""
-"This will add or remove the following committees for all selected "
-"participants:"
-msgstr ""
-
 msgid "This will add or remove the following groups for all selected participants:"
 msgstr ""
 
@@ -3105,6 +3089,9 @@ msgid "This will add or remove the following submitters for all selected motions
 msgstr ""
 
 msgid "This will add or remove the following tags for all selected motions:"
+msgstr ""
+
+msgid "This will add or remove the selected accounts to the following meeting:"
 msgstr ""
 
 msgid "This will move all selected motions as childs to:"
@@ -3137,9 +3124,6 @@ msgid "This will set the workflow for all selected motions:"
 msgstr ""
 
 msgid "Tile view"
-msgstr ""
-
-msgid "Time period to evaluate a poll"
 msgstr ""
 
 msgid "Timestamp"
@@ -3206,10 +3190,10 @@ msgid ""
 "{password}. The url referrs to the system url."
 msgstr ""
 
-msgid "Used for QRCode in PDF of access data."
+msgid "Used for WLAN QRCode in PDF of access data."
 msgstr ""
 
-msgid "Used for WLAN QRCode in PDF of access data."
+msgid "Used for invitation email and QRCode in PDF of access data."
 msgstr ""
 
 msgid "User permission"
@@ -3258,6 +3242,14 @@ msgid "Votes"
 msgstr ""
 
 msgid "Voting and ballot papers"
+msgstr ""
+
+msgid "Voting duration"
+msgstr ""
+
+msgid ""
+"Voting ends after short (some seconds/minutes) or long (some days/weeks) "
+"time period."
 msgstr ""
 
 msgid "Voting is currently in progress."
@@ -3372,9 +3364,6 @@ msgstr ""
 msgid "Yes/No/Abstain per candidate"
 msgstr ""
 
-msgid "You are disconnected from the voice conference."
-msgstr ""
-
 msgid "You are not allowed to see all entitled users."
 msgstr ""
 
@@ -3473,9 +3462,6 @@ msgstr ""
 msgid "You reached the maximum amount of votes. Deselect somebody first."
 msgstr ""
 
-msgid "You were asked to join the voice conference."
-msgstr ""
-
 msgid "Your browser"
 msgstr ""
 
@@ -3542,6 +3528,9 @@ msgstr ""
 msgid "by"
 msgstr ""
 
+msgid "committee-example"
+msgstr ""
+
 msgid "connecting ..."
 msgstr ""
 
@@ -3549,6 +3538,9 @@ msgid "connections"
 msgstr ""
 
 msgid "contribution"
+msgstr ""
+
+msgid "could not be created"
 msgstr ""
 
 msgid "created"
@@ -3605,6 +3597,9 @@ msgstr ""
 msgid "has saved his work on this motion."
 msgstr ""
 
+msgid "have been created"
+msgstr ""
+
 msgid "hidden"
 msgstr ""
 
@@ -3636,6 +3631,9 @@ msgid "items selected"
 msgstr ""
 
 msgid "lightblue"
+msgstr ""
+
+msgid "long running"
 msgstr ""
 
 msgid "majority"
@@ -3725,6 +3723,9 @@ msgstr ""
 msgid "selected"
 msgstr ""
 
+msgid "short running"
+msgstr ""
+
 msgid "started"
 msgstr ""
 
@@ -3741,6 +3742,9 @@ msgid "undocumented"
 msgstr ""
 
 msgid "version"
+msgstr ""
+
+msgid "will be created"
 msgstr ""
 
 msgid "with filter"

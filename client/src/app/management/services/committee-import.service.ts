@@ -52,7 +52,7 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
         this.registerBeforeImportHelper(FORWARD_TO_COMMITTEE_IDS, {
             repo,
             idProperty: FORWARD_TO_COMMITTEE_IDS,
-            verboseNameFn: plural => (plural ? `Forwardings` : `Forwarding`),
+            verboseNameFn: plural => (plural ? marker(`Forwardings`) : marker(`Forwarding`)),
             nameDelimiter: `;`,
             afterCreateUnresolvedEntriesFn: (modelsCreated, originalEntries) => {
                 for (const model of modelsCreated) {
@@ -67,7 +67,7 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
             MANAGER_IDS,
             new UserImportHelper({
                 repo: userRepo,
-                verboseName: `Committee managers`,
+                verboseName: marker(`Committee managers`),
                 property: MANAGER_IDS,
                 useDefault: [operator.operatorId]
             })
@@ -100,13 +100,13 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
         this.exporter.dummyCSVExport(
             COMMITTEE_PORT_HEADERS_AND_VERBOSE_NAMES,
             COMMITTEE_CSV_EXPORT_EXAMPLE,
-            `${this.translate.instant(`committee-example`)}.csv`
+            `${this.translate.instant(marker(`committee-example`))}.csv`
         );
     }
 
     protected pipeParseValue(value: string, header: keyof CommitteeCsvPort): any {
         if (header === NAME && value.length >= 256) {
-            throw new Error(`Name exceeds 256 characters`);
+            throw new Error(marker(`Name exceeds 256 characters`));
         }
         if (header === MEETING_START_DATE || header === MEETING_END_DATE) {
             return this.getDate(value);

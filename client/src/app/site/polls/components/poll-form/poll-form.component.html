@@ -116,7 +116,7 @@
             <ng-container *ngIf="isEVotingSelected">
                 <mat-form-field>
                     <mat-select
-                        placeholder="{{ 'Time period to evaluate a poll' | translate }}"
+                        placeholder="{{ 'Voting duration' | translate }}"
                         formControlName="backend"
                         required
                     >
@@ -128,7 +128,7 @@
                     </mat-select>
                     <mat-hint>
                         {{
-                            'The option short poll should be used, if polls are intended to end after a few minutes.'
+                            'Voting ends after short (some seconds/minutes) or long (some days/weeks) time period.'
                                 | translate
                         }}
                     </mat-hint>

@@ -364,10 +364,6 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
         this.interactionService.inviteToCall(speaker.userId);
     }
 
-    public kickFromVoice(speaker: ViewSpeaker): void {
-        this.interactionService.kickFromCall(speaker.userId);
-    }
-
     private updateSpeakers(): void {
         if (!this.listOfSpeakers) {
             return;

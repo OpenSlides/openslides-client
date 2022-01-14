@@ -6,8 +6,8 @@ export enum PollBackendDurationType {
 }
 
 export const PollBackendDurationChoices = {
-    [PollBackendDurationType.FAST]: _(`Short poll`),
-    [PollBackendDurationType.LONG]: _(`Long poll`)
+    [PollBackendDurationType.FAST]: _(`short running`),
+    [PollBackendDurationType.LONG]: _(`long running`)
 };
 
 export interface AssignmentAnalogVoteData {

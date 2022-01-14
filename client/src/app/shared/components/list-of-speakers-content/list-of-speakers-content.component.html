@@ -368,16 +368,11 @@
     </ng-container>
 </ng-template>
 
-<!-- Invite and kick from Call -->
+<!-- Invite to conference room -->
 <ng-template #callControls let-speaker="speaker">
     <button mat-menu-item (click)="inviteToVoice(speaker)">
         <mat-icon>add_call</mat-icon>
-        <span>{{ 'Invite to voice channel' | translate }}</span>
-    </button>
-
-    <button mat-menu-item (click)="kickFromVoice(speaker)">
-        <mat-icon>call_end</mat-icon>
-        <span>{{ 'Remove from voice channel' | translate }}</span>
+        <span>{{ 'Invite to conference room' | translate }}</span>
     </button>
     <ng-container></ng-container>
 </ng-template>

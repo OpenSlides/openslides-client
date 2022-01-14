@@ -26,6 +26,7 @@ _(`Automatically open the microphone for new conference speakers`);
 _(`Automatically open the web cam for new conference speakers`);
 
 // Projector config strings
+_(`Projector`);
 _(`Default projector`);
 _(`Projector logo`);
 _(`Projector header image`);
@@ -192,10 +193,9 @@ _(`Can create amendments`);
 _(`Can manage motion polls`);
 
 // users
-_(`Can see names of users`);
-_(`Can see extra data of users (e.g. email and comment)`);
-_(`Can manage users`);
-_(`Can change its own password`);
+_(`Can see participants`);
+_(`Can manage presence of others`);
+_(`Can manage participants`);
 
 // users config
 _(`Email body`);

@@ -26,11 +26,7 @@ interface senderMessage {
 
 const BroadcastMessageType = `callInteraction`;
 const InviteMessage = `invitationToCall`;
-const KickMessage = `kickFromCall`;
-const KickedInfo = _(`You are disconnected from the voice conference.`);
-const CallInviteTitle = _(`Invite to voice conference.`);
-const CallInviteWithSender = _(`%user% invites you to join the voice conference.`);
-const CallInviteAuto = _(`You were asked to join the voice conference.`);
+const CallInviteTitle = _(`Please join the conference room now!`);
 
 @Injectable({
     providedIn: `root`
@@ -104,15 +100,6 @@ export class InteractionService {
             });
 
         merge(
-            this.callRestrictionService.hasToLeaveCallObservable,
-            this.notifyService
-                .getMessageObservable<senderMessage>(KickMessage)
-                .pipe(filter(message => message.sendByThisUser === false))
-        ).subscribe(() => {
-            this.onKick();
-        });
-
-        merge(
             this.callRestrictionService.hasToEnterCallObservable,
             this.notifyService.getMessageObservable<senderMessage>(InviteMessage).pipe(
                 filter(message => message.sendByThisUser === false),
@@ -140,10 +127,6 @@ export class InteractionService {
         this.notifyService.sendToUsers(InviteMessage, content, userId);
     }
 
-    public kickFromCall(userId: Id): void {
-        this.notifyService.sendToUsers(KickMessage, null, userId);
-    }
-
     public viewStream(): void {
         if (this.conferenceState !== ConferenceState.stream) {
             this.setConferenceState(ConferenceState.stream);
@@ -158,14 +141,8 @@ export class InteractionService {
 
     private async onCallInvite(message?: senderMessage | void): Promise<void> {
         if (!this.isInCall) {
-            let accept: boolean;
-            if (message) {
-                let dialogMessage: string = this.translate.instant(CallInviteWithSender);
-                dialogMessage = dialogMessage.replace(`%user%`, message.inviter);
-                accept = await this.promptService.open(CallInviteTitle, dialogMessage);
-            } else {
-                accept = await this.promptService.open(CallInviteTitle, CallInviteAuto);
-            }
+            const accept = await this.promptService.open(CallInviteTitle);
+
             if (accept) {
                 this.enterCall();
                 this.rtcService.enterConferenceRoom();
@@ -175,13 +152,6 @@ export class InteractionService {
                 type: BroadcastMessageType,
                 payload: null
             });
-        }
-    }
-
-    private onKick(): void {
-        if (this.isInCall) {
-            this.rtcService.stopJitsi();
-            this.matSnackBar.open(this.translate.instant(KickedInfo), this.translate.instant(`OK`));
         }
     }
 }
