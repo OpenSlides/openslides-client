@@ -1,21 +1,6 @@
 import { User } from '../../../shared/models/users/user';
 
-export const BaseUserHeaders: (keyof User)[] = [
-    `title`,
-    `first_name`,
-    `last_name`,
-    `is_active`,
-    `is_physical_person`,
-    `default_password`,
-    `email`,
-    `username`,
-    `gender`,
-    `default_number`,
-    `default_structure_level`,
-    `default_vote_weight`
-];
-
-export const BaseUserHeadersAndVerboseNames: { [key: string]: string } = {
+export const memberHeadersAndVerboseNames: { [key in keyof User]?: string } = {
     title: `Title`,
     first_name: `Given name`,
     last_name: `Surname`,

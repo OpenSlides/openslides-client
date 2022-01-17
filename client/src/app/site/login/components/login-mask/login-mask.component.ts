@@ -15,7 +15,7 @@ import { ViewOrganization } from 'app/management/models/view-organization';
 import { fadeInAnim } from 'app/shared/animations';
 import { ParentErrorStateMatcher } from 'app/shared/parent-error-state-matcher';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { BrowserSupportService } from '../../services/browser-support.service';
@@ -34,12 +34,12 @@ const HttpWarning = _(`Using OpenSlides over HTTP is not supported. Enable HTTPS
     animations: [fadeInAnim]
 })
 export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestroy {
-    public get meeting(): ViewMeeting | null {
-        return this._meeting;
+    public get meetingObservable(): Observable<ViewMeeting | null> {
+        return this.activeMeeting.meetingObservable;
     }
 
-    public get organization(): ViewOrganization | null {
-        return this._organization;
+    public get organizationObservable(): Observable<ViewOrganization | null> {
+        return this.orgaService.organizationObservable;
     }
 
     /**
@@ -82,10 +82,6 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
 
     private currentMeetingId: number | null = null;
 
-    private _meeting: ViewMeeting | null = null;
-
-    private _organization: ViewOrganization | null = null;
-
     /**
      * Constructor for the login component
      *
@@ -125,9 +121,7 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
      */
     public ngOnInit(): void {
         this.subscriptions.push(
-            this.orgaSettings.get(`login_text`).subscribe(notice => (this.installationNotice = notice)),
-            this.activeMeeting.meetingObservable.subscribe(meeting => (this._meeting = meeting)),
-            this.orgaService.organizationObservable.subscribe(organization => (this._organization = organization))
+            this.orgaSettings.get(`login_text`).subscribe(notice => (this.installationNotice = notice))
         );
 
         // Maybe the operator changes and the user is logged in. If so, redirect him and boot OpenSlides.

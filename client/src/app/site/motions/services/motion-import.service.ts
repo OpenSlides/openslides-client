@@ -70,12 +70,12 @@ export class MotionImportService extends BaseImportService<Motion> {
         this.exporter.exportDummyMotion();
     }
 
-    protected getConfig(): ImportConfig {
+    protected getConfig(): ImportConfig<Motion> {
         return {
             modelHeadersAndVerboseNames: getMotionExportHeadersAndVerboseNames(),
             verboseNameFn: plural => this.repo.getVerboseName(plural),
-            hasDuplicatesFn: (entry: Partial<Motion>) =>
-                this.repo.getViewModelList().some(motion => motion.number === entry.number),
+            getDuplicatesFn: (entry: Partial<Motion>) =>
+                this.repo.getViewModelList().filter(motion => motion.number === entry.number),
             createFn: (entries: Motion[]) => this.repo.bulkCreate(entries)
         };
     }

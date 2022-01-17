@@ -1,8 +1,8 @@
 import { FormBuilder, FormControl } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { NewEntry } from 'app/core/ui-services/base-import.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { User } from 'app/shared/models/users/user';
+import { ImportModel } from 'app/shared/utils/import/import-model';
 import { BaseImportListComponent } from 'app/site/base/components/base-import-list.component';
 
 import { ImportListViewHeaderDefinition } from '../../../shared/components/import-list-view/import-list-view.component';
@@ -26,13 +26,16 @@ export abstract class BaseUserImportListComponent extends BaseImportListComponen
         });
     }
 
+    private get modelHeaders(): (keyof User)[] {
+        return Object.keys(this.modelHeadersAndVerboseNames) as (keyof User)[];
+    }
+
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService,
         public importer: BaseUserImportService,
         protected formBuilder: FormBuilder,
-        protected modelHeadersAndVerboseNames: { [key: string]: string },
-        protected modelHeaders: (keyof User)[]
+        protected modelHeadersAndVerboseNames: { [key: string]: string }
     ) {
         super(componentServiceCollector, translate, importer);
         this.textAreaForm = formBuilder.control(``);
@@ -44,7 +47,7 @@ export abstract class BaseUserImportListComponent extends BaseImportListComponen
      * @param row
      * @returns an error string similar to getVerboseError
      */
-    public nameErrors(row: NewEntry<User>): string {
+    public nameErrors(row: ImportModel<User>): string {
         for (const name of [`NoName`, `Duplicates`, `DuplicateImport`]) {
             if (this.importer.hasError(row, name)) {
                 return this.importer.verbose(name);

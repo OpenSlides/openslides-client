@@ -26,20 +26,13 @@ export abstract class BaseImportListComponent<M extends Identifiable>
     /**
      * Switch that turns true if a file has been selected in the input
      */
-    public hasFile = false;
 
-    /**
-     * @returns the amount of import items that will be imported
-     */
-    public get newCount(): number {
-        return this.importer && this.hasFile ? this.importer.summary.new : 0;
+    public get canImport(): boolean {
+        return this._hasFile && this._modelsToCreateAmount > 0;
     }
 
-    /**
-     * Constructor. Initializes the table and subscribes to import errors
-     *
-     * @param importer The import service, depending on the implementation
-     */
+    private _hasFile = false;
+    private _modelsToCreateAmount = 0;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -47,6 +40,10 @@ export abstract class BaseImportListComponent<M extends Identifiable>
         protected importer: BaseImportService<M>
     ) {
         super(componentServiceCollector, translate);
+    }
+
+    public ngOnInit(): void {
+        super.ngOnInit();
         this.initTable();
     }
 
@@ -54,12 +51,11 @@ export abstract class BaseImportListComponent<M extends Identifiable>
      * Initializes the table
      */
     public initTable(): void {
-        const entryObservable = this.importer.getNewEntries();
+        const entryObservable = this.importer.getNewEntriesObservable();
         this.subscriptions.push(
             entryObservable.pipe(distinctUntilChanged(), auditTime(100)).subscribe(newEntries => {
-                if (newEntries?.length) {
-                }
-                this.hasFile = newEntries.length > 0;
+                this._hasFile = newEntries.length > 0;
+                this._modelsToCreateAmount = newEntries.length;
             })
         );
     }

@@ -50,9 +50,10 @@ import { GridLayoutComponent } from './components/grid-layout/grid-layout.compon
 import { HeadBarComponent } from './components/head-bar/head-bar.component';
 import { IconContainerComponent } from './components/icon-container/icon-container.component';
 import { ImageComponent } from './components/image/image.component';
-import { ImportListFirstTabDirective } from './components/import-list-view/import-list-first-tab.directive';
-import { ImportListLastTabDirective } from './components/import-list-view/import-list-last-tab.directive';
 import { ImportListViewComponent } from './components/import-list-view/import-list-view.component';
+import { ImportListViewFirstTabDirective } from './components/import-list-view/import-list-view-first-tab.directive';
+import { ImportListViewLastTabDirective } from './components/import-list-view/import-list-view-last-tab.directive';
+import { ImportListViewStatusTemplateDirective } from './components/import-list-view/import-list-view-status-template.directive';
 import { LegalNoticeContentComponent } from './components/legal-notice-content/legal-notice-content.component';
 import { ListOfSpeakersContentComponent } from './components/list-of-speakers-content/list-of-speakers-content.component';
 import { ListOfSpeakersContentTitleDirective } from './components/list-of-speakers-content/list-of-speakers-content-title.directive';
@@ -196,8 +197,9 @@ const declarations = [
     UserChangePasswordComponent,
     FileUploadComponent,
     ImportListViewComponent,
-    ImportListFirstTabDirective,
-    ImportListLastTabDirective,
+    ImportListViewFirstTabDirective,
+    ImportListViewLastTabDirective,
+    ImportListViewStatusTemplateDirective,
     VideoPlayerComponent,
     ProgressComponent,
     GlobalHeadbarComponent,

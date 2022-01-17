@@ -5,12 +5,7 @@
     </div>
 
     <div class="menu-slot">
-        <button
-            *ngIf="hasFile && newCount"
-            mat-button
-            (click)="doImport()"
-            [disabled]="!isImportValid || isImportStarted"
-        >
+        <button *ngIf="canImport" mat-button (click)="doImport()" [disabled]="!isImportValid || isImportStarted">
             <span class="upper">{{ 'Import' | translate }}</span>
         </button>
     </div>

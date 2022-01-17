@@ -6,6 +6,7 @@ import {
     SimplifiedModelRequest
 } from 'app/core/core-services/model-request-builder.service';
 import { Permission } from 'app/core/core-services/permission';
+import { Id } from 'app/core/definitions/key-types';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Group } from 'app/shared/models/users/group';
@@ -16,6 +17,24 @@ import { map } from 'rxjs/operators';
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
 import { ModelRequestRepository } from '../model-request-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
+
+export class MeetingGroupsObject {
+    public readonly groups: { [groupName: string]: ViewGroup };
+    public readonly defaultGroup: ViewGroup;
+    public readonly adminGroup: ViewGroup;
+
+    public constructor(groups: ViewGroup[], meetingId: Id) {
+        this.groups = groups.mapToObject(group => ({ [group.name]: group }));
+        for (const group of groups) {
+            if (group.admin_group_for_meeting_id === meetingId) {
+                this.adminGroup = group;
+            }
+            if (group.default_group_for_meeting_id === meetingId) {
+                this.defaultGroup = group;
+            }
+        }
+    }
+}
 
 /**
  * Since groups are sorted by id, default is always the first entry.
@@ -104,6 +123,13 @@ export class GroupRepositoryService
      */
     public getViewModelListObservableWithoutDefaultGroup(): Observable<ViewGroup[]> {
         return this.getViewModelListObservable().pipe(this.getFilterDefaultGroupFn());
+    }
+
+    public getGroupsForActiveMeeting(): MeetingGroupsObject {
+        if (!this.activeMeeting) {
+            throw new Error(`There is no active meeting`);
+        }
+        return new MeetingGroupsObject(this.activeMeeting.groups, this.activeMeetingId);
     }
 
     public getRequestToGetAllModels(): SimplifiedModelRequest {

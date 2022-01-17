@@ -3,7 +3,7 @@ import { UserRepositoryService } from 'app/core/repositories/users/user-reposito
 import { ImportConfig } from 'app/core/ui-services/base-import.service';
 import { CsvExportService } from 'app/core/ui-services/csv-export.service';
 import { User } from 'app/shared/models/users/user';
-import { BaseUserHeadersAndVerboseNames } from 'app/site/users/base/base-user.constants';
+import { memberHeadersAndVerboseNames } from 'app/site/users/base/base-user.constants';
 import { BaseUserExport } from 'app/site/users/base/base-user-export';
 import { BaseUserImportService } from 'app/site/users/base/base-user-import.service';
 
@@ -33,7 +33,7 @@ export class MemberImportService extends BaseUserImportService {
 
     public downloadCsvExample(): void {
         this.exporter.dummyCSVExport<BaseUserExport>(
-            BaseUserHeadersAndVerboseNames,
+            memberHeadersAndVerboseNames,
             MemberCsvExportExample,
             `${this.translate.instant(`account-example`)}.csv`
         );
@@ -41,10 +41,10 @@ export class MemberImportService extends BaseUserImportService {
 
     protected getConfig(): ImportConfig<User> {
         return {
-            modelHeadersAndVerboseNames: BaseUserHeadersAndVerboseNames,
+            modelHeadersAndVerboseNames: memberHeadersAndVerboseNames,
             verboseNameFn: plural => (plural ? `Accounts` : `Account`),
-            hasDuplicatesFn: (entry: Partial<User>) =>
-                this.repo.getViewModelList().some(user => user.username === entry.username),
+            getDuplicatesFn: (entry: Partial<User>) =>
+                this.repo.getViewModelList().filter(user => user.username === entry.username),
             createFn: (entries: any[]) => this.repo.create(...entries)
         };
     }

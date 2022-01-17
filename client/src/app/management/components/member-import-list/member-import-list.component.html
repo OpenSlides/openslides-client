@@ -5,7 +5,7 @@
     </div>
 
     <div class="menu-slot">
-        <button *ngIf="hasFile && newCount" mat-button (click)="doImport()">
+        <button *ngIf="canImport" mat-button (click)="doImport()">
             <span class="upper">{{ 'Import' | translate }}</span>
         </button>
     </div>
@@ -15,4 +15,5 @@
     [columns]="generateImportColumns"
     [importer]="importer"
     [possibleFields]="possibleFields"
+    modelName="Account"
 ></os-import-list-view>

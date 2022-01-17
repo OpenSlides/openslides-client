@@ -303,7 +303,8 @@ export class OperatorService {
 
             let isReady = true;
             if (this.activeMeetingId) {
-                isReady = isReady && this.groupIds !== undefined && this.permissions !== undefined;
+                isReady =
+                    isReady && !!this.activeMeeting && this.groupIds !== undefined && this.permissions !== undefined;
             }
             if (this.isAuthenticated) {
                 isReady = isReady && this.OML !== undefined && this.CML !== undefined;
@@ -313,7 +314,6 @@ export class OperatorService {
                 this._ready = true;
                 this._readyDeferred.resolve();
                 this.operatorReadySubject.next(true);
-                console.debug(`operator is ready!`);
             }
         });
     }
@@ -453,9 +453,6 @@ export class OperatorService {
             result = true;
         } else {
             result = checkPerms.some(permission => this.permissions.includes(permission));
-        }
-        if (!this._ready) {
-            console.log(`has perms`, checkPerms, result, this.groupIds, this.isAuthenticated, this.permissions);
         }
         return result;
     }

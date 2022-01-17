@@ -26,8 +26,7 @@ export class StaticBeforeImportHandler<ToImport, ToCreate extends Identifiable =
     public doResolve(item: ToCreate, propertyName: string): ImportResolveInformation<ToCreate> {
         const result: ImportResolveInformation<ToCreate> = {
             model: item,
-            unresolvedModels: 0,
-            verboseName: this.getVerboseName()
+            unresolvedModels: 0
         };
         const property = item[propertyName];
         if (Array.isArray(property)) {

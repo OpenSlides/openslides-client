@@ -3,6 +3,10 @@ import { Collection, Field, Fqfield, Fqid, Id } from '../definitions/key-types';
 export const KEYSEPERATOR = `/`;
 export const TEMPLATE_FIELD_INDICATOR = `$`;
 
+export function copy<T>(model: T, modelHeaders: (keyof T)[]): T {
+    return modelHeaders.mapToObject(header => ({ [header]: model[header] })) as T;
+}
+
 export function fqidFromCollectionAndId(collection: string, id: number | string): string {
     return `${collection}${KEYSEPERATOR}${id}`;
 }

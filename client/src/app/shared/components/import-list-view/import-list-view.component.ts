@@ -1,32 +1,35 @@
 import {
-    ChangeDetectionStrategy,
     Component,
     ContentChildren,
     ElementRef,
     EventEmitter,
     Input,
+    OnDestroy,
     OnInit,
     Output,
     QueryList,
     TemplateRef,
     ViewEncapsulation
 } from '@angular/core';
+import { ContentChild, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { MatTab, MatTabChangeEvent } from '@angular/material/tabs';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { columnFactory, createDS, PblColumnDefinition, PblDataSource, PblNgridColumnSet } from '@pebula/ngrid';
-import { BaseImportService, NewEntry, ValueLabelCombination } from 'app/core/ui-services/base-import.service';
+import { BaseImportService, ValueLabelCombination } from 'app/core/ui-services/base-import.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseModel } from 'app/shared/models/base/base-model';
+import { ImportModel } from 'app/shared/utils/import/import-model';
 import { BaseComponent } from 'app/site/base/components/base.component';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { auditTime, distinctUntilChanged, map } from 'rxjs/operators';
 
 import { CsvMapping, ImportStepPhase } from '../../../core/ui-services/base-import.service';
-import { ImportListFirstTabDirective } from './import-list-first-tab.directive';
-import { ImportListLastTabDirective } from './import-list-last-tab.directive';
+import { ImportListViewFirstTabDirective } from './import-list-view-first-tab.directive';
+import { ImportListViewLastTabDirective } from './import-list-view-last-tab.directive';
+import { ImportListViewStatusTemplateDirective } from './import-list-view-status-template.directive';
 
 export type ImportListViewHeaderDefinition = PblColumnDefinition & HeaderDefinition;
 
@@ -43,12 +46,18 @@ interface HeaderDefinition {
     styleUrls: [`./import-list-view.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
-export class ImportListViewComponent<M extends BaseModel> extends BaseComponent implements OnInit {
-    @ContentChildren(ImportListFirstTabDirective, { read: MatTab })
+export class ImportListViewComponent<M extends BaseModel> extends BaseComponent implements OnDestroy, OnInit {
+    @ContentChildren(ImportListViewFirstTabDirective, { read: MatTab })
     public importListFirstTabs: QueryList<MatTab>;
 
-    @ContentChildren(ImportListLastTabDirective, { read: MatTab })
+    @ContentChildren(ImportListViewLastTabDirective, { read: MatTab })
     public importListLastTabs: QueryList<MatTab>;
+
+    @ContentChild(ImportListViewStatusTemplateDirective, { read: TemplateRef })
+    public importListStateTemplate: TemplateRef<any>;
+
+    @ViewChild(`fileInput`)
+    private fileInput: ElementRef<HTMLInputElement>;
 
     @Input()
     public columns?: PblColumnDefinition[];
@@ -114,12 +123,15 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
     /**
      * Data source for ngrid
      */
-    public vScrollDataSource: PblDataSource<NewEntry<M>>;
+    public vScrollDataSource: PblDataSource<ImportModel<M>>;
 
     /**
      * Switch that turns true if a file has been selected in the input
      */
     public hasFile: Observable<boolean>;
+    public get rawFileObservable(): Observable<File> {
+        return this.importer?.rawFileObservable || of(null);
+    }
 
     /**
      * Currently selected encoding. Is set and changed by the config's available
@@ -131,6 +143,10 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
      * indicator on which elements to display
      */
     public shown: 'all' | 'error' | 'noerror' = `all`;
+
+    public get hasLeftReceivedHeaders(): boolean {
+        return this.leftReceivedHeaders.length > 0;
+    }
 
     public get leftReceivedHeaders(): string[] {
         return this.importer.leftReceivedHeaders;
@@ -233,6 +249,12 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
         this.resetRowHeight();
     }
 
+    public ngOnDestroy(): void {
+        super.ngOnDestroy();
+        this._importer.clearFile();
+        this._importer.clearPreview();
+    }
+
     /**
      * Triggers a change in the tab group: Clearing the preview selection
      */
@@ -245,14 +267,14 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
      * Initializes the table
      */
     public initTable(): void {
-        const newEntriesObservable = this.importer.getNewEntries();
+        const newEntriesObservable = this.importer.getNewEntriesObservable();
         this.hasFile = newEntriesObservable.pipe(
             distinctUntilChanged(),
             auditTime(100),
             map(entries => entries.length > 0)
         );
 
-        this.vScrollDataSource = createDS<NewEntry<M>>()
+        this.vScrollDataSource = createDS<ImportModel<M>>()
             .keepAlive()
             .onTrigger(() => newEntriesObservable)
             .create();
@@ -276,8 +298,12 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
      *
      */
     public async doImport(): Promise<void> {
-        await this.importer.doImport();
-        this.setFilter();
+        this.importer.doImport().then(() => this.setFilter());
+    }
+
+    public removeSelectedFile(): void {
+        this.fileInput.nativeElement.value = null;
+        this.importer.clearFile();
     }
 
     /**
@@ -289,11 +315,11 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
         if (this.shown === `all`) {
             this.vScrollDataSource.setFilter();
         } else if (this.shown === `noerror`) {
-            const noErrorFilter = (data: NewEntry<any>) => data.status === `done` || data.status !== `error`;
+            const noErrorFilter = (data: ImportModel<any>) => data.status === `done` || data.status !== `error`;
 
             this.vScrollDataSource.setFilter(noErrorFilter);
         } else if (this.shown === `error`) {
-            const hasErrorFilter = (data: NewEntry<any>) =>
+            const hasErrorFilter = (data: ImportModel<any>) =>
                 data.status === `error` || !!data.errors.length || data.hasDuplicates;
 
             this.vScrollDataSource.setFilter(hasErrorFilter);
@@ -306,7 +332,7 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
      * @param row a newEntry object with a current status
      * @returns a css class name
      */
-    public getStateClass(row: NewEntry<M>): string {
+    public getStateClass(row: ImportModel<M>): string {
         switch (row.status) {
             case `done`:
                 return `import-done import-decided`;
@@ -322,12 +348,12 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
      * @param entry a newEntry object with a current status
      * @eturn the icon for the action of the item
      */
-    public getActionIcon(entry: NewEntry<M>): string {
+    public getActionIcon(entry: ImportModel<M>): string {
         switch (entry.status) {
             case `error`: // no import possible
                 return `block`;
             case `new`:
-                return ``;
+                return `add`;
             case `done`: // item has been imported
                 return `done`;
             default:
@@ -342,7 +368,7 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
         return value;
     }
 
-    public getErrorDescription(entry: NewEntry<M>): string {
+    public getErrorDescription(entry: ImportModel<M>): string {
         return entry.errors.map(error => _(this.getVerboseError(error))).join(`, `);
     }
 
@@ -409,7 +435,7 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
      * @param error An error as defined as key of {@link errorList}
      * @returns true if the error is present in the entry described in the row
      */
-    public hasError(row: NewEntry<M>, error: string): boolean {
+    public hasError(row: ImportModel<M>, error: string): boolean {
         return this.importer.hasError(row, error);
     }
 
