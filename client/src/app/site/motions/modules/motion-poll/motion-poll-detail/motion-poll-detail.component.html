@@ -76,8 +76,7 @@
                                 </div>
                             </div>
                             <div *ngIf="!vote.user">
-                                <i *ngIf="poll.is_pseudoanonymized">{{ 'Anonymous' | translate }}</i>
-                                <i *ngIf="!poll.is_pseudoanonymized">{{ 'Deleted user' | translate }}</i>
+                                <i>{{ 'Anonymous' | translate }}</i>
                             </div>
                         </div>
                         <div *pblNgridCellDef="'vote'; row as vote" class="vote-cell">

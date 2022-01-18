@@ -36,7 +36,6 @@ export interface PollSlideData {
 
     // These keys are only available, if poll/state == "published"
     entitled_users_at_stop: EntitledUsersEntry[];
-    is_pseudoanonymized: boolean;
     pollmethod: PollMethod;
     onehundred_percent_base: PollPercentBase;
     votesvalid: number;
