@@ -16,6 +16,7 @@ import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { MotionPollService } from 'app/site/motions/services/motion-poll.service';
 import { MotionPollDialogService } from 'app/site/motions/services/motion-poll-dialog.service';
 import { BasePollDetailComponentDirective } from 'app/site/polls/components/base-poll-detail.component';
+
 import { BaseVoteData } from '../../../../polls/components/base-poll-detail.component';
 
 @Component({

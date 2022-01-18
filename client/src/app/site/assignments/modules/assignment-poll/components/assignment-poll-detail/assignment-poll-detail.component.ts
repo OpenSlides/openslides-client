@@ -20,9 +20,9 @@ import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { BasePollDetailComponentDirective } from 'app/site/polls/components/base-poll-detail.component';
 import { ViewUser } from 'app/site/users/models/view-user';
 
+import { BaseVoteData } from '../../../../../polls/components/base-poll-detail.component';
 import { AssignmentPollService } from '../../services/assignment-poll.service';
 import { AssignmentPollDialogService } from '../../services/assignment-poll-dialog.service';
-import { BaseVoteData } from '../../../../../polls/components/base-poll-detail.component';
 
 @Component({
     selector: `os-assignment-poll-detail`,
