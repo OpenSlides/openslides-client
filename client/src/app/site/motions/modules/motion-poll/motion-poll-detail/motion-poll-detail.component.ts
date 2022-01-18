@@ -17,6 +17,8 @@ import { MotionPollService } from 'app/site/motions/services/motion-poll.service
 import { MotionPollDialogService } from 'app/site/motions/services/motion-poll-dialog.service';
 import { BasePollDetailComponentDirective } from 'app/site/polls/components/base-poll-detail.component';
 
+import { BaseVoteData } from '../../../../polls/components/base-poll-detail.component';
+
 @Component({
     selector: `os-motion-poll-detail`,
     templateUrl: `./motion-poll-detail.component.html`,
@@ -42,7 +44,7 @@ export class MotionPollDetailComponent extends BasePollDetailComponentDirective<
         }
     ];
 
-    public filterPropsSingleVotesTable = [`user.getFullName`, `valueVerbose`];
+    public filterPropsSingleVotesTable = [`user.full_name`, `valueVerbose`];
 
     public get showResults(): boolean {
         return this.hasPerms() || this.poll.isPublished;
@@ -81,8 +83,8 @@ export class MotionPollDetailComponent extends BasePollDetailComponentDirective<
         );
     }
 
-    protected createVotesData(): void {
-        this.setVotesData(this.poll?.options[0]?.votes);
+    protected createVotesData(): BaseVoteData[] {
+        return this.poll?.options[0]?.votes;
     }
 
     public openDialog(): void {

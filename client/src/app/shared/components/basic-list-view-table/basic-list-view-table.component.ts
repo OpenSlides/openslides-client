@@ -112,7 +112,7 @@ export class BasicListViewTableComponent<V extends BaseViewModel> implements OnI
     public columns: PblColumnDefinition[] = [];
 
     /**
-     * Properties to filter for
+     * Properties to filter for in the search field of the sort-filter-bar
      */
     @Input()
     public filterProps: string[];
@@ -319,7 +319,7 @@ export class BasicListViewTableComponent<V extends BaseViewModel> implements OnI
     public async ngOnInit(): Promise<void> {
         this.initDataListObservable();
         await this.restoreSearchQuery();
-        this.createDataSource();
+        this.initDataSource();
         this.changeRowHeight();
         this.cd.detectChanges();
         // ngrid exists after the first change detection
@@ -455,10 +455,8 @@ export class BasicListViewTableComponent<V extends BaseViewModel> implements OnI
     /**
      * Function to create the DataSource
      */
-    private createDataSource(): void {
-        this.dataSource = createDS<V>()
-            .onTrigger(() => (this.dataListObservable ? this.dataListObservable : []))
-            .create();
+    private initDataSource(): void {
+        this.dataSource = this.createDataSource();
 
         // inform listening components about changes in the data source
         this.dataSource.onSourceChanged.subscribe(() => {
@@ -498,6 +496,12 @@ export class BasicListViewTableComponent<V extends BaseViewModel> implements OnI
                 })
             );
         }
+    }
+
+    private createDataSource(): PblDataSource<V> {
+        return createDS<V>()
+            .onTrigger(() => this.dataListObservable ?? [])
+            .create();
     }
 
     /**
@@ -570,13 +574,15 @@ export class BasicListViewTableComponent<V extends BaseViewModel> implements OnI
      * @returns the filter predicate object
      */
     private getFilterPredicate(): DataSourcePredicate {
-        const toFiltering = (originItem: V, split: string[], trimmedInput: string) => {
+        const toFiltering = (originItem: V, splittedProp: string[], trimmedInput: string) => {
             let property: unknown;
+            let model: unknown = originItem;
             if (!originItem) {
                 return;
             }
-            for (const subProp of split) {
-                property = originItem[subProp];
+            for (const subProp of splittedProp) {
+                property = model[subProp];
+                model = property; // go recursive through this list of props
             }
             if (!property) {
                 return;
@@ -621,9 +627,9 @@ export class BasicListViewTableComponent<V extends BaseViewModel> implements OnI
             }
             for (const prop of this.filterProps) {
                 // find nested props
-                const split = prop.split(`.`);
+                const splittedProp = prop.split(`.`);
                 // let currValue: any = item;
-                const result = toFiltering(item, split, trimmedInput);
+                const result = toFiltering(item, splittedProp, trimmedInput);
                 if (result) {
                     return true;
                 }
