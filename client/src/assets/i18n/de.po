@@ -18,6 +18,9 @@ msgstr "\"0\" bedeutet eine unbegrenzte Anzahl an aktiven Accounts"
 msgid "\"0\" means an unlimited number of active meetings"
 msgstr "\"0\" bedeutet eine unbegrenzte Anzahl an aktiven Veranstaltungen"
 
+msgid "-Ä"
+msgstr "-Ä"
+
 msgid "100% base"
 msgstr "100-%-Basis"
 
@@ -272,6 +275,12 @@ msgstr "Änderungsanträge können mehrere Absätze ändern"
 msgid "Amendments to"
 msgstr "Änderungsanträge zu"
 
+msgid "Amount of accounts"
+msgstr "Anzahl der Accounts"
+
+msgid "Amount of meetings"
+msgstr "Anzahl der Veranstaltungen"
+
 msgid "Amount of votes"
 msgstr "Anzahl der Stimmen"
 
@@ -497,6 +506,9 @@ msgstr "Nachfragen, voreingestellt nein"
 
 msgid "Ask, default yes"
 msgstr "Nachfragen, voreingestellt ja"
+
+msgid "Assigned accounts"
+msgstr "Zugewiesene Accounts"
 
 msgid "At least"
 msgstr "Mindestens"
@@ -838,8 +850,8 @@ msgstr "Kommentare"
 msgid "Committee"
 msgstr "Gremium"
 
-msgid "Committee manager"
-msgstr "Gremienverwalter"
+msgid "Committee management"
+msgstr "Gremienverwaltung"
 
 msgid "Committee managers"
 msgstr "Gremienverwalter"
@@ -2441,9 +2453,6 @@ msgstr "Anwesenheit"
 msgid "Present"
 msgstr "Anwesend"
 
-msgid "Presentation and assembly system"
-msgstr "Präsentations- und Versammlungssystem"
-
 msgid "Preview"
 msgstr "Vorschau"
 
@@ -3484,9 +3493,6 @@ msgstr ""
 "Wird als Beschriftung vor der Beschlussempfehlung angezeigt. Leere Eingabe "
 "deaktiviert das Empfehlungssystem."
 
-msgid "Withdraw"
-msgstr "Zurückziehen"
-
 msgid "Withdraw point of order"
 msgstr "GO-Antrag zurückziehen"
 
@@ -3882,7 +3888,7 @@ msgstr "veröffentlicht"
 msgid "red"
 msgstr "rot"
 
-msgid "refered to committee"
+msgid "referred to committee"
 msgstr "in Ausschuss verwiesen"
 
 msgid "rejected"
@@ -3921,6 +3927,9 @@ msgstr "Unterstützer/innen"
 msgid "to"
 msgstr "bis"
 
+msgid "today"
+msgstr "heute"
+
 msgid "undocumented"
 msgstr "nicht erfasst"
 
@@ -3933,7 +3942,7 @@ msgstr "werden erstellt"
 msgid "with filter"
 msgstr "mit Filter"
 
-msgid "withdrawed"
+msgid "withdrawn"
 msgstr "zurückgezogen"
 
 msgid "yellow"

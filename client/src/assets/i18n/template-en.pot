@@ -10,6 +10,9 @@ msgstr ""
 msgid "\"0\" means an unlimited number of active meetings"
 msgstr ""
 
+msgid "-Ä"
+msgstr ""
+
 msgid "100% base"
 msgstr ""
 
@@ -247,6 +250,12 @@ msgstr ""
 msgid "Amendments to"
 msgstr ""
 
+msgid "Amount of accounts"
+msgstr ""
+
+msgid "Amount of meetings"
+msgstr ""
+
 msgid "Amount of votes"
 msgstr ""
 
@@ -452,6 +461,9 @@ msgid "Ask, default no"
 msgstr ""
 
 msgid "Ask, default yes"
+msgstr ""
+
+msgid "Assigned accounts"
 msgstr ""
 
 msgid "At least"
@@ -793,7 +805,7 @@ msgstr ""
 msgid "Committee"
 msgstr ""
 
-msgid "Committee manager"
+msgid "Committee management"
 msgstr ""
 
 msgid "Committee managers"
@@ -2343,9 +2355,6 @@ msgstr ""
 msgid "Present"
 msgstr ""
 
-msgid "Presentation and assembly system"
-msgstr ""
-
 msgid "Preview"
 msgstr ""
 
@@ -3319,9 +3328,6 @@ msgid ""
 "value to disable the recommendation system."
 msgstr ""
 
-msgid "Withdraw"
-msgstr ""
-
 msgid "Withdraw point of order"
 msgstr ""
 
@@ -3699,7 +3705,7 @@ msgstr ""
 msgid "red"
 msgstr ""
 
-msgid "refered to committee"
+msgid "referred to committee"
 msgstr ""
 
 msgid "rejected"
@@ -3738,6 +3744,9 @@ msgstr ""
 msgid "to"
 msgstr ""
 
+msgid "today"
+msgstr ""
+
 msgid "undocumented"
 msgstr ""
 
@@ -3750,7 +3759,7 @@ msgstr ""
 msgid "with filter"
 msgstr ""
 
-msgid "withdrawed"
+msgid "withdrawn"
 msgstr ""
 
 msgid "yellow"

@@ -67,7 +67,7 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
             MANAGER_IDS,
             new UserImportHelper({
                 repo: userRepo,
-                verboseName: marker(`Committee managers`),
+                verboseName: marker(`Committee management`),
                 property: MANAGER_IDS,
                 useDefault: [operator.operatorId]
             })

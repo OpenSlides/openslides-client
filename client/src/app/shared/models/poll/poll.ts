@@ -48,7 +48,6 @@ export class Poll extends BaseDecimalModel<Poll> {
     public global_yes: boolean;
     public global_no: boolean;
     public global_abstain: boolean;
-    public is_pseudoanonymized: boolean;
     public entitled_users_at_stop: EntitledUsersEntry[];
 
     public get isCreated(): boolean {
