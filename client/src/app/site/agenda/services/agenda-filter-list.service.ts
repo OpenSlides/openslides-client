@@ -44,7 +44,11 @@ export class AgendaFilterListService extends BaseFilterListService<ViewAgendaIte
     ) {
         super(store, historyService);
 
-        this.updateFilterForRepo(tagRepo, this.tagFilterOptions, this.translate.instant(`No tags`));
+        this.updateFilterForRepo({
+            repo: tagRepo,
+            filter: this.tagFilterOptions,
+            noneOptionLabel: this.translate.instant(`No tags`)
+        });
     }
 
     /**

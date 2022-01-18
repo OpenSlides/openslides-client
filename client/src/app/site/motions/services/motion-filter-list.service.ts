@@ -171,17 +171,29 @@ export class MotionFilterListService extends BaseFilterListService<ViewMotion> {
         this.getWorkflowConfig();
         this.getShowAmendmentConfig();
 
-        this.updateFilterForRepo(categoryRepo, this.categoryFilterOptions, this.translate.instant(`No category set`));
+        this.updateFilterForRepo({
+            repo: categoryRepo,
+            filter: this.categoryFilterOptions,
+            noneOptionLabel: this.translate.instant(`No category set`)
+        });
 
-        this.updateFilterForRepo(
-            motionBlockRepo,
-            this.motionBlockFilterOptions,
-            this.translate.instant(`No motion block set`)
-        );
+        this.updateFilterForRepo({
+            repo: motionBlockRepo,
+            filter: this.motionBlockFilterOptions,
+            noneOptionLabel: this.translate.instant(`No motion block set`)
+        });
 
-        this.updateFilterForRepo(commentRepo, this.motionCommentFilterOptions, this.translate.instant(`No comment`));
+        this.updateFilterForRepo({
+            repo: commentRepo,
+            filter: this.motionCommentFilterOptions,
+            noneOptionLabel: this.translate.instant(`No comment`)
+        });
 
-        this.updateFilterForRepo(tagRepo, this.tagFilterOptions, this.translate.instant(`No tags`));
+        this.updateFilterForRepo({
+            repo: tagRepo,
+            filter: this.tagFilterOptions,
+            noneOptionLabel: this.translate.instant(`No tags`)
+        });
 
         this.subscribeWorkflows();
         this.operator.operatorUpdatedEvent.subscribe(() => {

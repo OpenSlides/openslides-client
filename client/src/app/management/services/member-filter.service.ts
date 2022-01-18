@@ -31,7 +31,11 @@ export class MemberFilterService extends BaseFilterListService<ViewUser> {
     ) {
         super(store, historyService);
 
-        this.updateFilterForRepo(committeeRepo, this.committeeFilterOptions, this.translate.instant(`No committee`));
+        this.updateFilterForRepo({
+            repo: committeeRepo,
+            filter: this.committeeFilterOptions,
+            noneOptionLabel: this.translate.instant(`No committee`)
+        });
     }
 
     protected getFilterDefinitions(): OsFilter<ViewUser>[] {

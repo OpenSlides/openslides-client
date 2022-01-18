@@ -284,12 +284,17 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
      * @param noneOptionLabel The label of the non option, if set
      * @param filterFn custom filter function if required
      */
-    protected updateFilterForRepo(
-        repo: BaseRepository<BaseViewModel, BaseModel>,
-        filter: OsFilter<V>,
-        noneOptionLabel?: string,
-        filterFn?: (filter: BaseViewModel<any>) => boolean
-    ): void {
+    protected updateFilterForRepo({
+        repo,
+        filter,
+        noneOptionLabel,
+        filterFn
+    }: {
+        repo: BaseRepository<BaseViewModel, BaseModel>;
+        filter: OsFilter<V>;
+        noneOptionLabel?: string;
+        filterFn?: (filter: BaseViewModel<any>) => boolean;
+    }): void {
         repo.getViewModelListObservable().subscribe(viewModels => {
             if (viewModels && viewModels.length) {
                 const filterProperties: (OsFilterOption | string)[] = viewModels
@@ -391,26 +396,25 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
     protected addFilterOption(filterProperty: keyof V, option: OsFilterOption): void {
         const filter = this.filterDefinitions.find(f => f.property === filterProperty);
 
-        if (filter) {
-            const filterOption = filter.options.find(
-                o => typeof o !== `string` && o.condition === option.condition
-            ) as OsFilterOption;
+        if (!filter) {
+            return;
+        }
+        const filterOption = filter.options.find(
+            o => typeof o !== `string` && o.condition === option.condition
+        ) as OsFilterOption;
 
-            if (filterOption && !filterOption.isActive) {
-                filterOption.isActive = true;
-                this._filterStack.push({ property: filterProperty, option });
+        if (filterOption && !filterOption.isActive) {
+            filterOption.isActive = true;
+            this._filterStack.push({ property: filterProperty, option });
 
-                if (!filter.count) {
-                    filter.count = 1;
-                } else {
-                    filter.count += 1;
-                }
+            if (!filter.count) {
+                filter.count = 1;
+            } else {
+                filter.count += 1;
+            }
 
-                if (filterOption.children && filterOption.children.length) {
-                    for (const child of filterOption.children) {
-                        this.addFilterOption(filterProperty, child);
-                    }
-                }
+            if (filterOption.children && filterOption.children.length) {
+                filterOption.children.forEach(child => this.addFilterOption(filterProperty, child));
             }
         }
     }
@@ -423,31 +427,30 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
      */
     protected removeFilterOption(filterProperty: keyof V, option: OsFilterOption): void {
         const filter = this.filterDefinitions.find(f => f.property === filterProperty);
-        if (filter) {
-            const filterOption = filter.options.find(
-                o => typeof o !== `string` && o.condition === option.condition
-            ) as OsFilterOption;
-            if (filterOption && filterOption.isActive) {
-                filterOption.isActive = false;
+        if (!filter) {
+            return;
+        }
+        const filterOption = filter.options.find(
+            o => typeof o !== `string` && o.condition === option.condition
+        ) as OsFilterOption;
+        if (filterOption && filterOption.isActive) {
+            filterOption.isActive = false;
 
-                // remove filter from stack
-                const removeIndex = this._filterStack
-                    .map(stacked => stacked.option)
-                    .findIndex(mappedOption => mappedOption.condition === option.condition);
+            // remove filter from stack
+            const removeIndex = this._filterStack
+                .map(stacked => stacked.option)
+                .findIndex(mappedOption => mappedOption.condition === option.condition);
 
-                if (removeIndex > -1) {
-                    this._filterStack.splice(removeIndex, 1);
-                }
+            if (removeIndex > -1) {
+                this._filterStack.splice(removeIndex, 1);
+            }
 
-                if (filter.count) {
-                    filter.count -= 1;
-                }
+            if (filter.count) {
+                filter.count -= 1;
+            }
 
-                if (filterOption.children && filterOption.children.length) {
-                    for (const child of filterOption.children) {
-                        this.removeFilterOption(filterProperty, child);
-                    }
-                }
+            if (filterOption.children && filterOption.children.length) {
+                filterOption.children.forEach(child => this.removeFilterOption(filterProperty, child));
             }
         }
     }
@@ -497,45 +500,30 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
      */
     private isPassingFilterOption(item: V, filter: OsFilter<V>, option: OsFilterOption): boolean {
         const property = item[filter.property] as unknown;
-        if (property === undefined || property === null) {
-            return false;
-        } else if (Array.isArray(property)) {
-            const conditions = Array.isArray(option.condition) ? option.condition : [option.condition];
-            if (conditions.find(condition => this.isMatchingCondition(property, condition))) {
-                return true;
-            }
-        } else if (Array.isArray(option.condition)) {
-            if (
-                option.condition.indexOf(property as number) > -1 ||
-                option.condition.indexOf((property as any).id) > -1
-            ) {
-                return true;
-            }
-        } else if (typeof property === `object` && `id` in property) {
-            if ((property as any).id === option.condition) {
-                return true;
-            }
-        } else if (typeof property === `function`) {
-            return property.bind(item)() === option.condition;
-        } else if (property === option.condition) {
-            return true;
-        } else if (property.toString() === option.condition) {
-            return true;
-        }
-        return false;
-    }
+        const conditions = Array.isArray(option.condition) ? option.condition : [option.condition];
+        let toCheck = property;
 
-    private isMatchingCondition(value: any | any[], condition: OsFilterOptionCondition): boolean {
-        const matchingFn = (currentValue: any) => {
-            if (currentValue === condition) {
-                return true;
-            } else if (typeof value === `object` && `id` in value && value.id === condition) {
+        if (!toCheck) {
+            return false;
+        }
+        if (typeof toCheck === `function`) {
+            toCheck = toCheck.bind(item)();
+        }
+        if (!Array.isArray(toCheck)) {
+            toCheck = [toCheck];
+        }
+
+        return (toCheck as any[]).some(value => {
+            if (conditions.includes(value)) {
                 return true;
             }
-            return false;
-        };
-        const toCheck = Array.isArray(value) ? value : [value];
-        return toCheck.find(currentValue => matchingFn(currentValue));
+            if (conditions.includes(value.toString())) {
+                return true;
+            }
+            if (typeof value === `object` && `id` in value && conditions.includes(value.id)) {
+                return true;
+            }
+        });
     }
 
     /**

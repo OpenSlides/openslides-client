@@ -26,7 +26,11 @@ export class CommitteeFilterService extends BaseFilterListService<ViewCommittee>
         private translate: TranslateService
     ) {
         super(store, historyService);
-        this.updateFilterForRepo(organizationTagRepo, this.orgaTagFilterOptions, this.translate.instant(`No tags`));
+        this.updateFilterForRepo({
+            repo: organizationTagRepo,
+            filter: this.orgaTagFilterOptions,
+            noneOptionLabel: this.translate.instant(`No tags`)
+        });
     }
 
     protected getFilterDefinitions(): OsFilter<ViewCommittee>[] {

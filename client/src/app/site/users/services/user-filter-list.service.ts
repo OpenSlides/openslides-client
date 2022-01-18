@@ -40,12 +40,11 @@ export class UserFilterListService extends BaseFilterListService<ViewUser> {
         private translate: TranslateService
     ) {
         super(store, historyService);
-        this.updateFilterForRepo(
-            groupRepo,
-            this.userGroupFilterOptions,
-            this.translate.instant(`Default`),
-            (model: ViewUser) => model.id !== 1
-        );
+        this.updateFilterForRepo({
+            repo: groupRepo,
+            filter: this.userGroupFilterOptions,
+            filterFn: (model: ViewUser) => model.id !== 1
+        });
     }
 
     /**

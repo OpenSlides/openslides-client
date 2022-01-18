@@ -47,11 +47,11 @@
             <div *osPerms="permission.assignmentCanManage; and: !hideChangeState">
                 <button
                     mat-stroked-button
-                    [ngClass]="pollStateActions[poll.state].css"
+                    [ngClass]="pollStateActions[poll.state]?.css"
                     (click)="nextPollState()"
                     [disabled]="stateChangePendingObservable | async"
                 >
-                    <mat-icon> {{ pollStateActions[poll.state].icon }}</mat-icon>
+                    <mat-icon>{{ pollStateActions[poll.state].icon }}</mat-icon>
                     <span class="next-state-label">
                         <ng-container *ngIf="(stateChangePendingObservable | async) === false">
                             {{ poll.nextStateActionVerbose | translate }}
@@ -71,8 +71,10 @@
 
         <!-- Chart / Table -->
         <div *ngIf="poll.stateHasVotes" class="poll-result-wrapper">
-            <os-assignment-poll-detail-content [routerLink]="pollLink" [poll]="poll">
-            </os-assignment-poll-detail-content>
+            <os-assignment-poll-detail-content
+                [routerLink]="pollLink"
+                [poll]="poll"
+            ></os-assignment-poll-detail-content>
         </div>
 
         <!-- Poll progress bar -->
