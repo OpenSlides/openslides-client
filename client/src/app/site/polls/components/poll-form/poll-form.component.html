@@ -83,6 +83,7 @@
                             formControlName="max_votes_amount"
                             min="1"
                             required
+                            [errorStateMatcher]="parentErrorStateMatcher"
                         />
                     </mat-form-field>
                 </ng-container>
@@ -113,13 +114,9 @@
                     </ng-container>
                 </mat-select>
             </mat-form-field>
-            <ng-container *ngIf="isEVotingSelected">
+            <ng-container *ngIf="isEVotingSelected && isCreated">
                 <mat-form-field>
-                    <mat-select
-                        placeholder="{{ 'Voting duration' | translate }}"
-                        formControlName="backend"
-                        required
-                    >
+                    <mat-select placeholder="{{ 'Voting duration' | translate }}" formControlName="backend" required>
                         <ng-container *ngFor="let option of pollBackendDurationChoices | keyvalue">
                             <mat-option [value]="option.key">
                                 {{ option.value | translate }}
