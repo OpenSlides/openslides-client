@@ -18,7 +18,7 @@ import { BaseModelContextComponent } from 'app/site/base/components/base-model-c
 import { ViewGroup } from 'app/site/users/models/view-group';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { Label } from 'ng2-charts';
-import { BehaviorSubject,from, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, from, Observable, Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 
 import { PollService } from '../services/poll.service';
