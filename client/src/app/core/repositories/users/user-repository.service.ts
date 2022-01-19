@@ -21,10 +21,16 @@ import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-
 import { ModelRequestRepository } from '../model-request-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
-export interface MassImportResult {
-    importedTrackIds: number[];
-    errors: { [id: number]: string };
-}
+export const MEETING_SPECIFIC_USER_PROPERTIES: (keyof User)[] = [
+    `about_me`,
+    `group_ids`,
+    `comment`,
+    `structure_level`,
+    `number`,
+    `vote_weight`,
+    `vote_delegated_to_id`,
+    `vote_delegations_from_ids`
+];
 
 export type RawUser = FullNameInformation & Identifiable & Displayable;
 
@@ -304,7 +310,7 @@ export class UserRepositoryService
         }
     }
 
-    public getVerboseName = (plural: boolean = false) =>
+    public getVerboseName = (plural: boolean = false): string =>
         this.translate.instant(plural ? `Participants` : `Participant`);
 
     /**

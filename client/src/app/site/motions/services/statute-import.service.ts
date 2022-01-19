@@ -41,12 +41,12 @@ export class StatuteImportService extends BaseImportService<MotionStatuteParagra
         this.exporter.exportDummyCSV();
     }
 
-    protected getConfig(): ImportConfig<any> {
+    protected getConfig(): ImportConfig<MotionStatuteParagraph> {
         return {
             modelHeadersAndVerboseNames: statuteHeadersAndVerboseNames,
             verboseNameFn: plural => this.repo.getVerboseName(plural),
-            hasDuplicatesFn: (entry: Partial<MotionStatuteParagraph>) =>
-                this.repo.getViewModelList().some(paragraph => paragraph.title === entry.title),
+            getDuplicatesFn: (entry: Partial<MotionStatuteParagraph>) =>
+                this.repo.getViewModelList().filter(paragraph => paragraph.title === entry.title),
             createFn: (entries: any[]) => this.repo.bulkCreate(entries)
         };
     }

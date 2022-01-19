@@ -117,8 +117,8 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
         return {
             modelHeadersAndVerboseNames: COMMITTEE_PORT_HEADERS_AND_VERBOSE_NAMES,
             verboseNameFn: plural => this.repo.getVerboseName(plural),
-            hasDuplicatesFn: (entry: Partial<CommitteeCsvPort>) =>
-                this.repo.getViewModelList().some(committee => committee.name === entry.name),
+            getDuplicatesFn: (entry: Partial<CommitteeCsvPort>) =>
+                this.repo.getViewModelList().filter(committee => committee.name === entry.name),
             createFn: entries => this.repo.create(...(entries as any)),
             updateFn: entries => this.repo.update(null, ...(entries as any)),
             requiredFields: [NAME]

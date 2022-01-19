@@ -30,7 +30,7 @@
         <h1>{{ topic.getListTitle() }}</h1>
     </div>
     <div>
-        <span *ngIf="!editTopic">
+        <span *ngIf="!editTopic && topic.text">
             <!-- Render topic text as HTML -->
             <div [innerHTML]="topic.text | trust: 'html'"></div>
         </span>

@@ -17,14 +17,15 @@ export class GroupImportHelper extends BaseBeforeImportHandler<User> {
 
     public findByName(name: string): CsvMapping | CsvMapping[] {
         const result: CsvMapping[] = [];
+        const groups = this.repo.getGroupsForActiveMeeting();
         if (!name) {
-            return result;
+            return [{ id: groups.defaultGroup.id, name: groups.defaultGroup.name }];
         }
 
         const groupArray = name.split(`,`);
         for (let group of groupArray) {
             group = group.trim();
-            const existingGroup = this.repo.getViewModelList().find(groupInRepo => groupInRepo.name === group);
+            const existingGroup = Object.values(groups.groups).find(groupInRepo => groupInRepo.name === group);
             if (existingGroup) {
                 result.push({ id: existingGroup.id, name: existingGroup.name });
             } else {

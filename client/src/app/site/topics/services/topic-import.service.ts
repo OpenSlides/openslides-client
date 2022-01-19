@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { AgendaItemCreationPayload } from 'app/core/actions/common/agenda-item-creation-payload';
 import { TopicRepositoryService } from 'app/core/repositories/topics/topic-repository.service';
-import { BaseImportService, ImportConfig, NewEntry } from 'app/core/ui-services/base-import.service';
+import { BaseImportService, ImportConfig } from 'app/core/ui-services/base-import.service';
 import { CsvExportService } from 'app/core/ui-services/csv-export.service';
 import { DurationService } from 'app/core/ui-services/duration.service';
 import { AgendaItemType, ItemTypeChoices } from 'app/shared/models/agenda/agenda-item';
 import { Topic } from 'app/shared/models/topics/topic';
+import { ImportModel } from 'app/shared/utils/import/import-model';
 
 import { ImportServiceCollector } from '../../../core/ui-services/import-service-collector';
 import { topicHeadersAndVerboseNames } from '../topics.constants';
@@ -64,12 +65,12 @@ export class TopicImportService extends BaseImportService<Topic> {
         );
     }
 
-    protected getConfig(): ImportConfig<any> {
+    protected getConfig(): ImportConfig<Topic> {
         return {
             modelHeadersAndVerboseNames: topicHeadersAndVerboseNames,
             verboseNameFn: plural => this.repo.getVerboseName(plural),
-            hasDuplicatesFn: (entry: Partial<Topic>) =>
-                this.repo.getViewModelList().some(topic => topic.title === entry.title),
+            getDuplicatesFn: (entry: Partial<Topic>) =>
+                this.repo.getViewModelList().filter(topic => topic.title === entry.title),
             createFn: (entries: any[]) => this.repo.create(...entries)
         };
     }
@@ -127,9 +128,10 @@ export class TopicImportService extends BaseImportService<Topic> {
      * @param data a string as produced by textArea input
      */
     public parseTextArea(data: string): void {
-        const newEntries: NewEntry<any>[] = [];
+        const newEntries: { [importTrackId: number]: ImportModel<any> } = {};
         const lines = data.split(`\n`);
-        for (const line of lines) {
+        for (let i = 0; i < lines.length; ++i) {
+            const line = lines[i];
             if (!line.length) {
                 continue;
             }
@@ -137,11 +139,7 @@ export class TopicImportService extends BaseImportService<Topic> {
                 title: line,
                 agenda_type: AgendaItemType.COMMON
             };
-            newEntries.push({
-                newEntry: topic,
-                status: `new`,
-                errors: []
-            });
+            newEntries[i + 1] = new ImportModel({ model: topic, importTrackId: i + 1 });
         }
         this.setParsedEntries(newEntries);
     }

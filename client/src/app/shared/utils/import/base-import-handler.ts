@@ -7,12 +7,13 @@ import {
     ImportStepPhase
 } from 'app/core/ui-services/base-import.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 
 import { ImportHandlerConfig } from './import-handler-config';
+import { ImportStepDescriptor } from './import-step-descriptor';
 
 type CreateFn<E> = (entries: E[]) => Promise<Identifiable[]>;
-type FindFn<E, O> = (name: string, originalEntry: O, index: number) => E;
+type FindFn<E, O> = (name: string, originalEntry: O) => E;
 
 class ImportProcess<ToImport> {
     public readonly modelsImportedSubject = new BehaviorSubject<CsvMapping<ToImport>[]>([]);
@@ -28,7 +29,7 @@ class ImportProcess<ToImport> {
     public async doImport(models: CsvMapping<ToImport>[] = this._models): Promise<Identifiable[]> {
         const identifiables: Identifiable[] = [];
         let sliceIndex = 0;
-        do {
+        while (sliceIndex < Math.ceil(models.length / this._chunkSize)) {
             const modelsChunk =
                 this._chunkSize === 0
                     ? models
@@ -38,7 +39,7 @@ class ImportProcess<ToImport> {
             const previousValue = this.modelsImportedSubject.value;
             this.modelsImportedSubject.next(previousValue.concat(modelsChunk.filter((_, index) => !!ids[index].id)));
             sliceIndex += 1;
-        } while (sliceIndex < Math.ceil(models.length / this._chunkSize));
+        }
         return identifiables;
     }
 
@@ -122,7 +123,7 @@ export abstract class BaseImportHandler<ToCreate, ToImport> implements ImportHan
 
     private _transformFn: (entries: CsvMapping<ToImport>[], originalEntries: ToCreate[]) => CsvMapping[];
     private _createFn: (entries: CsvMapping<ToImport>[]) => Promise<Identifiable[]>;
-    private _findFn: (name: string, originalEntry: ToCreate, index: number) => ToImport | CsvMapping<ToImport>;
+    private _findFn: (name: string, originalEntry: ToCreate) => ToImport | CsvMapping<ToImport>;
     private _additionalFields: { key: keyof ToImport; value: unknown | (() => unknown) }[];
     private _nameDelimiter: string;
     private _useArray: boolean;
@@ -131,6 +132,7 @@ export abstract class BaseImportHandler<ToCreate, ToImport> implements ImportHan
     private _chunkSize = 100;
     private _isArrayProperty = false;
     private _importProcess: ImportProcess<ToImport>;
+    private _importStepDescriptor: ImportStepDescriptor;
 
     public constructor({
         idProperty,
@@ -138,6 +140,7 @@ export abstract class BaseImportHandler<ToCreate, ToImport> implements ImportHan
         useArray = false,
         repo,
         verboseNameFn,
+        labelFn,
         additionalFields = [],
         nameDelimiter = `,`,
         fixedChunkSize,
@@ -153,6 +156,10 @@ export abstract class BaseImportHandler<ToCreate, ToImport> implements ImportHan
         this._nameDelimiter = nameDelimiter;
         this._fixedChunkSize = fixedChunkSize;
         this._transformFn = transformFn;
+        this._importStepDescriptor = new ImportStepDescriptor({
+            verboseNameFn: verboseNameFn ?? repo?.getVerboseName,
+            labelFn
+        });
 
         this.setCreateFn(createFn, repo);
         this.setFindFn(findFn, repo);
@@ -188,41 +195,35 @@ export abstract class BaseImportHandler<ToCreate, ToImport> implements ImportHan
         }
     }
 
-    public getModelsImported(): CsvMapping<ToImport>[] {
-        return this._importProcess ? this._importProcess.modelsImportedSubject.value : [];
+    public getModelsImportedAmount(): number {
+        return this._importProcess ? this._importProcess.modelsImportedSubject.value.length : 0;
     }
 
-    public getModelsToCreate(): CsvMapping<ToImport>[] {
-        return this.modelsToCreate;
+    public getModelsToCreateAmount(): number {
+        return this.modelsToCreate.length;
     }
 
-    public getVerboseName(): string {
-        if (!this.verboseNameFn) {
-            throw new Error(`No verbose name is defined`);
-        }
-        if (typeof this.verboseNameFn === `string`) {
-            return this.verboseNameFn;
-        }
-        return this.verboseNameFn(this.modelsToCreate.length > 1);
+    public getDescription(): string {
+        return this._importStepDescriptor.getDescription(this.phase, this.getModelsToCreateAmount() !== 1);
     }
 
     public nextStep(step: ImportStepPhase): void {
         this._importingStepPhaseSubject.next(step);
     }
 
-    public findByName(name: string, csvLine: CsvMapping, index: number): CsvMapping<ToImport> | CsvMapping<ToImport>[] {
+    public findByName(name: string, csvLine: CsvMapping): CsvMapping<ToImport> | CsvMapping<ToImport>[] {
         if (!this._findFn) {
-            throw new Error(`No function to find any models is defined`);
+            throw new Error(`No function to find any models for property ${this.idProperty} is defined`);
         }
         if (!name) {
             return this.getReturnValue();
         }
         if (this.isArray) {
             const names = this.parseName(name);
-            const existingModels = names.map(n => this.find(n, csvLine, index));
+            const existingModels = names.map(n => this.find(n, csvLine));
             return this.getReturnValue(existingModels);
         } else {
-            return this.getReturnValue(this.find(name.trim(), csvLine, index));
+            return this.getReturnValue(this.find(name.trim(), csvLine));
         }
     }
 
@@ -232,9 +233,8 @@ export abstract class BaseImportHandler<ToCreate, ToImport> implements ImportHan
 
     protected onAfterCreateUnresolvedEntries(_modelsImported: ToImport[], _originalEntries: ToCreate[]): void {}
 
-    private find(name: string, csvLine: CsvMapping, index: number): CsvMapping<ToImport> {
-        const existingModel = (this._findFn(name, csvLine, index) ||
-            this._findFn(this.translateFn(name), csvLine, index)) as any;
+    private find(name: string, csvLine: CsvMapping): CsvMapping<ToImport> {
+        const existingModel = (this._findFn(name, csvLine) || this._findFn(this.translateFn(name), csvLine)) as any;
         if (existingModel?.id) {
             return { name: existingModel.getTitle(), id: existingModel.id } as CsvMapping<ToImport>;
         } else {

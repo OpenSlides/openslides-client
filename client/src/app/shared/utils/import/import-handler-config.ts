@@ -1,4 +1,4 @@
-import { CsvMapping } from '../../../core/ui-services/base-import.service';
+import { CsvMapping, ImportStepPhase } from '../../../core/ui-services/base-import.service';
 import { Identifiable } from '../../models/base/identifiable';
 
 interface ImportRepository<T> {
@@ -20,6 +20,7 @@ export interface ImportHandlerConfig<ToCreate = any, ToImport = any> {
      * A descriptive name for the models created by this helper
      */
     verboseNameFn?: string | ((plural?: boolean) => string);
+    labelFn?: string | ((phase: ImportStepPhase) => string);
     /**
      * Fields that are additionally passed to the create function to create models by this helper
      */
@@ -47,5 +48,5 @@ export interface ImportHandlerConfig<ToCreate = any, ToImport = any> {
      * Through this function known models are found by this helper. The default value is `repo.getViewModelList().find`
      * (therefore the `repo` field is required, if the function is not passed).
      */
-    findFn?: (name: string, originalEntry: ToCreate, index: number) => ToImport | CsvMapping<ToImport>;
+    findFn?: (name: string, originalEntry: ToCreate) => ToImport | CsvMapping<ToImport>;
 }

@@ -1,15 +1,20 @@
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { TranslateService } from '@ngx-translate/core';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
+import { copy } from 'app/core/core-services/key-transforms';
+import { SearchUsersByNameOrEmailPresenterService } from 'app/core/core-services/presenters/search-users-by-name-or-email-presenter.service';
+import { Id } from 'app/core/definitions/key-types';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
-import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
-import { ImportConfig } from 'app/core/ui-services/base-import.service';
+import {
+    MEETING_SPECIFIC_USER_PROPERTIES,
+    UserRepositoryService
+} from 'app/core/repositories/users/user-repository.service';
+import { ImportConfig, ImportStepPhase } from 'app/core/ui-services/base-import.service';
 import { CsvExportService } from 'app/core/ui-services/csv-export.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { User } from 'app/shared/models/users/user';
 import { BeforeImportHandler } from 'app/shared/utils/import/base-before-import-handler';
-import { Papa } from 'ngx-papaparse';
+import { ImportModel } from 'app/shared/utils/import/import-model';
 
 import { ImportServiceCollector } from '../../../core/ui-services/import-service-collector';
 import { BaseUserExport } from '../base/base-user-export';
@@ -35,13 +40,19 @@ export class UserImportService extends BaseUserImportService {
      */
     public errorList = {
         Group: `Group cannot be resolved`,
-        Duplicates: `This user already exists`,
+        Duplicates: `This user already exists in this meeting`,
         NoName: `Entry has no valid name`,
         DuplicateImport: `Entry cannot be imported twice. This line will be ommitted`,
         ParsingErrors: `Some csv values could not be read correctly.`,
         FailedImport: `Imported user could not be imported.`,
         vote_weight: `The vote weight has too many decimal places (max.: 6).`
     };
+
+    private get activeMeetingId(): Id {
+        return this.activeMeetingIdService.meetingId;
+    }
+
+    private _existingUserMap: { [userEmailUsername: string]: Partial<User>[] } = {};
 
     /**
      * Constructor. Calls parent and sets the expected header
@@ -53,13 +64,35 @@ export class UserImportService extends BaseUserImportService {
      * @param matSnackbar MatSnackBar for displaying error messages
      */
     public constructor(
-        serviceCollector: ImportServiceCollector,
+        importServiceCollector: ImportServiceCollector,
         repo: UserRepositoryService,
         private groupRepo: GroupRepositoryService,
-        private activeMeetingId: ActiveMeetingIdService,
-        private exporter: CsvExportService
+        private activeMeetingIdService: ActiveMeetingIdService,
+        private exporter: CsvExportService,
+        private presenter: SearchUsersByNameOrEmailPresenterService
     ) {
-        super(serviceCollector, repo);
+        super(importServiceCollector, repo);
+
+        this.registerMainImportHandler({
+            shouldBeCreatedFn: model => model.status === `merge`,
+            labelFn: (phase, plural) => {
+                const verboseName = this.repo.getVerboseName(plural);
+                let description = ``;
+                switch (phase) {
+                    case ImportStepPhase.FINISHED:
+                        description = `have been referenced`;
+                        break;
+                    case ImportStepPhase.ERROR:
+                        description = `could not be referenced`;
+                        break;
+                    default:
+                        description = `will be referenced`;
+                }
+                return `${verboseName} ${_(description)}`;
+            },
+            createFn: async () => [],
+            updateFn: models => this.updateUsers(models)
+        });
     }
 
     /**
@@ -74,13 +107,12 @@ export class UserImportService extends BaseUserImportService {
         );
     }
 
-    protected getConfig(): ImportConfig {
+    protected getConfig(): ImportConfig<User> {
         return {
             modelHeadersAndVerboseNames: userHeadersAndVerboseNames,
             verboseNameFn: plural => this.repo.getVerboseName(plural),
-            hasDuplicatesFn: (entry: Partial<User>) =>
-                this.repo.getViewModelList().some(user => user.username === entry.username),
-            createFn: (entries: any[]) => this.createUsers(entries)
+            createFn: (entries: any[]) => this.createUsers(entries),
+            shouldBeCreatedFn: user => user.status === `new`
         };
     }
 
@@ -90,11 +122,47 @@ export class UserImportService extends BaseUserImportService {
         };
     }
 
+    protected async onBeforeCreatingImportModels(_entries: User[]): Promise<void> {
+        this._existingUserMap = await this.getDuplicates(_entries);
+    }
+
+    protected async onCreateImportModel({
+        input,
+        importTrackId
+    }: {
+        input: any;
+        importTrackId: number;
+    }): Promise<ImportModel<User>> {
+        const username = input.username ? input.username : `${input.first_name} ${input.last_name}`;
+        const userEmailUsername = `${username}/${input.email}`;
+        const duplicates = this._existingUserMap[userEmailUsername];
+        const newEntry = duplicates.length === 1 ? { ...duplicates[0], ...input } : input;
+        const hasDuplicates =
+            duplicates.length > 1 ||
+            !!this.repo.getViewModelList().find(existingUser => existingUser.username === username);
+        const status = !hasDuplicates && duplicates.length === 1 ? `merge` : `new`;
+        return new ImportModel<User>({ model: newEntry, importTrackId, duplicates, hasDuplicates, status });
+    }
+
+    private async getDuplicates(entries: Partial<User>[]): Promise<{ [userEmailUsername: string]: Partial<User>[] }> {
+        const result = await this.presenter.call({
+            searchCriteria: entries.map(entry => {
+                const username = !!entry.username ? entry.username : `${entry.first_name} ${entry.last_name}`;
+                return { username, email: entry.email };
+            })
+        });
+        return result;
+    }
+
     private createUsers(users: any[]): Promise<Identifiable[]> {
         for (const user of users) {
-            user.is_present_in_meeting_ids =
-                user.is_present_in_meeting_ids === `1` ? [this.activeMeetingId.meetingId] : [];
+            user.is_present_in_meeting_ids = user.is_present_in_meeting_ids === `1` ? [this.activeMeetingId] : [];
         }
         return this.repo.create(...users);
+    }
+
+    private updateUsers(users: any[]): Promise<void> {
+        const updates = users.map(user => copy(user, MEETING_SPECIFIC_USER_PROPERTIES.concat(`id`)));
+        return this.repo.update(user => user as any, ...updates);
     }
 }

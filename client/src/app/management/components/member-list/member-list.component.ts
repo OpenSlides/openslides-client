@@ -13,7 +13,7 @@ import { CsvExportService } from 'app/core/ui-services/csv-export.service';
 import { MemberFilterService } from 'app/management/services/member-filter.service';
 import { MemberSortService } from 'app/management/services/member-sort.service';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
-import { BaseUserHeadersAndVerboseNames } from 'app/site/users/base/base-user.constants';
+import { memberHeadersAndVerboseNames } from 'app/site/users/base/base-user.constants';
 import { ViewUser } from 'app/site/users/models/view-user';
 
 import { ORGANIZATION_ID } from '../../../core/core-services/organization.service';
@@ -107,7 +107,7 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
     public csvExportMemberList(): void {
         this.csvExportService.export(
             this.dataSource.filteredData,
-            Object.entries(BaseUserHeadersAndVerboseNames).map(([key, value]) => ({
+            Object.entries(memberHeadersAndVerboseNames).map(([key, value]) => ({
                 property: key as keyof ViewUser,
                 label: value
             })),

@@ -5,7 +5,7 @@ import { MemberService } from 'app/core/core-services/member.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MemberImportService } from 'app/management/services/member-import.service';
 import { User } from 'app/shared/models/users/user';
-import { BaseUserHeaders, BaseUserHeadersAndVerboseNames } from 'app/site/users/base/base-user.constants';
+import { memberHeadersAndVerboseNames } from 'app/site/users/base/base-user.constants';
 import { BaseUserImportListComponent } from 'app/site/users/base/base-user-import-list.component';
 
 @Component({
@@ -21,14 +21,7 @@ export class MemberImportListComponent extends BaseUserImportListComponent imple
         public importer: MemberImportService,
         private memberService: MemberService
     ) {
-        super(
-            componentServiceCollector,
-            translate,
-            importer,
-            formBuilder,
-            BaseUserHeadersAndVerboseNames,
-            BaseUserHeaders
-        );
+        super(componentServiceCollector, translate, importer, formBuilder, memberHeadersAndVerboseNames);
     }
 
     public ngOnInit(): void {

@@ -8,7 +8,7 @@ import { User } from 'app/shared/models/users/user';
 
 import { BaseUserImportListComponent } from '../../base/base-user-import-list.component';
 import { UserImportService } from '../../services/user-import.service';
-import { headerMap, userHeadersAndVerboseNames } from '../../users.constants';
+import { userHeadersAndVerboseNames } from '../../users.constants';
 
 /**
  * Component for the user import list view.
@@ -29,7 +29,7 @@ export class UserImportListComponent extends BaseUserImportListComponent {
         formBuilder: FormBuilder,
         public importer: UserImportService
     ) {
-        super(componentServiceCollector, translate, importer, formBuilder, userHeadersAndVerboseNames, headerMap);
+        super(componentServiceCollector, translate, importer, formBuilder, userHeadersAndVerboseNames);
     }
 
     protected getModelRequest(): SimplifiedModelRequest {

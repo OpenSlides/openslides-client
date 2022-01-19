@@ -74,7 +74,7 @@ export function SpecificStructuredField(
     templateIdField: string,
     templateValue: string | number
 ): ISpecificStructuredField {
-    return { templateIdField, templateValue: templateValue.toString() };
+    return { templateIdField, templateValue: templateValue?.toString() };
 }
 
 export interface Follow extends BaseSimplifiedModelRequest {
