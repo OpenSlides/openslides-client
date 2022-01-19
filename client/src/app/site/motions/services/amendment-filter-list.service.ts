@@ -80,9 +80,11 @@ export class AmendmentFilterListService extends MotionFilterListService {
             meetingSettingsService
         );
 
-        this.updateFilterForRepo(motionRepo, this.motionFilterOptions, null, (model: ViewMotion) =>
-            motionRepo.hasAmendments(model)
-        );
+        this.updateFilterForRepo({
+            repo: motionRepo,
+            filter: this.motionFilterOptions,
+            filterFn: (model: ViewMotion) => motionRepo.hasAmendments(model)
+        });
     }
 
     /**

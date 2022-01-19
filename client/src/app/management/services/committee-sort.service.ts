@@ -16,10 +16,10 @@ export class CommitteeSortService extends BaseSortListService<ViewCommittee> {
     private readonly staticSortOptions: OsSortingOption<ViewCommittee>[] = [
         { property: `name`, label: this.translate.instant(`Title`) },
         { property: `meetingAmount`, label: this.translate.instant(`Amount of meetings`) },
-        { property: `memberAmount`, label: this.translate.instant(`Amount of members`) }
+        { property: `memberAmount`, label: this.translate.instant(`Amount of accounts`) }
     ];
 
-    public constructor(translate: TranslateService, store: StorageService, historyService: HistoryService) {
+    public constructor(protected translate: TranslateService, store: StorageService, historyService: HistoryService) {
         super(translate, store, historyService);
     }
 

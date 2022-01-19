@@ -63,7 +63,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
             const hasSetting = this.isMeetingSettingEnabled(meetingSetting);
             if (!hasSetting) {
                 this.cannotAccessReason = CannotAccessReason.NO_SETTING;
-            } else if (hasPerm) {
+            } else if (!hasPerm) {
                 this.cannotAccessReason = CannotAccessReason.NO_PERM;
             }
             return hasPerm && hasSetting;
@@ -107,11 +107,9 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     private hasPerms(basePerm: Permission | Permission[]): boolean {
         if (!basePerm) {
             return true;
-        } else if (basePerm instanceof Array) {
-            return this.operator.hasPerms(...basePerm);
-        } else {
-            return this.operator.hasPerms(basePerm);
         }
+        const toCheck = Array.isArray(basePerm) ? basePerm : [basePerm];
+        return this.operator.hasPerms(...toCheck);
     }
 
     private isMeetingSettingEnabled(meetingSetting?: keyof Settings): boolean {

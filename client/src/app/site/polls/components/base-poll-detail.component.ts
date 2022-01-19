@@ -18,7 +18,7 @@ import { BaseModelContextComponent } from 'app/site/base/components/base-model-c
 import { ViewGroup } from 'app/site/users/models/view-group';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { Label } from 'ng2-charts';
-import { from, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, from, Observable, Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 
 import { PollService } from '../services/poll.service';
@@ -72,18 +72,20 @@ export abstract class BasePollDetailComponentDirective<V extends ViewPoll<BaseVi
     public labels: Label[] = [];
 
     // The observable for the votes-per-user table
-    public votesDataObservable: Observable<BaseVoteData[]>;
+    public get votesDataObservable(): Observable<BaseVoteData[]> {
+        return this._votesDataSubject.asObservable();
+    }
 
     // The observable for the entitled-users-table
-    public entitledUsersObservable: Observable<EntitledUsersTableEntry[]>;
+    public get entitledUsersObservable(): Observable<EntitledUsersTableEntry[]> {
+        return this._entitledUsersSubject.asObservable();
+    }
 
     protected optionsLoaded = new Deferred();
 
     private entitledUsersSubscription: Subscription;
 
     public voteWeightEnabled: Observable<boolean> = this.meetingSettingsService.get(`users_enable_vote_weight`);
-
-    private currentOperator: ViewUser;
 
     protected get canSeeVotes(): boolean {
         return (this.hasPerms && this.poll.isFinished) || this.poll.isPublished;
@@ -93,21 +95,10 @@ export abstract class BasePollDetailComponentDirective<V extends ViewPoll<BaseVi
         return this.poll?.getContentObject().id;
     }
 
-    /**
-     * Constructor
-     *
-     * @param title
-     * @param translate
-     * @param matSnackbar
-     * @param repo
-     * @param route
-     * @param router
-     * @param fb
-     * @param groupRepo
-     * @param location
-     * @param promptService
-     * @param dialog
-     */
+    private _entitledUsersSubject = new BehaviorSubject<EntitledUsersTableEntry[]>([]);
+    private _votesDataSubject = new BehaviorSubject<BaseVoteData[]>([]);
+    private _currentOperator: ViewUser;
+
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService,
@@ -127,7 +118,7 @@ export abstract class BasePollDetailComponentDirective<V extends ViewPoll<BaseVi
 
         this.subscriptions.push(
             this.operator.userObservable.subscribe(currentUser => {
-                this.currentOperator = currentUser;
+                this._currentOperator = currentUser;
             })
         );
     }
@@ -175,13 +166,15 @@ export abstract class BasePollDetailComponentDirective<V extends ViewPoll<BaseVi
      * Set the votes data.
      */
     protected setVotesData(data: BaseVoteData[]): void {
-        this.votesDataObservable = from([data]);
+        this._votesDataSubject.next(data);
     }
+
+    protected onAfterSetVotesData(): void {}
 
     /**
      * Is called when the underlying vote data changes. Is supposed to call setVotesData
      */
-    protected abstract createVotesData(): void;
+    protected abstract createVotesData(): BaseVoteData[];
 
     private loadComponentById(id: Id): void {
         this.requestModels({
@@ -219,7 +212,8 @@ export abstract class BasePollDetailComponentDirective<V extends ViewPoll<BaseVi
                 this.repo.getViewModelObservable(id).subscribe((poll: V) => {
                     if (poll) {
                         this.poll = poll;
-                        this.createVotesData();
+                        this.setVotesData(this.createVotesData());
+                        this.onAfterSetVotesData();
                         this.setEntitledUsersData();
                     }
                 })
@@ -258,14 +252,14 @@ export abstract class BasePollDetailComponentDirective<V extends ViewPoll<BaseVi
                                 : null
                         });
                     }
-                    this.entitledUsersObservable = from([entries]);
+                    this._entitledUsersSubject.next(entries);
                     this.cd.markForCheck();
                 }))
         );
     }
 
     protected userHasVoteDelegation(user: ViewUser): boolean {
-        if (user.isVoteRightDelegated || this.currentOperator.canVoteFor(user)) {
+        if (user.isVoteRightDelegated || this._currentOperator.canVoteFor(user)) {
             return true;
         }
         return false;
@@ -276,8 +270,8 @@ export abstract class BasePollDetailComponentDirective<V extends ViewPoll<BaseVi
             return user.vote_delegated_to(this.activeMeetingId);
         }
 
-        if (this.currentOperator.canVoteFor(user)) {
-            return this.currentOperator;
+        if (this._currentOperator.canVoteFor(user)) {
+            return this._currentOperator;
         }
     }
 

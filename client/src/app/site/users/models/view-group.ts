@@ -18,11 +18,18 @@ export class ViewGroup extends BaseViewModel<Group> {
     }
 
     public hasPermission(perm: Permission): boolean {
-        return this.permissions?.some(permission => permission === perm || childPermissions[permission].includes(perm));
+        return this.permissions?.some(permission => permission === perm || this.hasChildPermission(permission, perm));
     }
 
     public hasPermissionImplicitly(perm: Permission): boolean {
-        return this.permissions?.some(permission => childPermissions[permission].includes(perm));
+        return this.permissions?.some(permission => this.hasChildPermission(permission, perm));
+    }
+
+    private hasChildPermission(permission: Permission, searchPermission: Permission): boolean {
+        if (!childPermissions[permission]) {
+            return false;
+        }
+        return childPermissions[permission].includes(searchPermission);
     }
 }
 interface IGroupRelations {

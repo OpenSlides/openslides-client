@@ -41,7 +41,7 @@ export class CommitteeImportListComponent extends BaseImportListComponent<Commit
         {
             prop: `manager_ids`,
             minWidth: 250,
-            label: _(`Committee managers`),
+            label: _(`Committee management`),
             isTableColumn: true
         },
         {

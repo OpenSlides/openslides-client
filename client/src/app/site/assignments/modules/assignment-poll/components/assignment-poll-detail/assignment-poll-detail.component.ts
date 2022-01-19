@@ -20,6 +20,7 @@ import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { BasePollDetailComponentDirective } from 'app/site/polls/components/base-poll-detail.component';
 import { ViewUser } from 'app/site/users/models/view-user';
 
+import { BaseVoteData } from '../../../../../polls/components/base-poll-detail.component';
 import { AssignmentPollService } from '../../services/assignment-poll.service';
 import { AssignmentPollDialogService } from '../../services/assignment-poll-dialog.service';
 
@@ -96,7 +97,7 @@ export class AssignmentPollDetailComponent extends BasePollDetailComponentDirect
         );
     }
 
-    protected createVotesData(): void {
+    protected createVotesData(): BaseVoteData[] {
         const votes = {};
         const pollOptions: ViewOption<ViewAssignment>[] = this.poll.options;
         for (const option of pollOptions) {
@@ -127,7 +128,10 @@ export class AssignmentPollDetailComponent extends BasePollDetailComponentDirect
                 }
             }
         }
-        this.setVotesData(Object.values(votes));
+        return Object.values(votes);
+    }
+
+    protected onAfterSetVotesData(): void {
         this.candidatesLabels = this.pollService.getChartLabels(this.poll);
         this.isReady = true;
         this.cd.markForCheck();

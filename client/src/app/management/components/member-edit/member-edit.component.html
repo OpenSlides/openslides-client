@@ -83,7 +83,7 @@
                     <os-search-repo-selector
                         formControlName="committee_$_management_level"
                         [multiple]="true"
-                        placeholder="{{ 'Committee manager' | translate }}"
+                        placeholder="{{ 'Committee management' | translate }}"
                         [repo]="committeeRepo"
                         [transformPropagateFn]="transformPropagateFn"
                         [transformSetFn]="getTransformSetFn()"
@@ -124,7 +124,7 @@
 
         <!-- Committee management -->
         <div *ngIf="user.committee_$_management_level?.length">
-            <h4>{{ 'Committee manager' | translate }}</h4>
+            <h4>{{ 'Committee management' | translate }}</h4>
             <ng-container
                 *ngTemplateOutlet="modelListTemplate; context: { models: getUserCommitteeManagementLevels() }"
             ></ng-container>

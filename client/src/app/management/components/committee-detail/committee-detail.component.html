@@ -80,11 +80,11 @@
         </os-committee-meta-info>
 
         <!-- Member amount -->
-        <os-committee-meta-info *ngIf="canManageUsers" icon="group" title="Members">
+        <os-committee-meta-info *ngIf="canManageUsers" icon="group" title="Assigned accounts">
             {{ getMemberAmount(committee) }}
         </os-committee-meta-info>
 
-        <os-committee-meta-info icon="engineering" title="Committee manager" *ngIf="canManageCommittee">
+        <os-committee-meta-info icon="engineering" title="Committee management" *ngIf="canManageCommittee">
             <ng-container *ngIf="committee.getManagers() as managers">
                 <span *ngFor="let manager of managers; let last = last">
                     <a [routerLink]="['/', 'accounts', manager.id]">{{ manager }}</a>
