@@ -12,15 +12,15 @@ export class NoActiveMeeting extends Error {}
 })
 export class ActiveMeetingIdService {
     public get meetingIdObservable(): Observable<number | null> {
-        return this.meetingIdSubject.asObservable();
+        return this._meetingIdSubject.asObservable();
     }
 
     public get meetingId(): number | null {
-        return this.meetingIdSubject.getValue();
+        return this._meetingIdSubject.getValue();
     }
 
     // undefined is for detecting, that this service wasn't loaded yet
-    private meetingIdSubject = new BehaviorSubject<number | null>(undefined);
+    private _meetingIdSubject = new BehaviorSubject<number | null>(undefined);
 
     public constructor(private router: Router, private DS: DataStoreService) {
         this.router.events
@@ -45,6 +45,6 @@ export class ActiveMeetingIdService {
             return;
         }
         this.DS.clearMeetingModels();
-        this.meetingIdSubject.next(newMeetingId);
+        this._meetingIdSubject.next(newMeetingId);
     }
 }
