@@ -77,7 +77,9 @@ export abstract class BasePollDetailComponentDirective<V extends ViewPoll<BaseVi
     }
 
     // The observable for the entitled-users-table
-    public entitledUsersObservable: Observable<EntitledUsersTableEntry[]>;
+    public get entitledUsersObservable(): Observable<EntitledUsersTableEntry[]> {
+        return this._entitledUsersSubject.asObservable();
+    }
 
     protected optionsLoaded = new Deferred();
 
@@ -93,6 +95,7 @@ export abstract class BasePollDetailComponentDirective<V extends ViewPoll<BaseVi
         return this.poll?.getContentObject().id;
     }
 
+    private _entitledUsersSubject = new BehaviorSubject<EntitledUsersTableEntry[]>([]);
     private _votesDataSubject = new BehaviorSubject<BaseVoteData[]>([]);
     private _currentOperator: ViewUser;
 
@@ -249,7 +252,7 @@ export abstract class BasePollDetailComponentDirective<V extends ViewPoll<BaseVi
                                 : null
                         });
                     }
-                    this.entitledUsersObservable = from([entries]);
+                    this._entitledUsersSubject.next(entries);
                     this.cd.markForCheck();
                 }))
         );
