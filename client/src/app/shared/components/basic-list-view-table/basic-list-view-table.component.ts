@@ -575,15 +575,17 @@ export class BasicListViewTableComponent<V extends BaseViewModel> implements OnI
      */
     private getFilterPredicate(): DataSourcePredicate {
         const toFiltering = (originItem: V, splittedProp: string[], trimmedInput: string) => {
+            const splittedPropsCopy = [...splittedProp];
             let property: unknown;
             let model: unknown = originItem;
             if (!originItem) {
                 return;
             }
-            for (const subProp of splittedProp) {
+            do {
+                const subProp = splittedPropsCopy.shift();
                 property = model[subProp];
-                model = property; // go recursive through this list of props
-            }
+                model = property;
+            } while (!!property && !!splittedPropsCopy.length);
             if (!property) {
                 return;
             }
