@@ -123,23 +123,26 @@ export abstract class BasePollComponent<C extends BaseViewModel = any> extends B
     protected onAfterUpdatePoll(_poll: ViewPoll<C>): void {}
 
     protected loadPoll(id: Id): void {
-        this.requestModels({
-            viewModelCtor: ViewPoll,
-            ids: [id],
-            follow: [
-                {
-                    idField: `option_ids`,
-                    follow: [{ idField: `vote_ids` }, { idField: `content_object_id` }]
-                },
-                {
-                    idField: `global_option_id`,
-                    follow: [{ idField: `vote_ids` }]
-                },
-                {
-                    idField: `entitled_group_ids`
-                }
-            ]
-        });
+        this.requestModels(
+            {
+                viewModelCtor: ViewPoll,
+                ids: [id],
+                follow: [
+                    {
+                        idField: `option_ids`,
+                        follow: [{ idField: `vote_ids` }, { idField: `content_object_id` }]
+                    },
+                    {
+                        idField: `global_option_id`,
+                        follow: [{ idField: `vote_ids` }]
+                    },
+                    {
+                        idField: `entitled_group_ids`
+                    }
+                ]
+            },
+            `${this.constructor.name}:${this._id}`
+        );
 
         this.subscriptions.push(
             this.repo.getViewModelObservable(this._id).subscribe(poll => {

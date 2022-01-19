@@ -1,6 +1,6 @@
 import { Directive, Input } from '@angular/core';
 
-import { PollBackendDurationChoices } from '../../../shared/models/poll/poll-constants';
+import { PollBackendDurationChoices, PollState } from '../../../shared/models/poll/poll-constants';
 import { ViewPoll } from '../../../shared/models/poll/view-poll';
 
 @Directive()

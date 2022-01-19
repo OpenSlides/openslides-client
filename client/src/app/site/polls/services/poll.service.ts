@@ -55,11 +55,11 @@ export interface PollTableData {
     value: VotingResult[];
 }
 
-export function isPollTableData(value: any): value is PollTableData {
-    if (!value) {
+export function isPollTableData(data: any): data is PollTableData {
+    if (!data) {
         return false;
     }
-    return !!value.votingOption && !!value.value;
+    return !!data.votingOption && !!data.value;
 }
 
 export interface VotingResult {
@@ -80,6 +80,9 @@ export interface VotingResult {
 }
 
 const PollChartBarThickness = 20;
+const YES_KEY = `yes`;
+const NO_KEY = `no`;
+const ABSTAIN_KEY = `abstain`;
 
 /**
  * Shared service class for polls. Used by child classes {@link MotionPollService}
@@ -96,7 +99,7 @@ export class PollService {
     /**
      * list of poll keys that are numbers and can be part of a quorum calculation
      */
-    public pollValues: CalculablePollKey[] = [`yes`, `no`, `abstain`, `votesvalid`, `votesinvalid`, `votescast`];
+    public pollValues: CalculablePollKey[] = [YES_KEY, NO_KEY, ABSTAIN_KEY, `votesvalid`, `votesinvalid`, `votescast`];
 
     public constructor(
         organizationSettingsService: OrganizationSettingsService,
@@ -230,18 +233,19 @@ export class PollService {
     /**
      * returns the total number of votes depending on the selected percent base
      */
-    private getPercentBase(poll: PollData, row: OptionData): number {
+    private getPercentBase(poll: PollData, row?: OptionData): number {
         const base: PollPercentBase = poll.onehundred_percent_base as PollPercentBase;
         let totalByBase: number;
+        const option = row ?? poll.options[0]; // Assuming that its a motion poll and the first option contains every vote.
         switch (base) {
             case PollPercentBase.YN:
-                totalByBase = this.sumOptionsYN(row);
+                totalByBase = this.sumOptionsYN(option);
                 break;
             case PollPercentBase.YNA:
-                totalByBase = this.sumOptionsYNA(row);
+                totalByBase = this.sumOptionsYNA(option);
                 break;
             case PollPercentBase.Y:
-                totalByBase = this.sumOptionsYNA(row);
+                totalByBase = this.sumOptionsYNA(option);
                 break;
             case PollPercentBase.Valid:
                 totalByBase = poll.votesvalid;
@@ -268,9 +272,9 @@ export class PollService {
 
     public getVoteValueInPercent(
         value: number,
-        { poll, row }: { poll: PollData; row: OptionData | PollTableData }
+        { poll, row }: { poll: PollData; row?: OptionData | PollTableData }
     ): string | null {
-        const option = isPollTableData(row) ? this.transformToOptionData(row) : row;
+        const option: OptionData | undefined = isPollTableData(row) ? this.transformToOptionData(row) : row;
         const totalByBase = this.getPercentBase(poll, option);
         if (totalByBase && totalByBase > 0) {
             const percentNumber = (value / totalByBase) * 100;
@@ -300,17 +304,17 @@ export class PollService {
     public getVoteTableKeys(poll: PollData): VotingResult[] {
         return [
             {
-                vote: `yes`,
+                vote: YES_KEY,
                 icon: `thumb_up`,
                 showPercent: true
             },
             {
-                vote: `no`,
+                vote: NO_KEY,
                 icon: `thumb_down`,
                 showPercent: true
             },
             {
-                vote: `abstain`,
+                vote: ABSTAIN_KEY,
                 icon: `trip_origin`,
                 showPercent: this.showAbstainPercent(poll)
             }
@@ -359,17 +363,19 @@ export class PollService {
     public generateChartData(poll: PollData): ChartData {
         const fields = this.getPollDataFieldsByMethod(poll);
 
-        const data: ChartData = fields.map(
-            key =>
-                ({
-                    data: this.getResultFromPoll(poll, key),
-                    label: key.toUpperCase(),
-                    backgroundColor: PollColor[key],
-                    hoverBackgroundColor: PollColor[key],
-                    barThickness: PollChartBarThickness,
-                    maxBarThickness: PollChartBarThickness
-                } as ChartDate)
-        );
+        const data: ChartData = fields
+            .map(
+                key =>
+                    ({
+                        data: this.getResultFromPoll(poll, key), // 0: option, 1: global_option
+                        label: key.toUpperCase(),
+                        backgroundColor: PollColor[key],
+                        hoverBackgroundColor: PollColor[key],
+                        barThickness: PollChartBarThickness,
+                        maxBarThickness: PollChartBarThickness
+                    } as ChartDate)
+            )
+            .filter(chartDate => !!chartDate.data[0] || !!chartDate.data[1]);
 
         return data;
     }
@@ -384,16 +390,16 @@ export class PollService {
     protected getPollDataFieldsByMethod(poll: PollData): CalculablePollKey[] {
         switch (poll.pollmethod) {
             case PollMethod.YNA: {
-                return [`yes`, `no`, `abstain`];
+                return [YES_KEY, NO_KEY, ABSTAIN_KEY];
             }
             case PollMethod.YN: {
-                return [`yes`, `no`];
+                return [YES_KEY, NO_KEY];
             }
             case PollMethod.N: {
-                return [`no`];
+                return [NO_KEY];
             }
             default: {
-                return [`yes`];
+                return [YES_KEY];
             }
         }
     }
@@ -403,14 +409,22 @@ export class PollService {
     }
 
     private transformToOptionData(data: PollTableData): OptionData {
-        const yes = data.value.find(vote => vote.vote === `yes`);
-        const no = data.value.find(vote => vote.vote === `no`);
-        const abstain = data.value.find(vote => vote.vote === `abstain`);
+        const yes = this.getVotingResultFromTableData(data, YES_KEY);
+        const no = this.getVotingResultFromTableData(data, NO_KEY);
+        const abstain = this.getVotingResultFromTableData(data, ABSTAIN_KEY);
         return {
             getOptionTitle: () => ({ title: data.votingOption, subtitle: data.votingOptionSubtitle }),
             yes: yes?.amount,
             no: no?.amount,
             abstain: abstain?.amount
         };
+    }
+
+    private getVotingResultFromTableData(data: PollTableData, key: `yes` | `no` | `abstain`): VotingResult {
+        if (data.votingOption === key) {
+            return data.value[0];
+        } else {
+            return data.value.find(vote => vote.vote === key);
+        }
     }
 }

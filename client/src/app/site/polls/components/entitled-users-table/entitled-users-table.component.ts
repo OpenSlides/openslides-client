@@ -48,7 +48,7 @@ export class EntitledUsersTableComponent extends BaseComponent {
         }
     ];
 
-    public filterPropsEntitledUsersTable = [`user.getFullName`, `vote_delegated_to.getFullName`, `voted_verbose`];
+    public filterPropsEntitledUsersTable = [`user.full_name`, `vote_delegated_to.full_name`, `voted_verbose`];
 
     public constructor(
         protected componentServiceCollector: ComponentServiceCollector,

@@ -86,6 +86,10 @@ export class PollFormComponent extends BaseComponent implements OnInit {
         }
     }
 
+    public get isCreated(): boolean {
+        return !this.data.state || this.data.isCreated; // no state means, its under creation
+    }
+
     public get isEVotingSelected(): boolean {
         return this.pollTypeControl?.value !== PollType.Analog || false;
     }
