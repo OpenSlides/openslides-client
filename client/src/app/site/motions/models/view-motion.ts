@@ -179,7 +179,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     }
 
     public get diffLines(): DiffLinesInParagraph[] | null {
-        return this.getAmendmentParagraphLines();
+        return this.getAmendmentParagraphLines(true);
     }
 
     /**
