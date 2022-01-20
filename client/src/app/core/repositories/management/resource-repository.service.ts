@@ -6,6 +6,9 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
+import { Identifiable } from '../../../shared/models/base/identifiable';
+import { ResourceAction } from 'app/core/actions/resource-action';
+import { ORGANIZATION_ID } from '../../core-services/organization.service';
 
 @Injectable({
     providedIn: `root`
@@ -30,7 +33,14 @@ export class ResourceRepositoryService extends BaseRepository<ViewResource, Reso
     public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Resources` : `Resource`);
 
     public getFieldsets(): Fieldsets<Resource> {
-        const detailFieldset: (keyof Resource)[] = [`id`, `mimetype`, `token`, `organization_id`];
+        const detailFieldset: (keyof Resource)[] = [
+            `id`,
+            `mimetype`,
+            `token`,
+            `organization_id`,
+            `filename`,
+            `filesize`
+        ];
         return {
             [DEFAULT_FIELDSET]: detailFieldset
         };
@@ -58,5 +68,20 @@ export class ResourceRepositoryService extends BaseRepository<ViewResource, Reso
             this.resourceSubjectMap[token] = new BehaviorSubject<Resource | null>(this.getResourceInstantly(token));
         }
         return this.resourceSubjectMap[token].asObservable();
+    }
+
+    public upload(...resources: ResourceAction.UploadPayload[]): Promise<Identifiable[]> {
+        const payload: ResourceAction.UploadPayload[] = resources.map(resource => ({
+            token: resource.token,
+            file: resource.file,
+            filename: resource.filename,
+            organization_id: ORGANIZATION_ID
+        }));
+        return this.sendBulkActionToBackend(ResourceAction.UPLOAD, payload);
+    }
+
+    public delete(...ids: Identifiable[]): Promise<void> {
+        const payload: ResourceAction.DeletePayload[] = ids.map(({ id }) => ({ id }));
+        return this.sendBulkActionToBackend(ResourceAction.DELETE, payload);
     }
 }

@@ -14,7 +14,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { columnFactory, createDS, PblColumnDefinition } from '@pebula/ngrid';
 import { PblNgridDataMatrixRow } from '@pebula/ngrid/target-events';
-import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';

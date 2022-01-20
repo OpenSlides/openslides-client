@@ -9,6 +9,7 @@ export class Resource extends BaseModel<Resource> {
     public token: string;
     public filesize: number;
     public mimetype: string;
+    public filename: string;
 
     public organization_id: Id; // organization/resource_ids;
 

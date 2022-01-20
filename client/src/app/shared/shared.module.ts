@@ -118,6 +118,7 @@ import { PollPercentBasePipe } from './pipes/poll-percent-base.pipe';
 import { PrecisionPipe } from './pipes/precision.pipe';
 import { ReversePipe } from './pipes/reverse.pipe';
 import { TrustPipe } from './pipes/trust.pipe';
+import { FileManagementListComponent } from './components/file-management-list/file-management-list.component';
 
 const declarations = [
     PermsDirective,
@@ -213,7 +214,8 @@ const declarations = [
     ListOfSpeakersContentTitleDirective,
     NotFoundComponent,
     VerticalTabGroupComponent,
-    VerticalTabGroupLabelHeaderDirective
+    VerticalTabGroupLabelHeaderDirective,
+    FileManagementListComponent
 ];
 
 const sharedModules = [
