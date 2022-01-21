@@ -206,7 +206,7 @@ export class OperatorService {
     ) {
         this.setNotReady();
 
-        this.authService.onLogout.subscribe(() =>
+        this.authService.logoutObservable.subscribe(() =>
             osRouter.navigateToLogin(this.activeMeetingId || this._lastActiveMeetingId)
         );
 
