@@ -25,24 +25,29 @@ export interface AuthServiceResponse {
     providedIn: `root`
 })
 export class AuthService {
-    // This is a wrapper around authTokenService.accessTokenObservable
-    // We need to control the point, when specific token changes should be propagated.
-    // undefined is used to indicate, that there is no valid token yet
-    private authTokenSubject = new BehaviorSubject<AuthToken | null>(undefined);
-    private authTokenSubscription: Subscription | null = null;
-
     public get authTokenObservable(): Observable<AuthToken | null> {
-        return this.authTokenSubject.asObservable();
+        return this._authTokenSubject.asObservable();
     }
 
     public get authToken(): AuthToken | null {
-        return this.authTokenSubject.getValue();
+        return this._authTokenSubject.getValue();
     }
 
     /**
      * "Pings" every time when a user logs out.
      */
-    public readonly onLogout = new EventEmitter<void>();
+    public get logoutObservable(): Observable<void> {
+        return this._logoutEvent.asObservable();
+    }
+
+    // This is a wrapper around authTokenService.accessTokenObservable
+    // We need to control the point, when specific token changes should be propagated.
+    // undefined is used to indicate, that there is no valid token yet
+    private readonly _authTokenSubject = new BehaviorSubject<AuthToken | null>(undefined);
+    private readonly _logoutEvent = new EventEmitter<void>();
+
+    private _authTokenSubscription: Subscription | null = null;
+    private _authTokenRefreshInterval: any | null = null;
 
     public constructor(
         private http: HttpService,
@@ -80,7 +85,7 @@ export class AuthService {
             throw e;
         } finally {
             // in error cases, resume the subscription
-            if (!this.authTokenSubscription) {
+            if (!this._authTokenSubscription) {
                 this.resumeTokenSubscription();
             }
         }
@@ -94,6 +99,7 @@ export class AuthService {
     }
 
     public async logout(): Promise<void> {
+        this.clearRefreshRoutine();
         this.lifecycleService.shutdown();
         const response = await this.http.post<AuthServiceResponse>(
             `${environment.authUrlPrefix}${environment.authSecurePrefix}/logout/`
@@ -101,7 +107,7 @@ export class AuthService {
         if (response.success) {
             this.authTokenService.setRawAccessToken(null);
         }
-        this.onLogout.emit();
+        this._logoutEvent.emit();
         await this.DS.clear();
         this.lifecycleService.bootup();
     }
@@ -133,21 +139,45 @@ export class AuthService {
     }
 
     private resumeTokenSubscription(): void {
-        if (this.authTokenSubscription) {
+        if (this._authTokenSubscription) {
             console.error(`The token subscription is already running`);
             return;
         }
-        this.authTokenSubscription = this.authTokenService.accessTokenObservable.subscribe(token =>
-            this.authTokenSubject.next(token)
-        );
+        this._authTokenSubscription = this.authTokenService.accessTokenObservable.subscribe(token => {
+            this._authTokenSubject.next(token);
+            this.setupRefreshRoutine();
+        });
     }
 
     private holdBackTokenSubscription(): void {
-        if (!this.authTokenSubscription) {
+        if (!this._authTokenSubscription) {
             console.error(`The token subscription is already stopped`);
             return;
         }
-        this.authTokenSubscription.unsubscribe();
-        this.authTokenSubscription = null;
+        this._authTokenSubscription.unsubscribe();
+        this._authTokenSubscription = null;
+        this.clearRefreshRoutine();
+    }
+
+    private setupRefreshRoutine(): void {
+        if (this._authTokenRefreshInterval) {
+            this.clearRefreshRoutine();
+        }
+        if (!this.authToken) {
+            return;
+        }
+        const issuedAt = new Date().getTime(); // in ms
+        const expiresAt = this.authToken.exp; // in sec
+        this._authTokenRefreshInterval = setTimeout(() => {
+            this.doWhoAmIRequest();
+        }, expiresAt * 1000 - issuedAt - 100); // 100ms before token is invalid
+    }
+
+    private clearRefreshRoutine(): void {
+        if (!this._authTokenRefreshInterval) {
+            return;
+        }
+        clearTimeout(this._authTokenRefreshInterval);
+        this._authTokenRefreshInterval = null;
     }
 }
