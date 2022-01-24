@@ -43,7 +43,7 @@
             <div>
                 <ng-container *ngFor="let step of importingStepsObservable | async">
                     <div
-                        class="import-list-summary"
+                        class="import-list-summary flex-vertical-center"
                         [ngClass]="{
                             'green-text': step.phase === Phase.FINISHED,
                             'red-warning-text': step.phase === Phase.ERROR
@@ -115,7 +115,7 @@
         }}
     </span>
     <br />
-    <div class="code red-warning-text">
+    <div class="code foreground-warn">
         <span *ngFor="let entry of possibleFields; let last = last">
             {{ entry | translate }}
             <span *ngIf="!last">,&nbsp;</span>
@@ -124,7 +124,7 @@
     <ul *ngIf="requiredFields.length">
         <li>
             <span *ngFor="let field of requiredFields; let last = last">
-                {{ field }}
+                {{ field | translate }}
                 <span *ngIf="!last">,&nbsp;</span>
             </span>
             <span *ngIf="requiredFields.length === 1">{{ 'is required' | translate }}.</span>
@@ -167,7 +167,7 @@
         </mat-form-field>
     </div>
     <div>
-        <div>
+        <div class="flex-vertical-center">
             <input
                 id="user-import-file-input"
                 type="file"
@@ -223,7 +223,7 @@
 
 <ng-template #modelNameTemplate let-model="model">
     {{ model.name | translate }}
-    <mat-icon class="newBadge" color="accent" inline *ngIf="!model.id">add</mat-icon>
+    <mat-icon class="newBadge" color="accent" inline *ngIf="model.willBeCreated">add</mat-icon>
 </ng-template>
 
 <ng-template #entryTemplate let-row="row" let-entry="entry" let-def="def">
@@ -309,7 +309,7 @@
 
 <ng-template #phaseIcon let-phase="phase">
     <div [ngSwitch]="phase">
-        <div *ngSwitchCase="Phase.ENQUEUED">
+        <div *ngSwitchDefault>
             <mat-icon class="icon-16 margin-left-12 margin-right-12"></mat-icon>
         </div>
         <div *ngSwitchCase="Phase.PENDING">

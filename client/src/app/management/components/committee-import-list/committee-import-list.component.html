@@ -25,13 +25,16 @@
             <div class="one-line">
                 {{ row.newEntry.description }}
             </div>
-            <div *ngIf="row.newEntry.organization_tag_ids?.length" class="one-line">
-                <span *ngFor="let tag of row.newEntry.organization_tag_ids; let last = last">
-                    {{ tag.name }}
-                    <mat-icon class="newBadge" color="accent" inline *ngIf="!tag.id">add</mat-icon>
-                    &nbsp;
-                    <span *ngIf="!last">;&nbsp;</span>
-                </span>
+            <div *ngIf="row.newEntry.organization_tag_ids?.length" class="one-line flex-vertical-center">
+                <mat-icon class="icon-14">local_offer</mat-icon>
+                <div class="margin-left-4 margin-right-4">
+                    <span *ngFor="let tag of row.newEntry.organization_tag_ids; let last = last">
+                        {{ tag.name }}
+                        <mat-icon class="newBadge" color="accent" inline *ngIf="!tag.id">add</mat-icon>
+                        &nbsp;
+                        <span *ngIf="!last">;&nbsp;</span>
+                    </span>
+                </div>
             </div>
         </div>
     </div>
@@ -39,7 +42,7 @@
         <div class="one-line">
             <span *ngFor="let meeting of meetings; let last = last">
                 {{ meeting.name }}
-                <mat-icon class="newBadge" color="accent" inline *ngIf="!meeting.id">add</mat-icon>
+                <mat-icon class="newBadge" color="accent" inline *ngIf="meeting.willBeCreated">add</mat-icon>
                 &nbsp;
                 <span *ngIf="!last">,&nbsp;</span>
             </span>

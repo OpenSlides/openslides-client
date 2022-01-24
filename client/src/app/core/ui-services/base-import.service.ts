@@ -3,14 +3,25 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { BaseBeforeImportHandler, BeforeImportHandler } from 'app/shared/utils/import/base-before-import-handler';
+import { ImportHandler } from 'app/shared/utils/import/base-import-handler';
 import { BaseMainImportHandler, MainImportHandler } from 'app/shared/utils/import/base-main-import-handler';
 import { ImportModel } from 'app/shared/utils/import/import-model';
+import { ImportFind } from 'app/shared/utils/import/import-utils';
+import {
+    StaticAdditionalImportHandler,
+    StaticAdditionalImportHandlerConfig
+} from 'app/shared/utils/import/static-additional-import-handler';
 import { Papa, ParseConfig } from 'ngx-papaparse';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { Identifiable } from '../../shared/models/base/identifiable';
+import {
+    AdditionalImportHandler,
+    BaseAdditionalImportHandler
+} from '../../shared/utils/import/base-additional-import-handler';
 import { AfterImportHandler, BaseAfterImportHandler } from '../../shared/utils/import/base-after-import-handler';
+import { ImportStep, ImportStepPhase } from '../../shared/utils/import/import-step';
 import {
     StaticAfterImportConfig,
     StaticAfterImportHandler
@@ -50,8 +61,8 @@ export interface ImportCSVPreview {
  */
 export type CsvMapping<T = any> = T & {
     name: string;
+    willBeCreated?: boolean;
     id?: Id;
-    multiId?: Id[];
 };
 
 /**
@@ -64,38 +75,21 @@ export interface CsvJsonMapping {
     [key: string]: string;
 }
 
-export type ImportConfig<ToCreate = any, K = any> = StaticMainImportConfig<ToCreate> & {
+type RawObject<ToCreate> = { [key in keyof ToCreate]?: any };
+
+export type ImportConfig<MainModel = any, K = any> = StaticMainImportConfig<MainModel> & {
     modelHeadersAndVerboseNames: K;
-    requiredFields?: (keyof ToCreate)[];
+    requiredFields?: (keyof MainModel)[];
 };
 
-export enum ImportStepPhase {
-    ENQUEUED,
-    PENDING,
-    FINISHED,
-    ERROR
-}
-
-export interface ImportStep {
-    phase: ImportStepPhase;
-    getModelsToCreateAmount(): number;
-    getModelsImportedAmount(): number;
-    getDescription(): string;
-}
-
-export interface ImportFind<ToImport> {
-    findByName: (name: string, line: any) => CsvMapping<ToImport> | CsvMapping<ToImport>[];
-}
-
-export interface ImportResolveHandler<ToCreate, ReturnType = void> {
-    doImport: (originalEntries: ToCreate[]) => ReturnType | Promise<ReturnType>;
-}
-
-export interface ImportCleanup {
-    doCleanup: () => void;
-}
-
 const DUPLICATE_IMPORT_ERROR = `Duplicates`;
+
+interface CsvValueParsingConfig<MainModel, SideModel> {
+    importModel: ImportModel<MainModel>;
+    allImportModels: ImportModel<MainModel>[];
+    header: keyof MainModel;
+    importFindHandler?: ImportFind<MainModel, SideModel>;
+}
 
 /**
  * Abstract service for imports
@@ -103,7 +97,7 @@ const DUPLICATE_IMPORT_ERROR = `Duplicates`;
 @Injectable({
     providedIn: `root`
 })
-export abstract class BaseImportService<ToCreate extends Identifiable> {
+export abstract class BaseImportService<MainModel extends Identifiable> {
     public chunkSize = 100;
 
     /**
@@ -189,7 +183,7 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
         return this._preview;
     }
 
-    public get importStepsObservable(): Observable<ImportStep[]> {
+    public get importingStepsObservable(): Observable<ImportStep[]> {
         return this._importingStepsSubject.asObservable();
     }
 
@@ -209,14 +203,14 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
         return this._rawFileSubject.asObservable();
     }
 
-    private get importModels(): ImportModel<ToCreate>[] {
+    private get importModels(): ImportModel<MainModel>[] {
         return Object.values(this._newEntries.value);
     }
 
     /**
      * BehaviorSubject for displaying a preview for the currently selected entries
      */
-    private readonly _newEntries = new BehaviorSubject<{ [importTrackId: number]: ImportModel<ToCreate> }>({});
+    private readonly _newEntries = new BehaviorSubject<{ [importTrackId: number]: ImportModel<MainModel> }>({});
 
     /**
      * storing the summary preview for the import, to avoid recalculating it
@@ -224,13 +218,15 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
      */
     private _preview: ImportCSVPreview;
 
-    private _beforeImportHelper: { [key: string]: BeforeImportHandler } = {};
-    private _afterImportHelper: { [key: string]: AfterImportHandler } = {};
+    private _beforeImportHandler: { [key: string]: { mainHandler: BeforeImportHandler } } = {};
+    private _afterImportHandler: {
+        [key: string]: { mainHandler: AfterImportHandler; additionalHandlers: AdditionalImportHandler[] };
+    } = {};
     private _otherMainImportHelper: MainImportHandler[] = [];
 
     private _modelHeadersAndVerboseNames: { [key: string]: string };
 
-    private _getDuplicatesFn: (entry: Partial<ToCreate>) => Partial<ToCreate>[] | Promise<Partial<ToCreate>[]>;
+    private _getDuplicatesFn: (entry: Partial<MainModel>) => Partial<MainModel>[] | Promise<Partial<MainModel>[]>;
 
     protected readonly translate: TranslateService = this.importServiceCollector.translate;
     protected readonly matSnackbar: MatSnackBar = this.importServiceCollector.matSnackBar;
@@ -257,13 +253,13 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
     private _csvLines: { [header: string]: string }[] = [];
     private _receivedHeaders: string[] = [];
     private _mapReceivedExpectedHeaders: { [expectedHeader: string]: string } = {};
-    private _requiredFields: (keyof ToCreate)[] = [];
+    private _requiredFields: (keyof MainModel)[] = [];
     private _lostHeaders: { expected: { [header: string]: string }; received: string[] } = {
         expected: {},
         received: []
     };
 
-    private _selfImportHelper: MainImportHandler<ToCreate>;
+    private _selfImportHelper: MainImportHandler<MainModel>;
 
     private readonly _papa: Papa = this.importServiceCollector.papa;
 
@@ -321,7 +317,7 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
      *
      * @param entries: an array of prepared newEntry objects
      */
-    public setParsedEntries(entries: { [importTrackId: number]: ImportModel<ToCreate> }): void {
+    public setParsedEntries(entries: { [importTrackId: number]: ImportModel<MainModel> }): void {
         this.clearPreview();
         if (!entries) {
             return;
@@ -361,11 +357,7 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
     }
 
     public updateSummary(): void {
-        this._importingStepsSubject.next([
-            ...Object.values(this._beforeImportHelper),
-            ...this.getAllMainImportHelpers(),
-            ...Object.values(this._afterImportHelper)
-        ]);
+        this._importingStepsSubject.next(this.getEveryImportHandler());
     }
 
     /**
@@ -373,7 +365,7 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
      *
      * @returns an observable BehaviorSubject
      */
-    public getNewEntriesObservable(): Observable<ImportModel<ToCreate>[]> {
+    public getNewEntriesObservable(): Observable<ImportModel<MainModel>[]> {
         return this._newEntries.asObservable().pipe(map(value => Object.values(value)));
     }
 
@@ -405,9 +397,7 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
      * Resets the data and preview (triggered upon selecting an invalid file)
      */
     public clearPreview(): void {
-        Object.values(this._beforeImportHelper).forEach(helper => helper.doCleanup());
-        Object.values(this._afterImportHelper).forEach(helper => helper.doCleanup());
-        this.getAllMainImportHelpers().forEach(helper => helper.doCleanup());
+        this.getEveryImportHandler().forEach(handler => handler.doCleanup());
         this.setNextEntries({});
         this._lostHeaders = { expected: {}, received: [] };
         this._preview = null;
@@ -439,7 +429,7 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
      * @param error The error to check for
      * @returns true if the error is present
      */
-    public hasError(entry: ImportModel<ToCreate>, error: string): boolean {
+    public hasError(entry: ImportModel<MainModel>, error: string): boolean {
         return entry.errors.includes(error);
     }
 
@@ -453,29 +443,31 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
         this._currentImportPhaseSubject.next(ImportStepPhase.PENDING);
         await this.doBeforeImport();
 
-        for (const handler of this.getAllMainImportHelpers()) {
-            handler.phase = ImportStepPhase.PENDING;
+        for (const handler of this.getEveryMainImportHandler()) {
+            handler.startImport();
             await handler.doImport();
-            handler.phase = ImportStepPhase.FINISHED;
+            handler.finishImport();
         }
 
-        this.doAfterImport(this.importModels.map(importModel => importModel.model));
+        await this.doAfterImport();
 
         this._currentImportPhaseSubject.next(ImportStepPhase.FINISHED);
         this.updatePreview();
     }
 
     private async doBeforeImport(): Promise<void> {
-        for (const helper of Object.values(this._beforeImportHelper)) {
-            if (helper.getModelsToCreateAmount() > 0) {
-                await helper.doImport(this.importModels.map(entry => entry.newEntry));
-            }
+        for (const { mainHandler } of Object.values(this._beforeImportHandler)) {
+            await mainHandler.doImport();
         }
     }
 
-    private async doAfterImport(modelsToCreate: ToCreate[]): Promise<void> {
-        for (const handler of Object.values(this._afterImportHelper)) {
-            await handler.doImport(modelsToCreate);
+    private async doAfterImport(): Promise<void> {
+        for (const { mainHandler, additionalHandlers } of Object.values(this._afterImportHandler)) {
+            await mainHandler.doImport();
+            for (const handler of additionalHandlers) {
+                handler.pipeImportedSideModels(mainHandler.getModelsToCreate());
+                await handler.doImport();
+            }
         }
     }
 
@@ -492,8 +484,7 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
         this.propagateNextNewEntries();
     }
 
-    private setNextEntries(nextEntries: { [importTrackId: number]: ImportModel<ToCreate> }): void {
-        this.getAllMainImportHelpers().forEach(helper => helper.pipeModels(Object.values(nextEntries)));
+    private setNextEntries(nextEntries: { [importTrackId: number]: ImportModel<MainModel> }): void {
         this._newEntries.next(nextEntries);
         this.updatePreview();
     }
@@ -504,41 +495,61 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
      *
      * @returns A map containing import-helpers for specific attributes of `ToCreate`.
      */
-    protected getBeforeImportHelpers(): { [key: string]: BeforeImportHandler<ToCreate, any> } {
+    protected getBeforeImportHelpers(): { [key: string]: BeforeImportHandler<MainModel, any> } {
         return {};
     }
 
-    protected pipeParseValue(_value: string, _header: keyof ToCreate): any {}
+    protected pipeParseValue(_value: string, _header: keyof MainModel): any {}
 
     protected registerBeforeImportHelper<ToImport>(
         header: string,
-        handler: StaticBeforeImportConfig<ToCreate, ToImport> | BaseBeforeImportHandler
+        handler: StaticBeforeImportConfig<MainModel, ToImport> | BaseBeforeImportHandler
     ): void {
         if (handler instanceof BaseBeforeImportHandler) {
-            this._beforeImportHelper[header] = handler as any;
+            this._beforeImportHandler[header] = { mainHandler: handler };
         } else {
-            this._beforeImportHelper[header] = new StaticBeforeImportHandler(handler, key =>
-                this.translate.instant(key)
-            );
+            this._beforeImportHandler[header] = {
+                mainHandler: new StaticBeforeImportHandler(handler, key => this.translate.instant(key))
+            };
         }
     }
 
-    protected registerAfterImportHandler<ToImport>(
+    protected registerAfterImportHandler<SideModel>(
         header: string,
-        handler: StaticAfterImportConfig<ToCreate, ToImport> | BaseAfterImportHandler
+        handler: StaticAfterImportConfig<MainModel, SideModel> | BaseAfterImportHandler,
+        additionalHandlers?: (
+            | StaticAdditionalImportHandlerConfig<MainModel, SideModel>
+            | BaseAdditionalImportHandler<MainModel, SideModel>
+        )[]
     ): void {
+        const getAfterImportHandler = (
+            _handler:
+                | StaticAdditionalImportHandlerConfig<MainModel, SideModel>
+                | BaseAdditionalImportHandler<MainModel, SideModel>
+        ) => {
+            if (_handler instanceof BaseAdditionalImportHandler) {
+                return _handler;
+            } else {
+                return new StaticAdditionalImportHandler<MainModel, SideModel>(_handler);
+            }
+        };
+        const _additionalHandlers = (additionalHandlers ?? []).map(_handler => getAfterImportHandler(_handler));
         if (handler instanceof BaseAfterImportHandler) {
-            this._afterImportHelper[header] = handler;
+            this._afterImportHandler[header] = { mainHandler: handler, additionalHandlers: _additionalHandlers };
         } else {
-            this._afterImportHelper[header] = new StaticAfterImportHandler<ToCreate, ToImport>(
-                handler,
-                header as keyof ToCreate
-            );
+            this._afterImportHandler[header] = {
+                mainHandler: new StaticAfterImportHandler<MainModel, SideModel>(
+                    handler,
+                    header as keyof MainModel,
+                    toTranslate => this.translate.instant(toTranslate)
+                ),
+                additionalHandlers: _additionalHandlers
+            };
         }
     }
 
     protected registerMainImportHandler(
-        handler: StaticMainImportConfig<ToCreate> | BaseMainImportHandler<ToCreate>
+        handler: StaticMainImportConfig<MainModel> | BaseMainImportHandler<MainModel>
     ): void {
         if (handler instanceof BaseMainImportHandler) {
             this._otherMainImportHelper.push(handler);
@@ -556,15 +567,15 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
         input,
         importTrackId
     }: {
-        input: ToCreate;
+        input: MainModel;
         importTrackId: number;
-    }): Promise<ImportModel<ToCreate>> {
+    }): Promise<ImportModel<MainModel>> {
         if (!this._getDuplicatesFn) {
             throw new Error(`No function to check for duplicates defined`);
         }
         const duplicates = await this._getDuplicatesFn(input);
         const hasDuplicates = duplicates.length > 0;
-        const entry: ImportModel<ToCreate> = new ImportModel({
+        const entry: ImportModel<MainModel> = new ImportModel({
             model: input,
             hasDuplicates,
             importTrackId,
@@ -580,17 +591,17 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
      *
      * @param _entries
      */
-    protected async onBeforeCreatingImportModels(_entries: ToCreate[]): Promise<void> {}
+    protected async onBeforeCreatingImportModels(_entries: MainModel[]): Promise<void> {}
 
     private async createImportModel({
         input,
         importTrackId,
         errors
     }: {
-        input: ToCreate;
+        input: MainModel;
         importTrackId: number;
         errors: string[];
-    }): Promise<ImportModel<ToCreate>> {
+    }): Promise<ImportModel<MainModel>> {
         const nextEntry = await this.onCreateImportModel({ input, importTrackId });
         if (nextEntry.hasDuplicates) {
             errors.push(DUPLICATE_IMPORT_ERROR);
@@ -610,11 +621,11 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
      *
      * @returns an object which has the headers of the models used internal
      */
-    private createRawObject(line: CsvJsonMapping): { [key in keyof ToCreate]?: any } {
+    private createRawObject(line: CsvJsonMapping): RawObject<MainModel> {
         return Object.keys(this._mapReceivedExpectedHeaders).mapToObject(expectedHeader => {
             const receivedHeader = this._mapReceivedExpectedHeaders[expectedHeader];
             return { [expectedHeader]: line[receivedHeader] };
-        }) as { [key in keyof ToCreate]?: any };
+        }) as { [key in keyof MainModel]?: any };
     }
 
     /**
@@ -626,27 +637,27 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
      *
      * @returns A new model which values are linked to any helpers if needed.
      */
-    private mapData(line: CsvJsonMapping): { model: ToCreate; errors: string[] } {
-        const toCreate: ToCreate = {} as ToCreate;
+    private mapData(importModel: ImportModel<MainModel>): void {
+        const rawObject = importModel.model;
         const errors = [];
-        const rawObject = this.createRawObject(line);
         for (const expectedHeader of Object.keys(this._mapReceivedExpectedHeaders)) {
-            const helper = this._beforeImportHelper[expectedHeader] || this._afterImportHelper[expectedHeader];
+            const handler = this._beforeImportHandler[expectedHeader] || this._afterImportHandler[expectedHeader];
             const csvValue = rawObject[expectedHeader];
             try {
                 const value = this.parseCsvValue(csvValue, {
-                    header: expectedHeader as keyof ToCreate,
-                    line: rawObject,
-                    helper
+                    header: expectedHeader as keyof MainModel,
+                    importModel: importModel,
+                    importFindHandler: handler?.mainHandler,
+                    allImportModels: this.importModels
                 });
-                toCreate[expectedHeader] = value;
+                rawObject[expectedHeader] = value;
             } catch (e) {
                 console.debug(`Error while parsing ${expectedHeader}\n`, e);
                 errors.push(e.message);
-                toCreate[expectedHeader] = csvValue;
+                rawObject[expectedHeader] = csvValue;
             }
         }
-        return { model: toCreate, errors };
+        importModel.errors = importModel.errors.concat(errors);
     }
 
     private init(): void {
@@ -658,17 +669,20 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
         this.initializeImportHelpers();
     }
 
-    private getSelfImportHelper(): MainImportHandler<ToCreate> {
+    private getSelfImportHelper(): MainImportHandler<MainModel> {
         return this._selfImportHelper;
     }
 
     private initializeImportHelpers(): void {
-        const { createFn, updateFn, getDuplicatesFn, verboseNameFn, shouldBeCreatedFn } = this.getConfig();
-        this._beforeImportHelper = { ...this._beforeImportHelper, ...this.getBeforeImportHelpers() };
+        const { createFn, updateFn, getDuplicatesFn, verboseNameFn, shouldCreateModelFn } = this.getConfig();
+        const handlers = Object.entries(this.getBeforeImportHelpers()).mapToObject(([key, value]) => ({
+            [key]: { mainHandler: value }
+        }));
+        this._beforeImportHandler = { ...this._beforeImportHandler, ...handlers };
         this._selfImportHelper = new StaticMainImportHandler({
             verboseNameFn,
             getDuplicatesFn,
-            shouldBeCreatedFn,
+            shouldCreateModelFn,
             createFn,
             updateFn,
             resolveEntryFn: importModel => this.resolveEntry(importModel)
@@ -676,11 +690,11 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
         this.updateSummary();
     }
 
-    private resolveEntry(entry: ImportModel<ToCreate>): ToCreate {
-        let model = { ...entry.newEntry } as ToCreate;
-        for (const key of Object.keys(this._beforeImportHelper)) {
-            const helper = this._beforeImportHelper[key];
-            const result = helper.doResolve(model, key);
+    private resolveEntry(entry: ImportModel<MainModel>): MainModel {
+        let model = { ...entry.newEntry } as MainModel;
+        for (const key of Object.keys(this._beforeImportHandler)) {
+            const { mainHandler: handler } = this._beforeImportHandler[key];
+            const result = handler.doResolve(model, key);
             model = result.model;
             if (result.unresolvedModels) {
                 entry.errors = (entry.errors ?? []).concat(this.getVerboseError(result.verboseName));
@@ -688,17 +702,18 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
                 break;
             }
         }
+        for (const key of Object.keys(this._afterImportHandler)) {
+            delete model[key];
+        }
         return model;
     }
 
-    private parseCsvValue<ToImport>(
-        value: string,
-        { header, line, helper }: { line: any; header: keyof ToCreate; helper?: ImportFind<ToImport> }
-    ): any {
-        if (helper) {
-            return helper.findByName(value, line);
+    private parseCsvValue<ToImport>(value: string, config: CsvValueParsingConfig<MainModel, ToImport>): any {
+        if (config.importFindHandler) {
+            const { importModel, allImportModels } = config;
+            return config.importFindHandler.findByName(value, { importModel, allImportModels });
         }
-        value = this.pipeParseValue(value, header) || value;
+        value = this.pipeParseValue(value, config.header) || value;
         return value;
     }
 
@@ -766,40 +781,51 @@ export abstract class BaseImportService<ToCreate extends Identifiable> {
     }
 
     private checkImportValidness(): void {
-        this._isImportValidSubject.next(
-            this._requiredFields.every(field => !Object.keys(this._lostHeaders.expected).includes(field as string))
+        const requiredFulfilled = this._requiredFields.every(
+            field => !Object.keys(this._lostHeaders.expected).includes(field as string)
         );
+        const validModels = this.importModels.some(importModel => !importModel.errors.length);
+        this._isImportValidSubject.next(requiredFulfilled && validModels);
     }
 
     private async propagateNextNewEntries(): Promise<void> {
-        const rawEntries: { model: ToCreate; errors: string[] }[] = [];
-        for (let i = 0; i < this._csvLines.length; ++i) {
-            const line = this._csvLines[i];
-            rawEntries.push(this.mapData(line));
-        }
-        await this.onBeforeCreatingImportModels(rawEntries.map(entry => entry.model));
+        const rawEntries = this._csvLines.map(line => this.createRawObject(line));
+        await this.onBeforeCreatingImportModels(rawEntries.map(entry => entry as MainModel));
         for (let i = 0; i < rawEntries.length; ++i) {
-            const { model, errors } = rawEntries[i];
+            const model = rawEntries[i] as MainModel;
             const nextEntry = await this.createImportModel({
                 input: model,
                 importTrackId: i + 1,
-                errors
+                errors: []
             });
             this.pushNextNewEntry(nextEntry);
         }
+        this.importModels.forEach(importModel => this.mapData(importModel));
+        for (const importHandler of this.getEveryImportHandler()) {
+            importHandler.pipeModels(this.importModels);
+        }
+        this.checkImportValidness();
     }
 
-    private pushNextNewEntry(nextEntry: ImportModel<ToCreate>): void {
+    private pushNextNewEntry(nextEntry: ImportModel<MainModel>): void {
         const oldEntries = this._newEntries.value;
         oldEntries[nextEntry.importTrackId] = nextEntry;
         this.setNextEntries(oldEntries);
     }
 
-    private getAllMainImportHelpers(): MainImportHandler<ToCreate>[] {
+    private getEveryImportHandler(): ImportHandler[] {
+        const beforeImportHandlers = Object.values(this._beforeImportHandler).map(({ mainHandler }) => mainHandler);
+        const afterImportHandlers = Object.values(this._afterImportHandler).flatMap(
+            ({ mainHandler, additionalHandlers }) => [mainHandler, ...additionalHandlers]
+        );
+        return [...beforeImportHandlers, ...this.getEveryMainImportHandler(), ...afterImportHandlers];
+    }
+
+    private getEveryMainImportHandler(): MainImportHandler<MainModel>[] {
         return [this.getSelfImportHelper(), ...this._otherMainImportHelper];
     }
 
     // Abstract methods
     public abstract downloadCsvExample(): void;
-    protected abstract getConfig(): ImportConfig<ToCreate>;
+    protected abstract getConfig(): ImportConfig<MainModel>;
 }

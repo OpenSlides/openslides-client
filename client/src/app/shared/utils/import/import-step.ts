@@ -1,5 +1,20 @@
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { ImportStepPhase } from 'app/core/ui-services/base-import.service';
+
+export enum ImportStepPhase {
+    ENQUEUED,
+    PENDING,
+    FINISHED,
+    ERROR
+}
+
+export interface ImportStep {
+    readonly phase: ImportStepPhase;
+    startImport(): void;
+    finishImport(): void;
+    getModelsToCreateAmount(): number;
+    getModelsImportedAmount(): number;
+    getDescription(): string;
+}
 
 type LabelFn = string | ((phase: ImportStepPhase, plural?: boolean) => string);
 type VerboseNameFn = string | ((plural?: boolean) => string);

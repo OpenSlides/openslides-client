@@ -18,15 +18,15 @@ import { MatTab, MatTabChangeEvent } from '@angular/material/tabs';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { columnFactory, createDS, PblColumnDefinition, PblDataSource, PblNgridColumnSet } from '@pebula/ngrid';
-import { BaseImportService, ValueLabelCombination } from 'app/core/ui-services/base-import.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { BaseModel } from 'app/shared/models/base/base-model';
 import { ImportModel } from 'app/shared/utils/import/import-model';
+import { ImportStep, ImportStepPhase } from 'app/shared/utils/import/import-step';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { Observable, of } from 'rxjs';
 import { auditTime, distinctUntilChanged, map } from 'rxjs/operators';
 
-import { CsvMapping, ImportStepPhase } from '../../../core/ui-services/base-import.service';
+import { BaseImportService, CsvMapping, ValueLabelCombination } from '../../../core/ui-services/base-import.service';
 import { ImportListViewFirstTabDirective } from './import-list-view-first-tab.directive';
 import { ImportListViewLastTabDirective } from './import-list-view-last-tab.directive';
 import { ImportListViewStatusTemplateDirective } from './import-list-view-status-template.directive';
@@ -216,8 +216,8 @@ export class ImportListViewComponent<M extends BaseModel> extends BaseComponent 
         return `${this.modelName || `Models`} have been imported.`;
     }
 
-    public get importingStepsObservable(): Observable<any> {
-        return this.importer.importStepsObservable;
+    public get importingStepsObservable(): Observable<ImportStep[]> {
+        return this.importer.importingStepsObservable;
     }
 
     public get requiredFields(): string[] {

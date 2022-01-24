@@ -6,9 +6,9 @@ import { CsvExportService } from 'app/core/ui-services/csv-export.service';
 import { DurationService } from 'app/core/ui-services/duration.service';
 import { AgendaItemType, ItemTypeChoices } from 'app/shared/models/agenda/agenda-item';
 import { Topic } from 'app/shared/models/topics/topic';
-import { ImportModel } from 'app/shared/utils/import/import-model';
 
 import { ImportServiceCollector } from '../../../core/ui-services/import-service-collector';
+import { ImportModel } from '../../../shared/utils/import/import-model';
 import { topicHeadersAndVerboseNames } from '../topics.constants';
 
 interface TopicExport {

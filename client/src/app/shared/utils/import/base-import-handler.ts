@@ -1,306 +1,101 @@
-import {
-    CsvMapping,
-    ImportCleanup,
-    ImportFind,
-    ImportResolveHandler,
-    ImportStep,
-    ImportStepPhase
-} from 'app/core/ui-services/base-import.service';
-import { Identifiable } from 'app/shared/models/base/identifiable';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { CsvMapping } from 'app/core/ui-services/base-import.service';
 
-import { ImportHandlerConfig } from './import-handler-config';
-import { ImportStepDescriptor } from './import-step-descriptor';
+import { ImportContext, SharedImportContext } from './import-context';
+import { ImportModel } from './import-model';
+import { ImportStep, ImportStepDescriptor, ImportStepPhase } from './import-step';
+import { ImportCleanup } from './import-utils';
 
-type CreateFn<E> = (entries: E[]) => Promise<Identifiable[]>;
-type FindFn<E, O> = (name: string, originalEntry: O) => E;
-
-class ImportProcess<ToImport> {
-    public readonly modelsImportedSubject = new BehaviorSubject<CsvMapping<ToImport>[]>([]);
-
-    private _importFailCounter = 0;
-
-    public constructor(
-        private readonly _createFn: (models: CsvMapping<ToImport>[]) => Promise<Identifiable[]>,
-        private readonly _chunkSize: number,
-        private readonly _models: CsvMapping<ToImport>[]
-    ) {}
-
-    public async doImport(models: CsvMapping<ToImport>[] = this._models): Promise<Identifiable[]> {
-        const identifiables: Identifiable[] = [];
-        let sliceIndex = 0;
-        while (sliceIndex < Math.ceil(models.length / this._chunkSize)) {
-            const modelsChunk =
-                this._chunkSize === 0
-                    ? models
-                    : models.slice(sliceIndex * this._chunkSize, (sliceIndex + 1) * this._chunkSize);
-            const ids = await this.doCreateModels(modelsChunk);
-            identifiables.push(...ids);
-            const previousValue = this.modelsImportedSubject.value;
-            this.modelsImportedSubject.next(previousValue.concat(modelsChunk.filter((_, index) => !!ids[index].id)));
-            sliceIndex += 1;
-        }
-        return identifiables;
-    }
-
-    private async doCreateModels(models: CsvMapping<ToImport>[]): Promise<Identifiable[]> {
-        try {
-            return await this.doCreateModelsHelper(models);
-        } catch (e) {
-            const identifiables: Identifiable[] = [];
-            for (const model of models) {
-                identifiables.push(...(await this.handleCreateError(model)));
-            }
-            return identifiables;
-        }
-    }
-
-    private async doCreateModelsHelper(models: CsvMapping<ToImport>[]): Promise<Identifiable[]> {
-        if (this._importFailCounter >= 3) {
-            return models.map(() => ({ id: null }));
-        } else {
-            return await this._createFn(models);
-        }
-    }
-
-    private async handleCreateError(model: CsvMapping<ToImport>): Promise<Identifiable[]> {
-        try {
-            return await this.doCreateModelsHelper([model]);
-        } catch (_) {
-            ++this._importFailCounter;
-            return [{ id: null }];
-        }
-    }
+export interface ImportHandler<ToCreate = any> extends ImportStep, ImportCleanup {
+    pipeModels(importModels: ImportModel<ToCreate>[]): void;
+    doImport(): void | Promise<void>;
 }
 
-export interface ImportHandler<ToCreate, ToImport = any>
-    extends ImportStep,
-        ImportFind<ToImport>,
-        ImportResolveHandler<ToCreate>,
-        ImportCleanup {}
-
-export interface BaseImportHandlerConfig<ToCreate = any, ToImport = any>
-    extends ImportHandlerConfig<ToCreate, ToImport> {
-    idProperty: keyof ToCreate;
-    translateFn?: (value: string) => string;
+/**
+ * `MainModel` is the type of a model an importer will primarly create. `SideModel` is the type of a model which will
+ * be created, too, but as a "side effect" during the import process of the main models.
+ */
+export interface BaseImportHandlerConfig<MainModel = any, SideModel = any> {
+    /**
+     * A descriptive name for the models created by this helper. If a `label` is given, the label is used over the descriptive name.
+     */
+    verboseNameFn?: string | ((plural?: boolean) => string);
+    /**
+     * A complete label for an import handler. This will be used over a `verboseNameFn` (if given). this can also be a function.
+     */
+    labelFn?: string | ((phase: ImportStepPhase, plural?: boolean) => string);
+    /**
+     * Sets the chunk size to an immutable value.
+     */
+    fixedChunkSize?: number;
+    /**
+     * This function can be used to transform any entries into objects, that are directly forced to the import
+     * function.
+     */
+    transformFn?: TransformFn<MainModel, SideModel>;
 }
 
-export abstract class BaseImportHandler<ToCreate, ToImport> implements ImportHandler<ToCreate, ToImport> {
-    protected set modelsToCreate(next: CsvMapping[]) {
-        this._modelsToCreateSubject.next(next);
-    }
+type TransformFn<MainModel, SideModel> = <K>(sideModels: CsvMapping<SideModel>[], mainModels: MainModel[]) => K[];
 
-    protected get modelsToCreate(): CsvMapping[] {
-        return this._modelsToCreateSubject.value;
-    }
-
-    public get modelsToCreateObservable(): Observable<CsvMapping<ToImport>[]> {
-        return this._modelsToCreateSubject.asObservable();
-    }
-
+export abstract class BaseImportHandler<MainModel = any, SideModel = any> implements ImportHandler<MainModel> {
     public get phase(): ImportStepPhase {
-        return this._importingStepPhaseSubject.value;
-    }
-
-    public get phaseObservable(): Observable<ImportStepPhase> {
-        return this._importingStepPhaseSubject.asObservable();
-    }
-
-    protected get isArray(): boolean {
-        return this._isArrayProperty || this._useArray;
+        return this.importContext.phase;
     }
 
     protected get chunkSize(): number {
         return this._fixedChunkSize ?? this._chunkSize;
     }
 
-    protected readonly translateFn: (value: string) => string;
-    protected readonly verboseNameFn: ((plural?: boolean) => string) | string;
-    protected readonly idProperty: keyof ToCreate;
+    protected readonly importContext: ImportContext<MainModel> = new ImportContext();
 
-    private readonly _modelsToCreateSubject = new BehaviorSubject<CsvMapping<ToImport>[]>([]);
-    private readonly _importingStepPhaseSubject = new BehaviorSubject<ImportStepPhase>(ImportStepPhase.ENQUEUED);
-
-    private _transformFn: (entries: CsvMapping<ToImport>[], originalEntries: ToCreate[]) => CsvMapping[];
-    private _createFn: (entries: CsvMapping<ToImport>[]) => Promise<Identifiable[]>;
-    private _findFn: (name: string, originalEntry: ToCreate) => ToImport | CsvMapping<ToImport>;
-    private _additionalFields: { key: keyof ToImport; value: unknown | (() => unknown) }[];
-    private _nameDelimiter: string;
-    private _useArray: boolean;
+    private readonly _chunkSize = 100;
     private readonly _fixedChunkSize: number;
+    private readonly _importStepDescriptor: ImportStepDescriptor;
+    private readonly _transformFn: TransformFn<MainModel, SideModel>;
 
-    private _chunkSize = 100;
-    private _isArrayProperty = false;
-    private _importProcess: ImportProcess<ToImport>;
-    private _importStepDescriptor: ImportStepDescriptor;
-
-    public constructor({
-        idProperty,
-        translateFn,
-        useArray = false,
-        repo,
-        verboseNameFn,
-        labelFn,
-        additionalFields = [],
-        nameDelimiter = `,`,
-        fixedChunkSize,
-        transformFn = models => models,
-        createFn,
-        findFn
-    }: BaseImportHandlerConfig<ToCreate, ToImport>) {
-        this.idProperty = idProperty;
-        this.translateFn = translateFn;
-        this.verboseNameFn = verboseNameFn ?? repo?.getVerboseName;
-        this._useArray = useArray;
-        this._additionalFields = additionalFields;
-        this._nameDelimiter = nameDelimiter;
-        this._fixedChunkSize = fixedChunkSize;
-        this._transformFn = transformFn;
+    public constructor(config: BaseImportHandlerConfig<MainModel, SideModel>) {
         this._importStepDescriptor = new ImportStepDescriptor({
-            verboseNameFn: verboseNameFn ?? repo?.getVerboseName,
-            labelFn
+            verboseNameFn: config.verboseNameFn,
+            labelFn: config.labelFn
         });
-
-        this.setCreateFn(createFn, repo);
-        this.setFindFn(findFn, repo);
-
-        if ((idProperty as string).slice(-3) === `ids`) {
-            this._isArrayProperty = true;
-        }
+        this._fixedChunkSize = config.fixedChunkSize;
+        this._transformFn = config.transformFn ?? (models => models as any);
     }
 
-    public doCleanup(): void {
-        this.modelsToCreate = [];
-        this.nextStep(ImportStepPhase.ENQUEUED);
-        if (this._importProcess) {
-            this._importProcess.modelsImportedSubject.next([]);
-        }
-    }
-
-    public async doImport(originalEntries: ToCreate[]): Promise<void> {
-        if (!this._createFn) {
-            throw new Error(`No function to create models is defined`);
-        }
+    public startImport(): void {
         this.nextStep(ImportStepPhase.PENDING);
-        this._importProcess = this.createImportProcess(originalEntries);
-        if (this.modelsToCreate.length) {
-            await this.import(originalEntries);
-        }
+    }
+
+    public finishImport(): void {
         this.nextStep(ImportStepPhase.FINISHED);
     }
 
-    public setChunkSize(size: number): void {
-        if (size) {
-            this._chunkSize = size;
-        }
-    }
-
-    public getModelsImportedAmount(): number {
-        return this._importProcess ? this._importProcess.modelsImportedSubject.value.length : 0;
-    }
-
-    public getModelsToCreateAmount(): number {
-        return this.modelsToCreate.length;
+    public pipeModels(importModels: ImportModel<MainModel>[]): void {
+        this.importContext.models = importModels.map(importModel => importModel.model);
     }
 
     public getDescription(): string {
         return this._importStepDescriptor.getDescription(this.phase, this.getModelsToCreateAmount() !== 1);
     }
 
-    public nextStep(step: ImportStepPhase): void {
-        this._importingStepPhaseSubject.next(step);
+    public doCleanup(): void {
+        this.importContext.models = [];
+        this.importContext.modelsImported = [];
+        this.importContext.phase = ImportStepPhase.ENQUEUED;
     }
 
-    public findByName(name: string, csvLine: CsvMapping): CsvMapping<ToImport> | CsvMapping<ToImport>[] {
-        if (!this._findFn) {
-            throw new Error(`No function to find any models for property ${this.idProperty} is defined`);
-        }
-        if (!name) {
-            return this.getReturnValue();
-        }
-        if (this.isArray) {
-            const names = this.parseName(name);
-            const existingModels = names.map(n => this.find(n, csvLine));
-            return this.getReturnValue(existingModels);
-        } else {
-            return this.getReturnValue(this.find(name.trim(), csvLine));
-        }
+    protected doTransformModels(models: CsvMapping<SideModel>[]): any[] {
+        return this._transformFn(models, this.importContext.models);
     }
 
-    protected doTransformModels(models: CsvMapping[], _originalEntries: ToCreate[]): CsvMapping[] {
-        return this._transformFn(models, _originalEntries);
+    protected nextStep(step: ImportStepPhase): void {
+        this.importContext.phase = step;
     }
 
-    protected onAfterCreateUnresolvedEntries(_modelsImported: ToImport[], _originalEntries: ToCreate[]): void {}
-
-    private find(name: string, csvLine: CsvMapping): CsvMapping<ToImport> {
-        const existingModel = (this._findFn(name, csvLine) || this._findFn(this.translateFn(name), csvLine)) as any;
-        if (existingModel?.id) {
-            return { name: existingModel.getTitle(), id: existingModel.id } as CsvMapping<ToImport>;
-        } else {
-            const pseudoModel: CsvMapping<ToImport> = existingModel ?? ({ name } as CsvMapping<ToImport>);
-            if (!this.modelsToCreate.find(model => model.name === pseudoModel.name)) {
-                this.modelsToCreate.push(pseudoModel);
-            }
-            return pseudoModel;
-        }
+    protected getImportContext(): SharedImportContext {
+        return this.importContext.getSharedContext();
     }
 
-    private createImportProcess(originalEntries: ToCreate[]): ImportProcess<ToImport> {
-        const models = this.modelsToCreate.map(model => {
-            this._additionalFields.forEach(
-                field => (model[field.key] = typeof field.value === `function` ? field.value() : field.value)
-            );
-            return model;
-        });
-        return new ImportProcess(this._createFn, this.chunkSize, this.doTransformModels(models, originalEntries));
-    }
-
-    private async import(originalEntries: ToCreate[]): Promise<void> {
-        const ids = await this._importProcess.doImport();
-        this.modelsToCreate = this.modelsToCreate.map((model, index) => ({
-            name: model.name,
-            id: ids[index]?.id
-        })) as CsvMapping<ToImport>[];
-        this.onAfterCreateUnresolvedEntries(this.modelsToCreate, originalEntries);
-    }
-
-    /**
-     * Parses an input by the given name-delimiter if `isArray` is true
-     *
-     * @param name The input of a single csv entry
-     */
-    private parseName(name: string): string[] {
-        const names = name
-            .split(this._nameDelimiter)
-            .map(n => n.trim())
-            .filter(n => !!n);
-        if (names.some(n => n.length > 256)) {
-            throw new Error(`Name exceeds 256 characters`);
-        }
-        return names;
-    }
-
-    private setFindFn(findFn?: FindFn<ToImport, ToCreate>, fallbackRepo?: any): void {
-        if (findFn) {
-            this._findFn = findFn;
-        } else if (fallbackRepo) {
-            this._findFn = name => fallbackRepo.getViewModelList().find(model => model.getTitle() === name);
-        }
-    }
-
-    private setCreateFn(createFn?: CreateFn<ToImport>, fallbackRepo?: any): void {
-        if (createFn) {
-            this._createFn = createFn;
-        } else if (fallbackRepo) {
-            this._createFn = entries => fallbackRepo.create(...entries);
-        }
-    }
-
-    private getReturnValue(item?: CsvMapping | CsvMapping[]): CsvMapping | CsvMapping[] {
-        if (this.isArray) {
-            return item ?? [];
-        }
-        return item || null;
-    }
+    public abstract getModelsToCreateAmount(): number;
+    public abstract getModelsImportedAmount(): number;
+    public abstract doImport(): Promise<void>;
 }

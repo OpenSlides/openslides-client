@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { Committee } from 'app/shared/models/event-management/committee';
+import { ImportStepPhase } from 'app/shared/utils/import/import-step';
 
 import { SimplifiedModelRequest } from '../../../core/core-services/model-request-builder.service';
 import { ORGANIZATION_ID } from '../../../core/core-services/organization.service';
-import { ImportStepPhase } from '../../../core/ui-services/base-import.service';
 import { ComponentServiceCollector } from '../../../core/ui-services/component-service-collector';
 import { ImportListViewHeaderDefinition } from '../../../shared/components/import-list-view/import-list-view.component';
 import {

@@ -3,7 +3,7 @@ import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/m
 import { CsvMapping } from 'app/core/ui-services/base-import.service';
 import { Motion } from 'app/shared/models/motions/motion';
 import { BaseBeforeImportHandler } from 'app/shared/utils/import/base-before-import-handler';
-import { ImportResolveInformation } from 'app/shared/utils/import/import-resolve-information';
+import { ImportResolveInformation } from 'app/shared/utils/import/import-utils';
 
 import { MotionCategory } from '../../../shared/models/motions/motion-category';
 
