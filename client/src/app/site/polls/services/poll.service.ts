@@ -196,6 +196,7 @@ export class PollService {
             {
                 vote: `amount_global_yes`,
                 showPercent: this.showPercentOfValidOrCast(poll),
+                amount: poll.global_option?.yes,
                 hide:
                     poll.global_option?.yes === VOTE_UNDOCUMENTED ||
                     !poll.global_option?.yes ||
@@ -204,11 +205,13 @@ export class PollService {
             {
                 vote: `amount_global_no`,
                 showPercent: this.showPercentOfValidOrCast(poll),
+                amount: poll.global_option?.no,
                 hide: poll.global_option?.no === VOTE_UNDOCUMENTED || !poll.global_option?.no
             },
             {
                 vote: `amount_global_abstain`,
                 showPercent: this.showPercentOfValidOrCast(poll),
+                amount: poll.global_option?.abstain,
                 hide: poll.global_option?.abstain === VOTE_UNDOCUMENTED || !poll.global_option?.abstain
             }
         ];
@@ -222,7 +225,7 @@ export class PollService {
                 class: `sums`,
                 value: [
                     {
-                        amount: poll[key.vote],
+                        amount: key.amount ?? poll[key.vote],
                         hide: key.hide,
                         showPercent: key.showPercent
                     } as VotingResult
