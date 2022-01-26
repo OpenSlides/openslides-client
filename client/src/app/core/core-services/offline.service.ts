@@ -1,6 +1,17 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 
-import { OfflineBroadcastService, OfflineReasonConfig } from './offline-broadcast.service';
+export interface OfflineReasonConfig {
+    /**
+     * The reason why we are offline
+     */
+    reason: string;
+    /**
+     * A function to check if we are online again. This has to return a boolean.
+     */
+    isOnlineFn: () => boolean | Promise<boolean>;
+}
 
 /**
  * This service handles everything connected with being offline.
@@ -12,20 +23,40 @@ import { OfflineBroadcastService, OfflineReasonConfig } from './offline-broadcas
     providedIn: `root`
 })
 export class OfflineService {
-    private config: OfflineReasonConfig | null = null;
+    public get offlineGone(): Observable<void> {
+        return this.isOfflineObservable.pipe(
+            filter(value => value === true),
+            map(() => {})
+        );
+    }
 
-    public constructor(private offlineBroadcastService: OfflineBroadcastService) {
-        this.offlineBroadcastService.goOfflineEvent.subscribe(reason => this.goOffline(reason));
+    public get onlineGone(): Observable<void> {
+        return this.isOfflineObservable.pipe(
+            filter(value => value === false),
+            map(() => {})
+        );
+    }
+
+    public get isOfflineObservable(): Observable<boolean> {
+        return this._isOfflineSubject.asObservable();
+    }
+
+    private readonly _isOfflineSubject = new BehaviorSubject(false);
+
+    private _config: OfflineReasonConfig | null = null;
+
+    public isOffline(): boolean {
+        return this._isOfflineSubject.value;
     }
 
     /**
      * Helper function to set offline status
      */
-    private goOffline(config: OfflineReasonConfig): void {
-        if (null !== this.config) {
+    public goOffline(config: OfflineReasonConfig): void {
+        if (null !== this._config) {
             return;
         }
-        this.config = config;
+        this._config = config;
 
         console.log(`Offline because: ${config.reason}`);
 
@@ -38,17 +69,17 @@ export class OfflineService {
 
         setTimeout(async () => {
             // Verifies that we are (still) offline
-            const isOnline = await this.config.isOnlineFn();
+            const isOnline = await this._config.isOnlineFn();
             console.log(`Is online again? ->`, isOnline);
 
             if (isOnline) {
                 // stop trying.
-                this.config = null;
-                this.offlineBroadcastService.isOfflineSubject.next(false);
+                this._config = null;
+                this._isOfflineSubject.next(false);
             } else {
                 // continue trying.
                 this.deferCheckStillOffline();
-                this.offlineBroadcastService.isOfflineSubject.next(true);
+                this._isOfflineSubject.next(true);
             }
         }, timeout);
     }

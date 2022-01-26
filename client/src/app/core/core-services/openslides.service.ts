@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { AuthService } from './auth.service';
 import { LifecycleService } from './lifecycle.service';
-import { OfflineBroadcastService } from './offline-broadcast.service';
+import { OfflineService } from './offline.service';
 import { OpenSlidesRouterService } from './openslides-router.service';
 
 const WHOAMI_FAILED = `WhoAmI failed`;
@@ -15,7 +15,7 @@ const WHOAMI_FAILED = `WhoAmI failed`;
 })
 export class OpenSlidesService {
     public constructor(
-        private offlineBroadcastService: OfflineBroadcastService,
+        private offlineService: OfflineService,
         private lifecycleService: LifecycleService,
         private authService: AuthService,
         private osRouter: OpenSlidesRouterService
@@ -30,7 +30,7 @@ export class OpenSlidesService {
     public async bootup(): Promise<void> {
         const online = await this.authService.doWhoAmIRequest();
         if (!online) {
-            this.offlineBroadcastService.goOfflineEvent.emit({
+            this.offlineService.goOffline({
                 reason: WHOAMI_FAILED,
                 isOnlineFn: async () => this.authService.doWhoAmIRequest()
             });
