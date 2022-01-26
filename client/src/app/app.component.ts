@@ -98,7 +98,7 @@ export class AppComponent implements OnInit {
         await this.onInitDone;
 
         setTimeout(() => {
-            this.lifecycleService.appLoaded.next();
+            this.lifecycleService.finishLoading();
         }, 0);
     }
 

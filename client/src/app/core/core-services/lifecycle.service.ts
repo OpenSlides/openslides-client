@@ -1,4 +1,5 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 
 import { Deferred } from '../promises/deferred';
 
@@ -13,17 +14,23 @@ export class LifecycleService {
      * This event is emitted, if the app becomes stable. It is ensured to happen after DomContentLoaded.
      * The event is also called in an async context to dispatch from the  main (sync) execution.
      */
-    public readonly appLoaded = new EventEmitter<void>();
+    public get appLoaded(): Observable<void> {
+        return this._appLoadingSubject.asObservable();
+    }
 
     /**
      * It is emitted, if openslides has booted: The user is authenticated and everything is ready to start.
      */
-    public readonly openslidesBooted = new EventEmitter<void>();
+    public get openslidesBooted(): Observable<void> {
+        return this._bootingSubject.asObservable();
+    }
 
     /**
      * OpenSlides is going down.
      */
-    public readonly openslidesShutdowned = new EventEmitter<void>();
+    public get openslidesShutdowned(): Observable<void> {
+        return this._shutdowningSubject.asObservable();
+    }
 
     private _isBooted = false;
     /**
@@ -42,14 +49,25 @@ export class LifecycleService {
     }
 
     private _booted = new Deferred();
+    private _hasLoaded = false;
 
-    public constructor() {}
+    private readonly _appLoadingSubject = new Subject<void>();
+    private readonly _bootingSubject = new Subject<void>();
+    private readonly _shutdowningSubject = new Subject<void>();
+
+    public finishLoading(): void {
+        if (this._hasLoaded) {
+            throw new Error(`Lifecycle has already loaded yet!`);
+        }
+        this._hasLoaded = true;
+        this._appLoadingSubject.next();
+    }
 
     public bootup(): void {
         this._isBooted = true;
         this._booted.resolve();
         console.debug(`Lifecycle: booted.`);
-        this.openslidesBooted.next();
+        this._bootingSubject.next();
     }
 
     /**
@@ -59,7 +77,7 @@ export class LifecycleService {
         this._isBooted = false;
         this._booted = new Deferred();
         console.debug(`Lifecycle: shutdown.`);
-        this.openslidesShutdowned.next();
+        this._shutdowningSubject.next();
     }
 
     /**

@@ -76,8 +76,7 @@ export class AuthService {
             if (response.success) {
                 // Shutdowning kills all connections. The operator is listening for token changes, so
                 // we must hold them back to this point.
-                this.lifecycleService.shutdown();
-                this.lifecycleService.bootup();
+                this.lifecycleService.reboot();
                 this.resumeTokenSubscription();
                 this.redirectUser(meetingId);
             }
@@ -170,6 +169,7 @@ export class AuthService {
         const expiresAt = this.authToken.exp; // in sec
         this._authTokenRefreshInterval = setTimeout(() => {
             this.doWhoAmIRequest();
+            this.lifecycleService.reboot();
         }, expiresAt * 1000 - issuedAt - 100); // 100ms before token is invalid
     }
 
