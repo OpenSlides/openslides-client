@@ -5,7 +5,7 @@ import { combineLatest, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
 
 import { DataStoreUpgradeService } from '../core-services/data-store-upgrade.service';
-import { OfflineBroadcastService } from '../core-services/offline-broadcast.service';
+import { OfflineService } from '../core-services/offline.service';
 import { OperatorService } from '../core-services/operator.service';
 import { CustomOverlayConfig, OverlayInstance, OverlayService } from './overlay.service';
 
@@ -38,7 +38,7 @@ export class SpinnerService {
     public constructor(
         private overlay: OverlayService,
         private upgradeService: DataStoreUpgradeService,
-        private offlineBroadcastService: OfflineBroadcastService,
+        private offlineService: OfflineService,
         private operator: OperatorService,
         private router: Router
     ) {}
@@ -92,7 +92,7 @@ export class SpinnerService {
     private initStableSubscription(): void {
         this.isStableSubscription = combineLatest([
             this.operator.isReadyObservable,
-            this.offlineBroadcastService.isOfflineSubject,
+            this.offlineService.isOfflineObservable,
             this.upgradeService.upgradeChecked.pipe(distinctUntilChanged()),
             this.router.events.pipe(filter(event => event instanceof RoutesRecognized))
         ]).subscribe(([isReady, isOffline, hasUpgradeChecked, event]) => {
