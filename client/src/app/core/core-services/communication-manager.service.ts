@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 
 import { HttpStream } from './http-stream';
 import { LifecycleService } from './lifecycle.service';
-import { OfflineBroadcastService } from './offline-broadcast.service';
+import { OfflineService } from './offline.service';
 
 export type HttpParamsGetter = () => HttpParams | { [param: string]: string | string[] };
 export type HttpBodyGetter = () => any;
@@ -31,14 +31,11 @@ export class CommunicationManagerService {
 
     private activeStreams: { [id: number]: HttpStream<any> } = {};
 
-    public constructor(
-        private offlineBroadcastService: OfflineBroadcastService,
-        private lifecycleService: LifecycleService
-    ) {
-        this.offlineBroadcastService.goOfflineEvent.subscribe(() => this.stopCommunication());
-        this.offlineBroadcastService.goOnlineEvent.subscribe(() => this.startCommunication());
-        this.lifecycleService.openslidesBooted.subscribe(() => this.startCommunication());
-        this.lifecycleService.openslidesShutdowned.subscribe(() => this.stopCommunication());
+    public constructor(offlineService: OfflineService, lifecycleService: LifecycleService) {
+        offlineService.offlineGone.subscribe(() => this.stopCommunication());
+        offlineService.onlineGone.subscribe(() => this.startCommunication());
+        lifecycleService.openslidesBooted.subscribe(() => this.startCommunication());
+        lifecycleService.openslidesShutdowned.subscribe(() => this.stopCommunication());
     }
 
     public registerStream<T>(stream: HttpStream<T>): CloseFn {
@@ -73,6 +70,9 @@ export class CommunicationManagerService {
         this.isRunning = false;
         for (const stream of Object.values(this.activeStreams)) {
             stream.close();
+        }
+        if (LOG) {
+            this.printActiveStreams();
         }
     }
 

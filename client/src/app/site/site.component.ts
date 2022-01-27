@@ -4,7 +4,6 @@ import { NavigationEnd, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { HistoryService } from 'app/core/core-services/history.service';
-import { OfflineBroadcastService } from 'app/core/core-services/offline-broadcast.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { TimeTravelService } from 'app/core/core-services/time-travel.service';
 import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
@@ -72,7 +71,6 @@ export class SiteComponent extends BaseComponent implements OnInit {
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService,
-        _offlineBroadcastService: OfflineBroadcastService,
         private activeMeeting: ActiveMeetingService,
         private router: Router,
         public vp: ViewportService,

@@ -1,7 +1,6 @@
 import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Follow } from 'app/core/core-services/model-request-builder.service';
-import { OfflineBroadcastService } from 'app/core/core-services/offline-broadcast.service';
 import { UnsafeHtml } from 'app/core/definitions/key-types';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MediaManageService } from 'app/core/ui-services/media-manage.service';
@@ -11,6 +10,8 @@ import { ViewProjector } from 'app/site/projector/models/view-projector';
 import { Size } from 'app/site/projector/size';
 import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
+
+import { OfflineService } from '../../../core/core-services/offline.service';
 
 export const PROJECTOR_CONTENT_FOLLOW: Follow = {
     idField: `current_projection_ids`,
@@ -135,7 +136,7 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService,
-        private offlineBroadcastService: OfflineBroadcastService,
+        private offlineService: OfflineService,
         private elementRef: ElementRef,
         private mediaManageService: MediaManageService
     ) {
@@ -161,7 +162,7 @@ export class ProjectorComponent extends BaseComponent implements OnDestroy {
         });
 
         this.subscriptions.push(
-            this.offlineBroadcastService.isOfflineSubject.subscribe(isOffline => (this.isOffline = isOffline))
+            this.offlineService.isOfflineObservable.subscribe(isOffline => (this.isOffline = isOffline))
         );
 
         const trigger$ = merge(

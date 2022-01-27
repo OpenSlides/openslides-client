@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { BehaviorSubject } from 'rxjs';
 
-import { OfflineBroadcastService } from '../core-services/offline-broadcast.service';
+import { OfflineService } from '../core-services/offline.service';
 
 export interface BannerDefinition {
     type?: string;
@@ -29,9 +29,9 @@ export class BannerService {
 
     public activeBanners: BehaviorSubject<BannerDefinition[]> = new BehaviorSubject<BannerDefinition[]>([]);
 
-    public constructor(offlineBroadcastService: OfflineBroadcastService) {
-        offlineBroadcastService.isOfflineSubject.subscribe(offline => {
-            if (offline) {
+    public constructor(offlineService: OfflineService) {
+        offlineService.isOfflineObservable.subscribe(isOffline => {
+            if (isOffline) {
                 this.addBanner(this.offlineBannerDefinition);
             } else {
                 this.removeBanner(this.offlineBannerDefinition);

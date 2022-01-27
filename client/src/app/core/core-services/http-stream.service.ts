@@ -6,7 +6,7 @@ import { AuthService } from './auth.service';
 import { HttpBodyGetter, HttpParamsGetter } from './communication-manager.service';
 import { ErrorDescription, HttpStream, HttpStreamOptions } from './http-stream';
 import { EndpointConfiguration, HttpStreamEndpointService } from './http-stream-endpoint.service';
-import { OfflineBroadcastService } from './offline-broadcast.service';
+import { OfflineService } from './offline.service';
 
 export type Params = HttpParams | { [param: string]: string | string[] };
 
@@ -27,7 +27,7 @@ export class HttpStreamService {
         private http: HttpClient,
         private endpointService: HttpStreamEndpointService,
         private auth: AuthService,
-        private offlineService: OfflineBroadcastService
+        private offlineService: OfflineService
     ) {}
 
     public create<T>(
@@ -76,7 +76,7 @@ export class HttpStreamService {
 
     private onError(endpoint: EndpointConfiguration, description?: ErrorDescription): void {
         console.log(`ERROR`, description);
-        this.offlineService.goOfflineEvent.emit({
+        this.offlineService.goOffline({
             reason: lostConnectionToFn(endpoint),
             isOnlineFn: async () => this.endpointService.isEndpointHealthy(endpoint)
         });
