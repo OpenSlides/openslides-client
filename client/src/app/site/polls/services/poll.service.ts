@@ -5,12 +5,15 @@ import { OrganizationSettingsService } from 'app/core/ui-services/organization-s
 import { ChartData, ChartDate } from 'app/shared/components/charts/charts.component';
 import { PollData } from 'app/shared/models/poll/generic-poll';
 import {
+    ABSTAIN_KEY,
     AssignmentPollMethodVerbose,
+    NO_KEY,
     PollColor,
     PollMethod,
     PollPercentBase,
     PollType,
-    VOTE_UNDOCUMENTED
+    VOTE_UNDOCUMENTED,
+    YES_KEY
 } from 'app/shared/models/poll/poll-constants';
 import { PollPercentBaseVerbose, PollPropertyVerbose, PollTypeVerbose } from 'app/shared/models/poll/poll-constants';
 import { ParsePollNumberPipe } from 'app/shared/pipes/parse-poll-number.pipe';
@@ -80,9 +83,6 @@ export interface VotingResult {
 }
 
 const PollChartBarThickness = 20;
-const YES_KEY = `yes`;
-const NO_KEY = `no`;
-const ABSTAIN_KEY = `abstain`;
 
 /**
  * Shared service class for polls. Used by child classes {@link MotionPollService}
@@ -171,7 +171,7 @@ export class PollService {
     }
 
     public getChartLabels(poll: PollData): string[] {
-        const fields = this.getPollDataFieldsByMethod(poll);
+        const fields = this.getPollDataFields(poll);
         return poll.options.map(option => {
             const votingResults = fields.map(field => {
                 const voteValue = option[field];
@@ -364,7 +364,7 @@ export class PollService {
     }
 
     public generateChartData(poll: PollData): ChartData {
-        const fields = this.getPollDataFieldsByMethod(poll);
+        const fields = this.getPollDataFields(poll);
 
         const data: ChartData = fields
             .map(
@@ -390,21 +390,8 @@ export class PollService {
         return [...poll.options, poll.global_option].map(option => (option ? option[key] : undefined));
     }
 
-    protected getPollDataFieldsByMethod(poll: PollData): CalculablePollKey[] {
-        switch (poll.pollmethod) {
-            case PollMethod.YNA: {
-                return [YES_KEY, NO_KEY, ABSTAIN_KEY];
-            }
-            case PollMethod.YN: {
-                return [YES_KEY, NO_KEY];
-            }
-            case PollMethod.N: {
-                return [NO_KEY];
-            }
-            default: {
-                return [YES_KEY];
-            }
-        }
+    protected getPollDataFields(_poll: PollData): CalculablePollKey[] {
+        throw new Error(`Method not implemented`);
     }
 
     public isVoteDocumented(vote: number): boolean {

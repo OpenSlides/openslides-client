@@ -125,10 +125,10 @@ export class ActiveMeetingService {
     }
 
     private closeModelSubscriptions(): void {
-        for (const subscription of this._modelAutoupdateSubscriptions) {
-            subscription.close();
+        while (this._modelAutoupdateSubscriptions.length > 0) {
+            const subscription = this._modelAutoupdateSubscriptions.shift();
+            subscription?.close();
         }
-        this._modelAutoupdateSubscriptions = [];
     }
 
     /**

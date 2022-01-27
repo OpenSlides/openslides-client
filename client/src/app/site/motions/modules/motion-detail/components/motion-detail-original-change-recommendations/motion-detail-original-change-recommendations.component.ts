@@ -138,15 +138,13 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
         // If we show it right away, there will be nasty Angular warnings about changed values, as the position
         // is changing while the DOM updates
         setTimeout(() => {
+            this.checkPermissions();
             this.setLineNumberCache();
             this.setTextChangeRecommendations(this._changeRecommendations);
         }, 1);
     }
 
-    /**
-     * @param changes
-     */
-    public ngOnChanges(changes: SimpleChanges): void {
+    public ngOnChanges(): void {
         this.update();
     }
 

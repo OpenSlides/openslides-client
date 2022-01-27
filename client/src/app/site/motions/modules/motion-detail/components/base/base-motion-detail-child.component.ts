@@ -29,9 +29,7 @@ export abstract class BaseMotionDetailChildComponent extends BaseComponent {
     public set motion(motion: ViewMotion) {
         const previousMotion = this._motion;
         this._motion = motion;
-        if (previousMotion?.id !== motion.id) {
-            this.doUpdate();
-        }
+        this.doUpdate();
         if (!Object.keys(previousMotion || {}).length && Object.keys(motion).length) {
             this.onInitTextBasedAmendment(); // Assuming that it's an amendment
         }
