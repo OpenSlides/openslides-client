@@ -20,8 +20,13 @@ import { ChartData } from '../charts/charts.component';
 export class MotionPollDetailContentComponent extends BaseComponent implements OnDestroy {
     private _poll: PollData;
 
-    public chartData: ChartData;
-    public tableData: PollTableData[];
+    public get chartData(): ChartData {
+        return this._chartData;
+    }
+
+    public get tableData(): PollTableData[] {
+        return this._tableData;
+    }
 
     @Input()
     public set poll(pollData: PollData) {
@@ -61,7 +66,9 @@ export class MotionPollDetailContentComponent extends BaseComponent implements O
         return this.pollService.showChart(this.poll);
     }
 
-    private tableDataSubscription: Subscription | null = null;
+    private _tableDataSubscription: Subscription | null = null;
+    private _tableData: PollTableData[] = [];
+    private _chartData: ChartData = null;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -80,21 +87,21 @@ export class MotionPollDetailContentComponent extends BaseComponent implements O
 
     private setupTableData(): void {
         this.cleanup();
-        this.tableDataSubscription = this.pollService.generateTableDataAsObservable(this.poll).subscribe(tableData => {
-            this.tableData = tableData;
+        this._tableDataSubscription = this.pollService.generateTableDataAsObservable(this.poll).subscribe(tableData => {
+            this._tableData = tableData;
             this.setChartData();
             this.cd.markForCheck();
         });
     }
 
     private setChartData(): void {
-        this.chartData = this.pollService.generateChartData(this.poll);
+        this._chartData = this.pollService.generateChartData(this.poll);
     }
 
     private cleanup(): void {
-        if (this.tableDataSubscription) {
-            this.tableDataSubscription.unsubscribe();
-            this.tableDataSubscription = null;
+        if (this._tableDataSubscription) {
+            this._tableDataSubscription.unsubscribe();
+            this._tableDataSubscription = null;
         }
     }
 }

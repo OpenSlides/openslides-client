@@ -5,11 +5,19 @@ import { PollRepositoryService } from 'app/core/repositories/polls/poll-reposito
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { OrganizationSettingsService } from 'app/core/ui-services/organization-settings.service';
 import { Assignment } from 'app/shared/models/assignments/assignment';
+import { PollData } from 'app/shared/models/poll/generic-poll';
 import { Poll } from 'app/shared/models/poll/poll';
-import { PollMethod, PollPercentBase, PollType } from 'app/shared/models/poll/poll-constants';
+import {
+    ABSTAIN_KEY,
+    NO_KEY,
+    PollMethod,
+    PollPercentBase,
+    PollType,
+    YES_KEY
+} from 'app/shared/models/poll/poll-constants';
 import { ParsePollNumberPipe } from 'app/shared/pipes/parse-poll-number.pipe';
 import { PollKeyVerbosePipe } from 'app/shared/pipes/poll-key-verbose.pipe';
-import { PollService } from 'app/site/polls/services/poll.service';
+import { CalculablePollKey, PollService } from 'app/site/polls/services/poll.service';
 
 export const UnknownUserLabel = _(`Deleted user`);
 
@@ -70,5 +78,22 @@ export class AssignmentPollService extends PollService {
         }
 
         return poll;
+    }
+
+    protected getPollDataFields(poll: PollData): CalculablePollKey[] {
+        switch (poll.pollmethod) {
+            case PollMethod.YNA: {
+                return [YES_KEY, NO_KEY, ABSTAIN_KEY];
+            }
+            case PollMethod.YN: {
+                return [YES_KEY, NO_KEY];
+            }
+            case PollMethod.N: {
+                return [NO_KEY];
+            }
+            default: {
+                return [YES_KEY];
+            }
+        }
     }
 }

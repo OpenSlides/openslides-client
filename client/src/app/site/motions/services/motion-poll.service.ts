@@ -6,12 +6,22 @@ import { OrganizationSettingsService } from 'app/core/ui-services/organization-s
 import { Motion } from 'app/shared/models/motions/motion';
 import { OptionData, PollData } from 'app/shared/models/poll/generic-poll';
 import { Poll } from 'app/shared/models/poll/poll';
-import { PollMethod, PollPercentBase, PollType } from 'app/shared/models/poll/poll-constants';
+import {
+    ABSTAIN_KEY,
+    INVALID_VOTES_KEY,
+    NO_KEY,
+    PollMethod,
+    PollPercentBase,
+    PollType,
+    YES_KEY
+} from 'app/shared/models/poll/poll-constants';
 import { ParsePollNumberPipe } from 'app/shared/pipes/parse-poll-number.pipe';
 import { PollKeyVerbosePipe } from 'app/shared/pipes/poll-key-verbose.pipe';
 import { PollService, PollTableData, VotingResult } from 'app/site/polls/services/poll.service';
 import { merge, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+
+import { CalculablePollKey } from '../../polls/services/poll.service';
 
 /**
  * Service class for motion polls.
@@ -76,6 +86,17 @@ export class MotionPollService extends PollService {
             poll.options &&
             poll.options.some(option => option.yes >= 0 && option.no >= 0 && option.abstain >= 0)
         );
+    }
+
+    protected getPollDataFields(poll: PollData): CalculablePollKey[] {
+        switch (poll.onehundred_percent_base) {
+            case PollPercentBase.YN:
+                return [YES_KEY, NO_KEY];
+            case PollPercentBase.Cast:
+                return [YES_KEY, NO_KEY, ABSTAIN_KEY, INVALID_VOTES_KEY];
+            default:
+                return [YES_KEY, NO_KEY, ABSTAIN_KEY];
+        }
     }
 
     private createTableData(poll: PollData, options: OptionData[]): PollTableData[] {

@@ -1,5 +1,10 @@
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
+export const YES_KEY = `yes`;
+export const NO_KEY = `no`;
+export const ABSTAIN_KEY = `abstain`;
+export const INVALID_VOTES_KEY = `votesinvalid`;
+
 export enum PollBackendDurationType {
     LONG = `long`,
     FAST = `fast`

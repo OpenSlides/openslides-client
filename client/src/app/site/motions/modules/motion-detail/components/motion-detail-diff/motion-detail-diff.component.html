@@ -15,11 +15,11 @@
                 <li *cdkVirtualFor="let change of changes; let index = index">
                     <span class="one-line">
                         <a href="" (click)="scrollToChangeClicked(change, $event)" *ngIf="!change.isTitleChange()">
-                            <span> {{ 'Line' | translate }} {{ formatLineRange(change) }} </span>
+                            <span>{{ 'Line' | translate }} {{ formatLineRange(change) }}</span>
                             <span *ngIf="change.isTitleChange()">{{ 'Title' | translate }}</span>
                             <span *ngIf="isChangeRecommendation(change)">
-                                ({{ 'Change recommendation' | translate }})</span
-                            >
+                                ({{ 'Change recommendation' | translate }})
+                            </span>
                             <span *ngIf="isAmendment(change)">
                                 ({{ 'Amendment' | translate }} {{ change.getIdentifier() }})
                             </span>
@@ -29,11 +29,12 @@
                         </i>
                         <i class="user-subtitle">
                             <ng-container *ngIf="change.isRejected() && !isAmendment(change)">
-                                – <span>{{ 'Rejected' | translate }}</span></ng-container
-                            >
+                                –
+                                <span>{{ 'Rejected' | translate }}</span>
+                            </ng-container>
                             <ng-container *ngIf="(change.isAccepted() || isAmendment(change)) && change.stateName">
-                                – {{ change.stateName | translate }}</ng-container
-                            >
+                                – {{ change.stateName | translate }}
+                            </ng-container>
                         </i>
                         <a
                             mat-icon-button
@@ -124,15 +125,7 @@
                     >
                         <mat-icon>more_horiz</mat-icon>
                     </button>
-
-                    <!--
-                    <a ng-if="change.type == 'amendment'" ui-sref="motions.motion.detail({id: change.original.id})"
-                       uib-tooltip="Open amendment"
-                       class="btn btn-default btn-sm pull-right btn-amend-info">
-                        <i class="fa fa-info"></i>
-                        {{ change.original.number }}
-                    </a>
-                --></div>
+                </div>
                 <div class="status-row" *ngIf="isChangeRecommendation(change) && change.isRejected()">
                     <i class="grey">{{ 'Rejected' | translate }}</i>
                 </div>
@@ -196,7 +189,8 @@
                     mat-menu-item
                     (click)="setAmendmentState(change, state.id)"
                 >
-                    {{ state.name | translate }} <span *ngIf="state.show_state_extension_field">&nbsp;...</span>
+                    {{ state.name | translate }}
+                    <span *ngIf="state.show_state_extension_field">&nbsp;...</span>
                 </button>
                 <mat-divider *ngIf="change.amendment.state.next_states.length > 0"></mat-divider>
                 <button
