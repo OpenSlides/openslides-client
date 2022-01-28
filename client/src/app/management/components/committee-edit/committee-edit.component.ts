@@ -52,7 +52,7 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
     public editCommittee: ViewCommittee;
 
     private get managerIdCtrl(): AbstractControl {
-        return this.committeeForm.get(`manager_ids`);
+        return this.committeeForm.get(`user_$_management_level`);
     }
 
     private navigatedFrom: string | undefined;
@@ -144,6 +144,10 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
 
     public onCancel(): void {
         this.navigateBack(this.committeeId);
+    }
+
+    public getTransformPropagateFn(): (value?: any) => any {
+        return value => ({ [CML.can_manage]: value });
     }
 
     /**
@@ -244,7 +248,7 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
             name: [``, Validators.required],
             description: [``],
             organization_tag_ids: [[]],
-            manager_ids: [[]],
+            user_$_management_level: [[]],
             forward_to_committee_ids: [[]],
             receive_forwardings_from_committee_ids: [[]]
         };
@@ -259,9 +263,7 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
         this.committeeForm.patchValue(committee.committee);
 
         if (this.committeeId && committee.users?.length) {
-            const committeeManagers = committee.users.filter(
-                user => user.committee_management_level(this.committeeId) === CML.can_manage
-            );
+            const committeeManagers = committee.getManagers();
             this.managerIdCtrl.patchValue(committeeManagers.map(user => user.id));
         }
     }

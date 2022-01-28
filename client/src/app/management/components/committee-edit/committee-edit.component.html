@@ -44,10 +44,11 @@
         <mat-form-field *osOmlPerms="OML.can_manage_users">
             <mat-label>{{ 'Committee managers' | translate }}</mat-label>
             <os-search-value-selector
-                formControlName="manager_ids"
+                formControlName="user_$_management_level"
                 [multiple]="true"
                 placeholder="{{ 'Committee managers' | translate }}"
                 [inputListValues]="organizationMembers"
+                [transformPropagateFn]="getTransformPropagateFn()"
             ></os-search-value-selector>
         </mat-form-field>
 

@@ -1,9 +1,9 @@
 import { CML } from 'app/core/core-services/organization-permission';
+import { Id } from 'app/core/definitions/key-types';
 import { Committee } from 'app/shared/models/event-management/committee';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 import { ViewUser } from 'app/site/users/models/view-user';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 
 import { ViewMeeting } from './view-meeting';
 import { ViewOrganization } from './view-organization';
@@ -34,19 +34,20 @@ export class ViewCommittee extends BaseViewModel<Committee> {
     }
 
     public get managerObservable(): Observable<ViewUser[]> {
-        return this.users_as_observable.pipe(map(users => this.getManagers(users)));
+        return of(this.getManagers());
     }
 
     public get managerAmount(): number {
         return this.getManagers().length || 0;
     }
 
-    public getManagers(users: ViewUser[] = this.users): ViewUser[] {
-        return users.filter(user => {
-            const hasCML = user.committee_management_level(this.committee.id) === CML.can_manage;
-            return hasCML;
-        });
+    public getManagers(): ViewUser[] {
+        const userIds = this.user_management_level_ids(CML.can_manage);
+        return userIds ? userIds.map(userId => this.getViewUser(userId)) : [];
     }
+
+    // Functions injected by the committee-repo
+    public getViewUser: (id: Id) => ViewUser;
 }
 interface ICommitteeRelations {
     meetings: ViewMeeting[];
@@ -57,5 +58,6 @@ interface ICommitteeRelations {
     receive_forwardings_from_committees: ViewCommittee[];
     organization: ViewOrganization;
     template_meeting: ViewMeeting;
+    // user_management_levels: (cml: CML) => ViewUser[]; // Not working yet!
 }
 export interface ViewCommittee extends Committee, ICommitteeRelations, HasOrganizationTags {}

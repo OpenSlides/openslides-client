@@ -10,8 +10,7 @@ export namespace CommitteeAction {
     export interface PartialPayload {
         description?: UnsafeHtml;
         // For UPDATE: Required permission: OML.can_manage_organization
-        user_ids?: Id[];
-        manager_ids?: Id[];
+        user_$_management_level?: { [management_level: string]: Id[] };
         // For UPDATE: Required permission: CML.can_manage || OML.can_manage_organization
         organization_tag_ids?: Id[];
         // Required permission: OML.can_manage_organization

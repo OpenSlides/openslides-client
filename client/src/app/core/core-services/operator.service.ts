@@ -42,7 +42,12 @@ function getUserCML(user: ViewUser): { [id: number]: string } | null {
 
     const committeeManagementLevel = {};
     for (const replacement of user.committee_$_management_level) {
-        committeeManagementLevel[+replacement] = user.committee_management_level(replacement);
+        if (!user.committee_management_level_ids(replacement)) {
+            continue;
+        }
+        for (const committeeId of user.committee_management_level_ids(replacement)) {
+            committeeManagementLevel[+committeeId] = replacement;
+        }
     }
     return committeeManagementLevel;
 }
