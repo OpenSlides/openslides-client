@@ -103,7 +103,7 @@ export class NotifyService {
     } = {};
 
     private channelId: string;
-    private commCloseFn: () => void;
+    private connectionClosingFn: () => void;
 
     /**
      * Constructor to create the NotifyService. Registers itself to the WebsocketService.
@@ -115,7 +115,7 @@ export class NotifyService {
         private operator: OperatorService,
         private activeMeetingIdService: ActiveMeetingIdService,
         private lifecycleService: LifecycleService,
-        private commManager: CommunicationManagerService,
+        private communicationManager: CommunicationManagerService,
         private httpEndpointService: HttpStreamEndpointService
     ) {
         /**
@@ -144,27 +144,29 @@ export class NotifyService {
 
         const iccMeeting = `${notifyPath}?meeting_id=${meetingId}`;
         this.httpEndpointService.registerEndpoint(ICC_ENDPOINT, iccMeeting, iccHealthPath, HTTPMethod.GET);
-        const httpStream = this.httpStreamService.create<NotifyResponse<any> | ChannelIdResponse>(ICC_ENDPOINT, {
-            onMessage: (notify: NotifyResponse<any> | ChannelIdResponse) => {
-                if ((notify as ChannelIdResponse).channel_id) {
-                    this.handleChannelIdResponse(notify as ChannelIdResponse);
-                } else {
-                    this.handleNotifyResponse(notify as NotifyResponse<any>);
-                }
-            },
-            description: `NotifyService`
-        });
-        this.commCloseFn = this.commManager.registerStream(httpStream);
+        const buildStreamFn = () =>
+            this.httpStreamService.create<NotifyResponse<any> | ChannelIdResponse>(ICC_ENDPOINT, {
+                onMessage: (notify: NotifyResponse<any> | ChannelIdResponse) => {
+                    if ((notify as ChannelIdResponse).channel_id) {
+                        this.handleChannelIdResponse(notify as ChannelIdResponse);
+                    } else {
+                        this.handleNotifyResponse(notify as NotifyResponse<any>);
+                    }
+                },
+                description: `NotifyService`
+            });
+        const { closeFn } = this.communicationManager.registerStreamBuilder(buildStreamFn);
+        this.connectionClosingFn = closeFn;
     }
 
     private disconnect(): void {
-        if (this.commCloseFn) {
+        if (this.connectionClosingFn) {
             try {
-                this.commCloseFn();
+                this.connectionClosingFn();
             } catch (e) {
                 console.warn(`Was not able to properly close previous ICC connection: `, e);
             }
-            this.commCloseFn = undefined;
+            this.connectionClosingFn = undefined;
         }
     }
 

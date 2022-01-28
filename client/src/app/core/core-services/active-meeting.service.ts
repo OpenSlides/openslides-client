@@ -3,7 +3,6 @@ import { ViewMeeting } from 'app/management/models/view-meeting';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, first } from 'rxjs/operators';
 
-import { Id } from '../definitions/key-types';
 import { MeetingRepositoryService } from '../repositories/management/meeting-repository.service';
 import { BannerDefinition, BannerService } from '../ui-services/banner.service';
 import { ActiveMeetingIdService } from './active-meeting-id.service';

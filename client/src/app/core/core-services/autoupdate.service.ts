@@ -142,17 +142,18 @@ export class AutoupdateService {
     }
 
     private async request(request: ModelRequest, description: string): Promise<ModelSubscription> {
-        const httpStream = this.httpStreamService.create(
-            AUTOUPDATE_DEFAULT_ENDPOINT,
-            { onMessage: (data, stream) => this.handleAutoupdate(data, stream.id), description },
-            { bodyFn: () => [request] }
-        );
-        const closeFn = this.communicationManager.registerStream(httpStream);
+        const buildStreamFn = () =>
+            this.httpStreamService.create(
+                AUTOUPDATE_DEFAULT_ENDPOINT,
+                { onMessage: (data, stream) => this.handleAutoupdate(data, stream.id), description },
+                { bodyFn: () => [request] }
+            );
+        const { closeFn, id } = this.communicationManager.registerStreamBuilder(buildStreamFn);
         return {
-            id: httpStream.id,
+            id,
             close: () => {
                 closeFn();
-                delete this._activeRequestObjects[httpStream.id];
+                delete this._activeRequestObjects[id];
             }
         };
     }
@@ -164,6 +165,9 @@ export class AutoupdateService {
         for (const key of Object.keys(autoupdateData)) {
             const data = key.split(`/`);
             const collectionRelation = `${data[0]}/${data[2]}`;
+            if (!this._activeRequestObjects[id]) {
+                continue;
+            }
             if (this._activeRequestObjects[id].getFullListUpdateCollectionRelations().includes(collectionRelation)) {
                 fullListUpdateCollections[
                     this._activeRequestObjects[id].getForeignCollectionByRelation(collectionRelation)

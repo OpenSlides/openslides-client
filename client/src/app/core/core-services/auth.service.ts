@@ -47,7 +47,7 @@ export class AuthService {
     private readonly _logoutEvent = new EventEmitter<void>();
 
     private _authTokenSubscription: Subscription | null = null;
-    private _authTokenRefreshInterval: any | null = null;
+    private _authTokenRefreshTimeout: NodeJS.Timeout | null = null;
 
     public constructor(
         private http: HttpService,
@@ -160,7 +160,7 @@ export class AuthService {
     }
 
     private setupRefreshRoutine(): void {
-        if (this._authTokenRefreshInterval) {
+        if (this._authTokenRefreshTimeout) {
             this.clearRefreshRoutine();
         }
         if (!this.authToken) {
@@ -168,16 +168,16 @@ export class AuthService {
         }
         const issuedAt = new Date().getTime(); // in ms
         const expiresAt = this.authToken.exp; // in sec
-        this._authTokenRefreshInterval = setTimeout(() => {
+        this._authTokenRefreshTimeout = setTimeout(() => {
             this.doWhoAmIRequest();
         }, expiresAt * 1000 - issuedAt - 100); // 100ms before token is invalid
     }
 
     private clearRefreshRoutine(): void {
-        if (!this._authTokenRefreshInterval) {
+        if (!this._authTokenRefreshTimeout) {
             return;
         }
-        clearTimeout(this._authTokenRefreshInterval);
-        this._authTokenRefreshInterval = null;
+        clearTimeout(this._authTokenRefreshTimeout);
+        this._authTokenRefreshTimeout = null;
     }
 }
