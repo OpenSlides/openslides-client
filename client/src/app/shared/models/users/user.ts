@@ -64,7 +64,7 @@ export class User extends BaseDecimalModel<User> {
     public current_projector_$_ids: any[];
 
     public organization_management_level: keyof OMLMapping;
-    public committee_$_management_level: Id[];
+    public committee_$_management_level: CML[];
 
     public get isVoteWeightOne(): boolean {
         throw new Error(`TODO`);
@@ -170,8 +170,14 @@ export class User extends BaseDecimalModel<User> {
         return this[`vote_delegations_$${meetingId}_from_ids`] || [];
     }
 
-    public committee_management_level(committeeId: Id): CML {
-        return this[`committee_$${committeeId}_management_level`];
+    /**
+     * Gives every committee id, a user has a requested committee permission.
+     *
+     * @param cml The committee permission to query
+     * @returns A list of committee ids, a user has the queried permission
+     */
+    public committee_management_level_ids(cml: CML): Id[] {
+        return this[`committee_$${cml}_management_level`];
     }
 
     protected getDecimalFields(): (keyof User)[] {

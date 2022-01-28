@@ -65,23 +65,12 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
         this.getUserByUrl();
     }
 
-    public transformPropagateFn(value?: Id[]): any {
-        if (!value?.length) {
-            return value;
-        }
-        return value.mapToObject(id => ({ [id]: CML.can_manage }));
+    public getTransformSetFn(): (value?: string[]) => Id[] {
+        return () => (this.user ? this.user.committee_management_level_ids(CML.can_manage) : []);
     }
 
-    public getTransformSetFn(): (value?: string[]) => Id[] {
-        return (value?: string[]): Id[] => {
-            const managementIds = [];
-            for (const strId of value || []) {
-                if (this.user.committee_management_level(parseInt(strId, 10)) === CML.can_manage) {
-                    managementIds.push(parseInt(strId, 10));
-                }
-            }
-            return managementIds;
-        };
+    public getTransformPropagateFn(): (value?: Id[]) => any {
+        return value => ({ [CML.can_manage]: value });
     }
 
     public getSaveAction(): () => Promise<void> {
@@ -131,12 +120,9 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
     }
 
     public getUserCommitteeManagementLevels(): ViewCommittee[] {
-        const committeesToManage: ViewCommittee[] = [];
-        for (const id of this.user.committee_$_management_level) {
-            if (this.user.committee_management_level(id) === CML.can_manage) {
-                committeesToManage.push(this.committeeRepo.getViewModel(id));
-            }
-        }
+        const committeesToManage: ViewCommittee[] = this.user
+            .committee_management_level_ids(CML.can_manage)
+            .map(committeeId => this.committeeRepo.getViewModel(committeeId));
         return committeesToManage.filter(committee => !!committee);
     }
 
@@ -201,41 +187,7 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
     }
 
     private getPartialUserPayload(): any {
-        const payload = {
-            ...this.personalInfoFormValue,
-            committee_$_management_level: this.getCommitteeManagementLevelPayload(),
-            committee_ids: this.getCommitteeMembershipAsIds()
-        };
-        return payload;
-    }
-
-    /**
-     * Function to compare old CML of this user with new selected. Necessary to get removed management permissions and
-     * parse them as `[committeeId]: null`.
-     *
-     * @returns An object with adjusted CML.
-     */
-    private getCommitteeManagementLevelPayload(): { [committeeId: number]: CML | null } {
-        const committeeManagementIds = Object.keys(this.personalInfoFormValue.committee_$_management_level || {});
-        const oldCommitteeManagementIds = (this.user?.committee_$_management_level || []) as any[];
-        return {
-            ...this.personalInfoFormValue.committee_$_management_level,
-            ...oldCommitteeManagementIds.difference(committeeManagementIds).mapToObject(id => ({ [id]: null }))
-        };
-    }
-
-    /**
-     * Function to get assigned CML to committees, which this user is not related to. Users can get permissions only
-     * for a committee, they are related to.
-     *
-     * @returns An array with ids for the committees this user is related to.
-     */
-    private getCommitteeMembershipAsIds(): Id[] {
-        const committeeMembership = (this.personalInfoFormValue.committee_ids || []) as Id[];
-        const committeeManager = Object.keys(this.personalInfoFormValue.committee_$_management_level || {}).map(strId =>
-            parseInt(strId, 10)
-        ) as Id[];
-        return committeeMembership.concat(committeeManager.difference(committeeMembership));
+        return this.personalInfoFormValue;
     }
 
     private checkFormForErrors(): void {

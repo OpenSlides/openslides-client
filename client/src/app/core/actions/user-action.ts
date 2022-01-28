@@ -61,7 +61,7 @@ export namespace UserAction {
         };
 
         committee_ids: Id[];
-        committee_$_management_level: string;
+        committee_$_management_level: { [management_level: string]: Id[] };
         organization_management_level: string;
     }
 

@@ -3,7 +3,8 @@ import { CommitteeAction } from 'app/core/actions/committee-action';
 import {
     DEFAULT_FIELDSET,
     Fieldsets,
-    SimplifiedModelRequest
+    SimplifiedModelRequest,
+    TypedFieldset
 } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { ORGANIZATION_ID } from 'app/core/core-services/organization.service';
@@ -17,6 +18,7 @@ import { Committee } from 'app/shared/models/event-management/committee';
 import { BaseRepository } from '../base-repository';
 import { ModelRequestRepository } from '../model-request-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
+import { UserRepositoryService } from '../users/user-repository.service';
 
 @Injectable({
     providedIn: `root`
@@ -25,7 +27,11 @@ export class CommitteeRepositoryService
     extends BaseRepository<ViewCommittee, Committee>
     implements ModelRequestRepository
 {
-    public constructor(repositoryServiceCollector: RepositoryServiceCollector, private operator: OperatorService) {
+    public constructor(
+        repositoryServiceCollector: RepositoryServiceCollector,
+        private operator: OperatorService,
+        private userRepo: UserRepositoryService
+    ) {
         super(repositoryServiceCollector, Committee);
     }
 
@@ -34,15 +40,16 @@ export class CommitteeRepositoryService
     public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Committees` : `Committee`);
 
     public getFieldsets(): Fieldsets<Committee> {
-        const titleFields: (keyof Committee)[] = [`name`, `description`];
-        const listFields: (keyof Committee)[] = titleFields.concat([
+        const titleFields: TypedFieldset<Committee> = [`name`, `description`];
+        const listFields = titleFields.concat([
             `meeting_ids`,
             `forward_to_committee_ids`,
             `receive_forwardings_from_committee_ids`,
             `organization_tag_ids`,
-            `user_ids`
+            `user_ids`,
+            { templateField: `user_$_management_level` }
         ]);
-        const editFields: (keyof Committee)[] = titleFields.concat([`default_meeting_id`, `template_meeting_id`]);
+        const editFields = titleFields.concat([`default_meeting_id`, `template_meeting_id`]);
         return {
             [DEFAULT_FIELDSET]: titleFields,
             list: listFields,
@@ -50,7 +57,7 @@ export class CommitteeRepositoryService
         };
     }
 
-    public create(...committees: Partial<Committee>[]): Promise<Identifiable[]> {
+    public create(...committees: any[]): Promise<Identifiable[]> {
         const payload: CommitteeAction.CreatePayload[] = committees.map(committee => ({
             name: committee.name,
             organization_id: ORGANIZATION_ID,
@@ -59,7 +66,7 @@ export class CommitteeRepositoryService
         return this.sendBulkActionToBackend(CommitteeAction.CREATE, payload);
     }
 
-    public update(update?: Partial<Committee>, ...committees: ViewCommittee[]): Promise<void> {
+    public update(update?: any, ...committees: ViewCommittee[]): Promise<void> {
         const createPayload = (id: Id, model: Partial<Committee>) => ({
             id,
             name: model.name,
@@ -113,6 +120,7 @@ export class CommitteeRepositoryService
 
     protected createViewModel(model: Committee): ViewCommittee {
         const viewModel = super.createViewModel(model);
+        viewModel.getViewUser = (id: Id) => this.userRepo.getViewModel(id);
         viewModel.canAccess = () =>
             this.operator.hasCommitteePermissions(model.id, CML.can_manage) ||
             this.operator.hasOrganizationPermissions(OML.can_manage_users) ||
@@ -126,14 +134,11 @@ export class CommitteeRepositoryService
      * decorators
      * https://www.typescriptlang.org/docs/handbook/decorators.html#metadata
      */
-    private getPartialCommitteePayload(
-        committee: Partial<CommitteeAction.PartialPayload>
-    ): CommitteeAction.PartialPayload {
+    private getPartialCommitteePayload(committee: any): CommitteeAction.PartialPayload {
         return {
             description: committee.description,
             organization_tag_ids: committee.organization_tag_ids === null ? [] : committee.organization_tag_ids,
-            user_ids: committee.user_ids === null ? [] : committee.user_ids,
-            manager_ids: committee.manager_ids === null ? [] : committee.manager_ids,
+            user_$_management_level: committee.user_$_management_level,
             forward_to_committee_ids:
                 committee.forward_to_committee_ids === null ? [] : committee.forward_to_committee_ids,
             receive_forwardings_from_committee_ids:

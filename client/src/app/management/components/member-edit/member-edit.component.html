@@ -85,7 +85,7 @@
                         [multiple]="true"
                         placeholder="{{ 'Committee management' | translate }}"
                         [repo]="committeeRepo"
-                        [transformPropagateFn]="transformPropagateFn"
+                        [transformPropagateFn]="getTransformPropagateFn()"
                         [transformSetFn]="getTransformSetFn()"
                     ></os-search-repo-selector>
                 </mat-form-field>
