@@ -3,7 +3,8 @@ import { UserAction } from 'app/core/actions/user-action';
 import {
     DEFAULT_FIELDSET,
     Fieldsets,
-    SimplifiedModelRequest
+    SimplifiedModelRequest,
+    TypedFieldset
 } from 'app/core/core-services/model-request-builder.service';
 import { PreventedInDemo } from 'app/core/definitions/custom-errors';
 import { Id } from 'app/core/definitions/key-types';
@@ -105,7 +106,7 @@ export class UserRepositoryService
     }
 
     public getFieldsets(): Fieldsets<User> {
-        const shortNameFields: (keyof User | { templateField: keyof User })[] = [
+        const shortNameFields: TypedFieldset<User> = [
             `title`,
             `first_name`,
             `last_name`,

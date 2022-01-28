@@ -251,6 +251,7 @@ type UserManyStructuredRelation<Result> = (arg?: Id) => Result[];
 interface IUserRelations {
     is_present_in_meetings: ViewMeeting[];
     committees: ViewCommittee[];
+    // committee_management_levels: (cml: CML) => ViewCommittee[]; // Not working yet!
     meetings: ViewMeeting[];
     groups: UserManyStructuredRelation<ViewGroup>;
     speakers: UserManyStructuredRelation<ViewSpeaker>;
