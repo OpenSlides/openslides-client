@@ -76,10 +76,7 @@ export class AutoupdateService {
     private _mutex = new Mutex();
 
     /**
-     * Constructor to create the AutoupdateService. Calls the constructor of the parent class.
-     * @param websocketService
-     * @param DS
-     * @param modelMapper
+     * Constructor to create the AutoupdateService.
      */
     public constructor(
         private DS: DataStoreService,
@@ -142,13 +139,13 @@ export class AutoupdateService {
     }
 
     private async request(request: ModelRequest, description: string): Promise<ModelSubscription> {
-        const buildStreamFn = () =>
+        const buildStreamFn = (streamId: number) =>
             this.httpStreamService.create(
                 AUTOUPDATE_DEFAULT_ENDPOINT,
-                { onMessage: (data, stream) => this.handleAutoupdate(data, stream.id), description },
+                { onMessage: (data, stream) => this.handleAutoupdate(data, stream.id), description, id: streamId },
                 { bodyFn: () => [request] }
             );
-        const { closeFn, id } = this.communicationManager.registerStreamBuilder(buildStreamFn);
+        const { closeFn, id } = this.communicationManager.registerStreamBuildFn(buildStreamFn);
         return {
             id,
             close: () => {
