@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MediafileAction } from 'app/core/actions/mediafile-action';
 import { HttpService } from 'app/core/core-services/http.service';
-import { AdditionalField } from 'app/core/core-services/model-request-builder.service';
+import { AdditionalField, SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Mediafile } from 'app/shared/models/mediafiles/mediafile';
@@ -11,7 +11,9 @@ import * as JSZip from 'jszip';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { ViewMeeting } from '../../../management/models/view-meeting';
 import { BaseIsListOfSpeakersContentObjectRepository } from '../base-is-list-of-speakers-content-object-repository';
+import { ModelRequestRepository } from '../model-request-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 export const LOGO_FONT_VALUES: AdditionalField[] = [
@@ -29,7 +31,10 @@ export const LOGO_FONT_VALUES: AdditionalField[] = [
 @Injectable({
     providedIn: `root`
 })
-export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjectRepository<ViewMediafile, Mediafile> {
+export class MediafileRepositoryService
+    extends BaseIsListOfSpeakersContentObjectRepository<ViewMediafile, Mediafile>
+    implements ModelRequestRepository
+{
     private directoryBehaviorSubject: BehaviorSubject<ViewMediafile[]>;
 
     public constructor(repositoryServiceCollector: RepositoryServiceCollector, private http: HttpService) {
@@ -149,5 +154,14 @@ export class MediafileRepositoryService extends BaseIsListOfSpeakersContentObjec
 
     public async delete(viewMediafile: ViewMediafile): Promise<void> {
         return this.sendActionToBackend(MediafileAction.DELETE, { id: viewMediafile.id });
+    }
+
+    public getRequestToGetAllModels(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [this.activeMeetingId],
+            fieldset: ``,
+            follow: [{ idField: `mediafile_ids`, fieldset: `fileSelection` }]
+        };
     }
 }

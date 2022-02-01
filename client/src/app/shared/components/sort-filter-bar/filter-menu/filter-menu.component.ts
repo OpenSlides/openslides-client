@@ -35,12 +35,6 @@ export class FilterMenuComponent implements OnInit, OnDestroy {
     public service: BaseFilterListService<BaseViewModel>;
 
     /**
-     * Constructor. Does nothing.
-     * @param service
-     */
-    public constructor() {}
-
-    /**
      * Directly closes again if no sorting is available
      */
     public ngOnInit(): void {

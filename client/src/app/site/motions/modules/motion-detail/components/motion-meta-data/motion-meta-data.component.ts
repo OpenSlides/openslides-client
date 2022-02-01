@@ -218,7 +218,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
 
     public getPossibleRecommendations(): ViewMotionState[] {
         const allStates = this.motion.state?.workflow?.states || [];
-        return allStates.filter(state => state.recommendation_label);
+        return allStates.filter(state => state.recommendation_label).sort((a, b) => a.weight - b.weight);
     }
 
     public getOriginMotions(): ViewMotion[] {

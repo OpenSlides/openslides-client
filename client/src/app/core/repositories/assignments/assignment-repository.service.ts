@@ -37,7 +37,8 @@ export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeake
                 `description`,
                 `default_poll_description`,
                 `number_poll_candidates`,
-                `agenda_item_id`
+                `agenda_item_id`,
+                `poll_ids`
             ]),
             list: listFields,
             title: titleFields

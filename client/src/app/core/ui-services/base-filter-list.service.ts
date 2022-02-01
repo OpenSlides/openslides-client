@@ -503,7 +503,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
         const conditions = Array.isArray(option.condition) ? option.condition : [option.condition];
         let toCheck = property;
 
-        if (!toCheck) {
+        if (toCheck === undefined || toCheck === null) {
             return false;
         }
         if (typeof toCheck === `function`) {

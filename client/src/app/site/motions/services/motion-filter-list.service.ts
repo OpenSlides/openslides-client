@@ -113,7 +113,7 @@ export class MotionFilterListService extends BaseFilterListService<ViewMotion> {
 
     public personalNoteFilterOptions: any[] = [
         {
-            property: `star`,
+            property: `isFavorite`,
             label: this.translate.instant(`Favorites`),
             options: [
                 {

@@ -4,7 +4,6 @@ import {
     Component,
     ElementRef,
     EventEmitter,
-    OnInit,
     Optional,
     Output,
     Self,
@@ -18,7 +17,7 @@ import { MediafileRepositoryService } from 'app/core/repositories/mediafiles/med
 import { BaseFormFieldControlComponent } from 'app/shared/components/base-form-field-control';
 import { mediumDialogSettings } from 'app/shared/utils/dialog-settings';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
-import { Observable } from 'rxjs';
+import { Observable, OperatorFunction } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -28,7 +27,7 @@ import { map } from 'rxjs/operators';
     providers: [{ provide: MatFormFieldControl, useExisting: AttachmentControlComponent }],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AttachmentControlComponent extends BaseFormFieldControlComponent<ViewMediafile[]> implements OnInit {
+export class AttachmentControlComponent extends BaseFormFieldControlComponent<ViewMediafile[]> {
     /**
      * Output for an error handler
      */
@@ -57,18 +56,13 @@ export class AttachmentControlComponent extends BaseFormFieldControlComponent<Vi
         element: ElementRef<HTMLElement>,
         @Optional() @Self() public ngControl: NgControl,
         private dialogService: MatDialog,
-        private mediaService: MediafileRepositoryService
+        public readonly mediaService: MediafileRepositoryService
     ) {
         super(formBuilder, focusMonitor, element, ngControl);
     }
 
-    /**
-     * On init method
-     */
-    public ngOnInit(): void {
-        this.mediaFileList = this.mediaService
-            .getViewModelListObservable()
-            .pipe(map(files => files.filter(file => !file.is_directory)));
+    public getMediafilesPipeFn(): OperatorFunction<ViewMediafile[], ViewMediafile[]> {
+        return map(mediafiles => mediafiles.filter(mediafile => !mediafile.is_directory));
     }
 
     /**

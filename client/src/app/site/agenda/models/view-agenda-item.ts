@@ -12,6 +12,8 @@ import { isProjectable } from 'app/site/base/projectable';
 import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
 import { HasTags } from 'app/site/tags/models/view-tag';
 
+import { Collection } from '../../../core/definitions/key-types';
+
 export interface HasAgendaItem extends DetailNavigable, HasAgendaItemId {
     agenda_item?: ViewAgendaItem;
 
@@ -71,6 +73,13 @@ export class ViewAgendaItem extends BaseProjectableViewModel<AgendaItem> {
 
     public getProjectiondefault(): Projectiondefault {
         return null;
+    }
+
+    /**
+     * Necessary for agenda item filter
+     */
+    public getContentObjectCollection(): Collection {
+        return this.content_object?.collection;
     }
 
     /**

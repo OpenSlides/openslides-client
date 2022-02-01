@@ -38,6 +38,12 @@ export namespace PollAction {
 
     export interface ElectronicOption extends Option {}
 
+    interface GlobalOptionConfig {
+        global_yes?: boolean;
+        global_no?: boolean;
+        global_abstain?: boolean;
+    }
+
     interface AnalogVotesPayload {
         votesvalid?: Decimal;
         votesinvalid?: Decimal;
@@ -51,7 +57,7 @@ export namespace PollAction {
         amount_global_abstain?: Decimal;
     }
 
-    interface PartialCreatePayload extends HasMeetingId {
+    interface PartialCreatePayload extends HasMeetingId, GlobalOptionConfig {
         // Required
         title: string;
         type: string;
@@ -64,9 +70,7 @@ export namespace PollAction {
         description?: string;
         min_votes_amount?: number;
         max_votes_amount?: number;
-        global_yes?: boolean;
-        global_no?: boolean;
-        global_abstain?: boolean;
+
         onehundred_percent_base?: string;
     }
 
@@ -117,7 +121,8 @@ export namespace PollAction {
     export interface UpdateElectronicPollPayload
         extends Identifiable,
             PartialUpdatePayload,
-            PartialUpdateCreatedPollPayload {
+            PartialUpdateCreatedPollPayload,
+            GlobalOptionConfig {
         // Optional, only if state == created, only for non analog types
         entitled_group_ids: Id[];
         backend?: PollBackendDurationType;

@@ -65,6 +65,20 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     }
 
     /**
+     * Necessary for motion filters
+     */
+    public get isFavorite(): boolean {
+        return this.getPersonalNote()?.star || false;
+    }
+
+    /**
+     * Necessary for motion filters
+     */
+    public get hasNotes(): boolean {
+        return !!this.getPersonalNote()?.note;
+    }
+
+    /**
      * @returns the creation date as Date object
      */
     public get creationDate(): Date {

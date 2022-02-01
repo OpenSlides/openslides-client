@@ -5,7 +5,7 @@ import { MatFormFieldControl } from '@angular/material/form-field';
 import { ModelSubscription } from 'app/core/core-services/autoupdate.service';
 import { ModelRequestService } from 'app/core/core-services/model-request.service';
 import { BaseRepository } from 'app/core/repositories/base-repository';
-import { ModelRequestRepository } from 'app/core/repositories/model-request-repository';
+import { isModelRequestRepository, ModelRequestRepository } from 'app/core/repositories/model-request-repository';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { Settings } from 'app/shared/models/event-management/meeting';
 import { OperatorFunction } from 'rxjs';
@@ -25,7 +25,16 @@ import { BaseSearchValueSelectorComponent } from '../base-search-value-selector/
 })
 export class SearchRepoSelectorComponent extends BaseSearchValueSelectorComponent implements OnInit, OnDestroy {
     @Input()
-    public repo: BaseRepository<any, any> & ModelRequestRepository;
+    public set repo(repo: BaseRepository<any, any> & ModelRequestRepository) {
+        if (!isModelRequestRepository(repo)) {
+            throw new Error(`Only a repo implementing "ModelRequestRepository" can be set`);
+        }
+        this._repo = repo;
+    }
+
+    public get repo(): BaseRepository<any, any> & ModelRequestRepository {
+        return this._repo;
+    }
 
     /**
      * Function to pipe view-models received from the observable of a view-model list.
@@ -43,13 +52,14 @@ export class SearchRepoSelectorComponent extends BaseSearchValueSelectorComponen
         return `search-repo-selector`;
     }
 
-    private modelSubscription: ModelSubscription;
+    private _modelSubscription: ModelSubscription;
+    private _repo: BaseRepository<any, any> & ModelRequestRepository;
 
     /**
      * Flag to indicate if the model-subscription was already made.
      * Prevents establishing a second model-subscription without closing it.
      */
-    private hasModelSubscriptionFired = false;
+    private _hasModelSubscriptionFired = false;
 
     public constructor(
         formBuilder: FormBuilder,
@@ -79,7 +89,7 @@ export class SearchRepoSelectorComponent extends BaseSearchValueSelectorComponen
     }
 
     protected async onAfterFirstUpdate(): Promise<void> {
-        if (this.repo && !this.empty && !this.modelSubscription) {
+        if (this.repo && !this.empty && !this._modelSubscription) {
             await this.doModelRequest();
             this.initItems();
         }
@@ -102,12 +112,12 @@ export class SearchRepoSelectorComponent extends BaseSearchValueSelectorComponen
     }
 
     private async doModelRequest(): Promise<void> {
-        if (this.hasModelSubscriptionFired) {
+        if (this._hasModelSubscriptionFired) {
             return;
         }
-        this.hasModelSubscriptionFired = true;
+        this._hasModelSubscriptionFired = true;
         this.cleanModelSubscription();
-        this.modelSubscription = await this.modelRequestService.subscribe(
+        this._modelSubscription = await this.modelRequestService.subscribe(
             this.repo.getRequestToGetAllModels(),
             `${this.constructor.name}: ${this.repo.constructor.name}`
         );
@@ -123,9 +133,9 @@ export class SearchRepoSelectorComponent extends BaseSearchValueSelectorComponen
     }
 
     private cleanModelSubscription(): void {
-        if (this.modelSubscription) {
-            this.modelSubscription.close();
-            this.modelSubscription = null;
+        if (this._modelSubscription) {
+            this._modelSubscription.close();
+            this._modelSubscription = null;
         }
     }
 }
