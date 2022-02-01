@@ -155,7 +155,7 @@ export class NotifyService {
                 },
                 description: `NotifyService`
             });
-        const { closeFn } = this.communicationManager.registerStreamBuilder(buildStreamFn);
+        const { closeFn } = this.communicationManager.registerStreamBuildFn(buildStreamFn);
         this.connectionClosingFn = closeFn;
     }
 

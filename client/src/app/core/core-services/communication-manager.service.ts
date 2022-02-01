@@ -83,9 +83,9 @@ export class CommunicationManagerService {
         lifecycleService.openslidesShutdowned.subscribe(() => this.stopCommunication());
     }
 
-    public registerStreamBuilder<T>(builder: () => HttpStream<T>): { closeFn: CloseFn; id: number } {
+    public registerStreamBuildFn<T>(buildFn: (streamId: number) => HttpStream<T>): { closeFn: CloseFn; id: number } {
         const nextId = Math.floor(Math.random() * (900000 - 1) + 100000);
-        this._activeStreamHandlers[nextId] = new StreamHandler(builder, {
+        this._activeStreamHandlers[nextId] = new StreamHandler(() => buildFn(nextId), {
             afterOpenedFn: stream => this.printStreamInformation(stream, `OPENED`),
             afterClosedFn: stream => this.printStreamInformation(stream, `CLOSED`)
         });
