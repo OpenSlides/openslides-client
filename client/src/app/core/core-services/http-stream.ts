@@ -34,9 +34,13 @@ export interface HttpStreamOptions<T> {
      */
     endpoint?: EndpointConfiguration;
     /**
-     * A description to identify a stream
+     * A string to describe the usage of a stream
      */
     description?: string;
+    /**
+     * A dedicated id to identify a stream
+     */
+    id?: number;
     /**
      * Handler to receive incoming data from a server
      *
@@ -178,7 +182,7 @@ class StreamMessageParser<T> {
 }
 
 export class HttpStream<T> {
-    public readonly id = Math.floor(Math.random() * (900000 - 1) + 100000); // [100000, 999999]
+    public readonly id: number;
     public readonly description: string;
     public readonly endpoint: EndpointConfiguration;
 
@@ -195,11 +199,7 @@ export class HttpStream<T> {
     }
 
     private _subscription: Subscription | null = null;
-    private _parser = new StreamMessageParser<T>(
-        content => this.handleParsedContent(content),
-        (type, errorContent, reason) => this.handleCommunicationError(type, errorContent, reason),
-        `${this.id}`
-    );
+    private _parser: StreamMessageParser<T>;
 
     private _reconnectsBeforeClose: number;
     private _shouldReconnectOnFailure: boolean | (() => boolean);
@@ -209,32 +209,22 @@ export class HttpStream<T> {
     private _reconnectAttempts = 0;
     private _isClosed = false;
 
-    public constructor(
-        private createStreamFn: () => Observable<HttpEvent<string>>,
-        {
-            endpoint,
-            description,
-            onMessage,
-            onError,
-            onComplete,
-            shouldStartImmediately,
-            shouldReconnectOnFailure = true,
-            reconnectsBeforeClose = 3,
-            reconnectTimeout = 2000
-        }: HttpStreamOptions<T> = {}
-    ) {
-        this.endpoint = endpoint;
-        this.description = description;
+    public constructor(private createStreamFn: () => Observable<HttpEvent<string>>, config: HttpStreamOptions<T> = {}) {
+        this.id = config.id ?? Math.floor(Math.random() * (900000 - 1) + 100000); // [100000, 999999]
+        this.endpoint = config.endpoint;
+        this.description = config.description;
 
-        this.onMessage = onMessage || emptyFn;
-        this.onError = onError || emptyFn;
-        this.onComplete = onComplete || emptyFn;
+        this.onMessage = config.onMessage || emptyFn;
+        this.onError = config.onError || emptyFn;
+        this.onComplete = config.onComplete || emptyFn;
 
-        this._reconnectsBeforeClose = Math.abs(reconnectsBeforeClose);
-        this._shouldReconnectOnFailure = shouldReconnectOnFailure;
-        this._reconnectTimeout = reconnectTimeout;
+        this._reconnectsBeforeClose = Math.abs(config.reconnectsBeforeClose);
+        this._shouldReconnectOnFailure = config.shouldReconnectOnFailure;
+        this._reconnectTimeout = config.reconnectTimeout;
 
-        if (shouldStartImmediately) {
+        this.buildMessageParser();
+
+        if (config.shouldStartImmediately) {
             this.open();
         }
     }
@@ -333,6 +323,14 @@ export class HttpStream<T> {
         await SleepPromise(Math.abs(timeout));
         ++this._reconnectAttempts;
         this.reconnect();
+    }
+
+    private buildMessageParser(): void {
+        this._parser = new StreamMessageParser<T>(
+            content => this.handleParsedContent(content),
+            (type, errorContent, reason) => this.handleCommunicationError(type, errorContent, reason),
+            `${this.id}`
+        );
     }
 
     private handleParsedContent(data: T): void {
