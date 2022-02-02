@@ -96,7 +96,13 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
         return ``;
     }
 
-    public getGlobalNoClass(user: ViewUser = this.user): string {
+    public getGlobalNoClass(user?: ViewUser): string {
+        if (!user) {
+            if (!this.user) {
+                return ``;
+            }
+            user = this.user;
+        }
         if (this.voteRequestData[user.id]?.value === `N`) {
             return `voted-no`;
         }

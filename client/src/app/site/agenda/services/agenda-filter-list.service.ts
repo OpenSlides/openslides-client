@@ -72,7 +72,7 @@ export class AgendaFilterListService extends BaseFilterListService<ViewAgendaIte
             },
             {
                 label: `Type`,
-                property: `collection`,
+                property: `getContentObjectCollection`,
                 options: [
                     { label: this.translate.instant(`Motions`), condition: Motion.COLLECTION },
                     { label: this.translate.instant(`Topics`), condition: Topic.COLLECTION },

@@ -37,11 +37,6 @@ export class MeetingGroupsObject {
 }
 
 /**
- * Since groups are sorted by id, default is always the first entry.
- */
-export const DEFAULT_GROUP_INDEX = 1;
-
-/**
  * Repository service for Groups
  *
  * Documentation partially provided in {@link BaseRepository}
@@ -114,8 +109,8 @@ export class GroupRepositoryService
         return this.sendActionToBackend(GroupAction.SET_PERMISSION, payload);
     }
 
-    public getFilterDefaultGroupFn(): OperatorFunction<any, any> {
-        return map(groups => groups.slice(DEFAULT_GROUP_INDEX));
+    public getFilterDefaultGroupFn(): OperatorFunction<ViewGroup[], ViewGroup[]> {
+        return map(groups => groups.filter(group => !group.isDefaultGroup));
     }
 
     /**

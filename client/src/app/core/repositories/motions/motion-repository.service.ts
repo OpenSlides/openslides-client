@@ -32,7 +32,8 @@ export const GET_POSSIBLE_RECOMMENDATIONS: Follow = {
     follow: [
         {
             idField: `state_ids`,
-            fieldset: [`recommendation_label`, `show_recommendation_extension_field`]
+            fieldset: `title`,
+            additionalFields: [`weight`, `recommendation_label`, `show_recommendation_extension_field`]
         }
     ]
 };
