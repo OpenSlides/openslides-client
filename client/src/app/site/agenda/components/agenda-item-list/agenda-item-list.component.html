@@ -33,7 +33,7 @@
 >
     <!-- Title column -->
     <div *pblNgridCellDef="'title'; row as item; rowContext as rowContext" class="cell-slot fill">
-        <a class="detail-link" [routerLink]="getDetailUrl(item)" *ngIf="!isMultiSelect"></a>
+        <os-detail-navigator [model]="item.content_object" *ngIf="!isMultiSelect"></os-detail-navigator>
         <div [ngStyle]="{ 'margin-left': item.level * 25 + 'px' }" class="innerTable">
             <!-- Title line -->
             <div class="title-line ellipsis-overflow">

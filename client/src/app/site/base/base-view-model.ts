@@ -3,6 +3,7 @@ import { BaseModel } from 'app/shared/models/base/base-model';
 import { HasCollection } from 'app/shared/models/base/collection';
 
 import { Identifiable } from '../../shared/models/base/identifiable';
+import { DetailNavigable } from './detail-navigable';
 import { Displayable } from './displayable';
 
 export interface ViewModelConstructor<T extends BaseViewModel> {
@@ -13,7 +14,7 @@ export interface ViewModelConstructor<T extends BaseViewModel> {
 /**
  * Base class for view models.
  */
-export abstract class BaseViewModel<M extends BaseModel = any> {
+export abstract class BaseViewModel<M extends BaseModel = any> implements DetailNavigable {
     public get fqid(): Fqid {
         return this.getModel().fqid;
     }
@@ -45,7 +46,7 @@ export abstract class BaseViewModel<M extends BaseModel = any> {
     /**
      * Override in children
      */
-    public getDetailStateURL(): string | null {
+    public getDetailStateUrl(): string | null {
         return ``;
     }
 }

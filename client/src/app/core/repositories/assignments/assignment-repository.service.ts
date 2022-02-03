@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AssignmentAction } from 'app/core/actions/assignment-action';
-import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
+import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'app/core/core-services/model-request-builder.service';
 import { Assignment } from 'app/shared/models/assignments/assignment';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { createAgendaItem } from 'app/shared/utils/create-agenda-item';
@@ -30,6 +30,7 @@ export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeake
     }
 
     public getFieldsets(): Fieldsets<Assignment> {
+        const routingFields: (keyof Assignment)[] = [`sequential_number`];
         const titleFields: (keyof Assignment)[] = [`title`];
         const listFields: (keyof Assignment)[] = titleFields.concat([`open_posts`, `phase`, `candidate_ids`]);
         return {
@@ -40,6 +41,7 @@ export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeake
                 `agenda_item_id`,
                 `poll_ids`
             ]),
+            [ROUTING_FIELDSET]: routingFields,
             list: listFields,
             title: titleFields
         };

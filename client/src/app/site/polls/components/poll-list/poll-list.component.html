@@ -12,19 +12,19 @@
 >
     <!-- Poll Title -->
     <div *pblNgridCellDef="'title'; row as poll; rowContext as context" class="cell-slot fill">
-        <a class="detail-link" [routerLink]="poll.getDetailStateURL()" *ngIf="!isMultiSelect"></a>
+        <os-detail-navigator [model]="poll" *ngIf="!isMultiSelect"></os-detail-navigator>
         <span>{{ poll.title }}</span>
     </div>
 
     <!-- Motion Or Assigmnent Title Title -->
     <div *pblNgridCellDef="'classType'; row as poll" class="cell-slot fill">
-        <a class="detail-link" [routerLink]="poll.getDetailStateURL()" *ngIf="!isMultiSelect"></a>
+        <os-detail-navigator [model]="poll" *ngIf="!isMultiSelect"></os-detail-navigator>
         <span>{{ poll.getContentObject().getListTitle() }}</span>
     </div>
 
     <!-- State -->
     <div *pblNgridCellDef="'state'; row as poll" class="cell-slot fill">
-        <a class="detail-link" [routerLink]="poll.getDetailStateURL()" *ngIf="!isMultiSelect"></a>
+        <os-detail-navigator [model]="poll" *ngIf="!isMultiSelect"></os-detail-navigator>
         <span>{{ poll.stateVerbose | translate }}</span>
     </div>
 
@@ -35,8 +35,8 @@
 </os-list-view-table>
 
 <ng-template #inProgress>
-    <mat-icon color="warn" matTooltip="{{ 'Voting is currently in progress.' | translate }}"> warning </mat-icon>
+    <mat-icon color="warn" matTooltip="{{ 'Voting is currently in progress.' | translate }}">warning</mat-icon>
 </ng-template>
 <ng-template #notInProgress>
-    <mat-icon color="accent" matTooltip="{{ 'You have already voted.' | translate }}"> check_circle </mat-icon>
+    <mat-icon color="accent" matTooltip="{{ 'You have already voted.' | translate }}">check_circle</mat-icon>
 </ng-template>

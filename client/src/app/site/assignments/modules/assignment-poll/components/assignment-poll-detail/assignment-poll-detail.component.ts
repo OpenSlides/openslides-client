@@ -154,6 +154,6 @@ export class AssignmentPollDetailComponent extends BasePollDetailComponentDirect
     }
 
     protected onDeleted(): void {
-        this.router.navigateByUrl(this.poll.getContentObjectDetailStateURL());
+        this.router.navigateByUrl(this.poll.getDetailStateUrl());
     }
 }

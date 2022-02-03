@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { Id } from 'app/core/definitions/key-types';
 import { MotionStateRepositoryService } from 'app/core/repositories/motions/motion-state-repository.service';
 import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/motion-workflow-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -70,11 +71,7 @@ interface RestrictionShape {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WorkflowDetailComponent extends BaseModelContextComponent implements OnInit {
-    /**
-     * Reference to the workflow dialog
-     */
-    @ViewChild(`workflowDialog`, { static: true })
-    private workflowDialog: TemplateRef<string>;
+    public readonly COLLECTION = ViewMotionWorkflow.COLLECTION;
 
     /**
      * Holds the dialog data
@@ -104,27 +101,6 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
     public labelColors: string[] = [`grey`, `red`, `green`, `lightblue`, `yellow`];
 
     /**
-     * Holds state permissions
-     */
-    private statePermissionsList = [
-        { name: `Recommendation label`, selector: `recommendation_label`, type: `input` },
-        { name: `Allow support`, selector: `allow_support`, type: `check` },
-        { name: `Allow create poll`, selector: `allow_create_poll`, type: `check` },
-        { name: `Allow submitter edit`, selector: `allow_submitter_edit`, type: `check` },
-        { name: `Set number`, selector: `set_number`, type: `check` },
-        { name: `Show state extension field`, selector: `show_state_extension_field`, type: `check` },
-        {
-            name: `Show recommendation extension field`,
-            selector: `show_recommendation_extension_field`,
-            type: `check`
-        },
-        { name: `Show amendment in parent motion`, selector: `merge_amendment_into_final`, type: `amendment` },
-        { name: `Restrictions`, selector: `restrictions`, type: `restrictions` },
-        { name: `Label color`, selector: `css_class`, type: `color` },
-        { name: `Next states`, selector: `next_states_id`, type: `state` }
-    ] as StatePerm[];
-
-    /**
      * Determines possible restrictions
      */
     public restrictions = [
@@ -150,6 +126,34 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
     }
 
     private _workflow: ViewMotionWorkflow;
+    private _workflowId: Id;
+
+    /**
+     * Reference to the workflow dialog
+     */
+    @ViewChild(`workflowDialog`, { static: true })
+    private readonly _workflowDialog: TemplateRef<string>;
+
+    /**
+     * Holds state permissions
+     */
+    private readonly _statePermissionsList = [
+        { name: `Recommendation label`, selector: `recommendation_label`, type: `input` },
+        { name: `Allow support`, selector: `allow_support`, type: `check` },
+        { name: `Allow create poll`, selector: `allow_create_poll`, type: `check` },
+        { name: `Allow submitter edit`, selector: `allow_submitter_edit`, type: `check` },
+        { name: `Set number`, selector: `set_number`, type: `check` },
+        { name: `Show state extension field`, selector: `show_state_extension_field`, type: `check` },
+        {
+            name: `Show recommendation extension field`,
+            selector: `show_recommendation_extension_field`,
+            type: `check`
+        },
+        { name: `Show amendment in parent motion`, selector: `merge_amendment_into_final`, type: `amendment` },
+        { name: `Restrictions`, selector: `restrictions`, type: `restrictions` },
+        { name: `Label color`, selector: `css_class`, type: `color` },
+        { name: `Next states`, selector: `next_states_id`, type: `state` }
+    ] as StatePerm[];
 
     /**
      * Constructor
@@ -175,48 +179,11 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
         super(componentServiceCollector, translate);
     }
 
-    /**
-     * Init.
-     *
-     * Observe the parameters of the URL and loads the specified workflow
-     */
-    public ngOnInit(): void {
-        super.ngOnInit();
-
-        const workflowId = Number(this.route.snapshot.paramMap.get(`id`));
-
-        this.subscribe({
-            viewModelCtor: ViewMotionWorkflow,
-            ids: [workflowId],
-            follow: [
-                {
-                    idField: `first_state_id`,
-                    fieldset: `title`
-                },
-                {
-                    idField: `state_ids`,
-                    follow: [
-                        {
-                            idField: `next_state_ids`,
-                            fieldset: `title`
-                        },
-                        {
-                            idField: `previous_state_ids`,
-                            fieldset: `title`
-                        }
-                    ]
-                }
-            ]
-        });
-
-        this.subscriptions.push(
-            this.workflowRepo.getViewModelObservable(workflowId).subscribe(newWorkflow => {
-                if (newWorkflow) {
-                    this.workflow = newWorkflow;
-                    this.cd.markForCheck();
-                }
-            })
-        );
+    public onIdFound(id: Id | null): void {
+        if (id) {
+            this._workflowId = id;
+            this.loadWorkflow();
+        }
     }
 
     /**
@@ -393,7 +360,7 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
             allowEmpty
         };
 
-        const dialogRef = this.dialog.open(this.workflowDialog, infoDialogSettings);
+        const dialogRef = this.dialog.open(this._workflowDialog, infoDialogSettings);
 
         return dialogRef.afterClosed();
     }
@@ -412,7 +379,7 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
      */
     public getTableDataSource(): MatTableDataSource<StatePerm> {
         const dataSource = new MatTableDataSource<StatePerm>();
-        dataSource.data = this.statePermissionsList;
+        dataSource.data = this._statePermissionsList;
         return dataSource;
     }
 
@@ -472,5 +439,47 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
 
     private updateView(): void {
         this.cd.detectChanges();
+    }
+
+    private setupWorkflowRequest(): void {
+        this.subscribe({
+            viewModelCtor: ViewMotionWorkflow,
+            ids: [this._workflowId],
+            follow: [
+                {
+                    idField: `first_state_id`,
+                    fieldset: `title`
+                },
+                {
+                    idField: `state_ids`,
+                    follow: [
+                        {
+                            idField: `next_state_ids`,
+                            fieldset: `title`
+                        },
+                        {
+                            idField: `previous_state_ids`,
+                            fieldset: `title`
+                        }
+                    ]
+                }
+            ]
+        });
+    }
+
+    private setupSubscription(): void {
+        this.subscriptions.push(
+            this.workflowRepo.getViewModelObservable(this._workflowId).subscribe(newWorkflow => {
+                if (newWorkflow) {
+                    this.workflow = newWorkflow;
+                    this.cd.markForCheck();
+                }
+            })
+        );
+    }
+
+    private loadWorkflow(): void {
+        this.setupWorkflowRequest();
+        this.setupSubscription();
     }
 }

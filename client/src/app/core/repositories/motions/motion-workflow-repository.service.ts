@@ -3,6 +3,7 @@ import { MotionWorkflowAction } from 'app/core/actions/motion-workflow-action';
 import {
     DEFAULT_FIELDSET,
     Fieldsets,
+    ROUTING_FIELDSET,
     SimplifiedModelRequest
 } from 'app/core/core-services/model-request-builder.service';
 import { Id } from 'app/core/definitions/key-types';
@@ -45,10 +46,12 @@ export class MotionWorkflowRepositoryService
     }
 
     public getFieldsets(): Fieldsets<MotionWorkflow> {
+        const routingFields: (keyof MotionWorkflow)[] = [`sequential_number`];
         const nameFields: (keyof MotionWorkflow)[] = [`name`];
         const listFields: (keyof MotionWorkflow)[] = nameFields;
         return {
             [DEFAULT_FIELDSET]: listFields,
+            [ROUTING_FIELDSET]: routingFields,
             name: nameFields,
             list: listFields
         };

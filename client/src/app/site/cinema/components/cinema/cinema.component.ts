@@ -60,7 +60,7 @@ export class CinemaComponent extends BaseModelContextComponent implements OnInit
 
     public get viewModelUrl(): string {
         if (this.projectedViewModel && isDetailNavigable(this.projectedViewModel)) {
-            return (this.projectedViewModel as DetailNavigable).getDetailStateURL();
+            return (this.projectedViewModel as DetailNavigable).getDetailStateUrl();
         } else {
             return ``;
         }

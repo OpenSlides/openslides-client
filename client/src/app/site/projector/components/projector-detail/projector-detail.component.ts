@@ -8,6 +8,7 @@ import { ProjectorMessageAction } from 'app/core/actions/projector-message-actio
 import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
+import { Id } from 'app/core/definitions/key-types';
 import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
 import { ProjectionRepositoryService } from 'app/core/repositories/projector/projection-repository.service';
 import { ProjectorCountdownRepositoryService } from 'app/core/repositories/projector/projector-countdown-repository.service';
@@ -43,6 +44,8 @@ import { ProjectorEditDialogComponent } from '../projector-edit-dialog/projector
     styleUrls: [`./projector-detail.component.scss`]
 })
 export class ProjectorDetailComponent extends BaseModelContextComponent implements OnInit {
+    public readonly COLLECTION = ViewProjector.COLLECTION;
+
     /**
      * The projector to show.
      */
@@ -73,9 +76,8 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
      */
     public editQueue = false;
 
-    /**
-     * Constructor
-     */
+    private _projectorId: Id;
+
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService,
@@ -112,39 +114,6 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
             switchMap(projectorId => this.projectorRepo.getViewModelObservable(projectorId))
         );
 
-        this.subscriptions.push(
-            projectorId$
-                .pipe(
-                    mergeMap(projectorId =>
-                        this.subscribe({
-                            viewModelCtor: ViewProjector,
-                            ids: [projectorId],
-                            follow: [
-                                {
-                                    idField: `history_projection_ids`,
-                                    follow: [
-                                        {
-                                            idField: `content_object_id`,
-                                            follow: [{ idField: `content_object_id` }]
-                                            // e.g. list of speakers: For the title, we need the LOS's content object
-                                        }
-                                    ]
-                                },
-                                PROJECTOR_CONTENT_FOLLOW
-                            ]
-                        })
-                    )
-                )
-                .subscribe(),
-            this.projectorObservable.subscribe(projector => {
-                if (projector) {
-                    const title = projector.name;
-                    super.setTitle(title);
-                    this.projector = projector;
-                }
-            })
-        );
-
         this.subscribe(
             {
                 viewModelCtor: ViewMeeting,
@@ -153,6 +122,13 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
             },
             `messages and countdowns`
         );
+    }
+
+    public onIdFound(id: Id | null): void {
+        if (id) {
+            this._projectorId = id;
+            this.loadProjector();
+        }
     }
 
     public editProjector(): void {
@@ -295,5 +271,42 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
                 this.messageRepo.create(message);
             }
         });
+    }
+
+    private setupSubscription(): void {
+        this.subscriptions.push(
+            this.projectorRepo.getViewModelObservable(this._projectorId).subscribe(projector => {
+                if (projector) {
+                    const title = projector.name;
+                    super.setTitle(title);
+                    this.projector = projector;
+                }
+            })
+        );
+    }
+
+    private setupProjectorRequest(): void {
+        this.subscribe({
+            viewModelCtor: ViewProjector,
+            ids: [this._projectorId],
+            follow: [
+                {
+                    idField: `history_projection_ids`,
+                    follow: [
+                        {
+                            idField: `content_object_id`,
+                            follow: [{ idField: `content_object_id` }]
+                            // e.g. list of speakers: For the title, we need the LOS's content object
+                        }
+                    ]
+                },
+                PROJECTOR_CONTENT_FOLLOW
+            ]
+        });
+    }
+
+    private loadProjector(): void {
+        this.setupProjectorRequest();
+        this.setupSubscription();
     }
 }

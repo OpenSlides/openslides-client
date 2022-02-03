@@ -41,6 +41,8 @@ import { ColorFormFieldComponent } from './components/color-form-field/color-for
 import { CountdownTimeComponent } from './components/contdown-time/countdown-time.component';
 import { C4DialogComponent, CopyrightSignComponent } from './components/copyright-sign/copyright-sign.component';
 import { CustomTranslationComponent } from './components/custom-translation/custom-translation.component';
+import { DetailNavigatorComponent } from './components/detail-navigator/detail-navigator.component';
+import { DetailViewComponent } from './components/detail-view/detail-view.component';
 import { EeComponent } from './components/ee/ee.component';
 import { ExtensionFieldComponent } from './components/extension-field/extension-field.component';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
@@ -213,7 +215,9 @@ const declarations = [
     ListOfSpeakersContentTitleDirective,
     NotFoundComponent,
     VerticalTabGroupComponent,
-    VerticalTabGroupLabelHeaderDirective
+    VerticalTabGroupLabelHeaderDirective,
+    DetailNavigatorComponent,
+    DetailViewComponent
 ];
 
 const sharedModules = [

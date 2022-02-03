@@ -102,7 +102,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
      * Returns all OsFilters containing active filters
      */
     public get activeFilters(): OsFilter<V>[] {
-        return this.filterDefinitions.filter(def => def.options.find((option: OsFilterOption) => option.isActive));
+        return this.filterDefinitions.filter(def => def.options.find((option: OsFilterOption) => option?.isActive));
     }
 
     public get filterCount(): number {
@@ -234,44 +234,54 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
      * and sets/updates {@link filterDefinitions}
      */
     public async setFilterDefinitions(): Promise<void> {
-        if (this.filterDefinitions) {
-            const newDefinitions = this.getFilterDefinitions();
+        if (!this.filterDefinitions) {
+            return;
+        }
 
-            let storedFilter = null;
-            if (!this.historyService.isInHistoryMode) {
-                storedFilter = await this.store.get<OsFilter<V>[]>(`filter_` + this.storageKey);
+        const nextDefinitions = this.getFilterDefinitions();
+
+        let storedFilters: OsFilter<V>[] = null;
+        if (!this.historyService.isInHistoryMode) {
+            storedFilters = await this.store.get<OsFilter<V>[]>(`filter_` + this.storageKey);
+        }
+
+        if (!(storedFilters && storedFilters.length && nextDefinitions && nextDefinitions.length)) {
+            return;
+        }
+
+        for (const nextDefinition of nextDefinitions) {
+            nextDefinition.count = this.getCountForFilterOptions(nextDefinition, storedFilters);
+        }
+
+        this.filterDefinitions = nextDefinitions ?? []; // Prevent being null or undefined
+        this.storeActiveFilters();
+    }
+
+    private getCountForFilterOptions(nextFilterDefinition: OsFilter<V>, storedFilters: OsFilter<V>[]): number {
+        if (!nextFilterDefinition) {
+            return;
+        }
+        let count = 0;
+        const matchingExistingFilter = storedFilters.find(oldDef => oldDef.property === nextFilterDefinition.property);
+        for (const option of nextFilterDefinition.options) {
+            if (typeof option !== `object`) {
+                continue;
             }
-
-            if (storedFilter && storedFilter.length && newDefinitions && newDefinitions.length) {
-                for (const newDef of newDefinitions) {
-                    // for some weird angular bugs, newDef can actually be undefined
-                    if (newDef) {
-                        let count = 0;
-                        const matchingExistingFilter = storedFilter.find(oldDef => oldDef.property === newDef.property);
-                        for (const option of newDef.options) {
-                            if (typeof option === `object`) {
-                                if (matchingExistingFilter && matchingExistingFilter.options) {
-                                    const existingOption = matchingExistingFilter.options.find(
-                                        o =>
-                                            typeof o !== `string` &&
-                                            JSON.stringify(o.condition) === JSON.stringify(option.condition)
-                                    ) as OsFilterOption;
-                                    if (existingOption) {
-                                        option.isActive = existingOption.isActive;
-                                    }
-                                    if (option.isActive) {
-                                        count++;
-                                    }
-                                }
-                            }
-                        }
-                        newDef.count = count;
-                    }
+            if (!matchingExistingFilter || !matchingExistingFilter.options) {
+                continue;
+            }
+            const existingOption = matchingExistingFilter.options.find(toCompare => {
+                if (typeof toCompare === `string` || !toCompare) {
+                    return false;
                 }
+                return JSON.stringify(toCompare.condition) === JSON.stringify(option.condition);
+            }) as OsFilterOption;
+            if (existingOption) {
+                option.isActive = existingOption.isActive;
             }
-
-            this.filterDefinitions = newDefinitions ?? []; // Prevent being null or undefined
-            this.storeActiveFilters();
+            if (option.isActive) {
+                ++count;
+            }
         }
     }
 

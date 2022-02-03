@@ -2,14 +2,14 @@
 <div *ngIf="model" [ngSwitch]="model.collectionString" class="preview-container">
     <div *ngSwitchCase="'mediafiles/mediafile'">
         <div *ngIf="modelType.includes('image')">
-            <img [src]="model.getDetailStateURL()" />
+            <img [src]="model.getDetailStateUrl()" />
         </div>
         <div *ngIf="modelType.includes('pdf')">
             <pdf-viewer
                 [original-size]="false"
                 [fit-to-page]="true"
                 [autoresize]="true"
-                [src]="model.getDetailStateURL()"
+                [src]="model.getDetailStateUrl()"
                 [style.display]="'block'"
             ></pdf-viewer>
         </div>

@@ -17,6 +17,7 @@ import { AmendmentParagraphs } from 'app/shared/models/motions/motion';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { Subscription } from 'rxjs';
+import { filter, first } from 'rxjs/operators';
 
 /**
  * The wizard used to create a new amendment based on a motion.
@@ -28,6 +29,8 @@ import { Subscription } from 'rxjs';
     encapsulation: ViewEncapsulation.None
 })
 export class AmendmentCreateWizardComponent extends BaseModelContextComponent implements OnInit {
+    public readonly COLLECTION = ViewMotion.COLLECTION;
+
     /**
      * The motion to be amended
      */
@@ -68,6 +71,8 @@ export class AmendmentCreateWizardComponent extends BaseModelContextComponent im
      * Indicates if an amendment can change multiple paragraphs or only one
      */
     public multipleParagraphsAllowed: boolean;
+
+    private _parentMotionId: Id | null = null;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -139,6 +144,13 @@ export class AmendmentCreateWizardComponent extends BaseModelContextComponent im
         }
     }
 
+    public onIdFound(id: Id): void {
+        if (id && !this._parentMotionId) {
+            this._parentMotionId = id;
+            this.loadMotionByUrl();
+        }
+    }
+
     /**
      * Saves the amendment and navigates to detail view of this amendment
      */
@@ -162,7 +174,14 @@ export class AmendmentCreateWizardComponent extends BaseModelContextComponent im
         };
 
         const response = await this.repo.createParagraphBased(motionCreate);
-        this.router.navigate([this.activeMeetingId, `motions`, response.id]);
+        const { sequential_number } = await this.motionRepo
+            .getViewModelObservable(response.id)
+            .pipe(
+                filter(motion => !!motion),
+                first()
+            )
+            .toPromise();
+        this.router.navigate([this.activeMeetingId, `motions`, sequential_number]);
     }
 
     private requestUpdatesForMotion(id: Id): void {
@@ -181,16 +200,14 @@ export class AmendmentCreateWizardComponent extends BaseModelContextComponent im
      */
     private loadMotionByUrl(): void {
         // load existing motion
-        this.subscriptions.push(
-            this.route.params.subscribe(params => {
-                this.requestUpdatesForMotion(parseInt(params.id, 10));
-                this.subscriptions.push(
-                    this.motionRepo.getViewModelObservable(params.id).subscribe(newViewMotion => {
-                        this.initialize(newViewMotion);
-                    })
-                );
-            })
-        );
+        if (this._parentMotionId) {
+            this.requestUpdatesForMotion(this._parentMotionId);
+            this.subscriptions.push(
+                this.motionRepo.getViewModelObservable(this._parentMotionId).subscribe(newViewMotion => {
+                    this.initialize(newViewMotion);
+                })
+            );
+        }
     }
 
     private initialize(motion: ViewMotion | undefined): void {

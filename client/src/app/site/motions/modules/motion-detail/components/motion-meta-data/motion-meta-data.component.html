@@ -115,7 +115,7 @@
 <div *ngIf="motion && recommendationReferencingMotions.length > 0 && showReferringMotions">
     <h4>{{ 'Referring motions' | translate }}</h4>
     <span *ngFor="let motion of recommendationReferencingMotions; let last = last">
-        <a routerLink="motion.getDetailStateURL()" class="nowrap">{{ motion.numberOrTitle }}</a>
+        <a [routerLink]="motion.getDetailStateUrl()" class="nowrap">{{ motion.numberOrTitle }}</a>
         <span *ngIf="!last">·</span>
     </span>
 </div>
@@ -273,7 +273,7 @@
 
 <ng-template let-motion="motion" #meetingLink>
     <span *ngIf="motion.meeting?.canAccess()">
-        <a [routerLink]="motion.getDetailStateURL()">
+        <a [routerLink]="motion.getDetailStateUrl()">
             {{ motion.meeting?.name }}
         </a>
         <span>({{ motion.created | localizedDate }})</span>

@@ -28,8 +28,9 @@ export class MotionStatuteParagraphRepositoryService extends BaseRepositoryWithA
     }
 
     public getFieldsets(): Fieldsets<MotionStatuteParagraph> {
+        const defaultFields: (keyof MotionStatuteParagraph)[] = [`title`, `text`, `weight`];
         return {
-            [DEFAULT_FIELDSET]: [`title`, `text`, `weight`]
+            [DEFAULT_FIELDSET]: defaultFields
         };
     }
 

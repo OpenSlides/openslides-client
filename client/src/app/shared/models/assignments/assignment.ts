@@ -6,6 +6,7 @@ import { HasAttachmentIds } from '../base/has-attachment-ids';
 import { HasListOfSpeakersId } from '../base/has-list-of-speakers-id';
 import { HasMeetingId } from '../base/has-meeting-id';
 import { HasProjectionIds } from '../base/has-projectable-ids';
+import { HasSequentialNumber } from '../base/has-sequential-number';
 import { HasTagIds } from '../base/has-tag-ids';
 
 export enum AssignmentPhase {
@@ -42,4 +43,5 @@ export interface Assignment
         HasAttachmentIds,
         HasTagIds,
         HasAgendaItemId,
-        HasListOfSpeakersId {}
+        HasListOfSpeakersId,
+        HasSequentialNumber {}

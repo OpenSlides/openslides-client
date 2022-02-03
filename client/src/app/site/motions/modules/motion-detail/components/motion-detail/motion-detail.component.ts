@@ -39,6 +39,7 @@ import { MotionPdfExportService } from 'app/site/motions/services/motion-pdf-exp
 import { MotionSortListService } from 'app/site/motions/services/motion-sort-list.service';
 import { PermissionsService } from 'app/site/motions/services/permissions.service';
 import { Observable } from 'rxjs';
+import { filter, first } from 'rxjs/operators';
 
 import { MotionViewService } from '../../../services/motion-view.service';
 import { MotionContentComponent } from '../motion-content/motion-content.component';
@@ -54,6 +55,8 @@ import { MotionContentComponent } from '../motion-content/motion-content.compone
     encapsulation: ViewEncapsulation.None
 })
 export class MotionDetailComponent extends BaseModelContextComponent implements OnInit, OnDestroy {
+    public readonly collection = ViewMotion.COLLECTION;
+
     @ViewChild(`content`, { static: true })
     public motionContent: TemplateRef<MotionContentComponent>;
 
@@ -92,26 +95,29 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
      */
     public previousMotion: ViewMotion;
 
+    public hasLoaded = new Deferred<boolean>();
+
     /**
      * Subject for (other) motions
      */
-    private motionObserver: Observable<ViewMotion[]>;
+    private _motionObserver: Observable<ViewMotion[]>;
 
     /**
      * List of presorted motions. Filles by sort service
      * and filter service.
      * To navigate back and forth
      */
-    private sortedMotions: ViewMotion[];
+    private _sortedMotions: ViewMotion[];
 
     /**
      * The observable for the list of motions. Set in OnInit
      */
-    private sortedMotionsObservable: Observable<ViewMotion[]>;
+    private _sortedMotionsObservable: Observable<ViewMotion[]>;
 
-    private parentId: Id;
+    private _motionId: Id;
+    private _parentId: Id;
 
-    private hasModelSubscriptionInitiated = false;
+    private _hasModelSubscriptionInitiated = false;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -220,7 +226,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
      */
     public navigateToMotion(motion: ViewMotion): void {
         if (motion) {
-            this.router.navigate([`../${motion.id}`], { relativeTo: this.route.parent });
+            this.router.navigate([`../${motion.sequential_number}`], { relativeTo: this.route.parent });
             // update the current motion
             this.motion = motion;
             this.setSurroundingMotions();
@@ -233,14 +239,14 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
      * respectively
      */
     public setSurroundingMotions(): void {
-        const indexOfCurrent = this.sortedMotions.findIndex(motion => motion === this.motion);
+        const indexOfCurrent = this._sortedMotions.findIndex(motion => motion === this.motion);
         if (indexOfCurrent > 0) {
-            this.previousMotion = this.sortedMotions[indexOfCurrent - 1];
+            this.previousMotion = this._sortedMotions[indexOfCurrent - 1];
         } else {
             this.previousMotion = null;
         }
-        if (indexOfCurrent > -1 && indexOfCurrent < this.sortedMotions.length - 1) {
-            this.nextMotion = this.sortedMotions[indexOfCurrent + 1];
+        if (indexOfCurrent > -1 && indexOfCurrent < this._sortedMotions.length - 1) {
+            this.nextMotion = this._sortedMotions[indexOfCurrent + 1];
         } else {
             this.nextMotion = null;
         }
@@ -292,41 +298,25 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         this.itemRepo.removeFromAgenda(this.motion.agenda_item_id).catch(this.raiseError);
     }
 
-    /**
-     * determine the motion to display using the URL
-     */
-    private getMotionByUrl(): void {
-        if (this.route.snapshot.params?.id) {
-            this.subscriptions.push(
-                this.route.params.subscribe(routeParams => {
-                    this.loadMotionById(Number(routeParams.id));
-                })
-            );
+    public onIdFound(id: Id | null): void {
+        if (this._motionId !== id) {
+            this.onRouteChanged();
+        }
+        this._motionId = id;
+        if (id) {
+            this.loadMotionById();
         } else {
             this.initNewMotion();
         }
-    }
-
-    /**
-     * Observes the route for events. Calls to clean all subs if the route changes.
-     * Calls the motion details from the new route
-     */
-    private observeRoute(): void {
-        this.subscriptions.push(
-            this.router.events.subscribe(navEvent => {
-                if (navEvent instanceof NavigationEnd) {
-                    this.onRouteHasChanged();
-                }
-            })
-        );
+        this.hasLoaded.resolve(true);
     }
 
     private registerSubjects(): void {
-        this.motionObserver = this.repo.getViewModelListObservable();
+        this._motionObserver = this.repo.getViewModelListObservable();
         // since updates are usually not commig at the same time, every change to
         // any subject has to mark the view for chekcing
         this.subscriptions.push(
-            this.motionObserver.subscribe(() => {
+            this._motionObserver.subscribe(() => {
                 this.cd.markForCheck();
             })
         );
@@ -383,11 +373,11 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         }
     }
 
-    private loadMotionById(motionId: number): void {
-        if (this.hasModelSubscriptionInitiated) {
+    private loadMotionById(motionId: number = this._motionId): void {
+        if (this._hasModelSubscriptionInitiated) {
             return; // already fired!
         }
-        this.hasModelSubscriptionInitiated = true;
+        this._hasModelSubscriptionInitiated = true;
         this.requestDetailedMotion(motionId);
 
         this.subscriptions.push(
@@ -402,7 +392,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         );
     }
 
-    private requestDetailedMotion(motionId: Id): void {
+    private requestDetailedMotion(motionId: Id = this._motionId): void {
         this.subscribe(
             {
                 viewModelCtor: ViewMotion,
@@ -485,15 +475,15 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
     public async createMotion(newMotionValues: Partial<MotionAction.CreatePayload>): Promise<void> {
         try {
             let response: Identifiable;
-            if (this.parentId) {
+            if (this._parentId) {
                 response = await this.amendmentService.createTextBased({
                     ...newMotionValues,
-                    lead_motion_id: this.parentId
+                    lead_motion_id: this._parentId
                 });
             } else {
                 response = await this.repo.create(newMotionValues);
             }
-            this.router.navigate([this.activeMeetingId, `motions`, response.id]);
+            await this.navigateAfterCreation(response.id);
         } catch (e) {
             this.raiseError(e);
         }
@@ -527,11 +517,11 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
 
     private async initializeAmendment(): Promise<void> {
         const motion: any = {};
-        this.parentId = +this.route.snapshot.queryParams.parent;
+        this._parentId = +this.route.snapshot.queryParams.parent;
         this.amendmentEdit = true;
-        await this.ensureParentIsAvailable(this.parentId);
-        const parentMotion = this.repo.getViewModel(this.parentId);
-        motion.lead_motion_id = this.parentId;
+        await this.ensureParentIsAvailable(this._parentId);
+        const parentMotion = this.repo.getViewModel(this._parentId);
+        motion.lead_motion_id = this._parentId;
         const defaultTitle = `${this.translate.instant(`Amendment to`)} ${parentMotion.numberOrTitle}`;
         motion.title = defaultTitle;
         motion.category_id = parentMotion.category_id;
@@ -551,31 +541,29 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         this.cd.reattach();
 
         this.registerSubjects();
-        this.observeRoute();
-        this.getMotionByUrl();
 
         // use the filter and the search service to get the current sorting
         // TODO: the `instant` can fail, if the page reloads.
         if (this.meetingSettingService.instant(`motions_amendments_in_main_list`)) {
-            this.motionFilterService.initFilters(this.motionObserver);
+            this.motionFilterService.initFilters(this._motionObserver);
             this.motionSortService.initSorting(this.motionFilterService.outputObservable);
-            this.sortedMotionsObservable = this.motionSortService.outputObservable;
+            this._sortedMotionsObservable = this.motionSortService.outputObservable;
         } else if (this.motion && this.motion.lead_motion_id) {
             // only use the amendments for this motion
             this.amendmentFilterService.initFilters(
                 this.repo.getAmendmentsByMotionAsObservable(this.motion.lead_motion_id)
             );
             this.amendmentSortService.initSorting(this.amendmentFilterService.outputObservable);
-            this.sortedMotionsObservable = this.amendmentSortService.outputObservable;
+            this._sortedMotionsObservable = this.amendmentSortService.outputObservable;
         } else {
-            this.sortedMotions = [];
+            this._sortedMotions = [];
         }
 
-        if (this.sortedMotionsObservable) {
+        if (this._sortedMotionsObservable) {
             this.subscriptions.push(
-                this.sortedMotionsObservable.subscribe(motions => {
+                this._sortedMotionsObservable.subscribe(motions => {
                     if (motions) {
-                        this.sortedMotions = motions;
+                        this._sortedMotions = motions;
                         this.setSurroundingMotions();
                     }
                 })
@@ -605,14 +593,25 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
      * Lifecycle routine for motions to get destroyed.
      */
     private destroy(): void {
-        this.hasModelSubscriptionInitiated = false;
+        this._hasModelSubscriptionInitiated = false;
         this.cleanSubscriptions();
         this.viewService.reset();
         this.cd.detach();
     }
 
-    private onRouteHasChanged(): void {
+    private onRouteChanged(): void {
         this.destroy();
         this.init();
+    }
+
+    private async navigateAfterCreation(id: Id): Promise<void> {
+        const motion = await this.repo
+            .getViewModelObservable(id)
+            .pipe(
+                filter(toCheck => !!toCheck),
+                first()
+            )
+            .toPromise();
+        this.router.navigate([this.activeMeetingId, `motions`, motion.sequential_number]);
     }
 }

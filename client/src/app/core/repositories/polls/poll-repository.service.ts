@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PollAction } from 'app/core/actions/poll-action';
-import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
+import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'app/core/core-services/model-request-builder.service';
 import { SendVotesService } from 'app/core/core-services/send-votes.service';
 import { Collection, Decimal, Id } from 'app/core/definitions/key-types';
 import { Identifiable } from 'app/shared/models/base/identifiable';
@@ -36,6 +36,7 @@ export class PollRepositoryService extends BaseRepositoryWithActiveMeeting<ViewP
     public getTitle = (viewModel: ViewPoll): string => viewModel.title;
 
     public getFieldsets(): Fieldsets<Poll> {
+        const routingFields: (keyof Poll)[] = [`sequential_number`];
         const listFieldset: (keyof Poll)[] = [
             `entitled_group_ids`,
             `state`,
@@ -63,6 +64,7 @@ export class PollRepositoryService extends BaseRepositoryWithActiveMeeting<ViewP
         );
         return {
             [DEFAULT_FIELDSET]: detailFieldset,
+            [ROUTING_FIELDSET]: routingFields,
             list: listFieldset
         };
     }

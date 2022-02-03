@@ -4,6 +4,7 @@ import { CalculablePollKey } from 'app/site/polls/services/poll.service';
 import { BaseDecimalModel } from '../base/base-decimal-model';
 import { HasMeetingId } from '../base/has-meeting-id';
 import { HasProjectionIds } from '../base/has-projectable-ids';
+import { HasSequentialNumber } from '../base/has-sequential-number';
 import {
     EntitledUsersEntry,
     PollBackendDurationType,
@@ -145,4 +146,4 @@ export class Poll extends BaseDecimalModel<Poll> {
     }
 }
 
-export interface Poll extends HasMeetingId, HasProjectionIds {}
+export interface Poll extends HasMeetingId, HasProjectionIds, HasSequentialNumber {}

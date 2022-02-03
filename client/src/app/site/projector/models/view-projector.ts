@@ -21,6 +21,10 @@ export class ViewProjector extends BaseViewModel<Projector> {
     public get nonStableCurrentProjections(): ViewProjection[] {
         return this.current_projections.filter(projection => !projection.stable);
     }
+
+    public getDetailStateUrl(): string {
+        return `/${this.getActiveMeetingId()}/projectors/detail/${this.sequential_number}`;
+    }
 }
 interface IProjectorRelations {
     current_projections: ViewProjection[];

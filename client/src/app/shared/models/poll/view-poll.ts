@@ -92,18 +92,9 @@ export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
         return Projectiondefault.poll;
     }
 
-    public getDetailStateURL(): string {
+    public getDetailStateUrl(): string {
         if (this.content_object_id) {
-            const routeFragments = this.content_object_id.split(`/`);
-            return `/${this.getActiveMeetingId()}/${routeFragments[0]}s/${routeFragments[1]}`;
-        } else {
-            return ``;
-        }
-    }
-
-    public getContentObjectDetailStateURL(): string {
-        if (this.content_object_id) {
-            return this.getContentObject().getDetailStateURL();
+            return this.getContentObject().getDetailStateUrl();
         } else {
             return ``;
         }
