@@ -1128,9 +1128,6 @@ msgstr "Nicht entscheiden"
 msgid "Do not forget to save your changes!"
 msgstr "Vergessen Sie nicht Ihre Änderungen zu speichern!"
 
-msgid "Do not set number"
-msgstr "Bezeichner nicht setzen"
-
 msgid "Do you really want to exit this page?"
 msgstr "Wollen Sie diese Seite wirklich verlassen?"
 
@@ -1968,6 +1965,9 @@ msgstr "Name des Empfehlungsgebers"
 msgid "Name of recommender for statute amendments"
 msgstr "Name des Empfehlungsgebers für Satzungsänderungsanträge"
 
+msgid "Natural person"
+msgstr "natürliche Person"
+
 msgid "Needs review"
 msgstr "Benötigt Review"
 
@@ -2129,6 +2129,9 @@ msgstr "Keine Schlagwörter"
 
 msgid "No users with email {0} found."
 msgstr "Es wurde kein Nutzer mit E-Mail-Adresse {0} gefunden."
+
+msgid "No verbose name is defined"
+msgstr "Es ist kein ausführlicher Name definiert"
 
 msgid "None"
 msgstr "aus"
@@ -2780,6 +2783,9 @@ msgstr "Antragsblock setzen"
 msgid "Set natural person ..."
 msgstr "Natürliche Person setzen ..."
 
+msgid "Set number"
+msgstr "Bezeichner setzen"
+
 msgid "Set or remove motion forwarding from the selected committees to:"
 msgstr "Antragsweiterleitung für ausgewählte Gremien setzen oder entfernen"
 
@@ -3313,6 +3319,9 @@ msgstr "Tippen Sie auf das Buch-Icon, um den Text zu bearbeiten."
 msgid "Translation"
 msgstr "Übersetzung"
 
+msgid "Type"
+msgstr "Typ"
+
 msgid "Undone"
 msgstr "unerledigt"
 
@@ -3732,6 +3741,9 @@ msgstr "Wortmeldung"
 msgid "could not be created"
 msgstr "konnten nicht erstellt werden"
 
+msgid "could not be defined"
+msgstr "konnten nicht definiert werden"
+
 msgid "created"
 msgstr "erstellt"
 
@@ -3782,6 +3794,9 @@ msgstr "grün"
 
 msgid "grey"
 msgstr "grau"
+
+msgid "has been imported"
+msgstr "wurden importiert"
 
 msgid "has saved his work on this motion."
 msgstr "hat die Arbeit an diesem Antrag gespeichert."
@@ -3921,6 +3936,9 @@ msgstr "gestartet"
 msgid "submitted"
 msgstr "eingereicht"
 
+msgid "successfully forwarded"
+msgstr "erfolgreich weitergeleitet"
+
 msgid "supporters"
 msgstr "Unterstützer/innen"
 
@@ -3938,6 +3956,15 @@ msgstr "Version"
 
 msgid "will be created"
 msgstr "werden erstellt"
+
+msgid "will be defined"
+msgstr "werden definiert"
+
+msgid "will be imported"
+msgstr "werden importiert"
+
+msgid "will be referenced"
+msgstr "werden referenziert"
 
 msgid "with filter"
 msgstr "mit Filter"

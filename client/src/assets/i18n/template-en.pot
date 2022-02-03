@@ -1068,9 +1068,6 @@ msgstr ""
 msgid "Do not forget to save your changes!"
 msgstr ""
 
-msgid "Do not set number"
-msgstr ""
-
 msgid "Do you really want to exit this page?"
 msgstr ""
 
@@ -1883,6 +1880,9 @@ msgstr ""
 msgid "Name of recommender for statute amendments"
 msgstr ""
 
+msgid "Natural person"
+msgstr ""
+
 msgid "Needs review"
 msgstr ""
 
@@ -2043,6 +2043,9 @@ msgid "No tags"
 msgstr ""
 
 msgid "No users with email {0} found."
+msgstr ""
+
+msgid "No verbose name is defined"
 msgstr ""
 
 msgid "None"
@@ -2677,6 +2680,9 @@ msgstr ""
 msgid "Set natural person ..."
 msgstr ""
 
+msgid "Set number"
+msgstr ""
+
 msgid "Set or remove motion forwarding from the selected committees to:"
 msgstr ""
 
@@ -3168,6 +3174,9 @@ msgstr ""
 msgid "Translation"
 msgstr ""
 
+msgid "Type"
+msgstr ""
+
 msgid "Undone"
 msgstr ""
 
@@ -3549,6 +3558,9 @@ msgstr ""
 msgid "could not be created"
 msgstr ""
 
+msgid "could not be defined"
+msgstr ""
+
 msgid "created"
 msgstr ""
 
@@ -3598,6 +3610,9 @@ msgid "green"
 msgstr ""
 
 msgid "grey"
+msgstr ""
+
+msgid "has been imported"
 msgstr ""
 
 msgid "has saved his work on this motion."
@@ -3738,6 +3753,9 @@ msgstr ""
 msgid "submitted"
 msgstr ""
 
+msgid "successfully forwarded"
+msgstr ""
+
 msgid "supporters"
 msgstr ""
 
@@ -3754,6 +3772,15 @@ msgid "version"
 msgstr ""
 
 msgid "will be created"
+msgstr ""
+
+msgid "will be defined"
+msgstr ""
+
+msgid "will be imported"
+msgstr ""
+
+msgid "will be referenced"
 msgstr ""
 
 msgid "with filter"

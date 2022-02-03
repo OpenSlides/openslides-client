@@ -33,8 +33,9 @@ export class MotionService {
             try {
                 const forwardMotions = motions.map(motion => this.motionFormatService.formatMotionForForward(motion));
                 await this.repo.createForwarded(toMeetingIds, ...forwardMotions);
-                const verboseName = motions.length === 1 ? `motion` : `motions`;
-                const message = `${motions.length} ${this.translate.instant(`${verboseName} successfully forwarded`)}`;
+                const verboseName =
+                    motions.length === 1 ? this.translate.instant(`Motion`) : this.translate.instant(`Motions`);
+                const message = `${motions.length} ${verboseName} ${this.translate.instant(`successfully forwarded`)}`;
                 this.snackbar.open(message, `Ok`);
             } catch (e) {
                 this.snackbar.open(e.toString(), `Ok`);
