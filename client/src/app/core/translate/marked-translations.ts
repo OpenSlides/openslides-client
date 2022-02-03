@@ -102,7 +102,7 @@ _(`Recommendation label`);
 _(`Allow support`);
 _(`Allow create poll`);
 _(`Allow submitter edit`);
-_(`Do not set number`);
+_(`Set number`);
 _(`Show state extension field`);
 _(`Show recommendation extension field`);
 _(`Show amendment in parent motion`);
@@ -214,6 +214,7 @@ _(`Participant`);
 _(`No users with email {0} found.`);
 _(`You can not delete yourself.`);
 _(`You can not deactivate yourself.`);
+_(`Natural person`);
 
 // default groups
 _(`Default`);
