@@ -4,7 +4,7 @@ import { MainImportHandlerConfig } from './base-main-import-handler';
 import { ImportModel } from './import-model';
 
 export interface StaticMainImportConfig<ToCreate> extends MainImportHandlerConfig<ToCreate> {
-    shouldBeCreatedFn?: (model: ImportModel<ToCreate>) => boolean;
+    shouldCreateModelFn?: (model: ImportModel<ToCreate>) => boolean;
     /**
      * This function can be omitted, if the function `onCreateImportModel` is overriden
      */
@@ -15,14 +15,14 @@ export interface StaticMainImportConfig<ToCreate> extends MainImportHandlerConfi
  * This class handles the import of the main "importing" models.
  */
 export class StaticMainImportHandler<ToCreate extends Identifiable> extends BaseMainImportHandler<ToCreate> {
-    private readonly _shouldBeCreatedFn: (model: ImportModel<ToCreate>) => boolean;
+    private readonly _shouldCreateModelFn: (model: ImportModel<ToCreate>) => boolean;
 
     public constructor(config: StaticMainImportConfig<ToCreate>) {
         super(config);
-        this._shouldBeCreatedFn = config.shouldBeCreatedFn ?? (model => !model.hasDuplicates);
+        this._shouldCreateModelFn = config.shouldCreateModelFn ?? (model => !model.hasDuplicates);
     }
 
     public pipeModels(models: ImportModel<ToCreate>[]): void | Promise<void> {
-        this.modelsToCreate = models.filter(this._shouldBeCreatedFn);
+        this.modelsToCreate = models.filter(this._shouldCreateModelFn);
     }
 }

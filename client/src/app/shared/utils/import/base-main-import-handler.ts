@@ -1,77 +1,68 @@
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { ImportCleanup, ImportStep, ImportStepPhase } from '../../../core/ui-services/base-import.service';
+import { BaseImportHandler, BaseImportHandlerConfig, ImportHandler } from './base-import-handler';
 import { ImportModel } from './import-model';
-import { ImportStepDescriptor } from './import-step-descriptor';
 
-export interface MainImportHandlerConfig<ToCreate> {
-    createFn: (entries: ToCreate[]) => Promise<Identifiable[]>;
-    updateFn?: (entries: ToCreate[]) => Promise<void>;
-    resolveEntryFn?: (importModel: ImportModel<ToCreate>) => ToCreate;
-    verboseNameFn?: string | ((plural?: boolean) => string);
-    labelFn?: string | ((phase: ImportStepPhase, plural?: boolean) => string);
-    chunkSize?: number;
+export interface MainImportHandlerConfig<MainModel> extends BaseImportHandlerConfig {
+    /**
+     * A function to create models, that are determined as "not duplicates of"
+     */
+    createFn: (entries: MainModel[]) => Promise<Identifiable[]>;
+    /**
+     * A function to update models, that already have an id.
+     */
+    updateFn?: (entries: MainModel[]) => Promise<void>;
+    resolveEntryFn?: (importModel: ImportModel<MainModel>) => MainModel;
 }
 
-export interface MainImportHandler<ToCreate = any> extends ImportStep, ImportCleanup {
-    pipeModels(models: ImportModel<ToCreate>[]): void | Promise<void>;
-    getModelsToCreate(): ImportModel<ToCreate>[];
-    getModelsToCreateObservable(): Observable<ImportModel<ToCreate>[]>;
-    doImport(): Promise<void>;
+export interface MainImportHandler<MainModel = any> extends ImportHandler {
+    getModelsToCreate(): ImportModel<MainModel>[];
+    getModelsToCreateObservable(): Observable<ImportModel<MainModel>[]>;
 }
 
-export abstract class BaseMainImportHandler<ToCreate extends Identifiable> implements MainImportHandler<ToCreate> {
-    public phase: ImportStepPhase = ImportStepPhase.ENQUEUED;
-
-    protected set modelsImported(value: ImportModel<ToCreate>[]) {
+export abstract class BaseMainImportHandler<MainModel extends Identifiable>
+    extends BaseImportHandler<MainModel>
+    implements MainImportHandler<MainModel>
+{
+    protected set modelsImported(value: ImportModel<MainModel>[]) {
         this._modelsImportedSubject.next(value);
     }
 
-    protected get modelsImported(): ImportModel<ToCreate>[] {
+    protected get modelsImported(): ImportModel<MainModel>[] {
         return this._modelsImportedSubject.value;
     }
 
-    protected set modelsToCreate(value: ImportModel<ToCreate>[]) {
+    protected set modelsToCreate(value: ImportModel<MainModel>[]) {
         this._modelsToCreateSubject.next(value);
     }
 
-    protected get modelsToCreate(): ImportModel<ToCreate>[] {
+    protected get modelsToCreate(): ImportModel<MainModel>[] {
         return this._modelsToCreateSubject.value;
     }
 
-    private _modelsToCreateSubject = new BehaviorSubject<ImportModel<ToCreate>[]>([]);
-    private _modelsImportedSubject = new BehaviorSubject<ImportModel<ToCreate>[]>([]);
-    private _importStepDescriptor: ImportStepDescriptor;
+    private _modelsToCreateSubject = new BehaviorSubject<ImportModel<MainModel>[]>([]);
+    private _modelsImportedSubject = new BehaviorSubject<ImportModel<MainModel>[]>([]);
 
-    private readonly _createFn: (entries: ToCreate[]) => Promise<Identifiable[]>;
-    private readonly _updateFn: (entries: ToCreate[]) => Promise<void>;
-    private readonly _resolveEntryFn: (importModel: ImportModel<ToCreate>) => ToCreate;
-    private readonly _chunkSize: number;
+    private readonly _createFn: (entries: MainModel[]) => Promise<Identifiable[]>;
+    private readonly _updateFn: (entries: MainModel[]) => Promise<void>;
+    private readonly _resolveEntryFn: (importModel: ImportModel<MainModel>) => MainModel;
 
-    public constructor(config: MainImportHandlerConfig<ToCreate>) {
-        this._chunkSize = config.chunkSize ?? 100;
+    public constructor(config: MainImportHandlerConfig<MainModel>) {
+        super(config);
         this._createFn = config.createFn;
         this._updateFn = config.updateFn;
         this._resolveEntryFn = config.resolveEntryFn ?? (model => model.model);
-        this._importStepDescriptor = new ImportStepDescriptor({
-            verboseNameFn: config.verboseNameFn,
-            labelFn: config.labelFn
-        });
     }
 
-    public abstract pipeModels(models: ImportModel<ToCreate>[]): void | Promise<void>;
+    public abstract pipeModels(models: ImportModel<MainModel>[]): void | Promise<void>;
 
-    public getModelsToCreate(): ImportModel<ToCreate>[] {
+    public getModelsToCreate(): ImportModel<MainModel>[] {
         return this.modelsToCreate;
     }
 
-    public getModelsToCreateObservable(): Observable<ImportModel<ToCreate>[]> {
+    public getModelsToCreateObservable(): Observable<ImportModel<MainModel>[]> {
         return this._modelsToCreateSubject.asObservable();
-    }
-
-    public getDescription(): string {
-        return this._importStepDescriptor.getDescription(this.phase, this.getModelsToCreate().length !== 1);
     }
 
     public getModelsToCreateAmount(): number {
@@ -98,29 +89,29 @@ export abstract class BaseMainImportHandler<ToCreate extends Identifiable> imple
         }
     }
 
-    private resolveEntries(): ToCreate[] {
+    private resolveEntries(): MainModel[] {
         return this.modelsToCreate.map(model => this._resolveEntryFn(model));
     }
 
     private async doCreateModels(
-        models: ToCreate[]
+        models: MainModel[]
     ): Promise<{ index: number; identifiable: Identifiable; errors: string[] }[]> {
         const M = models.map((model, index) => ({ index, model }));
-        const entriesToCreate: { index: number; model: ToCreate }[] = M.filter(entry => !entry.model.id);
-        const entriesToUpdate: { index: number; model: ToCreate }[] = M.filter(entry => !!entry.model.id);
+        const entriesToCreate: { index: number; model: MainModel }[] = M.filter(entry => !entry.model.id);
+        const entriesToUpdate: { index: number; model: MainModel }[] = M.filter(entry => !!entry.model.id);
         const identifiables: { identifiable: Identifiable; index: number; errors: string[] }[] = [];
-        for (let i = 0; i < Math.ceil(entriesToCreate.length / this._chunkSize); ++i) {
+        for (let i = 0; i < Math.ceil(entriesToCreate.length / this.chunkSize); ++i) {
             identifiables.push(
                 ...(await this.sendRequest(
-                    entriesToCreate.slice(i * this._chunkSize, (i + 1) * this._chunkSize),
+                    entriesToCreate.slice(i * this.chunkSize, (i + 1) * this.chunkSize),
                     this._createFn
                 ))
             );
         }
-        for (let i = 0; i < Math.ceil(entriesToUpdate.length / this._chunkSize); ++i) {
+        for (let i = 0; i < Math.ceil(entriesToUpdate.length / this.chunkSize); ++i) {
             identifiables.push(
                 ...(await this.sendRequest(
-                    entriesToUpdate.slice(i * this._chunkSize, (i + 1) * this._chunkSize),
+                    entriesToUpdate.slice(i * this.chunkSize, (i + 1) * this.chunkSize),
                     this._updateFn
                 ))
             );
@@ -129,10 +120,10 @@ export abstract class BaseMainImportHandler<ToCreate extends Identifiable> imple
     }
 
     private async sendRequest(
-        models: { model: ToCreate; index: number }[],
-        fn: (entries: ToCreate[]) => Promise<Identifiable[] | void>
+        models: { model: MainModel; index: number }[],
+        fn: (entries: MainModel[]) => Promise<Identifiable[] | void>
     ): Promise<{ index: number; identifiable: Identifiable; errors: string[] }[]> {
-        const request = async (data: { model: ToCreate; index: number }[]) => {
+        const request = async (data: { model: MainModel; index: number }[]) => {
             const defaultIdentifiables = data.map(date => ({ id: date.model.id }));
             const returnValue = (await fn(data.map(date => date.model))) || defaultIdentifiables;
             this.modelsImported = this.modelsImported.concat(data as any);
@@ -141,7 +132,7 @@ export abstract class BaseMainImportHandler<ToCreate extends Identifiable> imple
                 identifiable: date || { id: data[index].model.id }
             }));
         };
-        const sendSingleRequest = async (date: { model: ToCreate; index: number }) => {
+        const sendSingleRequest = async (date: { model: MainModel; index: number }) => {
             let response: { identifiable: Identifiable; errors: string[]; index: number }[] = [];
             try {
                 response = (await request([date])).map(receivedValue => ({ errors: [], ...receivedValue }));

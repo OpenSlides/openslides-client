@@ -3,47 +3,48 @@ import { UserRepositoryService } from 'app/core/repositories/users/user-reposito
 import { CsvMapping } from 'app/core/ui-services/base-import.service';
 import { User } from 'app/shared/models/users/user';
 import { BaseBeforeImportHandler } from 'app/shared/utils/import/base-before-import-handler';
-import { ImportResolveInformation } from 'app/shared/utils/import/import-resolve-information';
+import { ImportResolveInformation } from 'app/shared/utils/import/import-utils';
 import { ViewUser } from 'app/site/users/models/view-user';
 
-export class UserImportHelper<Model> extends BaseBeforeImportHandler<Model, User> {
-    private repo: UserRepositoryService;
-    private verboseName: string;
-    private property: keyof Model;
-    private useDefault?: number[];
+interface UserImportConfig<Model> {
+    repo: UserRepositoryService;
+    property: keyof Model;
+    verboseName?: string;
+    useDefault?: number[];
+    mapPropertyToFn?: (item: Model, ids: Id[]) => void;
+}
 
-    public constructor({
-        repo,
-        property,
-        verboseName,
-        useDefault
-    }: {
-        repo: UserRepositoryService;
-        property: keyof Model;
-        verboseName?: string;
-        useDefault?: number[];
-    }) {
+export class UserImportHelper<Model> extends BaseBeforeImportHandler<Model, User> {
+    private readonly _repo: UserRepositoryService;
+    private readonly _verboseName: string;
+    private readonly _property: keyof Model;
+    private readonly _useDefault?: number[];
+
+    private readonly _mapPropertyToFn?: (item: Model, ids: Id[]) => void;
+
+    public constructor(config: UserImportConfig<Model>) {
         super({
-            idProperty: property,
+            idProperty: config.property,
             translateFn: value => value,
-            repo: repo as any,
-            verboseNameFn: verboseName
+            repo: config.repo as any,
+            verboseNameFn: config.verboseName
         });
-        this.repo = repo;
-        this.property = property;
-        this.verboseName = verboseName;
-        this.useDefault = useDefault;
+        this._repo = config.repo;
+        this._property = config.property;
+        this._verboseName = config.verboseName;
+        this._useDefault = config.useDefault;
+        this._mapPropertyToFn = config.mapPropertyToFn || ((item, ids) => (item[this._property] = ids as any));
     }
 
-    public findByName(name: string): CsvMapping[] {
-        const result: CsvMapping[] = [];
+    public findByName(name: string): CsvMapping<User>[] {
+        const result: CsvMapping<User>[] = [];
         if (!name) {
             return result;
         }
         const usersAsStrings = name.split(`;`);
         for (const user of usersAsStrings) {
-            const nextUser = this.repo.parseStringIntoUser(user.trim());
-            const existingUsers = this.repo
+            const nextUser = this._repo.parseStringIntoUser(user.trim());
+            const existingUsers = this._repo
                 .getViewModelList()
                 .filter(
                     iUser =>
@@ -60,7 +61,7 @@ export class UserImportHelper<Model> extends BaseBeforeImportHandler<Model, User
         const result: ImportResolveInformation<Model> = {
             model: item,
             unresolvedModels: 0,
-            verboseName: this.verboseName
+            verboseName: this._verboseName
         };
         let ids: Id[] = [];
         for (const user of item[propertyName]) {
@@ -80,10 +81,10 @@ export class UserImportHelper<Model> extends BaseBeforeImportHandler<Model, User
                 ++result.unresolvedModels;
             }
         }
-        if (ids.length === 0 && this.useDefault) {
-            ids = this.useDefault;
+        if (ids.length === 0 && this._useDefault) {
+            ids = this._useDefault;
         }
-        item[this.property as any] = ids;
+        this._mapPropertyToFn(item, ids);
         return result;
     }
 
@@ -91,24 +92,15 @@ export class UserImportHelper<Model> extends BaseBeforeImportHandler<Model, User
         return models.map(newUser => ({ first_name: newUser.name }));
     }
 
-    private getNextEntry(user: string, existingUsers: ViewUser[]): CsvMapping {
-        if (!existingUsers.length) {
-            if (!this.modelsToCreate.find(listedUser => listedUser.name === user)) {
-                this.modelsToCreate.push({ name: user });
-            }
-            return { name: user };
+    private getNextEntry(user: string, existingUsers: ViewUser[]): CsvMapping<User> {
+        const returnValue: CsvMapping<User> = { name: user, willBeCreated: true } as any;
+        if (!existingUsers.length && !this.modelsToCreate.find(listedUser => listedUser.name === user)) {
+            this.modelsToCreate.push(returnValue);
         }
         if (existingUsers.length === 1) {
-            return {
-                name: existingUsers[0].short_name,
-                id: existingUsers[0].id
-            };
+            returnValue.id = existingUsers[0].id;
+            returnValue.willBeCreated = false;
         }
-        if (existingUsers.length > 1) {
-            return {
-                name: user,
-                multiId: existingUsers.map(ex => ex.id)
-            };
-        }
+        return returnValue;
     }
 }

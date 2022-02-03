@@ -9,12 +9,13 @@ import {
     MEETING_SPECIFIC_USER_PROPERTIES,
     UserRepositoryService
 } from 'app/core/repositories/users/user-repository.service';
-import { ImportConfig, ImportStepPhase } from 'app/core/ui-services/base-import.service';
+import { ImportConfig } from 'app/core/ui-services/base-import.service';
 import { CsvExportService } from 'app/core/ui-services/csv-export.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { User } from 'app/shared/models/users/user';
 import { BeforeImportHandler } from 'app/shared/utils/import/base-before-import-handler';
 import { ImportModel } from 'app/shared/utils/import/import-model';
+import { ImportStepPhase } from 'app/shared/utils/import/import-step';
 
 import { ImportServiceCollector } from '../../../core/ui-services/import-service-collector';
 import { BaseUserExport } from '../base/base-user-export';
@@ -74,7 +75,7 @@ export class UserImportService extends BaseUserImportService {
         super(importServiceCollector, repo);
 
         this.registerMainImportHandler({
-            shouldBeCreatedFn: model => model.status === `merge`,
+            shouldCreateModelFn: model => model.status === `merge`,
             labelFn: (phase, plural) => {
                 const verboseName = this.repo.getVerboseName(plural);
                 let description = ``;
@@ -112,7 +113,7 @@ export class UserImportService extends BaseUserImportService {
             modelHeadersAndVerboseNames: userHeadersAndVerboseNames,
             verboseNameFn: plural => this.repo.getVerboseName(plural),
             createFn: (entries: any[]) => this.createUsers(entries),
-            shouldBeCreatedFn: user => user.status === `new`
+            shouldCreateModelFn: user => user.status === `new`
         };
     }
 

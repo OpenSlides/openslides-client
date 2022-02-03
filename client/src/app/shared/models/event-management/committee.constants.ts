@@ -25,12 +25,12 @@ export interface CommitteeCsvPort {
 }
 
 export const COMMITTEE_PORT_HEADERS_AND_VERBOSE_NAMES: Partial<CommitteeCsvPort> = {
-    name: _(`Title`),
-    description: _(`Description`),
-    forward_to_committee_ids: _(`Can forward motions to committee`),
-    organization_tag_ids: _(`Tags`),
-    manager_ids: _(`Administrators`),
-    meeting: _(`Meeting`),
-    meeting_start_date: _(`Start date`),
-    meeting_end_date: _(`End date`)
+    [NAME]: _(`Title`),
+    [DESCRIPTION]: _(`Description`),
+    [FORWARD_TO_COMMITTEE_IDS]: _(`Can forward motions to committee`),
+    [ORGANIZATION_TAG_IDS]: _(`Tags`),
+    [MANAGER_IDS]: _(`Administrators`),
+    [MEETING]: _(`Meeting`),
+    [MEETING_START_DATE]: _(`Start date`),
+    [MEETING_END_DATE]: _(`End date`)
 };

@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { ImportModel } from 'app/shared/utils/import/import-model';
+import { ImportStepPhase } from 'app/shared/utils/import/import-step';
 import { toBoolean } from 'app/shared/utils/parser';
 
 import { OperatorService } from '../../core/core-services/operator.service';
+import { CML } from '../../core/core-services/organization-permission';
 import { CommitteeRepositoryService } from '../../core/repositories/management/committee-repository.service';
 import { MeetingRepositoryService } from '../../core/repositories/management/meeting-repository.service';
 import { OrganizationTagRepositoryService } from '../../core/repositories/management/organization-tag-repository.service';
@@ -10,6 +13,7 @@ import { UserRepositoryService } from '../../core/repositories/users/user-reposi
 import { BaseImportService, CsvMapping, ImportConfig } from '../../core/ui-services/base-import.service';
 import { CsvExportService } from '../../core/ui-services/csv-export.service';
 import { ImportServiceCollector } from '../../core/ui-services/import-service-collector';
+import { Committee } from '../../shared/models/event-management/committee';
 import {
     COMMITTEE_PORT_HEADERS_AND_VERBOSE_NAMES,
     CommitteeCsvPort,
@@ -24,12 +28,14 @@ import {
 import { UserImportHelper } from '../../site/motions/import/user-import-helper';
 import { COMMITTEE_CSV_EXPORT_EXAMPLE } from '../export/committee-csv-export-example';
 
+const COMMITTEE_SHARED_MODELS_KEY = `mapNameModels`;
+
 @Injectable({
     providedIn: `root`
 })
 export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> {
     public errorList = {
-        Duplicates: marker(`This committee already exists`)
+        Duplicates: _(`This committee already exists`)
     };
 
     public requiredHeaderLength = 1;
@@ -47,37 +53,102 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
         this.registerBeforeImportHelper(ORGANIZATION_TAG_IDS, {
             repo: organizationTagRepo,
             idProperty: ORGANIZATION_TAG_IDS,
-            verboseNameFn: plural => (plural ? `Tags` : `Tag`)
-        });
-        this.registerBeforeImportHelper(FORWARD_TO_COMMITTEE_IDS, {
-            repo,
-            idProperty: FORWARD_TO_COMMITTEE_IDS,
-            verboseNameFn: plural => (plural ? marker(`Forwardings`) : marker(`Forwarding`)),
-            nameDelimiter: `;`,
-            afterCreateUnresolvedEntriesFn: (modelsCreated, originalEntries) => {
-                for (const model of modelsCreated) {
-                    const originalOne = originalEntries.find(entry => entry.name === model.name);
-                    if (originalOne) {
-                        originalOne.id = model.id;
-                    }
-                }
-            }
+            nameDelimiter: `;`
         });
         this.registerBeforeImportHelper(
             MANAGER_IDS,
             new UserImportHelper({
                 repo: userRepo,
-                verboseName: marker(`Committee management`),
+                verboseName: _(`Committee management`),
                 property: MANAGER_IDS,
-                useDefault: [operator.operatorId]
+                useDefault: [operator.operatorId],
+                mapPropertyToFn: (committee, ids) => (committee.user_$_management_level = { [CML.can_manage]: ids })
             })
+        );
+        this.registerAfterImportHandler(
+            FORWARD_TO_COMMITTEE_IDS,
+            {
+                repo,
+                nameDelimiter: `;`,
+                findFn: name => this.repo.getViewModelList().find(committee => committee.name === name),
+                labelFn: phase => {
+                    switch (phase) {
+                        case ImportStepPhase.FINISHED:
+                            return `additional committees have been created, because they are mentioned in the forwardings`;
+                        case ImportStepPhase.ERROR:
+                            return `additional committees could not be created`;
+                        default:
+                            return `additional committees will be created, because they are mentioned in the forwardings`;
+                    }
+                },
+                shouldCreateModelFn: (pseudoModel, rawData) => {
+                    return !rawData.find(committee => committee.name === pseudoModel.name);
+                }
+            },
+            [
+                {
+                    pipeSideModelsFn: (sideModels, context) => {
+                        const mapNameModels = context.getData(COMMITTEE_SHARED_MODELS_KEY) as {
+                            [committeeName: string]: Committee;
+                        };
+                        sideModels.forEach(sideModel => (mapNameModels[sideModel.name] = sideModel));
+                        context.setData(COMMITTEE_SHARED_MODELS_KEY, mapNameModels);
+                    },
+                    transformFn: (_sideModels, mainModels) => mainModels,
+                    doImportFn: async (models: Committee[], context) => {
+                        const mapNameModels = context.getData(COMMITTEE_SHARED_MODELS_KEY) as {
+                            [committeeName: string]: Committee;
+                        };
+                        const updates = models
+                            .map(committee => ({
+                                id: committee.id,
+                                [FORWARD_TO_COMMITTEE_IDS]: committee.forward_to_committee_ids
+                                    .map((value: any) => mapNameModels[value.name].id)
+                                    .filter(value => !!value)
+                            }))
+                            .filter(update => !!update.id);
+                        return await this.repo.update(null, ...(updates as any));
+                    },
+                    labelFn: (phase, plural) => {
+                        const verboseName = plural ? _(`Forwardings`) : _(`Forwarding`);
+                        let description = ``;
+                        switch (phase) {
+                            case ImportStepPhase.FINISHED:
+                                description = _(`${plural ? `were` : `was`} defined`);
+                                break;
+                            case ImportStepPhase.ERROR:
+                                description = _(`could not be defined`);
+                                break;
+                            default:
+                                description = _(`will be defined`);
+                        }
+                        return `${verboseName} ${description}`;
+                    },
+                    pipeModelsFn: (models, context) => {
+                        const _models = models.map(({ model }) => model);
+                        const _dictionary = _models.mapToObject(model => ({ [model[NAME]]: model }));
+                        context.setData(COMMITTEE_SHARED_MODELS_KEY, _dictionary);
+                    },
+                    getModelsToCreateAmountFn: (models: ImportModel<CommitteeCsvPort>[]) => {
+                        const forwardings = models.flatMap(model => {
+                            if (model.errors.length > 0) {
+                                return [];
+                            }
+                            return model.model[FORWARD_TO_COMMITTEE_IDS];
+                        }) as any;
+                        return forwardings.length;
+                    },
+                    getModelsImportedAmountFn: (nextChunk: CommitteeCsvPort[], oldValue) =>
+                        oldValue + nextChunk.flatMap(model => model[FORWARD_TO_COMMITTEE_IDS]).length
+                }
+            ]
         );
         this.registerAfterImportHandler(MEETING, {
             repo: meetingRepo,
             useArray: true,
             fixedChunkSize: 1,
             findFn: (name, committee) => ({ name: name === `1` ? committee.name : name }),
-            transformFn: (_, originalEntries: any[]) => {
+            transformFn: (_entries, originalEntries: any[]) => {
                 let meetingPayload = [];
                 for (const committee of originalEntries) {
                     if (committee.meeting && committee.meeting.length > 0) {
@@ -100,13 +171,13 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
         this.exporter.dummyCSVExport(
             COMMITTEE_PORT_HEADERS_AND_VERBOSE_NAMES,
             COMMITTEE_CSV_EXPORT_EXAMPLE,
-            `${this.translate.instant(marker(`committee-example`))}.csv`
+            `${this.translate.instant(_(`committee-example`))}.csv`
         );
     }
 
     protected pipeParseValue(value: string, header: keyof CommitteeCsvPort): any {
         if (header === NAME && value.length >= 256) {
-            throw new Error(marker(`Name exceeds 256 characters`));
+            throw new Error(_(`Name exceeds 256 characters`));
         }
         if (header === MEETING_START_DATE || header === MEETING_END_DATE) {
             return this.getDate(value);

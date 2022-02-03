@@ -4,7 +4,7 @@ import { GroupRepositoryService } from 'app/core/repositories/users/group-reposi
 import { CsvMapping } from 'app/core/ui-services/base-import.service';
 import { User } from 'app/shared/models/users/user';
 import { BaseBeforeImportHandler } from 'app/shared/utils/import/base-before-import-handler';
-import { ImportResolveInformation } from 'app/shared/utils/import/import-resolve-information';
+import { ImportResolveInformation } from 'app/shared/utils/import/import-utils';
 
 export class GroupImportHelper extends BaseBeforeImportHandler<User> {
     public constructor(private repo: GroupRepositoryService, translate: TranslateService) {
@@ -29,10 +29,11 @@ export class GroupImportHelper extends BaseBeforeImportHandler<User> {
             if (existingGroup) {
                 result.push({ id: existingGroup.id, name: existingGroup.name });
             } else {
+                const newModel = { name: group, willBeCreated: true };
                 if (!this.modelsToCreate.find(entry => entry.name === group)) {
-                    this.modelsToCreate.push({ name: group });
+                    this.modelsToCreate.push(newModel);
                 }
-                result.push({ name: group });
+                result.push(newModel);
             }
         }
         return result;

@@ -3,60 +3,55 @@ import { CsvMapping } from 'app/core/ui-services/base-import.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 
 import { BaseBeforeImportHandler } from './base-before-import-handler';
-import { ImportResolveInformation } from './import-resolve-information';
+import { ImportResolveInformation } from './import-utils';
 import { StaticBeforeImportConfig } from './static-before-import-config';
 
-export class StaticBeforeImportHandler<ToImport, ToCreate extends Identifiable = any> extends BaseBeforeImportHandler<
-    ToCreate,
-    ToImport
+/**
+ * `MainModel` is the type of a model an importer will primarly create. `SideModel` is the type of a model which will
+ * be created, too, but as a "side effect" during the import process of the main models.
+ */
+export class StaticBeforeImportHandler<SideModel, MainModel extends Identifiable = any> extends BaseBeforeImportHandler<
+    MainModel,
+    SideModel
 > {
-    private _afterCreateUnresolvedEntriesFn: (modelsImported: ToImport[], originalEntries: ToCreate[]) => void;
-
     public constructor(
-        config: StaticBeforeImportConfig<ToCreate, ToImport>,
+        config: StaticBeforeImportConfig<MainModel, SideModel>,
         protected readonly translateFn: (key: string) => string
     ) {
         super({
             translateFn,
             ...config
         });
-        this._afterCreateUnresolvedEntriesFn = config.afterCreateUnresolvedEntriesFn;
     }
 
-    public doResolve(item: ToCreate, propertyName: string): ImportResolveInformation<ToCreate> {
-        const result: ImportResolveInformation<ToCreate> = {
-            model: item,
+    public doResolve(mainModel: MainModel, propertyName: string): ImportResolveInformation<MainModel> {
+        const result: ImportResolveInformation<MainModel> = {
+            model: mainModel,
             unresolvedModels: 0
         };
-        const property = item[propertyName];
-        if (Array.isArray(property)) {
-            return this.linkArrayPropertyToItem(property, item, result);
+        const propertyValue = mainModel[propertyName];
+        if (Array.isArray(propertyValue)) {
+            return this.linkArrayPropertyToItem(propertyValue, mainModel, result);
         } else {
-            return this.linkSinglePropertyToItem(property, item, result);
-        }
-    }
-
-    protected onAfterCreateUnresolvedEntries(modelsImported: ToImport[], originalEntries: ToCreate[]): void {
-        if (this._afterCreateUnresolvedEntriesFn) {
-            this._afterCreateUnresolvedEntriesFn(modelsImported, originalEntries);
+            return this.linkSinglePropertyToItem(propertyValue, mainModel, result);
         }
     }
 
     private linkArrayPropertyToItem(
-        property: CsvMapping<ToImport>[],
-        item: ToCreate,
-        result: ImportResolveInformation<ToCreate>
-    ): ImportResolveInformation<ToCreate> {
-        if (!property.length) {
+        propertyValue: CsvMapping<SideModel>[],
+        mainModel: MainModel,
+        result: ImportResolveInformation<MainModel>
+    ): ImportResolveInformation<MainModel> {
+        if (!propertyValue.length) {
             return result;
         }
-        if (property.every(model => model.id)) {
-            item[this.idProperty] = property.map(model => model.id) as any;
+        if (propertyValue.every(model => model.id)) {
+            mainModel[this.idProperty] = propertyValue.map(model => model.id) as any;
             return result;
         }
-        const ids = this.findIds(this.modelsToCreate, property);
+        const ids = this.findIds(this.modelsToCreate, propertyValue);
         if (ids.length > 0) {
-            item[this.idProperty] = ids as any;
+            mainModel[this.idProperty] = ids as any;
         } else {
             ++result.unresolvedModels;
         }
@@ -64,20 +59,20 @@ export class StaticBeforeImportHandler<ToImport, ToCreate extends Identifiable =
     }
 
     private linkSinglePropertyToItem(
-        property: CsvMapping<ToImport>,
-        item: ToCreate,
-        result: ImportResolveInformation<ToCreate>
-    ): ImportResolveInformation<ToCreate> {
-        if (!property) {
+        propertyValue: CsvMapping<SideModel>,
+        mainModel: MainModel,
+        result: ImportResolveInformation<MainModel>
+    ): ImportResolveInformation<MainModel> {
+        if (!propertyValue) {
             return result;
         }
-        if (property.id) {
-            item[this.idProperty] = property.id as any;
+        if (propertyValue.id) {
+            mainModel[this.idProperty] = propertyValue.id as any;
             return result;
         }
-        const newModel = this.modelsToCreate.find(_model => _model.name === property.name);
+        const newModel = this.modelsToCreate.find(_model => _model.name === propertyValue.name);
         if (newModel) {
-            item[this.idProperty] = newModel.id as any;
+            mainModel[this.idProperty] = newModel.id as any;
         } else {
             ++result.unresolvedModels;
         }
@@ -85,12 +80,11 @@ export class StaticBeforeImportHandler<ToImport, ToCreate extends Identifiable =
     }
 
     /**
-     * This function iterates through the models that are linked to the model to import and filters by their id.
-     * If a model has no id, the `source` array is search if there is a model with the same and an id.
+     * This function iterates through the side models and filters by their id.
+     * If a model has no id, the `source` array is search if there is a model with the same name and an id.
      *
-     * @param source An array containing the models that was created by this helper
-     * @param target An array which contains all models that are linked to the property of the model, that will be
-     * imported
+     * @param source An array containing the models that was created by this handler
+     * @param target An array which contains all models that are linked to the property of the main model.
      *
      * @returns An array which contains all ids of the linked models
      */
