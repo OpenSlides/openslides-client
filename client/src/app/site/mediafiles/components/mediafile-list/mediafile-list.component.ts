@@ -242,7 +242,7 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
     protected getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [this.activeMeetingIdService.meetingId],
+            ids: [this.activeMeetingId],
             follow: [
                 {
                     idField: `mediafile_ids`,

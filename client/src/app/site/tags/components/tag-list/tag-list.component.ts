@@ -80,7 +80,7 @@ export class TagListComponent extends BaseListViewComponent<ViewTag> implements 
     protected getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [this.activeMeetingIdService.meetingId],
+            ids: [this.activeMeetingId],
             follow: [
                 {
                     idField: `tag_ids`

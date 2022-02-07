@@ -57,7 +57,6 @@ export class MeetingSettingsListComponent
         private route: ActivatedRoute,
         private promptDialog: PromptService,
         private meetingSettingsDefinitionProvider: MeetingSettingsDefinitionProvider,
-        private activeMeetingService: ActiveMeetingService,
         private repo: MeetingRepositoryService
     ) {
         super(componentServiceCollector, translate);

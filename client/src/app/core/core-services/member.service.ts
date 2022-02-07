@@ -1,19 +1,18 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
-import { Meeting } from 'app/shared/models/event-management/meeting';
+import { ViewMeeting } from 'app/management/models/view-meeting';
 import { mediumDialogSettings } from 'app/shared/utils/dialog-settings';
 import { ViewUser } from 'app/site/users/models/view-user';
 
 import { MemberDeleteDialogComponent } from '../../management/components/member-delete-dialog/member-delete-dialog.component';
 import { Id } from '../definitions/key-types';
 import { UserRepositoryService } from '../repositories/users/user-repository.service';
-import { PromptService } from '../ui-services/prompt.service';
 import { ActiveMeetingService } from './active-meeting.service';
 import { SimplifiedModelRequest } from './model-request-builder.service';
 import { OperatorService } from './operator.service';
-import { CML, OML } from './organization-permission';
+import { OML } from './organization-permission';
 import { Presenter, PresenterService } from './presenter.service';
+import { GetUserRelatedModelsPresenterService } from './presenters/get-user-related-models-presenter.service';
 
 interface GetUsersPresenterResult {
     users: Id[];
@@ -23,48 +22,52 @@ interface GetActiveUsersPresenterResult {
     active_users_amount: number;
 }
 
-export interface GetUserRelatedModelsUser {
-    name?: string;
-    meetings?: {
-        id: Id;
-        is_active_in_organization_id: Id;
-        name: string;
-        candidate_ids: Id[];
-        speaker_ids: Id[];
-        submitter_ids: Id[];
-    }[];
-    committees?: GetUserRelatedModelsCommittee[];
-}
-
-export interface GetUserRelatedModelsCommittee {
-    id: Id;
-    name: string;
-    cml: CML;
-}
-
-export interface GetUserRelatedModelsPresenterResult {
-    [user_id: number]: GetUserRelatedModelsUser;
+interface MemberDeleteConfig {
+    toDelete: ViewUser[];
+    toRemove: ViewUser[];
+    meeting?: ViewMeeting;
 }
 
 @Injectable({
     providedIn: `root`
 })
 export class MemberService {
+    private get activeMeeting(): ViewMeeting {
+        return this.activeMeetingService.meeting;
+    }
+
     public constructor(
         private userRepo: UserRepositoryService,
         private operator: OperatorService,
         private presenter: PresenterService,
+        private userRelatedModelsPresenter: GetUserRelatedModelsPresenterService,
         private dialog: MatDialog,
-        private activeMeeting: ActiveMeetingService,
-        private translate: TranslateService,
-        private prompt: PromptService
+        private activeMeetingService: ActiveMeetingService
     ) {}
 
-    public async delete(users: ViewUser[], meeting: Meeting = this.activeMeeting.meeting): Promise<boolean> {
-        try {
-            return await this.doDeleteByPresenter(users);
-        } catch (e) {
-            return await this.doRemoveFromMeeting(users, meeting);
+    public async doDeleteOrRemove({
+        toDelete,
+        toRemove,
+        meeting = this.activeMeeting
+    }: MemberDeleteConfig): Promise<boolean> {
+        const payload = { user_ids: toDelete.map(user => user.id) };
+        const toDeleteData = await this.userRelatedModelsPresenter.call(payload);
+
+        for (const user of toDelete) {
+            toDeleteData[user.id].name = user.getFullName();
+        }
+
+        const data = { toDelete: toDeleteData, toRemove };
+
+        const promptDialog = this.dialog.open(MemberDeleteDialogComponent, { ...mediumDialogSettings, data });
+        if (await promptDialog.afterClosed().toPromise()) {
+            const action = this.userRepo
+                .delete(...toDelete)
+                .concat(this.userRepo.bulkRemoveUserFromMeeting(toRemove, meeting));
+            await action.resolve();
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -119,46 +122,5 @@ export class MemberService {
             fieldset: `orgaList`,
             follow: [{ idField: `committee_ids` }, { idField: `is_present_in_meeting_ids` }]
         };
-    }
-
-    private async doDeleteByPresenter(users: ViewUser[]): Promise<boolean> {
-        const data = await this.presenter.call<GetUserRelatedModelsPresenterResult>(Presenter.GET_USER_RELATED_MODELS, {
-            user_ids: users.map(user => user.id)
-        });
-
-        for (const user of users) {
-            data[user.id].name = user.getFullName();
-        }
-
-        const promptDialog = this.dialog.open(MemberDeleteDialogComponent, { ...mediumDialogSettings, data });
-        if (await promptDialog.afterClosed().toPromise()) {
-            await this.doDelete(users);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private async doDelete(users: ViewUser[]): Promise<void> {
-        try {
-            await this.userRepo.delete(...users);
-        } catch (e) {
-            await this.userRepo.update({ is_active: false }, ...users);
-        }
-    }
-
-    private async doRemoveFromMeeting(users: ViewUser[], meeting: Meeting): Promise<boolean> {
-        const title = this.translate.instant(
-            `Are you sure you want to remove ${
-                users.length === 1 ? `this participant` : `these participants`
-            } from this meeting?`
-        );
-        const content = users.map(user => user.getShortName()).join(`, `);
-        if (await this.prompt.open(title, content)) {
-            await this.userRepo.bulkRemoveGroupsFromUsers(users, meeting.group_ids);
-            return true;
-        } else {
-            return false;
-        }
     }
 }

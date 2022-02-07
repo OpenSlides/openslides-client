@@ -94,7 +94,7 @@ export class AgendaItemRepositoryService extends BaseRepositoryWithActiveMeeting
      */
     public async autoNumbering(): Promise<void> {
         const payload: AgendaItemAction.NumberingPayload = {
-            meeting_id: this.activeMeetingIdService.meetingId
+            meeting_id: this.activeMeetingId
         };
         return await this.actions.sendRequest(AgendaItemAction.NUMBERING, payload);
     }
@@ -144,7 +144,7 @@ export class AgendaItemRepositoryService extends BaseRepositoryWithActiveMeeting
      */
     public async sortItems(data: TreeIdNode[]): Promise<void> {
         const payload: AgendaItemAction.SortPayload = {
-            meeting_id: this.activeMeetingIdService.meetingId,
+            meeting_id: this.activeMeetingId,
             tree: data
         };
         return await this.actions.sendRequest(AgendaItemAction.SORT, payload);

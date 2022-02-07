@@ -111,7 +111,7 @@ export class MotionCategoryRepositoryService
      */
     public async sortCategories(data: TreeIdNode[]): Promise<void> {
         const payload: MotionCategoryAction.SortPayload = {
-            meeting_id: this.activeMeetingIdService.meetingId,
+            meeting_id: this.activeMeetingId,
             tree: data
         };
         return this.actions.sendRequest(MotionCategoryAction.SORT, payload);
@@ -119,7 +119,7 @@ export class MotionCategoryRepositoryService
 
     private getCreatePayload(partialCategory: Partial<MotionCategory>): MotionCategoryAction.CreatePayload {
         return {
-            meeting_id: this.activeMeetingIdService.meetingId,
+            meeting_id: this.activeMeetingId,
             name: partialCategory.name,
             prefix: partialCategory.prefix,
             parent_id: partialCategory.parent_id
@@ -129,7 +129,7 @@ export class MotionCategoryRepositoryService
     public getRequestToGetAllModels(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [this.activeMeetingIdService.meetingId],
+            ids: [this.activeMeetingId],
             follow: [
                 {
                     idField: `motion_category_ids`

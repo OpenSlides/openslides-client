@@ -168,7 +168,7 @@ export class CallListComponent extends BaseSortTreeComponent<ViewMotion> impleme
     public getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [this.activeMeetingIdService.meetingId],
+            ids: [this.activeMeetingId],
             follow: [
                 {
                     idField: `motion_ids`,

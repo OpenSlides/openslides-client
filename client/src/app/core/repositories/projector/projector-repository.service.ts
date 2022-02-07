@@ -55,7 +55,7 @@ export class ProjectorRepositoryService extends BaseRepositoryWithActiveMeeting<
 
     public async create(partialProjector: Partial<Projector> & { name: string }): Promise<Identifiable> {
         const payload: ProjectorAction.CreatePayload = {
-            meeting_id: this.activeMeetingIdService.meetingId,
+            meeting_id: this.activeMeetingId,
             name: partialProjector.name,
             ...this.getPartialPayload(partialProjector)
         };

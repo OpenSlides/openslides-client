@@ -177,7 +177,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
     protected getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [this.activeMeetingIdService.meetingId],
+            ids: [this.activeMeetingId],
             follow: [
                 {
                     idField: `agenda_item_ids`,
@@ -393,7 +393,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
         const title = this.translate.instant(`Are you sure you want to clear all speakers of all lists?`);
         const content = this.translate.instant(`All lists of speakers will be cleared.`);
         if (await this.promptService.open(title, content)) {
-            this.meetingRepo.deleteAllSpeakersOfAllListsOfSpeakersInAMeeting(this.activeMeetingIdService.meetingId);
+            this.meetingRepo.deleteAllSpeakersOfAllListsOfSpeakersInAMeeting(this.activeMeetingId);
         }
     }
 

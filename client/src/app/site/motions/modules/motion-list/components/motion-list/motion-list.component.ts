@@ -301,7 +301,7 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
     protected getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [this.activeMeetingIdService.meetingId],
+            ids: [this.activeMeetingId],
             follow: [
                 { idField: `agenda_item_ids` },
                 {

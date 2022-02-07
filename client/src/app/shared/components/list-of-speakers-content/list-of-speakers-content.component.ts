@@ -148,7 +148,6 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
         componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService,
         private listOfSpeakersRepo: ListOfSpeakersRepositoryService,
-        private activeMeetingService: ActiveMeetingService,
         private speakerRepo: SpeakerRepositoryService,
         private operator: OperatorService,
         private promptService: PromptService,

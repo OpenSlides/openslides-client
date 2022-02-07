@@ -110,7 +110,7 @@ export class MotionBlockRepositoryService extends BaseIsAgendaItemAndListOfSpeak
 
     private getCreatePayload(partialModel: Partial<MotionBlockAction.CreatePayload>): MotionBlockAction.CreatePayload {
         return {
-            meeting_id: this.activeMeetingIdService.meetingId,
+            meeting_id: this.activeMeetingId,
             title: partialModel.title,
             internal: partialModel.internal,
             ...createAgendaItem(partialModel)

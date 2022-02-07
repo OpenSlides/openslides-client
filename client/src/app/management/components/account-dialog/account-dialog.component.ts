@@ -157,6 +157,6 @@ export class AccountDialogComponent extends BaseModelContextComponent implements
     }
 
     private async updateIsUserInScope(): Promise<void> {
-        this._isUserInScope = await this.userService.isUserInScope(this.operator.operatorId);
+        this._isUserInScope = await this.userService.isUserInSameScope(this.operator.operatorId);
     }
 }
