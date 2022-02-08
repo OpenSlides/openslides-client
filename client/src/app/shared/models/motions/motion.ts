@@ -74,7 +74,7 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
     }
 
     public amendment_paragraph(paragraphNumber: number): string | null {
-        return this[`amendment_paragraph_$${paragraphNumber}`] || null;
+        return this[`amendment_paragraph_$${paragraphNumber}`] ?? null;
     }
 }
 export interface Motion

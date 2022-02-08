@@ -229,10 +229,7 @@ export class AmendmentCreateWizardComponent extends BaseModelContextComponent im
         this.contentForm.value.selectedParagraphs.forEach(para => {
             this.contentForm.removeControl(`text_` + para.paragraphNo);
         });
-        this.contentForm.addControl(
-            `text_` + paragraph.paragraphNo,
-            new FormControl(paragraph.html, Validators.required)
-        );
+        this.contentForm.addControl(`text_` + paragraph.paragraphNo, new FormControl(paragraph.html));
         this.contentForm.patchValue({
             selectedParagraphs: [paragraph]
         });
@@ -260,10 +257,7 @@ export class AmendmentCreateWizardComponent extends BaseModelContextComponent im
                 (para1: ParagraphToChoose, para2: ParagraphToChoose): number => para1.paragraphNo - para2.paragraphNo
             );
 
-            this.contentForm.addControl(
-                `text_` + paragraph.paragraphNo,
-                new FormControl(paragraph.html, Validators.required)
-            );
+            this.contentForm.addControl(`text_` + paragraph.paragraphNo, new FormControl(paragraph.html));
             this.contentForm.patchValue({
                 selectedParagraphs: newParagraphs
             });
