@@ -73,9 +73,9 @@
         <div class="groupsCell">
             <div *ngIf="getUserGroups(user)?.length">
                 <os-icon-container icon="people" noWrap="true">
-                    <span *ngFor="let group of getUserGroups(user); let last = last">
+                    <span *ngFor="let group of getUserGroups(user); let last = last" class="remove-spaces-group">
                         {{ group.getTitle() | translate }}
-                        <span *ngIf="!last">,</span>
+                        <span *ngIf="!last">,&nbsp;</span>
                     </span>
                 </os-icon-container>
             </div>
