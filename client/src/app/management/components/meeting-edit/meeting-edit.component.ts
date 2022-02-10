@@ -189,7 +189,7 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
     }
 
     private loadMeeting(): void {
-        this.requestModels(
+        this.subscribe(
             {
                 viewModelCtor: ViewMeeting,
                 ids: [this.meetingId],
@@ -219,7 +219,7 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
     }
 
     private loadCommittee(): void {
-        this.requestModels(
+        this.subscribe(
             {
                 viewModelCtor: ViewCommittee,
                 ids: [this.committeeId],
@@ -240,7 +240,7 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
 
     private async loadUsers(): Promise<void> {
         const simplifiedRequest = await this.memberService.getAllOrgaUsersModelRequest();
-        this.requestModels(simplifiedRequest);
+        this.subscribe(simplifiedRequest);
     }
 
     private createForm(): void {

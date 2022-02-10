@@ -77,7 +77,7 @@ export class MemberPasswordComponent extends BaseModelContextComponent implement
     }
 
     private loadUser(): void {
-        this.requestModels({
+        this.subscribe({
             viewModelCtor: ViewUser,
             ids: [this.userId]
         });

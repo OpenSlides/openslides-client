@@ -121,7 +121,7 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
             projectorId$
                 .pipe(
                     mergeMap(projectorId =>
-                        this.requestModels({
+                        this.subscribe({
                             viewModelCtor: ViewProjector,
                             ids: [projectorId],
                             follow: [
@@ -150,7 +150,7 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
             })
         );
 
-        this.requestModels(
+        this.subscribe(
             {
                 viewModelCtor: ViewMeeting,
                 ids: [this.activeMeetingId],

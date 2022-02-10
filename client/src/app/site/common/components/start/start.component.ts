@@ -79,7 +79,7 @@ export class StartComponent extends BaseModelContextComponent implements OnInit 
     }
 
     private requestUpdates(): void {
-        this.requestModels({
+        this.subscribe({
             viewModelCtor: ViewMeeting,
             ids: [this.activeMeetingService.meetingId],
             fieldset: `startPage`

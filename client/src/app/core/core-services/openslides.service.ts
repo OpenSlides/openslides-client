@@ -41,6 +41,6 @@ export class OpenSlidesService {
             this.osRouter.navigateToLogin();
         }
 
-        this.lifecycleService.bootup();
+        this.lifecycleService.reboot();
     }
 }

@@ -66,11 +66,6 @@ export class FullscreenProjectorComponent extends BaseModelContextComponent impl
 
     /**
      * Constructor. Updates the projector dimensions on a resize.
-     *
-     * @param auth
-     * @param route
-     * @param operator
-     * @param repo
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -147,7 +142,7 @@ export class FullscreenProjectorComponent extends BaseModelContextComponent impl
     }
 
     private requestProjector(projectorId: Id): void {
-        this.requestModels({
+        this.subscribe({
             viewModelCtor: ViewProjector,
             ids: [projectorId],
             follow: [

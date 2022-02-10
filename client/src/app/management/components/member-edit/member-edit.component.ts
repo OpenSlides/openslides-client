@@ -147,7 +147,7 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
 
     private loadUserById(userId: number): void {
         if (userId) {
-            this.requestModels({
+            this.subscribe({
                 viewModelCtor: ViewUser,
                 ids: [userId],
                 follow: [`committee_ids`],

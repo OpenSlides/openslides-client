@@ -3,6 +3,7 @@ import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.se
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 
+import { ActiveMeetingService } from '../../../core/core-services/active-meeting.service';
 import { HttpService } from '../../../core/core-services/http.service';
 import { NotifyService } from '../../../core/core-services/notify.service';
 
@@ -16,8 +17,8 @@ export enum ApplauseType {
     bar = `applause-type-bar`
 }
 
-const applausePath = `/system/applause`; // TODO
-const applauseNotifyMessageName = `applause`; // TODO
+const APPLAUSE_SEND_PATH = `/system/icc/applause/send`;
+const APPLAUSE_RECEIVE_TOPIC = `applause`; // TODO
 
 @Injectable({
     providedIn: `root`
@@ -57,10 +58,15 @@ export class ApplauseService {
         );
     }
 
+    private get activeMeetingId(): number {
+        return this.activeMeetingService.meetingId;
+    }
+
     public constructor(
         settingService: MeetingSettingsService,
         private httpService: HttpService,
-        private notifyService: NotifyService
+        private notifyService: NotifyService,
+        private activeMeetingService: ActiveMeetingService
     ) {
         this.showApplauseObservable = settingService.get(`applause_enable`);
         this.applauseTypeObservable = settingService.get(`applause_type`);
@@ -80,7 +86,7 @@ export class ApplauseService {
         });
 
         this.notifyService
-            .getMessageObservable<Applause>(applauseNotifyMessageName)
+            .getMessageObservable<Applause>(APPLAUSE_RECEIVE_TOPIC)
             .pipe(
                 map(notify => notify.message as Applause),
                 /**
@@ -96,7 +102,7 @@ export class ApplauseService {
     }
 
     public async sendApplause(): Promise<void> {
-        await this.httpService.post(applausePath);
+        await this.httpService.post(`${APPLAUSE_SEND_PATH}?meeting_id=${this.activeMeetingId}`);
 
         this.sendsApplauseSubject.next(true);
         setTimeout(() => {

@@ -103,7 +103,7 @@ export class CategoryMotionsSortComponent extends BaseModelContextComponent impl
         super.ngOnInit();
         const categoryId: number = +this.route.snapshot.params.id;
 
-        this.requestModels({
+        this.subscribe({
             viewModelCtor: ViewMotionCategory,
             ids: [categoryId],
             follow: [

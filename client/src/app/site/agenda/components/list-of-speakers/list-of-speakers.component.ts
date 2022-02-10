@@ -108,7 +108,7 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
                 : true;
 
         if (this.isCurrentListOfSpeakers) {
-            this.requestModels({
+            this.subscribe({
                 viewModelCtor: ViewMeeting,
                 ids: [this.activeMeetingId],
                 follow: [CURRENT_LIST_OF_SPEAKERS_FOLLOW],
@@ -148,7 +148,7 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
             }
         });
 
-        this.requestModels({
+        this.subscribe({
             viewModelCtor: ViewListOfSpeakers,
             ids: [id],
             follow: [

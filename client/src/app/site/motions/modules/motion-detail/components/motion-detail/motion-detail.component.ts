@@ -333,7 +333,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
     }
 
     private requestAdditionalModels(): void {
-        this.requestModels(
+        this.subscribe(
             {
                 viewModelCtor: ViewMeeting,
                 ids: [this.activeMeetingId],
@@ -403,7 +403,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
     }
 
     private requestDetailedMotion(motionId: Id): void {
-        this.requestModels(
+        this.subscribe(
             {
                 viewModelCtor: ViewMotion,
                 ids: [motionId],

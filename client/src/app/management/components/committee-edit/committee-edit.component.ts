@@ -224,7 +224,7 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
     }
 
     private loadCommittee(id?: number): void {
-        this.requestModels(
+        this.subscribe(
             {
                 viewModelCtor: ViewCommittee,
                 ids: [id],
@@ -269,7 +269,7 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
     }
 
     private requestUpdates(): void {
-        this.requestModels(
+        this.subscribe(
             {
                 viewModelCtor: ViewOrganization,
                 ids: [ORGANIZATION_ID],
@@ -287,7 +287,7 @@ export class CommitteeEditComponent extends BaseModelContextComponent implements
 
     private async fetchUsers(): Promise<void> {
         const userIds = await this.memberService.fetchAllOrgaUsers();
-        await this.requestModels(
+        await this.subscribe(
             {
                 viewModelCtor: ViewUser,
                 ids: userIds,

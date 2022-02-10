@@ -95,22 +95,25 @@
         </mat-form-field>
 
         <ng-container *osOmlPerms="OML.superadmin; and: !isCreateView">
-            <h3>Jitsi</h3>
-            <mat-form-field>
-                <mat-label>{{ 'Jitsi domain' | translate }}</mat-label>
-                <input matInput formControlName="jitsi_domain" />
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>{{ 'Jitsi room name' | translate }}</mat-label>
-                <input matInput formControlName="jitsi_room_name" />
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>{{ 'Jitsi room password' | translate }}</mat-label>
-                <input matInput formControlName="jitsi_room_password" />
-            </mat-form-field>
+            <div class="superadmin-place">
+                <h2>Superadmin-{{ 'Settings' | translate }}</h2>
+                <h3>Jitsi</h3>
+                <mat-form-field>
+                    <mat-label>{{ 'Jitsi domain' | translate }}</mat-label>
+                    <input matInput formControlName="jitsi_domain" />
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>{{ 'Jitsi room name' | translate }}</mat-label>
+                    <input matInput formControlName="jitsi_room_name" />
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>{{ 'Jitsi room password' | translate }}</mat-label>
+                    <input matInput formControlName="jitsi_room_password" />
+                </mat-form-field>
 
-            <h3>Chat</h3>
-            <mat-checkbox formControlName="enable_chat">{{'Enable chat' | translate}}</mat-checkbox>
+                <h3>Chat</h3>
+                <mat-checkbox formControlName="enable_chat">{{ 'Enable chat' | translate }}</mat-checkbox>
+            </div>
         </ng-container>
     </form>
 </mat-card>

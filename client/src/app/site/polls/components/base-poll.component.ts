@@ -123,7 +123,7 @@ export abstract class BasePollComponent<C extends BaseViewModel = any> extends B
     protected onAfterUpdatePoll(_poll: ViewPoll<C>): void {}
 
     protected loadPoll(id: Id): void {
-        this.requestModels(
+        this.subscribe(
             {
                 viewModelCtor: ViewPoll,
                 ids: [id],

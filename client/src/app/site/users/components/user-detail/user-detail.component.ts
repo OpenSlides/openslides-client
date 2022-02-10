@@ -181,7 +181,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
     private async loadUserById(): Promise<void> {
         const meetingId = this.activeMeetingIdService.meetingId;
         if (meetingId) {
-            await this.requestModels({
+            await this.subscribe({
                 viewModelCtor: ViewUser,
                 ids: [this._userId],
                 follow: [
@@ -271,7 +271,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
      */
     public async setEditMode(edit: boolean): Promise<void> {
         if (!this.hasSubscription(`edit subscription`)) {
-            await this.requestModels(
+            await this.subscribe(
                 {
                     viewModelCtor: ViewMeeting,
                     ids: [this.activeMeetingIdService.meetingId],

@@ -166,7 +166,7 @@ export class AmendmentCreateWizardComponent extends BaseModelContextComponent im
     }
 
     private requestUpdatesForMotion(id: Id): void {
-        this.requestModels(
+        this.subscribe(
             {
                 ids: [id],
                 viewModelCtor: ViewMotion,
