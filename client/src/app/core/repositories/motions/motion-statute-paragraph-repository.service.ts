@@ -60,7 +60,7 @@ export class MotionStatuteParagraphRepositoryService extends BaseRepositoryWithA
 
     public sort(statuteParagraphIds: Id[]): Promise<void> {
         const payload: MotionStatuteParagraphAction.SortPayload = {
-            meeting_id: this.activeMeetingIdService.meetingId,
+            meeting_id: this.activeMeetingId,
             statute_paragraph_ids: statuteParagraphIds
         };
         return this.sendActionToBackend(MotionStatuteParagraphAction.SORT, payload);
@@ -75,7 +75,7 @@ export class MotionStatuteParagraphRepositoryService extends BaseRepositoryWithA
         partialStatuteParagraph: Partial<MotionStatuteParagraph>
     ): MotionStatuteParagraphAction.CreatePayload {
         return {
-            meeting_id: this.activeMeetingIdService.meetingId,
+            meeting_id: this.activeMeetingId,
             text: partialStatuteParagraph.text,
             title: partialStatuteParagraph.title
         };

@@ -64,7 +64,7 @@ export class TagRepositoryService extends BaseRepositoryWithActiveMeeting<ViewTa
     private getCreatePayload(partialTag: Partial<Tag>): TagAction.CreatePayload {
         return {
             name: partialTag.name,
-            meeting_id: this.activeMeetingIdService.meetingId
+            meeting_id: this.activeMeetingId
         };
     }
 }

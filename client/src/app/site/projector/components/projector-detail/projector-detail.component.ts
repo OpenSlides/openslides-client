@@ -74,11 +74,7 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
     public editQueue = false;
 
     /**
-     * @param titleService
-     * @param translate
-     * @param matSnackBar
-     * @param projectorRepo
-     * @param route
+     * Constructor
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -94,7 +90,6 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
         private durationService: DurationService,
         private promptService: PromptService,
         private operator: OperatorService,
-        private activeMeetingService: ActiveMeetingService,
         private meetingRepo: MeetingRepositoryService
     ) {
         super(componentServiceCollector, translate);
@@ -121,7 +116,7 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
             projectorId$
                 .pipe(
                     mergeMap(projectorId =>
-                        this.requestModels({
+                        this.subscribe({
                             viewModelCtor: ViewProjector,
                             ids: [projectorId],
                             follow: [
@@ -150,7 +145,7 @@ export class ProjectorDetailComponent extends BaseModelContextComponent implemen
             })
         );
 
-        this.requestModels(
+        this.subscribe(
             {
                 viewModelCtor: ViewMeeting,
                 ids: [this.activeMeetingId],

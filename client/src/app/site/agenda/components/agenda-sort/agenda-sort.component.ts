@@ -68,7 +68,7 @@ export class AgendaSortComponent extends BaseSortTreeComponent<ViewAgendaItem> i
     public getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [this.activeMeetingIdService.meetingId], // TODO
+            ids: [this.activeMeetingId],
             follow: [
                 {
                     idField: `agenda_item_ids`,

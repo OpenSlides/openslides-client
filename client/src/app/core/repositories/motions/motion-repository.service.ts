@@ -115,7 +115,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
 
     private getCreatePayload(partialMotion: Partial<MotionAction.CreatePayload>): MotionAction.CreatePayload {
         return {
-            meeting_id: this.activeMeetingIdService.meetingId,
+            meeting_id: this.activeMeetingId,
             title: partialMotion.title,
             text: partialMotion.text,
             origin_id: partialMotion.origin_id,
@@ -402,7 +402,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      */
     public async sortMotions(data: TreeIdNode[]): Promise<void> {
         const payload: MotionAction.SortPayload = {
-            meeting_id: this.activeMeetingIdService.meetingId,
+            meeting_id: this.activeMeetingId,
             tree: this.createSortTree(data)
         };
         return await this.sendActionToBackend(MotionAction.SORT, payload);

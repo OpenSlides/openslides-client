@@ -105,7 +105,7 @@ export class GroupListComponent extends BaseModelContextComponent implements OnI
     public getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [this.activeMeetingIdService.meetingId],
+            ids: [this.activeMeetingId],
             follow: [
                 {
                     idField: `group_ids`

@@ -32,7 +32,7 @@ export class MemberImportListComponent extends BaseUserImportListComponent imple
     private async loadUsers(): Promise<void> {
         try {
             const request = await this.memberService.getAllOrgaUsersModelRequest();
-            this.requestModels(request, `load_users`);
+            this.subscribe(request, `load_users`);
         } catch (e) {
             console.log(`Error`, e);
         }

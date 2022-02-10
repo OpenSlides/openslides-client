@@ -254,7 +254,7 @@
             <span>{{ 'Add me' | translate }}</span>
         </button>
 
-        <button *ngIf="isOpInWaitlist()" mat-stroked-button [disabled]="closed" (click)="removeSpeaker()">
+        <button *ngIf="isOpInWaitlist()" mat-stroked-button (click)="removeSpeaker()">
             <mat-icon>remove</mat-icon>
             <span>{{ 'Remove me' | translate }}</span>
         </button>

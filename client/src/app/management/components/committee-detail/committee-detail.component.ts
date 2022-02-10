@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-import { MemberService } from 'app/core/core-services/member.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { CML, OML } from 'app/core/core-services/organization-permission';
@@ -12,7 +11,6 @@ import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewCommittee } from 'app/management/models/view-committee';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
-import { ViewUser } from 'app/site/users/models/view-user';
 import { Observable } from 'rxjs';
 
 const ForwardLabel = _(`Forward motions to`);
@@ -49,8 +47,7 @@ export class CommitteeDetailComponent extends BaseModelContextComponent implemen
         private router: Router,
         private operator: OperatorService,
         private committeeRepo: CommitteeRepositoryService,
-        private promptService: PromptService,
-        private memberService: MemberService
+        private promptService: PromptService
     ) {
         super(componentServiceCollector, translate);
         this.subscriptions.push(
@@ -91,7 +88,6 @@ export class CommitteeDetailComponent extends BaseModelContextComponent implemen
     }
 
     protected getModelRequest(): SimplifiedModelRequest {
-        this.fetchUsers();
         return {
             viewModelCtor: ViewCommittee,
             ids: [this.committeeId],
@@ -111,17 +107,5 @@ export class CommitteeDetailComponent extends BaseModelContextComponent implemen
             fieldset: `list`,
             additionalFields: [`default_meeting_id`]
         };
-    }
-
-    private async fetchUsers(): Promise<void> {
-        const userIds = await this.memberService.fetchAllOrgaUsers();
-        await this.requestModels(
-            {
-                viewModelCtor: ViewUser,
-                ids: userIds,
-                fieldset: `committeeEdit`
-            },
-            `loadUsers`
-        );
     }
 }

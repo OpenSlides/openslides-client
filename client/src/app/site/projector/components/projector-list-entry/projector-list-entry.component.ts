@@ -48,15 +48,6 @@ export class ProjectorListEntryComponent extends BaseComponent implements OnInit
 
     /**
      * Constructor. Initializes the update form.
-     *
-     * @param titleService
-     * @param translate
-     * @param matSnackBar
-     * @param repo
-     * @param formBuilder
-     * @param promptService
-     * @param clockSlideService
-     * @param operator OperatorService
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -65,7 +56,6 @@ export class ProjectorListEntryComponent extends BaseComponent implements OnInit
         private promptService: PromptService,
         private dialogService: MatDialog,
         private operator: OperatorService,
-        private activeMeetingService: ActiveMeetingService,
         private meetingRepo: MeetingRepositoryService
     ) {
         super(componentServiceCollector, translate);

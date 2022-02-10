@@ -177,7 +177,7 @@ export abstract class BasePollDetailComponentDirective<V extends ViewPoll<BaseVi
     protected abstract createVotesData(): BaseVoteData[];
 
     private loadComponentById(id: Id): void {
-        this.requestModels({
+        this.subscribe({
             viewModelCtor: ViewPoll,
             ids: [id],
             follow: [

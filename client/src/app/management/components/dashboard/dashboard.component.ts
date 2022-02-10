@@ -110,10 +110,10 @@ export class DashboardComponent extends BaseModelContextComponent implements OnI
             viewModelCtor: ViewOrganization,
             ids: [ORGANIZATION_ID],
             follow: [
-                { idField: `active_meeting_ids`, fieldset: `dashboard`, follow: [`user_ids`, `committee_id`] },
+                { idField: `active_meeting_ids`, fieldset: `dashboard`, follow: [`committee_id`] },
                 {
                     idField: `committee_ids`,
-                    follow: [{ idField: `meeting_ids`, fieldset: `dashboard`, follow: [`user_ids`] }]
+                    follow: [{ idField: `meeting_ids`, fieldset: `dashboard` }]
                 }
             ],
             fieldset: []

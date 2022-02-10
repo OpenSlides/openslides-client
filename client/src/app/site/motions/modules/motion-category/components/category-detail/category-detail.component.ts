@@ -102,7 +102,7 @@ export class CategoryDetailComponent extends BaseModelContextComponent implement
     public getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [this.activeMeetingIdService.meetingId],
+            ids: [this.activeMeetingId],
             follow: [
                 {
                     idField: `motion_category_ids`,

@@ -7,6 +7,11 @@
         width: 100%;
         flex: 1;
 
+        .section-title {
+            height: 30px;
+            margin: 0;
+        }
+
         div.cdk-virtual-scroll-content-wrapper {
             width: 100%;
         }
@@ -14,6 +19,10 @@
         .member {
             &:hover {
                 background-color: rgba(0, 0, 0, 0.025);
+            }
+
+            mat-icon {
+                min-width: 24px;
             }
         }
 

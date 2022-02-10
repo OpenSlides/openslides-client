@@ -147,7 +147,7 @@ export class HistoryListComponent extends BaseModelContextComponent implements O
     protected getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [this.activeMeetingIdService.meetingId],
+            ids: [this.activeMeetingId],
             follow: [
                 {
                     idField: `motion_ids`

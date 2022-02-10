@@ -76,7 +76,7 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
     }
 
     public async deleteSelected(members: ViewUser[] = this.selectedRows): Promise<void> {
-        await this.memberService.delete(members);
+        await this.memberService.doDeleteOrRemove({ toDelete: members, toRemove: [] });
     }
 
     public async assignMeetingToUsers(): Promise<void> {
@@ -99,7 +99,7 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
             if (selectedChoice.action === ADD) {
                 this.repo.bulkAddUserToMeeting(this.selectedRows, selectedMeeting);
             } else {
-                this.repo.bulkRemoveUserFromMeeting(this.selectedRows, selectedMeeting);
+                this.repo.bulkRemoveUserFromMeeting(this.selectedRows, selectedMeeting).resolve();
             }
         }
     }
@@ -120,7 +120,7 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
     }
 
     private async loadMeetings(): Promise<void> {
-        await this.requestModels(
+        await this.subscribe(
             {
                 viewModelCtor: ViewOrganization,
                 ids: [ORGANIZATION_ID],
@@ -148,7 +148,7 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
     private async loadUsers(start_index: number = 0, entries: number = 10000): Promise<void> {
         try {
             const request = await this.memberService.getAllOrgaUsersModelRequest(start_index, entries);
-            this.requestModels(request, `load_users`);
+            this.subscribe(request, `load_users`);
         } catch (e) {
             console.log(`Error:`, e);
         }

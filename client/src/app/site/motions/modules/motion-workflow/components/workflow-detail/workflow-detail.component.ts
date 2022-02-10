@@ -185,7 +185,7 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
 
         const workflowId = Number(this.route.snapshot.paramMap.get(`id`));
 
-        this.requestModels({
+        this.subscribe({
             viewModelCtor: ViewMotionWorkflow,
             ids: [workflowId],
             follow: [

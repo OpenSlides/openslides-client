@@ -105,7 +105,7 @@ export class ProjectorListComponent extends BaseModelContextComponent implements
     protected getModelRequest(): SimplifiedModelRequest | null {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [this.activeMeetingIdService.meetingId],
+            ids: [this.activeMeetingId],
             follow: [
                 {
                     idField: `projector_ids`,

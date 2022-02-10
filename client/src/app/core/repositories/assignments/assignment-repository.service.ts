@@ -48,7 +48,7 @@ export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeake
     public create(partialAssignment: Partial<Assignment>): Promise<Identifiable> {
         partialAssignment.phase = undefined;
         const payload: AssignmentAction.CreatePayload = {
-            meeting_id: this.activeMeetingIdService.meetingId,
+            meeting_id: this.activeMeetingId,
             ...this.getPartialPayload(partialAssignment),
             ...createAgendaItem(partialAssignment)
         };
@@ -74,13 +74,13 @@ export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeake
 
     private getPartialPayload(model: Partial<ViewAssignment>): any {
         return {
-            attachment_ids: model.attachment_ids,
+            attachment_ids: model.attachment_ids === null ? [] : model.attachment_ids,
             default_poll_description: model.default_poll_description,
             description: model.description,
             number_poll_candidates: model.number_poll_candidates,
             open_posts: model.open_posts,
             phase: model.phase,
-            tag_ids: model.tag_ids,
+            tag_ids: model.tag_ids === null ? [] : model.tag_ids,
             title: model.title
         };
     }

@@ -83,7 +83,7 @@ export class MotionWorkflowRepositoryService
     public create(partialModel: Partial<MotionWorkflow>): Promise<Identifiable> {
         const payload: MotionWorkflowAction.CreatePayload = {
             name: partialModel.name,
-            meeting_id: this.activeMeetingIdService.meetingId
+            meeting_id: this.activeMeetingId
         };
         return this.sendActionToBackend(MotionWorkflowAction.CREATE, payload);
     }
@@ -104,7 +104,7 @@ export class MotionWorkflowRepositoryService
     public getRequestToGetAllModels(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [this.activeMeetingIdService.meetingId],
+            ids: [this.activeMeetingId],
             follow: [
                 {
                     idField: `motion_workflow_ids`

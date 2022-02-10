@@ -114,7 +114,7 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
      * click on the delete user button
      */
     public async deleteUser(): Promise<void> {
-        if (await this.memberService.delete([this.user])) {
+        if (await this.memberService.doDeleteOrRemove({ toDelete: [this.user], toRemove: [] })) {
             this.router.navigate([`./accounts/`]);
         }
     }
@@ -147,7 +147,7 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
 
     private loadUserById(userId: number): void {
         if (userId) {
-            this.requestModels({
+            this.subscribe({
                 viewModelCtor: ViewUser,
                 ids: [userId],
                 follow: [`committee_ids`],

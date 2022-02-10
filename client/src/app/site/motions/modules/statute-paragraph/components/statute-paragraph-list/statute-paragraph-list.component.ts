@@ -85,7 +85,7 @@ export class StatuteParagraphListComponent extends BaseModelContextComponent imp
     protected getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [this.activeMeetingIdService.meetingId], // TODO
+            ids: [this.activeMeetingId],
             follow: [`motion_statute_paragraph_ids`],
             fieldset: []
         };

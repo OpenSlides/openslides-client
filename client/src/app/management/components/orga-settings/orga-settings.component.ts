@@ -38,7 +38,7 @@ export class OrgaSettingsComponent extends BaseModelContextComponent implements 
         super.setTitle(this.pageTitle);
         this.createForm();
 
-        this.requestModels({
+        this.subscribe({
             viewModelCtor: ViewOrganization,
             ids: [1],
             fieldset: `settings`

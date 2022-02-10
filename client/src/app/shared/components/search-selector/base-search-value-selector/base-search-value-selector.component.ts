@@ -77,7 +77,7 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormFieldCont
      * Useful to change the output of a form-control.
      */
     @Input()
-    public transformPropagateFn?: (value: Selectable) => Selectable;
+    public transformPropagateFn: (value: Selectable) => Selectable = value => value;
 
     /**
      * Function to determine depending on a specific selectable item whether the item should be disabled.
@@ -257,8 +257,8 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormFieldCont
     protected onAfterFirstUpdate(): void | Promise<void> {}
 
     protected push(value: Selectable): void {
-        const nextValue = this.transformPropagateFn ? this.transformPropagateFn(value) : value;
-        super.push(nextValue);
+        const nextValue = this.transformPropagateFn(value);
+        setTimeout(() => super.push(nextValue));
     }
 
     private triggerUpdate(): void {
@@ -272,6 +272,6 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormFieldCont
     }
 
     private setNextValue(value: any): void {
-        this.contentForm.setValue(value);
+        setTimeout(() => this.contentForm.setValue(value));
     }
 }

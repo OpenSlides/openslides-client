@@ -106,7 +106,7 @@ export class MediafileRepositoryService
         const payload: MediafileAction.MovePayload = {
             ids: mediafiles.map(mediafile => mediafile.id),
             parent_id: directoryId,
-            meeting_id: this.activeMeetingIdService.meetingId
+            meeting_id: this.activeMeetingId
         };
         return this.sendActionToBackend(MediafileAction.MOVE, payload);
     }
@@ -123,7 +123,7 @@ export class MediafileRepositoryService
 
     public async uploadFile(partialMediafile: Partial<MediafileAction.CreateFilePayload>): Promise<Identifiable> {
         const payload: MediafileAction.CreateFilePayload = {
-            meeting_id: this.activeMeetingIdService.meetingId,
+            meeting_id: this.activeMeetingId,
             file: partialMediafile.file,
             filename: partialMediafile.filename,
             title: partialMediafile.title,
@@ -135,7 +135,7 @@ export class MediafileRepositoryService
 
     public async createDirectory(partialMediafile: Partial<Mediafile>): Promise<Identifiable> {
         const payload: MediafileAction.CreateDirectoryPayload = {
-            meeting_id: this.activeMeetingIdService.meetingId,
+            meeting_id: this.activeMeetingId,
             title: partialMediafile.title,
             access_group_ids: partialMediafile.access_group_ids || [],
             parent_id: partialMediafile.parent_id

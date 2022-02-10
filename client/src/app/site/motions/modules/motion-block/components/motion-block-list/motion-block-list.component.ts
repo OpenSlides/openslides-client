@@ -128,7 +128,7 @@ export class MotionBlockListComponent extends BaseListViewComponent<ViewMotionBl
     protected getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [this.activeMeetingIdService.meetingId],
+            ids: [this.activeMeetingId],
             follow: [
                 {
                     idField: `motion_block_ids`,

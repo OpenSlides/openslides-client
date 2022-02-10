@@ -137,7 +137,7 @@ export class GroupRepositoryService
 
     private getCreatePayload(partialGroup: Partial<GroupAction.CreatePayload>): GroupAction.CreatePayload {
         return {
-            meeting_id: this.activeMeetingIdService.meetingId,
+            meeting_id: this.activeMeetingId,
             name: partialGroup.name,
             permissions: partialGroup.permissions
         };

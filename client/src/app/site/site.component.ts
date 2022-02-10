@@ -46,7 +46,7 @@ export class SiteComponent extends BaseComponent implements OnInit {
     }
 
     public get meeting(): ViewMeeting {
-        return this.activeMeeting.meeting;
+        return this.activeMeeting;
     }
 
     public get canSeeChatObservable(): Observable<boolean> {
@@ -59,19 +59,10 @@ export class SiteComponent extends BaseComponent implements OnInit {
 
     /**
      * Constructor
-     * @param route
-     * @param operator
-     * @param vp
-     * @param translate
-     * @param dialog
-     * @param mainMenuService
-     * @param historyService
-     * @param timeTravel
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService,
-        private activeMeeting: ActiveMeetingService,
         private router: Router,
         public vp: ViewportService,
         public dialog: MatDialog,

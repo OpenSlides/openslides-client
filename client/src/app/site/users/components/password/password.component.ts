@@ -59,7 +59,7 @@ export class PasswordComponent extends BaseModelContextComponent implements OnIn
         this.route.params.subscribe(params => {
             if (params.id) {
                 this.urlUserId = +params.id;
-                this.requestModels({
+                this.subscribe({
                     viewModelCtor: ViewUser,
                     ids: [this.urlUserId]
                 });

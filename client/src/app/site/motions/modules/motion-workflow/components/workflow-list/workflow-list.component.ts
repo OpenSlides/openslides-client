@@ -85,7 +85,7 @@ export class WorkflowListComponent extends BaseListViewComponent<ViewMotionWorkf
     protected getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [this.activeMeetingIdService.meetingId],
+            ids: [this.activeMeetingId],
             follow: [{ idField: `motion_workflow_ids` }]
         };
     }
@@ -120,7 +120,7 @@ export class WorkflowListComponent extends BaseListViewComponent<ViewMotionWorkf
     }
 
     public async exportWorkflows(): Promise<void> {
-        await this.getModelChanges(getAllWorkflowStates(this.activeMeetingId), `all_workflow_states`);
+        await this.instant(getAllWorkflowStates(this.activeMeetingId), `all_workflow_states`);
         this.workflowRepo.exportWorkflows(...this.selectedRows.map(entry => this.workflowRepo.getViewModel(entry.id)));
     }
 }

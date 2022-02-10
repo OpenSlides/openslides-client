@@ -226,7 +226,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
                         {
                             idField: {
                                 templateIdField: `group_$_ids`,
-                                templateValue: this.activeMeetingIdService.meetingId?.toString()
+                                templateValue: this.activeMeetingId?.toString()
                             }
                         },
                         {
@@ -238,7 +238,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
                         {
                             idField: {
                                 templateIdField: `vote_delegated_$_to_id`,
-                                templateValue: this.activeMeetingIdService.meetingId?.toString()
+                                templateValue: this.activeMeetingId?.toString()
                             }
                         }
                     ]
@@ -294,11 +294,11 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         if (this.isMultiSelect || !this.operator.hasPerms(Permission.userCanManage)) {
             return;
         }
-        this._isUserInScope = await this.userService.isUserInScope(user.id);
+        this._isUserInScope = await this.userService.isUserInSameScope(user.id);
         ev.stopPropagation();
         this.infoDialog = {
             name: user.username,
-            group_ids: user.group_ids(this.activeMeetingIdService.meetingId),
+            group_ids: user.group_ids(this.activeMeetingId),
             gender: user.gender,
             structure_level: user.structure_level(),
             number: user.number(),
@@ -316,6 +316,9 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
+                if (!result.group_ids?.length) {
+                    result.group_ids = [this.activeMeeting.default_group_id];
+                }
                 this.repo.update(result, user);
             }
         });

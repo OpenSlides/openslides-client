@@ -236,7 +236,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
         this.mediafilesObserver = this.mediafileRepo.getViewModelListBehaviorSubject();
 
         // Groups are needed, to select entitled groups.
-        this.requestModels(
+        this.subscribe(
             {
                 // Get all available groups in an active meeting.
                 viewModelCtor: ViewMeeting,
@@ -298,7 +298,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
             return;
         }
         this._assignmentId = assignmentId;
-        this.requestModels({
+        this.subscribe({
             viewModelCtor: ViewAssignment,
             ids: [assignmentId],
             follow: [
