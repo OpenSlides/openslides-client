@@ -22,9 +22,8 @@ export class ErrorService {
         } else {
             errorNotification = message;
         }
-        this.matSnackBar.open(getLongPreview(errorNotification, 1500),
-            this.translate.instant(`OK`), {
-                duration: 0
+        this.matSnackBar.open(getLongPreview(errorNotification, 1500), this.translate.instant(`OK`), {
+            duration: 0
         });
     };
 }
