@@ -4,20 +4,20 @@ import { stripHtmlTags } from './strip-html-tags';
  * Helper to get a preview string
  *
  * @param input
- * @returns returns the first and last 150 characters of a string; used within
- * tooltips for previews
+ * @param size Optional. The maximum amount of characters to display.
+ * @returns returns the first and last size/2 characters of a string
  */
-export function getLongPreview(input: string): string {
+export function getLongPreview(input: string, size: number = 300): string {
     if (!input || !input.length) {
         return ``;
     }
-    if (input.length < 300) {
+    if (input.length < size) {
         return stripHtmlTags(input);
     }
     return (
-        stripHtmlTags(input.substring(0, 147)) +
+        stripHtmlTags(input.substring(0, size / 2 - 3)) +
         ` [...] ` +
-        stripHtmlTags(input.substring(input.length - 150, input.length))
+        stripHtmlTags(input.substring(input.length - size / 2, input.length))
     );
 }
 

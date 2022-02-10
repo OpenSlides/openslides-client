@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
+import { getLongPreview } from 'app/shared/utils/previewStrings';
 
 @Injectable({
     providedIn: `root`
@@ -21,7 +22,7 @@ export class ErrorService {
         } else {
             errorNotification = message;
         }
-        this.matSnackBar.open(errorNotification, this.translate.instant(`OK`), {
+        this.matSnackBar.open(getLongPreview(errorNotification, 1500), this.translate.instant(`OK`), {
             duration: 0
         });
     };
