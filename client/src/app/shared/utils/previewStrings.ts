@@ -14,11 +14,7 @@ export function getLongPreview(input: string, size: number = 300): string {
     if (input.length < size) {
         return stripHtmlTags(input);
     }
-    return (
-        stripHtmlTags(input.substring(0, (size/ 2 - 3))) +
-        ` [...] ` +
-        stripHtmlTags(input.substring(input.length - size/2, input.length))
-    );
+    return `${stripHtmlTags(input.substring(0, (size/ 2 - 3)))} [...] ${stripHtmlTags(input.substring(input.length - size/2, input.length))}`;
 }
 
 /**
