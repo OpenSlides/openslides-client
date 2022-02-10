@@ -12,8 +12,8 @@
     </div>
 </os-head-bar>
 
-<mat-card class="os-card">
-    <form class="meeting-form" [formGroup]="meetingForm" (ngSubmit)="onSubmit()">
+<form class="meeting-form" [formGroup]="meetingForm" (ngSubmit)="onSubmit()">
+    <mat-card class="os-card">
         <mat-form-field>
             <mat-label>{{ 'Title' | translate }}</mat-label>
             <input matInput formControlName="name" required />
@@ -93,8 +93,11 @@
                 </ng-template>
             </os-search-repo-selector>
         </mat-form-field>
+    </mat-card>
 
-        <ng-container *osOmlPerms="OML.superadmin; and: !isCreateView">
+    <mat-card class="os-card" *osOmlPerms="OML.superadmin; and: !isCreateView">
+        <div class="superadmin-place">
+            <h2>Superadmin-{{ 'Settings' | translate }}</h2>
             <h3>Jitsi</h3>
             <mat-form-field>
                 <mat-label>{{ 'Jitsi domain' | translate }}</mat-label>
@@ -110,7 +113,7 @@
             </mat-form-field>
 
             <h3>Chat</h3>
-            <mat-checkbox formControlName="enable_chat">{{'Enable chat' | translate}}</mat-checkbox>
-        </ng-container>
-    </form>
-</mat-card>
+            <mat-checkbox formControlName="enable_chat">{{ 'Enable chat' | translate }}</mat-checkbox>
+        </div>
+    </mat-card>
+</form>

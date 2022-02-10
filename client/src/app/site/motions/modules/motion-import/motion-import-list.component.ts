@@ -39,7 +39,7 @@ export class MotionImportListComponent extends BaseImportListComponent<Motion> {
     }
 
     private load(): void {
-        this.requestModels({
+        this.subscribe({
             viewModelCtor: ViewMeeting,
             ids: [this.activeMeetingId],
             follow: [

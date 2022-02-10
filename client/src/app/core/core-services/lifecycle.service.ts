@@ -57,7 +57,7 @@ export class LifecycleService {
      */
     public shutdown(): void {
         this._isBooted = false;
-        this._booted = new Deferred();
+        this._booted.unresolve();
         console.debug(`Lifecycle: shutdown.`);
         this.openslidesShutdowned.next();
     }

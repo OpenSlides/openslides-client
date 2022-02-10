@@ -28,7 +28,7 @@ export abstract class BaseModelContextComponent extends BaseComponent implements
     public ngOnInit(): void {
         const simplifiedModelRequest = this.getModelRequest();
         if (simplifiedModelRequest) {
-            this.requestModels(simplifiedModelRequest);
+            this.subscribe(simplifiedModelRequest);
         }
     }
 
@@ -38,7 +38,7 @@ export abstract class BaseModelContextComponent extends BaseComponent implements
      * @param simplifiedModelRequest A `SimplifiedModelRequest` which goes to the AU-service
      * @param subscriptionName An optional name for the subscription
      */
-    protected async requestModels(
+    protected async subscribe(
         simplifiedModelRequest: SimplifiedModelRequest,
         subscriptionName: string = `default`
     ): Promise<void> {
@@ -61,7 +61,7 @@ export abstract class BaseModelContextComponent extends BaseComponent implements
      * @param modelRequest A `SimplifiedModelRequest` which goes to the AU-service
      * @param description An optional description for the request
      */
-    protected async getModelChanges(
+    protected async instant(
         modelRequest: SimplifiedModelRequest,
         description: string = `${this.constructor.name}`
     ): Promise<void> {

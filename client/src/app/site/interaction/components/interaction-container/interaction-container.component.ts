@@ -17,13 +17,9 @@ import { StreamService } from '../../services/stream.service';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InteractionContainerComponent extends BaseComponent implements OnInit {
-    public showBody = false;
-
-    private streamRunning = false;
-    private streamLoadedOnce = false;
-
-    public containerHeadTitle = ``;
-    public containerHeadSubtitle = ``;
+    public get isClosed(): boolean {
+        return !this._isOpen;
+    }
 
     public get isApplausEnabled(): Observable<boolean> {
         return this.applauseService.showApplauseObservable;
@@ -46,8 +42,16 @@ export class InteractionContainerComponent extends BaseComponent implements OnIn
     }
 
     public get isStreamInOtherTab(): boolean {
-        return !this.streamRunning && this.streamLoadedOnce;
+        return !this._streamRunning && this._streamLoadedOnce;
     }
+
+    public containerHeadTitle = ``;
+    public containerHeadSubtitle = ``;
+
+    private _isOpen = false;
+
+    private _streamRunning = false;
+    private _streamLoadedOnce = false;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -62,21 +66,21 @@ export class InteractionContainerComponent extends BaseComponent implements OnIn
         this.subscriptions.push(
             rtcService.showCallDialogObservable.subscribe(show => {
                 if (show) {
-                    this.showBody = false;
+                    this.closeBody();
                 }
                 this.cd.markForCheck();
             }),
             streamService.streamLoadedOnceObservable.subscribe(loadedOnce => {
-                this.streamLoadedOnce = loadedOnce;
+                this._streamLoadedOnce = loadedOnce;
                 if (!this.isStreamInOtherTab) {
-                    this.showBody = true;
+                    this.openBody();
                 }
                 this.cd.markForCheck();
             }),
             streamService.isStreamRunningObservable.subscribe(running => {
-                this.streamRunning = running || false;
+                this._streamRunning = running || false;
                 if (!this.isStreamInOtherTab) {
-                    this.showBody = true;
+                    this.openBody();
                 }
                 this.cd.markForCheck();
             })
@@ -100,8 +104,12 @@ export class InteractionContainerComponent extends BaseComponent implements OnIn
         this.cd.detectChanges();
     }
 
-    public showHideBody(): void {
-        this.showBody = !this.showBody;
+    public toggleBodyState(): void {
+        if (this.isClosed) {
+            this.openBody();
+        } else {
+            this.closeBody();
+        }
     }
 
     public updateTitle(title: string): void {
@@ -116,5 +124,13 @@ export class InteractionContainerComponent extends BaseComponent implements OnIn
             this.containerHeadSubtitle = title ?? ``;
             this.cd.markForCheck();
         }
+    }
+
+    private openBody(): void {
+        this._isOpen = true;
+    }
+
+    private closeBody(): void {
+        this._isOpen = false;
     }
 }

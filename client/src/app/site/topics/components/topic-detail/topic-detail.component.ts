@@ -159,7 +159,7 @@ export class TopicDetailComponent extends BaseModelContextComponent {
      * @param id the id of the required topic
      */
     public loadTopicById(id: number): void {
-        this.requestModels({
+        this.subscribe({
             viewModelCtor: ViewTopic,
             ids: [id],
             follow: [SPEAKER_BUTTON_FOLLOW, { idField: `attachment_ids` }, `tag_ids`]

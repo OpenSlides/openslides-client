@@ -74,7 +74,7 @@ export class PresenceDetailComponent extends BaseModelContextComponent implement
         try {
             this.errorMsg = null;
             const identifiable = (await this.userRepo.togglePresenceByNumber(number))[0];
-            await this.getModelChanges({
+            await this.instant({
                 ids: [identifiable.id],
                 viewModelCtor: ViewUser,
                 fieldset: `shortName`,

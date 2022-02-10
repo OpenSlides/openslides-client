@@ -115,7 +115,7 @@ export class CommitteeDetailComponent extends BaseModelContextComponent implemen
 
     private async fetchUsers(): Promise<void> {
         const userIds = await this.memberService.fetchAllOrgaUsers();
-        await this.requestModels(
+        await this.subscribe(
             {
                 viewModelCtor: ViewUser,
                 ids: userIds,

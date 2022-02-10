@@ -19,7 +19,7 @@ export class Deferred<T = void> extends Promise<T> {
      */
     private _resolve: (val?: T) => void;
 
-    private _wasResolved;
+    private _wasResolved: boolean;
     public get wasResolved(): boolean {
         return this._wasResolved;
     }
@@ -42,5 +42,9 @@ export class Deferred<T = void> extends Promise<T> {
     public resolve(val?: T): void {
         this._resolve(val);
         this._wasResolved = true;
+    }
+
+    public unresolve(): void {
+        this._wasResolved = false;
     }
 }

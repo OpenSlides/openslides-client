@@ -20,7 +20,7 @@
         </ng-container>
     </ng-container>
 
-    <div *ngIf="(showLiveConf | async) && (isConfStateStream | async)" @fadeIn>
+    <ng-container *ngIf="(showLiveConf | async) && (isConfStateStream | async)">
         <!-- Enter conference from stream -->
         <button
             (click)="enterConferenceRoom()"
@@ -41,7 +41,7 @@
         >
             <mat-icon color="primary">phone</mat-icon>
         </a>
-    </div>
+    </ng-container>
 
     <!-- Call support button -->
     <button

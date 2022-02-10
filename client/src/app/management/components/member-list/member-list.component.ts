@@ -120,7 +120,7 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
     }
 
     private async loadMeetings(): Promise<void> {
-        await this.requestModels(
+        await this.subscribe(
             {
                 viewModelCtor: ViewOrganization,
                 ids: [ORGANIZATION_ID],
@@ -148,7 +148,7 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
     private async loadUsers(start_index: number = 0, entries: number = 10000): Promise<void> {
         try {
             const request = await this.memberService.getAllOrgaUsersModelRequest(start_index, entries);
-            this.requestModels(request, `load_users`);
+            this.subscribe(request, `load_users`);
         } catch (e) {
             console.log(`Error:`, e);
         }

@@ -138,7 +138,7 @@ export class MediaUploadContentComponent extends BaseModelContextComponent imple
             })
         );
 
-        this.requestModels({
+        this.subscribe({
             viewModelCtor: ViewMeeting,
             ids: [this.activeMeetingId],
             follow: [{ idField: `mediafile_ids`, fieldset: `fileCreation` }],

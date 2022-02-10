@@ -159,7 +159,7 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
     }
 
     private async getCommitteeMeetings(): Promise<void> {
-        await this.getModelChanges(
+        await this.instant(
             getCommitteesModelRequest({
                 idField: `meeting_ids`,
                 additionalFields: [`name`, `start_time`, `end_time`],
