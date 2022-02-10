@@ -7,6 +7,8 @@ import { PromptService } from 'app/core/ui-services/prompt.service';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewUser } from 'app/site/users/models/view-user';
 
+import { UserService } from '../../../core/ui-services/user.service';
+
 @Component({
     selector: `os-user-multiselect-actions`,
     templateUrl: `./user-multiselect-actions.component.html`,
@@ -30,7 +32,8 @@ export class UserMultiselectActionsComponent extends BaseComponent implements On
         protected translate: TranslateService,
         private operator: OperatorService,
         private promptService: PromptService,
-        public repo: UserRepositoryService
+        public repo: UserRepositoryService,
+        private userService: UserService
     ) {
         super(componentServiceCollector, translate);
     }
@@ -85,9 +88,6 @@ export class UserMultiselectActionsComponent extends BaseComponent implements On
      * Bulk deletes users. Needs multiSelect mode to fill selectedRows
      */
     public async deleteSelected(): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to delete all selected participants?`);
-        if (await this.promptService.open(title)) {
-            this.repo.delete(...this.selectedUsers).catch(this.raiseError);
-        }
+        await this.userService.removeUsersFromMeeting(this.selectedUsers);
     }
 }

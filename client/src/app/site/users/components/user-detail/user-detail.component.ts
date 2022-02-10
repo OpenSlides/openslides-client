@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { SpecificStructuredField } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
+import { GetUserScopePresenterService } from 'app/core/core-services/presenters/get-user-scope-presenter.service';
 import { Id } from 'app/core/definitions/key-types';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
@@ -137,9 +138,9 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
         private groupRepo: GroupRepositoryService,
         private pollService: PollService,
         private meetingSettingsService: MeetingSettingsService,
-        private activeMeetingService: ActiveMeetingService,
         private userService: UserService,
         private memberService: MemberService,
+        private presenter: GetUserScopePresenterService,
         private cd: ChangeDetectorRef
     ) {
         super(componentServiceCollector, translate);
@@ -179,7 +180,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
     }
 
     private async loadUserById(): Promise<void> {
-        const meetingId = this.activeMeetingIdService.meetingId;
+        const meetingId = this.activeMeetingId;
         if (meetingId) {
             await this.subscribe({
                 viewModelCtor: ViewUser,
@@ -217,7 +218,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
                 }
             }),
             this.operator.operatorUpdatedEvent.subscribe(
-                async () => (this._isUserInScope = await this.userService.isUserInScope(this._userId))
+                async () => (this._isUserInScope = await this.userService.isUserInSameScope(this._userId))
             )
         );
     }
@@ -274,7 +275,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
             await this.subscribe(
                 {
                     viewModelCtor: ViewMeeting,
-                    ids: [this.activeMeetingIdService.meetingId],
+                    ids: [this.activeMeetingId],
                     follow: [`group_ids`, { idField: `user_ids`, fieldset: `shortName` }]
                 },
                 `edit subscription`
@@ -282,7 +283,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
         }
 
         if (!this.newUser && edit) {
-            this._isUserInScope = await this.userService.isUserInScope(this._userId);
+            this._isUserInScope = await this.userService.isUserInSameScope(this._userId);
         }
 
         this.isEditingSubject.next(edit);
@@ -297,7 +298,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
      * click on the delete user button
      */
     public async deleteUserButton(): Promise<void> {
-        if (await this.memberService.delete([this.user])) {
+        if (await this.memberService.doDeleteOrRemove({ toDelete: [this.user], toRemove: [] })) {
             this.goToAllUsers();
         }
     }

@@ -80,7 +80,7 @@ export class PollProgressComponent extends BaseModelContextComponent implements 
                             return users.filter(user => {
                                 const countable = user.isVoteCountable;
                                 const inVoteGroup = this.poll.entitled_group_ids.intersect(
-                                    user.group_ids(this.activeMeetingIdService.meetingId)
+                                    user.group_ids(this.activeMeetingId)
                                 ).length;
 
                                 return countable && inVoteGroup;

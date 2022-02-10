@@ -1,25 +1,33 @@
 import { Injectable } from '@angular/core';
-import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
+import { GetUserScopePresenterService } from 'app/core/core-services/presenters/get-user-scope-presenter.service';
+import { ViewUser } from 'app/site/users/models/view-user';
 
+import { ViewMeeting } from '../../management/models/view-meeting';
+import { ActiveMeetingService } from '../core-services/active-meeting.service';
+import { MemberService } from '../core-services/member.service';
 import { OperatorService } from '../core-services/operator.service';
 import { OML } from '../core-services/organization-permission';
 import { Permission } from '../core-services/permission';
-import { Presenter, PresenterService } from '../core-services/presenter.service';
 import { Id } from '../definitions/key-types';
+import { UserRepositoryService } from '../repositories/users/user-repository.service';
 
 /**
  * Form control names that are editable for all users even if they have no permissions to manage users.
  */
 export const PERSONAL_FORM_CONTROLS = [`username`, `email`, `about_me`];
 
-@Injectable({
-    providedIn: `root`
-})
+@Injectable({ providedIn: `root` })
 export class UserService {
+    private get activeMeeting(): ViewMeeting {
+        return this.activeMeetingService.meeting;
+    }
+
     public constructor(
         private operator: OperatorService,
-        private activeMeetingId: ActiveMeetingIdService,
-        private presenter: PresenterService
+        private userRepo: UserRepositoryService,
+        private activeMeetingService: ActiveMeetingService,
+        private presenter: GetUserScopePresenterService,
+        private memberService: MemberService
     ) {}
 
     /**
@@ -41,7 +49,7 @@ export class UserService {
         if ([`seePersonal`, `seeName`, `changePersonal`].includes(action) && isOwnPage === true) {
             return true;
         }
-        if (!this.activeMeetingId.meetingId) {
+        if (!this.activeMeeting) {
             return this.operator.hasOrganizationPermissions(OML.can_manage_users);
         }
         switch (action) {
@@ -67,12 +75,36 @@ export class UserService {
         }
     }
 
-    public async isUserInScope(...userIds: Id[]): Promise<boolean> {
-        try {
-            await this.presenter.call(Presenter.GET_USER_RELATED_MODELS, { user_ids: userIds });
-            return true;
-        } catch (e) {
-            return false;
-        }
+    public async removeUsersFromMeeting(users: ViewUser[], meeting: ViewMeeting = this.activeMeeting): Promise<void> {
+        const result = await this.presenter.call({ user_ids: users.map(user => user.id) });
+        const toDelete = Object.keys(result)
+            .map(key => parseInt(key, 10))
+            .filter(key => {
+                const fqid = `${result[key].collection}/${result[key].id}`;
+                return fqid === meeting.fqid;
+            });
+        const toDeleteUsers = toDelete.map(id => this.userRepo.getViewModel(id));
+        const toRemove = users.map(user => user.id).difference(toDelete);
+        const toRemoveUsers = toRemove.map(id => this.userRepo.getViewModel(id));
+
+        this.memberService.doDeleteOrRemove({ toDelete: toDeleteUsers, toRemove: toRemoveUsers, meeting });
+    }
+
+    /**
+     * Checks, if the passed users (given by their ids) are in the same scope as the operator and returns the result.
+     *
+     * @param userIds The id of every user to check
+     *
+     * @returns A boolean whether the given users are in the same scope as the operator
+     */
+    public async isUserInSameScope(...userIds: Id[]): Promise<boolean> {
+        const result = await this.presenter.call({ user_ids: [...userIds, this.operator.operatorId] });
+        const ownScope = result[this.operator.operatorId].collection;
+        return !Object.keys(result)
+            .map(userId => parseInt(userId, 10))
+            .some(userId => {
+                const toCompare = result[userId].collection;
+                return this.presenter.compareScope(ownScope, toCompare) === -1;
+            });
     }
 }

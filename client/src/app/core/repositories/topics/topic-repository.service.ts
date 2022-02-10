@@ -94,7 +94,7 @@ export class TopicRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCon
 
     private getCreatePayload(partialTopic: Partial<TopicAction.CreatePayload>): TopicAction.CreatePayload {
         return {
-            meeting_id: this.activeMeetingIdService.meetingId,
+            meeting_id: this.activeMeetingId,
             title: partialTopic.title,
             text: partialTopic.text,
             tag_ids: partialTopic.tag_ids,

@@ -239,8 +239,13 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
     }
 
     private async loadUsers(): Promise<void> {
-        const simplifiedRequest = await this.memberService.getAllOrgaUsersModelRequest();
-        this.subscribe(simplifiedRequest);
+        const userIds = await this.memberService.fetchAllOrgaUsers();
+        this.subscribe({
+            viewModelCtor: ViewUser,
+            ids: userIds,
+            fieldset: `shortName`,
+            additionalFields: [`committee_$_management_level`]
+        });
     }
 
     private createForm(): void {

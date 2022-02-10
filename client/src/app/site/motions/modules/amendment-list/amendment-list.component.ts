@@ -128,7 +128,7 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
     protected getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [this.activeMeetingIdService.meetingId],
+            ids: [this.activeMeetingId],
             follow: [
                 {
                     idField: `motion_ids`,

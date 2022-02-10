@@ -10,8 +10,10 @@ import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.se
 import { BaseModel } from 'app/shared/models/base/base-model';
 import { Subscription } from 'rxjs';
 
+import { ActiveMeetingService } from '../../../core/core-services/active-meeting.service';
 import { ActiveMeetingIdService } from '../../../core/core-services/active-meeting-id.service';
 import { CML, OML } from '../../../core/core-services/organization-permission';
+import { ViewMeeting } from '../../../management/models/view-meeting';
 
 /**
  * Provides functionalities that will be used by most components
@@ -88,7 +90,7 @@ export abstract class BaseComponent implements OnDestroy {
         link_title: false,
         height: 320,
         plugins: `autolink charmap code fullscreen image imagetools
-            lists link paste searchreplace`,
+        lists link paste searchreplace`,
         menubar: false,
         contextmenu: false,
         toolbar: `styleselect | bold italic underline strikethrough |
@@ -102,7 +104,11 @@ export abstract class BaseComponent implements OnDestroy {
     };
 
     public get activeMeetingId(): Id | null {
-        return this.componentServiceCollector.activeMeetingId.meetingId;
+        return this.activeMeetingIdService.meetingId;
+    }
+
+    protected get activeMeeting(): ViewMeeting | null {
+        return this.activeMeetingService.meeting;
     }
 
     protected get titleService(): Title {
@@ -122,7 +128,11 @@ export abstract class BaseComponent implements OnDestroy {
     }
 
     protected get activeMeetingIdService(): ActiveMeetingIdService {
-        return this.componentServiceCollector.activeMeetingId;
+        return this.componentServiceCollector.activeMeetingIdService;
+    }
+
+    protected get activeMeetingService(): ActiveMeetingService {
+        return this.componentServiceCollector.activeMeetingService;
     }
 
     public constructor(

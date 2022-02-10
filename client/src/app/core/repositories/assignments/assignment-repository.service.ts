@@ -48,7 +48,7 @@ export class AssignmentRepositoryService extends BaseIsAgendaItemAndListOfSpeake
     public create(partialAssignment: Partial<Assignment>): Promise<Identifiable> {
         partialAssignment.phase = undefined;
         const payload: AssignmentAction.CreatePayload = {
-            meeting_id: this.activeMeetingIdService.meetingId,
+            meeting_id: this.activeMeetingId,
             ...this.getPartialPayload(partialAssignment),
             ...createAgendaItem(partialAssignment)
         };

@@ -35,7 +35,7 @@ const HttpWarning = _(`Using OpenSlides over HTTP is not supported. Enable HTTPS
 })
 export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestroy {
     public get meetingObservable(): Observable<ViewMeeting | null> {
-        return this.activeMeeting.meetingObservable;
+        return this.activeMeetingService.meetingObservable;
     }
 
     public get organizationObservable(): Observable<ViewOrganization | null> {
@@ -105,7 +105,6 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
         private orgaService: OrganizationService,
         private orgaSettings: OrganizationSettingsService,
         private browserSupport: BrowserSupportService,
-        private activeMeeting: ActiveMeetingService,
         private spinnerService: SpinnerService
     ) {
         super(componentServiceCollector, translate);

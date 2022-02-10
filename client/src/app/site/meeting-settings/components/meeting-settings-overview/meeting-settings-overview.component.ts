@@ -26,8 +26,7 @@ export class MeetingSettingsOverviewComponent extends BaseComponent {
         protected translate: TranslateService,
         private promptDialog: PromptService,
         private meetingSettingsDefinitionProvider: MeetingSettingsDefinitionProvider,
-        private meetingRepo: MeetingRepositoryService,
-        private activeMeeting: ActiveMeetingService
+        private meetingRepo: MeetingRepositoryService
     ) {
         super(componentServiceCollector, translate);
 
@@ -43,7 +42,7 @@ export class MeetingSettingsOverviewComponent extends BaseComponent {
             `Changes of all settings group will be lost!`
         );
         if (await this.promptDialog.open(title)) {
-            await this.meetingRepo.update(this.getDefaultValues(), this.activeMeeting.meeting);
+            await this.meetingRepo.update(this.getDefaultValues(), this.activeMeeting);
         }
     }
 

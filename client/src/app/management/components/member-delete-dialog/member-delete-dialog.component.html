@@ -10,33 +10,25 @@
 <div mat-dialog-content>
     <div class="member-delete-dialog-content">
         <cdk-virtual-scroll-viewport class="member-list-block" [itemSize]="30">
-            <ng-container *cdkVirtualFor="let member of data | keyvalue">
-                <div
-                    class="member padding-left-8 pointer"
-                    [ngClass]="{
-                        'background-primary': selectedMember === member.value
-                    }"
-                    (click)="selectedMember = member.value"
-                >
-                    <div class="flex-vertical-center">
-                        <mat-icon *ngIf="!hasRelations(member.value)"></mat-icon>
-                        <mat-icon
-                            *ngIf="hasRelations(member.value)"
-                            color="warn"
-                            matTooltip="{{ 'This account has relations to meetings or committees' | translate }}"
-                        >
-                            warning
-                        </mat-icon>
-                        <p class="padding-left-8 padding-right-8 one-line">{{ member.value.name }}</p>
-                    </div>
-                    <mat-divider></mat-divider>
-                </div>
+            <ng-container *cdkVirtualFor="let member of members">
+                <ng-container *ngIf="isSectionTitle(member)">
+                    <p class="section-title flex-vertical-center">
+                        {{ member | translate }}
+                    </p>
+                </ng-container>
+                <ng-container
+                    *ngIf="!isSectionTitle(member)"
+                    [ngTemplateOutlet]="memberRowTemplate"
+                    [ngTemplateOutletContext]="{ member: member }"
+                ></ng-container>
             </ng-container>
         </cdk-virtual-scroll-viewport>
         <ng-container *ngIf="selectedMember">
             <mat-divider [vertical]="true"></mat-divider>
             <div class="member-detail-block">
-                <ng-container *ngTemplateOutlet="memberRelations; context: { member: selectedMember }"></ng-container>
+                <ng-container
+                    *ngTemplateOutlet="memberDetailTemplate; context: { member: selectedMember }"
+                ></ng-container>
             </div>
         </ng-container>
     </div>
@@ -47,32 +39,67 @@
     <button mat-button [matDialogClose]="false">{{ 'Cancel' | translate }}</button>
 </p>
 
-<ng-template #memberRelations let-member="member">
+<ng-template #memberRowTemplate let-member="member">
+    <div
+        class="member padding-left-8 pointer"
+        [ngClass]="{
+            'background-primary': selectedMember === member
+        }"
+        (click)="selectedMember = member"
+    >
+        <div class="flex-vertical-center">
+            <ng-container *ngIf="willBeRemoved(member)">
+                <mat-icon></mat-icon>
+            </ng-container>
+            <ng-container *ngIf="!willBeRemoved(member)">
+                <mat-icon *ngIf="!hasRelations(member)"></mat-icon>
+                <mat-icon
+                    *ngIf="hasRelations(member)"
+                    color="warn"
+                    matTooltip="{{ 'This account has relations to meetings or committees' | translate }}"
+                >
+                    warning
+                </mat-icon>
+            </ng-container>
+            <p class="padding-left-8 padding-right-8 one-line">{{ member.name }}</p>
+        </div>
+        <mat-divider></mat-divider>
+    </div>
+</ng-template>
+
+<ng-template #memberDetailTemplate let-member="member">
     <div class="member-name padding-left-25">{{ member.name }}</div>
-    <ng-container *ngIf="!hasRelations(member)">
+    <ng-container *ngIf="willBeRemoved(member)">
         <p class="padding-left-25">
-            {{
-                'This account is not linked as candidate, submitter or speaker in any meeting and is not manager of any committee'
-                    | translate
-            }}
+            {{ 'This account will only be removed from this meeting' | translate }}
         </p>
     </ng-container>
-    <ng-container *ngIf="hasRelations(member)">
-        <ul *ngFor="let meeting of member.meetings">
-            <p class="meeting-title">{{ meeting.name }}</p>
-            <li *ngIf="meeting.candidate_ids?.length">
-                {{ 'Is candidate' | translate }}
-            </li>
-            <li *ngIf="meeting.submitter_ids?.length">
-                {{ 'Is submitter' | translate }}
-            </li>
-            <li *ngIf="meeting.speaker_ids?.length">
-                {{ 'Is speaker' | translate }}
-            </li>
-        </ul>
-        <ul *ngFor="let committee of getManagedCommittees(member)">
-            <p class="committee-title">{{ committee.name }}</p>
-            <li>{{ 'Is manager' | translate }}</li>
-        </ul>
+    <ng-container *ngIf="!willBeRemoved(member)">
+        <ng-container *ngIf="!hasRelations(member)">
+            <p class="padding-left-25">
+                {{
+                    'This account is not linked as candidate, submitter or speaker in any meeting and is not manager of any committee'
+                        | translate
+                }}
+            </p>
+        </ng-container>
+        <ng-container *ngIf="hasRelations(member)">
+            <ul *ngFor="let meeting of member.meetings">
+                <p class="meeting-title">{{ meeting.name }}</p>
+                <li *ngIf="meeting.candidate_ids?.length">
+                    {{ 'Is candidate' | translate }}
+                </li>
+                <li *ngIf="meeting.submitter_ids?.length">
+                    {{ 'Is submitter' | translate }}
+                </li>
+                <li *ngIf="meeting.speaker_ids?.length">
+                    {{ 'Is speaker' | translate }}
+                </li>
+            </ul>
+            <ul *ngFor="let committee of getManagedCommittees(member)">
+                <p class="committee-title">{{ committee.name }}</p>
+                <li>{{ 'Is manager' | translate }}</li>
+            </ul>
+        </ng-container>
     </ng-container>
 </ng-template>

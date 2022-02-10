@@ -50,7 +50,7 @@ export class MotionCommentSectionSortComponent extends BaseModelContextComponent
     public getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
-            ids: [this.activeMeetingIdService.meetingId],
+            ids: [this.activeMeetingId],
             follow: [`motion_comment_section_ids`]
         };
     }
