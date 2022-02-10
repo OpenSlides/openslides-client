@@ -57,6 +57,7 @@
         "@tinymce/tinymce-angular": "^4.2.4",
         "@videojs/http-streaming": "^2.9.1",
         "acorn": "^8.0.1",
+        "broadcast-channel": "^4.10.0",
         "chart.js": "^2.9.3",
         "core-js": "^3.6.5",
         "css-element-queries": "^1.2.3",

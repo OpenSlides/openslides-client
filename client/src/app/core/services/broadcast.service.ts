@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BroadcastChannel } from 'broadcast-channel';
 import { Observable, Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
