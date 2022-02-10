@@ -2,16 +2,27 @@ name: CI
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build-and-test-dev-image:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: create docker dev image
-      run: make build-dev
+      - name: create docker dev image
+        run: make build-dev
 
-    - name: run tests in docker
-      run: make run-tests
+      - name: Check linting
+        run: make run-check-linting
+
+      - name: Check prettifying
+        run: make run-check-prettifying
+
+  build-and-test-prod-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build prod image
+        run: make build-prod
