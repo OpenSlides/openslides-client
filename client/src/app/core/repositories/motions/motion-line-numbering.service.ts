@@ -206,7 +206,7 @@ export class MotionLineNumberingService {
                 return `<em style="color: red; font-weight: bold;">` + msg + `</em>`;
             }
 
-            if (amendment.amendment_paragraph(paraNo)) {
+            if (typeof amendment.amendment_paragraph(paraNo) === `string`) {
                 // Add line numbers to newText, relative to the baseParagraph, by creating a diff
                 // to the line numbered base version any applying it right away
                 const diff = this.diffService.diff(paragraph, amendment.amendment_paragraph(paraNo));

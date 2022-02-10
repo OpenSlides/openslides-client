@@ -73,6 +73,10 @@ export abstract class BaseMotionDetailChildComponent extends BaseComponent {
         );
     }
 
+    public get parent(): ViewMotion | null {
+        return this.motion?.lead_motion;
+    }
+
     /**
      * Whether to show all amendments in the text, not only the ones with the apropriate state
      */
