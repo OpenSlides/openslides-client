@@ -92,6 +92,8 @@ export class CommitteeDetailComponent extends BaseModelContextComponent implemen
             viewModelCtor: ViewCommittee,
             ids: [this.committeeId],
             follow: [
+                { idField: `user_ids`, fieldset: `orgaEdit` },
+                // { idField: { templateIdField: `user_$_management_level`, templateValue: this.committeeId.toString() } },
                 { idField: `forward_to_committee_ids` },
                 { idField: `receive_forwardings_from_committee_ids` },
                 {
