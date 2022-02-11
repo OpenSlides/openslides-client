@@ -71,6 +71,16 @@
 >
     <ng-template #editView let-form="form">
         <div [formGroup]="form">
+            <h2>{{ 'Meeting specific information' | translate }}</h2>
+            <!-- Present? -->
+            <div [formGroup]="form">
+                <mat-checkbox
+                    formControlName="is_present"
+                    matTooltip="{{ 'Designates whether this user is in the room.' | translate }}"
+                >
+                    <span>{{ 'present' | translate }}</span>
+                </mat-checkbox>
+            </div>
             <div>
                 <!-- Strucuture Level -->
                 <mat-form-field
@@ -166,19 +176,8 @@
         </div>
     </ng-template>
 
-    <ng-template #moreChecks let-form="form">
-        <!-- Present? -->
-        <span [formGroup]="form">
-            <mat-checkbox
-                formControlName="is_present"
-                matTooltip="{{ 'Designates whether this user is in the room.' | translate }}"
-            >
-                <span>{{ 'present' | translate }}</span>
-            </mat-checkbox>
-        </span>
-    </ng-template>
-
     <ng-template #showView>
+        <h2>{{ 'Meeting specific information' | translate }}</h2>
         <div *ngIf="isAllowed('seePersonal') && user.isLastEmailSend">
             <div>
                 <h4>{{ 'Last email sent' | translate }}</h4>
@@ -247,12 +246,13 @@
                 <span>{{ user.comment() }}</span>
             </div>
         </div>
-    </ng-template>
 
-    <ng-template #moreIcons>
-        <mat-icon *ngIf="user.isPresentInMeeting() && isAllowed('seeName')" matTooltip="{{ 'Is present' | translate }}">
-            check_box
-        </mat-icon>
+        <div *ngIf="isAllowed('seeName')" class="flex-vertical-center margin-top-12">
+            <span>{{ (user.isPresentInMeeting() ? 'Is present' : 'Is not present') | translate }}</span>
+            <mat-icon class="margin-4">
+                {{ user.isPresentInMeeting() ? 'check_box' : 'check_box_outline_blank' }}
+            </mat-icon>
+        </div>
     </ng-template>
 </os-user-detail-view>
 

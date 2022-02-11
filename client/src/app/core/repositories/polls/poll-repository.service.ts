@@ -356,7 +356,6 @@ export class PollRepositoryService extends BaseRepositoryWithActiveMeeting<ViewP
                 break;
             case PollState.Published:
                 return this.publishPoll(poll);
-                break;
         }
     }
 

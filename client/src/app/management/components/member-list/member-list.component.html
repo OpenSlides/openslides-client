@@ -34,10 +34,14 @@
     <!-- Name column -->
     <div *pblNgridCellDef="'short_name'; row as user; rowContext as rowContext" class="cell-slot fill">
         <a class="detail-link" [routerLink]="user.id" *ngIf="!isMultiSelect"></a>
-        <div class="nameCell">
+        <div class="nameCell flex-vertical-center">
             <div>
                 {{ user.short_name }}
             </div>
+            <ng-container *ngIf="user.pronoun">
+                &nbsp;
+                <div>({{ user.pronoun }})</div>
+            </ng-container>
         </div>
     </div>
     <!-- Info column -->

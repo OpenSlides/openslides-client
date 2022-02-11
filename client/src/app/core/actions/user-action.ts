@@ -19,6 +19,7 @@ export namespace UserAction {
     export const FORGET_PASSWORD_CONFIRM = `user.forget_password_confirm`;
 
     export interface BaseUserPayload {
+        pronoun: string;
         title: string;
         first_name: string;
         last_name: string;
@@ -97,6 +98,8 @@ export namespace UserAction {
             [meeting_id: number]: UnsafeHtml;
         };
         email: string;
+        pronoun: string;
+        gender: string;
     }
 
     export interface TogglePresenceByNumberPayload {

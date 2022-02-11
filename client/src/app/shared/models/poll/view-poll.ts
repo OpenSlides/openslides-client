@@ -5,7 +5,7 @@ import { DetailNavigable } from 'app/site/base/detail-navigable';
 import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
 import { ViewGroup } from 'app/site/users/models/view-group';
 import { ViewUser } from 'app/site/users/models/view-user';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { BaseModel } from '../base/base-model';
 import { Projectiondefault } from '../projector/projector';
@@ -31,8 +31,14 @@ export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
         return this._model;
     }
     public static COLLECTION = Poll.COLLECTION;
-    protected _collection = Poll.COLLECTION;
-    public hasVoted = false;
+
+    public set hasVoted(value: boolean) {
+        this._hasVotedSubject.next(value);
+    }
+
+    public get hasVoted(): boolean {
+        return this._hasVotedSubject.value;
+    }
 
     public get pollClassType(): PollClassType | undefined {
         return this.content_object?.collection as PollClassType;
@@ -107,6 +113,10 @@ export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
         return this.results.flatMap(option => option.votes).some(vote => vote.weight > 0);
     }
 
+    public get hasVotedObservable(): Observable<boolean> {
+        return this._hasVotedSubject.asObservable();
+    }
+
     public hasVotedForDelegations(userId: number): boolean {
         return this.user_has_voted_for_delegations?.includes(userId);
     }
@@ -134,6 +144,8 @@ export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
     private get results(): ViewOption[] {
         return (this.options || []).concat(this.global_option).filter(option => !!option);
     }
+
+    private readonly _hasVotedSubject = new BehaviorSubject(false);
 }
 
 interface IPollRelations<C extends BaseViewModel<BaseModel> = any> {
