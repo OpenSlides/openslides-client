@@ -232,11 +232,11 @@ msgid ""
 "Allow only current speakers and list of speakers managers to enter the live "
 "conference"
 msgstr ""
-"Nur aktuellen Redner/innen und der Redelistenverwaltung erlauben in eine "
+"Nur aktuellen Redner*innen und der Redelistenverwaltung erlauben in eine "
 "Livekonferenz beizutreten"
 
 msgid "Allow submitter edit"
-msgstr "Antragsteller/in darf bearbeiten"
+msgstr "Antragsteller*in darf bearbeiten"
 
 msgid "Allow support"
 msgstr "Unterstützung möglich"
@@ -343,9 +343,6 @@ msgstr ""
 
 msgid "Are you sure you want to delete all selected motions?"
 msgstr "Sollen alle ausgewählten Anträge wirklich gelöscht werden?"
-
-msgid "Are you sure you want to delete all selected participants?"
-msgstr "Sollen alle ausgewählten Teilnehmende wirklich gelöscht werden?"
 
 msgid ""
 "Are you sure you want to delete all speakers from this list of speakers?"
@@ -1315,7 +1312,7 @@ msgid ""
 "Enter number of the next shown speakers. Choose -1 to show all next "
 "speakers."
 msgstr ""
-"Geben Sie die Anzahl der nächsten anzuzeigenden Redner/innen ein. Wählen Sie"
+"Geben Sie die Anzahl der nächsten anzuzeigenden Redner*innen ein. Wählen Sie"
 " -1 um alle anzuzeigen."
 
 msgid "Enter participant number"
@@ -1421,7 +1418,7 @@ msgid "Finished"
 msgstr "Abgeschlossen"
 
 msgid "First speech"
-msgstr "Erstredner/in"
+msgstr "Erstredner*in"
 
 msgid "First state"
 msgstr "Erster Status"
@@ -1667,6 +1664,9 @@ msgstr "Ungültige Stimmen"
 msgid "Invite to conference room"
 msgstr "In den Konferenzraum einladen"
 
+msgid "Is a committee"
+msgstr "Ist ein Gremium"
+
 msgid "Is active"
 msgstr "Ist aktiv"
 
@@ -1740,7 +1740,7 @@ msgid "Last modified"
 msgstr "Zuletzt geändert"
 
 msgid "Last speakers"
-msgstr "Letzte Redner/innen"
+msgstr "Letzte Redner*innen"
 
 msgid "Leave"
 msgstr "Verlassen"
@@ -1839,6 +1839,9 @@ msgstr "Mediendatei"
 
 msgid "Meeting"
 msgstr "Veranstaltung"
+
+msgid "Meeting specific information"
+msgstr "Veranstaltungsspezifische Informationen"
 
 msgid "Meetings"
 msgstr "Veranstaltungen"
@@ -2020,7 +2023,7 @@ msgid "New motion block"
 msgstr "Neuer Antragsblock"
 
 msgid "New participant"
-msgstr "Neue/r Teilnehmer/in"
+msgstr "Neue*r Teilnehmer*in"
 
 msgid "New password"
 msgstr "Neues Passwort"
@@ -2168,7 +2171,7 @@ msgid "Number motions"
 msgstr "Anträge nummerieren"
 
 msgid "Number of (minimum) required supporters for a motion"
-msgstr "Mindestanzahl erforderlicher Unterstützer/innen für einen Antrag"
+msgstr "Mindestanzahl erforderlicher Unterstützer*innen für einen Antrag"
 
 msgid "Number of all delegates"
 msgstr "Anzahl aller Delegierten"
@@ -2186,12 +2189,12 @@ msgid "Number of candidates"
 msgstr "Kandidatenanzahl"
 
 msgid "Number of last speakers to be shown on the projector"
-msgstr "Anzahl der dargestellten letzten Redner/innen auf dem Projektor"
+msgstr "Anzahl der dargestellten letzten Redner*innen auf dem Projektor"
 
 msgid ""
 "Number of next speakers automatically connecting to the live conference"
 msgstr ""
-"Anzahl der nächsten Redner/innen, die automatisch mit der Livekonferenz "
+"Anzahl der nächsten Redner*innen, die automatisch mit der Livekonferenz "
 "verbunden werden"
 
 msgid "Number of persons to be elected"
@@ -2201,7 +2204,7 @@ msgid "Number of requests to speak"
 msgstr "Anzahl der Wortmeldungen"
 
 msgid "Number of the next speakers to be shown on the projector"
-msgstr "Anzahl der dargestellten nächsten Render/innen auf dem Projektor"
+msgstr "Anzahl der dargestellten nächsten Render*innen auf dem Projektor"
 
 msgid "Number set"
 msgstr "Nummer gesetzt"
@@ -2281,6 +2284,9 @@ msgstr "Optionen"
 msgid "Organization"
 msgstr "Organisation"
 
+msgid "Organization specific information"
+msgstr "Organisationsspezifische Informationen"
+
 msgid "Origin"
 msgstr "Herkunft"
 
@@ -2342,7 +2348,7 @@ msgid "Parent directory"
 msgstr "Elternverzeichnis"
 
 msgid "Participant"
-msgstr "Teilnehmer/in"
+msgstr "Teilnehmer*in"
 
 msgid "Participant not found"
 msgstr "Teilnehmende*r nicht gefunden"
@@ -2381,6 +2387,9 @@ msgstr "Berechtigungen"
 
 msgid "Permit"
 msgstr "Zulassen"
+
+msgid "Personal information"
+msgstr "Persönliche Informationen"
 
 msgid "Personal note"
 msgstr "Persönliche Notiz"
@@ -2498,6 +2507,9 @@ msgstr "Projektor nicht gefunden"
 msgid "Projectors"
 msgstr "Projektoren"
 
+msgid "Pronoun"
+msgstr "Pronomen"
+
 msgid "Public"
 msgstr "Öffentlich"
 
@@ -2517,7 +2529,7 @@ msgid "Queue"
 msgstr "Warteliste"
 
 msgid "Re-add last speaker"
-msgstr "Letzte/n Redner/in zurückholen"
+msgstr "Letzte*n Redner*in zurückholen"
 
 msgid "Reason"
 msgstr "Begründung"
@@ -2584,7 +2596,7 @@ msgstr ""
 "extra Gruppenberechtigung um den Livestream zu sehen."
 
 msgid "Remove all speakers"
-msgstr "Alle Redner/innen entfernen"
+msgstr "Alle Redner*innen entfernen"
 
 msgid "Remove candidate"
 msgstr "Kandidate/in entfernen"
@@ -2711,10 +2723,10 @@ msgid "Select file"
 msgstr "Datei auswählen"
 
 msgid "Select or search new speaker ..."
-msgstr "Redner/in auswählen oder suchen ..."
+msgstr "Redner*in auswählen oder suchen ..."
 
 msgid "Select or search new submitter ..."
-msgstr "Antragsteller/in auswählen oder suchen ..."
+msgstr "Antragsteller*in auswählen oder suchen ..."
 
 msgid "Select paragraphs"
 msgstr "Absätze auswählen"
@@ -2862,7 +2874,7 @@ msgid "Show header and footer"
 msgstr "Kopf- und Fußzeile anzeigen"
 
 msgid "Show hint »first speech« in the list of speakers management view"
-msgstr "Hinweis »Erstredner/in« in der Redelistenverwaltung anzeigen "
+msgstr "Hinweis »Erstredner*in« in der Redelistenverwaltung anzeigen "
 
 msgid "Show internal items when projecting subitems"
 msgstr "Interne Einträge anzeigen bei der Projektion von Untereinträgen"
@@ -2909,12 +2921,12 @@ msgstr "Ergänzungsfeld für Status anzeigen"
 
 msgid "Show submitters and recommendation/state in table of contents"
 msgstr ""
-"Antragsteller/in und Beschlussempfehlung/Beschluss im PDF-Inhaltsverzeichnis"
+"Antragsteller*in und Beschlussempfehlung/Beschluss im PDF-Inhaltsverzeichnis"
 " anzeigen"
 
 msgid "Show the amount of speakers in subtitle of list of speakers slide"
 msgstr ""
-"Anzahl der Redner/innen im Untertitel der Redelistenprojektion anzeigen"
+"Anzahl der Redner*innen im Untertitel der Redelistenprojektion anzeigen"
 
 msgid "Show the sequential number for a motion"
 msgstr "Laufende Nummer von Anträgen anzeigen"
@@ -2983,7 +2995,7 @@ msgid "Sort name of participants by"
 msgstr "Namen der Teilnehmenden sortieren nach"
 
 msgid "Speakers"
-msgstr "Redner/innen"
+msgstr "Redner*innen"
 
 msgid "Staff"
 msgstr "Mitarbeitende"
@@ -3052,10 +3064,10 @@ msgid "Submit vote now"
 msgstr "Stimme(n) jetzt senden"
 
 msgid "Submitters"
-msgstr "Antragsteller/in"
+msgstr "Antragsteller*in"
 
 msgid "Submitters changed"
-msgstr "Antragsteller/in geändert"
+msgstr "Antragsteller*in geändert"
 
 msgid "Sum of votes including general No/Abstain"
 msgstr "Summe der Stimmen einschließlich generelles Nein/Enthaltung"
@@ -3073,10 +3085,10 @@ msgid "Support"
 msgstr "Unterstützen"
 
 msgid "Supporters"
-msgstr "Unterstützer/innen"
+msgstr "Unterstützer*innen"
 
 msgid "Supporters changed"
-msgstr "Unterstützer/innen geändert"
+msgstr "Unterstützer*innen geändert"
 
 msgid "Surname"
 msgstr "Nachname"
@@ -3189,6 +3201,12 @@ msgstr ""
 msgid "Thereof point of orders"
 msgstr "davon Geschäftsordnungsanträge"
 
+msgid "These accounts will be deleted:"
+msgstr "Diese Accounts werden gelöscht:"
+
+msgid "These accounts will be removed from the meeting:"
+msgstr "Diese Accounts werden aus der Veranstaltung entfernt:"
+
 msgid "This account has relations to meetings or committees"
 msgstr "Dieser Account hat Verweise zu Veranstaltungen oder Gremien"
 
@@ -3198,6 +3216,9 @@ msgid ""
 msgstr ""
 "Dieser Account ist nicht als Kandidat*in, Antragsteller*in oder Redner*in in"
 " einer Veranstaltung verlinkt und auch kein Verwalter*in eines Gremiums."
+
+msgid "This account will only be removed from this meeting"
+msgstr "Dieser Account wird aus der Veranstaltung entfernt"
 
 msgid "This ballot contains deleted users."
 msgstr "Der Wahlgang enthält gelöschte Nutzer."
@@ -3326,7 +3347,7 @@ msgid "Undone"
 msgstr "unerledigt"
 
 msgid "Unique speakers"
-msgstr "Eindeutige Redner/innen"
+msgstr "Eindeutige Redner*innen"
 
 msgid "Unsupport"
 msgstr "Unterstützung zurückziehen"
@@ -3940,7 +3961,7 @@ msgid "successfully forwarded"
 msgstr "erfolgreich weitergeleitet"
 
 msgid "supporters"
-msgstr "Unterstützer/innen"
+msgstr "Unterstützer*innen"
 
 msgid "to"
 msgstr "bis"

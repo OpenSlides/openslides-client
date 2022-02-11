@@ -316,9 +316,6 @@ msgstr ""
 msgid "Are you sure you want to delete all selected motions?"
 msgstr ""
 
-msgid "Are you sure you want to delete all selected participants?"
-msgstr ""
-
 msgid "Are you sure you want to delete all speakers from this list of speakers?"
 msgstr ""
 
@@ -1586,6 +1583,9 @@ msgstr ""
 msgid "Invite to conference room"
 msgstr ""
 
+msgid "Is a committee"
+msgstr ""
+
 msgid "Is active"
 msgstr ""
 
@@ -1755,6 +1755,9 @@ msgid "Media file"
 msgstr ""
 
 msgid "Meeting"
+msgstr ""
+
+msgid "Meeting specific information"
 msgstr ""
 
 msgid "Meetings"
@@ -2188,6 +2191,9 @@ msgstr ""
 msgid "Organization"
 msgstr ""
 
+msgid "Organization specific information"
+msgstr ""
+
 msgid "Origin"
 msgstr ""
 
@@ -2284,6 +2290,9 @@ msgid "Permissions"
 msgstr ""
 
 msgid "Permit"
+msgstr ""
+
+msgid "Personal information"
 msgstr ""
 
 msgid "Personal note"
@@ -2398,6 +2407,9 @@ msgid "Projector not found"
 msgstr ""
 
 msgid "Projectors"
+msgstr ""
+
+msgid "Pronoun"
 msgstr ""
 
 msgid "Public"
@@ -3065,12 +3077,21 @@ msgstr ""
 msgid "Thereof point of orders"
 msgstr ""
 
+msgid "These accounts will be deleted:"
+msgstr ""
+
+msgid "These accounts will be removed from the meeting:"
+msgstr ""
+
 msgid "This account has relations to meetings or committees"
 msgstr ""
 
 msgid ""
 "This account is not linked as candidate, submitter or speaker in any "
 "meeting and is not manager of any committee"
+msgstr ""
+
+msgid "This account will only be removed from this meeting"
 msgstr ""
 
 msgid "This ballot contains deleted users."
