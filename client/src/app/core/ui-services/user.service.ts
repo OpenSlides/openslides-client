@@ -14,7 +14,7 @@ import { UserRepositoryService } from '../repositories/users/user-repository.ser
 /**
  * Form control names that are editable for all users even if they have no permissions to manage users.
  */
-export const PERSONAL_FORM_CONTROLS = [`username`, `email`, `about_me`];
+export const PERSONAL_FORM_CONTROLS = [`username`, `email`, `about_me`, `pronoun`];
 
 @Injectable({ providedIn: `root` })
 export class UserService {

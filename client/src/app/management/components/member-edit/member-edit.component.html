@@ -34,6 +34,7 @@
     (errorEvent)="formErrors = $event"
 >
     <ng-template #editView let-form="form">
+        <h2>{{ 'Organization specific information' | translate }}</h2>
         <div [formGroup]="form">
             <!-- Default Strucuture Level -->
             <mat-form-field
@@ -105,6 +106,7 @@
     </ng-template>
 
     <ng-template #showView let-user="user">
+        <h2>{{ 'Organization specific information' | translate }}</h2>
         <!-- Structure Level -->
         <div *ngIf="user.default_structure_level">
             <h4>{{ 'Default structure level' | translate }}</h4>

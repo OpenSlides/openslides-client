@@ -39,6 +39,10 @@
     .flex-#{$i} {
         flex: $i;
     }
+
+    .width-#{$i}p {
+        width: calc(#{$i}% + 0px);
+    }
 }
 
 .align-right {

@@ -1,4 +1,4 @@
-import { Component, ContentChild, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
+import { Component, ContentChild, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { OperatorService } from 'app/core/core-services/operator.service';
@@ -26,18 +26,6 @@ export class UserDetailViewComponent extends BaseComponent {
      */
     @ContentChild(`showView`, { read: TemplateRef, static: true })
     public showView: TemplateRef<any>;
-
-    /**
-     * Reference to the edit template for checks.
-     */
-    @ContentChild(`moreChecks`, { read: TemplateRef, static: true })
-    public moreChecks: TemplateRef<any>;
-
-    /**
-     * Reference to the show template for icons.
-     */
-    @ContentChild(`moreIcons`, { read: TemplateRef, static: true })
-    public moreIcons: TemplateRef<any>;
 
     @Input()
     public set user(user: ViewUser) {
@@ -239,6 +227,7 @@ export class UserDetailViewComponent extends BaseComponent {
         this.personalInfoForm = this.fb.group(
             {
                 username: [``, this.isNewUser ? [] : [Validators.required]],
+                pronoun: [``],
                 title: [``],
                 first_name: [``],
                 last_name: [``],

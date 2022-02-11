@@ -52,6 +52,7 @@ interface NameInformation {
     last_name?: string;
 }
 interface ShortNameInformation extends NameInformation {
+    pronoun?: string;
     title?: string;
 }
 
@@ -104,6 +105,7 @@ export class UserRepositoryService
             `title`,
             `first_name`,
             `last_name`,
+            `pronoun`,
             `username` /* Required! To getShortName */
         ];
         const singleVotesFields = shortNameFields.concat([
@@ -199,7 +201,9 @@ export class UserRepositoryService
             about_me_$: {
                 [this.activeMeetingId]: update.about_me
             },
-            username: update.username
+            username: update.username,
+            pronoun: update.pronoun,
+            gender: update.gender
         };
         return this.sendActionToBackend(UserAction.UPDATE_SELF, payload);
     }
@@ -212,6 +216,7 @@ export class UserRepositoryService
 
     private getBaseUserPayload(partialUser: any): Partial<UserAction.BaseUserPayload> {
         let partialPayload: Partial<UserAction.BaseUserPayload> = {
+            pronoun: partialUser.pronoun,
             title: partialUser.title,
             first_name: partialUser.first_name,
             last_name: partialUser.last_name,
@@ -282,7 +287,11 @@ export class UserRepositoryService
         let fullName = this.getShortName(user);
         const additions: string[] = [];
 
-        // addition: add number and structure level
+        // addition: add pronoun, structure level and number
+        if (user.pronoun) {
+            additions.push(user.pronoun);
+        }
+
         const structure_level = user.structure_level ? user.structure_level() : null;
         if (structure_level) {
             additions.push(structure_level);

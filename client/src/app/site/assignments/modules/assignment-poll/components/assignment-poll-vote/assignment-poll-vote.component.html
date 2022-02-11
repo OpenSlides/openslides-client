@@ -1,4 +1,4 @@
-<ng-container *ngIf="poll">
+<ng-container *ngIf="poll && isReady">
     <!-- own voting -->
     <ng-container [ngTemplateOutlet]="votingArea"></ng-container>
 
@@ -21,125 +21,127 @@
         <span>&nbsp;{{ delegation.getFullName() }}</span>
     </h4>
 
-    <ng-container *ngIf="canVote(delegation)">
-        <!-- Poll hint -->
-        <p *ngIf="pollHint">
-            <i>{{ pollHint }}</i>
-        </p>
+    <ng-container *ngIf="{ canVote: canVoteForObservable(delegation) | async } as voting">
+        <ng-container *ngIf="voting.canVote">
+            <!-- Poll hint -->
+            <p *ngIf="pollHint">
+                <i>{{ pollHint }}</i>
+            </p>
 
-        <!-- Leftover votes -->
-        <h4 *ngIf="(poll.isMethodY || poll.isMethodN) && poll.max_votes_amount > 1">
-            {{ 'Available votes' | translate }}:
-            <b> {{ getVotesAvailable(delegation) }}/{{ poll.max_votes_amount }} </b>
+            <!-- Leftover votes -->
+            <h4 *ngIf="(poll.isMethodY || poll.isMethodN) && poll.max_votes_amount > 1">
+                {{ 'Available votes' | translate }}:
+                <b>{{ getVotesAvailable(delegation) }}/{{ poll.max_votes_amount }}</b>
 
-            <span *ngIf="poll.min_votes_amount > 1">
-                ({{ 'At least' | translate }} <b>{{ poll.min_votes_amount }}</b
-                >)
-            </span>
-        </h4>
+                <span *ngIf="poll.min_votes_amount > 1">
+                    ({{ 'At least' | translate }}
+                    <b>{{ poll.min_votes_amount }}</b>
+                    )
+                </span>
+            </h4>
 
-        <!-- Options and Actions -->
-        <div *ngFor="let option of poll.options; let i = index">
-            <div *ngIf="poll.type !== PollType.Pseudoanonymous || !option.user_has_voted">
-                <div
-                    [ngClass]="{
-                        'yna-grid': poll.isMethodYNA,
-                        'yn-grid': poll.isMethodYN,
-                        'single-vote-grid': poll.isMethodY || poll.isMethodN
-                    }"
-                >
-                    <div class="vote-candidate-name">
-                        <span *ngIf="option.content_object">
-                            <span>{{ option.content_object.short_name }}</span>
-                            <div class="user-subtitle" *ngIf="option.content_object.getLevelAndNumber()">
-                                {{ option.content_object.getLevelAndNumber() }}
-                            </div>
-                        </span>
-                        <i *ngIf="!option.content_object">{{ unknownUserLabel | translate }}</i>
+            <!-- Options and Actions -->
+            <div *ngFor="let option of poll.options; let i = index">
+                <div *ngIf="poll.type !== PollType.Pseudoanonymous || !option.user_has_voted">
+                    <div
+                        [ngClass]="{
+                            'yna-grid': poll.isMethodYNA,
+                            'yn-grid': poll.isMethodYN,
+                            'single-vote-grid': poll.isMethodY || poll.isMethodN
+                        }"
+                    >
+                        <div class="vote-candidate-name">
+                            <span *ngIf="option.content_object">
+                                <span>{{ option.content_object.short_name }}</span>
+                                <div class="user-subtitle" *ngIf="option.content_object.getLevelAndNumber()">
+                                    {{ option.content_object.getLevelAndNumber() }}
+                                </div>
+                            </span>
+                            <i *ngIf="!option.content_object">{{ unknownUserLabel | translate }}</i>
+                        </div>
+
+                        <div *ngFor="let action of voteActions">
+                            <button
+                                class="vote-button"
+                                mat-raised-button
+                                (click)="saveSingleVote(option.id, action.vote, delegation)"
+                                [disabled]="isDeliveringVote(delegation)"
+                                [ngClass]="getActionButtonClass(action, option, delegation)"
+                            >
+                                <mat-icon>{{ action.icon }}</mat-icon>
+                            </button>
+                            <span *ngIf="poll.isMethodYN || poll.isMethodYNA" class="vote-label">
+                                {{ action.label | translate }}
+                            </span>
+                        </div>
                     </div>
+                    <mat-divider *ngIf="poll.options.length - 1 > i"></mat-divider>
+                </div>
+            </div>
 
-                    <div *ngFor="let action of voteActions">
+            <!-- global yes/no/abstain -->
+            <ng-container *ngIf="(poll.isMethodY || poll.isMethodN) && poll.hasGlobalOptionEnabled">
+                <mat-divider></mat-divider>
+                <div class="global-option-grid">
+                    <div *ngIf="poll.global_yes">
                         <button
                             class="vote-button"
                             mat-raised-button
-                            (click)="saveSingleVote(option.id, action.vote, delegation)"
+                            (click)="saveGlobalVote('Y', delegation)"
+                            [ngClass]="getGlobalYesClass(delegation)"
                             [disabled]="isDeliveringVote(delegation)"
-                            [ngClass]="getActionButtonClass(action, option, delegation)"
                         >
-                            <mat-icon> {{ action.icon }}</mat-icon>
+                            <mat-icon>thumb_up</mat-icon>
                         </button>
-                        <span *ngIf="poll.isMethodYN || poll.isMethodYNA" class="vote-label">
-                            {{ action.label | translate }}
+                        <span class="vote-label">
+                            {{ PollPropertyVerbose.global_yes | translate }}
+                        </span>
+                    </div>
+
+                    <div *ngIf="poll.global_no">
+                        <button
+                            class="vote-button"
+                            mat-raised-button
+                            (click)="saveGlobalVote('N', delegation)"
+                            [ngClass]="getGlobalNoClass(delegation)"
+                            [disabled]="isDeliveringVote(delegation)"
+                        >
+                            <mat-icon>thumb_down</mat-icon>
+                        </button>
+                        <span class="vote-label">
+                            {{ PollPropertyVerbose.global_no | translate }}
+                        </span>
+                    </div>
+
+                    <div *ngIf="poll.global_abstain">
+                        <button
+                            class="vote-button"
+                            mat-raised-button
+                            (click)="saveGlobalVote('A', delegation)"
+                            [ngClass]="getGlobalAbstainClass(delegation)"
+                            [disabled]="isDeliveringVote(delegation)"
+                        >
+                            <mat-icon>trip_origin</mat-icon>
+                        </button>
+                        <span class="vote-label">
+                            {{ PollPropertyVerbose.global_abstain | translate }}
                         </span>
                     </div>
                 </div>
-                <mat-divider *ngIf="poll.options.length - 1 > i"></mat-divider>
-            </div>
-        </div>
+            </ng-container>
 
-        <!-- global yes/no/abstain -->
-        <ng-container *ngIf="(poll.isMethodY || poll.isMethodN) && poll.hasGlobalOptionEnabled">
-            <mat-divider></mat-divider>
-            <div class="global-option-grid">
-                <div *ngIf="poll.global_yes">
-                    <button
-                        class="vote-button"
-                        mat-raised-button
-                        (click)="saveGlobalVote('Y', delegation)"
-                        [ngClass]="getGlobalYesClass(delegation)"
-                        [disabled]="isDeliveringVote(delegation)"
-                    >
-                        <mat-icon>thumb_up</mat-icon>
-                    </button>
-                    <span class="vote-label">
-                        {{ PollPropertyVerbose.global_yes | translate }}
-                    </span>
-                </div>
-
-                <div *ngIf="poll.global_no">
-                    <button
-                        class="vote-button"
-                        mat-raised-button
-                        (click)="saveGlobalVote('N', delegation)"
-                        [ngClass]="getGlobalNoClass(delegation)"
-                        [disabled]="isDeliveringVote(delegation)"
-                    >
-                        <mat-icon>thumb_down</mat-icon>
-                    </button>
-                    <span class="vote-label">
-                        {{ PollPropertyVerbose.global_no | translate }}
-                    </span>
-                </div>
-
-                <div *ngIf="poll.global_abstain">
-                    <button
-                        class="vote-button"
-                        mat-raised-button
-                        (click)="saveGlobalVote('A', delegation)"
-                        [ngClass]="getGlobalAbstainClass(delegation)"
-                        [disabled]="isDeliveringVote(delegation)"
-                    >
-                        <mat-icon>trip_origin</mat-icon>
-                    </button>
-                    <span class="vote-label">
-                        {{ PollPropertyVerbose.global_abstain | translate }}
-                    </span>
-                </div>
-            </div>
+            <!-- Submit Vote -->
+            <ng-container
+                [ngTemplateOutlet]="sendNow"
+                [ngTemplateOutletContext]="{ delegation: delegation }"
+            ></ng-container>
         </ng-container>
 
-        <!-- Submit Vote -->
         <ng-container
-            [ngTemplateOutlet]="sendNow"
+            *ngIf="!voting.canVote"
+            [ngTemplateOutlet]="cannotVote"
             [ngTemplateOutletContext]="{ delegation: delegation }"
         ></ng-container>
-    </ng-container>
-
-    <ng-container
-        *ngIf="!canVote(delegation)"
-        [ngTemplateOutlet]="cannotVote"
-        [ngTemplateOutletContext]="{ delegation: delegation }"
-    >
     </ng-container>
 </ng-template>
 
@@ -147,7 +149,7 @@
     <div class="centered-button-wrapper">
         <!-- Success -->
         <div *ngIf="hasAlreadyVoted(delegation) && !isDeliveringVote(delegation)">
-            <mat-icon class="vote-submitted"> check_circle </mat-icon>
+            <mat-icon class="vote-submitted">check_circle</mat-icon>
             <br />
             <span>{{ 'Voting successful.' | translate }}</span>
         </div>
@@ -174,7 +176,7 @@
             (click)="submitVote(delegation)"
             [disabled]="getVotesCount(delegation) < minVotes"
         >
-            <mat-icon> how_to_vote </mat-icon>
+            <mat-icon>how_to_vote</mat-icon>
             <span>
                 {{ 'Submit vote now' | translate }}
             </span>

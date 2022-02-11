@@ -25,13 +25,13 @@
                     {{ 'List of speakers' | translate }}
                 </a>
 
-                <ng-container *osPerms="permission.agendaCanManageListOfSpeakers; complement: true">
+                <ng-container *osPerms="permission.listOfSpeakersCanManage; complement: true">
                     <mat-icon *ngIf="isLosClosed" matTooltip="{{ 'The list of speakers is closed.' | translate }}">
                         lock
                     </mat-icon>
                 </ng-container>
 
-                <ng-container *osPerms="permission.agendaCanManageListOfSpeakers">
+                <ng-container *osPerms="permission.listOfSpeakersCanManage">
                     <button mat-icon-button (click)="toggleListOfSpeakersOpen()">
                         <mat-icon *ngIf="isLosClosed" matTooltip="{{ 'The list of speakers is closed.' | translate }}">
                             lock

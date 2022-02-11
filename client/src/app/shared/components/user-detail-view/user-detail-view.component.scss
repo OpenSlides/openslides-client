@@ -41,3 +41,9 @@ mat-checkbox {
 .full-width {
     width: 100%;
 }
+
+.personal-info-area {
+    display: flex;
+    justify-content: space-between;
+    flex-flow: row wrap;
+}

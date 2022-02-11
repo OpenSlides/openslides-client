@@ -12,20 +12,22 @@ export enum VotingError {
     USER_HAS_NO_PERMISSION,
     USER_IS_ANONYMOUS,
     USER_NOT_PRESENT,
-    USER_HAS_DELEGATED_RIGHT
+    USER_HAS_DELEGATED_RIGHT,
+    USER_HAS_VOTED
 }
 
 /**
  * TODO: It appears that the only message that makes sense for the user to see it the last one.
  */
 const VotingErrorVerbose = {
-    1: _(`You can not vote right now because the voting has not yet started.`),
-    2: _(`You can not vote because this is an analog voting.`),
-    3: _(`You do not have the permission to vote.`),
-    4: _(`You have to be logged in to be able to vote.`),
-    5: _(`You have to be present to vote.`),
-    6: _(`Your voting right was delegated to another person.`),
-    7: _(`You have already voted.`)
+    [VotingError.POLL_WRONG_STATE]: _(`You can not vote right now because the voting has not yet started.`),
+    [VotingError.POLL_WRONG_TYPE]: _(`You can not vote because this is an analog voting.`),
+    [VotingError.USER_HAS_NO_PERMISSION]: _(`You do not have the permission to vote.`),
+    [VotingError.POLL_WRONG_STATE]: _(`You have to be logged in to be able to vote.`),
+    [VotingError.USER_IS_ANONYMOUS]: _(`You have to be present to vote.`),
+    [VotingError.USER_NOT_PRESENT]: _(`Your voting right was delegated to another person.`),
+    [VotingError.USER_HAS_DELEGATED_RIGHT]: _(`You have already voted.`),
+    [VotingError.USER_HAS_VOTED]: _(`You have already voted.`)
 };
 
 @Injectable({
@@ -51,6 +53,9 @@ export class VotingService {
      * @returns null if no errors exist (= user can vote) or else a VotingError
      */
     public getVotePermissionError(poll: ViewPoll, user: ViewUser = this.currentUser): VotingError | void {
+        if (poll.hasVoted) {
+            return VotingError.USER_HAS_VOTED;
+        }
         if (this.operator.isAnonymous) {
             return VotingError.USER_IS_ANONYMOUS;
         }

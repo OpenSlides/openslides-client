@@ -1,4 +1,4 @@
-<ng-container *ngIf="poll">
+<ng-container *ngIf="poll && isReady">
     <!-- own voting -->
     <ng-container [ngTemplateOutlet]="votingArea"></ng-container>
 
@@ -21,43 +21,44 @@
         <span>&nbsp;{{ delegation.getFullName() }}</span>
     </h4>
 
-    <div *ngIf="canVote(delegation)" class="vote-button-grid">
-        <!-- Voting -->
-        <ng-container *ngFor="let id of poll.option_ids">
-            <div class="vote-button" *ngFor="let option of voteOptions">
-                <button
-                    mat-raised-button
-                    (click)="saveVote(option.vote, id, delegation)"
-                    [ngClass]="getActionButtonClass(option, delegation)"
-                    [disabled]="isDeliveringVote(delegation)"
-                >
-                    <mat-icon> {{ option.icon }}</mat-icon>
-                </button>
-                <span class="vote-label"> {{ option.label | translate }} </span>
-            </div>
-        </ng-container>
-    </div>
+    <ng-container *ngIf="{ canVote: canVoteForObservable(delegation) | async } as voting">
+        <div *ngIf="voting.canVote" class="vote-button-grid">
+            <!-- Voting -->
+            <ng-container *ngFor="let id of poll.option_ids">
+                <div class="vote-button" *ngFor="let option of voteOptions">
+                    <button
+                        mat-raised-button
+                        (click)="saveVote(option.vote, id, delegation)"
+                        [ngClass]="getActionButtonClass(option, delegation)"
+                        [disabled]="isDeliveringVote(delegation)"
+                    >
+                        <mat-icon>{{ option.icon }}</mat-icon>
+                    </button>
+                    <span class="vote-label">{{ option.label | translate }}</span>
+                </div>
+            </ng-container>
+        </div>
 
-    <ng-container
-        *ngIf="!canVote(delegation)"
-        [ngTemplateOutlet]="cannotVote"
-        [ngTemplateOutletContext]="{ delegation: delegation }"
-    >
+        <ng-container
+            *ngIf="!voting.canVote"
+            [ngTemplateOutlet]="cannotVote"
+            [ngTemplateOutletContext]="{ delegation: delegation }"
+        ></ng-container>
+
+        <!-- Delivering -->
+        <div *ngIf="isDeliveringVote(delegation)" class="submit-vote-indicator">
+            <mat-spinner class="small-spinner"></mat-spinner>
+            <br />
+            <span>{{ 'Delivering vote... Please wait!' | translate }}</span>
+        </div>
     </ng-container>
-
-    <!-- Delivering -->
-    <div *ngIf="isDeliveringVote(delegation)" class="submit-vote-indicator">
-        <mat-spinner class="small-spinner"></mat-spinner>
-        <br />
-        <span>{{ 'Delivering vote... Please wait!' | translate }}</span>
-    </div>
 </ng-template>
 
 <ng-template #cannotVote let-delegation="delegation">
     <!-- Success -->
     <div *ngIf="hasAlreadyVoted(delegation) && !isDeliveringVote(delegation)" class="user-has-voted">
         <div>
-            <mat-icon class="vote-submitted"> check_circle </mat-icon>
+            <mat-icon class="vote-submitted">check_circle</mat-icon>
             <br />
             <span>{{ 'Voting successful.' | translate }}</span>
         </div>

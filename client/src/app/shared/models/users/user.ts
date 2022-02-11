@@ -21,6 +21,7 @@ export class User extends BaseDecimalModel<User> {
     public id: Id;
     public username: string;
     public title: string;
+    public pronoun: string;
     public first_name: string;
     public last_name: string;
     public is_active: boolean;

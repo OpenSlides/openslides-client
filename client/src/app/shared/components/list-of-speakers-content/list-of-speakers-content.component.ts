@@ -175,7 +175,7 @@ export class ListOfSpeakersContentComponent extends BaseModelContextComponent im
             // ovserve changes to the add-speaker form
             this.addSpeakerForm.valueChanges.subscribe(async formResult => {
                 // resetting a form triggers a form.next(null) - check if user_id
-                if (formResult && formResult.user_id) {
+                if (formResult?.user_id && typeof formResult?.user_id === `number`) {
                     await this.addUserAsNewSpeaker(formResult.user_id);
                     this.addSpeakerForm.reset();
                 }
