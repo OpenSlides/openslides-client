@@ -141,7 +141,8 @@ export const PollPropertyVerbose = {
     global_no: _(`General rejection`),
     global_abstain: _(`General abstain`),
     max_votes_amount: _(`Maximum amount of votes`),
-    min_votes_amount: _(`Minimum amount of votes`)
+    min_votes_amount: _(`Minimum amount of votes`),
+    max_votes_per_person: _(`Maximum amount of votes per person`)
 };
 
 export const AssignmentPollMethodVerbose = {

@@ -1869,6 +1869,9 @@ msgstr "Minimieren"
 msgid "Minimum amount of votes"
 msgstr "Minimale Stimmenanzahl"
 
+msgid "Maximum amount of votes per person"
+msgstr "Maximale Stimmenanzahl pro Person"
+
 msgid "Minimum number of digits for motion number"
 msgstr "Minimale Anzahl an Ziffern in der Antragsnummer"
 

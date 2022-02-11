@@ -1784,6 +1784,9 @@ msgstr ""
 msgid "Minimum amount of votes"
 msgstr ""
 
+msgid "Maximum amount of votes per person"
+msgstr ""
+
 msgid "Minimum number of digits for motion number"
 msgstr ""
 

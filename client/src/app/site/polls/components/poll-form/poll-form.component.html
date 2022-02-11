@@ -86,6 +86,19 @@
                             [errorStateMatcher]="parentErrorStateMatcher"
                         />
                     </mat-form-field>
+
+                    <!-- Max Amount of Votes per Person -->
+                    <mat-form-field *ngIf="showMaxVotesPerPerson(data)">
+                        <input
+                            type="number"
+                            matInput
+                            placeholder="{{ PollPropertyVerbose.max_votes_per_person | translate }}"
+                            formControlName="max_votes_per_person"
+                            min="1"
+                            required
+                            [errorStateMatcher]="parentErrorStateMatcher"
+                        />
+                    </mat-form-field>
                 </ng-container>
             </div>
 

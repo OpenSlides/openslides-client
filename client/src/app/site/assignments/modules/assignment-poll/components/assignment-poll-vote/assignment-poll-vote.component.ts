@@ -129,9 +129,14 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
 
     public getVotesCount(user: ViewUser = this.user): number {
         if (this.voteRequestData[user?.id]) {
-            return Object.keys(this.voteRequestData[user.id].value).filter(
-                key => this.voteRequestData[user.id].value[key]
-            ).length;
+            if (this.poll.isMethodY && this.poll.max_votes_per_person > 1){
+                return Object.keys(this.voteRequestData[user.id].value).map(
+                    key => parseInt(this.voteRequestData[user.id].value[key])).reduce((a,b) => (a+b),0);
+            } else {
+                return Object.keys(this.voteRequestData[user.id].value).filter(
+                    key => this.voteRequestData[user.id].value[key]
+                ).length;
+            }
         }
     }
 
@@ -188,6 +193,8 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
                 }, {});
 
             // check if you can still vote
+            console.log(Object.keys(tmpVoteRequest).filter(key => tmpVoteRequest[key]));
+            console.log(Object.keys(tmpVoteRequest).map(key => parseInt(tmpVoteRequest[key])));
             const countedVotes = Object.keys(tmpVoteRequest).filter(key => tmpVoteRequest[key]).length;
             if (countedVotes <= maxVotesAmount) {
                 this.voteRequestData[user.id].value = tmpVoteRequest;
@@ -215,6 +222,66 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
             // if a user filled out every option, try to send
             if (Object.keys(this.voteRequestData[user.id].value).length === this.poll.options.length) {
                 this.submitVote(user);
+            }
+        }
+    }
+
+    public saveMultipleVote(optionId: number, event: any, user: ViewUser = this.user): void {
+        const vote = parseInt(event.target.value);
+
+        if (isNaN(vote)){
+            this.raiseError(
+                this.translate.instant(`Invalid Input.`)
+            );
+        }
+
+        console.log("Called!");
+        console.log(this.poll.max_votes_per_person);
+        console.log(vote);
+
+        if (!this.voteRequestData[user.id]) {
+            throw new Error(`The user for your voting request does not exist`);
+        }
+
+        if (this.isGlobalOptionSelected(user)) {
+            delete this.voteRequestData[user.id].value;
+        }
+
+        if (this.poll.isMethodY && this.poll.max_votes_per_person > 1) {
+            // Another option is not expected here
+            const maxVotesAmount = this.poll.max_votes_amount;
+            const maxVotesAmountPP = this.poll.max_votes_per_person;
+            const tmpVoteRequest = this.poll.options
+                .map(option => option.id)
+                .reduce((o, n) => {
+                    o[n] = this.voteRequestData[user.id].value[n];
+                    o[n] = o[n] ? o[n] : 0;
+                    if (n === optionId){
+                        if (vote > Math.min(maxVotesAmountPP, maxVotesAmount)) {
+                            o[n] = Math.min(maxVotesAmountPP, maxVotesAmount);
+                        } else if (vote >= 0){
+                            o[n] = vote;
+                        }
+                    }
+                    return o;
+                }, {});
+
+            // check if you can still vote
+            const countedVotes = Object.keys(tmpVoteRequest).map(key => parseInt(tmpVoteRequest[key])).reduce((a,b) => (a+b),0);
+            console.log(tmpVoteRequest);
+            console.log(countedVotes);
+            console.log(maxVotesAmount);
+            if (countedVotes <= maxVotesAmount) {
+                this.voteRequestData[user.id].value = tmpVoteRequest;
+
+                // if you have no options anymore, try to send
+                if (this.getVotesCount(user) === maxVotesAmount) {
+                    this.submitVote(user);
+                }
+            } else {
+                this.raiseError(
+                    this.translate.instant(`You reached the maximum amount of votes. Deselect somebody first.`)
+                );
             }
         }
     }
