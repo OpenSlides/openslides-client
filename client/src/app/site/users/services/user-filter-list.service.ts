@@ -64,7 +64,7 @@ export class UserFilterListService extends BaseFilterListService<ViewUser> {
                 property: `is_active`,
                 label: this.translate.instant(`Active`),
                 options: [
-                    { condition: true, label: `Is active` },
+                    { condition: true, label: this.translate.instant(`Is active`) },
                     { condition: false, label: this.translate.instant(`Is not active`) }
                 ]
             },
@@ -73,7 +73,7 @@ export class UserFilterListService extends BaseFilterListService<ViewUser> {
                 label: this.translate.instant(`Committee`),
                 options: [
                     { condition: true, label: this.translate.instant(`Is not a committee`) },
-                    { condition: false, label: `Is a committee` }
+                    { condition: false, label: this.translate.instant(`Is a committee`) }
                 ]
             },
             {
