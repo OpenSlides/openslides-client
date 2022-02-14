@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NavigationEnd, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
 import { HistoryService } from 'app/core/core-services/history.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { TimeTravelService } from 'app/core/core-services/time-travel.service';
