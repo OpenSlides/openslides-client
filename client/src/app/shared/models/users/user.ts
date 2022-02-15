@@ -178,7 +178,7 @@ export class User extends BaseDecimalModel<User> {
      * @returns A list of committee ids, a user has the queried permission
      */
     public committee_management_level_ids(cml: CML): Id[] {
-        return this[`committee_$${cml}_management_level`];
+        return this[`committee_$${cml}_management_level`] ?? [];
     }
 
     protected getDecimalFields(): (keyof User)[] {

@@ -355,4 +355,9 @@
     .light-gray-by-theme {
         color: if($is-dark-theme, white, rgba(0, 0, 0, 0.65));
     }
+    
+    /** remove unwanted spaces from group displays */
+    .inline-flex {
+        display:inline-flex;
+    }
 }
