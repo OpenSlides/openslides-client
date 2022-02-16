@@ -5,6 +5,7 @@ import { MeetingRepositoryService } from 'app/core/repositories/management/meeti
 import { PromptService } from 'app/core/ui-services/prompt.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 
+import { OperatorService } from '../../../core/core-services/operator.service';
 import { OML } from '../../../core/core-services/organization-permission';
 import { CommitteeRepositoryService } from '../../../core/repositories/management/committee-repository.service';
 import { ViewCommittee } from '../../models/view-committee';
@@ -47,17 +48,22 @@ export class MeetingPreviewComponent {
         return this.meeting.id === this.committee.default_meeting_id;
     }
 
+    public get canEnter(): boolean {
+        return this.operator.isInMeetingIds(this.meeting.id);
+    }
+
     public constructor(
         protected translate: TranslateService,
         private meetingRepo: MeetingRepositoryService,
         private committeeRepo: CommitteeRepositoryService,
         private promptService: PromptService,
-        private meetingService: MeetingService
+        private meetingService: MeetingService,
+        private operator: OperatorService
     ) {}
 
     public async onArchive(): Promise<void> {
         const title = this.translate.instant(`Are you sure you want to archive this meeting?`);
-        const content = this.title;
+        const content = this.translate.instant(`Attention: This action can NOT be undone!`);
 
         const confirmed = await this.promptService.open(title, content);
         if (confirmed) {

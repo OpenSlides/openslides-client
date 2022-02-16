@@ -16,7 +16,6 @@ import { BaseModelContextComponent } from 'app/site/base/components/base-model-c
 import { PollService } from 'app/site/polls/services/poll.service';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 
-import { ActiveMeetingService } from '../../../../core/core-services/active-meeting.service';
 import { MemberService } from '../../../../core/core-services/member.service';
 import { PERSONAL_FORM_CONTROLS, UserService } from '../../../../core/ui-services/user.service';
 import { ViewGroup } from '../../models/view-group';
@@ -346,10 +345,7 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
         if (partialUser.is_present) {
             partialUser.is_present_in_meeting_ids = [this.activeMeetingId];
         }
-        if (!partialUser.group_ids?.length) {
-            const defaultGroupId = this.activeMeetingService.meeting.default_group_id;
-            partialUser.group_ids = [defaultGroupId];
-        }
+        this.checkForGroups(partialUser);
 
         await this.repo.create(partialUser);
         this.goToAllUsers();
@@ -357,11 +353,19 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
 
     private async updateUser(): Promise<void> {
         if (this.operator.hasPerms(Permission.userCanManage)) {
+            this.checkForGroups(this.personalInfoFormValue);
             await this.repo.update(this.personalInfoFormValue, this.user);
         } else {
             await this.repo.updateSelf(this.personalInfoFormValue, this.user);
         }
         this.setEditMode(false);
+    }
+
+    private checkForGroups(user: any): void {
+        if (!user?.group_ids.length) {
+            const defaultGroupId = this.activeMeetingService.meeting.default_group_id;
+            user.group_ids = [defaultGroupId];
+        }
     }
 
     private checkFormForErrors(): void {

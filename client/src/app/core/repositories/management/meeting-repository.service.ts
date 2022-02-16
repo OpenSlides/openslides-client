@@ -54,7 +54,8 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             `name`,
             `start_time`,
             `end_time`,
-            `is_active_in_organization_id`
+            `is_active_in_organization_id`,
+            `is_archived_organization_id`
         ]);
         const listFields: (keyof Meeting)[] = nameFields.concat(`user_ids`, `organization_tag_ids`);
         const editFields: (keyof Meeting)[] = listFields.concat([
@@ -76,7 +77,8 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             `user_ids`,
             `location`,
             `description`,
-            `default_meeting_for_committee_id`
+            `default_meeting_for_committee_id`,
+            `group_ids`
         );
 
         return {

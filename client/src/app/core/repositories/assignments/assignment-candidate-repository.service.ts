@@ -37,6 +37,9 @@ export class AssignmentCandidateRepositoryService extends BaseRepositoryWithActi
     public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Candidates` : `Candidate`);
 
     public create(assignment: ViewAssignment, userId: Id): Promise<Identifiable> {
+        if (typeof userId !== `number`) {
+            return;
+        }
         const payload: AssignmentCandidateAction.CreatePayload = {
             assignment_id: assignment.id,
             user_id: userId

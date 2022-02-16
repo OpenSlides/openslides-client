@@ -146,6 +146,12 @@ export const RELATIONS: Relation[] = [
     }),
     ...makeM2O({
         OViewModel: ViewOrganization,
+        MViewModel: ViewMeeting,
+        OField: `archived_meetings`,
+        MField: `is_archived_in_organization`
+    }),
+    ...makeM2O({
+        OViewModel: ViewOrganization,
         MViewModel: ViewTheme,
         OField: `themes`,
         MField: `organization`,
