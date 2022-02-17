@@ -20,7 +20,7 @@ import { ViewMeeting } from 'app/management/models/view-meeting';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 
 import { MemberService } from '../../../core/core-services/member.service';
 import { SimplifiedModelRequest } from '../../../core/core-services/model-request-builder.service';
@@ -45,13 +45,16 @@ const USER_GROUPS_FOLLOW_FN = (meetingId: Id) => ({
 export class MeetingEditComponent extends BaseModelContextComponent implements OnInit {
     public readonly CML = CML;
     public readonly OML = OML;
-
-    public get availableUsers(): Observable<ViewUser[]> {
-        return this.userRepo.getViewModelListObservable();
-    }
+    public readonly availableUsers: Observable<ViewUser[]>;
 
     public get availableMeetingsObservable(): Observable<ViewMeeting[]> {
-        return this.orga.organization.active_meetings_as_observable;
+        return combineLatest(
+            this.orga.organization?.active_meetings_as_observable,
+            this.orga.organization?.archived_meetings_as_observable,
+            (activeMeetings, archivedMeetings) => {
+                return [...activeMeetings, ...archivedMeetings];
+            }
+        );
     }
 
     private get isJitsiManipulationAllowed(): boolean {
@@ -105,6 +108,8 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
         } else {
             super.setTitle(EDIT_MEETING_LABEL);
         }
+
+        this.availableUsers = userRepo.getViewModelListObservable();
     }
 
     public ngOnInit(): void {
@@ -183,6 +188,7 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
                 if (this.committeeId) {
                     this.loadCommittee();
                 }
+                this.loadArchivedAndActiveMeetings();
                 this.loadUsers();
             })
         );
@@ -235,6 +241,17 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
                     this.updateFormByCommittee();
                 }
             })
+        );
+    }
+
+    private loadArchivedAndActiveMeetings(): void {
+        this.subscribe(
+            {
+                viewModelCtor: ViewOrganization,
+                ids: [ORGANIZATION_ID],
+                follow: [`active_meeting_ids`, `archived_meeting_ids`]
+            },
+            `archived-and-active-meetings`
         );
     }
 

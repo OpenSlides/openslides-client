@@ -122,14 +122,14 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
             submitter_ids: partialMotion.submitter_ids,
             workflow_id: partialMotion.workflow_id,
             category_id: partialMotion.category_id,
-            attachment_ids: partialMotion.attachment_ids,
+            attachment_ids: partialMotion.attachment_ids === null ? [] : partialMotion.attachment_ids,
             reason: partialMotion.reason,
             number: partialMotion.number,
             block_id: partialMotion.block_id,
             state_extension: partialMotion.state_extension,
             sort_parent_id: partialMotion.sort_parent_id,
-            tag_ids: partialMotion.tag_ids,
-            supporter_ids: partialMotion.supporter_ids,
+            tag_ids: partialMotion.tag_ids === null ? [] : partialMotion.tag_ids,
+            supporter_ids: partialMotion.supporter_ids === null ? [] : partialMotion.supporter_ids,
             ...createAgendaItem(partialMotion)
         };
     }
@@ -149,9 +149,9 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
             recommendation_extension: update.recommendation_extension,
             category_id: update.category_id,
             block_id: update.block_id,
-            supporter_ids: update.supporter_ids,
-            tag_ids: update.tag_ids,
-            attachment_ids: update.attachment_ids,
+            supporter_ids: update.supporter_ids === null ? [] : update.supporter_ids,
+            tag_ids: update.tag_ids === null ? [] : update.tag_ids,
+            attachment_ids: update.attachment_ids === null ? [] : update.attachment_ids,
             workflow_id: update.workflow_id,
             amendment_paragraph_$: update.amendment_paragraph_$
         };

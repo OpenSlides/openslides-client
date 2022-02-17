@@ -42,11 +42,17 @@
         </div>
     </mat-card-content>
     <mat-card-actions class="prev-content">
-        <ng-container
-            *osCmlPerms="CML.can_manage; committeeId: committee.id; nonAdminCheck: true; or: meeting.canAccess()"
+        <a *ngIf="canEnter" mat-stroked-button color="accent" [routerLink]="meeting.getUrl()">
+            {{ 'Open meeting' | translate }}
+        </a>
+        <span
+            *ngIf="!canEnter"
+            matTooltip="{{ 'You cannot enter this meeting because you are not assigned to any group' | translate }}"
         >
-            <a mat-stroked-button color="accent" [routerLink]="meeting.getUrl()">{{ 'Open meeting' | translate }}</a>
-        </ng-container>
+            <button mat-stroked-button color="accent" [disabled]="true">
+                {{ 'Open meeting' | translate }}
+            </button>
+        </span>
     </mat-card-actions>
 
     <!-- users -->
@@ -74,7 +80,7 @@
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit' | translate }}</span>
         </a>
-        <button mat-menu-item *ngIf="meeting.isActive" (click)="onDuplicate()">
+        <button mat-menu-item (click)="onDuplicate()">
             <mat-icon>file_copy</mat-icon>
             <span>{{ 'Duplicate' | translate }}</span>
         </button>

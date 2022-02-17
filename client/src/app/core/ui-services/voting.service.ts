@@ -23,10 +23,9 @@ const VotingErrorVerbose = {
     [VotingError.POLL_WRONG_STATE]: _(`You can not vote right now because the voting has not yet started.`),
     [VotingError.POLL_WRONG_TYPE]: _(`You can not vote because this is an analog voting.`),
     [VotingError.USER_HAS_NO_PERMISSION]: _(`You do not have the permission to vote.`),
-    [VotingError.POLL_WRONG_STATE]: _(`You have to be logged in to be able to vote.`),
-    [VotingError.USER_IS_ANONYMOUS]: _(`You have to be present to vote.`),
-    [VotingError.USER_NOT_PRESENT]: _(`Your voting right was delegated to another person.`),
-    [VotingError.USER_HAS_DELEGATED_RIGHT]: _(`You have already voted.`),
+    [VotingError.USER_IS_ANONYMOUS]: _(`You have to be logged in to be able to vote.`),
+    [VotingError.USER_NOT_PRESENT]: _(`You have to be present to vote.`),
+    [VotingError.USER_HAS_DELEGATED_RIGHT]: _(`Your voting right was delegated to another person.`),
     [VotingError.USER_HAS_VOTED]: _(`You have already voted.`)
 };
 

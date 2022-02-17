@@ -56,18 +56,18 @@ export class AmendmentService {
             lead_motion_id: partialMotion.lead_motion_id,
             title: partialMotion.title,
             origin_id: partialMotion.origin_id,
-            submitter_ids: partialMotion.submitter_ids,
+            submitter_ids: partialMotion.submitter_ids === null ? [] : partialMotion.submitter_ids,
             workflow_id: partialMotion.workflow_id,
             category_id: partialMotion.category_id,
-            attachment_ids: partialMotion.attachment_ids,
+            attachment_ids: partialMotion.attachment_ids === null ? [] : partialMotion.attachment_ids,
             reason: partialMotion.reason,
             number: partialMotion.number,
             block_id: partialMotion.block_id,
             state_extension: partialMotion.state_extension,
             amendment_paragraph_$: partialMotion.amendment_paragraph_$,
             sort_parent_id: partialMotion.sort_parent_id,
-            tag_ids: partialMotion.tag_ids,
-            supporter_ids: partialMotion.supporter_ids,
+            tag_ids: partialMotion.tag_ids === null ? [] : partialMotion.tag_ids,
+            supporter_ids: partialMotion.supporter_ids === null ? [] : partialMotion.supporter_ids,
             ...createAgendaItem(partialMotion)
         };
         return this.actions.sendRequest(AmendmentAction.CREATE_PARAGRAPHBASED_AMENDMENT, payload);

@@ -264,7 +264,7 @@ export class UserRepositoryService
     /**
      * getter for the name
      */
-    public getName(user: NameInformation): string {
+    private getName(user: NameInformation): string {
         const firstName = user.first_name?.trim() || ``;
         const lastName = user.last_name?.trim() || ``;
         const userName = user.username?.trim() || ``;

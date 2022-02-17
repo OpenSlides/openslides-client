@@ -27,7 +27,8 @@ export class Organization extends BaseModel<Organization> {
     public committee_ids: Id[]; // (committee/organization_id)[];
     public resource_ids: Id[]; // (resource/organization_id)[];
     public organization_tag_ids: Id[]; // (organization_tag/organization_id)[];
-    public active_meeting_ids: Id[]; // (meeting/is_active_in_organization_id);
+    public active_meeting_ids: Id[]; // (meeting/is_active_in_organization_id)[];
+    public archived_meeting_ids: Id[]; // (meeting/is_archived_in_organization_id)[];
 
     public constructor(input?: any) {
         super(Organization.COLLECTION, input);

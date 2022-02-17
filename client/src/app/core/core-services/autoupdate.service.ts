@@ -116,7 +116,7 @@ export class AutoupdateService {
             { bodyFn: () => [request] }
         );
         const { data, stream } = await httpStream.toPromise();
-        await this.handleAutoupdate(data, stream.id);
+        await this.handleAutoupdate({ autoupdateData: data, id: stream.id, description });
     }
 
     /**
@@ -142,7 +142,12 @@ export class AutoupdateService {
         const buildStreamFn = (streamId: number) =>
             this.httpStreamService.create(
                 AUTOUPDATE_DEFAULT_ENDPOINT,
-                { onMessage: (data, stream) => this.handleAutoupdate(data, stream.id), description, id: streamId },
+                {
+                    onMessage: (data, stream) =>
+                        this.handleAutoupdate({ autoupdateData: data, id: stream.id, description }),
+                    description,
+                    id: streamId
+                },
                 { bodyFn: () => [request] }
             );
         const { closeFn, id } = this.communicationManager.registerStreamBuildFn(buildStreamFn);
@@ -155,9 +160,17 @@ export class AutoupdateService {
         };
     }
 
-    private async handleAutoupdate(autoupdateData: AutoupdateModelData, id: number): Promise<void> {
+    private async handleAutoupdate({
+        autoupdateData,
+        id,
+        description
+    }: {
+        autoupdateData: AutoupdateModelData;
+        id: number;
+        description?: string;
+    }): Promise<void> {
         const modelData = autoupdateFormatToModelData(autoupdateData);
-        console.log(`autoupdate: from stream`, id, modelData, `raw data:`, autoupdateData);
+        console.log(`autoupdate: from stream ${description}`, id, modelData, `raw data:`, autoupdateData);
         const fullListUpdateCollections = {};
         for (const key of Object.keys(autoupdateData)) {
             const data = key.split(`/`);

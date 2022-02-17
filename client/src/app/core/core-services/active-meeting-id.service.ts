@@ -5,7 +5,7 @@ import { distinctUntilChanged, filter } from 'rxjs/operators';
 
 import { DataStoreService } from './data-store.service';
 
-export class NoActiveMeeting extends Error {}
+export class NoActiveMeetingError extends Error {}
 
 @Injectable({
     providedIn: `root`

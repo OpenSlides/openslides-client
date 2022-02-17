@@ -22,6 +22,8 @@ interface IOrganizationRelations {
     organization_tags: ViewOrganizationTag[];
     active_meetings: ViewMeeting[];
     active_meetings_as_observable: Observable<ViewMeeting[]>;
+    archived_meetings: ViewMeeting[];
+    archived_meetings_as_observable: Observable<ViewMeeting[]>;
     theme: ViewTheme;
     themes: ViewTheme[];
 }
