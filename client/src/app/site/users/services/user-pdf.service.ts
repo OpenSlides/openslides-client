@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
+import { OrganizationSettingsService } from 'app/core/ui-services/organization-settings.service';
 
 import { ViewUser } from '../models/view-user';
 
@@ -20,11 +21,12 @@ import { ViewUser } from '../models/view-user';
 export class UserPdfService {
     /**
      * Constructor
-     *
-     * @param translate handle translations
-     * @param meetingSettingsService Read settings
      */
-    public constructor(private translate: TranslateService, private meetingSettingsService: MeetingSettingsService) {}
+    public constructor(
+        private translate: TranslateService,
+        private meetingSettingsService: MeetingSettingsService,
+        private orgaSettingsService: OrganizationSettingsService
+    ) {}
 
     /**
      * Converts a user to PdfMake doc definition, containing access information
@@ -175,8 +177,8 @@ export class UserPdfService {
                 style: `userDataTopic`
             },
             {
-                text: this.meetingSettingsService.instant(`users_pdf_url`) || `-`,
-                link: this.meetingSettingsService.instant(`users_pdf_url`),
+                text: this.orgaSettingsService.instant(`url`) || `-`,
+                link: this.orgaSettingsService.instant(`url`),
                 style: `userDataValue`
             },
             {
@@ -184,10 +186,10 @@ export class UserPdfService {
             }
         ];
         // url qr code
-        if (this.meetingSettingsService.instant(`users_pdf_url`)) {
+        if (this.orgaSettingsService.instant(`url`)) {
             columnOpenSlides.push(
                 {
-                    qr: this.meetingSettingsService.instant(`users_pdf_url`),
+                    qr: this.orgaSettingsService.instant(`url`),
                     fit: 120,
                     margin: [0, 0, 0, 8]
                 },

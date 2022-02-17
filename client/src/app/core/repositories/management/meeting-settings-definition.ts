@@ -732,12 +732,6 @@ export const meetingSettings: SettingsGroup[] = [
                         label: _(`Help text for access data and welcome PDF`)
                     },
                     {
-                        key: `users_pdf_url`,
-                        label: _(`OpenSlides URL`),
-                        helpText: _(`Used for invitation email and QRCode in PDF of access data.`),
-                        dontTranslateDefault: true
-                    },
-                    {
                         key: `users_pdf_wlan_ssid`,
                         label: _(`WLAN name (SSID)`),
                         helpText: _(`Used for WLAN QRCode in PDF of access data.`)

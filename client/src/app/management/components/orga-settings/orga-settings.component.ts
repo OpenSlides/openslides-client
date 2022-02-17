@@ -70,6 +70,7 @@ export class OrgaSettingsComponent extends BaseModelContextComponent implements 
             if (this.operator.isSuperAdmin) {
                 rawSettingsForm = {
                     ...rawSettingsForm,
+                    url: [this.currentOrgaSettings.url],
                     reset_password_verbose_errors: [this.currentOrgaSettings.reset_password_verbose_errors],
                     enable_electronic_voting: [this.currentOrgaSettings.enable_electronic_voting],
                     enable_chat: [this.currentOrgaSettings.enable_chat],
