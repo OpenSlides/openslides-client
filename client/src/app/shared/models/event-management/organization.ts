@@ -10,6 +10,7 @@ export interface OrganizationSetting {
     login_text: string;
     theme_id: Id; // (theme/theme_for_organization_id);
     theme_ids: Id[]; // (theme/organization_id);
+    url: string;
     reset_password_verbose_errors: boolean;
     enable_electronic_voting: boolean;
     enable_chat: boolean;

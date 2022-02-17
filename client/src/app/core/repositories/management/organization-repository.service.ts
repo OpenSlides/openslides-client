@@ -24,6 +24,7 @@ export class OrganizationRepositoryService extends BaseRepository<ViewOrganizati
     public getFieldsets(): Fieldsets<Organization> {
         const coreFieldset: (keyof Organization)[] = [`name`, `description`, `active_meeting_ids`];
         const settingsFieldset: (keyof (OrganizationSetting & Organization))[] = coreFieldset.concat(
+            `url`,
             `legal_notice`,
             `privacy_policy`,
             `login_text`,
