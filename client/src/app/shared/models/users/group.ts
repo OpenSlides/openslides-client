@@ -13,6 +13,7 @@ export class Group extends BaseModel<Group> {
 
     public id: Id;
     public name: string;
+    public weight: number;
     public permissions: Permission[];
 
     public user_ids: Id[]; // (user/group_$<meeting_id>_ids)[];

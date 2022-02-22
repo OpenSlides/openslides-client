@@ -96,7 +96,7 @@ export class GroupListComponent extends BaseModelContextComponent implements OnI
 
         this.repo.getViewModelListObservable().subscribe(newViewGroups => {
             if (newViewGroups) {
-                this.groups = newViewGroups;
+                this.groups = newViewGroups.slice().sort((groupA, groupB) => groupA.weight - groupB.weight);
                 this.updateRowDef();
             }
         });

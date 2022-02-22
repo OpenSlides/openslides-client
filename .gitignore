@@ -3,6 +3,8 @@
 /dist/
 /bazel-out
 /integration/bazel/bazel-*
+.angular/cache
+.vscode
 e2e_test.*
 *.log
 
@@ -28,26 +30,6 @@ modules/.vscode
 .vimrc
 .nvimrc
 *.code-workspace
-<<<<<<< HEAD
-# System Files
-.DS_Store
-Thumbs.db
-# Virtual Environment
-.virtualenv*
-.venv
-
-## Compatibility
-# OS4-Submodules and aux-directories
-/openslides-*/
-/docker/keys/
-/docs/
-# OS3+-Submodules
-/autoupdate/
-# Plugin development
-openslides_*
-# Old OS3 stuff
-/tests/
-=======
 
 # Don't check in secret files
 *secret.js
@@ -59,7 +41,6 @@ yarn.lock
 
 # build-analytics
 .build-analytics
->>>>>>> a7d4575c0 (Initial commit for OpenSlides4)
 
 # rollup-test output
 /modules/rollup-test/dist/
@@ -67,15 +48,3 @@ yarn.lock
 # User specific bazel settings
 .bazelrc.user
 
-<<<<<<< HEAD
-## Deployment
-# Docker build artifacts
-docker/docker-compose.yml
-*-version.txt
-*.pem
-# secrets
-docker/secrets/*.env
-=======
-.notes.md
-baseline.json
->>>>>>> a7d4575c0 (Initial commit for OpenSlides4)
