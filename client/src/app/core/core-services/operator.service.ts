@@ -106,7 +106,7 @@ export class OperatorService {
     }
 
     private get isCommitteeManager(): boolean {
-        return this.user.committee_$_management_level.includes(CML.can_manage);
+        return (this.user.committee_$_management_level || []).includes(CML.can_manage);
     }
 
     public get isAnyManager(): boolean {
