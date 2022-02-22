@@ -218,7 +218,7 @@ export class HttpStream<T> {
         this.onError = config.onError || emptyFn;
         this.onComplete = config.onComplete || emptyFn;
 
-        this._reconnectsBeforeClose = Math.abs(config.reconnectsBeforeClose);
+        this._reconnectsBeforeClose = Math.abs(config.reconnectsBeforeClose || 3);
         this._shouldReconnectOnFailure = config.shouldReconnectOnFailure;
         this._reconnectTimeout = config.reconnectTimeout;
 
