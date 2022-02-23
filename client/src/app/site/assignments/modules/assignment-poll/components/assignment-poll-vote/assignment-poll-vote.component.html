@@ -61,7 +61,7 @@
                         </div>
 
                         <ng-container *ngIf="!poll.moreThanOneVotePerPerson">
-                            <div *ngFor="let action of voteActions" >
+                            <div *ngFor="let action of voteActions">
                                 <button
                                     class="vote-button"
                                     mat-raised-button
@@ -69,7 +69,7 @@
                                     [disabled]="isDeliveringVote(delegation)"
                                     [ngClass]="getActionButtonClass(action, option, delegation)"
                                 >
-                                    <mat-icon> {{ action.icon }}</mat-icon>
+                                    <mat-icon>{{ action.icon }}</mat-icon>
                                 </button>
                                 <span *ngIf="poll.isMethodYN || poll.isMethodYNA" class="vote-label">
                                     {{ action.label | translate }}
