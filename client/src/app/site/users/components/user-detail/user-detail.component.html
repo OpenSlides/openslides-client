@@ -225,7 +225,7 @@
             </div>
 
             <!-- Vote weight -->
-            <div *ngIf="user.vote_weight() && showVoteWeight">
+            <div *ngIf="showVoteWeight">
                 <h4>{{ 'Vote weight' | translate }}</h4>
                 <span>{{ user.vote_weight() }}</span>
             </div>
