@@ -235,6 +235,7 @@ export class PollRepositoryService extends BaseRepositoryWithActiveMeeting<ViewP
             description: update.description,
             max_votes_amount: update.max_votes_amount,
             min_votes_amount: update.min_votes_amount,
+            max_votes_per_person: update.max_votes_per_person,
             onehundred_percent_base: update.onehundred_percent_base,
             pollmethod: update.pollmethod,
             title: update.title,
