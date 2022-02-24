@@ -121,7 +121,10 @@ import { PrecisionPipe } from './pipes/precision.pipe';
 import { ReversePipe } from './pipes/reverse.pipe';
 import { TrustPipe } from './pipes/trust.pipe';
 
+import { HSize } from './pipes/hfilesize.pipe';
+
 const declarations = [
+    HSize,
     PermsDirective,
     DomChangeDirective,
     AutofocusDirective,
