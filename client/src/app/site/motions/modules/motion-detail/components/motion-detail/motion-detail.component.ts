@@ -397,6 +397,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
             {
                 viewModelCtor: ViewMotion,
                 ids: [motionId],
+                additionalFields: [`text`],
                 follow: [
                     {
                         idField: `all_origin_ids`,

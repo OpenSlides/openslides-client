@@ -13,6 +13,7 @@ import { ViewProjector } from '../models/view-projector';
  */
 export const CURRENT_LIST_OF_SPEAKERS_FOLLOW: Follow = {
     idField: `reference_projector_id`,
+    fieldset: ``,
     follow: [
         {
             idField: `current_projection_ids`,
@@ -23,13 +24,16 @@ export const CURRENT_LIST_OF_SPEAKERS_FOLLOW: Follow = {
                         {
                             idField: `list_of_speakers_id`,
                             follow: [
-                                { idField: `speaker_ids`, follow: [{ idField: `user_id`, fieldset: `shortName` }] }
+                                {
+                                    idField: `speaker_ids`,
+                                    follow: [{ idField: `user_id`, fieldset: `shortName` }]
+                                }
                             ]
                         }
                     ]
                 }
             ],
-            fieldset: `content`
+            fieldset: ``
         }
     ]
 };

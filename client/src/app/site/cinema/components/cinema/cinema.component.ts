@@ -126,7 +126,20 @@ export class CinemaComponent extends BaseModelContextComponent implements OnInit
         return {
             viewModelCtor: ViewMeeting,
             ids: [this.activeMeetingId],
-            follow: [CURRENT_LIST_OF_SPEAKERS_FOLLOW],
+            follow: [
+                CURRENT_LIST_OF_SPEAKERS_FOLLOW,
+                {
+                    idField: `reference_projector_id`,
+                    fieldset: ``,
+                    follow: [
+                        {
+                            idField: `current_projection_ids`,
+                            follow: [`content_object_id`],
+                            fieldset: `content`
+                        }
+                    ]
+                }
+            ],
             fieldset: ``
         };
     }
