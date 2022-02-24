@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ProjectorAction, ScrollScaleDirection } from 'app/core/actions/projector-action';
-import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
+import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'app/core/core-services/model-request-builder.service';
 import { Id } from 'app/core/definitions/key-types';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Projector } from 'app/shared/models/projector/projector';
@@ -29,27 +29,30 @@ export class ProjectorRepositoryService extends BaseRepositoryWithActiveMeeting<
     public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Projectors` : `Projector`);
 
     public getFieldsets(): Fieldsets<Projector> {
+        const routingFields: (keyof Projector)[] = [`sequential_number`];
+        const defaultFields: (keyof Projector)[] = [
+            `name`,
+            `scale`,
+            `scroll`,
+            `width`,
+            `aspect_ratio_numerator`,
+            `aspect_ratio_denominator`,
+            `color`,
+            `background_color`,
+            `header_background_color`,
+            `header_font_color`,
+            `header_h1_color`,
+            `chyron_background_color`,
+            `chyron_font_color`,
+            `show_header_footer`,
+            `show_title`,
+            `show_logo`,
+            `show_clock`,
+            `used_as_reference_projector_meeting_id`
+        ];
         return {
-            [DEFAULT_FIELDSET]: [
-                `name`,
-                `scale`,
-                `scroll`,
-                `width`,
-                `aspect_ratio_numerator`,
-                `aspect_ratio_denominator`,
-                `color`,
-                `background_color`,
-                `header_background_color`,
-                `header_font_color`,
-                `header_h1_color`,
-                `chyron_background_color`,
-                `chyron_font_color`,
-                `show_header_footer`,
-                `show_title`,
-                `show_logo`,
-                `show_clock`,
-                `used_as_reference_projector_meeting_id`
-            ]
+            [DEFAULT_FIELDSET]: defaultFields,
+            [ROUTING_FIELDSET]: routingFields
         };
     }
 

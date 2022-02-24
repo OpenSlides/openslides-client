@@ -1,13 +1,13 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
+import { Id } from 'app/core/definitions/key-types';
 import { MotionService } from 'app/core/repositories/motions/motion.service';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -26,7 +26,21 @@ import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category
     templateUrl: `./category-detail.component.html`,
     styleUrls: [`./category-detail.component.scss`]
 })
-export class CategoryDetailComponent extends BaseModelContextComponent implements OnInit {
+export class CategoryDetailComponent extends BaseModelContextComponent {
+    public readonly COLLECTION = ViewMotionCategory.COLLECTION;
+
+    /**
+     * The form to edit the selected category
+     */
+    @ViewChild(`editForm`, { static: true })
+    public editForm: FormGroup;
+
+    /**
+     * Reference to the template for edit-dialog
+     */
+    @ViewChild(`editDialog`, { static: true })
+    private readonly _editDialog: TemplateRef<string>;
+
     /**
      * The one selected category
      */
@@ -43,20 +57,6 @@ export class CategoryDetailComponent extends BaseModelContextComponent implement
     public readonly dataSources: { [id: number]: MatTableDataSource<ViewMotion> } = {};
 
     /**
-     * The form to edit the selected category
-     */
-    @ViewChild(`editForm`, { static: true })
-    public editForm: FormGroup;
-
-    /**
-     * Reference to the template for edit-dialog
-     */
-    @ViewChild(`editDialog`, { static: true })
-    private editDialog: TemplateRef<string>;
-
-    private dialogRef: MatDialogRef<any>;
-
-    /**
      * helper for permission checks
      *
      * @returns true if the user may alter motions
@@ -64,6 +64,9 @@ export class CategoryDetailComponent extends BaseModelContextComponent implement
     public get canEdit(): boolean {
         return this.operator.hasPerms(Permission.motionCanManage);
     }
+
+    private _dialogRef: MatDialogRef<any>;
+    private _categoryId: Id;
 
     /**
      * Constructor for motion block details
@@ -89,17 +92,12 @@ export class CategoryDetailComponent extends BaseModelContextComponent implement
         super(componentServiceCollector, translate);
     }
 
-    /**
-     * Init function.
-     * Sets the title, observes the block and the motions belonging in this block
-     */
-    public ngOnInit(): void {
-        super.ngOnInit();
-        const categoryId = +this.route.snapshot.params.id;
-        this.loadCategoryById(categoryId);
+    public onIdFound(id: Id): void {
+        this._categoryId = id;
+        this.loadCategoryById();
     }
 
-    public getModelRequest(): SimplifiedModelRequest {
+    protected getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMeeting,
             ids: [this.activeMeetingId],
@@ -121,11 +119,11 @@ export class CategoryDetailComponent extends BaseModelContextComponent implement
         };
     }
 
-    private loadCategoryById(categoryId: number): void {
+    private loadCategoryById(): void {
         this.subscriptions.push(
             this.repo.getViewModelListObservable().subscribe(categories => {
                 // Extract all sub-categories: The selected one and all child categories
-                const selectedCategoryIndex = categories.findIndex(category => category.id === categoryId);
+                const selectedCategoryIndex = categories.findIndex(category => category.id === this._categoryId);
 
                 if (selectedCategoryIndex < 0) {
                     return;
@@ -183,7 +181,7 @@ export class CategoryDetailComponent extends BaseModelContextComponent implement
      */
     public onKeyDown(event: KeyboardEvent): void {
         if (event.key === `Escape`) {
-            this.dialogRef.close();
+            this._dialogRef.close();
         }
         if (event.key === `Enter`) {
             this.save();
@@ -196,7 +194,7 @@ export class CategoryDetailComponent extends BaseModelContextComponent implement
     public save(): void {
         this.repo
             .update(this.editForm.value, this.selectedCategory)
-            .then(() => this.dialogRef.close())
+            .then(() => this._dialogRef.close())
             .catch(this.raiseError);
     }
 
@@ -209,7 +207,7 @@ export class CategoryDetailComponent extends BaseModelContextComponent implement
             name: [this.selectedCategory.name, Validators.required]
         });
 
-        this.dialogRef = this.dialog.open(this.editDialog, infoDialogSettings);
+        this._dialogRef = this.dialog.open(this._editDialog, infoDialogSettings);
     }
 
     /**

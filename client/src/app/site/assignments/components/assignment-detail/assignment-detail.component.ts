@@ -1,10 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { Id } from 'app/core/definitions/key-types';
+import { Deferred } from 'app/core/promises/deferred';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { AssignmentCandidateRepositoryService } from 'app/core/repositories/assignments/assignment-candidate-repository.service';
 import { AssignmentRepositoryService } from 'app/core/repositories/assignments/assignment-repository.service';
@@ -25,6 +26,7 @@ import { PermissionsService } from 'app/site/motions/services/permissions.servic
 import { ViewTag } from 'app/site/tags/models/view-tag';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { BehaviorSubject, Subscription } from 'rxjs';
+import { filter, first } from 'rxjs/operators';
 
 import { AssignmentPhases, ViewAssignment } from '../../models/view-assignment';
 import { ViewAssignmentCandidate } from '../../models/view-assignment-candidate';
@@ -41,25 +43,24 @@ import { AssignmentPdfExportService } from '../../services/assignment-pdf-export
     styleUrls: [`./assignment-detail.component.scss`]
 })
 export class AssignmentDetailComponent extends BaseModelContextComponent implements OnInit, OnDestroy {
+    public readonly COLLECTION = Assignment.COLLECTION;
+
+    public readonly hasLoaded = new Deferred<boolean>();
+
     /**
      * Determines if the assignment is new
      */
-    public newAssignment = false;
+    public isCreating = false;
 
     /**
      * If true, the page is supposed to be in 'edit' mode (i.e. the assignment itself can be edited)
      */
-    public editAssignment = false;
+    public isEditing = false;
 
     /**
      * The different phases of an assignment. Info is fetched from server
      */
     public phaseOptions = AssignmentPhases;
-
-    /**
-     * List of users.
-     */
-    private allUsers = new BehaviorSubject<ViewUser[]>([]);
 
     /**
      * A BehaviourSubject with a filtered list of users (excluding users already
@@ -113,16 +114,6 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
     }
 
     /**
-     * Current instance of ViewAssignment. Accessed via getter and setter.
-     */
-    private _assignment: ViewAssignment;
-
-    /**
-     * Used to detect changes in the URL
-     */
-    private _assignmentId: null | Id = null;
-
-    /**
      * Check if the operator is a candidate
      *
      * @returns true if they are in the list of candidates
@@ -155,29 +146,29 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
     }
 
     /**
+     * Current instance of ViewAssignment. Accessed via getter and setter.
+     */
+    private _assignment: ViewAssignment;
+
+    /**
+     * Used to detect changes in the URL
+     */
+    private _assignmentId: null | Id = null;
+
+    /**
      * Hold the subscription to the navigation.
      * This cannot go into the subscription-list, since it should
      * only get destroyed using ngOnDestroy routine and not on route changes.
      */
-    private navigationSubscription: Subscription;
+    private _navigationSubscription: Subscription;
+
+    /**
+     * List of users.
+     */
+    private _allUsers = new BehaviorSubject<ViewUser[]>([]);
 
     /**
      * Constructor. Build forms and subscribe to needed configs and updates
-     *
-     * @param title
-     * @param translate
-     * @param matSnackBar
-     * @param operator
-     * @param perms
-     * @param router
-     * @param route
-     * @param formBuilder
-     * @param assignmentRepo
-     * @param userRepo
-     * @param pollService
-     * @param itemRepo
-     * @param tagRepo
-     * @param promptService
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -185,7 +176,6 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
         private operator: OperatorService,
         public perms: PermissionsService,
         private router: Router,
-        private route: ActivatedRoute,
         formBuilder: FormBuilder,
         public assignmentRepo: AssignmentRepositoryService,
         private assignmentCandidateRepo: AssignmentCandidateRepositoryService,
@@ -202,7 +192,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
         this.updateSubscription(
             `allUsers`,
             this.userRepo.getViewModelListObservable().subscribe(users => {
-                this.allUsers.next(users);
+                this._allUsers.next(users);
                 this.filterCandidates();
             })
         );
@@ -229,8 +219,6 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
      */
     public ngOnInit(): void {
         super.ngOnInit();
-        this.observeRoute();
-        this.getAssignmentByUrl();
         this.agendaObserver = this.itemRepo.getViewModelListBehaviorSubject();
         this.tagsObserver = this.tagRepo.getViewModelListBehaviorSubject();
         this.mediafilesObserver = this.mediafileRepo.getViewModelListBehaviorSubject();
@@ -247,50 +235,34 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
         );
     }
 
-    /**
-     * Observes the route for events. Calls to clean all subs if the route changes.
-     * Calls the assignment details from the new route.
-     */
-    private observeRoute(): void {
-        this.navigationSubscription = this.router.events.subscribe(navEvent => {
-            if (navEvent instanceof NavigationEnd) {
-                this.getAssignmentByUrl();
-            }
-        });
-    }
-
     /* Triggers an update of the filter for the list of available candidates
      * (triggered on an autoupdate of either users or the assignment)
      */
     private filterCandidates(): void {
         if (this.assignment?.candidates?.length) {
             this.usersAsPossibleCandidates.next(
-                this.allUsers
+                this._allUsers
                     .getValue()
                     .filter(user => !this.assignment.candidates.some(candidate => candidate.user_id === user.id))
             );
         } else {
-            this.usersAsPossibleCandidates.next(this.allUsers.getValue());
+            this.usersAsPossibleCandidates.next(this._allUsers.getValue());
         }
     }
 
-    /**
-     * Determine the assignment to display using the URL
-     */
-    public getAssignmentByUrl(): void {
-        if (this.route.snapshot.url[0] && this.route.snapshot.url[0].path === `new`) {
-            super.setTitle(`New election`);
-            this.newAssignment = true;
-            this.editAssignment = true;
-            this.assignment = new ViewAssignment(new Assignment());
+    public onIdFound(id: Id): void {
+        if (id) {
+            this.loadAssignmentById(id);
         } else {
-            this.updateSubscription(
-                `route`,
-                this.route.params.subscribe(params => {
-                    this.loadAssignmentById(+params.id);
-                })
-            );
+            this.initAssignmentCreation();
         }
+        this.hasLoaded.resolve(true);
+    }
+
+    private initAssignmentCreation(): void {
+        super.setTitle(`New election`);
+        this.isCreating = true;
+        this.isEditing = true;
     }
 
     private loadAssignmentById(assignmentId: number): void {
@@ -322,7 +294,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
                     const title = assignment.getTitle();
                     super.setTitle(title);
                     this.assignment = assignment;
-                    if (!this.editAssignment) {
+                    if (!this.isEditing) {
                         this.patchForm(this.assignment);
                     }
                 }
@@ -393,13 +365,13 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
     public setEditMode(newMode: boolean): void {
         if (newMode && this.hasPerms(`manage`)) {
             this.patchForm(this.assignment);
-            this.editAssignment = true;
+            this.isEditing = true;
         }
-        if (!newMode && this.newAssignment) {
+        if (!newMode && this.isCreating) {
             this.router.navigate([this.activeMeetingId, `assignments`]);
         }
         if (!newMode) {
-            this.editAssignment = false;
+            this.isEditing = false;
         }
     }
 
@@ -439,7 +411,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
      * Save the current state of the assignment
      */
     private async saveAssignment(): Promise<void> {
-        if (this.newAssignment) {
+        if (this.isCreating) {
             this.createAssignment();
         } else {
             await this.updateAssignmentFromForm();
@@ -466,7 +438,7 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
      * @param userId the id of a ViewUser
      */
     public async addCandidate(userId: number): Promise<void> {
-        if (userId) {
+        if (userId && typeof userId === `number`) {
             await this.assignmentCandidateRepo.create(this.assignment, userId);
         }
     }
@@ -542,19 +514,19 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
     /**
      * Creates an assignment. Calls the "patchValues" function
      */
-    public async createAssignment(): Promise<void> {
+    private async createAssignment(): Promise<void> {
         try {
             const response = await this.assignmentRepo.create(this.assignmentForm.value);
-            this.router.navigate([this.activeMeetingId, `assignments`, response.id]);
+            await this.navigateAfterCreation(response.id);
         } catch (e) {
             this.raiseError(e);
         }
     }
 
-    public async updateAssignmentFromForm(): Promise<void> {
+    private async updateAssignmentFromForm(): Promise<void> {
         try {
             await this.assignmentRepo.update(this.assignmentForm.value, this.assignment);
-            this.editAssignment = false;
+            this.isEditing = false;
         } catch (e) {
             this.raiseError(e);
         }
@@ -570,8 +542,19 @@ export class AssignmentDetailComponent extends BaseModelContextComponent impleme
 
     public ngOnDestroy(): void {
         super.ngOnDestroy();
-        if (this.navigationSubscription) {
-            this.navigationSubscription.unsubscribe();
+        if (this._navigationSubscription) {
+            this._navigationSubscription.unsubscribe();
         }
+    }
+
+    private async navigateAfterCreation(id: Id): Promise<void> {
+        const assignment = await this.assignmentRepo
+            .getViewModelObservable(id)
+            .pipe(
+                filter(toCheck => !!toCheck),
+                first()
+            )
+            .toPromise();
+        this.router.navigate([this.activeMeetingId, `assignments`, assignment.sequential_number]);
     }
 }

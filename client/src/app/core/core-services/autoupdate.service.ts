@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Id } from 'app/core/definitions/key-types';
+import { Collection, Id } from 'app/core/definitions/key-types';
+import { Subject } from 'rxjs';
 
 import { BaseModel } from '../../shared/models/base/base-model';
 import { HTTPMethod } from '../definitions/http-methods';
@@ -105,10 +106,13 @@ export class AutoupdateService {
      * @param description A simple description for developing. It helps tracking streams:
      * Which component requests the autoupdate?
      */
-    public async instant(modelRequest: SimplifiedModelRequest, description: string): Promise<void> {
+    public async instant<D>(
+        modelRequest: SimplifiedModelRequest,
+        description: string
+    ): Promise<{ [collection: string]: { [id: number]: D } }> {
         const modelRequestObject = await this.modelRequestBuilder.build(modelRequest);
         const request = modelRequestObject.getModelRequest();
-        const httpStream = this.httpStreamService.create(
+        const httpStream = this.httpStreamService.create<AutoupdateModelData>(
             AUTOUPDATE_SINGLE_ENDPOINT,
             {
                 description
@@ -117,6 +121,8 @@ export class AutoupdateService {
         );
         const { data, stream } = await httpStream.toPromise();
         await this.handleAutoupdate({ autoupdateData: data, id: stream.id, description });
+        console.debug(`return data`, autoupdateFormatToModelData(data));
+        return autoupdateFormatToModelData(data) as any;
     }
 
     /**
@@ -203,23 +209,26 @@ export class AutoupdateService {
         }
 
         for (const collection of Object.keys(modelData)) {
-            for (const id of Object.keys(modelData[collection])) {
-                const model = modelData[collection][id];
-                if (changedModels[collection] === undefined) {
-                    changedModels[collection] = [];
-                }
-                // Important: our model system needs to have an id in the model, even if it is partial
-                model.id = +id;
-                const basemodel = this.mapObjectToBaseModel(collection, model);
-                if (basemodel) {
-                    changedModels[collection].push(basemodel);
-                }
-            }
+            changedModels[collection] = this.createCollectionUpdate(collection, modelData);
         }
 
         await this.doCollectionUpdates(changedModels, deletedModels);
 
         unlock();
+    }
+
+    private createCollectionUpdate(collection: Collection, modelData: ModelData): BaseModel<any>[] {
+        const update: BaseModel<any>[] = [];
+        for (const id of Object.keys(modelData[collection])) {
+            const model = modelData[collection][id];
+            // Important: our model system needs to have an id in the model, even if it is partial
+            model.id = +id;
+            const basemodel = this.mapObjectToBaseModel(collection, model);
+            if (basemodel) {
+                update.push(basemodel);
+            }
+        }
+        return update;
     }
 
     private async doCollectionUpdates(changedModels: ChangedModels, deletedModels: DeletedModels): Promise<void> {

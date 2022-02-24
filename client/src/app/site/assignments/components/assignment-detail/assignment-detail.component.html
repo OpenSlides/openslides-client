@@ -1,89 +1,93 @@
-<os-head-bar
-    [hasMainButton]="hasPerms('manage') && assignment"
-    mainButtonIcon="edit"
-    [nav]="false"
-    [editMode]="editAssignment"
-    [isSaveButtonEnabled]="assignmentForm.valid"
-    [saveAction]="getSaveAction()"
-    (mainEvent)="setEditMode(!editAssignment)"
->
-    <!-- Title -->
-    <div class="title-slot">
-        <h2 *ngIf="assignment && !newAssignment">{{ 'Election' | translate }}</h2>
-        <h2 *ngIf="newAssignment">{{ 'New election' | translate }}</h2>
-    </div>
+<os-detail-view [collection]="COLLECTION" (idFound)="onIdFound($event)">
+    <ng-container *ngIf="hasLoaded | async">
+        <os-head-bar
+            [hasMainButton]="hasPerms('manage') && assignment"
+            mainButtonIcon="edit"
+            [nav]="false"
+            [editMode]="isEditing"
+            [isSaveButtonEnabled]="assignmentForm.valid"
+            [saveAction]="getSaveAction()"
+            (mainEvent)="setEditMode(!isEditing)"
+        >
+            <!-- Title -->
+            <div class="title-slot">
+                <h2 *ngIf="assignment && !isCreating">{{ 'Election' | translate }}</h2>
+                <h2 *ngIf="isCreating">{{ 'New election' | translate }}</h2>
+            </div>
 
-    <!-- Menu -->
-    <div class="menu-slot">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="assignmentDetailMenu" *ngIf="assignment">
-            <mat-icon>more_vert</mat-icon>
-        </button>
-    </div>
+            <!-- Menu -->
+            <div class="menu-slot">
+                <button type="button" mat-icon-button [matMenuTriggerFor]="assignmentDetailMenu" *ngIf="assignment">
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+            </div>
 
-    <mat-menu #assignmentDetailMenu="matMenu">
-        <!-- PDF -->
-        <button mat-menu-item (click)="onDownloadPdf()">
-            <mat-icon>picture_as_pdf</mat-icon>
-            <span>{{ 'PDF' | translate }}</span>
-        </button>
+            <mat-menu #assignmentDetailMenu="matMenu">
+                <!-- PDF -->
+                <button mat-menu-item (click)="onDownloadPdf()">
+                    <mat-icon>picture_as_pdf</mat-icon>
+                    <span>{{ 'PDF' | translate }}</span>
+                </button>
 
-        <!-- List of speakers -->
-        <os-speaker-button [object]="assignment" [menuItem]="true"></os-speaker-button>
+                <!-- List of speakers -->
+                <os-speaker-button [object]="assignment" [menuItem]="true"></os-speaker-button>
 
-        <!-- Project -->
-        <os-projector-button [object]="assignment" [menuItem]="true"></os-projector-button>
+                <!-- Project -->
+                <os-projector-button [object]="assignment" [menuItem]="true"></os-projector-button>
 
-        <!-- Add/remove to/from agenda -->
-        <div *osPerms="permission.agendaItemCanManage">
-            <button mat-menu-item (click)="addToAgenda()" *ngIf="assignment && !assignment.agenda_item_id">
-                <mat-icon>add</mat-icon>
-                <span>{{ 'Add to agenda' | translate }}</span>
-            </button>
-            <button mat-menu-item (click)="removeFromAgenda()" *ngIf="assignment && assignment.agenda_item_id">
-                <mat-icon>remove</mat-icon>
-                <span>{{ 'Remove from agenda' | translate }}</span>
-            </button>
+                <!-- Add/remove to/from agenda -->
+                <div *osPerms="permission.agendaItemCanManage">
+                    <button mat-menu-item (click)="addToAgenda()" *ngIf="assignment && !assignment.agenda_item_id">
+                        <mat-icon>add</mat-icon>
+                        <span>{{ 'Add to agenda' | translate }}</span>
+                    </button>
+                    <button mat-menu-item (click)="removeFromAgenda()" *ngIf="assignment && assignment.agenda_item_id">
+                        <mat-icon>remove</mat-icon>
+                        <span>{{ 'Remove from agenda' | translate }}</span>
+                    </button>
+                </div>
+
+                <!-- Delete -->
+                <div *ngIf="hasPerms('manage')">
+                    <!-- Delete -->
+                    <mat-divider></mat-divider>
+                    <button mat-menu-item class="red-warning-text" (click)="onDeleteAssignmentButton()">
+                        <mat-icon>delete</mat-icon>
+                        <span>{{ 'Delete' | translate }}</span>
+                    </button>
+                </div>
+            </mat-menu>
+        </os-head-bar>
+
+        <div>
+            <div *ngIf="isEditing">
+                <ng-container [ngTemplateOutlet]="assignmentFormTemplate"></ng-container>
+            </div>
+            <div *ngIf="!isEditing">
+                <!-- assignment meta infos-->
+                <ng-container [ngTemplateOutlet]="metaInfoTemplate"></ng-container>
+
+                <!-- polls -->
+                <ng-container *ngIf="assignment && assignment.poll_ids">
+                    <ng-container *ngFor="let poll of assignment.poll_ids | reverse; trackBy: trackById">
+                        <os-assignment-poll [pollId]="poll"></os-assignment-poll>
+                    </ng-container>
+                </ng-container>
+
+                <!-- New Ballot button -->
+                <div class="new-ballot-button" *ngIf="assignment && hasPerms('createPoll')">
+                    <button mat-stroked-button (click)="openDialog()">
+                        <mat-icon>add</mat-icon>
+                        <span>{{ 'New ballot' | translate }}</span>
+                    </button>
+                </div>
+
+                <!-- candidates list -->
+                <ng-container [ngTemplateOutlet]="candidatesTemplate"></ng-container>
+            </div>
         </div>
-
-        <!-- Delete -->
-        <div *ngIf="hasPerms('manage')">
-            <!-- Delete -->
-            <mat-divider></mat-divider>
-            <button mat-menu-item class="red-warning-text" (click)="onDeleteAssignmentButton()">
-                <mat-icon>delete</mat-icon>
-                <span>{{ 'Delete' | translate }}</span>
-            </button>
-        </div>
-    </mat-menu>
-</os-head-bar>
-
-<div>
-    <div *ngIf="editAssignment">
-        <ng-container [ngTemplateOutlet]="assignmentFormTemplate"></ng-container>
-    </div>
-    <div *ngIf="!editAssignment">
-        <!-- assignment meta infos-->
-        <ng-container [ngTemplateOutlet]="metaInfoTemplate"></ng-container>
-
-        <!-- polls -->
-        <ng-container *ngIf="assignment && assignment.poll_ids">
-            <ng-container *ngFor="let poll of assignment.poll_ids | reverse; trackBy: trackById">
-                <os-assignment-poll [pollId]="poll"></os-assignment-poll>
-            </ng-container>
-        </ng-container>
-
-        <!-- New Ballot button -->
-        <div class="new-ballot-button" *ngIf="assignment && hasPerms('createPoll')">
-            <button mat-stroked-button (click)="openDialog()">
-                <mat-icon>add</mat-icon>
-                <span>{{ 'New ballot' | translate }}</span>
-            </button>
-        </div>
-
-        <!-- candidates list -->
-        <ng-container [ngTemplateOutlet]="candidatesTemplate"></ng-container>
-    </div>
-</div>
+    </ng-container>
+</os-detail-view>
 
 <ng-template #metaInfoTemplate>
     <mat-card class="os-card spacer-bottom-60" *ngIf="assignment">
@@ -216,12 +220,7 @@
 <!-- Form -->
 <ng-template #assignmentFormTemplate>
     <mat-card class="os-form-card spacer-bottom-60">
-        <form
-            class="content"
-            [formGroup]="assignmentForm"
-            (keydown)="onKeyDown($event)"
-            *ngIf="assignment && editAssignment"
-        >
+        <form class="content" [formGroup]="assignmentForm" (keydown)="onKeyDown($event)">
             <div>
                 <!-- title -->
                 <mat-form-field class="full-width">
@@ -232,11 +231,7 @@
 
             <!-- description: HTML Editor -->
             <h4>{{ 'Description' | translate }}:</h4>
-            <editor
-                formControlName="description"
-                [init]="tinyMceSettings"
-                *ngIf="assignment && editAssignment"
-            ></editor>
+            <editor formControlName="description" [init]="tinyMceSettings"></editor>
 
             <!-- searchValueSelector: tags -->
             <div class="content-field" *ngIf="tagsAvailable" [formGroup]="assignmentForm">
@@ -255,10 +250,7 @@
                 ></os-attachment-control>
             </div>
 
-            <os-agenda-content-object-form
-                *ngIf="newAssignment"
-                [form]="assignmentForm"
-            ></os-agenda-content-object-form>
+            <os-agenda-content-object-form *ngIf="isCreating" [form]="assignmentForm"></os-agenda-content-object-form>
 
             <!-- default_poll_description -->
             <div>
@@ -299,7 +291,3 @@
         </form>
     </mat-card>
 </ng-template>
-
-<os-not-found *ngIf="!assignment">
-    {{ 'Election not found' | translate }}
-</os-not-found>

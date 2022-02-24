@@ -33,6 +33,8 @@ export abstract class BasePollDetailComponentDirective<V extends ViewPoll<BaseVi
     extends BaseModelContextComponent
     implements OnInit, OnDestroy
 {
+    public readonly COLLECTION = ViewPoll.COLLECTION;
+
     /**
      * All the groups of users.
      */
@@ -98,6 +100,7 @@ export abstract class BasePollDetailComponentDirective<V extends ViewPoll<BaseVi
     private _entitledUsersSubject = new BehaviorSubject<EntitledUsersTableEntry[]>([]);
     private _votesDataSubject = new BehaviorSubject<BaseVoteData[]>([]);
     private _currentOperator: ViewUser;
+    private _pollId: Id;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -127,8 +130,7 @@ export abstract class BasePollDetailComponentDirective<V extends ViewPoll<BaseVi
      * OnInit-method.
      */
     public ngOnInit(): void {
-        this.findComponentById();
-
+        super.ngOnInit();
         this.groupObservable = this.groupRepo.getViewModelListObservable();
         this.subscriptions.push(
             this.groupRepo.getViewModelListObservable().subscribe(groups => (this.userGroups = groups))
@@ -156,6 +158,13 @@ export abstract class BasePollDetailComponentDirective<V extends ViewPoll<BaseVi
         this.pollDialog.openDialog(viewPoll);
     }
 
+    public onIdFound(id: Id | null): void {
+        if (id) {
+            this._pollId = id;
+            this.loadComponentById();
+        }
+    }
+
     protected onStateChanged(): void {}
 
     protected abstract hasPerms(): boolean;
@@ -176,10 +185,10 @@ export abstract class BasePollDetailComponentDirective<V extends ViewPoll<BaseVi
      */
     protected abstract createVotesData(): BaseVoteData[];
 
-    private loadComponentById(id: Id): void {
+    private loadComponentById(): void {
         this.subscribe({
             viewModelCtor: ViewPoll,
-            ids: [id],
+            ids: [this._pollId],
             follow: [
                 {
                     idField: `content_object_id`
@@ -198,27 +207,16 @@ export abstract class BasePollDetailComponentDirective<V extends ViewPoll<BaseVi
                 }
             ]
         });
-    }
-
-    /**
-     * Helper-function to search for this poll and display data or create a new one.
-     */
-    private findComponentById(): void {
-        const params = this.route.snapshot.params;
-        if (params && params.id) {
-            const id = +params.id;
-            this.loadComponentById(id);
-            this.subscriptions.push(
-                this.repo.getViewModelObservable(id).subscribe((poll: V) => {
-                    if (poll) {
-                        this.poll = poll;
-                        this.setVotesData(this.createVotesData());
-                        this.onAfterSetVotesData();
-                        this.setEntitledUsersData();
-                    }
-                })
-            );
-        }
+        this.subscriptions.push(
+            this.repo.getViewModelObservable(this._pollId).subscribe((poll: V) => {
+                if (poll) {
+                    this.poll = poll;
+                    this.setVotesData(this.createVotesData());
+                    this.onAfterSetVotesData();
+                    this.setEntitledUsersData();
+                }
+            })
+        );
     }
 
     private setEntitledUsersData(): void {

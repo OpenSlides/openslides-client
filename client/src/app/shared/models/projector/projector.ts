@@ -2,6 +2,7 @@ import { Id } from 'app/core/definitions/key-types';
 
 import { BaseModel } from '../base/base-model';
 import { HasMeetingId } from '../base/has-meeting-id';
+import { HasSequentialNumber } from '../base/has-sequential-number';
 
 export enum Projectiondefault {
     agendaAllItems = `agenda_all_items`,
@@ -89,92 +90,5 @@ export class Projector extends BaseModel<Projector> {
     public used_as_default_in_meeting_id(projectiondefault: Projectiondefault): Id | null {
         return this[`used_as_default_$${projectiondefault}_in_meeting_id`] || null;
     }
-
-    /**
-     * Must match all given identifiers. If a projectorelement does not have all keys
-     * to identify, it will be removed, if all existing keys match
-     *
-     * @returns true, TODO
-     */
-    /*public isElementShown(element: IdentifiableProjectorElement): boolean {
-        return this.elements.some(elementOnProjector => {
-            return element.getNumbers().every(identifier => {
-                return !elementOnProjector[identifier] || elementOnProjector[identifier] === element[identifier];
-            });
-        });
-    }*/
-
-    /**
-     * Removes all elements, that do not have `stable=true`.
-     *
-     * TODO: use this.partitionArray
-     *
-     * @returns all removed unstable elements
-     */
-    /*public removeAllNonStableElements(): ProjectorElements {
-        let unstableElements: ProjectorElements;
-        let stableElements: ProjectorElements;
-
-        [unstableElements, stableElements] = this.partitionArray(this.elements, element => !element.stable);
-
-        this.elements = stableElements;
-        return unstableElements;
-    }*/
-
-    /**
-     * Adds the given element to the projectorelements
-     *
-     * @param element The element to add.
-     */
-    /*public addElement<T extends ProjectorElement>(element: T): void {
-        this.elements.push(element);
-    }*/
-
-    /**
-     * Removes and returns all projector elements, witch can be identified with the
-     * given element.
-     *
-     * @param element The element to remove
-     * @returns all removed projector elements
-     */
-    /*public removeElements(element: IdentifiableProjectorElement): ProjectorElements {
-        let removedElements: ProjectorElements;
-        let nonRemovedElements: ProjectorElements;
-        [removedElements, nonRemovedElements] = this.partitionArray(this.elements, elementOnProjector => {
-            return elementIdentifies(element, elementOnProjector);
-        });
-        this.elements = nonRemovedElements;
-        return removedElements;
-    }*/
-
-    /**
-     * Replaces all elements with the given elements, if these elements can identify to the
-     * given one.
-     *
-     * @param element The element to replace
-     */
-    /*public replaceElements(element: IdentifiableProjectorElement): void {
-        this.elements = this.elements.map(elementOnProjector =>
-            elementIdentifies(element, elementOnProjector) ? element : elementOnProjector
-        );
-    }*/
-
-    /**
-     * Splits up the array into two arrays. All elements with a true return value from the callback
-     * will be in the fist array, all others in the second one.
-     *
-     * @param array The array to split
-     * @param callback To evaluate every entry
-     * @returns the splitted array
-     */
-    /*private partitionArray<T>(array: T[], callback: (element: T) => boolean): [T[], T[]] {
-        return array.reduce(
-            (result, element) => {
-                result[callback(element) ? 0 : 1].push(element);
-                return result;
-            },
-            [[], []] as [T[], T[]]
-        );
-    }*/
 }
-export interface Projector extends HasMeetingId {}
+export interface Projector extends HasMeetingId, HasSequentialNumber {}

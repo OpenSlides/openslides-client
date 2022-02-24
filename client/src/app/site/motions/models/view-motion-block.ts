@@ -42,8 +42,8 @@ export class ViewMotionBlock extends BaseProjectableViewModel {
      *
      * @returns the URL as string
      */
-    public getDetailStateURL(): string {
-        return `/${this.getActiveMeetingId()}/motions/blocks/${this.id}`;
+    public getDetailStateUrl(): string {
+        return `/${this.getActiveMeetingId()}/motions/blocks/${this.sequential_number}`;
     }
 
     public getProjectiondefault(): Projectiondefault {

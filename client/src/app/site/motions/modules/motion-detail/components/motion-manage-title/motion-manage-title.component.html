@@ -29,15 +29,16 @@
     <!-- Sequential number -->
     <span class="main-nav-color title-font">
         <span *ngIf="showSequentialNumber">
-            <span>{{ 'Sequential number' | translate }}</span
-            >&nbsp;{{ motion.sequential_number }}
+            <span>{{ 'Sequential number' | translate }}</span>
+            &nbsp;{{ motion.sequential_number }}
         </span>
-        <span *ngIf="showSequentialNumber && motion.lead_motion">&#xb7;&nbsp;</span>
-        <span *ngIf="motion.lead_motion">
+        <span *ngIf="showSequentialNumber && parent">&#xb7;&nbsp;</span>
+        <span *ngIf="parent">
             <span>
-                <span>{{ 'Amendment to' | translate }}</span
-                >&nbsp;<a [routerLink]="motion.lead_motion.getDetailStateURL()" [state]="{ back: 'true' }">
-                    {{ motion.lead_motion.number || motion.lead_motion.title }}
+                <span>{{ 'Amendment to' | translate }}</span>
+                &nbsp;
+                <a [routerLink]="parent?.getDetailStateUrl()" [state]="{ back: 'true' }">
+                    {{ parent.number || parent.title }}
                 </a>
             </span>
         </span>

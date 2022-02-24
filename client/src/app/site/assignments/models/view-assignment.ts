@@ -81,8 +81,8 @@ export class ViewAssignment extends BaseProjectableViewModel<Assignment> {
         return { properties: [{ key: `Title`, value: this.getTitle() }], searchValue: [this.getTitle()] };
     }
 
-    public getDetailStateURL(): string {
-        return `/${this.getActiveMeetingId()}/assignments/${this.id}`;
+    public getDetailStateUrl(): string {
+        return `/${this.getActiveMeetingId()}/assignments/${this.sequential_number}`;
     }
 
     public getProjectiondefault(): Projectiondefault {

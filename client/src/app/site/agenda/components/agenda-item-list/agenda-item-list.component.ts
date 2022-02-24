@@ -205,7 +205,7 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
      */
     public getDetailUrl(item: ViewAgendaItem): string {
         if (item.content_object && !this.isMultiSelect) {
-            return `/${item.content_object.getDetailStateURL()}`;
+            return `/${item.content_object.getDetailStateUrl()}`;
         }
     }
 

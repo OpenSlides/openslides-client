@@ -61,11 +61,11 @@ export abstract class BaseModelContextComponent extends BaseComponent implements
      * @param modelRequest A `SimplifiedModelRequest` which goes to the AU-service
      * @param description An optional description for the request
      */
-    protected async instant(
+    protected async instant<D>(
         modelRequest: SimplifiedModelRequest,
         description: string = `${this.constructor.name}`
-    ): Promise<void> {
-        await this.modelRequestService.instant(modelRequest, description);
+    ): Promise<{ [collection: string]: { [id: number]: D } }> {
+        return await this.modelRequestService.instant<D>(modelRequest, description);
     }
 
     public ngOnDestroy(): void {

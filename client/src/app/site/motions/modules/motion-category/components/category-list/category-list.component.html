@@ -25,7 +25,7 @@
 >
     <!-- Title -->
     <div *pblNgridCellDef="'title'; row as category; rowContext as rowContext" class="cell-slot fill">
-        <a class="detail-link" [routerLink]="category.id"></a>
+        <os-detail-navigator [model]="category"></os-detail-navigator>
         <div [style.margin-left]="getMargin(category)">{{ category.prefixedName }}</div>
     </div>
 

@@ -13,6 +13,7 @@ import { Subscription } from 'rxjs';
 import { ActiveMeetingService } from '../../../core/core-services/active-meeting.service';
 import { ActiveMeetingIdService } from '../../../core/core-services/active-meeting-id.service';
 import { CML, OML } from '../../../core/core-services/organization-permission';
+import { SequentialNumberMappingService } from '../../../core/core-services/sequential-number-mapping.service';
 import { ViewMeeting } from '../../../management/models/view-meeting';
 
 /**
@@ -133,6 +134,10 @@ export abstract class BaseComponent implements OnDestroy {
 
     protected get activeMeetingService(): ActiveMeetingService {
         return this.componentServiceCollector.activeMeetingService;
+    }
+
+    protected get sequentialNumberMappingService(): SequentialNumberMappingService {
+        return this.componentServiceCollector.sequentialNumberMappingService;
     }
 
     public constructor(
@@ -267,22 +272,6 @@ export abstract class BaseComponent implements OnDestroy {
      */
     public trackById(_index: number, item: Id | BaseModel): Id {
         return typeof item === `number` ? item : item.id;
-    }
-
-    /**
-     * TinyMCE Init callback. Used for certain mobile editors
-     * @param event
-     */
-    protected onInitTinyMce(event: any): void {
-        if (event.event.target.settings.theme === `mobile`) {
-            this.saveHint = true;
-        } else {
-            event.editor.focus();
-        }
-    }
-
-    protected onLeaveTinyMce(event: any): void {
-        this.saveHint = false;
     }
 
     /**

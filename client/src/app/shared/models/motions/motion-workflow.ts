@@ -2,6 +2,7 @@ import { Id } from 'app/core/definitions/key-types';
 
 import { BaseModel } from '../base/base-model';
 import { HasMeetingId } from '../base/has-meeting-id';
+import { HasSequentialNumber } from '../base/has-sequential-number';
 
 /**
  * Representation of a motion workflow. Has the nested property 'states'
@@ -24,4 +25,4 @@ export class MotionWorkflow extends BaseModel<MotionWorkflow> {
         super(MotionWorkflow.COLLECTION, input);
     }
 }
-export interface MotionWorkflow extends HasMeetingId {}
+export interface MotionWorkflow extends HasMeetingId, HasSequentialNumber {}

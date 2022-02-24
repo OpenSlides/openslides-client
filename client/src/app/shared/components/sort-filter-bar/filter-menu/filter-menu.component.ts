@@ -61,6 +61,6 @@ export class FilterMenuComponent implements OnInit, OnDestroy {
     }
 
     public isFilter(option: OsFilterOption): boolean {
-        return typeof option === `string` ? false : true;
+        return !!option && typeof option !== `string`;
     }
 }

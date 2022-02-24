@@ -1,18 +1,20 @@
-<os-head-bar [goBack]="true" [nav]="false">
-    <div class="title-slot">
-        <h2 *ngIf="poll">{{ 'Motion' | translate }} {{ poll.title }}</h2>
-    </div>
+<os-detail-view [collection]="COLLECTION" (idFound)="onIdFound($event)">
+    <os-head-bar [goBack]="true" [nav]="false">
+        <div class="title-slot">
+            <h2 *ngIf="poll">{{ 'Motion' | translate }} {{ poll.title }}</h2>
+        </div>
 
-    <div class="menu-slot" *osPerms="permission.motionCanManagePolls">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="pollDetailMenu">
-            <mat-icon>more_vert</mat-icon>
-        </button>
-    </div>
-</os-head-bar>
+        <div class="menu-slot" *osPerms="permission.motionCanManagePolls">
+            <button type="button" mat-icon-button [matMenuTriggerFor]="pollDetailMenu">
+                <mat-icon>more_vert</mat-icon>
+            </button>
+        </div>
+    </os-head-bar>
 
-<mat-card class="os-card spacer-bottom-60">
-    <ng-container [ngTemplateOutlet]="viewTemplate"></ng-container>
-</mat-card>
+    <mat-card class="os-card spacer-bottom-60">
+        <ng-container [ngTemplateOutlet]="viewTemplate"></ng-container>
+    </mat-card>
+</os-detail-view>
 
 <!-- Detailview for poll -->
 <ng-template #viewTemplate>

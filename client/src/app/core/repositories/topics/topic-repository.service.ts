@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TopicAction } from 'app/core/actions/topic-action';
-import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
+import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'app/core/core-services/model-request-builder.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Topic } from 'app/shared/models/topics/topic';
 import { createAgendaItem } from 'app/shared/utils/create-agenda-item';
@@ -52,9 +52,11 @@ export class TopicRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCon
     }
 
     public getFieldsets(): Fieldsets<Topic> {
+        const routingFields: (keyof Topic)[] = [`sequential_number`];
         const titleFields: (keyof Topic)[] = [`title`, `text`];
         return {
             [DEFAULT_FIELDSET]: titleFields.concat([`text`, `attachment_ids`, `tag_ids`]),
+            [ROUTING_FIELDSET]: routingFields,
             list: titleFields,
             title: titleFields
         };

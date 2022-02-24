@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { Permission } from 'app/core/core-services/permission';
+import { Id } from 'app/core/definitions/key-types';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { MotionService } from 'app/core/repositories/motions/motion.service';
 import { MotionBlockRepositoryService } from 'app/core/repositories/motions/motion-block-repository.service';
@@ -32,10 +33,7 @@ import { BlockDetailFilterListService } from 'app/site/motions/services/block-de
     styleUrls: [`./motion-block-detail.component.scss`]
 })
 export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion> implements OnInit {
-    /**
-     * Holds the block ID
-     */
-    private blockId: number;
+    public readonly COLLECTION = MotionBlock.COLLECTION;
 
     /**
      * Determines the block id from the given URL
@@ -93,22 +91,16 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
      * Reference to the template for edit-dialog
      */
     @ViewChild(`editDialog`, { static: true })
-    private editDialog: TemplateRef<string>;
+    private readonly _editDialog: TemplateRef<string>;
 
-    private dialogRef: MatDialogRef<any>;
+    /**
+     * Holds the block ID
+     */
+    private _blockId: number;
+    private _dialogRef: MatDialogRef<any>;
 
     /**
      * Constructor for motion block details
-     *
-     * @param titleService Setting the title
-     * @param translate translations
-     * @param matSnackBar showing errors
-     * @param operator the current user
-     * @param router navigating
-     * @param route determine the blocks ID by the route
-     * @param repo the motion blocks repository
-     * @param motionRepo the motion repository
-     * @param promptService the displaying prompts before deleting
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -127,12 +119,12 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
         public vp: ViewportService
     ) {
         super(componentServiceCollector, translate);
-        this.blockId = Number(this.route.snapshot.params.id);
+        this._blockId = Number(this.route.snapshot.params.id);
 
         /**
          * TODO: This "might" nit be needed anymore, since filtering can now work implicitly using the requests
          */
-        this.filterService.blockId = this.blockId;
+        this.filterService.blockId = this._blockId;
     }
 
     /**
@@ -142,15 +134,6 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
     public ngOnInit(): void {
         super.ngOnInit();
 
-        // pseudo filter
-        this.subscriptions.push(
-            this.repo.getViewModelObservable(this.blockId).subscribe(newBlock => {
-                if (newBlock) {
-                    super.setTitle(`${this.translate.instant(`Motion block`)} - ${newBlock.getTitle()}`);
-                    this.block = newBlock;
-                }
-            })
-        );
         // load config variables
         this.meetingSettingsService
             .get(`motions_show_sequential_number`)
@@ -158,10 +141,10 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
         (<any>window).comp = this;
     }
 
-    public getModelRequest(): SimplifiedModelRequest {
+    protected getModelRequest(): SimplifiedModelRequest {
         return {
             viewModelCtor: ViewMotionBlock,
-            ids: [this.blockId],
+            ids: [this._blockId],
             follow: [
                 {
                     idField: `motion_ids`,
@@ -182,6 +165,11 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
                 `agenda_item_id`
             ]
         };
+    }
+
+    public onIdFound(id: Id): void {
+        this._blockId = id;
+        this.loadMotionBlock();
     }
 
     /**
@@ -229,7 +217,7 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
      */
     public onKeyDown(event: KeyboardEvent): void {
         if (event.key === `Escape`) {
-            this.dialogRef.close();
+            this._dialogRef.close();
         }
     }
 
@@ -251,7 +239,7 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
     public saveBlock(): void {
         this.repo
             .update(this.blockEditForm.value as MotionBlock, this.block)
-            .then(() => this.dialogRef.close())
+            .then(() => this._dialogRef.close())
             .catch(this.raiseError);
     }
 
@@ -264,9 +252,9 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
             internal: [this.block.internal]
         });
 
-        this.dialogRef = this.dialog.open(this.editDialog, infoDialogSettings);
+        this._dialogRef = this.dialog.open(this._editDialog, infoDialogSettings);
 
-        this.dialogRef.keydownEvents().subscribe((event: KeyboardEvent) => {
+        this._dialogRef.keydownEvents().subscribe((event: KeyboardEvent) => {
             if (event.key === `Enter` && event.shiftKey) {
                 this.saveBlock();
             }
@@ -299,5 +287,17 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
 
     public removeFromAgenda(): void {
         this.itemRepo.removeFromAgenda(this.block.agenda_item).catch(this.raiseError);
+    }
+
+    private loadMotionBlock(): void {
+        // pseudo filter
+        this.subscriptions.push(
+            this.repo.getViewModelObservable(this._blockId).subscribe(newBlock => {
+                if (newBlock) {
+                    super.setTitle(`${this.translate.instant(`Motion block`)} - ${newBlock.getTitle()}`);
+                    this.block = newBlock;
+                }
+            })
+        );
     }
 }

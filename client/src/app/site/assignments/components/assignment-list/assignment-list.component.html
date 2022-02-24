@@ -13,7 +13,8 @@
     <!-- Multiselect info -->
     <div class="central-info-slot">
         <button mat-icon-button (click)="toggleMultiSelect()"><mat-icon>arrow_back</mat-icon></button>
-        <span>{{ selectedRows.length }}&nbsp;</span><span>{{ 'selected' | translate }}</span>
+        <span>{{ selectedRows.length }}&nbsp;</span>
+        <span>{{ 'selected' | translate }}</span>
     </div>
 </os-head-bar>
 
@@ -31,7 +32,7 @@
 >
     <!-- Title -->
     <div *pblNgridCellDef="'title'; row as assignment; rowContext as rowContext" class="cell-slot fill">
-        <a class="detail-link" [routerLink]="assignment.id" *ngIf="!isMultiSelect"></a>
+        <os-detail-navigator [model]="assignment" *ngIf="!isMultiSelect"></os-detail-navigator>
         <div class="innerTable">
             <div class="title-line ellipsis-overflow">
                 {{ assignment.getListTitle() }}

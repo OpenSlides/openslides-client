@@ -52,7 +52,7 @@ export class VotingBannerService {
 
         const banner =
             pollsToVote.length === 1
-                ? this.createBanner(this.getTextForPoll(pollsToVote[0]), pollsToVote[0].getDetailStateURL())
+                ? this.createBanner(this.getTextForPoll(pollsToVote[0]), pollsToVote[0].getDetailStateUrl())
                 : this.createBanner(
                       `${pollsToVote.length} ${this.translate.instant(`open votes`)}`,
                       `/${this.activeMeeting.meetingId}/polls/`

@@ -1,38 +1,42 @@
-<os-head-bar
-    [nav]="false"
-    [goBack]="true"
-    [editMode]="isMobile && manualSortMode"
-    (cancelEditEvent)="setManualSortMode(false)"
-    (saveEvent)="onMobileSaveSorting()"
->
-    <!-- Title -->
-    <div class="title-slot">
-        <h2>
-            <span *ngIf="!isCurrentListOfSpeakers">{{ 'List of speakers' | translate }}</span>
-            <span *ngIf="isCurrentListOfSpeakers">{{ 'Current list of speakers' | translate }}</span>
-        </h2>
-    </div>
-    <div class="menu-slot" *osPerms="[permission.listOfSpeakersCanManage, permission.projectorCanManage]">
-        <button
-            type="button"
-            mat-icon-button
-            matTooltip="{{ 'Re-add last speaker' | translate }}"
-            (click)="readdLastSpeaker()"
-            [disabled]="!canReaddLastSpeaker"
-        >
-            <mat-icon>undo</mat-icon>
-        </button>
-        <button type="button" mat-icon-button [matMenuTriggerFor]="speakerMenu"><mat-icon>more_vert</mat-icon></button>
-    </div>
-</os-head-bar>
+<os-detail-view [collection]="COLLECTION" (idFound)="onIdFound($event)">
+    <os-head-bar
+        [nav]="false"
+        [goBack]="true"
+        [editMode]="isMobile && manualSortMode"
+        (cancelEditEvent)="setManualSortMode(false)"
+        (saveEvent)="onMobileSaveSorting()"
+    >
+        <!-- Title -->
+        <div class="title-slot">
+            <h2>
+                <span *ngIf="!isCurrentListOfSpeakers">{{ 'List of speakers' | translate }}</span>
+                <span *ngIf="isCurrentListOfSpeakers">{{ 'Current list of speakers' | translate }}</span>
+            </h2>
+        </div>
+        <div class="menu-slot" *osPerms="[permission.listOfSpeakersCanManage, permission.projectorCanManage]">
+            <button
+                type="button"
+                mat-icon-button
+                matTooltip="{{ 'Re-add last speaker' | translate }}"
+                (click)="readdLastSpeaker()"
+                [disabled]="!canReaddLastSpeaker"
+            >
+                <mat-icon>undo</mat-icon>
+            </button>
+            <button type="button" mat-icon-button [matMenuTriggerFor]="speakerMenu">
+                <mat-icon>more_vert</mat-icon>
+            </button>
+        </div>
+    </os-head-bar>
 
-<os-list-of-speakers-content
-    #content
-    [listOfSpeakers]="viewListOfSpeakers"
-    [sortMode]="manualSortMode"
-    (isListOfSpeakersEmptyEvent)="isListOfSpeakersEmpty = $event"
-    (canReaddLastSpeakerEvent)="canReaddLastSpeaker = $event"
-></os-list-of-speakers-content>
+    <os-list-of-speakers-content
+        #content
+        [listOfSpeakers]="viewListOfSpeakers"
+        [sortMode]="manualSortMode"
+        (isListOfSpeakersEmptyEvent)="isListOfSpeakersEmpty = $event"
+        (canReaddLastSpeakerEvent)="canReaddLastSpeaker = $event"
+    ></os-list-of-speakers-content>
+</os-detail-view>
 
 <mat-menu #speakerMenu="matMenu">
     <button *ngIf="isMobile" mat-menu-item (click)="setManualSortMode(true)">

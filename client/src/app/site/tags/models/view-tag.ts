@@ -29,7 +29,7 @@ export class ViewTag extends BaseViewModel<Tag> implements Searchable {
         return { properties: [{ key: `Name`, value: this.name }], searchValue: [this.name] };
     }
 
-    public getDetailStateURL(): string {
+    public getDetailStateUrl(): string {
         return `${this.getActiveMeetingId()}/tags`;
     }
 }

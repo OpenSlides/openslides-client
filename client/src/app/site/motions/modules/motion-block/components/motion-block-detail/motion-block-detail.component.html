@@ -1,145 +1,145 @@
-<os-head-bar [nav]="false">
-    <!-- Title -->
-    <div class="title-slot">
-        <os-icon-container
-            *ngIf="block"
-            [noWrap]="true"
-            icon="check"
-            size="large"
-            [showIcon]="block.isFinished"
-            [iconTooltip]="'Finished' | translate"
-        >
+<os-detail-view [collection]="COLLECTION" (idFound)="onIdFound($event)">
+    <os-head-bar [nav]="false">
+        <!-- Title -->
+        <div class="title-slot">
             <os-icon-container
+                *ngIf="block"
                 [noWrap]="true"
-                icon="lock"
+                icon="check"
                 size="large"
-                [showIcon]="block.internal"
-                [iconTooltip]="'Internal' | translate"
+                [showIcon]="block.isFinished"
+                [iconTooltip]="'Finished' | translate"
             >
-                <h2>{{ block.title }}</h2>
+                <os-icon-container
+                    [noWrap]="true"
+                    icon="lock"
+                    size="large"
+                    [showIcon]="block.internal"
+                    [iconTooltip]="'Internal' | translate"
+                >
+                    <h2>{{ block.title }}</h2>
+                </os-icon-container>
             </os-icon-container>
-        </os-icon-container>
-    </div>
+        </div>
 
-    <!-- Menu -->
-    <div class="menu-slot">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="motionBlockMenu">
-            <mat-icon>more_vert</mat-icon>
-        </button>
-    </div>
+        <!-- Menu -->
+        <div class="menu-slot">
+            <button type="button" mat-icon-button [matMenuTriggerFor]="motionBlockMenu">
+                <mat-icon>more_vert</mat-icon>
+            </button>
+        </div>
 
-    <!-- Extra Controls -->
-    <div class="extra-controls-slot" *ngIf="!vp.isMobile">
-        <button
-            *osPerms="[permission.motionCanManage, permission.motionCanManageMetadata]"
-            mat-button
-            (click)="onFollowRecButton()"
-            [disabled]="isFollowingProhibited()"
-        >
-            <os-icon-container icon="done_all">
-                <span>{{ 'Follow recommendations for all motions' | translate }}</span>
-            </os-icon-container>
-        </button>
-    </div>
-</os-head-bar>
+        <!-- Extra Controls -->
+        <div class="extra-controls-slot" *ngIf="!vp.isMobile">
+            <button
+                *osPerms="[permission.motionCanManage, permission.motionCanManageMetadata]"
+                mat-button
+                (click)="onFollowRecButton()"
+                [disabled]="isFollowingProhibited()"
+            >
+                <os-icon-container icon="done_all">
+                    <span>{{ 'Follow recommendations for all motions' | translate }}</span>
+                </os-icon-container>
+            </button>
+        </div>
+    </os-head-bar>
 
-<os-list-view-table
-    [listObservableProvider]="motionRepo"
-    [filterService]="filterService"
-    [columns]="tableColumnDefinition"
-    [restricted]="restrictedColumns"
-    [filterProps]="filterProps"
-    [hiddenInMobile]="['remove']"
-    (dataSourceChange)="onDataSourceChange($event)"
->
-    <!-- Title column -->
-    <div *pblNgridCellDef="'title'; row as motion; rowContext as rowContext" class="cell-slot fill">
-        <a
-            class="detail-link"
-            [routerLink]="motion.getDetailStateURL()"
-            [state]="{ back: 'true' }"
-            *ngIf="!isMultiSelect"
-        ></a>
-        <div class="column-title innerTable">
-            <div class="title-line ellipsis-overflow">
-                <!-- Is Favorite -->
-                <span *ngIf="motion.star" class="favorite-star">
-                    <mat-icon inline>star</mat-icon>
-                </span>
-
-                <!-- Has File -->
-                <span class="icon-prefix" *ngIf="motion.hasAttachments()">
-                    <mat-icon>attach_file</mat-icon>
-                </span>
-
-                <!-- The title -->
-                <span>
-                    <span *ngIf="motion.number">
-                        {{ motion.number }}
-                        <span>&middot;</span>
+    <os-list-view-table
+        [listObservableProvider]="motionRepo"
+        [filterService]="filterService"
+        [columns]="tableColumnDefinition"
+        [restricted]="restrictedColumns"
+        [filterProps]="filterProps"
+        [hiddenInMobile]="['remove']"
+        (dataSourceChange)="onDataSourceChange($event)"
+    >
+        <!-- Title column -->
+        <div *pblNgridCellDef="'title'; row as motion; rowContext as rowContext" class="cell-slot fill">
+            <a
+                class="detail-link"
+                [routerLink]="motion.getDetailStateUrl()"
+                [state]="{ back: 'true' }"
+                *ngIf="!isMultiSelect"
+            ></a>
+            <div class="column-title innerTable">
+                <div class="title-line ellipsis-overflow">
+                    <!-- Is Favorite -->
+                    <span *ngIf="motion.star" class="favorite-star">
+                        <mat-icon inline>star</mat-icon>
                     </span>
-                    {{ motion.title }}
-                </span>
-            </div>
 
-            <!-- Submitters -->
-            <div class="submitters-line ellipsis-overflow">
-                <span *ngIf="motion.submitters.length">
-                    <span>{{ 'by' | translate }}</span>
-                    {{ motion.submitters }}
-                </span>
+                    <!-- Has File -->
+                    <span class="icon-prefix" *ngIf="motion.hasAttachments()">
+                        <mat-icon>attach_file</mat-icon>
+                    </span>
 
-                <span *ngIf="showSequential">
+                    <!-- The title -->
+                    <span>
+                        <span *ngIf="motion.number">
+                            {{ motion.number }}
+                            <span>&middot;</span>
+                        </span>
+                        {{ motion.title }}
+                    </span>
+                </div>
+
+                <!-- Submitters -->
+                <div class="submitters-line ellipsis-overflow">
                     <span *ngIf="motion.submitters.length">
-                        &middot;
+                        <span>{{ 'by' | translate }}</span>
+                        {{ motion.submitters }}
                     </span>
-                    <span>{{ 'Sequential number' | translate }}</span>
-                    {{ motion.id }}
-                </span>
-            </div>
 
-            <!-- Workflow state -->
-            <div class="ellipsis-overflow white">
-                <mat-basic-chip *ngIf="motion.state" [ngClass]="motion.stateCssColor" [disabled]="true">
-                    {{ getStateLabel(motion) }}
-                </mat-basic-chip>
+                    <span *ngIf="showSequential">
+                        <span *ngIf="motion.submitters.length">&middot;</span>
+                        <span>{{ 'Sequential number' | translate }}</span>
+                        {{ motion.id }}
+                    </span>
+                </div>
+
+                <!-- Workflow state -->
+                <div class="ellipsis-overflow white">
+                    <mat-basic-chip *ngIf="motion.state" [ngClass]="motion.stateCssColor" [disabled]="true">
+                        {{ getStateLabel(motion) }}
+                    </mat-basic-chip>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Recommendation column -->
-    <div *pblNgridCellDef="'recommendation'; row as motion" class="cell-slot fill">
-        <mat-basic-chip *ngIf="!!motion.recommendation" disableRipple class="bluegrey">
-            {{ getRecommendationLabel(motion) }}
-        </mat-basic-chip>
-    </div>
+        <!-- Recommendation column -->
+        <div *pblNgridCellDef="'recommendation'; row as motion" class="cell-slot fill">
+            <mat-basic-chip *ngIf="!!motion.recommendation" disableRipple class="bluegrey">
+                {{ getRecommendationLabel(motion) }}
+            </mat-basic-chip>
+        </div>
 
-    <!-- Remove from block column -->
-    <div *pblNgridCellDef="'remove'; row as motion" class="cell-slot fill">
-        <button
-            type="button"
-            mat-icon-button
-            color="warn"
-            matTooltip="{{ 'Remove from motion block' | translate }}"
-            (click)="onRemoveMotionButton(motion)"
-        >
-            <mat-icon>close</mat-icon>
-        </button>
-    </div>
+        <!-- Remove from block column -->
+        <div *pblNgridCellDef="'remove'; row as motion" class="cell-slot fill">
+            <button
+                type="button"
+                mat-icon-button
+                color="warn"
+                matTooltip="{{ 'Remove from motion block' | translate }}"
+                (click)="onRemoveMotionButton(motion)"
+            >
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
 
-    <!-- Menu -->
-    <div *pblNgridCellDef="'menu'; row as motion" class="cell-slot fill">
-        <button
-            mat-icon-button
-            [disabled]="isMultiSelect"
-            [matMenuTriggerFor]="singleItemMenu"
-            (click)="$event.stopPropagation()"
-            [matMenuTriggerData]="{ motion: motion }"
-        >
-            <mat-icon>more_vert</mat-icon>
-        </button>
-    </div>
-</os-list-view-table>
+        <!-- Menu -->
+        <div *pblNgridCellDef="'menu'; row as motion" class="cell-slot fill">
+            <button
+                mat-icon-button
+                [disabled]="isMultiSelect"
+                [matMenuTriggerFor]="singleItemMenu"
+                (click)="$event.stopPropagation()"
+                [matMenuTriggerData]="{ motion: motion }"
+            >
+                <mat-icon>more_vert</mat-icon>
+            </button>
+        </div>
+    </os-list-view-table>
+</os-detail-view>
 
 <!-- Menu for mobile entries -->
 <mat-menu #singleItemMenu="matMenu">

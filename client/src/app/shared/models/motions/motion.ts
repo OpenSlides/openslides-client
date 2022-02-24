@@ -7,6 +7,7 @@ import { HasListOfSpeakersId } from '../base/has-list-of-speakers-id';
 import { HasMeetingId } from '../base/has-meeting-id';
 import { HasPersonalNoteIds } from '../base/has-personal-note-ids';
 import { HasProjectionIds } from '../base/has-projectable-ids';
+import { HasSequentialNumber } from '../base/has-sequential-number';
 import { HasTagIds } from '../base/has-tag-ids';
 
 export interface MotionFormattingRepresentation {
@@ -34,7 +35,6 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
 
     public id: Id;
     public number: string;
-    public sequential_number: number;
     public title: string;
     public text: string;
     public modified_final_version: string;
@@ -85,4 +85,5 @@ export interface Motion
         HasAttachmentIds,
         HasPersonalNoteIds,
         HasProjectionIds,
-        HasReferencedMotionInRecommendationExtensionIds {}
+        HasReferencedMotionInRecommendationExtensionIds,
+        HasSequentialNumber {}

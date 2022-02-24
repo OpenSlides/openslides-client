@@ -5,7 +5,7 @@ export interface DetailNavigable {
     /**
      * Get the url for the detail view, so the user can navigate to it.
      */
-    getDetailStateURL(): string;
+    getDetailStateUrl(): string;
 }
 
 /**
@@ -15,5 +15,5 @@ export interface DetailNavigable {
  * @returns true if the interface is implemented
  */
 export function isDetailNavigable(obj: object): obj is DetailNavigable {
-    return (<DetailNavigable>obj).getDetailStateURL !== undefined;
+    return typeof (obj as DetailNavigable).getDetailStateUrl === `function`;
 }

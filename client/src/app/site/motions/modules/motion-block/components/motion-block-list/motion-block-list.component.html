@@ -19,7 +19,7 @@
 >
     <!-- Title column -->
     <div *pblNgridCellDef="'title'; value as title; row as block; rowContext as rowContext" class="cell-slot fill">
-        <a class="detail-link" [routerLink]="block.id" *ngIf="!isMultiSelect"></a>
+        <os-detail-navigator [model]="block" *ngIf="!isMultiSelect"></os-detail-navigator>
         <!--
         TODO: Tooltips do not work when hidden under the absolute link, but they can't be above it either,
         because for some reason they don't delegate the click event. So no tooltips for now
@@ -90,9 +90,9 @@
 
             <!-- Internal -->
             <p>
-                <mat-checkbox formControlName="internal"
-                    ><span>{{ 'Internal' | translate }}</span></mat-checkbox
-                >
+                <mat-checkbox formControlName="internal">
+                    <span>{{ 'Internal' | translate }}</span>
+                </mat-checkbox>
             </p>
 
             <os-agenda-content-object-form [form]="createBlockForm"></os-agenda-content-object-form>

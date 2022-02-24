@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MotionAction } from 'app/core/actions/motion-action';
 import { MotionBlockAction } from 'app/core/actions/motion-block-action';
-import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
+import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'app/core/core-services/model-request-builder.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { MotionBlock } from 'app/shared/models/motions/motion-block';
 import { createAgendaItem } from 'app/shared/utils/create-agenda-item';
@@ -52,10 +52,12 @@ export class MotionBlockRepositoryService extends BaseIsAgendaItemAndListOfSpeak
     }
 
     public getFieldsets(): Fieldsets<MotionBlock> {
+        const routingFields: (keyof MotionBlock)[] = [`sequential_number`];
         const titleFields: (keyof MotionBlock)[] = [`title`];
         const listFields: (keyof MotionBlock)[] = titleFields.concat([`internal`]);
         return {
             [DEFAULT_FIELDSET]: listFields,
+            [ROUTING_FIELDSET]: routingFields,
             title: titleFields
         };
     }

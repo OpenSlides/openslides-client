@@ -3,6 +3,7 @@ import { MotionCategoryAction } from 'app/core/actions/motion-category-action';
 import {
     DEFAULT_FIELDSET,
     Fieldsets,
+    ROUTING_FIELDSET,
     SimplifiedModelRequest
 } from 'app/core/core-services/model-request-builder.service';
 import { TreeIdNode } from 'app/core/ui-services/tree.service';
@@ -59,6 +60,7 @@ export class MotionCategoryRepositoryService
     }
 
     public getFieldsets(): Fieldsets<MotionCategory> {
+        const routingFields: (keyof MotionCategory)[] = [`sequential_number`];
         const detailFields: (keyof MotionCategory)[] = [`name`, `prefix`];
         const sortListFields: (keyof MotionCategory)[] = detailFields.concat([
             `weight`,
@@ -69,6 +71,7 @@ export class MotionCategoryRepositoryService
         const listFields: (keyof MotionCategory)[] = sortListFields.concat([`motion_ids`]);
         return {
             [DEFAULT_FIELDSET]: detailFields,
+            [ROUTING_FIELDSET]: routingFields,
             list: listFields,
             sortList: sortListFields
         };

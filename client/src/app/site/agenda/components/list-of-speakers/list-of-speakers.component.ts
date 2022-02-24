@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { CollectionMapperService } from 'app/core/core-services/collection-mapper.service';
 import { collectionFromFqid } from 'app/core/core-services/key-transforms';
+import { Id } from 'app/core/definitions/key-types';
 import { ListOfSpeakersRepositoryService } from 'app/core/repositories/agenda/list-of-speakers-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
@@ -30,8 +30,10 @@ import { ViewListOfSpeakers } from '../../models/view-list-of-speakers';
     styleUrls: [`./list-of-speakers.component.scss`]
 })
 export class ListOfSpeakersComponent extends BaseModelContextComponent implements OnInit, OnDestroy {
+    public readonly COLLECTION = ViewListOfSpeakers.COLLECTION;
+
     @ViewChild(`content`)
-    private listOfSpeakersContentComponent: ListOfSpeakersContentComponent;
+    private readonly _listOfSpeakersContentComponent: ListOfSpeakersContentComponent;
 
     /**
      * Determine if the user is viewing the current list if speakers
@@ -69,26 +71,15 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
      */
     public canReaddLastSpeaker: boolean;
 
-    private losSubscription: Subscription;
+    private _losSubscription: Subscription;
+    private _losId: Id;
 
     /**
      * Constructor for speaker list component. Generates the forms.
-     *
-     * @param title
-     * @param translate
-     * @param snackBar
-     * @param route Angulars ActivatedRoute
-     * @param DS the DataStore
-     * @param listOfSpeakersRepo Repository for list of speakers
-     * @param operator the current operator
-     * @param promptService
-     * @param currentListOfSpeakersService
-     * @param durationService helper for speech duration display
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService,
-        private route: ActivatedRoute,
         private listOfSpeakersRepo: ListOfSpeakersRepositoryService,
         private promptService: PromptService,
         private currentListOfSpeakersService: CurrentListOfSpeakersService,
@@ -100,30 +91,17 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
     }
 
     public ngOnInit(): void {
-        const id = parseInt(this.route.snapshot.url[this.route.snapshot.url.length - 1]?.path, 10);
-        // Check, if we are on the current list of speakers.
-        this.isCurrentListOfSpeakers =
-            this.route.snapshot.url.length > 0
-                ? this.route.snapshot.url[this.route.snapshot.url.length - 1].path === `speakers`
-                : true;
-
-        if (this.isCurrentListOfSpeakers) {
-            this.subscribe({
-                viewModelCtor: ViewMeeting,
-                ids: [this.activeMeetingId],
-                follow: [CURRENT_LIST_OF_SPEAKERS_FOLLOW],
-                fieldset: ``
-            });
-            this.subscriptions.push(
-                this.currentListOfSpeakersService.currentListOfSpeakersObservable.subscribe(clos => {
-                    this.setListOfSpeakers(clos);
-                })
-            );
-        } else {
-            this.setListOfSpeakersById(id);
-        }
-
+        super.ngOnInit();
         this.subscriptions.push(this.viewport.isMobileSubject.subscribe(isMobile => (this.isMobile = isMobile)));
+    }
+
+    public onIdFound(id: Id | null): void {
+        if (id) {
+            this._losId = id;
+            this.loadListOfSpeakers();
+        } else {
+            this.loadCurrentListOfSpeakers();
+        }
     }
 
     /**
@@ -131,42 +109,6 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
      */
     public getClosSlide(): ProjectionBuildDescriptor {
         return this.currentListOfSpeakersSlideService.getProjectionBuildDescriptor(false);
-    }
-
-    /**
-     * Sets the current list of speakers id to show
-     *
-     * @param id the list of speakers id
-     */
-    private setListOfSpeakersById(id: number): void {
-        if (this.losSubscription) {
-            this.losSubscription.unsubscribe();
-        }
-        this.losSubscription = this.listOfSpeakersRepo.getViewModelObservable(id).subscribe(listOfSpeakers => {
-            if (listOfSpeakers) {
-                this.setListOfSpeakers(listOfSpeakers);
-            }
-        });
-
-        this.subscribe({
-            viewModelCtor: ViewListOfSpeakers,
-            ids: [id],
-            follow: [
-                {
-                    idField: `speaker_ids`,
-                    follow: [{ idField: `user_id`, fieldset: `shortName` }]
-                },
-                `content_object_id` // To retreive the title
-            ]
-        });
-    }
-
-    private setListOfSpeakers(listOfSpeakers: ViewListOfSpeakers): void {
-        const title = this.isCurrentListOfSpeakers
-            ? `Current list of speakers`
-            : listOfSpeakers.getTitle() + ` - ${this.translate.instant(`List of speakers`)}`;
-        super.setTitle(title);
-        this.viewListOfSpeakers = listOfSpeakers;
     }
 
     /**
@@ -189,7 +131,7 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
      * Saves sorting on mobile devices.
      */
     public async onMobileSaveSorting(): Promise<void> {
-        await this.listOfSpeakersContentComponent.onSaveSorting();
+        await this._listOfSpeakersContentComponent.onSaveSorting();
         this.manualSortMode = false;
     }
 
@@ -219,8 +161,62 @@ export class ListOfSpeakersComponent extends BaseModelContextComponent implement
 
     public ngOnDestroy(): void {
         super.ngOnDestroy();
-        if (this.losSubscription) {
-            this.losSubscription.unsubscribe();
+        if (this._losSubscription) {
+            this._losSubscription.unsubscribe();
         }
+    }
+
+    private loadListOfSpeakers(): void {
+        this.setupLosRequest();
+        this.setupLosSubscription();
+    }
+
+    private loadCurrentListOfSpeakers(): void {
+        this.subscribe({
+            viewModelCtor: ViewMeeting,
+            ids: [this.activeMeetingId],
+            follow: [CURRENT_LIST_OF_SPEAKERS_FOLLOW],
+            fieldset: ``
+        });
+        this.subscriptions.push(
+            this.currentListOfSpeakersService.currentListOfSpeakersObservable.subscribe(clos => {
+                this.setListOfSpeakers(clos);
+            })
+        );
+    }
+
+    private setListOfSpeakers(listOfSpeakers: ViewListOfSpeakers): void {
+        const title = this.isCurrentListOfSpeakers
+            ? `Current list of speakers`
+            : listOfSpeakers.getTitle() + ` - ${this.translate.instant(`List of speakers`)}`;
+        super.setTitle(title);
+        this.viewListOfSpeakers = listOfSpeakers;
+    }
+
+    private setupLosSubscription(): void {
+        if (this._losSubscription) {
+            this._losSubscription.unsubscribe();
+        }
+        this._losSubscription = this.listOfSpeakersRepo
+            .getViewModelObservable(this._losId)
+            .subscribe(listOfSpeakers => {
+                if (listOfSpeakers) {
+                    this.setListOfSpeakers(listOfSpeakers);
+                }
+            });
+    }
+
+    private setupLosRequest(): void {
+        this.subscribe({
+            viewModelCtor: ViewListOfSpeakers,
+            ids: [this._losId],
+            follow: [
+                {
+                    idField: `speaker_ids`,
+                    follow: [{ idField: `user_id`, fieldset: `shortName` }]
+                },
+                `content_object_id` // To retreive the title
+            ]
+        });
     }
 }
